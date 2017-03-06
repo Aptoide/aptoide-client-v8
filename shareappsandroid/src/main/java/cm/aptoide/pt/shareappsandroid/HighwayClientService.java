@@ -26,8 +26,6 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.R.attr.id;
-
 /**
  * Created by filipegoncalves on 10-02-2017.
  */
@@ -92,7 +90,7 @@ public class HighwayClientService extends Service {
         System.out.println(" Finished receiving " + androidAppInfo);
 
         finishReceiveNotification(androidAppInfo.getApk().getFilePath(),
-            androidAppInfo.getPackageName());
+            androidAppInfo.getPackageName(), androidAppInfo);
 
         Intent i = new Intent();
         i.putExtra("FinishedReceiving", true);
@@ -108,7 +106,7 @@ public class HighwayClientService extends Service {
         //System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
         if (progressFilter.shouldUpdate(progress)) {
           int actualProgress = Math.round(progress * PROGRESS_SPLIT_SIZE);
-          showReceiveProgress(androidAppInfo.getAppName(), actualProgress);
+          showReceiveProgress(androidAppInfo.getAppName(), actualProgress, androidAppInfo);
         }
       }
     };
@@ -139,7 +137,7 @@ public class HighwayClientService extends Service {
       @Override public void onFinishSending(AndroidAppInfo o) {
         System.out.println(" Finished sending " + o);
 
-        finishSendNotification();
+        finishSendNotification(o);
 
         Intent i = new Intent();
         i.putExtra("isSent", true);
@@ -163,7 +161,7 @@ public class HighwayClientService extends Service {
 
         if (progressFilter.shouldUpdate(progress)) {
           int actualProgress = Math.round(progress * 100);
-          showSendProgress(androidAppInfo.getAppName(), actualProgress);
+          showSendProgress(androidAppInfo.getAppName(), actualProgress, androidAppInfo);
         }
       }
     };
@@ -181,7 +179,8 @@ public class HighwayClientService extends Service {
     }
   }
 
-  private void finishReceiveNotification(String receivedApkFilePath, String packageName) {
+  private void finishReceiveNotification(String receivedApkFilePath, String packageName,
+      AndroidAppInfo androidAppInfo) {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
       ((NotificationCompat.Builder) mBuilderReceive).setContentText(
@@ -203,11 +202,13 @@ public class HighwayClientService extends Service {
       if (mNotifyManager == null) {
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
       }
-      mNotifyManager.notify(id, ((NotificationCompat.Builder) mBuilderReceive).getNotification());
+      mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
+          ((NotificationCompat.Builder) mBuilderReceive).getNotification());
     }
   }
 
-  private void showReceiveProgress(String receivingAppName, int actual) {
+  private void showReceiveProgress(String receivingAppName, int actual,
+      AndroidAppInfo androidAppInfo) {
 
     //if (System.currentTimeMillis() - lastTimestampReceive > 1000 / 3) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -218,7 +219,8 @@ public class HighwayClientService extends Service {
       if (mNotifyManager == null) {
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
       }
-      mNotifyManager.notify(id, ((NotificationCompat.Builder) mBuilderReceive).getNotification());
+      mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
+          ((NotificationCompat.Builder) mBuilderReceive).getNotification());
     }
     lastTimestampReceive = System.currentTimeMillis();
     //}
@@ -236,7 +238,7 @@ public class HighwayClientService extends Service {
     }
   }
 
-  private void finishSendNotification() {
+  private void finishSendNotification(AndroidAppInfo androidAppInfo) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
       ((NotificationCompat.Builder) mBuilderSend).setContentText(
           this.getResources().getString(R.string.transfCompleted))
@@ -247,11 +249,12 @@ public class HighwayClientService extends Service {
       if (mNotifyManager == null) {
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
       }
-      mNotifyManager.notify(id, ((NotificationCompat.Builder) mBuilderSend).getNotification());
+      mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
+          ((NotificationCompat.Builder) mBuilderSend).getNotification());
     }
   }
 
-  private void showSendProgress(String sendingAppName, int actual) {
+  private void showSendProgress(String sendingAppName, int actual, AndroidAppInfo androidAppInfo) {
 
     //if (System.currentTimeMillis() - lastTimestampSend > 1000 / 3) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -261,7 +264,8 @@ public class HighwayClientService extends Service {
       if (mNotifyManager == null) {
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
       }
-      mNotifyManager.notify(id, ((NotificationCompat.Builder) mBuilderSend).getNotification());
+      mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
+          ((NotificationCompat.Builder) mBuilderSend).getNotification());
     }
     lastTimestampSend = System.currentTimeMillis();
     //}
