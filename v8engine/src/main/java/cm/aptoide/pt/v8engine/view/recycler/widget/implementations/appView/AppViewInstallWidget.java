@@ -387,7 +387,7 @@ import rx.android.schedulers.AndroidSchedulers;
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
             if (accountManager.isLoggedIn()
-                && ManagerPreferences.getShowPreview()
+                && ManagerPreferences.isShowPreviewDialog()
                 && Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
               SharePreviewDialog sharePreviewDialog =
                   new SharePreviewDialog(displayable, accountManager);
