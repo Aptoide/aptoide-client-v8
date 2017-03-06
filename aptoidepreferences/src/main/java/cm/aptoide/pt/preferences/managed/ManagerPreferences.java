@@ -232,7 +232,7 @@ public class ManagerPreferences {
     Preferences.get().edit().putBoolean(ManagedKeys.FACEBOOK_SYNC, true).apply();
   }
 
-  public static void setAllSyncValues(Boolean value) {
+  public static void setAddressBookSyncValues(Boolean value) {
     Preferences.get().edit().putBoolean(ManagedKeys.ADDRESS_BOOK_SYNC, value).apply();
     Preferences.get().edit().putBoolean(ManagedKeys.TWITTER_SYNC, value).apply();
     Preferences.get().edit().putBoolean(ManagedKeys.FACEBOOK_SYNC, value).apply();
