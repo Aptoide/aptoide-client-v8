@@ -231,4 +231,10 @@ public class ManagerPreferences {
   public static void setFacebookAsSynced() {
     Preferences.get().edit().putBoolean(ManagedKeys.FACEBOOK_SYNC, true).apply();
   }
+
+  public static void setAllSyncValues(Boolean value) {
+    Preferences.get().edit().putBoolean(ManagedKeys.ADDRESS_BOOK_SYNC, value).apply();
+    Preferences.get().edit().putBoolean(ManagedKeys.TWITTER_SYNC, value).apply();
+    Preferences.get().edit().putBoolean(ManagedKeys.FACEBOOK_SYNC, value).apply();
+  }
 }
