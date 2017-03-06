@@ -136,7 +136,9 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
       }
 
       //check if the user is the store's owner
-      if (accountManager.isLoggedIn() && accountManager.getAccount()
+      if (accountManager.isLoggedIn()
+          && accountManager.getAccount().getStore() != null
+          && accountManager.getAccount()
           .getStore()
           .equals(store.getName())) {
         description.setVisibility(View.VISIBLE);
@@ -240,7 +242,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         storeUtilsProxy.subscribeStore(storeWrapper.getStore().getName(), subscribedStoreMeta -> {
           ShowMessage.asSnack(itemView,
               AptoideUtils.StringU.getFormattedString(R.string.store_followed,
-                  subscribedStoreMeta.getData().getStore().getName()));
+                  subscribedStoreMeta.getData().getName()));
         }, err -> {
           CrashReport.getInstance().log(err);
         }, accountManager);

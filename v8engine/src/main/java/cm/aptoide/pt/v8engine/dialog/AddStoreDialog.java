@@ -24,7 +24,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeMetaRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
@@ -220,7 +220,7 @@ public class AddStoreDialog extends BaseDialog {
   }
 
   private void getStore(String storeName) {
-    GetHomeMetaRequest getHomeMetaRequest = buildRequest(storeName);
+    GetStoreMetaRequest getHomeMetaRequest = buildRequest(storeName);
 
     executeRequest(getHomeMetaRequest);
   }
@@ -241,12 +241,12 @@ public class AddStoreDialog extends BaseDialog {
     }
   }
 
-  private GetHomeMetaRequest buildRequest(String storeName) {
-    return GetHomeMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
+  private GetStoreMetaRequest buildRequest(String storeName) {
+    return GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
         accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier());
   }
 
-  private void executeRequest(GetHomeMetaRequest getHomeMetaRequest) {
+  private void executeRequest(GetStoreMetaRequest getHomeMetaRequest) {
     final IdsRepositoryImpl clientUuid =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
 

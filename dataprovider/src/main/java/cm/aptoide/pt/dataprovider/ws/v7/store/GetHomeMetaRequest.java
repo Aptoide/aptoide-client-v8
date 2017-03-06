@@ -49,7 +49,7 @@ import rx.Observable;
 
   @Override protected Observable<GetHomeMeta> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getStoreMeta(url != null ? url : "", body, bypassCache);
+    return interfaces.getHomeMeta(url != null ? url : "", body, bypassCache);
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithStore {

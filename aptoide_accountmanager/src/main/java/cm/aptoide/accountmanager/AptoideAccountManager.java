@@ -18,6 +18,7 @@ import cm.aptoide.accountmanager.ws.OAuth2AuthenticationRequest;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
@@ -388,9 +389,11 @@ public class AptoideAccountManager {
     return account == null ? null : account.getToken();
   }
 
-  public Completable subscribeStore(String storeName, String storeUserName, String storePassword) {
+  // TODO: 06/03/2017 trinkes make it return a completable
+  public Observable<ChangeStoreSubscriptionResponse> subscribeStore(String storeName,
+      String storeUserName, String storePassword) {
     return followStoreService.followStore(storeName, aptoideClientUuid.getUniqueIdentifier(),
-        getAccessToken(), storeUserName, storePassword).toCompletable();
+        getAccessToken(), storeUserName, storePassword);
   }
 
   public void sendLoginCancelledBroadcast() {
