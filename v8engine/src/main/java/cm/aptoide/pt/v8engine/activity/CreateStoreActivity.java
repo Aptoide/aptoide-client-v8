@@ -548,9 +548,9 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
   }
 
   private void goToMainActivity() {
-    Intent i = new Intent(this, MainActivity.class);
-    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    final Intent i = new Intent(this, MainActivity.class);
     startActivity(i);
+    finish();
   }
 
   private void onCreateSuccess(ProgressDialog progressDialog) {

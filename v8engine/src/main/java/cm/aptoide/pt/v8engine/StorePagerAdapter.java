@@ -78,17 +78,25 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
     GetStoreTabs.Tab tab = tabs.get(position);
     Event event = tab.getEvent();
 
+    Fragment fragment;
     switch (event.getType()) {
-      case API:
-        return caseAPI(tab);
-      case CLIENT:
-        return caseClient(event, tab);
-      case v3:
-        return caseV3(event);
+      case API: {
+        fragment = caseAPI(tab);
+        break;
+      }
+      case CLIENT: {
+        fragment = caseClient(event, tab);
+        break;
+      }
+      case v3:{
+        fragment = caseV3(event);
+        break;
+    }
       default:
         // Safe to throw exception as the tab should be filtered prior to getting here.
         throw new RuntimeException("Fragment type not implemented!");
     }
+    return fragment;
   }
 
   private Fragment caseAPI(GetStoreTabs.Tab tab) {

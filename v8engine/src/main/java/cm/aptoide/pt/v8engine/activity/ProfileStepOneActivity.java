@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
@@ -63,8 +64,7 @@ public class ProfileStepOneActivity extends AccountBaseActivity {
 
   private void bindViews() {
     mContinueButton = (Button) findViewById(R.id.logged_in_continue);
-    mMoreInfoButton =
-        (Button) findViewById(R.id.logged_in_more_info_button);
+    mMoreInfoButton = (Button) findViewById(R.id.logged_in_more_info_button);
     mToolbar = (Toolbar) findViewById(R.id.toolbar);
   }
 
@@ -90,19 +90,21 @@ public class ProfileStepOneActivity extends AccountBaseActivity {
           Logger.v(TAG, "user is public: error: " + answer.getError().getDescription());
           ShowMessage.asSnack(this, cm.aptoide.accountmanager.R.string.unknown_error);
         }
-        goTo();
+        navigateToNextActivity();
       }, throwable -> {
-        goTo();
+        navigateToNextActivity();
       });
     }));
     mSubscriptions.add(RxView.clicks(mMoreInfoButton).subscribe(clicks -> {
       Analytics.Account.accountProfileAction(1, Analytics.Account.ProfileAction.MORE_INFO);
-      startActivity(getIntent().setClass(this, ProfileStepTwoActivity.class));
+      final Intent i = getIntent();
+      i.setClass(this, ProfileStepTwoActivity.class);
+      startActivity(i);
       finish();
     }));
   }
 
-  private void goTo() {
+  private void navigateToNextActivity() {
 
     if (getIntent() != null && getIntent().getBooleanExtra(
         AptoideAccountManager.IS_FACEBOOK_OR_GOOGLE, false)) {
@@ -111,7 +113,9 @@ public class ProfileStepOneActivity extends AccountBaseActivity {
       if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {
         pleaseWaitDialog.dismiss();
       }
-      startActivity(getIntent().setClass(this, CreateStoreActivity.class));
+      final Intent i = getIntent();
+      i.setClass(this, CreateStoreActivity.class);
+      startActivity(i);
       finish();
     }
   }
