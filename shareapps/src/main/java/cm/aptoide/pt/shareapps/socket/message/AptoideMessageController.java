@@ -118,7 +118,9 @@ public abstract class AptoideMessageController implements Sender<Message> {
   public void exit() {
     send(new ExitMessage(getLocalhost()));
     try {
-      socket.close();
+      if (socket != null && !socket.isClosed()) {
+        socket.close();
+      }
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -127,7 +129,9 @@ public abstract class AptoideMessageController implements Sender<Message> {
   @Override public synchronized void send(Message message) {
     System.out.println(Thread.currentThread().getId() + ": Sending message: " + message);
     try {
-      objectOutputStream.writeObject(message);
+      if (objectOutputStream != null) {
+        objectOutputStream.writeObject(message);
+      }
     } catch (IOException e) {
       e.printStackTrace();
     }
