@@ -221,6 +221,12 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 
+  private void requestSpecialPermission() {
+    Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+    intent.setData(Uri.parse("package:" + getPackageName()));
+    startActivityForResult(intent, WRITE_SETTINGS_REQUEST_CODE);
+  }
+
   @Override public boolean checkPermissions() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
@@ -244,12 +250,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
       }
     }
     return true;
-  }
-
-  private void requestSpecialPermission() {
-    Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-    intent.setData(Uri.parse("package:" + getPackageName()));
-    startActivityForResult(intent, WRITE_SETTINGS_REQUEST_CODE);
   }
 
   private void forgetAPTXNetwork() {
@@ -300,6 +300,31 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
+  @Override public void setUpListeners() {
+    joinGroupButton.setOnClickListener(new View.OnClickListener() {
+
+      @Override public void onClick(View v) {
+        Group g = new Group(chosenHotspot);
+        presenter.clickJoinGroup(g);
+      }
+    });
+
+    createGroupButton.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
+          presenter.clickCreateGroup();
+        } else {
+          showNougatMR1Toast();
+        }
+      }
+    });
+  }
+
+  private void showNougatMR1Toast() {
+    Toast.makeText(this, this.getResources().getString(R.string.hotspotCreationErrorNougat),
+        Toast.LENGTH_SHORT).show();
+  }
+
   @Override public void requestPermissions() {
     if (!checkPermissions() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       boolean specialPermissionNotGranted = false;
@@ -347,22 +372,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         permissionListener.onPermissionGranted();
       }
     }
-  }
-
-  @Override public void setUpListeners() {
-    joinGroupButton.setOnClickListener(new View.OnClickListener() {
-
-      @Override public void onClick(View v) {
-        Group g = new Group(chosenHotspot);
-        presenter.clickJoinGroup(g);
-      }
-    });
-
-    createGroupButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        presenter.clickCreateGroup();
-      }
-    });
   }
 
   @Override public void showMobileDataDialog() {
@@ -448,10 +457,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     Toast.makeText(this, getResources().getString(R.string.noHotspotYet), Toast.LENGTH_LONG).show();
   }
 
-  @Override public void registerListener(PermissionListener listener) {
-    this.permissionListener = listener;
-  }
-
   @Override public void hideButtonsProgressBar() {
     buttonsProgressBar.setVisibility(View.INVISIBLE);
   }
@@ -505,16 +510,16 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     finish();
   }
 
+  @Override public void registerListener(PermissionListener listener) {
+    this.permissionListener = listener;
+  }
+
   @Override public void refreshRadar(ArrayList<String> clients) {
     radarTextView.show(clients);
   }
 
   @Override public void refreshRadarLowerVersions(ArrayList<String> clients) {
     radarTextView.showForLowerVersions(clients);
-  }
-
-  @Override public void removeListener() {
-    this.permissionListener = null;
   }
 
   @Override public void showRecoveringWifiStateToast() {
@@ -533,6 +538,10 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   public String getChosenHotspot() {
     return chosenHotspot;
+  }
+
+  @Override public void removeListener() {
+    this.permissionListener = null;
   }
 
   public void setChosenHotspot(String chosenHotspot) {

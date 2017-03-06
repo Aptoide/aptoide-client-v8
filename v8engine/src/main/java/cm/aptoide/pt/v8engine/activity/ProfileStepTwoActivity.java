@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
@@ -93,9 +94,9 @@ public class ProfileStepTwoActivity extends AccountBaseActivity {
           Toast.makeText(ProfileStepTwoActivity.this,
               cm.aptoide.accountmanager.R.string.unknown_error, Toast.LENGTH_SHORT).show();
         }
-        goTo();
+        navigateToNextActivity();
       }, throwable -> {
-        goTo();
+        navigateToNextActivity();
       });
     }));
     mSubscriptions.add(RxView.clicks(mPrivateProfile).subscribe(clicks -> {
@@ -118,15 +119,15 @@ public class ProfileStepTwoActivity extends AccountBaseActivity {
                   Toast.LENGTH_SHORT).show();
             }
 
-        goTo();
+        navigateToNextActivity();
       }, throwable -> {
 
-        goTo();
+        navigateToNextActivity();
       });
     }));
   }
 
-  private void goTo() {
+  private void navigateToNextActivity() {
 
     if (getIntent() != null && getIntent().getBooleanExtra(AptoideAccountManager.IS_FACEBOOK_OR_GOOGLE,
         false)) {
@@ -135,7 +136,9 @@ public class ProfileStepTwoActivity extends AccountBaseActivity {
       if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {
         pleaseWaitDialog.dismiss();
       }
-      startActivity(getIntent().setClass(this, CreateStoreActivity.class));
+      final Intent i = getIntent();
+      i.setClass(this, CreateStoreActivity.class);
+      startActivity(i);
       finish();
     }
   }
