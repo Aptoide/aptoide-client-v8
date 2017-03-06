@@ -65,8 +65,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
   @Override @CallSuper public void bindView(T displayable) {
     super.bindView(displayable);
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator =
-        new AccountNavigator(getContext(), getNavigationManager(), accountManager);
+    accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
 
     if (displayable.getUserSharer() != null) {
       if (displayable.getUserSharer().getName() != null && !displayable.getUser()
@@ -208,7 +207,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     for (int j = 0; j < displayable.getNumberOfLikes(); j++) {
 
       UserTimeline user = null;
-      if (j < displayable.getUserLikes().size()) {
+      if (displayable.getUserLikes() != null && j < displayable.getUserLikes().size()) {
         user = displayable.getUserLikes().get(j);
       }
       addUserToPreview(marginOfTheNextLikePreview, user);
