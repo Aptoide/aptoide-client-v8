@@ -35,7 +35,7 @@ public class MyAccountPresenter implements Presenter {
   private Observable<Void> signOutClick() {
     return view.signOutClick().doOnNext(__ -> {
       signOut();
-      ManagerPreferences.setAllSyncValues(false);
+      ManagerPreferences.setAddressBookSyncValues(false);
       view.navigateToHome();
     });
   }
