@@ -9,8 +9,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import cm.aptoide.pt.utils.FileUtils;
 import java.io.File;
 import java.util.ArrayList;
@@ -73,11 +75,7 @@ public class ApplicationsManager {
   }
 
   public void installApp(String filePath) {
-
-    File f = new File(filePath);
-    Intent install = new Intent(Intent.ACTION_VIEW).setDataAndType(Uri.fromFile(f),
-        "application/vnd.android.package-archive");
-    context.startActivity(install);
+    startInstallIntent(context, new File(filePath));
   }
 
   private String getAppFolder(String filePath) {
@@ -87,6 +85,27 @@ public class ApplicationsManager {
       sb.append(filePathArray[i] + "/");
     }
     return sb.toString();
+  }
+
+  private void startInstallIntent(Context context, File file) {
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+
+    Uri photoURI = null;
+    //read: https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en
+    if (Build.VERSION.SDK_INT > 23) {
+      //content://....apk for nougat
+      photoURI = FileProvider.getUriForFile(context, "cm.aptoide.pt.provider", file);
+      //todo only works on release this is the package name + provider
+    } else {
+      //file://....apk for < nougat
+      photoURI = Uri.fromFile(file);
+    }
+
+    intent.setDataAndType(photoURI, "application/vnd.android.package-archive");
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+        | Intent.FLAG_GRANT_READ_URI_PERMISSION
+        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+    context.startActivity(intent);
   }
 
   public void deleteAppFile(String filePath) {
