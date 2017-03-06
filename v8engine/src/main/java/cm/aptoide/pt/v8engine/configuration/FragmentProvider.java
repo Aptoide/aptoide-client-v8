@@ -130,7 +130,7 @@ public interface FragmentProvider {
   Fragment newCreateUserFragment();
 
   Fragment newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode openMode,
-      long followNumber, String storeTheme);
+      Long id, long followNumber, String storeTheme);
 
   Fragment newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode openMode,
       String storeTheme, String cardUid, long numberOfLikes);

@@ -40,15 +40,9 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
   @Nullable private String cardUid;
   @Nullable private Long numberOfLikes;
   private AptoideAccountManager accountManager;
+  private Long userId;
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-  }
-
-  public static TimeLineFollowFragment newInstance(FollowFragmentOpenMode openMode,
+  public static TimeLineFollowFragment newInstance(FollowFragmentOpenMode openMode, Long id,
       long followNumber, String storeTheme) {
     Bundle args = new Bundle();
     switch (openMode) {
@@ -60,6 +54,9 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
         args.putString(TITLE_KEY, AptoideUtils.StringU.getFormattedString(
             R.string.social_timeline_following_fragment_title, followNumber));
         break;
+    }
+    if (id != null) {
+      args.putLong(BundleKeys.USER_ID, id);
     }
     args.putSerializable(BundleKeys.OPEN_MODE, openMode);
     args.putString(BundleCons.STORE_THEME, storeTheme);
@@ -81,6 +78,13 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
     return fragment;
   }
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
+
   @Override protected boolean displayHomeUpAsEnabled() {
     return true;
   }
@@ -88,6 +92,9 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     openMode = (FollowFragmentOpenMode) args.get(BundleKeys.OPEN_MODE);
+    if (args.containsKey(BundleKeys.USER_ID)) {
+      userId = args.getLong(BundleKeys.USER_ID);
+    }
     cardUid = (String) args.get(BundleKeys.CARD_UID);
     numberOfLikes = (Long) args.get(BundleKeys.NUMBER_LIKES);
   }
@@ -119,11 +126,11 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
       switch (openMode) {
         case FOLLOWERS:
           request = GetFollowersRequest.of(accountManager.getAccessToken(),
-              aptoideClientUUID.getUniqueIdentifier());
+              aptoideClientUUID.getUniqueIdentifier(), userId);
           break;
         case FOLLOWING:
           request = GetFollowingRequest.of(accountManager.getAccessToken(),
-              aptoideClientUUID.getUniqueIdentifier());
+              aptoideClientUUID.getUniqueIdentifier(), userId);
           break;
         case LIKE_PREVIEW:
           request = GetUserLikesRequest.of(accountManager.getAccessToken(),
@@ -211,6 +218,7 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
   }
 
   @Partners public class BundleKeys {
+    public static final String USER_ID = "user_id";
     public static final String OPEN_MODE = "OPEN_MODE";
     public static final String CARD_UID = "CARDUID";
     public static final String NUMBER_LIKES = "NUMBER_LIKES";

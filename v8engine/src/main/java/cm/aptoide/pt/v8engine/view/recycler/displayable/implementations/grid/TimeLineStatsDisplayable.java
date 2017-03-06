@@ -20,6 +20,7 @@ import lombok.Getter;
 
 public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
 
+  private Long userId;
   private SpannableFactory spannableFactory;
   private String storeTheme;
   @Getter private boolean shouldShowAddFriends;
@@ -27,9 +28,11 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
   public TimeLineStatsDisplayable() {
   }
 
-  public TimeLineStatsDisplayable(TimelineStats pojo, SpannableFactory spannableFactory,
+  public TimeLineStatsDisplayable(TimelineStats pojo, Long userId,
+      SpannableFactory spannableFactory,
       String storeTheme, boolean shouldShowAddFriends) {
     super(pojo);
+    this.userId = userId;
     this.spannableFactory = spannableFactory;
     this.storeTheme = storeTheme;
     this.shouldShowAddFriends = shouldShowAddFriends;
@@ -64,14 +67,14 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
   public Void followersClick(NavigationManagerV4 navigationManager) {
     navigationManager.navigateTo(V8Engine.getFragmentProvider()
         .newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode.FOLLOWERS,
-            getPojo().getData().getFollowers(), storeTheme));
+            userId, getPojo().getData().getFollowers(), storeTheme));
     return null;
   }
 
   public Void followingClick(NavigationManagerV4 navigationManager) {
     navigationManager.navigateTo(V8Engine.getFragmentProvider()
         .newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode.FOLLOWING,
-            getPojo().getData().getFollowing(), storeTheme));
+            userId, getPojo().getData().getFollowing(), storeTheme));
     return null;
   }
 

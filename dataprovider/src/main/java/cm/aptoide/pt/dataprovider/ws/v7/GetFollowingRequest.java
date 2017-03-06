@@ -14,11 +14,11 @@ public class GetFollowingRequest extends V7<GetFollowers, GetFollowersRequest.Bo
     super(body, baseHost);
   }
 
-  public static GetFollowingRequest of(String accessToken, String aptoideClientUUID) {
+  public static GetFollowingRequest of(String accessToken, String aptoideClientUUID, Long userId) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     return new GetFollowingRequest(
-        ((GetFollowersRequest.Body) decorator.decorate(new GetFollowersRequest.Body(),
+        ((GetFollowersRequest.Body) decorator.decorate(new GetFollowersRequest.Body(userId),
             accessToken)), BASE_HOST);
   }
 
