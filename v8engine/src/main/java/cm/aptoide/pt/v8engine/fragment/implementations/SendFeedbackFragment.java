@@ -49,6 +49,8 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
   private EditText subgectEdit;
   private Subscription unManagedSubscription;
 
+  private final String KEY_SCREENSHOT_PATH = "screenShotPath";
+
   public static SendFeedbackFragment newInstance(String screenshotFilePath) {
     SendFeedbackFragment sendFeedbackFragment = new SendFeedbackFragment();
     Bundle bundle = new Bundle();
@@ -81,6 +83,9 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    if (savedInstanceState != null) {
+      savedInstanceState.getString(KEY_SCREENSHOT_PATH);
+    }
   }
 
   @Override public void onDestroyView() {
@@ -108,6 +113,11 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     messageBodyEdit = (EditText) view.findViewById(R.id.FeedBacktext);
     sendFeedbackBtn = (Button) view.findViewById(R.id.FeedBackSendButton);
     logsAndScreenshotsCb = (CheckBox) view.findViewById(R.id.FeedBackCheckBox);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putString(KEY_SCREENSHOT_PATH, screenShotPath);
   }
 
   private void sendFeedback() {
@@ -169,11 +179,10 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
             //attach screenshots and logs
             if (logsAndScreenshotsCb.isChecked()) {
               ArrayList<Uri> uris = new ArrayList<Uri>();
-              File ss = new File(screenShotPath);
-              if (ss != null) {
+              if (screenShotPath != null) {
+                File ss = new File(screenShotPath);
                 uris.add(getUriFromFile(ss));
               }
-
               File logs =
                   AptoideUtils.SystemU.readLogs(Application.getConfiguration().getCachePath(),
                       LOGS_FILE_NAME);
