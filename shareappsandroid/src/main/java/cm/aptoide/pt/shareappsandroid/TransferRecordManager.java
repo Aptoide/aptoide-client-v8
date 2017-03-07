@@ -75,6 +75,10 @@ public class TransferRecordManager {
     }
   }
 
+  public void stop() {
+    this.applicationsManager.stop();
+  }
+
   public interface DeleteAppsListener {
 
     void onDeleteAllApps(List<HighwayTransferRecordItem> toRemoveList);
