@@ -183,9 +183,9 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
 
   private void showMainIcon(Context context, String mainIconUrl, int defaultMainIcon) {
     if (TextUtils.isEmpty(mainIconUrl)) {
-      ImageLoader.with(context).loadUsingCircleTransform(defaultMainIcon, mainIcon);
+      ImageLoader.with(context).loadWithShadowCircleTransform(defaultMainIcon, mainIcon);
     } else {
-      ImageLoader.with(context).loadUsingCircleTransform(mainIconUrl, mainIcon);
+      ImageLoader.with(context).loadWithShadowCircleTransform(mainIconUrl, mainIcon);
     }
   }
 
@@ -273,7 +273,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
 
   private void setupSecondaryInfo(Context context, String name, String secondaryIconUrl) {
     secondaryName.setText(name);
-    ImageLoader.with(context).loadUsingCircleTransform(secondaryIconUrl, secondaryIcon);
+    ImageLoader.with(context).loadWithShadowCircleTransform(secondaryIconUrl, secondaryIcon);
   }
 
   private void setupMainInfo(String name, StoreThemeEnum theme, Context context,
