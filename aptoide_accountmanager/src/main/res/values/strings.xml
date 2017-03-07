@@ -30,7 +30,6 @@
       account
     </string>
   <string name="user_cancelled">Cancelled by user</string>
-  <string name="facebook_login_cancelled">Facebook login canceled</string>
 
   <!--errors-->
   <string name="error_occured">An error occurred. Please try again</string>
