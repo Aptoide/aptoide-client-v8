@@ -118,17 +118,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     return tryCloseLoginBottomSheet() || super.onBackPressed();
   }
 
-  private boolean tryCloseLoginBottomSheet() {
-    if (credentialsEditTextsArea.getVisibility() == View.VISIBLE) {
-      credentialsEditTextsArea.setVisibility(View.GONE);
-      loginSignupSelectionArea.setVisibility(View.VISIBLE);
-      loginArea.setVisibility(View.GONE);
-      signUpArea.setVisibility(View.GONE);
-      return true;
-    }
-    return false;
-  }
-
   @Override public Observable<Void> showAptoideLoginAreaClick() {
     return RxView.clicks(loginSelectionButton);
   }
@@ -206,7 +195,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
       }
 
       @Override public void onCancel() {
-        showFacebookLoginError(cm.aptoide.accountmanager.R.string.unknown_error);
+        showFacebookLoginError(cm.aptoide.accountmanager.R.string.facebook_login_cancelled);
       }
 
       @Override public void onError(FacebookException error) {
@@ -219,8 +208,17 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     facebookEmailRequiredDialog.show();
   }
 
-  @Override public void showCheckAptoideCredentialsMessage() {
-    ShowMessage.asToast(getContext(), cm.aptoide.accountmanager.R.string.fields_cannot_empty);
+  @Override public void showMissingCredentialsMessage() {
+    ShowMessage.asToast(getContext(),
+        cm.aptoide.accountmanager.R.string.no_email_and_pass_error_message);
+  }
+
+  @Override public void showMissingEmailMessage() {
+    ShowMessage.asToast(getContext(), cm.aptoide.accountmanager.R.string.no_email_error_message);
+  }
+
+  @Override public void showMissingPasswordMessage() {
+    ShowMessage.asToast(getContext(), cm.aptoide.accountmanager.R.string.no_pass_error_message);
   }
 
   @Override public void hideFacebookLogin() {
@@ -265,6 +263,17 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     onBackPressed();
     // pop this fragment from stack
     getActivity().onBackPressed();
+  }
+
+  private boolean tryCloseLoginBottomSheet() {
+    if (credentialsEditTextsArea.getVisibility() == View.VISIBLE) {
+      credentialsEditTextsArea.setVisibility(View.GONE);
+      loginSignupSelectionArea.setVisibility(View.VISIBLE);
+      loginArea.setVisibility(View.GONE);
+      signUpArea.setVisibility(View.GONE);
+      return true;
+    }
+    return false;
   }
 
   @Override public void dismiss() {

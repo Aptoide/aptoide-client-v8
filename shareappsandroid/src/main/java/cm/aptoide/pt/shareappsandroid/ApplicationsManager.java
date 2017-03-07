@@ -225,4 +225,12 @@ public class ApplicationsManager {
     }
     return null;
   }
+
+  public void stop() {
+    try {
+      context.unregisterReceiver(installNotificationReceiver);
+    } catch (IllegalArgumentException e) {
+    }
+  }
+
 }

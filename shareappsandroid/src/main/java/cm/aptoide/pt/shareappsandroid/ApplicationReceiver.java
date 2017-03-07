@@ -34,6 +34,7 @@ public class ApplicationReceiver {
     receiveFilter = new IntentFilter();
     receiveFilter.addAction("RECEIVEAPP");
     receiveFilter.addAction("ERRORRECEIVING");
+    receiveFilter.addAction("SERVER_LEFT");
   }
 
   public void startListening(ReceiveAppListener receiveAppListener) {

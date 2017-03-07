@@ -124,7 +124,7 @@ public class HandlersFactory {
         if (fileClientLifecycle != null) {
           shareAppsFileClientSocket.setFileClientLifecycle(androidAppInfo, fileClientLifecycle);
         }
-        shareAppsFileClientSocket.start();
+        shareAppsFileClientSocket.startAsync();
       } else {
         messageSender.send(ackMessage);
       }

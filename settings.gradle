@@ -16,6 +16,5 @@ include 'vanilla',
     ':database',
     ':imageloader',
     ':downloadmanager',
-    ':emptyapp',
     ':shareapps',
     ':shareappsandroid'

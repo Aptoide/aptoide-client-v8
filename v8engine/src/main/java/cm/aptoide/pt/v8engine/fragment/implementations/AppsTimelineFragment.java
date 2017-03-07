@@ -187,7 +187,10 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
     subscription = displayableObservable.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(items -> addItems(items), throwable -> finishLoading(throwable));
+        .subscribe(items -> {
+          addItems(items);
+          finishLoading();
+        }, throwable -> finishLoading(throwable));
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -222,7 +225,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
             .add(0, new TimelineLoginDisplayable().setAccountNavigator(accountNavigator));
         return Observable.just(displayableDatalist);
       }
-    }).doOnUnsubscribe(() -> finishLoading());
+    });
   }
 
   @NonNull private Observable<Datalist<Displayable>> getUserTimelineStats(boolean refresh,
@@ -253,7 +256,6 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
         .retryWhen(errors -> errors.delay(1, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .filter(error -> onStopLoadNext(error)))
-        .doOnUnsubscribe(() -> removeLoading())
         .subscribeOn(AndroidSchedulers.mainThread());
   }
 
