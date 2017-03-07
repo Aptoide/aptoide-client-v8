@@ -26,6 +26,7 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
@@ -48,6 +49,7 @@ import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import com.astuetz.PagerSlidingTabStrip;
 import com.trello.rxlifecycle.android.FragmentEvent;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -68,11 +70,13 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private Event.Name defaultTab;
   @Nullable private Long userId;
   private StoreCredentialsProvider storeCredentialsProvider;
+  private OpenType openType;
 
   public static StoreFragment newInstance(long userId, String storeTheme, Event.Name defaultTab) {
     Bundle args = new Bundle();
     args.putLong(BundleCons.USER_ID, userId);
     args.putSerializable(BundleCons.STORE_CONTEXT, StoreContext.meta);
+    args.putSerializable(BundleCons.OPEN_TYPE, OpenType.GetHome);
     args.putString(BundleCons.STORE_THEME, storeTheme);
     args.putSerializable(BundleCons.DEFAULT_TAB_TO_OPEN, defaultTab);
     StoreFragment fragment = new StoreFragment();
@@ -84,12 +88,14 @@ public class StoreFragment extends BasePagerToolbarFragment {
       Event.Name defaultTab) {
     StoreFragment storeFragment = newInstance(storeName, storeTheme);
     storeFragment.getArguments().putSerializable(BundleCons.DEFAULT_TAB_TO_OPEN, defaultTab);
+    storeFragment.getArguments().putSerializable(BundleCons.OPEN_TYPE, OpenType.GetHome);
     return storeFragment;
   }
 
   public static StoreFragment newInstance(String storeName, String storeTheme) {
     Bundle args = new Bundle();
     args.putString(BundleCons.STORE_NAME, storeName);
+    args.putSerializable(BundleCons.OPEN_TYPE, OpenType.GetStore);
     args.putSerializable(BundleCons.STORE_CONTEXT, StoreContext.meta);
     args.putString(BundleCons.STORE_THEME, storeTheme);
     StoreFragment fragment = new StoreFragment();
@@ -117,6 +123,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
     super.loadExtras(args);
     storeName = args.getString(BundleCons.STORE_NAME);
     storeContext = (StoreContext) args.get(BundleCons.STORE_CONTEXT);
+    openType = args.containsKey(BundleCons.OPEN_TYPE) ? (OpenType) args.get(BundleCons.OPEN_TYPE)
+        : OpenType.GetStore;
     storeTheme = args.getString(BundleCons.STORE_THEME);
     defaultTab = (Event.Name) args.get(BundleCons.DEFAULT_TAB_TO_OPEN);
     if (args.containsKey(BundleCons.USER_ID)) {
@@ -141,9 +149,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create || getHome == null) {
-      GetHomeRequest.of(StoreUtils.getStoreCredentials(storeName), userId, storeContext,
-          accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
-          .observe(refresh)
+      getRequest(refresh, openType)
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe((getHome) -> {
@@ -255,6 +261,25 @@ public class StoreFragment extends BasePagerToolbarFragment {
     }
   }
 
+  private Observable<GetHome> getRequest(boolean refresh, OpenType openType) {
+    switch (openType) {
+      case GetHome:
+        return GetHomeRequest.of(StoreUtils.getStoreCredentials(storeName), userId, storeContext,
+            accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+            .observe(refresh);
+      case GetStore:
+      default:
+        return GetStoreRequest.of(StoreUtils.getStoreCredentials(storeName), storeContext,
+            accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+            .observe(refresh)
+            .map(getStore -> {
+              GetHome getHome = new GetHome();
+              getHome.setNodes(getStore.getNodes());
+              return getHome;
+            });
+    }
+  }
+
   private void showStoreSuspendedPopup(String storeName) {
     GenericDialogs.createGenericOkCancelMessage(getContext(), "", R.string.store_suspended_message,
         android.R.string.ok, R.string.unfollow).subscribe(eResponse -> {
@@ -312,6 +337,10 @@ public class StoreFragment extends BasePagerToolbarFragment {
     Analytics.Stores.enter(storeName == null ? String.valueOf(userId) : storeName);
   }
 
+  public enum OpenType {
+    GetHome, GetStore
+  }
+
   @Partners public static class BundleCons {
 
     public static final String STORE_NAME = "storeName";
@@ -319,5 +348,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     public static final String STORE_THEME = "storeTheme";
     public static final String DEFAULT_TAB_TO_OPEN = "default_tab_to_open";
     public static final String USER_ID = "userId";
+    public static final String OPEN_TYPE = "OPEN_TYPE";
   }
 }
