@@ -21,10 +21,12 @@ import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.shareapps.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
 import cm.aptoide.pt.shareapps.socket.message.server.AptoideMessageServerSocket;
+import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimerTask;
 
 /**
  * Created by filipegoncalves on 10-02-2017.
@@ -326,10 +328,15 @@ public class HighwayServerService extends Service {
 
           List<FileInfo> fileInfoList = getFileInfo(filePath, obbsFilePath);
 
-          AndroidAppInfo appInfo = new AndroidAppInfo(appName, packageName, fileInfoList);
+          final AndroidAppInfo appInfo = new AndroidAppInfo(appName, packageName, fileInfoList);
 
-          aptoideMessageClientController.send(
-              new RequestPermissionToSend(aptoideMessageClientController.getLocalhost(), appInfo));
+          AptoideUtils.ThreadU.runOnIoThread(new TimerTask() {
+            @Override public void run() {
+              aptoideMessageClientController.send(
+                  new RequestPermissionToSend(aptoideMessageClientController.getLocalhost(),
+                      appInfo));
+            }
+          });
         }
       } else if (intent.getAction() != null && intent.getAction().equals("SHUTDOWN_SERVER")) {
         if (aptoideMessageServerSocket != null) {

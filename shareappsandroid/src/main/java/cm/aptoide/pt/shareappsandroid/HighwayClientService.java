@@ -313,11 +313,15 @@ public class HighwayClientService extends Service {
 
           List<FileInfo> fileInfoList = getFileInfo(filePath, obbsFilePath);
 
-          AndroidAppInfo appInfo = new AndroidAppInfo(appName, packageName, fileInfoList);
+          final AndroidAppInfo appInfo = new AndroidAppInfo(appName, packageName, fileInfoList);
 
           Host host = aptoideMessageController.getHost();
-          aptoideMessageController.send(
-              new RequestPermissionToSend(aptoideMessageController.getLocalhost(), appInfo));
+          AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
+            @Override public void run() {
+              aptoideMessageController.send(
+                  new RequestPermissionToSend(aptoideMessageController.getLocalhost(), appInfo));
+            }
+          });
         }
       } else if (intent.getAction() != null && intent.getAction().equals("DISCONNECT")) {
         System.out.println("Requested to disconnect !");
