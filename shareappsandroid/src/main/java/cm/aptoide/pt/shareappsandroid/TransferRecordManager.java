@@ -20,7 +20,7 @@ public class TransferRecordManager {
       List<HighwayTransferRecordItem> listOfApps) {
     List<HighwayTransferRecordItem> toRemoveList = findAppsToRemove(listOfApps);
     if (toRemoveList != null) {
-      listOfApps.remove(toRemoveList);
+      listOfApps.removeAll(toRemoveList);
       listener.onDeleteAllApps(toRemoveList);
     }
   }
