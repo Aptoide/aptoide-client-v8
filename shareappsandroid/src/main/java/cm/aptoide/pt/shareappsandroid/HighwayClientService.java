@@ -1,6 +1,5 @@
 package cm.aptoide.pt.shareappsandroid;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -10,6 +9,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.StatFs;
 import android.support.annotation.Nullable;
+import android.support.v7.app.NotificationCompat;
 import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.shareapps.socket.entities.FileInfo;
 import cm.aptoide.pt.shareapps.socket.entities.Host;
@@ -22,11 +22,9 @@ import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
 import java.io.IOException;
-import java.net.SocketTimeoutException;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.R.attr.id;
 
 /**
  * Created by filipegoncalves on 10-02-2017.
@@ -35,6 +33,7 @@ import static android.R.attr.id;
 public class HighwayClientService extends Service {
 
   public static final int INSTALL_APP_NOTIFICATION_REQUEST_CODE = 147;
+  private final int PROGRESS_SPLIT_SIZE = 10;
   private int port;
   private String serverIP;
   private ArrayList<App> listOfApps;
@@ -48,9 +47,6 @@ public class HighwayClientService extends Service {
   private AptoideMessageClientController aptoideMessageController;
   private AptoideMessageClientSocket aptoideMessageClientSocket;
 
-  private String receivingAppName;
-  private String sendingAppName;
-
   @Override public void onCreate() {
     super.onCreate();
     System.out.println("Inside the onCreate of the service");
@@ -60,11 +56,14 @@ public class HighwayClientService extends Service {
     }
 
     fileClientLifecycle = new FileClientLifecycle<AndroidAppInfo>() {
+
+      private ProgressFilter progressFilter;
+
       @Override public void onError(IOException e) {
         System.out.println("Fell on error  Client !! ");
 
         Intent i = new Intent();
-        if (e instanceof SocketTimeoutException) {
+        if (e instanceof SocketException) {
           i.setAction("SERVER_LEFT");
         } else {
           i.setAction("ERRORRECEIVING");
@@ -75,7 +74,8 @@ public class HighwayClientService extends Service {
       @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
         System.out.println(" Started receiving ");
 
-        receivingAppName = androidAppInfo.getAppName();
+        progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
+
         //show notification
         createReceiveNotification(androidAppInfo.getAppName());
 
@@ -90,7 +90,7 @@ public class HighwayClientService extends Service {
         System.out.println(" Finished receiving " + androidAppInfo);
 
         finishReceiveNotification(androidAppInfo.getApk().getFilePath(),
-            androidAppInfo.getPackageName());
+            androidAppInfo.getPackageName(), androidAppInfo);
 
         Intent i = new Intent();
         i.putExtra("FinishedReceiving", true);
@@ -102,18 +102,23 @@ public class HighwayClientService extends Service {
         sendBroadcast(i);
       }
 
-      @Override public void onProgressChanged(float progress) {
+      @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
         //System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
-        int actualProgress = Math.round(progress * 100);
-        showReceiveProgress(receivingAppName, actualProgress);
+        if (progressFilter.shouldUpdate(progress)) {
+          int actualProgress = Math.round(progress * PROGRESS_SPLIT_SIZE);
+          showReceiveProgress(androidAppInfo.getAppName(), actualProgress, androidAppInfo);
+        }
       }
     };
 
     fileServerLifecycle = new FileServerLifecycle<AndroidAppInfo>() {
+
+      private ProgressFilter progressFilter;
+
       @Override public void onStartSending(AndroidAppInfo o) {
         System.out.println(" Started sending ");
 
-        sendingAppName = o.getAppName();
+        progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
 
         Intent i = new Intent();
         i.putExtra("isSent", false);
@@ -132,7 +137,7 @@ public class HighwayClientService extends Service {
       @Override public void onFinishSending(AndroidAppInfo o) {
         System.out.println(" Finished sending " + o);
 
-        finishSendNotification();
+        finishSendNotification(o);
 
         Intent i = new Intent();
         i.putExtra("isSent", true);
@@ -151,19 +156,21 @@ public class HighwayClientService extends Service {
         i.setAction("ERRORSENDING");
       }
 
-      @Override public void onProgressChanged(float progress) {
+      @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
         //System.out.println("onProgressChanged() called with: progress = [" + progress + "]");
 
-        int actualProgress = Math.round(progress * 100);
-        showSendProgress(sendingAppName, actualProgress);
+        if (progressFilter.shouldUpdate(progress)) {
+          int actualProgress = Math.round(progress * 100);
+          showSendProgress(androidAppInfo.getAppName(), actualProgress, androidAppInfo);
+        }
       }
     };
   }
 
   private void createReceiveNotification(String receivingAppName) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      mBuilderReceive = new Notification.Builder(this);
-      ((Notification.Builder) mBuilderReceive).setContentTitle(
+      mBuilderReceive = new NotificationCompat.Builder(this);
+      ((NotificationCompat.Builder) mBuilderReceive).setContentTitle(
           this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
               .getString(R.string.receive))
           .setContentText(
@@ -172,10 +179,11 @@ public class HighwayClientService extends Service {
     }
   }
 
-  private void finishReceiveNotification(String receivedApkFilePath, String packageName) {
+  private void finishReceiveNotification(String receivedApkFilePath, String packageName,
+      AndroidAppInfo androidAppInfo) {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-      ((Notification.Builder) mBuilderReceive).setContentText(
+      ((NotificationCompat.Builder) mBuilderReceive).setContentText(
           this.getResources().getString(R.string.transfCompleted))
           // Removes the progress bar
           .setSmallIcon(android.R.drawable.stat_sys_download_done)
@@ -190,26 +198,29 @@ public class HighwayClientService extends Service {
           PendingIntent.getBroadcast(this, INSTALL_APP_NOTIFICATION_REQUEST_CODE, intent,
               PendingIntent.FLAG_CANCEL_CURRENT);
 
-      ((Notification.Builder) mBuilderReceive).setContentIntent(contentIntent);
+      ((NotificationCompat.Builder) mBuilderReceive).setContentIntent(contentIntent);
       if (mNotifyManager == null) {
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
       }
-      mNotifyManager.notify(id, ((Notification.Builder) mBuilderReceive).getNotification());
+      mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
+          ((NotificationCompat.Builder) mBuilderReceive).getNotification());
     }
   }
 
-  private void showReceiveProgress(String receivingAppName, int actual) {
+  private void showReceiveProgress(String receivingAppName, int actual,
+      AndroidAppInfo androidAppInfo) {
 
     //if (System.currentTimeMillis() - lastTimestampReceive > 1000 / 3) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-      ((Notification.Builder) mBuilderReceive).setContentText(
+      ((NotificationCompat.Builder) mBuilderReceive).setContentText(
           this.getResources().getString(R.string.receiving) + " " + receivingAppName);
 
-      ((Notification.Builder) mBuilderReceive).setProgress(100, actual, false);
+      ((NotificationCompat.Builder) mBuilderReceive).setProgress(100, actual, false);
       if (mNotifyManager == null) {
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
       }
-      mNotifyManager.notify(id, ((Notification.Builder) mBuilderReceive).getNotification());
+      mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
+          ((NotificationCompat.Builder) mBuilderReceive).getNotification());
     }
     lastTimestampReceive = System.currentTimeMillis();
     //}
@@ -218,8 +229,8 @@ public class HighwayClientService extends Service {
   private void createSendNotification() {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      mBuilderSend = new Notification.Builder(this);
-      ((Notification.Builder) mBuilderSend).setContentTitle(
+      mBuilderSend = new NotificationCompat.Builder(this);
+      ((NotificationCompat.Builder) mBuilderSend).setContentTitle(
           this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
               .getString(R.string.send))
           .setContentText(this.getResources().getString(R.string.preparingSend))
@@ -227,9 +238,9 @@ public class HighwayClientService extends Service {
     }
   }
 
-  private void finishSendNotification() {
+  private void finishSendNotification(AndroidAppInfo androidAppInfo) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-      ((Notification.Builder) mBuilderSend).setContentText(
+      ((NotificationCompat.Builder) mBuilderSend).setContentText(
           this.getResources().getString(R.string.transfCompleted))
           // Removes the progress bar
           .setSmallIcon(android.R.drawable.stat_sys_download_done)
@@ -238,21 +249,23 @@ public class HighwayClientService extends Service {
       if (mNotifyManager == null) {
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
       }
-      mNotifyManager.notify(id, ((Notification.Builder) mBuilderSend).getNotification());
+      mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
+          ((NotificationCompat.Builder) mBuilderSend).getNotification());
     }
   }
 
-  private void showSendProgress(String sendingAppName, int actual) {
+  private void showSendProgress(String sendingAppName, int actual, AndroidAppInfo androidAppInfo) {
 
     //if (System.currentTimeMillis() - lastTimestampSend > 1000 / 3) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-      ((Notification.Builder) mBuilderSend).setContentText(
+      ((NotificationCompat.Builder) mBuilderSend).setContentText(
           this.getResources().getString(R.string.sending) + " " + sendingAppName);
-      ((Notification.Builder) mBuilderSend).setProgress(100, actual, false);
+      ((NotificationCompat.Builder) mBuilderSend).setProgress(100, actual, false);
       if (mNotifyManager == null) {
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
       }
-      mNotifyManager.notify(id, ((Notification.Builder) mBuilderSend).getNotification());
+      mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
+          ((NotificationCompat.Builder) mBuilderSend).getNotification());
     }
     lastTimestampSend = System.currentTimeMillis();
     //}

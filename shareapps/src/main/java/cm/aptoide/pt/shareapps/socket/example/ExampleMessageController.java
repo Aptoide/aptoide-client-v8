@@ -22,7 +22,7 @@ public class ExampleMessageController extends AptoideMessageClientController {
         e.printStackTrace();
       }
 
-      @Override public void onProgressChanged(float progress) {
+      @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
         System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
       }
 
@@ -52,9 +52,7 @@ public class ExampleMessageController extends AptoideMessageClientController {
         e.printStackTrace();
       }
 
-
-
-      @Override public void onProgressChanged(float progress) {
+      @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
         System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
       }
     };
