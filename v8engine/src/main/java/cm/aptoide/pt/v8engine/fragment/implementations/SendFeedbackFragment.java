@@ -84,7 +84,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     if (savedInstanceState != null) {
-      savedInstanceState.getString(KEY_SCREENSHOT_PATH);
+      screenShotPath = savedInstanceState.getString(KEY_SCREENSHOT_PATH);
     }
   }
 
