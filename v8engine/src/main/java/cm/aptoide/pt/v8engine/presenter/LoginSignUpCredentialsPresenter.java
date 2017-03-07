@@ -114,9 +114,15 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
 
   private Observable<Void> aptoideLoginClick() {
     return view.aptoideLoginClick().<Void>flatMap(credentials -> {
-      if (TextUtils.isEmpty(credentials.getPassword()) || TextUtils.isEmpty(
+      if (TextUtils.isEmpty(credentials.getPassword()) && TextUtils.isEmpty(
           credentials.getUsername())) {
-        view.showCheckAptoideCredentialsMessage();
+        view.showMissingCredentialsMessage();
+        return Observable.empty();
+      } else if (TextUtils.isEmpty(credentials.getUsername())) {
+        view.showMissingEmailMessage();
+        return Observable.empty();
+      } else if (TextUtils.isEmpty(credentials.getPassword())) {
+        view.showMissingPasswordMessage();
         return Observable.empty();
       }
       view.hideKeyboard();
@@ -137,9 +143,15 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
 
   private Observable<Void> aptoideSignUpClick() {
     return view.aptoideSignUpClick().<Void>flatMap(credentials -> {
-      if (TextUtils.isEmpty(credentials.getPassword()) || TextUtils.isEmpty(
+      if (TextUtils.isEmpty(credentials.getPassword()) && TextUtils.isEmpty(
           credentials.getUsername())) {
-        view.showCheckAptoideCredentialsMessage();
+        view.showMissingCredentialsMessage();
+        return Observable.empty();
+      } else if (TextUtils.isEmpty(credentials.getUsername())) {
+        view.showMissingEmailMessage();
+        return Observable.empty();
+      } else if (TextUtils.isEmpty(credentials.getPassword())) {
+        view.showMissingPasswordMessage();
         return Observable.empty();
       }
       view.hideKeyboard();
