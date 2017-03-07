@@ -22,7 +22,7 @@ import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
 import java.io.IOException;
-import java.net.SocketTimeoutException;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +63,7 @@ public class HighwayClientService extends Service {
         System.out.println("Fell on error  Client !! ");
 
         Intent i = new Intent();
-        if (e instanceof SocketTimeoutException) {
+        if (e instanceof SocketException) {
           i.setAction("SERVER_LEFT");
         } else {
           i.setAction("ERRORRECEIVING");
