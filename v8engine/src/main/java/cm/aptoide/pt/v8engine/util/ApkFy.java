@@ -11,13 +11,13 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.zip.ZipFile;
 
-import static com.google.android.gms.internal.zzs.TAG;
-
 /**
  * Created by neuro on 30-12-2016.
  */
 
 public class ApkFy {
+
+  private static final String TAG = ApkFy.class.getSimpleName();
 
   public void run(Activity activity) {
     if (SecurePreferences.shouldRunApkFy()) {
@@ -38,15 +38,18 @@ public class ApkFy {
       final String sourceDir = context.getPackageManager()
           .getPackageInfo(V8Engine.getConfiguration().getAppId(), 0).applicationInfo.sourceDir;
       final ZipFile myZipFile = new ZipFile(sourceDir);
-      final InputStream is = myZipFile.getInputStream(myZipFile.getEntry("META-INF/aob"));
 
-      Properties properties = new Properties();
-      properties.load(is);
-      if (properties.containsKey("downloadId")) {
-        appId = properties.getProperty("downloadId");
+      if (myZipFile.getEntry("META-INF/aob") != null) {
+        final InputStream is = myZipFile.getInputStream(myZipFile.getEntry("META-INF/aob"));
+
+        Properties properties = new Properties();
+        properties.load(is);
+        if (properties.containsKey("downloadId")) {
+          appId = properties.getProperty("downloadId");
+        }
+
+        return appId != null ? Long.parseLong(appId) : null;
       }
-
-      return appId != null ? Long.parseLong(appId) : null;
     } catch (Exception e) {
       if (appId != null) {
         CrashReport.getInstance().log("APKFY_APP_ID", appId);
