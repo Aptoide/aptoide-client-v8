@@ -51,6 +51,8 @@ public interface HighwayTransferRecordView {
 
   void showServerLeftMessage();
 
+  void clearAdapter();
+
   interface TransferRecordListener {
     void onInstallApp(HighwayTransferRecordItem item);
 
