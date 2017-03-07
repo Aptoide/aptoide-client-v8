@@ -145,8 +145,8 @@ public class ConnectionManager {
             NetworkInfo info = conMgr.getNetworkInfo(network);
             if (info != null && info.getType() == ConnectivityManager.TYPE_WIFI) {
               if (info.isAvailable() && info.isConnected()) {
+
                 isWifiConnected = true;
-                break;
               }
             }
           }
@@ -159,7 +159,9 @@ public class ConnectionManager {
           System.out.println("The state is :  : " + inf.getState());
           if (inf.getState() == NetworkInfo.State.CONNECTED
               && inf.getType() == ConnectivityManager.TYPE_WIFI) {
+
             isWifiConnected = true;
+
           }
         }
       }
@@ -187,8 +189,8 @@ public class ConnectionManager {
 
   public static ConnectionManager getInstance(Context context) {
     if (instance == null) {
-      instance =
-          new ConnectionManager(context, PreferenceManager.getDefaultSharedPreferences(context),
+      instance = new ConnectionManager(context.getApplicationContext(),
+          PreferenceManager.getDefaultSharedPreferences(context),
               (WifiManager) context.getSystemService(Context.WIFI_SERVICE));
     }
     return instance;
@@ -493,6 +495,9 @@ public class ConnectionManager {
 
   public void stop() {
     System.out.println("Going to cancel the tasks");
+    if (clients != null) {
+      clients.clear();
+    }
     this.listenerJoinWifi = null;
     this.listenerActivateButtons = null;
     this.clientsConnectedListener = null;
