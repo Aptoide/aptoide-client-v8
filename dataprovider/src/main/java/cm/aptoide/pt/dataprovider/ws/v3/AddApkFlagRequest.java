@@ -6,6 +6,8 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import rx.Observable;
 
 /**
@@ -14,7 +16,8 @@ import rx.Observable;
 public class AddApkFlagRequest extends V3<GenericResponseV2> {
 
   protected AddApkFlagRequest(BaseBody baseBody) {
-    super(BASE_HOST, baseBody);
+    super(BASE_HOST, baseBody,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), isDebug()));
   }
 
   public static AddApkFlagRequest of(String storeName, String appMd5sum, String flag,

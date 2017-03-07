@@ -7,6 +7,8 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import rx.Observable;
 
@@ -16,7 +18,8 @@ import rx.Observable;
 public class InAppBillingPurchasesRequest extends V3<InAppBillingPurchasesResponse> {
 
   private InAppBillingPurchasesRequest(String baseHost, BaseBody baseBody) {
-    super(baseHost, baseBody);
+    super(baseHost, baseBody,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), isDebug()));
   }
 
   public static InAppBillingPurchasesRequest of(int apiVersion, String packageName, String type,

@@ -21,7 +21,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.ws.CheckUserCredentialsRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
@@ -274,8 +274,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
               || CREATE_STORE_REQUEST_CODE == 2
               || CREATE_STORE_REQUEST_CODE == 3) {
             progressDialog.show();
-            mSubscriptions.add(CheckUserCredentialsRequest.of(storeName, accountManager,
-                accountManager.getAccessToken()).observe().subscribe(answer -> {
+            mSubscriptions.add(CheckUserCredentialsRequest.of(storeName, accountManager.getAccessToken()).observe().subscribe(answer -> {
               if (answer.hasErrors()) {
                 if (answer.getErrors() != null && answer.getErrors().size() > 0) {
                   progressDialog.dismiss();

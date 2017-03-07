@@ -16,7 +16,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.ws.responses.Subscription;
+import cm.aptoide.pt.model.v3.Subscription;
 import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
@@ -164,7 +164,8 @@ public abstract class V8Engine extends DataProvider {
       accountManager = new AptoideAccountManager(this, getConfiguration(), AccountManager.get(this),
           aptoideClientUuid, new ExternalServicesLoginAvailability(this, getConfiguration(),
           GoogleApiAvailability.getInstance()), new AccountAnalytcs(),
-          new BaseBodyInterceptor(aptoideClientUuid.getUniqueIdentifier(), accountManager));
+          new BaseBodyInterceptor(aptoideClientUuid.getUniqueIdentifier(), accountManager),
+          getConfiguration().getAccountType());
     }
     return accountManager;
   }

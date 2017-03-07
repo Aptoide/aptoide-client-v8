@@ -7,10 +7,8 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.util.Pair;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;

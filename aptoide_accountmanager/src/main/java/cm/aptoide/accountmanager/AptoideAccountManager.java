@@ -10,14 +10,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.text.TextUtils;
-import cm.aptoide.accountmanager.ws.ChangeUserRepoSubscriptionRequest;
-import cm.aptoide.accountmanager.ws.CheckUserCredentialsRequest;
-import cm.aptoide.accountmanager.ws.CreateUserRequest;
-import cm.aptoide.accountmanager.ws.GetUserRepoSubscriptionRequest;
-import cm.aptoide.accountmanager.ws.OAuth2AuthenticationRequest;
-import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
-import cm.aptoide.accountmanager.ws.responses.Subscription;
+import cm.aptoide.pt.dataprovider.ws.v3.ChangeUserRepoSubscriptionRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.ChangeUserSettingsRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.CreateUserRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.GetUserRepoSubscriptionRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.OAuth2AuthenticationRequest;
+import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
+import cm.aptoide.pt.model.v3.Subscription;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
@@ -40,6 +42,9 @@ import rx.schedulers.Schedulers;
 public class AptoideAccountManager {
 
   public static final String IS_FACEBOOK_OR_GOOGLE = "facebook_google";
+  /**
+   * Account type id
+   */
   private static final String ACCESS = "access";
   private static final String ACCESS_CONFIRMED = "access_confirmed";
   private static final String MATURE_SWITCH = "aptoide_account_manager_mature_switch";
@@ -58,7 +63,8 @@ public class AptoideAccountManager {
   public static String LOGIN_CANCELLED;
   public static String LOGOUT;
 
-  private final AptoideClientUUID aptoideClientUuid;
+  private final String accountType;
+  private final AptoideClientUUID aptoideClientUUID;
   private final Context applicationContext;
   private final AptoidePreferencesConfiguration configuration;
   private final AccountManager androidAccountManager;
@@ -69,15 +75,16 @@ public class AptoideAccountManager {
 
   public AptoideAccountManager(Context applicationContext,
       AptoidePreferencesConfiguration configuration, AccountManager androidAccountManager,
-      AptoideClientUUID aptoideClientUuid, LoginAvailability loginAvailability, Analytics analytics,
-      BodyInterceptor baseBodyInterceptor) {
+      AptoideClientUUID aptoideClientUUID, LoginAvailability loginAvailability, Analytics analytics,
+      BodyInterceptor baseBodyInterceptor, String accountType) {
     this.bodyInterceptor = baseBodyInterceptor;
-    this.aptoideClientUuid = aptoideClientUuid;
+    this.aptoideClientUUID = aptoideClientUUID;
     this.applicationContext = applicationContext;
     this.configuration = configuration;
     this.loginAvailability = loginAvailability;
     this.androidAccountManager = androidAccountManager;
     this.analytics = analytics;
+    this.accountType = accountType;
     LOGIN = configuration.getAppId() + ".accountmanager.broadcast.login";
     LOGIN_CANCELLED = configuration.getAppId() + ".accountmanager.broadcast.LOGIN_CANCELLED";
     LOGOUT = configuration.getAppId() + ".accountmanager.broadcast.logout";
@@ -145,25 +152,18 @@ public class AptoideAccountManager {
 
   public Completable createAccount(String email, String password) {
     return validateCredentials(email, password).andThen(
-        CreateUserRequest.of(email.toLowerCase(), password, aptoideClientUuid.getUniqueIdentifier(),
-            this).observe(true))
-        .toSingle()
-        .flatMapCompletable(oAuth -> {
-          if (oAuth.hasErrors()) {
-            return Completable.error(new OAuthException(oAuth));
-          }
-          return syncAccount(oAuth.getAccessToken(), oAuth.getRefreshToken(), password,
-              Account.Type.APTOIDE);
-        })
-        .doOnCompleted(() -> analytics.login(email))
-        .doOnCompleted(() -> sendLoginBroadcast())
-        .onErrorResumeNext(throwable -> {
-          if (throwable instanceof SocketTimeoutException) {
-            return login(Account.Type.APTOIDE, email, password, null);
-          }
-          return Completable.error(throwable);
-        })
-        .doOnCompleted(() -> analytics.signUp());
+        CreateUserRequest.of(email.toLowerCase(), password, aptoideClientUUID.getUniqueIdentifier())
+            .observe(true)).toSingle().flatMapCompletable(response -> {
+      if (response.hasErrors()) {
+        return Completable.error(new AccountException(response.getErrors()));
+      }
+      return login(Account.Type.APTOIDE, email, password, null);
+    }).doOnCompleted(() -> analytics.signUp()).onErrorResumeNext(throwable -> {
+      if (throwable instanceof SocketTimeoutException) {
+        return login(Account.Type.APTOIDE, email, password, null);
+      }
+      return Completable.error(throwable);
+    }).doOnCompleted(() -> analytics.login(email)).doOnCompleted(() -> sendLoginBroadcast());
   }
 
   public void sendLoginBroadcast() {
@@ -172,29 +172,24 @@ public class AptoideAccountManager {
 
   public Completable login(Account.Type type, final String email, final String password,
       final String name) {
-    return OAuth2AuthenticationRequest.of(email, password, type, name,
-        aptoideClientUuid.getUniqueIdentifier(), this)
-        .observe()
-        .toSingle()
-        .flatMapCompletable(oAuth -> {
-          if (!oAuth.hasErrors()) {
-            return syncAccount(oAuth.getAccessToken(), oAuth.getRefreshToken(), password, type);
-          } else {
-            return Completable.error(new OAuthException(oAuth));
-          }
-        })
-        .doOnCompleted(() -> analytics.login(email))
-        .doOnCompleted(() -> sendLoginBroadcast());
+    return OAuth2AuthenticationRequest.of(email, password, type.name(), name,
+        aptoideClientUUID.getUniqueIdentifier()).observe().toSingle().flatMapCompletable(oAuth -> {
+      if (!oAuth.hasErrors()) {
+        return syncAccount(oAuth.getAccessToken(), oAuth.getRefreshToken(), password, type);
+      } else {
+        return Completable.error(new AccountException(oAuth.getError()));
+      }
+    }).doOnCompleted(() -> analytics.login(email)).doOnCompleted(() -> sendLoginBroadcast());
   }
 
   public void unsubscribeStore(String storeName) {
-    ChangeUserRepoSubscriptionRequest.of(storeName, false, this)
+    ChangeUserRepoSubscriptionRequest.of(storeName, false, getAccessToken())
         .execute(genericResponseV3 -> Logger.d(TAG, "Successfully unsubscribed " + storeName),
             true);
   }
 
   public void subscribeStore(String storeName) {
-    ChangeUserRepoSubscriptionRequest.of(storeName, true, this)
+    ChangeUserRepoSubscriptionRequest.of(storeName, true, getAccessToken())
         .execute(genericResponseV3 -> Logger.d(TAG, "Successfully subscribed " + storeName), true);
   }
 
@@ -203,7 +198,7 @@ public class AptoideAccountManager {
   }
 
   public Observable<List<Subscription>> getUserRepos() {
-    return GetUserRepoSubscriptionRequest.of(this)
+    return GetUserRepoSubscriptionRequest.of(getAccessToken())
         .observe()
         .observeOn(AndroidSchedulers.mainThread())
         .map(getUserRepoSubscription -> getUserRepoSubscription.getSubscription());
@@ -245,10 +240,26 @@ public class AptoideAccountManager {
             account.getType()));
   }
 
+  public Completable updateAccount(boolean mature) {
+    return getAccountAsync().flatMapCompletable(account -> {
+      return ChangeUserSettingsRequest.of(mature, getAccessToken())
+          .observe(true)
+          .toSingle()
+          .flatMapCompletable(response -> {
+            if (response.getStatus().equals("OK")) {
+              return syncAccount(account.getToken(), account.getRefreshToken(),
+                  account.getPassword(), account.getType());
+            } else {
+              return Completable.error(new Exception(V3.getErrorMessage(response)));
+            }
+          });
+    });
+  }
+
   public Completable updateAccount(Account.Access access) {
     return getAccountAsync().flatMapCompletable(account -> {
       return SetUserRequest.of(access.name(), bodyInterceptor)
-          .observe()
+          .observe(true)
           .toSingle()
           .flatMapCompletable(response -> {
             if (response.isOk()) {
@@ -264,16 +275,16 @@ public class AptoideAccountManager {
   public Completable updateAccount(String nickname, String avatarPath) {
     return getAccountAsync().flatMapObservable(account -> {
       if (TextUtils.isEmpty(nickname)) {
-        return Observable.error(new UserValidationException(UserValidationException.EMPTY_NAME));
+        return Observable.error(new AccountValidationException(AccountValidationException.EMPTY_NAME));
       }
-      return CreateUserRequest.of("true", account.getEmail(), nickname, account.getPassword(),
+      return CreateUserRequest.of(account.getEmail(), nickname, account.getPassword(),
           (TextUtils.isEmpty(avatarPath) ? "" : avatarPath),
-          aptoideClientUuid.getUniqueIdentifier(), this).observe();
+          aptoideClientUUID.getUniqueIdentifier(), getAccessToken()).observe(true);
     }).flatMap(response -> {
       if (!response.hasErrors()) {
         return Observable.just(response);
       } else {
-        return Observable.error(new OAuthException(response));
+        return Observable.error(new AccountException(response.getErrors()));
       }
     }).toCompletable();
   }
@@ -334,7 +345,7 @@ public class AptoideAccountManager {
 
   private Completable syncAccount(String accessToken, String refreshToken, String encryptedPassword,
       Account.Type type) {
-    return CheckUserCredentialsRequest.of(this, accessToken)
+    return CheckUserCredentialsRequest.of(accessToken)
         .observe()
         .toSingle()
         .flatMapCompletable(response -> {
@@ -349,7 +360,7 @@ public class AptoideAccountManager {
 
   private Completable refreshToken(Account account) {
     return OAuth2AuthenticationRequest.of(account.getRefreshToken(),
-        aptoideClientUuid.getUniqueIdentifier(), this)
+        aptoideClientUUID.getUniqueIdentifier())
         .observe()
         .subscribeOn(Schedulers.io())
         .toSingle()
@@ -362,7 +373,7 @@ public class AptoideAccountManager {
                     account.getStoreAvatar(), account.isMature(), account.getAccess(),
                     account.isAccessConfirmed()));
           } else {
-            return Completable.error(new OAuthException(oAuth));
+            return Completable.error(new AccountException(oAuth.getError()));
           }
         });
   }
@@ -370,11 +381,11 @@ public class AptoideAccountManager {
   private Completable saveAccount(Account account) {
     return Completable.defer(() -> {
       final android.accounts.Account[] androidAccounts =
-          androidAccountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
+          androidAccountManager.getAccountsByType(accountType);
 
       final android.accounts.Account androidAccount;
       if (androidAccounts.length == 0) {
-        androidAccount = new android.accounts.Account(account.getEmail(), Constants.ACCOUNT_TYPE);
+        androidAccount = new android.accounts.Account(account.getEmail(), accountType);
         try {
           androidAccountManager.addAccountExplicitly(androidAccount, account.getPassword(), null);
         } catch (SecurityException e) {
@@ -403,10 +414,10 @@ public class AptoideAccountManager {
 
   private Single<Account> getAccountAsync() {
     return getAndroidAccountAsync().flatMap(androidAccount -> {
-      final Account.Access access = androidAccountManager.getUserData(androidAccount, ACCESS) ==
-          null
-          ? Account.Access.UNLISTED
-          : Account.Access.valueOf(androidAccountManager.getUserData(androidAccount, ACCESS));
+      final Account.Access access =
+          androidAccountManager.getUserData(androidAccount, ACCESS) == null
+              ? Account.Access.UNLISTED
+              : Account.Access.valueOf(androidAccountManager.getUserData(androidAccount, ACCESS));
 
       return Single.just(new Account(androidAccountManager.getUserData(androidAccount, USER_ID),
           androidAccount.name, androidAccountManager.getUserData(androidAccount, USER_NICK_NAME),
@@ -434,7 +445,7 @@ public class AptoideAccountManager {
 
   private android.accounts.Account getAndroidAccount() throws IllegalStateException {
     final android.accounts.Account[] accounts =
-        androidAccountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
+        androidAccountManager.getAccountsByType(accountType);
 
     if (accounts.length == 0) {
       throw new IllegalStateException("No account found.");
