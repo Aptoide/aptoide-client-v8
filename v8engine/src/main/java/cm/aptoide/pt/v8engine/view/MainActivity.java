@@ -267,7 +267,12 @@ public class MainActivity extends TabNavigatorActivity implements MainView, Frag
         return;
       }
     }
-    super.onBackPressed();
+    try {
+      super.onBackPressed();
+    } catch (Exception e) {
+      // Aptoide crashes here on apkfy :/
+      e.printStackTrace();
+    }
   }
 
   @Override public Fragment getLast() {
