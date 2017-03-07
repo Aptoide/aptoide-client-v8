@@ -543,6 +543,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     showHideOptionsMenu(true);
     setupShare(getApp);
     if (openType == OpenType.OPEN_WITH_INSTALL_POPUP) {
+      openType = null;
       GenericDialogs.createGenericOkCancelMessage(getContext(),
           Application.getConfiguration().getMarketName(),
           getContext().getString(R.string.installapp_alrt, appName))
@@ -619,7 +620,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     GetAppMeta.Media media = app.getMedia();
 
     final boolean shouldInstall = openType == OpenType.OPEN_AND_INSTALL;
-    openType = null;
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
             installedRepository);
