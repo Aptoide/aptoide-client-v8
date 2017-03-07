@@ -45,8 +45,8 @@ import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.PackageRepository;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
-import cm.aptoide.pt.v8engine.repository.TimelineCardFilter;
 import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.repository.TimelineCardFilter;
 import cm.aptoide.pt.v8engine.repository.TimelineRepository;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
@@ -179,7 +179,10 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
     subscription = displayableObservable.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(items -> addItems(items), throwable -> finishLoading(throwable));
+        .subscribe(items -> {
+          addItems(items);
+          finishLoading();
+        }, throwable -> finishLoading(throwable));
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -223,7 +226,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
       } else {
         return Observable.just(displayableDatalist);
       }
-    }).doOnUnsubscribe(() -> finishLoading());
+    });
   }
 
   @Override public void reload() {
@@ -240,7 +243,6 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
         .retryWhen(errors -> errors.delay(1, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .filter(error -> onStopLoadNext(error)))
-        .doOnUnsubscribe(() -> removeLoading())
         .subscribeOn(AndroidSchedulers.mainThread());
   }
 
@@ -384,7 +386,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
       return SocialInstallDisplayable.from((SocialInstall) card, timelineAnalytics,
           spannableFactory, socialRepository, dateCalculator);
     } else if (card instanceof SocialRecommendation) {
-      return SocialRecommendationDisplayable.from((SocialRecommendation) card, spannableFactory, socialRepository, dateCalculator);
+      return SocialRecommendationDisplayable.from((SocialRecommendation) card, spannableFactory,
+          socialRepository, dateCalculator);
     }
     throw new IllegalArgumentException(
         "Only articles, features, store latest apps, app updates, videos, recommendations and similar cards supported.");
