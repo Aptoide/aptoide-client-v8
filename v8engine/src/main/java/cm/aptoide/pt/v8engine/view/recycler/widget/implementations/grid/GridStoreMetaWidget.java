@@ -105,6 +105,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
           R.drawable.ic_avatar_apps, R.drawable.ic_store);
 
       updateSubscribeButtonText(isStoreSubscribed);
+      subscribeButton.setVisibility(View.VISIBLE);
       compositeSubscription.add(RxView.clicks(subscribeButton)
           .subscribe(
               handleSubscriptionLogic(new StoreWrapper(store, isStoreSubscribed), displayable),
@@ -163,7 +164,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         setSecondaryInfoVisibility(false);
       }
     } else {
-
+      subscribeButton.setVisibility(View.INVISIBLE);
       setupMainInfo(user.getName(), StoreThemeEnum.get("default"), getContext(),
           getHomeMeta.getData().getStats().getFollowers(),
           getHomeMeta.getData().getStats().getFollowing(), user.getAvatar(),
