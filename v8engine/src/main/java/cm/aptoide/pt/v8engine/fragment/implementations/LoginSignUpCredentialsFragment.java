@@ -195,7 +195,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
       }
 
       @Override public void onCancel() {
-        showFacebookLoginError(cm.aptoide.accountmanager.R.string.unknown_error);
+        showFacebookLoginError(cm.aptoide.accountmanager.R.string.facebook_login_cancelled);
       }
 
       @Override public void onError(FacebookException error) {
