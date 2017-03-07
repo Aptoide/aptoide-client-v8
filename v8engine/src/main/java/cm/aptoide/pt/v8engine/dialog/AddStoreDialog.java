@@ -23,7 +23,7 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
@@ -68,7 +68,7 @@ public class AddStoreDialog extends BaseDialog {
   private TextView topStoreText1;
   private TextView topStoreText2;
   private String givenStoreName;
-  private BaseBodyDecorator bodyDecorator;
+  private BaseBodyInterceptor bodyDecorator;
   private StoreCredentialsProvider storeCredentialsProvider;
 
   public AddStoreDialog attachFragmentManager(NavigationManagerV4 navigationManager) {
@@ -101,7 +101,7 @@ public class AddStoreDialog extends BaseDialog {
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    bodyDecorator = new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    bodyDecorator = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
     mSubscriptions = new CompositeSubscription();
     if (savedInstanceState != null) {
       storeName = savedInstanceState.getString(BundleArgs.STORE_NAME.name());

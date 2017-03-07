@@ -7,7 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.store.ListStores;
@@ -47,21 +47,21 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
   }
 
   public static ListStoresRequest ofTopStores(int offset, int limit, String accessToken,
-      BodyDecorator bodyDecorator) {
+      BodyInterceptor bodyInterceptor) {
 
     final Body baseBody = new Body();
     baseBody.setOffset(offset);
     baseBody.limit = limit;
-    return new ListStoresRequest((Body) bodyDecorator.decorate(baseBody), BASE_HOST);
+    return new ListStoresRequest((Body) bodyInterceptor.intercept(baseBody), BASE_HOST);
   }
 
-  public static ListStoresRequest ofAction(String url, BodyDecorator bodyDecorator) {
+  public static ListStoresRequest ofAction(String url, BodyInterceptor bodyInterceptor) {
 
     url = url.replace("listStores", "");
     if (!url.startsWith("/")) {
       url = "/" + url;
     }
-    return new ListStoresRequest(url, (Body) bodyDecorator.decorate(new Body()),
+    return new ListStoresRequest(url, (Body) bodyInterceptor.intercept(new Body()),
         BASE_HOST);
   }
 

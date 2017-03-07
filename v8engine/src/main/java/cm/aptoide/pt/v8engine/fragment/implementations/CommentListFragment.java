@@ -19,7 +19,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.CommentType;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -89,7 +89,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private FloatingActionButton floatingActionButton;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
-  private BaseBodyDecorator bodyDecorator;
+  private BaseBodyInterceptor bodyDecorator;
   private StoreCredentialsProvider storeCredentialsProvider;
 
   public static Fragment newInstance(CommentType commentType, String timelineArticleId) {
@@ -119,7 +119,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
     aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    bodyDecorator = new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    bodyDecorator = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {

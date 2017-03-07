@@ -24,7 +24,7 @@ import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
@@ -88,7 +88,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
     analytics = new AddressBookAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     mActionsListener = new AddressBookPresenter(this, new ContactsRepositoryImpl(
-        new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager),
+        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
         aptoideClientUUID), analytics,
         new AddressBookNavigationManager(NavigationManagerV4.Builder.buildWith(getActivity()),
             getTag(), getString(R.string.addressbook_about),

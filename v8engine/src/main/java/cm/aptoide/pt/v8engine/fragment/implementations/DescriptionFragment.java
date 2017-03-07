@@ -14,7 +14,7 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
@@ -53,7 +53,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   private String description;
   private String appName;
   private AptoideAccountManager accountManager;
-  private BaseBodyDecorator bodyDecorator;
+  private BaseBodyInterceptor bodyDecorator;
   private StoreCredentialsProvider storeCredentialsProvider;
 
   public static DescriptionFragment newInstance(String appName, String description,
@@ -85,7 +85,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    bodyDecorator = new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    bodyDecorator = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
   }
 
   @Override public void loadExtras(Bundle args) {

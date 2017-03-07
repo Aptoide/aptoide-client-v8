@@ -18,7 +18,7 @@ import cm.aptoide.accountmanager.ws.OAuth2AuthenticationRequest;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -65,13 +65,13 @@ public class AptoideAccountManager {
   private final LoginAvailability loginAvailability;
 
   private final Analytics analytics;
-  private final BodyDecorator bodyDecorator;
+  private final BodyInterceptor bodyInterceptor;
 
   public AptoideAccountManager(Context applicationContext,
       AptoidePreferencesConfiguration configuration, AccountManager androidAccountManager,
       AptoideClientUUID aptoideClientUuid, LoginAvailability loginAvailability, Analytics analytics,
-      BodyDecorator baseBodyDecorator) {
-    this.bodyDecorator = baseBodyDecorator;
+      BodyInterceptor baseBodyInterceptor) {
+    this.bodyInterceptor = baseBodyInterceptor;
     this.aptoideClientUuid = aptoideClientUuid;
     this.applicationContext = applicationContext;
     this.configuration = configuration;
@@ -247,7 +247,7 @@ public class AptoideAccountManager {
 
   public Completable updateAccount(Account.Access access) {
     return getAccountAsync().flatMapCompletable(account -> {
-      return SetUserRequest.of(access.name(), bodyDecorator)
+      return SetUserRequest.of(access.name(), bodyInterceptor)
           .observe()
           .toSingle()
           .flatMapCompletable(response -> {

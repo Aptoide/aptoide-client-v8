@@ -25,7 +25,7 @@ import cm.aptoide.pt.iab.InAppBillingSerializer;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.Product;
@@ -54,7 +54,7 @@ public final class RepositoryFactory {
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), context);
     return new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
         AccessorFactory.getAccessorFor(Store.class), getAccountManager(context), aptoideClientUUID,
-        new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), getAccountManager(context)));
+        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), getAccountManager(context)));
   }
 
   public static InstalledRepository getInstalledRepository() {
@@ -95,7 +95,7 @@ public final class RepositoryFactory {
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), context);
     return new AppRepository(getNetworkOperatorManager(context), getAccountManager(context),
         aptoideClientUUID,
-        new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), getAccountManager(context)),
+        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), getAccountManager(context)),
         new StoreCredentialsProviderImpl());
   }
 

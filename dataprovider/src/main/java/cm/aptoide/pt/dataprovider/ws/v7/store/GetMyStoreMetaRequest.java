@@ -1,7 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import rx.Observable;
@@ -16,8 +16,8 @@ public class GetMyStoreMetaRequest extends V7<GetStoreMeta, BaseBody> {
     super(body, baseHost);
   }
 
-  public static GetMyStoreMetaRequest of(BodyDecorator bodyDecorator) {
-    return new GetMyStoreMetaRequest(bodyDecorator.decorate(new BaseBody()), BASE_HOST);
+  public static GetMyStoreMetaRequest of(BodyInterceptor bodyInterceptor) {
+    return new GetMyStoreMetaRequest(bodyInterceptor.intercept(new BaseBody()), BASE_HOST);
   }
 
   @Override protected Observable<GetStoreMeta> loadDataFromNetwork(Interfaces interfaces,

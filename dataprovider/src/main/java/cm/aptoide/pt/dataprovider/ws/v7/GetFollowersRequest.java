@@ -13,9 +13,9 @@ public class GetFollowersRequest extends V7<GetFollowers, GetFollowersRequest.Bo
     super(body, baseHost);
   }
 
-  public static GetFollowersRequest of(BodyDecorator bodyDecorator) {
+  public static GetFollowersRequest of(BodyInterceptor bodyInterceptor) {
 
-    return new GetFollowersRequest(((Body) bodyDecorator.decorate(new Body())), BASE_HOST);
+    return new GetFollowersRequest(((Body) bodyInterceptor.intercept(new Body())), BASE_HOST);
   }
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,

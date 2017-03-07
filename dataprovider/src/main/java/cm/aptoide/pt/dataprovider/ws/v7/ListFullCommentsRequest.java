@@ -30,14 +30,14 @@ public class ListFullCommentsRequest extends V7<ListFullComments, ListFullCommen
     super(body, baseHost);
   }
 
-  public static ListFullCommentsRequest of(long reviewId, int limit, BodyDecorator bodyDecorator) {
+  public static ListFullCommentsRequest of(long reviewId, int limit, BodyInterceptor bodyInterceptor) {
     //
     //
     //
 
     Body body = new Body(limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh());
 
-    return new ListFullCommentsRequest((Body) bodyDecorator.decorate(body), BASE_HOST);
+    return new ListFullCommentsRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
   }
 
   @Override protected Observable<ListFullComments> loadDataFromNetwork(Interfaces interfaces,

@@ -25,7 +25,7 @@ import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -140,7 +140,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     if (create || getStore == null) {
       GetStoreRequest.of(StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), storeContext,
           accountManager.getAccessToken(),
-          new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager))
+          new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager))
           .observe(refresh)
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))

@@ -6,12 +6,12 @@ import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import java.util.Collections;
 import java.util.List;
 import rx.Completable;
@@ -31,16 +31,16 @@ public class UpdateRepository implements Repository<Update, String> {
   private final AptoideAccountManager accountManager;
   private final UpdateAccessor updateAccessor;
   private final StoreAccessor storeAccessor;
-  private final BodyDecorator bodyDecorator;
+  private final BodyInterceptor bodyInterceptor;
 
   UpdateRepository(UpdateAccessor updateAccessor, StoreAccessor storeAccessor,
       AptoideAccountManager accountManager, IdsRepositoryImpl idsRepository,
-      BodyDecorator bodyDecorator) {
+      BodyInterceptor bodyInterceptor) {
     this.updateAccessor = updateAccessor;
     this.storeAccessor = storeAccessor;
     this.accountManager = accountManager;
     this.aptoideClientUUID = idsRepository;
-    this.bodyDecorator = bodyDecorator;
+    this.bodyInterceptor = bodyInterceptor;
   }
 
   public @NonNull Completable sync(boolean bypassCache) {
@@ -62,7 +62,7 @@ public class UpdateRepository implements Repository<Update, String> {
   private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
     Logger.d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
     return ListAppsUpdatesRequest.of(storeIds, accountManager.getAccessToken(),
-        aptoideClientUUID.getUniqueIdentifier(), bodyDecorator).observe(bypassCache).map(result -> {
+        aptoideClientUUID.getUniqueIdentifier(), bodyInterceptor).observe(bypassCache).map(result -> {
       if (result != null && result.isOk()) {
         return result.getList();
       }

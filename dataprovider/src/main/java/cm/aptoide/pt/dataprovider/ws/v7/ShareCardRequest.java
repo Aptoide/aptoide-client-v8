@@ -23,9 +23,9 @@ public class ShareCardRequest extends V7<BaseV7Response, ShareCardRequest.Body> 
   }
 
   public static ShareCardRequest of(TimelineCard timelineCard, String accessToken,
-      BodyDecorator bodyDecorator) {
+      BodyInterceptor bodyInterceptor) {
     final ShareCardRequest.Body body = new ShareCardRequest.Body(timelineCard.getCardId());
-    return new ShareCardRequest((ShareCardRequest.Body) bodyDecorator.decorate(body),
+    return new ShareCardRequest((ShareCardRequest.Body) bodyInterceptor.intercept(body),
         BASE_HOST, timelineCard.getCardId(), accessToken);
   }
 

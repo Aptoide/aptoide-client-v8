@@ -14,8 +14,8 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.CommentType;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForReview;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
 import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
@@ -55,7 +55,7 @@ public class CommentDialogFragment
   private boolean reply;
   private CommentListFragment commentDialogCallbackContract;
   private AptoideAccountManager accountManager;
-  private BodyDecorator bodyDecorator;
+  private BodyInterceptor bodyInterceptor;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -63,7 +63,7 @@ public class CommentDialogFragment
     onEmptyTextError = AptoideUtils.StringU.getResString(R.string.error_MARG_107);
     aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    bodyDecorator = new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
   }
 
   public static CommentDialogFragment newInstanceStoreCommentReply(long storeId,
@@ -246,24 +246,24 @@ public class CommentDialogFragment
     switch (commentType) {
       case REVIEW:
         // new comment on a review
-        return PostCommentForReview.of(idAsLong, inputText, bodyDecorator).observe();
+        return PostCommentForReview.of(idAsLong, inputText, bodyInterceptor).observe();
 
       case STORE:
         // check if this is a new comment on a store or a reply to a previous one
         if (previousCommentId == null) {
-          return PostCommentForStore.of(idAsLong, inputText, bodyDecorator).observe();
+          return PostCommentForStore.of(idAsLong, inputText, bodyInterceptor).observe();
         }
 
-        return PostCommentForStore.of(idAsLong, previousCommentId, inputText, bodyDecorator).observe();
+        return PostCommentForStore.of(idAsLong, previousCommentId, inputText, bodyInterceptor).observe();
 
       case TIMELINE:
         // check if this is a new comment on a article or a reply to a previous one
         if (previousCommentId == null) {
-          return PostCommentForTimelineArticle.of(idAsString, inputText, bodyDecorator).observe();
+          return PostCommentForTimelineArticle.of(idAsString, inputText, bodyInterceptor).observe();
         }
 
         return PostCommentForTimelineArticle.of(idAsString, previousCommentId, inputText,
-            bodyDecorator).observe();
+            bodyInterceptor).observe();
     }
     // default case
     Logger.e(this.getTag(), "Unable to create reply due to missing comment type");

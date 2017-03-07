@@ -25,9 +25,9 @@ public class ShareInstallCardRequest extends V7<BaseV7Response, ShareInstallCard
   }
 
   public static ShareInstallCardRequest of(String packageName, String accessToken, String shareType,
-      BodyDecorator bodyDecorator) {
+      BodyInterceptor bodyInterceptor) {
     ShareInstallCardRequest.Body body = new ShareInstallCardRequest.Body(packageName);
-    return new ShareInstallCardRequest((ShareInstallCardRequest.Body) bodyDecorator.decorate(body),
+    return new ShareInstallCardRequest((ShareInstallCardRequest.Body) bodyInterceptor.intercept(body),
         BASE_HOST, packageName, shareType, accessToken);
   }
 

@@ -18,7 +18,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.activity.CreateStoreActivity;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -89,7 +89,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     final AptoideClientUUID aptoideClientUUID = new IdsRepositoryImpl
         (SecurePreferencesImplementation.getInstance(), getContext());
     storeUtilsProxy = new StoreUtilsProxy(accountManager,
-        new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager),
+        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
         new StoreCredentialsProviderImpl());
     final GetStoreMeta getStoreMeta = displayable.getPojo();
     final cm.aptoide.pt.model.v7.store.Store store = getStoreMeta.getData();

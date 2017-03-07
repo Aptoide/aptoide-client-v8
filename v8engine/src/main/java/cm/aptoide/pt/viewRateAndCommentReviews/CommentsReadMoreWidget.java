@@ -10,7 +10,7 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.ListComments;
@@ -46,7 +46,7 @@ public class CommentsReadMoreWidget extends Widget<CommentsReadMoreDisplayable> 
 
     Observable<ListComments> listCommentsObservable =
         ListCommentsRequest.of(displayable.getResourceId(), displayable.getNext(), 100, displayable.isReview(),
-            new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager)).observe();
+            new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager)).observe();
 
     compositeSubscription.add(RxView.clicks(readMoreButton)
         .flatMap(__ -> listCommentsObservable)

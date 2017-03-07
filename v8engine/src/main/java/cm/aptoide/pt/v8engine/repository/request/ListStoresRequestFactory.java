@@ -1,12 +1,12 @@
 package cm.aptoide.pt.v8engine.repository.request;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.V7EndlessController;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 
 /**
  * Created by neuro on 03-01-2017.
@@ -15,27 +15,27 @@ class ListStoresRequestFactory {
 
   private final AptoideClientUUID aptoideClientUUID;
   private final AptoideAccountManager accountManager;
-  private BodyDecorator bodyDecorator;
+  private BodyInterceptor bodyInterceptor;
 
   public ListStoresRequestFactory(AptoideClientUUID aptoideClientUUID,
-      AptoideAccountManager accountManager, BodyDecorator baseBodyDecorator) {
+      AptoideAccountManager accountManager, BodyInterceptor baseBodyInterceptor) {
     this.aptoideClientUUID = aptoideClientUUID;
     this.accountManager = accountManager;
-    this.bodyDecorator = baseBodyDecorator;
+    this.bodyInterceptor = baseBodyInterceptor;
   }
 
   public ListStoresRequest newListStoresRequest(int offset, int limit) {
     return ListStoresRequest.ofTopStores(offset, limit, accountManager.getAccessToken(),
-        bodyDecorator);
+        bodyInterceptor);
   }
 
   public V7EndlessController<Store> listStores(int offset, int limit) {
     return new V7EndlessController<>(
         ListStoresRequest.ofTopStores(offset, limit, accountManager.getAccessToken(),
-            bodyDecorator));
+            bodyInterceptor));
   }
 
   public ListStoresRequest newListStoresRequest(String url) {
-    return ListStoresRequest.ofAction(url, bodyDecorator);
+    return ListStoresRequest.ofAction(url, bodyInterceptor);
   }
 }

@@ -4,24 +4,24 @@ import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 
 /**
  * Created by diogoloureiro on 10/08/16.
  */
-public class BaseBodyDecorator implements BodyDecorator {
+public class BaseBodyInterceptor implements BodyInterceptor {
 
   private final String aptoideClientUUID;
   private final AptoideAccountManager accountManager;
 
-  public BaseBodyDecorator(String aptoideClientUUID, AptoideAccountManager accountManager) {
+  public BaseBodyInterceptor(String aptoideClientUUID, AptoideAccountManager accountManager) {
     this.aptoideClientUUID = aptoideClientUUID;
     this.accountManager = accountManager;
   }
 
-  public BaseBody decorate(BaseBody baseBody) {
+  public BaseBody intercept(BaseBody baseBody) {
 
     if (!TextUtils.isEmpty(accountManager.getAccessToken())) {
       baseBody.setAccessToken(accountManager.getAccessToken());

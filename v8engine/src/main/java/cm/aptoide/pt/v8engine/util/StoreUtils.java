@@ -9,7 +9,7 @@ import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -55,9 +55,9 @@ public class StoreUtils {
   @Deprecated public static void subscribeStore(String storeName,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager,
-      BodyDecorator bodyDecorator, StoreCredentialsProvider storeCredentialsProvider) {
+      BodyInterceptor bodyInterceptor, StoreCredentialsProvider storeCredentialsProvider) {
     subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName, storeCredentialsProvider),
-        accountManager.getAccessToken(), bodyDecorator), successRequestListener,
+        accountManager.getAccessToken(), bodyInterceptor), successRequestListener,
         errorRequestListener, accountManager);
   }
 

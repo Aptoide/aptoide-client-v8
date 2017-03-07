@@ -21,9 +21,9 @@ public class SetConnectionRequest extends V7<BaseV7Response, SetConnectionReques
     super(body, baseHost);
   }
 
-  public static SetConnectionRequest of(String userPhone, BodyDecorator bodyDecorator) {
+  public static SetConnectionRequest of(String userPhone, BodyInterceptor bodyInterceptor) {
     Body body = new Body(userPhone);
-    return new SetConnectionRequest((Body) bodyDecorator.decorate(body), BASE_HOST);
+    return new SetConnectionRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

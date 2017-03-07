@@ -18,7 +18,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
@@ -43,13 +43,13 @@ public class DialogUtils {
   private final Locale LOCALE = Locale.getDefault();
   private final AptoideAccountManager accountManager;
   private final AccountNavigator accountNavigator;
-  private BodyDecorator bodyDecorator;
+  private BodyInterceptor bodyInterceptor;
 
   public DialogUtils(AptoideAccountManager accountManager, AptoideClientUUID aptoideClientUUID,
-      AccountNavigator accountNavigator, BodyDecorator bodyDecorator) {
+      AccountNavigator accountNavigator, BodyInterceptor bodyInterceptor) {
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
-    this.bodyDecorator = bodyDecorator;
+    this.bodyInterceptor = bodyInterceptor;
   }
 
   public Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
@@ -139,9 +139,9 @@ public class DialogUtils {
         // WS call
         if (storeName != null) {
           PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-              bodyDecorator).execute(successRequestListener, errorRequestListener);
+              bodyInterceptor).execute(successRequestListener, errorRequestListener);
         } else {
-          PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyDecorator)
+          PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor)
               .execute(successRequestListener, errorRequestListener);
         }
       });
@@ -218,9 +218,9 @@ public class DialogUtils {
 
       if (storeName != null) {
         PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-            bodyDecorator).execute(successRequestListener, errorRequestListener);
+            bodyInterceptor).execute(successRequestListener, errorRequestListener);
       } else {
-        PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyDecorator)
+        PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor)
             .execute(successRequestListener, errorRequestListener);
       }
     });

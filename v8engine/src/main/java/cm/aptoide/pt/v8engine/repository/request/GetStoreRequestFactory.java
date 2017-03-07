@@ -1,8 +1,8 @@
 package cm.aptoide.pt.v8engine.repository.request;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
@@ -14,17 +14,17 @@ class GetStoreRequestFactory {
 
   private final AptoideAccountManager accountManager;
   private final StoreCredentialsProvider storeCredentialsProvider;
-  private final BodyDecorator bodyDecorator;
+  private final BodyInterceptor bodyInterceptor;
 
   public GetStoreRequestFactory(AptoideAccountManager accountManager, StoreCredentialsProvider storeCredentialsProvider,
-      BodyDecorator bodyDecorator) {
+      BodyInterceptor bodyInterceptor) {
     this.accountManager = accountManager;
     this.storeCredentialsProvider = storeCredentialsProvider;
-    this.bodyDecorator = bodyDecorator;
+    this.bodyInterceptor = bodyInterceptor;
   }
 
   public GetStoreRequest newStore(String url) {
     return GetStoreRequest.ofAction(url, storeCredentialsProvider.fromUrl(url), accountManager.getAccessToken(),
-        bodyDecorator);
+        bodyInterceptor);
   }
 }

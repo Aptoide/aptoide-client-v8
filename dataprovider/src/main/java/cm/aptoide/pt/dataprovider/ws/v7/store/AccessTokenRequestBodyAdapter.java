@@ -2,7 +2,7 @@ package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import cm.aptoide.pt.dataprovider.ws.v7.AccessTokenBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -19,7 +19,7 @@ public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
 
   private static final String JSONOBJECT_ERROR = "Couldn't build store_properties json";
   private final BaseBody baseBody;
-  private final BodyDecorator decorator;
+  private final BodyInterceptor decorator;
   private String storeName;
   private String accessToken;
   private String storeTheme;
@@ -27,7 +27,7 @@ public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
   private Long storeid;
   private SimpleSetStoreRequest.StoreProperties storeProperties;
 
-  public AccessTokenRequestBodyAdapter(BaseBody baseBody, BodyDecorator decorator,
+  public AccessTokenRequestBodyAdapter(BaseBody baseBody, BodyInterceptor decorator,
       String accessToken, String storeName, String storeTheme) {
     this.baseBody = baseBody;
     this.decorator = decorator;
@@ -36,7 +36,7 @@ public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
     this.accessToken = accessToken;
   }
 
-  public AccessTokenRequestBodyAdapter(BaseBody baseBody, BodyDecorator decorator,
+  public AccessTokenRequestBodyAdapter(BaseBody baseBody, BodyInterceptor decorator,
       String accessToken, String storeName, String storeTheme, String storeDescription,
       Boolean storeEdit, long storeid) {
     this.baseBody = baseBody;
@@ -49,7 +49,7 @@ public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
   }
 
   public HashMapNotNull<String, RequestBody> get() {
-    decorator.decorate(baseBody);
+    decorator.intercept(baseBody);
     HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
     ObjectMapper mapper = new ObjectMapper();
     mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);

@@ -30,7 +30,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.AutoUpdate;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -75,7 +75,7 @@ public class MainActivity extends TabNavigatorActivity implements MainView, Frag
     final IdsRepositoryImpl aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
     storeUtilsProxy = new StoreUtilsProxy(accountManager,
-        new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager),
+        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
         new StoreCredentialsProviderImpl());
     final AutoUpdate autoUpdate =
         new AutoUpdate(this, new InstallerFactory().create(this, InstallerFactory.DEFAULT),

@@ -8,13 +8,13 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -58,7 +58,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
   private IdsRepositoryImpl idsRepository;
   private AptoideAccountManager accountManager;
   private View noDownloadsView;
-  private BodyDecorator bodyDecorator;
+  private BodyInterceptor bodyInterceptor;
 
   public static DownloadsFragment newInstance() {
     return new DownloadsFragment();
@@ -204,8 +204,8 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
     idsRepository =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    bodyDecorator = new BaseBodyDecorator(idsRepository.getUniqueIdentifier(), accountManager);
-    installConverter = new InstallEventConverter(bodyDecorator);
-    downloadConverter = new DownloadEventConverter(bodyDecorator);
+    bodyInterceptor = new BaseBodyInterceptor(idsRepository.getUniqueIdentifier(), accountManager);
+    installConverter = new InstallEventConverter(bodyInterceptor);
+    downloadConverter = new DownloadEventConverter(bodyInterceptor);
   }
 }

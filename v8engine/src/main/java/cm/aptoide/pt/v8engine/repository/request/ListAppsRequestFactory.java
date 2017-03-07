@@ -1,6 +1,6 @@
 package cm.aptoide.pt.v8engine.repository.request;
 
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
@@ -11,15 +11,15 @@ import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 class ListAppsRequestFactory {
 
   private final StoreCredentialsProvider storeCredentialsProvider;
-  private final BodyDecorator bodyDecorator;
+  private final BodyInterceptor bodyInterceptor;
 
-  public ListAppsRequestFactory(BodyDecorator bodyDecorator,
+  public ListAppsRequestFactory(BodyInterceptor bodyInterceptor,
       StoreCredentialsProvider storeCredentialsProvider) {
     this.storeCredentialsProvider = storeCredentialsProvider;
-    this.bodyDecorator = bodyDecorator;
+    this.bodyInterceptor = bodyInterceptor;
   }
 
   public ListAppsRequest newListAppsRequest(String url) {
-    return ListAppsRequest.ofAction(url, storeCredentialsProvider.fromUrl(url), bodyDecorator);
+    return ListAppsRequest.ofAction(url, storeCredentialsProvider.fromUrl(url), bodyInterceptor);
   }
 }

@@ -10,7 +10,7 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v3.PaidApp;
@@ -31,16 +31,16 @@ public class AppRepository {
   private final NetworkOperatorManager operatorManager;
   private final AptoideClientUUID aptoideClientUUID;
   private final AptoideAccountManager accountManager;
-  private final BodyDecorator bodyDecorator;
+  private final BodyInterceptor bodyInterceptor;
   private final StoreCredentialsProvider storeCredentialsProvider;
 
   AppRepository(NetworkOperatorManager operatorManager, AptoideAccountManager accountManager,
-      AptoideClientUUID aptoideClientUUID, BodyDecorator bodyDecorator,
+      AptoideClientUUID aptoideClientUUID, BodyInterceptor bodyInterceptor,
       StoreCredentialsProviderImpl storeCredentialsProvider) {
     this.operatorManager = operatorManager;
     this.aptoideClientUUID = aptoideClientUUID;
     this.accountManager = accountManager;
-    this.bodyDecorator = bodyDecorator;
+    this.bodyInterceptor = bodyInterceptor;
     this.storeCredentialsProvider = storeCredentialsProvider;
   }
 
@@ -53,7 +53,7 @@ public class AppRepository {
     return GetAppRequest.of(appId,
         V8Engine.getConfiguration().getPartnerId() == null ? null : storeName,
         StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
-        bodyDecorator)
+        bodyInterceptor)
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -124,8 +124,7 @@ public class AppRepository {
 
   public Observable<GetApp> getApp(String packageName, boolean refresh, boolean sponsored,
       String storeName) {
-    return GetAppRequest.of(packageName, storeName,
-        bodyDecorator).observe(refresh).flatMap(response -> {
+    return GetAppRequest.of(packageName, storeName, bodyInterceptor).observe(refresh).flatMap(response -> {
       if (response != null && response.isOk()) {
         if (response.getNodes().getMeta().getData().isPaid()) {
           return addPayment(sponsored, response, refresh);
@@ -140,8 +139,7 @@ public class AppRepository {
   }
 
   public Observable<GetApp> getAppFromMd5(String md5, boolean refresh, boolean sponsored) {
-    return GetAppRequest.ofMd5(md5,
-        bodyDecorator).observe(refresh).flatMap(response -> {
+    return GetAppRequest.ofMd5(md5, bodyInterceptor).observe(refresh).flatMap(response -> {
       if (response != null && response.isOk()) {
         if (response.getNodes().getMeta().getData().isPaid()) {
           return addPayment(sponsored, response, refresh);

@@ -23,8 +23,8 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -86,7 +86,7 @@ import rx.functions.Action1;
   private String storeName;
   private int usersToVote;
   private TextView emptyReviewTextView;
-  private BodyDecorator bodyDecorator;
+  private BodyInterceptor bodyInterceptor;
 
   public AppViewRateAndReviewsWidget(@NonNull View itemView) {
     super(itemView);
@@ -118,10 +118,9 @@ import rx.functions.Action1;
     aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    bodyDecorator = new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
     dialogUtils = new DialogUtils(accountManager, aptoideClientUUID,
-        new AccountNavigator(getContext(), getNavigationManager(), accountManager),
-        bodyDecorator);
+        new AccountNavigator(getContext(), getNavigationManager(), accountManager), bodyInterceptor);
     appName = app.getName();
     packageName = app.getPackageName();
     storeName = app.getStore().getName();
@@ -177,7 +176,7 @@ import rx.functions.Action1;
       BaseRequestWithStore.StoreCredentials storeCredentials) {
     Subscription subscription =
         ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS, storeCredentials,
-            bodyDecorator)
+            bodyInterceptor)
             .observe(true)
             .observeOn(AndroidSchedulers.mainThread())
             .map(listReviews -> {

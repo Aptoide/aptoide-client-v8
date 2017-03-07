@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
@@ -17,7 +17,7 @@ import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
@@ -40,7 +40,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
 
   private AptoideClientUUID aptoideClientUUID;
   private AptoideAccountManager accountManager;
-  private BodyDecorator bodyDecorator;
+  private BodyInterceptor bodyInterceptor;
   private StoreCredentialsProvider storeCredentialsProvider;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,11 +49,11 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    bodyDecorator = new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
   }
 
   @Override protected V7<ListStores, ? extends Endless> buildRequest(boolean refresh, String url) {
-    GetMyStoreListRequest request = GetMyStoreListRequest.of(url, true, bodyDecorator);
+    GetMyStoreListRequest request = GetMyStoreListRequest.of(url, true, bodyInterceptor);
 
     return request;
   }
@@ -89,7 +89,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
               new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
           storesDisplayables.add(
               new RecommendedStoreDisplayable(list.get(i), storeRepository, accountManager,
-                  new StoreUtilsProxy(accountManager, bodyDecorator, storeCredentialsProvider)));
+                  new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider)));
         } else {
           storesDisplayables.add(new GridStoreDisplayable(list.get(i)));
         }

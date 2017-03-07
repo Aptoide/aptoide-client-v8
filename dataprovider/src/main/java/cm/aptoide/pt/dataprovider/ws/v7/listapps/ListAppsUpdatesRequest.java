@@ -7,7 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import android.content.pm.PackageInfo;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithAlphaBetaKey;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -46,9 +46,9 @@ import rx.schedulers.Schedulers;
   }
 
   public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String accessToken,
-      String aptoideClientUUID, BodyDecorator bodyDecorator) {
+      String aptoideClientUUID, BodyInterceptor bodyInterceptor) {
 
-    return new ListAppsUpdatesRequest((Body) bodyDecorator.decorate(
+    return new ListAppsUpdatesRequest((Body) bodyInterceptor.intercept(
         new Body(getInstalledApks(), subscribedStoresIds, aptoideClientUUID)),
         BASE_HOST);
   }

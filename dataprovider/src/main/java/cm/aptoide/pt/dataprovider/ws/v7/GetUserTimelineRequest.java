@@ -35,10 +35,10 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
   }
 
   public static GetUserTimelineRequest of(String url, Integer limit, int offset,
-      List<String> packages, BodyDecorator bodyDecorator) {
+      List<String> packages, BodyInterceptor bodyInterceptor) {
 
     GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(url,
-        (Body) bodyDecorator.decorate(new Body(limit, offset, packages)), BASE_HOST);
+        (Body) bodyInterceptor.intercept(new Body(limit, offset, packages)), BASE_HOST);
     return getAppRequest;
   }
 

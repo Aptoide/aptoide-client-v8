@@ -27,7 +27,7 @@ import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
@@ -130,7 +130,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
         new EndlessRecyclerOnScrollListener(this.getAdapter(),
             ListAppVersionsRequest.of(appPackge, storeNames, accountManager.getAccessToken(),
                 aptoideClientUUID.getUniqueIdentifier(), StoreUtils.getSubscribedStoresAuthMap(),
-                new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager)),
+                new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager)),
             otherVersionsSuccessRequestListener, Throwable::printStackTrace);
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);

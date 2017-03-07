@@ -13,8 +13,8 @@ public class GetTimelineStatsRequest extends V7<TimelineStats, BaseBody> {
     super(body, baseHost);
   }
 
-  public static GetTimelineStatsRequest of(BodyDecorator bodyDecorator) {
-    return new GetTimelineStatsRequest(bodyDecorator.decorate(new BaseBody()), BASE_HOST);
+  public static GetTimelineStatsRequest of(BodyInterceptor bodyInterceptor) {
+    return new GetTimelineStatsRequest(bodyInterceptor.intercept(new BaseBody()), BASE_HOST);
   }
 
   @Override protected Observable<TimelineStats> loadDataFromNetwork(Interfaces interfaces,

@@ -32,44 +32,44 @@ import rx.Observable;
     super(body, httpClient, converterFactory, baseHost);
   }
 
-  public static GetAppRequest of(String packageName, String storeName, BodyDecorator bodyDecorator) {
+  public static GetAppRequest of(String packageName, String storeName, BodyInterceptor bodyInterceptor) {
 
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST,
-        (Body) bodyDecorator.decorate(new Body(packageName, storeName, forceServerRefresh)));
+        (Body) bodyInterceptor.intercept(new Body(packageName, storeName, forceServerRefresh)));
   }
 
-  public static GetAppRequest of(String packageName, BodyDecorator bodyDecorator, long appId) {
+  public static GetAppRequest of(String packageName, BodyInterceptor bodyInterceptor, long appId) {
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST,
-        (Body) bodyDecorator.decorate(new Body(appId, forceServerRefresh, packageName)));
+        (Body) bodyInterceptor.intercept(new Body(appId, forceServerRefresh, packageName)));
   }
 
-  public static GetAppRequest of(long appId, String storeName, String packageName, BodyDecorator bodyDecorator) {
+  public static GetAppRequest of(long appId, String storeName, String packageName, BodyInterceptor bodyInterceptor) {
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST,
-        (Body) bodyDecorator.decorate(new Body(appId, storeName, forceServerRefresh, packageName)));
+        (Body) bodyInterceptor.intercept(new Body(appId, storeName, forceServerRefresh, packageName)));
   }
 
-  public static GetAppRequest of(long appId, BodyDecorator bodyDecorator) {
+  public static GetAppRequest of(long appId, BodyInterceptor bodyInterceptor) {
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST,
-        (Body) bodyDecorator.decorate(new Body(appId, forceServerRefresh, null)));
+        (Body) bodyInterceptor.intercept(new Body(appId, forceServerRefresh, null)));
   }
 
-  public static GetAppRequest ofMd5(String md5, BodyDecorator bodyDecorator) {
+  public static GetAppRequest ofMd5(String md5, BodyInterceptor bodyInterceptor) {
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST,
-        (Body) bodyDecorator.decorate(new Body(forceServerRefresh, md5)));
+        (Body) bodyInterceptor.intercept(new Body(forceServerRefresh, md5)));
   }
 
   public static GetAppRequest of(long appId, String storeName,
-      BaseRequestWithStore.StoreCredentials storeCredentials, String packageName, BodyDecorator bodyDecorator) {
+      BaseRequestWithStore.StoreCredentials storeCredentials, String packageName, BodyInterceptor bodyInterceptor) {
 
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
@@ -77,12 +77,12 @@ import rx.Observable;
     body.setStoreUser(storeCredentials.getUsername());
     body.setStorePassSha1(storeCredentials.getPasswordSha1());
 
-    return new GetAppRequest(BASE_HOST, (Body) bodyDecorator.decorate(body));
+    return new GetAppRequest(BASE_HOST, (Body) bodyInterceptor.intercept(body));
   }
 
-  public static GetAppRequest ofAction(String url, BodyDecorator bodyDecorator) {
+  public static GetAppRequest ofAction(String url, BodyInterceptor bodyInterceptor) {
     final long appId = getAppIdFromUrl(url);
-    return new GetAppRequest(BASE_HOST, (Body) bodyDecorator.decorate(new Body(appId)));
+    return new GetAppRequest(BASE_HOST, (Body) bodyInterceptor.intercept(new Body(appId)));
   }
 
   private static long getAppIdFromUrl(String url) {

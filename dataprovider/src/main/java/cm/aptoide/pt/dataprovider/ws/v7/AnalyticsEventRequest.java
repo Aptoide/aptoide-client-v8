@@ -25,11 +25,11 @@ public class AnalyticsEventRequest extends V7<BaseV7Response, AnalyticsEventRequ
   }
 
   public static AnalyticsEventRequest of(String eventName, String context, String action,
-      Map<String, Object> data, BodyDecorator bodyDecorator) {
+      Map<String, Object> data, BodyInterceptor bodyInterceptor) {
     final AnalyticsEventRequest.Body body =
         new AnalyticsEventRequest.Body(DataProvider.getConfiguration().getAppId(), data);
 
-    return new AnalyticsEventRequest((Body) bodyDecorator.decorate(body), BASE_HOST, action,
+    return new AnalyticsEventRequest((Body) bodyInterceptor.intercept(body), BASE_HOST, action,
         eventName, context);
   }
 

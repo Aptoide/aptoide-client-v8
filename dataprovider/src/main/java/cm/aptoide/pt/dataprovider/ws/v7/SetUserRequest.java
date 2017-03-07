@@ -17,9 +17,9 @@ public class SetUserRequest extends V7<BaseV7Response, SetUserRequest.Body> {
     super(body, baseHost);
   }
 
-  public static SetUserRequest of(String user_access, BodyDecorator bodyDecorator) {
+  public static SetUserRequest of(String user_access, BodyInterceptor bodyInterceptor) {
     Body body = new Body(user_access);
-    return new SetUserRequest((Body) bodyDecorator.decorate(body), BASE_HOST);
+    return new SetUserRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

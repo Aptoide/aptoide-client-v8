@@ -21,15 +21,15 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
   }
 
   public static SimpleSetStoreRequest of(String storeName, String storeTheme,
-      BodyDecorator bodyDecorator) {
+      BodyInterceptor bodyInterceptor) {
     Body body = new Body(storeName, storeTheme);
-    return new SimpleSetStoreRequest((Body) bodyDecorator.decorate(body), BASE_HOST);
+    return new SimpleSetStoreRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
   }
 
   public static SimpleSetStoreRequest of(long storeId, String storeTheme, String storeDescription,
-      BodyDecorator bodyDecorator) {
+      BodyInterceptor bodyInterceptor) {
     Body body = new Body(storeId, storeTheme, storeDescription);
-    return new SimpleSetStoreRequest((Body) bodyDecorator.decorate(body), BASE_HOST);
+    return new SimpleSetStoreRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

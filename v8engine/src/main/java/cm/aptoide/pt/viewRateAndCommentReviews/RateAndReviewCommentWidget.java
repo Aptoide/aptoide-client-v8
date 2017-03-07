@@ -18,8 +18,8 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetReviewRatingRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -70,7 +70,7 @@ import rx.Observable;
   private View helpfullButtonLayout;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
-  private BodyDecorator bodyDecorator;
+  private BodyInterceptor bodyInterceptor;
 
   public RateAndReviewCommentWidget(View itemView) {
     super(itemView);
@@ -101,7 +101,7 @@ import rx.Observable;
     aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    bodyDecorator = new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
     accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
     final FragmentActivity context = getContext();
     ImageLoader.with(context)
@@ -188,7 +188,7 @@ import rx.Observable;
   }
 
   private void loadCommentsForThisReview(long reviewId, int limit, CommentAdder commentAdder) {
-    ListCommentsRequest.of(reviewId, limit, true, bodyDecorator).execute(listComments -> {
+    ListCommentsRequest.of(reviewId, limit, true, bodyInterceptor).execute(listComments -> {
       if (listComments.isOk()) {
         List<Comment> comments = listComments.getDatalist().getList();
         commentAdder.addComment(comments);
@@ -206,7 +206,7 @@ import rx.Observable;
     setHelpButtonsClickable(false);
 
     if (accountManager.isLoggedIn()) {
-      SetReviewRatingRequest.of(reviewId, positive, bodyDecorator).execute(response -> {
+      SetReviewRatingRequest.of(reviewId, positive, bodyInterceptor).execute(response -> {
         if (response == null) {
           Logger.e(TAG, "empty response");
           return;

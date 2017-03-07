@@ -10,7 +10,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowersRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowingRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserLikesRequest;
@@ -39,7 +39,7 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
   private TimeLineFollowFragment.FollowFragmentOpenMode openMode;
   @Nullable private String cardUid;
   @Nullable private Long numberOfLikes;
-  private BaseBodyDecorator bodyDecorator;
+  private BaseBodyInterceptor bodyDecorator;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -48,7 +48,7 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
     final AptoideClientUUID aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext());
-    bodyDecorator = new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    bodyDecorator = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
   }
 
   public static TimeLineFollowFragment newInstance(FollowFragmentOpenMode openMode,

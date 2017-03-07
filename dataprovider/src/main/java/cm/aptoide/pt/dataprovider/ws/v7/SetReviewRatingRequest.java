@@ -26,13 +26,13 @@ public class SetReviewRatingRequest extends V7<BaseV7Response, SetReviewRatingRe
     super(body, baseHost);
   }
 
-  public static SetReviewRatingRequest of(long reviewId, boolean helpful, BodyDecorator bodyDecorator) {
+  public static SetReviewRatingRequest of(long reviewId, boolean helpful, BodyInterceptor bodyInterceptor) {
     //
     //  http://ws75-primary.aptoide.com/api/7/setReview/package_name/cm.aptoide
     // .pt/store_name/apps/title/Best%20app%20store/rating/5/access_token/ca01ee1e05ab4d82d99ef143e2816e667333c6ef
     //
     Body body = new Body(reviewId, helpful ? "up" : "down");
-    return new SetReviewRatingRequest((Body) bodyDecorator.decorate(body), BASE_HOST);
+    return new SetReviewRatingRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

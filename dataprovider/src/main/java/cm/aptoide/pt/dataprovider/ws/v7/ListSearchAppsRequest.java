@@ -31,7 +31,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
   }
 
   public static ListSearchAppsRequest of(String query, String storeName,
-      HashMapNotNull<String, List<String>> subscribedStoresAuthMap, BodyDecorator bodyDecorator) {
+      HashMapNotNull<String, List<String>> subscribedStoresAuthMap, BodyInterceptor bodyInterceptor) {
 
     List<String> stores = null;
     if (storeName != null) {
@@ -41,38 +41,38 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
     if (subscribedStoresAuthMap != null && subscribedStoresAuthMap.containsKey(storeName)) {
       HashMapNotNull<String, List<String>> storesAuthMap = new HashMapNotNull<>();
       storesAuthMap.put(storeName, subscribedStoresAuthMap.get(storeName));
-      return new ListSearchAppsRequest((Body) bodyDecorator.decorate(
+      return new ListSearchAppsRequest((Body) bodyInterceptor.intercept(
           new Body(Endless.DEFAULT_LIMIT, query, storesAuthMap, stores, false)),
           BASE_HOST);
     }
     return new ListSearchAppsRequest(
-        (Body) bodyDecorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, stores, false)), BASE_HOST);
+        (Body) bodyInterceptor.intercept(new Body(Endless.DEFAULT_LIMIT, query, stores, false)), BASE_HOST);
   }
 
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
       List<Long> subscribedStoresIds, HashMapNotNull<String, List<String>> subscribedStoresAuthMap,
-      BodyDecorator bodyDecorator) {
+      BodyInterceptor bodyInterceptor) {
 
     if (addSubscribedStores) {
-      return new ListSearchAppsRequest((Body) bodyDecorator.decorate(
+      return new ListSearchAppsRequest((Body) bodyInterceptor.intercept(
           new Body(Endless.DEFAULT_LIMIT, query, subscribedStoresIds, subscribedStoresAuthMap,
               false)), BASE_HOST);
     } else {
       return new ListSearchAppsRequest(
-          (Body) bodyDecorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, false)),
+          (Body) bodyInterceptor.intercept(new Body(Endless.DEFAULT_LIMIT, query, false)),
           BASE_HOST);
     }
   }
 
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
-      boolean trustedOnly, List<Long> subscribedStoresIds, BodyDecorator bodyDecorator) {
+      boolean trustedOnly, List<Long> subscribedStoresIds, BodyInterceptor bodyInterceptor) {
 
     if (addSubscribedStores) {
-      return new ListSearchAppsRequest((Body) bodyDecorator.decorate(
+      return new ListSearchAppsRequest((Body) bodyInterceptor.intercept(
           new Body(Endless.DEFAULT_LIMIT, query, subscribedStoresIds, null, trustedOnly)), BASE_HOST);
     } else {
       return new ListSearchAppsRequest(
-          (Body) bodyDecorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, trustedOnly)), BASE_HOST);
+          (Body) bodyInterceptor.intercept(new Body(Endless.DEFAULT_LIMIT, query, trustedOnly)), BASE_HOST);
     }
   }
 

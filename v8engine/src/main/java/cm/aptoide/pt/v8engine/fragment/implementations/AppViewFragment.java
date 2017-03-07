@@ -48,7 +48,7 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.iab.BillingBinder;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -64,7 +64,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -170,7 +170,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private GetApp getApp;
   private AptoideAccountManager accountManager;
   private StoreCredentialsProvider storeCredentialsProvider;
-  private BodyDecorator bodyDecorator;
+  private BodyInterceptor bodyInterceptor;
   private SocialRepository socialRepository;
 
   public static AppViewFragment newInstance(String md5) {
@@ -242,8 +242,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
     final AptoideClientUUID aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    bodyDecorator = new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager);
-    socialRepository = new SocialRepository(accountManager, bodyDecorator);
+    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    socialRepository = new SocialRepository(accountManager, bodyInterceptor);
     productFactory = new ProductFactory();
     appRepository = RepositoryFactory.getAppRepository(getContext());
     adsRepository = new AdsRepository(

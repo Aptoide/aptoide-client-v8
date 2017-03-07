@@ -1,7 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.store.ListStores;
@@ -24,16 +24,16 @@ public class GetMyStoreListRequest extends V7<ListStores, GetMyStoreListRequest.
     this.url = url;
   }
 
-  public static GetMyStoreListRequest of(String url, BodyDecorator bodyDecorator) {
-    return of(url, false, bodyDecorator);
+  public static GetMyStoreListRequest of(String url, BodyInterceptor bodyInterceptor) {
+    return of(url, false, bodyInterceptor);
   }
 
   public static GetMyStoreListRequest of(String url, boolean useEndless,
-      BodyDecorator bodyDecorator) {
+      BodyInterceptor bodyInterceptor) {
     GetMyStoreListRequest.useEndless = useEndless;
 
     return new GetMyStoreListRequest(url,
-        (EndlessBody) bodyDecorator.decorate(new EndlessBody(WidgetsArgs.createDefault())),
+        (EndlessBody) bodyInterceptor.intercept(new EndlessBody(WidgetsArgs.createDefault())),
         BASE_HOST);
   }
 

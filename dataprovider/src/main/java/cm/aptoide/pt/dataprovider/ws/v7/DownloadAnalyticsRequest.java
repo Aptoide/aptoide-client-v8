@@ -24,9 +24,9 @@ public class DownloadAnalyticsRequest
   }
 
   public static DownloadAnalyticsRequest of(DownloadInstallAnalyticsBaseBody body, String action,
-      String name, String context, BodyDecorator bodyDecorator) {
+      String name, String context, BodyInterceptor bodyInterceptor) {
     return new DownloadAnalyticsRequest(
-        (DownloadInstallAnalyticsBaseBody) bodyDecorator.decorate(body), BASE_HOST, action,
+        (DownloadInstallAnalyticsBaseBody) bodyInterceptor.intercept(body), BASE_HOST, action,
         name, context);
   }
 

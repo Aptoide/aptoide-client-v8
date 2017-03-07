@@ -32,7 +32,7 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
@@ -109,7 +109,7 @@ public abstract class V8Engine extends DataProvider {
         }
       } else {
         addDefaultStore(accountManager,
-            new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager),
+            new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
             new StoreCredentialsProviderImpl());
       }
 
@@ -137,7 +137,7 @@ public abstract class V8Engine extends DataProvider {
   public static void clearUserData(AptoideAccountManager accountManager) {
     AccessorFactory.getAccessorFor(Store.class).removeAll();
     StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null, accountManager,
-        new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager),
+        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
         new StoreCredentialsProviderImpl());
     regenerateUserAgent(accountManager);
   }
@@ -152,9 +152,9 @@ public abstract class V8Engine extends DataProvider {
   }
 
   private static void addDefaultStore(AptoideAccountManager accountManager,
-      BodyDecorator bodyDecorator, StoreCredentialsProvider storeCredentialsProvider) {
+      BodyInterceptor bodyInterceptor, StoreCredentialsProvider storeCredentialsProvider) {
     StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), getStoreMeta -> checkUpdates(),
-        null, accountManager, bodyDecorator, storeCredentialsProvider);
+        null, accountManager, bodyInterceptor, storeCredentialsProvider);
   }
 
   public AptoideAccountManager getAccountManager() {
@@ -164,7 +164,7 @@ public abstract class V8Engine extends DataProvider {
       accountManager = new AptoideAccountManager(this, getConfiguration(), AccountManager.get(this),
           aptoideClientUuid, new ExternalServicesLoginAvailability(this, getConfiguration(),
           GoogleApiAvailability.getInstance()), new AccountAnalytcs(),
-          new BaseBodyDecorator(aptoideClientUuid.getUniqueIdentifier(), accountManager));
+          new BaseBodyInterceptor(aptoideClientUuid.getUniqueIdentifier(), accountManager));
     }
     return accountManager;
   }
@@ -250,7 +250,7 @@ public abstract class V8Engine extends DataProvider {
           }
         } else {
           generateAptoideUUID().subscribe(success -> addDefaultStore(accountManager,
-              new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager),
+              new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
               new StoreCredentialsProviderImpl()), err -> {
             CrashReport.getInstance().log(err);
           });

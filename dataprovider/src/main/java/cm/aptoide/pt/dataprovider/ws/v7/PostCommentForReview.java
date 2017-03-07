@@ -27,12 +27,12 @@ public class PostCommentForReview extends V7<BaseV7Response, PostCommentForRevie
     super(body, baseHost);
   }
 
-  public static PostCommentForReview of(long reviewId, String text, BodyDecorator bodyDecorator) {
+  public static PostCommentForReview of(long reviewId, String text, BodyInterceptor bodyInterceptor) {
     //
     //  http://ws75-primary.aptoide.com/api/7/setComment/review_id/1/body/amazing%20review/access_token/ca01ee1e05ab4d82d99ef143e2816e667333c6ef
     //
     Body body = new Body(reviewId, text);
-    return new PostCommentForReview((Body) bodyDecorator.decorate(body), BASE_HOST);
+    return new PostCommentForReview((Body) bodyInterceptor.intercept(body), BASE_HOST);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

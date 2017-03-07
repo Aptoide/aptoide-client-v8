@@ -17,7 +17,7 @@ import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
@@ -95,7 +95,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       final String storeTheme = V8Engine.getConfiguration().getDefaultTheme();
 
       final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager,
-          new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager),
+          new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
           new StoreCredentialsProviderImpl());
 
       Action1<Void> openStore = __ -> {

@@ -9,7 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.Comment;
@@ -83,7 +83,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
   private Void reloadComments() {
     ManagerPreferences.setForceServerRefreshFlag(true);
     compositeSubscription.add(ListCommentsRequest.of(storeId, 0, 3,
-        false, new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager))
+        false, new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager))
         .observe()
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())

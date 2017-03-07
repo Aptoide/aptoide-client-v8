@@ -2,9 +2,9 @@ package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 
 /**
  * Created by trinkes on 05/01/2017.
@@ -12,10 +12,10 @@ import cm.aptoide.pt.v8engine.BaseBodyDecorator;
 
 public class InstallEventConverter extends DownloadInstallEventConverter<InstallEvent> {
 
-  private BodyDecorator bodyDecorator;
+  private BodyInterceptor bodyInterceptor;
 
-  public InstallEventConverter(BodyDecorator bodyDecorator) {
-    this.bodyDecorator = bodyDecorator;
+  public InstallEventConverter(BodyInterceptor bodyInterceptor) {
+    this.bodyInterceptor = bodyInterceptor;
   }
 
   @Override
@@ -28,6 +28,6 @@ public class InstallEventConverter extends DownloadInstallEventConverter<Install
       DownloadInstallBaseEvent.Origin origin, String packageName, String url, String obbUrl,
       String patchObbUrl, DownloadInstallBaseEvent.AppContext context, int versionCode) {
     return new InstallEvent(action, origin, packageName, url, obbUrl, patchObbUrl, context,
-        versionCode, this, bodyDecorator);
+        versionCode, this, bodyInterceptor);
   }
 }

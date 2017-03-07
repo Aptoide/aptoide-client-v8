@@ -17,7 +17,7 @@ import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.AddressBookAnalytics;
@@ -56,7 +56,7 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
     final AptoideAccountManager accountManager =
         ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     this.mActionsListener = new PhoneInputPresenter(this, new ContactsRepositoryImpl(
-        new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager),
+        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
         aptoideClientUUID), new AddressBookAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext())));
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());

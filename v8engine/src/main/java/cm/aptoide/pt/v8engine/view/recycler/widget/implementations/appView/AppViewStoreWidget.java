@@ -17,7 +17,7 @@ import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -92,7 +92,7 @@ import rx.functions.Action1;
     final IdsRepositoryImpl aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager,
-        new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager),
+        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
         new StoreCredentialsProviderImpl());
 
     Action1<Void> openStore = __ -> {

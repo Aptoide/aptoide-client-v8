@@ -29,7 +29,7 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
@@ -45,7 +45,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
@@ -113,7 +113,7 @@ import rx.android.schedulers.AndroidSchedulers;
   private InstallEventConverter installConverter;
   private AptoideAccountManager accountManager;
   private AptoideClientUUID aptoideClientUUID;
-  private BodyDecorator bodyDecorator;
+  private BodyInterceptor bodyInterceptor;
 
   //private Subscription subscribe;
   //private long appID;
@@ -150,9 +150,9 @@ import rx.android.schedulers.AndroidSchedulers;
     installManager = new InstallManager(downloadManager, installer);
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
-    bodyDecorator = new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager);
-    downloadInstallEventConverter = new DownloadEventConverter(bodyDecorator);
-    installConverter = new InstallEventConverter(bodyDecorator);
+    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    downloadInstallEventConverter = new DownloadEventConverter(bodyInterceptor);
+    installConverter = new InstallEventConverter(bodyInterceptor);
     analytics = Analytics.getInstance();
 
     minimalAd = displayable.getMinimalAd();
@@ -402,7 +402,7 @@ import rx.android.schedulers.AndroidSchedulers;
                   sharePreviewDialog.getPreviewDialogBuilder(getContext());
 
               SocialRepository socialRepository =
-                  new SocialRepository(accountManager, bodyDecorator);
+                  new SocialRepository(accountManager, bodyInterceptor);
 
               sharePreviewDialog.showShareCardPreviewDialog(
                   displayable.getPojo().getNodes().getMeta().getData().getPackageName(), "install",

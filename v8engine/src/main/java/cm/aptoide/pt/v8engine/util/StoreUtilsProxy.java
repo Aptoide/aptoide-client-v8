@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.util;
 
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
@@ -22,20 +22,20 @@ import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 public class StoreUtilsProxy {
 
   private final AptoideAccountManager accountManager;
-  private final BodyDecorator bodyDecorator;
+  private final BodyInterceptor bodyInterceptor;
   private final StoreCredentialsProvider storeCredentialsProvider;
 
-  public StoreUtilsProxy(AptoideAccountManager accountManager, BodyDecorator bodyDecorator,
+  public StoreUtilsProxy(AptoideAccountManager accountManager, BodyInterceptor bodyInterceptor,
       StoreCredentialsProvider storeCredentialsProvider) {
     this.accountManager = accountManager;
-    this.bodyDecorator = bodyDecorator;
+    this.bodyInterceptor = bodyInterceptor;
     this.storeCredentialsProvider = storeCredentialsProvider;
   }
 
   public void subscribeStore(String storeName) {
     subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName,
         storeCredentialsProvider),
-        accountManager.getAccessToken(), bodyDecorator), null, null, storeName, accountManager);
+        accountManager.getAccessToken(), bodyInterceptor), null, null, storeName, accountManager);
   }
 
   public void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
@@ -54,7 +54,7 @@ public class StoreUtilsProxy {
       @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager) {
     subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName,
         storeCredentialsProvider),
-        accountManager.getAccessToken(), bodyDecorator), successRequestListener,
+        accountManager.getAccessToken(), bodyInterceptor), successRequestListener,
         errorRequestListener, storeName, accountManager);
   }
 

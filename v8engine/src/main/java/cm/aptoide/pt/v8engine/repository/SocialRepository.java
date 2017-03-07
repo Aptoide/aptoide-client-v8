@@ -3,8 +3,8 @@ package cm.aptoide.pt.v8engine.repository;
 import android.content.Context;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.LikeCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ShareCardRequest;
@@ -22,15 +22,15 @@ import rx.schedulers.Schedulers;
 public class SocialRepository {
 
   private final AptoideAccountManager accountManager;
-  private final BodyDecorator bodyDecorator;
+  private final BodyInterceptor bodyInterceptor;
 
-  public SocialRepository(AptoideAccountManager accountManager, BodyDecorator bodyDecorator) {
+  public SocialRepository(AptoideAccountManager accountManager, BodyInterceptor bodyInterceptor) {
     this.accountManager = accountManager;
-    this.bodyDecorator = bodyDecorator;
+    this.bodyInterceptor = bodyInterceptor;
   }
 
   public void share(TimelineCard timelineCard, Context context, boolean privacy) {
-    ShareCardRequest.of(timelineCard, accountManager.getAccessToken(), bodyDecorator)
+    ShareCardRequest.of(timelineCard, accountManager.getAccessToken(), bodyInterceptor)
         .observe()
         .toSingle()
         .flatMapCompletable(response -> {
@@ -45,7 +45,7 @@ public class SocialRepository {
   }
 
   public void like(TimelineCard timelineCard, String cardType, String ownerHash, int rating) {
-    LikeCardRequest.of(timelineCard, cardType, ownerHash, rating, bodyDecorator,
+    LikeCardRequest.of(timelineCard, cardType, ownerHash, rating, bodyInterceptor,
         accountManager.getAccessToken())
         .observe()
         .observeOn(Schedulers.io())
@@ -56,7 +56,7 @@ public class SocialRepository {
 
   public void share(String packageName, String shareType, boolean privacy) {
     ShareInstallCardRequest.of(packageName, accountManager.getAccessToken(), shareType,
-        bodyDecorator).observe().toSingle().flatMapCompletable(response -> {
+        bodyInterceptor).observe().toSingle().flatMapCompletable(response -> {
       if (response.isOk()) {
         return accountManager.updateAccount(getAccountAccess(privacy));
       }

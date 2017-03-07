@@ -33,13 +33,13 @@ import rx.Observable;
   }
 
   public static ListAppsRequest ofAction(String url, StoreCredentials storeCredentials,
-      BodyDecorator bodyDecorator) {
+      BodyInterceptor bodyInterceptor) {
     V7Url listAppsV7Url = new V7Url(url).remove("listApps");
     if (listAppsV7Url.containsLimit()) {
       return new ListAppsRequest(listAppsV7Url.get(),
-          (Body) bodyDecorator.decorate(new Body(storeCredentials)), BASE_HOST);
+          (Body) bodyInterceptor.intercept(new Body(storeCredentials)), BASE_HOST);
     } else {
-      return new ListAppsRequest(listAppsV7Url.get(), (Body) bodyDecorator.decorate(
+      return new ListAppsRequest(listAppsV7Url.get(), (Body) bodyInterceptor.intercept(
           new Body(storeCredentials, Type.APPS_GROUP.getPerLineCount() * LINES_PER_REQUEST)), BASE_HOST);
     }
   }

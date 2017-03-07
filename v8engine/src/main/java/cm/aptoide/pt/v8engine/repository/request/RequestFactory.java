@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.repository.request;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7EndlessController;
@@ -11,7 +11,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 
@@ -29,18 +29,18 @@ public class RequestFactory {
   private final StoreCredentialsProvider storeCredentialsProvider;
 
   public RequestFactory(AptoideClientUUID aptoideClientUUID, AptoideAccountManager accountManager,
-      StoreCredentialsProvider storeCredentialsProvider, BodyDecorator bodyDecorator) {
+      StoreCredentialsProvider storeCredentialsProvider, BodyInterceptor bodyInterceptor) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     listStoresRequestFactory =
-        new ListStoresRequestFactory(aptoideClientUUID, accountManager, bodyDecorator);
+        new ListStoresRequestFactory(aptoideClientUUID, accountManager, bodyInterceptor);
     listAppsRequestFactory =
-        new ListAppsRequestFactory(bodyDecorator, storeCredentialsProvider);
+        new ListAppsRequestFactory(bodyInterceptor, storeCredentialsProvider);
     listFullReviewsRequestFactory =
-        new ListFullReviewsRequestFactory(aptoideClientUUID, accountManager, bodyDecorator);
+        new ListFullReviewsRequestFactory(aptoideClientUUID, accountManager, bodyInterceptor);
     getStoreRequestFactory =
-        new GetStoreRequestFactory(accountManager, storeCredentialsProvider, bodyDecorator);
+        new GetStoreRequestFactory(accountManager, storeCredentialsProvider, bodyInterceptor);
     getStoreWidgetsRequestFactory =
-        new GetStoreWidgetsRequestFactory(accountManager, storeCredentialsProvider, bodyDecorator);
+        new GetStoreWidgetsRequestFactory(accountManager, storeCredentialsProvider, bodyInterceptor);
   }
 
   public ListStoresRequest newListStoresRequest(int offset, int limit) {

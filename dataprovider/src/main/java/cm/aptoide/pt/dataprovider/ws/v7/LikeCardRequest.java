@@ -28,11 +28,11 @@ public class LikeCardRequest extends V7<BaseV7Response, LikeCardRequest.Body> {
     this.rating = rating;
   }
 
-  public static LikeCardRequest of(TimelineCard timelineCard, String cardType, String ownerHash, int rating, BodyDecorator bodyDecorator,
+  public static LikeCardRequest of(TimelineCard timelineCard, String cardType, String ownerHash, int rating, BodyInterceptor bodyInterceptor,
       String accessToken) {
     LikeCardRequest.Body body = new LikeCardRequest.Body();
 
-    return new LikeCardRequest((LikeCardRequest.Body) bodyDecorator.decorate(body),
+    return new LikeCardRequest((LikeCardRequest.Body) bodyInterceptor.intercept(body),
         BASE_HOST, accessToken, timelineCard.getCardId(), rating);
   }
 

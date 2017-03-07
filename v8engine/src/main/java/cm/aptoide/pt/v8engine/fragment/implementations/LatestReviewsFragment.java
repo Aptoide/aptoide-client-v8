@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.FullReview;
@@ -89,7 +89,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
       ListFullReviewsRequest listFullReviewsRequest =
           ListFullReviewsRequest.of(storeId, REVIEWS_LIMIT, 0,
               StoreUtils.getStoreCredentials(storeId, storeCredentialsProvider),
-              new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager));
+              new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager));
       Action1<ListFullReviews> listFullReviewsAction = listTopFullReviews -> {
         List<FullReview> reviews = listTopFullReviews.getDatalist().getList();
         displayables = new LinkedList<>();

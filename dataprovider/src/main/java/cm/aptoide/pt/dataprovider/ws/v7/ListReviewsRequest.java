@@ -42,9 +42,8 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
   }
 
   public static ListReviewsRequest of(String storeName, String packageName,
-      BaseRequestWithStore.StoreCredentials storecredentials, BodyDecorator bodyDecorator) {
-    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, storecredentials,
-        bodyDecorator);
+      BaseRequestWithStore.StoreCredentials storecredentials, BodyInterceptor bodyInterceptor) {
+    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, storecredentials, bodyInterceptor);
   }
 
   /**
@@ -52,10 +51,10 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
    */
   public static ListReviewsRequest of(String storeName, String packageName, int maxReviews,
       int maxComments, BaseRequestWithStore.StoreCredentials storecredentials,
-      BodyDecorator bodyDecorator) {
+      BodyInterceptor bodyInterceptor) {
     Body body = new Body(storeName, packageName, maxReviews, maxComments,
         ManagerPreferences.getAndResetForceServerRefresh(), storecredentials);
-    return new ListReviewsRequest((Body) bodyDecorator.decorate(body), BASE_HOST);
+    return new ListReviewsRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
   }
 
   /**
@@ -63,8 +62,8 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
    */
   public static ListReviewsRequest ofTopReviews(String storeName, String packageName,
       int maxReviews, BaseRequestWithStore.StoreCredentials storeCredentials,
-      BodyDecorator bodyDecorator) {
-    return of(storeName, packageName, maxReviews, 0, storeCredentials, bodyDecorator);
+      BodyInterceptor bodyInterceptor) {
+    return of(storeName, packageName, maxReviews, 0, storeCredentials, bodyInterceptor);
   }
 
   @Override protected Observable<ListReviews> loadDataFromNetwork(Interfaces interfaces,

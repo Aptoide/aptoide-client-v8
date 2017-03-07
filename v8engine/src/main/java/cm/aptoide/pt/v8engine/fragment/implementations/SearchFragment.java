@@ -22,8 +22,8 @@ import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.ListSearchApps;
@@ -64,7 +64,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
   private String storeName;
   private boolean onlyTrustedApps;
   private int selectedButton = 0;
-  private BodyDecorator bodyDecorator;
+  private BodyInterceptor bodyInterceptor;
 
   public static SearchFragment newInstance(String query) {
     return newInstance(query, false);
@@ -97,7 +97,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
     accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
-    bodyDecorator = new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
   }
 
   @Override public void bindViews(View view) {
@@ -231,7 +231,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       shouldFinishLoading = true;
       ListSearchAppsRequest of =
           ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-              bodyDecorator);
+              bodyInterceptor);
       of.execute(listSearchApps -> {
         List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
@@ -245,7 +245,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       }, e -> finishLoading());
     } else {
       ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          bodyDecorator)
+          bodyInterceptor)
           .execute(listSearchApps -> {
             List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
@@ -260,7 +260,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
       // Other stores
       ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          bodyDecorator)
+          bodyInterceptor)
           .execute(listSearchApps -> {
             List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 

@@ -18,7 +18,7 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
@@ -36,7 +36,7 @@ import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.Video;
 import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -108,7 +108,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private AptoideAccountManager accountManager;
   private IdsRepositoryImpl idsRepository;
   private AccountNavigator accountNavigator;
-  private BodyDecorator bodyDecorator;
+  private BodyInterceptor bodyInterceptor;
 
   public static AppsTimelineFragment newInstance(String action, String storeName) {
     AppsTimelineFragment fragment = new AppsTimelineFragment();
@@ -132,14 +132,14 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
     idsRepository =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    bodyDecorator = new BaseBodyDecorator(idsRepository.getUniqueIdentifier(), accountManager);
+    bodyInterceptor = new BaseBodyInterceptor(idsRepository.getUniqueIdentifier(), accountManager);
     timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
         new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
-            AccessorFactory.getAccessorFor(Installed.class)), bodyDecorator);
+            AccessorFactory.getAccessorFor(Installed.class)), bodyInterceptor);
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
-        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyDecorator);
-    socialRepository = new SocialRepository(accountManager, bodyDecorator);
+        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor);
+    socialRepository = new SocialRepository(accountManager, bodyInterceptor);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -378,7 +378,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     } else if (card instanceof AppUpdate) {
       return AppUpdateDisplayable.from((AppUpdate) card, spannableFactory, downloadFactory,
           dateCalculator, installManager, permissionManager, timelineAnalytics, socialRepository,
-          idsRepository, accountManager, bodyDecorator);
+          idsRepository, accountManager, bodyInterceptor);
     } else if (card instanceof Recommendation) {
       return RecommendationDisplayable.from((Recommendation) card, dateCalculator, spannableFactory,
           timelineAnalytics, socialRepository);

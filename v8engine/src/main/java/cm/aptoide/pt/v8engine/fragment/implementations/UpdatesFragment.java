@@ -7,14 +7,14 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -65,7 +65,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
   private int oldUpdateListHash = 0;
   private IdsRepositoryImpl idsRepository;
-  private BodyDecorator bodyDecorator;
+  private BodyInterceptor bodyInterceptor;
 
   @NonNull public static UpdatesFragment newInstance() {
     return new UpdatesFragment();
@@ -79,9 +79,9 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     installManager = new InstallManager(AptoideDownloadManager.getInstance(),
         new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK));
     analytics = Analytics.getInstance();
-    bodyDecorator = new BaseBodyDecorator(idsRepository.getUniqueIdentifier(), accountManager);
-    downloadInstallEventConverter = new DownloadEventConverter(bodyDecorator);
-    installConverter = new InstallEventConverter(bodyDecorator);
+    bodyInterceptor = new BaseBodyInterceptor(idsRepository.getUniqueIdentifier(), accountManager);
+    downloadInstallEventConverter = new DownloadEventConverter(bodyInterceptor);
+    installConverter = new InstallEventConverter(bodyInterceptor);
 
     updatesDisplayablesList = new LinkedList<>();
     installedDisplayablesList = new LinkedList<>();

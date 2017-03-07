@@ -2,7 +2,7 @@ package cm.aptoide.pt.viewRateAndCommentReviews;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.ListReviews;
@@ -45,7 +45,7 @@ class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<Li
         .flatMap(review -> ListCommentsRequest.of( // fetch the list of comments for each review
             review.getComments().getView(), review.getId(), 3,
             StoreUtils.getStoreCredentials(fragment.getStoreName(), storeCredentialsProvider), true,
-            new BaseBodyDecorator(aptoideClientUuid, accountManager))
+            new BaseBodyInterceptor(aptoideClientUuid, accountManager))
             .observe()
             .subscribeOn(Schedulers.io()) // parallel I/O split point
             .map(listComments -> {

@@ -26,23 +26,23 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
   }
 
   public static PostReviewRequest of(String storeName, String packageName, String title,
-      String textBody, Integer rating, BodyDecorator bodyDecorator) {
+      String textBody, Integer rating, BodyInterceptor bodyInterceptor) {
     //
     //  http://ws75-primary.aptoide.com/api/7/setReview/package_name/cm.aptoide
     // .pt/store_name/apps/title/Best%20app%20store/rating/5/access_token/ca01ee1e05ab4d82d99ef143e2816e667333c6ef
     //
     Body body = new Body(storeName, packageName, title, textBody, rating);
-    return new PostReviewRequest((Body) bodyDecorator.decorate(body), BASE_HOST);
+    return new PostReviewRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
   }
 
   public static PostReviewRequest of(String packageName, String title, String textBody,
-      Integer rating, BodyDecorator bodyDecorator) {
+      Integer rating, BodyInterceptor bodyInterceptor) {
     //
     //  http://ws75-primary.aptoide.com/api/7/setReview/package_name/cm.aptoide
     // .pt/store_name/apps/title/Best%20app%20store/rating/5/access_token/ca01ee1e05ab4d82d99ef143e2816e667333c6ef
     //
     Body body = new Body(packageName, title, textBody, rating);
-    return new PostReviewRequest((Body) bodyDecorator.decorate(body), BASE_HOST);
+    return new PostReviewRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

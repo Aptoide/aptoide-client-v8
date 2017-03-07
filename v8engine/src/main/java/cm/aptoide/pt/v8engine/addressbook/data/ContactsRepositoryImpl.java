@@ -3,7 +3,7 @@ package cm.aptoide.pt.v8engine.addressbook.data;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.SetConnectionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SyncAddressBookRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -28,12 +28,12 @@ import rx.schedulers.Schedulers;
 
 public class ContactsRepositoryImpl implements ContactsRepository {
 
-  private final BodyDecorator bodyDecorator;
+  private final BodyInterceptor bodyInterceptor;
   private final AptoideClientUUID aptoideClientUUID;
 
-  public ContactsRepositoryImpl(BodyDecorator bodyDecorator, AptoideClientUUID aptoideClientUUID) {
+  public ContactsRepositoryImpl(BodyInterceptor bodyInterceptor, AptoideClientUUID aptoideClientUUID) {
     this.aptoideClientUUID = aptoideClientUUID;
-    this.bodyDecorator = bodyDecorator;
+    this.bodyInterceptor = bodyInterceptor;
   }
 
   @Override public void getContacts(@NonNull LoadContactsCallback callback1) {
@@ -45,7 +45,7 @@ public class ContactsRepositoryImpl implements ContactsRepository {
       List<String> numbers = contacts.getMobileNumbers();
       List<String> emails = contacts.getEmails();
 
-      SyncAddressBookRequest.of(numbers, emails, bodyDecorator)
+      SyncAddressBookRequest.of(numbers, emails, bodyInterceptor)
           .observe()
           .subscribe(getFollowers -> {
             List<Contact> contactList = new ArrayList<>();
@@ -72,7 +72,7 @@ public class ContactsRepositoryImpl implements ContactsRepository {
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext());
     SyncAddressBookRequest.of(twitterModel.getId(), twitterModel.getToken(),
-        twitterModel.getSecret(), bodyDecorator).observe().subscribe(getFollowers -> {
+        twitterModel.getSecret(), bodyInterceptor).observe().subscribe(getFollowers -> {
       List<Contact> contactList = new ArrayList<>();
       for (GetFollowers.TimelineUser user : getFollowers.getDatalist().getList()) {
         Contact contact = new Contact();
@@ -95,7 +95,8 @@ public class ContactsRepositoryImpl implements ContactsRepository {
     AptoideClientUUID aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext());
-    SyncAddressBookRequest.of(facebookModel.getId(), facebookModel.getAccessToken(), bodyDecorator)
+    SyncAddressBookRequest.of(facebookModel.getId(), facebookModel.getAccessToken(),
+        bodyInterceptor)
         .observe()
         .subscribe(getFriends -> {
           List<Contact> contactList = new ArrayList<>();
@@ -135,7 +136,7 @@ public class ContactsRepositoryImpl implements ContactsRepository {
       AptoideClientUUID aptoideClientUUID =
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
               DataProvider.getContext());
-      SetConnectionRequest.of(hashedPhoneNumber, bodyDecorator).observe().subscribe(response -> {
+      SetConnectionRequest.of(hashedPhoneNumber, bodyInterceptor).observe().subscribe(response -> {
         if (response.isOk()) {
           callback.onPhoneNumberSubmission(true);
         } else {

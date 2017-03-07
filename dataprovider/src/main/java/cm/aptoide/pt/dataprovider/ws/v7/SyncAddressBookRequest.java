@@ -21,9 +21,9 @@ public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequ
     super(body, baseHost);
   }
 
-  public static SyncAddressBookRequest of(List<String> numbers, List<String> emails, BodyDecorator bodyDecorator) {
+  public static SyncAddressBookRequest of(List<String> numbers, List<String> emails, BodyInterceptor bodyInterceptor) {
 
-    return new SyncAddressBookRequest(((SyncAddressBookRequest.Body) bodyDecorator.decorate(
+    return new SyncAddressBookRequest(((SyncAddressBookRequest.Body) bodyInterceptor.intercept(
         new Body(new Contacts(numbers, emails), null, null))), BASE_HOST);
   }
 
@@ -33,22 +33,22 @@ public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequ
    * @param id
    * @param token
    * @param secret
-   * @param bodyDecorator
+   * @param bodyInterceptor
    * @return
    */
   public static SyncAddressBookRequest of(long id, String token, String secret,
-      BodyDecorator bodyDecorator) {
+      BodyInterceptor bodyInterceptor) {
 
-    return new SyncAddressBookRequest(((SyncAddressBookRequest.Body) bodyDecorator.decorate(
+    return new SyncAddressBookRequest(((SyncAddressBookRequest.Body) bodyInterceptor.intercept(
         new Body(null, new Twitter(id, token, secret), null))), BASE_HOST);
   }
 
   /**
    * This constructor was created to deal with facebook contacts request
    */
-  public static SyncAddressBookRequest of(long id, String token, BodyDecorator bodyDecorator) {
+  public static SyncAddressBookRequest of(long id, String token, BodyInterceptor bodyInterceptor) {
 
-    return new SyncAddressBookRequest(((SyncAddressBookRequest.Body) bodyDecorator.decorate(
+    return new SyncAddressBookRequest(((SyncAddressBookRequest.Body) bodyInterceptor.intercept(
         new Body(null, null, new Facebook(id, token)))), BASE_HOST);
   }
 

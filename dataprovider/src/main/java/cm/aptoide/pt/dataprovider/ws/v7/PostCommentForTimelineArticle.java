@@ -22,16 +22,16 @@ public class PostCommentForTimelineArticle
   }
 
   public static PostCommentForTimelineArticle of(String timelineArticleId, String text,
-      BodyDecorator bodyDecorator) {
+      BodyInterceptor bodyInterceptor) {
     Body body = new Body(timelineArticleId, text);
-    return new PostCommentForTimelineArticle((Body) bodyDecorator.decorate(body),
+    return new PostCommentForTimelineArticle((Body) bodyInterceptor.intercept(body),
         BASE_HOST);
   }
 
   public static PostCommentForTimelineArticle of(String timelineArticleId, long previousCommentId,
-      String text, BodyDecorator bodyDecorator) {
+      String text, BodyInterceptor bodyInterceptor) {
     Body body = new Body(timelineArticleId, text, previousCommentId);
-    return new PostCommentForTimelineArticle((Body) bodyDecorator.decorate(body),
+    return new PostCommentForTimelineArticle((Body) bodyInterceptor.intercept(body),
         BASE_HOST);
   }
 

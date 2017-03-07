@@ -34,9 +34,9 @@ import rx.Observable;
   }
 
   public static SetStoreRequest of(String accessToken, String storeName, String storeTheme,
-      String storeAvatarPath, BodyDecorator bodyDecorator) {
+      String storeAvatarPath, BodyInterceptor bodyInterceptor) {
     AccessTokenRequestBodyAdapter body =
-        new AccessTokenRequestBodyAdapter(new BaseBody(), bodyDecorator, accessToken, storeName,
+        new AccessTokenRequestBodyAdapter(new BaseBody(), bodyInterceptor, accessToken, storeName,
             storeTheme);
     File file = new File(storeAvatarPath);
     RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
@@ -59,9 +59,9 @@ import rx.Observable;
   }
 
   public static SetStoreRequest of(String accessToken, String storeName, String storeTheme, String storeAvatarPath, String storeDescription, Boolean editStore,
-      long storeId, BodyDecorator bodyDecorator) {
+      long storeId, BodyInterceptor bodyInterceptor) {
     AccessTokenRequestBodyAdapter body =
-        new AccessTokenRequestBodyAdapter(new BaseBody(), bodyDecorator, accessToken, storeName,
+        new AccessTokenRequestBodyAdapter(new BaseBody(), bodyInterceptor, accessToken, storeName,
             storeTheme, storeDescription, editStore, storeId);
     File file = new File(storeAvatarPath);
     RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);

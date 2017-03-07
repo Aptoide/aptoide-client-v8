@@ -15,12 +15,12 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
@@ -107,7 +107,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
       DownloadFactory downloadFactory, DateCalculator dateCalculator, InstallManager installManager,
       PermissionManager permissionManager, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository, IdsRepositoryImpl idsRepository,
-      AptoideAccountManager accountManager, BodyDecorator bodyDecorator) {
+      AptoideAccountManager accountManager, BodyInterceptor bodyInterceptor) {
     String abTestingURL = null;
 
     if (appUpdate.getAb() != null
@@ -121,9 +121,9 @@ public class AppUpdateDisplayable extends CardDisplayable {
         appUpdate.getPackageName(), downloadFactory.create(appUpdate, Download.ACTION_UPDATE),
         dateCalculator, appUpdate.getId(), abTestingURL, installManager, permissionManager,
         timelineAnalytics, socialRepository,
-        new DownloadEventConverter(bodyDecorator),
+        new DownloadEventConverter(bodyInterceptor),
         new InstallEventConverter(
-            new BaseBodyDecorator(idsRepository.getUniqueIdentifier(), accountManager)), Analytics.getInstance(),
+            new BaseBodyInterceptor(idsRepository.getUniqueIdentifier(), accountManager)), Analytics.getInstance(),
         accountManager, idsRepository);
   }
 

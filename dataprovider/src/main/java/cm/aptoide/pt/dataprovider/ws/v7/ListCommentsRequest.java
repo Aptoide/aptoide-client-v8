@@ -23,7 +23,7 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
   }
 
   public static ListCommentsRequest ofStoreAction(String url, boolean refresh,
-      @Nullable BaseRequestWithStore.StoreCredentials storeCredentials, BodyDecorator bodyDecorator) {
+      @Nullable BaseRequestWithStore.StoreCredentials storeCredentials, BodyInterceptor bodyInterceptor) {
 
     ListCommentsRequest.url = url;
 
@@ -34,19 +34,19 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       body.setStoreId(storeCredentials.getId());
     }
 
-    return new ListCommentsRequest((Body) bodyDecorator.decorate(body), BASE_HOST);
+    return new ListCommentsRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
   }
 
   public static ListCommentsRequest of(String url, long resourceId, int limit,
       BaseRequestWithStore.StoreCredentials storeCredentials, boolean isReview,
-      BodyDecorator bodyDecorator) {
+      BodyInterceptor bodyInterceptor) {
     ListCommentsRequest.url = url;
-    return of(resourceId, limit, storeCredentials, isReview, bodyDecorator);
+    return of(resourceId, limit, storeCredentials, isReview, bodyInterceptor);
   }
 
   public static ListCommentsRequest of(long resourceId, int limit,
       BaseRequestWithStore.StoreCredentials storeCredentials, boolean isReview,
-      BodyDecorator bodyDecorator) {
+      BodyInterceptor bodyInterceptor) {
     String username = storeCredentials.getUsername();
     String password = storeCredentials.getPasswordSha1();
 
@@ -60,18 +60,18 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       body.setStoreId(resourceId);
     }
 
-    return new ListCommentsRequest((Body) bodyDecorator.decorate(body), BASE_HOST);
+    return new ListCommentsRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
   }
 
   public static ListCommentsRequest of(long resourceId, int offset, int limit, boolean isReview,
-      BodyDecorator bodyDecorator) {
+      BodyInterceptor bodyInterceptor) {
     ListCommentsRequest listCommentsRequest =
-        of(resourceId, limit, isReview, bodyDecorator);
+        of(resourceId, limit, isReview, bodyInterceptor);
     listCommentsRequest.getBody().setOffset(offset);
     return listCommentsRequest;
   }
 
-  public static ListCommentsRequest of(long resourceId, int limit, boolean isReview, BodyDecorator bodyDecorator) {
+  public static ListCommentsRequest of(long resourceId, int limit, boolean isReview, BodyInterceptor bodyInterceptor) {
     Body body = new Body(limit, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc);
 
     if (isReview) {
@@ -80,11 +80,11 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       body.setStoreId(resourceId);
     }
 
-    return new ListCommentsRequest((Body) bodyDecorator.decorate(body), BASE_HOST);
+    return new ListCommentsRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
   }
 
   public static ListCommentsRequest ofTimeline(String url, boolean refresh,
-      String timelineArticleId, BodyDecorator bodyDecorator) {
+      String timelineArticleId, BodyInterceptor bodyInterceptor) {
 
     ListCommentsRequest.url = url;
 
@@ -95,7 +95,7 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     body.setCommentType(null);
     body.setTimelineCardId(timelineArticleId);
 
-    return new ListCommentsRequest((Body) bodyDecorator.decorate(body), BASE_HOST);
+    return new ListCommentsRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
   }
 
   @Override protected Observable<ListComments> loadDataFromNetwork(Interfaces interfaces,

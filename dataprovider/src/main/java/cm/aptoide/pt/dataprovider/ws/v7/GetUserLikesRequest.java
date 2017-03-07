@@ -14,9 +14,9 @@ public class GetUserLikesRequest extends V7<GetFollowers, GetUserLikesRequest.Bo
     super(body, baseHost);
   }
 
-  public static GetUserLikesRequest of(String cardUid, BodyDecorator bodyDecorator) {
+  public static GetUserLikesRequest of(String cardUid, BodyInterceptor bodyInterceptor) {
 
-    return new GetUserLikesRequest(((Body) bodyDecorator.decorate(new Body(cardUid))),
+    return new GetUserLikesRequest(((Body) bodyInterceptor.intercept(new Body(cardUid))),
         BASE_HOST);
   }
 

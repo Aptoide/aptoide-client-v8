@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.request.RequestFactory;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
@@ -26,7 +26,7 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
     requestFactory = new RequestFactory(aptoideClientUUID,
         ((V8Engine) getContext().getApplicationContext()).getAccountManager(),
         new StoreCredentialsProviderImpl(),
-        new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(),
+        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(),
             ((V8Engine) getContext().getApplicationContext()).getAccountManager()));
 
     super.onCreate(savedInstanceState);

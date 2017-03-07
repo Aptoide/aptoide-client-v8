@@ -25,7 +25,7 @@ import cm.aptoide.accountmanager.ws.CheckUserCredentialsRequest;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.v8engine.BaseBodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -113,7 +113,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
 
   private int CREATE_STORE_REQUEST_CODE = 0; //1: all (Multipart)  2: user and theme 3:user 4/5:edit
   private AptoideAccountManager accountManager;
-  private BaseBodyDecorator bodyDecorator;
+  private BaseBodyInterceptor bodyDecorator;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     getData();
@@ -122,7 +122,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         getApplicationContext());
     accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
-    bodyDecorator = new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    bodyDecorator = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
     mSubscriptions = new CompositeSubscription();
     bindViews();
     editViews();
