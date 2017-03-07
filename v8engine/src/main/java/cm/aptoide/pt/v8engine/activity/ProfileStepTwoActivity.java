@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
@@ -88,7 +89,7 @@ public class ProfileStepTwoActivity extends AccountBaseActivity {
                 () -> showContinueSuccessMessage(Analytics.Account.ProfileAction.CONTINUE))
             .doOnError(throwable -> showErrorMessage())
             .onErrorComplete()
-            .andThen(navigateToCreateStoreView())
+            .doOnTerminate(() -> navigateToCreateStoreViewOrDismiss())
             .toObservable())
         .retry()
         .subscribe());
@@ -100,7 +101,7 @@ public class ProfileStepTwoActivity extends AccountBaseActivity {
                 () -> showContinueSuccessMessage(Analytics.Account.ProfileAction.PRIVATE_PROFILE))
             .doOnError(throwable -> showErrorMessage())
             .onErrorComplete()
-            .andThen(navigateToCreateStoreView())
+            .doOnTerminate(() -> navigateToCreateStoreViewOrDismiss())
             .toObservable())
         .retry()
         .subscribe());
@@ -115,19 +116,14 @@ public class ProfileStepTwoActivity extends AccountBaseActivity {
     Analytics.Account.accountProfileAction(2, action);
   }
 
-  private Completable navigateToCreateStoreView() {
+  private void navigateToCreateStoreViewOrDismiss() {
     if (externalLogin) {
-      return accountManager.syncCurrentAccount().onErrorComplete().doOnTerminate(() -> {
-        dismiss();
-      });
+      dismiss();
     } else {
-      return Completable.fromAction(() -> {
-        startActivity(getIntent().setClass(this, CreateStoreActivity.class));
-        dismiss();
-      });
+      startActivity(new Intent(this, CreateStoreActivity.class));
+      dismiss();
     }
   }
-
   private void dismiss() {
     pleaseWaitDialog.dismiss();
     finish();

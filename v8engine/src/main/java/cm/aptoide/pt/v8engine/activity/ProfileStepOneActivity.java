@@ -22,7 +22,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import com.jakewharton.rxbinding.view.RxView;
-import rx.Completable;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -84,29 +83,27 @@ public class ProfileStepOneActivity extends AccountBaseActivity {
             .doOnCompleted(() -> showContinueSuccessMessage())
             .doOnError(throwable -> showErrorMessage())
             .onErrorComplete()
-            .andThen(navigateToCreateStoreView())
+            .doOnTerminate(() -> navigateToCreateStoreViewOrDismiss())
             .toObservable())
         .retry()
         .subscribe());
     mSubscriptions.add(RxView.clicks(mMoreInfoButton).subscribe(clicks -> {
       Analytics.Account.accountProfileAction(1, Analytics.Account.ProfileAction.MORE_INFO);
-      final Intent i = getIntent();
-      i.setClass(this, ProfileStepTwoActivity.class);
-      startActivity(i);
-      finish();
+      navigateToProfileStepTwoView();
     }));
   }
 
-  private Completable navigateToCreateStoreView() {
+  private void navigateToProfileStepTwoView() {
+    startActivity(new Intent(this, ProfileStepTwoActivity.class));
+    finish();
+  }
+
+  private void navigateToCreateStoreViewOrDismiss() {
     if (externalLogin) {
-      return accountManager.syncCurrentAccount().onErrorComplete().doOnTerminate(() -> {
-        dismiss();
-      });
+      dismiss();
     } else {
-      return Completable.fromAction(() -> {
-        startActivity(getIntent().setClass(this, CreateStoreActivity.class));
-        dismiss();
-      });
+      startActivity(new Intent(this, CreateStoreActivity.class));
+      dismiss();
     }
   }
 

@@ -42,9 +42,6 @@ import rx.schedulers.Schedulers;
 public class AptoideAccountManager {
 
   public static final String IS_FACEBOOK_OR_GOOGLE = "facebook_google";
-  /**
-   * Account type id
-   */
   private static final String ACCESS = "access";
   private static final String ACCESS_CONFIRMED = "access_confirmed";
   private static final String MATURE_SWITCH = "aptoide_account_manager_mature_switch";
