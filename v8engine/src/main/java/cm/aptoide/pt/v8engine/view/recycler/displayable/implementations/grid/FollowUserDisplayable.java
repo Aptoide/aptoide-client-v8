@@ -7,6 +7,7 @@ import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
@@ -112,17 +113,27 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
 
   public void viewClicked(NavigationManagerV4 navigationManager) {
     Store store = getPojo().getStore();
+    String theme = getStoreTheme(store);
+
+    if (store != null) {
+      navigationManager.navigateTo(V8Engine.getFragmentProvider()
+          .newStoreFragment(store.getName(), theme, StoreFragment.OpenType.GetHome));
+    } else {
+      navigationManager.navigateTo(V8Engine.getFragmentProvider()
+          .newStoreFragment(getPojo().getId(), theme, StoreFragment.OpenType.GetHome));
+    }
+  }
+
+  private String getStoreTheme(Store store) {
     String theme;
-    if (store.getAppearance() != null) {
+    if (store != null && store.getAppearance() != null) {
       theme =
           store.getAppearance().getTheme() == null ? V8Engine.getConfiguration().getDefaultTheme()
               : store.getAppearance().getTheme();
     } else {
       theme = V8Engine.getConfiguration().getDefaultTheme();
     }
-
-    navigationManager.navigateTo(
-        V8Engine.getFragmentProvider().newStoreFragment(store.getName(), theme));
+    return theme;
   }
 
   public TimeLineFollowFragment.FollowFragmentOpenMode getOpenMode() {

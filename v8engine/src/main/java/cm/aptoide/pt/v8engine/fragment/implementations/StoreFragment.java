@@ -72,11 +72,16 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private StoreCredentialsProvider storeCredentialsProvider;
   private OpenType openType;
 
-  public static StoreFragment newInstance(long userId, String storeTheme, Event.Name defaultTab) {
+  public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
+    return newInstance(userId, storeTheme, null, openType);
+  }
+
+  public static StoreFragment newInstance(long userId, String storeTheme, Event.Name defaultTab,
+      OpenType openType) {
     Bundle args = new Bundle();
     args.putLong(BundleCons.USER_ID, userId);
     args.putSerializable(BundleCons.STORE_CONTEXT, StoreContext.meta);
-    args.putSerializable(BundleCons.OPEN_TYPE, OpenType.GetHome);
+    args.putSerializable(BundleCons.OPEN_TYPE, openType);
     args.putString(BundleCons.STORE_THEME, storeTheme);
     args.putSerializable(BundleCons.DEFAULT_TAB_TO_OPEN, defaultTab);
     StoreFragment fragment = new StoreFragment();
@@ -85,22 +90,26 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   public static StoreFragment newInstance(String storeName, String storeTheme,
-      Event.Name defaultTab) {
-    StoreFragment storeFragment = newInstance(storeName, storeTheme);
+      Event.Name defaultTab, OpenType openType) {
+    StoreFragment storeFragment = newInstance(storeName, storeTheme, openType);
     storeFragment.getArguments().putSerializable(BundleCons.DEFAULT_TAB_TO_OPEN, defaultTab);
-    storeFragment.getArguments().putSerializable(BundleCons.OPEN_TYPE, OpenType.GetHome);
     return storeFragment;
   }
 
-  public static StoreFragment newInstance(String storeName, String storeTheme) {
+  public static StoreFragment newInstance(String storeName, String storeTheme,
+      StoreFragment.OpenType openType) {
     Bundle args = new Bundle();
     args.putString(BundleCons.STORE_NAME, storeName);
-    args.putSerializable(BundleCons.OPEN_TYPE, OpenType.GetStore);
+    args.putSerializable(BundleCons.OPEN_TYPE, openType);
     args.putSerializable(BundleCons.STORE_CONTEXT, StoreContext.meta);
     args.putString(BundleCons.STORE_THEME, storeTheme);
     StoreFragment fragment = new StoreFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  public static StoreFragment newInstance(String storeName, String storeTheme) {
+    return newInstance(storeName, storeTheme, OpenType.GetStore);
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -149,8 +158,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create || getHome == null) {
-      getRequest(refresh, openType)
-          .observeOn(AndroidSchedulers.mainThread())
+      getRequest(refresh, openType).observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe((getHome) -> {
             this.getHome = getHome;

@@ -24,6 +24,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.customviews.LikeButtonView;
+import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialCardDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
@@ -234,11 +235,13 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
 
   private void openStore(long userId, String storeTheme) {
     getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
-        .newStoreFragment(userId, storeTheme, Event.Name.getUserTimeline));
+        .newStoreFragment(userId, storeTheme, Event.Name.getUserTimeline,
+            StoreFragment.OpenType.GetHome));
   }
 
   private void openStore(String storeName, String storeTheme) {
     getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
-        .newStoreFragment(storeName, storeTheme, Event.Name.getUserTimeline));
+        .newStoreFragment(storeName, storeTheme, Event.Name.getUserTimeline,
+            StoreFragment.OpenType.GetHome));
   }
 }

@@ -9,6 +9,7 @@ import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsContract;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +25,15 @@ public interface FragmentProvider {
 
   Fragment newStoreFragment(String storeName, String storeTheme);
 
-  Fragment newStoreFragment(String storeName, String storeTheme, Event.Name defaultTab);
+  Fragment newStoreFragment(String storeName, String storeTheme, StoreFragment.OpenType openType);
 
-  Fragment newStoreFragment(long userId, String storeTheme, Event.Name defaultTab);
+  Fragment newStoreFragment(String storeName, String storeTheme, Event.Name defaultTab,
+      StoreFragment.OpenType openType);
+
+  Fragment newStoreFragment(long userId, String storeTheme, Event.Name defaultTab,
+      StoreFragment.OpenType openType);
+
+  Fragment newStoreFragment(long userId, String storeTheme, StoreFragment.OpenType openType);
 
   /**
    * @param storeContext is needed to give context to fragment ex: store downloads vs global
@@ -145,8 +152,7 @@ public interface FragmentProvider {
 
   Fragment newPhoneInputFragment();
 
-  Fragment newInviteFriendsFragment(InviteFriendsContract.View.OpenMode openMode,
-      String tag);
+  Fragment newInviteFriendsFragment(InviteFriendsContract.View.OpenMode openMode, String tag);
 
   Fragment newSpotShareFragment();
 

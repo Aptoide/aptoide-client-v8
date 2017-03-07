@@ -66,14 +66,25 @@ public class FragmentProviderImpl implements FragmentProvider {
     return StoreFragment.newInstance(storeName, storeTheme);
   }
 
-  @Override
-  public Fragment newStoreFragment(String storeName, String storeTheme, Event.Name defaultTab) {
-    return StoreFragment.newInstance(storeName, storeTheme, defaultTab);
+  @Override public Fragment newStoreFragment(String storeName, String storeTheme,
+      StoreFragment.OpenType openType) {
+    return StoreFragment.newInstance(storeName, storeTheme, openType);
   }
 
   @Override
-  public Fragment newStoreFragment(long userId, String storeTheme, Event.Name defaultTab) {
-    return StoreFragment.newInstance(userId, storeTheme, defaultTab);
+  public Fragment newStoreFragment(String storeName, String storeTheme, Event.Name defaultTab,
+      StoreFragment.OpenType openType) {
+    return StoreFragment.newInstance(storeName, storeTheme, defaultTab, openType);
+  }
+
+  @Override public Fragment newStoreFragment(long userId, String storeTheme, Event.Name defaultTab,
+      StoreFragment.OpenType openType) {
+    return StoreFragment.newInstance(userId, storeTheme, defaultTab, openType);
+  }
+
+  @Override public Fragment newStoreFragment(long userId, String storeTheme,
+      StoreFragment.OpenType openType) {
+    return StoreFragment.newInstance(userId, storeTheme, openType);
   }
 
   @Override
@@ -291,8 +302,8 @@ public class FragmentProviderImpl implements FragmentProvider {
     return PhoneInputFragment.newInstance();
   }
 
-  @Override public Fragment newInviteFriendsFragment(
-      InviteFriendsContract.View.OpenMode openMode, String tag) {
+  @Override public Fragment newInviteFriendsFragment(InviteFriendsContract.View.OpenMode openMode,
+      String tag) {
     return InviteFriendsFragment.newInstance(openMode, tag);
   }
 

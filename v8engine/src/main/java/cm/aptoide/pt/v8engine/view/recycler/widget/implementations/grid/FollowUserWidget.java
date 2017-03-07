@@ -19,7 +19,6 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
@@ -156,13 +155,10 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     followedTv.setTextColor(displayable.getStoreColor());
     followingTv.setTextColor(displayable.getStoreColor());
 
-    final FragmentShower fragmentShower = (FragmentShower) getContext();
-    if (displayable.hasStore()) {
-      compositeSubscription.add(RxView.clicks(itemView)
-          .subscribe(click -> displayable.viewClicked(getNavigationManager()), err -> {
-            CrashReport.getInstance().log(err);
-          }));
-    }
+    compositeSubscription.add(RxView.clicks(itemView)
+        .subscribe(click -> displayable.viewClicked(getNavigationManager()), err -> {
+          CrashReport.getInstance().log(err);
+        }));
   }
 
   private void setFollowColor(FollowUserDisplayable displayable) {
