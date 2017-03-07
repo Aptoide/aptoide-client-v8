@@ -212,28 +212,31 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
       List<String> packages) {
     return getDisplayableList(packages, 0, refresh).doOnSubscribe(
         () -> getAdapter().clearDisplayables()).flatMap(displayableDatalist -> {
-      if (!displayableDatalist.getList().isEmpty()) {
-        if (accountManager.isLoggedIn()) {
           Long userId =
               getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
-          return timelineRepository.getTimelineStats(refresh, userId).map(timelineStats -> {
-            displayableDatalist.getList()
-                .add(0, new TimeLineStatsDisplayable(timelineStats, userId, spannableFactory,
-                    storeTheme, timelineAnalytics, userId == null));
-            return displayableDatalist;
-          }).onErrorReturn(throwable -> {
-            CrashReport.getInstance().log(throwable);
-            return displayableDatalist;
-          });
-        } else {
-          displayableDatalist.getList()
-              .add(0, new TimelineLoginDisplayable().setAccountNavigator(accountNavigator));
-          return Observable.just(displayableDatalist);
-        }
+
+      if (accountManager.isLoggedIn() || userId != null) {
+        return getUserTimelineStats(refresh, displayableDatalist, userId);
       } else {
+        displayableDatalist.getList()
+            .add(0, new TimelineLoginDisplayable().setAccountNavigator(accountNavigator));
         return Observable.just(displayableDatalist);
       }
     }).doOnUnsubscribe(() -> finishLoading());
+  }
+
+  @NonNull private Observable<Datalist<Displayable>> getUserTimelineStats(boolean refresh,
+      Datalist<Displayable> displayableDatalist, Long userId) {
+    return timelineRepository.getTimelineStats(refresh, userId).map(timelineStats -> {
+      TimeLineStatsDisplayable timeLineStatsDisplayable =
+          new TimeLineStatsDisplayable(timelineStats, userId, spannableFactory, storeTheme,
+              timelineAnalytics, userId == null);
+      displayableDatalist.getList().add(0, timeLineStatsDisplayable);
+      return displayableDatalist;
+    }).onErrorReturn(throwable -> {
+      CrashReport.getInstance().log(throwable);
+      return displayableDatalist;
+    });
   }
 
   @Override public void reload() {
