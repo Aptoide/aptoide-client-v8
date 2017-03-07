@@ -653,7 +653,6 @@ public class HighwayTransferRecordActivity extends ActivityView
   }
 
   @Override protected void onDestroy() {
-    System.out.println("Called on destroy of the transferRecordActivity !!!!!!!!!!!!");
     presenter.onDestroy();
     super.onDestroy();
   }
@@ -881,6 +880,10 @@ public class HighwayTransferRecordActivity extends ActivityView
   @Override public void showServerLeftMessage() {
     Toast.makeText(this, this.getResources().getString(R.string.groupCreatorLeft),
         Toast.LENGTH_SHORT).show();
+  }
+
+  @Override public void clearAdapter() {
+    adapter.clearListOfItems();
   }
 
   private Dialog createDialogToDelete(final HighwayTransferRecordItem item) {
