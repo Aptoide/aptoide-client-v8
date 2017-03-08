@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.addressbook.phoneinput;
 
 import cm.aptoide.pt.v8engine.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepository;
+import cm.aptoide.pt.v8engine.addressbook.navigation.AddressBookNavigation;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -9,12 +10,15 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by jdandrade on 14/02/2017.
  */
 public class PhoneInputPresenter implements PhoneInputContract.UserActionsListener {
+  private final AddressBookAnalytics analytics;
+  private final AddressBookNavigation addressBookNavigation;
   private PhoneInputContract.View mPhoneInputView;
   private ContactsRepository mContactsRepository;
-  private final AddressBookAnalytics analytics;
 
   public PhoneInputPresenter(PhoneInputContract.View phoneInputView,
-      ContactsRepository contactsRepository, AddressBookAnalytics analytics) {
+      ContactsRepository contactsRepository, AddressBookAnalytics analytics,
+      AddressBookNavigation addressBookNavigation) {
+    this.addressBookNavigation = addressBookNavigation;
     this.mPhoneInputView = phoneInputView;
     this.mContactsRepository = contactsRepository;
     this.analytics = analytics;
@@ -31,7 +35,7 @@ public class PhoneInputPresenter implements PhoneInputContract.UserActionsListen
         .subscribe(success1 -> {
           if (success) {
             analytics.sendShareYourPhoneSuccessEvent();
-            mPhoneInputView.showSubmissionSuccess();
+            addressBookNavigation.navigateToThankYouConnectingFragment();
             mPhoneInputView.hideVirtualKeyboard();
           } else {
             mPhoneInputView.showSubmissionError();
