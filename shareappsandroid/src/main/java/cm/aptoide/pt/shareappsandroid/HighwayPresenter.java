@@ -135,16 +135,22 @@ public class HighwayPresenter implements Presenter {
         //analytics - track event
         connectionManager.evaluateWifi(new ConnectionManager.WifiStateListener() {
           @Override public void onStateChanged(boolean enabled) {
-            view.hideButtonsProgressBar();
-            System.out.println("Inside presenter on Success for join group");
-            analytics.joinGroupSuccess();
-            view.enableButtons(true);
-            String ipAddress = connectionManager.getIPAddress();
-            if (outsideShareManager != null) {
-              ArrayList<String> pathsFromOutside = outsideShareManager.getPathsFromOutsideShare();
-              view.openChatClient(ipAddress, deviceName, pathsFromOutside);
+            if (enabled) {
+              view.hideButtonsProgressBar();
+              System.out.println("Inside presenter on Success for join group");
+              analytics.joinGroupSuccess();
+              view.enableButtons(true);
+              String ipAddress = connectionManager.getIPAddress();
+              if (outsideShareManager != null) {
+                ArrayList<String> pathsFromOutside = outsideShareManager.getPathsFromOutsideShare();
+                view.openChatClient(ipAddress, deviceName, pathsFromOutside);
+              } else {
+                view.openChatClient(ipAddress, deviceName, null);
+              }
             } else {
-              view.openChatClient(ipAddress, deviceName, null);
+              view.hideButtonsProgressBar();
+              view.enableButtons(true);
+              view.showJoinGroupResult(ConnectionManager.ERROR_UNKNOWN);
             }
           }
         });

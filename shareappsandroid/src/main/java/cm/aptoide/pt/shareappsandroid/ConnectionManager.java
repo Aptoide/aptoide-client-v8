@@ -10,6 +10,7 @@ import android.net.Network;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -146,7 +147,21 @@ public class ConnectionManager {
             if (info != null && info.getType() == ConnectivityManager.TYPE_WIFI) {
               if (info.isAvailable() && info.isConnected()) {
 
-                isWifiConnected = true;
+                WifiInfo wifiInfo = wifimanager.getConnectionInfo();
+                if (wifiInfo.getSSID().contains("APTX")) {
+                  isWifiConnected = true;
+                  break;
+                } else {//connected to the wrong network
+                  listenerJoinWifi.onStateChanged(false);
+                  try {
+                    context.unregisterReceiver(this);
+                  } catch (IllegalArgumentException e) {
+                    System.out.println(
+                        "There was an error while trying to unregister the wifireceiver and the wifireceiverforconnectingwifi");
+                  }
+                  break;
+                }
+
               }
             }
           }
@@ -160,7 +175,22 @@ public class ConnectionManager {
           if (inf.getState() == NetworkInfo.State.CONNECTED
               && inf.getType() == ConnectivityManager.TYPE_WIFI) {
 
-            isWifiConnected = true;
+            WifiInfo wifiInfo = wifimanager.getConnectionInfo();
+            if (wifiInfo.getSSID().contains("APTX")) {
+              isWifiConnected = true;
+              break;
+            } else {
+              listenerJoinWifi.onStateChanged(false);
+              try {
+                context.unregisterReceiver(this);
+                context.unregisterReceiver(scanAPTXNetworks);
+              } catch (IllegalArgumentException e) {
+                System.out.println(
+                    "There was an error while trying to unregister the wifireceiver and the wifireceiverforconnectingwifi");
+              }
+              break;
+            }
+
           }
         }
       }
