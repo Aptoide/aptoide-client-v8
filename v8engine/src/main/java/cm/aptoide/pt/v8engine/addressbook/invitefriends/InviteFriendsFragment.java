@@ -93,6 +93,7 @@ public class InviteFriendsFragment extends UIComponentFragment
   }
 
   @Override public void showPhoneInputFragment() {
-    getNavigationManager().navigateTo(V8Engine.getFragmentProvider().newPhoneInputFragment());
+    getNavigationManager().navigateTo(
+        V8Engine.getFragmentProvider().newPhoneInputFragment(entranceTag));
   }
 }

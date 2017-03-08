@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.addressbook.syncresult;
 
 import cm.aptoide.pt.v8engine.addressbook.AddressBookAnalytics;
-import cm.aptoide.pt.v8engine.addressbook.data.Contact;
+import cm.aptoide.pt.v8engine.addressbook.navigation.AddressBookNavigation;
 
 /**
  * Created by jdandrade on 13/02/2017.
@@ -11,16 +11,19 @@ public class SyncResultPresenter implements SyncResultContract.UserActionsListen
 
   private final SyncResultContract.View mSyncSuccessView;
   private final AddressBookAnalytics analytics;
+  private final AddressBookNavigation addressBookNavigation;
 
   public SyncResultPresenter(SyncResultContract.View syncSuccessView,
-      AddressBookAnalytics analytics) {
+      AddressBookAnalytics analytics, AddressBookNavigation addressBookNavigation) {
     this.mSyncSuccessView = syncSuccessView;
+    this.addressBookNavigation = addressBookNavigation;
     this.analytics = analytics;
   }
 
   @Override public void allowFindClicked() {
-    analytics.sendNewConnectionsAllowFriendsToFindYouEvent(AddressBookAnalytics.HAS_NEW_CONNECTIONS_SCREEN);
-    this.mSyncSuccessView.showPhoneInputFragment();
+    analytics.sendNewConnectionsAllowFriendsToFindYouEvent(
+        AddressBookAnalytics.HAS_NEW_CONNECTIONS_SCREEN);
+    this.addressBookNavigation.navigateToPhoneInputView();
   }
 
   @Override public void doneClicked() {

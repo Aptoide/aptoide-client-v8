@@ -8,11 +8,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
+import cm.aptoide.pt.v8engine.addressbook.navigation.AddressBookNavigationManager;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.UIComponentFragment;
 import com.facebook.appevents.AppEventsLogger;
@@ -30,6 +32,7 @@ public class SyncResultFragment extends UIComponentFragment implements SyncResul
 
   public static final int SYNCED_LIST_NUMBER_OF_COLUMNS = 2;
   public static final String CONTACTS_JSON = "CONTACTS_JSON";
+  private static final String TAG = "TAG";
   private SyncResultContract.UserActionsListener mActionsListener;
   private List<Contact> contacts;
   private RecyclerView recyclerView;
@@ -37,13 +40,15 @@ public class SyncResultFragment extends UIComponentFragment implements SyncResul
   private Button allowFind;
   private Button done;
   private TextView successMessage;
+  private String entranceTag;
 
-  public static Fragment newInstance(List<Contact> contacts) {
+  public static Fragment newInstance(List<Contact> contacts, String tag) {
     SyncResultFragment syncSuccessFragment = new SyncResultFragment();
     Gson gson = new Gson();
     String contactsJson = gson.toJson(contacts);
     Bundle extras = new Bundle();
     extras.putString(CONTACTS_JSON, contactsJson);
+    extras.putString(TAG, tag);
     syncSuccessFragment.setArguments(extras);
     return syncSuccessFragment;
   }
@@ -63,7 +68,11 @@ public class SyncResultFragment extends UIComponentFragment implements SyncResul
     super.onCreate(savedInstanceState);
     mActionsListener = new SyncResultPresenter(this,
         new AddressBookAnalytics(Analytics.getInstance(),
-            AppEventsLogger.newLogger(getContext().getApplicationContext())));
+            AppEventsLogger.newLogger(getContext().getApplicationContext())),
+        new AddressBookNavigationManager(NavigationManagerV4.Builder.buildWith(getActivity()),
+            entranceTag, getString(R.string.addressbook_about),
+            getString(R.string.addressbook_data_about,
+                Application.getConfiguration().getMarketName())));
     mListAdapter = new SyncResultAdapter((ArrayList<Contact>) contacts, getContext());
   }
 
@@ -95,10 +104,6 @@ public class SyncResultFragment extends UIComponentFragment implements SyncResul
 
   @Override public void showStore() {
 
-  }
-
-  @Override public void showPhoneInputFragment() {
-    getNavigationManager().navigateTo(V8Engine.getFragmentProvider().newPhoneInputFragment());
   }
 
   @Override public void setProgressIndicator(boolean active) {

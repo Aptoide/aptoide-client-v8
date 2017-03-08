@@ -27,6 +27,7 @@ import com.jakewharton.rxbinding.view.RxView;
  */
 public class PhoneInputFragment extends UIComponentFragment implements PhoneInputContract.View {
 
+  public static final String TAG = "TAG";
   private PhoneInputContract.UserActionsListener mActionsListener;
   private TextView mNotNowV;
   private TextView mSharePhoneV;
@@ -35,10 +36,13 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
   private EditText mPhoneNumber;
   private ProgressDialog mGenericPleaseWaitDialog;
   private ContactUtils contactUtils;
+  private String entranceTag;
 
-  public static PhoneInputFragment newInstance() {
+
+  public static PhoneInputFragment newInstance(String tag) {
     PhoneInputFragment phoneInputFragment = new PhoneInputFragment();
     Bundle extras = new Bundle();
+    extras.putString(TAG, tag);
     phoneInputFragment.setArguments(extras);
     return phoneInputFragment;
   }
@@ -102,7 +106,7 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
 
   @Override public void showSubmissionSuccess() {
     getNavigationManager().navigateTo(
-        V8Engine.getFragmentProvider().newThankYouConnectingFragment());
+        V8Engine.getFragmentProvider().newThankYouConnectingFragment(entranceTag));
   }
 
   @Override public void showSubmissionError() {

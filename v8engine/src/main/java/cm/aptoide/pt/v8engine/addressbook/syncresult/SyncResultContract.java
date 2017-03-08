@@ -13,8 +13,6 @@ public interface SyncResultContract {
 
     void showStore();
 
-    void showPhoneInputFragment();
-
     void setProgressIndicator(boolean active);
   }
 
