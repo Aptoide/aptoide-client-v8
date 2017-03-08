@@ -77,6 +77,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   private View loginSignupSelectionArea;
   private Button loginSelectionButton;
   private Button signUpSelectionButton;
+  private TextView termsAndConditions;
+  private View separator;
 
   private boolean isPasswordVisible = false;
   private View credentialsEditTextsArea;
@@ -130,6 +132,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     setAptoideSignUpLoginAreaVisible();
     loginArea.setVisibility(View.GONE);
     signUpArea.setVisibility(View.VISIBLE);
+    separator.setVisibility(View.GONE);
+    termsAndConditions.setVisibility(View.GONE);
   }
 
   private void setAptoideSignUpLoginAreaVisible() {
@@ -144,6 +148,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     setAptoideSignUpLoginAreaVisible();
     loginArea.setVisibility(View.VISIBLE);
     signUpArea.setVisibility(View.GONE);
+    separator.setVisibility(View.GONE);
+    termsAndConditions.setVisibility(View.GONE);
   }
 
   @Override public void showLoading() {
@@ -271,6 +277,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
       loginSignupSelectionArea.setVisibility(View.VISIBLE);
       loginArea.setVisibility(View.GONE);
       signUpArea.setVisibility(View.GONE);
+      separator.setVisibility(View.VISIBLE);
+      termsAndConditions.setVisibility(View.VISIBLE);
       return true;
     }
     return false;
@@ -377,6 +385,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         String.format(getString(R.string.join_company), getCompanyName()));
     loginArea = view.findViewById(R.id.login_button_area);
     signUpArea = view.findViewById(R.id.sign_up_button_area);
+    termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions);
+    separator = (View) view.findViewById(R.id.separator);
 
     final Context context = getContext();
 
