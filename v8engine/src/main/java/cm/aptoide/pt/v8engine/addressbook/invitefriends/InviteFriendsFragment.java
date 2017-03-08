@@ -11,7 +11,6 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.v8engine.addressbook.navigation.AddressBookNavigationManager;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -44,10 +43,8 @@ public class InviteFriendsFragment extends UIComponentFragment
     return inviteFriendsFragment;
   }
 
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-    openMode = (OpenMode) args.get(OPEN_MODE);
-    entranceTag = (String) args.get(TAG);
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
     mActionsListener = new InviteFriendsPresenter(this,
         new AddressBookNavigationManager(NavigationManagerV4.Builder.buildWith(getActivity()),
             entranceTag, getString(R.string.addressbook_about),
@@ -55,6 +52,12 @@ public class InviteFriendsFragment extends UIComponentFragment
                 Application.getConfiguration().getMarketName())), openMode,
         new AddressBookAnalytics(Analytics.getInstance(),
             AppEventsLogger.newLogger(getContext().getApplicationContext())));
+  }
+
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    openMode = (OpenMode) args.get(OPEN_MODE);
+    entranceTag = (String) args.get(TAG);
   }
 
   @Override public void setupViews() {
@@ -90,10 +93,5 @@ public class InviteFriendsFragment extends UIComponentFragment
     allowFind = (Button) view.findViewById(R.id.addressbook_allow_find);
     done = (Button) view.findViewById(R.id.addressbook_done);
     message = (TextView) view.findViewById(R.id.addressbook_friends_message);
-  }
-
-  @Override public void showPhoneInputFragment() {
-    getNavigationManager().navigateTo(
-        V8Engine.getFragmentProvider().newPhoneInputFragment(entranceTag));
   }
 }

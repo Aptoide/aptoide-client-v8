@@ -29,7 +29,7 @@ public class InviteFriendsPresenter implements InviteFriendsContract.UserActions
   }
 
   @Override public void allowFindClicked() {
-    this.inviteFriendsView.showPhoneInputFragment();
+    addressBookNavigationManager.navigateToPhoneInputView();
   }
 
   @Override public void doneClicked() {
