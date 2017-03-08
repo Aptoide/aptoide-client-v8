@@ -66,7 +66,7 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
   }
 
   public String getStoreName() {
-    return getPojo().getStore().getName();
+    return getPojo().getStore() == null ? null : getPojo().getStore().getName();
   }
 
   public String getStoreAvatar() {
