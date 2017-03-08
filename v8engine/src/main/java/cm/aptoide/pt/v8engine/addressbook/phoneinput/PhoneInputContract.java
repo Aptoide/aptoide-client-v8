@@ -11,8 +11,6 @@ public interface PhoneInputContract {
 
     void setGenericPleaseWaitDialog(boolean active);
 
-    void showSubmissionSuccess();
-
     void showSubmissionError();
 
     void hideVirtualKeyboard();

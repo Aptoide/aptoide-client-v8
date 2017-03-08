@@ -21,4 +21,6 @@ public interface AddressBookNavigation {
   void showAboutFragment();
 
   void showSuccessFragment(List<Contact> contacts);
+
+  void navigateToThankYouConnectingFragment();
 }

@@ -9,8 +9,6 @@ import android.content.Context;
 public interface InviteFriendsContract {
   interface View {
 
-    void showPhoneInputFragment();
-
     enum OpenMode {
       ERROR, CONTACTS_PERMISSION_DENIAL, NO_FRIENDS
     }

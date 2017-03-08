@@ -36,11 +36,12 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
   }
 
   @Override public void navigateToPhoneInputView() {
-    this.navigationManager.navigateTo(V8Engine.getFragmentProvider().newPhoneInputFragment(exitNavigationFragmentTag));
+    this.navigationManager.navigateTo(
+        V8Engine.getFragmentProvider().newPhoneInputFragment(exitNavigationFragmentTag));
   }
 
-  @Override public void navigateToInviteFriendsView(
-      @NonNull InviteFriendsContract.View.OpenMode openMode) {
+  @Override
+  public void navigateToInviteFriendsView(@NonNull InviteFriendsContract.View.OpenMode openMode) {
     switch (openMode) {
       case ERROR:
         this.navigationManager.navigateTo(V8Engine.getFragmentProvider()
@@ -49,8 +50,7 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
         break;
       case NO_FRIENDS:
         this.navigationManager.navigateTo(V8Engine.getFragmentProvider()
-            .newInviteFriendsFragment(
-                InviteFriendsContract.View.OpenMode.NO_FRIENDS,
+            .newInviteFriendsFragment(InviteFriendsContract.View.OpenMode.NO_FRIENDS,
                 exitNavigationFragmentTag));
         break;
       case CONTACTS_PERMISSION_DENIAL:
@@ -69,6 +69,12 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
   }
 
   @Override public void showSuccessFragment(List<Contact> contacts) {
-    navigationManager.navigateTo(V8Engine.getFragmentProvider().newSyncSuccessFragment(contacts, exitNavigationFragmentTag));
+    navigationManager.navigateTo(
+        V8Engine.getFragmentProvider().newSyncSuccessFragment(contacts, exitNavigationFragmentTag));
+  }
+
+  @Override public void navigateToThankYouConnectingFragment() {
+    navigationManager.navigateTo(
+        V8Engine.getFragmentProvider().newThankYouConnectingFragment(exitNavigationFragmentTag));
   }
 }
