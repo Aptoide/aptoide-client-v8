@@ -335,7 +335,11 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setTitle(storeName);
-    toolbar.setLogo(R.drawable.ic_store);
+    if (userId != null) {
+      toolbar.setLogo(R.drawable.ic_user_icon);
+    } else {
+      toolbar.setLogo(R.drawable.ic_store);
+    }
   }
 
   @Partners @CallSuper @Override public void setupToolbar() {
