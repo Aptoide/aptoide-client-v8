@@ -29,6 +29,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
   @Getter private Date date;
   @Getter private List<UserTimeline> userLikes;
   @Getter private boolean liked;
+  @Getter private String abUrl;
 
   SocialCardDisplayable() {
     numberOfLikes = 0;
@@ -38,7 +39,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
   SocialCardDisplayable(TimelineCard timelineCard, long numberOfLikes, long numberOfComments,
       Store store, Comment.User user, Comment.User userSharer, boolean liked,
       List<UserTimeline> userLikes, Date date, SpannableFactory spannableFactory,
-      DateCalculator dateCalculator) {
+      DateCalculator dateCalculator, String abUrl) {
     super(timelineCard);
     this.date = date;
     this.liked = liked;
@@ -50,6 +51,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
     this.userLikes = userLikes;
     this.spannableFactory = spannableFactory;
     this.store = store;
+    this.abUrl = abUrl;
   }
 
   public String getTimeSinceLastUpdate(Context context) {
