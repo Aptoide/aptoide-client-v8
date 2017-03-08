@@ -5,9 +5,9 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.store.GetHomeMeta;
 import lombok.Data;
@@ -32,19 +32,15 @@ import rx.Observable;
   }
 
   public static GetHomeMetaRequest ofAction(String url, StoreCredentials storeCredentials,
-      String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-
+      BodyInterceptor interceptor) {
     return new GetHomeMetaRequest(new V7Url(url).remove("home/getMeta").get(),
-        (Body) decorator.decorate(new Body(storeCredentials), accessToken), BASE_HOST);
+        (Body) interceptor.intercept(new Body(storeCredentials)), BASE_HOST);
   }
 
-  public static GetHomeMetaRequest of(StoreCredentials storeCredentials, String accessToken,
-      String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-
+  public static GetHomeMetaRequest of(StoreCredentials storeCredentials,
+      BodyInterceptor interceptor) {
     return new GetHomeMetaRequest(BASE_HOST,
-        (Body) decorator.decorate(new Body(storeCredentials), accessToken));
+        (Body) interceptor.intercept(new Body(storeCredentials)));
   }
 
   @Override protected Observable<GetHomeMeta> loadDataFromNetwork(Interfaces interfaces,

@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.repository.request;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetUserRequest;
 
 /**
@@ -10,16 +11,13 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetUserRequest;
 
 public class GetUserRequestFactory {
 
-  private final IdsRepository idsRepository;
-  private final AptoideAccountManager accountManager;
+  private final BodyInterceptor bodyInterceptor;
 
-  public GetUserRequestFactory(IdsRepository idsRepository, AptoideAccountManager accountManager) {
-    this.idsRepository = idsRepository;
-    this.accountManager = accountManager;
+  public GetUserRequestFactory(BodyInterceptor bodyInterceptor) {
+    this.bodyInterceptor = bodyInterceptor;
   }
 
   public GetUserRequest newGetUser(String url) {
-    return GetUserRequest.of(url, accountManager.getAccessToken(),
-        idsRepository.getUniqueIdentifier());
+    return GetUserRequest.of(url, bodyInterceptor);
   }
 }

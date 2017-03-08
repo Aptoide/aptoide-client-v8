@@ -21,10 +21,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.ws.CheckUserCredentialsRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -112,6 +113,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
 
   private int CREATE_STORE_REQUEST_CODE = 0; //1: all (Multipart)  2: user and theme 3:user 4/5:edit
   private AptoideAccountManager accountManager;
+  private BaseBodyInterceptor bodyDecorator;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     getData();
@@ -120,6 +122,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         getApplicationContext());
     accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
+    bodyDecorator = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
     mSubscriptions = new CompositeSubscription();
     bindViews();
     editViews();
@@ -271,8 +274,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
               || CREATE_STORE_REQUEST_CODE == 2
               || CREATE_STORE_REQUEST_CODE == 3) {
             progressDialog.show();
-            mSubscriptions.add(CheckUserCredentialsRequest.of(storeName, accountManager,
-                accountManager.getAccessToken()).observe().subscribe(answer -> {
+            mSubscriptions.add(CheckUserCredentialsRequest.of(storeName, accountManager.getAccessToken()).observe().subscribe(answer -> {
               if (answer.hasErrors()) {
                 if (answer.getErrors() != null && answer.getErrors().size() > 0) {
                   progressDialog.dismiss();
@@ -314,53 +316,60 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
               onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
               progressDialog.dismiss();
             }));
-          } else if (CREATE_STORE_REQUEST_CODE == 4) {
-            setStoreData();
-            progressDialog.show();
-            mSubscriptions.add(SetStoreRequest.of(aptoideClientUUID.getUniqueIdentifier(),
-                accountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath,
-                storeDescription, true, storeId).observe().subscribe(answer -> {
-              accountManager.syncCurrentAccount().subscribe(() -> {
-                progressDialog.dismiss();
-                goToMainActivity();
-              }, Throwable::printStackTrace);
-            }, throwable -> {
-              if (((AptoideWsV7Exception) throwable).getBaseResponse()
-                  .getErrors()
-                  .get(0)
-                  .getCode()
-                  .equals("API-1")) {
-                progressDialog.dismiss();
-                ShowMessage.asObservableSnack(this, cm.aptoide.accountmanager.R.string.ws_error_API_1)
-                    .subscribe(visibility -> {
-                      if (visibility == ShowMessage.DISMISSED) {
-                        goToMainActivity();
-                      }
-                    });
-              } else {
-                onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
-                progressDialog.dismiss();
-              }
-            }));
-          } else if (CREATE_STORE_REQUEST_CODE == 5) {
-            /*
-             * not multipart
-             */
-            setStoreData();
-            progressDialog.show();
-            mSubscriptions.add(SimpleSetStoreRequest.of(accountManager.getAccessToken(),
-                aptoideClientUUID.getUniqueIdentifier(), storeId, storeTheme, storeDescription)
-                .observe()
-                .subscribe(answer -> {
-                  accountManager.syncCurrentAccount().subscribe(() -> {
-                    progressDialog.dismiss();
-                    accountManager.sendLoginBroadcast();
-                    goToMainActivity();
-                  }, Throwable::printStackTrace);
-                }, throwable -> {
-                  onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
-                  progressDialog.dismiss();
-                }));
+          } else {
+            if (CREATE_STORE_REQUEST_CODE == 4) {
+              setStoreData();
+              progressDialog.show();
+              mSubscriptions.add(
+                  SetStoreRequest.of(accountManager.getAccessToken(), storeName, storeTheme,
+                      storeAvatarPath, storeDescription, true, storeId, bodyDecorator)
+                      .observe()
+                      .subscribe(answer -> {
+                        accountManager.syncCurrentAccount().subscribe(() -> {
+                          progressDialog.dismiss();
+                          goToMainActivity();
+                        }, Throwable::printStackTrace);
+                      }, throwable -> {
+                        if (((AptoideWsV7Exception) throwable).getBaseResponse()
+                            .getErrors()
+                            .get(0)
+                            .getCode()
+                            .equals("API-1")) {
+                          progressDialog.dismiss();
+                          ShowMessage.asObservableSnack(this,
+                              cm.aptoide.accountmanager.R.string.ws_error_API_1)
+                              .subscribe(visibility -> {
+                                if (visibility == ShowMessage.DISMISSED) {
+                                  goToMainActivity();
+                                }
+                              });
+                        } else {
+                          onCreateFail(
+                              ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+                          progressDialog.dismiss();
+                        }
+                      }));
+            } else if (CREATE_STORE_REQUEST_CODE == 5) {
+              /*
+               * not multipart
+               */
+              setStoreData();
+              progressDialog.show();
+              mSubscriptions.add(
+                  SimpleSetStoreRequest.of(storeId, storeTheme, storeDescription, bodyDecorator)
+                      .observe()
+                      .subscribe(answer -> {
+                        accountManager.syncCurrentAccount().subscribe(() -> {
+                          progressDialog.dismiss();
+                          accountManager.sendLoginBroadcast();
+                          goToMainActivity();
+                        }, Throwable::printStackTrace);
+                      }, throwable -> {
+                        onCreateFail(
+                            ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+                        progressDialog.dismiss();
+                      }));
+            }
           }
         }
 
@@ -560,8 +569,8 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
        * Multipart
        */
       setStoreData();
-      mSubscriptions.add(SetStoreRequest.of(aptoideClientUUID.getUniqueIdentifier(),
-          accountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath)
+      mSubscriptions.add(SetStoreRequest.of(accountManager.getAccessToken(), storeName, storeTheme,
+          storeAvatarPath, bodyDecorator)
           .observe()
           .timeout(90, TimeUnit.SECONDS)
           .subscribe(answer -> {
@@ -622,8 +631,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
        * not multipart
        */
       setStoreData();
-      SimpleSetStoreRequest.of(accountManager.getAccessToken(),
-          aptoideClientUUID.getUniqueIdentifier(), storeName, storeTheme).execute(answer -> {
+      SimpleSetStoreRequest.of(storeName, storeTheme, bodyDecorator).execute(answer -> {
         accountManager.syncCurrentAccount().subscribe(() -> {
           progressDialog.dismiss();
           accountManager.sendLoginBroadcast();

@@ -46,7 +46,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.dialog.AdultDialog;
+import cm.aptoide.pt.v8engine.dialog.AdultDialogFactory;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
@@ -177,7 +177,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
             if (cb.isChecked()) {
               cb.setChecked(false);
-              AdultDialog.buildAreYouAdultDialog(getActivity(),
+              AdultDialogFactory.buildAreYouAdultDialog(getActivity(),
                   new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
                       if (which == DialogInterface.BUTTON_POSITIVE) {
@@ -187,7 +187,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                     }
                   }).show();
             } else {
-              Logger.d(AdultDialog.class.getName(), "FLURRY TESTING : LOCK ADULT CONTENT");
+              Logger.d(AdultDialogFactory.class.getName(), "FLURRY TESTING : LOCK ADULT CONTENT");
               Analytics.AdultContent.lock();
               accountManager.updateMatureSwitch(false);
             }
@@ -389,7 +389,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     final Preference adultPinPreference = findPreference(SettingsConstants.ADULT_PIN);
     if (pin != -1) {
       // With Pin
-      AdultDialog.buildMaturePinInputDialog(getActivity(), new DialogInterface.OnClickListener() {
+      AdultDialogFactory.buildMaturePinInputDialog(getActivity(), new DialogInterface.OnClickListener() {
         @Override public void onClick(DialogInterface dialog, int which) {
           if (which == Dialog.BUTTON_POSITIVE) {
             SecurePreferences.setAdultContentPin(-1);
@@ -407,7 +407,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private Dialog dialogSetAdultPin(final Preference mp) {
     isSetingPIN = true;
 
-    return AdultDialog.setAdultPinDialog(getActivity(), mp, (v, which) -> isSetingPIN = false);
+    return AdultDialogFactory.setAdultPinDialog(getActivity(), mp, (v, which) -> isSetingPIN = false);
   }
 
   private void settingsResult() {

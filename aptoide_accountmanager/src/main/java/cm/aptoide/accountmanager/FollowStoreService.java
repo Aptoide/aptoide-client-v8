@@ -1,5 +1,6 @@
 package cm.aptoide.accountmanager;
 
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
 import rx.Observable;
 
@@ -9,12 +10,9 @@ import rx.Observable;
 
 public interface FollowStoreService {
 
-  Observable<ChangeStoreSubscriptionResponse> followStore(String storeName,
-      String aptoideClientUUID, String accessToken);
+  Observable<ChangeStoreSubscriptionResponse> followStore(String storeName, String storeUserName,
+      String sha1Password, BodyInterceptor interceptor);
 
-  Observable<ChangeStoreSubscriptionResponse> followStore(String storeName,
-      String aptoideClientUUID, String accessToken, String storeUserName, String sha1Password);
-
-  Observable<ChangeStoreSubscriptionResponse> unFollowStore(String storeName,
-      String aptoideClientUUID, String accessToken, String storeUserName, String sha1Password);
+  Observable<ChangeStoreSubscriptionResponse> unFollowStore(String storeName, String storeUserName,
+      String sha1Password, BodyInterceptor interceptor);
 }

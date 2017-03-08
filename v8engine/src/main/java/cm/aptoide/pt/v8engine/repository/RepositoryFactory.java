@@ -19,12 +19,13 @@ import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.iab.InAppBillingSerializer;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.Product;
@@ -33,6 +34,7 @@ import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
 import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
 import cm.aptoide.pt.v8engine.repository.sync.SyncDataConverter;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 
 /**
  * Created by sithengineer on 02/09/16.
@@ -48,9 +50,11 @@ public final class RepositoryFactory {
   }
 
   public static UpdateRepository getUpdateRepository(Context context) {
+    IdsRepositoryImpl aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), context);
     return new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
-        AccessorFactory.getAccessorFor(Store.class), getAccountManager(context),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), context));
+        AccessorFactory.getAccessorFor(Store.class), getAccountManager(context), aptoideClientUUID,
+        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), getAccountManager(context)));
   }
 
   public static InstalledRepository getInstalledRepository() {
@@ -87,9 +91,12 @@ public final class RepositoryFactory {
   }
 
   public static AppRepository getAppRepository(Context context) {
+    final AptoideClientUUID aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), context);
     return new AppRepository(getNetworkOperatorManager(context), getAccountManager(context),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+        aptoideClientUUID,
+        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), getAccountManager(context)),
+        new StoreCredentialsProviderImpl());
   }
 
   private static NetworkOperatorManager getNetworkOperatorManager(Context context) {

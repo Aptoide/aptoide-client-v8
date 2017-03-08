@@ -10,6 +10,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowersRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowingRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserLikesRequest;
@@ -34,13 +35,22 @@ import rx.functions.Action1;
 
 public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment {
 
-  private AptoideClientUUID aptoideClientUUID;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private TimeLineFollowFragment.FollowFragmentOpenMode openMode;
   @Nullable private String cardUid;
   @Nullable private Long numberOfLikes;
-  private AptoideAccountManager accountManager;
+  private BaseBodyInterceptor bodyDecorator;
   private Long userId;
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    final AptoideAccountManager accountManager =
+        ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    final AptoideClientUUID aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext());
+    bodyDecorator = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+  }
 
   public static TimeLineFollowFragment newInstance(FollowFragmentOpenMode openMode, Long id,
       long followNumber, String storeTheme) {
@@ -76,13 +86,6 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
     TimeLineFollowFragment fragment = new TimeLineFollowFragment();
     fragment.setArguments(args);
     return fragment;
-  }
-
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -125,17 +128,16 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
       V7 request;
       switch (openMode) {
         case FOLLOWERS:
-          request = GetFollowersRequest.of(accountManager.getAccessToken(),
-              aptoideClientUUID.getUniqueIdentifier(), userId);
+          request = GetFollowersRequest.of(bodyDecorator, userId);
           break;
         case FOLLOWING:
-          request = GetFollowingRequest.of(accountManager.getAccessToken(),
-              aptoideClientUUID.getUniqueIdentifier(), userId);
+          request = GetFollowingRequest.of(bodyDecorator, userId);
           break;
         case LIKE_PREVIEW:
-          request = GetUserLikesRequest.of(accountManager.getAccessToken(),
+          final String uniqueIdentifier =
               new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                  DataProvider.getContext()).getUniqueIdentifier(), cardUid);
+                  DataProvider.getContext()).getUniqueIdentifier();
+          request = GetUserLikesRequest.of(cardUid, bodyDecorator);
           break;
         default:
           throw new IllegalStateException(

@@ -20,6 +20,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
+import cm.aptoide.pt.model.v3.BaseV3Response;
+import cm.aptoide.pt.model.v3.ErrorResponse;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetFollowers;
@@ -107,6 +109,22 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
 
   @Override public Observable<U> observe(boolean bypassCache) {
     return handleToken(retryOnTicket(super.observe(bypassCache)), bypassCache);
+  }
+
+  @NonNull public static String getErrorMessage(BaseV7Response response) {
+    final StringBuilder builder = new StringBuilder();
+    if (response != null && response.getErrors() != null) {
+      for (BaseV7Response.Error error : response.getErrors()) {
+        builder.append(error.getDescription());
+        builder.append(". ");
+      }
+      if (builder.length() == 0) {
+        builder.append("Server failed with empty error list.");
+      }
+    } else {
+      builder.append("Server returned null response.");
+    }
+    return builder.toString();
   }
 
   private Observable<U> retryOnTicket(Observable<U> observable) {

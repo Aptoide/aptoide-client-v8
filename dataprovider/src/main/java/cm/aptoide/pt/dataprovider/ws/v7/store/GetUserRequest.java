@@ -1,7 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.store.GetStore;
@@ -22,13 +22,10 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
     this.url = url;
   }
 
-  public static GetUserRequest of(String url, String accessToken, String aptoideClientUUID) {
-
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-
+  public static GetUserRequest of(String url, BodyInterceptor interceptor) {
     final GetUserRequest.Body body = new GetUserRequest.Body(WidgetsArgs.createDefault());
     return new GetUserRequest(new V7Url(url).remove("user/get").get(), BASE_HOST,
-        (GetUserRequest.Body) decorator.decorate(body, accessToken));
+        (GetUserRequest.Body) interceptor.intercept(body));
   }
 
   @Override

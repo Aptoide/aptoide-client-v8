@@ -2,8 +2,8 @@ package cm.aptoide.pt.v8engine.util;
 
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
@@ -21,17 +21,19 @@ import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 public class StoreUtilsProxy {
 
   private final AptoideAccountManager accountManager;
-  private final AptoideClientUUID aptoideClientUUID;
+  private final BodyInterceptor bodyInterceptor;
+  private final StoreCredentialsProvider storeCredentialsProvider;
 
-  public StoreUtilsProxy(AptoideClientUUID aptoideClientUuid, AptoideAccountManager accountManager) {
-    this.aptoideClientUUID = aptoideClientUuid;
+  public StoreUtilsProxy(AptoideAccountManager accountManager, BodyInterceptor bodyInterceptor,
+      StoreCredentialsProvider storeCredentialsProvider) {
     this.accountManager = accountManager;
+    this.bodyInterceptor = bodyInterceptor;
+    this.storeCredentialsProvider = storeCredentialsProvider;
   }
 
   public void subscribeStore(String storeName) {
-    subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
-        accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier()), null,
-        null, storeName, accountManager);
+    subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName,
+        storeCredentialsProvider), bodyInterceptor), null, null, storeName, accountManager);
   }
 
   public void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
@@ -53,11 +55,10 @@ public class StoreUtilsProxy {
 
   public void subscribeStore(String storeName,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
-      @Nullable ErrorRequestListener errorRequestListener,
-      AptoideAccountManager accountManager) {
-    subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
-        accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier()),
-        successRequestListener, errorRequestListener, storeName, accountManager);
+      @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager) {
+    subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName,
+        storeCredentialsProvider), bodyInterceptor), successRequestListener,
+        errorRequestListener, storeName, accountManager);
   }
 
   public void unSubscribeStore(String storeName,

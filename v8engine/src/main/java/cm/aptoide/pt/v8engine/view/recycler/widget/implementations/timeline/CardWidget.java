@@ -7,17 +7,16 @@ import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigation.AccountNavigator;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.activity.AccountBaseActivity;
 import cm.aptoide.pt.v8engine.activity.CreateStoreActivity;
 import cm.aptoide.pt.v8engine.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.CardDisplayable;
@@ -86,8 +85,8 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     }
 
     if (TextUtils.isEmpty(accountManager.getAccount().getStore())
-        && !AccountBaseActivity.UserAccessState.PUBLIC.toString()
-        .equals(ManagerPreferences.getUserAccess())) {
+        && !Account.Access.PUBLIC
+        .equals(accountManager.getAccountAccess())) {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
           R.string.create_store_create, snackView -> {
             Intent intent = new Intent(getContext(), CreateStoreActivity.class);
@@ -100,7 +99,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     AlertDialog.Builder alertDialog = sharePreviewDialog.getPreviewDialogBuilder(getContext());
 
     Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
-      if (!ManagerPreferences.getUserAccessConfirmed()) {
+      if (!accountManager.isAccountAccessConfirmed()) {
         alertDialog.setPositiveButton(R.string.share, (dialogInterface, i) -> {
           displayable.share(getContext(), sharePreviewDialog.getPrivacyResult());
           subscriber.onNext(GenericDialogs.EResponse.YES);

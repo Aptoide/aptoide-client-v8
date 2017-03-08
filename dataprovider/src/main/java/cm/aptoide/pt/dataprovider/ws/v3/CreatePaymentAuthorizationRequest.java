@@ -6,6 +6,8 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.pt.model.v3.BaseV3Response;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import rx.Observable;
 
 /**
@@ -15,7 +17,8 @@ import rx.Observable;
 public class CreatePaymentAuthorizationRequest extends V3<BaseV3Response> {
 
   private CreatePaymentAuthorizationRequest(String baseHost, BaseBody baseBody) {
-    super(baseHost, baseBody);
+    super(baseHost, baseBody,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), isDebug()));
   }
 
   public static CreatePaymentAuthorizationRequest of(String accessToken, int paymentId) {

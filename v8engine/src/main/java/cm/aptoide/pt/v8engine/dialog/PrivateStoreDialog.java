@@ -21,8 +21,9 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -30,6 +31,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 
@@ -49,6 +51,7 @@ public class PrivateStoreDialog extends BaseDialog {
   private String storePassSha1;
   private boolean isInsideStore;
   private StoreUtilsProxy storeUtilsProxy;
+  private BaseBodyInterceptor bodyInterceptor;
 
   public static PrivateStoreDialog newInstance(Fragment returnFragment, int requestCode,
       String storeName, boolean isInsideStore) {
@@ -72,7 +75,10 @@ public class PrivateStoreDialog extends BaseDialog {
     super.onCreate(savedInstanceState);
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
-    storeUtilsProxy = new StoreUtilsProxy(aptoideClientUUID, accountManager);
+    bodyInterceptor =
+        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    storeUtilsProxy =
+        new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     final Bundle args = getArguments();
     if (args != null) {
@@ -150,7 +156,7 @@ public class PrivateStoreDialog extends BaseDialog {
   private GetStoreMetaRequest buildRequest() {
     return GetStoreMetaRequest.of(
         new BaseRequestWithStore.StoreCredentials(storeName, storeUser, storePassSha1),
-        accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier());
+        bodyInterceptor);
   }
 
   private void dismissLoadingDialog() {

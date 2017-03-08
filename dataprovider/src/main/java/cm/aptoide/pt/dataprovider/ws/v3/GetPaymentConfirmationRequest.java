@@ -7,6 +7,8 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import rx.Observable;
 
 /**
@@ -16,7 +18,8 @@ import rx.Observable;
 public class GetPaymentConfirmationRequest extends V3<PaymentConfirmationResponse> {
 
   public GetPaymentConfirmationRequest(String baseHost, BaseBody baseBody) {
-    super(baseHost, baseBody);
+    super(baseHost, baseBody,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), isDebug()));
   }
 
   public static GetPaymentConfirmationRequest of(int productId,

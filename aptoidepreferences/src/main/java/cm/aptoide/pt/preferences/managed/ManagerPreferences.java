@@ -182,24 +182,6 @@ public class ManagerPreferences {
     Preferences.get().edit().putBoolean(ManagedKeys.DONT_SHOW_ME_AGAIN, showPreviewDialog).apply();
   }
 
-  public static String getUserAccess() {
-    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getString(ManagedKeys.ACCESS, "UNLISTED");
-  }
-
-  public static void setUserAccess(String access) {
-    Preferences.get().edit().putString(ManagedKeys.ACCESS, access).apply();
-  }
-
-  public static Boolean getUserAccessConfirmed() {
-    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getBoolean(ManagedKeys.ACCESS_CONFIRMED, false);
-  }
-
-  public static void setUserAccessConfirmed(Boolean accessConfirmed) {
-    Preferences.get().edit().putBoolean(ManagedKeys.ACCESS_CONFIRMED, accessConfirmed).apply();
-  }
-
   public static boolean isFirstRunV7() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
         .getBoolean(ManagedKeys.FIRST_RUN_V7, true);

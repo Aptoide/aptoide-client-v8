@@ -45,11 +45,14 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.iab.BillingBinder;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -61,6 +64,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -166,6 +170,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private GetApp getApp;
   private AptoideAccountManager accountManager;
   private StoreCredentialsProvider storeCredentialsProvider;
+  private BodyInterceptor bodyInterceptor;
+  private SocialRepository socialRepository;
 
   public static AppViewFragment newInstance(String md5) {
     Bundle bundle = new Bundle();
@@ -234,10 +240,16 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     permissionManager = new PermissionManager();
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
-
+    final AptoideClientUUID aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+    bodyInterceptor =
+        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    socialRepository = new SocialRepository(accountManager, bodyInterceptor);
     productFactory = new ProductFactory();
     appRepository = RepositoryFactory.getAppRepository(getContext());
-    adsRepository = new AdsRepository();
+    adsRepository = new AdsRepository(
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()), accountManager);
     installedRepository = RepositoryFactory.getInstalledRepository();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
   }
@@ -486,7 +498,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     DataproviderUtils.AdNetworksUtils.knockCpc(minimalAd);
     Analytics.LTV.cpi(minimalAd.getPackageName());
     AptoideUtils.ThreadU.runOnUiThread(
-        () -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, false));
+        () -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, false,
+            adsRepository));
   }
 
   private void updateLocalVars(GetAppMeta.App app) {
@@ -689,9 +702,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
                 AlertDialog.Builder alertDialog =
                     sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(),
                         appName, app.getIcon());
-                SocialRepository socialRepository = new SocialRepository(accountManager,
-                    new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                        getContext()));
+                SocialRepository socialRepository =
+                    new SocialRepository(accountManager, bodyInterceptor);
 
                 sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
                     sharePreviewDialog, alertDialog, socialRepository);

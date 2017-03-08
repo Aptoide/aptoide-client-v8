@@ -16,6 +16,8 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -68,6 +70,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private StoreCredentialsProvider storeCredentialsProvider;
   private AptoideAccountManager accountManager;
+  private BodyInterceptor bodyInterceptor;
 
   public static RateAndReviewsFragment newInstance(long appId, String appName, String storeName,
       String packageName, String storeTheme) {
@@ -175,8 +178,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   }
 
   private void fetchRating(boolean refresh) {
-    GetAppRequest.of(appId, accountManager.getAccessToken(),
-        aptoideClientUUID.getUniqueIdentifier(), packageName)
+    GetAppRequest.of(packageName, bodyInterceptor, appId)
         .observe(refresh)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
@@ -211,13 +213,14 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
   private void fetchReviews() {
     ListReviewsRequest reviewsRequest =
-        ListReviewsRequest.of(storeName, packageName, accountManager.getAccessToken(),
-            aptoideClientUUID.getUniqueIdentifier(), storeCredentialsProvider.get(storeName));
+        ListReviewsRequest.of(storeName, packageName, storeCredentialsProvider.get(storeName),
+            bodyInterceptor);
 
     getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
-            new ListFullReviewsSuccessRequestListener(this, accountManager, aptoideClientUUID),
+            new ListFullReviewsSuccessRequestListener(this, accountManager, aptoideClientUUID,
+                new StoreCredentialsProviderImpl()),
             Throwable::printStackTrace);
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
@@ -228,8 +231,9 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
+    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
     dialogUtils = new DialogUtils(accountManager, aptoideClientUUID,
-        new AccountNavigator(getContext(), getNavigationManager(), accountManager));
+        new AccountNavigator(getContext(), getNavigationManager(), accountManager), bodyInterceptor);
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
   }
 

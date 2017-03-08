@@ -1,6 +1,5 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,28 +12,28 @@ import rx.Observable;
 
 public class ShareInstallCardRequest extends V7<BaseV7Response, ShareInstallCardRequest.Body> {
 
-  private static String packageName;
-  private static String type;
-  private static String access_token;
+  private final String packageName;
+  private final String type;
+  private final String accessToken;
 
-  protected ShareInstallCardRequest(ShareInstallCardRequest.Body body, String baseHost) {
+  protected ShareInstallCardRequest(Body body, String baseHost, String packageName, String type,
+      String accessToken) {
     super(body, baseHost);
+    this.packageName = packageName;
+    this.type = type;
+    this.accessToken = accessToken;
   }
 
   public static ShareInstallCardRequest of(String packageName, String accessToken, String shareType,
-      String aptoideClientUUID) {
-    ShareInstallCardRequest.packageName = packageName;
-    access_token = accessToken;
-    type = shareType;
+      BodyInterceptor bodyInterceptor) {
     ShareInstallCardRequest.Body body = new ShareInstallCardRequest.Body(packageName);
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    return new ShareInstallCardRequest(
-        (ShareInstallCardRequest.Body) decorator.decorate(body, accessToken), BASE_HOST);
+    return new ShareInstallCardRequest((ShareInstallCardRequest.Body) bodyInterceptor.intercept(body),
+        BASE_HOST, packageName, shareType, accessToken);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.shareInstallCard(body, packageName, access_token, type);
+    return interfaces.shareInstallCard(body, packageName, accessToken, type);
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body

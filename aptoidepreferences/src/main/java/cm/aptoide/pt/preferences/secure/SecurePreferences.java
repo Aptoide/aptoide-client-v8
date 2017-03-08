@@ -109,18 +109,6 @@ public class SecurePreferences {
         .getBoolean(SecureKeys.IS_TIMELINE_ACTIVE, false);
   }
 
-  public static void setAdultSwitch(boolean active) {
-    SecurePreferencesImplementation.getInstance()
-        .edit()
-        .putBoolean(SecureKeys.ADULT_CONTENT_SWITCH, active)
-        .apply();
-  }
-
-  @Partners public static boolean isAdultSwitchActive() {
-    return SecurePreferencesImplementation.getInstance()
-        .getBoolean(SecureKeys.ADULT_CONTENT_SWITCH, false);
-  }
-
   public static boolean isRootDialogShowed() {
     return SecurePreferencesImplementation.getInstance()
         .getBoolean(SecureKeys.ROOT_DIALOG_ShOWED, false);

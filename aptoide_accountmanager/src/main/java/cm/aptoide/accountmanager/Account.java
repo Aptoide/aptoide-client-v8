@@ -21,13 +21,13 @@ public class Account {
   private final String store;
   private final String storeAvatar;
   private final boolean mature;
-  private final String access;
+  private final Access access;
   private final boolean accessConfirmed;
   private String password;
 
   public Account(String id, String email, String nickname, String avatar, String refreshToken,
       String token, String password, Type type, String store, String storeAvatar, boolean mature,
-      String access, boolean accessConfirmed) {
+      Access access, boolean accessConfirmed) {
     this.id = id;
     this.email = email;
     this.nickname = nickname;
@@ -83,7 +83,7 @@ public class Account {
     return mature;
   }
 
-  public String getAccess() {
+  public Access getAccess() {
     return access;
   }
 
@@ -97,5 +97,11 @@ public class Account {
 
   public enum Type {
     APTOIDE, GOOGLE, FACEBOOK, ABAN
+  }
+
+  public enum Access {
+    PUBLIC,
+    PRIVATE,
+    UNLISTED
   }
 }
