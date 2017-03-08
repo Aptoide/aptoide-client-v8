@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -16,6 +17,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
+import cm.aptoide.pt.v8engine.addressbook.navigation.AddressBookNavigationManager;
 import cm.aptoide.pt.v8engine.addressbook.utils.ContactUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.UIComponentFragment;
@@ -38,7 +40,6 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
   private ContactUtils contactUtils;
   private String entranceTag;
 
-
   public static PhoneInputFragment newInstance(String tag) {
     PhoneInputFragment phoneInputFragment = new PhoneInputFragment();
     Bundle extras = new Bundle();
@@ -52,9 +53,18 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
     this.mActionsListener = new PhoneInputPresenter(this, new ContactsRepositoryImpl(
         ((V8Engine) getContext().getApplicationContext()).getAccountManager()),
         new AddressBookAnalytics(Analytics.getInstance(),
-            AppEventsLogger.newLogger(getContext().getApplicationContext())));
+            AppEventsLogger.newLogger(getContext().getApplicationContext())),
+        new AddressBookNavigationManager(NavigationManagerV4.Builder.buildWith(getActivity()),
+            entranceTag, getString(R.string.addressbook_about),
+            getString(R.string.addressbook_data_about,
+                Application.getConfiguration().getMarketName())));
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
     contactUtils = new ContactUtils();
+  }
+
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    entranceTag = (String) args.get(TAG);
   }
 
   @Override public void setupViews() {
@@ -102,11 +112,6 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
     } else {
       mGenericPleaseWaitDialog.dismiss();
     }
-  }
-
-  @Override public void showSubmissionSuccess() {
-    getNavigationManager().navigateTo(
-        V8Engine.getFragmentProvider().newThankYouConnectingFragment(entranceTag));
   }
 
   @Override public void showSubmissionError() {
