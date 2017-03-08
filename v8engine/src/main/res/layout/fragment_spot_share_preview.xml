@@ -1,30 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
 
-  <Button
-      android:layout_marginTop="16dp"
-      android:layout_marginBottom="72dp"
-      android:layout_centerHorizontal="true"
-      android:layout_alignParentBottom="true"
-      android:id="@+id/fragment_spot_share_preview_start_button"
-      android:text="@string/fragment_spot_share_preview_start_button"
-      style="@style/Widget.Aptoide.Button.Colored"
+
+  <ImageView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      />
-
-  <cm.aptoide.pt.shareappsandroid.HighwayRadarScan
-      android:layout_alignParentTop="true"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      custom:enableAnimation="false"
-      android:layout_above="@+id/fragment_spot_share_preview_start_button"
+      android:gravity="center"
+      android:src="@drawable/layer_10"
       />
 
 
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_marginTop="10dp"
+      android:fontFamily="sans-serif"
+      android:text="@string/spot_share_line_1"
+      android:textColor="@color/default_color"
+      android:textSize="22sp"
+      android:textStyle="bold"
+      />
 
-</RelativeLayout>
+
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:fontFamily="sans-serif"
+      android:text="@string/spot_share_line_2"
+      android:textColor="@color/radar_color_2"
+      android:textSize="13sp"
+      />
+
+  <Button
+      android:id="@+id/fragment_spot_share_preview_start_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginBottom="72dp"
+      android:layout_marginTop="23dp"
+      android:text="@string/fragment_spot_share_preview_start_button"
+      style="@style/Widget.Aptoide.Button.Colored"
+      />
+
+
+</LinearLayout>

@@ -449,4 +449,9 @@
   <string name="addressbook_about">About Address Book</string>
   <string name="addressbook_we_werent_able_to_connect_you">We weren’t able to connect you</string>
 
+
+  <!-- Spot and Share-->
+  <string name="spot_share_line_1">Share apps with your friends</string>
+  <string name="spot_share_line_2">Phone to phone, without Internet</string>
+
 </resources>
