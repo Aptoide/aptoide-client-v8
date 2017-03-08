@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Button;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -13,20 +13,20 @@ import com.jakewharton.rxbinding.view.RxView;
 
 public class TimeLineStatsWidget extends Widget<TimeLineStatsDisplayable> {
 
-  private TextView followers;
-  private TextView following;
-  private TextView followFriends;
-  private View addFriendsLayout;
+  private Button followers;
+  private Button following;
+  private Button followFriends;
+  private View rightSeparator;
 
   public TimeLineStatsWidget(View itemView) {
     super(itemView);
   }
 
   @Override protected void assignViews(View itemView) {
-    followers = (TextView) itemView.findViewById(R.id.followers);
-    following = (TextView) itemView.findViewById(R.id.following);
-    followFriends = (TextView) itemView.findViewById(R.id.follow_friends_button);
-    addFriendsLayout = itemView.findViewById(R.id.add_friends_layout);
+    followers = (Button) itemView.findViewById(R.id.followers);
+    following = (Button) itemView.findViewById(R.id.following);
+    followFriends = (Button) itemView.findViewById(R.id.follow_friends_button);
+    rightSeparator = itemView.findViewById(R.id.rightSeparator);
   }
 
   @Override public void bindView(TimeLineStatsDisplayable displayable) {
@@ -45,7 +45,8 @@ public class TimeLineStatsWidget extends Widget<TimeLineStatsDisplayable> {
           CrashReport.getInstance().log(err);
         }));
     if (!displayable.isShouldShowAddFriends()) {
-      addFriendsLayout.setVisibility(View.GONE);
+      rightSeparator.setVisibility(View.GONE);
+      followFriends.setVisibility(View.GONE);
     }
   }
 }

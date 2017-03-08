@@ -46,7 +46,7 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
       SocialRepository socialRepository, DateCalculator dateCalculator) {
     super(socialInstall, likes, comments, store, socialInstall.getUser(),
         socialInstall.getUserSharer(), socialInstall.getMy().isLiked(), socialInstall.getLikes(),
-        date, spannableFactory, dateCalculator);
+        date, spannableFactory, dateCalculator, abTestingURL);
     this.avatarResource = icon;
     this.titleResource = titleResource;
     this.user = user;
@@ -60,9 +60,9 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
     this.socialRepository = socialRepository;
   }
 
-  public static Displayable from(SocialInstall socialInstall,
-      TimelineAnalytics timelineAnalytics, SpannableFactory spannableFactory,
-      SocialRepository socialRepository, DateCalculator dateCalculator) {
+  public static Displayable from(SocialInstall socialInstall, TimelineAnalytics timelineAnalytics,
+      SpannableFactory spannableFactory, SocialRepository socialRepository,
+      DateCalculator dateCalculator) {
 
     //for (App similarApp : socialInstall.getSimilarApps()) {
     //  similarAppsNames.add(similarApp.getName());
@@ -137,7 +137,8 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
   }
 
   public void sendOpenAppEvent() {
-    timelineAnalytics.sendOpenAppEvent(CARD_TYPE_NAME, TimelineAnalytics.SOURCE_APTOIDE, getPackageName());
+    timelineAnalytics.sendOpenAppEvent(CARD_TYPE_NAME, TimelineAnalytics.SOURCE_APTOIDE,
+        getPackageName());
   }
 
   @Override public void share(Context context, boolean privacyResult) {

@@ -145,8 +145,8 @@ public class ConnectionManager {
             NetworkInfo info = conMgr.getNetworkInfo(network);
             if (info != null && info.getType() == ConnectivityManager.TYPE_WIFI) {
               if (info.isAvailable() && info.isConnected()) {
+
                 isWifiConnected = true;
-                break;
               }
             }
           }
@@ -159,6 +159,7 @@ public class ConnectionManager {
           System.out.println("The state is :  : " + inf.getState());
           if (inf.getState() == NetworkInfo.State.CONNECTED
               && inf.getType() == ConnectivityManager.TYPE_WIFI) {
+
             isWifiConnected = true;
           }
         }
@@ -187,9 +188,9 @@ public class ConnectionManager {
 
   public static ConnectionManager getInstance(Context context) {
     if (instance == null) {
-      instance =
-          new ConnectionManager(context, PreferenceManager.getDefaultSharedPreferences(context),
-              (WifiManager) context.getSystemService(Context.WIFI_SERVICE));
+      instance = new ConnectionManager(context.getApplicationContext(),
+          PreferenceManager.getDefaultSharedPreferences(context),
+          (WifiManager) context.getSystemService(Context.WIFI_SERVICE));
     }
     return instance;
   }
@@ -373,8 +374,8 @@ public class ConnectionManager {
           }
 
           if (recon) {
-          System.out.println("Correctly joined the network");
-          return SUCCESSFUL_JOIN;
+            System.out.println("Correctly joined the network");
+            return SUCCESSFUL_JOIN;
           } else {
             return ERROR_ON_RECONNECT;
           }
@@ -476,10 +477,8 @@ public class ConnectionManager {
   }
 
   private String intToIp(int i) {
-    return (i & 0xFF) + "." +
-        ((i >> 8) & 0xFF) + "." +
-        ((i >> 16) & 0xFF) + "." +
-        ((i >> 24) & 0xFF);
+    return (i & 0xFF) + "." + ((i >> 8) & 0xFF) + "." + ((i >> 16) & 0xFF) + "." + ((i >> 24)
+        & 0xFF);
   }
 
   public void resume() {//not being called. Receivers were being registered twice.
@@ -493,6 +492,9 @@ public class ConnectionManager {
 
   public void stop() {
     System.out.println("Going to cancel the tasks");
+    if (clients != null) {
+      clients.clear();
+    }
     this.listenerJoinWifi = null;
     this.listenerActivateButtons = null;
     this.clientsConnectedListener = null;

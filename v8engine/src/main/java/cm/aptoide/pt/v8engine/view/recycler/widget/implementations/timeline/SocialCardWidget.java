@@ -88,9 +88,9 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     }
 
     if (comments != null) {
-      compositeSubscription.add(
-          RxView.clicks(comments).flatMap(aVoid -> showComments(displayable)).subscribe(aVoid -> {
-          }, showError()));
+      compositeSubscription.add(RxView.clicks(comments)
+          .flatMap(aVoid -> showComments(displayable))
+          .subscribe(aVoid -> knockWithSixpackCredentials(displayable.getAbUrl()), showError()));
 
       comments.setVisibility(View.VISIBLE);
     } else {
@@ -114,6 +114,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
           numberLikes.setVisibility(View.VISIBLE);
           if (likePreviewContainer.getChildCount() < 4) {
             if (!displayable.isLiked()) {
+              knockWithSixpackCredentials(displayable.getAbUrl());
               UserTimeline user = new UserTimeline();
               Store store = new Store();
               store.setAvatar(accountManager.getAccount().getStoreAvatar());

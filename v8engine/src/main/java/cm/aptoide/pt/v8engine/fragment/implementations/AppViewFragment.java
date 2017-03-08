@@ -230,7 +230,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     permissionManager = new PermissionManager();
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
@@ -353,8 +353,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   public void buyApp(GetAppMeta.App app) {
-    startActivityForResult(PaymentActivity.getIntent(getActivity(),
-        (ParcelableProduct) productFactory.create(app)),
+    startActivityForResult(
+        PaymentActivity.getIntent(getActivity(), (ParcelableProduct) productFactory.create(app)),
         PAY_APP_REQUEST_CODE);
   }
 
@@ -397,87 +397,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     inflater.inflate(R.menu.menu_appview_fragment, menu);
     SearchUtils.setupGlobalSearchView(menu, getNavigationManager());
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int i = item.getItemId();
-
-    //if (i == android.R.id.home) {
-    //  getActivity().onBackPressed();
-    //  return true;
-    //} else
-    if (i == R.id.menu_share) {
-      shareApp(appName, packageName, wUrl);
-      return true;
-    } else if (i == R.id.menu_schedule) {
-
-      scheduled = Scheduled.from(app, appAction);
-
-      ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(Scheduled.class);
-      scheduledAccessor.insert(scheduled);
-
-      String str = this.getString(R.string.added_to_scheduled);
-      ShowMessage.asSnack(this.getView(), str);
-      return true;
-    } else if (i == R.id.menu_uninstall && unInstallAction != null) {
-      unInstallAction.call();
-      return true;
-    } else if (i == R.id.menu_remote_install) {
-      if (AptoideUtils.SystemU.getConnectionType().equals("mobile")) {
-        GenericDialogs.createGenericOkMessage(getContext(),
-            getContext().getString(R.string.remote_install_menu_title),
-            getContext().getString(R.string.install_on_tv_mobile_error)).subscribe();
-      } else {
-        DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
-        newFragment.show(getActivity().getSupportFragmentManager(),
-            RemoteInstallDialog.class.getSimpleName());
-      }
-    }
-
-    return super.onOptionsItemSelected(item);
-  }
-
-  private void shareApp(String appName, String packageName, String wUrl) {
-
-    if (accountManager.isLoggedIn()) {
-
-      GenericDialogs.createGenericShareDialog(getContext(), getString(R.string.share))
-          .subscribe(eResponse -> {
-            if (GenericDialogs.EResponse.SHARE_EXTERNAL == eResponse) {
-
-              shareDefault(appName, packageName, wUrl);
-            } else if (GenericDialogs.EResponse.SHARE_TIMELINE == eResponse) {
-              if (accountManager.isLoggedIn()
-                  && ManagerPreferences.isShowPreviewDialog()
-                  && Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
-                SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(accountManager);
-                AlertDialog.Builder alertDialog =
-                    sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(),
-                        appName, app.getIcon());
-                SocialRepository socialRepository = new SocialRepository(accountManager,
-                    new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                        getContext()));
-
-                sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
-                    sharePreviewDialog, alertDialog, socialRepository);
-              }
-            }
-          }, Throwable::printStackTrace);
-    } else {
-
-      shareDefault(appName, packageName, wUrl);
-    }
-  }
-
-  @Partners protected void shareDefault(String appName, String packageName, String wUrl) {
-    if (wUrl != null) {
-      Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-      sharingIntent.setType("text/plain");
-      sharingIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.install) + " \"" +
-          appName + "\"");
-      sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
-      startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
-    }
   }
 
   private Observable<GetApp> manageOrganicAds(GetApp getApp) {
@@ -542,6 +461,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     showHideOptionsMenu(true);
     setupShare(getApp);
     if (openType == OpenType.OPEN_WITH_INSTALL_POPUP) {
+      openType = null;
       GenericDialogs.createGenericOkCancelMessage(getContext(),
           Application.getConfiguration().getMarketName(),
           getContext().getString(R.string.installapp_alrt, appName))
@@ -618,7 +538,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     GetAppMeta.Media media = app.getMedia();
 
     final boolean shouldInstall = openType == OpenType.OPEN_AND_INSTALL;
-    openType = null;
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
             installedRepository);
@@ -695,10 +614,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     }
   }
 
-  //
-  // Scrollable interface
-  //
-
   public void setupShare(GetApp app) {
     appName = app.getNodes().getMeta().getData().getName();
     wUrl = app.getNodes().getMeta().getData().getUrls().getW();
@@ -713,6 +628,91 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       return hasScreenShots || hasVideos;
     }
     return false;
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int i = item.getItemId();
+
+    //if (i == android.R.id.home) {
+    //  getActivity().onBackPressed();
+    //  return true;
+    //} else
+    if (i == R.id.menu_share) {
+      shareApp(appName, packageName, wUrl);
+      return true;
+    } else if (i == R.id.menu_schedule) {
+
+      scheduled = Scheduled.from(app, appAction);
+
+      ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(Scheduled.class);
+      scheduledAccessor.insert(scheduled);
+
+      String str = this.getString(R.string.added_to_scheduled);
+      ShowMessage.asSnack(this.getView(), str);
+      return true;
+    } else if (i == R.id.menu_uninstall && unInstallAction != null) {
+      unInstallAction.call();
+      return true;
+    } else if (i == R.id.menu_remote_install) {
+      if (AptoideUtils.SystemU.getConnectionType().equals("mobile")) {
+        GenericDialogs.createGenericOkMessage(getContext(),
+            getContext().getString(R.string.remote_install_menu_title),
+            getContext().getString(R.string.install_on_tv_mobile_error)).subscribe();
+      } else {
+        DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
+        newFragment.show(getActivity().getSupportFragmentManager(),
+            RemoteInstallDialog.class.getSimpleName());
+      }
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
+  //
+  // Scrollable interface
+  //
+
+  private void shareApp(String appName, String packageName, String wUrl) {
+
+    if (accountManager.isLoggedIn()) {
+
+      GenericDialogs.createGenericShareDialog(getContext(), getString(R.string.share))
+          .subscribe(eResponse -> {
+            if (GenericDialogs.EResponse.SHARE_EXTERNAL == eResponse) {
+
+              shareDefault(appName, packageName, wUrl);
+            } else if (GenericDialogs.EResponse.SHARE_TIMELINE == eResponse) {
+              if (accountManager.isLoggedIn()
+                  && ManagerPreferences.isShowPreviewDialog()
+                  && Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
+                SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(accountManager);
+                AlertDialog.Builder alertDialog =
+                    sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(),
+                        appName, app.getIcon());
+                SocialRepository socialRepository = new SocialRepository(accountManager,
+                    new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                        getContext()));
+
+                sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
+                    sharePreviewDialog, alertDialog, socialRepository);
+              }
+            }
+          }, Throwable::printStackTrace);
+    } else {
+
+      shareDefault(appName, packageName, wUrl);
+    }
+  }
+
+  @Partners protected void shareDefault(String appName, String packageName, String wUrl) {
+    if (wUrl != null) {
+      Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+      sharingIntent.setType("text/plain");
+      sharingIntent.putExtra(Intent.EXTRA_SUBJECT,
+          getString(R.string.install) + " \"" + appName + "\"");
+      sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
+      startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
+    }
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -754,24 +754,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   @Partners protected enum BundleKeys {
-    APP_ID,
-    STORE_NAME,
-    MINIMAL_AD,
-    PACKAGE_NAME,
-    SHOULD_INSTALL,
-    MD5
+    APP_ID, STORE_NAME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5
   }
 
   public enum OpenType {
     /**
      * Only open the appview
      */
-    OPEN_ONLY,
-    /**
+    OPEN_ONLY, /**
      * opens the appView and starts the installation
      */
-    OPEN_AND_INSTALL,
-    /**
+    OPEN_AND_INSTALL, /**
      * open the appView and ask user if want to install the app
      */
     OPEN_WITH_INSTALL_POPUP

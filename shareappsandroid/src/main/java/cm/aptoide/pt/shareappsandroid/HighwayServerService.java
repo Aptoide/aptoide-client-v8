@@ -21,10 +21,12 @@ import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.shareapps.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
 import cm.aptoide.pt.shareapps.socket.message.server.AptoideMessageServerSocket;
+import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimerTask;
 
 /**
  * Created by filipegoncalves on 10-02-2017.
@@ -207,18 +209,18 @@ public class HighwayServerService extends Service {
       AndroidAppInfo androidAppInfo) {
 
     //if (System.currentTimeMillis() - lastTimestampReceive > 1000 / 3) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-        ((NotificationCompat.Builder) mBuilderReceive).setContentText(
-            this.getResources().getString(R.string.receiving) + " " + receivingAppName);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+      ((NotificationCompat.Builder) mBuilderReceive).setContentText(
+          this.getResources().getString(R.string.receiving) + " " + receivingAppName);
 
-        ((NotificationCompat.Builder) mBuilderReceive).setProgress(100, actual, false);
-        if (mNotifyManager == null) {
-          mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        }
-        mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
-            ((NotificationCompat.Builder) mBuilderReceive).build());
+      ((NotificationCompat.Builder) mBuilderReceive).setProgress(100, actual, false);
+      if (mNotifyManager == null) {
+        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
       }
-      lastTimestampReceive = System.currentTimeMillis();
+      mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
+          ((NotificationCompat.Builder) mBuilderReceive).build());
+    }
+    lastTimestampReceive = System.currentTimeMillis();
     //}
   }
 
@@ -253,17 +255,17 @@ public class HighwayServerService extends Service {
   private void showSendProgress(String sendingAppName, int actual, AndroidAppInfo androidAppInfo) {
 
     //if (System.currentTimeMillis() - lastTimestampSend > 1000 / 3) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-        ((NotificationCompat.Builder) mBuilderSend).setContentText(
-            this.getResources().getString(R.string.sending) + " " + sendingAppName);
-        ((NotificationCompat.Builder) mBuilderSend).setProgress(100, actual, false);
-        if (mNotifyManager == null) {
-          mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        }
-        mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
-            ((NotificationCompat.Builder) mBuilderSend).build());
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+      ((NotificationCompat.Builder) mBuilderSend).setContentText(
+          this.getResources().getString(R.string.sending) + " " + sendingAppName);
+      ((NotificationCompat.Builder) mBuilderSend).setProgress(100, actual, false);
+      if (mNotifyManager == null) {
+        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
       }
-      lastTimestampSend = System.currentTimeMillis();
+      mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
+          ((NotificationCompat.Builder) mBuilderSend).build());
+    }
+    lastTimestampSend = System.currentTimeMillis();
     //}
   }
 
@@ -299,7 +301,6 @@ public class HighwayServerService extends Service {
             aptoideMessageClientController)).startAsync();
 
         System.out.println("Connected 342");
-
       } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
         //read parcelable
         Bundle b = intent.getBundleExtra("bundle");
@@ -326,10 +327,15 @@ public class HighwayServerService extends Service {
 
           List<FileInfo> fileInfoList = getFileInfo(filePath, obbsFilePath);
 
-          AndroidAppInfo appInfo = new AndroidAppInfo(appName, packageName, fileInfoList);
+          final AndroidAppInfo appInfo = new AndroidAppInfo(appName, packageName, fileInfoList);
 
-          aptoideMessageClientController.send(
-              new RequestPermissionToSend(aptoideMessageClientController.getLocalhost(), appInfo));
+          AptoideUtils.ThreadU.runOnIoThread(new TimerTask() {
+            @Override public void run() {
+              aptoideMessageClientController.send(
+                  new RequestPermissionToSend(aptoideMessageClientController.getLocalhost(),
+                      appInfo));
+            }
+          });
         }
       } else if (intent.getAction() != null && intent.getAction().equals("SHUTDOWN_SERVER")) {
         if (aptoideMessageServerSocket != null) {

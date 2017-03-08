@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.text.ParcelableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.UnderlineSpan;
 import cm.aptoide.pt.model.v7.TimelineStats;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.R;
@@ -30,8 +29,9 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
   public TimeLineStatsDisplayable() {
   }
 
-  public TimeLineStatsDisplayable(TimelineStats pojo, Long userId, SpannableFactory spannableFactory,
-      String storeTheme, TimelineAnalytics timelineAnalytics, boolean shouldShowAddFriends) {
+  public TimeLineStatsDisplayable(TimelineStats pojo, Long userId,
+      SpannableFactory spannableFactory, String storeTheme, TimelineAnalytics timelineAnalytics,
+      boolean shouldShowAddFriends) {
     super(pojo);
     this.userId = userId;
     this.spannableFactory = spannableFactory;
@@ -52,7 +52,7 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
 
     return spannableFactory.createSpan(
         context.getString(R.string.timeline_followers, getPojo().getData().getFollowers()),
-        new ParcelableSpan[] { new ForegroundColorSpan(Color.BLACK), new UnderlineSpan() },
+        new ParcelableSpan[] { new ForegroundColorSpan(Color.BLACK) },
         String.valueOf(getPojo().getData().getFollowers()),
         String.valueOf(getPojo().getData().getFollowers()));
   }
@@ -61,7 +61,7 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
 
     return spannableFactory.createSpan(
         context.getString(R.string.timeline_followed, getPojo().getData().getFollowing()),
-        new ParcelableSpan[] { new ForegroundColorSpan(Color.BLACK), new UnderlineSpan() },
+        new ParcelableSpan[] { new ForegroundColorSpan(Color.BLACK) },
         String.valueOf(getPojo().getData().getFollowing()),
         String.valueOf(getPojo().getData().getFollowing()));
   }

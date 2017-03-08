@@ -136,6 +136,11 @@ public class TransferRecordPresenter implements Presenter {
     applicationSender.stop();
     transferRecordManager.stop();
     //connectionManager.cleanNetworks();
+    if (listOfApps != null) {
+      listOfApps.clear();
+      view.clearAdapter();
+      view.notifyChanged();
+    }
   }
 
   @Override public void onStop() {
