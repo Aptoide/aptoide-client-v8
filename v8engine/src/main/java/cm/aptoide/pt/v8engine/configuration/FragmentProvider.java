@@ -148,13 +148,13 @@ public interface FragmentProvider {
 
   Fragment newAddressBookFragment();
 
-  Fragment newSyncSuccessFragment(List<Contact> contacts);
+  Fragment newSyncSuccessFragment(List<Contact> contacts, String tag);
 
-  Fragment newPhoneInputFragment();
+  Fragment newPhoneInputFragment(String tag);
 
   Fragment newInviteFriendsFragment(InviteFriendsContract.View.OpenMode openMode, String tag);
 
   Fragment newSpotShareFragment();
 
-  Fragment newThankYouConnectingFragment();
+  Fragment newThankYouConnectingFragment(String tag);
 }

@@ -36,7 +36,7 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
   }
 
   @Override public void navigateToPhoneInputView() {
-    this.navigationManager.navigateTo(V8Engine.getFragmentProvider().newPhoneInputFragment());
+    this.navigationManager.navigateTo(V8Engine.getFragmentProvider().newPhoneInputFragment(exitNavigationFragmentTag));
   }
 
   @Override public void navigateToInviteFriendsView(
@@ -69,6 +69,6 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
   }
 
   @Override public void showSuccessFragment(List<Contact> contacts) {
-    navigationManager.navigateTo(V8Engine.getFragmentProvider().newSyncSuccessFragment(contacts));
+    navigationManager.navigateTo(V8Engine.getFragmentProvider().newSyncSuccessFragment(contacts, exitNavigationFragmentTag));
   }
 }

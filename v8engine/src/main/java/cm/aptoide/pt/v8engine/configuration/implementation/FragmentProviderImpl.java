@@ -294,12 +294,12 @@ public class FragmentProviderImpl implements FragmentProvider {
     return AddressBookFragment.newInstance();
   }
 
-  @Override public Fragment newSyncSuccessFragment(List<Contact> contacts) {
-    return SyncResultFragment.newInstance(contacts);
+  @Override public Fragment newSyncSuccessFragment(List<Contact> contacts, String tag) {
+    return SyncResultFragment.newInstance(contacts, tag);
   }
 
-  @Override public Fragment newPhoneInputFragment() {
-    return PhoneInputFragment.newInstance();
+  @Override public Fragment newPhoneInputFragment(String tag) {
+    return PhoneInputFragment.newInstance(tag);
   }
 
   @Override public Fragment newInviteFriendsFragment(InviteFriendsContract.View.OpenMode openMode,
@@ -311,7 +311,7 @@ public class FragmentProviderImpl implements FragmentProvider {
     return SpotSharePreviewFragment.newInstance();
   }
 
-  @Override public Fragment newThankYouConnectingFragment() {
-    return ThankYouConnectingFragment.newInstance();
+  @Override public Fragment newThankYouConnectingFragment(String tag) {
+    return ThankYouConnectingFragment.newInstance(tag);
   }
 }

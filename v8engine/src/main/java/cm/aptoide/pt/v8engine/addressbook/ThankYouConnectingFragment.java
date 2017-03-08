@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.addressbook.navigation.AddressBookNavigationManager;
 import cm.aptoide.pt.v8engine.fragment.UIComponentFragment;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -13,11 +13,14 @@ import com.jakewharton.rxbinding.view.RxView;
  * Created by jdandrade on 01/03/2017.
  */
 public class ThankYouConnectingFragment extends UIComponentFragment {
+  public static final String TAG = "TAG";
   private Button done;
+  private String entranceTag;
 
-  public static ThankYouConnectingFragment newInstance() {
+  public static ThankYouConnectingFragment newInstance(String tag) {
     ThankYouConnectingFragment thankYouConnectingFragment = new ThankYouConnectingFragment();
     Bundle extras = new Bundle();
+    extras.putString(TAG, tag);
     thankYouConnectingFragment.setArguments(extras);
     return thankYouConnectingFragment;
   }
@@ -30,10 +33,17 @@ public class ThankYouConnectingFragment extends UIComponentFragment {
     done = (Button) view.findViewById(R.id.addressbook_done);
   }
 
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    entranceTag = (String) args.get(TAG);
+  }
+
   @Override public void setupViews() {
+    AddressBookNavigationManager addressBookNavigationManager =
+        new AddressBookNavigationManager(getNavigationManager(), entranceTag,
+            getString(R.string.addressbook_about), getString(R.string.addressbook_data_about));
     RxView.clicks(done)
-        .subscribe(clicks -> getNavigationManager().navigateTo(
-            V8Engine.getFragmentProvider().newAddressBookFragment()),
+        .subscribe(clicks -> addressBookNavigationManager.leaveAddressBook(),
             throwable -> throwable.printStackTrace());
   }
 }
