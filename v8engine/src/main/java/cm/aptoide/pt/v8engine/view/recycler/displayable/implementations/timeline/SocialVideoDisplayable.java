@@ -59,7 +59,7 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
       SocialRepository socialRepository) {
     super(socialVideo, numberOfLikes, numberOfComments, socialVideo.getStore(),
         socialVideo.getUser(), socialVideo.getUserSharer(), socialVideo.getMy().isLiked(),
-        socialVideo.getLikes(), date, spannableFactory, dateCalculator);
+        socialVideo.getLikes(), date, spannableFactory, dateCalculator, abUrl);
     this.videoTitle = videoTitle;
     this.link = link;
     this.baseLink = baseLink;
