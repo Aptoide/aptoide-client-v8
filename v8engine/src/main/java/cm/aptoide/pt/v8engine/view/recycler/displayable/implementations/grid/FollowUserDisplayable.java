@@ -104,7 +104,7 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
   }
 
   public boolean hasUser() {
-    return !TextUtils.isEmpty(getPojo().getName());
+    return !TextUtils.isEmpty(getPojo().getName()) || !TextUtils.isEmpty(getPojo().getAvatar());
   }
 
   public boolean hasStore() {
