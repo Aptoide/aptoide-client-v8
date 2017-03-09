@@ -1,6 +1,5 @@
 package cm.aptoide.pt.shareappsandroid;
 
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
@@ -9,6 +8,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.StatFs;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
 import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.shareapps.socket.entities.FileInfo;
@@ -36,7 +36,7 @@ public class HighwayClientService extends Service {
   private final int PROGRESS_SPLIT_SIZE = 10;
   private int port;
   private ArrayList<App> listOfApps;
-  private NotificationManager mNotifyManager;
+  private NotificationManagerCompat mNotifyManager;
   private Object mBuilderSend;
   private Object mBuilderReceive;
   private long lastTimestampReceive;
@@ -51,7 +51,7 @@ public class HighwayClientService extends Service {
     System.out.println("Inside the onCreate of the service");
 
     if (mNotifyManager == null) {
-      mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+      mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
     }
 
     fileClientLifecycle = new FileClientLifecycle<AndroidAppInfo>() {
@@ -200,7 +200,7 @@ public class HighwayClientService extends Service {
 
       ((NotificationCompat.Builder) mBuilderReceive).setContentIntent(contentIntent);
       if (mNotifyManager == null) {
-        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
       }
       mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
           ((NotificationCompat.Builder) mBuilderReceive).getNotification());
@@ -217,7 +217,7 @@ public class HighwayClientService extends Service {
 
       ((NotificationCompat.Builder) mBuilderReceive).setProgress(100, actual, false);
       if (mNotifyManager == null) {
-        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
       }
       mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
           ((NotificationCompat.Builder) mBuilderReceive).getNotification());
@@ -247,7 +247,7 @@ public class HighwayClientService extends Service {
           .setProgress(0, 0, false)
           .setAutoCancel(true);
       if (mNotifyManager == null) {
-        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
       }
       mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
           ((NotificationCompat.Builder) mBuilderSend).getNotification());
@@ -262,7 +262,7 @@ public class HighwayClientService extends Service {
           this.getResources().getString(R.string.sending) + " " + sendingAppName);
       ((NotificationCompat.Builder) mBuilderSend).setProgress(100, actual, false);
       if (mNotifyManager == null) {
-        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
       }
       mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
           ((NotificationCompat.Builder) mBuilderSend).getNotification());
