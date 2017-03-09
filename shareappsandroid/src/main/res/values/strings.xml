@@ -83,5 +83,16 @@
 
   <string name="hotspotCreationErrorNougat">Please, ask your friends to create a group</string>
 
+  <string name="searching_groups">Searching for groups</string>
+
+  <string name="joined_group">Joined group %1$s</string>
+  <string name="created_group">Created group %1$s</string>
+
+  <string name="waiting_group_friends">Waiting for friends to join group</string>
+  <string name="share_instruction">Share apps or wait for someone in the group to share them.</string>
+
+  <string name="warning">Warning</string>
+  <string name="clear_history_warning">If you didn’t install the apps shared they will be deleted.</string>
+
 </resources>
 
