@@ -16,7 +16,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.model.v3.Subscription;
 import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
@@ -36,6 +35,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v3.Subscription;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -45,7 +45,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.account.ExternalServicesLoginAvailability;
-import cm.aptoide.pt.v8engine.account.FollowStoreServiceImp;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AccountAnalytcs;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.SpotAndShareAnalytics;
@@ -166,8 +165,7 @@ public abstract class V8Engine extends DataProvider {
           aptoideClientUuid, new ExternalServicesLoginAvailability(this, getConfiguration(),
           GoogleApiAvailability.getInstance()), new AccountAnalytcs(),
           new BaseBodyInterceptor(aptoideClientUuid.getUniqueIdentifier(), accountManager),
-          getConfiguration().getAccountType(),
-          new FollowStoreServiceImp());
+          getConfiguration().getAccountType());
     }
     return accountManager;
   }

@@ -56,7 +56,8 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
   void unsubscribeStore() {
     if (accountManager.isLoggedIn()) {
       accountManager.unsubscribeStore(getPojo().getName(),
-          storeCredentialsProvider.get(getPojo().getName()));
+          storeCredentialsProvider.get(getPojo().getName()).getName(),
+          storeCredentialsProvider.get(getPojo().getName()).getPasswordSha1());
     }
     StoreUtils.unsubscribeStore(getPojo().getName(), accountManager, storeCredentialsProvider);
   }

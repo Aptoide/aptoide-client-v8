@@ -22,6 +22,7 @@ public class ChangeUserSettingsRequest extends V3<BaseV3Response> {
   public static ChangeUserSettingsRequest of(boolean matureSwitchStatus, String accessToken) {
     BaseBody body = new BaseBody();
     body.put("mode", "json");
+    body.put("access_token", accessToken);
     List<String> list = new ArrayList<>();
     list.add("matureswitch=" + (matureSwitchStatus ? ACTIVE : INACTIVE));
     body.put("settings", TextUtils.join(",", list));

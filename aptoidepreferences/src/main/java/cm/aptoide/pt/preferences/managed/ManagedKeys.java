@@ -11,7 +11,6 @@ package cm.aptoide.pt.preferences.managed;
 public class ManagedKeys {
 
   public static final String HWSPECS_FILTER = "hwspecsChkBox";
-  public static final String MATURE_CHECK_BOX = "matureChkBox";
   public static final String ANIMATIONS_ENABLED = "animationsEnabled";
   public static final String GENERAL_DOWNLOADS_WIFI = "generalnetworkwifi";
   public static final String GENERAL_DOWNLOADS_MOBILE = "generalnetworkmobile";
