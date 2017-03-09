@@ -18,6 +18,12 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
     this.aptoideMessageController = aptoideMessageController;
   }
 
+  public AptoideMessageClientSocket(String host, String fallbackHostName, int port,
+      AptoideMessageClientController aptoideMessageController) {
+    super(host, fallbackHostName, port);
+    this.aptoideMessageController = aptoideMessageController;
+  }
+
   @Override protected void onConnected(Socket socket) throws IOException {
     aptoideMessageController.onConnect(socket);
   }

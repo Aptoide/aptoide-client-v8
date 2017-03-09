@@ -12,7 +12,8 @@ public abstract class AptoideClientSocket extends AptoideSocket {
 
   private final String hostName;
   private final int port;
-  @Setter private int retries = 3;
+  private String fallbackHostName;
+  @Setter private int retries;
 
   public AptoideClientSocket(String hostName, int port) {
     this.hostName = hostName;
@@ -25,23 +26,41 @@ public abstract class AptoideClientSocket extends AptoideSocket {
     this.port = port;
   }
 
+  public AptoideClientSocket(String hostName, String fallbackHostName, int port) {
+    this(hostName, port);
+    this.fallbackHostName = fallbackHostName;
+  }
+
+  public AptoideClientSocket(int bufferSize, String hostName, String fallbackHostName, int port) {
+    this(bufferSize, hostName, port);
+    this.fallbackHostName = fallbackHostName;
+  }
+
   @Override public AptoideSocket start() {
 
     Socket socket = null;
 
-    while (socket == null && retries-- > 0) {
-      try {
-        socket = new Socket(hostName, port);
-      } catch (IOException e) {
-        e.printStackTrace(System.out);
-        System.out.println("Failed to connect to " + hostName + ":" + port);
-        if (onError != null) {
-          onError.onError(e);
-        }
-        try {
-          Thread.sleep(1000);
-        } catch (InterruptedException e1) {
-          e1.printStackTrace();
+    String[] hosts = new String[] { hostName, fallbackHostName };
+
+    for (String host : hosts) {
+      if (host != null) {
+        retries = 3;
+
+        while (socket == null && retries-- > 0) {
+          try {
+            socket = new Socket(hostName, port);
+          } catch (IOException e) {
+            e.printStackTrace(System.out);
+            System.out.println("Failed to connect to " + hostName + ":" + port);
+            if (onError != null) {
+              onError.onError(e);
+            }
+            try {
+              Thread.sleep(1000);
+            } catch (InterruptedException e1) {
+              e1.printStackTrace();
+            }
+          }
         }
       }
     }
@@ -49,7 +68,7 @@ public abstract class AptoideClientSocket extends AptoideSocket {
     if (socket == null) {
       if (onError != null) {
         onError.onError(new IOException(
-            getClass().getSimpleName() + " Couldn't connect to " + hostName + ":" + port));
+            getClass().getSimpleName() + " Couldn't connect to " + hosts + ":" + port));
       }
       return null;
     }

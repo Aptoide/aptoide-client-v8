@@ -159,7 +159,16 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override public void showError(Throwable throwable) {
     String message = getString(cm.aptoide.accountmanager.R.string.unknown_error);
-    if (throwable instanceof AccountException) {
+
+    if (throwable instanceof cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception) {
+
+      final cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception ex =
+          ((cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception) throwable);
+      @StringRes int errorId =
+          getResources().getIdentifier("error_" + ex.getBaseResponse().getError(), "string",
+              getContext().getPackageName());
+      message = getString(errorId);
+    } else if (throwable instanceof AccountException) {
 
       if (((AccountException) throwable).hasCode()) {
         message = getString(ErrorsMapper.getWebServiceErrorMessageFromCode(
