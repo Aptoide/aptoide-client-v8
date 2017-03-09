@@ -34,11 +34,11 @@ public class GroupManager {
       listener.onError(ConnectionManager.ERROR_INVALID_GROUP);
       return;
     }
-    if (connectionManager.isMobileDataOn() && !mobileDataDialog) {
-      mobileDataDialog = true;
-      listener.onError(ConnectionManager.ERROR_MOBILE_DATA_ON_DIALOG);
-      return;
-    }
+    //if (connectionManager.isMobileDataOn() && !mobileDataDialog) {
+    //  mobileDataDialog = true;
+    //  listener.onError(ConnectionManager.ERROR_MOBILE_DATA_ON_DIALOG);
+    //  return;
+    //}
     if (joiningGroup) {
       return;
     }
