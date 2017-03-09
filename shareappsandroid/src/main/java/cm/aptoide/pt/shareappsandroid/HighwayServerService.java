@@ -5,8 +5,8 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.IBinder;
+import android.os.StatFs;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
@@ -276,6 +276,8 @@ public class HighwayServerService extends Service {
       System.out.println("inside of startcommand in the service");
       if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
         //port = intent.getIntExtra("port", 0);
+        final String externalStoragepath = intent.getStringExtra("ExternalStoragePath");
+
         System.out.println("Going to start serving");
         aptoideMessageServerSocket = new AptoideMessageServerSocket(55555, Integer.MAX_VALUE);
         aptoideMessageServerSocket.setHostsChangedCallbackCallback(new HostsChangedCallback() {
@@ -285,18 +287,21 @@ public class HighwayServerService extends Service {
           }
         });
         aptoideMessageServerSocket.startAsync();
-        String s = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-            .toString();
+
         StorageCapacity storageCapacity = new StorageCapacity() {
           @Override public boolean hasCapacity(long bytes) {
-            return true;
+            long availableSpace = -1L;
+            StatFs stat = new StatFs(externalStoragepath);
+            availableSpace = (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
+            return availableSpace > bytes;
           }
         };
 
         // TODO: 22-02-2017 fix this hardcoded ip
 
         aptoideMessageClientController =
-            new AptoideMessageClientController(s, storageCapacity, fileServerLifecycle,
+            new AptoideMessageClientController(externalStoragepath, storageCapacity,
+                fileServerLifecycle,
                 fileClientLifecycle);
         (new AptoideMessageClientSocket("192.168.43.1", 55555,
             aptoideMessageClientController)).startAsync();
