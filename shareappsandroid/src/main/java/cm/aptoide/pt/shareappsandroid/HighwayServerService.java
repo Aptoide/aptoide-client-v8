@@ -26,7 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimerTask;
 
 /**
  * Created by filipegoncalves on 10-02-2017.
@@ -329,7 +328,7 @@ public class HighwayServerService extends Service {
 
           final AndroidAppInfo appInfo = new AndroidAppInfo(appName, packageName, fileInfoList);
 
-          AptoideUtils.ThreadU.runOnIoThread(new TimerTask() {
+          AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
             @Override public void run() {
               aptoideMessageClientController.send(
                   new RequestPermissionToSend(aptoideMessageClientController.getLocalhost(),
