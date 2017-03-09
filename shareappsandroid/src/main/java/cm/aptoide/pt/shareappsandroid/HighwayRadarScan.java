@@ -56,17 +56,17 @@ public class HighwayRadarScan extends View {
 
   private void init(AttributeSet attributeSet, Context context) {
 
-    circleColor = Color.parseColor("#e17117");
-    radarColor = Color.parseColor("#99e17117");
-    tailColor = Color.parseColor("#e17117");
+    circleColor = Color.parseColor("#cecece");
+    radarColor = Color.parseColor("#fafafa");
+    tailColor = Color.parseColor("#efefef");
     enableAnimation = true;
     if (attributeSet != null) {
       TypedArray ta = context.obtainStyledAttributes(attributeSet, R.styleable.HighwayRadarScan);
       circleColor =
-          ta.getColor(R.styleable.HighwayRadarScan_circleColor, Color.parseColor("#e17117"));
+          ta.getColor(R.styleable.HighwayRadarScan_circleColor, Color.parseColor("#cecece"));
       radarColor =
-          ta.getColor(R.styleable.HighwayRadarScan_radarColor, Color.parseColor("#99e17117"));
-      tailColor = ta.getColor(R.styleable.HighwayRadarScan_tailColor, Color.parseColor("#e17117"));
+          ta.getColor(R.styleable.HighwayRadarScan_radarColor, Color.parseColor("#fafafa"));
+      tailColor = ta.getColor(R.styleable.HighwayRadarScan_tailColor, Color.parseColor("#efefef"));
       enableAnimation = ta.getBoolean(R.styleable.HighwayRadarScan_enableAnimation, true);
       ta.recycle();
     }
@@ -131,7 +131,7 @@ public class HighwayRadarScan extends View {
 
     //    Shader shader = new SweepGradient(cX, cY, Color.parseColor("#00e17117"), Color.parseColor("#ffe17117"));
     Shader shader =
-        new SweepGradient(cX, cY, Color.parseColor("#00ffa726"), Color.parseColor("#ffffa726"));
+        new SweepGradient(cX, cY, Color.parseColor("#00fafafa"), Color.parseColor("#ffefefef"));
     radar.setShader(shader);
     canvas.concat(matrix);
     canvas.drawCircle(cX, cY, 3 * raio / 7, radar);
