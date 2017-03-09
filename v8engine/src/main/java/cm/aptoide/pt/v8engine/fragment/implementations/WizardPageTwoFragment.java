@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import cm.aptoide.pt.v8engine.R;
 
 /**
@@ -19,6 +21,15 @@ public class WizardPageTwoFragment extends Fragment {
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.wizard_page_two, null);
+    View view = inflater.inflate(R.layout.wizard_page_one, null);
+    setText(view);
+    return view;
+  }
+
+  private void setText(View view) {
+    ((TextView) view.findViewById(android.R.id.text1)).setText(R.string.wizard_title_viewpager_two);
+    ((TextView) view.findViewById(android.R.id.text2)).setText(
+        R.string.wizard_sub_title_viewpager_two);
+    ((ImageView) view.findViewById(android.R.id.icon)).setImageResource(R.drawable.wizard_two);
   }
 }

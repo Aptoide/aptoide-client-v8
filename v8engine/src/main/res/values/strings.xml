@@ -154,23 +154,17 @@
   <!-- WIZARD -->
   <string name="wizard_skip"><b>SKIP</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_welcome_message"><b>Welcome!</b></string>
-  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
-  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
-  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
+  <string name="wizard_title_viewpager_one">Now with a Timeline!</string>
+  <string name="wizard_sub_title_viewpager_one"><b>Best app videos and news</b> in one place. \nDiscover apps via your <b>friends.</b></string>
 
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two"><b>Apps Timeline</b></string>
-  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
+  <string name="wizard_title_viewpager_two">Have your own Store</string>
+  <string name="wizard_sub_title_viewpager_two">Customize your store <b>to share apps \n with friends</b> and the <b>Aptoide Community.</b></string>
 
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
-  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
-  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
-  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
-  <string name="wizard_register_now_button">Register now</string>
-  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
-  <string name="wizard_or_login"><u>or Login</u></string>
+  <string name="wizard_title_viewpager_three">Be a part</string>
+  <string name="wizard_sub_title_viewpager_three"><b>Find people</b> who share your app interests. \n<b>Rate and share.</b></string>
+  <string name="wizard_sub_sub_title_viewpager_three">Join us!</string>
 
   <string name="you_need_to_be_logged_in">You need to be logged in</string>
   <string name="follow">Follow</string>

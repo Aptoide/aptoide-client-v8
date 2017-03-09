@@ -17,6 +17,7 @@
   <color name="navdrawer_body_text_1_inverse">#deffffff</color>
   <color name="navdrawer_body_text_2_inverse">#d2ffffff</color>
   <color name="medium_gray">#b8b8b8</color>
+  <color name="very_dark_gray">#4a4a4a</color>
   <color name="darker_gray">#858585</color>
   <color name="comment_gray">#f2f2f2</color>
 
