@@ -91,6 +91,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private Preference removePinPreferenceView;
   private CheckBoxPreference adultContentPreferenceView;
   private CheckBoxPreference adultContentWithPinPreferenceView;
+  private boolean trackAnalytics;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -98,6 +99,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    trackAnalytics = true;
     fileManager = FileManager.build();
     subscriptions = new CompositeSubscription();
     permissionManager = new PermissionManager();
@@ -210,7 +212,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     subscriptions.add(adultContentConfirmationDialog.positiveClicks()
         .doOnNext(click -> adultContentPreferenceView.setEnabled(false))
         .flatMap(click -> adultContent.enable()
-            .doOnCompleted(() -> Analytics.AdultContent.unlock())
+            .doOnCompleted(() -> trackUnlock())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnTerminate(() -> adultContentPreferenceView.setEnabled(true))
             .toObservable())
@@ -226,7 +228,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
           } else {
             adultContentPreferenceView.setEnabled(false);
             return adultContent.disable()
-                .doOnCompleted(() -> Analytics.AdultContent.lock())
+                .doOnCompleted(() -> trackLock())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnTerminate(() -> adultContentPreferenceView.setEnabled(true))
                 .toObservable();
@@ -244,7 +246,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
           } else {
             adultContentWithPinPreferenceView.setEnabled(false);
             return adultContent.disable()
-                .doOnCompleted(() -> Analytics.AdultContent.lock())
+                .doOnCompleted(() -> trackLock())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnTerminate(() -> adultContentWithPinPreferenceView.setEnabled(true))
                 .toObservable();
@@ -299,7 +301,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     subscriptions.add(enableAdultContentPinDialog.positiveClicks()
         .doOnNext(clock -> adultContentWithPinPreferenceView.setEnabled(false))
         .flatMap(pin -> adultContent.enable(Integer.valueOf(pin.toString()))
-            .doOnCompleted(() -> Analytics.AdultContent.unlock())
+            .doOnCompleted(() -> trackUnlock())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError(throwable -> {
               if (throwable instanceof SecurityException) {
@@ -483,5 +485,19 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   private void settingsResult() {
     getActivity().setResult(Activity.RESULT_OK);
+  }
+
+  private void trackLock() {
+    if (trackAnalytics) {
+      trackAnalytics = false;
+      Analytics.AdultContent.lock();
+    }
+  }
+
+  private void trackUnlock() {
+    if (trackAnalytics) {
+      trackAnalytics = false;
+      Analytics.AdultContent.unlock();
+    }
   }
 }
