@@ -11,10 +11,11 @@ public class GroupManager {
 
   private final ConnectionManager connectionManager;
   private AsyncTask<Void, Void, Integer> joinTask;
-  private boolean joiningGroup;
+  private boolean interactingWithGroup;
   private boolean mobileDataDialog;
   private Group group;
-  private GroupListener listener;
+  private GroupListener joinGrouplistener;
+  private GroupListener createGrouplistener;
   private String deviceName;
   private String randomAlphaNum;
   private JoinHotspotTask joinHotspotTask;
@@ -29,9 +30,9 @@ public class GroupManager {
 
   public void joinGroup(Group group, GroupListener listener) {
     this.group = group;
-    this.listener = listener;
+    this.joinGrouplistener = listener;
     if (group == null || TextUtils.isEmpty(group.getName())) {
-      listener.onError(ConnectionManager.ERROR_INVALID_GROUP);
+      joinGrouplistener.onError(ConnectionManager.ERROR_INVALID_GROUP);
       return;
     }
     //if (connectionManager.isMobileDataOn() && !mobileDataDialog) {
@@ -39,7 +40,7 @@ public class GroupManager {
     //  listener.onError(ConnectionManager.ERROR_MOBILE_DATA_ON_DIALOG);
     //  return;
     //}
-    if (joiningGroup) {
+    if (interactingWithGroup) {
       return;
     }
     try {
@@ -52,7 +53,7 @@ public class GroupManager {
 
   public void retryToJoinGroup(Group group) {//after mobileDataDialog
     if (group == null || TextUtils.isEmpty(group.getName())) {
-      listener.onError(ConnectionManager.ERROR_INVALID_GROUP);
+      joinGrouplistener.onError(ConnectionManager.ERROR_INVALID_GROUP);
       return;
     }
     //if (connectionManager.isMobileDataOn()) {
@@ -70,7 +71,7 @@ public class GroupManager {
   }
 
   public void createGroup(String randomAlphaNum, String deviceName, GroupListener listener) {
-    this.listener = listener;
+    this.createGrouplistener = listener;
     this.randomAlphaNum = randomAlphaNum;
     this.deviceName = deviceName;
     createTask = activateHotspotTask.execute();
@@ -82,10 +83,11 @@ public class GroupManager {
   }
 
   public void stop() {
-    this.listener = null;
+    this.createGrouplistener = null;
+    this.joinGrouplistener = null;
     this.connectionManager.stop();
     mobileDataDialog = false;
-    joiningGroup = false;
+    interactingWithGroup = false;
   }
 
   public interface GroupListener {
@@ -102,24 +104,24 @@ public class GroupManager {
 
     @Override protected void onPreExecute() {
       super.onPreExecute();
-      joiningGroup = true;
+      interactingWithGroup = true;
     }
 
     @Override protected void onCancelled() {
       super.onCancelled();
-      listener = null;
-      joiningGroup = false;
+      joinGrouplistener = null;
+      interactingWithGroup = false;
     }
 
     protected void onPostExecute(Integer result) {
-      joiningGroup = false;
-      if (listener != null) {
+      if (joinGrouplistener != null) {
         if (result == ConnectionManager.SUCCESSFUL_JOIN) {
-          listener.onSuccess();
+          joinGrouplistener.onSuccess();
         } else {
-          listener.onError(result);
+          joinGrouplistener.onError(result);
         }
       }
+      interactingWithGroup = false;
     }
   }
 
@@ -129,22 +131,29 @@ public class GroupManager {
       return connectionManager.enableHotspot(randomAlphaNum, deviceName);
     }
 
+    @Override protected void onPreExecute() {
+      super.onPreExecute();
+      interactingWithGroup = true;
+    }
+
     @Override protected void onPostExecute(Integer integer) {
       super.onPostExecute(integer);
-      if (listener != null) {
+      if (createGrouplistener != null) {
         if (integer == ConnectionManager.SUCCESS_HOTSPOT_CREATION) {
-          listener.onSuccess();
+          createGrouplistener.onSuccess();
         } else {
-          listener.onError(integer);
+          createGrouplistener.onError(integer);
         }
       }
+      interactingWithGroup = false;
     }
 
     @Override protected void onCancelled() {
       super.onCancelled();
-      if (listener != null) {
-        listener = null;
+      if (createGrouplistener != null) {
+        createGrouplistener = null;
       }
+      interactingWithGroup = false;
     }
   }
 }
