@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -27,13 +26,11 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.model.v7.store.HomeUser;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.activity.CreateStoreActivity;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
@@ -241,7 +238,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         storeWrapper.setStoreSubscribed(false);
         if (accountManager.isLoggedIn()) {
           accountManager.unsubscribeStore(storeWrapper.getStore().getName(),
-              displayable.getStoreCredentialsProvider().get(storeWrapper.getStore().getName()));
+              displayable.getStoreCredentialsProvider().get(storeWrapper.getStore().getName()).getName(),
+              displayable.getStoreCredentialsProvider().get(storeWrapper.getStore().getName()).getPasswordSha1());
         }
         StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
         storeAccessor.remove(storeWrapper.getStore().getId());

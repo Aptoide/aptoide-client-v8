@@ -10,20 +10,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.text.TextUtils;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v3.ChangeUserSettingsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.CreateUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.GetUserRepoSubscriptionRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.OAuth2AuthenticationRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
-import cm.aptoide.pt.model.v3.Subscription;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
+import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
+import cm.aptoide.pt.model.v3.Subscription;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
@@ -67,14 +68,12 @@ public class AptoideAccountManager {
   private final LoginAvailability loginAvailability;
 
   private final Analytics analytics;
-  private FollowStoreService followStoreService;
   private final BodyInterceptor bodyInterceptor;
 
   public AptoideAccountManager(Context applicationContext,
       AptoidePreferencesConfiguration configuration, AccountManager androidAccountManager,
       AptoideClientUUID aptoideClientUUID, LoginAvailability loginAvailability, Analytics analytics,
-      BodyInterceptor baseBodyInterceptor, String accountType,
-      FollowStoreService followStoreService) {
+      BodyInterceptor baseBodyInterceptor, String accountType) {
     this.bodyInterceptor = baseBodyInterceptor;
     this.aptoideClientUUID = aptoideClientUUID;
     this.applicationContext = applicationContext;
@@ -86,7 +85,6 @@ public class AptoideAccountManager {
     LOGIN = configuration.getAppId() + ".accountmanager.broadcast.login";
     LOGIN_CANCELLED = configuration.getAppId() + ".accountmanager.broadcast.LOGIN_CANCELLED";
     LOGOUT = configuration.getAppId() + ".accountmanager.broadcast.logout";
-    this.followStoreService = followStoreService;
   }
 
   public boolean isLoggedIn() {
@@ -137,14 +135,6 @@ public class AptoideAccountManager {
     }).onErrorReturn(throwable -> null).toBlocking().value();
   }
 
-  public void updateMatureSwitch(boolean matureSwitch) {
-    getAccountAsync().flatMapCompletable(account -> saveAccount(
-        new Account(account.getId(), account.getEmail(), account.getNickname(), account.getAvatar(),
-            account.getRefreshToken(), account.getToken(), account.getPassword(), account.getType(),
-            account.getStore(), account.getStoreAvatar(), matureSwitch, account.getAccess(),
-            account.isAccessConfirmed()))).onErrorComplete().subscribe();
-  }
-
   public Completable refreshAccountToken() {
     return getAccountAsync().flatMapCompletable(account -> refreshToken(account));
   }
@@ -181,15 +171,24 @@ public class AptoideAccountManager {
     }).doOnCompleted(() -> analytics.login(email)).doOnCompleted(() -> sendLoginBroadcast());
   }
 
-  public void unsubscribeStore(String storeName,
-      BaseRequestWithStore.StoreCredentials storeCredentials) {
-    followStoreService.unFollowStore(storeName, storeCredentials.getUsername(),
-        storeCredentials.getPasswordSha1(), bodyInterceptor).subscribe();
+  public void unsubscribeStore(String storeName, String storeUserName, String storePassword) {
+    changeSubscription(storeName, storeUserName, storePassword,
+        ChangeStoreSubscriptionResponse.StoreSubscriptionState.SUBSCRIBED,
+        bodyInterceptor).subscribe();
   }
 
   public Completable subscribeStore(String storeName, String storeUserName, String storePassword) {
-    return followStoreService.followStore(storeName, storeUserName, storePassword, bodyInterceptor)
-        .toCompletable();
+    return changeSubscription(storeName, storeUserName, storePassword,
+        ChangeStoreSubscriptionResponse.StoreSubscriptionState.SUBSCRIBED,
+        bodyInterceptor).toCompletable();
+  }
+
+  private Observable<ChangeStoreSubscriptionResponse> changeSubscription(String storeName,
+      String storeUserName, String sha1Password,
+      ChangeStoreSubscriptionResponse.StoreSubscriptionState subscription,
+      BodyInterceptor interceptor) {
+    return ChangeStoreSubscriptionRequest.of(storeName, subscription, storeUserName, sha1Password,
+        interceptor).observe();
   }
 
   public void sendLoginCancelledBroadcast() {
@@ -241,7 +240,7 @@ public class AptoideAccountManager {
 
   public Completable updateAccount(boolean mature) {
     return getAccountAsync().flatMapCompletable(account -> {
-      return ChangeUserSettingsRequest.of(mature, getAccessToken())
+      return ChangeUserSettingsRequest.of(mature, account.getToken())
           .observe(true)
           .toSingle()
           .flatMapCompletable(response -> {
@@ -412,7 +411,7 @@ public class AptoideAccountManager {
     }).subscribeOn(Schedulers.io());
   }
 
-  private Single<Account> getAccountAsync() {
+  public Single<Account> getAccountAsync() {
     return getAndroidAccountAsync().flatMap(androidAccount -> {
       final Account.Access access =
           androidAccountManager.getUserData(androidAccount, ACCESS) == null

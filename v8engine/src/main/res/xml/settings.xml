@@ -64,13 +64,29 @@
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="matureChkBox"
+        android:persistent="false"
         android:summary="@string/setting_dont_show_mature_content"
         android:title="@string/setting_mature_filtering"/>
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="matureChkBoxWithPin"
+        android:persistent="false"
+        android:summary="@string/setting_dont_show_mature_content"
+        android:title="@string/setting_mature_filtering"
+        android:visible="false"/>
     <Preference
         android:inputType="number"
         android:key="Maturepin"
+        android:persistent="false"
         android:summary="@string/set_mature_pin_summary"
         android:title="@string/set_mature_pin_title"/>
+    <Preference
+        android:inputType="number"
+        android:key="removeMaturepin"
+        android:persistent="false"
+        android:summary="@string/remove_mature_pin_summary"
+        android:title="@string/remove_mature_pin_title"
+        android:visible="false"/>
   </PreferenceCategory>
 
   <PreferenceCategory android:title="@string/setting_updates">

@@ -93,17 +93,6 @@ public class SecurePreferences {
         .apply();
   }
 
-  public static int getAdultContentPin() {
-    return SecurePreferencesImplementation.getInstance().getInt(SecureKeys.ADULT_CONTENT_PIN, -1);
-  }
-
-  public static void setAdultContentPin(int pin) {
-    SecurePreferencesImplementation.getInstance()
-        .edit()
-        .putInt(SecureKeys.ADULT_CONTENT_PIN, pin)
-        .apply();
-  }
-
   public static boolean isTimelineActive() {
     return SecurePreferencesImplementation.getInstance()
         .getBoolean(SecureKeys.IS_TIMELINE_ACTIVE, false);

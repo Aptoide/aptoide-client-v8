@@ -1,18 +1,11 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.content.DialogInterface;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.dialog.AdultDialogFactory;
-import cm.aptoide.pt.v8engine.fragment.BaseLoaderFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AdultRowDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
@@ -34,37 +27,39 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
   }
 
   @Override public void bindView(AdultRowDisplayable displayable) {
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
-    adultSwitch.setOnCheckedChangeListener(null);
-    adultSwitch.setChecked(accountManager.isAccountMature());
-    adultSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
 
-      if (isChecked) {
-        AdultDialogFactory.buildAreYouAdultDialog(getContext(), (dialog, which) -> {
-          if (which == DialogInterface.BUTTON_POSITIVE) {
-            //						adultSwitch.setChecked(true);
-            accountManager.updateMatureSwitch(true);
 
-            FragmentManager supportFragmentManager = getContext().getSupportFragmentManager();
-            ((BaseLoaderFragment) supportFragmentManager.getFragments()
-                .get(supportFragmentManager.getBackStackEntryCount())).load(true, true, null);
-          }
-        }, dialog1 -> {
-          shouldITrackNextChange = false;
-          adultSwitch.setChecked(false);
-        }).show();
-      } else {
-        if (shouldITrackNextChange) {
-          Logger.d(this.getClass().getName(), "FLURRY TESTING HOME : LOCK ADULT CONTENT");
-          Analytics.AdultContent.lock();
-        } else {
-          shouldITrackNextChange = true;
-        }
-        FragmentManager supportFragmentManager = getContext().getSupportFragmentManager();
-        ((BaseLoaderFragment) supportFragmentManager.getFragments()
-            .get(supportFragmentManager.getBackStackEntryCount())).load(true, true, null);
-        accountManager.updateMatureSwitch(false);
-      }
-    });
+    //adultSwitch.setOnCheckedChangeListener(null);
+    //adultSwitch.setChecked(accountManager.isAccountMature());
+    //adultSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+    //
+    //  if (isChecked) {
+    //    AdultDialogFactory.buildAreYouAdultDialog(getContext(), (dialog, which) -> {
+    //      if (which == DialogInterface.BUTTON_POSITIVE) {
+    //        //						adultSwitch.setChecked(true);
+    //        accountManager.updateAccountMatureState(true);
+    //
+    //        FragmentManager supportFragmentManager = getContext().getSupportFragmentManager();
+    //        ((BaseLoaderFragment) supportFragmentManager.getFragments()
+    //            .get(supportFragmentManager.getBackStackEntryCount())).load(true, true, null);
+    //      }
+    //    }, dialog1 -> {
+    //      shouldITrackNextChange = false;
+    //      adultSwitch.setChecked(false);
+    //    }).show();
+    //  } else {
+    //    if (shouldITrackNextChange) {
+    //      Logger.d(this.getClass().getName(), "FLURRY TESTING HOME : LOCK ADULT CONTENT");
+    //      Analytics.AdultContent.lock();
+    //    } else {
+    //      shouldITrackNextChange = true;
+    //    }
+    //    FragmentManager supportFragmentManager = getContext().getSupportFragmentManager();
+    //    ((BaseLoaderFragment) supportFragmentManager.getFragments()
+    //        .get(supportFragmentManager.getBackStackEntryCount())).load(true, true, null);
+    //    accountManager.updateAccountMatureState(false);
+    //  }
+    //});
   }
 }
