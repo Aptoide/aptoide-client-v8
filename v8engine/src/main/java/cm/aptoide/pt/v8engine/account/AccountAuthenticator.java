@@ -14,7 +14,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.view.MainActivity;
@@ -28,6 +27,18 @@ import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
   public static final String INVALID_AUTH_TOKEN_TYPE = "invalid authTokenType";
+  public static final String AUTHTOKEN_TYPE_FULL_ACCESS = "Full access";
+  public static final String AUTHTOKEN_TYPE_READ_ONLY = "Read only";
+  public static final String AUTHTOKEN_TYPE_READ_ONLY_LABEL =
+      "Read only access to an Aptoide " + "account";
+  /**
+   * Auth token types
+   */
+  public static final String AUTHTOKEN_TYPE_FULL_ACCESS_LABEL = "Full access to an Aptoide " + "account";
+  public final static String ARG_OPTIONS_BUNDLE = "BE";
+  public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
+  public final static String ARG_AUTH_TYPE = "AUTH_TYPE";
+  public final static String ARG_IS_ADDING_NEW_ACCOUNT = "IS_ADDING_ACCOUNT";
   private static final String TAG = AccountAuthenticator.class.getSimpleName();
   private final AptoideAccountManager accountManager;
 
@@ -69,10 +80,10 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
     Intent intent = new Intent(Application.getContext(), MainActivity.class);
     intent.putExtra(MainActivity.FRAGMENT, LoginFragment.class.getName());
     // FIXME: 14/2/2017 sithengineer add this funtionality in main Activity
-    intent.putExtra(Constants.ARG_ACCOUNT_TYPE, accountType);
-    intent.putExtra(Constants.ARG_AUTH_TYPE, authTokenType);
-    intent.putExtra(Constants.ARG_IS_ADDING_NEW_ACCOUNT, true);
-    intent.putExtra(Constants.ARG_OPTIONS_BUNDLE, options);
+    intent.putExtra(ARG_ACCOUNT_TYPE, accountType);
+    intent.putExtra(ARG_AUTH_TYPE, authTokenType);
+    intent.putExtra(ARG_IS_ADDING_NEW_ACCOUNT, true);
+    intent.putExtra(ARG_OPTIONS_BUNDLE, options);
     intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
     return intent;
   }
@@ -87,7 +98,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
     // If the caller requested an authToken type we don't support, then
     // return an error
-    if (!authTokenType.equals(Constants.AUTHTOKEN_TYPE_FULL_ACCESS)) {
+    if (!authTokenType.equals(AUTHTOKEN_TYPE_FULL_ACCESS)) {
       final Bundle result = new Bundle();
       result.putString(AccountManager.KEY_ERROR_MESSAGE, INVALID_AUTH_TOKEN_TYPE);
       return result;
@@ -120,10 +131,10 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
   }
 
   @Override public String getAuthTokenLabel(String authTokenType) {
-    if (Constants.AUTHTOKEN_TYPE_FULL_ACCESS.equals(authTokenType)) {
-      return Constants.AUTHTOKEN_TYPE_FULL_ACCESS_LABEL;
-    } else if (Constants.AUTHTOKEN_TYPE_READ_ONLY.equals(authTokenType)) {
-      return Constants.AUTHTOKEN_TYPE_READ_ONLY_LABEL;
+    if (AUTHTOKEN_TYPE_FULL_ACCESS.equals(authTokenType)) {
+      return AUTHTOKEN_TYPE_FULL_ACCESS_LABEL;
+    } else if (AUTHTOKEN_TYPE_READ_ONLY.equals(authTokenType)) {
+      return AUTHTOKEN_TYPE_READ_ONLY_LABEL;
     } else {
       return authTokenType + " (Label)";
     }

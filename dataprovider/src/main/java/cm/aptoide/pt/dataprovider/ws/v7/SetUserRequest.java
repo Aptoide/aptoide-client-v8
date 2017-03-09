@@ -1,6 +1,5 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,11 +17,9 @@ public class SetUserRequest extends V7<BaseV7Response, SetUserRequest.Body> {
     super(body, baseHost);
   }
 
-  public static SetUserRequest of(String aptoideClientUUID, String user_access, String accessToken,
-      String userPhone) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    Body body = new Body(user_access, userPhone);
-    return new SetUserRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+  public static SetUserRequest of(String user_access, BodyInterceptor bodyInterceptor) {
+    Body body = new Body(user_access);
+    return new SetUserRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
@@ -33,11 +30,9 @@ public class SetUserRequest extends V7<BaseV7Response, SetUserRequest.Body> {
   @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
 
     public String user_access;
-    private String userPhone;
 
-    public Body(String user_access, String userPhone) {
+    public Body(String user_access) {
       this.user_access = user_access;
-      this.userPhone = userPhone;
     }
   }
 }

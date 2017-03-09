@@ -1,6 +1,5 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import rx.Observable;
 
@@ -14,12 +13,10 @@ public class GetFollowingRequest extends V7<GetFollowers, GetFollowersRequest.Bo
     super(body, baseHost);
   }
 
-  public static GetFollowingRequest of(String accessToken, String aptoideClientUUID, Long userId) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+  public static GetFollowingRequest of(BodyInterceptor bodyInterceptor, Long userId) {
 
     return new GetFollowingRequest(
-        ((GetFollowersRequest.Body) decorator.decorate(new GetFollowersRequest.Body(userId),
-            accessToken)), BASE_HOST);
+        ((GetFollowersRequest.Body) bodyInterceptor.intercept(new GetFollowersRequest.Body(userId))), BASE_HOST);
   }
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,

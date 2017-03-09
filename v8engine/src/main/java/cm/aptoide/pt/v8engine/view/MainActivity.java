@@ -30,6 +30,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.AutoUpdate;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -46,6 +47,7 @@ import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.services.ContentPuller;
 import cm.aptoide.pt.v8engine.util.ApkFy;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import java.io.UnsupportedEncodingException;
@@ -70,9 +72,11 @@ public class MainActivity extends TabNavigatorActivity implements MainView, Frag
     setContentView(R.layout.frame_layout);
 
     accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
-    final IdsRepositoryImpl clientUuid =
+    final IdsRepositoryImpl aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
-    storeUtilsProxy = new StoreUtilsProxy(clientUuid, accountManager);
+    storeUtilsProxy = new StoreUtilsProxy(accountManager,
+        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
+        new StoreCredentialsProviderImpl());
     final AutoUpdate autoUpdate =
         new AutoUpdate(this, new InstallerFactory().create(this, InstallerFactory.DEFAULT),
             new DownloadFactory(), AptoideDownloadManager.getInstance(), new PermissionManager());

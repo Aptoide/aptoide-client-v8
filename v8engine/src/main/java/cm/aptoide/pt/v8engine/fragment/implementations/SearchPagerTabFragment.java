@@ -11,6 +11,8 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.ListSearchApps;
@@ -83,7 +85,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
         addDisplayables(displayables);
       };
-
+  private BodyInterceptor bodyInterceptor;
 
   public static SearchPagerTabFragment newInstance(String query, boolean subscribedStores,
       boolean hasMultipleFragments) {
@@ -110,10 +112,13 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    adsRepository = new AdsRepository();
+    adsRepository = new AdsRepository(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext()), accountManager);
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
     accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    bodyInterceptor =
+        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
     super.onCreate(savedInstanceState);
   }
 
@@ -147,11 +152,11 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
       ListSearchAppsRequest of;
       if (storeName != null) {
         of = ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-            accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier());
+            bodyInterceptor);
       } else {
         of = ListSearchAppsRequest.of(query, addSubscribedStores,
             StoreUtils.getSubscribedStoresIds(), StoreUtils.getSubscribedStoresAuthMap(),
-            accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier());
+            bodyInterceptor);
       }
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,

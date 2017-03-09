@@ -8,6 +8,8 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v3.PaidApp;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import rx.Observable;
 
 /**
@@ -16,7 +18,8 @@ import rx.Observable;
 public class GetApkInfoRequest extends V3<PaidApp> {
 
   protected GetApkInfoRequest(BaseBody baseBody) {
-    super(BASE_HOST, baseBody);
+    super(BASE_HOST, baseBody,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), isDebug()));
   }
 
   public static GetApkInfoRequest of(long appId, NetworkOperatorManager operatorManager,

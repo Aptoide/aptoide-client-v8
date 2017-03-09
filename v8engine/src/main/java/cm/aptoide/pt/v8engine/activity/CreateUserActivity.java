@@ -21,9 +21,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import cm.aptoide.accountmanager.AccountValidationException;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.OAuthException;
-import cm.aptoide.accountmanager.UserValidationException;
+import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -126,16 +126,17 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
   }
 
   private void showError(Throwable throwable) {
-    if (throwable instanceof OAuthException) {
-      showErrorMessage(ErrorsMapper.getWebServiceErrorMessageFromCode(
-          ((OAuthException) throwable).getoAuth().getErrors().get(0).getCode()));
+    if (throwable instanceof AccountException) {
+      showErrorMessage(
+          ErrorsMapper.getWebServiceErrorMessageFromCode(((AccountException) throwable).getCode()));
     } else if (throwable instanceof SocketTimeoutException
         || throwable instanceof TimeoutException) {
       RxSnackbar.dismisses(
           Snackbar.make(content, cm.aptoide.accountmanager.R.string.user_upload_photo_failed,
               Snackbar.LENGTH_SHORT)).subscribe(dismissed -> finish());
-    } else if (throwable instanceof UserValidationException
-        && ((UserValidationException) throwable).getCode() == UserValidationException.EMPTY_NAME) {
+    } else if (throwable instanceof AccountValidationException
+        && ((AccountValidationException) throwable).getCode()
+        == AccountValidationException.EMPTY_NAME) {
       showErrorMessage(cm.aptoide.accountmanager.R.string.nothing_inserted_user);
     } else {
       showErrorMessage(cm.aptoide.accountmanager.R.string.unknown_error);

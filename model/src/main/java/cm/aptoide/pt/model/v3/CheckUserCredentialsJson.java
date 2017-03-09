@@ -3,23 +3,19 @@
  * Modified by Neurophobic Animal on 26/04/2016.
  */
 
-package cm.aptoide.accountmanager.ws.responses;
+package cm.aptoide.pt.model.v3;
 
+import cm.aptoide.pt.model.v3.BaseV3Response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Created by brutus on 09-12-2013.
  */
-@Data public class CheckUserCredentialsJson {
-
-  public String status;
-  public List<ErrorResponse> errors;
-
-  public boolean hasErrors() {
-    return errors != null && errors.size() > 0;
-  }
+@Data @EqualsAndHashCode(callSuper = true) public class CheckUserCredentialsJson
+    extends BaseV3Response {
 
   public int id;
   public String token;

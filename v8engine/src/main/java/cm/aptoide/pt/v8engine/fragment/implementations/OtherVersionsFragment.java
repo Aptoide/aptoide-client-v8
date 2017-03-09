@@ -1,12 +1,12 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
-import android.accounts.AccountManager;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.view.Menu;
@@ -28,6 +28,7 @@ import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
@@ -50,6 +51,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
   private String appName;
   private String appImgUrl;
   private String appPackge;
+  private CollapsingToolbarLayout collapsingToolbarLayout;
   // views
   private ViewHeader header;
   //private TextView emptyData;
@@ -94,6 +96,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     super.bindViews(view);
     final Context context = getContext();
     header = new ViewHeader(context, view);
+    collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
     //emptyData = (TextView) view.findViewById(R.id.empty_data);
     setHasOptionsMenu(true);
   }
@@ -129,7 +132,8 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(),
             ListAppVersionsRequest.of(appPackge, storeNames, accountManager.getAccessToken(),
-                aptoideClientUUID.getUniqueIdentifier(), StoreUtils.getSubscribedStoresAuthMap()),
+                aptoideClientUUID.getUniqueIdentifier(), StoreUtils.getSubscribedStoresAuthMap(),
+                new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager)),
             otherVersionsSuccessRequestListener, Throwable::printStackTrace);
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
@@ -146,6 +150,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
   private void setTitle(String title) {
     if (hasToolbar()) {
       getToolbar().setTitle(title);
+      collapsingToolbarLayout.setTitle(title);
     }
   }
 

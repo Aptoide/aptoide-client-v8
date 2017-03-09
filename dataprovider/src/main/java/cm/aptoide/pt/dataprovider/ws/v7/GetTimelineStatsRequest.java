@@ -1,6 +1,5 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.TimelineStats;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,12 +15,8 @@ public class GetTimelineStatsRequest extends V7<TimelineStats, GetTimelineStatsR
     super(body, baseHost);
   }
 
-  public static GetTimelineStatsRequest of(String accessToken, String aptoideClientUUID,
-      Long userId) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    return new GetTimelineStatsRequest(
-        (GetTimelineStatsRequest.Body) decorator.decorate(new Body(userId), accessToken),
-        BASE_HOST);
+  public static GetTimelineStatsRequest of(BodyInterceptor bodyInterceptor, Long userId) {
+    return new GetTimelineStatsRequest((Body) bodyInterceptor.intercept(new Body(userId)), BASE_HOST);
   }
 
   @Override protected Observable<TimelineStats> loadDataFromNetwork(Interfaces interfaces,

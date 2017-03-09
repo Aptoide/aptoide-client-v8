@@ -1,7 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.store.AccessTokenRequestBodyAdapter;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -34,11 +33,10 @@ import rx.Observable;
     multipartBody = file;
   }
 
-  public static SetStoreRequest of(String aptoideClientUUID, String accessToken, String storeName,
-      String storeTheme, String storeAvatarPath) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+  public static SetStoreRequest of(String accessToken, String storeName, String storeTheme,
+      String storeAvatarPath, BodyInterceptor bodyInterceptor) {
     AccessTokenRequestBodyAdapter body =
-        new AccessTokenRequestBodyAdapter(new BaseBody(), decorator, accessToken, storeName,
+        new AccessTokenRequestBodyAdapter(new BaseBody(), bodyInterceptor, accessToken, storeName,
             storeTheme);
     File file = new File(storeAvatarPath);
     RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
@@ -60,12 +58,10 @@ import rx.Observable;
     return clientBuilder;
   }
 
-  public static SetStoreRequest of(String aptoideClientUUID, String accessToken, String storeName,
-      String storeTheme, String storeAvatarPath, String storeDescription, Boolean editStore,
-      long storeId) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+  public static SetStoreRequest of(String accessToken, String storeName, String storeTheme, String storeAvatarPath, String storeDescription, Boolean editStore,
+      long storeId, BodyInterceptor bodyInterceptor) {
     AccessTokenRequestBodyAdapter body =
-        new AccessTokenRequestBodyAdapter(new BaseBody(), decorator, accessToken, storeName,
+        new AccessTokenRequestBodyAdapter(new BaseBody(), bodyInterceptor, accessToken, storeName,
             storeTheme, storeDescription, editStore, storeId);
     File file = new File(storeAvatarPath);
     RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);

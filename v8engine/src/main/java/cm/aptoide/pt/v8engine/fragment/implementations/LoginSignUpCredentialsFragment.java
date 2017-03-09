@@ -18,11 +18,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.OAuthException;
-import cm.aptoide.accountmanager.ws.AptoideWsV3Exception;
-import cm.aptoide.accountmanager.ws.responses.OAuth;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -162,31 +159,20 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override public void showError(Throwable throwable) {
     String message = getString(cm.aptoide.accountmanager.R.string.unknown_error);
-    try {
-      if (throwable instanceof OAuthException) {
-        final OAuth oAuth = ((OAuthException) throwable).getoAuth();
-        message = getString(
-            ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getErrors().get(0).getCode()));
-      } else if (throwable instanceof AptoideWsV3Exception) {
-        final AptoideWsV3Exception ex = ((AptoideWsV3Exception) throwable);
-        @StringRes int errorId =
-            getResources().getIdentifier("error_" + ex.getBaseResponse().getError(), "string",
-                getContext().getPackageName());
-        message = getString(errorId);
-      } else if (throwable instanceof cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception) {
-        final cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception ex =
-            ((cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception) throwable);
-        @StringRes int errorId =
-            getResources().getIdentifier("error_" + ex.getBaseResponse().getError(), "string",
-                getContext().getPackageName());
-        message = getString(errorId);
-      } else if (throwable instanceof IOException) {
-        message = getString(cm.aptoide.accountmanager.R.string.connection_error);
-      }
-    } catch (Exception e) {
-      CrashReport.getInstance().log(e);
-    }
+    if (throwable instanceof AccountException) {
 
+      if (((AccountException) throwable).hasCode()) {
+        message = getString(ErrorsMapper.getWebServiceErrorMessageFromCode(
+            ((AccountException) throwable).getCode()));
+      } else {
+        @StringRes int errorId =
+            getResources().getIdentifier("error_" + ((AccountException) throwable).getError(),
+                "string", getContext().getPackageName());
+        message = getString(errorId);
+      }
+    } else if (throwable instanceof IOException) {
+      message = getString(cm.aptoide.accountmanager.R.string.connection_error);
+    }
     // FIXME: 23/2/2017 sithengineer find a better solution than this.
     ShowMessage.asToast(getContext(), message);
   }

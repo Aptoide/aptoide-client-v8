@@ -6,7 +6,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.ws.Api;
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -42,32 +41,29 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
     }, isDebug()), WebService.getDefaultConverter(), baseHost);
   }
 
-  public static ListReviewsRequest of(String storeName, String packageName, String accessToken,
-      String aptoideClientUUID, BaseRequestWithStore.StoreCredentials storecredentials) {
-    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, accessToken, aptoideClientUUID,
-        storecredentials);
+  public static ListReviewsRequest of(String storeName, String packageName,
+      BaseRequestWithStore.StoreCredentials storecredentials, BodyInterceptor bodyInterceptor) {
+    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, storecredentials, bodyInterceptor);
   }
 
   /**
    * example call: http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/limit/10
    */
   public static ListReviewsRequest of(String storeName, String packageName, int maxReviews,
-      int maxComments, String accessToken, String aptoideClientUUID,
-      BaseRequestWithStore.StoreCredentials storecredentials) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+      int maxComments, BaseRequestWithStore.StoreCredentials storecredentials,
+      BodyInterceptor bodyInterceptor) {
     Body body = new Body(storeName, packageName, maxReviews, maxComments,
         ManagerPreferences.getAndResetForceServerRefresh(), storecredentials);
-    return new ListReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+    return new ListReviewsRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
   }
 
   /**
    * example call: http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/sub_limit/0/limit/3
    */
   public static ListReviewsRequest ofTopReviews(String storeName, String packageName,
-      int maxReviews, String accessToken, String aptoideClientUUID,
-      BaseRequestWithStore.StoreCredentials storeCredentials) {
-    return of(storeName, packageName, maxReviews, 0, accessToken, aptoideClientUUID,
-        storeCredentials);
+      int maxReviews, BaseRequestWithStore.StoreCredentials storeCredentials,
+      BodyInterceptor bodyInterceptor) {
+    return of(storeName, packageName, maxReviews, 0, storeCredentials, bodyInterceptor);
   }
 
   @Override protected Observable<ListReviews> loadDataFromNetwork(Interfaces interfaces,

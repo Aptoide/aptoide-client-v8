@@ -3,7 +3,7 @@
  * Modified by SithEngineer on 27/06/2016.
  */
 
-package cm.aptoide.accountmanager.ws.responses;
+package cm.aptoide.pt.model.v3;
 
 import lombok.Data;
 

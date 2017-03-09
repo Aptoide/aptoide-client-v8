@@ -14,6 +14,7 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
@@ -24,6 +25,8 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.BaseLoaderToolbarFragment;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
@@ -50,6 +53,8 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   private String description;
   private String appName;
   private AptoideAccountManager accountManager;
+  private BaseBodyInterceptor bodyDecorator;
+  private StoreCredentialsProvider storeCredentialsProvider;
 
   public static DescriptionFragment newInstance(String appName, String description,
       String storeTheme) {
@@ -76,9 +81,11 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    storeCredentialsProvider = new StoreCredentialsProviderImpl();
     aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    bodyDecorator = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -125,8 +132,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
       finishLoading();
     } else if (hasAppId) {
       GetAppRequest.of(appId, V8Engine.getConfiguration().getPartnerId() == null ? null : storeName,
-          StoreUtils.getStoreCredentials(storeName), accountManager.getAccessToken(),
-          aptoideClientUUID.getUniqueIdentifier(), packageName).execute(getApp -> {
+          StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName, bodyDecorator).execute(getApp -> {
         setupAppDescription(getApp);
         setupTitle(getApp);
         finishLoading();

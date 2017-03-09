@@ -1,7 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import lombok.EqualsAndHashCode;
@@ -21,18 +21,10 @@ public class ChangeStoreSubscriptionRequest
   }
 
   public static ChangeStoreSubscriptionRequest of(String storeName,
-      ChangeStoreSubscriptionResponse.StoreSubscriptionState storeSubscription,
-      String aptoideClientUUID, String accessToken) {
-    Body body = (Body) new BaseBodyDecorator(aptoideClientUUID).decorate(
-        new Body(storeName, storeSubscription), accessToken);
-    return new ChangeStoreSubscriptionRequest(body, BASE_HOST);
-  }
-
-  public static ChangeStoreSubscriptionRequest of(String storeName,
-      ChangeStoreSubscriptionResponse.StoreSubscriptionState storeSubscription,
-      String aptoideClientUUID, String accessToken, String storeUser, String sha1PassWord) {
-    Body body = (Body) new BaseBodyDecorator(aptoideClientUUID).decorate(
-        new Body(storeName, storeSubscription, storeUser, sha1PassWord), accessToken);
+      ChangeStoreSubscriptionResponse.StoreSubscriptionState storeSubscription, String storeUser,
+      String sha1PassWord, BodyInterceptor interceptor) {
+    Body body = (Body) interceptor.intercept(
+        new Body(storeName, storeSubscription, storeUser, sha1PassWord));
     return new ChangeStoreSubscriptionRequest(body, BASE_HOST);
   }
 

@@ -7,7 +7,6 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.util.CommentType;
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,14 +27,12 @@ public class PostCommentForReview extends V7<BaseV7Response, PostCommentForRevie
     super(body, baseHost);
   }
 
-  public static PostCommentForReview of(long reviewId, String text, String accessToken,
-      String aptoideClientUUID) {
+  public static PostCommentForReview of(long reviewId, String text, BodyInterceptor bodyInterceptor) {
     //
     //  http://ws75-primary.aptoide.com/api/7/setComment/review_id/1/body/amazing%20review/access_token/ca01ee1e05ab4d82d99ef143e2816e667333c6ef
     //
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     Body body = new Body(reviewId, text);
-    return new PostCommentForReview((Body) decorator.decorate(body, accessToken), BASE_HOST);
+    return new PostCommentForReview((Body) bodyInterceptor.intercept(body), BASE_HOST);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

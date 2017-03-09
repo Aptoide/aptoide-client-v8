@@ -13,14 +13,17 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FollowUserDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -69,6 +72,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
 
   @Override public void bindView(FollowUserDisplayable displayable) {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    final AptoideClientUUID aptoideClientUUID = new IdsRepositoryImpl
+        (SecurePreferencesImplementation.getInstance(), getContext());
 
     if (!displayable.getOpenMode()
         .equals(TimeLineFollowFragment.FollowFragmentOpenMode.LIKE_PREVIEW)) {
@@ -88,9 +93,9 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       final String storeName = displayable.getStoreName();
       final String storeTheme = V8Engine.getConfiguration().getDefaultTheme();
 
-      final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
-          accountManager);
+      final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager,
+          new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
+          new StoreCredentialsProviderImpl());
 
       Action1<Void> openStore = __ -> {
         getNavigationManager().navigateTo(

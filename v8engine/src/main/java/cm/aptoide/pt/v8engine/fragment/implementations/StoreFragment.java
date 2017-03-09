@@ -26,6 +26,7 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -67,10 +68,11 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private StoreContext storeContext;
   private GetHome getHome;
   private String storeTheme;
+  private StoreCredentialsProvider storeCredentialsProvider;
   private Event.Name defaultTab;
   @Nullable private Long userId;
-  private StoreCredentialsProvider storeCredentialsProvider;
   private OpenType openType;
+  private BaseBodyInterceptor bodyInterceptor;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -114,10 +116,12 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    storeCredentialsProvider = new StoreCredentialsProviderImpl();
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    storeCredentialsProvider = new StoreCredentialsProviderImpl();
+    bodyInterceptor =
+        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
   }
 
   @Override public void onDestroy() {
@@ -272,19 +276,18 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private Observable<GetHome> getRequest(boolean refresh, OpenType openType) {
     switch (openType) {
       case GetHome:
-        return GetHomeRequest.of(StoreUtils.getStoreCredentials(storeName), userId, storeContext,
-            accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
-            .observe(refresh);
+        return GetHomeRequest.of(
+            StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), userId,
+            storeContext, bodyInterceptor).observe(refresh);
       case GetStore:
       default:
-        return GetStoreRequest.of(StoreUtils.getStoreCredentials(storeName), storeContext,
-            accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
-            .observe(refresh)
-            .map(getStore -> {
-              GetHome getHome = new GetHome();
-              getHome.setNodes(getStore.getNodes());
-              return getHome;
-            });
+        return GetStoreRequest.of(
+            StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), storeContext,
+            bodyInterceptor).observe(refresh).map(getStore -> {
+          GetHome getHome = new GetHome();
+          getHome.setNodes(getStore.getNodes());
+          return getHome;
+        });
     }
   }
 

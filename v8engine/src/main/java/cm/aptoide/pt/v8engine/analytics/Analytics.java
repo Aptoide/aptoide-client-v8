@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -47,6 +46,8 @@ public class Analytics {
 
   // Constantes globais a todos os eventos.
   public static final String ACTION = "Action";
+  public static final String IS_LOCALYTICS_ENABLE_KEY = "IS_LOCALYTICS_ENABLE_KEY";
+  public static final String IS_LOCALYTICS_FIRST_SESSION = "IS_LOCALYTICS_FIRST_SESSION";
   private static final String METHOD = "Method";
   private static final String TAG = Analytics.class.getSimpleName();
   private static final boolean ACTIVATE_FLURRY = true;
@@ -217,8 +218,8 @@ public class Analytics {
         SharedPreferences sPref =
             PreferenceManager.getDefaultSharedPreferences(application.getBaseContext());
         ACTIVATE_LOCALYTICS =
-            ACTIVATE_LOCALYTICS && (sPref.getBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY, false));
-        isFirstSession = sPref.getBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, false);
+            ACTIVATE_LOCALYTICS && (sPref.getBoolean(IS_LOCALYTICS_ENABLE_KEY, false));
+        isFirstSession = sPref.getBoolean(IS_LOCALYTICS_FIRST_SESSION, false);
         if (ACTIVATE_LOCALYTICS || isFirstSession) {
           // Integrate Localytics
           Localytics.autoIntegrate(application);
@@ -1007,20 +1008,20 @@ public class Analytics {
   public static class LocalyticsSessionControl {
     public static void firstSession(SharedPreferences sPref) {
       SharedPreferences.Editor edit = sPref.edit();
-      edit.putBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, false);
-      Logger.d(TAG, "contains" + sPref.contains(Constants.IS_LOCALYTICS_ENABLE_KEY));
-      if (!sPref.contains(Constants.IS_LOCALYTICS_ENABLE_KEY)) {
+      edit.putBoolean(IS_LOCALYTICS_FIRST_SESSION, false);
+      Logger.d(TAG, "contains" + sPref.contains(IS_LOCALYTICS_ENABLE_KEY));
+      if (!sPref.contains(IS_LOCALYTICS_ENABLE_KEY)) {
         Random random = new Random();
         int i = random.nextInt(10);
         Logger.d(TAG, "firstSession: " + i);
-        edit.putBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, true);
-        edit.putBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY, i == 0);
+        edit.putBoolean(IS_LOCALYTICS_FIRST_SESSION, true);
+        edit.putBoolean(IS_LOCALYTICS_ENABLE_KEY, i == 0);
       }
       edit.apply();
       Logger.d(TAG, "firstSession: IS_LOCALYTICS_FIRST_SESSION: " + sPref.getBoolean(
-          Constants.IS_LOCALYTICS_FIRST_SESSION, false));
+          IS_LOCALYTICS_FIRST_SESSION, false));
       Logger.d(TAG, "firstSession: IS_LOCALYTICS_ENABLE_KEY: " + sPref.getBoolean(
-          Constants.IS_LOCALYTICS_ENABLE_KEY, false));
+          IS_LOCALYTICS_ENABLE_KEY, false));
     }
   }
 

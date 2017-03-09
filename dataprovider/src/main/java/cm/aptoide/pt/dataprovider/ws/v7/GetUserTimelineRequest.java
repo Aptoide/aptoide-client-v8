@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import java.util.List;
 import lombok.EqualsAndHashCode;
@@ -36,11 +35,10 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
   }
 
   public static GetUserTimelineRequest of(String url, Integer limit, int offset,
-      List<String> packages, String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+      List<String> packages, BodyInterceptor bodyInterceptor) {
 
     GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(url,
-        (Body) decorator.decorate(new Body(limit, offset, packages), accessToken), BASE_HOST);
+        (Body) bodyInterceptor.intercept(new Body(limit, offset, packages)), BASE_HOST);
     return getAppRequest;
   }
 

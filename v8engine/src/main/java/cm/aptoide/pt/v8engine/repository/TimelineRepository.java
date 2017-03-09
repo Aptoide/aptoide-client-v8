@@ -8,6 +8,8 @@ package cm.aptoide.pt.v8engine.repository;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetTimelineStatsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -27,21 +29,17 @@ public class TimelineRepository {
 
   private final String action;
   private final TimelineCardFilter filter;
-  private final AptoideClientUUID aptoideClientUUID;
-  private final AptoideAccountManager accountManager;
+  private final BodyInterceptor bodyInterceptor;
 
-  public TimelineRepository(String action, TimelineCardFilter filter,
-      IdsRepositoryImpl idsRepository, AptoideAccountManager accountManager) {
+  public TimelineRepository(String action, TimelineCardFilter filter, BodyInterceptor bodyInterceptor) {
     this.action = action;
     this.filter = filter;
-    this.aptoideClientUUID = idsRepository;
-    this.accountManager = accountManager;
+    this.bodyInterceptor = bodyInterceptor;
   }
 
   public Observable<Datalist<TimelineCard>> getTimelineCards(Integer limit, int offset,
       List<String> packageNames, boolean refresh) {
-    return GetUserTimelineRequest.of(action, limit, offset, packageNames,
-        accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+    return GetUserTimelineRequest.of(action, limit, offset, packageNames, bodyInterceptor)
         .observe(refresh)
         .flatMap(response -> {
           if (response.isOk()) {
@@ -84,7 +82,6 @@ public class TimelineRepository {
   }
 
   public Observable<TimelineStats> getTimelineStats(boolean byPassCache, Long userId) {
-    return GetTimelineStatsRequest.of(accountManager.getAccessToken(),
-        aptoideClientUUID.getUniqueIdentifier(), userId).observe(byPassCache);
+    return GetTimelineStatsRequest.of(bodyInterceptor, userId).observe(byPassCache);
   }
 }
