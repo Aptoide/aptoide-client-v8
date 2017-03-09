@@ -60,11 +60,12 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   private AddressBookContract.UserActionsListener mActionsListener;
   private Button addressBookSyncButton;
   private Button allowFriendsFindButton;
-  private RelativeLayout facebookSyncButton;
-  private RelativeLayout twitterSyncButton;
-  private TextView dismissV;
+  private Button facebookSyncButton;
+  private Button twitterSyncButton;
+  private Button dismissV;
   private TextView addressbook_2nd_msg;
   private TextView about;
+  private ImageView checkOrReloadAddressBook;
   private ImageView checkOrReloadTwitter;
   private ImageView checkOrReloadFacebook;
   private CallbackManager callbackManager;
@@ -115,7 +116,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
     addressbook_2nd_msg.setText(
         getString(R.string.addressbook_2nd_msg, V8Engine.getConfiguration().getMarketName()));
     mActionsListener.getButtonsState();
-    dismissV.setPaintFlags(dismissV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+    //dismissV.setPaintFlags(dismissV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     about.setPaintFlags(about.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     RxView.clicks(addressBookSyncButton).flatMap(click -> {
       analytics.sendSyncAddressBookEvent();
@@ -208,7 +209,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   }
 
   @Override public void changeAddressBookState(boolean checked) {
-    changeSyncState(checked, addressBookSyncButton);
+    changeSyncState(checked, checkOrReloadAddressBook);
   }
 
   @Override public void changeTwitterState(boolean checked) {
@@ -236,19 +237,20 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   }
 
   @Override public int getContentViewId() {
-    return R.layout.fragment_addressbook;
+    return R.layout.fragment_addressbook_constraint;
   }
 
   @Override public void bindViews(@Nullable View view) {
-    addressBookSyncButton = (Button) view.findViewById(R.id.addressbook_sync_button);
-    facebookSyncButton = (RelativeLayout) view.findViewById(R.id.facebook_sync_button);
-    twitterSyncButton = (RelativeLayout) view.findViewById(R.id.twitter_sync_button);
+    addressBookSyncButton = (Button) view.findViewById(R.id.addressbook_text);
+    facebookSyncButton = (Button) view.findViewById(R.id.facebook_text);
+    twitterSyncButton = (Button) view.findViewById(R.id.twitter_text);
     allowFriendsFindButton = (Button) view.findViewById(R.id.addressbook_allow_find);
-    dismissV = (TextView) view.findViewById(R.id.addressbook_not_now);
+    dismissV = (Button) view.findViewById(R.id.addressbook_done);
     about = (TextView) view.findViewById(R.id.addressbook_about);
     addressbook_2nd_msg = (TextView) view.findViewById(R.id.addressbook_2nd_msg);
     checkOrReloadFacebook = (ImageView) view.findViewById(R.id.check_or_reload_facebook);
     checkOrReloadTwitter = (ImageView) view.findViewById(R.id.check_or_reload_twitter);
+    checkOrReloadAddressBook = (ImageView) view.findViewById(R.id.check_or_reload_addressbook);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
