@@ -72,13 +72,12 @@
 
   <Button
       android:id="@+id/addressbook_done"
-      style="?attr/customButton"
+      style="?attr/customButtonThinLine"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
       android:layout_marginBottom="10dp"
       android:layout_marginTop="5dp"
-      android:background="@drawable/addressbook_button_rectangle_orange_border_shape"
       android:padding="10dp"
       android:text="@string/done"
       android:textColor="@color/default_color" />
