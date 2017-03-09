@@ -63,6 +63,7 @@ public class HighwayServerService extends Service {
 
         Intent i = new Intent();
         i.setAction("ERRORRECEIVING");
+        sendBroadcast(i);
       }
 
       @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
@@ -150,6 +151,7 @@ public class HighwayServerService extends Service {
         e.printStackTrace();
         Intent i = new Intent();
         i.setAction("ERRORSENDING");
+        sendBroadcast(i);
       }
 
       @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
