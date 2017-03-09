@@ -153,6 +153,7 @@ public class HighwayClientService extends Service {
 
         Intent i = new Intent();
         i.setAction("ERRORSENDING");
+        sendBroadcast(i);
       }
 
       @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
