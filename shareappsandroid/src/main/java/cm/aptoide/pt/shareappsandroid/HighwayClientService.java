@@ -35,7 +35,6 @@ public class HighwayClientService extends Service {
   public static final int INSTALL_APP_NOTIFICATION_REQUEST_CODE = 147;
   private final int PROGRESS_SPLIT_SIZE = 10;
   private int port;
-  private String serverIP;
   private ArrayList<App> listOfApps;
   private NotificationManager mNotifyManager;
   private Object mBuilderSend;
@@ -276,7 +275,7 @@ public class HighwayClientService extends Service {
     if (intent != null) {
 
       if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
-        serverIP = intent.getStringExtra("targetIP");
+        String serverIP = intent.getStringExtra("targetIP");
         port = intent.getIntExtra("port", 0);
 
         final String externalStoragepath = intent.getStringExtra("ExternalStoragePath");
@@ -293,8 +292,8 @@ public class HighwayClientService extends Service {
         aptoideMessageController =
             new AptoideMessageClientController(externalStoragepath, storageCapacity,
                 fileServerLifecycle, fileClientLifecycle);
-        aptoideMessageClientSocket =
-            new AptoideMessageClientSocket(serverIP, port, aptoideMessageController);
+        aptoideMessageClientSocket = new AptoideMessageClientSocket(serverIP, "192.168.43.1", port,
+            aptoideMessageController);
         aptoideMessageClientSocket.startAsync();
 
         System.out.println(" Connected ! ");
