@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.preferences;
 
-import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import rx.Completable;
 import rx.Observable;
@@ -56,7 +55,7 @@ public class AdultContent {
   public Observable<Boolean> enabled() {
     return accountManager.getAccountAsync()
         .flatMapCompletable(
-            account -> preferences.save(ADULT_CONTENT_PREFERENCES_KEY, account.isMature()))
+            account -> preferences.save(ADULT_CONTENT_PREFERENCES_KEY, account.isAdultContentEnabled()))
         .onErrorComplete()
         .andThen(preferences.getBoolean(ADULT_CONTENT_PREFERENCES_KEY, false));
   }

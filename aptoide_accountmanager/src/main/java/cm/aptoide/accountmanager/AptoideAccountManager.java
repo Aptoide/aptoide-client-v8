@@ -219,7 +219,7 @@ public class AptoideAccountManager {
 
   public boolean isAccountMature() {
     final Account account = getAccount();
-    return account == null ? false : account.isMature();
+    return account == null ? false : account.isAdultContentEnabled();
   }
 
   public boolean isAccountAccessConfirmed() {
@@ -238,9 +238,9 @@ public class AptoideAccountManager {
             account.getType()));
   }
 
-  public Completable updateAccount(boolean mature) {
+  public Completable updateAccount(boolean adultContentEnabled) {
     return getAccountAsync().flatMapCompletable(account -> {
-      return ChangeUserSettingsRequest.of(mature, account.getToken())
+      return ChangeUserSettingsRequest.of(adultContentEnabled, account.getToken())
           .observe(true)
           .toSingle()
           .flatMapCompletable(response -> {
@@ -369,7 +369,7 @@ public class AptoideAccountManager {
                 new Account(account.getId(), account.getEmail(), account.getNickname(),
                     account.getAvatar(), account.getRefreshToken(), oAuth.getAccessToken(),
                     account.getPassword(), account.getType(), account.getStore(),
-                    account.getStoreAvatar(), account.isMature(), account.getAccess(),
+                    account.getStoreAvatar(), account.isAdultContentEnabled(), account.getAccess(),
                     account.isAccessConfirmed()));
           } else {
             return Completable.error(new AccountException(oAuth.getError()));
@@ -403,7 +403,7 @@ public class AptoideAccountManager {
       androidAccountManager.setUserData(androidAccount, USER_REPO, account.getStore());
       androidAccountManager.setUserData(androidAccount, REPO_AVATAR, account.getStoreAvatar());
       androidAccountManager.setUserData(androidAccount, MATURE_SWITCH,
-          String.valueOf(account.isMature()));
+          String.valueOf(account.isAdultContentEnabled()));
       androidAccountManager.setUserData(androidAccount, ACCESS, account.getAccess().name());
       androidAccountManager.setUserData(androidAccount, ACCESS_CONFIRMED,
           String.valueOf(account.isAccessConfirmed()));

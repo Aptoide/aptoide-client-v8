@@ -82,15 +82,15 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private PermissionManager permissionManager;
   private AdultContent adultContent;
 
-  private RxAlertDialog matureDialog;
-  private EditableTextDialog requestPinDialog;
+  private RxAlertDialog adultContentConfirmationDialog;
+  private EditableTextDialog enableAdultContentPinDialog;
   private EditableTextDialog setPinDialog;
   private EditableTextDialog removePinDialog;
 
   private Preference pinPreferenceView;
   private Preference removePinPreferenceView;
-  private CheckBoxPreference maturePreferenceView;
-  private CheckBoxPreference matureWithPinPreferenceView;
+  private CheckBoxPreference adultContentPreferenceView;
+  private CheckBoxPreference adultContentWithPinPreferenceView;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -101,11 +101,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
     fileManager = FileManager.build();
     subscriptions = new CompositeSubscription();
     permissionManager = new PermissionManager();
-    matureDialog = new RxAlertDialog.Builder(getContext()).setMessage(R.string.are_you_adult)
+    adultContentConfirmationDialog = new RxAlertDialog.Builder(getContext()).setMessage(R.string.are_you_adult)
         .setPositiveButton(R.string.yes)
         .setNegativeButton(R.string.no)
         .build();
-    requestPinDialog = new PinDialog.Builder(getContext()).setMessage(R.string.request_adult_pin)
+    enableAdultContentPinDialog = new PinDialog.Builder(getContext()).setMessage(R.string.request_adult_pin)
         .setPositiveButton(R.string.ok)
         .setNegativeButton(R.string.cancel)
         .setView(R.layout.dialog_requestpin)
@@ -178,8 +178,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
       }
     }
 
-    maturePreferenceView = (CheckBoxPreference) findPreference(ADULT_CONTENT_PREFERENCE_VIEW_KEY);
-    matureWithPinPreferenceView =
+    adultContentPreferenceView = (CheckBoxPreference) findPreference(ADULT_CONTENT_PREFERENCE_VIEW_KEY);
+    adultContentWithPinPreferenceView =
         (CheckBoxPreference) findPreference(ADULT_CONTENT_WITH_PIN_PREFERENCE_VIEW_KEY);
     pinPreferenceView = findPreference(ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
     removePinPreferenceView = findPreference(REMOVE_ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
@@ -203,50 +203,50 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     subscriptions.add(adultContent.enabled()
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(state -> maturePreferenceView.setChecked(state))
-        .doOnNext(state -> matureWithPinPreferenceView.setChecked(state))
+        .doOnNext(state -> adultContentPreferenceView.setChecked(state))
+        .doOnNext(state -> adultContentWithPinPreferenceView.setChecked(state))
         .subscribe());
 
-    subscriptions.add(matureDialog.positiveClicks()
-        .doOnNext(click -> maturePreferenceView.setEnabled(false))
+    subscriptions.add(adultContentConfirmationDialog.positiveClicks()
+        .doOnNext(click -> adultContentPreferenceView.setEnabled(false))
         .flatMap(click -> adultContent.enable()
             .doOnCompleted(() -> Analytics.AdultContent.unlock())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnTerminate(() -> maturePreferenceView.setEnabled(true))
+            .doOnTerminate(() -> adultContentPreferenceView.setEnabled(true))
             .toObservable())
         .retry()
         .subscribe());
 
-    subscriptions.add(RxPreference.checks(maturePreferenceView)
+    subscriptions.add(RxPreference.checks(adultContentPreferenceView)
         .flatMap(checked -> {
-          rollbackCheck(maturePreferenceView);
+          rollbackCheck(adultContentPreferenceView);
           if (checked) {
-            matureDialog.show();
+            adultContentConfirmationDialog.show();
             return Observable.empty();
           } else {
-            maturePreferenceView.setEnabled(false);
+            adultContentPreferenceView.setEnabled(false);
             return adultContent.disable()
                 .doOnCompleted(() -> Analytics.AdultContent.lock())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnTerminate(() -> maturePreferenceView.setEnabled(true))
+                .doOnTerminate(() -> adultContentPreferenceView.setEnabled(true))
                 .toObservable();
           }
         })
         .retry()
         .subscribe());
 
-    subscriptions.add(RxPreference.checks(matureWithPinPreferenceView)
+    subscriptions.add(RxPreference.checks(adultContentWithPinPreferenceView)
         .flatMap(checked -> {
-          rollbackCheck(matureWithPinPreferenceView);
+          rollbackCheck(adultContentWithPinPreferenceView);
           if (checked) {
-            requestPinDialog.show();
+            enableAdultContentPinDialog.show();
             return Observable.empty();
           } else {
-            matureWithPinPreferenceView.setEnabled(false);
+            adultContentWithPinPreferenceView.setEnabled(false);
             return adultContent.disable()
                 .doOnCompleted(() -> Analytics.AdultContent.lock())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnTerminate(() -> matureWithPinPreferenceView.setEnabled(true))
+                .doOnTerminate(() -> adultContentWithPinPreferenceView.setEnabled(true))
                 .toObservable();
           }
         })
@@ -259,13 +259,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
           if (pinRequired) {
             pinPreferenceView.setVisible(false);
             removePinPreferenceView.setVisible(true);
-            matureWithPinPreferenceView.setVisible(true);
-            maturePreferenceView.setVisible(false);
+            adultContentWithPinPreferenceView.setVisible(true);
+            adultContentPreferenceView.setVisible(false);
           } else {
             pinPreferenceView.setVisible(true);
             removePinPreferenceView.setVisible(false);
-            matureWithPinPreferenceView.setVisible(false);
-            maturePreferenceView.setVisible(true);
+            adultContentWithPinPreferenceView.setVisible(false);
+            adultContentPreferenceView.setVisible(true);
           }
         })
         .subscribe());
@@ -296,8 +296,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
         .retry()
         .subscribe());
 
-    subscriptions.add(requestPinDialog.positiveClicks()
-        .doOnNext(clock -> matureWithPinPreferenceView.setEnabled(false))
+    subscriptions.add(enableAdultContentPinDialog.positiveClicks()
+        .doOnNext(clock -> adultContentWithPinPreferenceView.setEnabled(false))
         .flatMap(pin -> adultContent.enable(Integer.valueOf(pin.toString()))
             .doOnCompleted(() -> Analytics.AdultContent.unlock())
             .observeOn(AndroidSchedulers.mainThread())
@@ -306,7 +306,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 ShowMessage.asSnack(getActivity(), R.string.adult_pin_wrong);
               }
             })
-            .doOnTerminate(() -> matureWithPinPreferenceView.setEnabled(true))
+            .doOnTerminate(() -> adultContentWithPinPreferenceView.setEnabled(true))
             .toObservable())
         .retry()
         .subscribe());
