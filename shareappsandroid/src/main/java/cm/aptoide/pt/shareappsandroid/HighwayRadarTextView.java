@@ -2,6 +2,8 @@ package cm.aptoide.pt.shareappsandroid;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -30,8 +32,9 @@ public class HighwayRadarTextView extends FrameLayout
   private int width;
   private int height;
   private int mode = HighwayRadarRippleView.MODE_OUT;
-  private int fontColor = getResources().getColor(R.color.aptoide_orange_700);
-  private int shadowColor = getResources().getColor(R.color.aptoide_orange_700);
+  private int fontColor = Color.parseColor("#000000");
+  private int rippleViewDefaultColor = Color.parseColor("#aeaeae");
+  private int shadowColor = getResources().getColor(R.color.aptoide_orange);
   private OnRippleViewClickListener onRippleOutViewClickListener;
   private List<HighwayRadarRippleView> listOfHotspot;
   private List<HighwayRadarLowElement> listOfHotspotLow;
@@ -142,7 +145,6 @@ public class HighwayRadarTextView extends FrameLayout
         txt.setTextColor(ranColor);
 
         txt.setTextSize(TypedValue.COMPLEX_UNIT_SP, txtSize);
-        txt.setShadowLayer(1, 1, 1, shadowColor);
         txt.setGravity(Gravity.CENTER);
         txt.setOnClickListener(new OnClickListener() {
           @Override public void onClick(View view) {
@@ -163,8 +165,9 @@ public class HighwayRadarTextView extends FrameLayout
                 }
                 //select o novo
                 activity.setChosenHotspot(keyword);
-                txt.setShadowLayer(1, 1, 1, 0xdd696969);
-                txt.setTextColor(0xff0000ff);
+                txt.setEffectColor(Color.parseColor("#e17117"));
+                txt.postInvalidate();
+                txt.setTypeface(null, Typeface.BOLD);
 
                 if (size == 1) {
                   activity.joinSingleHotspot();
@@ -222,8 +225,9 @@ public class HighwayRadarTextView extends FrameLayout
       if (listOfHotspot.get(i).getText().toString().equals(aux)) {
         activity.setChosenHotspot("");
         activity.setJoinGroupFlag(false);
-        listOfHotspot.get(i).setShadowLayer(1, 1, 1, shadowColor);//meter a cor antiga
-        listOfHotspot.get(i).setTextColor(fontColor);
+        listOfHotspot.get(i).setTypeface(null, Typeface.NORMAL);
+        listOfHotspot.get(i).setEffectColor(rippleViewDefaultColor);
+
       }
     }
   }
@@ -342,7 +346,6 @@ public class HighwayRadarTextView extends FrameLayout
         txt.setText(keyword);
         txt.setTextColor(ranColor);
         txt.setTextSize(TypedValue.COMPLEX_UNIT_SP, txtSize);
-        txt.setShadowLayer(1, 1, 1, shadowColor);
         txt.setGravity(Gravity.CENTER);
         txt.setOnClickListener(new OnClickListener() {
           @Override public void onClick(View view) {
@@ -362,8 +365,6 @@ public class HighwayRadarTextView extends FrameLayout
               }
               //select o novo
               activity.setChosenHotspot(keyword);
-              txt.setShadowLayer(1, 1, 1, 0xddff9800);
-              txt.setTextColor(0xffff9800);
 
               if (size == 1) {
                 activity.joinSingleHotspot();
@@ -402,8 +403,7 @@ public class HighwayRadarTextView extends FrameLayout
     for (int i = 0; i < listOfHotspotLow.size(); i++) {
       if (listOfHotspotLow.get(i).getText().equals(keyword)) {
         activity.setChosenHotspot("");
-        listOfHotspotLow.get(i).setShadowLayer(1, 1, 1, shadowColor);//meter a cor antiga
-        listOfHotspotLow.get(i).setTextColor(fontColor);
+        listOfHotspotLow.get(i).setTypeface(null, Typeface.NORMAL);
       }
     }
   }
