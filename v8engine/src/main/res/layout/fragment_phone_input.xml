@@ -57,7 +57,7 @@
       android:maxEms="3"
       android:maxLength="3"
       android:textAlignment="textEnd"
-      app:layout_constraintEnd_toStartOf="@id/addressbook_phone_number"
+      app:layout_constraintEnd_toStartOf="@+id/addressbook_phone_number"
       app:layout_constraintHorizontal_weight="0.3"
       app:layout_constraintLeft_toLeftOf="@id/guidelineLeft"
       app:layout_constraintTop_toBottomOf="@id/addressbook_share_phone_message"
