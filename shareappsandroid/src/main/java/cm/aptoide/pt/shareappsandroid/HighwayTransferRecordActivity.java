@@ -111,7 +111,11 @@ public class HighwayTransferRecordActivity extends ActivityView
     targetIPAddress = getIntent().getStringExtra("targetIP");
     nickname = getIntent().getStringExtra("nickname");
 
-    welcomeText.setText(this.getResources().getString(R.string.welcome) + " " + nickname);
+    if (isHotspot) {
+      welcomeText.setText(this.getResources().getString(R.string.created_group, nickname));
+    } else {
+      welcomeText.setText(this.getResources().getString(R.string.joined_group, nickname));
+    }
     receivedAppListView.setVisibility(View.GONE);
 
     //        Intent receiveIntent = null;
