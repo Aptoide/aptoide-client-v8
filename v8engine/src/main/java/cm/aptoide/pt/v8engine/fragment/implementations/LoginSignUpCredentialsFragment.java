@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
@@ -27,12 +26,13 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import cm.aptoide.pt.v8engine.activity.CreateUserActivity;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.GoogleLoginFragment;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsPresenter;
+import cm.aptoide.pt.v8engine.view.AccountErrorMapper;
 import cm.aptoide.pt.v8engine.view.LoginSignUpCredentialsView;
+import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
 import cm.aptoide.pt.v8engine.viewModel.AptoideAccountViewModel;
 import cm.aptoide.pt.v8engine.viewModel.FacebookAccountViewModel;
 import com.facebook.CallbackManager;
@@ -44,7 +44,6 @@ import com.facebook.login.LoginResult;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import rx.Observable;
@@ -82,6 +81,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   private BottomSheetBehavior<View> bottomSheetBehavior;
   private boolean dismissToNavigateToMainView;
   private boolean navigateToHome;
+  private ThrowableToStringMapper errorMapper;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
@@ -97,6 +97,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    errorMapper = new AccountErrorMapper(getContext());
     this.dismissToNavigateToMainView = getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);
     this.navigateToHome = getArguments().getBoolean(CLEAN_BACK_STACK);
   }
@@ -158,34 +159,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void showError(Throwable throwable) {
-
-    String message = getString(cm.aptoide.accountmanager.R.string.unknown_error);
-
-    // [AN-1287] - do not delete this exceptions. This takes care of the login/sign up problems
-    if (throwable instanceof cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception) {
-
-      final cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception ex =
-          ((cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception) throwable);
-      @StringRes int errorId =
-          getResources().getIdentifier("error_" + ex.getBaseResponse().getError(), "string",
-              getContext().getPackageName());
-      message = getString(errorId);
-    } else if (throwable instanceof AccountException) {
-
-      if (((AccountException) throwable).hasCode()) {
-        message = getString(ErrorsMapper.getWebServiceErrorMessageFromCode(
-            ((AccountException) throwable).getCode()));
-      } else {
-        @StringRes int errorId =
-            getResources().getIdentifier("error_" + ((AccountException) throwable).getError(),
-                "string", getContext().getPackageName());
-        message = getString(errorId);
-      }
-    } else if (throwable instanceof IOException) {
-      message = getString(cm.aptoide.accountmanager.R.string.connection_error);
-    }
     // FIXME: 23/2/2017 sithengineer find a better solution than this.
-    ShowMessage.asToast(getContext(), message);
+    ShowMessage.asToast(getContext(), errorMapper.map(throwable));
   }
 
   @Override public void showFacebookLogin() {
@@ -209,19 +184,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override public void showPermissionsRequiredMessage() {
     facebookEmailRequiredDialog.show();
-  }
-
-  @Override public void showMissingCredentialsMessage() {
-    ShowMessage.asToast(getContext(),
-        cm.aptoide.accountmanager.R.string.no_email_and_pass_error_message);
-  }
-
-  @Override public void showMissingEmailMessage() {
-    ShowMessage.asToast(getContext(), cm.aptoide.accountmanager.R.string.no_email_error_message);
-  }
-
-  @Override public void showMissingPasswordMessage() {
-    ShowMessage.asToast(getContext(), cm.aptoide.accountmanager.R.string.no_pass_error_message);
   }
 
   @Override public void hideFacebookLogin() {

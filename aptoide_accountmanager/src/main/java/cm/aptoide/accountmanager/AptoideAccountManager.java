@@ -9,8 +9,10 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
 import cm.aptoide.pt.dataprovider.ws.v3.ChangeUserSettingsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.CreateUserRequest;
@@ -151,6 +153,12 @@ public class AptoideAccountManager {
       if (throwable instanceof SocketTimeoutException) {
         return login(Account.Type.APTOIDE, email, password, null);
       }
+
+      if (throwable instanceof AptoideWsV3Exception) {
+        return Completable.error(
+            new AccountException(((AptoideWsV3Exception) throwable).getBaseResponse().getError()));
+      }
+
       return Completable.error(throwable);
     }).doOnCompleted(() -> analytics.login(email)).doOnCompleted(() -> sendLoginBroadcast());
   }
@@ -161,13 +169,24 @@ public class AptoideAccountManager {
 
   public Completable login(Account.Type type, final String email, final String password,
       final String name) {
-    return OAuth2AuthenticationRequest.of(email, password, type.name(), name,
-        aptoideClientUUID.getUniqueIdentifier()).observe().toSingle().flatMapCompletable(oAuth -> {
-      if (!oAuth.hasErrors()) {
-        return syncAccount(oAuth.getAccessToken(), oAuth.getRefreshToken(), password, type);
-      } else {
-        return Completable.error(new AccountException(oAuth.getError()));
+    return validateCredentials(email, password).andThen(
+        OAuth2AuthenticationRequest.of(email, password, type.name(), name,
+            aptoideClientUUID.getUniqueIdentifier())
+            .observe()
+            .toSingle()
+            .flatMapCompletable(oAuth -> {
+              if (!oAuth.hasErrors()) {
+                return syncAccount(oAuth.getAccessToken(), oAuth.getRefreshToken(), password, type);
+              } else {
+                return Completable.error(new AccountException(oAuth.getError()));
+              }
+            })).onErrorResumeNext(throwable -> {
+      if (throwable instanceof AptoideWsV3Exception) {
+        return Completable.error(
+            new AccountException(((AptoideWsV3Exception) throwable).getBaseResponse().getError()));
       }
+
+      return Completable.error(throwable);
     }).doOnCompleted(() -> analytics.login(email)).doOnCompleted(() -> sendLoginBroadcast());
   }
 
