@@ -73,13 +73,13 @@ public class PrivateStoreDialog extends BaseDialog {
 
   @Override public void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
     bodyInterceptor =
         new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
     storeUtilsProxy =
         new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl());
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     final Bundle args = getArguments();
     if (args != null) {
       storeName = args.getString(BundleArgs.STORE_NAME.name());

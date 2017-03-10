@@ -11,7 +11,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -21,9 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import cm.aptoide.accountmanager.AccountValidationException;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -32,8 +29,10 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.view.AccountErrorMapper;
+import cm.aptoide.pt.v8engine.view.CreateUserErrorMapper;
+import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
 import com.jakewharton.rxbinding.support.design.widget.RxSnackbar;
 import com.jakewharton.rxbinding.view.RxView;
 import java.net.SocketTimeoutException;
@@ -49,6 +48,7 @@ import rx.subscriptions.CompositeSubscription;
 public class CreateUserActivity extends AccountPermissionsBaseActivity {
 
   private static int CREATE_USER_REQUEST_CODE = 0; //1:Username and Avatar 2: Username
+  private ThrowableToStringMapper errorMapper;
 
   private String avatarPath;
   private Toolbar toolbar;
@@ -65,6 +65,7 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_create_user);
+    errorMapper = new CreateUserErrorMapper(this, new AccountErrorMapper(this));
     accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
     subscriptions = new CompositeSubscription();
     toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -126,21 +127,15 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
   }
 
   private void showError(Throwable throwable) {
-    if (throwable instanceof AccountException) {
-      showErrorMessage(
-          ErrorsMapper.getWebServiceErrorMessageFromCode(((AccountException) throwable).getCode()));
-    } else if (throwable instanceof SocketTimeoutException
-        || throwable instanceof TimeoutException) {
-      RxSnackbar.dismisses(
-          Snackbar.make(content, cm.aptoide.accountmanager.R.string.user_upload_photo_failed,
-              Snackbar.LENGTH_SHORT)).subscribe(dismissed -> finish());
-    } else if (throwable instanceof AccountValidationException
-        && ((AccountValidationException) throwable).getCode()
-        == AccountValidationException.EMPTY_NAME) {
-      showErrorMessage(cm.aptoide.accountmanager.R.string.nothing_inserted_user);
-    } else {
-      showErrorMessage(cm.aptoide.accountmanager.R.string.unknown_error);
+    final String message = errorMapper.map(throwable);
+
+    if (throwable instanceof SocketTimeoutException || throwable instanceof TimeoutException) {
+      RxSnackbar.dismisses(Snackbar.make(content, message, Snackbar.LENGTH_SHORT))
+          .subscribe(dismissed -> finish());
+      return;
     }
+
+    ShowMessage.asSnack(content, errorMapper.map(throwable));
   }
 
   private void dismissProgressDialog() {
@@ -164,10 +159,6 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
 
   private boolean isAvatarSelected() {
     return !TextUtils.isEmpty(avatarPath);
-  }
-
-  private void showErrorMessage(@StringRes int reason) {
-    ShowMessage.asSnack(content, reason);
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
