@@ -749,11 +749,8 @@ public class HighwayTransferRecordActivity extends ActivityView
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-    builder.setTitle(this.getResources().getString(R.string.alert))
-        .setMessage(this.getResources().getString(R.string.alertClearApps1)
-            + " \n"
-            + "\n"
-            + this.getResources().getString(R.string.alertClearApps2))
+    builder.setTitle(this.getResources().getString(R.string.warning))
+        .setMessage(this.getResources().getString(R.string.clear_history_warning))
         .setPositiveButton(this.getResources().getString(R.string.delete),
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int id) {
