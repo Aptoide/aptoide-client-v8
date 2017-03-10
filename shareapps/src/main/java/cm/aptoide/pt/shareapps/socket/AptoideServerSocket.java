@@ -9,6 +9,7 @@ import cm.aptoide.pt.shareapps.socket.util.ServerSocketTimeoutManager;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -204,5 +205,18 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
+  }
+
+  public void removeHost(Host host) {
+    Iterator<Socket> iterator = connectedSockets.iterator();
+    while (iterator.hasNext()) {
+      Socket socket = iterator.next();
+      if (socket.getInetAddress().getHostAddress().equals(host.getIp())) {
+        iterator.remove();
+        hostsChangedCallbackCallback.hostsChanged(getConnectedHosts());
+        System.out.println("AptoideServerSocket: Host " + host + " removed from the server.");
+      }
+    }
+
   }
 }

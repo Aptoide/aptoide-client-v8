@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.shareappsandroid.analytics.SpotAndShareAnalyticsInterface;
+import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -473,9 +474,23 @@ public class HighwayTransferRecordActivity extends ActivityView
                 public void onClick(DialogInterface dialog, int id) {
 
                   sendDisconnectMessage();
-                  presenter.recoverNetworkState();
-                  presenter.cleanAPTXNetworks();
-                  finish();
+                  new Thread(new Runnable() {
+                    @Override public void run() {
+                      try {
+                        Thread.sleep(1000);
+                      } catch (InterruptedException e) {
+                        e.printStackTrace();
+                      }
+
+                      AptoideUtils.ThreadU.runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                          presenter.recoverNetworkState();
+                          presenter.cleanAPTXNetworks();
+                          finish();
+                        }
+                      });
+                    }
+                  }).start();
                 }
               })
           .setNegativeButton(this.getResources().getString(R.string.cancel),
