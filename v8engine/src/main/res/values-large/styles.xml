@@ -13,6 +13,8 @@
 
 
   <style name="Wizard_Title">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:gravity">center</item>
     <item name="android:id">@android:id/text1</item>
     <item name="android:layout_marginBottom">7dp</item>
     <item name="android:layout_marginTop">10dp</item>
@@ -24,8 +26,9 @@
 
 
   <style name="Wizard_Sub_Title">
-    <item name="android:id">@android:id/text2</item>
+    <item name="android:layout_width">match_parent</item>
     <item name="android:gravity">center</item>
+    <item name="android:id">@android:id/text2</item>
     <item name="android:layout_marginLeft">10dp</item>
     <item name="android:layout_marginRight">10dp</item>
     <item name="android:layout_marginStart">10dp</item>

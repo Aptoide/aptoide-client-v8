@@ -852,6 +852,7 @@
 
 
   <style name="Wizard_Title">
+    <item name="android:layout_width">match_parent</item>
     <item name="android:id">@android:id/text1</item>
     <item name="android:layout_marginBottom">7dp</item>
     <item name="android:layout_marginTop">10dp</item>
@@ -859,10 +860,12 @@
     <item name="android:textColor">@color/white</item>
     <item name="android:textSize">25sp</item>
     <item name="android:textStyle">bold</item>
+    <item name="android:gravity">center</item>
   </style>
 
 
   <style name="Wizard_Sub_Title">
+    <item name="android:layout_width">match_parent</item>
     <item name="android:id">@android:id/text2</item>
     <item name="android:gravity">center</item>
     <item name="android:layout_marginLeft">10dp</item>
