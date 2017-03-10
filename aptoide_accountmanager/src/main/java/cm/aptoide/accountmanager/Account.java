@@ -20,13 +20,13 @@ public class Account {
   private final Type type;
   private final String store;
   private final String storeAvatar;
-  private final boolean mature;
+  private final boolean adultContentEnabled;
   private final Access access;
   private final boolean accessConfirmed;
   private String password;
 
   public Account(String id, String email, String nickname, String avatar, String refreshToken,
-      String token, String password, Type type, String store, String storeAvatar, boolean mature,
+      String token, String password, Type type, String store, String storeAvatar, boolean adultContentEnabled,
       Access access, boolean accessConfirmed) {
     this.id = id;
     this.email = email;
@@ -38,7 +38,7 @@ public class Account {
     this.type = type;
     this.store = store;
     this.storeAvatar = storeAvatar;
-    this.mature = mature;
+    this.adultContentEnabled = adultContentEnabled;
     this.access = access;
     this.accessConfirmed = accessConfirmed;
   }
@@ -79,8 +79,8 @@ public class Account {
     return storeAvatar;
   }
 
-  public boolean isMature() {
-    return mature;
+  public boolean isAdultContentEnabled() {
+    return adultContentEnabled;
   }
 
   public Access getAccess() {

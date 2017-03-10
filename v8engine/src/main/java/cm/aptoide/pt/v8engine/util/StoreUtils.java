@@ -182,7 +182,8 @@ public class StoreUtils {
   public static void unsubscribeStore(String name, AptoideAccountManager accountManager,
       StoreCredentialsProvider storeCredentialsProvider) {
     if (accountManager.isLoggedIn()) {
-      accountManager.unsubscribeStore(name, storeCredentialsProvider.get(name));
+      accountManager.unsubscribeStore(name, storeCredentialsProvider.get(name).getName(),
+          storeCredentialsProvider.get(name).getPasswordSha1());
     }
     StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
     storeAccessor.remove(name);
