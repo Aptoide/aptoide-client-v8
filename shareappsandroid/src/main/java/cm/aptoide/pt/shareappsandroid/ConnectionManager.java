@@ -218,7 +218,7 @@ public class ConnectionManager {
 
   public static ConnectionManager getInstance(Context context) {
     if (instance == null) {
-      instance = new ConnectionManager(context.getApplicationContext(),
+      instance = new ConnectionManager(context,
           PreferenceManager.getDefaultSharedPreferences(context),
           (WifiManager) context.getSystemService(Context.WIFI_SERVICE));
     }

@@ -56,7 +56,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     super.onCreate(savedInstanceState);
 
     deviceName = getIntent().getStringExtra("deviceName");
-    connectionManager = ConnectionManager.getInstance(this);
+    connectionManager = ConnectionManager.getInstance(this.getApplicationContext());
     analytics = ShareApps.getAnalytics();
     groupManager = new GroupManager(connectionManager);
 
@@ -227,31 +227,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     startActivityForResult(intent, WRITE_SETTINGS_REQUEST_CODE);
   }
 
-  @Override public boolean checkPermissions() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-          != PackageManager.PERMISSION_GRANTED) {
-        return false;
-      }
-
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-          != PackageManager.PERMISSION_GRANTED) {
-        return false;
-      }
-
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-          != PackageManager.PERMISSION_GRANTED) {
-        return false;
-      }
-
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_SETTINGS)
-          != PackageManager.PERMISSION_GRANTED && !Settings.System.canWrite(this)) {//special
-        return false;
-      }
-    }
-    return true;
-  }
-
   private void forgetAPTXNetwork() {
     presenter.forgetAPTXNetwork();
     //System.out.println("Forget APTX inside the mainactivity- called on the beggining");
@@ -278,6 +253,31 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     //  }
     //}
 
+  }
+
+  @Override public boolean checkPermissions() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+          != PackageManager.PERMISSION_GRANTED) {
+        return false;
+      }
+
+      if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+          != PackageManager.PERMISSION_GRANTED) {
+        return false;
+      }
+
+      if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+          != PackageManager.PERMISSION_GRANTED) {
+        return false;
+      }
+
+      if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_SETTINGS)
+          != PackageManager.PERMISSION_GRANTED && !Settings.System.canWrite(this)) {//special
+        return false;
+      }
+    }
+    return true;
   }
 
   private void recoverNetworkState() {
@@ -323,6 +323,17 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   private void showNougatMR1Toast() {
     Toast.makeText(this, this.getResources().getString(R.string.hotspotCreationErrorNougat),
         Toast.LENGTH_SHORT).show();
+  }
+
+  @Override public void showMobileDataDialog() {
+    Dialog d = buildMobileDataDialog();
+    d.show();
+  }
+
+  @Override public void showMobileDataToast() {
+    Toast.makeText(HighwayActivity.this,
+        HighwayActivity.this.getResources().getString(R.string.mDataJoinGroup), Toast.LENGTH_SHORT)
+        .show();
   }
 
   @Override public void requestPermissions() {
@@ -372,17 +383,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         permissionListener.onPermissionGranted();
       }
     }
-  }
-
-  @Override public void showMobileDataDialog() {
-    Dialog d = buildMobileDataDialog();
-    d.show();
-  }
-
-  @Override public void showMobileDataToast() {
-    Toast.makeText(HighwayActivity.this,
-        HighwayActivity.this.getResources().getString(R.string.mDataJoinGroup), Toast.LENGTH_SHORT)
-        .show();
   }
 
   @Override public void showJoinGroupResult(int result) {
@@ -510,10 +510,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     finish();
   }
 
-  @Override public void registerListener(PermissionListener listener) {
-    this.permissionListener = listener;
-  }
-
   @Override public void refreshRadar(ArrayList<String> clients) {
     radarTextView.show(clients);
   }
@@ -527,6 +523,10 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         Toast.LENGTH_SHORT).show();
   }
 
+  @Override public void registerListener(PermissionListener listener) {
+    this.permissionListener = listener;
+  }
+
   @Override public void dismiss() {
     finish();
   }
@@ -538,10 +538,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   public String getChosenHotspot() {
     return chosenHotspot;
-  }
-
-  @Override public void removeListener() {
-    this.permissionListener = null;
   }
 
   public void setChosenHotspot(String chosenHotspot) {
@@ -570,6 +566,10 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   public boolean isJoinGroupFlag() {
     return joinGroupFlag;
+  }
+
+  @Override public void removeListener() {
+    this.permissionListener = null;
   }
 
   public void setJoinGroupFlag(boolean joinGroupFlag) {
