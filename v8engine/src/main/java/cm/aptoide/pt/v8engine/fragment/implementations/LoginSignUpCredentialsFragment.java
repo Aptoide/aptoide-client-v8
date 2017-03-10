@@ -158,8 +158,10 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void showError(Throwable throwable) {
+
     String message = getString(cm.aptoide.accountmanager.R.string.unknown_error);
 
+    // [AN-1287] - do not delete this exceptions. This takes care of the login/sign up problems
     if (throwable instanceof cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception) {
 
       final cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception ex =
@@ -396,8 +398,13 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
     progressDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
 
-    bottomSheetBehavior =
-        BottomSheetBehavior.from(view.getRootView().findViewById(R.id.login_signup_layout));
+    //FIXME this should be deleted [AN-1301]
+    if (view != null
+        && view.getRootView() != null
+        && view.getRootView().findViewById(R.id.login_signup_layout) != null) {
+      bottomSheetBehavior =
+          BottomSheetBehavior.from(view.getRootView().findViewById(R.id.login_signup_layout));
+    }
   }
 
   public String getCompanyName() {
