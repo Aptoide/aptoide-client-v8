@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -94,6 +96,15 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
           mPhoneNumber.requestFocus();
         }
       }
+    });
+
+    mPhoneNumber.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+      if ((keyEvent != null && (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId
+          == EditorInfo.IME_ACTION_DONE)) {
+        String countryCode = mCountryNumber.getText().toString();
+        mActionsListener.submitClicked(countryCode.concat(mPhoneNumber.getText().toString()));
+      }
+      return false;
     });
 
     RxView.clicks(mNotNowV).subscribe(click -> this.mActionsListener.notNowClicked());

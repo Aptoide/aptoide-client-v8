@@ -90,14 +90,14 @@
       tools:layout_conversion_absoluteY="333dp"
       tools:layout_editor_absoluteX="30dp">
 
-    <!--<ImageView-->
-    <!--android:id="@+id/aptoide_icon"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginEnd="9dp"-->
-    <!--android:layout_marginRight="9dp"-->
-    <!--android:padding="5dp"-->
-    <!--android:src="@mipmap/ic_launcher" />-->
+    <ImageView
+        android:id="@+id/aptoide_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="19dp"
+        android:layout_marginLeft="19dp"
+        android:src="@drawable/ic_action_addewaa" />
 
     <ImageView
         android:id="@+id/check_or_reload_addressbook"
@@ -145,7 +145,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="9dp"
         android:layout_marginRight="9dp"
-        android:padding="5dp"
+        android:padding="10dp"
         android:src="@drawable/ic_action_facebook" />
 
     <ImageView
@@ -169,16 +169,6 @@
         android:text="@string/facebook"
         android:textAllCaps="false"
         android:textColor="@color/facebook" />
-
-    <!--<TextView-->
-    <!--android:id="@+id/facebook_text"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentTop="true"-->
-    <!--android:layout_centerHorizontal="true"-->
-    <!--android:layout_centerVertical="true"-->
-    <!--android:text="@string/facebook"-->
-    <!--android:textColor="@color/facebook" />-->
 
   </RelativeLayout>
 
@@ -204,7 +194,7 @@
         android:id="@+id/twitter_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="5dp"
+        android:padding="10dp"
         android:src="@drawable/ic_action_twitter" />
 
     <android.support.v7.widget.AppCompatButton
@@ -217,15 +207,6 @@
         android:text="@string/twitter"
         android:textAllCaps="false"
         android:textColor="@color/twitter_color" />
-
-    <!--<TextView-->
-    <!--android:id="@+id/twitter_text"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_centerHorizontal="true"-->
-    <!--android:layout_centerVertical="true"-->
-    <!--android:text="@string/twitter"-->
-    <!--android:textColor="@color/twitter_color" />-->
 
     <ImageView
         android:id="@+id/check_or_reload_twitter"
