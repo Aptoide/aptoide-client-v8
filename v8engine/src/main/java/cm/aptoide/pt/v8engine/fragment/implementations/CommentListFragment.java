@@ -19,7 +19,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.CommentType;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -31,6 +30,7 @@ import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
@@ -113,13 +113,15 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    storeCredentialsProvider =
+        new StoreCredentialsProviderImpl(); //this object is used in loadExtras and loadExtras is called in the super
     super.onCreate(savedInstanceState);
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    storeCredentialsProvider = new StoreCredentialsProviderImpl();
     accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
     aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    bodyDecorator = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    bodyDecorator =
+        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -204,8 +206,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     if (commentType == CommentType.TIMELINE) {
       caseListSocialTimelineComments(true);
     } else {
-      caseListStoreComments(url, StoreUtils.getStoreCredentialsFromUrl(url,
-          storeCredentialsProvider), true);
+      caseListStoreComments(url,
+          StoreUtils.getStoreCredentialsFromUrl(url, storeCredentialsProvider), true);
     }
   }
 

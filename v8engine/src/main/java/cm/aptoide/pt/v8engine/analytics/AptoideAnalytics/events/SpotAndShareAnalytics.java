@@ -28,9 +28,11 @@ public class SpotAndShareAnalytics implements SpotAndShareAnalyticsInterface {
   }
 
   public static void clickShareApps() {
-    //TODO THis should be called in v8engine, not here
-    //TODO click on drawer and click on start btn in SpotShare Tab
     trackEvent(EVENT_NAME_SPOT_SHARE, null);
+  }
+
+  public static void trackEvent(String eventName, Map<String, String> attributes) {
+    Analytics.getInstance().sendSpotAndShareEvents(eventName, attributes);
   }
 
   @Override public void joinGroupSuccess() {
@@ -91,9 +93,5 @@ public class SpotAndShareAnalytics implements SpotAndShareAnalyticsInterface {
     Map<String, String> attributes = new HashMap<>();
     attributes.put("results", result);
     trackEvent(eventName, attributes);
-  }
-
-  public static void trackEvent(String eventName, Map<String, String> attributes) {
-    Analytics.getInstance().sendSpotAndShareEvents(eventName, attributes);
   }
 }
