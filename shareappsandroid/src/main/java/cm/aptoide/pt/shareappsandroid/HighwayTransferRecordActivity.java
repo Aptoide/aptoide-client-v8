@@ -147,7 +147,8 @@ public class HighwayTransferRecordActivity extends ActivityView
     transferRecordManager = new TransferRecordManager(applicationsManager);
 
     presenter = new TransferRecordPresenter(this, applicationReceiver, applicationSender,
-        transferRecordManager, isHotspot, ConnectionManager.getInstance(this), analytics);
+        transferRecordManager, isHotspot,
+        ConnectionManager.getInstance(this.getApplicationContext()), analytics);
     attachPresenter(presenter);
   }
 
@@ -495,7 +496,7 @@ public class HighwayTransferRecordActivity extends ActivityView
 
   private void setInitialApConfig() {
     if (wifimanager == null) {
-      wifimanager = (WifiManager) getSystemService(WIFI_SERVICE);
+      wifimanager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
     }
     Method[] methods = wifimanager.getClass().getDeclaredMethods();
     WifiConfiguration wc = DataHolder.getInstance().getWcOnJoin();
