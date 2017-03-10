@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
@@ -230,7 +229,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   }
 
   @Override public int getContentViewId() {
-    return R.layout.fragment_addressbook_constraint;
+    return R.layout.fragment_addressbook;
   }
 
   @Override public void bindViews(@Nullable View view) {
