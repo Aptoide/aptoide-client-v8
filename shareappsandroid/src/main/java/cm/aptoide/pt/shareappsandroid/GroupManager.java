@@ -12,6 +12,7 @@ public class GroupManager {
   private final ConnectionManager connectionManager;
   private AsyncTask<Void, Void, Integer> joinTask;
   private boolean interactingWithGroup;
+      //flag to know if he is already joining a group (multiple clicks) or creating a group
   private boolean mobileDataDialog;
   private Group group;
   private GroupListener joinGrouplistener;
@@ -29,6 +30,9 @@ public class GroupManager {
   }
 
   public void joinGroup(Group group, GroupListener listener) {
+    if (interactingWithGroup) {
+      return;
+    }
     this.group = group;
     this.joinGrouplistener = listener;
     if (group == null || TextUtils.isEmpty(group.getName())) {
@@ -40,9 +44,6 @@ public class GroupManager {
     //  listener.onError(ConnectionManager.ERROR_MOBILE_DATA_ON_DIALOG);
     //  return;
     //}
-    if (interactingWithGroup) {
-      return;
-    }
     try {
       joinTask = joinHotspotTask.execute();
     } catch (IllegalStateException e) {
