@@ -109,7 +109,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
         if (event.getData() != null && event.getData().getUser() != null) {
           userId = event.getData().getUser().getId();
         }
-        return V8Engine.getFragmentProvider().newAppsTimelineFragment(event.getAction(), userId);
+        return V8Engine.getFragmentProvider().newAppsTimelineFragment(event.getAction(), userId, storeId);
       default:
         return V8Engine.getFragmentProvider()
             .newStoreTabGridRecyclerFragment(event, storeTheme, tab.getTag(), storeContext);
