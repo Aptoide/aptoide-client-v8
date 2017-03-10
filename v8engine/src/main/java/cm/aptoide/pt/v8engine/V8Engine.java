@@ -44,6 +44,7 @@ import cm.aptoide.pt.shareappsandroid.ShareApps;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
+import cm.aptoide.pt.v8engine.account.AccountDynamicRequestFactory;
 import cm.aptoide.pt.v8engine.account.ExternalServicesLoginAvailability;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AccountAnalytcs;
@@ -159,13 +160,12 @@ public abstract class V8Engine extends DataProvider {
 
   public AptoideAccountManager getAccountManager() {
     if (accountManager == null) {
-      final IdsRepositoryImpl aptoideClientUuid =
+      final IdsRepositoryImpl aptoideClientUUID =
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
       accountManager = new AptoideAccountManager(this, getConfiguration(), AccountManager.get(this),
-          aptoideClientUuid, new ExternalServicesLoginAvailability(this, getConfiguration(),
-          GoogleApiAvailability.getInstance()), new AccountAnalytcs(),
-          new BaseBodyInterceptor(aptoideClientUuid.getUniqueIdentifier(), accountManager),
-          getConfiguration().getAccountType());
+          aptoideClientUUID, new ExternalServicesLoginAvailability(this, getConfiguration(),
+          GoogleApiAvailability.getInstance()), new AccountAnalytcs(), getConfiguration().getAccountType(),
+          new AccountDynamicRequestFactory(aptoideClientUUID));
     }
     return accountManager;
   }

@@ -9,7 +9,6 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
@@ -19,11 +18,9 @@ import cm.aptoide.pt.dataprovider.ws.v3.CreateUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.GetUserRepoSubscriptionRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.OAuth2AuthenticationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
 import cm.aptoide.pt.model.v3.Subscription;
@@ -68,15 +65,13 @@ public class AptoideAccountManager {
   private final AptoidePreferencesConfiguration configuration;
   private final AccountManager androidAccountManager;
   private final LoginAvailability loginAvailability;
-
+  private final AccountRequestFactory requestFactory;
   private final Analytics analytics;
-  private final BodyInterceptor bodyInterceptor;
 
   public AptoideAccountManager(Context applicationContext,
       AptoidePreferencesConfiguration configuration, AccountManager androidAccountManager,
       AptoideClientUUID aptoideClientUUID, LoginAvailability loginAvailability, Analytics analytics,
-      BodyInterceptor baseBodyInterceptor, String accountType) {
-    this.bodyInterceptor = baseBodyInterceptor;
+      String accountType, AccountRequestFactory requestFactory) {
     this.aptoideClientUUID = aptoideClientUUID;
     this.applicationContext = applicationContext;
     this.configuration = configuration;
@@ -87,6 +82,7 @@ public class AptoideAccountManager {
     LOGIN = configuration.getAppId() + ".accountmanager.broadcast.login";
     LOGIN_CANCELLED = configuration.getAppId() + ".accountmanager.broadcast.LOGIN_CANCELLED";
     LOGOUT = configuration.getAppId() + ".accountmanager.broadcast.logout";
+    this.requestFactory = requestFactory;
   }
 
   public boolean isLoggedIn() {
@@ -192,22 +188,19 @@ public class AptoideAccountManager {
 
   public void unsubscribeStore(String storeName, String storeUserName, String storePassword) {
     changeSubscription(storeName, storeUserName, storePassword,
-        ChangeStoreSubscriptionResponse.StoreSubscriptionState.SUBSCRIBED,
-        bodyInterceptor).subscribe();
+        ChangeStoreSubscriptionResponse.StoreSubscriptionState.SUBSCRIBED).subscribe();
   }
 
   public Completable subscribeStore(String storeName, String storeUserName, String storePassword) {
     return changeSubscription(storeName, storeUserName, storePassword,
-        ChangeStoreSubscriptionResponse.StoreSubscriptionState.SUBSCRIBED,
-        bodyInterceptor).toCompletable();
+        ChangeStoreSubscriptionResponse.StoreSubscriptionState.SUBSCRIBED).toCompletable();
   }
 
   private Observable<ChangeStoreSubscriptionResponse> changeSubscription(String storeName,
       String storeUserName, String sha1Password,
-      ChangeStoreSubscriptionResponse.StoreSubscriptionState subscription,
-      BodyInterceptor interceptor) {
-    return ChangeStoreSubscriptionRequest.of(storeName, subscription, storeUserName, sha1Password,
-        interceptor).observe();
+      ChangeStoreSubscriptionResponse.StoreSubscriptionState subscription) {
+    return requestFactory.createChangeStoreSubscription(storeName, storeUserName, sha1Password, subscription,
+        this).observe();
   }
 
   public void sendLoginCancelledBroadcast() {
@@ -275,7 +268,7 @@ public class AptoideAccountManager {
 
   public Completable updateAccount(Account.Access access) {
     return getAccountAsync().flatMapCompletable(account -> {
-      return SetUserRequest.of(access.name(), bodyInterceptor)
+      return requestFactory.createSetUser(access.name(), this)
           .observe(true)
           .toSingle()
           .flatMapCompletable(response -> {
