@@ -218,7 +218,8 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
           }
           try {
             startActivity(emailIntent);
-            getActivity().onBackPressed();
+            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+            getActivity().getSupportFragmentManager().popBackStack();
             //				Analytics.SendFeedback.sendFeedback();
           } catch (ActivityNotFoundException ex) {
             ShowMessage.asSnack(getView(), R.string.feedback_no_email);
