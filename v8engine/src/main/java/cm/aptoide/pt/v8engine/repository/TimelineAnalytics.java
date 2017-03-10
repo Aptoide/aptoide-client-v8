@@ -124,7 +124,7 @@ public class TimelineAnalytics {
       String packageName, String similarPackageName) {
     final Map<String, String> specific = new HashMap<>();
     specific.put("app", packageName);
-    specific.put("similarTo", similarPackageName);
+    specific.put("similar_to", similarPackageName);
     return createTimelineCardData(cardType, source, specific);
   }
 
@@ -140,14 +140,14 @@ public class TimelineAnalytics {
       String packageName, String basedOnPackageName) {
     final Map<String, String> specific = new HashMap<>();
     specific.put("app", packageName);
-    specific.put("basedOn", basedOnPackageName);
+    specific.put("based_on", basedOnPackageName);
     return createTimelineCardData(cardType, source, specific);
   }
 
   private Map<String, Object> createTimelineCardData(String cardType, String source,
       Map<String, String> specific) {
     final Map<String, Object> result = new HashMap<>();
-    result.put("cardType", cardType);
+    result.put("card_type", cardType);
     result.put("source", source);
     result.put("specific", specific);
     return result;
