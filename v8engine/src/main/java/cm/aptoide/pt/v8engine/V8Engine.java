@@ -6,10 +6,7 @@
 package cm.aptoide.pt.v8engine;
 
 import android.accounts.AccountManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.database.sqlite.SQLiteDatabase;
@@ -24,18 +21,17 @@ import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
-import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v3.Subscription;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -44,6 +40,7 @@ import cm.aptoide.pt.shareappsandroid.ShareApps;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
+import cm.aptoide.pt.v8engine.account.DatabaseStoreDataPersist;
 import cm.aptoide.pt.v8engine.account.ExternalServicesLoginAvailability;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AccountAnalytcs;
@@ -57,11 +54,11 @@ import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
 import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
-import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.MainActivity;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import com.flurry.android.FlurryAgent;
@@ -91,49 +88,6 @@ public abstract class V8Engine extends DataProvider {
   private static AptoideClientUUID aptoideClientUUID;
   private AptoideAccountManager accountManager;
 
-  public static void loadStores(AptoideAccountManager accountManager) {
-
-    accountManager.getUserRepos().subscribe(subscriptions -> {
-
-      if (subscriptions.size() > 0) {
-        for (Subscription subscription : subscriptions) {
-          Store store = new Store();
-          store.setDownloads(Long.parseLong(subscription.getDownloads()));
-          store.setIconPath(subscription.getAvatarHd() != null ? subscription.getAvatarHd()
-              : subscription.getAvatar());
-          store.setStoreId(subscription.getId().longValue());
-          store.setStoreName(subscription.getName());
-          store.setTheme(subscription.getTheme());
-
-          ((StoreAccessor) AccessorFactory.getAccessorFor(Store.class)).insert(store);
-        }
-      } else {
-        addDefaultStore(accountManager,
-            new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
-            new StoreCredentialsProviderImpl());
-      }
-
-      checkUpdates();
-    }, e -> {
-      CrashReport.getInstance().log(e);
-    });
-  }
-
-  private static void checkUpdates() {
-    UpdateRepository repository = RepositoryFactory.getUpdateRepository(DataProvider.getContext());
-    repository.sync(true)
-        .andThen(repository.getAll(false))
-        .first()
-        .subscribe(updates -> Logger.d(TAG, "updates are up to date now"), throwable -> {
-          CrashReport.getInstance().log(throwable);
-        });
-  }
-
-  public static void loadUserData(AptoideAccountManager accountManager) {
-    loadStores(accountManager);
-    regenerateUserAgent(accountManager);
-  }
-
   public static void clearUserData(AptoideAccountManager accountManager) {
     AccessorFactory.getAccessorFor(Store.class).removeAll();
     StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null, accountManager,
@@ -149,25 +103,6 @@ public abstract class V8Engine extends DataProvider {
             return accountManager.getUserEmail();
           }
         }, AptoideUtils.Core.getDefaultVername(), getConfiguration().getPartnerId()));
-  }
-
-  private static void addDefaultStore(AptoideAccountManager accountManager,
-      BodyInterceptor bodyInterceptor, StoreCredentialsProvider storeCredentialsProvider) {
-    StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), getStoreMeta -> checkUpdates(),
-        null, accountManager, bodyInterceptor, storeCredentialsProvider);
-  }
-
-  public AptoideAccountManager getAccountManager() {
-    if (accountManager == null) {
-      final IdsRepositoryImpl aptoideClientUuid =
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
-      accountManager = new AptoideAccountManager(this, getConfiguration(), AccountManager.get(this),
-          aptoideClientUuid, new ExternalServicesLoginAvailability(this, getConfiguration(),
-          GoogleApiAvailability.getInstance()), new AccountAnalytcs(),
-          new BaseBodyInterceptor(aptoideClientUuid.getUniqueIdentifier(), accountManager),
-          getConfiguration().getAccountType());
-    }
-    return accountManager;
   }
 
   /**
@@ -203,6 +138,10 @@ public abstract class V8Engine extends DataProvider {
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
     shareApps = new ShareApps(new SpotAndShareAnalytics());
 
+    //
+    // do not erase this code. it is useful to figure out when someone forgot to attach an error handler when subscribing and the app
+    // is crashing in Rx without a proper stack trace
+    //
     //if (BuildConfig.DEBUG) {
     //  RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
     //}
@@ -222,13 +161,6 @@ public abstract class V8Engine extends DataProvider {
     }
 
     regenerateUserAgent(accountManager);
-
-    IntentFilter intentFilter = new IntentFilter(AptoideAccountManager.LOGIN);
-    intentFilter.addAction(AptoideAccountManager.LOGOUT);
-    this.registerReceiver(new BroadcastReceiver() {
-      @Override public void onReceive(Context context, Intent intent) {
-      }
-    }, intentFilter);
 
     SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
     Analytics.LocalyticsSessionControl.firstSession(sPref);
@@ -250,11 +182,23 @@ public abstract class V8Engine extends DataProvider {
             SecurePreferences.setUserDataLoaded();
           }
         } else {
-          generateAptoideUUID().subscribe(success -> addDefaultStore(accountManager,
-              new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
-              new StoreCredentialsProviderImpl()), err -> {
-            CrashReport.getInstance().log(err);
-          });
+          final BaseBodyInterceptor bodyInterceptor =
+              new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+
+          final StoreCredentialsProviderImpl storeCredentials = new StoreCredentialsProviderImpl();
+
+          StoreUtilsProxy proxy =
+              new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentials,
+                  AccessorFactory.getAccessorFor(Store.class));
+
+          BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
+              storeCredentials.get(getConfiguration().getDefaultStore());
+
+          generateAptoideUUID().flatMap(__ -> proxy.addDefaultStore(
+              GetStoreMetaRequest.of(defaultStoreCredentials, bodyInterceptor), accountManager,
+              defaultStoreCredentials).doOnCompleted(() -> checkUpdates()).toObservable())
+              .subscribe(success -> {
+              }, err -> CrashReport.getInstance().log(err));
         }
         SecurePreferences.setFirstRun(false);
       }).subscribe();
@@ -296,11 +240,6 @@ public abstract class V8Engine extends DataProvider {
             "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)), throwable -> {
           CrashReport.getInstance().log(throwable);
         });
-    // setupCurrentActivityListener();
-
-    //if (BuildConfig.DEBUG) {
-    //  setupStrictMode();
-    //  Logger.w(TAG, "StrictMode setup")
 
     ABTestManager.getInstance()
         .initialize(aptoideClientUUID.getUniqueIdentifier())
@@ -316,15 +255,10 @@ public abstract class V8Engine extends DataProvider {
     return new TokenInvalidator() {
       @Override public Single<String> invalidateAccessToken() {
         return accountManager.refreshAccountToken()
-            .andThen(Single.just(accountManager.getAccount().getToken()));
+            .andThen(accountManager.getAccountAsync())
+            .map(account -> account.getToken());
       }
     };
-  }
-
-  @Partners protected void setupCrashReports(boolean isDisabled) {
-    CrashReport.getInstance()
-        .addLogger(new CrashlyticsCrashLogger(this, isDisabled))
-        .addLogger(new ConsoleLogger());
   }
 
   @Partners protected FragmentProvider createFragmentProvider() {
@@ -344,9 +278,32 @@ public abstract class V8Engine extends DataProvider {
         .subscribeOn(Schedulers.computation());
   }
 
-  //
-  // Strict Mode
-  //
+  public AptoideAccountManager getAccountManager() {
+    if (accountManager == null) {
+      final IdsRepositoryImpl aptoideClientUuid =
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
+      accountManager = new AptoideAccountManager(this, AccountManager.get(this), aptoideClientUuid,
+          new ExternalServicesLoginAvailability(this, getConfiguration(),
+              GoogleApiAvailability.getInstance()), new AccountAnalytcs(),
+          new BaseBodyInterceptor(aptoideClientUuid.getUniqueIdentifier(), accountManager),
+          getConfiguration().getAccountType(),
+          new DatabaseStoreDataPersist(AccessorFactory.getAccessorFor(Store.class),
+              new DatabaseStoreDataPersist.DatabaseStoreMapper()));
+    }
+    return accountManager;
+  }
+
+  @Partners public void createShortCut() {
+    Intent shortcutIntent = new Intent(this, MainActivity.class);
+    shortcutIntent.setAction(Intent.ACTION_MAIN);
+    Intent intent = new Intent();
+    intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+    intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "Aptoide");
+    intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
+        Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.mipmap.ic_launcher));
+    intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+    getApplicationContext().sendBroadcast(intent);
+  }
 
   private Observable<?> loadInstalledApps() {
     return Observable.fromCallable(() -> {
@@ -371,6 +328,20 @@ public abstract class V8Engine extends DataProvider {
           AccessorFactory.getAccessorFor(Installed.class).insertAll(list);
         })
         .subscribeOn(Schedulers.io());
+  }
+
+  public static void loadUserData(AptoideAccountManager accountManager) {
+    regenerateUserAgent(accountManager);
+  }
+
+  private static void checkUpdates() {
+    UpdateRepository repository = RepositoryFactory.getUpdateRepository(DataProvider.getContext());
+    repository.sync(true)
+        .andThen(repository.getAll(false))
+        .first()
+        .subscribe(updates -> Logger.d(TAG, "updates are up to date now"), throwable -> {
+          CrashReport.getInstance().log(throwable);
+        });
   }
 
   //	private static class LeakCAnaryActivityWatcher implements ActivityLifecycleCallbacks {
@@ -417,29 +388,28 @@ public abstract class V8Engine extends DataProvider {
   //		}
   //	}
 
-  private void setupStrictMode() {
-    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads()
-        .detectDiskWrites()
-        .detectNetwork()   // or .detectAll() for all detectable problems
-        .penaltyLog()
-        .build());
+  @Partners protected void setupCrashReports(boolean isDisabled) {
+    CrashReport.getInstance()
+        .addLogger(new CrashlyticsCrashLogger(this, isDisabled))
+        .addLogger(new ConsoleLogger());
+  }
 
-    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects()
+  //
+  // Strict Mode
+  //
+
+  /**
+   * do not erase this method. it should be called in internal and dev Application class
+   * of Vanilla module
+   */
+  protected void setupStrictMode() {
+    StrictMode.setThreadPolicy(
+        new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
+
+    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedClosableObjects()
         .detectLeakedClosableObjects()
         .penaltyLog()
         .penaltyDeath()
         .build());
-  }
-
-  @Partners public void createShortCut() {
-    Intent shortcutIntent = new Intent(this, MainActivity.class);
-    shortcutIntent.setAction(Intent.ACTION_MAIN);
-    Intent intent = new Intent();
-    intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-    intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "Aptoide");
-    intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
-        Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.mipmap.ic_launcher));
-    intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-    getApplicationContext().sendBroadcast(intent);
   }
 }

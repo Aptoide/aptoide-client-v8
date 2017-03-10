@@ -304,7 +304,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
                 ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created)
                     .subscribe(visibility -> {
                       mSubscriptions.add(accountManager.syncCurrentAccount().subscribe(() -> {
-                      }, Throwable::printStackTrace));
+                      }, err -> err.printStackTrace()));
                       if (visibility == ShowMessage.DISMISSED) {
                         Analytics.Account.createStore(!TextUtils.isEmpty(storeAvatarPath),
                             Analytics.Account.CreateStoreAction.CREATE);
@@ -328,7 +328,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
                         accountManager.syncCurrentAccount().subscribe(() -> {
                           progressDialog.dismiss();
                           goToMainActivity();
-                        }, Throwable::printStackTrace);
+                        }, err -> err.printStackTrace());
                       }, throwable -> {
                         if (((AptoideWsV7Exception) throwable).getBaseResponse()
                             .getErrors()
@@ -361,9 +361,8 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
                       .subscribe(answer -> {
                         accountManager.syncCurrentAccount().subscribe(() -> {
                           progressDialog.dismiss();
-                          accountManager.sendLoginBroadcast();
                           goToMainActivity();
-                        }, Throwable::printStackTrace);
+                        }, err -> err.printStackTrace());
                       }, throwable -> {
                         onCreateFail(
                             ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
@@ -576,7 +575,6 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
           .subscribe(answer -> {
             accountManager.syncCurrentAccount().subscribe(() -> {
               progressDialog.dismiss();
-              accountManager.sendLoginBroadcast();
               goToMainActivity();
             }, throwable -> throwable.printStackTrace());
           }, throwable -> {
@@ -622,7 +620,6 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
             }
             accountManager.syncCurrentAccount().subscribe(() -> {
               progressDialog.dismiss();
-              accountManager.sendLoginBroadcast();
               goToMainActivity();
             }, throwable1 -> throwable1.printStackTrace());
           }));
@@ -634,14 +631,13 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
       SimpleSetStoreRequest.of(storeName, storeTheme, bodyDecorator).execute(answer -> {
         accountManager.syncCurrentAccount().subscribe(() -> {
           progressDialog.dismiss();
-          accountManager.sendLoginBroadcast();
           goToMainActivity();
-        }, Throwable::printStackTrace);
+        }, err -> err.printStackTrace());
       }, throwable -> {
         onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
         accountManager.syncCurrentAccount().subscribe(() -> {
           progressDialog.dismiss();
-        }, Throwable::printStackTrace);
+        }, err -> err.printStackTrace());
       });
     }
   }

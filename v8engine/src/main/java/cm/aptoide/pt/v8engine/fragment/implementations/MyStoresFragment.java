@@ -33,7 +33,7 @@ public class MyStoresFragment extends GetStoreWidgetsFragment {
 
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
     Observable<List<Displayable>> widgetList =
-        super.buildDisplayables(refresh, url).map(this::addFollowStoreDisplayable);
+        super.buildDisplayables(refresh, url).map(list -> addFollowStoreDisplayable(list));
     return widgetList;
   }
 
@@ -50,6 +50,31 @@ public class MyStoresFragment extends GetStoreWidgetsFragment {
           });
     }
     super.load(create, refresh, savedInstanceState);
+
+    /*
+    if (create || refresh) {
+
+      String url = "";
+      AptoideAccountManager accountManager =
+          ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+
+      AptoideClientUUID aptoideClientUUID =
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+
+      GetMyStoreListRequest.of(url, accountManager.getAccessToken(),
+          aptoideClientUUID.getUniqueIdentifier())
+          .observe(refresh)
+          .observeOn(Schedulers.io())
+          .filter(data -> data.isOk() && data.getDatalist().getCount() > 0)
+          .map(list -> list.getDatalist().getList())
+          .flatMapIterable(list -> list)
+          .map(store -> Store.from(store))
+          .subscribe(listStores -> {
+              // save stores
+              storeRepository.saveAll(listStores);
+          }, err -> CrashReport.getInstance().log(err));
+    }
+    */
   }
 
   private List<Displayable> addFollowStoreDisplayable(List<Displayable> displayables) {

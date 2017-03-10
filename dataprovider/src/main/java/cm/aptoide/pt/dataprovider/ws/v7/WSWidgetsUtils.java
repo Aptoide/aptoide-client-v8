@@ -48,7 +48,7 @@ public class WSWidgetsUtils {
           return ListAppsRequest.ofAction(url, storeCredentials, bodyInterceptor)
               .observe(refresh)
               .observeOn(Schedulers.io())
-              .doOnNext(wsWidget::setViewObject)
+              .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
 
@@ -56,7 +56,7 @@ public class WSWidgetsUtils {
           return ListStoresRequest.ofAction(url, bodyInterceptor)
               .observe(refresh)
               .observeOn(Schedulers.io())
-              .doOnNext(wsWidget::setViewObject)
+              .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
 
@@ -64,7 +64,7 @@ public class WSWidgetsUtils {
           return GetStoreDisplaysRequest.ofAction(url, storeCredentials, bodyInterceptor)
               .observe(refresh)
               .observeOn(Schedulers.io())
-              .doOnNext(wsWidget::setViewObject)
+              .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
 
@@ -73,7 +73,7 @@ public class WSWidgetsUtils {
               mature)
               .observe()
               .observeOn(Schedulers.io())
-              .doOnNext(wsWidget::setViewObject)
+              .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
 
@@ -81,7 +81,7 @@ public class WSWidgetsUtils {
           return GetHomeMetaRequest.ofAction(url, storeCredentials, bodyInterceptor)
               .observe(refresh)
               .observeOn(Schedulers.io())
-              .doOnNext(wsWidget::setViewObject)
+              .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
 
@@ -99,7 +99,7 @@ public class WSWidgetsUtils {
           return ListFullReviewsRequest.ofAction(url, refresh, storeCredentials, bodyInterceptor)
               .observe(refresh)
               .observeOn(Schedulers.io())
-              .doOnNext(wsWidget::setViewObject)
+              .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
 
@@ -108,7 +108,7 @@ public class WSWidgetsUtils {
           return GetMyStoreListRequest.of(url, bodyInterceptor)
               .observe(refresh)
               .observeOn(Schedulers.io())
-              .doOnNext(wsWidget::setViewObject)
+              .doOnNext(obj -> wsWidget.setViewObject(obj))
               .doOnError(throwable -> {
                 LinkedList<String> errorsList = new LinkedList<>();
                 errorsList.add(USER_NOT_LOGGED_ERROR);
@@ -130,7 +130,7 @@ public class WSWidgetsUtils {
                 homeMeta.setData(data);
                 return homeMeta;
               })
-              .doOnNext(wsWidget::setViewObject)
+              .doOnNext(obj -> wsWidget.setViewObject(obj))
               .doOnError(throwable -> {
                 LinkedList<String> errorsList = new LinkedList<>();
                 errorsList.add(USER_NOT_LOGGED_ERROR);
@@ -146,7 +146,7 @@ public class WSWidgetsUtils {
           return GetAppRequest.ofAction(url, bodyInterceptor)
               .observe(refresh)
               .observeOn(Schedulers.io())
-              .doOnNext(wsWidget::setViewObject)
+              .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
 

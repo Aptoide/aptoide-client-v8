@@ -59,7 +59,7 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
           storeCredentialsProvider.get(getPojo().getName()).getName(),
           storeCredentialsProvider.get(getPojo().getName()).getPasswordSha1());
     }
-    StoreUtils.unsubscribeStore(getPojo().getName(), accountManager, storeCredentialsProvider);
+    StoreUtils.unSubscribeStore(getPojo().getName(), accountManager, storeCredentialsProvider);
   }
 
   void openStoreFragment(NavigationManagerV4 navigationManager) {

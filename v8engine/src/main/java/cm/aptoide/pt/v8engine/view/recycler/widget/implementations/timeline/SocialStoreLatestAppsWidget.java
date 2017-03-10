@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -91,7 +93,7 @@ public class SocialStoreLatestAppsWidget
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     storeUtilsProxy = new StoreUtilsProxy(accountManager,
         new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
-        new StoreCredentialsProviderImpl());
+        new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class));
     storeName.setText(displayable.getStoreName());
     userName.setText(displayable.getUser().getName());
     setCardViewMargin(displayable, cardView);

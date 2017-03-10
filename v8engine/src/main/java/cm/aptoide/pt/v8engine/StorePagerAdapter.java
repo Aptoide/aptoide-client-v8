@@ -90,10 +90,10 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
         fragment = caseClient(event, tab);
         break;
       }
-      case v3:{
+      case v3: {
         fragment = caseV3(event);
         break;
-    }
+      }
       default:
         // Safe to throw exception as the tab should be filtered prior to getting here.
         throw new RuntimeException("Fragment type not implemented!");

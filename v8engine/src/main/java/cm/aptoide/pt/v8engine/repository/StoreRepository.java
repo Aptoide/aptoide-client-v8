@@ -43,4 +43,8 @@ public class StoreRepository implements Repository<Store, Integer> {
   public Observable<Store> getByName(String storeName) {
     return storeAccessor.get(storeName);
   }
+
+  public void saveAll(List<Store> stores) {
+    storeAccessor.insertAll(stores);
+  }
 }

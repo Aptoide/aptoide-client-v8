@@ -18,6 +18,8 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -76,7 +78,7 @@ public class MainActivity extends TabNavigatorActivity implements MainView, Frag
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
     storeUtilsProxy = new StoreUtilsProxy(accountManager,
         new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
-        new StoreCredentialsProviderImpl());
+        new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class));
     final AutoUpdate autoUpdate =
         new AutoUpdate(this, new InstallerFactory().create(this, InstallerFactory.DEFAULT),
             new DownloadFactory(), AptoideDownloadManager.getInstance(), new PermissionManager());

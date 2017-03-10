@@ -66,21 +66,19 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
         String.valueOf(getPojo().getData().getFollowing()));
   }
 
-  public Void followersClick(NavigationManagerV4 navigationManager) {
+  void followersClick(NavigationManagerV4 navigationManager) {
     navigationManager.navigateTo(V8Engine.getFragmentProvider()
         .newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode.FOLLOWERS,
             userId, getPojo().getData().getFollowers(), storeTheme));
-    return null;
   }
 
-  public Void followingClick(NavigationManagerV4 navigationManager) {
+  void followingClick(NavigationManagerV4 navigationManager) {
     navigationManager.navigateTo(V8Engine.getFragmentProvider()
         .newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode.FOLLOWING,
             userId, getPojo().getData().getFollowing(), storeTheme));
-    return null;
   }
 
-  public void followFriendsClick(NavigationManagerV4 navigationManager) {
+  void followFriendsClick(NavigationManagerV4 navigationManager) {
     timelineAnalytics.sendFollowFriendsEvent();
     navigationManager.navigateTo(V8Engine.getFragmentProvider().newAddressBookFragment());
   }

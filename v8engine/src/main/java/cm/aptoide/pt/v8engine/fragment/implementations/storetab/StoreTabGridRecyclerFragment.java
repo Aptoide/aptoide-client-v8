@@ -134,7 +134,8 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
       Observable<List<Displayable>> displayablesObservable = buildDisplayables(refresh, url);
       if (displayablesObservable != null) {
         DisplayableManager displayableManager = this;
-        displayablesObservable.compose(bindUntilEvent(LifecycleEvent.DESTROY))
+        displayablesObservable
+            .compose(bindUntilEvent(LifecycleEvent.DESTROY))
             .subscribe(displayables -> {
               displayableManager.clearDisplayables().addDisplayables(displayables, true);
             }, err -> {

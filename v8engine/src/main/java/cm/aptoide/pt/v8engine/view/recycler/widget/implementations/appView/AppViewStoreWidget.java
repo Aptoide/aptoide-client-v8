@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
@@ -93,7 +94,8 @@ import rx.functions.Action1;
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager,
         new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
-        new StoreCredentialsProviderImpl());
+        new StoreCredentialsProviderImpl(),
+        AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class));
 
     Action1<Void> openStore = __ -> {
       getNavigationManager().navigateTo(

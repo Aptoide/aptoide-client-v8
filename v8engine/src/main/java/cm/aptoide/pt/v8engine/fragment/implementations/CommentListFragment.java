@@ -11,10 +11,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
@@ -112,14 +114,19 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     return fragment;
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    View v = super.onCreateView(inflater, container, savedInstanceState);
+
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
     aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     bodyDecorator = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+
+    return v;
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -237,7 +244,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     getRecyclerView().clearOnScrollListeners();
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(getAdapter(), listCommentsRequest, listCommentsAction,
-            Throwable::printStackTrace, true);
+            err -> err.printStackTrace(), true);
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
@@ -284,7 +291,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     getRecyclerView().clearOnScrollListeners();
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(getAdapter(), listCommentsRequest, listCommentsAction,
-            Throwable::printStackTrace, true);
+            err -> err.printStackTrace(), true);
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh);

@@ -332,9 +332,9 @@ public class SearchFragment extends BasePagerToolbarFragment {
     inflater.inflate(R.menu.menu_search, menu);
 
     if (storeName != null) {
-      SearchUtils.setupInsideStoreSearchView(menu, getNavigationManager(), storeName);
+      SearchUtils.setupInsideStoreSearchView(menu, this, storeName);
     } else {
-      SearchUtils.setupGlobalSearchView(menu, getNavigationManager());
+      SearchUtils.setupGlobalSearchView(menu, this);
     }
   }
 

@@ -7,8 +7,8 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
@@ -52,8 +52,8 @@ public class StoreUtils {
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager,
       BodyInterceptor bodyInterceptor, StoreCredentialsProvider storeCredentialsProvider) {
-    subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName, storeCredentialsProvider), bodyInterceptor), successRequestListener,
-        errorRequestListener, accountManager, null, null);
+    subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName, storeCredentialsProvider),
+        bodyInterceptor), successRequestListener, errorRequestListener, accountManager, null, null);
   }
 
   /**
@@ -94,9 +94,8 @@ public class StoreUtils {
   /**
    * @see StoreCredentialsProvider
    */
-  @Deprecated
-  public static BaseRequestWithStore.StoreCredentials getStoreCredentials(String storeName,
-      StoreCredentialsProvider storeCredentialsProvider) {
+  @Deprecated public static BaseRequestWithStore.StoreCredentials getStoreCredentials(
+      String storeName, StoreCredentialsProvider storeCredentialsProvider) {
     return storeCredentialsProvider.get(storeName);
   }
 
@@ -179,14 +178,16 @@ public class StoreUtils {
     return storesAuthMap.size() > 0 ? storesAuthMap : null;
   }
 
-  public static void unsubscribeStore(String name, AptoideAccountManager accountManager,
+  public static void unSubscribeStore(String name, AptoideAccountManager accountManager,
       StoreCredentialsProvider storeCredentialsProvider) {
-    if (accountManager.isLoggedIn()) {
-      accountManager.unsubscribeStore(name, storeCredentialsProvider.get(name).getName(),
-          storeCredentialsProvider.get(name).getPasswordSha1());
-    }
-    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-    storeAccessor.remove(name);
+    accountManager.loginStatus().first().subscribe(isLoggedIn -> {
+      if (isLoggedIn) {
+        accountManager.unsubscribeStore(name, storeCredentialsProvider.get(name).getName(),
+            storeCredentialsProvider.get(name).getPasswordSha1());
+      }
+      StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+      storeAccessor.remove(name);
+    });
   }
 
   public static StoreError getErrorType(String code) {

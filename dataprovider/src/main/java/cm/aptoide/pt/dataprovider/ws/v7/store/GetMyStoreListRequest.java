@@ -1,5 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
@@ -17,7 +19,11 @@ import rx.Observable;
 public class GetMyStoreListRequest extends V7<ListStores, GetMyStoreListRequest.EndlessBody> {
 
   private static boolean useEndless;
-  private final String url;
+  @Nullable private String url;
+
+  public GetMyStoreListRequest(EndlessBody body, String baseHost) {
+    super(body, baseHost);
+  }
 
   public GetMyStoreListRequest(String url, EndlessBody body, String baseHost) {
     super(body, baseHost);
@@ -42,10 +48,14 @@ public class GetMyStoreListRequest extends V7<ListStores, GetMyStoreListRequest.
     if (url.contains("getSubscribed")) {
       body.setRefresh(bypassCache);
     }
-    if (useEndless) {
-      return interfaces.getMyStoreListEndless(url, body, bypassCache);
+    if (TextUtils.isEmpty(url)) {
+      return interfaces.getMyStoreList(body, bypassCache);
     } else {
-      return interfaces.getMyStoreList(url, body, bypassCache);
+      if (useEndless) {
+        return interfaces.getMyStoreListEndless(url, body, bypassCache);
+      } else {
+        return interfaces.getMyStoreList(url, body, bypassCache);
+      }
     }
   }
 
