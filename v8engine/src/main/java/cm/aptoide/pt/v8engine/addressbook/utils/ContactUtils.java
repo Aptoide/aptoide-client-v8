@@ -61,6 +61,7 @@ public class ContactUtils {
         while (cursorNumbers.moveToNext()) {
           final String mobileNumber = cursorNumbers.getString(
               cursorNumbers.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+          String normalizedMobileNumber = null;
 
           try {
             final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
@@ -68,17 +69,14 @@ public class ContactUtils {
             Phonenumber.PhoneNumber phoneNumber = phoneNumberUtil.parse(mobileNumber, country);
 
             if (phoneNumberUtil.isValidNumberForRegion(phoneNumber, country)) {
-              System.out.println("valid : " + phoneNumberUtil.format(phoneNumber,
-                  PhoneNumberUtil.PhoneNumberFormat.E164));
-            } else {
-              System.out.println("invalid: " + phoneNumberUtil.format(phoneNumber,
-                  PhoneNumberUtil.PhoneNumberFormat.E164));
+              normalizedMobileNumber =
+                  phoneNumberUtil.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.E164);
             }
-          } catch (NumberParseException e) {
-            System.out.println("NaN: " + mobileNumber);
+          } catch (NumberParseException ignored) {
+
           }
 
-          contact.addMobileNumber(mobileNumber);
+          contact.addMobileNumber(normalizedMobileNumber);
         }
         cursorNumbers.close();
       }

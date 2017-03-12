@@ -37,6 +37,20 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
     shareAppsMessageController.onConnect(socket);
   }
 
+  @Override public void removeHost(Host host) {
+    super.removeHost(host);
+
+    Iterator<AptoideMessageServerController> iterator = aptoideMessageControllers.iterator();
+    while (iterator.hasNext()) {
+      AptoideMessageServerController aptoideMessageServerController = iterator.next();
+      if (aptoideMessageServerController.getHost().getIp().equals(host.getIp())) {
+        iterator.remove();
+        System.out.println("ShareApps: Host " + host + " removed from the server.");
+        sendToOthers(host, new HostLeftMessage(getHost(), host));
+      }
+    }
+  }
+
   public void requestPermissionToSendApk(RequestPermissionToSend message) {
     int availablePort = getAvailablePort();
     // TODO: 06-02-2017 neuro may not be a bad idea to replace this null with the actual host :/
@@ -107,17 +121,5 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
         }
       }
     });
-  }
-
-  public void removeHost(Host host) {
-    Iterator<AptoideMessageServerController> iterator = aptoideMessageControllers.iterator();
-    while (iterator.hasNext()) {
-      AptoideMessageServerController aptoideMessageServerController = iterator.next();
-      if (aptoideMessageServerController.getHost().getIp().equals(host.getIp())) {
-        iterator.remove();
-        System.out.println("ShareApps: Host " + host + " removed from the server.");
-        sendToOthers(host, new HostLeftMessage(getHost(), host));
-      }
-    }
   }
 }

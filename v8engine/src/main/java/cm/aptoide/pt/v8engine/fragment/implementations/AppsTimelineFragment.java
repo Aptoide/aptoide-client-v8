@@ -91,6 +91,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   public static final int SEARCH_LIMIT = 20;
   private static final String USER_ID_KEY = "USER_ID_KEY";
   private static final String ACTION_KEY = "ACTION";
+  private static final String STORE_ID = "STORE_ID";
   private static final String PACKAGE_LIST_KEY = "PACKAGE_LIST";
   private DownloadFactory downloadFactory;
   private SpannableFactory spannableFactory;
@@ -113,17 +114,24 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private AccountNavigator accountNavigator;
   private BodyInterceptor bodyInterceptor;
   private StoreCredentialsProvider storeCredentialsProvider;
+  private long storeId;
 
-  public static AppsTimelineFragment newInstance(String action, Long userId) {
+  public static AppsTimelineFragment newInstance(String action, Long userId, long storeId) {
     AppsTimelineFragment fragment = new AppsTimelineFragment();
 
     final Bundle args = new Bundle();
+    args.putLong(STORE_ID, storeId);
     args.putString(ACTION_KEY, action);
     if (userId != null) {
       args.putLong(USER_ID_KEY, userId);
     }
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    storeId = args.getLong(STORE_ID);
   }
 
   @Override public void bindViews(View view) {
@@ -218,8 +226,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
       List<String> packages) {
     return getDisplayableList(packages, 0, refresh).doOnSubscribe(
         () -> getAdapter().clearDisplayables()).flatMap(displayableDatalist -> {
-          Long userId =
-              getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
+      Long userId =
+          getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
 
       if (accountManager.isLoggedIn() || userId != null) {
         return getUserTimelineStats(refresh, displayableDatalist, userId);
@@ -236,7 +244,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     return timelineRepository.getTimelineStats(refresh, userId).map(timelineStats -> {
       TimeLineStatsDisplayable timeLineStatsDisplayable =
           new TimeLineStatsDisplayable(timelineStats, userId, spannableFactory, storeTheme,
-              timelineAnalytics, userId == null);
+              timelineAnalytics, userId == null, storeId);
       displayableDatalist.getList().add(0, timeLineStatsDisplayable);
       return displayableDatalist;
     }).onErrorReturn(throwable -> {

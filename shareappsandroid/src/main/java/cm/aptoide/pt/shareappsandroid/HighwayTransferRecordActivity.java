@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.shareappsandroid.analytics.SpotAndShareAnalyticsInterface;
+import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -110,7 +111,11 @@ public class HighwayTransferRecordActivity extends ActivityView
     targetIPAddress = getIntent().getStringExtra("targetIP");
     nickname = getIntent().getStringExtra("nickname");
 
-    welcomeText.setText(this.getResources().getString(R.string.welcome) + " " + nickname);
+    if (isHotspot) {
+      welcomeText.setText(this.getResources().getString(R.string.created_group, nickname));
+    } else {
+      welcomeText.setText(this.getResources().getString(R.string.joined_group, nickname));
+    }
     receivedAppListView.setVisibility(View.GONE);
 
     //        Intent receiveIntent = null;
@@ -147,7 +152,8 @@ public class HighwayTransferRecordActivity extends ActivityView
     transferRecordManager = new TransferRecordManager(applicationsManager);
 
     presenter = new TransferRecordPresenter(this, applicationReceiver, applicationSender,
-        transferRecordManager, isHotspot, ConnectionManager.getInstance(this), analytics);
+        transferRecordManager, isHotspot,
+        ConnectionManager.getInstance(this.getApplicationContext()), analytics);
     attachPresenter(presenter);
   }
 
@@ -472,9 +478,23 @@ public class HighwayTransferRecordActivity extends ActivityView
                 public void onClick(DialogInterface dialog, int id) {
 
                   sendDisconnectMessage();
-                  presenter.recoverNetworkState();
-                  presenter.cleanAPTXNetworks();
-                  finish();
+                  new Thread(new Runnable() {
+                    @Override public void run() {
+                      try {
+                        Thread.sleep(1000);
+                      } catch (InterruptedException e) {
+                        e.printStackTrace();
+                      }
+
+                      AptoideUtils.ThreadU.runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                          presenter.recoverNetworkState();
+                          presenter.cleanAPTXNetworks();
+                          finish();
+                        }
+                      });
+                    }
+                  }).start();
                 }
               })
           .setNegativeButton(this.getResources().getString(R.string.cancel),
@@ -495,7 +515,7 @@ public class HighwayTransferRecordActivity extends ActivityView
 
   private void setInitialApConfig() {
     if (wifimanager == null) {
-      wifimanager = (WifiManager) getSystemService(WIFI_SERVICE);
+      wifimanager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
     }
     Method[] methods = wifimanager.getClass().getDeclaredMethods();
     WifiConfiguration wc = DataHolder.getInstance().getWcOnJoin();
@@ -748,11 +768,8 @@ public class HighwayTransferRecordActivity extends ActivityView
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-    builder.setTitle(this.getResources().getString(R.string.alert))
-        .setMessage(this.getResources().getString(R.string.alertClearApps1)
-            + " \n"
-            + "\n"
-            + this.getResources().getString(R.string.alertClearApps2))
+    builder.setTitle(this.getResources().getString(R.string.warning))
+        .setMessage(this.getResources().getString(R.string.clear_history_warning))
         .setPositiveButton(this.getResources().getString(R.string.delete),
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int id) {

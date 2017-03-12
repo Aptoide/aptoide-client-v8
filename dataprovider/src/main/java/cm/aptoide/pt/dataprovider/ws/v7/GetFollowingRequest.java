@@ -14,9 +14,17 @@ public class GetFollowingRequest extends V7<GetFollowers, GetFollowersRequest.Bo
   }
 
   public static GetFollowingRequest of(BodyInterceptor bodyInterceptor, Long userId) {
+    GetFollowersRequest.Body body = new GetFollowersRequest.Body();
+    body.setUserId(userId);
+    return new GetFollowingRequest(((GetFollowersRequest.Body) bodyInterceptor.intercept(body)),
+        BASE_HOST);
+  }
 
-    return new GetFollowingRequest(
-        ((GetFollowersRequest.Body) bodyInterceptor.intercept(new GetFollowersRequest.Body(userId))), BASE_HOST);
+  public static GetFollowingRequest ofStore(BodyInterceptor bodyInterceptor, Long storeId) {
+    GetFollowersRequest.Body body = new GetFollowersRequest.Body();
+    body.setStoreId(storeId);
+    return new GetFollowingRequest(((GetFollowersRequest.Body) bodyInterceptor.intercept(body)),
+        BASE_HOST);
   }
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,

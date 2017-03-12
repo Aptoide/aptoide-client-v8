@@ -98,7 +98,7 @@ public interface FragmentProvider {
 
   Fragment newListStoresFragment();
 
-  Fragment newAppsTimelineFragment(String action, Long userId);
+  Fragment newAppsTimelineFragment(String action, Long userId, long storeId);
 
   Fragment newSubscribedStoresFragment(Event event, String title, String storeTheme, String tag);
 
@@ -138,6 +138,9 @@ public interface FragmentProvider {
 
   Fragment newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode openMode,
       Long id, long followNumber, String storeTheme);
+
+  Fragment newStoreTimeLineFollowStatsFragment(Long id, long followNumber, String storeTheme,
+      TimeLineFollowFragment.FollowFragmentOpenMode followers);
 
   Fragment newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode openMode,
       String storeTheme, String cardUid, long numberOfLikes);

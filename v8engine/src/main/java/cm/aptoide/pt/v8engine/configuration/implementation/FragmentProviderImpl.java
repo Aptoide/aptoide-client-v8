@@ -36,6 +36,7 @@ import cm.aptoide.pt.v8engine.fragment.implementations.SocialFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SpotSharePreviewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowStoreFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.UpdatesFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.storetab.GetAdsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.storetab.GetStoreFragment;
@@ -192,8 +193,8 @@ public class FragmentProviderImpl implements FragmentProvider {
     return new ListStoresFragment();
   }
 
-  @Override public Fragment newAppsTimelineFragment(String action, Long userId) {
-    return AppsTimelineFragment.newInstance(action, userId);
+  @Override public Fragment newAppsTimelineFragment(String action, Long userId, long storeId) {
+    return AppsTimelineFragment.newInstance(action, userId, storeId);
   }
 
   @Override
@@ -273,6 +274,11 @@ public class FragmentProviderImpl implements FragmentProvider {
       TimeLineFollowFragment.FollowFragmentOpenMode openMode, Long id, long followNumber,
       String storeTheme) {
     return TimeLineFollowFragment.newInstance(openMode, id, followNumber, storeTheme);
+  }
+
+  @Override public Fragment newStoreTimeLineFollowStatsFragment(Long id, long followNumber,
+      String storeTheme, TimeLineFollowFragment.FollowFragmentOpenMode openMode) {
+    return TimeLineFollowStoreFragment.newInstance(id, followNumber, storeTheme, openMode);
   }
 
   @Override public Fragment newTimeLineFollowStatsFragment(

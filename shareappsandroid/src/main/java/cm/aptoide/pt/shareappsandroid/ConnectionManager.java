@@ -161,7 +161,6 @@ public class ConnectionManager {
                   }
                   break;
                 }
-
               }
             }
           }
@@ -190,7 +189,6 @@ public class ConnectionManager {
               }
               break;
             }
-
           }
         }
       }
@@ -218,9 +216,9 @@ public class ConnectionManager {
 
   public static ConnectionManager getInstance(Context context) {
     if (instance == null) {
-      instance = new ConnectionManager(context.getApplicationContext(),
-          PreferenceManager.getDefaultSharedPreferences(context),
-          (WifiManager) context.getSystemService(Context.WIFI_SERVICE));
+      instance =
+          new ConnectionManager(context, PreferenceManager.getDefaultSharedPreferences(context),
+              (WifiManager) context.getSystemService(Context.WIFI_SERVICE));
     }
     return instance;
   }
@@ -373,44 +371,46 @@ public class ConnectionManager {
     Log.e("O net id meu esta a : ", "netid : " + netid);
 
     List<WifiConfiguration> list = wifimanager.getConfiguredNetworks();
-    for (WifiConfiguration i : list) {
-      Log.i("config network", "list of config networks is : " + i.toString());
-      if (i.SSID != null && i.SSID.equals("\"" + chosenHotspot + "\"")) {
-        Log.d("cONFIG nETOWKRS", "Found List of COnfigured Networks APTX");
-        try {
-          boolean b = wifimanager.disconnect();
-          System.out.println("o boolean do disconnect " + b);
+    if (list != null) {
+      for (WifiConfiguration i : list) {
+        Log.i("config network", "list of config networks is : " + i.toString());
+        if (i.SSID != null && i.SSID.equals("\"" + chosenHotspot + "\"")) {
+          Log.d("cONFIG nETOWKRS", "Found List of COnfigured Networks APTX");
           try {
-            Thread.sleep(800);
-          } catch (InterruptedException e) {
-          }
-          boolean enab = wifimanager.enableNetwork(i.networkId, true);
-          System.out.print(
-              "i.networkId " + i.networkId + "\n" + "o net id do add esta a : " + netid);
-          System.out.println("o boolean do resetHotspot : " + enab);
+            boolean b = wifimanager.disconnect();
+            System.out.println("o boolean do disconnect " + b);
+            try {
+              Thread.sleep(800);
+            } catch (InterruptedException e) {
+            }
+            boolean enab = wifimanager.enableNetwork(i.networkId, true);
+            System.out.print(
+                "i.networkId " + i.networkId + "\n" + "o net id do add esta a : " + netid);
+            System.out.println("o boolean do resetHotspot : " + enab);
 
-          //System.out.println("Correctly joined the network");
-          //return SUCCESSFUL_JOIN;
-          try {
-            Thread.sleep(2000);
-          } catch (InterruptedException e) {
-          }
-          boolean recon = wifimanager.reconnect();
-          System.out.println("O boolean do reconnect ta a : " + recon);
+            //System.out.println("Correctly joined the network");
+            //return SUCCESSFUL_JOIN;
+            try {
+              Thread.sleep(2000);
+            } catch (InterruptedException e) {
+            }
+            boolean recon = wifimanager.reconnect();
+            System.out.println("O boolean do reconnect ta a : " + recon);
 
-          try {
-            Thread.sleep(2000);
-          } catch (InterruptedException e) {
-          }
+            try {
+              Thread.sleep(2000);
+            } catch (InterruptedException e) {
+            }
 
-          if (recon) {
-            System.out.println("Correctly joined the network");
-            return SUCCESSFUL_JOIN;
-          } else {
-            return ERROR_ON_RECONNECT;
+            if (recon) {
+              System.out.println("Correctly joined the network");
+              return SUCCESSFUL_JOIN;
+            } else {
+              return ERROR_ON_RECONNECT;
+            }
+          } catch (Exception e) {
+            e.printStackTrace();
           }
-        } catch (Exception e) {
-          e.printStackTrace();
         }
       }
     }
