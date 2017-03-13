@@ -284,6 +284,14 @@ public class HighwayServerService extends Service {
           @Override public void hostsChanged(List<Host> hostList) {
             System.out.println("hostsChanged() called with: " + "hostList = [" + hostList + "]");
             DataHolder.getInstance().setConnectedClients(hostList);
+            Intent i = new Intent();
+            if (hostList.size() >= 2) {
+              i.setAction("SHOW_SEND_BUTTON");
+              sendBroadcast(i);
+            } else {
+              i.setAction("HIDE_SEND_BUTTON");
+              sendBroadcast(i);
+            }
           }
         });
         aptoideMessageServerSocket.startAsync();

@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -21,8 +22,9 @@ import rx.Observable;
 public class PushNotificationsRequest extends V3<GetPushNotificationsResponse> {
 
   protected PushNotificationsRequest(BaseBody baseBody) {
-    super(BASE_HOST, baseBody,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), isDebug()));
+    super(baseBody,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
   }
 
   public static PushNotificationsRequest of() {

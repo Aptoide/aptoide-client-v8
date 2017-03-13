@@ -6,7 +6,10 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.model.v7.ListSearchApps;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.util.Collections;
 import java.util.List;
 import lombok.EqualsAndHashCode;
@@ -21,17 +24,15 @@ import rx.Observable;
  */
 public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequest.Body> {
 
-  private ListSearchAppsRequest(Body body, String baseHost) {
-    super(body, baseHost);
-  }
-
-  private ListSearchAppsRequest(OkHttpClient httpClient, Converter.Factory converterFactory,
-      Body body, String baseHost) {
-    super(body, httpClient, converterFactory, baseHost);
+  private ListSearchAppsRequest(Body body, String baseHost, BodyInterceptor bodyInterceptor) {
+    super(body, baseHost,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static ListSearchAppsRequest of(String query, String storeName,
-      HashMapNotNull<String, List<String>> subscribedStoresAuthMap, BodyInterceptor bodyInterceptor) {
+      HashMapNotNull<String, List<String>> subscribedStoresAuthMap,
+      BodyInterceptor bodyInterceptor) {
 
     List<String> stores = null;
     if (storeName != null) {
@@ -41,12 +42,12 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
     if (subscribedStoresAuthMap != null && subscribedStoresAuthMap.containsKey(storeName)) {
       HashMapNotNull<String, List<String>> storesAuthMap = new HashMapNotNull<>();
       storesAuthMap.put(storeName, subscribedStoresAuthMap.get(storeName));
-      return new ListSearchAppsRequest((Body) bodyInterceptor.intercept(
-          new Body(Endless.DEFAULT_LIMIT, query, storesAuthMap, stores, false)),
-          BASE_HOST);
+      return new ListSearchAppsRequest(
+          new Body(Endless.DEFAULT_LIMIT, query, storesAuthMap, stores, false), BASE_HOST,
+          bodyInterceptor);
     }
-    return new ListSearchAppsRequest(
-        (Body) bodyInterceptor.intercept(new Body(Endless.DEFAULT_LIMIT, query, stores, false)), BASE_HOST);
+    return new ListSearchAppsRequest(new Body(Endless.DEFAULT_LIMIT, query, stores, false),
+        BASE_HOST, bodyInterceptor);
   }
 
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
@@ -54,13 +55,12 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       BodyInterceptor bodyInterceptor) {
 
     if (addSubscribedStores) {
-      return new ListSearchAppsRequest((Body) bodyInterceptor.intercept(
-          new Body(Endless.DEFAULT_LIMIT, query, subscribedStoresIds, subscribedStoresAuthMap,
-              false)), BASE_HOST);
-    } else {
       return new ListSearchAppsRequest(
-          (Body) bodyInterceptor.intercept(new Body(Endless.DEFAULT_LIMIT, query, false)),
-          BASE_HOST);
+          new Body(Endless.DEFAULT_LIMIT, query, subscribedStoresIds, subscribedStoresAuthMap,
+              false), BASE_HOST, bodyInterceptor);
+    } else {
+      return new ListSearchAppsRequest(new Body(Endless.DEFAULT_LIMIT, query, false), BASE_HOST,
+          bodyInterceptor);
     }
   }
 
@@ -68,17 +68,19 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       boolean trustedOnly, List<Long> subscribedStoresIds, BodyInterceptor bodyInterceptor) {
 
     if (addSubscribedStores) {
-      return new ListSearchAppsRequest((Body) bodyInterceptor.intercept(
-          new Body(Endless.DEFAULT_LIMIT, query, subscribedStoresIds, null, trustedOnly)), BASE_HOST);
-    } else {
       return new ListSearchAppsRequest(
-          (Body) bodyInterceptor.intercept(new Body(Endless.DEFAULT_LIMIT, query, trustedOnly)), BASE_HOST);
+          new Body(Endless.DEFAULT_LIMIT, query, subscribedStoresIds, null, trustedOnly), BASE_HOST,
+          bodyInterceptor);
+    } else {
+      return new ListSearchAppsRequest(new Body(Endless.DEFAULT_LIMIT, query, trustedOnly),
+          BASE_HOST, bodyInterceptor);
     }
   }
 
   @Override protected Observable<ListSearchApps> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.listSearchApps(body, bypassCache);
+    return intercept(body).flatMapObservable(
+        body -> interfaces.listSearchApps((Body) body, bypassCache));
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithAlphaBetaKey

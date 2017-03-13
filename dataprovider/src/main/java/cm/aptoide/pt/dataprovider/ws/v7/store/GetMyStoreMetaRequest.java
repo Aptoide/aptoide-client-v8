@@ -4,6 +4,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import rx.Observable;
 
 /**
@@ -12,16 +15,19 @@ import rx.Observable;
 
 public class GetMyStoreMetaRequest extends V7<GetStoreMeta, BaseBody> {
 
-  public GetMyStoreMetaRequest(BaseBody body, String baseHost) {
-    super(body, baseHost);
+  public GetMyStoreMetaRequest(BaseBody body, String baseHost, BodyInterceptor bodyInterceptor) {
+    super(body, baseHost,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static GetMyStoreMetaRequest of(BodyInterceptor bodyInterceptor) {
-    return new GetMyStoreMetaRequest(bodyInterceptor.intercept(new BaseBody()), BASE_HOST);
+    return new GetMyStoreMetaRequest(new BaseBody(), BASE_HOST, bodyInterceptor);
   }
 
   @Override protected Observable<GetStoreMeta> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getMyStoreMeta(body, bypassCache);
+    return intercept(body).flatMapObservable(
+        body -> interfaces.getMyStoreMeta((BaseBody) body, bypassCache));
   }
 }

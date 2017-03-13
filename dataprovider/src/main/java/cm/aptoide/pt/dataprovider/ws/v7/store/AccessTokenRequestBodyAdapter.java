@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import rx.Single;
 
 /**
  * Created by pedroribeiro on 12/12/16.
@@ -19,7 +20,7 @@ public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
 
   private static final String JSONOBJECT_ERROR = "Couldn't build store_properties json";
   private final BaseBody baseBody;
-  private final BodyInterceptor decorator;
+  private final BodyInterceptor interceptor;
   private String storeName;
   private String accessToken;
   private String storeTheme;
@@ -27,20 +28,20 @@ public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
   private Long storeid;
   private SimpleSetStoreRequest.StoreProperties storeProperties;
 
-  public AccessTokenRequestBodyAdapter(BaseBody baseBody, BodyInterceptor decorator,
+  public AccessTokenRequestBodyAdapter(BaseBody baseBody, BodyInterceptor interceptor,
       String accessToken, String storeName, String storeTheme) {
     this.baseBody = baseBody;
-    this.decorator = decorator;
+    this.interceptor = interceptor;
     this.storeName = storeName;
     storeProperties = new SimpleSetStoreRequest.StoreProperties(storeTheme, null);
     this.accessToken = accessToken;
   }
 
-  public AccessTokenRequestBodyAdapter(BaseBody baseBody, BodyInterceptor decorator,
+  public AccessTokenRequestBodyAdapter(BaseBody baseBody, BodyInterceptor interceptor,
       String accessToken, String storeName, String storeTheme, String storeDescription,
       Boolean storeEdit, long storeid) {
     this.baseBody = baseBody;
-    this.decorator = decorator;
+    this.interceptor = interceptor;
     this.storeName = storeName;
     this.accessToken = accessToken;
     storeProperties = new SimpleSetStoreRequest.StoreProperties(storeTheme, storeDescription);
@@ -48,32 +49,34 @@ public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
     this.storeid = storeid;
   }
 
-  public HashMapNotNull<String, RequestBody> get() {
-    decorator.intercept(baseBody);
-    HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+  public Single<HashMapNotNull<String, RequestBody>> get() {
+    return interceptor.intercept(baseBody).<HashMapNotNull<String, RequestBody>> map(baseBody -> {
 
-    if (storeEdit) {
-      body.put("store_id", createBodyPartFromLong(storeid));
-      try {
-        body.put("store_properties",
-            createBodyPartFromString(mapper.writeValueAsString(storeProperties)));
-      } catch (JsonProcessingException e) {
-        e.printStackTrace();
-      }
-    } else {
-      body.put("store_name", createBodyPartFromString(storeName));
-      try {
-        body.put("store_properties",
-            createBodyPartFromString(mapper.writeValueAsString(storeProperties)));
-      } catch (JsonProcessingException e) {
-        e.printStackTrace();
-      }
-    }
-    body.put("access_token", createBodyPartFromString(accessToken));
+      HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
+      ObjectMapper mapper = new ObjectMapper();
+      mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-    return body;
+      if (storeEdit) {
+        body.put("store_id", createBodyPartFromLong(storeid));
+        try {
+          body.put("store_properties",
+              createBodyPartFromString(mapper.writeValueAsString(storeProperties)));
+        } catch (JsonProcessingException e) {
+          e.printStackTrace();
+        }
+      } else {
+        body.put("store_name", createBodyPartFromString(storeName));
+        try {
+          body.put("store_properties",
+              createBodyPartFromString(mapper.writeValueAsString(storeProperties)));
+        } catch (JsonProcessingException e) {
+          e.printStackTrace();
+        }
+      }
+      body.put("access_token", createBodyPartFromString(accessToken));
+
+      return body;
+    });
   }
 
   private RequestBody createBodyPartFromLong(Long longValue) {

@@ -53,6 +53,14 @@ public interface HighwayTransferRecordView {
 
   void clearAdapter();
 
+  boolean getTransparencySend();
+
+  void setTransparencySend(boolean transparency);
+
+  boolean getTransparencyClearHistory();
+
+  void setTransparencyClearHistory(boolean transparency);
+
   interface TransferRecordListener {
     void onInstallApp(HighwayTransferRecordItem item);
 

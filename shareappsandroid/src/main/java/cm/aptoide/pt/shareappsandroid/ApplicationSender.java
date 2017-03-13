@@ -21,12 +21,24 @@ public class ApplicationSender {
 
   private static ApplicationSender instance;
   private Context context;
-  private SendListener listener;
+  private SendListener sendListener;
+  private HostsListener hostsListener;
   private boolean isHotspot;
   private String port;
   private String targetIPAddress;
   private BroadcastReceiver send;
+  private BroadcastReceiver hostsReceiver =
+      new BroadcastReceiver() {//todo extract to a ClientsManager class
+        @Override public void onReceive(Context context, Intent intent) {
+          if (intent.getAction() != null && intent.getAction().equals("SHOW_SEND_BUTTON")) {
+            hostsListener.onAvailableClients();
+          } else if (intent.getAction() != null && intent.getAction().equals("HIDE_SEND_BUTTON")) {
+            hostsListener.onNoClients();
+          }
+        }
+      };
   private IntentFilter intentFilter;
+  private IntentFilter hostsFilter;
 
   public ApplicationSender(Context context, boolean isHotspot) {
     this.context = context;
@@ -34,6 +46,12 @@ public class ApplicationSender {
     this.intentFilter = new IntentFilter();
     intentFilter.addAction("SENDAPP");
     intentFilter.addAction("ERRORSENDING");
+    if (isHotspot) {
+      hostsFilter = new IntentFilter();
+      hostsFilter.addAction("SHOW_SEND_BUTTON");
+      hostsFilter.addAction("HIDE_SEND_BUTTON");
+      context.registerReceiver(hostsReceiver, hostsFilter);
+    }
   }
 
   public static ApplicationSender getInstance(Context context, boolean isHotspot) {
@@ -58,14 +76,14 @@ public class ApplicationSender {
             int positionToReSend = intent.getIntExtra("positionToReSend", 100000);
 
             if (!isSent || needReSend) {
-              listener.onAppStartingToSend(appName, packageName, needReSend, isSent,
+              sendListener.onAppStartingToSend(appName, packageName, needReSend, isSent,
                   positionToReSend);
             } else {
               System.out.println("Application Sender : : : : Sent an App");
-              listener.onAppSent(appName, needReSend, isSent, false, positionToReSend);
+              sendListener.onAppSent(appName, needReSend, isSent, false, positionToReSend);
             }
           } else if (intent.getAction() != null && intent.getAction().equals("ERRORSENDING")) {
-            listener.onErrorSendingApp();
+            sendListener.onErrorSendingApp();
           }
         }
       };
@@ -95,8 +113,12 @@ public class ApplicationSender {
     return sendIntent;
   }
 
-  public void setListener(SendListener listener) {
-    this.listener = listener;
+  public void setSendListener(SendListener sendListener) {
+    this.sendListener = sendListener;
+  }
+
+  public void setHostsListener(HostsListener hostsListener) {
+    this.hostsListener = hostsListener;
   }
 
   public void reSendApp(List<App> appToResend, int position) {
@@ -110,19 +132,19 @@ public class ApplicationSender {
         String appName = intent.getStringExtra("appName");
         String packageName = intent.getStringExtra("packageName");
         int positionToReSend = intent.getIntExtra("positionToReSend", 100000);
-        listener.onAppSent(appName, needReSend, isSent, false, positionToReSend);
+        sendListener.onAppSent(appName, needReSend, isSent, false, positionToReSend);
       }
     };
   }
 
   public void stop() {
-    //removeListener();
+    //removeSendListeners();
+    //removeHostsListener();
   }
 
-  public void removeListener() {
-    if (listener != null) {
-      this.listener = null;
-      //unregister send
+  public void removeSendListener() {
+    if (sendListener != null) {
+      this.sendListener = null;
       try {
         context.unregisterReceiver(send);
       } catch (IllegalArgumentException e) {
@@ -130,8 +152,17 @@ public class ApplicationSender {
     }
   }
 
+  private void removeHostsListener() {
+    if (hostsListener != null) {
+      this.hostsListener = null;
+      try {
+        context.unregisterReceiver(hostsReceiver);
+      } catch (IllegalArgumentException e) {
+      }
+    }
+  }
+
   public interface SendListener {
-    //        void onAppSent(String appName);
 
     void onAppStartingToSend(String appName, String packageName, boolean needReSend, boolean isSent,
         int positionToReSend);
@@ -140,5 +171,12 @@ public class ApplicationSender {
         int positionToReSend);
 
     void onErrorSendingApp();
+  }
+
+  public interface HostsListener {
+
+    void onNoClients();
+
+    void onAvailableClients();
   }
 }

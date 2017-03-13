@@ -33,12 +33,12 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
   private static final int MAX_REVIEWS = 10;
   private static final int MAX_COMMENTS = 10;
 
-  private ListReviewsRequest(Body body, String baseHost) {
-    super(body, OkHttpClientFactory.getSingletonClient(new UserAgentGenerator() {
+  private ListReviewsRequest(Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST, OkHttpClientFactory.getSingletonClient(new UserAgentGenerator() {
       @Override public String generateUserAgent() {
         return SecurePreferences.getUserAgent();
       }
-    }, isDebug()), WebService.getDefaultConverter(), baseHost);
+    }, false), WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static ListReviewsRequest of(String storeName, String packageName,
@@ -52,9 +52,9 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
   public static ListReviewsRequest of(String storeName, String packageName, int maxReviews,
       int maxComments, BaseRequestWithStore.StoreCredentials storecredentials,
       BodyInterceptor bodyInterceptor) {
-    Body body = new Body(storeName, packageName, maxReviews, maxComments,
+    final Body body = new Body(storeName, packageName, maxReviews, maxComments,
         ManagerPreferences.getAndResetForceServerRefresh(), storecredentials);
-    return new ListReviewsRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
+    return new ListReviewsRequest(body, bodyInterceptor);
   }
 
   /**
@@ -68,8 +68,7 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
 
   @Override protected Observable<ListReviews> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    //bypassCache is not used, for reviews always get new data
-    return interfaces.listReviews(body, true);
+    return intercept(body).flatMapObservable(body -> interfaces.listReviews((Body) body, true));
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body

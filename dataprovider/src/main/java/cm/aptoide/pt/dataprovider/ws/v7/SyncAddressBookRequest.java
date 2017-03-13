@@ -2,6 +2,9 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.model.v7.GetFollowers;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.util.List;
 import lombok.Data;
 import rx.Observable;
@@ -17,44 +20,38 @@ public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequ
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
 
-  public SyncAddressBookRequest(Body body, String baseHost) {
-    super(body, baseHost);
+  public SyncAddressBookRequest(Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  public static SyncAddressBookRequest of(List<String> numbers, List<String> emails, BodyInterceptor bodyInterceptor) {
-
-    return new SyncAddressBookRequest(((SyncAddressBookRequest.Body) bodyInterceptor.intercept(
-        new Body(new Contacts(numbers, emails), null, null))), BASE_HOST);
+  public static SyncAddressBookRequest of(List<String> numbers, List<String> emails,
+      BodyInterceptor bodyInterceptor) {
+    return new SyncAddressBookRequest((new Body(new Contacts(numbers, emails), null, null)),
+        bodyInterceptor);
   }
 
   /**
    * This constructor was created in order to send user twitter info
-   *
-   * @param id
-   * @param token
-   * @param secret
-   * @param bodyInterceptor
-   * @return
    */
   public static SyncAddressBookRequest of(long id, String token, String secret,
       BodyInterceptor bodyInterceptor) {
-
-    return new SyncAddressBookRequest(((SyncAddressBookRequest.Body) bodyInterceptor.intercept(
-        new Body(null, new Twitter(id, token, secret), null))), BASE_HOST);
+    return new SyncAddressBookRequest(new Body(null, new Twitter(id, token, secret), null),
+        bodyInterceptor);
   }
 
   /**
    * This constructor was created to deal with facebook contacts request
    */
   public static SyncAddressBookRequest of(long id, String token, BodyInterceptor bodyInterceptor) {
-
-    return new SyncAddressBookRequest(((SyncAddressBookRequest.Body) bodyInterceptor.intercept(
-        new Body(null, null, new Facebook(id, token)))), BASE_HOST);
+    return new SyncAddressBookRequest(new Body(null, null, new Facebook(id, token)),
+        bodyInterceptor);
   }
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.setConnections(body);
+    return intercept(body).flatMapObservable(body -> interfaces.setConnections((Body) body));
   }
 
   @Data public static class Body extends BaseBody implements Endless {

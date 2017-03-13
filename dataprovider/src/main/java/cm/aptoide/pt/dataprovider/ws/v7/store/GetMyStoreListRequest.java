@@ -7,6 +7,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.store.ListStores;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,12 +24,10 @@ public class GetMyStoreListRequest extends V7<ListStores, GetMyStoreListRequest.
   private static boolean useEndless;
   @Nullable private String url;
 
-  public GetMyStoreListRequest(EndlessBody body, String baseHost) {
-    super(body, baseHost);
-  }
-
-  public GetMyStoreListRequest(String url, EndlessBody body, String baseHost) {
-    super(body, baseHost);
+  public GetMyStoreListRequest(String url, EndlessBody body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
     this.url = url;
   }
 
@@ -38,9 +39,8 @@ public class GetMyStoreListRequest extends V7<ListStores, GetMyStoreListRequest.
       BodyInterceptor bodyInterceptor) {
     GetMyStoreListRequest.useEndless = useEndless;
 
-    return new GetMyStoreListRequest(url,
-        (EndlessBody) bodyInterceptor.intercept(new EndlessBody(WidgetsArgs.createDefault())),
-        BASE_HOST);
+    return new GetMyStoreListRequest(url, new EndlessBody(WidgetsArgs.createDefault()),
+        bodyInterceptor);
   }
 
   @Override
@@ -52,9 +52,11 @@ public class GetMyStoreListRequest extends V7<ListStores, GetMyStoreListRequest.
       return interfaces.getMyStoreList(body, bypassCache);
     } else {
       if (useEndless) {
-        return interfaces.getMyStoreListEndless(url, body, bypassCache);
+        return intercept(body).flatMapObservable(
+            body -> interfaces.getMyStoreListEndless(url, (EndlessBody) body, bypassCache));
       } else {
-        return interfaces.getMyStoreList(url, body, bypassCache);
+        return intercept(body).flatMapObservable(
+            body -> interfaces.getMyStoreList(url, (Body) body, bypassCache));
       }
     }
   }

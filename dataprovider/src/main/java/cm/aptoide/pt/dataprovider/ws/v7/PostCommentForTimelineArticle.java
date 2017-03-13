@@ -2,6 +2,9 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.model.v7.SetComment;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,27 +20,28 @@ public class PostCommentForTimelineArticle
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
 
-  private PostCommentForTimelineArticle(Body body, String baseHost) {
-    super(body, baseHost);
+  private PostCommentForTimelineArticle(Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static PostCommentForTimelineArticle of(String timelineArticleId, String text,
       BodyInterceptor bodyInterceptor) {
     Body body = new Body(timelineArticleId, text);
-    return new PostCommentForTimelineArticle((Body) bodyInterceptor.intercept(body),
-        BASE_HOST);
+    return new PostCommentForTimelineArticle(body, bodyInterceptor);
   }
 
   public static PostCommentForTimelineArticle of(String timelineArticleId, long previousCommentId,
       String text, BodyInterceptor bodyInterceptor) {
     Body body = new Body(timelineArticleId, text, previousCommentId);
-    return new PostCommentForTimelineArticle((Body) bodyInterceptor.intercept(body),
-        BASE_HOST);
+    return new PostCommentForTimelineArticle(body, bodyInterceptor);
   }
 
   @Override
   protected Observable<SetComment> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.postTimelineComment(body, true);
+    return intercept(body).flatMapObservable(
+        body -> interfaces.postTimelineComment((Body) body, true));
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body

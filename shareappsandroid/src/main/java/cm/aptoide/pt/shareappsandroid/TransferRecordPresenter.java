@@ -55,6 +55,10 @@ public class TransferRecordPresenter implements Presenter {
         }
         analytics.receiveApkSuccess();
         view.showNewCard(item);
+
+        if (!view.getTransparencyClearHistory()) {
+          view.setTransparencyClearHistory(false);
+        }
       }
 
       @Override public void onErrorReceiving() {
@@ -74,7 +78,8 @@ public class TransferRecordPresenter implements Presenter {
       }
     });
     setTransferRecordListener();
-    applicationSender.setListener(new ApplicationSender.SendListener() {
+
+    applicationSender.setSendListener(new ApplicationSender.SendListener() {
       @Override public void onAppStartingToSend(String appName, String packageName, boolean isSent,
           boolean needReSend, int positionToReSend) {
         //need more, so that i can go find the apk info /drawable ,etc
@@ -105,12 +110,19 @@ public class TransferRecordPresenter implements Presenter {
                 listOfApps.get(i).setSent(isSent);
                 view.updateItemStatus(i, isSent, needReSend);
                 //                            i=-1;//to do only for the last app sent with this name.
+                if (!view.getTransparencyClearHistory()) {
+                  view.setTransparencyClearHistory(false);
+                }
               }
             }
           } else {
             //deal with final try to re-send
             listOfApps.get(positionToReSend).setNeedReSend(needReSend);
             listOfApps.get(positionToReSend).setSent(isSent);
+
+            if (!view.getTransparencyClearHistory()) {
+              view.setTransparencyClearHistory(false);
+            }
           }
         }
       }
@@ -119,6 +131,18 @@ public class TransferRecordPresenter implements Presenter {
         //handle error
         analytics.sendApkFailed();
         view.showGeneralErrorToast(isHotspot);
+      }
+    });
+
+    applicationSender.setHostsListener(new ApplicationSender.HostsListener() {
+      @Override public void onNoClients() {
+        view.setTransparencySend(true);
+      }
+
+      @Override public void onAvailableClients() {
+        if (!view.getTransparencySend()) {
+          view.setTransparencySend(false);
+        }
       }
     });
   }
