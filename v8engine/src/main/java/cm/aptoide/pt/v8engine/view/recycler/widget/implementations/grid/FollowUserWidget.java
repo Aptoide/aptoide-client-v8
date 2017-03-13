@@ -94,7 +94,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       final String storeTheme = V8Engine.getConfiguration().getDefaultTheme();
 
       final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager,
-          new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
+          new BaseBodyInterceptor(aptoideClientUUID, accountManager),
           new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class));
 
       Action1<Void> openStore = __ -> {

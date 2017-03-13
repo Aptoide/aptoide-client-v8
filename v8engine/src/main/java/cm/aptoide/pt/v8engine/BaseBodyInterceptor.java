@@ -6,6 +6,7 @@ import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.AccessTokenBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import rx.Single;
@@ -16,10 +17,10 @@ import rx.schedulers.Schedulers;
  */
 public class BaseBodyInterceptor implements BodyInterceptor {
 
-  private final String aptoideClientUUID;
+  private final AptoideClientUUID aptoideClientUUID;
   private final AptoideAccountManager accountManager;
 
-  public BaseBodyInterceptor(String aptoideClientUUID, AptoideAccountManager accountManager) {
+  public BaseBodyInterceptor(AptoideClientUUID aptoideClientUUID, AptoideAccountManager accountManager) {
     this.aptoideClientUUID = aptoideClientUUID;
     this.accountManager = accountManager;
   }
@@ -30,7 +31,7 @@ public class BaseBodyInterceptor implements BodyInterceptor {
         baseBody.setAccessToken(accountManager.getAccessToken());
       }
 
-      baseBody.setAptoideId(aptoideClientUUID);
+      baseBody.setAptoideId(aptoideClientUUID.getUniqueIdentifier());
       baseBody.setAptoideVercode(AptoideUtils.Core.getVerCode());
       baseBody.setCdn("pool");
       baseBody.setLang(Api.LANG);

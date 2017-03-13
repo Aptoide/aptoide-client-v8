@@ -21,12 +21,11 @@ public class AccountDynamicRequestFactory implements AccountRequestFactory {
       ChangeStoreSubscriptionResponse.StoreSubscriptionState subscription,
       AptoideAccountManager accountManager) {
     return ChangeStoreSubscriptionRequest.of(storeName, subscription, storeUserName, sha1Password,
-        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager));
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager));
   }
 
   @Override
   public SetUserRequest createSetUser(String access, AptoideAccountManager accountManager) {
-    return SetUserRequest.of(access, new BaseBodyInterceptor(aptoideClientUUID
-        .getUniqueIdentifier(), accountManager));
+    return SetUserRequest.of(access, new BaseBodyInterceptor(aptoideClientUUID, accountManager));
   }
 }

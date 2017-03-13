@@ -13,7 +13,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -92,18 +91,19 @@ public abstract class V8Engine extends DataProvider {
   public static void clearUserData(AptoideAccountManager accountManager) {
     AccessorFactory.getAccessorFor(Store.class).removeAll();
     StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null, accountManager,
-        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager),
         new StoreCredentialsProviderImpl());
     regenerateUserAgent(accountManager);
   }
 
   private static void regenerateUserAgent(final AptoideAccountManager accountManager) {
-    SecurePreferences.setUserAgent(
-        AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, new UserData() {
-          public String getEmail() {
-            return accountManager.getUserEmail();
-          }
-        }, AptoideUtils.Core.getDefaultVername(), getConfiguration().getPartnerId()));
+    Observable.just(null)
+        .observeOn(Schedulers.computation())
+        .doOnNext(o -> SecurePreferences.setUserAgent(
+            AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID,
+                () -> accountManager.getUserEmail(), AptoideUtils.Core.getDefaultVername(),
+                getConfiguration().getPartnerId())))
+        .subscribe();
   }
 
   /**
@@ -184,7 +184,7 @@ public abstract class V8Engine extends DataProvider {
           }
         } else {
           final BaseBodyInterceptor bodyInterceptor =
-              new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+              new BaseBodyInterceptor(aptoideClientUUID, accountManager);
 
           final StoreCredentialsProviderImpl storeCredentials = new StoreCredentialsProviderImpl();
 

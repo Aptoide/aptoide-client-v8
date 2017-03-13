@@ -2,12 +2,12 @@ package cm.aptoide.pt.viewRateAndCommentReviews;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -38,13 +38,12 @@ class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<Li
 
     List<Review> reviews = listFullReviews.getDatalist().getList();
     List<Displayable> displayables = new LinkedList<>();
-    final String aptoideClientUuid = aptoideClientUUID.getUniqueIdentifier();
 
     Observable.from(reviews)
         .flatMap(review -> ListCommentsRequest.of( // fetch the list of comments for each review
             review.getComments().getView(), review.getId(), 3,
             StoreUtils.getStoreCredentials(fragment.getStoreName(), storeCredentialsProvider), true,
-            new BaseBodyInterceptor(aptoideClientUuid, accountManager))
+            new BaseBodyInterceptor(aptoideClientUUID, accountManager))
             .observe()
             .subscribeOn(Schedulers.io()) // parallel I/O split point
             .map(listComments -> {

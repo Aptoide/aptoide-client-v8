@@ -125,7 +125,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
         timelineAnalytics, socialRepository,
         new DownloadEventConverter(bodyInterceptor),
         new InstallEventConverter(
-            new BaseBodyInterceptor(idsRepository.getUniqueIdentifier(), accountManager)), Analytics.getInstance(),
+            new BaseBodyInterceptor(idsRepository, accountManager)), Analytics.getInstance(),
         accountManager, idsRepository, appUpdate.getStore().getAppearance().getTheme());
   }
 

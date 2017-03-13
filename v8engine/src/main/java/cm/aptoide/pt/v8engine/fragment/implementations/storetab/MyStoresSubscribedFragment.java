@@ -51,7 +51,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
     aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     bodyInterceptor =
-        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager);
   }
 
   @Override protected V7<ListStores, ? extends Endless> buildRequest(boolean refresh, String url) {

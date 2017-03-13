@@ -77,7 +77,7 @@ public class MainActivity extends TabNavigatorActivity implements MainView, Frag
     final IdsRepositoryImpl aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
     storeUtilsProxy = new StoreUtilsProxy(accountManager,
-        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager),
         new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class));
     final AutoUpdate autoUpdate =
         new AutoUpdate(this, new InstallerFactory().create(this, InstallerFactory.DEFAULT),

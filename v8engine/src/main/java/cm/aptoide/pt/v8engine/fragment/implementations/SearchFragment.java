@@ -23,11 +23,11 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.SearchPagerAdapter;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -97,7 +97,15 @@ public class SearchFragment extends BasePagerToolbarFragment {
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
     accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
-    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID, accountManager);
+  }
+
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+
+    query = args.getString(BundleCons.QUERY);
+    storeName = args.getString(BundleCons.STORE_NAME);
+    onlyTrustedApps = args.getBoolean(BundleCons.ONLY_TRUSTED, false);
   }
 
   @Override public void bindViews(View view) {
@@ -311,20 +319,22 @@ public class SearchFragment extends BasePagerToolbarFragment {
     return R.layout.global_search_fragment;
   }
 
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-
-    query = args.getString(BundleCons.QUERY);
-    storeName = args.getString(BundleCons.STORE_NAME);
-    onlyTrustedApps = args.getBoolean(BundleCons.ONLY_TRUSTED, false);
-  }
-
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
 
     outState.putString(BundleCons.QUERY, query);
     outState.putString(BundleCons.STORE_NAME, storeName);
     outState.putInt(BundleCons.SELECTED_BUTTON, selectedButton);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int i = item.getItemId();
+
+    if (i == android.R.id.home) {
+      getActivity().onBackPressed();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -336,16 +346,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
     } else {
       SearchUtils.setupGlobalSearchView(menu, this);
     }
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int i = item.getItemId();
-
-    if (i == android.R.id.home) {
-      getActivity().onBackPressed();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
