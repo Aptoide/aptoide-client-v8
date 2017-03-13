@@ -100,7 +100,7 @@ public interface FragmentProvider {
 
   Fragment newAppsTimelineFragment(String action, Long userId);
 
-  Fragment newSubscribedStoresFragment(Event event, String title, String storeTheme, String tag);
+  Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag);
 
   Fragment newSearchPagerTabFragment(String query, boolean subscribedStores,
       boolean hasMultipleFragments);

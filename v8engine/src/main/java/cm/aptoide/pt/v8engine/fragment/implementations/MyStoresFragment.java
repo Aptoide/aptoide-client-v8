@@ -1,16 +1,20 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.storetab.GetStoreWidgetsFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FollowStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import rx.Observable;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -20,10 +24,8 @@ import rx.android.schedulers.AndroidSchedulers;
 public class MyStoresFragment extends GetStoreWidgetsFragment {
 
   private static final String TAG = MyStoresFragment.class.getSimpleName();
-  private Subscription subscription;
 
-  public static MyStoresFragment newInstance(Event event, String title, String storeTheme,
-      String tag) {
+  public static MyStoresFragment newInstance(Event event, String storeTheme, String tag) {
     // TODO: 28-12-2016 neuro ia saltando um preguito com este null lolz
     Bundle args = buildBundle(event, null, storeTheme, tag, null);
     MyStoresFragment fragment = new MyStoresFragment();
@@ -32,49 +34,7 @@ public class MyStoresFragment extends GetStoreWidgetsFragment {
   }
 
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
-    Observable<List<Displayable>> widgetList =
-        super.buildDisplayables(refresh, url).map(list -> addFollowStoreDisplayable(list));
-    return widgetList;
-  }
-
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    if (subscription == null || subscription.isUnsubscribed()) {
-      subscription = storeRepository.getAll()
-          .distinct()
-          .observeOn(AndroidSchedulers.mainThread())
-          .skip(1)
-          .compose(bindUntilEvent(LifecycleEvent.DESTROY))
-          .subscribe(stores -> {
-            Logger.d(TAG, "Store database changed, reloading...");
-            super.load(false, true, null);
-          });
-    }
-    super.load(create, refresh, savedInstanceState);
-
-    /*
-    if (create || refresh) {
-
-      String url = "";
-      AptoideAccountManager accountManager =
-          ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-
-      AptoideClientUUID aptoideClientUUID =
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-
-      GetMyStoreListRequest.of(url, accountManager.getAccessToken(),
-          aptoideClientUUID.getUniqueIdentifier())
-          .observe(refresh)
-          .observeOn(Schedulers.io())
-          .filter(data -> data.isOk() && data.getDatalist().getCount() > 0)
-          .map(list -> list.getDatalist().getList())
-          .flatMapIterable(list -> list)
-          .map(store -> Store.from(store))
-          .subscribe(listStores -> {
-              // save stores
-              storeRepository.saveAll(listStores);
-          }, err -> CrashReport.getInstance().log(err));
-    }
-    */
+    return super.buildDisplayables(refresh, url).map(list -> addFollowStoreDisplayable(list));
   }
 
   private List<Displayable> addFollowStoreDisplayable(List<Displayable> displayables) {
@@ -101,5 +61,41 @@ public class MyStoresFragment extends GetStoreWidgetsFragment {
           .remove(displayableList.size() - 1);
     }
     return displayables;
+  }
+
+  @Override public void onViewCreated() {
+    super.onViewCreated();
+    registerForViewChanges();
+  }
+
+  private void registerForViewChanges() {
+    AptoideAccountManager accountManager =
+        ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+
+    Observable<Boolean> loginObservable = accountManager.loginStatus().doOnNext(__ -> reloadData());
+
+    Observable<List<Store>> storesObservable =
+        storeRepository.getAll().distinct().debounce(1, TimeUnit.MINUTES).doOnNext(__ -> {
+          Logger.d(TAG, "Store database changed, reloading...");
+          reloadData();
+        });
+
+    //
+    // until this fragment is destroyed we listen for DB changes and login state changes
+    // to reload the stores that we are showing
+    //
+    Observable.merge(loginObservable, storesObservable)
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe();
+  }
+
+  private void reloadData() {
+    //
+    // this call "magically" gets the store from db (again) and does a WS call to get the
+    // most recent subscribed stores, updating the DB (redundancy?) and showing the
+    // remote stores
+    //
+    super.load(false, true, null);
   }
 }

@@ -34,6 +34,7 @@ import java.lang.ref.WeakReference;
 import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -85,7 +86,7 @@ public class AptoideAccountManager {
   }
 
   public Observable<Boolean> loginStatus() {
-    return loginStatusRelay.startWith(isLoggedIn());
+    return loginStatusRelay.startWith(isLoggedIn()).distinctUntilChanged();
   }
 
   public boolean isLoggedIn() {
@@ -97,10 +98,10 @@ public class AptoideAccountManager {
 
   /**
    * Use {@link #getAccountAsync()} method instead.
+   *
    * @return user Account
    */
-  @Deprecated
-  public Account getAccount() {
+  @Deprecated public Account getAccount() {
     Account account = weakRefAccount.get();
     if (account != null) {
       return account;
@@ -216,8 +217,19 @@ public class AptoideAccountManager {
     }).onErrorReturn(throwable -> null).toBlocking().value();
   }
 
+  /**
+   * This method uses a 200 millis delay due to other bugs in the app (such as improper component
+   * lifecycle in most fragments). After the proper component lifecycle is done, remove this delay.
+   *
+   * @param isLoggedIn boolean that indicates the current state of the user log in. This will
+   * propagate to all listeners of {@link #loginStatus()}
+   */
   private void sendLoginEvent(boolean isLoggedIn) {
-    loginStatusRelay.call(isLoggedIn);
+    Observable.timer(650, TimeUnit.MILLISECONDS)
+        .doOnNext(__ -> loginStatusRelay.call(isLoggedIn))
+        .subscribe();
+
+    //loginStatusRelay.call(isLoggedIn);
   }
 
   public Completable refreshAccountToken() {
