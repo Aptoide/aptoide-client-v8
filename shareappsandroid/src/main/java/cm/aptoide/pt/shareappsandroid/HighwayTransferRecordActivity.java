@@ -84,6 +84,7 @@ public class HighwayTransferRecordActivity extends ActivityView
     send = (LinearLayout) findViewById(R.id.TransferRecordSendLayout);
     clearHistory = (LinearLayout) findViewById(R.id.TransferRecordClearLayout);
     mToolbar = (Toolbar) findViewById(R.id.shareAppsToolbar);
+
     analytics = ShareApps.getAnalytics();
 
     setUpToolbar();
@@ -112,10 +113,13 @@ public class HighwayTransferRecordActivity extends ActivityView
     nickname = getIntent().getStringExtra("nickname");
 
     if (isHotspot) {
+      setTransparencySend(true);
       welcomeText.setText(this.getResources().getString(R.string.created_group, nickname));
     } else {
       welcomeText.setText(this.getResources().getString(R.string.joined_group, nickname));
     }
+    setTransparencyClearHistory(true);
+
     receivedAppListView.setVisibility(View.GONE);
 
     //        Intent receiveIntent = null;
@@ -222,8 +226,6 @@ public class HighwayTransferRecordActivity extends ActivityView
     startService(sendIntent);
   }
 
-  //method to check apk archive's similar to receive
-
   public String checkIfHasObb(String appName) {
     boolean hasObb = false;
     String obbsFilePath = "noObbs";
@@ -245,8 +247,6 @@ public class HighwayTransferRecordActivity extends ActivityView
     }
     return obbsFilePath;
   }
-
-  //method to send (startSErvice with action send
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int i = item.getItemId();
@@ -332,6 +332,8 @@ public class HighwayTransferRecordActivity extends ActivityView
     }
   }
 
+  //method to check apk archive's similar to receive
+
   public void resendOutside(String name,
       String filePath) {//file to deal with the re-send from outside
 
@@ -358,55 +360,6 @@ public class HighwayTransferRecordActivity extends ActivityView
       }
     }
   }
-
-  //    public void installApp(String filePath) {
-  //        System.out.println("TransferRecordActivity : going to install the app with the following filepath : " + filePath);
-  //        File f = new File(filePath);
-  ////        Intent install = new Intent(Intent.ACTION_VIEW).setDataAndType(Uri.parse(filePath), "application/vnd.android.package-archive");
-  //        Intent install = new Intent(Intent.ACTION_VIEW).setDataAndType(Uri.fromFile(f), "application/vnd.android.package-archive");
-  //        System.out.println("TransferRecordACtivity going tos tart the intent - created this intent aqui  - supostamente e para instalar.");
-  //        startActivity(install);
-  //        System.out.println("Just started the activity for the install !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-  //    }
-
-  //    public void deleteAppFile(String filePath) {
-  //
-  //        File fdelete = new File(filePath);
-  //        if (fdelete.exists()) {
-  //            if (fdelete.delete()) {
-  //                System.out.println("[TransferRecordActivity] file Deleted !!|!|!!|!|!|!|!|!|!|!|!|!|!|!|!|!|:" + filePath);
-  //            } else {
-  //                System.out.println("[TransferREcordActivity] file not Deleted !!|!|!|!|!|!|!|!|!|!|!|!|!|!|!|!|! :" + filePath);
-  //            }
-  //        }
-  //    }
-
-  //    public void sendFiles(List<App> list, int positionToReSend) { //this method is onyl used on the customAdapter for the re-send
-  //        Intent sendIntent = null;
-  //        if (isHotspot) {
-  //            System.out.println("HIGHWAY APP SELECTION ACTIVITY I will try to send a message and i am a hostpot");
-  //            sendIntent = new Intent(this, HighwayServerComm.class);
-  //        } else {
-  //            System.out.println("HIGHWAY APP SELECTION ACTIVITY I will try to send a message and i am NOT NOT NOT NOT a hotspot");
-  //            sendIntent = new Intent(this, HighwayClientComm.class);
-  //            sendIntent.putExtra("targetIP", targetIPAddress);
-  //
-  //        }
-  //        sendIntent.putExtra("port", porto);
-  //        System.out.println("App selection activity  : o bool do isHotspot : " + isHotspot);
-  //        sendIntent.putExtra("isHotspot", isHotspot);
-  //
-  ////        sendIntent.putExtra("fromOutside",outsideShare);
-  //
-  //        sendIntent.putExtra("positionToReSend", positionToReSend);
-  //        Bundle tmp = new Bundle();
-  //        tmp.putParcelableArrayList("listOfAppsToInstall", new ArrayList<Parcelable>(list));//change listOfAppsToInstall to listOfAppsTOSend
-  //        sendIntent.putExtra("bundle", tmp);
-  //
-  //
-  //        sendIntent.setAction("SEND");
-  //        startService(sendIntent);
-  //    }
 
   private void sendOutside(String name, String filePath) {
     PackageInfo packageInfo = packageManager.getPackageArchiveInfo(filePath, 0);
@@ -549,6 +502,55 @@ public class HighwayTransferRecordActivity extends ActivityView
     }
   }
 
+  //    public void installApp(String filePath) {
+  //        System.out.println("TransferRecordActivity : going to install the app with the following filepath : " + filePath);
+  //        File f = new File(filePath);
+  ////        Intent install = new Intent(Intent.ACTION_VIEW).setDataAndType(Uri.parse(filePath), "application/vnd.android.package-archive");
+  //        Intent install = new Intent(Intent.ACTION_VIEW).setDataAndType(Uri.fromFile(f), "application/vnd.android.package-archive");
+  //        System.out.println("TransferRecordACtivity going tos tart the intent - created this intent aqui  - supostamente e para instalar.");
+  //        startActivity(install);
+  //        System.out.println("Just started the activity for the install !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+  //    }
+
+  //    public void deleteAppFile(String filePath) {
+  //
+  //        File fdelete = new File(filePath);
+  //        if (fdelete.exists()) {
+  //            if (fdelete.delete()) {
+  //                System.out.println("[TransferRecordActivity] file Deleted !!|!|!!|!|!|!|!|!|!|!|!|!|!|!|!|!|:" + filePath);
+  //            } else {
+  //                System.out.println("[TransferREcordActivity] file not Deleted !!|!|!|!|!|!|!|!|!|!|!|!|!|!|!|!|! :" + filePath);
+  //            }
+  //        }
+  //    }
+
+  //    public void sendFiles(List<App> list, int positionToReSend) { //this method is onyl used on the customAdapter for the re-send
+  //        Intent sendIntent = null;
+  //        if (isHotspot) {
+  //            System.out.println("HIGHWAY APP SELECTION ACTIVITY I will try to send a message and i am a hostpot");
+  //            sendIntent = new Intent(this, HighwayServerComm.class);
+  //        } else {
+  //            System.out.println("HIGHWAY APP SELECTION ACTIVITY I will try to send a message and i am NOT NOT NOT NOT a hotspot");
+  //            sendIntent = new Intent(this, HighwayClientComm.class);
+  //            sendIntent.putExtra("targetIP", targetIPAddress);
+  //
+  //        }
+  //        sendIntent.putExtra("port", porto);
+  //        System.out.println("App selection activity  : o bool do isHotspot : " + isHotspot);
+  //        sendIntent.putExtra("isHotspot", isHotspot);
+  //
+  ////        sendIntent.putExtra("fromOutside",outsideShare);
+  //
+  //        sendIntent.putExtra("positionToReSend", positionToReSend);
+  //        Bundle tmp = new Bundle();
+  //        tmp.putParcelableArrayList("listOfAppsToInstall", new ArrayList<Parcelable>(list));//change listOfAppsToInstall to listOfAppsTOSend
+  //        sendIntent.putExtra("bundle", tmp);
+  //
+  //
+  //        sendIntent.setAction("SEND");
+  //        startService(sendIntent);
+  //    }
+
   private void sendDisconnectMessage() {
     Intent disconnect = new Intent(this, HighwayClientService.class);
     disconnect.setAction("DISCONNECT");
@@ -677,27 +679,6 @@ public class HighwayTransferRecordActivity extends ActivityView
     super.onDestroy();
   }
 
-  //    private void deleteAllApps() {
-  //        toRemoveList = new ArrayList<>();
-  //
-  //        for (int i = 0; i < listOfItems.size(); i++) {
-  //
-  //            if (listOfItems.get(i).isSent() || listOfItems.get(i).isReceived()) {//no isSending or need resend
-  //
-  //                toRemoveList.add(listOfItems.get(i));
-  //                listOfItems.get(i).setDeleted(true);
-  //
-  //                if (listOfItems.get(i).isReceived()) {
-  //
-  //                    String tmpFilePath = listOfItems.get(i).getFilePath();
-  //                    System.out.println("GOing to delete this filepath : " + tmpFilePath);
-  //                    deleteAppFile(tmpFilePath);
-  //
-  //                }
-  //            }
-  //        }
-  //    }
-
   @Override public void setUpSendButtonListener() {
     send.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
@@ -730,6 +711,27 @@ public class HighwayTransferRecordActivity extends ActivityView
       adapter.addTransferedItem(item);
     }
   }
+
+  //    private void deleteAllApps() {
+  //        toRemoveList = new ArrayList<>();
+  //
+  //        for (int i = 0; i < listOfItems.size(); i++) {
+  //
+  //            if (listOfItems.get(i).isSent() || listOfItems.get(i).isReceived()) {//no isSending or need resend
+  //
+  //                toRemoveList.add(listOfItems.get(i));
+  //                listOfItems.get(i).setDeleted(true);
+  //
+  //                if (listOfItems.get(i).isReceived()) {
+  //
+  //                    String tmpFilePath = listOfItems.get(i).getFilePath();
+  //                    System.out.println("GOing to delete this filepath : " + tmpFilePath);
+  //                    deleteAppFile(tmpFilePath);
+  //
+  //                }
+  //            }
+  //        }
+  //    }
 
   @Override public void updateItemStatus(int positionToReSend, boolean isSent, boolean needReSend) {
     if (adapter != null) {
@@ -901,6 +903,34 @@ public class HighwayTransferRecordActivity extends ActivityView
 
   @Override public void clearAdapter() {
     adapter.clearListOfItems();
+  }
+
+  public boolean getTransparencySend() {
+    return send.isEnabled();
+  }
+
+  public void setTransparencySend(boolean transparent) {
+    if (transparent) {
+      send.setAlpha(0.3f);
+      send.setEnabled(false);
+    } else {
+      send.setAlpha(1);
+      send.setEnabled(true);
+    }
+  }
+
+  public boolean getTransparencyClearHistory() {
+    return clearHistory.isEnabled();
+  }
+
+  public void setTransparencyClearHistory(boolean transparent) {
+    if (transparent) {
+      clearHistory.setAlpha(.3f);
+      clearHistory.setEnabled(false);
+    } else {
+      clearHistory.setAlpha(1);
+      clearHistory.setEnabled(true);
+    }
   }
 
   private Dialog createDialogToDelete(final HighwayTransferRecordItem item) {
