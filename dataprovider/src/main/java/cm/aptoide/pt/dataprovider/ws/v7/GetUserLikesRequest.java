@@ -13,21 +13,20 @@ import rx.Observable;
  */
 
 public class GetUserLikesRequest extends V7<GetFollowers, GetUserLikesRequest.Body> {
-  protected GetUserLikesRequest(Body body, String baseHost) {
-    super(body, baseHost,
+  protected GetUserLikesRequest(Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static GetUserLikesRequest of(String cardUid, BodyInterceptor bodyInterceptor) {
-
-    return new GetUserLikesRequest(((Body) bodyInterceptor.intercept(new Body(cardUid))),
-        BASE_HOST);
+    return new GetUserLikesRequest(new Body(cardUid), bodyInterceptor);
   }
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getCardUserLikes(body, bypassCache);
+    return intercept(body).flatMapObservable(
+        body -> interfaces.getCardUserLikes((Body) body, bypassCache));
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody

@@ -24,10 +24,10 @@ public class GetMyStoreListRequest extends V7<ListStores, GetMyStoreListRequest.
   private static boolean useEndless;
   @Nullable private String url;
 
-  public GetMyStoreListRequest(String url, EndlessBody body, String baseHost) {
-    super(body, baseHost,
+  public GetMyStoreListRequest(String url, EndlessBody body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
     this.url = url;
   }
 
@@ -39,9 +39,8 @@ public class GetMyStoreListRequest extends V7<ListStores, GetMyStoreListRequest.
       BodyInterceptor bodyInterceptor) {
     GetMyStoreListRequest.useEndless = useEndless;
 
-    return new GetMyStoreListRequest(url,
-        (EndlessBody) bodyInterceptor.intercept(new EndlessBody(WidgetsArgs.createDefault())),
-        BASE_HOST);
+    return new GetMyStoreListRequest(url, new EndlessBody(WidgetsArgs.createDefault()),
+        bodyInterceptor);
   }
 
   @Override
@@ -53,9 +52,11 @@ public class GetMyStoreListRequest extends V7<ListStores, GetMyStoreListRequest.
       return interfaces.getMyStoreList(body, bypassCache);
     } else {
       if (useEndless) {
-        return interfaces.getMyStoreListEndless(url, body, bypassCache);
+        return intercept(body).flatMapObservable(
+            body -> interfaces.getMyStoreListEndless(url, (EndlessBody) body, bypassCache));
       } else {
-        return interfaces.getMyStoreList(url, body, bypassCache);
+        return intercept(body).flatMapObservable(
+            body -> interfaces.getMyStoreList(url, (Body) body, bypassCache));
       }
     }
   }

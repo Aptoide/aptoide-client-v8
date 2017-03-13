@@ -26,36 +26,29 @@ import rx.Observable;
   private static final int LINES_PER_REQUEST = 6;
   private String url;
 
-  private ListAppsRequest(String url, Body body) {
-    super(body, OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+  private ListAppsRequest(String url, Body body, BodyInterceptor bodyInterceptor) {
+    super(body,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
     this.url = url;
-  }
-
-  private ListAppsRequest(Body body) {
-    super(body, OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
   }
 
   public static ListAppsRequest ofAction(String url, StoreCredentials storeCredentials,
       BodyInterceptor bodyInterceptor) {
     V7Url listAppsV7Url = new V7Url(url).remove("listApps");
     if (listAppsV7Url.containsLimit()) {
-      return new ListAppsRequest(listAppsV7Url.get(),
-          (Body) bodyInterceptor.intercept(new Body(storeCredentials)));
+      return new ListAppsRequest(listAppsV7Url.get(), new Body(storeCredentials), bodyInterceptor);
     } else {
-      return new ListAppsRequest(listAppsV7Url.get(), (Body) bodyInterceptor.intercept(
-          new Body(storeCredentials, Type.APPS_GROUP.getPerLineCount() * LINES_PER_REQUEST)));
+      return new ListAppsRequest(listAppsV7Url.get(),
+          new Body(storeCredentials, Type.APPS_GROUP.getPerLineCount() * LINES_PER_REQUEST),
+          bodyInterceptor);
     }
-  }
-
-  public static ListAppsRequest of(int groupId) {
-    return new ListAppsRequest(new Body(groupId));
   }
 
   @Override
   protected Observable<ListApps> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.listApps(url != null ? url : "", body, bypassCache);
+    return intercept(body).flatMapObservable(
+        body -> interfaces.listApps(url != null ? url : "", (Body) body, bypassCache));
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithStore

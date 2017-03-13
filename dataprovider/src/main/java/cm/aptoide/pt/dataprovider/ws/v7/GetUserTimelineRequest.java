@@ -13,8 +13,6 @@ import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -26,30 +24,25 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
 
   private String url;
 
-  GetUserTimelineRequest(String url, Body body, String baseHost) {
-    super(body, baseHost,
+  GetUserTimelineRequest(String url, Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
-    this.url = url;
-  }
-
-  GetUserTimelineRequest(String url, Body body, OkHttpClient httpClient,
-      Converter.Factory converterFactory, String baseHost) {
-    super(body, baseHost, httpClient, converterFactory);
+        WebService.getDefaultConverter(), bodyInterceptor);
     this.url = url;
   }
 
   public static GetUserTimelineRequest of(String url, Integer limit, int offset,
       List<String> packages, BodyInterceptor bodyInterceptor) {
 
-    GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(url,
-        (Body) bodyInterceptor.intercept(new Body(limit, offset, packages)), BASE_HOST);
+    GetUserTimelineRequest getAppRequest =
+        new GetUserTimelineRequest(url, new Body(limit, offset, packages), bodyInterceptor);
     return getAppRequest;
   }
 
   @Override protected Observable<GetUserTimeline> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getUserTimeline(url, body, bypassCache);
+    return intercept(body).flatMapObservable(
+        body -> interfaces.getUserTimeline(url, (Body) body, bypassCache));
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithAlphaBetaKey

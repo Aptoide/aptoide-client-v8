@@ -29,28 +29,29 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
   static final String STORT_BY_DOWNLOADS = "downloads7d";
   private String url;
 
-  private ListStoresRequest(String url, Body body, String baseHost) {
+  private ListStoresRequest(String url, Body body, String baseHost,
+      BodyInterceptor bodyInterceptor) {
     super(body, baseHost,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
     this.url = url;
   }
 
-  private ListStoresRequest(Body body, String baseHost) {
+  private ListStoresRequest(Body body, String baseHost, BodyInterceptor bodyInterceptor) {
     super(body, baseHost,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   private ListStoresRequest(String url, OkHttpClient httpClient, Converter.Factory converterFactory,
-      Body body, String baseHost) {
-    super(body, baseHost, httpClient, converterFactory);
+      Body body, String baseHost, BodyInterceptor bodyInterceptor) {
+    super(body, baseHost, httpClient, converterFactory, bodyInterceptor);
     this.url = url;
   }
 
   private ListStoresRequest(OkHttpClient httpClient, Converter.Factory converterFactory, Body body,
-      String baseHost) {
-    super(body, baseHost, httpClient, converterFactory);
+      String baseHost, BodyInterceptor bodyInterceptor) {
+    super(body, baseHost, httpClient, converterFactory, bodyInterceptor);
   }
 
   public static ListStoresRequest ofTopStores(int offset, int limit, String accessToken,
@@ -59,7 +60,7 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
     final Body baseBody = new Body();
     baseBody.setOffset(offset);
     baseBody.limit = limit;
-    return new ListStoresRequest((Body) bodyInterceptor.intercept(baseBody), BASE_HOST);
+    return new ListStoresRequest(baseBody, BASE_HOST, bodyInterceptor);
   }
 
   public static ListStoresRequest ofAction(String url, BodyInterceptor bodyInterceptor) {
@@ -68,16 +69,17 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
     if (!url.startsWith("/")) {
       url = "/" + url;
     }
-    return new ListStoresRequest(url, (Body) bodyInterceptor.intercept(new Body()),
-        BASE_HOST);
+    return new ListStoresRequest(url, new Body(), BASE_HOST, bodyInterceptor);
   }
 
   @Override
   protected Observable<ListStores> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
     if (TextUtils.isEmpty(url)) {
-      return interfaces.listTopStores(STORT_BY_DOWNLOADS, 10, body, bypassCache);
+      return intercept(body).flatMapObservable(
+          body -> interfaces.listTopStores(STORT_BY_DOWNLOADS, 10, (Body) body, bypassCache));
     } else {
-      return interfaces.listStores(url, body, bypassCache);
+      return intercept(body).flatMapObservable(
+          body -> interfaces.listStores(url, (Body) body, bypassCache));
     }
   }
 

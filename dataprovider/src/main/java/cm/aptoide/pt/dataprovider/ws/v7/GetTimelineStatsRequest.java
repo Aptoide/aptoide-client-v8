@@ -14,19 +14,20 @@ import rx.Observable;
 
 public class GetTimelineStatsRequest extends V7<TimelineStats, GetTimelineStatsRequest.Body> {
 
-  protected GetTimelineStatsRequest(GetTimelineStatsRequest.Body body, String baseHost) {
-    super(body, baseHost,
+  protected GetTimelineStatsRequest(Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static GetTimelineStatsRequest of(BodyInterceptor bodyInterceptor, Long userId) {
-    return new GetTimelineStatsRequest((Body) bodyInterceptor.intercept(new Body(userId)), BASE_HOST);
+    return new GetTimelineStatsRequest(new Body(userId), bodyInterceptor);
   }
 
   @Override protected Observable<TimelineStats> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getTimelineStats(body, bypassCache);
+    return intercept(body).flatMapObservable(
+        body -> interfaces.getTimelineStats((Body) body, bypassCache));
   }
 
   @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {

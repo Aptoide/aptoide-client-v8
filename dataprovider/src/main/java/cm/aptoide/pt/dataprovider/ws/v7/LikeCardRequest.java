@@ -20,30 +20,29 @@ public class LikeCardRequest extends V7<BaseV7Response, LikeCardRequest.Body> {
       + "://"
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
-  private final String accessToken;
   private final String cardId;
   private final int rating;
 
-  public LikeCardRequest(Body body, String baseHost, String accessToken, String cardId, int rating) {
-    super(body, baseHost,
+  public LikeCardRequest(Body body, String cardId, int rating, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
-    this.accessToken = accessToken;
+        WebService.getDefaultConverter(), bodyInterceptor);
     this.cardId = cardId;
     this.rating = rating;
   }
 
-  public static LikeCardRequest of(TimelineCard timelineCard, String cardType, String ownerHash, int rating, BodyInterceptor bodyInterceptor,
-      String accessToken) {
-    LikeCardRequest.Body body = new LikeCardRequest.Body();
-
-    return new LikeCardRequest((LikeCardRequest.Body) bodyInterceptor.intercept(body),
-        BASE_HOST, accessToken, timelineCard.getCardId(), rating);
+  public static LikeCardRequest of(TimelineCard timelineCard, String cardType, String ownerHash,
+      int rating, BodyInterceptor bodyInterceptor) {
+    final LikeCardRequest.Body body = new LikeCardRequest.Body();
+    return new LikeCardRequest(body, timelineCard.getCardId(), rating,
+        bodyInterceptor);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.setReview(body, cardId, accessToken, String.valueOf(rating), true);
+    return intercept(body).flatMapObservable(
+        body -> interfaces.setReview((Body) body, cardId, body.getAccessToken(),
+            String.valueOf(rating), true));
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body

@@ -15,18 +15,19 @@ import rx.Observable;
 
 public class GetMyStoreMetaRequest extends V7<GetStoreMeta, BaseBody> {
 
-  public GetMyStoreMetaRequest(BaseBody body, String baseHost) {
+  public GetMyStoreMetaRequest(BaseBody body, String baseHost, BodyInterceptor bodyInterceptor) {
     super(body, baseHost,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static GetMyStoreMetaRequest of(BodyInterceptor bodyInterceptor) {
-    return new GetMyStoreMetaRequest(bodyInterceptor.intercept(new BaseBody()), BASE_HOST);
+    return new GetMyStoreMetaRequest(new BaseBody(), BASE_HOST, bodyInterceptor);
   }
 
   @Override protected Observable<GetStoreMeta> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getMyStoreMeta(body, bypassCache);
+    return intercept(body).flatMapObservable(
+        body -> interfaces.getMyStoreMeta((BaseBody) body, bypassCache));
   }
 }

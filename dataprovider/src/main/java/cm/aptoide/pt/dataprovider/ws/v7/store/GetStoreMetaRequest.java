@@ -15,20 +15,20 @@ import rx.Observable;
 public class GetStoreMetaRequest
     extends BaseRequestWithStore<GetStoreMeta, GetHomeMetaRequest.Body> {
 
-  public GetStoreMetaRequest(GetHomeMetaRequest.Body body) {
-    super(body, OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+  public GetStoreMetaRequest(GetHomeMetaRequest.Body body, BodyInterceptor bodyInterceptor) {
+    super(body,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static GetStoreMetaRequest of(StoreCredentials storeCredentials,
       BodyInterceptor bodyInterceptor) {
-
-    return new GetStoreMetaRequest((GetHomeMetaRequest.Body) bodyInterceptor.intercept(
-        new GetHomeMetaRequest.Body(storeCredentials)));
+    return new GetStoreMetaRequest(new GetHomeMetaRequest.Body(storeCredentials), bodyInterceptor);
   }
 
   @Override protected Observable<GetStoreMeta> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getStoreMeta(body, bypassCache);
+    return intercept(body).flatMapObservable(
+        body -> interfaces.getStoreMeta((GetHomeMetaRequest.Body) body, bypassCache));
   }
 }

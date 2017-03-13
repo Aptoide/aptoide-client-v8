@@ -26,7 +26,6 @@ import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.ListComments;
-import cm.aptoide.pt.model.v7.ListFullComments;
 import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.model.v7.ListSearchApps;
@@ -42,10 +41,8 @@ import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
@@ -63,6 +60,7 @@ import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Url;
 import rx.Observable;
+import rx.Single;
 import rx.schedulers.Schedulers;
 
 /**
@@ -75,13 +73,20 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
       + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
       + "/api/7/";
   @Getter protected final B body;
+  private final BodyInterceptor bodyInterceptor;
   private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
   private final int MAX_RETRY_COUNT = 3;
   private boolean accessTokenRetry = false;
 
-  protected V7(B body, String baseHost, OkHttpClient httpClient, Converter.Factory converterFactory) {
+  protected V7(B body, String baseHost, OkHttpClient httpClient, Converter.Factory converterFactory,
+      BodyInterceptor bodyInterceptor) {
     super(Interfaces.class, httpClient, converterFactory, baseHost);
     this.body = body;
+    this.bodyInterceptor = bodyInterceptor;
+  }
+
+  protected Single<AccessTokenBody> intercept(BaseBody baseBody) {
+    return bodyInterceptor.intercept(baseBody);
   }
 
   @Override public Observable<U> observe(boolean bypassCache) {
@@ -150,7 +155,6 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
           if (!accessTokenRetry) {
             accessTokenRetry = true;
             return DataProvider.invalidateAccessToken().flatMapObservable(s -> {
-              V7.this.body.setAccessToken(s);
               return V7.this.observe(bypassCache);
             });
           } else {
@@ -236,10 +240,6 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listComments") Observable<ListComments> listComments(@Body ListCommentsRequest.Body body,
-        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("listFullComments") Observable<ListFullComments> listFullComments(
-        @Body ListFullCommentsRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST Observable<ListComments> listComments(@Url String url,

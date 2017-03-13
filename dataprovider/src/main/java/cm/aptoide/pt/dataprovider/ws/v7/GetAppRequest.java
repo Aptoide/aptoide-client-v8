@@ -26,55 +26,37 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true) public class GetAppRequest
     extends V7<GetApp, GetAppRequest.Body> {
 
-  private GetAppRequest(String baseHost, Body body) {
+  private GetAppRequest(String baseHost, Body body, BodyInterceptor bodyInterceptor) {
     super(body, baseHost,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  private GetAppRequest(OkHttpClient httpClient, Converter.Factory converterFactory,
-      String baseHost, Body body) {
-    super(body, baseHost, httpClient, converterFactory);
-  }
-
-  public static GetAppRequest of(String packageName, String storeName, BodyInterceptor bodyInterceptor) {
+  public static GetAppRequest of(String packageName, String storeName,
+      BodyInterceptor bodyInterceptor) {
 
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
-    return new GetAppRequest(BASE_HOST,
-        (Body) bodyInterceptor.intercept(new Body(packageName, storeName, forceServerRefresh)));
+    return new GetAppRequest(BASE_HOST, new Body(packageName, storeName, forceServerRefresh),
+        bodyInterceptor);
   }
 
   public static GetAppRequest of(String packageName, BodyInterceptor bodyInterceptor, long appId) {
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
-    return new GetAppRequest(BASE_HOST,
-        (Body) bodyInterceptor.intercept(new Body(appId, forceServerRefresh, packageName)));
-  }
-
-  public static GetAppRequest of(long appId, String storeName, String packageName, BodyInterceptor bodyInterceptor) {
-    boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
-
-    return new GetAppRequest(BASE_HOST,
-        (Body) bodyInterceptor.intercept(new Body(appId, storeName, forceServerRefresh, packageName)));
-  }
-
-  public static GetAppRequest of(long appId, BodyInterceptor bodyInterceptor) {
-    boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
-
-    return new GetAppRequest(BASE_HOST,
-        (Body) bodyInterceptor.intercept(new Body(appId, forceServerRefresh, null)));
+    return new GetAppRequest(BASE_HOST, new Body(appId, forceServerRefresh, packageName),
+        bodyInterceptor);
   }
 
   public static GetAppRequest ofMd5(String md5, BodyInterceptor bodyInterceptor) {
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
-    return new GetAppRequest(BASE_HOST,
-        (Body) bodyInterceptor.intercept(new Body(forceServerRefresh, md5)));
+    return new GetAppRequest(BASE_HOST, new Body(forceServerRefresh, md5), bodyInterceptor);
   }
 
   public static GetAppRequest of(long appId, String storeName,
-      BaseRequestWithStore.StoreCredentials storeCredentials, String packageName, BodyInterceptor bodyInterceptor) {
+      BaseRequestWithStore.StoreCredentials storeCredentials, String packageName,
+      BodyInterceptor bodyInterceptor) {
 
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
@@ -82,12 +64,12 @@ import rx.Observable;
     body.setStoreUser(storeCredentials.getUsername());
     body.setStorePassSha1(storeCredentials.getPasswordSha1());
 
-    return new GetAppRequest(BASE_HOST, (Body) bodyInterceptor.intercept(body));
+    return new GetAppRequest(BASE_HOST, body, bodyInterceptor);
   }
 
   public static GetAppRequest ofAction(String url, BodyInterceptor bodyInterceptor) {
     final long appId = getAppIdFromUrl(url);
-    return new GetAppRequest(BASE_HOST, (Body) bodyInterceptor.intercept(new Body(appId)));
+    return new GetAppRequest(BASE_HOST, new Body(appId), bodyInterceptor);
   }
 
   private static long getAppIdFromUrl(String url) {
@@ -107,7 +89,7 @@ import rx.Observable;
 
   @Override
   protected Observable<GetApp> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.getApp(body, bypassCache);
+    return intercept(body).flatMapObservable(body -> interfaces.getApp((Body) body, bypassCache));
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithApp {

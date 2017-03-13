@@ -24,9 +24,10 @@ import rx.Observable;
 
   private final String url;
 
-  private GetStoreRequest(String url, GetStoreBody body) {
-    super(body, OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+  private GetStoreRequest(String url, GetStoreBody body, BodyInterceptor bodyInterceptor) {
+    super(body,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
     this.url = url;
   }
 
@@ -36,7 +37,7 @@ import rx.Observable;
     final GetStoreBody body = new GetStoreBody(storeCredentials, WidgetsArgs.createDefault());
     body.setContext(storeContext);
 
-    return new GetStoreRequest("", (GetStoreBody) bodyInterceptor.intercept(body));
+    return new GetStoreRequest("", body, bodyInterceptor);
   }
 
   public static GetStoreRequest ofAction(String url, StoreCredentials storeCredentials,
@@ -44,11 +45,12 @@ import rx.Observable;
 
     final GetStoreBody body = new GetStoreBody(storeCredentials, WidgetsArgs.createDefault());
 
-    return new GetStoreRequest(new V7Url(url).remove("getStore").get(), (GetStoreBody) bodyInterceptor.intercept(body));
+    return new GetStoreRequest(new V7Url(url).remove("getStore").get(), body, bodyInterceptor);
   }
 
   @Override
   protected Observable<GetStore> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.getStore(url, body, bypassCache);
+    return intercept(body).flatMapObservable(
+        body -> interfaces.getStore(url, (GetStoreBody) body, bypassCache));
   }
 }

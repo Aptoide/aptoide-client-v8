@@ -24,35 +24,27 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
 
-  protected PostReviewRequest(Body body, String baseHost) {
-    super(body, baseHost,
+  protected PostReviewRequest(Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static PostReviewRequest of(String storeName, String packageName, String title,
       String textBody, Integer rating, BodyInterceptor bodyInterceptor) {
-    //
-    //  http://ws75-primary.aptoide.com/api/7/setReview/package_name/cm.aptoide
-    // .pt/store_name/apps/title/Best%20app%20store/rating/5/access_token/ca01ee1e05ab4d82d99ef143e2816e667333c6ef
-    //
-    Body body = new Body(storeName, packageName, title, textBody, rating);
-    return new PostReviewRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
+    final Body body = new Body(storeName, packageName, title, textBody, rating);
+    return new PostReviewRequest(body, bodyInterceptor);
   }
 
   public static PostReviewRequest of(String packageName, String title, String textBody,
       Integer rating, BodyInterceptor bodyInterceptor) {
-    //
-    //  http://ws75-primary.aptoide.com/api/7/setReview/package_name/cm.aptoide
-    // .pt/store_name/apps/title/Best%20app%20store/rating/5/access_token/ca01ee1e05ab4d82d99ef143e2816e667333c6ef
-    //
-    Body body = new Body(packageName, title, textBody, rating);
-    return new PostReviewRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
+    final Body body = new Body(packageName, title, textBody, rating);
+    return new PostReviewRequest(body, bodyInterceptor);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.postReview(body, true);
+    return intercept(body).flatMapObservable(body -> interfaces.postReview((Body) body, true));
   }
 
   @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {

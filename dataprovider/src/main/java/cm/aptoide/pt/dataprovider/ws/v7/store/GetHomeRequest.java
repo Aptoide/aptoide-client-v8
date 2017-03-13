@@ -15,21 +15,21 @@ import rx.Observable;
  */
 public class GetHomeRequest extends V7<GetHome, GetHomeBody> {
 
-  protected GetHomeRequest(GetHomeBody body, String baseHost) {
+  protected GetHomeRequest(GetHomeBody body, String baseHost, BodyInterceptor bodyInterceptor) {
     super(body, baseHost,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static GetHomeRequest of(@Nullable BaseRequestWithStore.StoreCredentials storeCredentials,
-      @Nullable Long userId, StoreContext storeContext, BodyInterceptor interceptor) {
+      @Nullable Long userId, StoreContext storeContext, BodyInterceptor bodyInterceptor) {
     final GetHomeBody body = new GetHomeBody(storeCredentials, WidgetsArgs.createDefault(), userId);
     body.setContext(storeContext);
-    return new GetHomeRequest((GetHomeBody) interceptor.intercept(body), BASE_HOST);
+    return new GetHomeRequest(body, BASE_HOST, bodyInterceptor);
   }
 
   @Override
   protected Observable<GetHome> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.getHome(body, bypassCache);
+    return intercept(body).flatMapObservable(bodu -> interfaces.getHome(body, bypassCache));
   }
 }

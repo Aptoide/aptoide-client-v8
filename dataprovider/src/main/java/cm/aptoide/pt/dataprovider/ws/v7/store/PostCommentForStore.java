@@ -16,32 +16,32 @@ import rx.Observable;
 
 public class PostCommentForStore extends V7<SetComment, PostCommentForStore.Body> {
 
-  //private static final String BASE_HOST = "http://ws75-primary.aptoide.com/api/7/";
   private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
       + "://"
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
 
-  private PostCommentForStore(Body body, String baseHost) {
-    super(body, baseHost,
+  private PostCommentForStore(Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static PostCommentForStore of(long storeId, String text, BodyInterceptor bodyInterceptor) {
     Body body = new Body(storeId, text);
-    return new PostCommentForStore((Body) bodyInterceptor.intercept(body), BASE_HOST);
+    return new PostCommentForStore(body, bodyInterceptor);
   }
 
   public static PostCommentForStore of(long storeId, long previousCommentId, String text,
       BodyInterceptor bodyInterceptor) {
     Body body = new Body(storeId, text, previousCommentId);
-    return new PostCommentForStore((Body) bodyInterceptor.intercept(body), BASE_HOST);
+    return new PostCommentForStore(body, bodyInterceptor);
   }
 
   @Override
   protected Observable<SetComment> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.postStoreComment(body, true);
+    return intercept(body).flatMapObservable(
+        body -> interfaces.postStoreComment((Body) body, true));
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body

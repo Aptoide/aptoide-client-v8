@@ -19,10 +19,11 @@ public class AnalyticsEventRequest extends V7<BaseV7Response, AnalyticsEventRequ
   private final String name;
   private final String context;
 
-  private AnalyticsEventRequest(Body body, String action, String name, String context) {
+  private AnalyticsEventRequest(Body body, String action, String name, String context,
+      BodyInterceptor bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
     this.action = action;
     this.name = name;
     this.context = context;
@@ -33,13 +34,13 @@ public class AnalyticsEventRequest extends V7<BaseV7Response, AnalyticsEventRequ
     final AnalyticsEventRequest.Body body =
         new AnalyticsEventRequest.Body(DataProvider.getConfiguration().getAppId(), data);
 
-    return new AnalyticsEventRequest((Body) bodyInterceptor.intercept(body), action,
-        eventName, context);
+    return new AnalyticsEventRequest(body, action, eventName, context, bodyInterceptor);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.addEvent(name, action, context, body);
+    return intercept(body).flatMapObservable(
+        body -> interfaces.addEvent(name, action, context, (Body) body));
   }
 
   static class Body extends AnalyticsBaseBody {

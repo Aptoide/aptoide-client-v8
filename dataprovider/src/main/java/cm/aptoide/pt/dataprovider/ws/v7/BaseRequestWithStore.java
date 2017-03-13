@@ -14,8 +14,9 @@ import retrofit2.Converter;
  */
 public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> extends V7<U, B> {
 
-  public BaseRequestWithStore(B body, OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(body, BASE_HOST, httpClient, converterFactory);
+  public BaseRequestWithStore(B body, OkHttpClient httpClient, Converter.Factory converterFactory,
+      BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
   }
 
   public static class StoreCredentials {

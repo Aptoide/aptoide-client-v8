@@ -34,16 +34,16 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   private static final int MAX_COMMENTS = 10;
   private String url;
 
-  protected ListFullReviewsRequest(Body body, String baseHost) {
-    super(body, baseHost,
+  protected ListFullReviewsRequest(Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  public ListFullReviewsRequest(String url, Body body, String baseHost) {
-    super(body, baseHost,
+  public ListFullReviewsRequest(String url, Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
     this.url = url;
   }
 
@@ -52,46 +52,23 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
 
     Body body = new Body(storeId, limit, offset, ManagerPreferences.getAndResetForceServerRefresh(),
         storeCredentials);
-    return new ListFullReviewsRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
+    return new ListFullReviewsRequest(body, bodyInterceptor);
   }
 
-  public static ListFullReviewsRequest ofAction(String url, boolean refresh, BaseRequestWithStore.StoreCredentials storeCredentials, BodyInterceptor bodyInterceptor) {
+  public static ListFullReviewsRequest ofAction(String url, boolean refresh,
+      BaseRequestWithStore.StoreCredentials storeCredentials, BodyInterceptor bodyInterceptor) {
     return new ListFullReviewsRequest(url.replace("listFullReviews", ""),
-        (Body) bodyInterceptor.intercept(new Body(refresh, storeCredentials)), BASE_HOST);
-  }
-
-  public static ListFullReviewsRequest of(String storeName, String packageName, BodyInterceptor bodyInterceptor) {
-    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, bodyInterceptor);
-  }
-
-  /**
-   * example call: http://ws75.aptoide.com/api/7/listFullReviews/store_name/apps/package_name/com.supercell.clashofclans/limit/10
-   */
-  public static ListFullReviewsRequest of(String storeName, String packageName, int maxReviews,
-      int maxComments, BodyInterceptor bodyInterceptor) {
-
-    Body body = new Body(storeName, packageName, maxReviews, maxComments,
-        ManagerPreferences.getAndResetForceServerRefresh());
-    return new ListFullReviewsRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
-  }
-
-  /**
-   * example call: http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/sub_limit/0/limit/3
-   */
-  public static ListFullReviewsRequest ofTopReviews(String storeName, String packageName,
-      int maxReviews, BodyInterceptor bodyInterceptor) {
-
-    Body body = new Body(storeName, packageName, maxReviews, 0,
-        ManagerPreferences.getAndResetForceServerRefresh());
-    return new ListFullReviewsRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
+        new Body(refresh, storeCredentials), bodyInterceptor);
   }
 
   @Override protected Observable<ListFullReviews> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     if (TextUtils.isEmpty(url)) {
-      return interfaces.listFullReviews(body, bypassCache);
+      return intercept(body).flatMapObservable(
+          body -> interfaces.listFullReviews((Body) body, bypassCache));
     } else {
-      return interfaces.listFullReviews(url, body, bypassCache);
+      return intercept(body).flatMapObservable(
+          body -> interfaces.listFullReviews(url, (Body) body, bypassCache));
     }
   }
 

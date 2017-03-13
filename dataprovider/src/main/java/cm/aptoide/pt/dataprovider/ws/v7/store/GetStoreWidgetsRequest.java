@@ -27,21 +27,11 @@ import rx.Observable;
 
   private final String url;
 
-  private GetStoreWidgetsRequest(String url, Body body) {
-    super(body, OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+  private GetStoreWidgetsRequest(String url, Body body, BodyInterceptor bodyInterceptor) {
+    super(body,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
     this.url = url;
-  }
-
-  @Partners public static GetStoreWidgetsRequest ofActionFirstInstall(String url,
-      StoreCredentials storeCredentials, String accessToken, String storeName,
-      BodyInterceptor bodyInterceptor) {
-
-    final Body body =
-        new Body(storeCredentials, WidgetsArgs.createDefault(), StoreContext.first_install,
-            storeName);
-
-    return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets").get(), (Body) bodyInterceptor.intercept(body));
   }
 
   public static GetStoreWidgetsRequest ofAction(String url, StoreCredentials storeCredentials,
@@ -49,12 +39,14 @@ import rx.Observable;
 
     final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
 
-    return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets").get(), (Body) bodyInterceptor.intercept(body));
+    return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets").get(), body,
+        bodyInterceptor);
   }
 
   @Override protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getStoreWidgets(url, body, bypassCache);
+    return intercept(body).flatMapObservable(
+        body -> interfaces.getStoreWidgets(url, (Body) body, bypassCache));
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithStore {

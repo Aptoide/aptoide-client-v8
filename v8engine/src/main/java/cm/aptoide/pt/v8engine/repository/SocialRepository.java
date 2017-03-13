@@ -4,12 +4,10 @@ import android.content.Context;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.LikeCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ShareCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ShareInstallCardRequest;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
@@ -30,7 +28,7 @@ public class SocialRepository {
   }
 
   public void share(TimelineCard timelineCard, Context context, boolean privacy) {
-    ShareCardRequest.of(timelineCard, accountManager.getAccessToken(), bodyInterceptor)
+    ShareCardRequest.of(timelineCard, bodyInterceptor)
         .observe()
         .toSingle()
         .flatMapCompletable(response -> {
@@ -45,8 +43,7 @@ public class SocialRepository {
   }
 
   public void like(TimelineCard timelineCard, String cardType, String ownerHash, int rating) {
-    LikeCardRequest.of(timelineCard, cardType, ownerHash, rating, bodyInterceptor,
-        accountManager.getAccessToken())
+    LikeCardRequest.of(timelineCard, cardType, ownerHash, rating, bodyInterceptor)
         .observe()
         .observeOn(Schedulers.io())
         .subscribe(
@@ -55,7 +52,7 @@ public class SocialRepository {
   }
 
   public void share(String packageName, String shareType, boolean privacy) {
-    ShareInstallCardRequest.of(packageName, accountManager.getAccessToken(), shareType,
+    ShareInstallCardRequest.of(packageName, shareType,
         bodyInterceptor).observe().toSingle().flatMapCompletable(response -> {
       if (response.isOk()) {
         return accountManager.updateAccount(getAccountAccess(privacy));

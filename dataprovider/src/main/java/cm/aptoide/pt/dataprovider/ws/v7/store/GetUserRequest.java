@@ -20,22 +20,22 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
   private static final String TAG = GetUserRequest.class.getSimpleName();
   private String url;
 
-  public GetUserRequest(String url, String baseHost, GetUserRequest.Body body) {
-    super(body, baseHost,
+  public GetUserRequest(String url, Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
     this.url = url;
   }
 
-  public static GetUserRequest of(String url, BodyInterceptor interceptor) {
+  public static GetUserRequest of(String url, BodyInterceptor bodyInterceptor) {
     final GetUserRequest.Body body = new GetUserRequest.Body(WidgetsArgs.createDefault());
-    return new GetUserRequest(new V7Url(url).remove("user/get").get(), BASE_HOST,
-        (GetUserRequest.Body) interceptor.intercept(body));
+    return new GetUserRequest(new V7Url(url).remove("user/get").get(), body, bodyInterceptor);
   }
 
   @Override
   protected Observable<GetStore> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.getUser(url, body, bypassCache);
+    return intercept(body).flatMapObservable(
+        body -> interfaces.getUser(url, (Body) body, bypassCache));
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {

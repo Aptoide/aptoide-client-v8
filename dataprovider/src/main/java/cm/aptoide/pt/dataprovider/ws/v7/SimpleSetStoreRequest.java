@@ -19,27 +19,27 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
 
   private static final String BASE_HOST = "https://ws75-primary.aptoide.com/api/7/";
 
-  protected SimpleSetStoreRequest(Body body, String baseHost) {
-    super(body, baseHost,
+  protected SimpleSetStoreRequest(Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static SimpleSetStoreRequest of(String storeName, String storeTheme,
       BodyInterceptor bodyInterceptor) {
     Body body = new Body(storeName, storeTheme);
-    return new SimpleSetStoreRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
+    return new SimpleSetStoreRequest(body, bodyInterceptor);
   }
 
   public static SimpleSetStoreRequest of(long storeId, String storeTheme, String storeDescription,
       BodyInterceptor bodyInterceptor) {
     Body body = new Body(storeId, storeTheme, storeDescription);
-    return new SimpleSetStoreRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
+    return new SimpleSetStoreRequest(body, bodyInterceptor);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.editStore(body);
+    return intercept(body).flatMapObservable(body -> interfaces.editStore((Body) body));
   }
 
   @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {

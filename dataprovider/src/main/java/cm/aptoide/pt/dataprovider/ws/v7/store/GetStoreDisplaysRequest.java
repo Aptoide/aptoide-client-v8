@@ -25,9 +25,10 @@ import rx.Observable;
 
   private String url;
 
-  GetStoreDisplaysRequest(String url, Body body) {
-    super(body, OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+  GetStoreDisplaysRequest(String url, Body body, BodyInterceptor bodyInterceptor) {
+    super(body,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
     this.url = url;
   }
 
@@ -35,12 +36,13 @@ import rx.Observable;
       BodyInterceptor bodyInterceptor) {
 
     return new GetStoreDisplaysRequest(new V7Url(url).remove("getStoreDisplays").get(),
-        (Body) bodyInterceptor.intercept(new Body(storeCredentials)));
+        new Body(storeCredentials), bodyInterceptor);
   }
 
   @Override protected Observable<GetStoreDisplays> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getStoreDisplays(url, body, bypassCache);
+    return intercept(body).flatMapObservable(
+        body -> interfaces.getStoreDisplays(url, (Body) body, bypassCache));
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithStore {

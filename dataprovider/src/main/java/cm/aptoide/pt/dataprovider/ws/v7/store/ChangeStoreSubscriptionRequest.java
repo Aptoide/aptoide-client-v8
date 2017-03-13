@@ -19,24 +19,24 @@ public class ChangeStoreSubscriptionRequest
     extends V7<ChangeStoreSubscriptionResponse, ChangeStoreSubscriptionRequest.Body> {
   private static final String BASE_HOST = "https://ws75-primary.aptoide.com/api/7/";
 
-  protected ChangeStoreSubscriptionRequest(Body body) {
+  protected ChangeStoreSubscriptionRequest(Body body, BodyInterceptor bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static ChangeStoreSubscriptionRequest of(String storeName,
       ChangeStoreSubscriptionResponse.StoreSubscriptionState storeSubscription, String storeUser,
-      String sha1PassWord, BodyInterceptor interceptor) {
-    Body body = (Body) interceptor.intercept(
-        new Body(storeName, storeSubscription, storeUser, sha1PassWord));
-    return new ChangeStoreSubscriptionRequest(body);
+      String sha1PassWord, BodyInterceptor bodyInterceptor) {
+    final Body body = new Body(storeName, storeSubscription, storeUser, sha1PassWord);
+    return new ChangeStoreSubscriptionRequest(body, bodyInterceptor);
   }
 
   @Override
   protected Observable<ChangeStoreSubscriptionResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.changeStoreSubscription(bypassCache, body);
+    return intercept(body).flatMapObservable(
+        body -> interfaces.changeStoreSubscription(bypassCache, (Body) body));
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {

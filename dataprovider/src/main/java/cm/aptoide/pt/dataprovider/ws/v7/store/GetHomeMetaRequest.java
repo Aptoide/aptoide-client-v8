@@ -25,21 +25,23 @@ import rx.Observable;
 
   private final String url;
 
-  private GetHomeMetaRequest(Body body, String url) {
-    super(body, OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+  private GetHomeMetaRequest(Body body, String url, BodyInterceptor bodyInterceptor) {
+    super(body,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
     this.url = url;
   }
 
   public static GetHomeMetaRequest ofAction(String url, StoreCredentials storeCredentials,
-      BodyInterceptor interceptor) {
-    return new GetHomeMetaRequest((Body) interceptor.intercept(new Body(storeCredentials)),
-        new V7Url(url).remove("home/getMeta").get());
+      BodyInterceptor bodyInterceptor) {
+    return new GetHomeMetaRequest(new Body(storeCredentials),
+        new V7Url(url).remove("home/getMeta").get(), bodyInterceptor);
   }
 
   @Override protected Observable<GetHomeMeta> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getHomeMeta(url != null ? url : "", body, bypassCache);
+    return intercept(body).flatMapObservable(
+        body -> interfaces.getHomeMeta(url != null ? url : "", (Body) body, bypassCache));
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithStore {

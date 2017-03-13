@@ -39,23 +39,17 @@ import rx.schedulers.Schedulers;
 
   private static final int SPLIT_SIZE = 100;
 
-  private ListAppsUpdatesRequest(Body body, String baseHost) {
+  private ListAppsUpdatesRequest(Body body, String baseHost, BodyInterceptor bodyInterceptor) {
     super(body, baseHost,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
-  }
-
-  private ListAppsUpdatesRequest(OkHttpClient httpClient, Converter.Factory converterFactory,
-      Body body, String baseHost) {
-    super(body, baseHost, httpClient, converterFactory);
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String accessToken,
       String aptoideClientUUID, BodyInterceptor bodyInterceptor) {
-
-    return new ListAppsUpdatesRequest((Body) bodyInterceptor.intercept(
-        new Body(getInstalledApks(), subscribedStoresIds, aptoideClientUUID)),
-        BASE_HOST);
+    return new ListAppsUpdatesRequest(
+        new Body(getInstalledApks(), subscribedStoresIds, aptoideClientUUID), BASE_HOST,
+        bodyInterceptor);
   }
 
   private static List<ApksData> getInstalledApks() {
@@ -99,7 +93,8 @@ import rx.schedulers.Schedulers;
             .observeOn(Schedulers.io())
             // map bodies to request with bodies
             //.map(body -> fetchDataUsingBodyWithRetry(interfaces, body, bypassCache, 3))
-            .map(body -> interfaces.listAppsUpdates(body, bypassCache))
+            .map(body -> intercept(body).flatMapObservable(
+                interceptedBody -> interfaces.listAppsUpdates((Body) interceptedBody, bypassCache)))
             // wait for all requests to be ready and return a list of requests
             .toList()
             // subscribe to all observables (list of observables<request>) at the same time using merge
@@ -121,7 +116,8 @@ import rx.schedulers.Schedulers;
               return resultListAppsUpdates;
             });
       }
-      return interfaces.listAppsUpdates(body, bypassCache);
+      return intercept(body).flatMapObservable(
+          interceptedBody -> interfaces.listAppsUpdates((Body) interceptedBody, bypassCache));
     });
   }
 
