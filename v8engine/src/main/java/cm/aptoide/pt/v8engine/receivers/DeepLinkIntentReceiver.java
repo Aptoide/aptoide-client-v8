@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.receivers;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Intent;
@@ -13,7 +14,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -53,7 +53,7 @@ import org.xml.sax.XMLReader;
 /**
  * Created by neuro on 10-08-2016.
  */
-public class DeepLinkIntentReceiver extends AppCompatActivity {
+public class DeepLinkIntentReceiver extends Activity {
   public static final String AUTHORITY = "cm.aptoide.pt";
   public static final int DEEPLINK_ID = 1;
   public static final int SCHEDULE_DOWNLOADS_ID = 2;
