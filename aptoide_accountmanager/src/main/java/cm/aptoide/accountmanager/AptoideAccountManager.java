@@ -8,6 +8,7 @@ package cm.aptoide.accountmanager;
 import android.accounts.AccountManager;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
@@ -118,10 +119,9 @@ public class AptoideAccountManager {
     }
 
     return getAndroidAccountAsync().flatMap(androidAccount -> {
+
       final Account.Access access =
-          androidAccountManager.getUserData(androidAccount, ACCESS) == null
-              ? Account.Access.UNLISTED
-              : Account.Access.valueOf(androidAccountManager.getUserData(androidAccount, ACCESS));
+          getAccessFrom(androidAccountManager.getUserData(androidAccount, ACCESS));
 
       return storeDataPersist.get()
           .doOnSuccess(stores -> {
@@ -142,21 +142,6 @@ public class AptoideAccountManager {
               access,
               Boolean.valueOf(androidAccountManager.getUserData(androidAccount, ACCESS_CONFIRMED)),
               stores));
-
-      /*
-      return Single.just(new Account(androidAccountManager.getUserData(androidAccount, USER_ID),
-          androidAccount.name, androidAccountManager.getUserData(androidAccount, USER_NICK_NAME),
-          androidAccountManager.getUserData(androidAccount, USER_AVATAR),
-          androidAccountManager.getUserData(androidAccount, REFRESH_TOKEN),
-          androidAccountManager.getUserData(androidAccount, ACCESS_TOKEN),
-          androidAccountManager.getPassword(androidAccount),
-          Account.Type.valueOf(androidAccountManager.getUserData(androidAccount, LOGIN_MODE)),
-          androidAccountManager.getUserData(androidAccount, USER_REPO),
-          androidAccountManager.getUserData(androidAccount, REPO_AVATAR),
-          Boolean.valueOf(androidAccountManager.getUserData(androidAccount, MATURE_SWITCH)), access,
-          Boolean.valueOf(androidAccountManager.getUserData(androidAccount, ACCESS_CONFIRMED)),
-          Collections.emptyList()));
-      */
     });
   }
 
@@ -168,6 +153,11 @@ public class AptoideAccountManager {
         return Single.error(e);
       }
     }).observeOn(Schedulers.from(Executors.newSingleThreadExecutor()));
+  }
+
+  @NonNull private Account.Access getAccessFrom(String serverAccess) {
+    return TextUtils.isEmpty(serverAccess) ? Account.Access.UNLISTED
+        : Account.Access.valueOf(serverAccess.toUpperCase());
   }
 
   private android.accounts.Account getAndroidAccount() throws IllegalStateException {
@@ -417,8 +407,7 @@ public class AptoideAccountManager {
         serverUser.getUsername(), serverUser.getAvatar(), refreshToken, accessToken,
         encryptedPassword, accountType, serverUser.getRepo(), serverUser.getRavatarHd(),
         serverUser.getSettings().getMatureswitch().equals("active"),
-        Account.Access.valueOf(serverUser.getAccess().toUpperCase()),
-        serverUser.isAccessConfirmed(), subscribedStores);
+        getAccessFrom(serverUser.getAccess()), serverUser.isAccessConfirmed(), subscribedStores);
   }
 
   private Store mapToStore(Subscription subscription) {
@@ -439,16 +428,16 @@ public class AptoideAccountManager {
         ChangeStoreSubscriptionResponse.StoreSubscriptionState.SUBSCRIBED).subscribe();
   }
 
-  public Completable subscribeStore(String storeName, String storeUserName, String storePassword) {
-    return changeSubscription(storeName, storeUserName, storePassword,
-        ChangeStoreSubscriptionResponse.StoreSubscriptionState.SUBSCRIBED).toCompletable();
-  }
-
   private Observable<ChangeStoreSubscriptionResponse> changeSubscription(String storeName,
       String storeUserName, String sha1Password,
       ChangeStoreSubscriptionResponse.StoreSubscriptionState subscription) {
     return requestFactory.createChangeStoreSubscription(storeName, storeUserName, sha1Password,
         subscription, this).observe();
+  }
+
+  public Completable subscribeStore(String storeName, String storeUserName, String storePassword) {
+    return changeSubscription(storeName, storeUserName, storePassword,
+        ChangeStoreSubscriptionResponse.StoreSubscriptionState.SUBSCRIBED).toCompletable();
   }
 
   public String getUserEmail() {
@@ -467,8 +456,7 @@ public class AptoideAccountManager {
   }
 
   public Account.Access getAccountAccess() {
-    final Account account = getAccount();
-    return account == null ? null : account.getAccess();
+    return getAccount().getAccess();
   }
 
   public Completable syncCurrentAccount() {
