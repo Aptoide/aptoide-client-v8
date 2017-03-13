@@ -33,12 +33,6 @@ public interface LoginSignUpCredentialsView extends GoogleLoginView {
 
   void showPermissionsRequiredMessage();
 
-  void showMissingCredentialsMessage();
-
-  void showMissingEmailMessage();
-
-  void showMissingPasswordMessage();
-
   void hideFacebookLogin();
 
   void navigateToForgotPasswordView();

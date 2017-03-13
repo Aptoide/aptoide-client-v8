@@ -10,7 +10,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowersRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowingRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserLikesRequest;
@@ -19,6 +18,7 @@ import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeWithToolbarFragment;
@@ -41,16 +41,6 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
   @Nullable private Long numberOfLikes;
   private BaseBodyInterceptor bodyDecorator;
   private Long userId;
-
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    final AptoideAccountManager accountManager =
-        ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    final AptoideClientUUID aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext());
-    bodyDecorator = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
-  }
 
   public static TimeLineFollowFragment newInstance(FollowFragmentOpenMode openMode, Long id,
       long followNumber, String storeTheme) {
@@ -86,6 +76,17 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
     TimeLineFollowFragment fragment = new TimeLineFollowFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    final AptoideAccountManager accountManager =
+        ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    final AptoideClientUUID aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext());
+    bodyDecorator =
+        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -126,23 +127,7 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
     if (create || refresh) {
 
       V7 request;
-      switch (openMode) {
-        case FOLLOWERS:
-          request = GetFollowersRequest.of(bodyDecorator, userId);
-          break;
-        case FOLLOWING:
-          request = GetFollowingRequest.of(bodyDecorator, userId);
-          break;
-        case LIKE_PREVIEW:
-          final String uniqueIdentifier =
-              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                  DataProvider.getContext()).getUniqueIdentifier();
-          request = GetUserLikesRequest.of(cardUid, bodyDecorator);
-          break;
-        default:
-          throw new IllegalStateException(
-              "There is a case (openMode) that it is not being handled.");
-      }
+      request = buildRequest(openMode);
       LinkedList<Displayable> dispList = new LinkedList<>();
 
       final int[] hidden = { 0 };
@@ -175,6 +160,24 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
     } else {
       getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     }
+  }
+
+  protected V7 buildRequest(FollowFragmentOpenMode openMode) {
+    V7 request;
+    switch (openMode) {
+      case FOLLOWERS:
+        request = GetFollowersRequest.of(bodyDecorator, userId);
+        break;
+      case FOLLOWING:
+        request = GetFollowingRequest.of(bodyDecorator, userId);
+        break;
+      case LIKE_PREVIEW:
+        request = GetUserLikesRequest.of(cardUid, bodyDecorator);
+        break;
+      default:
+        throw new IllegalStateException("There is a case (openMode) that it is not being handled.");
+    }
+    return request;
   }
 
   public String getHeaderMessage() {
@@ -213,6 +216,10 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
   @Override public void onDestroyView() {
     endlessRecyclerOnScrollListener.removeListeners();
     super.onDestroyView();
+  }
+
+  protected BaseBodyInterceptor getBodyDecorator() {
+    return bodyDecorator;
   }
 
   public enum FollowFragmentOpenMode {

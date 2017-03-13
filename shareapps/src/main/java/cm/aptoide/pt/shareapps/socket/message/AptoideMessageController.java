@@ -87,6 +87,8 @@ public abstract class AptoideMessageController implements Sender<Message> {
       }
     } else {
       if (canHandle(message)) {
+        System.out.println(
+            "Handling message " + message + ", " + message.getClass().getSimpleName());
         messageHandlersMap.get(message.getClass()).handleMessage(message, this);
       } else {
         throw new IllegalArgumentException(
@@ -127,7 +129,9 @@ public abstract class AptoideMessageController implements Sender<Message> {
   }
 
   @Override public synchronized void send(Message message) {
-    System.out.println(Thread.currentThread().getId() + ": Sending message: " + message);
+    System.out.println(
+        Thread.currentThread().getId() + ": Sending message: " + message + ", " + message.getClass()
+            .getSimpleName());
     try {
       if (objectOutputStream != null) {
         objectOutputStream.writeObject(message);

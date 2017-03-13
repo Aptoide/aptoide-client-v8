@@ -30,7 +30,6 @@ import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.navigation.TabNavigator;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.shareappsandroid.HighwayActivity;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
@@ -206,9 +205,8 @@ public class HomeFragment extends StoreFragment {
         } else {
           final NavigationManagerV4 navigationManager = getNavigationManager();
           if (itemId == R.id.shareapps) {
-            //requestPermissions();
             SpotAndShareAnalytics.clickShareApps();
-            startActivity(new Intent(getContext(), HighwayActivity.class));
+            navigationManager.navigateTo(V8Engine.getFragmentProvider().newSpotShareFragment());
           } else if (itemId == R.id.navigation_item_rollback) {
             navigationManager.navigateTo(V8Engine.getFragmentProvider().newRollbackFragment());
           } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {

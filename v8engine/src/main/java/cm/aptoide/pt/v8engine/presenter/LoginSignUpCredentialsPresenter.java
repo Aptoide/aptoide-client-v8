@@ -114,17 +114,6 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
 
   private Observable<Void> aptoideLoginClick() {
     return view.aptoideLoginClick().<Void>flatMap(credentials -> {
-      if (TextUtils.isEmpty(credentials.getPassword()) && TextUtils.isEmpty(
-          credentials.getUsername())) {
-        view.showMissingCredentialsMessage();
-        return Observable.empty();
-      } else if (TextUtils.isEmpty(credentials.getUsername())) {
-        view.showMissingEmailMessage();
-        return Observable.empty();
-      } else if (TextUtils.isEmpty(credentials.getPassword())) {
-        view.showMissingPasswordMessage();
-        return Observable.empty();
-      }
       view.hideKeyboard();
       view.showLoading();
       return accountManager.login(Account.Type.APTOIDE, credentials.getUsername(),
@@ -143,17 +132,6 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
 
   private Observable<Void> aptoideSignUpClick() {
     return view.aptoideSignUpClick().<Void>flatMap(credentials -> {
-      if (TextUtils.isEmpty(credentials.getPassword()) && TextUtils.isEmpty(
-          credentials.getUsername())) {
-        view.showMissingCredentialsMessage();
-        return Observable.empty();
-      } else if (TextUtils.isEmpty(credentials.getUsername())) {
-        view.showMissingEmailMessage();
-        return Observable.empty();
-      } else if (TextUtils.isEmpty(credentials.getPassword())) {
-        view.showMissingPasswordMessage();
-        return Observable.empty();
-      }
       view.hideKeyboard();
       view.showLoading();
       return accountManager.createAccount(credentials.getUsername(), credentials.getPassword())

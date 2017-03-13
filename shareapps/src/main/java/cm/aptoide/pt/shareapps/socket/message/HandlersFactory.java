@@ -12,6 +12,7 @@ import cm.aptoide.pt.shareapps.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.shareapps.socket.message.messages.AckMessage;
 import cm.aptoide.pt.shareapps.socket.message.messages.AndroidAppInfoMessage;
 import cm.aptoide.pt.shareapps.socket.message.messages.ExitMessage;
+import cm.aptoide.pt.shareapps.socket.message.messages.HostLeftMessage;
 import cm.aptoide.pt.shareapps.socket.message.messages.ReceiveApk;
 import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
 import cm.aptoide.pt.shareapps.socket.message.messages.SendApk;
@@ -51,6 +52,7 @@ public class HandlersFactory {
 
     messageHandlers.add(new SendApkHandler(serverLifecycle));
     messageHandlers.add(new ReceiveApkHandler(rootDir, storageCapacity, fileClientLifecycle));
+    messageHandlers.add(new HostLeftMessageHandler());
 
     return messageHandlers;
   }
@@ -153,6 +155,16 @@ public class HandlersFactory {
 
     @Override public void handleMessage(ExitMessage message, Sender<Message> messageSender) {
       aptoideMessageServerSocket.removeHost(message.getLocalHost());
+    }
+  }
+
+  private static class HostLeftMessageHandler extends MessageHandler<HostLeftMessage> {
+
+    public HostLeftMessageHandler() {
+      super(HostLeftMessage.class);
+    }
+
+    @Override public void handleMessage(HostLeftMessage message, Sender<Message> messageSender) {
     }
   }
 }

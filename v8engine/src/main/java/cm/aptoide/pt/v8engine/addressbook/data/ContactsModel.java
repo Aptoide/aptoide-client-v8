@@ -28,6 +28,7 @@ public class ContactsModel {
   }
 
   public void addMobileNumber(String mobileNumber) {
+    if (mobileNumber == null) return;
     try {
       mobileNumber = StringEncryption.SHA256(mobileNumber);
     } catch (NoSuchAlgorithmException e) {

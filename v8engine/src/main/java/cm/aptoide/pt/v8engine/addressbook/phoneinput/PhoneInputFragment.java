@@ -4,7 +4,11 @@ import android.app.ProgressDialog;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -85,8 +89,34 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
 
     String countryCodeE164 = contactUtils.getCountryCodeForRegion(getContext());
     if (!countryCodeE164.isEmpty()) {
-      mCountryNumber.setHint("+" + countryCodeE164);
+      mCountryNumber.setHint(countryCodeE164);
     }
+
+    mCountryNumber.addTextChangedListener(new TextWatcher() {
+      @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+      }
+
+      @Override
+      public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+      }
+
+      @Override public void afterTextChanged(Editable editable) {
+        if (editable.length() == 3) {
+          mPhoneNumber.requestFocus();
+        }
+      }
+    });
+
+    mPhoneNumber.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+      if ((keyEvent != null && (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId
+          == EditorInfo.IME_ACTION_DONE)) {
+        String countryCode = mCountryNumber.getText().toString();
+        mActionsListener.submitClicked(countryCode.concat(mPhoneNumber.getText().toString()));
+      }
+      return false;
+    });
 
     RxView.clicks(mNotNowV).subscribe(click -> this.mActionsListener.notNowClicked());
     RxView.clicks(mSaveNumber).subscribe(click -> {
