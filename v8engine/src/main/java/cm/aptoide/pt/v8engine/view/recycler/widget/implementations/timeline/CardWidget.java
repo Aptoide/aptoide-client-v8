@@ -55,8 +55,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
 
   @CallSuper @Override public void bindView(T displayable) {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator =
-        new AccountNavigator(getContext(), getNavigationManager(), accountManager);
+    accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
     compositeSubscription.add(RxView.clicks(shareButton)
         //.flatMap(a -> {
         //// FIXME: 20/12/2016 sithengineer remove this flatMap
@@ -84,9 +83,8 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
       return;
     }
 
-    if (TextUtils.isEmpty(accountManager.getAccount().getStore())
-        && !Account.Access.PUBLIC
-        .equals(accountManager.getAccountAccess())) {
+    if (TextUtils.isEmpty(accountManager.getAccount().getStore()) && !Account.Access.PUBLIC.equals(
+        accountManager.getAccountAccess())) {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
           R.string.create_store_create, snackView -> {
             Intent intent = new Intent(getContext(), CreateStoreActivity.class);
@@ -95,7 +93,8 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
       return;
     }
 
-    SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable, accountManager);
+    SharePreviewDialog sharePreviewDialog =
+        new SharePreviewDialog(displayable, accountManager, true);
     AlertDialog.Builder alertDialog = sharePreviewDialog.getPreviewDialogBuilder(getContext());
 
     Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {

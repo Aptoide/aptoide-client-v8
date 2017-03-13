@@ -112,13 +112,13 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    adsRepository = new AdsRepository(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext()), accountManager);
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
     accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor =
         new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    adsRepository = new AdsRepository(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext()), accountManager);
     super.onCreate(savedInstanceState);
   }
 
