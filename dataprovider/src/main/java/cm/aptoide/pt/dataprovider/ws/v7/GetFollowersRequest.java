@@ -15,9 +15,10 @@ public class GetFollowersRequest extends V7<GetFollowers, GetFollowersRequest.Bo
     super(body, baseHost);
   }
 
-  public static GetFollowersRequest of(BodyInterceptor bodyInterceptor, Long userId) {
+  public static GetFollowersRequest of(BodyInterceptor bodyInterceptor, Long userId, Long storeId) {
     Body body = new Body();
     body.setUserId(userId);
+    body.setStoreId(storeId);
     return new GetFollowersRequest(((Body) bodyInterceptor.intercept(body)), BASE_HOST);
   }
 

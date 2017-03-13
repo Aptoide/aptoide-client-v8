@@ -8,7 +8,6 @@ import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
@@ -18,15 +17,14 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
 public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.TimelineUser> {
 
-  private TimeLineFollowFragment.FollowFragmentOpenMode openMode;
+  private boolean isLike;
 
   public FollowUserDisplayable() {
   }
 
-  public FollowUserDisplayable(GetFollowers.TimelineUser pojo,
-      TimeLineFollowFragment.FollowFragmentOpenMode openMode) {
+  public FollowUserDisplayable(GetFollowers.TimelineUser pojo, boolean isLike) {
     super(pojo);
-    this.openMode = openMode;
+    this.isLike = isLike;
   }
 
   @Override protected Configs getConfig() {
@@ -136,7 +134,7 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
     return theme;
   }
 
-  public TimeLineFollowFragment.FollowFragmentOpenMode getOpenMode() {
-    return openMode;
+  public boolean isLike() {
+    return isLike;
   }
 }

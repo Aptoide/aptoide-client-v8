@@ -10,7 +10,6 @@ import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsContract;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -136,14 +135,18 @@ public interface FragmentProvider {
 
   Fragment newCreateUserFragment();
 
-  Fragment newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode openMode,
-      Long id, long followNumber, String storeTheme);
+  Fragment newTimeLineFollowersUsingUserIdFragment(Long id, long followerNumber, String storeTheme);
 
-  Fragment newStoreTimeLineFollowStatsFragment(Long id, long followNumber, String storeTheme,
-      TimeLineFollowFragment.FollowFragmentOpenMode followers);
+  Fragment newTimeLineFollowingFragmentUsingUserId(Long id, long followingNumber,
+      String storeTheme);
 
-  Fragment newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode openMode,
-      String storeTheme, String cardUid, long numberOfLikes);
+  Fragment newTimeLineFollowersUsingStoreIdFragment(Long id, long followerNumber,
+      String storeTheme);
+
+  Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, long followerNumber,
+      String storeTheme);
+
+  Fragment newTimeLineLikesFragment(String cardUid, long numberOfLikes, String storeTheme);
 
   Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId);
 
@@ -160,4 +163,6 @@ public interface FragmentProvider {
   Fragment newSpotShareFragment();
 
   Fragment newThankYouConnectingFragment(String tag);
+
+  Fragment newTimeLineFollowersFragment(long followerNumber, String storeTheme);
 }
