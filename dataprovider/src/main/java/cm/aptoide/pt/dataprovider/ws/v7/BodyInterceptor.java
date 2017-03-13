@@ -6,7 +6,7 @@ import rx.Single;
  * Created by marcelobenites on 06/03/17.
  */
 
-public interface BodyInterceptor {
+public interface BodyInterceptor<T> {
 
-  public Single<AccessTokenBody> intercept(BaseBody baseBody);
+  public Single<T> intercept(T body);
 }

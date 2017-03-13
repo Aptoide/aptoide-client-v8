@@ -26,8 +26,7 @@ public class GetTimelineStatsRequest extends V7<TimelineStats, GetTimelineStatsR
 
   @Override protected Observable<TimelineStats> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(
-        body -> interfaces.getTimelineStats((Body) body, bypassCache));
+    return interfaces.getTimelineStats(body, bypassCache);
   }
 
   @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {

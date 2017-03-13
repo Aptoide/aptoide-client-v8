@@ -33,7 +33,7 @@ public class SetUserRequest extends V7<BaseV7Response, SetUserRequest.Body> {
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(body -> interfaces.setUser((Body) body));
+    return interfaces.setUser((Body) body);
   }
 
   @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {

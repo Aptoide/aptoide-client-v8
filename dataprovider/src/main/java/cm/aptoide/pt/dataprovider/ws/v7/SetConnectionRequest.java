@@ -33,7 +33,7 @@ public class SetConnectionRequest extends V7<BaseV7Response, SetConnectionReques
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(body -> interfaces.setConnection((Body) body));
+    return interfaces.setConnection((Body) body);
   }
 
   @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {

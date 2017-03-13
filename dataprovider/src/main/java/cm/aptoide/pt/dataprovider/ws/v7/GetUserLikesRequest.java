@@ -25,8 +25,7 @@ public class GetUserLikesRequest extends V7<GetFollowers, GetUserLikesRequest.Bo
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(
-        body -> interfaces.getCardUserLikes((Body) body, bypassCache));
+    return interfaces.getCardUserLikes(body, bypassCache);
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody

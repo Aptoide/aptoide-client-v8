@@ -43,7 +43,7 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(body -> interfaces.editStore((Body) body));
+    return interfaces.editStore((Body) body);
   }
 
   @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {

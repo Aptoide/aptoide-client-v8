@@ -40,8 +40,7 @@ public class PostCommentForStore extends V7<SetComment, PostCommentForStore.Body
 
   @Override
   protected Observable<SetComment> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return intercept(body).flatMapObservable(
-        body -> interfaces.postStoreComment((Body) body, true));
+    return interfaces.postStoreComment(body, true);
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body

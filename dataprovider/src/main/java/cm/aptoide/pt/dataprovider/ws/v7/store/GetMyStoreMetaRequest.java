@@ -27,7 +27,6 @@ public class GetMyStoreMetaRequest extends V7<GetStoreMeta, BaseBody> {
 
   @Override protected Observable<GetStoreMeta> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(
-        body -> interfaces.getMyStoreMeta((BaseBody) body, bypassCache));
+    return interfaces.getMyStoreMeta(body, bypassCache);
   }
 }

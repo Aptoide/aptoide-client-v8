@@ -30,6 +30,6 @@ public class GetHomeRequest extends V7<GetHome, GetHomeBody> {
 
   @Override
   protected Observable<GetHome> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return intercept(body).flatMapObservable(bodu -> interfaces.getHome(body, bypassCache));
+    return interfaces.getHome(body, bypassCache);
   }
 }

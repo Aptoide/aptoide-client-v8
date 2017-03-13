@@ -41,8 +41,7 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
 
   @Override protected Observable<GetUserTimeline> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(
-        body -> interfaces.getUserTimeline(url, (Body) body, bypassCache));
+    return interfaces.getUserTimeline(url, body, bypassCache);
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithAlphaBetaKey

@@ -32,8 +32,7 @@ public class ShareCardRequest extends V7<BaseV7Response, ShareCardRequest.Body> 
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(V7.Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(
-        body -> interfaces.shareCard((Body) body, cardId, body.getAccessToken()));
+    return interfaces.shareCard(body, cardId, body.getAccessToken());
   }
 
   @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {

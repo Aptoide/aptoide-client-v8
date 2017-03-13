@@ -40,8 +40,7 @@ public class ChangeStoreSubscriptionRequest
   @Override
   protected Observable<ChangeStoreSubscriptionResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(
-        body -> interfaces.changeStoreSubscription(bypassCache, (Body) body));
+    return interfaces.changeStoreSubscription(bypassCache, body);
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {

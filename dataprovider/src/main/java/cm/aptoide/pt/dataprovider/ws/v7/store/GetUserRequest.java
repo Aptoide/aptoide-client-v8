@@ -34,8 +34,7 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
 
   @Override
   protected Observable<GetStore> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return intercept(body).flatMapObservable(
-        body -> interfaces.getUser(url, (Body) body, bypassCache));
+    return interfaces.getUser(url, body, bypassCache);
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {

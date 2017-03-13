@@ -60,8 +60,7 @@ import rx.Observable;
 
   @Override protected Observable<ListAppVersions> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(
-        body -> interfaces.listAppVersions((Body) body, bypassCache));
+    return interfaces.listAppVersions(body, bypassCache);
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body

@@ -44,7 +44,7 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(body -> interfaces.postReview((Body) body, true));
+    return interfaces.postReview(body, true);
   }
 
   @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {

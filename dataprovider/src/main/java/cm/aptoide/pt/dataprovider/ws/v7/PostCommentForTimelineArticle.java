@@ -39,8 +39,7 @@ public class PostCommentForTimelineArticle
 
   @Override
   protected Observable<SetComment> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return intercept(body).flatMapObservable(
-        body -> interfaces.postTimelineComment((Body) body, true));
+    return interfaces.postTimelineComment(body, true);
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body

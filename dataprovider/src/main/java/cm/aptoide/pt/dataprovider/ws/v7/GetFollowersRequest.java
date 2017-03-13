@@ -35,8 +35,7 @@ public class GetFollowersRequest extends V7<GetFollowers, GetFollowersRequest.Bo
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(
-        body -> interfaces.getTimelineFollowers((Body) body, bypassCache));
+    return interfaces.getTimelineFollowers(body, bypassCache);
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody

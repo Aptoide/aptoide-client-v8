@@ -51,7 +51,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import retrofit2.Converter;
 import retrofit2.adapter.rxjava.HttpException;
-import retrofit2.http.Body;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -66,7 +65,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by neuro on 19-04-2016.
  */
-public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Interfaces, U> {
+public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
 
   public static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
       + "://"
@@ -85,12 +84,10 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
     this.bodyInterceptor = bodyInterceptor;
   }
 
-  protected Single<AccessTokenBody> intercept(BaseBody baseBody) {
-    return bodyInterceptor.intercept(baseBody);
-  }
-
   @Override public Observable<U> observe(boolean bypassCache) {
-    return handleToken(retryOnTicket(super.observe(bypassCache)), bypassCache);
+    return bodyInterceptor.intercept(body).flatMapObservable(body -> handleToken(retryOnTicket(super
+            .observe(bypassCache)),
+        bypassCache));
   }
 
   @NonNull public static String getErrorMessage(BaseV7Response response) {
@@ -170,174 +167,181 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
 
   public interface Interfaces {
 
-    @POST("getApp") Observable<GetApp> getApp(@Body GetAppRequest.Body body,
+    @POST("getApp") Observable<GetApp> getApp(@retrofit2.http.Body GetAppRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listApps{url}") Observable<ListApps> listApps(
-        @Path(value = "url", encoded = true) String path, @Body ListAppsRequest.Body body,
+        @Path(value = "url", encoded = true) String path, @retrofit2.http.Body ListAppsRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listAppsUpdates") Observable<ListAppsUpdates> listAppsUpdates(
-        @Body ListAppsUpdatesRequest.Body body,
+        @retrofit2.http.Body ListAppsUpdatesRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("home/get") Observable<GetHome> getHome(@Body GetHomeBody body,
+    @POST("home/get") Observable<GetHome> getHome(@retrofit2.http.Body GetHomeBody body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("getStore{url}") Observable<GetStore> getStore(
-        @Path(value = "url", encoded = true) String path, @Body GetStoreBody body,
+        @Path(value = "url", encoded = true) String path, @retrofit2.http.Body GetStoreBody body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("getStoreDisplays{url}") Observable<GetStoreDisplays> getStoreDisplays(
-        @Path(value = "url", encoded = true) String path, @Body GetStoreDisplaysRequest.Body body,
+        @Path(value = "url", encoded = true) String path, @retrofit2.http.Body
+        GetStoreDisplaysRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("getStoreWidgets{url}") Observable<GetStoreWidgets> getStoreWidgets(
-        @Path(value = "url", encoded = true) String path, @Body GetStoreWidgetsRequest.Body body,
+        @Path(value = "url", encoded = true) String path, @retrofit2.http.Body
+        GetStoreWidgetsRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("user/get{url}") Observable<GetStore> getUser(
-        @Path(value = "url", encoded = true) String path, @Body GetUserRequest.Body body,
+        @Path(value = "url", encoded = true) String path, @retrofit2.http.Body GetUserRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listStores/sort/{sort}/limit/{limit}") Observable<ListStores> listTopStores(
         @Path(value = "sort", encoded = true) String sort,
-        @Path(value = "limit", encoded = true) int limit, @Body ListStoresRequest.Body body,
+        @Path(value = "limit", encoded = true) int limit, @retrofit2.http.Body ListStoresRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listStores{url}") Observable<ListStores> listStores(
-        @Path(value = "url", encoded = true) String path, @Body ListStoresRequest.Body body,
+        @Path(value = "url", encoded = true) String path, @retrofit2.http.Body ListStoresRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("home/getMeta{url}") Observable<GetHomeMeta> getHomeMeta(
-        @Path(value = "url", encoded = true) String path, @Body GetHomeMetaRequest.Body body,
+        @Path(value = "url", encoded = true) String path, @retrofit2.http.Body GetHomeMetaRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("store/getMeta") Observable<GetStoreMeta> getStoreMeta(@Body GetHomeMetaRequest.Body body,
+    @POST("store/getMeta") Observable<GetStoreMeta> getStoreMeta(@retrofit2.http.Body
+        GetHomeMetaRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listSearchApps") Observable<ListSearchApps> listSearchApps(
-        @Body ListSearchAppsRequest.Body body,
+        @retrofit2.http.Body ListSearchAppsRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST Observable<GetUserTimeline> getUserTimeline(@Url String url,
-        @Body GetUserTimelineRequest.Body body,
+        @retrofit2.http.Body GetUserTimelineRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listAppVersions") Observable<ListAppVersions> listAppVersions(
-        @Body ListAppVersionsRequest.Body body,
+        @retrofit2.http.Body ListAppVersionsRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("listReviews") Observable<ListReviews> listReviews(@Body ListReviewsRequest.Body body,
+    @POST("listReviews") Observable<ListReviews> listReviews(@retrofit2.http.Body ListReviewsRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listFullReviews") Observable<ListFullReviews> listFullReviews(
-        @Body ListFullReviewsRequest.Body body,
+        @retrofit2.http.Body ListFullReviewsRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listFullReviews{url}") Observable<ListFullReviews> listFullReviews(
-        @Path(value = "url", encoded = true) String path, @Body ListFullReviewsRequest.Body body,
+        @Path(value = "url", encoded = true) String path, @retrofit2.http.Body
+        ListFullReviewsRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("listComments") Observable<ListComments> listComments(@Body ListCommentsRequest.Body body,
+    @POST("listComments") Observable<ListComments> listComments(@retrofit2.http.Body
+        ListCommentsRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST Observable<ListComments> listComments(@Url String url,
-        @Body ListCommentsRequest.Body body,
+        @retrofit2.http.Body ListCommentsRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("setReview") Observable<BaseV7Response> postReview(@Body PostReviewRequest.Body body,
+    @POST("setReview") Observable<BaseV7Response> postReview(@retrofit2.http.Body PostReviewRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("setComment") Observable<BaseV7Response> postReviewComment(
-        @Body PostCommentForReview.Body body,
+        @retrofit2.http.Body PostCommentForReview.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("setComment") Observable<SetComment> postStoreComment(@Body PostCommentForStore.Body body,
+    @POST("setComment") Observable<SetComment> postStoreComment(@retrofit2.http.Body
+        PostCommentForStore.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("setComment") Observable<SetComment> postTimelineComment(
-        @Body PostCommentForTimelineArticle.Body body,
+        @retrofit2.http.Body PostCommentForTimelineArticle.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("setReviewVote") Observable<BaseV7Response> setReviewVote(
-        @Body SetReviewRatingRequest.Body body,
+        @retrofit2.http.Body SetReviewRatingRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("user/addEvent/name={name}/action={action}/context={context}")
     Observable<BaseV7Response> addEvent(@Path(value = "name") String name,
         @Path(value = "action") String action, @Path(value = "context") String context,
-        @Body DownloadInstallAnalyticsBaseBody body);
+        @retrofit2.http.Body DownloadInstallAnalyticsBaseBody body);
 
     @POST("user/addEvent/name={name}/action={action}/context={context}")
     Observable<BaseV7Response> addEvent(@Path(value = "name") String name,
         @Path(value = "action") String action, @Path(value = "context") String context,
-        @Body AnalyticsEventRequest.Body body);
+        @retrofit2.http.Body AnalyticsEventRequest.Body body);
 
     @POST("user/shareTimeline/card_uid={cardUid}/access_token={accessToken}")
-    Observable<BaseV7Response> shareCard(@Body ShareCardRequest.Body body,
+    Observable<BaseV7Response> shareCard(@retrofit2.http.Body ShareCardRequest.Body body,
         @Path(value = "cardUid") String card_id, @Path(value = "accessToken") String accessToken);
 
     @POST("user/shareTimeline/package_id={packageName}/access_token={accessToken}/type={type}")
-    Observable<BaseV7Response> shareInstallCard(@Body ShareInstallCardRequest.Body body,
+    Observable<BaseV7Response> shareInstallCard(@retrofit2.http.Body ShareInstallCardRequest.Body body,
         @Path(value = "packageName") String packageName,
         @Path(value = "accessToken") String access_token, @Path(value = "type") String type);
 
     @POST("review/set/access_token={accessToken}/card_uid={cardUid}/rating={rating}")
-    Observable<BaseV7Response> setReview(@Body LikeCardRequest.Body body,
+    Observable<BaseV7Response> setReview(@retrofit2.http.Body BaseBody body,
         @Path(value = "cardUid") String cardId, @Path(value = "accessToken") String access_token,
         @Path(value = "rating") String rating,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("my/store/getMeta") Observable<GetStoreMeta> getMyStoreMeta(@Body BaseBody body,
+    @POST("my/store/getMeta") Observable<GetStoreMeta> getMyStoreMeta(@retrofit2.http.Body BaseBody body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("{url}") Observable<ListStores> getMyStoreList(
-        @Path(value = "url", encoded = true) String path, @Body GetMyStoreListRequest.Body body,
+        @Path(value = "url", encoded = true) String path, @retrofit2.http.Body GetMyStoreListRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("my/stores/getSubscribed") Observable<ListStores> getMyStoreList(
-        @Body GetMyStoreListRequest.Body body,
+        @retrofit2.http.Body GetMyStoreListRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("{url}") Observable<ListStores> getMyStoreListEndless(
         @Path(value = "url", encoded = true) String path,
-        @Body GetMyStoreListRequest.EndlessBody body,
+        @retrofit2.http.Body GetMyStoreListRequest.EndlessBody body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @Multipart @POST("store/set") Observable<BaseV7Response> editStore(
         @Part MultipartBody.Part store_avatar, @PartMap HashMapNotNull<String, RequestBody> body);
 
     @POST("user/getTimelineStats") Observable<TimelineStats> getTimelineStats(
-        @Body GetTimelineStatsRequest.Body body,
+        @retrofit2.http.Body GetTimelineStatsRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("user/getFollowers") Observable<GetFollowers> getTimelineFollowers(
-        @Body GetFollowersRequest.Body body,
+        @retrofit2.http.Body GetFollowersRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("user/getFollowing") Observable<GetFollowers> getTimelineGetFollowing(
-        @Body GetFollowersRequest.Body body,
+        @retrofit2.http.Body GetFollowersRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("user/timeline/card/getLikes") Observable<GetFollowers> getCardUserLikes(
-        @Body GetUserLikesRequest.Body body,
+        @retrofit2.http.Body GetUserLikesRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("store/set") Observable<BaseV7Response> editStore(@Body SimpleSetStoreRequest.Body body);
+    @POST("store/set") Observable<BaseV7Response> editStore(@retrofit2.http.Body
+        SimpleSetStoreRequest.Body body);
 
-    @POST("user/set") Observable<BaseV7Response> setUser(@Body SetUserRequest.Body body);
+    @POST("user/set") Observable<BaseV7Response> setUser(@retrofit2.http.Body SetUserRequest.Body body);
 
     @POST("user/connections/add") Observable<GetFollowers> setConnections(
-        @Body SyncAddressBookRequest.Body body);
+        @retrofit2.http.Body SyncAddressBookRequest.Body body);
 
     @POST("user/connections/set") Observable<BaseV7Response> setConnection(
-        @Body SetConnectionRequest.Body body);
+        @retrofit2.http.Body SetConnectionRequest.Body body);
 
     @POST("store/subscription/set")
     Observable<ChangeStoreSubscriptionResponse> changeStoreSubscription(
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache,
-        @Body ChangeStoreSubscriptionRequest.Body body);
+        @retrofit2.http.Body ChangeStoreSubscriptionRequest.Body body);
   }
 }
 
