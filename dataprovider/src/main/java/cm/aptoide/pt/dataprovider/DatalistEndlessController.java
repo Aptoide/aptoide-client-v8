@@ -75,7 +75,7 @@ public class DatalistEndlessController<T, U> implements EndlessControllerWithCac
 
               loading = false;
 
-              return Observable.from(list).map(mapper::map).toList();
+              return Observable.from(list).map(obj -> mapper.map(obj)).toList();
             });
       } else {
         return Observable.just(Collections.emptyList());

@@ -18,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
@@ -79,7 +81,8 @@ public class PrivateStoreDialog extends BaseDialog {
     bodyInterceptor =
         new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
     storeUtilsProxy =
-        new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl());
+        new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl(), AccessorFactory
+            .getAccessorFor(Store.class));
     final Bundle args = getArguments();
     if (args != null) {
       storeName = args.getString(BundleArgs.STORE_NAME.name());

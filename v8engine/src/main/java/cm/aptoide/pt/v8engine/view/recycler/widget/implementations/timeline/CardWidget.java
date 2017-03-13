@@ -12,7 +12,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigation.AccountNavigator;
-import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
@@ -30,8 +29,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by jdandrade on 29/11/2016.
@@ -44,6 +41,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   TextView shareButton;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
+  private AlertDialog alertDialog;
 
   CardWidget(View itemView) {
     super(itemView);
@@ -53,37 +51,43 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     shareButton = (TextView) itemView.findViewById(R.id.social_share);
   }
 
+  @Override public void unbindView() {
+    if (alertDialog != null && alertDialog.isShowing()) {
+      alertDialog.dismiss();
+    }
+    super.unbindView();
+  }
+
   @CallSuper @Override public void bindView(T displayable) {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
-    compositeSubscription.add(RxView.clicks(shareButton)
-        //.flatMap(a -> {
-        //// FIXME: 20/12/2016 sithengineer remove this flatMap
-        //return Observable.fromCallable(() -> {
-        //  final String elementId = displayable.getTimelineCard().getCardId();
-        //  Fragment fragment = V8Engine.getFragmentProvider()
-        //      .newCommentGridRecyclerFragment(CommentType.TIMELINE, elementId);
-        //  getNavigationManager().navigateTo(fragment);
-        //  return null;
-        //});
-        //})
-        .subscribe(click -> {
-          shareCard(displayable);
-        }, err -> {
-          CrashReport.getInstance().log(err);
-        }));
+
+    Observable<Account> shareClick = RxView.clicks(shareButton)
+        .flatMap(__ -> accountManager.getAccountAsync()
+            .toObservable()
+            .onErrorResumeNext(Observable.just(null)));
+
+    Observable<Boolean> isAccountAccessConfirmedObservable =
+        Observable.fromCallable(() -> accountManager.isAccountAccessConfirmed());
+
+    compositeSubscription.add(
+        Observable.zip(shareClick, accountManager.loginStatus(), isAccountAccessConfirmedObservable,
+            (account, isLoggedIn, isAccessAccountConfirmed) -> {
+              shareCard(displayable, account, isLoggedIn, isAccessAccountConfirmed);
+              return null;
+            }).subscribe(__ -> {
+        }, err -> CrashReport.getInstance().log(err)));
   }
 
-  void shareCard(T displayable) {
-    if (!accountManager.isLoggedIn()) {
+  private void shareCard(T displayable, Account account, boolean isLoggedIn,
+      boolean isAccessAccountConfirmed) {
+    if (!isLoggedIn) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
-          snackView -> {
-            accountNavigator.navigateToAccountView();
-          });
+          snackView -> accountNavigator.navigateToAccountView());
       return;
     }
 
-    if (TextUtils.isEmpty(accountManager.getAccount().getStore()) && !Account.Access.PUBLIC.equals(
+    if (TextUtils.isEmpty(account.getStore()) && !Account.Access.PUBLIC.equals(
         accountManager.getAccountAccess())) {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
           R.string.create_store_create, snackView -> {
@@ -93,13 +97,33 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
       return;
     }
 
-    SharePreviewDialog sharePreviewDialog =
+    final SharePreviewDialog sharePreviewDialog =
         new SharePreviewDialog(displayable, accountManager, true);
-    AlertDialog.Builder alertDialog = sharePreviewDialog.getPreviewDialogBuilder(getContext());
 
+    final AlertDialog.Builder alertDialogBuilder =
+        sharePreviewDialog.getPreviewDialogBuilder(getContext());
+
+    if (!isAccessAccountConfirmed) {
+      alertDialogBuilder.setPositiveButton(R.string.share, (dialogInterface, i) -> {
+        displayable.share(getContext(), sharePreviewDialog.getPrivacyResult());
+        ShowMessage.asSnack(getContext(), R.string.social_timeline_share_dialog_title);
+      }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+        // does nothing
+      });
+    } else {
+      alertDialogBuilder.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
+        displayable.share(getContext(), sharePreviewDialog.getPrivacyResult());
+        ShowMessage.asSnack(getContext(), R.string.social_timeline_share_dialog_title);
+      }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+        // does nothing
+      });
+    }
+    alertDialog = alertDialogBuilder.show();
+
+    /*
     Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
       if (!accountManager.isAccountAccessConfirmed()) {
-        alertDialog.setPositiveButton(R.string.share, (dialogInterface, i) -> {
+        alertDialogBuilder.setPositiveButton(R.string.share, (dialogInterface, i) -> {
           displayable.share(getContext(), sharePreviewDialog.getPrivacyResult());
           subscriber.onNext(GenericDialogs.EResponse.YES);
           subscriber.onCompleted();
@@ -108,7 +132,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
           subscriber.onCompleted();
         });
       } else {
-        alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
+        alertDialogBuilder.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
           displayable.share(getContext(), sharePreviewDialog.getPrivacyResult());
           subscriber.onNext(GenericDialogs.EResponse.YES);
           subscriber.onCompleted();
@@ -117,7 +141,8 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
           subscriber.onCompleted();
         });
       }
-      alertDialog.show();
+      AlertDialog alertDialog = alertDialogBuilder.show();
+      subscriber.add(Subscriptions.create(() -> alertDialog.dismiss()));
     }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(eResponse -> {
       switch (eResponse) {
         case YES:
@@ -129,6 +154,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
           break;
       }
     });
+    */
   }
 
   abstract String getCardTypeName();

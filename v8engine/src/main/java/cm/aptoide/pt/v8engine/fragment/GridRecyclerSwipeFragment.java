@@ -5,19 +5,7 @@
 
 package cm.aptoide.pt.v8engine.fragment;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.ReloadInterface;
 import cm.aptoide.pt.v8engine.layouthandler.LoaderLayoutHandler;
@@ -31,7 +19,6 @@ public abstract class GridRecyclerSwipeFragment<T extends BaseAdapter>
     extends GridRecyclerFragmentWithDecorator<T> implements ReloadInterface {
 
   protected String storeTheme;
-  private BroadcastReceiver receiver;
 
   @NonNull @Override protected LoaderLayoutHandler createLoaderLayoutHandler() {
     return new SwipeLoaderLayoutHandler(getViewToShowAfterLoadingId(), this);
@@ -43,35 +30,6 @@ public abstract class GridRecyclerSwipeFragment<T extends BaseAdapter>
 
   @Override public int getContentViewId() {
     return R.layout.recycler_swipe_fragment;
-  }
-
-  @Override public void onDestroyView() {
-    unregisterReceiverForAccountManager();
-    super.onDestroyView();
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    registerReceiverForAccountManager();
-  }
-
-  protected void registerReceiverForAccountManager() {
-    receiver = new BroadcastReceiver() {
-      @Override public void onReceive(Context context, Intent intent) {
-        load(false, true, null);
-      }
-    };
-    IntentFilter intentFilter = new IntentFilter(AptoideAccountManager.LOGIN);
-    intentFilter.addAction(AptoideAccountManager.LOGOUT);
-    getContext().registerReceiver(receiver, intentFilter);
-  }
-
-  private void unregisterReceiverForAccountManager() {
-    try {
-      getContext().unregisterReceiver(receiver);
-    } catch (IllegalArgumentException ex) {
-      CrashReport.getInstance().log(ex);
-    }
   }
 
   protected static class BundleCons {

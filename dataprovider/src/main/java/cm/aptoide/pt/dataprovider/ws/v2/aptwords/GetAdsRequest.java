@@ -33,7 +33,7 @@ import rx.Observable;
     extends Aptwords<GetAdsResponse> {
 
   private static final OkHttpClient client =
-      OkHttpClientFactory.newClient(SecurePreferences::getUserAgent, isDebug());
+      OkHttpClientFactory.newClient(() -> SecurePreferences.getUserAgent(), isDebug());
   @Getter @Setter private static String forcedCountry = null;
   private final String aptoideClientUUID;
   private final boolean googlePlayServicesAvailable;
@@ -211,14 +211,10 @@ import rx.Observable;
   }
 
   public enum Location {
-    homepage("native-aptoide:homepage"),
-    appview("native-aptoide:appview"),
-    middleappview("native-aptoide:middleappview"),
-    search("native-aptoide:search"),
-    secondinstall("native-aptoide:secondinstall"),
-    secondtry("native-aptoide:secondtry"),
-    aptoidesdk("sdk-aptoide:generic"),
-    firstinstall("native-aptoide:first-install");
+    homepage("native-aptoide:homepage"), appview("native-aptoide:appview"), middleappview(
+        "native-aptoide:middleappview"), search("native-aptoide:search"), secondinstall(
+        "native-aptoide:secondinstall"), secondtry("native-aptoide:secondtry"), aptoidesdk(
+        "sdk-aptoide:generic"), firstinstall("native-aptoide:first-install");
 
     private final String value;
 

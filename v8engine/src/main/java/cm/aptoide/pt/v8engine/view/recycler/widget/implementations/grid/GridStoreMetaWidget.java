@@ -14,22 +14,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
-import cm.aptoide.pt.v8engine.activity.CreateStoreActivity;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.model.v7.store.HomeUser;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.activity.CreateStoreActivity;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
@@ -86,11 +86,11 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   @Override public void bindView(GridStoreMetaDisplayable displayable) {
 
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    final AptoideClientUUID aptoideClientUUID = new IdsRepositoryImpl
-        (SecurePreferencesImplementation.getInstance(), getContext());
+    final AptoideClientUUID aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     storeUtilsProxy = new StoreUtilsProxy(accountManager,
         new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
-        new StoreCredentialsProviderImpl());
+        new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class));
     final GetHomeMeta getHomeMeta = displayable.getPojo();
     final cm.aptoide.pt.model.v7.store.Store store = getHomeMeta.getData().getStore();
     HomeUser user = getHomeMeta.getData().getUser();
@@ -98,7 +98,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     if (store != null) {
       final StoreThemeEnum theme = StoreThemeEnum.get(
           store.getAppearance() == null ? "default" : store.getAppearance().getTheme());
-      final Context context = itemView.getContext();  StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+      final Context context = itemView.getContext();
+      StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
       boolean isStoreSubscribed =
           storeAccessor.get(store.getId()).toBlocking().firstOrDefault(null) != null;
 
@@ -144,9 +145,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
       //check if the user is the store's owner
       if (accountManager.isLoggedIn()
           && accountManager.getAccount().getStore() != null
-          && accountManager.getAccount()
-          .getStore()
-          .equals(store.getName())) {
+          && accountManager.getAccount().getStore().equals(store.getName())) {
         description.setVisibility(View.VISIBLE);
         backgroundView.setVisibility(View.VISIBLE);
         if (TextUtils.isEmpty(store.getAppearance().getDescription())) {
@@ -238,8 +237,11 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         storeWrapper.setStoreSubscribed(false);
         if (accountManager.isLoggedIn()) {
           accountManager.unsubscribeStore(storeWrapper.getStore().getName(),
-              displayable.getStoreCredentialsProvider().get(storeWrapper.getStore().getName()).getName(),
-              displayable.getStoreCredentialsProvider().get(storeWrapper.getStore().getName()).getPasswordSha1());
+              displayable.getStoreCredentialsProvider()
+                  .get(storeWrapper.getStore().getName())
+                  .getName(), displayable.getStoreCredentialsProvider()
+                  .get(storeWrapper.getStore().getName())
+                  .getPasswordSha1());
         }
         StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
         storeAccessor.remove(storeWrapper.getStore().getId());

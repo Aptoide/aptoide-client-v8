@@ -42,6 +42,7 @@ import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.BadgeView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -57,7 +58,6 @@ public class HomeFragment extends StoreFragment {
 
   //private static final int SPOT_SHARE_PERMISSION_REQUEST_CODE = 6531;
 
-
   private DrawerLayout drawerLayout;
   private NavigationView navigationView;
   private BadgeView updatesBadge;
@@ -65,6 +65,9 @@ public class HomeFragment extends StoreFragment {
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
   private TabNavigator tabNavigator;
+  private TextView userEmail;
+  private TextView userUsername;
+  private ImageView userAvatarImage;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -81,54 +84,59 @@ public class HomeFragment extends StoreFragment {
     super.onAttach(activity);
 
     if (activity instanceof TabNavigator) {
-      tabNavigator = (TabNavigator)activity;
+      tabNavigator = (TabNavigator) activity;
     } else {
-      throw new IllegalStateException("Activity must implement " + TabNavigator.class
-          .getSimpleName());
+      throw new IllegalStateException(
+          "Activity must implement " + TabNavigator.class.getSimpleName());
     }
   }
 
   @Override public void onResume() {
     super.onResume();
-    setUserDataOnHeader();
-    getToolbar().setTitle("");
-  }
 
-  private void setUserDataOnHeader() {
+    getToolbar().setTitle("");
+
     if (navigationView == null || navigationView.getVisibility() != View.VISIBLE) {
       // if the navigation view is not visible do nothing
       return;
     }
 
     View baseHeaderView = navigationView.getHeaderView(0);
-    TextView userEmail = (TextView) baseHeaderView.findViewById(R.id.profile_email_text);
-    TextView userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
-    ImageView userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
+    userEmail = (TextView) baseHeaderView.findViewById(R.id.profile_email_text);
+    userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
+    userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
 
-    if (accountManager.isLoggedIn()) {
+    accountManager.getAccountAsync()
+        .toObservable()
+        .onErrorResumeNext(
+            Observable.just(null))//fixme fix this in the account manager and remove this line
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.PAUSE))
+        .subscribe(account -> {
+          if (account == null) {
+            setInvisibleUserImageAndName();
+            return;
+          }
+          setVisibleUserImageAndName(account);
+        }, err -> CrashReport.getInstance().log(err));
+  }
 
-      Account account = accountManager.getAccount();
-      if (account != null) {
-        userEmail.setVisibility(View.VISIBLE);
-        userUsername.setVisibility(View.VISIBLE);
-        userEmail.setText(account.getEmail());
-        userUsername.setText(account.getNickname());
-
-        ImageLoader.with(getContext())
-            .loadWithCircleTransformAndPlaceHolder(account.getAvatar(), userAvatarImage,
-                R.drawable.user_account_white);
-      }
-
-      return;
-    }
-
+  private void setInvisibleUserImageAndName() {
     userEmail.setText("");
     userUsername.setText("");
-
     userEmail.setVisibility(View.GONE);
     userUsername.setVisibility(View.GONE);
-
     ImageLoader.with(getContext()).load(R.drawable.user_account_white, userAvatarImage);
+  }
+
+  private void setVisibleUserImageAndName(Account account) {
+    userEmail.setVisibility(View.VISIBLE);
+    userUsername.setVisibility(View.VISIBLE);
+    userEmail.setText(account.getEmail());
+    userUsername.setText(account.getNickname());
+    ImageLoader.with(getContext())
+        .loadWithCircleTransformAndPlaceHolder(account.getAvatar(), userAvatarImage,
+            R.drawable.user_account_white);
   }
 
   @Nullable @Override
@@ -184,7 +192,7 @@ public class HomeFragment extends StoreFragment {
   }
 
   @Override protected void setupSearch(Menu menu) {
-    SearchUtils.setupGlobalSearchView(menu, getNavigationManager());
+    SearchUtils.setupGlobalSearchView(menu, this);
   }
 
   @Override public void setupViews() {
@@ -366,5 +374,4 @@ public class HomeFragment extends StoreFragment {
   private void closeDrawer() {
     drawerLayout.closeDrawers();
   }
-
 }

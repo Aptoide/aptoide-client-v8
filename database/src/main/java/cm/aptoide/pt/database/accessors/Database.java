@@ -18,6 +18,7 @@ import io.realm.RealmResults;
 import java.util.List;
 import lombok.Cleanup;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by sithengineer on 16/05/16.
@@ -121,7 +122,8 @@ public final class Database {
   <E extends RealmObject> Observable<List<E>> copyFromRealm(RealmResults<E> results) {
     return Observable.just(results)
         .filter(data -> data.isLoaded())
-        .map(realmObjects -> Database.getInternal().copyFromRealm(realmObjects));
+        .map(realmObjects -> Database.getInternal().copyFromRealm(realmObjects))
+        .observeOn(Schedulers.io());
   }
 
   /**
@@ -179,10 +181,11 @@ public final class Database {
         .defaultIfEmpty(null);
   }
 
-  <E extends RealmObject> Observable<E> copyFromRealm(E object) {
+  private <E extends RealmObject> Observable<E> copyFromRealm(E object) {
     return Observable.just(object)
         .filter(data -> data.isLoaded())
-        .map(realmObject -> Database.getInternal().copyFromRealm(realmObject));
+        .map(realmObject -> Database.getInternal().copyFromRealm(realmObject))
+        .observeOn(Schedulers.io());
   }
 
   public <E extends RealmObject> Observable<E> get(Class<E> clazz, String key, Integer value) {

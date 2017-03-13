@@ -220,8 +220,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
             new ListFullReviewsSuccessRequestListener(this, accountManager, aptoideClientUUID,
-                new StoreCredentialsProviderImpl()),
-            Throwable::printStackTrace);
+                new StoreCredentialsProviderImpl()), (throwable) -> throwable.printStackTrace());
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }

@@ -21,10 +21,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
@@ -33,6 +34,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.activity.StoreSearchActivity;
@@ -255,7 +257,7 @@ public class AddStoreDialog extends BaseDialog {
   private void executeRequest(GetStoreMetaRequest getHomeMetaRequest) {
     final IdsRepositoryImpl clientUuid =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    new StoreUtilsProxy(accountManager, bodyDecorator, storeCredentialsProvider).subscribeStore(getHomeMetaRequest,
+    new StoreUtilsProxy(accountManager, bodyDecorator, storeCredentialsProvider, AccessorFactory.getAccessorFor(Store.class)).subscribeStore(getHomeMetaRequest,
         getStoreMeta1 -> {
           ShowMessage.asSnack(getView(),
               AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));

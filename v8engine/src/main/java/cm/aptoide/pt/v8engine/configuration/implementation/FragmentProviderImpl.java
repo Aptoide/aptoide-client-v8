@@ -198,9 +198,9 @@ public class FragmentProviderImpl implements FragmentProvider {
   }
 
   @Override
-  public Fragment newSubscribedStoresFragment(Event event, String label, String storeTheme,
+  public Fragment newSubscribedStoresFragment(Event event, String storeTheme,
       String tag) {
-    return MyStoresFragment.newInstance(event, label, storeTheme, tag);
+    return MyStoresFragment.newInstance(event, storeTheme, tag);
   }
 
   @Override public Fragment newSearchPagerTabFragment(String query, boolean subscribedStores,

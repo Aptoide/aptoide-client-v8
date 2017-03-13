@@ -160,7 +160,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
       }
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,
-              listSearchAppsSuccessRequestListener, Throwable::printStackTrace, refresh);
+              listSearchAppsSuccessRequestListener, err -> err.printStackTrace(), refresh);
       getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
       endlessRecyclerOnScrollListener.onLoadMore(refresh);
     } else {
