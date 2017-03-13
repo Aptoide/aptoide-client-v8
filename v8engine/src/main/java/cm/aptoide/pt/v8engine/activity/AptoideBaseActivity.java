@@ -127,46 +127,45 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     // got this error on fabric => added this check
     if (grantResults.length == 0) {
       super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-    switch (requestCode) {
+    } else {
+      switch (requestCode) {
 
-      case ACCESS_TO_EXTERNAL_FS_REQUEST_ID:
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          // Permission Granted
-          Logger.i(TAG, "access to read and write to external storage was granted");
-          if (toRunWhenAccessToFileSystemIsGranted != null) {
-            toRunWhenAccessToFileSystemIsGranted.call();
+        case ACCESS_TO_EXTERNAL_FS_REQUEST_ID:
+          if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // Permission Granted
+            Logger.i(TAG, "access to read and write to external storage was granted");
+            if (toRunWhenAccessToFileSystemIsGranted != null) {
+              toRunWhenAccessToFileSystemIsGranted.call();
+            }
+          } else {
+            if (toRunWhenAccessToFileSystemIsDenied != null) {
+              toRunWhenAccessToFileSystemIsDenied.call();
+            }
+            ShowMessage.asSnack(findViewById(android.R.id.content),
+                "access to read and write to external " + "storage" + " was denied");
           }
-        } else {
-          if (toRunWhenAccessToFileSystemIsDenied != null) {
-            toRunWhenAccessToFileSystemIsDenied.call();
-          }
-          ShowMessage.asSnack(findViewById(android.R.id.content),
-              "access to read and write to external " +
-                  "storage" +
-                  " was denied");
-        }
-        break;
+          break;
 
-      case ACCESS_TO_ACCOUNTS_REQUEST_ID:
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          // Permission Granted
-          Logger.i(TAG, "access to get accounts was granted");
-          if (toRunWhenAccessToAccountsIsGranted != null) {
-            toRunWhenAccessToAccountsIsGranted.call();
+        case ACCESS_TO_ACCOUNTS_REQUEST_ID:
+          if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // Permission Granted
+            Logger.i(TAG, "access to get accounts was granted");
+            if (toRunWhenAccessToAccountsIsGranted != null) {
+              toRunWhenAccessToAccountsIsGranted.call();
+            }
+          } else {
+            if (toRunWhenAccessToAccountsIsDenied != null) {
+              toRunWhenAccessToAccountsIsDenied.call();
+            }
+            ShowMessage.asSnack(findViewById(android.R.id.content),
+                "access to get accounts was denied");
           }
-        } else {
-          if (toRunWhenAccessToAccountsIsDenied != null) {
-            toRunWhenAccessToAccountsIsDenied.call();
-          }
-          ShowMessage.asSnack(findViewById(android.R.id.content),
-              "access to get accounts was denied");
-        }
-        break;
+          break;
 
-      default:
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        break;
+        default:
+          super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+          break;
+      }
     }
   }
 
