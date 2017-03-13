@@ -2,6 +2,9 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.model.v7.SetComment;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,7 +21,9 @@ public class PostCommentForTimelineArticle
       + "/api/7/";
 
   private PostCommentForTimelineArticle(Body body, String baseHost) {
-    super(body, baseHost);
+    super(body, baseHost,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
   }
 
   public static PostCommentForTimelineArticle of(String timelineArticleId, String text,

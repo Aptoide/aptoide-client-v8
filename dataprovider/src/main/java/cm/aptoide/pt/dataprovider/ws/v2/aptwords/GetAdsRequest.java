@@ -12,6 +12,7 @@ import cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -24,6 +25,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -32,8 +34,6 @@ import rx.Observable;
 @Data @Accessors(chain = true) @EqualsAndHashCode(callSuper = true) public class GetAdsRequest
     extends Aptwords<GetAdsResponse> {
 
-  private static final OkHttpClient client =
-      OkHttpClientFactory.newClient(() -> SecurePreferences.getUserAgent(), isDebug());
   @Getter @Setter private static String forcedCountry = null;
   private final String aptoideClientUUID;
   private final boolean googlePlayServicesAvailable;
@@ -49,8 +49,8 @@ import rx.Observable;
   private boolean mature;
 
   private GetAdsRequest(String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid,
-      boolean mature) {
-    super(client);
+      boolean mature, Converter.Factory converterFactory, OkHttpClient httpClient) {
+    super(httpClient, converterFactory);
     this.aptoideClientUUID = aptoideClientUUID;
     this.googlePlayServicesAvailable = googlePlayServicesAvailable;
     this.oemid = oemid;
@@ -72,8 +72,11 @@ import rx.Observable;
 
   public static GetAdsRequest of(Location location, String keyword, Integer limit,
       String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, boolean mature) {
-    return new GetAdsRequest(aptoideClientUUID, googlePlayServicesAvailable, oemid,
-        mature).setLocation(location).setKeyword(keyword).setLimit(limit);
+    return new GetAdsRequest(aptoideClientUUID, googlePlayServicesAvailable, oemid, mature,
+        WebService.getDefaultConverter(),
+        OkHttpClientFactory.newClient(SecurePreferences::getUserAgent, false)).setLocation(location)
+        .setKeyword(keyword)
+        .setLimit(limit);
   }
 
   public static GetAdsRequest ofHomepageMore(String aptoideClientUUID,

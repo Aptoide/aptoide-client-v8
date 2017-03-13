@@ -7,6 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.model.v3.BaseV3Response;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import rx.Observable;
@@ -16,16 +17,17 @@ import rx.Observable;
  */
 public class CreatePaymentConfirmationRequest extends V3<BaseV3Response> {
 
-  private CreatePaymentConfirmationRequest(String baseHost, BaseBody baseBody) {
-    super(baseHost, baseBody,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), isDebug()));
+  private CreatePaymentConfirmationRequest(BaseBody baseBody) {
+    super(baseBody,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
   }
 
   public static CreatePaymentConfirmationRequest ofInApp(int productId, int paymentId,
       NetworkOperatorManager operatorManager, String developerPayload, String accessToken) {
     final BaseBody args = getBaseBody(productId, paymentId, operatorManager, accessToken);
     args.put("developerPayload", developerPayload);
-    return new CreatePaymentConfirmationRequest(BASE_HOST, args);
+    return new CreatePaymentConfirmationRequest(args);
   }
 
   private static BaseBody getBaseBody(int productId, int paymentId,
@@ -47,14 +49,14 @@ public class CreatePaymentConfirmationRequest extends V3<BaseV3Response> {
     final BaseBody args = getBaseBody(productId, paymentId, operatorManager, accessToken);
     args.put("paykey", paymentConfirmationId);
     args.put("developerPayload", developerPayload);
-    return new CreatePaymentConfirmationRequest(BASE_HOST, args);
+    return new CreatePaymentConfirmationRequest(args);
   }
 
   public static CreatePaymentConfirmationRequest ofPaidApp(int productId, int paymentId,
       NetworkOperatorManager operatorManager, String store, String accessToken) {
     final BaseBody args = getBaseBody(productId, paymentId, operatorManager, accessToken);
     args.put("repo", store);
-    return new CreatePaymentConfirmationRequest(BASE_HOST, args);
+    return new CreatePaymentConfirmationRequest(args);
   }
 
   public static CreatePaymentConfirmationRequest ofPaidApp(int productId, int paymentId,
@@ -63,7 +65,7 @@ public class CreatePaymentConfirmationRequest extends V3<BaseV3Response> {
     final BaseBody args = getBaseBody(productId, paymentId, operatorManager, accessToken);
     args.put("paykey", paymentConfirmationId);
     args.put("repo", store);
-    return new CreatePaymentConfirmationRequest(BASE_HOST, args);
+    return new CreatePaymentConfirmationRequest(args);
   }
 
   @Override protected Observable<BaseV3Response> loadDataFromNetwork(Interfaces interfaces,

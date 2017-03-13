@@ -2,6 +2,9 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.model.v7.GetFollowers;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import rx.Observable;
 
 /**
@@ -11,7 +14,9 @@ import rx.Observable;
 public class GetFollowingRequest extends V7<GetFollowers, GetFollowersRequest.Body> {
 
   protected GetFollowingRequest(GetFollowersRequest.Body body, String baseHost) {
-    super(body, baseHost);
+    super(body, baseHost,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
   }
 
   public static GetFollowingRequest of(BodyInterceptor bodyInterceptor, @Nullable Long userId,

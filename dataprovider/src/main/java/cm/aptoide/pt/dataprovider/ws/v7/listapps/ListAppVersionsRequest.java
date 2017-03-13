@@ -12,7 +12,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.Data;
@@ -31,7 +33,9 @@ import rx.Observable;
   private static final Integer MAX_LIMIT = 10;
 
   private ListAppVersionsRequest(Body body, String baseHost) {
-    super(body, WebService.getDefaultConverter(), baseHost);
+    super(body, baseHost,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
   }
 
   public static ListAppVersionsRequest of(String accessToken, BodyInterceptor bodyInterceptor) {

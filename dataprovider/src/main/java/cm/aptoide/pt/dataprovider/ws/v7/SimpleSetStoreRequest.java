@@ -1,6 +1,9 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,7 +20,9 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
   private static final String BASE_HOST = "https://ws75-primary.aptoide.com/api/7/";
 
   protected SimpleSetStoreRequest(Body body, String baseHost) {
-    super(body, baseHost);
+    super(body, baseHost,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
   }
 
   public static SimpleSetStoreRequest of(String storeName, String storeTheme,

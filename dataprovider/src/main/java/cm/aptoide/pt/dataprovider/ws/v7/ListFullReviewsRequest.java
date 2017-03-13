@@ -8,7 +8,10 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v7.ListFullReviews;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -32,11 +35,15 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   private String url;
 
   protected ListFullReviewsRequest(Body body, String baseHost) {
-    super(body, baseHost);
+    super(body, baseHost,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
   }
 
   public ListFullReviewsRequest(String url, Body body, String baseHost) {
-    super(body, baseHost);
+    super(body, baseHost,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
     this.url = url;
   }
 

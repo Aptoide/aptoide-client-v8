@@ -6,6 +6,9 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -24,13 +27,15 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
   private String url;
 
   GetUserTimelineRequest(String url, Body body, String baseHost) {
-    super(body, baseHost);
+    super(body, baseHost,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
     this.url = url;
   }
 
   GetUserTimelineRequest(String url, Body body, OkHttpClient httpClient,
       Converter.Factory converterFactory, String baseHost) {
-    super(body, httpClient, converterFactory, baseHost);
+    super(body, baseHost, httpClient, converterFactory);
     this.url = url;
   }
 

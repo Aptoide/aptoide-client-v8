@@ -6,7 +6,10 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.model.v7.ListSearchApps;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.util.Collections;
 import java.util.List;
 import lombok.EqualsAndHashCode;
@@ -22,12 +25,14 @@ import rx.Observable;
 public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequest.Body> {
 
   private ListSearchAppsRequest(Body body, String baseHost) {
-    super(body, baseHost);
+    super(body, baseHost,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
   }
 
   private ListSearchAppsRequest(OkHttpClient httpClient, Converter.Factory converterFactory,
       Body body, String baseHost) {
-    super(body, httpClient, converterFactory, baseHost);
+    super(body, baseHost, httpClient, converterFactory);
   }
 
   public static ListSearchAppsRequest of(String query, String storeName,

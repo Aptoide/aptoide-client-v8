@@ -1,6 +1,9 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -18,7 +21,9 @@ public class ShareInstallCardRequest extends V7<BaseV7Response, ShareInstallCard
 
   protected ShareInstallCardRequest(Body body, String baseHost, String packageName, String type,
       String accessToken) {
-    super(body, baseHost);
+    super(body, baseHost,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
     this.packageName = packageName;
     this.type = type;
     this.accessToken = accessToken;

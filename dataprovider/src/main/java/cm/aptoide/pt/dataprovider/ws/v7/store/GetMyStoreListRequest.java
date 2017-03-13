@@ -7,6 +7,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.store.ListStores;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,12 +24,10 @@ public class GetMyStoreListRequest extends V7<ListStores, GetMyStoreListRequest.
   private static boolean useEndless;
   @Nullable private String url;
 
-  public GetMyStoreListRequest(EndlessBody body, String baseHost) {
-    super(body, baseHost);
-  }
-
   public GetMyStoreListRequest(String url, EndlessBody body, String baseHost) {
-    super(body, baseHost);
+    super(body, baseHost,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
     this.url = url;
   }
 

@@ -3,6 +3,9 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -22,7 +25,9 @@ public class LikeCardRequest extends V7<BaseV7Response, LikeCardRequest.Body> {
   private final int rating;
 
   public LikeCardRequest(Body body, String baseHost, String accessToken, String cardId, int rating) {
-    super(body, baseHost);
+    super(body, baseHost,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
     this.accessToken = accessToken;
     this.cardId = cardId;
     this.rating = rating;

@@ -3,6 +3,7 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.ws.v7.store.AccessTokenRequestBodyAdapter;
 import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.io.File;
@@ -29,7 +30,7 @@ import rx.Observable;
 
   private SetStoreRequest(AccessTokenBody body, String baseHost, MultipartBody.Part file,
       OkHttpClient customClient) {
-    super(body, customClient, baseHost);
+    super(body, baseHost, customClient, WebService.getDefaultConverter());
     multipartBody = file;
   }
 

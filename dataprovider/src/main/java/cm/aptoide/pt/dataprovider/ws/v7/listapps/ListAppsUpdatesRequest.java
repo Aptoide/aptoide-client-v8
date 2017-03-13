@@ -10,7 +10,10 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithAlphaBetaKey;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
@@ -37,12 +40,14 @@ import rx.schedulers.Schedulers;
   private static final int SPLIT_SIZE = 100;
 
   private ListAppsUpdatesRequest(Body body, String baseHost) {
-    super(body, baseHost);
+    super(body, baseHost,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
   }
 
   private ListAppsUpdatesRequest(OkHttpClient httpClient, Converter.Factory converterFactory,
       Body body, String baseHost) {
-    super(body, httpClient, converterFactory, baseHost);
+    super(body, baseHost, httpClient, converterFactory);
   }
 
   public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String accessToken,

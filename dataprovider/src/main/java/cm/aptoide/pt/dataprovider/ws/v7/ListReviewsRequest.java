@@ -34,11 +34,11 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
   private static final int MAX_COMMENTS = 10;
 
   private ListReviewsRequest(Body body, String baseHost) {
-    super(body, OkHttpClientFactory.getSingletonClient(new UserAgentGenerator() {
-      @Override public String generateUserAgent() {
-        return SecurePreferences.getUserAgent();
-      }
-    }, isDebug()), WebService.getDefaultConverter(), baseHost);
+    super(body, baseHost, OkHttpClientFactory.getSingletonClient(new UserAgentGenerator() {
+  @Override public String generateUserAgent() {
+    return SecurePreferences.getUserAgent();
+  }
+}, false), WebService.getDefaultConverter());
   }
 
   public static ListReviewsRequest of(String storeName, String packageName,

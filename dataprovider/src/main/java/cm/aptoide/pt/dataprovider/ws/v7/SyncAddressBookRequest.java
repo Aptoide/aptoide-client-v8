@@ -2,6 +2,9 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.model.v7.GetFollowers;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.util.List;
 import lombok.Data;
 import rx.Observable;
@@ -18,7 +21,9 @@ public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequ
       + "/api/7/";
 
   public SyncAddressBookRequest(Body body, String baseHost) {
-    super(body, baseHost);
+    super(body, baseHost,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
   }
 
   public static SyncAddressBookRequest of(List<String> numbers, List<String> emails, BodyInterceptor bodyInterceptor) {

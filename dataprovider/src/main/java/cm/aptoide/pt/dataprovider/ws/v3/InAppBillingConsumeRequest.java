@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.pt.model.v3.BaseV3Response;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import rx.Observable;
@@ -15,9 +16,10 @@ import rx.Observable;
  */
 public class InAppBillingConsumeRequest extends V3<BaseV3Response> {
 
-  private InAppBillingConsumeRequest(String baseHost, BaseBody baseBody) {
-    super(baseHost, baseBody,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), isDebug()));
+  private InAppBillingConsumeRequest(BaseBody baseBody) {
+    super(baseBody,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
   }
 
   public static InAppBillingConsumeRequest of(int apiVersion, String packageName,
@@ -29,7 +31,7 @@ public class InAppBillingConsumeRequest extends V3<BaseV3Response> {
     args.put("reqtype", "iabconsume");
     args.put("purchasetoken", purchaseToken);
     args.put("access_token", accessToken);
-    return new InAppBillingConsumeRequest(BASE_HOST, args);
+    return new InAppBillingConsumeRequest(args);
   }
 
   @Override protected Observable<BaseV3Response> loadDataFromNetwork(Interfaces interfaces,

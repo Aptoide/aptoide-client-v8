@@ -15,9 +15,8 @@ public class DownloadAnalyticsRequest
   private String name;
   private String context;
 
-  protected DownloadAnalyticsRequest(DownloadInstallAnalyticsBaseBody body, String baseHost,
-      String action, String name, String context) {
-    super(body, baseHost);
+  protected DownloadAnalyticsRequest(DownloadInstallAnalyticsBaseBody body, String action, String name, String context) {
+    super(body);
     this.action = action;
     this.name = name;
     this.context = context;
@@ -26,7 +25,7 @@ public class DownloadAnalyticsRequest
   public static DownloadAnalyticsRequest of(DownloadInstallAnalyticsBaseBody body, String action,
       String name, String context, BodyInterceptor bodyInterceptor) {
     return new DownloadAnalyticsRequest(
-        (DownloadInstallAnalyticsBaseBody) bodyInterceptor.intercept(body), BASE_HOST, action,
+        (DownloadInstallAnalyticsBaseBody) bodyInterceptor.intercept(body), action,
         name, context);
   }
 

@@ -7,6 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.text.TextUtils;
 import cm.aptoide.pt.model.v3.BaseV3Response;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -24,8 +25,8 @@ import rx.Observable;
  */
 public class CreateUserRequest extends V3<BaseV3Response> {
 
-  public CreateUserRequest(String baseHost, BaseBody baseBody, OkHttpClient httpClient) {
-    super(baseHost, baseBody, httpClient);
+  public CreateUserRequest(BaseBody baseBody, OkHttpClient httpClient) {
+    super(baseBody, httpClient, WebService.getDefaultConverter());
   }
 
   public static CreateUserRequest of(String email, String password, String aptoideClientUUID) {
@@ -35,8 +36,8 @@ public class CreateUserRequest extends V3<BaseV3Response> {
 
     body.put("hmac", AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash, "bazaar_hmac"));
 
-    return new CreateUserRequest(BASE_HOST, body,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), isDebug()));
+    return new CreateUserRequest(body,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false));
   }
 
   public static CreateUserRequest of(String email, String name, String password,
@@ -61,7 +62,7 @@ public class CreateUserRequest extends V3<BaseV3Response> {
       RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
       MultipartBody.Part multipartBody =
           MultipartBody.Part.createFormData("user_avatar", file.getName(), requestFile);
-      return new CreateUserRequest(BASE_HOST, body, getHttpClient(accessToken));
+      return new CreateUserRequest(body, getHttpClient(accessToken));
     } else if (userAvatarPath.isEmpty()) {
       body.put("update", "true");
       body.put("name", name);
@@ -72,8 +73,8 @@ public class CreateUserRequest extends V3<BaseV3Response> {
     body.put("hmac",
         AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash + name + "true", "bazaar_hmac"));
 
-    return new CreateUserRequest(BASE_HOST, body,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), isDebug()));
+    return new CreateUserRequest(body,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false));
   }
 
   private static void addBaseParameters(String email, String aptoideClientUUID, BaseBody parameters,

@@ -5,7 +5,10 @@ import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v7.ListComments;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import rx.Observable;
 
@@ -19,7 +22,9 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
   private static String url;
 
   private ListCommentsRequest(Body body, String baseHost) {
-    super(body, baseHost);
+    super(body, baseHost,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
   }
 
   public static ListCommentsRequest ofStoreAction(String url, boolean refresh,

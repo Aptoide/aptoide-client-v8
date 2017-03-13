@@ -7,7 +7,10 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -23,13 +26,15 @@ import rx.Observable;
   private static final int LINES_PER_REQUEST = 6;
   private String url;
 
-  private ListAppsRequest(String url, Body body, String baseHost) {
-    super(body, baseHost);
+  private ListAppsRequest(String url, Body body) {
+    super(body, OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
     this.url = url;
   }
 
   private ListAppsRequest(Body body) {
-    super(body, BASE_HOST);
+    super(body, OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
   }
 
   public static ListAppsRequest ofAction(String url, StoreCredentials storeCredentials,
@@ -37,10 +42,10 @@ import rx.Observable;
     V7Url listAppsV7Url = new V7Url(url).remove("listApps");
     if (listAppsV7Url.containsLimit()) {
       return new ListAppsRequest(listAppsV7Url.get(),
-          (Body) bodyInterceptor.intercept(new Body(storeCredentials)), BASE_HOST);
+          (Body) bodyInterceptor.intercept(new Body(storeCredentials)));
     } else {
       return new ListAppsRequest(listAppsV7Url.get(), (Body) bodyInterceptor.intercept(
-          new Body(storeCredentials, Type.APPS_GROUP.getPerLineCount() * LINES_PER_REQUEST)), BASE_HOST);
+          new Body(storeCredentials, Type.APPS_GROUP.getPerLineCount() * LINES_PER_REQUEST)));
     }
   }
 

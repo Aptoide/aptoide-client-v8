@@ -42,7 +42,7 @@ import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -79,28 +79,7 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
   private final int MAX_RETRY_COUNT = 3;
   private boolean accessTokenRetry = false;
 
-  protected V7(B body, String baseHost) {
-    super(Interfaces.class, getDefaultUserAgentGenerator(), WebService.getDefaultConverter(),
-        baseHost);
-    this.body = body;
-  }
-
-  @NonNull private static UserAgentGenerator getDefaultUserAgentGenerator() {
-    return () -> SecurePreferences.getUserAgent();
-  }
-
-  protected V7(B body, Converter.Factory converterFactory, String baseHost) {
-    super(Interfaces.class, getDefaultUserAgentGenerator(), converterFactory, baseHost);
-    this.body = body;
-  }
-
-  protected V7(B body, OkHttpClient httpClient, String baseHost) {
-    super(Interfaces.class, httpClient, WebService.getDefaultConverter(), baseHost);
-    this.body = body;
-  }
-
-  protected V7(B body, OkHttpClient httpClient, Converter.Factory converterFactory,
-      String baseHost) {
+  protected V7(B body, String baseHost, OkHttpClient httpClient, Converter.Factory converterFactory) {
     super(Interfaces.class, httpClient, converterFactory, baseHost);
     this.body = body;
   }

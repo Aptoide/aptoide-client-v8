@@ -7,7 +7,10 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.util.Log;
 import cm.aptoide.pt.model.v7.GetApp;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,12 +27,14 @@ import rx.Observable;
     extends V7<GetApp, GetAppRequest.Body> {
 
   private GetAppRequest(String baseHost, Body body) {
-    super(body, baseHost);
+    super(body, baseHost,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
   }
 
   private GetAppRequest(OkHttpClient httpClient, Converter.Factory converterFactory,
       String baseHost, Body body) {
-    super(body, httpClient, converterFactory, baseHost);
+    super(body, baseHost, httpClient, converterFactory);
   }
 
   public static GetAppRequest of(String packageName, String storeName, BodyInterceptor bodyInterceptor) {
