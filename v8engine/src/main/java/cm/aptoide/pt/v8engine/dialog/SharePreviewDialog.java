@@ -50,17 +50,20 @@ import rx.android.schedulers.AndroidSchedulers;
 public class SharePreviewDialog {
 
   private final AptoideAccountManager accountManager;
-
+  private final boolean dontShowMeAgainOption;
   @Nullable private Displayable displayable;
   private boolean privacyResult;
 
-  public SharePreviewDialog(Displayable cardDisplayable, AptoideAccountManager accountManager) {
+  public SharePreviewDialog(Displayable cardDisplayable, AptoideAccountManager accountManager,
+      boolean dontShowMeAgainOption) {
     this.displayable = cardDisplayable;
     this.accountManager = accountManager;
+    this.dontShowMeAgainOption = dontShowMeAgainOption;
   }
 
-  public SharePreviewDialog(AptoideAccountManager accountManager) {
+  public SharePreviewDialog(AptoideAccountManager accountManager, boolean dontShowMeAgainOption) {
     this.accountManager = accountManager;
+    this.dontShowMeAgainOption = dontShowMeAgainOption;
   }
 
   public AlertDialog.Builder getPreviewDialogBuilder(Context context) {
@@ -572,11 +575,14 @@ public class SharePreviewDialog {
         }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
           subscriber.onNext(GenericDialogs.EResponse.NO);
           subscriber.onCompleted();
-        }).setNeutralButton(R.string.dont_show_again, (dialogInterface, i) -> {
-          subscriber.onNext(GenericDialogs.EResponse.CANCEL);
-          subscriber.onCompleted();
-          ManagerPreferences.setShowPreviewDialog(false);
         });
+        if (dontShowMeAgainOption) {
+          alertDialog.setNeutralButton(R.string.dont_show_again, (dialogInterface, i) -> {
+            subscriber.onNext(GenericDialogs.EResponse.CANCEL);
+            subscriber.onCompleted();
+            ManagerPreferences.setShowPreviewDialog(false);
+          });
+        }
       }
 
       alertDialog.show();

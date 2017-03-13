@@ -82,7 +82,9 @@ public class Analytics {
   private static void track(String event, String key, String attr, int flags) {
 
     try {
-      if (!ACTIVATE_LOCALYTICS && !ACTIVATE_FLURRY) return;
+      if (!ACTIVATE_LOCALYTICS && !ACTIVATE_FLURRY) {
+        return;
+      }
 
       HashMap stringObjectHashMap = new HashMap<>();
 
@@ -145,6 +147,13 @@ public class Analytics {
     }
   }
 
+  private static void logFacebookEvents(String eventName) {
+    if (BuildConfig.BUILD_TYPE.equals("debug")) {
+      return;
+    }
+    facebookLogger.logEvent(eventName);
+  }
+
   public void save(@NonNull String key, @NonNull Event event) {
     saver.save(key, event);
   }
@@ -183,13 +192,20 @@ public class Analytics {
   private static void track(String event, int flags) {
 
     try {
-      if (!ACTIVATE_LOCALYTICS && !ACTIVATE_FLURRY) return;
+      if (!ACTIVATE_LOCALYTICS && !ACTIVATE_FLURRY) {
+        return;
+      }
 
-      if (checkAcceptability(flags, LOCALYTICS)) Localytics.tagEvent(event);
+      if (checkAcceptability(flags, LOCALYTICS)) {
+        Localytics.tagEvent(event);
+        Logger.d(TAG, "Localytics Event: " + event);
+      }
 
-      if (checkAcceptability(flags, FLURRY)) FlurryAgent.logEvent(event);
+      if (checkAcceptability(flags, FLURRY)) {
+        FlurryAgent.logEvent(event);
+        Logger.d(TAG, "Flurry Event: " + event);
+      }
 
-      Logger.d(TAG, "Event: " + event);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -387,21 +403,32 @@ public class Analytics {
     private static final String CREATE_USER_PROFILE = "Account_Create_A_User_Profile_Screen";
     private static final String PROFILE_SETTINGS = "Account_Profile_Settings_Screen";
     private static final String CREATE_YOUR_STORE = "Account_Create_Your_Store_Screen";
+    private static final String HAS_PICTURE = "has_picture";
 
     public static void clickIn(StartupClick clickEvent) {
       track(LOGIN_SIGN_UP_START_SCREEN, ACTION, clickEvent.getClickEvent(), ALL);
+      Map<String, String> map = new HashMap<>();
+      map.put(ACTION, clickEvent.getClickEvent());
+      logFacebookEvents(LOGIN_SIGN_UP_START_SCREEN, map);
     }
 
     public static void signInSuccessAptoide() {
       track(SIGNUP_SCREEN, ALL);
+      logFacebookEvents(SIGNUP_SCREEN);
     }
 
     public static void loginSuccess(LoginMethod loginMethod) {
       track(LOGIN_SCREEN, METHOD, loginMethod.getMethod(), ALL);
+      Map<String, String> map = new HashMap<>();
+      map.put(METHOD, loginMethod.getMethod());
+      logFacebookEvents(LOGIN_SCREEN, map);
     }
 
     public static void createdUserProfile(boolean hasPicture) {
-      track(CREATE_USER_PROFILE, "has_picture", hasPicture ? "True" : "False", ALL);
+      track(CREATE_USER_PROFILE, HAS_PICTURE, hasPicture ? "True" : "False", ALL);
+      Map<String, String> map = new HashMap<>();
+      map.put(HAS_PICTURE, hasPicture ? "True" : "False");
+      logFacebookEvents(CREATE_USER_PROFILE, map);
     }
 
     public static void accountProfileAction(int screen, ProfileAction action) {
@@ -409,13 +436,15 @@ public class Analytics {
       map.put(ACTION, action.getAction());
       map.put("screen", Integer.toString(screen));
       track(PROFILE_SETTINGS, map, ALL);
+      logFacebookEvents(PROFILE_SETTINGS, map);
     }
 
     public static void createStore(boolean hasPicture, CreateStoreAction action) {
       HashMap<String, String> map = new HashMap<>();
       map.put(ACTION, action.getAction());
-      map.put("has_picture", hasPicture ? "True" : "False");
+      map.put(HAS_PICTURE, hasPicture ? "True" : "False");
       track(CREATE_YOUR_STORE, map, ALL);
+      logFacebookEvents(CREATE_YOUR_STORE, map);
     }
 
     public enum StartupClick {
@@ -1020,8 +1049,9 @@ public class Analytics {
       edit.apply();
       Logger.d(TAG, "firstSession: IS_LOCALYTICS_FIRST_SESSION: " + sPref.getBoolean(
           IS_LOCALYTICS_FIRST_SESSION, false));
-      Logger.d(TAG, "firstSession: IS_LOCALYTICS_ENABLE_KEY: " + sPref.getBoolean(
-          IS_LOCALYTICS_ENABLE_KEY, false));
+      Logger.d(TAG,
+          "firstSession: IS_LOCALYTICS_ENABLE_KEY: " + sPref.getBoolean(IS_LOCALYTICS_ENABLE_KEY,
+              false));
     }
   }
 
