@@ -10,7 +10,10 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithAlphaBetaKey;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
@@ -36,21 +39,17 @@ import rx.schedulers.Schedulers;
 
   private static final int SPLIT_SIZE = 100;
 
-  private ListAppsUpdatesRequest(Body body, String baseHost) {
-    super(body, baseHost);
-  }
-
-  private ListAppsUpdatesRequest(OkHttpClient httpClient, Converter.Factory converterFactory,
-      Body body, String baseHost) {
-    super(body, httpClient, converterFactory, baseHost);
+  private ListAppsUpdatesRequest(Body body, String baseHost, BodyInterceptor bodyInterceptor) {
+    super(body, baseHost,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String accessToken,
       String aptoideClientUUID, BodyInterceptor bodyInterceptor) {
-
-    return new ListAppsUpdatesRequest((Body) bodyInterceptor.intercept(
-        new Body(getInstalledApks(), subscribedStoresIds, aptoideClientUUID)),
-        BASE_HOST);
+    return new ListAppsUpdatesRequest(
+        new Body(getInstalledApks(), subscribedStoresIds, aptoideClientUUID), BASE_HOST,
+        bodyInterceptor);
   }
 
   private static List<ApksData> getInstalledApks() {
@@ -94,7 +93,8 @@ import rx.schedulers.Schedulers;
             .observeOn(Schedulers.io())
             // map bodies to request with bodies
             //.map(body -> fetchDataUsingBodyWithRetry(interfaces, body, bypassCache, 3))
-            .map(body -> interfaces.listAppsUpdates(body, bypassCache))
+            .map(body -> intercept(body).flatMapObservable(
+                interceptedBody -> interfaces.listAppsUpdates((Body) interceptedBody, bypassCache)))
             // wait for all requests to be ready and return a list of requests
             .toList()
             // subscribe to all observables (list of observables<request>) at the same time using merge
@@ -116,7 +116,8 @@ import rx.schedulers.Schedulers;
               return resultListAppsUpdates;
             });
       }
-      return interfaces.listAppsUpdates(body, bypassCache);
+      return intercept(body).flatMapObservable(
+          interceptedBody -> interfaces.listAppsUpdates((Body) interceptedBody, bypassCache));
     });
   }
 

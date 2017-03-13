@@ -35,8 +35,9 @@ import cm.aptoide.pt.v8engine.fragment.implementations.SettingsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SocialFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SpotSharePreviewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowStoreFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowersFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowingFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineLikesFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.UpdatesFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.storetab.GetAdsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.storetab.GetStoreFragment;
@@ -270,21 +271,31 @@ public class FragmentProviderImpl implements FragmentProvider {
     return CreateUserFragment.newInstance();
   }
 
-  @Override public Fragment newTimeLineFollowStatsFragment(
-      TimeLineFollowFragment.FollowFragmentOpenMode openMode, Long id, long followNumber,
+  @Override
+  public Fragment newTimeLineFollowersUsingUserIdFragment(Long userId, long followerNumber,
       String storeTheme) {
-    return TimeLineFollowFragment.newInstance(openMode, id, followNumber, storeTheme);
+    return TimeLineFollowersFragment.newInstanceUsingUser(userId, followerNumber, storeTheme);
   }
 
-  @Override public Fragment newStoreTimeLineFollowStatsFragment(Long id, long followNumber,
-      String storeTheme, TimeLineFollowFragment.FollowFragmentOpenMode openMode) {
-    return TimeLineFollowStoreFragment.newInstance(id, followNumber, storeTheme, openMode);
+  @Override public Fragment newTimeLineFollowingFragmentUsingUserId(Long id, long followNumber,
+      String storeTheme) {
+    return TimeLineFollowingFragment.newInstanceUsingUserId(id, followNumber, storeTheme);
   }
 
-  @Override public Fragment newTimeLineFollowStatsFragment(
-      TimeLineFollowFragment.FollowFragmentOpenMode openMode, String storeTheme, String cardUid,
-      long numberOfLikes) {
-    return TimeLineFollowFragment.newInstance(openMode, storeTheme, cardUid, numberOfLikes);
+  @Override
+  public Fragment newTimeLineFollowersUsingStoreIdFragment(Long storeId, long followerNumber,
+      String storeTheme) {
+    return TimeLineFollowersFragment.newInstanceUsingStore(storeId, followerNumber, storeTheme);
+  }
+
+  @Override public Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, long followNumber,
+      String storeTheme) {
+    return TimeLineFollowingFragment.newInstanceUsingStoreId(id, followNumber, storeTheme);
+  }
+
+  @Override
+  public Fragment newTimeLineLikesFragment(String cardUid, long numberOfLikes, String storeTheme) {
+    return TimeLineLikesFragment.newInstance(storeTheme, cardUid, numberOfLikes);
   }
 
   @Override
@@ -319,5 +330,9 @@ public class FragmentProviderImpl implements FragmentProvider {
 
   @Override public Fragment newThankYouConnectingFragment(String tag) {
     return ThankYouConnectingFragment.newInstance(tag);
+  }
+
+  @Override public Fragment newTimeLineFollowersFragment(long followerNumber, String storeTheme) {
+    return TimeLineFollowersFragment.newInstanceUsingUser(followerNumber, storeTheme);
   }
 }

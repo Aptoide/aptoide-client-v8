@@ -2,6 +2,9 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -14,34 +17,28 @@ import rx.Observable;
 public class ShareCardRequest extends V7<BaseV7Response, ShareCardRequest.Body> {
 
   private final String cardId;
-  private final String accessToken;
 
-  protected ShareCardRequest(Body body, String baseHost, String cardId, String accessToken) {
-    super(body, baseHost);
+  protected ShareCardRequest(Body body, String cardId, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
     this.cardId = cardId;
-    this.accessToken = accessToken;
   }
 
-  public static ShareCardRequest of(TimelineCard timelineCard, String accessToken,
-      BodyInterceptor bodyInterceptor) {
+  public static ShareCardRequest of(TimelineCard timelineCard, BodyInterceptor bodyInterceptor) {
     final ShareCardRequest.Body body = new ShareCardRequest.Body(timelineCard.getCardId());
-    return new ShareCardRequest((ShareCardRequest.Body) bodyInterceptor.intercept(body),
-        BASE_HOST, timelineCard.getCardId(), accessToken);
+    return new ShareCardRequest(body, timelineCard.getCardId(), bodyInterceptor);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(V7.Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.shareCard(body, cardId, accessToken);
+    return intercept(body).flatMapObservable(
+        body -> interfaces.shareCard((Body) body, cardId, body.getAccessToken()));
   }
 
-  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
-      extends BaseBody {
+  @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
 
-    private String cardId;
-
-    public Body(String cardId) {
-      this.cardId = cardId;
-    }
+    private final String cardId;
   }
 }
 

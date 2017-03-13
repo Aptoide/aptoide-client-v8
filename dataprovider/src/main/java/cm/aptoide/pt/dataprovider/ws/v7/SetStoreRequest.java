@@ -3,6 +3,7 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.ws.v7.store.AccessTokenRequestBodyAdapter;
 import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.io.File;
@@ -27,9 +28,9 @@ import rx.Observable;
 
   private final MultipartBody.Part multipartBody;
 
-  private SetStoreRequest(AccessTokenBody body, String baseHost, MultipartBody.Part file,
-      OkHttpClient customClient) {
-    super(body, customClient, baseHost);
+  private SetStoreRequest(AccessTokenBody body, MultipartBody.Part file, OkHttpClient customClient,
+      BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST, customClient, WebService.getDefaultConverter(), bodyInterceptor);
     multipartBody = file;
   }
 
@@ -44,9 +45,9 @@ import rx.Observable;
     // use a client with bigger timeouts
     OkHttpClient.Builder clientBuilder = getBuilder();
 
-    return new SetStoreRequest(body, BASE_HOST,
+    return new SetStoreRequest(body,
         MultipartBody.Part.createFormData("store_avatar", file.getName(), requestFile),
-        clientBuilder.build());
+        clientBuilder.build(), bodyInterceptor);
   }
 
   @NonNull private static OkHttpClient.Builder getBuilder() {
@@ -58,8 +59,9 @@ import rx.Observable;
     return clientBuilder;
   }
 
-  public static SetStoreRequest of(String accessToken, String storeName, String storeTheme, String storeAvatarPath, String storeDescription, Boolean editStore,
-      long storeId, BodyInterceptor bodyInterceptor) {
+  public static SetStoreRequest of(String accessToken, String storeName, String storeTheme,
+      String storeAvatarPath, String storeDescription, Boolean editStore, long storeId,
+      BodyInterceptor bodyInterceptor) {
     AccessTokenRequestBodyAdapter body =
         new AccessTokenRequestBodyAdapter(new BaseBody(), bodyInterceptor, accessToken, storeName,
             storeTheme, storeDescription, editStore, storeId);
@@ -69,17 +71,14 @@ import rx.Observable;
     // use a client with bigger timeouts
     OkHttpClient.Builder clientBuilder = getBuilder();
 
-    return new SetStoreRequest(body, BASE_HOST,
+    return new SetStoreRequest(body,
         MultipartBody.Part.createFormData("store_avatar", file.getName(), requestFile),
-        clientBuilder.build());
+        clientBuilder.build(), bodyInterceptor);
   }
-
-  //private RequestBody createBodyPartFromString(String string) {
-  //  return RequestBody.create(MediaType.parse("multipart/form-data"), string);
-  //}
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.editStore(multipartBody, ((AccessTokenRequestBodyAdapter) body).get());
+    return ((AccessTokenRequestBodyAdapter) body).get()
+        .flatMapObservable(body -> interfaces.editStore(multipartBody, body));
   }
 }

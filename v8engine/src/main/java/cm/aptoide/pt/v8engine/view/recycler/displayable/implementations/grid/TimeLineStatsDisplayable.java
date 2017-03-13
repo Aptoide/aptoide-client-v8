@@ -8,7 +8,6 @@ import cm.aptoide.pt.model.v7.TimelineStats;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
 import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -71,12 +70,15 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
   public Void followersClick(NavigationManagerV4 navigationManager) {
     if (storeId > 0) {
       navigationManager.navigateTo(V8Engine.getFragmentProvider()
-          .newStoreTimeLineFollowStatsFragment(storeId, getPojo().getData().getFollowers(),
-              storeTheme, TimeLineFollowFragment.FollowFragmentOpenMode.FOLLOWERS));
+          .newTimeLineFollowersUsingStoreIdFragment(storeId, getPojo().getData().getFollowers(),
+              storeTheme));
+    } else if (userId > 0) {
+      navigationManager.navigateTo(V8Engine.getFragmentProvider()
+          .newTimeLineFollowersUsingUserIdFragment(userId, getPojo().getData().getFollowers(),
+              storeTheme));
     } else {
       navigationManager.navigateTo(V8Engine.getFragmentProvider()
-          .newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode.FOLLOWERS,
-              userId, getPojo().getData().getFollowers(), storeTheme));
+          .newTimeLineFollowersFragment(getPojo().getData().getFollowers(), storeTheme));
     }
     return null;
   }
@@ -84,12 +86,12 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
   public Void followingClick(NavigationManagerV4 navigationManager) {
     if (storeId > 0) {
       navigationManager.navigateTo(V8Engine.getFragmentProvider()
-          .newStoreTimeLineFollowStatsFragment(storeId, getPojo().getData().getFollowers(),
-              storeTheme, TimeLineFollowFragment.FollowFragmentOpenMode.FOLLOWING));
+          .newTimeLineFollowingFragmentUsingStoreId(storeId, getPojo().getData().getFollowing(),
+              storeTheme));
     } else {
       navigationManager.navigateTo(V8Engine.getFragmentProvider()
-          .newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode.FOLLOWING,
-              userId, getPojo().getData().getFollowing(), storeTheme));
+          .newTimeLineFollowingFragmentUsingUserId(userId, getPojo().getData().getFollowing(),
+              storeTheme));
     }
     return null;
   }

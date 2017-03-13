@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.pt.model.v3.InAppBillingAvailableResponse;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import rx.Observable;
@@ -15,9 +16,10 @@ import rx.Observable;
  */
 public class InAppBillingAvailableRequest extends V3<InAppBillingAvailableResponse> {
 
-  public InAppBillingAvailableRequest(String baseHost, BaseBody baseBody) {
-    super(baseHost, baseBody,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), isDebug()));
+  public InAppBillingAvailableRequest(BaseBody baseBody) {
+    super(baseBody,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
   }
 
   public static InAppBillingAvailableRequest of(int apiVersion, String packageName, String type) {
@@ -27,7 +29,7 @@ public class InAppBillingAvailableRequest extends V3<InAppBillingAvailableRespon
     args.put("reqtype", "iabavailable");
     args.put("package", packageName);
     args.put("purchasetype", type);
-    return new InAppBillingAvailableRequest(BASE_HOST, args);
+    return new InAppBillingAvailableRequest(args);
   }
 
   @Override

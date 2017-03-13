@@ -9,7 +9,6 @@ import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
-import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import com.trello.rxlifecycle.android.FragmentEvent;

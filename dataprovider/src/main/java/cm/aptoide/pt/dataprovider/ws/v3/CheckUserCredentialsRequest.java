@@ -16,8 +16,9 @@ public class CheckUserCredentialsRequest extends V3<CheckUserCredentialsJson> {
   private final boolean createStore;
 
   public CheckUserCredentialsRequest(BaseBody baseBody, boolean createStore) {
-    super(BASE_HOST, baseBody, OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(),
-        WebService.isDebug()));
+    super(baseBody,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
     this.createStore = createStore;
   }
 

@@ -22,7 +22,6 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
@@ -77,8 +76,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     final AptoideClientUUID aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
 
-    if (!displayable.getOpenMode()
-        .equals(TimeLineFollowFragment.FollowFragmentOpenMode.LIKE_PREVIEW)) {
+    if (!displayable.isLike()) {
       followLayout.setVisibility(View.GONE);
       followNumbers.setVisibility(View.VISIBLE);
       separatorView.setVisibility(View.VISIBLE);

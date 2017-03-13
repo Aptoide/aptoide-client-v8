@@ -25,20 +25,16 @@ import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v3.PaymentAuthorizationsResponse;
 import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
 import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
-import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.io.IOException;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
+import retrofit2.Converter;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Header;
-import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -60,8 +56,8 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
   private final String INVALID_ACCESS_TOKEN_CODE = "invalid_token";
   private boolean accessTokenRetry = false;
 
-  protected V3(String baseHost, BaseBody baseBody, OkHttpClient httpClient) {
-    super(Interfaces.class, httpClient, WebService.getDefaultConverter(), baseHost);
+  protected V3(BaseBody baseBody, OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(Interfaces.class, httpClient, converterFactory, BASE_HOST);
     this.map = baseBody;
   }
 

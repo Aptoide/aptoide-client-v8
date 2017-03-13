@@ -12,7 +12,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.Data;
@@ -30,22 +32,10 @@ import rx.Observable;
 
   private static final Integer MAX_LIMIT = 10;
 
-  private ListAppVersionsRequest(Body body, String baseHost) {
-    super(body, WebService.getDefaultConverter(), baseHost);
-  }
-
-  public static ListAppVersionsRequest of(String accessToken, BodyInterceptor bodyInterceptor) {
-    Body body = new Body();
-    body.setLimit(MAX_LIMIT);
-    return new ListAppVersionsRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
-  }
-
-  public static ListAppVersionsRequest of(int limit, int offset, String accessToken,
-      BodyInterceptor bodyInterceptor) {
-    Body body = new Body();
-    body.setLimit(limit);
-    body.setOffset(offset);
-    return new ListAppVersionsRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
+  private ListAppVersionsRequest(Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static ListAppVersionsRequest of(String packageName, List<String> storeNames,
@@ -54,8 +44,7 @@ import rx.Observable;
     if (storeNames != null && !storeNames.isEmpty()) {
       Body body = new Body(packageName, storeNames, storeCredentials);
       body.setLimit(MAX_LIMIT);
-      return new ListAppVersionsRequest((Body) bodyInterceptor.intercept(body),
-          BASE_HOST);
+      return new ListAppVersionsRequest(body, bodyInterceptor);
     } else {
       return of(packageName, accessToken, storeCredentials, bodyInterceptor);
     }
@@ -66,20 +55,13 @@ import rx.Observable;
     Body body = new Body(packageName);
     body.setStoresAuthMap(storeCredentials);
     body.setLimit(MAX_LIMIT);
-    return new ListAppVersionsRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
-  }
-
-  public static ListAppVersionsRequest of(String packageName, int limit, int offset,
-      String accessToken, BodyInterceptor bodyInterceptor) {
-    Body body = new Body(packageName);
-    body.setLimit(limit);
-    body.setOffset(offset);
-    return new ListAppVersionsRequest((Body) bodyInterceptor.intercept(body), BASE_HOST);
+    return new ListAppVersionsRequest(body, bodyInterceptor);
   }
 
   @Override protected Observable<ListAppVersions> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.listAppVersions(body, bypassCache);
+    return intercept(body).flatMapObservable(
+        body -> interfaces.listAppVersions((Body) body, bypassCache));
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body

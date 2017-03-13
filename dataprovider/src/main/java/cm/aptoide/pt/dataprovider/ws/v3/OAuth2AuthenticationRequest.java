@@ -8,6 +8,7 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.pt.model.v3.OAuth;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -23,8 +24,9 @@ import rx.Observable;
 public class OAuth2AuthenticationRequest extends V3<OAuth> {
 
   public OAuth2AuthenticationRequest(BaseBody baseBody) {
-    super(BASE_HOST, baseBody,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), isDebug()));
+    super(baseBody,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
   }
 
   public static OAuth2AuthenticationRequest of(String username, String password, String mode,

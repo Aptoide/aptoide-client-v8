@@ -1,6 +1,9 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -14,26 +17,26 @@ public class ShareInstallCardRequest extends V7<BaseV7Response, ShareInstallCard
 
   private final String packageName;
   private final String type;
-  private final String accessToken;
 
-  protected ShareInstallCardRequest(Body body, String baseHost, String packageName, String type,
-      String accessToken) {
-    super(body, baseHost);
+  protected ShareInstallCardRequest(Body body, String packageName, String type,
+      BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
     this.packageName = packageName;
     this.type = type;
-    this.accessToken = accessToken;
   }
 
-  public static ShareInstallCardRequest of(String packageName, String accessToken, String shareType,
+  public static ShareInstallCardRequest of(String packageName, String shareType,
       BodyInterceptor bodyInterceptor) {
     ShareInstallCardRequest.Body body = new ShareInstallCardRequest.Body(packageName);
-    return new ShareInstallCardRequest((ShareInstallCardRequest.Body) bodyInterceptor.intercept(body),
-        BASE_HOST, packageName, shareType, accessToken);
+    return new ShareInstallCardRequest(body, packageName, shareType, bodyInterceptor);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.shareInstallCard(body, packageName, accessToken, type);
+    return intercept(body).flatMapObservable(
+        body -> interfaces.shareInstallCard((Body) body, packageName, body.getAccessToken(), type));
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
