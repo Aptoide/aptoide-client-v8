@@ -71,7 +71,7 @@ public class MyAccountFragment extends GooglePlayServicesFragment implements MyA
         HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
             V8Engine.getConfiguration().getDefaultTheme());
     navManager.cleanBackStack();
-    navManager.navigateTo(home);
+    navManager.navigateToWithoutBackSave(home);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

@@ -94,7 +94,7 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
     return null;
   }
 
-  public void followFriendsClick(NavigationManagerV4 navigationManager) {
+  void followFriendsClick(NavigationManagerV4 navigationManager) {
     timelineAnalytics.sendFollowFriendsEvent();
     navigationManager.navigateTo(V8Engine.getFragmentProvider().newAddressBookFragment());
   }

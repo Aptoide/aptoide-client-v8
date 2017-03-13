@@ -407,7 +407,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.menu_appview_fragment, menu);
-    SearchUtils.setupGlobalSearchView(menu, getNavigationManager());
+    SearchUtils.setupGlobalSearchView(menu, this);
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }
 
@@ -709,7 +709,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
                     sharePreviewDialog, alertDialog, socialRepository);
               }
             }
-          }, Throwable::printStackTrace);
+          }, err -> err.printStackTrace());
     } else {
 
       shareDefault(appName, packageName, wUrl);

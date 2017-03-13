@@ -33,7 +33,8 @@ public class AdsRepository {
     this.aptoideClientUUID = aptoideClientUUID;
     this.accountManager = accountManager;
     this.googlePlayServicesAvailabilityChecker =
-        DataproviderUtils.AdNetworksUtils::isGooglePlayServicesAvailable;
+        (context) -> DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context);
+
     partnerIdProvider = () -> DataProvider.getConfiguration().getPartnerId();
   }
 
@@ -46,12 +47,12 @@ public class AdsRepository {
 
   private Observable<MinimalAd> mapToMinimalAd(
       Observable<GetAdsResponse> getAdsResponseObservable) {
-    return getAdsResponseObservable.map(GetAdsResponse::getAds).flatMap(ads -> {
+    return getAdsResponseObservable.map((getAdsResponse) -> getAdsResponse.getAds()).flatMap(ads -> {
       if (!validAds(ads)) {
         return Observable.error(new IllegalStateException("Invalid ads returned from server"));
       }
       return Observable.just(ads.get(0));
-    }).map(MinimalAd::from);
+    }).map((ad) -> MinimalAd.from(ad));
   }
 
   public static boolean validAds(List<GetAdsResponse.Ad> ads) {
@@ -75,7 +76,7 @@ public class AdsRepository {
         return Observable.error(new IllegalStateException("Invalid ads returned from server"));
       }
       return Observable.just(ads);
-    }).map(GetAdsResponse::getAds).map(ads -> {
+    }).map((getAdsResponse) -> getAdsResponse.getAds()).map(ads -> {
       List<MinimalAd> minimalAds = new LinkedList<>();
       for (GetAdsResponse.Ad ad : ads) {
         minimalAds.add(MinimalAd.from(ad));

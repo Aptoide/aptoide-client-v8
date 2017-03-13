@@ -18,6 +18,7 @@ public class AptoideBase extends V8Engine {
   @Override public void onCreate() {
     setupCrashReports(BuildConfig.CRASH_REPORTS_DISABLED);
     super.onCreate();
+    //setupStrictMode();
   }
 
   @Override protected void attachBaseContext(Context base) {

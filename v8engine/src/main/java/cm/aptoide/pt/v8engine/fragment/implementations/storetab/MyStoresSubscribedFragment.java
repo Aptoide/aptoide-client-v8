@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
@@ -90,7 +91,8 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
               new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
           storesDisplayables.add(
               new RecommendedStoreDisplayable(list.get(i), storeRepository, accountManager,
-                  new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider),
+                  new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider, AccessorFactory
+                      .getAccessorFor(cm.aptoide.pt.database.realm.Store.class)),
                   storeCredentialsProvider));
         } else {
           storesDisplayables.add(new GridStoreDisplayable(list.get(i)));

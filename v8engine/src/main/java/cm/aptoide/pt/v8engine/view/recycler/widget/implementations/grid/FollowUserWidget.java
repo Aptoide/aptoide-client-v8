@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -72,8 +74,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
 
   @Override public void bindView(FollowUserDisplayable displayable) {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    final AptoideClientUUID aptoideClientUUID = new IdsRepositoryImpl
-        (SecurePreferencesImplementation.getInstance(), getContext());
+    final AptoideClientUUID aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
 
     if (!displayable.getOpenMode()
         .equals(TimeLineFollowFragment.FollowFragmentOpenMode.LIKE_PREVIEW)) {
@@ -95,7 +97,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
 
       final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager,
           new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
-          new StoreCredentialsProviderImpl());
+          new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class));
 
       Action1<Void> openStore = __ -> {
         getNavigationManager().navigateTo(

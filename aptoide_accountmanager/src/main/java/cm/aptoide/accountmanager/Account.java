@@ -5,6 +5,8 @@
 
 package cm.aptoide.accountmanager;
 
+import java.util.List;
+
 /**
  * Created by marcelobenites on 10/02/17.
  */
@@ -23,11 +25,12 @@ public class Account {
   private final boolean adultContentEnabled;
   private final Access access;
   private final boolean accessConfirmed;
-  private String password;
+  private final String password;
+  private final List<Store> subscribedStores;
 
   public Account(String id, String email, String nickname, String avatar, String refreshToken,
       String token, String password, Type type, String store, String storeAvatar, boolean adultContentEnabled,
-      Access access, boolean accessConfirmed) {
+      Access access, boolean accessConfirmed, List<Store> subscribedStores) {
     this.id = id;
     this.email = email;
     this.nickname = nickname;
@@ -41,6 +44,11 @@ public class Account {
     this.adultContentEnabled = adultContentEnabled;
     this.access = access;
     this.accessConfirmed = accessConfirmed;
+    this.subscribedStores = subscribedStores;
+  }
+
+  public List<Store> getSubscribedStores() {
+    return subscribedStores;
   }
 
   public String getEmail() {

@@ -296,7 +296,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
         android.R.string.ok, R.string.unfollow).subscribe(eResponse -> {
       switch (eResponse) {
         case NO:
-          StoreUtils.unsubscribeStore(storeName, accountManager, storeCredentialsProvider);
+          StoreUtils.unSubscribeStore(storeName, accountManager, storeCredentialsProvider);
         case YES:
         case CANCEL:
           getActivity().onBackPressed();
@@ -324,7 +324,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   protected void setupSearch(Menu menu) {
-    SearchUtils.setupInsideStoreSearchView(menu, getNavigationManager(), storeName);
+    SearchUtils.setupInsideStoreSearchView(menu, this, storeName);
   }
 
   @Override public void setupViews() {

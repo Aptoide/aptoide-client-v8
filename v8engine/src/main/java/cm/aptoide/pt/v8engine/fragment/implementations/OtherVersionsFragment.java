@@ -134,7 +134,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
             ListAppVersionsRequest.of(appPackge, storeNames, accountManager.getAccessToken(),
                 aptoideClientUUID.getUniqueIdentifier(), StoreUtils.getSubscribedStoresAuthMap(),
                 new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager)),
-            otherVersionsSuccessRequestListener, Throwable::printStackTrace);
+            otherVersionsSuccessRequestListener, err -> err.printStackTrace());
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);

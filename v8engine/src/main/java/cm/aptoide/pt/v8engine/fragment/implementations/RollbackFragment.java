@@ -89,7 +89,7 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
-    AptoideUtils.ThreadU.runOnUiThread(this::fetchRollbacks);
+    AptoideUtils.ThreadU.runOnUiThread(() -> fetchRollbacks());
   }
 
   @UiThread private void fetchRollbacks() {

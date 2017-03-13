@@ -108,24 +108,26 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
         likeButton.setHeartState(false);
       }
 
-      likeButton.setOnClickListener(view -> {
-        if (likeCard(displayable, 1)) {
-          numberLikes.setText(String.valueOf(displayable.getNumberOfLikes() + 1));
-          numberLikes.setVisibility(View.VISIBLE);
-          if (likePreviewContainer.getChildCount() < 4) {
-            if (!displayable.isLiked()) {
-              knockWithSixpackCredentials(displayable.getAbUrl());
-              UserTimeline user = new UserTimeline();
-              Store store = new Store();
-              store.setAvatar(accountManager.getAccount().getStoreAvatar());
-              user.setAvatar(accountManager.getAccount().getAvatar());
-              user.setStore(store);
-              addUserToPreview(marginOfTheNextLikePreview, user);
-              likePreviewContainer.invalidate();
+      compositeSubscription.add(RxView.clicks(likeButton)
+          .flatMap(__ -> accountManager.getAccountAsync().toObservable())
+          .subscribe(account -> {
+            if (likeCard(displayable, 1)) {
+              numberLikes.setText(String.valueOf(displayable.getNumberOfLikes() + 1));
+              numberLikes.setVisibility(View.VISIBLE);
+              if (likePreviewContainer.getChildCount() < 4) {
+                if (!displayable.isLiked()) {
+                  knockWithSixpackCredentials(displayable.getAbUrl());
+                  UserTimeline user = new UserTimeline();
+                  Store store = new Store();
+                  store.setAvatar(account.getStoreAvatar());
+                  user.setAvatar(account.getAvatar());
+                  user.setStore(store);
+                  addUserToPreview(marginOfTheNextLikePreview, user);
+                  likePreviewContainer.invalidate();
+                }
+              }
             }
-          }
-        }
-      });
+          }));
 
       like.setVisibility(View.VISIBLE);
     } else {

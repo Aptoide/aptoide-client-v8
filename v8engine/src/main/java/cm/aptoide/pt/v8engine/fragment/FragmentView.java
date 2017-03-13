@@ -27,6 +27,13 @@ public abstract class FragmentView extends RxFragment implements cm.aptoide.pt.v
     return navigator;
   }
 
+  // TODO: move navigation manager creation to here and fix all the extending classes
+  //
+  //@Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+  //  navigator = NavigationManagerV4.Builder.buildWith(getActivity());
+  //  super.onActivityCreated(savedInstanceState);
+  //}
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
