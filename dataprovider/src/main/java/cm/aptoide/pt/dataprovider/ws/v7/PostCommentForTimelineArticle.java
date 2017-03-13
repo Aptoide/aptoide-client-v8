@@ -14,7 +14,6 @@ import rx.Observable;
 public class PostCommentForTimelineArticle
     extends V7<SetComment, PostCommentForTimelineArticle.Body> {
 
-  //private static final String BASE_HOST = "http://ws75-primary.aptoide.com/api/7/";
   private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
       + "://"
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
