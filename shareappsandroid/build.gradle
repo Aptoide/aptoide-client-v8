@@ -25,7 +25,7 @@ dependencies {
   compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
   testCompile 'junit:junit:4.12'
 
-  compile project(path: ':shareapps')
+  compile project(path: ':spotandshare')
   compile project(path: ':utils')
 
   compile "com.android.support:design:${SUPPORT_LIB_VERSION}"

@@ -1,6 +1,6 @@
 package cm.aptoide.pt.shareappsandroid;
 
-import cm.aptoide.pt.shareapps.socket.entities.Host;
+import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.shareappsandroid.analytics.SpotAndShareAnalyticsInterface;
 import java.util.ArrayList;
 import java.util.List;

@@ -4,7 +4,7 @@ import android.net.wifi.WifiConfiguration;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.TextView;
-import cm.aptoide.pt.shareapps.socket.entities.Host;
+import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
