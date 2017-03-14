@@ -169,9 +169,7 @@ public class HighwayRadarTextView extends FrameLayout
                 txt.postInvalidate();
                 txt.setTypeface(null, Typeface.BOLD);
 
-                if (size == 1) {
-                  activity.joinSingleHotspot();
-                }
+                activity.joinSingleHotspot();
               }
             }
           }
@@ -366,9 +364,7 @@ public class HighwayRadarTextView extends FrameLayout
               //select o novo
               activity.setChosenHotspot(keyword);
 
-              if (size == 1) {
-                activity.joinSingleHotspot();
-              }
+              activity.joinSingleHotspot();
             }
           }
         });
