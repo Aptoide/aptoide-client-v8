@@ -142,6 +142,7 @@ public class TransferRecordPresenter implements Presenter {
       @Override public void onAvailableClients() {
         if (!view.getTransparencySend()) {
           view.setTransparencySend(false);
+          view.setTextViewMessage(true);
         }
       }
     });

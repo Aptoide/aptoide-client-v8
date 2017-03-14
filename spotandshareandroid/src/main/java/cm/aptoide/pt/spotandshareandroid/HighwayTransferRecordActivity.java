@@ -115,8 +115,10 @@ public class HighwayTransferRecordActivity extends ActivityView
     if (isHotspot) {
       setTransparencySend(true);
       welcomeText.setText(this.getResources().getString(R.string.created_group, nickname));
+      setTextViewMessage(false);
     } else {
       welcomeText.setText(this.getResources().getString(R.string.joined_group, nickname));
+      setTextViewMessage(true);
     }
     setTransparencyClearHistory(true);
 
@@ -930,6 +932,14 @@ public class HighwayTransferRecordActivity extends ActivityView
     } else {
       clearHistory.setAlpha(1);
       clearHistory.setEnabled(true);
+    }
+  }
+
+  public void setTextViewMessage(boolean clientsAvailable) {
+    if (clientsAvailable) {
+      textView.setText(R.string.share_instruction);
+    } else {
+      textView.setText(R.string.waiting_group_friends);
     }
   }
 
