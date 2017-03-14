@@ -292,25 +292,6 @@ public class HighwayTransferRecordActivity extends ActivityView
                   setInitialApConfig();//to not interfere with recovering wifi state
                   presenter.listenToDisconnect();
                   sendServerShutdownMessage();
-
-                  //new Thread(new Runnable() {//todo fix with broadcast-receiver to disconnect
-                  //  @Override public void run() {
-                  //    try {
-                  //      Thread.sleep(5000);
-                  //    } catch (InterruptedException e) {
-                  //      e.printStackTrace();
-                  //    }
-                  //
-                  //    AptoideUtils.ThreadU.runOnUiThread(new Runnable() {
-                  //      @Override public void run() {
-                  //
-                  //      }
-                  //    });
-                  //  }
-                  //}).start();
-                  //setInitialApConfig();
-                  //presenter.recoverNetworkState();
-                  //finish();
                 }
               })
           .setNegativeButton(this.getResources().getString(R.string.cancel),
@@ -328,25 +309,8 @@ public class HighwayTransferRecordActivity extends ActivityView
           .setPositiveButton(this.getResources().getString(R.string.leave),
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-
+                  presenter.listenToDisconnect();
                   sendDisconnectMessage();
-                  new Thread(new Runnable() {
-                    @Override public void run() {
-                      try {
-                        Thread.sleep(1000);
-                      } catch (InterruptedException e) {
-                        e.printStackTrace();
-                      }
-
-                      AptoideUtils.ThreadU.runOnUiThread(new Runnable() {
-                        @Override public void run() {
-                          presenter.recoverNetworkState();
-                          presenter.cleanAPTXNetworks();
-                          finish();
-                        }
-                      });
-                    }
-                  }).start();
                 }
               })
           .setNegativeButton(this.getResources().getString(R.string.cancel),

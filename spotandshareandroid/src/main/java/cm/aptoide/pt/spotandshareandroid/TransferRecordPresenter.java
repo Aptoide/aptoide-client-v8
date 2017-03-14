@@ -25,8 +25,8 @@ public class TransferRecordPresenter implements Presenter {
   public TransferRecordPresenter(HighwayTransferRecordView view,
       ApplicationReceiver applicationReceiver, ApplicationSender applicationSender,
       TransferRecordManager transferRecordManager, boolean isHotspot,
-      ApplicationDisconnecter disconnecter,
-      ConnectionManager connectionManager, SpotAndShareAnalyticsInterface anaylitics) {
+      ApplicationDisconnecter disconnecter, ConnectionManager connectionManager,
+      SpotAndShareAnalyticsInterface anaylitics) {
     this.view = view;
     this.applicationReceiver = applicationReceiver;
     this.applicationSender = applicationSender;
@@ -163,6 +163,9 @@ public class TransferRecordPresenter implements Presenter {
     applicationReceiver.stop();
     applicationSender.stop();
     transferRecordManager.stop();
+    if (disconnecter != null) {
+      disconnecter.stop();
+    }
     //connectionManager.cleanNetworks();
     if (listOfApps != null) {
       listOfApps.clear();
@@ -305,11 +308,16 @@ public class TransferRecordPresenter implements Presenter {
 
   public void listenToDisconnect() {
     disconnecter.listenToDisconnect(new ApplicationDisconnecter.DisconnectListener() {
-      @Override public void onDisconnected() {
+      @Override public void onServerDisconnected() {
         recoverNetworkState();
         view.dismiss();
       }
-    });
 
+      @Override public void onClientDisconnected() {
+        recoverNetworkState();
+        cleanAPTXNetworks();
+        view.dismiss();
+      }
+    });
   }
 }

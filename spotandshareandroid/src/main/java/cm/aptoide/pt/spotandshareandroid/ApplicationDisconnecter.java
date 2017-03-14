@@ -18,11 +18,11 @@ public class ApplicationDisconnecter {
     @Override public void onReceive(Context context, Intent intent) {
       if (intent.getAction() != null && intent.getAction().equals("SERVER_DISCONNECT")) {
         if (listener != null) {
-          listener.onDisconnected();
+          listener.onServerDisconnected();
         }
       } else if (intent.getAction() != null && intent.getAction().equals("CLIENT_DISCONNECT")) {
         if (listener != null) {
-          listener.onDisconnected();
+          listener.onClientDisconnected();
         }
       }
     }
@@ -37,9 +37,22 @@ public class ApplicationDisconnecter {
 
   public void listenToDisconnect(DisconnectListener listener) {
     this.listener = listener;
+    context.registerReceiver(receiver,intentFilter);
   }
 
+  public void stop(){
+    if (listener != null) {
+      this.listener = null;
+      //unregister receiver
+      try {
+        context.unregisterReceiver(receiver);
+      } catch (IllegalArgumentException e) {
+      }
+    }
+  }
   interface DisconnectListener {
-    void onDisconnected();
+    void onServerDisconnected();
+
+    void onClientDisconnected();
   }
 }

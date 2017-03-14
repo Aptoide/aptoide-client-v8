@@ -332,6 +332,9 @@ public class HighwayClientService extends Service {
             }
           }
         });
+        Intent i = new Intent();
+        i.setAction("CLIENT_DISCONNECT");
+        sendBroadcast(i);
       }
     }
 
