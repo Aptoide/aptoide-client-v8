@@ -29,7 +29,6 @@ public abstract class Application extends android.app.Application {
     // This callback runs before Content Provider's onCreate is called.
     // Application's onCreate can't be used because it runs after ContentProvider' onCreate.
     // https://code.google.com/p/android/issues/detail?id=8727
-    configuration = createConfiguration();
     AptoideUtils.setContext(this);
   }
 
@@ -37,6 +36,7 @@ public abstract class Application extends android.app.Application {
 
   @Override public void onCreate() {
     super.onCreate();
+    configuration = createConfiguration();
     AptoideUtils.setContext(this);
   }
 }
