@@ -125,8 +125,7 @@ public abstract class V8Engine extends DataProvider {
     fragmentProvider = createFragmentProvider();
     activityProvider = createActivityProvider();
     displayableWidgetMapping = createDisplayableWidgetMapping();
-    aptoideClientUuid =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
+    aptoideClientUuid = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
     shareApps = new ShareApps(new SpotAndShareAnalytics());
 
     //
@@ -139,8 +138,12 @@ public abstract class V8Engine extends DataProvider {
 
     Database.initialize(this);
 
-    generateAptoideUuid().subscribe(__ -> {
-    }, err -> CrashReport.getInstance().log(err));
+    generateAptoideUuid().observeOn(Schedulers.computation())
+        .andThen(regenerateUserAgent(accountManager))
+        .andThen(initAbTestManager())
+        .andThen(prepareApp())
+        .subscribe(() -> {
+        }, error -> CrashReport.getInstance().log(error));
 
     // this will trigger the migration if needed
     SQLiteDatabase db = new SQLiteDatabaseHelper(this).getWritableDatabase();
@@ -152,34 +155,11 @@ public abstract class V8Engine extends DataProvider {
       SecurePreferences.setLogoutUser(false);
     }
 
-    regenerateUserAgent(accountManager).subscribe();
-
     SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
     Analytics.LocalyticsSessionControl.firstSession(sPref);
     Analytics.Lifecycle.Application.onCreate(this);
     Logger.setDBG(ManagerPreferences.isDebug() || BuildConfig.DEBUG);
     new FlurryAgent.Builder().withLogEnabled(false).build(this, BuildConfig.FLURRY_KEY);
-
-    if (SecurePreferences.isFirstRun()) {
-      createShortCut();
-      PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-      if (accountManager.isLoggedIn() && ManagerPreferences.isFirstRunV7()) {
-        accountManager.removeAccount();
-      }
-
-      createShortcut().andThen(discoverAndSaveInstalledApps())
-          .andThen(setupFirstRun())
-          .subscribe(() -> {
-          }, err -> CrashReport.getInstance().log(err));
-
-      // load picture, name and email
-      accountManager.syncCurrentAccount().subscribe(() -> {
-      }, e -> {
-        CrashReport.getInstance().log(e);
-      });
-    } else {
-      discoverAndSaveInstalledApps().subscribe();
-    }
 
     final int appSignature = SecurityUtils.checkAppSignature(this);
     if (appSignature != SecurityUtils.VALID_APP_SIGNATURE) {
@@ -210,13 +190,6 @@ public abstract class V8Engine extends DataProvider {
           CrashReport.getInstance().log(throwable);
         });
 
-    ABTestManager.getInstance()
-        .initialize(aptoideClientUuid.getUniqueIdentifier())
-        .subscribe(success -> {
-        }, throwable -> {
-          CrashReport.getInstance().log(throwable);
-        });
-
     Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
   }
 
@@ -242,9 +215,42 @@ public abstract class V8Engine extends DataProvider {
     return DisplayableWidgetMapping.getInstance();
   }
 
-  private Observable<String> generateAptoideUuid() {
-    return Observable.fromCallable(() -> aptoideClientUuid.getUniqueIdentifier())
+  private Completable generateAptoideUuid() {
+    return Completable.fromCallable(() -> aptoideClientUuid.getUniqueIdentifier())
         .subscribeOn(Schedulers.newThread());
+  }
+
+  private Completable regenerateUserAgent(final AptoideAccountManager accountManager) {
+    return Completable.fromCallable(() -> {
+      final String userAgent = AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUuid,
+          () -> accountManager.getUserEmail(), AptoideUtils.Core.getDefaultVername(),
+          getConfiguration().getPartnerId());
+      SecurePreferences.setUserAgent(userAgent);
+
+      return null;
+    }).subscribeOn(Schedulers.newThread());
+  }
+
+  private Completable initAbTestManager() {
+    return Completable.defer(() -> ABTestManager.getInstance()
+        .initialize(aptoideClientUuid.getUniqueIdentifier())
+        .toCompletable());
+  }
+
+  private Completable prepareApp() {
+    if (SecurePreferences.isFirstRun()) {
+      PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+      if (accountManager.isLoggedIn() && ManagerPreferences.isFirstRunV7()) {
+        accountManager.removeAccount();
+      }
+
+      // load picture, name and email
+      return setupFirstRun().andThen(accountManager.syncCurrentAccount())
+          .andThen(createShortcut())
+          .andThen(discoverAndSaveInstalledApps());
+    } else {
+      return discoverAndSaveInstalledApps();
+    }
   }
 
   public AptoideAccountManager getAccountManager() {
@@ -271,22 +277,36 @@ public abstract class V8Engine extends DataProvider {
     return accountManager;
   }
 
-  private Completable regenerateUserAgent(final AptoideAccountManager accountManager) {
-    return Completable.fromCallable(() -> {
-      final String userAgent = AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUuid,
-          () -> accountManager.getUserEmail(), AptoideUtils.Core.getDefaultVername(),
-          getConfiguration().getPartnerId());
-      SecurePreferences.setUserAgent(userAgent);
+  private Completable setupFirstRun() {
+    return Completable.defer(() -> Completable.fromCallable(() -> {
+      SecurePreferences.setFirstRun(false);
+      if (accountManager.isLoggedIn()) {
 
+        if (!SecurePreferences.isUserDataLoaded()) {
+          regenerateUserAgent(accountManager).doOnCompleted(
+              () -> SecurePreferences.setUserDataLoaded()).subscribe();
+        }
+        return null;
+      }
+
+      final BaseBodyInterceptor bodyInterceptor =
+          new BaseBodyInterceptor(aptoideClientUuid, accountManager);
+
+      final StoreCredentialsProviderImpl storeCredentials = new StoreCredentialsProviderImpl();
+
+      StoreUtilsProxy proxy = new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentials,
+          AccessorFactory.getAccessorFor(Store.class));
+
+      BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
+          storeCredentials.get(getConfiguration().getDefaultStore());
+
+      generateAptoideUuid().andThen(
+          proxy.addDefaultStore(GetStoreMetaRequest.of(defaultStoreCredentials, bodyInterceptor),
+              accountManager, defaultStoreCredentials).andThen(refreshUpdates()).toObservable())
+          .subscribe(__ -> {
+          }, err -> CrashReport.getInstance().log(err));
       return null;
-    }).subscribeOn(Schedulers.newThread());
-  }
-
-  /**
-   * Use {@link #createShortcut()} using a {@link Completable}
-   */
-  @Deprecated @Partners public void createShortCut() {
-    createAppShortcut();
+    }));
   }
 
   public Completable createShortcut() {
@@ -321,35 +341,8 @@ public abstract class V8Engine extends DataProvider {
         .toCompletable();
   }
 
-  private Completable setupFirstRun() {
-    return Completable.fromCallable(() -> {
-      if (accountManager.isLoggedIn()) {
-
-        if (!SecurePreferences.isUserDataLoaded()) {
-          regenerateUserAgent(accountManager).doOnCompleted(
-              () -> SecurePreferences.setUserDataLoaded()).subscribe();
-        }
-      } else {
-        final BaseBodyInterceptor bodyInterceptor =
-            new BaseBodyInterceptor(aptoideClientUuid, accountManager);
-
-        final StoreCredentialsProviderImpl storeCredentials = new StoreCredentialsProviderImpl();
-
-        StoreUtilsProxy proxy =
-            new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentials,
-                AccessorFactory.getAccessorFor(Store.class));
-
-        BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
-            storeCredentials.get(getConfiguration().getDefaultStore());
-
-        generateAptoideUuid().flatMap(__ -> proxy.addDefaultStore(
-            GetStoreMetaRequest.of(defaultStoreCredentials, bodyInterceptor), accountManager,
-            defaultStoreCredentials).andThen(refreshUpdates()).toObservable()).subscribe(__ -> {
-        }, err -> CrashReport.getInstance().log(err));
-      }
-      SecurePreferences.setFirstRun(false);
-      return null;
-    });
+  private Completable refreshUpdates() {
+    return RepositoryFactory.getUpdateRepository(DataProvider.getContext()).sync(true);
   }
 
   private void createAppShortcut() {
@@ -374,8 +367,11 @@ public abstract class V8Engine extends DataProvider {
   //      });
   //}
 
-  private Completable refreshUpdates() {
-    return RepositoryFactory.getUpdateRepository(DataProvider.getContext()).sync(true);
+  /**
+   * Use {@link #createShortcut()} using a {@link Completable}
+   */
+  @Deprecated @Partners public void createShortCut() {
+    createAppShortcut();
   }
 
   @Partners protected void setupCrashReports(boolean isDisabled) {

@@ -7,7 +7,6 @@ package cm.aptoide.pt.dataprovider.repository;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
@@ -15,6 +14,7 @@ import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
+import cm.aptoide.pt.utils.AptoideUtils;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import java.security.SecureRandom;
 import java.util.UUID;
@@ -76,20 +76,14 @@ public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
   }
 
   @WorkerThread @Override public synchronized String getGoogleAdvertisingId() {
-    if (Looper.myLooper() == null) {
-      Looper.prepare();
-    }
-    Looper looper = Looper.myLooper();
-
-    if (Looper.myLooper() == Looper.getMainLooper()) {
-      throw new IllegalStateException("You cannot run this method from the main thread");
-    }
-
-    //Looper.loop();
 
     String googleAdvertisingId = sharedPreferences.getString(GOOGLE_ADVERTISING_ID_CLIENT, null);
     if (!TextUtils.isEmpty(googleAdvertisingId)) {
       return googleAdvertisingId;
+    }
+
+    if (AptoideUtils.ThreadU.isUiThread()) {
+      throw new IllegalStateException("You cannot run this method from the main thread");
     }
 
     if (DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context)) {
@@ -102,8 +96,6 @@ public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
 
     sharedPreferences.edit().putString(GOOGLE_ADVERTISING_ID_CLIENT, googleAdvertisingId).apply();
     sharedPreferences.edit().putBoolean(GOOGLE_ADVERTISING_ID_CLIENT_SET, true).apply();
-
-    looper.quit();
 
     return googleAdvertisingId;
   }
