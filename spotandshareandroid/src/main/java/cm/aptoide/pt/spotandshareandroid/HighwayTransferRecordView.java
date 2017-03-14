@@ -61,6 +61,8 @@ public interface HighwayTransferRecordView {
 
   void setTransparencyClearHistory(boolean transparency);
 
+  void setTextViewMessage(boolean availableClients);
+
   interface TransferRecordListener {
     void onInstallApp(HighwayTransferRecordItem item);
 
