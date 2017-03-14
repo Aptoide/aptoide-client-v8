@@ -89,7 +89,7 @@ import rx.Observable;
 
   @Override
   protected Observable<GetApp> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return intercept(body).flatMapObservable(body -> interfaces.getApp((Body) body, bypassCache));
+    return interfaces.getApp(body, bypassCache);
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithApp {

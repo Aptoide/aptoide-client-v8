@@ -1,5 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -17,7 +18,10 @@ import rx.Observable;
 
 public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequest.Body> {
 
-  private static final String BASE_HOST = "https://ws75-primary.aptoide.com/api/7/";
+  private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+      + "://"
+      + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
+      + "/api/7/";
 
   protected SimpleSetStoreRequest(Body body, BodyInterceptor bodyInterceptor) {
     super(body, BASE_HOST,
@@ -39,7 +43,7 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(body -> interfaces.editStore((Body) body));
+    return interfaces.editStore((Body) body);
   }
 
   @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
@@ -17,7 +18,11 @@ import rx.Observable;
 
 public class ChangeStoreSubscriptionRequest
     extends V7<ChangeStoreSubscriptionResponse, ChangeStoreSubscriptionRequest.Body> {
-  private static final String BASE_HOST = "https://ws75-primary.aptoide.com/api/7/";
+
+  private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+      + "://"
+      + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
+      + "/api/7/";
 
   protected ChangeStoreSubscriptionRequest(Body body, BodyInterceptor bodyInterceptor) {
     super(body, BASE_HOST,
@@ -35,8 +40,7 @@ public class ChangeStoreSubscriptionRequest
   @Override
   protected Observable<ChangeStoreSubscriptionResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(
-        body -> interfaces.changeStoreSubscription(bypassCache, (Body) body));
+    return interfaces.changeStoreSubscription(bypassCache, body);
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {

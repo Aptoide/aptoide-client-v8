@@ -39,8 +39,7 @@ public class AnalyticsEventRequest extends V7<BaseV7Response, AnalyticsEventRequ
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(
-        body -> interfaces.addEvent(name, action, context, (Body) body));
+    return interfaces.addEvent(name, action, context, body);
   }
 
   static class Body extends AnalyticsBaseBody {

@@ -52,11 +52,9 @@ public class GetMyStoreListRequest extends V7<ListStores, GetMyStoreListRequest.
       return interfaces.getMyStoreList(body, bypassCache);
     } else {
       if (useEndless) {
-        return intercept(body).flatMapObservable(
-            body -> interfaces.getMyStoreListEndless(url, (EndlessBody) body, bypassCache));
+        return interfaces.getMyStoreListEndless(url, body, bypassCache);
       } else {
-        return intercept(body).flatMapObservable(
-            body -> interfaces.getMyStoreList(url, (Body) body, bypassCache));
+        return interfaces.getMyStoreList(url, body, bypassCache);
       }
     }
   }

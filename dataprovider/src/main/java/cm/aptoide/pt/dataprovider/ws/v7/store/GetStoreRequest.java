@@ -50,7 +50,6 @@ import rx.Observable;
 
   @Override
   protected Observable<GetStore> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return intercept(body).flatMapObservable(
-        body -> interfaces.getStore(url, (GetStoreBody) body, bypassCache));
+    return interfaces.getStore(url, body, bypassCache);
   }
 }

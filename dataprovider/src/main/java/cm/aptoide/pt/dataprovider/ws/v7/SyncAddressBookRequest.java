@@ -51,7 +51,7 @@ public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequ
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(body -> interfaces.setConnections((Body) body));
+    return interfaces.setConnections((Body) body);
   }
 
   @Data public static class Body extends BaseBody implements Endless {

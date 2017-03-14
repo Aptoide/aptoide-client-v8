@@ -14,7 +14,7 @@ import rx.Observable;
 /**
  * Created by jdandrade on 06/12/2016.
  */
-public class LikeCardRequest extends V7<BaseV7Response, LikeCardRequest.Body> {
+public class LikeCardRequest extends V7<BaseV7Response, BaseBody> {
 
   private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
       + "://"
@@ -23,7 +23,7 @@ public class LikeCardRequest extends V7<BaseV7Response, LikeCardRequest.Body> {
   private final String cardId;
   private final int rating;
 
-  public LikeCardRequest(Body body, String cardId, int rating, BodyInterceptor bodyInterceptor) {
+  public LikeCardRequest(BaseBody body, String cardId, int rating, BodyInterceptor bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
@@ -33,22 +33,13 @@ public class LikeCardRequest extends V7<BaseV7Response, LikeCardRequest.Body> {
 
   public static LikeCardRequest of(TimelineCard timelineCard, String cardType, String ownerHash,
       int rating, BodyInterceptor bodyInterceptor) {
-    final LikeCardRequest.Body body = new LikeCardRequest.Body();
-    return new LikeCardRequest(body, timelineCard.getCardId(), rating,
-        bodyInterceptor);
+    final BaseBody body = new BaseBody();
+    return new LikeCardRequest(body, timelineCard.getCardId(), rating, bodyInterceptor);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(
-        body -> interfaces.setReview((Body) body, cardId, body.getAccessToken(),
-            String.valueOf(rating), true));
-  }
-
-  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
-      extends BaseBody {
-
-    public Body() {
-    }
+    return interfaces.setReview(body, cardId, body.getAccessToken(), String.valueOf(rating),
+            true);
   }
 }

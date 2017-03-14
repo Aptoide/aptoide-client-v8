@@ -45,8 +45,7 @@ import rx.Observable;
 
   @Override protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(
-        body -> interfaces.getStoreWidgets(url, (Body) body, bypassCache));
+    return interfaces.getStoreWidgets(url, body, bypassCache);
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithStore {

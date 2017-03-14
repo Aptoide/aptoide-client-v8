@@ -106,11 +106,9 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       boolean bypassCache) {
     //bypassCache is not used, for comments always get new data
     if (TextUtils.isEmpty(url)) {
-      return intercept(body).flatMapObservable(
-          body -> interfaces.listComments((Body) body, true));
+      return interfaces.listComments(body, true);
     } else {
-      return intercept(body).flatMapObservable(
-          body -> interfaces.listComments(url, (Body) body, true));
+      return interfaces.listComments(url, body, true);
     }
   }
 

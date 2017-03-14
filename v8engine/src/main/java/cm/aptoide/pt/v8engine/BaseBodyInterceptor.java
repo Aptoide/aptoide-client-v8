@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.Api;
-import cm.aptoide.pt.dataprovider.ws.v7.AccessTokenBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -14,7 +13,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by diogoloureiro on 10/08/16.
  */
-public class BaseBodyInterceptor implements BodyInterceptor {
+public class BaseBodyInterceptor implements BodyInterceptor<BaseBody> {
 
   private final String aptoideClientUUID;
   private final AptoideAccountManager accountManager;
@@ -24,28 +23,28 @@ public class BaseBodyInterceptor implements BodyInterceptor {
     this.accountManager = accountManager;
   }
 
-  public Single<AccessTokenBody> intercept(BaseBody baseBody) {
-    return Single.<AccessTokenBody>fromCallable(() -> {
+  public Single<BaseBody> intercept(BaseBody body) {
+    return Single.<BaseBody>fromCallable(() -> {
       if (!TextUtils.isEmpty(accountManager.getAccessToken())) {
-        baseBody.setAccessToken(accountManager.getAccessToken());
+        body.setAccessToken(accountManager.getAccessToken());
       }
 
-      baseBody.setAptoideId(aptoideClientUUID);
-      baseBody.setAptoideVercode(AptoideUtils.Core.getVerCode());
-      baseBody.setCdn("pool");
-      baseBody.setLang(Api.LANG);
-      baseBody.setMature(accountManager.isAccountMature());
+      body.setAptoideId(aptoideClientUUID);
+      body.setAptoideVercode(AptoideUtils.Core.getVerCode());
+      body.setCdn("pool");
+      body.setLang(Api.LANG);
+      body.setMature(accountManager.isAccountMature());
       if (ManagerPreferences.getHWSpecsFilter()) {
-        baseBody.setQ(Api.Q);
+        body.setQ(Api.Q);
       }
       if (ManagerPreferences.isDebug()) {
         String forceCountry = ManagerPreferences.getForceCountry();
         if (!TextUtils.isEmpty(forceCountry)) {
-          baseBody.setCountry(forceCountry);
+          body.setCountry(forceCountry);
         }
       }
 
-      return baseBody;
+      return body;
     }).subscribeOn(Schedulers.computation());
   }
 }

@@ -214,7 +214,7 @@ public class HomeFragment extends StoreFragment {
           final NavigationManagerV4 navigationManager = getNavigationManager();
           if (itemId == R.id.shareapps) {
             SpotAndShareAnalytics.clickShareApps();
-            navigationManager.navigateTo(V8Engine.getFragmentProvider().newSpotShareFragment());
+            navigationManager.navigateTo(V8Engine.getFragmentProvider().newSpotShareFragment(true));
           } else if (itemId == R.id.navigation_item_rollback) {
             navigationManager.navigateTo(V8Engine.getFragmentProvider().newRollbackFragment());
           } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {

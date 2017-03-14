@@ -79,8 +79,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
   @Override protected Observable<ListSearchApps> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(
-        body -> interfaces.listSearchApps((Body) body, bypassCache));
+    return interfaces.listSearchApps(body, bypassCache);
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithAlphaBetaKey

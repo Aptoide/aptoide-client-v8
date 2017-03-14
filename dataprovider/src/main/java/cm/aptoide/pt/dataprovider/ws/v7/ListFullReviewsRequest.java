@@ -64,11 +64,9 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   @Override protected Observable<ListFullReviews> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     if (TextUtils.isEmpty(url)) {
-      return intercept(body).flatMapObservable(
-          body -> interfaces.listFullReviews((Body) body, bypassCache));
+      return interfaces.listFullReviews(body, bypassCache);
     } else {
-      return intercept(body).flatMapObservable(
-          body -> interfaces.listFullReviews(url, (Body) body, bypassCache));
+      return interfaces.listFullReviews(url, body, bypassCache);
     }
   }
 

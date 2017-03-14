@@ -12,9 +12,11 @@ import rx.Observable;
 public class SpotSharePreviewPresenter implements Presenter {
 
   private final SpotSharePreviewView view;
+  private final boolean showToolbar;
 
-  public SpotSharePreviewPresenter(SpotSharePreviewView view) {
+  public SpotSharePreviewPresenter(SpotSharePreviewView view, boolean showToolbar) {
     this.view = view;
+    this.showToolbar = showToolbar;
   }
 
   @Override public void present() {
@@ -24,6 +26,10 @@ public class SpotSharePreviewPresenter implements Presenter {
             resumed -> startSelection().compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
+
+    if (showToolbar) {
+      view.showToolbar();
+    }
   }
 
   private Observable<Void> startSelection() {

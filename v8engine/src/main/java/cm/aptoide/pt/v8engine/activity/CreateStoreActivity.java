@@ -25,6 +25,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
@@ -36,10 +37,13 @@ import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.StoreBodyInterceptor;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.view.MainActivity;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jakewharton.rxbinding.view.RxView;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
@@ -113,7 +117,9 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
 
   private int CREATE_STORE_REQUEST_CODE = 0; //1: all (Multipart)  2: user and theme 3:user 4/5:edit
   private AptoideAccountManager accountManager;
-  private BaseBodyInterceptor bodyDecorator;
+  private BaseBodyInterceptor bodyInterceptor;
+  private RequestBodyFactory requestBodyFactory;
+  private ObjectMapper serializer;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     getData();
@@ -122,7 +128,11 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         getApplicationContext());
     accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
-    bodyDecorator = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    bodyInterceptor =
+        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    requestBodyFactory = new RequestBodyFactory();
+    serializer = new ObjectMapper();
+    serializer.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     mSubscriptions = new CompositeSubscription();
     bindViews();
     editViews();
@@ -274,55 +284,60 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
               || CREATE_STORE_REQUEST_CODE == 2
               || CREATE_STORE_REQUEST_CODE == 3) {
             progressDialog.show();
-            mSubscriptions.add(CheckUserCredentialsRequest.of(storeName, accountManager.getAccessToken()).observe().subscribe(answer -> {
-              if (answer.hasErrors()) {
-                if (answer.getErrors() != null && answer.getErrors().size() > 0) {
-                  progressDialog.dismiss();
-                  if (answer.getErrors().get(0).code.equals("WOP-2")) {
-                    mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
-                        getApplicationContext().getResources().getString(R.string.ws_error_WOP_2))
-                        .subscribe(__ -> {/*does nothing*/}, err -> {
-                          CrashReport.getInstance().log(err);
-                        }));
-                  } else if (answer.getErrors().get(0).code.equals("WOP-3")) {
-                    ShowMessage.asSnack(this,
-                        ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
-                  } else {
-                    ShowMessage.asObservableSnack(this,
-                        ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code))
-                        .subscribe(visibility -> {
-                          if (visibility == ShowMessage.DISMISSED) {
-                            goToMainActivity();
+            mSubscriptions.add(
+                CheckUserCredentialsRequest.of(storeName, accountManager.getAccessToken())
+                    .observe()
+                    .subscribe(answer -> {
+                      if (answer.hasErrors()) {
+                        if (answer.getErrors() != null && answer.getErrors().size() > 0) {
+                          progressDialog.dismiss();
+                          if (answer.getErrors().get(0).code.equals("WOP-2")) {
+                            mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
+                                getApplicationContext().getResources()
+                                    .getString(R.string.ws_error_WOP_2))
+                                .subscribe(__ -> {/*does nothing*/}, err -> {
+                                  CrashReport.getInstance().log(err);
+                                }));
+                          } else if (answer.getErrors().get(0).code.equals("WOP-3")) {
+                            ShowMessage.asSnack(this, ErrorsMapper.getWebServiceErrorMessageFromCode(
+                                answer.getErrors().get(0).code));
+                          } else {
+                            ShowMessage.asObservableSnack(this,
+                                ErrorsMapper.getWebServiceErrorMessageFromCode(
+                                    answer.getErrors().get(0).code)).subscribe(visibility -> {
+                              if (visibility == ShowMessage.DISMISSED) {
+                                goToMainActivity();
+                              }
+                            });
                           }
-                        });
-                  }
-                }
-              } else if (!(CREATE_STORE_REQUEST_CODE == 3)) {
-                onCreateSuccess(progressDialog);
-              } else {
-                progressDialog.dismiss();
-                ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created)
-                    .subscribe(visibility -> {
-                      mSubscriptions.add(accountManager.syncCurrentAccount().subscribe(() -> {
-                      }, err -> err.printStackTrace()));
-                      if (visibility == ShowMessage.DISMISSED) {
-                        Analytics.Account.createStore(!TextUtils.isEmpty(storeAvatarPath),
-                            Analytics.Account.CreateStoreAction.CREATE);
-                        goToMainActivity();
+                        }
+                      } else if (!(CREATE_STORE_REQUEST_CODE == 3)) {
+                        onCreateSuccess(progressDialog);
+                      } else {
+                        progressDialog.dismiss();
+                        ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created)
+                            .subscribe(visibility -> {
+                              mSubscriptions.add(accountManager.syncCurrentAccount().subscribe(() -> {
+                              }, err -> err.printStackTrace()));
+                              if (visibility == ShowMessage.DISMISSED) {
+                                Analytics.Account.createStore(!TextUtils.isEmpty(storeAvatarPath),
+                                    Analytics.Account.CreateStoreAction.CREATE);
+                                goToMainActivity();
+                              }
+                            });
                       }
-                    });
-              }
-            }, throwable -> {
-              onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
-              progressDialog.dismiss();
-            }));
+                    }, throwable -> {
+                      onCreateFail(
+                          ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+                      progressDialog.dismiss();
+                    }));
           } else {
             if (CREATE_STORE_REQUEST_CODE == 4) {
               setStoreData();
               progressDialog.show();
               mSubscriptions.add(
                   SetStoreRequest.of(accountManager.getAccessToken(), storeName, storeTheme,
-                      storeAvatarPath, storeDescription, true, storeId, bodyDecorator)
+                      storeAvatarPath, storeDescription, true, storeId, createStoreInterceptor())
                       .observe()
                       .subscribe(answer -> {
                         accountManager.syncCurrentAccount().subscribe(() -> {
@@ -356,7 +371,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
               setStoreData();
               progressDialog.show();
               mSubscriptions.add(
-                  SimpleSetStoreRequest.of(storeId, storeTheme, storeDescription, bodyDecorator)
+                  SimpleSetStoreRequest.of(storeId, storeTheme, storeDescription, bodyInterceptor)
                       .observe()
                       .subscribe(answer -> {
                         accountManager.syncCurrentAccount().subscribe(() -> {
@@ -569,7 +584,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
        */
       setStoreData();
       mSubscriptions.add(SetStoreRequest.of(accountManager.getAccessToken(), storeName, storeTheme,
-          storeAvatarPath, bodyDecorator)
+          storeAvatarPath, createStoreInterceptor())
           .observe()
           .timeout(90, TimeUnit.SECONDS)
           .subscribe(answer -> {
@@ -628,7 +643,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
        * not multipart
        */
       setStoreData();
-      SimpleSetStoreRequest.of(storeName, storeTheme, bodyDecorator).execute(answer -> {
+      SimpleSetStoreRequest.of(storeName, storeTheme, bodyInterceptor).execute(answer -> {
         accountManager.syncCurrentAccount().subscribe(() -> {
           progressDialog.dismiss();
           goToMainActivity();
@@ -640,6 +655,11 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
         }, err -> err.printStackTrace());
       });
     }
+  }
+
+  @NonNull private StoreBodyInterceptor createStoreInterceptor() {
+    return new StoreBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager,
+        requestBodyFactory, storeTheme, storeDescription, serializer);
   }
 
   private void onCreateFail(@StringRes int reason) {

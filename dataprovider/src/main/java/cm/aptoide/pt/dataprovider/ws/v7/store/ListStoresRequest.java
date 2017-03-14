@@ -75,11 +75,9 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
   @Override
   protected Observable<ListStores> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
     if (TextUtils.isEmpty(url)) {
-      return intercept(body).flatMapObservable(
-          body -> interfaces.listTopStores(STORT_BY_DOWNLOADS, 10, (Body) body, bypassCache));
+      return interfaces.listTopStores(STORT_BY_DOWNLOADS, 10, body, bypassCache);
     } else {
-      return intercept(body).flatMapObservable(
-          body -> interfaces.listStores(url, (Body) body, bypassCache));
+      return interfaces.listStores(url, body, bypassCache);
     }
   }
 

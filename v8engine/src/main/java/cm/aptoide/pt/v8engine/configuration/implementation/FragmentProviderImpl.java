@@ -324,8 +324,8 @@ public class FragmentProviderImpl implements FragmentProvider {
     return InviteFriendsFragment.newInstance(openMode, tag);
   }
 
-  @Override public Fragment newSpotShareFragment() {
-    return SpotSharePreviewFragment.newInstance();
+  @Override public Fragment newSpotShareFragment(boolean showToolbar) {
+    return SpotSharePreviewFragment.newInstance(showToolbar);
   }
 
   @Override public Fragment newThankYouConnectingFragment(String tag) {

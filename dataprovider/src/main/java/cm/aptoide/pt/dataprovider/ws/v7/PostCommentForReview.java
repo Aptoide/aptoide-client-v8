@@ -40,8 +40,7 @@ public class PostCommentForReview extends V7<BaseV7Response, PostCommentForRevie
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(
-        body -> interfaces.postReviewComment((Body) body, true));
+    return interfaces.postReviewComment(body, true);
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body

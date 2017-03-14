@@ -68,7 +68,7 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
 
   @Override protected Observable<ListReviews> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(body -> interfaces.listReviews((Body) body, true));
+    return interfaces.listReviews(body, true);
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body

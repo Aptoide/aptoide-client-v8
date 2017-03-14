@@ -93,8 +93,7 @@ import rx.schedulers.Schedulers;
             .observeOn(Schedulers.io())
             // map bodies to request with bodies
             //.map(body -> fetchDataUsingBodyWithRetry(interfaces, body, bypassCache, 3))
-            .map(body -> intercept(body).flatMapObservable(
-                interceptedBody -> interfaces.listAppsUpdates((Body) interceptedBody, bypassCache)))
+            .map(body -> interfaces.listAppsUpdates(body, bypassCache))
             // wait for all requests to be ready and return a list of requests
             .toList()
             // subscribe to all observables (list of observables<request>) at the same time using merge
@@ -116,8 +115,7 @@ import rx.schedulers.Schedulers;
               return resultListAppsUpdates;
             });
       }
-      return intercept(body).flatMapObservable(
-          interceptedBody -> interfaces.listAppsUpdates((Body) interceptedBody, bypassCache));
+      return interfaces.listAppsUpdates(body, bypassCache);
     });
   }
 

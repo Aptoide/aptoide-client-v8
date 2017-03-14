@@ -34,7 +34,6 @@ public class DownloadAnalyticsRequest extends V7<BaseV7Response, DownloadInstall
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(
-        body -> interfaces.addEvent(name, action, context, (AnalyticsEventRequest.Body) body));
+    return interfaces.addEvent(name, action, context, body);
   }
 }

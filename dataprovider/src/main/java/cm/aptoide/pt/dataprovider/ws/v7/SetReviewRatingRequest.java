@@ -38,7 +38,7 @@ public class SetReviewRatingRequest extends V7<BaseV7Response, SetReviewRatingRe
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(body -> interfaces.setReviewVote((Body) body, true));
+    return interfaces.setReviewVote((Body) body, true);
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body

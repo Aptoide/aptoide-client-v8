@@ -160,7 +160,7 @@ public interface FragmentProvider {
 
   Fragment newInviteFriendsFragment(InviteFriendsContract.View.OpenMode openMode, String tag);
 
-  Fragment newSpotShareFragment();
+  Fragment newSpotShareFragment(boolean showToolbar);
 
   Fragment newThankYouConnectingFragment(String tag);
 

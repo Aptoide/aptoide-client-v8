@@ -35,8 +35,7 @@ public class ShareInstallCardRequest extends V7<BaseV7Response, ShareInstallCard
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return intercept(body).flatMapObservable(
-        body -> interfaces.shareInstallCard((Body) body, packageName, body.getAccessToken(), type));
+    return interfaces.shareInstallCard(body, packageName, body.getAccessToken(), type);
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
