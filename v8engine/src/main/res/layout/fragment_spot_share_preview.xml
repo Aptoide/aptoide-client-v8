@@ -80,6 +80,7 @@
         android:id="@+id/fragment_spot_share_preview_start_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="?attr/actionBarSize"
         android:text="@string/fragment_spot_share_preview_start_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
