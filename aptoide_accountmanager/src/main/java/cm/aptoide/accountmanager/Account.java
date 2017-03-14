@@ -5,6 +5,7 @@
 
 package cm.aptoide.accountmanager;
 
+import android.text.TextUtils;
 import java.util.List;
 
 /**
@@ -29,8 +30,9 @@ public class Account {
   private final List<Store> subscribedStores;
 
   public Account(String id, String email, String nickname, String avatar, String refreshToken,
-      String token, String password, Type type, String store, String storeAvatar, boolean adultContentEnabled,
-      Access access, boolean accessConfirmed, List<Store> subscribedStores) {
+      String token, String password, Type type, String store, String storeAvatar,
+      boolean adultContentEnabled, Access access, boolean accessConfirmed,
+      List<Store> subscribedStores) {
     this.id = id;
     this.email = email;
     this.nickname = nickname;
@@ -103,13 +105,16 @@ public class Account {
     return password;
   }
 
+  public boolean isLoggedIn() {
+    return (!TextUtils.isEmpty(getEmail()) && !TextUtils.isEmpty(getToken()) && !TextUtils.isEmpty(
+        getRefreshToken()) && !TextUtils.isEmpty(getPassword()));
+  }
+
   public enum Type {
     APTOIDE, GOOGLE, FACEBOOK, ABAN
   }
 
   public enum Access {
-    PUBLIC,
-    PRIVATE,
-    UNLISTED
+    PUBLIC, PRIVATE, UNLISTED
   }
 }

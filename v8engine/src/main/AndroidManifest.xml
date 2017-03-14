@@ -65,7 +65,7 @@
     <activity android:name=".activity.WebAuthorizationActivity"/>
     <activity android:name=".activity.LoginActivity"/>
 
-    <activity android:name="cm.aptoide.pt.shareappsandroid.HighwayActivity" />
+    <activity android:name="cm.aptoide.pt.spotandshareandroid.HighwayActivity" />
 
     <activity
         android:name="com.facebook.FacebookActivity"

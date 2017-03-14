@@ -91,11 +91,13 @@ public class AptoideAccountManager {
     return loginStatusRelay.startWith(isLoggedIn()).distinctUntilChanged();
   }
 
-  public boolean isLoggedIn() {
+  /**
+   * Use {@link Account#isLoggedIn()} instead.
+   * @return true if user is logged in, false otherwise.
+   */
+  @Deprecated public boolean isLoggedIn() {
     final Account account = getAccount();
-    return (account != null && !TextUtils.isEmpty(account.getEmail()) && !TextUtils.isEmpty(
-        account.getToken()) && !TextUtils.isEmpty(account.getRefreshToken()) && !TextUtils.isEmpty(
-        account.getPassword()));
+    return account != null && account.isLoggedIn();
   }
 
   /**
@@ -418,7 +420,11 @@ public class AptoideAccountManager {
     return store;
   }
 
-  public String getAccessToken() {
+  /**
+   * Use {@link Account#getToken()} instead.
+   * @return account access token.
+   */
+  @Deprecated public String getAccessToken() {
     final Account account = getAccount();
     return account == null ? null : account.getToken();
   }
@@ -440,22 +446,38 @@ public class AptoideAccountManager {
         ChangeStoreSubscriptionResponse.StoreSubscriptionState.SUBSCRIBED).toCompletable();
   }
 
-  public String getUserEmail() {
+  /**
+   * Use {@link Account#getEmail()} instead.
+   * @return user e-mail.
+   */
+  @Deprecated public String getUserEmail() {
     final Account account = getAccount();
     return account == null ? null : account.getEmail();
   }
 
-  public boolean isAccountMature() {
+  /**
+   * Use {@link Account#isAdultContentEnabled()} instead.
+   * @return true if adult content enabled, false otherwise.
+   */
+  @Deprecated public boolean isAccountMature() {
     final Account account = getAccount();
     return account == null ? false : account.isAdultContentEnabled();
   }
 
-  public boolean isAccountAccessConfirmed() {
+  /**
+   * Use {@link Account#isAccessConfirmed()} instead.
+   * @return true if user {@link Account.Access} level is confirmed, false otherwise.
+   */
+  @Deprecated public boolean isAccountAccessConfirmed() {
     final Account account = getAccount();
     return account == null ? false : account.isAccessConfirmed();
   }
 
-  public Account.Access getAccountAccess() {
+  /**
+   * Use {@link Account#getAccess()} instead.
+   * @return user {@link Account.Access} level.
+   */
+  @Deprecated public Account.Access getAccountAccess() {
     return getAccount().getAccess();
   }
 
