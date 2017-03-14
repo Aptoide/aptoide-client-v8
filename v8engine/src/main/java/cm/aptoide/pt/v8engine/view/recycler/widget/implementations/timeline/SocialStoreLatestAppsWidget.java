@@ -92,7 +92,7 @@ public class SocialStoreLatestAppsWidget
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     storeUtilsProxy = new StoreUtilsProxy(accountManager,
-        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager),
         new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class));
     storeName.setText(displayable.getStoreName());
     userName.setText(displayable.getUser().getName());

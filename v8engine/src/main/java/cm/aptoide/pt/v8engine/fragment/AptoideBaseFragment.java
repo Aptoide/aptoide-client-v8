@@ -26,7 +26,7 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
     requestFactory = new RequestFactory(aptoideClientUUID,
         ((V8Engine) getContext().getApplicationContext()).getAccountManager(),
         new StoreCredentialsProviderImpl(),
-        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(),
+        new BaseBodyInterceptor(aptoideClientUUID,
             ((V8Engine) getContext().getApplicationContext()).getAccountManager()));
 
     super.onCreate(savedInstanceState);

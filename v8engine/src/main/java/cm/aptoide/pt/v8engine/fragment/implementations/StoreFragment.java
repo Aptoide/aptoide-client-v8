@@ -26,7 +26,6 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -36,6 +35,7 @@ import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetHome;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -121,7 +121,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
         DataProvider.getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor =
-        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager);
   }
 
   @Override public void onDestroy() {

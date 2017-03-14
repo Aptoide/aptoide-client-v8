@@ -87,7 +87,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
     analytics = new AddressBookAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     mActionsListener = new AddressBookPresenter(this, new ContactsRepositoryImpl(
-        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager),
         aptoideClientUUID), analytics,
         new AddressBookNavigationManager(NavigationManagerV4.Builder.buildWith(getActivity()),
             getTag(), getString(R.string.addressbook_about),

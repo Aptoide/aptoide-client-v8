@@ -204,7 +204,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
     idsRepository =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    bodyInterceptor = new BaseBodyInterceptor(idsRepository.getUniqueIdentifier(), accountManager);
+    bodyInterceptor = new BaseBodyInterceptor(idsRepository, accountManager);
     installConverter = new InstallEventConverter(bodyInterceptor);
     downloadConverter = new DownloadEventConverter(bodyInterceptor);
   }

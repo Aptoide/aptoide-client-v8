@@ -64,7 +64,7 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
     final AptoideAccountManager accountManager =
         ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     this.mActionsListener = new PhoneInputPresenter(this, new ContactsRepositoryImpl(
-        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager),
         aptoideClientUUID),
         new AddressBookAnalytics(Analytics.getInstance(),
             AppEventsLogger.newLogger(getContext().getApplicationContext())),

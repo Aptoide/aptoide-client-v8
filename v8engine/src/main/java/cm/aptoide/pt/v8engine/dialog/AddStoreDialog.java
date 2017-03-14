@@ -103,7 +103,7 @@ public class AddStoreDialog extends BaseDialog {
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    bodyDecorator = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    bodyDecorator = new BaseBodyInterceptor(aptoideClientUUID, accountManager);
     mSubscriptions = new CompositeSubscription();
     if (savedInstanceState != null) {
       storeName = savedInstanceState.getString(BundleArgs.STORE_NAME.name());
@@ -250,14 +250,15 @@ public class AddStoreDialog extends BaseDialog {
   }
 
   private GetStoreMetaRequest buildRequest(String storeName) {
-    return GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName,
-        storeCredentialsProvider), bodyDecorator);
+    return GetStoreMetaRequest.of(
+        StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), bodyDecorator);
   }
 
   private void executeRequest(GetStoreMetaRequest getHomeMetaRequest) {
     final IdsRepositoryImpl clientUuid =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    new StoreUtilsProxy(accountManager, bodyDecorator, storeCredentialsProvider, AccessorFactory.getAccessorFor(Store.class)).subscribeStore(getHomeMetaRequest,
+    new StoreUtilsProxy(accountManager, bodyDecorator, storeCredentialsProvider,
+        AccessorFactory.getAccessorFor(Store.class)).subscribeStore(getHomeMetaRequest,
         getStoreMeta1 -> {
           ShowMessage.asSnack(getView(),
               AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));

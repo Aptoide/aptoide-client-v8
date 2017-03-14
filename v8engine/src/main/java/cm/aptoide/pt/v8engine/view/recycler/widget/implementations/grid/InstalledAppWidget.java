@@ -18,7 +18,6 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -28,6 +27,7 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -82,7 +82,7 @@ import java.util.Locale;
     final AccountNavigator accountNavigator =
         new AccountNavigator(getContext(), getNavigationManager(), accountManager);
     this.accountNavigator = accountNavigator;
-    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID, accountManager);
     dialogUtils =
         new DialogUtils(accountManager, aptoideClientUUID, accountNavigator, bodyInterceptor);
     appName = pojo.getName();

@@ -56,13 +56,6 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
   private ViewHeader header;
   //private TextView emptyData;
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-  }
-
   /**
    * @param appName
    * @param appImgUrl
@@ -79,6 +72,13 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     args.putString(BundleCons.APP_PACKAGE, appPackage);
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -133,7 +133,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
         new EndlessRecyclerOnScrollListener(this.getAdapter(),
             ListAppVersionsRequest.of(appPackge, storeNames, accountManager.getAccessToken(),
                 aptoideClientUUID.getUniqueIdentifier(), StoreUtils.getSubscribedStoresAuthMap(),
-                new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager)),
+                new BaseBodyInterceptor(aptoideClientUUID, accountManager)),
             otherVersionsSuccessRequestListener, err -> err.printStackTrace());
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);

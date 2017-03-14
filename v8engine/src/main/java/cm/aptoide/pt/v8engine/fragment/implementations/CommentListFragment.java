@@ -127,7 +127,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     bodyDecorator =
-        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager);
 
     return v;
   }
