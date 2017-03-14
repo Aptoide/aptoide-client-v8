@@ -160,17 +160,19 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
 
-    if (savedInstanceState != null
-        && savedInstanceState.getStringArray(PACKAGE_LIST_KEY) != null) {
+    if (savedInstanceState != null && savedInstanceState.getStringArray(PACKAGE_LIST_KEY) != null) {
       packages = Arrays.asList(savedInstanceState.getStringArray(PACKAGE_LIST_KEY));
     }
 
     Observable<List<String>> packagesObservable =
         (packages != null) ? Observable.just(packages) : refreshPackages();
 
-    Observable<Datalist<Displayable>> displayableObservable = packagesObservable.flatMap(
-        packages -> Observable.concat(getFreshDisplayables(refresh, packages),
-            getNextDisplayables(packages)));
+    Observable<Datalist<Displayable>> displayableObservable = accountManager.getAccountAsync()
+        .map(account -> account.isLoggedIn())
+        .onErrorReturn(throwable -> false)
+        .flatMapObservable(loggedIn -> packagesObservable.flatMap(
+            packages -> Observable.concat(getFreshDisplayables(refresh, packages, loggedIn),
+                getNextDisplayables(packages))));
 
     displayableObservable.observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -199,13 +201,13 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   }
 
   @NonNull private Observable<Datalist<Displayable>> getFreshDisplayables(boolean refresh,
-      List<String> packages) {
+      List<String> packages, boolean loggedIn) {
     return getDisplayableList(packages, 0, refresh).doOnSubscribe(
         () -> getAdapter().clearDisplayables()).flatMap(displayableDatalist -> {
       Long userId =
           getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
 
-      if (accountManager.isLoggedIn() || userId != null) {
+      if (loggedIn || userId != null) {
         return getUserTimelineStats(refresh, displayableDatalist, userId);
       } else {
         displayableDatalist.getList()

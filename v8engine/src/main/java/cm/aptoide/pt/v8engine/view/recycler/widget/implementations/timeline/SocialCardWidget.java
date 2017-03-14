@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.util.CommentType;
@@ -111,7 +112,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
       compositeSubscription.add(RxView.clicks(likeButton)
           .flatMap(__ -> accountManager.getAccountAsync().toObservable())
           .subscribe(account -> {
-            if (likeCard(displayable, 1)) {
+            if (likeCard(displayable, 1, account)) {
               numberLikes.setText(String.valueOf(displayable.getNumberOfLikes() + 1));
               numberLikes.setVisibility(View.VISIBLE);
               if (likePreviewContainer.getChildCount() < 4) {
@@ -183,8 +184,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     return err -> CrashReport.getInstance().log(err);
   }
 
-  private boolean likeCard(T displayable, int rating) {
-    if (!accountManager.isLoggedIn()) {
+  private boolean likeCard(T displayable, int rating, Account account) {
+    if (!account.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
             accountNavigator.navigateToAccountView();

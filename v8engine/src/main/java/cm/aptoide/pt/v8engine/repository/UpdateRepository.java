@@ -11,7 +11,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import java.util.Collections;
 import java.util.List;
 import rx.Completable;
@@ -61,8 +60,7 @@ public class UpdateRepository implements Repository<Update, String> {
 
   private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
     Logger.d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
-    return ListAppsUpdatesRequest.of(storeIds, accountManager.getAccessToken(),
-        aptoideClientUUID.getUniqueIdentifier(), bodyInterceptor).observe(bypassCache).map(result -> {
+    return ListAppsUpdatesRequest.of(storeIds, aptoideClientUUID.getUniqueIdentifier(), bodyInterceptor).observe(bypassCache).map(result -> {
       if (result != null && result.isOk()) {
         return result.getList();
       }

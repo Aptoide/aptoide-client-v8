@@ -45,8 +45,8 @@ import rx.schedulers.Schedulers;
         WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String accessToken,
-      String aptoideClientUUID, BodyInterceptor bodyInterceptor) {
+  public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String aptoideClientUUID,
+      BodyInterceptor bodyInterceptor) {
     return new ListAppsUpdatesRequest(
         new Body(getInstalledApks(), subscribedStoresIds, aptoideClientUUID), BASE_HOST,
         bodyInterceptor);
