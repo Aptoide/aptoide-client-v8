@@ -33,7 +33,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   private static final int PERMISSION_REQUEST_CODE = 6531;
   private static final int WRITE_SETTINGS_REQUEST_CODE = 5;
   public String deviceName;
-  public LinearLayout joinGroupButton;
   public LinearLayout createGroupButton;
   public HighwayRadarTextView radarTextView;
   public LinearLayout progressBarLayout;
@@ -71,7 +70,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     groupButtonsLayout = (LinearLayout) findViewById(R.id.groupButtonsLayout);
 
     buttonsProgressBar = (ProgressBar) findViewById(R.id.buttonsProgressBar);
-    joinGroupButton = (LinearLayout) findViewById(R.id.joinGroup);//send
     createGroupButton = (LinearLayout) findViewById(R.id.createGroup);//receive
     radarTextView.setActivity(this);
     //setUpToolbar();
@@ -260,6 +258,21 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     startActivityForResult(intent, WRITE_SETTINGS_REQUEST_CODE);
   }
 
+  @Override public void showConnections() {
+    presenter.scanNetworks();
+  }
+
+  @Override public void enableButtons(boolean enable) {
+    if (enable) {
+      progressBarLayout.setVisibility(View.GONE);
+      groupButtonsLayout.setVisibility(View.VISIBLE);
+      System.out.println("Activating the buttons !");
+    } else {//disable
+      progressBarLayout.setVisibility(View.VISIBLE);
+      groupButtonsLayout.setVisibility(View.GONE);
+    }
+  }
+
   @Override public boolean checkPermissions() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
@@ -285,42 +298,20 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     return true;
   }
 
-  @Override public void showConnections() {
-    presenter.scanNetworks();
-  }
-
-  @Override public void enableButtons(boolean enable) {
-    if (enable) {
-      progressBarLayout.setVisibility(View.GONE);
-      groupButtonsLayout.setVisibility(View.VISIBLE);
-      System.out.println("Activating the buttons !");
-    } else {//disable
-      progressBarLayout.setVisibility(View.VISIBLE);
-      groupButtonsLayout.setVisibility(View.GONE);
-    }
-  }
-
   @Override public void setUpListeners() {
-    joinGroupButton.setOnClickListener(new View.OnClickListener() {
-
-      @Override public void onClick(View v) {
-        Group g = new Group(chosenHotspot);
-        presenter.clickJoinGroup(g);
-      }
-    });
 
     createGroupButton.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
           presenter.clickCreateGroup();
         } else {
-          showNougatMR1Toast();
+          showNougatErrorToast();
         }
       }
     });
   }
 
-  private void showNougatMR1Toast() {
+  private void showNougatErrorToast() {
     Toast.makeText(this, this.getResources().getString(R.string.hotspotCreationErrorNougat),
         Toast.LENGTH_SHORT).show();
   }
@@ -390,55 +381,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     return builder.create();
   }
 
-  @Override public void requestPermissions() {
-    if (!checkPermissions() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      boolean specialPermissionNotGranted = false;
-
-      //check if already has the permissions
-      ArrayList<String> permissionsArray = new ArrayList<>();
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-          != PackageManager.PERMISSION_GRANTED) {
-
-        permissionsArray.add(Manifest.permission.READ_PHONE_STATE);
-      }
-
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-          != PackageManager.PERMISSION_GRANTED) {
-        permissionsArray.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-      }
-
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-          != PackageManager.PERMISSION_GRANTED) {
-
-        permissionsArray.add(Manifest.permission.ACCESS_FINE_LOCATION);
-      }
-
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_SETTINGS)
-          != PackageManager.PERMISSION_GRANTED) {//special
-        if (Settings.System.canWrite(this)) {
-          permissionsArray.add(Manifest.permission.WRITE_SETTINGS);
-          System.out.println("can write settings!");
-        } else {
-          specialPermissionNotGranted = true;
-        }
-      }
-
-      if (permissionsArray.size() > 0) {
-
-        String[] missingPermissions = new String[permissionsArray.size()];
-        missingPermissions = permissionsArray.toArray(missingPermissions);
-
-        ActivityCompat.requestPermissions(this, missingPermissions, PERMISSION_REQUEST_CODE);
-      } else if (specialPermissionNotGranted) {
-        requestSpecialPermission();
-      }
-    } else {
-      if (permissionListener != null) {
-        permissionListener.onPermissionGranted();
-      }
-    }
-  }
-
   @Override public void showCreateGroupResult(int result) {
     presenter.tagAnalyticsUnsuccessCreate();
     switch (result) {
@@ -492,6 +434,55 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     finish();
   }
 
+  @Override public void requestPermissions() {
+    if (!checkPermissions() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      boolean specialPermissionNotGranted = false;
+
+      //check if already has the permissions
+      ArrayList<String> permissionsArray = new ArrayList<>();
+      if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+          != PackageManager.PERMISSION_GRANTED) {
+
+        permissionsArray.add(Manifest.permission.READ_PHONE_STATE);
+      }
+
+      if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+          != PackageManager.PERMISSION_GRANTED) {
+        permissionsArray.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+      }
+
+      if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+          != PackageManager.PERMISSION_GRANTED) {
+
+        permissionsArray.add(Manifest.permission.ACCESS_FINE_LOCATION);
+      }
+
+      if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_SETTINGS)
+          != PackageManager.PERMISSION_GRANTED) {//special
+        if (Settings.System.canWrite(this)) {
+          permissionsArray.add(Manifest.permission.WRITE_SETTINGS);
+          System.out.println("can write settings!");
+        } else {
+          specialPermissionNotGranted = true;
+        }
+      }
+
+      if (permissionsArray.size() > 0) {
+
+        String[] missingPermissions = new String[permissionsArray.size()];
+        missingPermissions = permissionsArray.toArray(missingPermissions);
+
+        ActivityCompat.requestPermissions(this, missingPermissions, PERMISSION_REQUEST_CODE);
+      } else if (specialPermissionNotGranted) {
+        requestSpecialPermission();
+      }
+    } else {
+      if (permissionListener != null) {
+        permissionListener.onPermissionGranted();
+      }
+    }
+  }
+
   @Override
   public void openChatHotspot(ArrayList<String> pathsFromOutsideShare, String deviceName) {
     Intent history =
@@ -536,10 +527,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     return chosenHotspot;
   }
 
-  @Override public void registerListener(PermissionListener listener) {
-    this.permissionListener = listener;
-  }
-
   public void setChosenHotspot(String chosenHotspot) {
     this.chosenHotspot = chosenHotspot;
   }
@@ -570,6 +557,10 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   public void setJoinGroupFlag(boolean joinGroupFlag) {
     this.joinGroupFlag = joinGroupFlag;
+  }
+
+  @Override public void registerListener(PermissionListener listener) {
+    this.permissionListener = listener;
   }
 
 
