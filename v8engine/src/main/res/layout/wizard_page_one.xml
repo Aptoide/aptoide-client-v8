@@ -6,6 +6,10 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:paddingBottom="@dimen/bottom_skip_bar_height"
+    android:paddingEnd="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingStart="10dp"
     >
 
   <ImageView
