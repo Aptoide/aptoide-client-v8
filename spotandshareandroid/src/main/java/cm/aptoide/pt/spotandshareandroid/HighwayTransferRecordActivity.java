@@ -157,8 +157,11 @@ public class HighwayTransferRecordActivity extends ActivityView
     applicationSender = ApplicationSender.getInstance(getApplicationContext(), isHotspot);
     transferRecordManager = new TransferRecordManager(applicationsManager);
 
+    ApplicationDisconnecter applicationDisconnecter =
+        new ApplicationDisconnecter(getApplicationContext());
+
     presenter = new TransferRecordPresenter(this, applicationReceiver, applicationSender,
-        transferRecordManager, isHotspot,
+        transferRecordManager, isHotspot, applicationDisconnecter,
         ConnectionManager.getInstance(this.getApplicationContext()), analytics);
     attachPresenter(presenter);
   }
@@ -286,10 +289,28 @@ public class HighwayTransferRecordActivity extends ActivityView
           .setPositiveButton(this.getResources().getString(R.string.leave),
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                  setInitialApConfig();//to not interfere with recovering wifi state
+                  presenter.listenToDisconnect();
                   sendServerShutdownMessage();
-                  setInitialApConfig();
-                  presenter.recoverNetworkState();
-                  finish();
+
+                  //new Thread(new Runnable() {//todo fix with broadcast-receiver to disconnect
+                  //  @Override public void run() {
+                  //    try {
+                  //      Thread.sleep(5000);
+                  //    } catch (InterruptedException e) {
+                  //      e.printStackTrace();
+                  //    }
+                  //
+                  //    AptoideUtils.ThreadU.runOnUiThread(new Runnable() {
+                  //      @Override public void run() {
+                  //
+                  //      }
+                  //    });
+                  //  }
+                  //}).start();
+                  //setInitialApConfig();
+                  //presenter.recoverNetworkState();
+                  //finish();
                 }
               })
           .setNegativeButton(this.getResources().getString(R.string.cancel),
@@ -340,12 +361,6 @@ public class HighwayTransferRecordActivity extends ActivityView
 
   //method to check apk archive's similar to receive
 
-  private void sendServerShutdownMessage() {
-    Intent shutdown = new Intent(this, HighwayServerService.class);
-    shutdown.setAction("SHUTDOWN_SERVER");
-    startService(shutdown);
-  }
-
   private void setInitialApConfig() {
     if (wifimanager == null) {
       wifimanager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
@@ -380,6 +395,12 @@ public class HighwayTransferRecordActivity extends ActivityView
         }
       }
     }
+  }
+
+  private void sendServerShutdownMessage() {
+    Intent shutdown = new Intent(this, HighwayServerService.class);
+    shutdown.setAction("SHUTDOWN_SERVER");
+    startService(shutdown);
   }
 
   private void sendDisconnectMessage() {

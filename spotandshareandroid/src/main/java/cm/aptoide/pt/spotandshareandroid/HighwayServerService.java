@@ -355,6 +355,9 @@ public class HighwayServerService extends Service {
       } else if (intent.getAction() != null && intent.getAction().equals("SHUTDOWN_SERVER")) {
         if (aptoideMessageServerSocket != null) {
           aptoideMessageServerSocket.shutdown();
+          Intent i = new Intent();
+          i.setAction("SERVER_DISCONNECT");
+          sendBroadcast(i);
         }
       }
     }
