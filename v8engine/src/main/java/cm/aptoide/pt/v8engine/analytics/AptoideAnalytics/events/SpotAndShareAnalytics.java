@@ -1,6 +1,6 @@
 package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
 
-import cm.aptoide.pt.shareappsandroid.analytics.SpotAndShareAnalyticsInterface;
+import cm.aptoide.pt.spotandshareandroid.analytics.SpotAndShareAnalyticsInterface;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import java.util.HashMap;
 import java.util.Map;

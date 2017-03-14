@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import cm.aptoide.pt.shareappsandroid.HighwayActivity;
+import cm.aptoide.pt.spotandshareandroid.HighwayActivity;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.FragmentView;
 import cm.aptoide.pt.v8engine.presenter.SpotSharePreviewPresenter;
