@@ -670,7 +670,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       if (AptoideUtils.SystemU.getConnectionType().equals("mobile")) {
         GenericDialogs.createGenericOkMessage(getContext(),
             getContext().getString(R.string.remote_install_menu_title),
-            getContext().getString(R.string.install_on_tv_mobile_error)).subscribe();
+            getContext().getString(R.string.install_on_tv_mobile_error)).subscribe(__ -> {
+        }, err -> CrashReport.getInstance().log(err));
       } else {
         DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
         newFragment.show(getActivity().getSupportFragmentManager(),

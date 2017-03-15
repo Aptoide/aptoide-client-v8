@@ -128,7 +128,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
                 }
               }
             }
-          }));
+          }, err -> CrashReport.getInstance().log(err)));
 
       like.setVisibility(View.VISIBLE);
     } else {
@@ -155,9 +155,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     showLikesPreview(displayable);
 
     compositeSubscription.add(RxView.clicks(likePreviewContainer)
-        .subscribe(click -> displayable.likesPreviewClick(getNavigationManager()), (throwable) -> {
-          throwable.printStackTrace();
-        }));
+        .subscribe(click -> displayable.likesPreviewClick(getNavigationManager()),
+            err -> CrashReport.getInstance().log(err)));
 
     compositeSubscription.add(
         Observable.merge(RxView.clicks(storeAvatar), RxView.clicks(userAvatar)).subscribe(click -> {

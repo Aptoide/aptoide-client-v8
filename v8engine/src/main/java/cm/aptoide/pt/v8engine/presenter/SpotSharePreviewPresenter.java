@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.view.SpotSharePreviewView;
 import cm.aptoide.pt.v8engine.view.View;
@@ -25,7 +26,10 @@ public class SpotSharePreviewPresenter implements Presenter {
         .flatMap(
             resumed -> startSelection().compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+        .subscribe(__ -> {
+        }, err -> {
+          CrashReport.getInstance().log(err);
+        });
 
     if (showToolbar) {
       view.showToolbar();

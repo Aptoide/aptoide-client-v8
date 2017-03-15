@@ -283,8 +283,8 @@ public abstract class V8Engine extends DataProvider {
       if (accountManager.isLoggedIn()) {
 
         if (!SecurePreferences.isUserDataLoaded()) {
-          regenerateUserAgent(accountManager).doOnCompleted(
-              () -> SecurePreferences.setUserDataLoaded()).subscribe();
+          regenerateUserAgent(accountManager).subscribe(() -> SecurePreferences.setUserDataLoaded(),
+              err -> CrashReport.getInstance().log(err));
         }
         return null;
       }

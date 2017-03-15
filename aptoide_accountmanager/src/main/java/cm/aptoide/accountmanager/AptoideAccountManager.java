@@ -93,6 +93,7 @@ public class AptoideAccountManager {
 
   /**
    * Use {@link Account#isLoggedIn()} instead.
+   *
    * @return true if user is logged in, false otherwise.
    */
   @Deprecated public boolean isLoggedIn() {
@@ -220,7 +221,8 @@ public class AptoideAccountManager {
   private void sendLoginEvent(boolean isLoggedIn) {
     Observable.timer(650, TimeUnit.MILLISECONDS)
         .doOnNext(__ -> loginStatusRelay.call(isLoggedIn))
-        .subscribe();
+        .subscribe(__ -> {
+        }, err -> CrashReport.getInstance().log(err));
 
     //loginStatusRelay.call(isLoggedIn);
   }
@@ -422,6 +424,7 @@ public class AptoideAccountManager {
 
   /**
    * Use {@link Account#getToken()} instead.
+   *
    * @return account access token.
    */
   @Deprecated public String getAccessToken() {
@@ -449,6 +452,7 @@ public class AptoideAccountManager {
 
   /**
    * Use {@link Account#getEmail()} instead.
+   *
    * @return user e-mail.
    */
   @Deprecated public String getUserEmail() {
@@ -458,6 +462,7 @@ public class AptoideAccountManager {
 
   /**
    * Use {@link Account#isAdultContentEnabled()} instead.
+   *
    * @return true if adult content enabled, false otherwise.
    */
   @Deprecated public boolean isAccountMature() {
@@ -467,6 +472,7 @@ public class AptoideAccountManager {
 
   /**
    * Use {@link Account#isAccessConfirmed()} instead.
+   *
    * @return true if user {@link Account.Access} level is confirmed, false otherwise.
    */
   @Deprecated public boolean isAccountAccessConfirmed() {
@@ -476,6 +482,7 @@ public class AptoideAccountManager {
 
   /**
    * Use {@link Account#getAccess()} instead.
+   *
    * @return user {@link Account.Access} level.
    */
   @Deprecated public Account.Access getAccountAccess() {
