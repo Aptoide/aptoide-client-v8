@@ -165,6 +165,12 @@ public class HomeFragment extends StoreFragment {
         .subscribe(size -> refreshUpdatesBadge(size), throwable -> {
           CrashReport.getInstance().log(throwable);
         });
+
+    tabNavigator.navigation()
+        .doOnNext(tab -> viewPager.setCurrentItem(
+            ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(getEventName(tab))))
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe();
   }
 
   public void refreshUpdatesBadge(int num) {
@@ -319,15 +325,6 @@ public class HomeFragment extends StoreFragment {
     toolbar.setTitle("");
     toolbar.setNavigationIcon(R.drawable.ic_drawer);
     toolbar.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    tabNavigator.navigation()
-        .doOnNext(tab -> viewPager.setCurrentItem(
-            ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(getEventName(tab))))
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe();
   }
 
   private Event.Name getEventName(int tab) {

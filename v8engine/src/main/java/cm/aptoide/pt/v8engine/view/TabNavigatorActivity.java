@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.view;
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.activity.BaseActivity;
 import cm.aptoide.pt.navigation.TabNavigator;
+import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 
@@ -12,11 +13,11 @@ import rx.Observable;
 
 public class TabNavigatorActivity extends BaseActivity implements TabNavigator {
 
-  private PublishRelay<Integer> navigatorSubject;
+  private BehaviorRelay<Integer> navigatorSubject;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    navigatorSubject = PublishRelay.create();
+    navigatorSubject = BehaviorRelay.create();
   }
 
   @Override public void navigate(int tab) {

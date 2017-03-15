@@ -130,8 +130,8 @@ public class HighwayPresenter implements Presenter {
 
   public void clickJoinGroup(Group group) {
     view.enableButtons(false);
-    groupManager.joinGroup(group, new GroupManager.GroupListener() {
-      @Override public void onSuccess() {
+    groupManager.joinGroup(group, new GroupManager.JoinGroupListener() {
+      @Override public void onSuccess(final String fullGroupName) {
         //analytics - track event
         connectionManager.evaluateWifi(new ConnectionManager.WifiStateListener() {
           @Override public void onStateChanged(boolean enabled) {
@@ -143,9 +143,9 @@ public class HighwayPresenter implements Presenter {
               String ipAddress = connectionManager.getIPAddress();
               if (outsideShareManager != null) {
                 ArrayList<String> pathsFromOutside = outsideShareManager.getPathsFromOutsideShare();
-                view.openChatClient(ipAddress, deviceName, pathsFromOutside);
+                view.openChatClient(ipAddress, fullGroupName, pathsFromOutside);
               } else {
-                view.openChatClient(ipAddress, deviceName, null);
+                view.openChatClient(ipAddress, fullGroupName, null);
               }
             } else {
               view.hideButtonsProgressBar();
@@ -167,7 +167,7 @@ public class HighwayPresenter implements Presenter {
   public void clickCreateGroup() {
     String randomAlphaNum = connectionManager.generateRandomAlphanumericString(5);
     view.enableButtons(false);
-    groupManager.createGroup(randomAlphaNum, deviceName, new GroupManager.GroupListener() {
+    groupManager.createGroup(randomAlphaNum, deviceName, new GroupManager.CreateGroupListener() {
       @Override public void onSuccess() {
         view.hideButtonsProgressBar();
         view.enableButtons(true);

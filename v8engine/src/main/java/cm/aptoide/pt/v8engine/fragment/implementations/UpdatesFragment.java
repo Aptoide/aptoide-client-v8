@@ -79,7 +79,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     installManager = new InstallManager(AptoideDownloadManager.getInstance(),
         new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK));
     analytics = Analytics.getInstance();
-    bodyInterceptor = new BaseBodyInterceptor(idsRepository.getUniqueIdentifier(), accountManager);
+    bodyInterceptor = new BaseBodyInterceptor(idsRepository, accountManager);
     downloadInstallEventConverter = new DownloadEventConverter(bodyInterceptor);
     installConverter = new InstallEventConverter(bodyInterceptor);
 
@@ -88,6 +88,37 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
     installedRepository = RepositoryFactory.getInstalledRepository();
     updateRepository = RepositoryFactory.getUpdateRepository(getContext());
+  }
+
+  /**
+   * This method is called when pull to refresh is done. An update repository call is made to fetch
+   * new updates and this call will hit the network. When new updates are found the listener in the
+   * load() method above will be notified of those changes and update the list. The response of
+   * this repository call will show a notification according: the number of new updates, no more
+   * new updates or no updates at all.
+   */
+  @Override public void reload() {
+    super.reload();
+
+    if (updateReloadSubscription != null && !updateReloadSubscription.isUnsubscribed()) {
+      updateReloadSubscription.unsubscribe();
+    }
+
+    updateReloadSubscription = updateRepository.sync(true).subscribe(() -> finishLoading(), e -> {
+      if (e instanceof RepositoryItemNotFoundException) {
+        ShowMessage.asSnack(getView(), R.string.add_store);
+      }
+      CrashReport.getInstance().log(e);
+      finishLoading();
+    });
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+
+    if (updateReloadSubscription != null && !updateReloadSubscription.isUnsubscribed()) {
+      updateReloadSubscription.unsubscribe();
+    }
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -200,36 +231,5 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
       }
       return Observable.just(item);
     });
-  }
-
-  /**
-   * This method is called when pull to refresh is done. An update repository call is made to fetch
-   * new updates and this call will hit the network. When new updates are found the listener in the
-   * load() method above will be notified of those changes and update the list. The response of
-   * this repository call will show a notification according: the number of new updates, no more
-   * new updates or no updates at all.
-   */
-  @Override public void reload() {
-    super.reload();
-
-    if (updateReloadSubscription != null && !updateReloadSubscription.isUnsubscribed()) {
-      updateReloadSubscription.unsubscribe();
-    }
-
-    updateReloadSubscription = updateRepository.sync(true).subscribe(() -> finishLoading(), e -> {
-      if (e instanceof RepositoryItemNotFoundException) {
-        ShowMessage.asSnack(getView(), R.string.add_store);
-      }
-      CrashReport.getInstance().log(e);
-      finishLoading();
-    });
-  }
-
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-
-    if (updateReloadSubscription != null && !updateReloadSubscription.isUnsubscribed()) {
-      updateReloadSubscription.unsubscribe();
-    }
   }
 }

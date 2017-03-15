@@ -117,7 +117,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     final IdsRepositoryImpl idsRepository =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     final BodyInterceptor bodyInterceptor =
-        new BaseBodyInterceptor(idsRepository.getUniqueIdentifier(), accountManager);
+        new BaseBodyInterceptor(idsRepository, accountManager);
 
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(applicationContext), bodyInterceptor);

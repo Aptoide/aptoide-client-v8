@@ -115,8 +115,10 @@ public class HighwayTransferRecordActivity extends ActivityView
     if (isHotspot) {
       setTransparencySend(true);
       welcomeText.setText(this.getResources().getString(R.string.created_group, nickname));
+      setTextViewMessage(false);
     } else {
       welcomeText.setText(this.getResources().getString(R.string.joined_group, nickname));
+      setTextViewMessage(true);
     }
     setTransparencyClearHistory(true);
 
@@ -155,8 +157,11 @@ public class HighwayTransferRecordActivity extends ActivityView
     applicationSender = ApplicationSender.getInstance(getApplicationContext(), isHotspot);
     transferRecordManager = new TransferRecordManager(applicationsManager);
 
+    ApplicationDisconnecter applicationDisconnecter =
+        new ApplicationDisconnecter(getApplicationContext());
+
     presenter = new TransferRecordPresenter(this, applicationReceiver, applicationSender,
-        transferRecordManager, isHotspot,
+        transferRecordManager, isHotspot, applicationDisconnecter,
         ConnectionManager.getInstance(this.getApplicationContext()), analytics);
     attachPresenter(presenter);
   }
@@ -284,10 +289,9 @@ public class HighwayTransferRecordActivity extends ActivityView
           .setPositiveButton(this.getResources().getString(R.string.leave),
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                  setInitialApConfig();//to not interfere with recovering wifi state
+                  presenter.listenToDisconnect();
                   sendServerShutdownMessage();
-                  setInitialApConfig();
-                  presenter.recoverNetworkState();
-                  finish();
                 }
               })
           .setNegativeButton(this.getResources().getString(R.string.cancel),
@@ -305,25 +309,8 @@ public class HighwayTransferRecordActivity extends ActivityView
           .setPositiveButton(this.getResources().getString(R.string.leave),
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-
+                  presenter.listenToDisconnect();
                   sendDisconnectMessage();
-                  new Thread(new Runnable() {
-                    @Override public void run() {
-                      try {
-                        Thread.sleep(1000);
-                      } catch (InterruptedException e) {
-                        e.printStackTrace();
-                      }
-
-                      AptoideUtils.ThreadU.runOnUiThread(new Runnable() {
-                        @Override public void run() {
-                          presenter.recoverNetworkState();
-                          presenter.cleanAPTXNetworks();
-                          finish();
-                        }
-                      });
-                    }
-                  }).start();
                 }
               })
           .setNegativeButton(this.getResources().getString(R.string.cancel),
@@ -337,12 +324,6 @@ public class HighwayTransferRecordActivity extends ActivityView
   }
 
   //method to check apk archive's similar to receive
-
-  private void sendServerShutdownMessage() {
-    Intent shutdown = new Intent(this, HighwayServerService.class);
-    shutdown.setAction("SHUTDOWN_SERVER");
-    startService(shutdown);
-  }
 
   private void setInitialApConfig() {
     if (wifimanager == null) {
@@ -378,6 +359,12 @@ public class HighwayTransferRecordActivity extends ActivityView
         }
       }
     }
+  }
+
+  private void sendServerShutdownMessage() {
+    Intent shutdown = new Intent(this, HighwayServerService.class);
+    shutdown.setAction("SHUTDOWN_SERVER");
+    startService(shutdown);
   }
 
   private void sendDisconnectMessage() {
@@ -930,6 +917,14 @@ public class HighwayTransferRecordActivity extends ActivityView
     } else {
       clearHistory.setAlpha(1);
       clearHistory.setEnabled(true);
+    }
+  }
+
+  public void setTextViewMessage(boolean clientsAvailable) {
+    if (clientsAvailable) {
+      textView.setText(R.string.share_instruction);
+    } else {
+      textView.setText(R.string.waiting_group_friends);
     }
   }
 

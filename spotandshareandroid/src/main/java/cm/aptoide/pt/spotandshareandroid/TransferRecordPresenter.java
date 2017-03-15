@@ -12,6 +12,7 @@ import java.util.List;
 public class TransferRecordPresenter implements Presenter {
 
   private final ConnectionManager connectionManager;
+  private final ApplicationDisconnecter disconnecter;
   private HighwayTransferRecordView view;
   private List<HighwayTransferRecordItem> listOfApps;
   private List<Host> connectedClients;
@@ -24,12 +25,14 @@ public class TransferRecordPresenter implements Presenter {
   public TransferRecordPresenter(HighwayTransferRecordView view,
       ApplicationReceiver applicationReceiver, ApplicationSender applicationSender,
       TransferRecordManager transferRecordManager, boolean isHotspot,
-      ConnectionManager connectionManager, SpotAndShareAnalyticsInterface anaylitics) {
+      ApplicationDisconnecter disconnecter, ConnectionManager connectionManager,
+      SpotAndShareAnalyticsInterface anaylitics) {
     this.view = view;
     this.applicationReceiver = applicationReceiver;
     this.applicationSender = applicationSender;
     this.transferRecordManager = transferRecordManager;
     this.isHotspot = isHotspot;
+    this.disconnecter = disconnecter;
     this.connectionManager = connectionManager;
     listOfApps = new ArrayList<>();
     this.analytics = anaylitics;
@@ -142,6 +145,7 @@ public class TransferRecordPresenter implements Presenter {
       @Override public void onAvailableClients() {
         if (!view.getTransparencySend()) {
           view.setTransparencySend(false);
+          view.setTextViewMessage(true);
         }
       }
     });
@@ -159,6 +163,9 @@ public class TransferRecordPresenter implements Presenter {
     applicationReceiver.stop();
     applicationSender.stop();
     transferRecordManager.stop();
+    if (disconnecter != null) {
+      disconnecter.stop();
+    }
     //connectionManager.cleanNetworks();
     if (listOfApps != null) {
       listOfApps.clear();
@@ -297,5 +304,20 @@ public class TransferRecordPresenter implements Presenter {
 
   public void installApp(String filePath, String packageName) {
     transferRecordManager.installApp(filePath, packageName);
+  }
+
+  public void listenToDisconnect() {
+    disconnecter.listenToDisconnect(new ApplicationDisconnecter.DisconnectListener() {
+      @Override public void onServerDisconnected() {
+        recoverNetworkState();
+        view.dismiss();
+      }
+
+      @Override public void onClientDisconnected() {
+        recoverNetworkState();
+        cleanAPTXNetworks();
+        view.dismiss();
+      }
+    });
   }
 }

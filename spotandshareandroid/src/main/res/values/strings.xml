@@ -83,7 +83,7 @@
 
   <string name="hotspotCreationErrorNougat">Please, ask your friends to create a group</string>
 
-  <string name="searching_groups">Searching for groups</string>
+  <string name="searching_groups">Searching for groups to join</string>
 
   <string name="joined_group">Joined group %1$s</string>
   <string name="created_group">Created group %1$s</string>

@@ -287,7 +287,7 @@ public class AptoideAccountManager {
   }
 
   public Completable createAccount(String email, String password) {
-    return validateCredentials(email, password).andThen(
+    return validateCredentials(email, password, true).andThen(
         CreateUserRequest.of(email.toLowerCase(), password, aptoideClientUUID.getUniqueIdentifier())
             .observe(true)).toSingle().flatMapCompletable(response -> {
       if (response.hasErrors()) {
@@ -308,7 +308,7 @@ public class AptoideAccountManager {
     }).doOnCompleted(() -> analytics.login(email)).doOnCompleted(() -> sendLoginEvent(true));
   }
 
-  private Completable validateCredentials(String email, String password) {
+  private Completable validateCredentials(String email, String password, boolean validatePassword) {
     return Completable.defer(() -> {
       if (TextUtils.isEmpty(email) && TextUtils.isEmpty(password)) {
         return Completable.error(
@@ -319,7 +319,7 @@ public class AptoideAccountManager {
       } else if (TextUtils.isEmpty(email)) {
         return Completable.error(
             new AccountValidationException(AccountValidationException.EMPTY_EMAIL));
-      } else if (password.length() < 8 || !has1number1letter(password)) {
+      } else if (validatePassword && password.length() < 8 || !has1number1letter(password)) {
         return Completable.error(
             new AccountValidationException(AccountValidationException.INVALID_PASSWORD));
       }
@@ -329,7 +329,7 @@ public class AptoideAccountManager {
 
   public Completable login(Account.Type type, final String email, final String password,
       final String name) {
-    return validateCredentials(email, password).andThen(
+    return validateCredentials(email, password, false).andThen(
         OAuth2AuthenticationRequest.of(email, password, type.name(), name,
             aptoideClientUUID.getUniqueIdentifier())
             .observe()
