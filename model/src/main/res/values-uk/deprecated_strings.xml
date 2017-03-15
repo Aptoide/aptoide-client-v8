@@ -159,13 +159,6 @@
 
     <string name="feedback_send_button">Надіслати відгук</string>
 
-    <string name="my_account">Мій акаунт</string>
-    <string name="setting_schdwntitle">Заплановані завантаження</string>
-    <string name="settings">Налаштування</string>
-    <string name="facebook">Фейсбук</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Резервне копіювання Додатків</string>
-
     <string name="menu_context_reparse">Перезавантажити</string>
     <string name="menu_context_remove">Видалити</string>
 
@@ -483,8 +476,6 @@
     <string name="friends_to_invite">Усі інші друзі з Фейсбук в Aptoide</string>
     <string name="upload_app_backup_apps_installed">Вам треба спочатку завантажити додаток у ваш магазин. Ви можете використовувати Aptoide Backup Apps.</string>
     <string name="upload_app_backup_apps_not_installed">Вам треба спочатку завантажити додаток у ваш магазин. Спочатку встановіть Aptoide Backup Apps.</string>
-    <string name="setting_category_autoupdate">Авто-оновлення %s</string>
-    <string name="setting_category_autoupdate_title">Дозволити Авто-оновлення в %s</string>
     <string name="social_timeline_notifications_sum2">Дозволити Оповіщення соціальної стрічки Aptoide. Ви отримаєте останні новини у стрічці повідомленнь.</string>
     <string name="ignored">Проігноровано</string>
     <string name="application_signature_blacklisted">Підпис додатку не є перевіреним підписом на антивірусній платформі Aptoide тому, що він був використаний щоб підписати додаток, який не відповідає підпису справжнього розробника цього додатку.</string>

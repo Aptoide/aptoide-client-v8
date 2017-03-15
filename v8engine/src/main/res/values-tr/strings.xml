@@ -198,25 +198,12 @@ bir tehdit içermez!</string>
     <string name="remote_install_help">Yardım</string>
     <string name="remote_install_help_url">http://blog.aptoide.com/remote-tv-install</string>
 
-    <string name="wizard_welcome_message"><b>Hoş geldiniz!</b></string>
-  <string name="wizard_sub_title_viewpager_one"><b>Güvenli</b> ve <b>keyifli</b> bir yolculuğa başlayın.</string>
-  <string name="wizard_description_part_one_viewpager_one">Güvenli bir yükleme için güvenilen rozeti olan uygulamalara <b>bakın</b>.</string>
-  <string name="wizard_description_part_two_viewpager_one">Her zaman istediğiniz ama
-hiçbir zaman bulamadığınız uygulamaları
-<b>keşfedin</b>.</string>
-
+    <string name="wizard_sub_title_viewpager_one"><b>Güvenli</b> ve <b>keyifli</b> bir yolculuğa başlayın.</string>
   <string name="wizard_title_viewpager_two"><b>Uygulama Zaman Tüneli</b></string>
   <string name="wizard_sub_title_viewpager_two"><b>En son uygulamaları</b> alın, <b>tematik mağazaları</b> 
 bulun ve <b>kişiselleştirilmiş içeriğe</b> ulaşın.</string>
 
   <string name="wizard_title_viewpager_three"><b>Topluluğa katılın</b></string>
-  <string name="wizard_description_part_one_viewpager_three">Arkadaşlarınızı <b>takip edin</b></string>
-  <string name="wizard_description_part_two_viewpager_three">Uygulamaları <b>Gözden Geçirin</b> ve Oylayın</string>
-  <string name="wizard_description_part_three_viewpager_three">Mağazanızı <b>Oluşturun</b></string>
-  <string name="wizard_register_now_button">Şimdi kayıt olun</string>
-  <string name="wizard_be_a_part_of_aptoide">Aptoide\'ın bir parçası olun!</string>
-  <string name="wizard_or_login"><u>veya Giriş Yapın</u></string>
-
   <string name="you_need_to_be_logged_in">Oturum açmış olmanız gerekir</string>
   <string name="follow">Takip Et</string>
   <string name="followed">Takip Ediliyor</string>
@@ -272,7 +259,6 @@ bulun ve <b>kişiselleştirilmiş içeriğe</b> ulaşın.</string>
   <string name="create_store_displayable_message">Mağazanızı şimdi oluşturun ve uygulamalarınızı paylaşmaya başlayın!</string>
   <string name="create_store_displayable_button">MAĞAZA OLUŞTUR</string>
   <string name="my_store_created_displayable_message">Android Uygulama Mağazanız</string>
-  <string name="create_store_displayable_created_store_message">Mağazanızı az öce oluşturdunuz!</string>
   <string name="create_store_displayable_explore_message">Tüm olasılıkları araştır ve gir</string>
   <string name="create_store_displayable_explore_button">Araştır</string>
 
@@ -316,15 +302,80 @@ bulun ve <b>kişiselleştirilmiş içeriğe</b> ulaşın.</string>
 
   <string name="edit_store">Düzenle</string>
 
-  <string name="comment_store_title">Mağazadaki Yorumlar</string>
+  <string name="comment_store_title">Bu mağazadaki Yorumlar</string>
   <string name="timeline_stats_followers">Takipçiler</string>
   <string name="timeline_login_message">Arkadaşlarınız neler yüklüyor?</string>
   <string name="private_followers_message">%d takipçileri özeldir</string>
   <string name="private_following_message">%d özel kullanıcılar/mağazaları takip ediyorsunuz</string>
 
-  <string name="item_payment_button_use">kullan</string>
-  <string name="item_payment_button_register">kayıt ol</string>
-  <string name="item_payment_approving_text">Onaylanıyor</string>
-  <string name="activity_payment_more_payments_button">Başka bir ödeme yöntemi kullan</string>
+  <string name="my_account">Hesabım</string>
+  <string name="spot_share">Bul ve Paylaş</string>
+  <string name="setting_schdwntitle">Zamanlanmış İndirmeler</string>
+  <string name="settings">Ayarlar</string>
+  <string name="facebook">Facebook</string>
+  <string name="twitter">Twitter</string>
+  <string name="backup_apps">Yedekleme Uygulamaları</string>
+
+  <string name="timeline"><b>Zaman çizelgesi</b></string>
+  <string name="create_store_displayable_created_store_short_term_message">Mağazanızı az önce oluşturdunuz!</string>
+  <string name="social_timeline_who_liked">Kim beğendi</string>
+  <string name="social_timeline_users_private">%d özel</string>
+
+  <string name="reviews_expand_button">%d Yanıtlar</string>
+  <string name="out_of_space_dialog_title">Yer Yok</string>
+  <string name="out_of_space_dialog_message">Devam etmek için lütfen boş alan yaratın.</string>
+  <string name="setting_category_autoupdate">%s Güncelleştirmeler</string>
+  <string name="setting_category_autoupdate_title">%sGüncelleme bildirimleri al</string>
+  <string name="setting_category_autoupdate_message">%s yeni sürümleri için düzenli olarak kontrol et</string>
+  <string name="store_added_long_time_suggestion_message">uzun vadeli göster</string>
+  <string name="store_added_short_time_suggestion_message">yeni oluşturulanları göster</string>
+  <string name="create_store_displayable_created_store_long_term_message">uzun vadeli</string>
+  <string name="create_store_displayable_explore_long_term_button">Mağazayı Görüntüle</string>
+  <string name="create_store_displayable_empty_description_message">Mağazanız için bir açıklama ekleyin. İyi bir açıklama daha fazla takipçi ve etkileşim almanıza yardımcı olur.</string>
+
+  <string name="addressbook_increase_network_message">Ağınız artırın.</string>
+  <string name="addressbook_connect_with_friends_message">Arkadaşlarınızla bağlantı kurun.</string>
+  <string name="addressbook_sync">Adres Defteri\'ni Eşitle</string>
+  <string name="not_now">Şimdi değil</string>
+  <string name="follow_friends">Arkadaşlarınızı Takip Edin</string>
+  <string name="addressbook_data_about"><b>%1$s verilerinizi nasıl kullanırsınız</b> 
+
+
+%1$s App Store kullanan arkadaşlarınız ve aile üyeleriniz için rehberinizde arama yapar. Bu bilgiyi sadece sizin içeriğiniz ile ilintili uygulamaları paylaşabilecek daha fazla insanla bağlantı kurmak üzere %1$s deneyiminizi geliştirmek kullanıyoruz.
+
+
+
+Gizliliğinizi korumak için tüm verileri %1$s sunucuları göndermeden önce kodlanacaktır.
+ </string>
+  <string name="addressbook_success">Başarılı!</string>
+  <string name="addressbook_allow_friends_find">Arkadaşlarınızın sizi bulmasına izin verin</string>
+  <string name="google">Google</string>
+  <string name="done">Tamam</string>
+  <string name="addressbook_share_phone">Telefon numaranızı paylaşın, böylece arkadaşlarınız %s üzerinde kolayca bulabilirler</string>
+  <string name="addressbook_phone_number">Telefon numarası</string>
+  <string name="addressbook_insuccess_connection">Rehberiniz ile bağlantı kuramadık!</string>
+  <string name="addressbook_invite_friends">Size katılmaları için arkadaşlarınızı davet edin!</string>
+  <string name="addressbook_thanks_for_connecting">Bağlantı kurduğunuz için teşekkürler</string>
+  <string name="addressbook_success_connected_friends">Sizi başarıyla %2$s kullanan %1$s arkadaşınızla başarı ile bağlantı kurmanızı sağladık</string>
+  <string name="addressbook_2nd_msg">%1$s App Store kullanan arkadaşlarınız ve aile üyeleriniz
+için rehberinize bir göz atacaktır. Gizliliğinizi korumak için %1$s
+sunucularına hiçbir özel veri gönderilmeyecektir</string>
+  <string name="addressbook_3rd_msg">DAHA FAZLA BİLGİ EDİNİN</string>
+
+  <string name="join_company">%s katıl</string>
+  <string name="login">Oturum Aç</string>
+  <string name="login_company">%s oturum aç</string>
+  <string name="connect_with_facebook">Facebook ile Bağlan</string>
+  <string name="connect_with_google">Google ile Bağlan</string>
+  <string name="accept_terms_signup">Aptoide katılarak Aptoide\'nın Geliştiriciler için Şart ve Koşullar ile İçerik politikasını kabul etmiş olursunuz</string>
+  <string name="recover_password">Şifrenizi kurtarın</string>
+  <string name="email">E-posta</string>
+  <string name="password">Parola</string>
+  <string name="create_password">Parola Oluştur</string>
+  <string name="store_suspended_message">Mağaza askıya alındı</string>
+
+  <string name="add_store_dialog_title">Farklı mağazalarda sadece sizin için özel olarak hazırlanmış içeriği bulabilirsiniz</string>
+  <string name="add_store_dialog_top_stores">EN İYİ MAĞAZALARI KEŞFET</string>
+  <string name="add_store_dialog_top_stores_small_text">ve özel içerik bulun!</string>
 
 </resources>

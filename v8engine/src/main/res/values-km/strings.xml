@@ -104,27 +104,12 @@
     <string name="followed_stores">ហាងលក់ទំនិញបន្ទាប់</string>
     <string name="storage_access_permission_request_message">សូមអនុញ្ញាតឱ្យចូលប្រើឃ្លាំងទូរស័ព្ទរបស់អ្នក ដូច្នេះយើងអាចទាញយកនិងដំឡើងកម្មវិធីនេះ.</string>
 
-    <string name="wizard_welcome_message"><b>ស្វាគមន៍!</b></string>
     <string name="wizard_sub_title_viewpager_one">ចាប់ផ្តើម <b>សន្តិសុខ</b> និង <b>ដំណើរកំសាន្ត</b> ដ៏រីករាយ។.</string>
-    <string name="wizard_description_part_one_viewpager_one"><b>ស្វែងរក</b> កម្មវិធីមាន
-ស្លាកដែលទុកចិត្តសម្រាប់ 
-សុវត្ថិភាពការដំឡើង.</string>
-    <string name="wizard_description_part_two_viewpager_one"><b>ស្វែងរក</b> កម្មវិធីដែល
-អ្នកចង់, ប៉ុន្តែ
-រកមិនឃើញ.</string>
-
     <string name="wizard_title_viewpager_two"><b>កម្មវិធីបង្ហាញមុខ</b></string>
     <string name="wizard_sub_title_viewpager_two">ទទួលយក <b>កម្មវិធីចុងក្រោយ</b>, ស្វែងរក <b>ហាងលក់ទំនិញតាមផ្នែក</b>
 និងចូលប្រើ <b>មាតិកាផ្ទាល់ខ្លួន.</b></string>
 
     <string name="wizard_title_viewpager_three"><b>ចូលរួមជាមួយសហគមន៍</b></string>
-    <string name="wizard_description_part_one_viewpager_three"><b>តាមដាន</b> មិត្តរបស់អ្នក</string>
-    <string name="wizard_description_part_two_viewpager_three"><b>ពិនិត្យឡើងវិញ</b> និងវាយតម្លៃកម្មវិធី</string>
-    <string name="wizard_description_part_three_viewpager_three"><b>បង្កើត</b> ហាងលក់ទំនិញរបស់អ្នក</string>
-    <string name="wizard_register_now_button">ចុះឈ្មោះប្រើនៅពេលនេះ</string>
-    <string name="wizard_be_a_part_of_aptoide">ជាផ្នែកមួយនៃ Aptoide!</string>
-    <string name="wizard_or_login"><u>ឬចុះឈ្មោះចូលប្រើ</u></string>
-
     <string name="you_need_to_be_logged_in">អ្នកត្រូវចុះឈ្មោះចូលប្រើ</string>
     <string name="follow">តាមដាន</string>
     <string name="followed">ការតាមដាន</string>

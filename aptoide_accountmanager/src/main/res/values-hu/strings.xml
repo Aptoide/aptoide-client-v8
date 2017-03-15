@@ -25,4 +25,5 @@
     <string name="ws_error_IARG_106">Az e-mail cím nem érvényes</string>
     <string name="ws_error_REPO_7">Ez a felhasználó már rendelkezik érvényes repo-val.</string>
     <string name="ws_error_WOP_11">Az áruházat nem tudtuk létrehozni. Kérjük próbálja újra.</string>
-    </resources>
+    <string name="wizard_skip"><b>PRESKOČI</b></string>
+  </resources>

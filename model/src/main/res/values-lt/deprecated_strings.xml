@@ -159,13 +159,6 @@
 
     <string name="feedback_send_button">Siųsti atsiliepimą</string>
 
-    <string name="my_account">Mano paskyra</string>
-    <string name="setting_schdwntitle">Suplanuoti atsisiuntimai</string>
-    <string name="settings">Nustatymai</string>
-    <string name="facebook">\"Facebook\"</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Atsarginės programėlių kopijos</string>
-
     <string name="menu_context_reparse">Perkrauti</string>
     <string name="menu_context_remove">Pašalinti</string>
 
@@ -481,8 +474,6 @@ teikėjas.
     <string name="friends_to_invite">Visi kiti Facebook draugai Aptoide</string>
     <string name="upload_app_backup_apps_installed">Jums reikia įkelti šią programėlę į savo parduotuvę. Galite naudoti Aptoide atsarginių kopijų kūrimo programėles.</string>
     <string name="upload_app_backup_apps_not_installed">Jums reikia įkelti šią programėlę į savo parduotuvę. Prašome įdiegti ir naudoti Aptoide atsarginių kopijų kūrimo programėles.</string>
-    <string name="setting_category_autoupdate">%s Automatinis naujinimas</string>
-    <string name="setting_category_autoupdate_title">Įgalinti %s Automatinis naujinimą</string>
     <string name="social_timeline_notifications_sum2">Įgalinti Aptoide bendravimo sienos pranešimus. Jūs gausite naujausią informaciją pranešimų juostoje.</string>
     <string name="ignored">Ignoruojama</string>
     <string name="application_signature_blacklisted">Programa nėra patikimų sąraše Aptoide anti-kenkėjiškų programų platformoje, nes ji buvo naudojama pasirašant kitą programą, kuri nesutampa su teisėto kūrėjo parašu.</string>

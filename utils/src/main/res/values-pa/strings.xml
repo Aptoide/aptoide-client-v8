@@ -17,4 +17,7 @@
 <string name="continue_option">ਜਾਰੀ ਰੱਖੋ</string>
   <string name="more_info">ਹੋਰ ਜਾਣਕਾਰੀ</string>
 
-  </resources>
+  <string name="share_options_share_external">ਵੱਲੋਂ ਸ਼ੇਅਰ ਕਰੋ...</string>
+  <string name="share_options_share_in_timeline">ਐਪਸ ਟਾਈਮਲਾਈਨ ਵਿੱਚ ਸ਼ੇਅਰ ਕਰੋ</string>
+
+</resources>

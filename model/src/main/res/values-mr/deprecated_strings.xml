@@ -173,13 +173,6 @@
 
   <string name="feedback_send_button">अभिप्राय पाठवा</string>
 
-  <string name="my_account">माझे खाते</string>
-  <string name="setting_schdwntitle">नियोजित डाउनलोड</string>
-  <string name="settings">सेटिंग</string>
-  <string name="facebook">फेसबुक</string>
-  <string name="twitter">ट्विटर</string>
-  <string name="backup_apps">बॅकअप अॅप्स</string>
-
   <string name="menu_context_reparse">रीलोड करा</string>
   <string name="menu_context_remove">काढून टाका</string>
 
@@ -245,7 +238,7 @@
   <string name="timeline_like">लाईक</string>
   <string name="likes">लाईक</string>
   <string name="unlike">अनलाईक</string>
-  <string name="timeline_empty_no_friends_send_email">असे वाटते की आपल्या मित्रांनी Aptoide फेसबुकद्वारे लॉगीन केले नाही. त्यांनी फेसबुकद्वारे लॉगीन करण्यासाठी त्यान ईमेल पाठवा</string>
+  <string name="timeline_empty_no_friends_send_email">असे वाटते की आपल्या मित्रांनी Aptoide ला फेसबुकद्वारे लॉगीन केले नाही. त्यांनी फेसबुकद्वारे लॉगीन करण्यासाठी त्यांना ईमेल पाठवा</string>
   <string name="timeline_empty_send_email_to_friends">मित्रांना ईमेल करा</string>
   <string name="aptoide_timeline">Aptoide टाइमलाइन</string>
   <string name="timeline_email_invitation">ने आपल्याला Aptoide सोशल टाईमलाईनमध्ये सामील होण्यासाठी आमंत्रित केले आहे. भेटत रहा!</string>
@@ -308,8 +301,6 @@
   <string name="setting_hwspecssum">आपल्या फोनची हार्डवेअर माहिती</string>
   <string name="setting_appfiltersum">ह्या उपकरणाला समर्थित नसणारे अॅप्लीकेशन दाखवू नका</string>
   <string name="setting_appfiltertitle">अॅप्लीकेशन फिल्टर करा</string>
-  <string name="setting_category_autoupdate">%s अपोआप अपडेट</string>
-  <string name="setting_category_autoupdate_title">%s अपोआप अपडेट चालू करा</string>
   <string name="setting_dont_show_mature_content">प्रौढ सामग्री दाखवा</string>
   <string name="setting_mature_filtering">प्रौढ सामग्री</string>
   <string name="setting_updates">अपडेट</string>
@@ -514,4 +505,5 @@
   <string name="search_minimum_chars">शोध प्रश्नात किमान २ अक्षरे असणे जरुरी आहे.</string>
 <string name="noIgnoreUpdateText">अॅप्लीकेशनची नवीन आवृत्ती आपल्या उपकरणावर चालत नाही किंवा एखादे फिचर त्यात नाही?
 अॅप्स अपडेट होण्यापासून थांबवा. अपडेट्स टॅबमध्ये जाऊन जे अॅप्लीकेशन थांबवायचे आहे त्यावर लॉंगप्रेस करा.</string>
+  <string name="stand_by">तयार रहा</string>
   </resources>

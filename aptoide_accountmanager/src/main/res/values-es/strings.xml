@@ -36,7 +36,7 @@ y la Política de Contenido de los Desarrolladores
  "</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-    <string name="facebook_email_permission_regected_message">"Aptoide necesita tu email para crear una
+    <string name="facebook_email_permission_regected_message">"Necesitamos tu email para crear una
  cuenta
  "</string>
     <string name="error_invalid_grant">Combinación de nombre de usuario y contraseña no válida</string>
@@ -54,10 +54,10 @@ y la Política de Contenido de los Desarrolladores
     <string name="ws_error_REPO_5">El nombre de la tienda ha de tener al menos 3 caracteres de longitud.</string>
     <string name="ws_error_REPO_6">El nombre de la tienda ya está en uso. Tienes que elegir otro
  nombre.</string>
-    <string name="ws_error_WOP_9">El email introducido ya existe en Aptoide</string>
-    <string name="ws_error_WOP_10">El email introducido todavía no existe en Aptoide</string>
+    <string name="ws_error_WOP_9">El email introducido ya existe</string>
+    <string name="ws_error_WOP_10">El email introducido todavía no está registrado</string>
     <string name="ws_error_QUOTA_2">Se ha alcanzado la cifra límite de usuarios nuevos para el día de hoy. Si necesitas
- elevar este límite contacta con el servicio de soporte en support@aptoide.com o crea más usuarios mañana</string>
+ elevar este límite contacta con el servicio de soporte o crea más usuarios mañana</string>
     <string name="ws_error_AUTH_1">O el email o la contraseña no son válidos para registrarse (tras actualizar el
  nombre)</string>
     <string name="login_successful">Inicio de sesión correcto</string>
@@ -125,5 +125,27 @@ y la Política de Contenido de los Desarrolladores
   <string name="nothing_inserted_user">Introduce un nombre de usuario y una foto (opcional) para crear tu perfil</string>
   <string name="create_user_bad_photo">Elige una imagen con una resolución mínima de 300x300</string>
   <string name="create_profile_logged_in_activity_title">Conectado</string>
+
+<string name="facebook_grant_permission_button">Autorizar</string>
+  <string name="ws_error_API_1">La imagen no es válida.</string>
+    <string name="edit_store_header">Edita tu tienda con una bonita imagen y una buena descripción</string>
+  <string name="create_store_description_title">Descripción de tu tienda</string>
+  <string name="create_store_description_hint">Descripción de tu tienda</string>
+  <string name="edit_store_title">Edita tu tienda</string>
+  <string name="save_edit_store">Guardar</string>
+
+  <string name="image_requirements_popup_message">La imagen tiene los siguientes problemas:
+</string>
+  <string name="image_requirements_error_min_height">- La altura mínima es inferior a 600px
+</string>
+  <string name="image_requirements_error_max_height">- La altura máxima es mayor de 10240px
+</string>
+  <string name="image_requirements_error_min_width">- El ancho mínimo es menor de 600px
+</string>
+  <string name="image_requirements_error_max_width">- El ancho máximo es mayor de 1024px
+</string>
+  <string name="image_requirements_error_max_file_size">- El tamaño máximo es mayor de 5 MB
+</string>
+  <string name="image_requirements_error_popup_title">Imagen</string>
 
 </resources>

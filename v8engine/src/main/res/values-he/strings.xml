@@ -109,27 +109,12 @@
     <string name="storage_access_permission_request_message">נא לאפשר לגשת לאחסון הטלפון שלך כדי שנוכל להוריד ולהתקין יישומון זה.</string>
 
     <string name="wizard_skip"><b>דילוג</b></string>
-    <string name="wizard_welcome_message"><b>ברוך בואך!</b></string>
     <string name="wizard_sub_title_viewpager_one">בואו נצא למסע <b>מאובטח</b> ו<b>מהנה</b>.</string>
-    <string name="wizard_description_part_one_viewpager_one">עדיף <b>לחפש</b> יישומונים
-עם תגית מהימנות 
-להתקנה בטוחה.</string>
-    <string name="wizard_description_part_two_viewpager_one">ניתן <b>לגלות</b> יישומונים
-שרצית, אך מעולם
-לא הצלחת למצוא.</string>
-
     <string name="wizard_title_viewpager_two"><b>חדשות יישומונים</b></string>
     <string name="wizard_sub_title_viewpager_two">ניתן להוריד את <b>היישומונים העדכניים ביותר</b>, למצוא <b>חנויות לפי נושאים</b>
 ולגשת ל<b>תוכן מותאם אישית.</b></string>
 
     <string name="wizard_title_viewpager_three"><b>הצטרפות לקהילה</b></string>
-    <string name="wizard_description_part_one_viewpager_three"><b>לעקוב</b> אחר החברים שלך</string>
-    <string name="wizard_description_part_two_viewpager_three"><b>לסקור</b> ולדרג יישומונים</string>
-    <string name="wizard_description_part_three_viewpager_three"><b>ליצור</b> חנות משלך</string>
-    <string name="wizard_register_now_button">להירשם כעת</string>
-    <string name="wizard_be_a_part_of_aptoide">בואו להיות חלק מאפטויד!</string>
-    <string name="wizard_or_login"><u>או להיכנס</u></string>
-
     <string name="you_need_to_be_logged_in">עליך להיכנס</string>
     <string name="follow">לעקוב</string>
     <string name="followed">במעקב</string>
@@ -211,8 +196,8 @@
     <string name="updates">עדכונים</string>
     <string name="social_timeline">ציר זמן חברתי</string>
     <string name="appview_good_app_guaranteed">יישומון טוב באחריות!</string>
-    <string name="appview_good_app_description">יישומון זה עבר את בדיקת האבטחה להימצאות וירוסים ותקיפות זדוניות אחרות ואין
- בו כל איומים!</string>
+    <string name="appview_good_app_description">יישומונים אלו עברו את בדיקת האבטחה להימצאות וירוסים ותקיפות זדוניות אחרות ואין
+ בהם כל איומים!</string>
 
     <string name="unfollow_yes_no">לבטל את המינוי?</string>
     <string name="unfollow">ביטול המינוי</string>
@@ -274,4 +259,71 @@
   <string name="clearcache_title">פינוי האחסון</string>
 
 <string name="clear_cache_summary">תתבצע מחיקה של הסמלים, התמונות, קובצי ה־apk שהתקבלו, ה־obb, נתוני השירות ועוד…</string>
+  <string name="install_on_tv_mobile_error">נא לוודא שההתקן שלך מחובר לרשת אלחוטית כדי להשתמש בתכונה זו.</string>
+  <string name="timeline"><b>ציר זמן</b></string>
+  <string name="recommended_stores">חנויות מומלצות</string>
+  <string name="create_store_displayable_message">ניתן ליצור חנות משלך עכשיו ולהתחיל לשתף את היישומונים שלך!</string>
+  <string name="create_store_displayable_button">יצירת חנות</string>
+  <string name="my_store_created_displayable_message">חנות יישומוני האנדרויד שלך</string>
+  <string name="create_store_displayable_created_store_short_term_message">כרגע יצרת את החנות שלך!</string>
+  <string name="create_store_displayable_explore_message">כדאי להיכנס ולחקור את כל ההזדמנויות</string>
+  <string name="create_store_displayable_explore_button">סיור</string>
+
+  <string name="install_app_outter_pt1">בחנות שלך אין יישומונים עדיין.</string>
+  <string name="install_app_outter_pt2">ולהעלות יישומונים ולשתף אותם עם העולם!</string>
+  <string name="install_app_inner">" התקנת %1$s "</string>
+  <string name="open_app_inner">" פתיחת %1$s "</string>
+  <string name="downloads_count">הורדות: %1$s</string>
+  <string name="version_number">גרסה: %1$s</string>
+  <string name="app_size">גודל: %1$s</string>
+  <string name="social_timeline_you_will_share">מה העוקבים שלך ייראו:</string>
+  <string name="social_timeline_share_title">שיתוף תצוגה מקדימה של כרטיס</string>
+  <string name="social_timeline_share_dialog_title">תודה לך על השיתוף</string>
+  <string name="social_timeline_share_dialog_opt_in_text_1">החברים שלך יוכלו למצוא אותך ולעקוב אחריך.</string>
+  <string name="social_timeline_share_dialog_installed_and_recommended">מותקן ומומלץ</string>
+  <string name="done">בוצע</string>
+  <string name="addressbook_share_phone">ניתן לשתף את מספר הטלפון שלך כדי לאפשר לחבריך למצוא אותך בקלות ב־%s</string>
+  <string name="addressbook_phone_number">מספר טלפון</string>
+  <string name="addressbook_insuccess_connection">לא הייתה לנו אפשרות להתחבר לספר הכתובות שלך!</string>
+  <string name="addressbook_invite_friends">להזמין חברים להצטרף!</string>
+  <string name="addressbook_thanks_for_connecting">תודה לך על הכניסה</string>
+  <string name="addressbook_success_connected_friends">חיברנו אותך בהצלחה ל־%1$s חברים שמשתמשים ב־%2$s</string>
+
+  <string name="join_company">הצטרפות אל %s</string>
+  <string name="login">כניסה</string>
+  <string name="login_company">כניסה אל %s</string>
+  <string name="connect_with_facebook">כניסה עם פייסבוק</string>
+  <string name="connect_with_google">כניסה עם גוגל</string>
+  <string name="recover_password">שחזור הססמה שלך</string>
+  <string name="email">דוא״ל</string>
+  <string name="password">ססמה</string>
+  <string name="create_password">יצירת ססמה</string>
+
+<string name="google">Google</string>
+  <string name="addressbook_allow_friends_find">לאפשר לחברים למצוא אותך</string>
+  <string name="follow_friends">לעקוב אחר חברים</string>
+  <string name="addressbook_success">הסתיים בהצלחה!</string>
+  <string name="not_now">לא עכשיו</string>
+  <string name="addressbook_sync">סנכרון ספר הכתובות</string>
+  <string name="addressbook_connect_with_friends_message">התחברות עם חברים.</string>
+  <string name="addressbook_increase_network_message">הגדלת רשת החברים שלך.</string>
+  <string name="create_store_displayable_empty_description_message">כדאי להוסיף תיאור לחנות שלך. תיאור טוב מסייע לך לקבל יותר עוקבים ואינטראקציה.</string>
+
+  <string name="create_store_displayable_explore_long_term_button">הצגת החנות</string>
+  <string name="create_store_displayable_created_store_long_term_message">טווח ארוך</string>
+  <string name="social_timeline_share_bar_login">מה החברים שלך מתקינים?</string>
+  <string name="social_timeline_share_bar_following">ניתן לעקוב אחר חנויות נוספות כדי להתחבר לחברים שלך.</string>
+  <string name="social_timeline_share_bar_followers">ניתן לשפר את החנות שלך כדי שיהיו לך עוקבים נוספים.</string>
+  <string name="social_timeline_share_soon">השיתוף יפורסם בקרוב</string>
+  <string name="private_profile_create_store">כדי שיהיה לך פרופיל פרטי, עליך ליצור חנות</string>
+  <string name="social_timeline_shared_by">שותף ע״י %1$s</string>
+  <string name="social_timeline_who_liked">מי אהב</string>
+  <string name="edit_store">עריכה</string>
+
+  <string name="comment_store">תגובה על חנות</string>
+  <string name="comment_store_title">תגובות על החנות הזאת</string>
+  <string name="timeline_followers">%d עוקבים</string>
+  <string name="timeline_followed">%d במעקב</string>
+  <string name="timeline_stats_followers">עוקבים</string>
+  <string name="timeline_login_message">מה החברים שלך מתקינים?</string>
   </resources>

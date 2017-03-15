@@ -19,4 +19,7 @@
 
   <string name="more_info">अधिक जानकारी</string>
 
-  </resources>
+  <string name="share_options_share_external">इसके द्वारा साझा करें...</string>
+  <string name="share_options_share_in_timeline">एप्स टाइमलाइन में साझा करें</string>
+
+</resources>

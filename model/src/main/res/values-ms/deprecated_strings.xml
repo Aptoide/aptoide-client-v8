@@ -71,7 +71,7 @@
     <string name="error_REPO_2">Kedai itu telah dibatalkan.</string>
     <string name="error_REPO_3">Kedai itu bukan milik pengguna ini.</string>
     <string name="error_REPO_4_no_store">Akaun anda tidak mempunyai kedai. Anda perlu membuat satu untuk membuat ulasan.</string>
-    <string name="error_REPO_7">Pengguna ini telah mempunyai repo yang sah.</string>
+    <string name="error_REPO_7">Pengguna ini telah mempunyai stor yang sah.</string>
 
     <string name="error_APK_1">Tidak dapat membuka aplikasi ini dengan maklumat dan versi yang diberikan</string>
     <string name="error_APK_4">Tidak dapat membuka aplikasi ini</string>
@@ -164,13 +164,6 @@
 
     <string name="feedback_send_button">Hantar Maklum Balas</string>
 
-    <string name="my_account">Akaun Saya</string>
-    <string name="setting_schdwntitle">Muat Turun Berjadual</string>
-    <string name="settings">Tetapan</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Aplikasi Sandaran</string>
-
     <string name="menu_context_reparse">Muat semula</string>
     <string name="menu_context_remove">Buang</string>
 
@@ -235,7 +228,7 @@
     <string name="timeline_like">Suka</string>
     <string name="likes">Suka</string>
     <string name="unlike">Tidak Suka</string>
-    <string name="timeline_empty_no_friends_send_email">Nampaknya kawan-kawan anda tidak log masuk dalam Aptoide dengan akaun Facebook mereka. Hantar e-mel kepada mereka untuk log masuk dengan Akaun Facebook mereka</string>
+    <string name="timeline_empty_no_friends_send_email">Nampaknya rakan-rakan anda tidak log masuk ke dalam Aptoide dengan akaun Facebook mereka. Hantar e-mel kepada mereka untuk membuat log masuk dengan Akaun Facebook mereka</string>
     <string name="timeline_empty_send_email_to_friends">Email Rakan</string>
     <string name="aptoide_timeline">Garis Masa Aptoide</string>
     <string name="timeline_email_invitation">Menjemput anda untuk menyertai Garis Masa Sosial Aptoide beliau. Berhubunglah!</string>
@@ -290,7 +283,7 @@
     <string name="setting_3g">3G</string>
     <string name="setting_4g">4G</string>
     <string name="setting_ethernet">Ethernet</string>
-    <string name="setting_sum_general_download_rules">Muat turun Aplikasi, Pilihan Editor, Aplikasi Teratas dan Kedai-kedai melalui sambungan data mudah alih yang dibenarkan</string>
+    <string name="setting_sum_general_download_rules">Muat turun Aplikasi, Pilihan Editor, Aplikasi dan Stor Teratas melalui sambungan data mudah alih yang dibenarkan</string>
     <string name="setting_general_download_rules">Peraturan Muat Turun Am</string>
     <string name="setting_hwspecstitle">Spesifikasi perkakasan</string>
     <string name="setting_hwspecssum">Maklumat Perkakasan mengenai telefon anda</string>
@@ -309,7 +302,7 @@
     <string name="setting_allUpdates_filtering">Tapis Maklumat Terbaru</string>
     <string name="setting_schdwninstallsum">Pasang muat turun berjadual secara automatik apabila terdapat sambungan WiFi</string>
     <string name="setting_schdwninstalltitle">Pasang secara Automatik</string>
-    <string name="setting_clear_memory">Bersihkan Memori</string>
+    <string name="setting_clear_memory">Penstoran</string>
     <string name="clearcontent_title">Mengeluarkan data dan konfigurasi</string>
     <string name="settings_maxFileCache_sum">Menetapkan saiz maksimum untuk menyimpan fail-fail apk anda</string>
     <string name="settings_maxFileCache_title">"Muat Turun  Fail Cache (MB)"</string>
@@ -484,8 +477,6 @@
     <string name="friends_to_invite">Semua rakan-rakan Facebook lain di Aptoide</string>
     <string name="upload_app_backup_apps_installed">Anda perlu memuat naik aplikasi ini ke kedai anda terlebih dahulu. Anda boleh menggunakan Aptoide Backup Apps.</string>
     <string name="upload_app_backup_apps_not_installed">Anda perlu memuat naik aplikasi ini ke kedai anda terlebih dahulu. Anda boleh menggunakan Aptoide Backup Apps.</string>
-    <string name="setting_category_autoupdate">Pemgemaskinian Auto %s</string>
-    <string name="setting_category_autoupdate_title">Membolehkan kemas kini automatik %s</string>
     <string name="social_timeline_notifications_sum2">Membolehkan Pemberitahuan Garis Waktu Sosial Aptoide . Anda akan menerima berita terkini di bahagian pemberitahuan.</string>
     <string name="ignored">diabaikan</string>
     <string name="application_signature_blacklisted">Tandatangan aplikasi bukanlah tandatangan Dipercayai di platform Anti-Perisian Hasad Aptoide kerana ia telah digunakan untuk menandatangani satu lagi aplikasi yang tidak sepadan dengan tandatangan yang berhubung dengan pemaju legit.</string>

@@ -112,27 +112,13 @@
     <string name="storage_access_permission_request_message">يرجى السماح بالوصول إلى موقع التخزين بهاتفك حتى يمكننا تحميل وتثبيت هذا التطبيق.</string>
 
     <string name="wizard_skip"><b>تخطي</b></string>
-    <string name="wizard_welcome_message"><b>مرحباً</b></string>
-    <string name="wizard_sub_title_viewpager_one">ابدأ رحلة <b>آمنة</b>و <b>ممتعة</b>.</string>
-    <string name="wizard_description_part_one_viewpager_one"><b>ابحث عن</b>تطبيقات بها
-علامة الموثوقية من أجل 
-تثبيت آمن.</string>
-    <string name="wizard_description_part_two_viewpager_one"><b>اكتشف</b> التطبيقات التي
-ترغب بها، ولكن
-لم تجدها.</string>
+    <string name="wizard_sub_title_viewpager_one"><b>أفضل فيديوهات وأخبار التطبيقات</b> في مكان واحد.
+اكتشف التطبيقات من خلال <b>أصدقائك.</b></string>
+    <string name="wizard_title_viewpager_two">امتلك متجرك الخاص<b>تغذية التطبيقات</b></string>
+    <string name="wizard_sub_title_viewpager_two">خصص متجرك <b>لمشاركة التطبيقات
+ مع أصدقائك</b>و <b>مجتمع آبتويد.</b></string>
 
-    <string name="wizard_title_viewpager_two"><b>تغذية التطبيقات</b></string>
-    <string name="wizard_sub_title_viewpager_two">احصل على <b>أحدث التطبيقات</b>، اعثر على <b>متاجر مواضيعية</b>
-وادخل على <b>محتوى مخصص.</b></string>
-
-    <string name="wizard_title_viewpager_three"><b>انضم إلى المجتمع</b></string>
-    <string name="wizard_description_part_one_viewpager_three"><b>اتبع</b>أصدقاءك</string>
-    <string name="wizard_description_part_two_viewpager_three"><b>قم بعمل تعليق</b>وتقييم للتطبيقات</string>
-    <string name="wizard_description_part_three_viewpager_three"><b>قم بإنشاء</b>متجرك</string>
-    <string name="wizard_register_now_button">اشترك الأن</string>
-    <string name="wizard_be_a_part_of_aptoide">كن جزءاً من أبتويد!</string>
-    <string name="wizard_or_login"><u>أو سجل الدخول</u></string>
-
+    <string name="wizard_title_viewpager_three">كن جزءاً<b>انضم إلى المجتمع</b></string>
     <string name="you_need_to_be_logged_in">يجب عليك تسجيل الدخول</string>
     <string name="follow">اتبع</string>
     <string name="followed">تتابع</string>
@@ -169,7 +155,7 @@
     <string name="applications">تطبيقات</string>
     <string name="arcade">الأركيد</string>
     <string name="arcade_action">الأركيد والأكشن</string>
-    <string name="board">ألعاب الطاولة</string>
+    <string name="board">الطاولة</string>
     <string name="books_reference">الكتب والمراجع</string>
     <string name="brain_puzzle">العقل والألغاز</string>
     <string name="business">الأعمال</string>
@@ -279,14 +265,13 @@
   <string name="create_store_displayable_message">قم بإنشاء متجرك الآن وابدأ بمشاركة تطبيقاتك!</string>
   <string name="create_store_displayable_button">إنشاء متجر</string>
   <string name="my_store_created_displayable_message">متجر تطبيقات أندرويد الخاص بك</string>
-  <string name="create_store_displayable_created_store_message">لقد قمت بإنشاء متجرك!</string>
   <string name="create_store_displayable_explore_message">ادخل واستكشف كل الاحتمالات</string>
   <string name="create_store_displayable_explore_button">استكشاف</string>
 
   <string name="install_app_outter_pt1">لا يملك متجرك تطبيقات حتى الآن.</string>
   <string name="install_app_outter_pt2">وتحميل تطبيقات لمشاركتها مع العالم!</string>
-  <string name="install_app_inner">تثبيت %1$s</string>
-  <string name="open_app_inner">فتح %1$s</string>
+  <string name="install_app_inner">" تثبيت %1$s "</string>
+  <string name="open_app_inner">" فتح %1$s "</string>
   <string name="downloads_count">التحميلات: %1$s</string>
   <string name="version_number">الإصدار: %1$s</string>
   <string name="app_size">الحجم: %1$s</string>
@@ -323,4 +308,121 @@
 
   <string name="timeline_stats_followers">المتابعون</string>
   <string name="timeline_login_message">ما الذي يثبته أصدقاؤك؟</string>
+<string name="password">كلمة المرور</string>
+  <string name="login">تسجيل الدخول</string>
+  <string name="my_account">حسابي</string>
+  <string name="spot_share">تحديد ومشاركة</string>
+  <string name="setting_schdwntitle">التحميلات المجدولة</string>
+  <string name="settings">الإعدادات</string>
+  <string name="facebook">فيسبوك</string>
+  <string name="twitter">تويتر</string>
+  <string name="backup_apps">تطبيقات النسخ الاحتياطي</string>
+
+  <string name="timeline"><b>الجدول الزمني</b></string>
+  <string name="create_store_displayable_created_store_short_term_message">لقد قمت للتو بإنشاء متجرك!</string>
+  <string name="social_timeline_shared_by">تمت مشاركته من قبل %1$s</string>
+  <string name="social_timeline_who_liked">من اعجبهم</string>
+  <string name="social_timeline_users_private">%d خاص</string>
+
+  <string name="edit_store">تحرير</string>
+
+  <string name="comment_store_title">تعليقات على هذا المتجر</string>
+  <string name="private_followers_message">%d متابع ملفاتهم خاصة</string>
+  <string name="private_following_message">أنت تتابع %d مستخدم/متجر خاص</string>
+
+  <string name="reviews_expand_button">%d رد</string>
+  <string name="out_of_space_dialog_title">نفذت المساحة</string>
+  <string name="out_of_space_dialog_message">يرجى تفريغ بعض المساحة للاستمرار.</string>
+  <string name="setting_category_autoupdate">%s تحديث</string>
+  <string name="setting_category_autoupdate_title">أحصل على إشعارات تحديث %s</string>
+  <string name="setting_category_autoupdate_message">تحقق بشكل دوري من إصدارات %s الجديدة</string>
+  <string name="store_added_long_time_suggestion_message">إظهار المدى الطويل</string>
+  <string name="store_added_short_time_suggestion_message">إظهار ما تم إنشاؤه للتو</string>
+  <string name="create_store_displayable_created_store_long_term_message">طويل الأجل</string>
+  <string name="create_store_displayable_explore_long_term_button">عرض المتجر</string>
+  <string name="create_store_displayable_empty_description_message">إضافة وصف لمتجرك. الوصف الجيد يساعدك على الحصول على مزيد من المتابعين والتفاعل.</string>
+
+  <string name="addressbook_increase_network_message">زيادة شبكتك.</string>
+  <string name="addressbook_connect_with_friends_message">التواصل مع الأصدقاء.</string>
+  <string name="addressbook_sync">مزامنة دفتر العناوين</string>
+  <string name="not_now">ليس الآن</string>
+  <string name="follow_friends">اتبع الأصدقاء</string>
+  <string name="addressbook_success">النجاح!</string>
+  <string name="addressbook_allow_friends_find">السماح للأصدقاء للعثور عليك</string>
+  <string name="google">جوجل</string>
+  <string name="done">تم</string>
+  <string name="addressbook_share_phone">مشاركة رقم هاتفك كي يتمكن أصدقاؤك من العثور عليك بسهولة على%s</string>
+  <string name="addressbook_phone_number">رقم الهاتف</string>
+  <string name="addressbook_insuccess_connection">لم نكن قادرين على التواصل مع دفتر العناوين الخاص بك!</string>
+  <string name="addressbook_invite_friends">دعوة الأصدقاء للانضمام لك!</string>
+  <string name="addressbook_thanks_for_connecting">شكرا لكم على الاتصال</string>
+  <string name="addressbook_success_connected_friends">لقد قمنا بتوصيلك بنجاح مع أصدقاء %1$s الذين يستخدمون %2$s</string>
+  <string name="addressbook_2nd_msg">%1$s سوف يقوم بالبحث في دفتر عناوينك عن الأصدقاء والأسرة
+ الذين يستخدمون متجر تطبيقاتنا. لحماية خصوصيتك، لن يتم إرسال أي بيانات خاصة إلى خوادم
+ %1$s</string>
+  <string name="addressbook_3rd_msg">التعرف على المزيد</string>
+
+  <string name="join_company">انضم إلى %s</string>
+  <string name="login_company">الدخول إلى %s</string>
+  <string name="connect_with_facebook">الاتصال بالفيسبوك</string>
+  <string name="connect_with_google">الاتصال بجوجل</string>
+  <string name="accept_terms_signup">من خلال الانضمام إلى أبتويد فأنت توافق على الشروط والأحكام وسياسة المحتوى للمطورين في أبتويد.</string>
+  <string name="recover_password">استعادة كلمة السر الخاصة بك</string>
+  <string name="email">البريد الإلكتروني</string>
+  <string name="create_password">إنشاء كلمة المرور</string>
+  <string name="store_suspended_message">تم تعليق المتجر</string>
+
+  <string name="add_store_dialog_title">يمكنك العثور على محتوى مخصص وحصري تم إنشاؤه لك خصيصاً في المتاجر المختلفة</string>
+  <string name="add_store_dialog_top_stores">استكشف أعلى المتاجر</string>
+  <string name="add_store_dialog_top_stores_small_text">وأحصل على محتوى حصري!</string>
+
+<string name="addressbook_data_about"><b>كيف يستخدم %1$s بياناتك</b>
+ 
+
+%1$s سوف يبحث في دفتر عناوينك عن الأصدقاء والأسرة الذين يستخدمون متاجر التطبيقات لدينا. وسوف
+ نستخدم هذه البيانات فقط لتحسين تجربة استخدام %1$s الخاصة بك من خلال توصيلك بمزيد من الأشخاص
+
+
+لحماية خصوصيتك، لن يتم إرسال أي بيانات خاصة واضحة
+ إلى خوادم %1$s. وسوف يتم إنشاء توقيع إلكتروني مجهول (hash) ببياناتك
+ ولن يمكن عكسه للحصول على بيانات الاتصال الأصلية.
+ </string>
+  <string name="follow_store">اتبع المتجر</string>
+
+  <string name="fragment_spot_share_preview_start_button">البدأ</string>
+
+  <string name="activity_login_title">تسجيل الدخول</string>
+  <string name="activity_login_forgot_password_button">هل نسيت كلمة المرور؟</string>
+  <string name="activity_login_button">تسجيل الدخول</string>
+  <string name="activity_login_sign_up_button">التسجيل</string>
+  <string name="view_credentials_username_hint">البريد الإلكتروني</string>
+  <string name="view_credentials_password_hint">كلمة المرور</string>
+
+  <string name="permission_access_deny">تم رفض الوصول للقراءة والكتابة على وحدة التخزين الخارجية</string>
+  <string name="permission_account_deny">تم رفض الوصول للحصول على الحسابات</string>
+
+  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">لم نعثر على أي جهات اتصال تستخدم %1$s</string>
+  <string name="address_book_twitter_error">خطأ في إذن تويتر</string>
+  <string name="follow_my_store">مرحباً، اتبع متجري %1$s هنا</string>
+  <string name="addressbook_about">حول دفتر العناوين</string>
+  <string name="addressbook_we_werent_able_to_connect_you">لم نتمكن من توصيلك</string>
+
+<string name="wizard_title_viewpager_one">الآن مع حائط زمني!</string>
+  <string name="wizard_sub_title_viewpager_three"><b>ابحث عن أشخاص</b> يشتركون معك في اهتمامات التطبيقات. 
+<b>قيم وشارك</b></string>
+  <string name="wizard_sub_sub_title_viewpager_three">انضم إلينا!</string>
+
+  <string name="facebook_login_cancelled">الغاء تسجيل الدخول عبر الفيسبوك</string>
+  <string name="google_login_cancelled">فشل تسجيل الدخول عبر جوجل</string>
+  <string name="login_separator_text">أو الاتصال باستخدام البريد الإلكتروني الخاص بك</string>
+
+  <string name="store_meta_apps">تطبيقات
+%s</string>
+  <string name="store_meta_following">متابعة
+%s</string>
+  <string name="store_meta_followers">متابعون
+%s</string>
+  <string name="spot_share_line_1">شارك التطبيقات مع أصدقائك</string>
+  <string name="spot_share_line_2">من الهاتف إلى الهاتف، بدون انترنت</string>
+
 </resources>

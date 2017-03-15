@@ -6,7 +6,7 @@
     <string name="WidgetProvider_timestamp_hour_ago">%s uur geleden</string>
     <string name="WidgetProvider_timestamp_hours_ago">%s uur geleden</string>
     <string name="WidgetProvider_timestamp_minutes_ago">%s minuten geleden</string>
-    <string name="WidgetProvider_timestamp_just_now">Zonet</string>
+    <string name="WidgetProvider_timestamp_just_now">Zojuist</string>
     <string name="WidgetProvider_timestamp_weeks_ago">%s weken geleden</string>
     <string name="WidgetProvider_timestamp_week_ago2">1 week geleden</string>
     <string name="WidgetProvider_timestamp_days_ago">%s dagen geleden</string>
@@ -19,4 +19,7 @@
 
   <string name="more_info">Meer info</string>
 
-  </resources>
+  <string name="share_options_share_external">Delen via...</string>
+  <string name="share_options_share_in_timeline">Delen in de apps-tijdlijn</string>
+
+</resources>

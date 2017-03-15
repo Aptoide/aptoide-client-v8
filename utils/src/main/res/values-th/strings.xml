@@ -17,4 +17,9 @@
 
 <string name="continue_option">ต่อ</string>
 
-  </resources>
+  <string name="more_info">ข้อมูลเพิ่มเติม</string>
+
+  <string name="share_options_share_external">แชร์ไปยัง</string>
+  <string name="share_options_share_in_timeline">แชร์ในไทม์ไลน์แอป</string>
+
+</resources>

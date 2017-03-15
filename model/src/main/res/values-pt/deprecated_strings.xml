@@ -164,13 +164,6 @@
 
     <string name="feedback_send_button">Enviar Feedback</string>
 
-    <string name="my_account">A minha conta</string>
-    <string name="setting_schdwntitle">Transferências agendadas</string>
-    <string name="settings">Definições</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Salvaguarda de Apps</string>
-
     <string name="menu_context_reparse">Recarregar</string>
     <string name="menu_context_remove">Remover</string>
 
@@ -485,8 +478,6 @@ Crítica</string>
     <string name="friends_to_invite">Todos os amigos Facebook no Aptoide</string>
     <string name="upload_app_backup_apps_installed">Tem de carregar esta app para a sua loja primeiro. Pode usar o Aptoide Backup Apps.</string>
     <string name="upload_app_backup_apps_not_installed">Tem de carregar esta app para a sua loja primeiro. Por favor, instale e use o Aptoide Backup Apps.</string>
-    <string name="setting_category_autoupdate">Auto-actualização de %s</string>
-    <string name="setting_category_autoupdate_title">Activar a auto-actualização de %s</string>
     <string name="social_timeline_notifications_sum2">Activar as notificações da cronologia social Aptoide. Irá receber as últimas novidades na barra de notificações.</string>
     <string name="ignored">Ignorado</string>
     <string name="application_signature_blacklisted">A assinatura da aplicação não é uma assinatura fidedigna na plataforma Anti-Malware da Aptoide porque foi usada para verificar outra aplicação que não corresponde à assinatura do developer legítimo.</string>

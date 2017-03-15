@@ -159,13 +159,6 @@
 
     <string name="feedback_send_button">ສົ່ງຄຳຕິຊົມ</string>
 
-    <string name="my_account">ບັນຊີຂອງຂ້ອຍ</string>
-    <string name="setting_schdwntitle">ການດາວໂຫຼດທີ່ຖືກຕັ້ງເວລາ</string>
-    <string name="settings">ການຕັ້ງຄ່າ</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">ສຳຮອງແອັບຯ</string>
-
     <string name="menu_context_reparse">ໂຫຼດໃໝ່</string>
     <string name="menu_context_remove">ລຶບ</string>
 
@@ -481,8 +474,6 @@
     <string name="friends_to_invite">ໝູ່ Facebook ອື່ນໆໃນ Aptoide</string>
     <string name="upload_app_backup_apps_installed">ທ່ານຕ້ອງອັບໂຫຼດແອັບນີ້ໃສ່ຮ້ານຄ້າຂອງທ່ານກ່ອນ. ທ່ານສາມາດໃຊ້ແອັບ Aptoide Backup ໄດ້.</string>
     <string name="upload_app_backup_apps_not_installed">ທ່ານຕ້ອງອັບໂຫຼດແອັບນີ້ໃສ່ຮ້ານຄ້າຂອງທ່ານກ່ອນ. ກະລຸນາຕິດຕັ້ງແອັບ Aptoide Backup.</string>
-    <string name="setting_category_autoupdate">ອັບເດດ %s ອັດຕະໂນມັດ</string>
-    <string name="setting_category_autoupdate_title">ເປີດອັບເດດ %s ອັດຕະໂນມັດ</string>
     <string name="social_timeline_notifications_sum2">ເປີດນຳໃຊ້ການແຈ້ງເຕືອນທາມລາຍສັງຄົມ Aptoide. ທ່ານຈະໄດ້ຮັບຂ່າວສານຫຼ້າສຸດຢູ່ແຖບການແຈ້ງເຕືອນ.</string>
     <string name="ignored">ບໍ່ສົນໃຈ</string>
     <string name="application_signature_blacklisted">ລາຍເຊັນແອັບພລິເຄຊັນບໍ່ແມ່ນລາຍເຊັນທີ່ໜ້າເຊື່ອຖືຢູ່ໃນແພລັດຟອມປ້ອງກັນໄວຣັສ Aptoide ເນື່ອງຈາກມັນໄດ້ຖືກໃຊ້ເພື່ອເຊັນແອັບພລິເຄຊັນອື່ນ ທີ່ບໍ່ກົງກັບລາຍເຊັນທີ່ກ່ຽວຂ້ອງກັບຜູ້ພັດທະນາທີ່ໜ້າເຊື່ອຖື.</string>

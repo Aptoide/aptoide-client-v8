@@ -159,13 +159,6 @@
 
     <string name="feedback_send_button">Пошаљите повратну информацију</string>
 
-    <string name="my_account">Мој налог</string>
-    <string name="setting_schdwntitle">Планирана преузимања</string>
-    <string name="settings">Поставке</string>
-    <string name="facebook">Фејсбук</string>
-    <string name="twitter">Твитер</string>
-    <string name="backup_apps">Бекаповане апликације</string>
-
     <string name="menu_context_reparse">Поново учитај</string>
     <string name="menu_context_remove">Уклони</string>
 
@@ -472,5 +465,4 @@
     <string name="website_copied">Вебсајт копиран на клипборд</string>
     <string name="email_copied">Имејл копиран на клипборд</string>
     <string name="privacy_copied">Линк приватности копиран на клипборд</string>
-    <string name="setting_category_autoupdate_title">Омогући аутоматско ажурирање %s</string>
-  </resources>
+    </resources>

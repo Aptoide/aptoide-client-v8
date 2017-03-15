@@ -17,4 +17,9 @@
 
 <string name="continue_option">Ipagpatuloy</string>
 
-  </resources>
+  <string name="more_info">Higit pang impormasyon</string>
+
+  <string name="share_options_share_external">Ibahagi sa pamamagitan ng...</string>
+  <string name="share_options_share_in_timeline">Ibahagi sa Apps Timeline</string>
+
+</resources>

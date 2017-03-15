@@ -103,27 +103,12 @@
     <string name="followed_stores">Lojas seguidas</string>
     <string name="storage_access_permission_request_message">Por favor, permita o acesso ao armazenamento do seu dispositivo para que possamos transferir e instalar a app.</string>
 
-    <string name="wizard_welcome_message"><b>Bem-vindo!</b></string>
     <string name="wizard_sub_title_viewpager_one">Comece uma jornada <b>segura</b> e <b>divertida</b>.</string>
-    <string name="wizard_description_part_one_viewpager_one"><b>Encontre</b> apps com o
-crachá Fidedigno para 
-uma instalação segura.</string>
-    <string name="wizard_description_part_two_viewpager_one"><b>Descubra</b> as apps que
-sempre quis, mas
-nunca encontrou.</string>
-
     <string name="wizard_title_viewpager_two"><b>Feed de Apps</b></string>
     <string name="wizard_sub_title_viewpager_two">Tenha as <b>últimas apps</b>, encontre <b>lojas temáticas</b>
 e aceda a <b>conteúdos personalizados.</b></string>
 
     <string name="wizard_title_viewpager_three"><b>Junte-se à Comunidade</b></string>
-    <string name="wizard_description_part_one_viewpager_three"><b>Siga</b> os seus amigos</string>
-    <string name="wizard_description_part_two_viewpager_three"><b>Critique</b> e Avalie apps</string>
-    <string name="wizard_description_part_three_viewpager_three"><b>Crie</b> a sua Loja</string>
-    <string name="wizard_register_now_button">Registe-se agora</string>
-    <string name="wizard_be_a_part_of_aptoide">Faça parte da Aptoide!</string>
-    <string name="wizard_or_login"><u>ou Inicie sessão</u></string>
-
     <string name="you_need_to_be_logged_in">Tem de ter sessão iniciada</string>
     <string name="follow">Seguir</string>
     <string name="followed">A seguir</string>
@@ -277,7 +262,6 @@ e aceda a <b>conteúdos personalizados.</b></string>
   <string name="create_store_displayable_message">Crie a sua loja agora e comece a partilhar as suas apps!</string>
   <string name="create_store_displayable_button">CRIAR LOJA</string>
   <string name="my_store_created_displayable_message">A sua loja de Apps Android</string>
-  <string name="create_store_displayable_created_store_message">Acabou de criar a sua loja!</string>
   <string name="create_store_displayable_explore_message">Entre e explore todas as possibilidades</string>
   <string name="create_store_displayable_explore_button">Explorar</string>
 

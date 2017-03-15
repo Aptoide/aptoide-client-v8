@@ -158,13 +158,6 @@
 
     <string name="feedback_send_button">שליחת משוב</string>
 
-    <string name="my_account">החשבון שלי</string>
-    <string name="setting_schdwntitle">הורדות מתוזמנות</string>
-    <string name="settings">הגדרות</string>
-    <string name="facebook">פייסבוק</string>
-    <string name="twitter">טוויטר</string>
-    <string name="backup_apps">גיבוי יישומונים</string>
-
     <string name="menu_context_reparse">טעינה מחדש</string>
     <string name="menu_context_remove">הסרה</string>
 
@@ -227,7 +220,7 @@
     <string name="timeline_like">אהבתי</string>
     <string name="likes">אוהבים</string>
     <string name="unlike">הסרת אהבתי</string>
-    <string name="timeline_empty_no_friends_send_email">נראה כי החברים שלך לא נכנסו לאפטויד דרך החשבון שלהם בפייסבוק. ניתן לשלוח להם דוא״ל כדי שיתחברו דרך חשבון הפייסבוק</string>
+    <string name="timeline_empty_no_friends_send_email">נראה כי החברים שלך לא נכנסו לאפטויד דרך החשבון שלהם בפייסבוק. ניתן לשלוח להם דוא״ל כדי שייכנסו דרך חשבון הפייסבוק</string>
     <string name="timeline_empty_send_email_to_friends">שליחת דוא״ל לחברים</string>
     <string name="aptoide_timeline">ציר הזמן של אפטויד</string>
     <string name="timeline_email_invitation">הוזמנת להצטרף לציר זמן באפטויד. התחברו!</string>
@@ -477,8 +470,6 @@
     <string name="friends_to_invite">כל החברים האחרים מפייסבוק באפטויד</string>
     <string name="upload_app_backup_apps_installed">עליך להעלות יישוומון זה לחנות שלך תחילה. ניתן להשתמש בגיבוי היישומונים של אפטויד.</string>
     <string name="upload_app_backup_apps_not_installed">עליך להעלות יישומון זה לחנות שלך תחילה. נא להשתמש בגיבוי היישומונים של אפטויד.</string>
-    <string name="setting_category_autoupdate">עדכון אוטומטי של %s</string>
-    <string name="setting_category_autoupdate_title">הפעלת עדכון אוטומטי של %s</string>
     <string name="social_timeline_notifications_sum2">הפעלת התרעות על ציר הזמן החברתי של אפטויד. החדשות העדכניות ביותר יגיעו אליך לשורת ההודעות.</string>
     <string name="ignored">בהתעלמות</string>
     <string name="application_signature_blacklisted">אישור היישומון אינו מהימן בפלטפורמת מניעת הנוזקות של אפטויד כיוון שאישור הזה משמש לחתימה של יישומון אחר שאינו תואם לחתימה הקשורה למפתח החוקי.</string>
@@ -499,4 +490,5 @@
     <string name="change_theme_soon">בקרוב</string>
   <string name="critical">קריטי</string>
 
+  <string name="stand_by">המתנה</string>
   </resources>

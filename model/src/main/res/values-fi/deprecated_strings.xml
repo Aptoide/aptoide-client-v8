@@ -154,17 +154,10 @@
     <string name="see_less">Näytä vähemmän</string>
     <string name="get_latest">Hanki viimeisin versio</string>
 
-    <string name="installed_tab">Asennettu</string>
+    <string name="installed_tab">Asennetut</string>
     <string name="updates_tab">Päivitykset</string>
 
     <string name="feedback_send_button">Lähetä palautetta</string>
-
-    <string name="my_account">Oma tilini</string>
-    <string name="setting_schdwntitle">Ajastetut lataukset</string>
-    <string name="settings">Asetukset</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Varmuuskopioi sovellukset</string>
 
     <string name="menu_context_reparse">Päivitä</string>
     <string name="menu_context_remove">Poista</string>
@@ -193,7 +186,7 @@ sinua.
     <string name="billing_result">"Tapahtuman tulos: "</string>
 
     <string name="change_payment">Takaisin</string>
-    <string name="rollback_installed">Asennettu</string>
+    <string name="rollback_installed">Asennetut</string>
     <string name="rollback_uninstalled">Asennus poistettu</string>
     <string name="rollback_updated">Päivitetty</string>
     <string name="rollback_downgraded">Asennettu vanhempi versio</string>
@@ -483,8 +476,6 @@ Kokeile toisia hakusanoja.</string>
     <string name="friends_to_invite">Kaikki muut Facebook-kaverit Aptoidessa</string>
     <string name="upload_app_backup_apps_installed">Sinun pitää ladata tämä sovellus ensin kauppaasi. Voit käyttää Aptoide Backup -sovellusta.</string>
     <string name="upload_app_backup_apps_not_installed">Sinun pitää ladata tämä sovellus ensin kauppaasi. Asenna ja käytä Aptoide Backup -sovellusta.</string>
-    <string name="setting_category_autoupdate">Kohteen %s automaattinen päivitys</string>
-    <string name="setting_category_autoupdate_title">Ota kohteen %s automaattinen päivitys käyttöön</string>
     <string name="social_timeline_notifications_sum2">Ota Aptoiden sosiaalisen aikajanan ilmoitukset käyttöön. Saat viimeisimmät uutiset ilmoituspalkkiin.</string>
     <string name="ignored">Ohitetut</string>
     <string name="application_signature_blacklisted">Sovelluksen allekirjoitus ei ole luotettu Aptoiden haittaohjelma-aslustassa, koska allekirjoitusta on käytetty myös toisen sovelluksen allekirjoittamiseen, joka ei täsmännyt oikean kehittäjän allekirjoitukseen.</string>
@@ -506,4 +497,5 @@ Kokeile toisia hakusanoja.</string>
   <string name="critical">Kriittinen</string>
 
   <string name="stand_by">Valmiustila</string>
+  <string name="setting_general">Yleinen</string>
   </resources>

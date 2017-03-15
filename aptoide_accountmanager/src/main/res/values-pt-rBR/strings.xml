@@ -4,14 +4,13 @@
     <string name="password">Senha</string>
     <string name="link_device_webinstall">Associar conta à instalação web</string>
     <string name="register">Registrar</string>
-    <string name="forgot_passwd">Esqueceu a senha?</string>
+    <string name="forgot_passwd"><u> 1Esqueceu a senha?</u> 2</string>
     <string name="fields_cannot_empty">Por favor, verifique seu e-mail e senha.</string>
     <string name="unknown_error">Erro desconhecido</string>
-    <string name="no_email_and_pass_error_message">"Por favor, insira um e-mail e senha para
- se registrar.
+    <string name="no_email_and_pass_error_message">"Por favor, insira um e-mail e senha
  "</string>
-    <string name="no_pass_error_message">Por favor, insira uma senha para se registrar.</string>
-    <string name="no_email_error_message">Por favor, insira um e-mail para se registrar.</string>
+    <string name="no_pass_error_message">Por favor, insira a senha</string>
+    <string name="no_email_error_message">Por favor, insira um e-mail</string>
     <string name="password_validation_text">"A senha deve ter pelo menos 8 caracteres e deve ter
  pelo menos uma letra e um número ou caracteres especiais (!@#$%*)
  "</string>
@@ -36,7 +35,7 @@
  "</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-    <string name="facebook_email_permission_regected_message">"O Aptoide precisa do seu e-mail para fazer uma
+    <string name="facebook_email_permission_regected_message">"Precisamos de seu email para criar uma
  conta
  "</string>
     <string name="error_invalid_grant">Nome de usuário e senha inválidos</string>
@@ -54,10 +53,10 @@
     <string name="ws_error_REPO_5">O nome da loja deve ter pelo menos 3 caracteres.</string>
     <string name="ws_error_REPO_6">Este nome de loja já está sendo usado, você precisa escolher
  outro.</string>
-    <string name="ws_error_WOP_9">O e-mail fornecido já existe no Aptoide</string>
-    <string name="ws_error_WOP_10">O e-mail fornecido ainda não existe no Aptoide</string>
+    <string name="ws_error_WOP_9">O e-mail fornecido já existe</string>
+    <string name="ws_error_WOP_10">O email fornecido não existe ainda</string>
     <string name="ws_error_QUOTA_2">Limite diário de usuários criados atingido por hoje. Se você precisa que
- este limite seja aumentado, por favor, entre em contato com o nosso suporte em suport@aptoide.com ou crie mais usuários amanhã</string>
+ este limite seja aumentado, por favor, entre em contato com o nosso suporte ou crie mais usuários amanhã</string>
     <string name="ws_error_AUTH_1">O e-mail ou a senha não são válidos para fazer login (mediante atualização
  de nome)</string>
     <string name="login_successful">Login bem-sucedido</string>
@@ -68,7 +67,7 @@
   <string name="user_cancelled">Cancelado pelo usuário</string>
 
   <string name="ws_error_WOP_3">Uma loja já existe com o mesmo nome. Por favor, dê outro nome para a sua loja.</string>
-  <string name="please_wait_upload">Aguarde, estamos enviando a foto. Isso pode demorar um pouco.</string>
+  <string name="please_wait_upload">Aguarde, se você está carregando, isto pode demorar um pouco…</string>
 
 
   <string name="create_user_title">Criar um Perfil de Usuário</string>
@@ -92,7 +91,7 @@
   <string name="next">Próximo</string>
 
   <string name="create_store_title">Criar Sua Loja</string>
-  <string name="create_store_header"><b>Crie sua loja</b> e compartilhe sua seleção de apps com a comunidade %s . <b>Tente</b></string>
+  <string name="create_store_header"><b>Crie sua loja</b> e compartilhe sua seleção de apps com a comunidade %s .<b>Tente</b></string>
   <string name="create_store_name">Escolher um nome para a sua Loja %s</string>
   <string name="create_store_name_inserted">Nome da sua Loja</string>
   <string name="create_store_theme">Tema da Loja</string>
@@ -125,5 +124,27 @@
   <string name="nothing_inserted_user">Insira um nome de usuário e uma foto (opcional) para criar seu perfil</string>
   <string name="create_user_bad_photo">Escolha uma imagem com uma resolução mínima de 300x300</string>
   <string name="create_profile_logged_in_activity_title">Logado</string>
+
+<string name="facebook_grant_permission_button">Dar permissão</string>
+  <string name="ws_error_API_1">Esta imagem não é válida.</string>
+    <string name="edit_store_header">Edite sua loja com uma linda imagem e uma bela descrição</string>
+  <string name="create_store_description_title">A descrição de sua loja</string>
+  <string name="create_store_description_hint">A descrição de sua loja</string>
+  <string name="edit_store_title">Edite Sua Loja</string>
+  <string name="save_edit_store">Salvar</string>
+
+  <string name="image_requirements_popup_message">A imagem possui os seguintes problemas:
+</string>
+  <string name="image_requirements_error_min_height">- Altura mínima é menor do que 600px
+</string>
+  <string name="image_requirements_error_max_height">- Altura máxima é maior do que 10240px
+</string>
+  <string name="image_requirements_error_min_width">- Largura mínima é menor do que 600px
+</string>
+  <string name="image_requirements_error_max_width">- Largura máxima é maior do que 10240px
+</string>
+  <string name="image_requirements_error_max_file_size">- Tamanho máximo é maior do que 5 MB
+</string>
+  <string name="image_requirements_error_popup_title">Imagem</string>
 
 </resources>

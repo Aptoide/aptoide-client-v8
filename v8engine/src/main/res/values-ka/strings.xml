@@ -155,13 +155,6 @@
   <string name="one_numeric">1</string>
   <string name="installing_msg">ყენდება</string>
   <string name="wizard_skip"><b>გამოტოვე</b></string>
-  <string name="wizard_welcome_message"><b>კეთილი იყოს თქვენი მობრძანება!</b></string>
-  <string name="wizard_description_part_two_viewpager_three"><b>განიხილე</b> და შეაფასე აპლიკაციები</string>
-  <string name="wizard_description_part_three_viewpager_three"><b>შექმენი</b> შენი მარკეტი</string>
-  <string name="wizard_register_now_button">დარეგისტრირდი ახლავე</string>
-  <string name="wizard_be_a_part_of_aptoide">გახდი Aptoide-ს ნაწილი!</string>
-  <string name="wizard_or_login"><u>ან გაიარე ავტორიზაცია</u></string>
-
   <string name="you_need_to_be_logged_in">საჭიროა ავტორიზაციის გავლა</string>
   <string name="follow">გამოწერა</string>
   <string name="followed">გამოწერილია</string>
@@ -195,15 +188,9 @@
   <string name="pause_all_downloads">გააჩერე გადმოწერა</string>
   <string name="storage_access_permission_request_message">აპლიკაციის გადმოსაწერად და დასაყენებლად საჭიროა ტელეფონის მეხსიერებაზე წვდომის ნებართვა.</string>
 
-  <string name="wizard_sub_title_viewpager_one">დაიწყე <b> უსაფრთხო</b> და <b> სასიამოვნო </b> მოგზაურობა.</string>
-  <string name="wizard_description_part_one_viewpager_one"><b> დააყენეთ </b> აპლიკაციები
-\"სანდო\" ნიშნით და
-იყავით უსაფრთხოდ.</string>
-  <string name="wizard_description_part_two_viewpager_one"><b> აღმოაჩინეთ </b> აპლიკაციები, რომლებიც
-გინდოდათ, მაგრამ
-ვერ პოულობდით.</string>
-
-  <string name="wizard_title_viewpager_three"><b> შეუერთდი საზოგადოებას</b></string>
+  <string name="wizard_sub_title_viewpager_one"><b>საუკეთესო ვიდეოები და სიახლეები აპლიკაციების შესახებ</b> ერთ ადგილას.
+აღმოაჩინეთ აპლიკაციები თქვენი <b>მეგობრების მეშვეობით.</b></string>
+  <string name="wizard_title_viewpager_three">გახდი საზოგადოების წევრი<b> შეუერთდი საზოგადოებას</b></string>
   <string name="displayable_social_timeline_similar_to">%1$s -ის მსგავსი</string>
 
 <string name="downgrade_warning_dialog">წინა ვერსიაზე დაბრუნებით, შესაძლოა დაკარგოთ რაიმე ინფორმაცია ან მოხდეს აპლიკაციის ანგარიშიდან გამოსვლა.</string>
@@ -214,7 +201,7 @@
   <string name="fragment_download_no_connection_subtitle">აქ გამოჩნდება თქვენ მიერ გადმოწერილი აპლიკაციები!</string>
   <string name="fragment_download_no_connection">არაფერია გადმოწერილი</string>
   <string name="downgrading_msg">ყენდება ძველი ვერსია</string>
-  <string name="wizard_title_viewpager_two"><b>აპლიკაციათა ქრონიკა</b></string>
+  <string name="wizard_title_viewpager_two">იქონიეთ საკუთარი მარკეტი<b>აპლიკაციათა ქრონიკა</b></string>
   <string name="appview_follow_store_button_text">გამოწერა</string>
   <string name="subscribers">გამომწერები</string>
   <string name="apps">აპლიკაციები</string>
@@ -234,8 +221,8 @@
   <string name="aptoide_publishers">%s გამომცემლები</string>
   <string name="appview_good_app_description">ამ აპლიკაციამ გაიარა შემოწმება ვირუსებზე და სხვა საფრთხეებზე. ის არ შეიცავს
 არაფერ საზიანოს!</string>
-  <string name="wizard_sub_title_viewpager_two">დააყენე <b>უახლესი აპლიკაციები</b>, მოძებნე <b>თემატური მარკეტები</b>
-და ისარგებლე <b>პერსონალიზებული მასალით</b></string>
+  <string name="wizard_sub_title_viewpager_two">თქვენებურად შეცვალეთ მარკეტი, <b>რათა გაუზიაროთ აპლიკაციები
+თქვენ მეგობრებს</b> და <b>Aptoide-ის საზოგადოებას.</b></string>
 
   <string name="open_apps_manager">აპლიკაციების მენეჯერის გახსნა</string>
 
@@ -248,7 +235,6 @@
   <string name="displayable_social_timeline_article_get_app_button">აპლიკაციის დაყენება %1$s</string>
   <string name="flag_results">შედეგების მონიშვნა</string>
   <string name="appstimeline_update_app">აპლიკაცია</string>
-  <string name="wizard_description_part_one_viewpager_three"><b>ადევნეთ</b> თვალი თქვენი მეგობრების აქტივობას</string>
   <string name="include_system_apps_summary">ამის მონიშვნით, თქვენ მიიღებთ შეტყობინებას სისტემური აპლიკაციების განახლების შესახებ</string>
   <string name="remote_install_success">აპლიკაცია ახლა ყენდება</string>
     <string name="remote_install_fail">დისტანციურად დაყენება ვერ მოხერხდა</string>
@@ -287,7 +273,6 @@
   <string name="social_timeline_share_dialog_installed_and_recommended">დაყენებული და რეკომენდებული</string>
   <string name="install_on_tv_mobile_error">ამ ფუნქციის გამოსაყენებლად დარწმუნდით, რომ დაკავშირებული ხართ Wi-Fi ქსელთან.</string>
     <string name="create_store_displayable_message">"შექმენით საკუთარი მარკეტი და დაიწყეთ  აპლიკაციების გაზიარება!"</string>
-  <string name="create_store_displayable_created_store_message">თქვენ უკვე შექმენით საკუთარი მარკეტი!</string>
   <string name="install_app_outter_pt1">თქვენ მარკეტში ჯერ არ არის აპლიკაციები.</string>
   <string name="install_app_outter_pt2">და ატვირთეთ აპლიკაციები, რათა გაუზიაროთ ისინი მთელ მსოფლიოს!</string>
   <string name="social_timeline_share_bar_followers">გააუმჯობესეთ თქვენი მარკეტი, რათა იქონიოთ მეტი გამომწერი.</string>
@@ -308,7 +293,7 @@
   <string name="social_timeline_share_dialog_opt_in_text_1">თქვენ მეგობრებს შეეძლებათ თქვენი პოვნა და გამოწერა.</string>
   <string name="social_timeline_share_bar_following">გამოიწერეთ მეტი მარკეტი.</string>
   <string name="social_timeline_following_fragment_title">გამოწერილი ყავს %d ადამიანი</string>
-  <string name="private_profile_create_store">კონფიდენციალური პროფილის ქონისთვის საჭიროა მარკეტის შექმნა</string>
+  <string name="private_profile_create_store">არასაჯარო პროფილის ქონისთვის საჭიროა მარკეტის შექმნა</string>
 
 
   <string name="create_store_displayable_explore_button">შესვლა</string>
@@ -316,7 +301,6 @@
   <string name="edit_store">რედაქტირება</string>
 
   <string name="comment_store_title">კომენტარები მარკეტზე</string>
-  <string name="activity_payment_more_payments_button">გადახდის სხვა მეთოდის გამოყენება</string>
   <string name="reviews_expand_button">%d პასუხი</string>
   <string name="out_of_space_dialog_title">არასაკმარისი მეხსიერება</string>
   <string name="out_of_space_dialog_message">გთხოვთ გაათავისუფლოთ ადგილი მეხსიერებაზე.</string>
@@ -329,5 +313,102 @@
   <string name="private_followers_message">%d გამომწერის ანგარიში არ არის საჯარო</string>
   <string name="private_following_message">თქვენ გამოწერილი გყავთ %d არასაჯარო მომხმარებელი/მარკეტი</string>
 
-  <string name="item_payment_button_register">რეგისტრაცია</string>
+  <string name="social_timeline_share_title">პუბლიკაციის წინასწარი ნახვა</string>
+  <string name="password">პაროლი</string>
+  <string name="login">ავტორიზაცია</string>
+  <string name="my_account">ჩემი ანგარიში</string>
+  <string name="setting_schdwntitle">გადადებული გადმოწერები</string>
+  <string name="settings">პარამეტრები</string>
+  <string name="facebook">Facebook</string>
+  <string name="twitter">Twitter</string>
+  <string name="backup_apps">Backup Apps (აპლიკაცია)</string>
+
+  <string name="timeline"><b>ქრონიკა</b></string>
+  <string name="create_store_displayable_created_store_short_term_message">თქვენ უკვე შექმენით საკუთარი მარკეტი!</string>
+  <string name="follow_store">მარკეტის გამოწერა</string>
+
+  <string name="create_store_displayable_explore_long_term_button">მარკეტის ნახვა</string>
+  <string name="connect_with_facebook">Facebook-ით ავტორიზაცია</string>
+  <string name="connect_with_google">Google-ით ავტორიზაცია</string>
+  <string name="recover_password">პაროლის აღდგენა</string>
+  <string name="email">ელ.ფოსტა</string>
+  <string name="activity_login_title">ავტორიზაცია</string>
+  <string name="activity_login_forgot_password_button">დაგავიწყდათ პაროლი?</string>
+  <string name="activity_login_button">ავტორიზაცია</string>
+  <string name="activity_login_sign_up_button">რეგისტრაცია</string>
+  <string name="view_credentials_username_hint">ელ.ფოსტა</string>
+  <string name="view_credentials_password_hint">პაროლი</string>
+
+  <string name="not_now">ახლა არა</string>
+  <string name="google">Google</string>
+  <string name="done">მზადაა</string>
+  <string name="addressbook_phone_number">მობილურის ნომერი</string>
+  <string name="addressbook_thanks_for_connecting">გმადლობთ დაკავშირებისთვის</string>
+  <string name="spot_share">მოძებნე &amp; გააზიარე</string>
+  <string name="social_timeline_shared_by">გააზიარა %1$s -მ(ა)</string>
+  <string name="social_timeline_who_liked">ვინ მოიწონა</string>
+  <string name="addressbook_we_werent_able_to_connect_you">ჩვენ ვერ შევძელით თქვენი დაკავშირება</string>
+
+<string name="setting_category_autoupdate">%s-ის განახლებები</string>
+  <string name="setting_category_autoupdate_title">%s-ის განახლებების შეტყობინების მიღება</string>
+  <string name="setting_category_autoupdate_message">%s-ის ახალ ვერსიაზე პერიოდულად შემოწმება</string>
+  <string name="create_store_displayable_empty_description_message">დაამატეთ მარკეტის აღწერა. კარგი აღწერა დაგეხმარებათ გამომწერების მოზიდვაში.</string>
+  <string name="join_company">%s-(ს)თან დაკავშირება</string>
+  <string name="add_store_dialog_title">თქვენ შეგიძლიათ იპოვოთ თქვენზე მორგებული, ექსკლუზიური მასალა სხვადასხვა მარკეტებში</string>
+  <string name="add_store_dialog_top_stores">დაათვალიერეთ ტოპ მარკეტები</string>
+  <string name="add_store_dialog_top_stores_small_text">და აღმოაჩინეთ ექსლუზიური მასალა!</string>
+
+  <string name="addressbook_increase_network_message">გაზარდეთ თქვენი ქსელი.</string>
+  <string name="addressbook_connect_with_friends_message">დაუკავშირდით მეგობრებს.</string>
+  <string name="addressbook_sync">კონტაქტების სინქრონოზაცია</string>
+  <string name="follow_friends">მეგობრების გამოწერა</string>
+  <string name="addressbook_data_about"><b>როგორ იყენებს თქვენ ინფორმაციას %1$s</b>
+
+
+%1$s თქვენ კონტაქტებში მოძებნის ხალხს, ვინც იყენებს ჩვენ აპლიკაციას. ამ
+ ინფორმაციას გამოვიყენებთ მხოლოდ %1$s-(ი)თ(ი) სარგებლობის პროცესის 
+ გასაუმჯობესებლად, თქვენ ნაცნობებთან დაკავშირების გზით,
+ რომლებსაც შეეძლებათ აპლიკაციებთან დაკავშირებული ინფორმაციის გაზიარება.
+
+
+თქვენი კონფიდენციალურობის დასაცავად, ინფორმაცია გადაიგზავნება %1$s-ის სერვეზე. იქ თქვენი ინფორმაციის
+ შესაბამისი ანონიმური კოდი (hash) შეიქმნება. ამ კოდიდან შეუძლებელი იქნება თავდაპირველი ინფორმაციის აღდგენა თქვენი კონტაქტების შესახებ.
+ </string>
+  <string name="wizard_title_viewpager_one">ახლა უკვე ქრონიკით!</string>
+  <string name="wizard_sub_sub_title_viewpager_three">შემოგვიერთდით!</string>
+
+  <string name="addressbook_success">მოთხოვნა წარმატებით შესრულდა!</string>
+  <string name="addressbook_invite_friends">მოიწვიეთ მეგობრები!</string>
+  <string name="wizard_sub_title_viewpager_three"><b>იპოვნეთ ადამიანები</b>, რომლებიც იზიარებენ თქვენ ინტერესებს.
+<b>შეაფასეთ და გააზიარეთ.</b></string>
+  <string name="social_timeline_users_private">%d არის არასაჯარო</string>
+
+  <string name="spot_share_line_2">ტელეფონიდან ტელეფონში, ინტერნეტის გარეშე</string>
+
+<string name="spot_share_line_1">გაუზიარე აპლიკაციები მეგობრებს</string>
+  <string name="store_meta_followers">გამომწერები
+%s</string>
+  <string name="store_meta_following">გამოწერილი
+%s</string>
+  <string name="store_meta_apps">აპლიკაციები
+%s</string>
+  <string name="google_login_cancelled">Google-ით ავტორიზაცია ვერ მოხერხდა</string>
+  <string name="login_separator_text">ან დარეგისტრირდით ელ.ფოსტის მისამართით</string>
+
+  <string name="addressbook_allow_friends_find">უფლება მიეცით მეგობრებს, რომ გიპოვონ</string>
+  <string name="addressbook_3rd_msg">დაწვრილებით</string>
+  <string name="addressbook_2nd_msg">%1$s დაათვალიერებს თქვენ კონტაქტებს და იპოვის მათ,
+ ვინც იყქნებს ჩვენ მარკეტს. კონფიდენციალურობის დაცვის მიზნით, თქვენი პირადი მონაცემები არ გაიგზავნება %1$s-ის
+ სერვერებზე</string>
+  <string name="fragment_spot_share_preview_start_button">დაწყება</string>
+
+  <string name="accept_terms_signup">Aptoide-ზე რეგისტრაციით, თქვენ ეთანხმებით მის პირობებს და მასალის გავრცელების პოლიტიკას შემმუშავებლებისთვის.</string>
+  <string name="create_password">შექმენით პაროლი</string>
+  <string name="store_suspended_message">მარკეტი დაბლოკილია</string>
+  <string name="facebook_login_cancelled">Facebook-ით ავტორიზაცია გაუქმდა</string>
+  <string name="permission_access_deny">გარე მეხსიერების წაკითხვის და ჩაწერის უფლება არ იყო მიცემული</string>
+  <string name="permission_account_deny">ანგარიშების მიღების უფლება არ იყო მიღებული</string>
+
+  <string name="addressbook_share_phone">გაგვიზიარეთ თქვენი მობილურის ნომერი, რათა მეგობრებმა იოლად გიპოვონ %s-ზე</string>
+  <string name="addressbook_insuccess_connection">ვერ მოხერხდა კონტაქტების ინფორმაციის მიღება!</string>
   </resources>

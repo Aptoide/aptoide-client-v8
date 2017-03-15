@@ -119,9 +119,6 @@
 
     <string name="feedback_send_button">Enviar Feedback</string>
 
-    <string name="my_account">El meu compte</string>
-    <string name="setting_schdwntitle">Descàrregues programades</string>
-    <string name="settings">Configuració</string>
     <string name="menu_context_reparse">Recarregar</string>
     <string name="menu_context_remove">Eliminar</string>
 

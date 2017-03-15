@@ -162,13 +162,6 @@
 
     <string name="feedback_send_button">피드백 보내기</string>
 
-    <string name="my_account">내 계정</string>
-    <string name="setting_schdwntitle">"예정된 다운로드 "</string>
-    <string name="settings">설정</string>
-    <string name="facebook">페이스북</string>
-    <string name="twitter">트위터</string>
-    <string name="backup_apps">앱 백업</string>
-
     <string name="menu_context_reparse">다시 로드</string>
     <string name="menu_context_remove">제거</string>
 
@@ -481,8 +474,6 @@
     <string name="friends_to_invite">Aptoide 의 모든 다른 페이스북 친구들</string>
     <string name="upload_app_backup_apps_installed">이 앱을 귀하의 스토에어 먼저 업로드 하셔야 합니다. Aptoide Backup Apps을 이용하실 수 있습니다.</string>
     <string name="upload_app_backup_apps_not_installed">이 앱을 귀하의 스토에어 먼저 업로드 하셔야 합니다. 인스톨 하시고 Aptoide Backup Apps 을 사용하세요.</string>
-    <string name="setting_category_autoupdate">%s 자동 업데이트</string>
-    <string name="setting_category_autoupdate_title">%s 자동 업데이트 활성</string>
     <string name="social_timeline_notifications_sum2">Aptoide 소셜 타임라인 알림 사용하기. 알림 바에 최신의 뉴스를 받을 것 입니다.</string>
     <string name="ignored">무시됨</string>
     <string name="application_signature_blacklisted">어플리케이션 서명이 다른 어플리케이션에서 서명으로 사용되었고 합법적인 개발자와 관련된 서명과 일치하지 않기 때문에 검증된 Aptoide 의 안티-멜웨어 플랫폼 서명이 아닙니다.</string>

@@ -19,4 +19,7 @@
 
   <string name="more_info">Altre info</string>
 
-  </resources>
+  <string name="share_options_share_external">Condividi via..</string>
+  <string name="share_options_share_in_timeline">Condividi sul Diario delle App</string>
+
+</resources>

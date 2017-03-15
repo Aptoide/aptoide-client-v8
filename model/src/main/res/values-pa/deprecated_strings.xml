@@ -180,13 +180,6 @@
 
   <string name="feedback_send_button">ਫੀਡਬੈਕ ਭੇਜੋ</string>
 
-  <string name="my_account">ਮੇਰਾ ਖਾਤਾ</string>
-  <string name="setting_schdwntitle">ਅਨੁਸੂਚਿਤ ਡਾਊਨਲੋਡ</string>
-  <string name="settings">ਸੈਟਿੰਗ</string>
-  <string name="facebook">ਫੇਸਬੁੱਕ</string>
-  <string name="twitter">ਟਵਿੱਟਰ</string>
-  <string name="backup_apps">ਬੈਕਅੱਪ ਐਪਸ</string>
-
   <string name="menu_context_reparse">ਦੁਬਾਰਾ ਲੋਡ ਕਰੋ</string>
   <string name="menu_context_remove">ਹਟਾਓ</string>
 
@@ -314,8 +307,6 @@
   <string name="setting_hwspecssum">ਤੁਹਾਡੇ ਫੋਨ ਦੇ ਬਾਰੇ ਹਾਰਡਵੇਅਰ ਜਾਣਕਾਰੀ</string>
   <string name="setting_appfiltersum">ਅੈਪਲੀਕੇਸ਼ਨਾਂ, ਜੋ ਕਿ ਇਸ ਜੰਤਰ ਦੇ ਅਨੁਕੂਲ ਨਹੀ ਹਨ, ਨਾ ਵੇਖਾਓ</string>
   <string name="setting_appfiltertitle">ਫਿਲਟਰ ਐਪਲੀਕੇਸ਼ਨ</string>
-  <string name="setting_category_autoupdate">%s ਆਟੋ ਅੱਪਡੇਟ</string>
-  <string name="setting_category_autoupdate_title">%s ਆਟੋ ਅੱਪਡੇਟ ਨੂੰ ਯੋਗ ਕਰੋ</string>
   <string name="setting_dont_show_mature_content">ਵਿਕਸਤ ਸਮੱਗਰੀ ਦਿਖਾਓ</string>
   <string name="setting_mature_filtering">ਬਾਲਗ ਸਮੱਗਰੀ</string>
   <string name="setting_updates">ਅੱਪਡੇਟ</string>
@@ -517,4 +508,6 @@
   <string name="unsubscribing_store_message">%s ਅਨਸਬਸਕ੍ਰਾਇਬ ਹੋ ਰਿਹਾ ਹੈ</string>
 
   <string name="search_minimum_chars">ਖੋਜ ਕਿਊਰੀ ਵਿੱਚ ਘੱਟੋ-ਘੱਟ 2 ਅੱਖਰ ਹੋਣੇ ਚਾਹੀਦੇ ਹਨ|</string>
-</resources>
+<string name="stand_by">ਸਟੈਂਡ ਬਾਏ</string>
+  <string name="setting_general">ਆਮ</string>
+  </resources>

@@ -4,7 +4,7 @@
     <string name="password">Wachtwoord</string>
     <string name="link_device_webinstall">Account koppelen met Webinstall</string>
     <string name="register">Registreren</string>
-    <string name="forgot_passwd">Wachtwoord vergeten?</string>
+    <string name="forgot_passwd"><u>Wachtwoord vergeten?</u></string>
     <string name="fields_cannot_empty">Controleer uw e-mailadres en wachtwoord.</string>
     <string name="no_email_and_pass_error_message">"Voer een e-mailadres en wachtwoord in om
  te registreren.
@@ -38,8 +38,8 @@
  "</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-  <string name="facebook_email_permission_regected_message">"Aptoide heeft je e-mail nodig om een
- account te maken
+  <string name="facebook_email_permission_regected_message">"We hebben je e-mailadres nodig om een
+ account aan te maken
  "</string>
   <string name="error_invalid_grant">Ongeldige combinatie van gebruikersnaam en wachtwoord</string>
   <string name="ws_error_MARG_200">\@string/error_occured</string>
@@ -56,12 +56,12 @@
   <string name="ws_error_REPO_5">De winkelnaam moet minstens drie tekens lang zijn.</string>
     <string name="ws_error_REPO_6">Deze winkelnaam is al in gebruik, je moet een andere naam
  kiezen.</string>
-  <string name="ws_error_WOP_9">Het opgegeven e-mailadres bestaat al in Aptoide</string>
-  <string name="ws_error_WOP_10">Het opgegeven e-mailadres bestaat nog niet in Aptoide</string>
+  <string name="ws_error_WOP_9">Het opgegeven e-mailadres is al in gebruik</string>
+  <string name="ws_error_WOP_10">Het opgegeven e-mailadres is nog niet in gebruik</string>
   <string name="ws_error_QUOTA_2">Dagelijkse limiet van aangemaakte gebruikers bereikt. Als je
- een hogere limiet nodig hebt, contacteer dan het hulpteam op support@aptoide.com of maak morgen meer gebruikers aan</string>
-    <string name="ws_error_AUTH_1">Het e-mailadres of het wachtwoord zijn ongeldig (bij naam
- update)</string>
+ een hogere limiet nodig hebt, contacteer dan het hulpteam of maak morgen meer gebruikers aan</string>
+    <string name="ws_error_AUTH_1">Het e-mailadres of het wachtwoord is ongeldig (bij bijwerken
+ van naam)</string>
   <string name="login_successful">Het inloggen is geslaagd</string>
   <string name="user_created">Gebruiker aangemaakt</string>
   <string name="login">Inloggen</string>
@@ -129,7 +129,7 @@
   <string name="create_profile_pub_pri_sub_text_3">Je kan je profiel privé maken, waarbij je de deelfuncties verliest.</string>
   <string name="create_profile_pub_pri_make_priv">Maak mijn profiel privé</string>
   <string name="create_profile_logged_in_activity_title">Ingelogd</string>
-  <string name="image_requirements_popup_message">De afbeelding heeft volgende problemen:
+  <string name="image_requirements_popup_message">De afbeelding heeft de volgende problemen:
 </string>
   <string name="image_requirements_error_min_height">- Minimumhoogte is minder dan 600px
 </string>

@@ -17,4 +17,7 @@
   <string name="WidgetProvider_timestamp_year_ago">१ वर्षापूर्वी</string>
   <string name="WidgetProvider_timestamp_years_ago">%s वर्षांपूर्वी</string>
 
+<string name="share_options_share_external">याद्वारे शेअर करा...</string>
+  <string name="share_options_share_in_timeline">अॅप्स टाईमलाईनमध्ये शेअर करा</string>
+
 </resources>

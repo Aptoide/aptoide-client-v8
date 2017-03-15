@@ -4,13 +4,12 @@
     <string name="password">პაროლი</string>
     <string name="link_device_webinstall">დაუკავშირე ანგარიში Webinstall-ს</string>
     <string name="register">რეგისტრაცია</string>
-    <string name="forgot_passwd">დაგავიწყდათ პაროლი?</string>
+    <string name="forgot_passwd"><u>დაგავიწყდათ პაროლი?</u></string>
     <string name="fields_cannot_empty">გთხოვთ, შეამოწმოთმოთ ელ.ფოსტა და პაროლი.</string>
-    <string name="no_email_and_pass_error_message">"რეგისტაციისთვის შეიყვანეთ ელ.ფოსტის მისამართი და
-პაროლი.
+    <string name="no_email_and_pass_error_message">"შეიყვანეთ ელ.ფოსტის მისამართი და პაროლი
  "</string>
-    <string name="no_pass_error_message">შეიყვანეთ პაროლი.</string>
-    <string name="no_email_error_message">შეიყვანეთ ელ-ფოსტის მისამართი.</string>
+    <string name="no_pass_error_message">შეიყვანეთ პაროლი</string>
+    <string name="no_email_error_message">შეიყვანეთ ელ-ფოსტის მისამართი</string>
     <string name="password_validation_text">"პაროლი უნდა შეიცავდეს მინიმუმ 8 სიმბოლოს
 (მინიმუმ 1 ასოს და 1 ციფრს ან სპეც. სიმბოლოს (!@#$%*))
  "</string>
@@ -34,7 +33,7 @@
 
 <string name="or">ან</string>
   <string name="login_successful">ავტორიზაცია წარმატებულია</string>
-  <string name="ws_error_WOP_9">ეს ელ,ფოსტა უკვე დარეგისტრირებულია Aptoide-ზე</string>
+  <string name="ws_error_WOP_9">ეს ელ.ფოსტა უკვე რეგისტრირებულია</string>
   <string name="ws_error_REPO_5">მარკეტის სახელი, სულ მცირე, უნდა შედგებოდეს 3 სიმბოლოსგან.</string>
     <string name="error_invalid_grant">არასწორი პაროლი ან მომხმარებლის სახელი</string>
   <string name="ws_error_AUTH_100">Google-ით ავტორიზაცია ვერ მოხერხდა. შეამოწმეთ თქვენი Google-ის ანგარიში (შესაძლოა ის გააქტიურებას საჭიროებს)</string>
@@ -46,7 +45,7 @@
   <string name="ws_error_REPO_4">მარკეტის სახელი უნდა შეიცავდეს მხოლოდ ასოებს, ციფრებს და
 დეფისს.</string>
   <string name="ws_error_REPO_6">ეს სახელი დაკავებულია. აირჩიეთ სხვა.</string>
-  <string name="ws_error_WOP_10">ელ.ფოსტის ეს მისამართი არ არის Aptoide-ის ბაზაში</string>
+  <string name="ws_error_WOP_10">ელ.ფოსტის ეს მისამართი ჯერ არ არის რეგისტრირებული</string>
   <string name="accept_terms">"რეგისტრაციით, თქვენ ეთანხმებით Aptoide-ის გამოყენების პირობებს
 და მასალის პოლიტიკას შემმუშავებლებისთვის
  "</string>
@@ -56,7 +55,7 @@
   <string name="ws_error_AUTH_1">არასწორი პაროლი ან ელ.ფოსტის მისამართი</string>
   <string name="ws_error_IARG_111">passhash -ის არასწორი ფორმატი</string>
     <string name="ws_error_QUOTA_2">მომხმარებელთა რეგისტრაციის დღიური ლიმიტი ამოწურულია. თუ გსურთ
-ამ ლიმიტის გაზრდა, დაგვიკავშირდით მისამართზე support@aptoide.com ან შექმენით ახალი მომხმარებლები ხვალ</string>
+ამ ლიმიტის გაზრდა, დაგვიკავშირდით ან შექმენით ახალი მომხმარებლები ხვალ</string>
     <string name="login">ავტორიზაცია</string>
   <string name="user_cancelled">გაუქმდა მომხმარებლის მიერ</string>
 
@@ -136,4 +135,5 @@
   <string name="successful">მოთხოვნა წარმატებით შესრულდა</string>
   <string name="create_profile_pub_pri_sub_text_3">თქვენ შეგიძლიათ გახადოთ საკუთარი ანგარიში პირადი, მაგრამ თქვენ დაკარგავთ გაზიარების საშუალებას.</string>
   <string name="facebook_grant_permission_button">უფლების მიცემა</string>
+  <string name="edit_store_header">დაუმატეთ მარკეტს ლამაზი სურათი და საინტერესო აღწერა</string>
   </resources>

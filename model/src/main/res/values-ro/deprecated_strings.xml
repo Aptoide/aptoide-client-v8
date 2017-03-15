@@ -163,13 +163,6 @@ Erorile pe care le vezi</string>
 
     <string name="feedback_send_button">Trimite feedback</string>
 
-    <string name="my_account">Contul meu</string>
-    <string name="setting_schdwntitle">Descărcări programate</string>
-    <string name="settings">Setări</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Backup Aplicații</string>
-
     <string name="menu_context_reparse">Reîncărcare</string>
     <string name="menu_context_remove">Elimină</string>
 
@@ -486,8 +479,6 @@ recenzie</string>
   <string name="email_copied">E-mail copiat pe clipboard</string>
   <string name="privacy_copied">Link de confidențialitate copiat pe clipboard</string>
   <string name="unsubscribe">Dezabonează-te</string>
-  <string name="setting_category_autoupdate">"Actualizare automată  %s"</string>
-  <string name="setting_category_autoupdate_title">Activează actualizare automată %s</string>
   <string name="hidden_adult">Unele aplicații sunt ascunse pentru că este activ filtrul pentru conținut destinat adulților. Vrei să ai acces la lista cu aceste aplicații?</string>
   <string name="rollback_empty">Reinstalează rapid o versiune anterioară a aplicației și rezolvă problemele de incompatibilitate. Păstrează un jurnal al tuturor aplicațiilor instalate (via Aptoide), incluzând versiunea și data instalării.</string>
 
@@ -516,4 +507,6 @@ recenzie</string>
   <string name="all_stores">Toate magazinele</string>
   <string name="followed_stores">Magazine urmărite</string>
   <string name="search_minimum_chars">Interogarea de căutare trebuie să aibă cel puțin 2 caractere.</string>
-</resources>
+<string name="stand_by">În așteptare</string>
+  <string name="setting_general">General</string>
+  </resources>

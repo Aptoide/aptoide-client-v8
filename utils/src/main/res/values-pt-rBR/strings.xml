@@ -19,4 +19,7 @@
 
   <string name="more_info">Mais informações</string>
 
-  </resources>
+  <string name="share_options_share_external">Compartilhar via...</string>
+  <string name="share_options_share_in_timeline">Compartilhar na Linha do Tempo dos Aplicativos</string>
+
+</resources>

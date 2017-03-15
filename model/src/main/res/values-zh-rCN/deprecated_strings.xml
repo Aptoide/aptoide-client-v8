@@ -159,13 +159,6 @@
 
     <string name="feedback_send_button">发送反馈</string>
 
-    <string name="my_account">我的帐户</string>
-    <string name="setting_schdwntitle">下载计划</string>
-    <string name="settings">设置</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">备份应用</string>
-
     <string name="menu_context_reparse">重新加载</string>
     <string name="menu_context_remove">删除</string>
 
@@ -479,8 +472,6 @@
     <string name="friends_to_invite">在Aptoide的所有其他Facebook好友</string>
     <string name="upload_app_backup_apps_installed">您首先需要将此应用上传至您的商店。可使用Aptoide备份应用。</string>
     <string name="upload_app_backup_apps_not_installed">您首先需要将此应用上传至您的商店。请安装并使用Aptoide备份应用。</string>
-    <string name="setting_category_autoupdate">%s自动更新</string>
-    <string name="setting_category_autoupdate_title">启用%s自动更新</string>
     <string name="social_timeline_notifications_sum2">禁用Aptoide社交时间轴通知。您将在通知栏收到最新消息。</string>
     <string name="ignored">已忽略</string>
     <string name="application_signature_blacklisted">应用的签名不是Aptoide反恶意软件平台上受信任的签名，因为它已用于为与合法开发人员的签名不匹配的其他应用签名。</string>
@@ -501,4 +492,6 @@
     <string name="change_theme_soon">即将推出</string>
   <string name="critical">严重</string>
 
+  <string name="stand_by">待机</string>
+  <string name="setting_general">通用</string>
   </resources>

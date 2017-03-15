@@ -159,13 +159,6 @@
 
     <string name="feedback_send_button">Enviar feedback</string>
 
-    <string name="my_account">Minha conta</string>
-    <string name="setting_schdwntitle">Downloads agendados</string>
-    <string name="settings">Configurações</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Backup Apps</string>
-
     <string name="menu_context_reparse">Recarregar</string>
     <string name="menu_context_remove">Remover</string>
 
@@ -230,7 +223,7 @@
     <string name="timeline_like">Curtir</string>
     <string name="likes">Curtidas</string>
     <string name="unlike">Descurtir</string>
-    <string name="timeline_empty_no_friends_send_email">Parece que seus amigos não fizeram login no Aptoide com suas contas do Facebook. Envie um e-mail para eles fazerem login com suas Contas do Facebook</string>
+    <string name="timeline_empty_no_friends_send_email">Parece que seus amigos não fizeram login no Aptoide com suas contas do Facebook. Envie um e-mail para que eles se conectem com sua Conta do Facebook</string>
     <string name="timeline_empty_send_email_to_friends">Enviar e-mail a amigos</string>
     <string name="aptoide_timeline">Linha do tempo do Aptoide</string>
     <string name="timeline_email_invitation">Convidou você para se juntar à sua linha do tempo social do Aptoide. Esteja conectado!</string>
@@ -487,8 +480,6 @@ Por favor, tente outras palavras-chave.</string>
     <string name="friends_to_invite">Todos os outros amigos do Facebook na Aptoide</string>
     <string name="upload_app_backup_apps_installed">Você precisa fazer o upload deste aplicativo para sua loja, em primeiro lugar. Você pode usar os Aplicativos de Backup Aptoide.</string>
     <string name="upload_app_backup_apps_not_installed">Você precisa fazer o upload deste aplicativo para a sua loja, em primeiro lugar. Por favor, instale e use os Aplicativos de Backup Aptoide.</string>
-    <string name="setting_category_autoupdate">%s Atualização automática</string>
-    <string name="setting_category_autoupdate_title">Ativar %s a atualização automática</string>
     <string name="social_timeline_notifications_sum2">Ativar Notificações da Linha de Tempo Aptoide. Você receberá as últimas notícias na barra de notificação.</string>
     <string name="ignored">Ignorado(a)</string>
     <string name="application_signature_blacklisted">A assinatura do aplicativo não é uma assinatura de confiança na plataforma Anti-Malware Aptoide porque foi usada para assinar outro aplicativo que não coincide com a assinatura relacionada com o desenvolvedor legítimo.</string>
@@ -509,4 +500,6 @@ Por favor, tente outras palavras-chave.</string>
     <string name="change_theme_soon">Brevemente</string>
   <string name="critical">Crítico</string>
 
+  <string name="stand_by">Aguarde</string>
+  <string name="setting_general">Geral</string>
   </resources>

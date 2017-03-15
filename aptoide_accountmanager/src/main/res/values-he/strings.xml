@@ -27,7 +27,7 @@
     <string name="ws_error_MARG_112">חסר משתנה User-Agent</string>
     <string name="ws_error_IARG_5">תבנית hmac שגויה</string>
     <string name="ws_error_IARG_106">כתובת דוא״ל שגויה</string>
-    <string name="ws_error_REPO_7">למשתמש זה כבר יש מאגר תקני.</string>
+    <string name="ws_error_REPO_7">למשתמש זה כבר יש חנות תקנית.</string>
     <string name="ws_error_WOP_11">לא ניתן ליצור חנות. נא לנסות שוב.</string>
     <string name="wizard_skip"><b>דילוג</b></string>
 
@@ -48,20 +48,20 @@
     <string name="ws_error_REPO_5">על שם החנות להיות מורכב מ־3 תווים לפחות.</string>
     <string name="ws_error_REPO_6">שם חנות זה כבר תפוס, עליך לבחור בשם
 אחר.</string>
-    <string name="ws_error_WOP_9">כתובת הדוא״ל שסיפקת כבר קיימת באפטויד</string>
-    <string name="ws_error_WOP_10">כתובת הדוא״ל שסופקה אינה קיימת באפטויד עדיין</string>
+    <string name="ws_error_WOP_9">כתובת הדוא״ל שסיפקת כבר קיימת</string>
+    <string name="ws_error_WOP_10">כתובת הדוא״ל שסופקה אינה קיימת עדיין</string>
     <string name="login_successful">הכניסה הצליחה</string>
     <string name="user_created">משתמש נוצר</string>
     <string name="accept_terms">"הרשמתך מהווה הסכמה לתנאי השימוש והתוכן
 של אפטויד למפתחים
  "</string>
-    <string name="facebook_email_permission_regected_message">"לאפטויד נדרשת כתובת הדוא״ל שלך
+    <string name="facebook_email_permission_regected_message">"אנו צריכים כתובת הדוא״ל שלך
  כדי ליצור חשבון
  "</string>
     <string name="ws_error_AUTH_100">לא ניתן להיכנס עם Google. נא לבדוק את חשבון הגוגל שלך (יתכן שיהיה עליך לאמת את כתובת הדוא״ל שלך)</string>
     <string name="ws_error_AUTH_102">לא ניתן להיכנס עם Facebook. נא לבדוק את חשבון הגוגל שלך (יתכן שיהיה עליך לאמת את כתובת הדוא״ל שלך)</string>
     <string name="ws_error_QUOTA_2">המגבלה של המשתמשים שניתן ליצור בכל יום הושגה. אם עליך להגדיל
- הכמות המוגבלת נא ליצור קשר עם התמיכה בכתובת support@aptoide.com או לייצר משתמשים חדשים מחר</string>
+ הכמות המוגבלת נא ליצור קשר עם התמיכה או לייצר משתמשים נוספים מחר</string>
     <string name="ws_error_AUTH_1">שם המשתמש או כתובת הדוא״ל אינם תקפים לכניסה (עם עדכון
  השם)</string>
     <string name="login">כניסה</string>

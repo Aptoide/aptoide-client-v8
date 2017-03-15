@@ -51,7 +51,7 @@
     <string name="error_IARG_301">က႑မွားေနသည္</string>
     <string name="error_IARG_302">ဤက႑တြင္ ယခု App ႐ွိႏွင့္ၿပီးၿပီ</string>
 
-    <string name="error_AUTH_1">Login သတ္မွတ္ခ်က္အတိုင္း ျပည့္စံုေအာင္ျဖည့္ပါ!</string>
+    <string name="error_AUTH_1">အေကာင့္၀င္မႈ သတ္မွတ္ခ်က္မ်ား မွားယြင္းေနပါသည္!</string>
     <string name="error_AUTH_2">သတ္မွတ္ခ်က္မ်ား မွားယြင္းေနပါသည္!</string>
     <string name="error_AUTH_3">အေကာင့္ကို ပယ္ဖ်က္ျပီးပါျပီ. ေမးျမန္းလိုပါက Aptoide ေထာက္ကူအဖြဲ႕သို႕ ဆက္သြယ္ပါ.</string>
     <string name="error_AUTH_4">HMAC အတည္ျပဳမႈ မေအာင္ျမင္ပါ</string>
@@ -163,13 +163,6 @@
 
     <string name="feedback_send_button">အႀကံျပဳခ်က္ ေပးပို႔မည္</string>
 
-    <string name="my_account">မိမိ အေကာင့္</string>
-    <string name="setting_schdwntitle">ေဒါင္းလုဒ္လုပ္ခ်ိန္သတ္မွတ္ထားသည္မ်ား</string>
-    <string name="settings">ခ်ိန္ညွိမႈမ်ား</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Backup apps</string>
-
     <string name="menu_context_reparse">Reload</string>
     <string name="menu_context_remove">ဖယ္ရွားမည္</string>
 
@@ -200,7 +193,7 @@
     <string name="rollback_uninstalled">Uninstall လုပ္ၿပီးၿပီ</string>
     <string name="rollback_updated">အဆင့္ျမွင့္တင္ၿပီးသား</string>
     <string name="rollback_downgraded">အဆင့္ေလွ်ာ့ခ်ၿပီးသား</string>
-    <string name="install">တပ္ဆင္မည္</string>
+    <string name="install">ထည့္သြင္းမည္</string>
     <string name="cannot_uninstall_self">Installer အား uninstall လုပ္လုိ႔မရပါ.</string>
     <string name="at_time">%s တြင္</string>
     <string name="root_access_dialog">"Root လုပ္ထားသည္. ေဒါင္းလုဒ္ဆြဲထားသည့္ app မ်ားကို အလုိလို  install လုပ္လိုပါသလား?"</string>
@@ -486,8 +479,6 @@
     <string name="friends_to_invite">Aptoide ရှိ အခြားသော Facebook သူငယ်ချင်းများအားလုံး</string>
     <string name="upload_app_backup_apps_installed">သင်သည် ဤ app အား သင့်စတိုးသို့ ဦးစွာ တင်ရန် လိုအပ်ပါသည်. သင်သည် Aptoide Backup Apps အား အသုံးပြုနိုင်ပါသည်.</string>
     <string name="upload_app_backup_apps_not_installed">"သင်သည် ဤ app အား သင့်စတိုးတွင်  ဦးစွာထည့်သွင်းရန် လိုအပ်ပါသည်. ကျေးဇူးပြု၍ Aptoide Backup Apps အား ထည့်သွင်းပြီး အသုံးပြုပါ."</string>
-    <string name="setting_category_autoupdate">%s အလိုအေလ်ာက္ အဆင့္ျမွင့္တင္ျခင္း</string>
-    <string name="setting_category_autoupdate_title">%s အလိုအေလ်ာက္ အဆင့္ျမွင့္တင္ျခင္းအား ဖြင့္ပါ</string>
     <string name="social_timeline_notifications_sum2">Aptoide လူမှုမီဒီယာ Timeline Notifications အား ဖွင့်ပါ. သင်သည် နောက်ဆုံးသတင်းများအား notification bar တွင် ရရှိပါလိမ့်မည်.</string>
     <string name="ignored">လစ်လျူရှုထားသော</string>
     <string name="application_signature_blacklisted">Application လက်မှတ်သည် Aptoide Anti-Malware ပလက်ဖောင်းတွင် ယုံကြည်ရသော လက်မှတ်တစ်ခု မဟုတ်ပါ အဘယ်ကြောင့်ဆိုသော် ယင်းအား တရား၀င်ထုတ်လုပ်သူနှင့် သက်ဆိုင်သော လက်မှတ်နှင့် ကိုက်ညီမှု မရှိသည့် အခြား application တစ်ခုတွင် ထည့်သွင်းထားသောကြောင့် ဖြစ်ပါသည်.</string>
@@ -509,4 +500,5 @@
   <string name="stand_by">အသင့္အေနအထား</string>
   <string name="critical">အေရးေပၚ</string>
 
+  <string name="setting_general">အေထြေထြ</string>
   </resources>

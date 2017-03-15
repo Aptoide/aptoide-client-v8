@@ -39,28 +39,13 @@ nun contienen amenaces dales!</string>
     <string name="installing_msg">Instalando</string>
     <string name="all_stores">Toles tiendes</string>
     <string name="wizard_skip"><b>SALTAR</b></string>
-    <string name="wizard_welcome_message"><b>¡Bienllegáu/ada!</b></string>
     <string name="wizard_sub_title_viewpager_one">Entama un viaxe <b>seguru</b> y <b>divertíu</b>.</string>
-    <string name="wizard_description_part_one_viewpager_one"><b>Gueta</b> aplicaciones coles
-insinies d\'enfotu pa
-una instalación segura.</string>
-    <string name="wizard_description_part_two_viewpager_one"><b>Descubri</b> les aplicaciones
-que quies pero
-qu\'enxamás alcuentres.</string>
-
     <string name="wizard_title_viewpager_two"><b>Feed d\'aplicaciones</b></string>
     <string name="wizard_sub_title_viewpager_two">Consigui les <b>caberes aplicaciones</b>, alcuentra
 <b>tiendes temátiques</b> y accedi <b>conteníu
 personalizáu</b></string>
 
     <string name="wizard_title_viewpager_three"><b>Xúnite a la comunidá</b></string>
-    <string name="wizard_description_part_one_viewpager_three"><b>Sigui</b> a los tos collacios</string>
-    <string name="wizard_description_part_two_viewpager_three"><b>Reseña</b> y valora aplicaciones</string>
-    <string name="wizard_description_part_three_viewpager_three"><b>Crea</b> la to tienda</string>
-    <string name="wizard_register_now_button">Rexístrate agora</string>
-    <string name="wizard_be_a_part_of_aptoide">¡Sé parte d\'Aptoide!</string>
-    <string name="wizard_or_login"><u>o anicia sesión</u></string>
-
     <string name="action">Aición</string>
     <string name="adventure">Venturiega</string>
     <string name="all">Too</string>

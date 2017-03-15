@@ -38,4 +38,5 @@
     <string name="feedback_not_valid">Kérjük érvényes tárgyat adjon meg!</string>
     <string name="ignore_update">Frissítés mellőzése</string>
     <string name="added_to_scheduled">Hozzáadva ide: Menü &gt; Ütemezett Letöltések</string>
-    </resources>
+    <string name="wizard_skip"><b>PRESKOČI</b></string>
+  </resources>

@@ -101,27 +101,13 @@
     <string name="followed_stores">Kedai yang Diikuti</string>
     <string name="storage_access_permission_request_message">Sila membenarkan akses kepada storan telefon anda supaya kami boleh memuat turun dan memasang aplikasi ini.</string>
 
-    <string name="wizard_welcome_message"><b>Selamat datang!</b></string>
-    <string name="wizard_sub_title_viewpager_one">Mulakan suatu pengembaraan <b>selamat</b> dan <b>seronok</b>.</string>
-    <string name="wizard_description_part_one_viewpager_one"><b>Cari</b> app dengan
-lencana Dipercayai untuk
-pemasangan yang terjamin.</string>
-    <string name="wizard_description_part_two_viewpager_one"><b>Cari</b> aplikasi yang
-anda mahu, tetapi
-tidak pernah dijumpai.</string>
+    <string name="wizard_sub_title_viewpager_one"><b>Apl video dan berita terbaik</b> pada satu tempat.
+Terokai apl melalui <b>rakan</b> anda</string>
+    <string name="wizard_title_viewpager_two">Miliki Stor anda sendiri<b>Garis Masa App</b></string>
+    <string name="wizard_sub_title_viewpager_two">Ubah suai stor anda <b>untuk berkongsi apl
+ dengan rakan</b> dan <b>Komuniti Aptoide.</b></string>
 
-    <string name="wizard_title_viewpager_two"><b>Garis Masa App</b></string>
-    <string name="wizard_sub_title_viewpager_two">Dapatkan <b>aplikasi terkini</b>, cari <b>kedai tematik</b>
-dan akses <b> kandungan peribadi. </b></string>
-
-    <string name="wizard_title_viewpager_three"><b>Sertai komuniti</b></string>
-    <string name="wizard_description_part_one_viewpager_three"><b>Ikut</b> rakan-rakan anda</string>
-    <string name="wizard_description_part_two_viewpager_three"><b>Ulas</b> dan Kadar aplikasi</string>
-    <string name="wizard_description_part_three_viewpager_three"><b>Reka</b> Kedai anda</string>
-    <string name="wizard_register_now_button">Daftar sekarang</string>
-    <string name="wizard_be_a_part_of_aptoide">Jadilah sebahagian daripada Aptoide!</string>
-    <string name="wizard_or_login"><u>atau Log Masuk</u></string>
-
+    <string name="wizard_title_viewpager_three">Jadi sebahagian<b>Sertai komuniti</b></string>
     <string name="you_need_to_be_logged_in">Anda perlu log masuk</string>
     <string name="follow">Ikut</string>
     <string name="followed">Ikuti</string>
@@ -131,12 +117,12 @@ dan akses <b> kandungan peribadi. </b></string>
     <string name="dialog_install_warning_trusted_app_button">Aplikasi Dipercayai</string>
     <string name="dialog_install_warning_careful_text">Berhati-hati jika anda memilih untuk memasang aplikasi ini. Ia mungkin telah diusik, mempunyai virus atau perisian hasad.</string>
     <string name="dialog_install_warning_credibility_text">Sebelum meneruskan, periksa
- komen kredibiliti dan pengguna lain Kedai ini. Aptoide sentiasa mengesyorkan bahawa anda hanya memasang %1$s aplikasi yang Dipercayai.</string>
+ kredibiliti Stor dan komen pengguna yang lain. Aptoide sentiasa mengesyorkan bahawa anda hanya memasang %1$s aplikasi yang Dipercayai.</string>
     <string name="dialog_install_warning_trusted_version_button">Versi Dipercayai</string>
     <string name="dialog_install_warning_get_trusted_version_button">Dapatkan</string>
 <string name="appview_good_app_guaranteed">App Baik Dijamin!</string>
-    <string name="appview_good_app_description">Aplikasi ini lulus ujian keselamatan untuk virus, malware dan lain-lain serangan dan tidak 
- mengandungi apa-apa ancaman!</string>
+    <string name="appview_good_app_description">Aplikasi ini melepasi ujian keselamatan untuk virus, perisian perosak dan serangan berbahaya lain dan tidak
+ mengandungi sebarang ancaman!</string>
 
     <string name="unfollow_yes_no">Adakah anda pasti anda mahu nyahikut?</string>
     <string name="unfollow">Nyahikut</string>
@@ -249,5 +235,185 @@ dan akses <b> kandungan peribadi. </b></string>
 <string name="downgrade_warning_dialog">Dengan penurunan taraf anda mungkin kehilangan data aplikasi yang berkaitan dan anda mungkin log keluar daripada akaun aplikasi.</string>
 
   <string name="displayable_social_timeline_similar_to">hampir sama dengan %1$s</string>
+
+<string name="password">Kata Laluan</string>
+  <string name="login">Log masuk</string>
+  <string name="my_account">Akaun Saya</string>
+  <string name="spot_share">Spot&amp;Kongsi</string>
+  <string name="setting_schdwntitle">Muat Turun Dijadualkan</string>
+  <string name="settings">Tetapan</string>
+  <string name="facebook">Facebook</string>
+  <string name="twitter">Twitter</string>
+  <string name="backup_apps">Sandar Apl</string>
+
+  <string name="include_system_apps_title">Termasuk apl sistem</string>
+  <string name="include_system_apps_summary">Memeriksa ini, anda akan diberitahu tentang kemaskini sistem apl (apl yang dipasang oleh pengeluar peranti)</string>
+  <string name="remote_install_menu_title">Pasang di TV</string>
+  <string name="install_on_tv_mobile_error">Pastikan peranti anda disambungkan ke Wi-FI untuk menggunakan ciri ini.</string>
+  <string name="remote_install_title">Pilih peranti sasaran</string>
+  <string name="remote_install_success">Apl telah dipasang</string>
+  <string name="remote_install_fail">Pemasangan jauh telah gagal</string>
+  <string name="remote_install_nodevices">Tiada peranti ditemui</string>
+  <string name="remote_install_notinstallated">Adakah anda mempunyai Aptoide TV yang dipasang pada Android TV anda?
+ http://aptoi.de/tv</string>
+  <string name="remote_install_nowifi">Tiada sambungan Wi-Fi</string>
+  <string name="remote_install_nowifi_tip">Sila benarkan dan sambungkan ke rangkaian Wi-Fi</string>
+  <string name="remote_install_empty_list">Mencari…</string>
+  <string name="remote_install_tip">Sila pastikan anda mempunyai AndroidTV yang disambung ke rangkaian</string>
+  <string name="remote_install_retry">Cuba semula</string>
+  <string name="remote_install_help">Bantuan</string>
+  <string name="wizard_title_viewpager_one">Kini dengan Garis Masa!</string>
+  <string name="wizard_sub_title_viewpager_three"><b>Cari orang</b> yang berkongsi minat apl anda.
+<b>Nilai dan kongsikan.</b></string>
+  <string name="wizard_sub_sub_title_viewpager_three">Sertai kami!</string>
+
+  <string name="timeline"><b>Garis Masa</b></string>
+  <string name="freed_space">%s dibebaskan</string>
+  <string name="storage_dialog_title">Bersihkan Penstoran Aptoide</string>
+  <string name="clear_cache_dialog_message">Adakah anda pasti mahu memadam semua ikon, imej, apk dimuat turun, obb, data webservice …</string>
+  <string name="clear_cache_summary">Padam ikon, imej, apk dimuat turun, obb, data webservice, …</string>
+  <string name="clearcache_title">Bersihkan Penstoran</string>
+
+  <string name="recommended_stores">Stor Yang Disyorkan</string>
+  <string name="create_store_displayable_message">Cipta Stor anda sekarang dan mula berkongsi apl anda!</string>
+  <string name="create_store_displayable_button">CIPTA STOR</string>
+  <string name="my_store_created_displayable_message">Stor Apl Android anda</string>
+  <string name="create_store_displayable_created_store_short_term_message">Anda telah mencipta Stor anda!</string>
+  <string name="create_store_displayable_explore_message">Masuk dan terokai semua kemungkinan</string>
+  <string name="create_store_displayable_explore_button">Terokai</string>
+  <string name="follow_store">Ikuti Stor</string>
+
+  <string name="install_app_outter_pt1">Stor anda masih tidak mempunyai aplikasi.</string>
+  <string name="install_app_outter_pt2">dan muat naik apl untuk berkongsikannya kepada dunia!</string>
+  <string name="install_app_inner">" Pasang %1$s "</string>
+  <string name="open_app_inner">" Buka %1$s "</string>
+  <string name="downloads_count">Muat turun: %1$s</string>
+  <string name="version_number">Versi: %1$s</string>
+  <string name="app_size">Saiz: %1$s</string>
+  <string name="comment_on_store">Komen %1$s stor</string>
+  <string name="word_this">ini</string>
+
+  <string name="social_timeline_you_will_share">Apa yang dilihat oleh pengikut anda:</string>
+  <string name="social_timeline_share_title">Pratonton kad kongsi</string>
+  <string name="social_timeline_share_title_checkbox">Privasikan profil pengguna saya dalam Garis Masa Apl. Hanya papar/kongsikan maklumat stor saya.</string>
+  <string name="social_timeline_share_title_checkbox_fb">Benarkan profil pengguna saya menjadi awam pada Garis Masa Apl</string>
+  <string name="social_timeline_share_dialog_title">Terima kasih di atas perkongsian</string>
+  <string name="social_timeline_share_dialog_opt_in_text_1">Rakan-rakan anda akan dapat mencari dan mengikuti anda.</string>
+  <string name="social_timeline_share_dialog_opt_in_text_2">Jika anda mahu memprivasikan profil anda pada Garis Masa Apl, edit tetapan privasi anda pada <b>www.aptoide.com</b>.</string>
+  <string name="social_timeline_share_dialog_opt_out_text_1">Dengan menyembunyikan profil anda, rakan-rakan anda tidak akan dapat mencari dan mengikuti anda pada Garis Masa Apl.</string>
+  <string name="social_timeline_share_dialog_opt_out_text_2">Akses <b>www.aptoide.com</b>, log masuk ke dalam akaun anda dan pergi ke <b>Tetapan</b> untuk menukar definisi privasi.</string>
+  <string name="social_timeline_share_dialog_installed_and_recommended">Dipasang dan Disyorkan</string>
+  <string name="social_timeline_share_bar_login">Apakah yang dipasang oleh rakan-rakan anda?</string>
+  <string name="social_timeline_share_bar_following">Ikuti lebih banyak Stor dan berhubung dengan rakan-rakan anda.</string>
+  <string name="social_timeline_share_bar_followers">Perbaiki stor anda untuk mendapat lebih ramai pengikut.</string>
+  <string name="social_timeline_followers_fragment_title">%d pengikut</string>
+  <string name="social_timeline_following_fragment_title">Mengikuti %d orang</string>
+  <string name="social_timeline_share_soon">Perkongsian akan disiarkan tidak lama lagi</string>
+  <string name="social_timeline_recommends">Disyorkan</string>
+  <string name="private_profile_create_store">Untuk memiliki profil privasi, anda perlu mencipta stor</string>
+  <string name="social_timeline_shared_by">dikongsi oleh %1$s</string>
+  <string name="social_timeline_who_liked">Telah menyukai</string>
+  <string name="social_timeline_users_private">%d adalah privasi</string>
+
+  <string name="edit_store">Sunting</string>
+
+  <string name="comment_store">Komen Stor</string>
+  <string name="comment_store_title">Komen pada Stor ini</string>
+  <string name="be_the_first_to_send_feedback_about_this_store">Jadilah yang pertama untuk menghantar maklum balas tentang stor ini</string>
+
+
+  <string name="timeline_followers">Pengikut %d</string>
+  <string name="timeline_followed">Mengikuti %d</string>
+  <string name="timeline_stats_followers">Pengikut</string>
+  <string name="timeline_login_message">Apakah yang dipasang oleh rakan-rakan anda?</string>
+  <string name="private_followers_message">%d pengikut adalah privasi</string>
+  <string name="private_following_message">anda sedang mengikuti %d pengguna/stor privasi</string>
+
+  <string name="reviews_expand_button">%d Balasan</string>
+  <string name="out_of_space_dialog_title">Kehabisan ruang</string>
+  <string name="out_of_space_dialog_message">Sila kosongkan ruang untuk meneruskan.</string>
+  <string name="setting_category_autoupdate">%s Kemas Kini</string>
+  <string name="setting_category_autoupdate_title">Dapatkan %s pemberitahuan kemas kini</string>
+  <string name="setting_category_autoupdate_message">Semak %s versi baru secara berkala</string>
+  <string name="store_added_long_time_suggestion_message">papar jangka panjang</string>
+  <string name="store_added_short_time_suggestion_message">papar yang baru dicipta</string>
+  <string name="create_store_displayable_created_store_long_term_message">jangka panjang</string>
+  <string name="create_store_displayable_explore_long_term_button">Papar Stor</string>
+  <string name="create_store_displayable_empty_description_message">Tambah huraian bagi Stor anda. Huraian yang baik membantu anda mendapatkan lebih ramai pengikut dan interaksi.</string>
+  <string name="fragment_spot_share_preview_start_button">Mula</string>
+
+  <string name="join_company">Sertai %s</string>
+  <string name="login_company">Log masuk %s</string>
+  <string name="connect_with_facebook">Bersambung dengan Facebook</string>
+  <string name="connect_with_google">Bersambung dengan Google</string>
+  <string name="accept_terms_signup">Dengan menyertai Aptoide, anda bersetuju dengan Terma dan Syarat Aptoide serta Dasar Kandungan untuk Pembangun.</string>
+  <string name="recover_password">Pulih semula kata laluan anda</string>
+  <string name="email">E-mel</string>
+  <string name="create_password">Cipta Kata Laluan</string>
+  <string name="store_suspended_message">Stor digantung</string>
+  <string name="facebook_login_cancelled">Log masuk Facebook dibatalkan</string>
+  <string name="google_login_cancelled">Log masuk Google gagal</string>
+  <string name="login_separator_text">Atau bersambung menggunakan e-mel anda</string>
+
+  <string name="add_store_dialog_title">Anda boleh menemui kandungan yang dibuat secara eksklusif untuk anda dalam stor berbeza</string>
+  <string name="add_store_dialog_top_stores">TEROKAI STOR TERATAS</string>
+  <string name="add_store_dialog_top_stores_small_text">dan dapatkan kandungan eksklusif!</string>
+
+  <string name="activity_login_title">Log masuk</string>
+  <string name="activity_login_forgot_password_button">Terlupa kata laluan?</string>
+  <string name="activity_login_button">Log masuk</string>
+  <string name="activity_login_sign_up_button">Daftar</string>
+  <string name="view_credentials_username_hint">E-mel</string>
+  <string name="view_credentials_password_hint">Kata laluan</string>
+
+  <string name="permission_access_deny">akses untuk membaca dan menulis pada penstoran luaran dinafikan</string>
+  <string name="permission_account_deny">akses untuk mendapatkan akaun dinafikan</string>
+
+  <string name="addressbook_increase_network_message">Tingkatkan rangkaian anda.</string>
+  <string name="addressbook_connect_with_friends_message">Berhubung dengan rakan.</string>
+  <string name="addressbook_sync">Segerakkan Buku Alamat</string>
+  <string name="not_now">Bukan sekarang</string>
+  <string name="follow_friends">Ikuti Rakan</string>
+  <string name="addressbook_data_about"><b>Bagaimana %1$s Menggunakan Data anda</b>
+
+
+%1$s akan mencari rakan dan keluarga yang menggunakan Gedung Apl di dalam buku alamat. Kami akan
+ hanya menggunakan maklumat ini untuk meningkatkan pengalaman %1$s anda dengan menyambungkan anda kepada lebih ramai orang
+ yang boleh berkongsi apl dengan kandungan berkaitan bersama anda.
+
+
+Untuk melindungi privasi anda, tiada data privasi jelas
+ akan dihantar kepada pelayar %1$s. Tandatangan tidak bernama (bahan lama) akan dicipta dengan data anda
+ dan bahan lama tersebut tidak boleh ditukarkan semula kepada maklumat hubungan asal.
+ </string>
+  <string name="addressbook_success">Berjaya!</string>
+  <string name="addressbook_allow_friends_find">Benarkan rakan mencari anda</string>
+  <string name="google">Google</string>
+  <string name="done">Selesai</string>
+  <string name="addressbook_share_phone">Kongsikan nombor telefon anda supaya rakan-rakan boleh mencari anda dengan mudah pada %s</string>
+  <string name="addressbook_phone_number">Nombor telefon</string>
+  <string name="addressbook_insuccess_connection">Kami tidak dapat bersambung dengan buku alamat anda!</string>
+  <string name="addressbook_invite_friends">Jemput rakan untuk menyertai anda!</string>
+  <string name="addressbook_thanks_for_connecting">Terima kasih kerana menyambung</string>
+  <string name="addressbook_success_connected_friends">Kami telah berjaya menyambungkan anda dengan %1$s rakan yang menggunakan %2$s</string>
+  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">Kami tidak menjumpai sebarang hubungan yang menggunakan %1$s</string>
+  <string name="addressbook_2nd_msg">%1$s akan melayari buku alamat anda untuk mencari rakan dan keluarga
+ yang menggunakan Gedung Apl kami. Untuk melindungi privasi anda, tiada data privasi akan dihantar ke %1$s
+ pelayar</string>
+  <string name="addressbook_3rd_msg">KETAHUI LEBIH LANJUT</string>
+  <string name="address_book_twitter_error">Ralat pengesahan Twitter</string>
+  <string name="follow_my_store">Hai, ikuti Stor %1$s saya di sini</string>
+  <string name="store_meta_apps">Apl
+%s</string>
+  <string name="store_meta_following">Mengikuti
+%s</string>
+  <string name="store_meta_followers">Pengikut
+%s</string>
+  <string name="addressbook_about">Tentang Buku Alamat</string>
+  <string name="addressbook_we_werent_able_to_connect_you">Kami tidak dapat menyambungkan anda</string>
+
+
+  <string name="spot_share_line_1">Kongsikan apl dengan rakan anda</string>
+  <string name="spot_share_line_2">Telefon ke telefon, tanpa Internet</string>
 
 </resources>

@@ -163,13 +163,6 @@ Probleme, die Sie begegnet sind</string>
 
     <string name="feedback_send_button">Feedback senden</string>
 
-    <string name="my_account">Mein Konto</string>
-    <string name="setting_schdwntitle">Geplante Downloads</string>
-    <string name="settings">Einstellungen</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Apps sichern</string>
-
     <string name="menu_context_reparse">Neu laden</string>
     <string name="menu_context_remove">Entfernen</string>
 
@@ -484,8 +477,6 @@ Probleme, die Sie begegnet sind</string>
     <string name="friends_to_invite">Alle anderen Facebook-Freunde in Aptoide</string>
     <string name="upload_app_backup_apps_installed">Sie müssen diese App zunächst in Ihren Store hochladen. Sie können Aptoide Backup Apps nutzen.</string>
     <string name="upload_app_backup_apps_not_installed">Sie müssen diese App zunächst in Ihren Store hochladen. Bitte installieren und nutzen Sie Aptoide Backup Apps.</string>
-    <string name="setting_category_autoupdate">Automatisches %s Update</string>
-    <string name="setting_category_autoupdate_title">Automatisches %s Update aktivieren</string>
     <string name="social_timeline_notifications_sum2">Aptoide Social Timeline Notifications aktivieren. Sie werden alle Neuigkeiten in Ihrer Benachrichtigungsleiste erhalten.</string>
     <string name="ignored">Ignoriert</string>
     <string name="application_signature_blacklisted">Applikationssignatur ist keine vertrauenswürdige Signatur auf der Anti-Malware-Plattform von Aptoide, weil sie genutzt wurde, um andere Applikationen zu signieren, die nicht mit der Signatur übereinstimmen, die mit dem eigentlichen Entwickler verbunden ist.</string>
@@ -506,4 +497,6 @@ Probleme, die Sie begegnet sind</string>
     <string name="change_theme_soon">Kommt bald</string>
   <string name="critical">Kritisch</string>
 
+  <string name="stand_by">Stand-By</string>
+  <string name="setting_general">Allgemein</string>
   </resources>

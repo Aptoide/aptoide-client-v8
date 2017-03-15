@@ -4,14 +4,13 @@
     <string name="password">Mot de passe</string>
     <string name="link_device_webinstall">Lier le compte avec Webinstall</string>
     <string name="register">S’enregistrer</string>
-    <string name="forgot_passwd">Mot de passe perdu ?</string>
+    <string name="forgot_passwd"><u>Mot de passe perdu ?</u></string>
     <string name="fields_cannot_empty">Veuillez vérifier votre e-mail et mot de passe.</string>
     <string name="unknown_error">Erreur inconnue</string>
-    <string name="no_email_and_pass_error_message">"Merci de saisir une adresse courriel et
-un mot de passe pour vous inscrire.
+    <string name="no_email_and_pass_error_message">"Merci de saisir une adresse courriel et un mot de passe
  "</string>
-    <string name="no_pass_error_message">Merci de saisir un mot de passe pour vous inscrire.</string>
-    <string name="no_email_error_message">Merci de saisir une adresse email pour vous inscrire.</string>
+    <string name="no_pass_error_message">Merci de saisir un mot de passe</string>
+    <string name="no_email_error_message">Merci de saisir une adresse courriel</string>
     <string name="password_validation_text">"Le mot de passe doit contenir au moins 8 caractères dont
 au moins une lettre et un chiffre ou un caractère spécial (!@#$%*)
  "</string>
@@ -64,7 +63,7 @@ nom.</string>
 merci de contacter le support ou créez les nouveaux utilisateurs demain.</string>
     <string name="ws_error_AUTH_1">Courriel ou mot de passe ne sont pas valides pour
 vous connecter (après mise à jour du nom)</string>
-    <string name="login">Se connecter</string>
+    <string name="login">Identifiant</string>
   <string name="user_cancelled">Annulé par l\'utilisateur</string>
 
   <string name="please_wait_upload">Merci de patienter, si vous êtes en train de télécharger, cela peut prendre un peu de temps…</string>

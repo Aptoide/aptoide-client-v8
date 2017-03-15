@@ -4,13 +4,12 @@
     <string name="password">Κωδικός</string>
     <string name="link_device_webinstall">Σύνδεση λογαριασμού με Webinstall</string>
     <string name="register">Εγγραφή</string>
-    <string name="forgot_passwd">Ξεχάσατε τον κωδικό;</string>
+    <string name="forgot_passwd"><u>Ξεχάσατε τον κωδικό;</u></string>
     <string name="fields_cannot_empty">Παρακαλώ ελέγξτε το ηλεκτρονικό ταχυδρομείο και τον κωδικό σας.</string>
-    <string name="no_email_and_pass_error_message">"Παρακαλώ εισάγεται email και κωδικό για
- εγγραφή.
+    <string name="no_email_and_pass_error_message">"Παρακαλώ εισάγετε email και κωδικό
  "</string>
-    <string name="no_pass_error_message">Παρακαλώ εισάγεται κωδικό για εγγραφή.</string>
-    <string name="no_email_error_message">Παρακαλώ εισάγεται email για εγγραφή.</string>
+    <string name="no_pass_error_message">Παρακαλώ εισάγετε έναν κωδικό</string>
+    <string name="no_email_error_message">Παρακαλώ εισάγεται ένα email</string>
     <string name="password_validation_text">"Ο κωδικός πρέπει να έχει το λιγότερο 8 χαρακτήρες και πρέπει να έχει
  τουλάχιστον ένα χαρακτήρα και ένα αριθμό ή ειδικό χαρακτήρα (!@#$%*)
  "</string>
@@ -27,15 +26,31 @@
     <string name="ws_error_MARG_112">Λείπει η παράμετρος user-agent</string>
     <string name="ws_error_IARG_5">Μη έγκυρη μορφή hmac</string>
     <string name="ws_error_IARG_106">Το ηλεκτρονικό ταχυδρομείο δεν είναι έγκυρο</string>
-    <string name="ws_error_REPO_7">Ο χρήστης έχει ήδη μία έγκυρη repo.</string>
+    <string name="ws_error_REPO_7">Ο χρήστης έχει ήδη έγκυρο κατάστημα.</string>
     <string name="ws_error_WOP_11">Το κατάστημα δεν μπορεί να δημιουργηθεί. Παρακαλώ προσπαθήστε πάλι.</string>
     <string name="or">ή</string>
   <string name="unknown_error">Άγνωστο Σφάλμα</string>
     <string name="error_invalid_grant">Άγνωστος συνδυασμός όνομα χρήστη και κωδικού πρόσβασης</string>
-  <string name="ws_error_WOP_9">Το email υπάρχει ήδη στο Aptoide</string>
-  <string name="ws_error_WOP_10">Το email δεν υπάρχει στο Aptoide ακόμη</string>
-  <string name="facebook_email_permission_regected_message">"Το Aptoide χρειάζεται το email σαν για να
-δημιουργήσει λογαρισμό
+  <string name="ws_error_WOP_9">Το email υπάρχει ήδη</string>
+  <string name="ws_error_WOP_10">Το email δεν υπάρχει ακόμη</string>
+  <string name="facebook_email_permission_regected_message">"Χρειαζόμαστε το email σαε για να δημιουργήσουμε έναν
+ λογαριασμό
  "</string>
   <string name="ws_error_IARG_111">Μη έγκυρη μορφή passhash</string>
-    </resources>
+    <string name="login">Σύνδεση</string>
+  <string name="image_requirements_error_popup_title">Εικόνα</string>
+
+<string name="image_requirements_error_max_file_size">- Το μέγιστο μέγεθος είναι μεγαλύτερο από 5 MB
+</string>
+  <string name="login_successful">Επιτυχής σύνδεση</string>
+  <string name="facebook_grant_permission_button">Χορήγηση άδειας</string>
+  <string name="user_cancelled">Ακυρώθηκε από τον χρήστη</string>
+
+  <string name="ws_error_AUTH_100">Δεν μπόρεσε να γίνει σύνδεση με το Google. Παρακαλώ ελέγξτε τον Google λογαριασμό σας (μπορεί να χρειαστεί επιβεβαίωση του email σας)</string>
+  <string name="ws_error_AUTH_102">Δεν μπόρεσε να γίνει σύνδεση με το Facebook. Παρακαλώ ελέγξτε το Facebook λογαριασμό σας (μπορεί να χρειαστεί επιβεβαίωση του email σας)</string>
+  <string name="ws_error_invalid_grant">Μη έγκυρος συνδυασμός όνομα χρήστη και κωδικού</string>
+  <string name="ws_error_REPO_5">Το όνομα του καταστήματος πρέπει να περιέχει τουλάχιστον 3 χαρακτήρες.</string>
+  <string name="ws_error_API_1">Η εικόνα δεν είναι έγκυρη.</string>
+  <string name="user_upload_photo_failed">Δεν ήταν δυνατή η δημιουργία προφίλ αυτή την στιγμή.</string>
+  <string name="wizard_skip"><b>ΠΑΡΑΛΕΙΨΗ</b></string>
+  </resources>

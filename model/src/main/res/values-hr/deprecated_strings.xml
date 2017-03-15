@@ -159,13 +159,6 @@
 
     <string name="feedback_send_button">Pošaljite povratnu informaciju</string>
 
-    <string name="my_account">Moj račun</string>
-    <string name="setting_schdwntitle">Zakazana preuzimanja</string>
-    <string name="settings">Postavke</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Sigurnosna kopija aplikacija</string>
-
     <string name="menu_context_reparse">Ponovno učitaj</string>
     <string name="menu_context_remove">Ukloni</string>
 
@@ -483,8 +476,6 @@
   <string name="friends_to_invite">Svi ostali Facebook prijatelji unutar Aptoide</string>
   <string name="upload_app_backup_apps_installed">Morate prvo poslati ovu aplikaciju u svoju trgovinu. Možete koristiti Aptoide Backup Apps.</string>
   <string name="upload_app_backup_apps_not_installed">Morate prvo poslati ovu aplikaciju u svoju trgovinu. Molimo vas, instalirajte Aptoide Backup Apps.</string>
-  <string name="setting_category_autoupdate">%s automatsko ažuriranje</string>
-  <string name="setting_category_autoupdate_title">Uključi %s automatsko ažuriranje</string>
   <string name="change_theme_soon">Dolazi uskoro</string>
   <string name="social_timeline_notifications_sum2">Uključite Aptoide notifikacije na socijalnoj vremenskoj crti. Dobivat ćete najnovije vijesti u notifikacijama.</string>
   <string name="ignored">Ignorirano</string>

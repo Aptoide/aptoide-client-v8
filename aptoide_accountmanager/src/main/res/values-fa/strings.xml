@@ -1,17 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources><string name="one_account_allowed">هر کاربر فقط یک حساب کاربری می‌تواند داشته باشد</string>
     <string name="username">ایمیل</string>
-    <string name="password">رمز</string>
+    <string name="password">رمز عبور</string>
     <string name="link_device_webinstall">اتصال حساب کاربری به Webinstall</string>
     <string name="register">ثبت نام</string>
-    <string name="forgot_passwd">رمزتان را فراموش کرده‌اید؟</string>
+    <string name="forgot_passwd"><u>رمز را فراموش کرده‌اید؟</u></string>
     <string name="fields_cannot_empty">لطفاً ایمیل و رمز خود را چک کنید.</string>
     <string name="unknown_error">خطای نامشخص</string>
-    <string name="no_email_and_pass_error_message">"لطفاً برای ثبت نام ایمیل و رمز خود را
-وارد کنید.
+    <string name="no_email_and_pass_error_message">"لطفاً ایمیل و رمز عبوری وارد کنید
  "</string>
-    <string name="no_pass_error_message">لطفاً برای ثبت نام یک رمز عبور وارد کنید.</string>
-    <string name="no_email_error_message">لطفاً برای ثبت نام یک ایمیل وارد کنید.</string>
+    <string name="no_pass_error_message">لطفاً یک رمز عبور وارد کنید</string>
+    <string name="no_email_error_message">لطفاً یک ایمیل وارد کنید</string>
     <string name="password_validation_text">"رمز شما باید حداقل 8 شناسه داشته باشد
 و حداقل شامل یک حرف و یک عدد یا شناسه‌های خاص (!@#$%*) باشد.
  "</string>
@@ -40,8 +39,8 @@
     <string name="default_account_type">cm.aptoide.pt</string>
 
   <string name="facebook_grant_permission_button">تایید دسترسی</string>
-  <string name="facebook_email_permission_regected_message">"اپ‌توید برای ساختن حساب کاربری به ایمیل شما
-نیاز دارد
+  <string name="facebook_email_permission_regected_message">"ما به ایمیل شما نیاز دارید برای ساخت یک
+حساب کاربری
  "</string>
   <string name="user_cancelled">انصراف توسط کاربر</string>
 
@@ -64,11 +63,11 @@
   <string name="ws_eror_WOP_1">شما با این نام کاربری دارای یک فروشگاه هستید. با یک نام کاربری می‌توانید تنها یک فروشگاه ایجاد کنید</string>
   <string name="ws_error_WOP_2">نام انتخابی برای فروشگاه شما نامعتبر است. نام فروشگاه می‌تواند شامل حروف، اعداد و خط فاصله باشد. خط فاصله نمی‌تواند در ابتدا و انتهای نام فروشگاه قرار گیرد.</string>
   <string name="ws_error_WOP_3">نام انتخابی شما پیش‌تر انتخاب شده است. نام دیگری برای فروشگاه خود انتخاب کنید.</string>
-  <string name="ws_error_WOP_9">ایمیل شما قبلا در اپ‌توید ثبت شده است</string>
-  <string name="ws_error_WOP_10">ایمیل شما تا کنون در اپ‌توید ثبت نشده است</string>
+  <string name="ws_error_WOP_9">ایمیل شما در سیستم موجود است</string>
+  <string name="ws_error_WOP_10">ایمیل شما هنوز ثبت نام است</string>
   <string name="ws_error_API_1">عکس انتخاب شده نامعتبر است.</string>
-    <string name="ws_error_QUOTA_2">تعداد حساب‌های کاربری ساخته شده در امروز به سقف تعداد مجاز روزانه رسیده است. اگر نیاز به
-ساخت حساب‌های بیشتر دارید، فردا ادامه کار را پی بگیرید یا با ایمیل پشتیبانی (support@aptoide.com) تماس بگیرید</string>
+    <string name="ws_error_QUOTA_2">تعداد حساب‌های کاربری ساخته شده در امروز به سقف مجاز روزانه رسیده است. اگر نیاز به
+افزایش این محدودیت دارید، با پشتیبانی تماس بگیرید یا فردا کاربرهای بیشتری بسازید</string>
     <string name="ws_error_AUTH_1">ایمیل یا رمز ورود را اشتباه وارد کرده‌اید (بر اساس به‌روزرسانی
 نام کاربری)</string>
   <string name="user_upload_photo_failed">در حال حاضر ساخت پروفایل شدنی نیست.</string>
@@ -79,7 +78,7 @@
 
 
   <string name="create_user_title">ساخت حساب کاربری</string>
-  <string name="create_user_header">&lt;/b&gt;حساب کاربری بسازید&lt;/b&gt; تا بتوانید به برنامه‌ها و بازی‌ها امتیاز دهید، پای آن‌ها نظر بگذارید و برنامه‌های مورد علاقه‌تان را با دوستان‌تان به اشتراک بگذارید<b>Create your User Profile</b> so that you\'re able to rate, comment and share apps with your friends</string>
+  <string name="create_user_header"><b>حساب کاربری بسازید</b> تا بتوانید به برنامه‌ها و بازی‌ها امتیاز دهید، پای آن‌ها نظر بگذارید و برنامه‌های مورد علاقه‌تان را با دوستان‌تان به اشتراک بگذارید</string>
   <string name="create_user_take_picture">برای حساب کاربری خود عکس بیندازید</string>
   <string name="create_user_random_photo">یا از عکس‌های قبلی خود یکی را انتخاب کنید</string>
   <string name="create_user_choose_username">شناسه کاربری خود را انتخاب کنید</string>

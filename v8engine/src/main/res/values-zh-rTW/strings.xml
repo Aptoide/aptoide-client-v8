@@ -103,25 +103,12 @@
     <string name="followed_stores">已關注商店</string>
     <string name="storage_access_permission_request_message">請允許對您手機的儲存進行存取，以便我們下載並安裝此應用。</string>
 
-    <string name="wizard_welcome_message"><b>歡迎使用！</b></string>
     <string name="wizard_sub_title_viewpager_one">開啟一段<b>安全</b>又<b>愉快</b>的旅程。</string>
-    <string name="wizard_description_part_one_viewpager_one"><b>尋找</b>帶有「受信任」徽章的應用，
-以便進行安全的安裝。</string>
-    <string name="wizard_description_part_two_viewpager_one"><b>搜尋</b>您想要的應用，
-但從未找到。</string>
-
     <string name="wizard_title_viewpager_two"><b>應用時間表</b></string>
     <string name="wizard_sub_title_viewpager_two">獲取<b>最新應用</b>，查找<b>主題商店</b>
 和存取<b>個人化內容。</b></string>
 
     <string name="wizard_title_viewpager_three"><b>加入社群</b></string>
-    <string name="wizard_description_part_one_viewpager_three"><b>關注</b>好友</string>
-    <string name="wizard_description_part_two_viewpager_three"><b>檢閱</b>和評價應用</string>
-    <string name="wizard_description_part_three_viewpager_three"><b>建立</b>您的商店</string>
-    <string name="wizard_register_now_button">立即註冊</string>
-    <string name="wizard_be_a_part_of_aptoide">成為Aptoide的一員！</string>
-    <string name="wizard_or_login"><u>或登入</u></string>
-
     <string name="you_need_to_be_logged_in">您需要登入</string>
     <string name="follow">關注</string>
     <string name="followed">正在關注</string>

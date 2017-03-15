@@ -19,4 +19,7 @@
 
   <string name="more_info">Больше информации</string>
 
-  </resources>
+  <string name="share_options_share_external">Поделиться через...</string>
+  <string name="share_options_share_in_timeline">Опубликовать в ленте приложений</string>
+
+</resources>

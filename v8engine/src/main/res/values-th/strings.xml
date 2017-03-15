@@ -97,15 +97,8 @@
     <string name="followed_stores">ติดตามร้านค้า</string>
     <string name="storage_access_permission_request_message">โปรดอนุญาตให้เข้าในส่วนจัดเก็บของโทรศัพท์ พวกเราสามารถดาวน์โหลดและติดตั้งแอปนี้</string>
 
-    <string name="wizard_welcome_message"><b>ยินดีต้อนรับ!</b></string>
-    <string name="wizard_sub_title_viewpager_one">เริ่ม<b>ความปลอดภัย</b> และ <b>สนุก</b>กับการเดินทาง</string>
-    <string name="wizard_description_part_one_viewpager_one"><b>มองหา</b> แอป
-ที่น่าเชื่อถือเพื่อน 
-การติดตั้งที่ปลอดภัย</string>
-    <string name="wizard_register_now_button">ลงทะเบียนตอนนี้</string>
-    <string name="wizard_be_a_part_of_aptoide">เป็นส่วนหนึ่งของ Aptoide!</string>
-    <string name="wizard_or_login"><u>หรือเข้าสู่ระบบ</u></string>
-
+    <string name="wizard_sub_title_viewpager_one"><b>แอปวีดีโอและข่าวสารที่ดีที่สุด</b> ในที่ที่เดียว
+ค้นพบแอปผ่าน<b>เพื่อนของคุณ</b></string>
     <string name="you_need_to_be_logged_in">คุณจำเป็นต้องเข้าสู่ระบบ</string>
     <string name="follow">ติดตาม</string>
     <string name="followed">ติดตาม</string>
@@ -115,29 +108,21 @@
     <string name="dialog_install_warning_trusted_app_button">แอปที่น่าเชือ่ถือ</string>
     <string name="dialog_install_warning_trusted_version_button">เวอร์ชั่นที่น่าเชื่อถือ</string>
     <string name="dialog_install_warning_get_trusted_version_button">รับ</string>
-<string name="wizard_description_part_two_viewpager_three"><b>รีวิว</b> และให้คะแนนแอป</string>
-    <string name="wizard_description_part_one_viewpager_three"><b>ติดตาม</b>เพื่อนของคุณ</string>
-    <string name="wizard_title_viewpager_three"><b>เข้าร่วมคอมมิวนิตี้</b></string>
-    <string name="wizard_title_viewpager_two"><b>แอปไทม์ไลน์</b></string>
+<string name="wizard_title_viewpager_three">เป็นส่วนหนึ่ง<b>เข้าร่วมคอมมิวนิตี้</b></string>
+    <string name="wizard_title_viewpager_two">มีร้านค้าของคุณ<b>แอปไทม์ไลน์</b></string>
     <string name="wizard_skip"><b>ข้าม</b></string>
     <string name="no_rollbacks_msg">ดาวน์เกรดแอปใดๆไปเวอร์ชั่นก่อนหน้านี้อย่างรวดเร็ว และแก้ไขปัญหาการเข้ากันไม่ได้ เก็บล็อกของการติดตั้ง
  แอปของคุณทั้งหมด(ผ่านทาง%s)รวมถึงเวอร์ชั่นและวันที่ติดตั้ง</string>
 
-    <string name="wizard_description_part_two_viewpager_one"><b> ค้นพบ</b> แอปนั้น
-ที่คุ๊ต้องการ แต่
-ไม่เคยพบมาก่อน</string>
+    <string name="wizard_sub_title_viewpager_two">ตั้งค่าร้านของคุณ<b> แชร์แอป
+ให้กับเพื่อน</b> และ<b>คอมมิวนิตี้Aptoide</b></string>
 
-    <string name="wizard_sub_title_viewpager_two">รับ <b> แอปล่าสุด</b> , ค้นหา <b> ร้านค้าสำคัญ</b> 
-และเข้าสู่ <b> คอนเท้นต์ส่วนตัว</b></string>
-
-    <string name="wizard_description_part_three_viewpager_three"><b> สร้าง</b> ร้านค้าของคุณ</string>
     <string name="dialog_install_warning_careful_text">ระวัง ถ้าคุณเลือกเพื่อติดตั้งแอปนี้ มันอาจจะทำให้มีไวรัสหรือมัลแวร์</string>
     <string name="dialog_install_warning_credibility_text">ก่อนการดำเนินการ ตรวจสอบร้านค้า
 ที่น่าเชื่อถือและความคิดเห็นของผู้ใช้งานอื่น Aptoideแนะนำให้คุณติดตั้งแอป %1$s ที่มีความน่าเชื่อถือ</string>
     <string name="appview_good_app_guaranteed">รับประกันแอปดี!</string>
     <string name="appview_good_app_description">แอปพลิเคชั่นนี้ผ่านการทดสอบความปลอดภัยด้านไวรัส มัลแวร์ และสิ่งโจมตีอื่นๆ 
-และไม่มี
-สิ่งคุกคามใดใด!</string>
+และไม่มีสิ่งคุกคามใดใด!</string>
 
     <string name="unfollow_yes_no">คุณต้องการไม่ติดตามใช่หรือไม่?</string>
     <string name="unfollow">ไม่ติดตาม</string>
@@ -251,4 +236,184 @@
 
   <string name="displayable_social_timeline_similar_to">คล้ายกับ %1$s</string>
 
-</resources>
+<string name="login">เข้าสู่ระบบ</string>
+  <string name="spot_share">สปอต&amp;แชร์</string>
+  <string name="my_account">บัญชีของฉัน</string>
+  <string name="setting_schdwntitle">ตารางการดาวน์โหลด</string>
+  <string name="settings">การตั้งค่า</string>
+  <string name="facebook">เฟสบุ๊ค</string>
+  <string name="twitter">ทวิตเตอร์</string>
+  <string name="backup_apps">สำรองแอป</string>
+
+  <string name="include_system_apps_title">รวมระบบแอป</string>
+  <string name="include_system_apps_summary">การตรวจนี้ คุณจะได้รับแจ้งของแอประบบ (แอปถูกติดตั้งโดยผู้ผลิตอุปกรณ์) อัพเดต</string>
+  <string name="remote_install_menu_title">ติดตั้งบนทีวี</string>
+  <string name="install_on_tv_mobile_error">แน่ใจว่าอุปกรณ์ของคุณถูกเชื่อมต่อกับไวไฟเพื่อใช้การทำงานนี้</string>
+  <string name="remote_install_title">เลือกอุปกรณ์เป้าหมาย</string>
+  <string name="remote_install_success">แอปกำลังติดตั้ง</string>
+  <string name="remote_install_fail">การติดตั้งระยะไกลล้มเหลว</string>
+  <string name="remote_install_nodevices">ไม่พบอุปกรณ์</string>
+  <string name="remote_install_notinstallated">คุณติดตั้ง Aptoide TVบนทีวีแอนดรอยด์ของคุณ ?
+ http://aptoi.de/tv</string>
+  <string name="remote_install_nowifi">ไม่มีการเชื่อมต่อไวไฟ</string>
+  <string name="remote_install_nowifi_tip">โปรดใช้งานและเชื่อต่อเครือข่ายไวไฟ</string>
+  <string name="remote_install_empty_list">กำลังค้นหา…</string>
+  <string name="remote_install_tip">โปรดแน่ใจว่าคุณเชื่อมต่อเครือข่ายกับทีวีแอนดรอยด์</string>
+  <string name="remote_install_retry">ลองใหม่</string>
+  <string name="remote_install_help">ช่วยเหลือ</string>
+  <string name="wizard_title_viewpager_one">ตอนนี้ที่ไทม์ไลน์!</string>
+  <string name="wizard_sub_title_viewpager_three"><b>ค้นหาคน</b> ผู้ที่แชร์แอปที่คุณสนใจ
+<b>ให้คะแนนและแชร์</b></string>
+  <string name="wizard_sub_sub_title_viewpager_three">เข้าร่วมกับเรา!</string>
+
+  <string name="timeline"><b>ไทม์ไลน์</b></string>
+  <string name="freed_space">%sฟรีด</string>
+  <string name="storage_dialog_title">เคลียร์คลังAptoide</string>
+  <string name="clear_cache_dialog_message">คุณแน่ใจว่าคุณต้องการลบไอคอน รูปภาพ apk ดาวน์โหลด obb เว็ปเซอร์วิส ดาต้า ทั้งหมด…</string>
+  <string name="clear_cache_summary">ลบไอคอน รูปภาพ apk ที่ดาวน์โหลด obb ข้อมูลบริการเว็ป…</string>
+  <string name="clearcache_title">เคลียร์คลัง</string>
+
+  <string name="recommended_stores">แนะนำร้านค้า</string>
+  <string name="create_store_displayable_message">สร้างร้านค้าของคุณตอนนี้และเริ่มแชร์แอปของคุณ!</string>
+  <string name="create_store_displayable_button">สร้างร้านค้า</string>
+  <string name="my_store_created_displayable_message">ร้านค้าแอนดรอย์แอปของคุณ</string>
+  <string name="create_store_displayable_created_store_short_term_message">คุณเพิ่งสร้างร้านค้าของคุณ!</string>
+  <string name="create_store_displayable_explore_message">ใส่และสำรวจความเป็นไปได้ทั้งหมด</string>
+  <string name="create_store_displayable_explore_button">สำรวจ</string>
+  <string name="follow_store">ติดตามร้านค้า</string>
+
+  <string name="install_app_outter_pt1">ร้านค้าของคุณยังไม่มีแอปพลิเคชั่น</string>
+  <string name="install_app_outter_pt2">และอัพโหลดแอปเพื่อแชร์ให้กับโลก!</string>
+  <string name="install_app_inner">" ติดตั้ง%1$s "</string>
+  <string name="open_app_inner">" เปิด%1$s "</string>
+  <string name="downloads_count">ดาวน์โหลด: %1$s</string>
+  <string name="version_number">เวอร์ชั่น: %1$s</string>
+  <string name="app_size">ขนาด: %1$s</string>
+  <string name="comment_on_store">ความคิดเห็นร้านค้า %1$s</string>
+  <string name="word_this">นี่</string>
+
+  <string name="social_timeline_you_will_share">สิ่งที่ผู้ติดตามของคุณจะเห็น:</string>
+  <string name="social_timeline_share_title">แชร์การ์ดก่อน</string>
+  <string name="social_timeline_share_title_checkbox">ทำโปรไฟล์ผู้ใช้ส่วนตัวในไทม์ไลน์แอป แสดง/แชร์เพียงข้อมูลร้านค้าของฉัน</string>
+  <string name="social_timeline_share_title_checkbox_fb">ติดตามโปรไฟล์ผู้ใช้ของฉันสาธารณะบนไทม์ไลน์แอป</string>
+  <string name="social_timeline_share_dialog_title">ขอบคุณสำหรับการแชร์</string>
+  <string name="social_timeline_share_dialog_opt_in_text_1">เพื่อนของคุณสามารถพบและติดตามคุณได้</string>
+  <string name="social_timeline_share_dialog_opt_in_text_2">ถ้าคุณต้องการให้เป็นโปรไฟล์ส่วนตัวบนไทม์ไลน์แอป แก้ไขการตั้งค่าส่วนตัวของคุณบน<b>www.aptoide.com</b></string>
+  <string name="social_timeline_share_dialog_opt_out_text_1">สร้างโปร์ไฟลืที่ถูกซ่อนของคุณ เพื่อนของคุณไม่สามารถพบและติดตามคุณบนไทม์ไลน์แอปได้</string>
+  <string name="social_timeline_share_dialog_opt_out_text_2">เข้าสู่<b>www.aptoide.com</b> เข้าระบบสู่บัญชีของคุณและไปยัง<b>การตั้งค่า</b> เพื่อเปลี่ยนความเป็นส่วนตัว</string>
+  <string name="social_timeline_share_dialog_installed_and_recommended">ติดตั้งและแนะนำ</string>
+  <string name="social_timeline_share_bar_login">เพื่อนคุณติดตั้งอะไร?</string>
+  <string name="social_timeline_share_bar_following">ติดตามร้านค้าเพิ่มเตอมและเชื่อมต่อเพื่อนของคุณ</string>
+  <string name="social_timeline_share_bar_followers">ปรับปรุงร้านค้าของคุณเพื่อให้มีผู้ติดตามเพิ่มขึ้น</string>
+  <string name="social_timeline_followers_fragment_title">%d ผู้ติดตาม</string>
+  <string name="social_timeline_following_fragment_title">กำลังติดตาม%dคน</string>
+  <string name="social_timeline_share_soon">แชร์ไปยังสาธารณะเร็วๆนี้</string>
+  <string name="social_timeline_recommends">แนะนำ</string>
+  <string name="private_profile_create_store">โปรไฟล์ส่วนตัว คุณจำเป็นต้องสร้างร้านค้า</string>
+  <string name="social_timeline_shared_by">แชร์โดย%1$s</string>
+  <string name="social_timeline_who_liked">ใครชอบ</string>
+  <string name="social_timeline_users_private">%dเป็นส่วนตัว</string>
+
+  <string name="edit_store">แก้ไข</string>
+
+  <string name="comment_store">ความคิดเห็นร้านค้า</string>
+  <string name="comment_store_title">ความคิดเห็นร้านค้านี้</string>
+  <string name="be_the_first_to_send_feedback_about_this_store">เป็นคนแรกที่ส่งฟี๊ดแบ็คเกี่ยวกับร้านค้านี้</string>
+
+
+  <string name="timeline_followers">ผู้ติดตาม%d</string>
+  <string name="timeline_followed">ติดตาม%d</string>
+  <string name="timeline_stats_followers">ผู้ติดตาม</string>
+  <string name="timeline_login_message">เพื่อนของคุณกำลังติดตั้งอะไร?</string>
+  <string name="private_followers_message">%dผู้ติดตามส่วนตัว</string>
+  <string name="private_following_message">คุณกำลังติดตามผู้ใช้งาน/ร้านค้าส่วนตัว %d</string>
+
+  <string name="reviews_expand_button">%dตอบกลับ</string>
+  <string name="out_of_space_dialog_title">ไม่มีที่ว่า</string>
+  <string name="out_of_space_dialog_message">โปรดเตรียมที่ว่างเพื่อดำเนินการ</string>
+  <string name="setting_category_autoupdate">%sอัพเดต</string>
+  <string name="setting_category_autoupdate_title">รับ%sการแจ้งเตือนอัพเดต</string>
+  <string name="setting_category_autoupdate_message">ช่วงระยะที่ตรวจสอบสำหรับ%sเวอร์ชั่นใหม่</string>
+  <string name="store_added_long_time_suggestion_message">แสดงระยะยาว</string>
+  <string name="store_added_short_time_suggestion_message">แสดงที่เพิ่งสร้าง</string>
+  <string name="create_store_displayable_created_store_long_term_message">ระยะยาว</string>
+  <string name="create_store_displayable_explore_long_term_button">ดูร้านค้า</string>
+  <string name="create_store_displayable_empty_description_message">เพิ่มคำบรรยายสำหรับร้านค้าของคุณ คำบรรยายที่ดีช่วยให้คุณได้ผู้ติดตามเพิ่มและมีกิจกรรม</string>
+  <string name="fragment_spot_share_preview_start_button">เริ่ม</string>
+
+  <string name="join_company">เข้าร่วม %s</string>
+  <string name="login_company">เข้าสู่ระบบ %s</string>
+  <string name="connect_with_facebook">เชื่อมต่อกับเฟสบุ๊ค</string>
+  <string name="connect_with_google">เชื่อต่อกับกูเกิ้ล</string>
+  <string name="accept_terms_signup">โดยการเข้าร่วมAptoide คุณยอมรับเงื่อนไขและข้อตกลงของทีม Aptoide และนโยบายเนื้อหาสำหรับนักพัฒนา</string>
+  <string name="recover_password">รื้อฟื้นรหัสผ่านของคุณ</string>
+  <string name="email">อีเมลล์</string>
+  <string name="password">รหัสผ่าน</string>
+  <string name="create_password">สร้างรหัสผ่าน</string>
+  <string name="store_suspended_message">ร้านค้าที่ระงับชั่วคราว</string>
+  <string name="facebook_login_cancelled">ยกเลิกการเข้าสู่ระบบเฟสบุ๊ค</string>
+  <string name="google_login_cancelled">การเข้าสู่ระบบกูเกิ้ลล้มเหลว</string>
+  <string name="login_separator_text">หรือเชื่อมต่อโดยการใช้อีเมลล์ของคุณ</string>
+
+  <string name="add_store_dialog_title">คุณสามารถพบคอนเท็นต์ที่ปรับได้โดยเฉพาะเพื่อสร้างร้านค้าที่แตกต่าง</string>
+  <string name="add_store_dialog_top_stores">ค้นพบร้านค้ายอดนิยม</string>
+  <string name="add_store_dialog_top_stores_small_text">และเนื้อหาสุดพิเศษ!</string>
+
+  <string name="activity_login_title">เข้าสู่ระบบ</string>
+  <string name="activity_login_forgot_password_button">ลืมรหัสผ่าน?</string>
+  <string name="activity_login_button">เข้าสู่ระบบ</string>
+  <string name="activity_login_sign_up_button">สมัคร</string>
+  <string name="view_credentials_username_hint">อีเมลล์</string>
+  <string name="view_credentials_password_hint">รหัสผ่าน</string>
+
+  <string name="permission_access_deny">เข้าสู่เพื่ออ่านและเขียนคลังภายนอกที่ถูกปฏิเสธ</string>
+  <string name="permission_account_deny">เข้าสู่บัญชีที่ถูกปฏิเสธ</string>
+
+  <string name="addressbook_increase_network_message">เพิ่มเครือข่ายของคุณ</string>
+  <string name="addressbook_connect_with_friends_message">เชื่อมต่อกับเพื่อน</string>
+  <string name="addressbook_sync">ซิงค์สมุดที่อยู่</string>
+  <string name="not_now">ไม่ใช่ตอนนี้</string>
+  <string name="follow_friends">ติดตามเพื่อน</string>
+  <string name="addressbook_data_about"><b> %1$s ใช้ข้อมูลของคุณอย่างไรa</b>
+ 
+
+%1$s จะค้นหาสมุดที่อยู่สำหรับเพื่อและครอบครัวของคุณ ซึ่งถูกใช้บนร้านค้าแอปของเรา พวกเราจะ
+ส่งเพียงข้อมูลปรับปรุงประสบการณ์ %1$sของคุณโดยการเชื่อมต่อคุณกับคนเพิ่มเติม 
+ซึ่งสามารถแชร์เนื้อหาแอปที่เกี่ยวข้องกับคุณ
+
+
+เพื่อป้องกันความเป็นส่วนตัวของคุณ ไม่มีข้อมูลส่วนที่ชัดเจน
+ที่ถูกส่งไปยังเซิฟเวอร์ %1$s ลายเซ็นต์ที่ไม่แสดงตัวตนจะถูกสร้างด้วยข้อมูลของคุณ 
+และอันตรายนั้นไม่สามารถกลับไปสู่ข้อมูลการติดต่อเดิมได้
+ </string>
+  <string name="addressbook_success">สำเร็จ!</string>
+  <string name="addressbook_allow_friends_find">อนุญาตให้เพื่อนค้นหาคุณ</string>
+  <string name="google">กูเกิ้ล</string>
+  <string name="done">สำเร็จ</string>
+  <string name="addressbook_share_phone">แชร์เบอร์โทรศัพท์ของคุณ เพื่อให้เพื่อนพบคุณได้ง่ายขึ้นบน %s</string>
+  <string name="addressbook_phone_number">เบอร์โทรศัพท์</string>
+  <string name="addressbook_insuccess_connection">คุณไม่สามารถเชื่อต่อสมุดที่อยู่ของคุณได้!</string>
+  <string name="addressbook_invite_friends">เชิญเพื่อนเพื่อเข้าร่วมกับคุณ!</string>
+  <string name="addressbook_thanks_for_connecting">ขอบคุณสำหรับการเชื่อมต่อ</string>
+  <string name="addressbook_success_connected_friends">พวกเราเชื่อมต่อกับคุณได้สำเร็จด้วยเพื่อน%1$s คน ซึ่งใช้%2$s</string>
+  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">พวกเราไม่พบผู้ติดต่อใๆที่กำลังใช้%1$s</string>
+  <string name="addressbook_3rd_msg">เรียนรู้เพิ่มเตอม</string>
+  <string name="address_book_twitter_error">ข้อผิดพลาดในการมีสิทธิ์ทวิตเตอร์</string>
+  <string name="follow_my_store">สวัสดีติดตามร้านค้าฉัน%1$s ได้ที่นี่</string>
+  <string name="store_meta_apps">แอป
+%s</string>
+  <string name="store_meta_following">ติดตาม
+%s</string>
+  <string name="store_meta_followers">ผู้ติดตาม
+%s</string>
+  <string name="addressbook_about">เกี่ยวกับสมุดที่อยู่</string>
+  <string name="addressbook_we_werent_able_to_connect_you">พวกเราไม่สามารถเชื่อมต่อคุณได้</string>
+
+
+  <string name="spot_share_line_1">แชร์แอปกับเพื่อนของคุณ</string>
+  <string name="spot_share_line_2">โทรศัพท์กับโทรศัพท์ โดยไม่ใช้อินเตอร์เน็ต</string>
+
+<string name="addressbook_2nd_msg">"%1$s จะค้นหาสมุดที่อยู่สำหรับเพื่อนและครอบครัว
+ซึ่งใช้ร้านค้าแอปของพวกเรา เพื่อป้องกันความเป็นส่วนตัวของคุณ ไม่มีข้อมูลส่วนตัวที่ถูกส่งออกไปจาก  %1$s
+ บริการ"</string>
+  </resources>

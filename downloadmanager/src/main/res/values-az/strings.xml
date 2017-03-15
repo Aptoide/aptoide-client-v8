@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="aptoide_downloading">%s yüklənir</string>
+  <string name="pause_download">Dayandır</string>
+  <string name="resume_download">Davam et</string>
+  <string name="general_downloads_dialog_only_mobile_message">Siz yalnız mobil 3G/4G internet üzərindən yükləməni seçdiniz. Bu ayarı yaddaşda saxlamaq istəyirsinizmi?</string>
+  <string name="general_downloads_dialog_only_wifi_message">Siz yalnız WiFi internet üzərindən yükləməni seçdiniz. Bu ayarı yaddaşda saxlamaq istəyirsinizmi?</string>
+  <string name="general_downloads_dialog_no_download_rule_message">Yükləmə qaydası təyin olunmayib. Bu ayarı yaddaşda saxlamaq istəyirsinizmi?</string>
+</resources>

@@ -159,13 +159,6 @@
 
     <string name="feedback_send_button">Enviar Feedback</string>
 
-    <string name="my_account">A miña conta</string>
-    <string name="setting_schdwntitle">Descargas programadas</string>
-    <string name="settings">Configuración</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Copia de seguridade das aplicacións</string>
-
     <string name="menu_context_reparse">Cargar de novo</string>
     <string name="menu_context_remove">Eliminar</string>
 

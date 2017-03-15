@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources><string name="one_account_allowed">"মাত্র একটি অ্যাকাউন্টের অনুমতি আছে "</string>
     <string name="username">ই-মেইল</string>
-    <string name="password">পাসওয়ার্ড</string>
+    <string name="password">পাসওয়ার্ড</string>
     <string name="link_device_webinstall">"ওয়েবইন্সটলের সাথে  অ্যাকাউন্ট লিংক করুন "</string>
     <string name="register">সাইন আপ</string>
-    <string name="forgot_passwd">পাসওয়ার্ড ভুলে গেছেন?</string>
+    <string name="forgot_passwd"><u>পাসওয়ার্ড ভুলে গেছেন?</u></string>
     <string name="fields_cannot_empty">অনুগ্রহ করে আপনার ই-মেইল এবং পাসওয়ার্ড পরীক্ষা করুন।</string>
     <string name="logged_as">আপনি লগইন করেছেন:</string>
     <string name="sign_out">সাইন আউট</string>
@@ -21,24 +21,23 @@
     <string name="ws_error_IARG_106">"এই ই-মেইম ঠিকানাটি  বৈধ নয় "</string>
     <string name="ws_error_WOP_11">স্টোর তৈরি করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।</string>
     <string name="or">বা</string>
-  <string name="login">লগ ইন</string>
+  <string name="login">লগইন</string>
   <string name="login_successful">সফল লগ ইন</string>
   <string name="unknown_error">অজানা ত্রুটি</string>
     <string name="accept_terms">"সাইন আপ করার মাধ্যমে আপনি মেনে নিচ্ছেন অ্যাপটোইড এর সেবার শর্তাবলী এবং
   ডেভেলপারদের বিষয়বস্তুর নীতি
  "</string>
     <string name="no_email_and_pass_error_message">"অনুগ্রহপূর্বক একটি ইমেইল এবং পাসওয়ার্ড অনুপ্রবেশ করুন
-  রেজিষ্টার।
  "</string>
-  <string name="no_pass_error_message">অনুগ্রহপূর্বক রেজিষ্টার করতে পাসওয়ার্ড অনুপ্রবেশ করুন।</string>
-  <string name="no_email_error_message">অনুগ্রহপূর্বক রেজিষ্টার করতে একটি ইমেইল অনুপ্রবেশ করুন।</string>
+  <string name="no_pass_error_message">অনুগ্রহপূর্বক পাসওয়ার্ড অনুপ্রবেশ করুন</string>
+  <string name="no_email_error_message">অনুগ্রহপূর্বক একটি ইমেইল অনুপ্রবেশ করুন</string>
     <string name="password_validation_text">"পাসওয়ার্ড অবশ্যই ৮ অক্ষর বিশিষ্ট হতে এবং তাতে থাকতে হবে
  অন্ততপক্ষে একটি বর্ণ এবং একটি সংখ্যা বা বিশেষ চিহ্নসমূহ (!@#$%*)
  "</string>
   <string name="default_account_type">cm.aptoide.pt</string>
 
-  <string name="facebook_email_permission_regected_message">"অ্যাপটোইড আপনার ইমেইল দিয়ে তৈরী করবে একটি
- একাউন্ট
+  <string name="facebook_email_permission_regected_message">"আমাদের আপনার ইমেইলটি দরকার একটি
+ একাউন্ট তৈরীর জন্য
  "</string>
   <string name="user_cancelled">ইউজার কর্তৃক বাতিলকৃত</string>
 
@@ -59,10 +58,10 @@
     <string name="ws_error_REPO_6">এই স্টোর নামটি ইতিমধ্যে নিয়ে নেয়া, আপনারকে ভিন্ন একটি নির্বাচন করতে হবে
  একটি।</string>
   <string name="ws_error_WOP_3">একই নামের একটি স্টোর ইতিমধ্যে রয়েছে। অনুগ্রহপূর্বক আপনার স্টোরের ভিন্ন নাম দিন।</string>
-  <string name="ws_error_WOP_9">প্রদানকৃত ইমেইল ইতিমধ্যে অ্যাপটোইডে বিদ্যমান</string>
-  <string name="ws_error_WOP_10">প্রদানকৃত ইমেইল অদ্যবধি অ্যাপটোইডে বিদ্যমান নয়</string>
+  <string name="ws_error_WOP_9">প্রদানকৃত ইমেইল ইতিমধ্যে বিদ্যমান</string>
+  <string name="ws_error_WOP_10">প্রদানকৃত ইমেইল অদ্যবধি নিবন্ধিত নয়</string>
   <string name="ws_error_QUOTA_2">আজ ইউজার তৈরীর দৈনন্দিন কোঠা পরিপূর্ন হয়েছে। আপনার যদি দরকার হয়
- এই কোঠা বৃদ্ধির তাহলে অনুগ্রহপূর্বক সহয়তার জন্য support@aptoide.com এ যোগাযোগ করুন বা আগামীকাল আরো ইউজার তৈরী করুন</string>
+ এই কোঠা বৃদ্ধি করার তাহলে অনুগ্রহপূর্বক সহয়তার জন্য সাপোর্টে যোগাযোগ করুন বা আগামীকাল আরো ইউজার তৈরী করুন</string>
     <string name="ws_error_AUTH_1">হয় ইমেইল বা পাসওয়ার্ড সঠিক নয় লগ ইন করার জন্য (নামের উপর
  আপডেট)</string>
   <string name="user_created">ইউজার প্রস্তুত</string>
@@ -124,5 +123,27 @@
   <string name="nothing_inserted_user">অনুগ্রহপূর্বক আপনার প্রোফাইল প্রস্তুত করতে একটি ইউজারনাম ও একটি ছবি (ঐচ্ছিক) প্রদান করুন</string>
   <string name="create_user_bad_photo">অনুগ্রহপূর্বক ৩০০X৩০০ রেজুলেশনের একট ছবি নির্বাচন করুন</string>
   <string name="create_profile_logged_in_activity_title">লগ ইন কৃত</string>
+
+<string name="facebook_grant_permission_button">অনুমতি প্রদান</string>
+  <string name="ws_error_API_1">ছবিটি কার্যকরি নয়।</string>
+    <string name="edit_store_header">আপনার স্টোরটিকে সম্পাদনা করুন একটি সুন্দর ছবি ও একটি চমৎকার বিবরণের মাধ্যমে</string>
+  <string name="create_store_description_title">আপনার স্টোরের বিবরণ</string>
+  <string name="create_store_description_hint">আপনার স্টোরের বিবরণ</string>
+  <string name="edit_store_title">আপনার স্টোর সম্পাদনা করুন</string>
+  <string name="save_edit_store">সেভ</string>
+
+  <string name="image_requirements_popup_message">ছবিটিতে নিম্নের সমস্য সমূহ বিদ্যমান:
+</string>
+  <string name="image_requirements_error_min_height">- সর্বনিম্ন উচ্চতা হলো ৬০০ পিক্সেল এর কম
+</string>
+  <string name="image_requirements_error_max_height">- সর্বোচ্চ উচ্চতা হলো ১০২৪০ পিক্সেল এর বেশী
+</string>
+  <string name="image_requirements_error_min_width">- সর্বনিম্ন প্রস্থ হলো ৬০০ পিক্সেলের কম
+</string>
+  <string name="image_requirements_error_max_width">- সর্বোচ্চ প্রস্থ হলো ১০২৪০ পিক্সেলের বেশী
+</string>
+  <string name="image_requirements_error_max_file_size">- সর্বোচ্চ আকার হলো ৫ এমবি এর অধিক
+</string>
+  <string name="image_requirements_error_popup_title">ছবি</string>
 
 </resources>

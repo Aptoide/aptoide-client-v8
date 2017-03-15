@@ -159,13 +159,6 @@
 
     <string name="feedback_send_button">Visszajelzés küldése</string>
 
-    <string name="my_account">Saját fiók</string>
-    <string name="setting_schdwntitle">Ütemezett letöltések</string>
-    <string name="settings">Beállítások</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Bizt. másolat készítése</string>
-
     <string name="menu_context_reparse">Újratöltés</string>
     <string name="menu_context_remove">Eltávolítás</string>
 

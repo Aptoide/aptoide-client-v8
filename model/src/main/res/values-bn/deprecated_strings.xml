@@ -123,9 +123,6 @@
 ইনস্টলকৃত</string>
     <string name="updates_tab">আপডেটসমূহ</string>
 
-    <string name="my_account">আমার অ্যাকাউন্ট</string>
-    <string name="setting_schdwntitle">নির্ধারিত ডাউনলোড</string>
-    <string name="settings">সেটিংস</string>
     <string name="menu_context_reparse">পুনরায় লোড করুন</string>
     <string name="menu_context_remove">অপসারণ</string>
 
@@ -135,7 +132,8 @@
     <string name="no_excluded_updates">"কোন বাদ দেওয়া আপডেট নেই "</string>
     <string name="no_excluded_updates_selected">"কোন বাদ দেওয়া আপডেট বাছাই করা হয়নি "</string>
     <string name="exclude_update">আপডেট অগ্রাহ্য করুন</string>
-    <string name="cancel">বাতিল</string>
+    <string name="cancel">মূল্যপরিশোধ 
+বাতিল</string>
     <string name="no_payments_available">কোন পেমেন্ট পাওয়া যায়নি।</string>
     <string name="failed_auth_code">অ্যাকাউন্ট অথোরাইজ করতে ব্যর্থ। আবার চেষ্টা করুন।</string>
     <string name="error_occured_paying">একটি ত্রুটি দেখা দিয়েছে। পেমেন্ট সম্পন্ন হয়েছিল না।</string>
@@ -324,10 +322,6 @@
 
   <string name="feedback_send_button">প্রতিক্রিয়া দিন</string>
 
-  <string name="facebook">ফেসবুক</string>
-  <string name="twitter">টুইটার</string>
-  <string name="backup_apps">ব্যাকআপ অ্যাপসমূহ</string>
-
   <string name="search_other_stores">স্টোরসমূহ
 বা অন্যকিছুর জন্য খুঁজুন…</string>
   <string name="subscribe_pvt_store">ব্যক্তিগত স্টোর সাবস্ক্রাইব করুন</string>
@@ -379,8 +373,6 @@
   <string name="setting_wifi">ওয়াইফাই</string>
   <string name="setting_mobile">মোবাইল ৩জি/৪জি</string>
   <string name="setting_sum_general_download_rules">অ্যাপস ডাউনলোড,সম্পাদকের পছন্দ, শীর্ষ অ্যাপসমূহ এবং স্টোরসমূহ যেগুলো মোবাইল ডাটা সংযোগের মাধ্যমে প্রবেশাধিকারপ্রাপ্ত</string>
-  <string name="setting_category_autoupdate">%s সয়ংক্রিয় আপডেট</string>
-  <string name="setting_category_autoupdate_title">%s সয়ংক্রিয় আপডেট সচলকরণ</string>
   <string name="setting_dont_show_mature_content">প্রাপ্তবয়স্কদের বিষয়সমূহ দেখান</string>
   <string name="whats_new">নতুন কি আছে?</string>
   <string name="setting_schdwninstallsum">তফসিলভূক্ত ডাউনলোডসমূহ ইনস্টল করুন যখন ওয়াইফাই সংযোগ পাওয়া যাবে</string>

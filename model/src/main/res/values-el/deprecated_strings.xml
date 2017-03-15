@@ -163,13 +163,6 @@
 
     <string name="feedback_send_button">Στείλτε Σχόλια(Feedback)</string>
 
-    <string name="my_account">Ο Λογαριασμός μου</string>
-    <string name="setting_schdwntitle">Προγραμματισμένες Λήψεις</string>
-    <string name="settings">Ρυθμίσεις</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Αντ. Ασφ. Εφαρμογών</string>
-
     <string name="menu_context_reparse">Επαναφόρτωση</string>
     <string name="menu_context_remove">Αφαίρεση</string>
 

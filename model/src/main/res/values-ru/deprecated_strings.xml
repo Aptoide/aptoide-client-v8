@@ -158,13 +158,6 @@
 
     <string name="feedback_send_button">Отправить отзыв</string>
 
-    <string name="my_account">Мой аккаунт</string>
-    <string name="setting_schdwntitle">Запланированные загрузки</string>
-    <string name="settings">Настройки</string>
-    <string name="facebook">Фейсбук</string>
-    <string name="twitter">Твиттер</string>
-    <string name="backup_apps">Копии Приложений</string>
-
     <string name="menu_context_reparse">Перезагрузить</string>
     <string name="menu_context_remove">Удалить</string>
 
@@ -374,7 +367,7 @@
     <string name="application_signature_analysis">Подпись приложения, в сравнении с подписью разработчика:</string>
     <string name="application_signature_matched">Подпись приложения совпадает с подписью разработчика данного приложения.</string>
     <string name="application_signature_not_matched">Подпись приложения не совпадает с подписью разработчика данного приложения. Возможно, что приложение не подлинное.</string>
-    <string name="warning">Осторожно</string>
+    <string name="warning">Предупреждение</string>
     <string name="trusted_app">Проверенное приложение</string>
     <string name="unknown">Неизвестно</string>
 
@@ -467,8 +460,6 @@
 
     <string name="setting_wifi">Wi-Fi</string>
     <string name="setting_mobile">"Mobile  3G/4G"</string>
-    <string name="setting_category_autoupdate">Авто-обновление %s</string>
-    <string name="setting_category_autoupdate_title">Разрешить авто-обновление %s</string>
     <string name="setting_schdwninstallsum">Загрузка запрограммирована на автоматическое начало при наличии WiFi</string>
     <string name="social_timeline_notifications_sum2">"Разрешить Уведомления  социальной ленты Aptoide. Вы получите последние новости в строке уведомлений."</string>
     <string name="appview_subscribe_store_button_text">Подписаться?</string>
@@ -510,4 +501,6 @@
     <string name="change_theme_soon">Скоро будет возможно</string>
   <string name="critical">Критическое</string>
 
+  <string name="stand_by">В режиме ожидания</string>
+  <string name="setting_general">Общие</string>
   </resources>

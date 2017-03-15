@@ -110,27 +110,12 @@ programėlių registrą (per %s), įskaitant versiją ir įdiegimo datą.</strin
     <string name="followed_stores">Sekamos parduotuvės</string>
     <string name="storage_access_permission_request_message">Leiskite prieigą prie jūsų telefono, kad galėtume parsiųsti ir įdiegti šią programėlę.</string>
 
-    <string name="wizard_welcome_message"><b>Sveiki atvykę!</b></string>
     <string name="wizard_sub_title_viewpager_one">Pradėkite <b>saugią</b> ir <b>malonią</b> kelionę.</string>
-    <string name="wizard_description_part_one_viewpager_one"><b>Ieškoti</b> programėlių su
-Patikimumo ženkleliu 
-saugiam įdiegimui.</string>
-    <string name="wizard_description_part_two_viewpager_one"><b>Atraskite</b> programėles,
-kurių norite, bet
-dar neradote.</string>
-
     <string name="wizard_title_viewpager_two"><b>Programėlių srautas</b></string>
     <string name="wizard_sub_title_viewpager_two">Gaukite <b>naujausias programėles</b>, raskite <b>temines parduotuves</b>
 ir prieikite prie <b>asmeninio turinio.</b></string>
 
     <string name="wizard_title_viewpager_three"><b>Prisijunkite prie bendruomenės</b></string>
-    <string name="wizard_description_part_one_viewpager_three"><b>Sekite</b> draugus</string>
-    <string name="wizard_description_part_two_viewpager_three"><b>Apžvelkite</b> ir įvertinkite programėles</string>
-    <string name="wizard_description_part_three_viewpager_three"><b>Sukurkite</b> savo parduotuvę</string>
-    <string name="wizard_register_now_button">Užsiregistruokite dabar</string>
-    <string name="wizard_be_a_part_of_aptoide">Tapkite Aptoide dalimi!</string>
-    <string name="wizard_or_login"><u>arba prisijunkite</u></string>
-
     <string name="you_need_to_be_logged_in">Jūs turite būti prisijungęs</string>
     <string name="follow">Sekti</string>
     <string name="followed">Sekama</string>

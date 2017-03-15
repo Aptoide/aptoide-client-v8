@@ -67,7 +67,6 @@
   <string name="updating_msg">Ενημέρωση</string>
   <string name="installing_msg">Εγκατάσταση</string>
   <string name="pause_all_downloads">Παύση Λήψεων</string>
-  <string name="wizard_welcome_message"><b>Καλώς ήρθατε!</b></string>
   <string name="updates_filter_summary">Επιλέγοντας αυτό, δεν θα ενημερώνεστε για δοκιμαστικές εκδόσεις.</string>
   <string name="latest_reviews">Τελευταίες Κριτικές</string>
   <string name="latest_comments">Τελευταία Σχόλια</string>
@@ -81,4 +80,14 @@
   <string name="music_audio">Μουσική &amp; Ήχος</string>
   <string name="puzzle">Παζλ</string>
   <string name="weather">Καιρός</string>
+  <string name="password">Κωδικός</string>
+  <string name="login">Σύνδεση</string>
+  <string name="wizard_skip"><b>ΠΑΡΑΛΕΙΨΗ</b></string>
+  <string name="my_account">Ο Λογαριασμός μου</string>
+  <string name="setting_schdwntitle">Προγραμματισμένες Λήψεις</string>
+  <string name="settings">Ρυθμίσεις</string>
+  <string name="facebook">Facebook</string>
+  <string name="twitter">Twitter</string>
+  <string name="backup_apps">Αντ. Ασφ. Εφαρμογών</string>
+
   </resources>

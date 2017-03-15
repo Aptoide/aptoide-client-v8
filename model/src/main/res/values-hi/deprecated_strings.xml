@@ -158,13 +158,6 @@
 
     <string name="feedback_send_button">फीडबैक भेजें</string>
 
-    <string name="my_account">मेरा अकाउंट</string>
-    <string name="setting_schdwntitle">शैड्यूल किए गए डाऊनलोड्स</string>
-    <string name="settings">सेटिंग्स</string>
-    <string name="facebook">फेसबुक</string>
-    <string name="twitter">ट्विटर</string>
-    <string name="backup_apps">बैकअप एप्स</string>
-
     <string name="menu_context_reparse">दोबारा लोड करें</string>
     <string name="menu_context_remove">हटाएँ</string>
 
@@ -196,7 +189,7 @@
     <string name="rollback_uninstalled">अनइन्स्टाल किया गया</string>
     <string name="rollback_updated">अपडेटेड</string>
     <string name="rollback_downgraded">डाउनग्रेडेड</string>
-    <string name="install">इन्स्टाल करें</string>
+    <string name="install">स्थापित करें</string>
     <string name="cannot_uninstall_self">इन्स्टालर को अनइन्स्टाल नहीं कर सकते ।</string>
     <string name="at_time">%s पर</string>
     <string name="root_access_dialog">ऐसा लगता है आप रूट हैं। क्या आप डाउनलोड के बाद एप को ऑटो इन्स्टाल करने की अनुमति देना चाहेंगे?</string>
@@ -229,7 +222,7 @@
     <string name="timeline_like">लाइक</string>
     <string name="likes">लाइक्स</string>
     <string name="unlike">अनलाइक करें</string>
-    <string name="timeline_empty_no_friends_send_email">ऐसा लगता है कि आपके मित्रों ने Aptoide में अपने फेसबुक अकाउंट से लॉग-इन नहीं किया था। उनके फेसबुक अकाउंट के साथ लॉगिन करने के लिए उन्हें एक ईमेल भेजें</string>
+    <string name="timeline_empty_no_friends_send_email">ऐसा लगता है कि आपके मित्रों ने Aptoide में अपने फेसबुक अकाउंट से लॉग इन नहीं किया था। उनके फेसबुक अकाउंट के साथ लॉगिन करने के लिए उन्हें एक ईमेल भेजें</string>
     <string name="timeline_empty_send_email_to_friends">मित्रों को ईमेल करें</string>
     <string name="aptoide_timeline">Aptoide टाइमलाइन</string>
     <string name="timeline_email_invitation">ने आपको Aptoide सोशल टाइमलाइन में शामिल होने के लिए आमंत्रित किया। मिलते जुलते रहें!</string>
@@ -479,8 +472,6 @@
     <string name="friends_to_invite">Aptoide में अन्य सभी फेसबुक मित्र</string>
     <string name="upload_app_backup_apps_installed">आपको पहले यह एप्प अपने स्टोर में अपलोड करने की जरूरत है। आप Aptoide बैकअप एप्स का उपयोग कर सकते हैं।</string>
     <string name="upload_app_backup_apps_not_installed">आपको पहले यह एप्प अपने स्टोर में अपलोड करने की जरूरत है। कृपया Aptoide बैकअप एप्स स्थापित और उपयोग करें।</string>
-    <string name="setting_category_autoupdate">%s ऑटो अपडेट</string>
-    <string name="setting_category_autoupdate_title">%s ऑटो अपडेट सक्षम करें</string>
     <string name="social_timeline_notifications_sum2">Aptoide सोशल टाइमलाइन अधिसूचनाएँ सक्षम करें। आपको नोटिफिकेशन बार पर ताजा खबरें प्राप्त होंगी।</string>
     <string name="ignored">उपेक्षित</string>
     <string name="application_signature_blacklisted">एप्लीकेशन हस्ताक्षर Aptoide के एंटी-मैलवेयर प्लेटफार्म पर एक विश्वसनीय हस्ताक्षर नहीं हैं क्योंकि इसका उपयोग एक और एप्लीकेशन को साइन करने के लिए किया गया है जो वैध डेवलपर से संबंधित हस्ताक्षर से मेल नहीं खाता है।</string>
@@ -501,4 +492,6 @@
     <string name="change_theme_soon">जल्द आ रहा है</string>
   <string name="critical">गंभीर</string>
 
+  <string name="setting_general">सामान्य</string>
+  <string name="stand_by">स्टैंड बाई</string>
   </resources>

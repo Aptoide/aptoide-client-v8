@@ -19,4 +19,7 @@
 
   <string name="more_info">מידע נוסף</string>
 
-  </resources>
+  <string name="share_options_share_external">שיתוף דרך…</string>
+  <string name="share_options_share_in_timeline">שיתוף בציר זמן היישומונים</string>
+
+</resources>

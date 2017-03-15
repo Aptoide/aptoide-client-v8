@@ -159,13 +159,6 @@
 
     <string name="feedback_send_button">Odeslat zpětnou vazbu</string>
 
-    <string name="my_account">Můj účet</string>
-    <string name="setting_schdwntitle">Plánovaná stahování</string>
-    <string name="settings">Nastavení</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Zálohovat aplikace</string>
-
     <string name="menu_context_reparse">Znovu načíst</string>
     <string name="menu_context_remove">Odstranit</string>
 

@@ -29,7 +29,7 @@ veya özel karakter içermesi gerekmektedir (!@#$%*)
     <string name="ws_error_REPO_7">Bu kullanıcının zaten geçerli bir deposu var.</string>
     <string name="ws_error_WOP_11">Mağaza oluşturulamadı. Lütfen tekrar deneyiniz.</string>
     <string name="or">veya</string>
-    <string name="login">Giriş Yap</string>
+    <string name="login">Oturum Aç</string>
   <string name="login_successful">Başarılı oturum açma</string>
   <string name="unknown_error">Bilinmeyen Hata</string>
     <string name="accept_terms">"Kayıt olarak Geliştiriciler için Aptoide Hizmet Koşulları ve
@@ -37,8 +37,8 @@ veya özel karakter içermesi gerekmektedir (!@#$%*)
  "</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-  <string name="facebook_email_permission_regected_message">"Aptoide bir hesap açmak için e-postaya
-ihtiyaç duyuyor
+  <string name="facebook_email_permission_regected_message">"Bir hesap açmak için e-postaya
+ihtiyacımız var
  "</string>
   <string name="user_cancelled">Kullanıcı tarafından iptal edildi</string>
 
@@ -58,10 +58,10 @@ veya tire kullanın.</string>
     <string name="ws_error_REPO_6">Bu mağaza adı zaten alınmış, başka bir tane seçmeniz
 gerekiyor.</string>
   <string name="ws_error_WOP_3">Bu mağaza adıyla aynı bir mağaza zaten var. Lütfen mağazanız için başka bir ad seçiniz.</string>
-  <string name="ws_error_WOP_9">Sağlanan e-posta Aptoide içinde zaten var</string>
-  <string name="ws_error_WOP_10">Sağlanan e-posta Aptoide içinde henüz mevcut değil</string>
+  <string name="ws_error_WOP_9">Sağlanan e-posta zaten var</string>
+  <string name="ws_error_WOP_10">Sağlanan e-posta henüz mevcut değil</string>
   <string name="ws_error_QUOTA_2">Bugün için günlük oluşturulan kullanıcılar sınırına ulaşıldı. Bu sınırın
-arttırılmasına ihtiyacınız olursa lütfen destek ekibiyle support@aptoide.com adresinden iletişime geçin veya daha fazla kullanıcıyı yarın oluşturun</string>
+arttırılmasına ihtiyacınız olursa lütfen destek ekibiyle iletişime geçin veya daha fazla kullanıcıyı yarın oluşturun</string>
     <string name="ws_error_AUTH_1">E-posta ya da parola (ad güncelleştirmesine dayanılarak) 
 oturum açmanız için geçerli değildir</string>
   <string name="user_created">Kullanıcı Oluşturuldu</string>

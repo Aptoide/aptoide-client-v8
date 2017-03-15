@@ -103,27 +103,12 @@
     <string name="followed_stores">ຮ້ານຄ້າທີ່ຕິດຕາມ</string>
     <string name="storage_access_permission_request_message">ກະລຸນາອະນຸຍາດການເຂົ້າເຖິງບ່ອນເກັບຂໍ້ມູນໂທລະສັບຂອງທ່ານ ເພື່ອພວກເຮົາຈະສາມາດດາວໂຫຼດ ແລະຕິດຕັ້ງແອັບຯນີ້.</string>
 
-    <string name="wizard_welcome_message"><b>ຍິນດີຕ້ອນຮັບ!</b></string>
     <string name="wizard_sub_title_viewpager_one">ເລີ່ມຕົ້ນການເດີນທາງທີ່ <b>ປອດໄພ</b> ແລະ <b>ມ່ວນຊື່ນ</b>.</string>
-    <string name="wizard_description_part_one_viewpager_one"><b>ເບິ່ງຫາr</b> ແອັບທີ່ມີ
-ກາຮັບປະກັນຄວາມໜ້າເຊື່ອຖື 
-ເພື່ອຕິດຕັ້ງຢ່າງປອດໄພ.</string>
-    <string name="wizard_description_part_two_viewpager_one"><b>ຄົ້ນຫາ</b> ແອັບ
-ທີ່ທ່ານຕ້ອງການ, ແຕ່
-ບໍ່ເຄີຍພົບມັນ.</string>
-
     <string name="wizard_title_viewpager_two"><b>ແອັບທາມລາຍ</b></string>
     <string name="wizard_sub_title_viewpager_two">ດາວໂຫຼດ <b>ແອັບຫຼ້າສຸດ</b>, ຊອກຫາ <b>ຮ້ານຄ້າທີ່ກ່ຽວຂ້ອງ</b>
 ແລະເຂົ້າເຖິງ <b>ເນື້ອຫາສະເພາະບຸກຄົນ.</b></string>
 
     <string name="wizard_title_viewpager_three"><b>ເຂົ້າຮ່ວມຊຸມຊົນ</b></string>
-    <string name="wizard_description_part_one_viewpager_three"><b>ຕິດຕາມ</b> ໝູ່ຂອງທ່ານ</string>
-    <string name="wizard_description_part_two_viewpager_three"><b>ວິຈານ</b> ແລະ ໃຫ້ຄະແນນແອັບ</string>
-    <string name="wizard_description_part_three_viewpager_three"><b>ສ້າງ</b> ຮ້ານຄ້າຂອງທ່ານ</string>
-    <string name="wizard_register_now_button">ລົງທະບຽນດຽວນີ້</string>
-    <string name="wizard_be_a_part_of_aptoide">ເປັນສ່ວນໜຶ່ງຂອງ Aptoide!</string>
-    <string name="wizard_or_login"><u>ຫຼືເຂົ້າສູ່ລະບົບ</u></string>
-
     <string name="you_need_to_be_logged_in">ທ່ານຕ້ອງເຂົ້າສູ່ລະບົບ</string>
     <string name="follow">ຕິດຕາມ</string>
     <string name="followed">ຕິດຕາມຢູ່</string>

@@ -85,7 +85,7 @@
 
     <string name="error_410">متاسفانه، برنامه درخواستی شما برروی این سرور پیدا نشد.</string>
 
-    <string name="please_wait">لطفاً کمی صبر کنید …</string>
+    <string name="please_wait">لطفا صبر کنید …</string>
     <string name="simple_error_occured">خطایی رخ داده است. </string>
     <string name="yes">بله</string>
     <string name="no">خیر</string>
@@ -162,13 +162,6 @@
 
     <string name="feedback_send_button">تجربه شما از اپ‌توید</string>
 
-    <string name="my_account">حساب کاربری من</string>
-    <string name="setting_schdwntitle">دانلودهای زمان‌بندی شده</string>
-    <string name="settings">تنظیمات</string>
-    <string name="facebook">فیسبوک</string>
-    <string name="twitter">توییتر</string>
-    <string name="backup_apps">برنامه‌های پشتیبان</string>
-
     <string name="menu_context_reparse">بارگذاری مجدد</string>
     <string name="menu_context_remove">حذف کردن</string>
 
@@ -184,7 +177,7 @@
     <string name="exclude_update">به‌روز‌رسانی نکردن</string>
     <string name="install_update">به‌روزرسانی برنامه</string>
 
-    <string name="cancel">انصراف</string>
+    <string name="cancel">لغو کردن</string>
     <string name="no_payments_available">هیچ روش پرداختی در دسترس نیست.</string>
     <string name="failed_auth_code">فعال‌سازی حساب شما در حال حاضر ممکن نیست. لطفاً دوباره تلاش کنید.</string>
     <string name="error_occured_paying">فرایند پرداخت به علت بروز خطایی نامشخص نیمه تمام ماند.</string>
@@ -391,7 +384,7 @@
     <string name="application_signature_analysis">امضای دیجیتالی برنامه با امضای دیجیتالی توسعه‌دهنده‌ی آن مقایسه شد:</string>
     <string name="application_signature_matched">امضای دیجیتالی برنامه با امضای دیجیتالی توسعه‌دهنده‌ی آن منطبق است.</string>
     <string name="application_signature_not_matched">امضای دیجیتالی برنامه با امضای دیجیتالی توسعه‌دهنده‌ی آن منطبق نیست. این اپ ممکن است جعلی باشد.</string>
-    <string name="warning">هشدار</string>
+    <string name="warning">اخطار</string>
     <string name="trusted_app">این اپ مورد اعتماد است</string>
     <string name="unknown">ناشناخته</string>
 
@@ -481,8 +474,6 @@
     <string name="privacy_copied">لینک حریم شخصی در کلیپ بورد کپی شد</string>
     <string name="all_stores">همه فروشگاه‌ها</string>
   <string name="followed_stores">فروشگاه‌های دنبال شده</string>
-  <string name="setting_category_autoupdate">به‌روزرسانی خودکار %s</string>
-  <string name="setting_category_autoupdate_title">فعال کردن به‌روزرسانی خودکار %s</string>
   <string name="hidden_adult">برخی از برنامه‌ها به دلیل محتوای نامناسب‌شان نمایش داده نمی‌شوند. چرا دنبال این جور چیزها هستی؟</string>
   <string name="rollback_empty">با بازگشتن به نسخه‌های قبل‌تر برنامه، مشکلات نا‌هم‌خوانی برنامه با گوشی سا سیستم‌عامل را برطرف کنید. تاریخ نصب و نسخه برنامه را در اپ‌توید حفظ و ذخیره کنید.</string>
 
@@ -509,5 +500,6 @@
   <string name="unsubscribing_store_message">لغو اشتراک از %s</string>
 
   <string name="search_minimum_chars">عبارتی که می‌خواهید آن را جست‌و‌جو کنید باید حداقل دو حرفی باشد.</string>
-<string name="stand_by"/>
+<string name="stand_by">استندبای</string>
+  <string name="setting_general">عمومی</string>
   </resources>

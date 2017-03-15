@@ -158,13 +158,6 @@
 
     <string name="feedback_send_button">Feedback-a bidali</string>
 
-    <string name="my_account">Nire kontua</string>
-    <string name="setting_schdwntitle">Hitzarturiko Deskargak</string>
-    <string name="settings">Ezarpenak</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Aplikazioen Backup-a egin</string>
-
     <string name="menu_context_reparse">Berriro kargatu</string>
     <string name="menu_context_remove">Kendu</string>
 

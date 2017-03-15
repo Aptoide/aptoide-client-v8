@@ -164,13 +164,6 @@
 
     <string name="feedback_send_button">Geri bildirim gönder</string>
 
-    <string name="my_account">Hesabım</string>
-    <string name="setting_schdwntitle">Programlanmış İndirmeler</string>
-    <string name="settings">Ayarlar</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Uygulamaları Yedekle</string>
-
     <string name="menu_context_reparse">Tekrar yükle</string>
     <string name="menu_context_remove">Kaldır</string>
 
@@ -185,7 +178,7 @@
     <string name="exclude_update">Güncellemeyi Görmezden Gel</string>
     <string name="install_update">Güncellemeyi Kur</string>
 
-    <string name="cancel">İptal et</string>
+    <string name="cancel">İptal</string>
     <string name="no_payments_available">Hiçbir ödeme bulunamadı.</string>
     <string name="failed_auth_code">Hesabın izninin açılması başarısız oldu. Tekrar deneyiniz.</string>
     <string name="error_occured_paying">Bir hata meydana geldi. Ödeme tamamlanamadı.</string>
@@ -201,7 +194,7 @@ Telefon operatörünüz faturalandıracaktır.
     <string name="rollback_uninstalled">Kaldırılmış</string>
     <string name="rollback_updated">Güncellenmiş</string>
     <string name="rollback_downgraded">Eski sürüme dönülmüş</string>
-    <string name="install">Kur</string>
+    <string name="install">Yükle</string>
     <string name="cannot_uninstall_self">Kurucu kaldırılamaz.</string>
     <string name="at_time">şu vakitte: %s</string>
     <string name="root_access_dialog">Root izinleriniz var gibi görünüyor. İndirmeden sonra uygulamanın otomatik olarak kurulmasını ister misiniz?</string>
@@ -484,8 +477,6 @@ Telefon operatörünüz faturalandıracaktır.
   <string name="friends_to_invite">Aptoide üzerinde tüm diğer Facebook arkadaşları</string>
   <string name="upload_app_backup_apps_installed">Önce bu uygulamayı mağazanıza yüklemeniz gerekir. Aptoide Yedekleme Uygulamalarını kullanabilirsiniz.</string>
   <string name="upload_app_backup_apps_not_installed">Önce bu uygulamayı mağazanıza yüklemeniz gerekir. Lütfen kurun ve Aptoide Yedekleme Uygulamalarını kullanın.</string>
-  <string name="setting_category_autoupdate">%s Otomatik güncelleme</string>
-  <string name="setting_category_autoupdate_title">%s otomatik güncelleştirmeyi etkinleştir</string>
   <string name="change_theme_soon">Çok yakında</string>
   <string name="social_timeline_notifications_sum2">Aptoide Sosyal Zaman Tüneli Bildirimlerini etkinleştirin. Son haberleri bildirim çubuğunda alacaksınız.</string>
   <string name="ignored">Görmezden gelindi</string>
@@ -506,4 +497,5 @@ Telefon operatörünüz faturalandıracaktır.
   <string name="all_stores">Tüm Mağazalar</string>
   <string name="followed_stores">Takip Edilen Mağazalar</string>
   <string name="search_minimum_chars">Arama sorgusu en az 2 karakter içermelidir.</string>
-</resources>
+<string name="stand_by">Beklemede</string>
+  </resources>

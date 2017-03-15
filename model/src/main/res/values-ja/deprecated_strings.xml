@@ -158,13 +158,6 @@
 
     <string name="feedback_send_button">フィードバックを送信</string>
 
-    <string name="my_account">マイアカウント</string>
-    <string name="setting_schdwntitle">スケジュールされたダウンロード</string>
-    <string name="settings">設定</string>
-    <string name="facebook">フェイスブック</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">アプリをバックアップ</string>
-
     <string name="menu_context_reparse">再読み込み</string>
     <string name="menu_context_remove">削除</string>
 
@@ -480,8 +473,6 @@
     <string name="friends_to_invite">Aptoide 内のすべての他の Facebook の友人</string>
     <string name="upload_app_backup_apps_installed">まずこのアプリをストアにアップロードする必要があります。 Aptoide バックアップ アプリを使用することができます。</string>
     <string name="upload_app_backup_apps_not_installed">まずこのアプリをストアにアップロードする必要があります。 Aptoide バックアップ アプリをインストールして使用してください。</string>
-    <string name="setting_category_autoupdate">%s 自動更新</string>
-    <string name="setting_category_autoupdate_title">%s の自動更新を有効にします</string>
     <string name="social_timeline_notifications_sum2">Aptoide ソーシャル タイムライン通知を有効にします。通知バーに最新ニュースが表示されます。</string>
     <string name="ignored">無視しました</string>
     <string name="application_signature_blacklisted">正式な開発者に関連する署名と一致しない、別のアプリケーションに署名するために使用されているため、アプリケーションの署名は Aptoide マルウェア対策プラットフォームで信頼された署名ではありません。</string>
@@ -503,4 +494,5 @@
   <string name="critical">クリティカル</string>
 
   <string name="stand_by">待機</string>
+  <string name="setting_general">全般</string>
   </resources>

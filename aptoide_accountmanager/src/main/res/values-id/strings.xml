@@ -36,7 +36,7 @@ Kebijakan Konten Bagi Pengembang yang diberlakukan oleh Aptoide
  "</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-    <string name="facebook_email_permission_regected_message">"Aptoide membutuhkan email Anda untuk membuat
+    <string name="facebook_email_permission_regected_message">"Kami membutuhkan email Anda untuk membuat
 akun
  "</string>
     <string name="error_invalid_grant">Kombinasi nama pengguna dan kata sandi tidak valid</string>
@@ -54,10 +54,10 @@ huruf, angka atau tanda hubung.</string>
     <string name="ws_error_REPO_5">Nama toko tersebut minimal harus terdiri dari 3 karakter.</string>
     <string name="ws_error_REPO_6">Nama toko tersebut sudah diambil, Anda perlu memilih
 yang lain.</string>
-    <string name="ws_error_WOP_9">Email yang dimasukkan sudah ada di Aptoide</string>
-    <string name="ws_error_WOP_10">Email yang dimasukkan belum ada di Aptoide</string>
+    <string name="ws_error_WOP_9">Email yang dimasukkan sudah ada</string>
+    <string name="ws_error_WOP_10">Email yang dimasukkan belum terdaftar</string>
     <string name="ws_error_QUOTA_2">Batas harian pembuatan akun pengguna sudah tercapai hari ini. Jika Anda ingin
- batas ini diperbesar, silakan hubungi layanan kami di support@aptoide.com atau buatlah pengguna lain besok</string>
+ batas ini ditambah, silakan hubungi layanan kami atau buat pengguna lainnya besok</string>
     <string name="ws_error_AUTH_1">Mungkin email atau kata sandinya tidak valid untuk masuk
 (saat perubahan nama)</string>
     <string name="login_successful">Berhasil masuk</string>
@@ -125,5 +125,27 @@ yang lain.</string>
   <string name="nothing_inserted_user">Silakan masukkan nama pengguna dan foto (opsional) untuk membuat profil</string>
   <string name="create_user_bad_photo">Silakan pilih gambar dengan resolusi minimal 300 x 300</string>
   <string name="create_profile_logged_in_activity_title">Masuk</string>
+
+<string name="facebook_grant_permission_button">Berikan izin</string>
+  <string name="ws_error_API_1">Gambar tidak valid.</string>
+    <string name="edit_store_header">Ubah toko Anda dengan gambar yang indah dan deskripsi yang bagus</string>
+  <string name="create_store_description_title">Deskripsi Toko Anda</string>
+  <string name="create_store_description_hint">Deskripsi toko Anda</string>
+  <string name="edit_store_title">Ubah Toko Anda</string>
+  <string name="save_edit_store">Simpan</string>
+
+  <string name="image_requirements_popup_message">Gambar tersebut memiliki masalah sebagai berikut:
+</string>
+  <string name="image_requirements_error_min_height">- Tinggi minimal kurang dari 600px
+</string>
+  <string name="image_requirements_error_max_height">- Tinggi maksimal lebih dari 10240px
+</string>
+  <string name="image_requirements_error_min_width">- Lebar minimal kurang dari 600px
+</string>
+  <string name="image_requirements_error_max_width">- Lebar maksimal lebih dari 10240px
+</string>
+  <string name="image_requirements_error_max_file_size">- Ukuran maksimal lebih dari 5 MB
+</string>
+  <string name="image_requirements_error_popup_title">Gambar</string>
 
 </resources>

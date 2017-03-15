@@ -4,14 +4,13 @@
     <string name="password">पासवर्ड</string>
     <string name="link_device_webinstall">वेबइन्स्टाल के साथ अकाउंट लिंक करें</string>
     <string name="register">साइन अप</string>
-    <string name="forgot_passwd">पासवर्ड भूल गए?</string>
+    <string name="forgot_passwd"><u>पासवर्ड भूले?</u></string>
     <string name="fields_cannot_empty">अपने ईमेल और पासवर्ड की जांच करें ।</string>
     <string name="unknown_error">अज्ञात त्रुटि</string>
-    <string name="no_email_and_pass_error_message">"पंजीकरण के लिए एक ईमेल और पासवर्ड 
-डालें।
+    <string name="no_email_and_pass_error_message">"कृपया एक ईमेल और पासवर्ड डालें
  "</string>
-    <string name="no_pass_error_message">रजिस्टर करने के लिए एक पासवर्ड डालें।</string>
-    <string name="no_email_error_message">रजिस्टर करने के लिए एक ईमेल डालें।</string>
+    <string name="no_pass_error_message">कृपया एक पासवर्ड डालें</string>
+    <string name="no_email_error_message">कृपया एक ईमेल डालें</string>
     <string name="password_validation_text">"पासवर्ड न्यूनतम 8 वर्णों का होना चाहिए और उसमें न्यूनतम 
 एक अक्षर और एक संख्या या विशेष वर्ण (!@#$%*) होना चाहिए
  "</string>
@@ -36,7 +35,7 @@
  "</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-    <string name="facebook_email_permission_regected_message">"एक खाता बनाने के लिए Aptoide को आपके ईमेल की 
+    <string name="facebook_email_permission_regected_message">"एक खाता बनाने के लिए हमें आपके ईमेल की 
 जरूरत है
  "</string>
     <string name="error_invalid_grant">अमान्य प्रयोक्तानाम एवं पासवर्ड संयोजन</string>
@@ -54,10 +53,10 @@
     <string name="ws_error_REPO_5">उस स्टोर का नाम कम से कम 3 अक्षरों का होना चाहिए।</string>
     <string name="ws_error_REPO_6">वह स्टोर नाम पहले ही ले लिया गया है, आपको एक अन्य का चयन करने की 
 जरूरत है।</string>
-    <string name="ws_error_WOP_9">प्रदान की गयी ईमेल पहले से Aptoide में मौजूद है</string>
-    <string name="ws_error_WOP_10">प्रदान की गयी ईमेल Aptoide में अभी तक मौजूद नहीं है</string>
-    <string name="ws_error_QUOTA_2">बनाये गए प्रयोक्ताओं के लिए आज की दैनिक सीमा पूरी हो गई। अगर आप
- इस सीमा में वृद्धि चाहते हैं तो कृपया support@aptoide.com पर सहायता से संपर्क करें या अन्य प्रयोक्ताओं को कल बनाएँ</string>
+    <string name="ws_error_WOP_9">प्रदान की गयी ईमेल पहले से मौजूद है</string>
+    <string name="ws_error_WOP_10">प्रदान की गयी ईमेल अभी तक पंजीकृत नहीं है</string>
+    <string name="ws_error_QUOTA_2">प्रयोक्ताओं को बनाने के लिए आज की दैनिक सीमा पूरी हो गई। अगर आप
+ इस सीमा में वृद्धि चाहते हैं तो कृपया सहायता से संपर्क करें या अन्य प्रयोक्ताओं को कल बनाएँ</string>
     <string name="ws_error_AUTH_1">ईमेल या पासवर्ड लॉग इन करने के लिए मान्य नहीं हैं (नाम 
 अद्यतन पर)</string>
     <string name="login_successful">लॉग इन सफल</string>
@@ -92,7 +91,7 @@
   <string name="next">आगे</string>
 
   <string name="create_store_title">अपना स्टोर बनाएँ</string>
-  <string name="create_store_header"><b>अपना स्टोर बनाएँ</b> और अपने एप्स संग्रह को %s समुदाय के साथ साझा करें। <b>एक बार प्रयास करें</b></string>
+  <string name="create_store_header"><b>अपना स्टोर बनाएँ</b> और अपने एप्स संग्रह को %s समुदाय के साथ साझा करें।<b>एक बार प्रयास करें</b></string>
   <string name="create_store_name">अपने %s स्टोर के लिए एक नाम चुनें</string>
   <string name="create_store_name_inserted">आपके स्टोर का नाम</string>
   <string name="create_store_theme">स्टोर थीम</string>
@@ -125,5 +124,27 @@
   <string name="nothing_inserted_user">अपना प्रोफाइल बनाने के लिए एक उपयोगकर्ता नाम और फोटो (वैकल्पिक) डालें</string>
   <string name="create_user_bad_photo">कृपया कम से कम 300x300 रेजोल्यूशन के साथ एक तस्वीर चुनें</string>
   <string name="create_profile_logged_in_activity_title">लॉग इन किया</string>
+
+<string name="facebook_grant_permission_button">अनुमति दें</string>
+  <string name="ws_error_API_1">फोटो मान्य नहीं है।</string>
+  <string name="edit_store_header">अपने स्टोर को एक सुंदर फोटो और आकर्षक विवरण के साथ संपादित करें</string>
+  <string name="create_store_description_title">आपके स्टोर का विवरण</string>
+  <string name="create_store_description_hint">आपका स्टोर विवरण</string>
+  <string name="edit_store_title">अपना स्टोर संपादित करें</string>
+  <string name="save_edit_store">सहेजें</string>
+
+  <string name="image_requirements_popup_message">फोटो में निम्न समस्याएँ हैं:
+</string>
+  <string name="image_requirements_error_min_height">- न्यूनतम ऊंचाई 600px से कम है
+</string>
+  <string name="image_requirements_error_max_height">- अधिकतम ऊंचाई 1024px से ज्यादा है
+</string>
+  <string name="image_requirements_error_min_width">- न्यूनतम चौड़ाई 600px से कम है
+</string>
+  <string name="image_requirements_error_max_width">- अधिकतम चौड़ाई 1024px से अधिक है
+</string>
+  <string name="image_requirements_error_max_file_size">- अधिकतम आकार 5 एमबी से ज्यादा है
+</string>
+  <string name="image_requirements_error_popup_title">फोटो</string>
 
 </resources>

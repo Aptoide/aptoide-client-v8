@@ -191,27 +191,12 @@ al je (via %s) geïnstalleerde apps, inclusief versie en installatiedatum.</stri
   <string name="storage_access_permission_request_message">Geef toegang tot de opslag van je apparaat zodat we deze app kunnen downloaden en installeren.</string>
 
   <string name="wizard_skip"><b>OVERSLAAN</b></string>
-  <string name="wizard_welcome_message"><b>Welkom!</b></string>
   <string name="wizard_sub_title_viewpager_one">Begin een <b>veilige</b> en <b>leuke</b> reis.</string>
-  <string name="wizard_description_part_one_viewpager_one"><b>Kijk uit naar</b> apps met het
-Vertrouwd-pictogram voor
-een veilige installatie.</string>
-  <string name="wizard_description_part_two_viewpager_one"><b>Ontdek</b> apps
-die je altijd hebt gewild, maar
-nooit hebt gevonden.</string>
-
   <string name="wizard_title_viewpager_two"><b>App-tijdslijn</b></string>
   <string name="wizard_sub_title_viewpager_two">Verkrijg de <b>nieuwste apps</b>, vind <b>thematische winkels</b>
 en krijg toegang tot <b>gepersonaliseerde inhoud</b>.</string>
 
   <string name="wizard_title_viewpager_three"><b>Word deel van de gemeenschap</b></string>
-  <string name="wizard_description_part_one_viewpager_three"><b>Volg</b> je vrienden</string>
-  <string name="wizard_description_part_two_viewpager_three"><b>Schrijf recensies</b> en beoordeel apps</string>
-  <string name="wizard_description_part_three_viewpager_three"><b>Maak</b> je eigen winkel</string>
-  <string name="wizard_register_now_button">Registreer nu</string>
-  <string name="wizard_be_a_part_of_aptoide">Neem deel aan Aptoide!</string>
-  <string name="wizard_or_login"><u>of log in</u></string>
-
   <string name="you_need_to_be_logged_in">Je moet ingelogd zijn</string>
   <string name="follow">Volgen</string>
   <string name="followed">Gevolgd</string>
@@ -275,7 +260,6 @@ en krijg toegang tot <b>gepersonaliseerde inhoud</b>.</string>
   <string name="create_store_displayable_message">Maak nu je winkel aan en deel je apps!</string>
   <string name="create_store_displayable_button">WINKEL AANMAKEN</string>
   <string name="my_store_created_displayable_message">Je Android-appwinkel</string>
-  <string name="create_store_displayable_created_store_message">Je hebt net je winkel aangemaakt!</string>
   <string name="create_store_displayable_explore_message">Treed binnen en ontdek alle mogelijkheden</string>
   <string name="create_store_displayable_explore_button">Ontdekken</string>
 
@@ -313,7 +297,7 @@ en krijg toegang tot <b>gepersonaliseerde inhoud</b>.</string>
 
   <string name="comment_store">Reacties op winkel</string>
   <string name="comment_store_title">Reacties op deze winkel</string>
-  <string name="be_the_first_to_send_feedback_about_this_store">Geef de eerste reactie op deze winkel</string>
+  <string name="be_the_first_to_send_feedback_about_this_store">Geef als eerste een reactie op deze winkel</string>
 
 
   <string name="timeline_followers">%d volgers</string>
@@ -323,9 +307,78 @@ en krijg toegang tot <b>gepersonaliseerde inhoud</b>.</string>
   <string name="private_followers_message">%d volgers zijn privé</string>
   <string name="private_following_message">je volgt %d privégebruikers/winkels</string>
 
-  <string name="item_payment_button_use">gebruiken</string>
-  <string name="item_payment_button_register">registreren</string>
-  <string name="item_payment_approving_text">Goedkeuren</string>
-  <string name="activity_payment_more_payments_button">Gebruik een andere betaalmethode</string>
+  <string name="password">Wachtwoord</string>
+  <string name="login">Inloggen</string>
+  <string name="my_account">Mijn account</string>
+  <string name="settings">Instellingen</string>
+  <string name="facebook">Facebook</string>
+  <string name="twitter">Twitter</string>
+  <string name="setting_schdwntitle">Geplande downloads</string>
+  <string name="backup_apps">Apps back-uppen</string>
 
-</resources>
+  <string name="timeline"><b>Tijdslijn</b></string>
+  <string name="create_store_displayable_created_store_short_term_message">Je hebt net je winkel aangemaakt!</string>
+  <string name="social_timeline_users_private">%d zijn privé</string>
+
+  <string name="reviews_expand_button">%d reacties</string>
+  <string name="out_of_space_dialog_title">Onvoldoende ruimte</string>
+  <string name="out_of_space_dialog_message">Maak ruimte vrij om door te kunnen gaan.</string>
+  <string name="setting_category_autoupdate">%s updates</string>
+  <string name="setting_category_autoupdate_title">Updatemeldingen voor %s inschakelen</string>
+  <string name="setting_category_autoupdate_message">Periodieke controle voor nieuwe versies van %s</string>
+  <string name="create_store_displayable_explore_long_term_button">Bekijk winkel</string>
+  <string name="create_store_displayable_empty_description_message">Voeg een beschrijving van je winkel toe. Een goede beschrijving zorgt voor meer volgers en interactie.</string>
+
+  <string name="addressbook_increase_network_message">Vergroot je netwerk.</string>
+  <string name="addressbook_connect_with_friends_message">Verbind met je vrienden.</string>
+  <string name="follow_friends">Volg vrienden</string>
+  <string name="addressbook_sync">Synchroniseer je adresboek</string>
+  <string name="not_now">Niet nu</string>
+  <string name="addressbook_success">Succes!</string>
+  <string name="addressbook_allow_friends_find">Sta je vrienden toe je te vinden</string>
+  <string name="google">Google</string>
+  <string name="done">Klaar</string>
+  <string name="addressbook_share_phone">Deel je telefoonnummer zodat je vrienden je eenvoudig kunnen vinden op %s</string>
+  <string name="addressbook_phone_number">Telefoonnummer</string>
+  <string name="addressbook_insuccess_connection">We konden geen verbinding maken met je adresboek!</string>
+  <string name="addressbook_invite_friends">Nodig je vrienden uit!</string>
+  <string name="addressbook_2nd_msg">%1$s zal door je adresboek bladeren op zoek naar vrienden en familie
+die onze appwinkel ook gebruiken. Om je privacy te beschermen worden er geen privégegevens verzonden
+naar de %1$s-servers</string>
+  <string name="connect_with_facebook">Verbind met Facebook</string>
+  <string name="connect_with_google">Verbind met Google</string>
+  <string name="login_company">Inloggen op %s</string>
+  <string name="fragment_spot_share_preview_start_button">Start</string>
+
+  <string name="join_company">Word lid van %s</string>
+  <string name="addressbook_3rd_msg">LEES MEER</string>
+  <string name="address_book_twitter_error">Twitter-authenticatiefout</string>
+  <string name="follow_my_store">Hallo, volg hier mijn winkel %1$s</string>
+  <string name="addressbook_about">Over adresboek</string>
+  <string name="addressbook_we_werent_able_to_connect_you">We konden je niet verbinden</string>
+
+<string name="spot_share">Delen</string>
+  <string name="follow_store">Winkel volgen</string>
+
+  <string name="social_timeline_who_liked">Wie vindt dit leuk</string>
+  <string name="store_added_long_time_suggestion_message">toon lange termijn</string>
+  <string name="create_store_displayable_created_store_long_term_message">lange termijn</string>
+  <string name="recover_password">Wachtwoord vergeten</string>
+  <string name="email">E-mail</string>
+  <string name="create_password">Wachtwoord aanmaken</string>
+  <string name="store_suspended_message">Winkel opgeschort</string>
+
+  <string name="add_store_dialog_top_stores">ONTDEK DE BESTE WINKELS</string>
+  <string name="add_store_dialog_top_stores_small_text">en vind exclusieve inhoud!</string>
+
+  <string name="activity_login_title">Inloggen</string>
+  <string name="activity_login_forgot_password_button">Wachtwoord vergeten?</string>
+  <string name="activity_login_button">Inloggen</string>
+  <string name="activity_login_sign_up_button">Word lid</string>
+  <string name="view_credentials_username_hint">E-mail</string>
+  <string name="view_credentials_password_hint">Wachtwoord</string>
+
+  <string name="permission_access_deny">toegang tot lezen van en schrijven naar externe opslag geweigerd</string>
+  <string name="permission_account_deny">toegang tot accounts geweigerd</string>
+
+  </resources>

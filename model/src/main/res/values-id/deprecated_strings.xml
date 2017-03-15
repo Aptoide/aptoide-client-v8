@@ -159,13 +159,6 @@
 
     <string name="feedback_send_button">Kirim Umpan Balik</string>
 
-    <string name="my_account">Akun Saya</string>
-    <string name="setting_schdwntitle">Unduhan Terjadwal</string>
-    <string name="settings">Pengaturan</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Aplikasi Cadangan</string>
-
     <string name="menu_context_reparse">Muat Ulang</string>
     <string name="menu_context_remove">Hapus</string>
 
@@ -197,7 +190,7 @@ oleh operator.
     <string name="rollback_uninstalled">Dicopot</string>
     <string name="rollback_updated">Diperbarui</string>
     <string name="rollback_downgraded">Diturunkan</string>
-    <string name="install">Unduh</string>
+    <string name="install">Pasang</string>
     <string name="cannot_uninstall_self">Tidak dapat mencopot installer.</string>
     <string name="at_time">pada %s</string>
     <string name="root_access_dialog">Sepertinya Anda memiliki root. Anda ingin mengizinkan pemasangan otomatis aplikasi setelah pengunduhan?</string>
@@ -482,8 +475,6 @@ oleh operator.
     <string name="friends_to_invite">Semua teman Facebook lainnya di Aptoide</string>
     <string name="upload_app_backup_apps_installed">Anda perlu mengunggah aplikasi ini ke toko Anda terlebih dahulu. Anda bisa menggunakan Aplikasi Backup Aptoide.</string>
     <string name="upload_app_backup_apps_not_installed">Anda perlu mengunggah aplikasi ini ke toko Anda terlebih dahulu. Silakan pasang dan gunakan Aplikasi Backup Aptoide.</string>
-    <string name="setting_category_autoupdate">Pembaruan Otomatis %s</string>
-    <string name="setting_category_autoupdate_title">Aktifkan pembaruan otomatis %s</string>
     <string name="social_timeline_notifications_sum2">Aktifkan Notifikasi Timeline Sosial Aptoide. Anda akan menerima berita terbaru pada bilah notifikasi.</string>
     <string name="ignored">Diabaikan</string>
     <string name="application_signature_blacklisted">Signatur aplikasi bukan signatur Terpercaya menurut platform Anti-Malware Aptoide karena sudah digunakan untuk menandatangani aplikasi lain yang tidak sesuai dengan signatur yang terhubung dengan pengembang yang sah.</string>
@@ -504,4 +495,6 @@ oleh operator.
     <string name="change_theme_soon">Segera hadir</string>
   <string name="critical">Kritis</string>
 
+  <string name="stand_by">Siaga</string>
+  <string name="setting_general">Umum</string>
   </resources>

@@ -103,24 +103,13 @@
     <string name="followed_stores">फॉलो किये गए स्टोर</string>
     <string name="storage_access_permission_request_message">कृपया अपनी फोन स्टोरेज उपयोग की अनुमति दें ताकि हम इस एप्लीकेशन को डाउनलोड और स्थापित कर सकें।</string>
 
-    <string name="wizard_welcome_message"><b>स्वागत है!</b></string>
-    <string name="wizard_sub_title_viewpager_one">एक <b>सुरक्षित</b> एवं <b>सुखद</b> यात्रा प्रारंभ करें।</string>
-    <string name="wizard_description_part_one_viewpager_one">एक सुरक्षित स्थापना के लिए 
-विश्वसनीयता बैज
-के साथ एप्स <b>देखें</b>।</string>
-    <string name="wizard_description_part_two_viewpager_one">एप्स <b>खोजें</b> जिसे\nआप चाहते थे, लेकिन\nकभी नहीं मिली।</string>
+    <string name="wizard_sub_title_viewpager_one">एक ही स्थान पर <b>सर्वश्रेष्ठ एप्प वीडियो एवं समाचार</b>। 
+आपके <b>मित्रों</b> के माध्यम से एप्स का पता लगाएँ</string>
+    <string name="wizard_title_viewpager_two">आपका अपना स्टोर रखें<b>एप्स टाइमलाइन</b></string>
+    <string name="wizard_sub_title_viewpager_two"><b>Aptoide समुदाय</b> और अपने <b>मित्रों के साथ 
+एप्स साझा करने के लिए</b> अपना स्टोर अनुकूलित करें</string>
 
-    <string name="wizard_title_viewpager_two"><b>एप्स टाइमलाइन</b></string>
-    <string name="wizard_sub_title_viewpager_two"><b>नवीनतम एप्स</b> प्राप्त करें, <b>थीमेटिक स्टोर</b> खोजें\nऔर <b>व्यक्तिगत सामग्री उपयोग करें।</b></string>
-
-    <string name="wizard_title_viewpager_three"><b>कम्युनिटी में शामिल हो जाएं</b></string>
-    <string name="wizard_description_part_one_viewpager_three">अपने मित्रों को <b>फॉलो</b> करें</string>
-    <string name="wizard_description_part_two_viewpager_three">एप्स की <b>समीक्षा</b> एवं रेट करें</string>
-    <string name="wizard_description_part_three_viewpager_three">अपना स्टोर <b>बनाएं</b></string>
-    <string name="wizard_register_now_button">अभी पंजीकरण करें</string>
-    <string name="wizard_be_a_part_of_aptoide">Aptoide का एक हिस्सा बनें!</string>
-    <string name="wizard_or_login"><u>या लॉगिन करें</u></string>
-
+    <string name="wizard_title_viewpager_three">एक हिस्सा बनें<b>कम्युनिटी में शामिल हो जाएं</b></string>
     <string name="you_need_to_be_logged_in">आपको लॉग इन करने की जरूरत है</string>
     <string name="follow">फॉलो करें</string>
     <string name="followed">फॉलो कर रहे हैं</string>
@@ -276,14 +265,13 @@
   <string name="create_store_displayable_message">अभी अपना स्टोर बनाएँ और अपनी एप्स साझा करना शुरू करें!</string>
   <string name="create_store_displayable_button">स्टोर बनाएँ</string>
   <string name="my_store_created_displayable_message">आपका एंड्रॉयड एप्प स्टोर</string>
-  <string name="create_store_displayable_created_store_message">आपने अभी अपना स्टोर बना लिया है!</string>
   <string name="create_store_displayable_explore_message">प्रवेश करें और सभी संभावनाओं का पता लगाएँ</string>
   <string name="create_store_displayable_explore_button">पता लगाएँ</string>
 
   <string name="install_app_outter_pt1">आपके स्टोर में अभी तक एप्लीकेशन नहीं हैं।</string>
   <string name="install_app_outter_pt2">और दुनिया के साथ उन्हें साझा करने के लिए एप्स अपलोड करें!</string>
-  <string name="install_app_inner">%1$s स्थापित करें</string>
-  <string name="open_app_inner">%1$s खोलें</string>
+  <string name="install_app_inner">" %1$s स्थापित करें "</string>
+  <string name="open_app_inner">" %1$s खोलें "</string>
   <string name="downloads_count">डाउनलोड: %1$s</string>
   <string name="version_number">संस्करण: %1$s</string>
   <string name="app_size">आकार: %1$s</string>
@@ -320,4 +308,120 @@
 
   <string name="timeline_stats_followers">फॉलोअर</string>
   <string name="timeline_login_message">आपके मित्र क्या स्थापित कर रहे हैं?</string>
+<string name="my_account">मेरा खाता</string>
+  <string name="spot_share">स्पॉट व शेयर</string>
+  <string name="setting_schdwntitle">अनुसूचित डाउनलोड</string>
+  <string name="settings">सेटिंग्स</string>
+  <string name="facebook">फेसबुक</string>
+  <string name="twitter">ट्विटर</string>
+  <string name="backup_apps">बैकअप एप्स</string>
+
+  <string name="timeline"><b>टाइमलाइन</b></string>
+  <string name="create_store_displayable_created_store_short_term_message">आपने अभी अपना स्टोर बनाया है!</string>
+  <string name="follow_store">स्टोर फॉलो करें</string>
+
+  <string name="social_timeline_shared_by">%1$s द्वारा साझा किया गया</string>
+  <string name="social_timeline_who_liked">किसने लाइक किया</string>
+  <string name="social_timeline_users_private">%d निजी हैं</string>
+
+  <string name="edit_store">एडिट करें</string>
+
+  <string name="comment_store_title">इस स्टोर में टिप्पणियां</string>
+  <string name="private_followers_message">%d फॉलोअर निजी हैं</string>
+  <string name="private_following_message">आप %d निजी प्रयोक्ता/स्टोर को फॉलो कर रहे हैं</string>
+
+  <string name="reviews_expand_button">%d उत्तर</string>
+  <string name="out_of_space_dialog_title">जगह कम है</string>
+  <string name="out_of_space_dialog_message">कृपया, आगे बढ़ने के लिए जगह खाली करें।</string>
+  <string name="setting_category_autoupdate">%s अपडेट</string>
+  <string name="setting_category_autoupdate_title">%s अपडेट अधिसूचनाएं प्राप्त करें</string>
+  <string name="setting_category_autoupdate_message">%s नए संस्करणों के लिए निरंतर जाँच करें</string>
+  <string name="store_added_long_time_suggestion_message">दीर्घ अवधि दिखाएं</string>
+  <string name="store_added_short_time_suggestion_message">अभी बनाया दिखाएं</string>
+  <string name="create_store_displayable_created_store_long_term_message">दीर्घ अवधि</string>
+  <string name="create_store_displayable_explore_long_term_button">स्टोर देखें</string>
+  <string name="create_store_displayable_empty_description_message">अपने स्टोर के लिए एक विवरण जोड़ें। एक उपयुक्त विवरण आपको अधिक फॉलोअर और प्रभाव प्राप्त करने में मदद करता है।</string>
+  <string name="fragment_spot_share_preview_start_button">शुरू करें</string>
+
+  <string name="join_company">%s में शामिल हो जाएँ</string>
+  <string name="login">लॉग इन</string>
+  <string name="login_company">%s लॉग इन करें</string>
+  <string name="connect_with_facebook">फेसबुक के साथ जुड़ें</string>
+  <string name="connect_with_google">गूगल के साथ जुड़ें</string>
+  <string name="accept_terms_signup">Aptoide में शामिल होने से आप Aptoide के नियम एवं शर्तों और डेवलपर्स के लिए सामग्री नीति से सहमत हैं।</string>
+  <string name="recover_password">अपना पासवर्ड पुनः प्राप्त करें</string>
+  <string name="email">ईमेल</string>
+  <string name="password">पासवर्ड</string>
+  <string name="create_password">पासवर्ड बनाएँ</string>
+  <string name="store_suspended_message">स्टोर निलंबित</string>
+
+  <string name="add_store_dialog_title">आप आवश्यकता के अनुसार केवल आपके लिए बनाई गई अनन्य सामग्री को अलग स्टोर में पा सकते हैं</string>
+  <string name="add_store_dialog_top_stores">शीर्ष स्टोर खोजें</string>
+  <string name="add_store_dialog_top_stores_small_text">और अनन्य सामग्री ढूंढें!</string>
+
+  <string name="activity_login_title">लॉग इन</string>
+  <string name="activity_login_forgot_password_button">पासवर्ड भूले?</string>
+  <string name="activity_login_button">लॉग इन</string>
+  <string name="activity_login_sign_up_button">साइन अप</string>
+  <string name="view_credentials_username_hint">ईमेल</string>
+  <string name="view_credentials_password_hint">पासवर्ड</string>
+
+  <string name="permission_access_deny">बाहरी स्टोरेज को पढ़ने और लिखने के लिए अभिगम से इनकार किया गया था</string>
+  <string name="permission_account_deny">खाते प्राप्त करने के लिए अभिगम से इनकार किया गया था</string>
+
+  <string name="addressbook_increase_network_message">अपने नेटवर्क को बढ़ाएं।</string>
+  <string name="addressbook_connect_with_friends_message">मित्रों के साथ जुड़ें।</string>
+  <string name="addressbook_sync">एड्रेस बुक सिंक करें</string>
+  <string name="not_now">अभी नहीं</string>
+  <string name="follow_friends">मित्रों को फॉलो करें</string>
+  <string name="addressbook_data_about"><b>%1$s आपका डाटा कैसे उपयोग करता है</b>
+ 
+
+%1$s आपके उन मित्रों और परिवार के लिए आपकी एड्रेस बुक को खोजेगा, जो हमारा एप्प स्टोर उपयोग कर रहे हैं। हम
+ आपको अधिक लोगों से जोड़ते हुए केवल आपका %1$s अनुभव सुधारने के लिए इस जानकारी का उपयोग करेंगे, 
+जो आपके एप्स से संबंधित सामग्री को आपके साथ साझा कर सकते हैं।
+
+
+आपकी गोपनीयता की रक्षा के लिए, कोई भी स्पष्ट निजी डाटा
+ %1$s सर्वरों को नहीं भेजा जाएगा। एक गुप्त हस्ताक्षर (हैश) आपके डाटा के साथ बनाया जाएगा
+ और उस हैश को मूल संपर्क जानकारी में नहीं बदला जा सकता है।
+ </string>
+  <string name="addressbook_success">सफलता!</string>
+  <string name="addressbook_allow_friends_find">मित्रों को आपको खोजने की अनुमति दें</string>
+  <string name="google">गूगल</string>
+  <string name="done">पूर्ण</string>
+  <string name="addressbook_share_phone">अपना फोन नंबर साझा करें ताकि आपके मित्र आपको %s पर आसानी से खोज सकें</string>
+  <string name="addressbook_phone_number">फोन नंबर</string>
+  <string name="addressbook_insuccess_connection">हम आपकी एड्रेस बुक के साथ जुड़ने में सक्षम नहीं हुए!</string>
+  <string name="addressbook_invite_friends">अपने मित्रों को जुड़ने के लिए आमंत्रित करें!</string>
+  <string name="addressbook_thanks_for_connecting">जुड़ने के लिए धन्यवाद</string>
+  <string name="addressbook_success_connected_friends">हमने आपको %1$s मित्रों के साथ सफलतापूर्वक जोड़ दिया जो %2$s का उपयोग करते हैं</string>
+  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">हमें कोई भी संपर्क नहीं मिले जो %1$s का उपयोग कर रहे हैं</string>
+  <string name="addressbook_2nd_msg">%1$s आपके उन मित्रों और परिवार के लिए आपकी एड्रेस बुक को खोजेगा
+जो हमारा एप्प स्टोर उपयोग कर रहे हैं। आपकी गोपनीयता की रक्षा के लिए, %1$s सर्वरों पर कोई निजी डाटा 
+नहीं भेजा जाएगा</string>
+  <string name="addressbook_3rd_msg">और जानें</string>
+  <string name="address_book_twitter_error">ट्विटर अनुज्ञा त्रुटि</string>
+  <string name="follow_my_store">नमस्ते, मेरा %1$s स्टोर यहाँ फॉलो करें</string>
+  <string name="addressbook_about">एड्रेस बुक के बारे में</string>
+  <string name="addressbook_we_werent_able_to_connect_you">हम आपसे जुड़ने में सक्षम नहीं हुए थे</string>
+
+<string name="wizard_title_viewpager_one">अब एक टाइमलाइन के साथ!</string>
+  <string name="wizard_sub_title_viewpager_three"><b>उन लोगों को खोजें</b> जो आपकी एप्प रुचियों को साझा करते हैं। 
+<b>रेट करें और साझा करें।</b></string>
+  <string name="wizard_sub_sub_title_viewpager_three">हमसे जुड़ें!</string>
+
+  <string name="facebook_login_cancelled">फेसबुक लॉग इन रद्द किया गया</string>
+  <string name="google_login_cancelled">गूगल लॉग इन विफल रहा</string>
+  <string name="login_separator_text">या अपनी ईमेल का उपयोग करते हुए जुड़ें</string>
+
+  <string name="store_meta_apps">एप्स
+%s</string>
+  <string name="store_meta_following">फॉलो कर रहे हैं
+%s</string>
+  <string name="store_meta_followers">फॉलोअर्स
+%s</string>
+  <string name="spot_share_line_1">अपने मित्रों के साथ एप्स साझा करें</string>
+  <string name="spot_share_line_2">फोन से फोन, बिना इंटरनेट</string>
+
 </resources>

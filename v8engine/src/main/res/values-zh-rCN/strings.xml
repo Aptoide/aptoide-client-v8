@@ -101,23 +101,13 @@
     <string name="followed_stores">已关注的商店</string>
     <string name="storage_access_permission_request_message">请允许访问您的手机存储以便我们可以下载并安装此应用。</string>
 
-    <string name="wizard_welcome_message"><b>欢迎！</b></string>
-    <string name="wizard_sub_title_viewpager_one">开始<b>安全</b>、<b>快乐</b>的旅途。</string>
-    <string name="wizard_description_part_one_viewpager_one"><b>查找</b>带有信任徽章的应用，
-以安全安装。</string>
-    <string name="wizard_description_part_two_viewpager_one"><b>发现</b>\n想要但从未找到过\n的应用。</string>
+    <string name="wizard_sub_title_viewpager_one">这里汇集了<b>最佳应用视频和新闻</b>。
+通过<b>好友</b>发现应用。</string>
+    <string name="wizard_title_viewpager_two">拥有自己的商店<b>应用时间表</b></string>
+    <string name="wizard_sub_title_viewpager_two">通过定制你的商店与好友和
+<b>Aptoide 社区</b>分享应用</string>
 
-    <string name="wizard_title_viewpager_two"><b>应用时间表</b></string>
-    <string name="wizard_sub_title_viewpager_two">获取<b>最新应用</b>，查找<b>主题商店</b>\n然后访问<b>个性化内容。</b></string>
-
-    <string name="wizard_title_viewpager_three"><b>加入社区</b></string>
-    <string name="wizard_description_part_one_viewpager_three"><b>关注</b>好友</string>
-    <string name="wizard_description_part_two_viewpager_three"><b>审核</b>并评价应用</string>
-    <string name="wizard_description_part_three_viewpager_three"><b>创建</b>商店</string>
-    <string name="wizard_register_now_button">立即注册</string>
-    <string name="wizard_be_a_part_of_aptoide">成为Aptoide的一份子！</string>
-    <string name="wizard_or_login"><u>或登录</u></string>
-
+    <string name="wizard_title_viewpager_three">加入我们<b>加入社区</b></string>
     <string name="you_need_to_be_logged_in">您需要登录</string>
     <string name="follow">关注</string>
     <string name="followed">已关注</string>
@@ -272,7 +262,6 @@
   <string name="create_store_displayable_message">立即创建商店和分享应用！</string>
   <string name="create_store_displayable_button">创建商店</string>
   <string name="my_store_created_displayable_message">您的Android应用商店</string>
-  <string name="create_store_displayable_created_store_message">您刚刚已经创建了商店！</string>
   <string name="create_store_displayable_explore_message">进入并探索所有可以做的事</string>
   <string name="create_store_displayable_explore_button">探索</string>
 
@@ -316,4 +305,122 @@
 
   <string name="timeline_stats_followers">粉丝</string>
   <string name="timeline_login_message">您的好友安装了什么应用？</string>
+<string name="password">密码</string>
+  <string name="login">登录</string>
+  <string name="my_account">我的帐户</string>
+  <string name="spot_share">发现与共享</string>
+  <string name="setting_schdwntitle">计划下载</string>
+  <string name="settings">设置</string>
+  <string name="facebook">Facebook</string>
+  <string name="twitter">Twitter</string>
+  <string name="backup_apps">备份应用</string>
+
+  <string name="timeline"><b>时间线</b></string>
+  <string name="create_store_displayable_created_store_short_term_message">您刚刚创建了您的商店！</string>
+  <string name="social_timeline_shared_by">共享者：%1$s</string>
+  <string name="social_timeline_who_liked">点赞者</string>
+  <string name="social_timeline_users_private">%d 属于私人性质</string>
+
+  <string name="edit_store">编辑</string>
+
+  <string name="comment_store_title">这家商店的评价</string>
+  <string name="private_followers_message">%d 粉丝属于私人性质</string>
+  <string name="private_following_message">您正在关注 %d 私人用户/商店</string>
+
+  <string name="reviews_expand_button">%d 回复</string>
+  <string name="out_of_space_dialog_title">空间不足</string>
+  <string name="out_of_space_dialog_message">请释放空间以继续。</string>
+  <string name="setting_category_autoupdate">%s 更新</string>
+  <string name="setting_category_autoupdate_title">获取 %s 更新通知</string>
+  <string name="setting_category_autoupdate_message">定期检查 %s 的新版本</string>
+  <string name="store_added_long_time_suggestion_message">显示长期</string>
+  <string name="store_added_short_time_suggestion_message">显示刚创建</string>
+  <string name="create_store_displayable_created_store_long_term_message">长期</string>
+  <string name="create_store_displayable_explore_long_term_button">查看商店</string>
+  <string name="create_store_displayable_empty_description_message">为您的商店添加描述。良好的描述可以帮助您获得更多粉丝和互动。</string>
+
+  <string name="addressbook_increase_network_message">拓展人脉。</string>
+  <string name="addressbook_connect_with_friends_message">联络好友。</string>
+  <string name="addressbook_sync">同步通讯簿</string>
+  <string name="not_now">现在不要</string>
+  <string name="follow_friends">关注好友</string>
+  <string name="addressbook_data_about"><b>%1$s 如何使用您的数据</b>
+ 
+
+%1$s 将搜索您的通讯簿，查找正在使用我们的应用商店的好友和家人。
+我们只会利用此信息让您接触到更多可与您共享应用相关内容的人，
+进而改善您的 %1$s 体验。
+
+
+为了保护您的隐私，我们不会将任何明确的私人数据
+发送至 %1$s 服务器。我们将使用您的数据创建匿名签名（哈希），
+而该哈希无法逆向转换成原始联系人信息。
+ </string>
+  <string name="addressbook_success">成功！</string>
+  <string name="addressbook_allow_friends_find">允许好友找到您</string>
+  <string name="google">Google</string>
+  <string name="done">完成</string>
+  <string name="addressbook_share_phone">共享电话号码，让好友可以在 %s 上轻松找到您</string>
+  <string name="addressbook_phone_number">电话号码</string>
+  <string name="addressbook_insuccess_connection">我们无法连接您的通讯簿！</string>
+  <string name="addressbook_invite_friends">邀请好友加入！</string>
+  <string name="addressbook_thanks_for_connecting">感谢您的连接</string>
+  <string name="addressbook_success_connected_friends">我们已成功让您与使用 %2$s 的 %1$s 位好友取得联系</string>
+  <string name="addressbook_2nd_msg">%1$s 将浏览您的通讯簿，查找使用我们的应用商店的
+好友和家人。为了保护您的隐私，我们不会将任何私人数据发送至 %1$s 
+服务器</string>
+  <string name="addressbook_3rd_msg">了解详情</string>
+
+  <string name="join_company">加入 %s</string>
+  <string name="login_company">登录 %s</string>
+  <string name="connect_with_facebook">关联 Facebook</string>
+  <string name="connect_with_google">关联 Google</string>
+  <string name="accept_terms_signup">加入 Aptoide 即表示您同意 Aptoide 的条款和条件以及开发人员内容政策。</string>
+  <string name="recover_password">找回密码</string>
+  <string name="email">电子邮件</string>
+  <string name="create_password">创建密码</string>
+  <string name="store_suspended_message">商店暂停</string>
+
+  <string name="add_store_dialog_title">您可以在不同的商店找到专为您量身定制的内容</string>
+  <string name="add_store_dialog_top_stores">发现顶级店铺</string>
+  <string name="add_store_dialog_top_stores_small_text">并找到独家内容！</string>
+
+<string name="follow_store">关注商店</string>
+
+  <string name="fragment_spot_share_preview_start_button">开始</string>
+
+  <string name="activity_login_title">登录</string>
+  <string name="activity_login_forgot_password_button">忘记密码？</string>
+  <string name="activity_login_button">登录</string>
+  <string name="activity_login_sign_up_button">注册</string>
+  <string name="view_credentials_username_hint">电子邮件</string>
+  <string name="view_credentials_password_hint">密码</string>
+
+  <string name="permission_access_deny">对外部存储进行读写访问被拒</string>
+  <string name="permission_account_deny">获取帐户被拒</string>
+
+  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">我们未找到任何使用 %1$s 的联系人</string>
+  <string name="address_book_twitter_error">Twitter 身份验证错误</string>
+  <string name="follow_my_store">您好，请在此关注我的 %1$s 商店</string>
+  <string name="addressbook_about">关于通讯簿</string>
+  <string name="addressbook_we_werent_able_to_connect_you">我们无法联系您</string>
+
+<string name="wizard_title_viewpager_one">现已推出时间线！</string>
+  <string name="wizard_sub_title_viewpager_three"><b>查找与你的应用兴趣相同的人群。</b>
+<b>评价与分享。</b></string>
+  <string name="wizard_sub_sub_title_viewpager_three">加入我们！</string>
+
+  <string name="facebook_login_cancelled">已取消 Facebook 登录</string>
+  <string name="google_login_cancelled">Google 登录失败</string>
+  <string name="login_separator_text">或者使用电子邮件连接</string>
+
+  <string name="store_meta_apps">应用
+%s</string>
+  <string name="store_meta_following">关注
+%s</string>
+  <string name="store_meta_followers">关注者
+%s</string>
+  <string name="spot_share_line_1">与好友分享应用</string>
+  <string name="spot_share_line_2">互通电话，无需互联网</string>
+
 </resources>

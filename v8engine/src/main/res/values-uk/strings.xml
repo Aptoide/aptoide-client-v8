@@ -106,26 +106,12 @@
     <string name="storage_access_permission_request_message">Будь ласка, відкрийте доступ до пам\'яті вашого телефону, щоб ми змогли завантажити та встановити додаток.</string>
 
     <string name="wizard_skip"><b>Пропустити</b></string>
-    <string name="wizard_welcome_message"><b> Ласкаво просимо!</b> </string>
     <string name="wizard_sub_title_viewpager_one">Розпочати<b> безпечну</b> та <b>веселу</b> подорож</string>
-    <string name="wizard_description_part_one_viewpager_one"><b> Шукайте</b> додатки з поміткою
-\"Перевірено\" для безпечного встановлення додатків</string>
-    <string name="wizard_description_part_two_viewpager_one"><b> найдіть</b> додатки,
-які ви хотіли,
-але не могли знайти.</string>
-
     <string name="wizard_title_viewpager_two"><b> Стрічка додатків</b> </string>
     <string name="wizard_sub_title_viewpager_two">авантажуйте <b>  найновіші додатки</b>, знаходьте <b> тематичні магазини</b>
 та отримуйте <b>  персоналізований контент.</b> </string>
 
     <string name="wizard_title_viewpager_three"><b> приєднатися до спільноти</b></string>
-    <string name="wizard_description_part_one_viewpager_three"><b>Підпишіться </b> на своїх друзів</string>
-    <string name="wizard_description_part_two_viewpager_three"><b>Коментуйте</b> та оцінюйте додатки</string>
-    <string name="wizard_description_part_three_viewpager_three"><b>Cтворіть</b> ваш магазин</string>
-    <string name="wizard_register_now_button">Зареєструватися зараз</string>
-    <string name="wizard_be_a_part_of_aptoide">Приєднатися до Aptoide!</string>
-    <string name="wizard_or_login"><u> або Залогінитися </u></string>
-
     <string name="you_need_to_be_logged_in">Вам треба залогінитись</string>
     <string name="follow">Підписатися</string>
     <string name="followed">Ви підписалися</string>

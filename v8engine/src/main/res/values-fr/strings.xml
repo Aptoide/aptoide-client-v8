@@ -30,7 +30,7 @@ Bloquez la mise à jour des applications. Allez sur l\'onglet des Mises à jour 
     <string name="fragment_social_timeline_general_error">Il y a un petit souci. Pouvez-vous réessayer plus tard ?</string>
 
     <string name="displayable_social_timeline_app_update">Mettre à jour</string>
-    <string name="appview_rate_this_app">Évaluer cette application</string>
+    <string name="appview_rate_this_app">Notez l\'application</string>
     <string name="needs_license">Requiert une licence</string>
     <string name="virus">Virus</string>
     <string name="additional_information">Informations additionnelles</string>
@@ -41,7 +41,7 @@ Bloquez la mise à jour des applications. Allez sur l\'onglet des Mises à jour 
     <string name="title">TITRE</string>
     <string name="feedback_not_valid">Merci d\'entrer un sujet valide !</string>
     <string name="ignore_update">Ignorer la mise à jour ?</string>
-    <string name="added_to_scheduled">Ajouté au Menu &gt; Téléchargements Programmés</string>
+    <string name="added_to_scheduled">Ajouté au Menu &gt; Téléchargements Planifiés</string>
     <string name="dark">Sombre</string>
     <string name="light">Clair</string>
 
@@ -94,20 +94,10 @@ Bloquez la mise à jour des applications. Allez sur l\'onglet des Mises à jour 
     <string name="all_stores">Toutes les boutiques</string>
     <string name="followed_stores">Boutiques suivies</string>
     <string name="wizard_skip"><b>IGNORER</b></string>
-    <string name="wizard_welcome_message"><b>Bienvenue !</b></string>
     <string name="wizard_sub_title_viewpager_one">Débutez un voyage <b>sûr</b> et <b>agréable</b>.</string>
-    <string name="wizard_description_part_two_viewpager_one"><b>Découvrez</b> des applications\ndont vous rêviez mais\nque vous ne trouviez pas.</string>
-
     <string name="wizard_sub_title_viewpager_two">Obtenez les <b>applications les plus récentes</b>, recherchez dans des <b>boutiques thématiques</b>\net accédez à du <b>contenu personnalisé.</b></string>
 
     <string name="wizard_title_viewpager_three"><b>Rejoignez la communauté</b></string>
-    <string name="wizard_description_part_one_viewpager_three"><b>Suivez</b> vos amis</string>
-    <string name="wizard_description_part_two_viewpager_three"><b>Évaluez</b> et votez pour les applications</string>
-    <string name="wizard_description_part_three_viewpager_three"><b>Créez</b> votre boutique</string>
-    <string name="wizard_register_now_button">S\'inscrire maintenant</string>
-    <string name="wizard_be_a_part_of_aptoide">Faites partie d\'Aptoide !</string>
-    <string name="wizard_or_login">ou <u>identifiez-vous</u></string>
-
     <string name="you_need_to_be_logged_in">Vous devez être connecté</string>
     <string name="dialog_install_warning_trusted_app_button">Applications approuvées</string>
     <string name="dialog_install_warning_careful_text">Soyez prudent si vous choisissez d\'installer cette application. Elle peut avoir été modifiée et posséder un virus ou un logiciel malveillant.</string>
@@ -127,10 +117,7 @@ Conservez un journal de toutes les applications installées (via %s), incluant l
     <string name="pause_all_downloads">Mettre en pause les téléchargements</string>
     <string name="storage_access_permission_request_message">Merci d\'autoriser l\'accès au stockage de votre téléphone afin de permettre le téléchargement puis l\'installation de cette application.</string>
 
-    <string name="wizard_description_part_one_viewpager_one"><b>Rechercher</b> des apps avec le
-Badge Approuvé pour
-une installation sécurisée.</string>
-    <string name="wizard_title_viewpager_two"><b>Flux d\'Applications</b></string>
+    <string name="wizard_title_viewpager_two">Créez une boutique personnelle<b>Flux d\'Applications</b></string>
     <string name="home_title">Accueil</string>
     <string name="community">Communauté</string>
     <string name="stores">Boutiques</string>
@@ -264,7 +251,6 @@ et ne contient pas de menace !</string>
     <string name="recommended_stores">Boutiques recommandées</string>
   <string name="create_store_displayable_message">Créez une boutique et partagez vos applications !</string>
   <string name="create_store_displayable_button">CRÉER LA BOUTIQUE</string>
-  <string name="create_store_displayable_created_store_message">Bravo, vous avez créé votre boutique !</string>
   <string name="create_store_displayable_explore_button">Explorer</string>
 
   <string name="install_app_inner">" Installer %1$s "</string>
@@ -289,7 +275,7 @@ et ne contient pas de menace !</string>
   <string name="social_timeline_share_dialog_opt_in_text_1">Vos amis pourront vous trouver et vous suivre.</string>
   <string name="social_timeline_share_dialog_installed_and_recommended">Installé et recommandé</string>
 
-  <string name="comment_store">Evaluez cette boutique</string>
+  <string name="comment_store">Notez la boutique</string>
   <string name="be_the_first_to_send_feedback_about_this_store">Soyez le premier à donner votre avis sur cette boutique.</string>
   <string name="social_timeline_share_bar_login">Quelles applications vos amis ont-ils installé ?</string>
   <string name="social_timeline_share_bar_following">Suivez plus de boutiques et connectez-vous à vos amis.</string>
@@ -323,12 +309,7 @@ et ne contient pas de menace !</string>
 
   <string name="social_timeline_shared_by">partagé par %1$s</string>
 
-  <string name="item_payment_button_use">Utiliser</string>
-  <string name="item_payment_button_register">S\'enregistrer</string>
-  <string name="item_payment_approving_text">Approbation en cours...</string>
-  <string name="activity_payment_more_payments_button">Utiliser un autre moyen de paiement</string>
-
-<string name="private_followers_message">%d suiveurs sont privés</string>
+  <string name="private_followers_message">%d suiveurs sont privés</string>
   <string name="private_following_message">vous suivez %d utilisateurs / boutiques privés</string>
 
   <string name="comment_store_title">Avis sur cette boutique</string>
@@ -342,4 +323,107 @@ et ne contient pas de menace !</string>
   <string name="out_of_space_dialog_title">Espace insuffisant</string>
   <string name="out_of_space_dialog_message">Libérez de l\'espace avant de poursuivre.</string>
 
-</resources>
+<string name="timeline"><b>Flux</b></string>
+  <string name="setting_category_autoupdate">%s mises à jour</string>
+  <string name="create_store_displayable_explore_long_term_button">Visiter la boutique</string>
+  <string name="addressbook_connect_with_friends_message">Connectez-vous avec vos amis.</string>
+  <string name="addressbook_success">Succès !</string>
+  <string name="addressbook_allow_friends_find">Permettre aux amis de vous trouver</string>
+  <string name="google">Google</string>
+  <string name="done">Terminé</string>
+  <string name="addressbook_phone_number">Numéro de téléphone</string>
+  <string name="addressbook_invite_friends">Invitez vos amis à vous rejoindre !</string>
+  <string name="login">Identifiant</string>
+  <string name="connect_with_facebook">Se connecter avec Facebook</string>
+  <string name="connect_with_google">Se connecter avec Google</string>
+  <string name="recover_password">Mot de passe oublié</string>
+  <string name="email">Email</string>
+  <string name="password">Mot de passe</string>
+  <string name="create_password">Générer un mot de passe</string>
+
+<string name="create_store_displayable_created_store_short_term_message">Vous venez de créer votre boutique !</string>
+  <string name="setting_category_autoupdate_title">Être notifié des mises à jour pour %s</string>
+  <string name="setting_category_autoupdate_message">Vérifier automatiquement les mises à jour pour %s</string>
+  <string name="create_store_displayable_empty_description_message">Rédigez une description pour votre boutique. Une bonne description est la clef de votre succès.</string>
+
+  <string name="addressbook_increase_network_message">Augmentez votre réseau.</string>
+  <string name="addressbook_sync">Synchroniser votre carnet d\'adresses</string>
+  <string name="not_now">Pas maintenant</string>
+  <string name="follow_friends">Suivre vos amis</string>
+  <string name="addressbook_share_phone">Partagez votre numéro de téléphone afin que vos amis puissent vous trouver facilement sur %s</string>
+  <string name="join_company">Se connecter à %s</string>
+  <string name="login_company">Se connecter à %s</string>
+  <string name="store_added_long_time_suggestion_message">afficher sur le long terme</string>
+  <string name="store_added_short_time_suggestion_message">afficher créé récemment</string>
+  <string name="create_store_displayable_created_store_long_term_message">long terme</string>
+  <string name="addressbook_insuccess_connection">Impossible de se connecter à votre carnet d\'adresses !</string>
+  <string name="addressbook_thanks_for_connecting">Merci de vous être connecté</string>
+  <string name="addressbook_success_connected_friends">Vous êtes maintenant connectés avec %1$s amis qui utilisent %2$s</string>
+
+  <string name="accept_terms_signup">En vous inscrivant vous acceptez les Conditions d\'Utilisation d\'Aptoide et la Politique de Contenu pour développeurs.</string>
+  <string name="addressbook_data_about"><b>Comment %1$s utilise vos données ?</b>
+ 
+
+%1$s va parcourir votre carnet d\'adresses à la recherche de contacts qui utilisent notre boutique d\'applications.
+Nous utiliserons ces informations pour améliorer votre expérience %1$s en vous connectant à plus de personnes
+qui peuvent partager des contenus liés aux applications avec vous.
+ 
+
+Afin de protéger votre vie privée, toutes les données seront chiffrées lors de l\'envoi sur les serveurs de %1$s.
+Une signature anonyme (hash) sera créee avec vos données et ce hash ne permet pas de retrouver les infos du contact.
+ </string>
+  <string name="addressbook_2nd_msg">%1$s va rechercher dans votre carnet d\'adresses vos amis ou famille
+utilisant notre App Store. Pour protéger votre vie privée, aucune donnée ne sera envoyée sur
+les serveurs de %1$s</string>
+  <string name="addressbook_3rd_msg">En savoir plus</string>
+
+  <string name="store_suspended_message">Boutique suspendue</string>
+
+  <string name="add_store_dialog_top_stores">DÉCOUVREZ LES MEILLEURES BOUTIQUES</string>
+  <string name="add_store_dialog_top_stores_small_text">et accédez à des contenus exclusifs !</string>
+
+<string name="add_store_dialog_title">Vous pourrez trouver du contenu exclusif et sur-mesure dans les boutiques</string>
+  <string name="setting_schdwntitle">Téléchargements planifiés</string>
+  <string name="settings">Paramètres</string>
+  <string name="facebook">Facebook</string>
+  <string name="twitter">Twitter</string>
+  <string name="backup_apps">Sauvegarder les Apps</string>
+
+  <string name="my_account">Mon compte</string>
+  <string name="spot_share">Partager</string>
+  <string name="fragment_spot_share_preview_start_button">Démarrer</string>
+
+  <string name="activity_login_title">S\'identifier</string>
+  <string name="activity_login_forgot_password_button">Mot de passe perdu ?</string>
+  <string name="activity_login_button">Se connecter</string>
+  <string name="activity_login_sign_up_button">S\'inscrire</string>
+  <string name="view_credentials_username_hint">Email</string>
+  <string name="view_credentials_password_hint">Mot de passe</string>
+
+  <string name="addressbook_about">A propos du Carnet d\'adresses</string>
+  <string name="follow_store">S\'abonner à la boutique</string>
+
+  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">Aucun contact utilisant %1$s n\'a été trouvé</string>
+  <string name="follow_my_store">Bonjour, abonnez-vous à ma boutique %1$s ici</string>
+  <string name="addressbook_we_werent_able_to_connect_you">Impossible de vous connecter</string>
+
+<string name="permission_access_deny">les accès en lecture / écriture au stockage externe ont été refusés</string>
+  <string name="permission_account_deny">l\'accès aux comptes a été refusé</string>
+
+  <string name="address_book_twitter_error">Erreur d\'autorisation Twitter</string>
+  <string name="facebook_login_cancelled">Connexion Facebook annulée</string>
+  <string name="google_login_cancelled">Connexion Google annulée</string>
+  <string name="login_separator_text">Ou connectez-vous avec votre adresse mail</string>
+
+  <string name="store_meta_apps">Apps
+%s</string>
+  <string name="store_meta_following">Vous suivez
+%s</string>
+  <string name="store_meta_followers">Vous êtes suivis par
+%s</string>
+  <string name="spot_share_line_1">Partager des apps avec vos amis</string>
+  <string name="spot_share_line_2">De téléphone à téléphone, sans connexion Internet</string>
+
+<string name="wizard_sub_sub_title_viewpager_three">Rejoignez-nous !</string>
+
+  </resources>

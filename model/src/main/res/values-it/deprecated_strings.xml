@@ -164,13 +164,6 @@ Errori che hai notato</string>
 
     <string name="feedback_send_button">Invia Feedback</string>
 
-    <string name="my_account">Il Mio Account</string>
-    <string name="setting_schdwntitle">Download Pianificati</string>
-    <string name="settings">Impostazioni</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Backup Applicazioni</string>
-
     <string name="menu_context_reparse">Ricarica</string>
     <string name="menu_context_remove">Rimuovi</string>
 
@@ -414,9 +407,9 @@ Errori che hai notato</string>
     <string name="abTest1_label_3">Installa</string>
 
 
-    <string name="notification_timeline_new_likes">Hai %s nuovi Mi piace. Dai un\'occhiata al tuo Diario Social!</string>
-    <string name="notification_timeline_new_comments">Hai %s nuovi commenti. Dai un\'occhiata al tuo Diario Social!</string>
-    <string name="notification_timeline_activity">Hai %1$s nuovi commenti e %2$s Mi piace. Dai un\'occhiata al tuo Diario Social!</string>
+    <string name="notification_timeline_new_likes">Hai %s nuovi Mi piace. Dai un\'occhiata al Diario Social!</string>
+    <string name="notification_timeline_new_comments">Hai %s nuovi commenti. Dai un\'occhiata al Diario Social!</string>
+    <string name="notification_timeline_activity">Hai %1$s nuovi commenti e %2$s Mi piace. Dai un\'occhiata al Diario Social!</string>
     <string name="notification_social_timeline">Diario Social Aptoide. Dacci un\'occhiata!</string>
     <string name="notification_timeline_posts">I tuoi amici hanno installato nuove applicazioni!</string>
 
@@ -485,9 +478,7 @@ Errori che hai notato</string>
     <string name="friends_to_invite">Tutti gli altri amici di Facebook in Aptoide</string>
     <string name="upload_app_backup_apps_installed">È necessario innanzitutto caricare quest\'app nel tuo negozio. È possibile utilizzare Aptoide Backup Apps.</string>
     <string name="upload_app_backup_apps_not_installed">È necessario innanzitutto caricare quest\'app nel tuo negozio. Si prega di installare e utilizzare Aptoide Backup Apps.</string>
-    <string name="setting_category_autoupdate">Aggiornamento Automatico %s</string>
-    <string name="setting_category_autoupdate_title">Abilitare l\'aggiornamento automatico %s</string>
-    <string name="social_timeline_notifications_sum2">Abilitare la Cronologia di Notifiche Social di Aptoide. Riceverai le ultime notizie sulla barra di notifica.</string>
+    <string name="social_timeline_notifications_sum2">Abilitare le Notifiche per il Diario Social di Aptoide. Riceverai le ultime notizie sulla barra di notifica.</string>
     <string name="ignored">Ignorato</string>
     <string name="application_signature_blacklisted">La firma dell\'applicazione non è una firma Attendibile sulla piattaforma Aptoide Anti-Malware perché è stata utilizzata per firmare un\'altra applicazione che non corrisponde alla firma correlata al legittimo sviluppatore.</string>
     <string name="scanned_manually_by_aptoide_team">Scansionato manualmente da Aptoide Team:</string>
@@ -507,4 +498,6 @@ Errori che hai notato</string>
     <string name="change_theme_soon">Prossimamente</string>
   <string name="critical">Critico</string>
 
+  <string name="stand_by">Stand-by</string>
+  <string name="setting_general">Generali</string>
   </resources>

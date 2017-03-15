@@ -18,4 +18,8 @@
   <string name="WidgetProvider_timestamp_year_ago">১ বছর পূর্বে</string>
   <string name="WidgetProvider_timestamp_years_ago">%s বছর পূর্বে</string>
 
+<string name="share_options_share_external">শেয়ারের মাধ্যম সমূহ
+ শেয়ার যার দ্বারা...</string>
+  <string name="share_options_share_in_timeline">অ্যাপস সময়ক্রমে শেয়ারকরণ</string>
+
 </resources>

@@ -164,13 +164,6 @@ Các lỗi sai bạn sẽ thấy</string>
 
     <string name="feedback_send_button">Gửi phản hồi</string>
 
-    <string name="my_account">Tài Khoản Của Tôi</string>
-    <string name="setting_schdwntitle">Tải Về Dự Kiến</string>
-    <string name="settings">Cài đặt</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Ứng dụng hỗ trợ</string>
-
     <string name="menu_context_reparse">Tải lại</string>
     <string name="menu_context_remove">Xóa</string>
 
@@ -479,8 +472,6 @@ Các lỗi sai bạn sẽ thấy</string>
     <string name="error_occured_retry_later">Đã xảy ra lỗi. Aptoide sẽ tự động thử lại sau.</string>
     <string name="rollback_updated_at">Cập nhật tại %1$s</string>
     <string name="friends_to_invite">Tất cả bạn bè Facebook khác trong Aptoide</string>
-    <string name="setting_category_autoupdate">%s tự động cập nhật</string>
-    <string name="setting_category_autoupdate_title">Kích hoạt %s tự động cập nhật</string>
     <string name="no_updates_available_retoric">Mọi thứ đã được cập nhật!</string>
     <string name="no_new_updates_available">Không có bản cập nhật mới nào!</string>
     <string name="search_minimum_chars">Truy vấn tìm kiếm phải có ít nhất 2 kí tự.</string>

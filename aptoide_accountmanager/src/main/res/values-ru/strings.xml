@@ -4,7 +4,7 @@
     <string name="password">Пароль</string>
     <string name="link_device_webinstall">Связать аккаунт с Webinstall</string>
     <string name="register">Авторизация</string>
-    <string name="forgot_passwd">Забыли пароль?</string>
+    <string name="forgot_passwd"><u>Забыли пароль?</u></string>
     <string name="fields_cannot_empty">Пожалуйста, проверьте свой email и пароль.</string>
     <string name="password_validation_text">"Пароль должен быть не менее 8 символов и должен включать в себя
  как минимум одну букву, один номер или специальный символ (!@#$%*)
@@ -28,14 +28,13 @@
     <string name="accept_terms">"При регистрации вы соглашаетесь с условиями использования Aptoide и
  политикой контента для разработчиков
  "</string>
-    <string name="no_email_and_pass_error_message">"Пожалуйста введите email и пароль, чтобы
- зарегистрироваться.
+    <string name="no_email_and_pass_error_message">"Пожалуйста введите email и пароль
  "</string>
-    <string name="no_pass_error_message">Пожалуйста, введите пароль, чтобы зарегистрироваться.</string>
-    <string name="no_email_error_message">Чтобы зарегистрироваться, введите email.</string>
+    <string name="no_pass_error_message">Пожалуйста, введите пароль</string>
+    <string name="no_email_error_message">Пожалуйста, введите e-mail</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-    <string name="facebook_email_permission_regected_message">"Aptoide нужен ваш email, чтобы создать
+    <string name="facebook_email_permission_regected_message">"Нам нужен ваш email, чтобы создать
  учетную запись
  "</string>
     <string name="error_invalid_grant">Неверная комбинация имени пользователя и пароля</string>
@@ -54,10 +53,10 @@
     <string name="ws_error_REPO_5">Название магазина должно иметь не менее 3 знаков.</string>
     <string name="ws_error_REPO_6">Магазин с таким именем уже существует, вам нужно выбрать
  другое.</string>
-    <string name="ws_error_WOP_9">Этот email уже зарегистрирован в Aptoide</string>
-    <string name="ws_error_WOP_10">Этот email еще не зарегистрирован в Aptoide</string>
+    <string name="ws_error_WOP_9">Этот e-mail уже зарегистрирован</string>
+    <string name="ws_error_WOP_10">Этот e-mail еще не зарегистрирован</string>
     <string name="ws_error_QUOTA_2">Дневной лимит на создание пользователей исчерпан на сегодня. Если вы хотите
- увеличить этот лимит – пожалуйста, свяжитесь с поддержкой по адресу support@aptoide.com или добавьте новых пользователей завтра</string>
+ увеличить этот лимит – пожалуйста, свяжитесь с поддержкой или добавьте новых пользователей завтра</string>
     <string name="ws_error_AUTH_1">Неверный E-mail или пароль для учетной записи (после обновления
  имени)</string>
     <string name="login_successful">Вход успешно выполнен</string>
@@ -92,7 +91,7 @@
   <string name="next">Дальше</string>
 
   <string name="create_store_title">Создайте свой магазин</string>
-  <string name="create_store_header"><b>Создайте свой магазин</b> и делитесь вашим выбором приложений с сообществом %s. <b>Попробуйте</b></string>
+  <string name="create_store_header"><b>Создайте свой магазин</b> и делитесь вашим выбором приложений с сообществом %s.<b>Попробуйте</b></string>
   <string name="create_store_name">Выберите название для своего магазина %s</string>
   <string name="create_store_name_inserted">Название вашего магазина</string>
   <string name="create_store_theme">Тема магазина</string>
@@ -125,5 +124,27 @@
   <string name="nothing_inserted_user">Пожалуйста, введите имя пользователя и фото (необязательно), чтобы создать профиль</string>
   <string name="create_user_bad_photo">Пожалуйста, выберите изображение с разрешением как минимум 300x300</string>
   <string name="create_profile_logged_in_activity_title">Вход произведен</string>
+
+<string name="facebook_grant_permission_button">Разрешить</string>
+  <string name="ws_error_API_1">Изображение не является допустимым.</string>
+    <string name="edit_store_header">Дополните ваш магазин красивой картинкой и привлекательным описанием</string>
+  <string name="create_store_description_title">Описание вашего магазина</string>
+  <string name="create_store_description_hint">Описание вашего магазина</string>
+  <string name="edit_store_title">Редактировать ваш магазин</string>
+  <string name="save_edit_store">Сохранить</string>
+
+  <string name="image_requirements_popup_message">Изображение имеет следующие проблемы:
+</string>
+  <string name="image_requirements_error_min_height">- Высота меньше минимального значения в 600px
+</string>
+  <string name="image_requirements_error_max_height">- Высота превышает максимальное значение в 10240px
+</string>
+  <string name="image_requirements_error_min_width">- Ширина меньше минимального значения в 600px
+</string>
+  <string name="image_requirements_error_max_width">- Ширина превышает максимальное значение в 10240px
+</string>
+  <string name="image_requirements_error_max_file_size">- Размер превышает максимальное значение в 5MB
+</string>
+  <string name="image_requirements_error_popup_title">Картинка</string>
 
 </resources>

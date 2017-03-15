@@ -67,7 +67,7 @@ Magpanatili ng isang log ng lahat ng iyong nainstalang app (sa pamamagitan ng %s
 
     <string name="fragment_social_timeline_aptoide_team">Koponan ng Aptoide</string>
     <string name="displayable_social_timeline_store_latest_apps_headline">Ang store na ito ay mayroong bagong Apps</string>
-    <string name="displayable_social_timeline_app_update_name">App %1$s</string>
+    <string name="displayable_social_timeline_app_update_name">App na %1$s</string>
     <string name="displayable_social_timeline_app_has_update">"mayroong  %1$s"</string>
     <string name="displayable_social_timeline_article_get_app_button">Kumuha ng app %1$s</string>
     <string name="displayable_social_timeline_app_update_version">Bersyon %1$s</string>
@@ -108,35 +108,21 @@ Magpanatili ng isang log ng lahat ng iyong nainstalang app (sa pamamagitan ng %s
     <string name="followed_stores">Mga Nasundang Store</string>
     <string name="storage_access_permission_request_message">Paki-pahintulutan ang akses sa imbakan ng iyong telepono para mai-download at mainstala namin ang app na ito.</string>
 
-    <string name="wizard_welcome_message"><b>Maligayang Pagdating</b></string>
-    <string name="wizard_sub_title_viewpager_one">Simulan ang isang <b>ligtas</b>at<b>kasiya-siyang </b>paglalakbay.</string>
-    <string name="wizard_description_part_one_viewpager_one"><b>Hanapin ang</b>mga app na may
-Mapagkakatiwalaang sagisag (badge) para sa
-ligtas na instala.</string>
-    <string name="wizard_description_part_two_viewpager_one"><b>Tuklasin</b>ang mga app na
-nais mo, ngunit
-hindi kailanman natagpuan.</string>
+    <string name="wizard_sub_title_viewpager_one"><b>Pinakamagandang mga app bidyo at balita</b> sa iisang lugar.
+Tuklasin ang mga apps sa pamamagitan ng iyong <b>mga kaibigan</b></string>
+    <string name="wizard_title_viewpager_two">Magkaroon ng iyong sariling Store<b>Mga App Timeline</b></string>
+    <string name="wizard_sub_title_viewpager_two">Ipasadya ang iyong store <b>upang makapagbahagi ng app
+ sa mga kaibigan</b> at sa <b>Komunidad ng Aptoide.</b></string>
 
-    <string name="wizard_title_viewpager_two"><b>Mga App Timeline</b></string>
-    <string name="wizard_sub_title_viewpager_two">Kunin ang<b>mga pinakabagong app</b>, hanapin ang<b>mga pampakay na store</b>
-at maakses ang<b>pinasadyang nilalaman</b></string>
-
-    <string name="wizard_title_viewpager_three"><b>Sumali sa komunidad</b></string>
-    <string name="wizard_description_part_one_viewpager_three"><b>Sundan</b>ang iyong mga kaibigan</string>
-    <string name="wizard_description_part_two_viewpager_three"><b>I-rebyu</b> at Graduhan ang mga app</string>
-    <string name="wizard_description_part_three_viewpager_three"><b>Lumikha</b> ng iyong Store</string>
-    <string name="wizard_register_now_button">Mag-rehistro ngayon</string>
-    <string name="wizard_be_a_part_of_aptoide">Maging bahagi ng Aptoide!</string>
-    <string name="wizard_or_login"><u>o Mag-login</u></string>
-
+    <string name="wizard_title_viewpager_three">Maging bahagi<b>Sumali sa komunidad</b></string>
     <string name="you_need_to_be_logged_in">Kailangan na ikaw ay naka-log in</string>
     <string name="follow">Sundan</string>
     <string name="followed">Sinusundan</string>
     
-    <string name="dialog_install_warning_credibility_text">"Bago magpatuloy, i-tsek ang
- kredibilidad ng Store at iba pang mga komento ng user. Ang Aptoide ay palaging nagrerekomenda na iinstala mo lamang ang %1$s     Mapapagkatiwalaang mga app."</string>
+    <string name="dialog_install_warning_credibility_text">Bago magpatuloy, i-tsek ang
+ kredibilidad ng Store at iba pang mga komento ng user. Ang Aptoide ay palaging nagrerekomenda na iinstala mo lamang ang %1$s Mapapagkatiwalaang mga app.</string>
     <string name="appview_good_app_guaranteed">Magandang App ay Garantisado!</string>
-    <string name="appview_good_app_description">Ang mga aplikasyong ito ay pumasa sa pang-seguridad na test para sa virus, malware at iba pang malisyosong pag-atake at hindi naglalaman ng anumang mga banta!</string>
+    <string name="appview_good_app_description">Ang mga aplikasyong ito ay pumasa sa pang-seguridad na test para sa virus, malware at iba pang mga malisyosong pag-atake at hindi naglalaman ng anumang mga banta!</string>
 
     <string name="unfollow_yes_no">Sigurado kang gusto mong hindi na sumunod?</string>
     <string name="unfollow">Hindi na susunod</string>
@@ -166,7 +152,7 @@ at maakses ang<b>pinasadyang nilalaman</b></string>
     <string name="applications">Mga aplikasyon</string>
     <string name="arcade">Arkada</string>
     <string name="arcade_action">Arkada at Aksyon</string>
-    <string name="board">Mga Board na Laro</string>
+    <string name="board">Ang Board</string>
     <string name="books_reference">Mga Libro at Reperensiya</string>
     <string name="brain_puzzle">Utak at Palaisipan</string>
     <string name="business">Negosyo</string>
@@ -236,7 +222,7 @@ at maakses ang<b>pinasadyang nilalaman</b></string>
 
   <string name="apps_timeline"><b>Mga App Timeline</b></string>
   <string name="displayable_social_timeline_article_related_to">Kaugnay sa %1$s</string>
-  <string name="appstimeline_update_app">app</string>
+  <string name="appstimeline_update_app">ang app</string>
   <string name="customtabs_open_native_app">Buksan sa App</string>
 
 
@@ -249,5 +235,182 @@ at maakses ang<b>pinasadyang nilalaman</b></string>
 <string name="downgrade_warning_dialog">Sa pagbababa (downgrading) maaaring mawala sa yo ang mga kaugnay ng app na datos at maaari kang ma-log out sa account ng app.</string>
 
   <string name="displayable_social_timeline_similar_to">katulad ng %1$s</string>
+
+<string name="password">Password</string>
+  <string name="login">Mag-login</string>
+  <string name="my_account">Aking Account</string>
+  <string name="spot_share">Mamataan &amp; Ibahagi</string>
+  <string name="setting_schdwntitle">Naka-iskedyul na mga Download</string>
+  <string name="settings">Mga Setting</string>
+  <string name="facebook">Facebook</string>
+  <string name="twitter">Twitter</string>
+  <string name="backup_apps">Mga Backup Apps</string>
+
+  <string name="include_system_apps_title">Kabilang ang sistemang apps</string>
+  <string name="include_system_apps_summary">Sa pagtsetsek nito, ikaw ay maaabisuhan sa mga update ng sistemang apps (apps na ininstala ng tagagawa ng aparato)</string>
+  <string name="remote_install_menu_title">I-instala sa Telebisyon</string>
+  <string name="install_on_tv_mobile_error">Siguraduhin na ang iyong aparato ay nakakonekta sa Wi-Fi upang magamit ang tampok na ito.</string>
+  <string name="remote_install_title">Mamili ng target na aparato</string>
+  <string name="remote_install_success">Ang app ay iniinstala na ngayon</string>
+  <string name="remote_install_fail">Ang remote na instalasyon ay nabigo</string>
+  <string name="remote_install_nodevices">Walang mga aparato ang natagpuan</string>
+  <string name="remote_install_notinstallated">Mayroon ka bang Aptoide TV na nakainstala sa iyong Android TV?
+ http://aptoi.de/tv</string>
+  <string name="remote_install_nowifi">Walang koneksyon ng Wi-Fi</string>
+  <string name="remote_install_nowifi_tip">Pakiusap na paganahin at kumonekta sa isang Wi-Fi network</string>
+  <string name="remote_install_empty_list">Naghahanap…</string>
+  <string name="remote_install_tip">Paki-siguro na mayroon kang AndroidTV na nakakonekta sa network</string>
+  <string name="remote_install_retry">Subukang muli</string>
+  <string name="remote_install_help">Tulong</string>
+  <string name="wizard_title_viewpager_one">Ngayon ay may Timeline na!</string>
+  <string name="wizard_sub_title_viewpager_three"><b>Mahanap ang mga tao</b> na mayroon din ng iyong mga kinawiwilihang app. 
+<b>Graduhan at ibahagi.</b></string>
+  <string name="wizard_sub_sub_title_viewpager_three">Samahan kami!</string>
+
+  <string name="timeline"><b>Timeline</b></string>
+  <string name="freed_space">%s pinalaya</string>
+  <string name="storage_dialog_title">I-clear ang Aptoide na Imbakan (Aptoid Storage)</string>
+  <string name="clear_cache_dialog_message">Sigurado ka ba na gusto mong alisin ang lahat ng mga icon, imahe, na-download na apk, obb, datos ng webservice, …</string>
+  <string name="clear_cache_summary">Inaalis ang mga icon, imahe, na-download na apk, obb, datos ng webservice, …</string>
+  <string name="clearcache_title">I-clear ang Imbakan (Storage)</string>
+
+  <string name="recommended_stores">Mga Nirerekomendang Store</string>
+  <string name="create_store_displayable_message">Lumikha ng iyong Store ngayon at simulan ang pamamahagi ng iyong apps!</string>
+  <string name="create_store_displayable_button">LUMIKHA NG STORE</string>
+  <string name="my_store_created_displayable_message">Iyong Android App store</string>
+  <string name="create_store_displayable_created_store_short_term_message">Kakalikha mo lamang ng iyong Store!</string>
+  <string name="create_store_displayable_explore_message">Pumasok at galugarin ang lahat ng mga posibilidad</string>
+  <string name="create_store_displayable_explore_button">Galugarin</string>
+  <string name="follow_store">Sundan ang Store</string>
+
+  <string name="install_app_outter_pt1">Ang iyong store ay wala pang mga aplikasyon.</string>
+  <string name="install_app_outter_pt2">at mag-upload ng mga apps para maibahagi sila sa mundo!</string>
+  <string name="install_app_inner">" I-instala %1$s "</string>
+  <string name="open_app_inner">" Buksan %1$s "</string>
+  <string name="downloads_count">Mga Download: %1$s</string>
+  <string name="version_number">Bersyon: %1$s</string>
+  <string name="app_size">Laki: %1$s</string>
+  <string name="comment_on_store">Komento %1$s store</string>
+  <string name="word_this">ito</string>
+
+  <string name="social_timeline_you_will_share">Ang makikita ng iyong mga tagasunod:</string>
+  <string name="social_timeline_share_title">Ibahagi ang prebyu ng kard</string>
+  <string name="social_timeline_share_title_checkbox">Gawing pribado ang aking user profile sa Apps Timeline. Ipakita/ibahagi lamang ang impormasyon ng aking store.</string>
+  <string name="social_timeline_share_title_checkbox_fb">Pahintulutan na maging publiko ang aking user profile sa Apps Timeline</string>
+  <string name="social_timeline_share_dialog_title">Salamat sa pagbabahagi</string>
+  <string name="social_timeline_share_dialog_opt_in_text_1">Ang iyong mga kaibigan ay magagawang mahanap ka at masundan ka.</string>
+  <string name="social_timeline_share_dialog_opt_in_text_2">Kung gusto mong maging pribado ang iyong profile sa Apps Timeline, i-edit ang iyong privacy settings sa <b>www.aptoide.com</b>.</string>
+  <string name="social_timeline_share_dialog_opt_out_text_1">Dahil sa ginawang pagtago ng iyong profile, ang iyong mga kaibigan ay hindi magagawang mahanap at masundan ka sa Apps Timeline.</string>
+  <string name="social_timeline_share_dialog_opt_out_text_2">I-akses ang <b>www.aptoide.com</b>, mag-login sa iyong account at pumunta sa <b>Settings</b> upang baguhin ang mga depinisyon ng privacy.</string>
+  <string name="social_timeline_share_dialog_installed_and_recommended">Ininstala at Nirerekomenda</string>
+  <string name="social_timeline_share_bar_login">Ano ang iniinstala ng iyong mga kaibigan?</string>
+  <string name="social_timeline_share_bar_following">Sundan ang mas marami pang mga Store at kumonekta sa iyong mga kaibigan.</string>
+  <string name="social_timeline_share_bar_followers">Pabutihin ang iyong store upang magkaroon ng mas maraming mga tagasunod.</string>
+  <string name="social_timeline_followers_fragment_title">%d (mga) tagasunod</string>
+  <string name="social_timeline_following_fragment_title">Sinusundan ng %d (mga) tao</string>
+  <string name="social_timeline_share_soon">Ang ibinahagi ay ilalathala mamaya</string>
+  <string name="social_timeline_recommends">Nagrerekomenda</string>
+  <string name="private_profile_create_store">Para magkaroon ng pribadong profile, kailangan mong lumikha ng isang store</string>
+  <string name="social_timeline_shared_by">ibinahagi ni %1$s</string>
+  <string name="social_timeline_who_liked">Sino ang nag-like</string>
+  <string name="social_timeline_users_private">%d ay pribado</string>
+
+  <string name="edit_store">I-edit</string>
+
+  <string name="comment_store">Komento sa Store</string>
+  <string name="comment_store_title">Mga komento sa Store na ito</string>
+  <string name="be_the_first_to_send_feedback_about_this_store">Maging una sa pagpapadala ng katugunan tungkol sa store na ito</string>
+
+
+  <string name="timeline_followers">Mga Tagasunod %d</string>
+  <string name="timeline_followed">Sinusundan %d</string>
+  <string name="timeline_stats_followers">Mga Tagasunod</string>
+  <string name="timeline_login_message">Ano ang iniinstala ng iyong mga kaibigan?</string>
+  <string name="private_followers_message">%d mga tagasunod ay pribado</string>
+  <string name="private_following_message">Sinusundan mo ang %d pribadong mga user/store</string>
+
+  <string name="reviews_expand_button">%d Mga Tugon</string>
+  <string name="out_of_space_dialog_title">Naubusan ng espasyo</string>
+  <string name="out_of_space_dialog_message">Pakiusap, magpalaya ng espasyo upang makapagpatuloy.</string>
+  <string name="setting_category_autoupdate">%s Mga Update</string>
+  <string name="setting_category_autoupdate_title">Kumuha ng %s Mga notipikasyon sa Update</string>
+  <string name="setting_category_autoupdate_message">Pana-panahong magtsek para sa %s mga bagong bersyon</string>
+  <string name="store_added_long_time_suggestion_message">ipakita ang pangmatagalang termino</string>
+  <string name="store_added_short_time_suggestion_message">ipakita ang kakalikha pa lamang</string>
+  <string name="create_store_displayable_created_store_long_term_message">pangmatagalang termino</string>
+  <string name="create_store_displayable_explore_long_term_button">Tingnan ang Store</string>
+  <string name="create_store_displayable_empty_description_message">Magdagdag ng isang deskripsyon para sa iyong Store. Ang isang magandang deskripsyon ay tinutulungan kang makakuha ng mas maraming mga tagasunod at interaksyon.</string>
+  <string name="fragment_spot_share_preview_start_button">Magsimula</string>
+
+  <string name="join_company">Sumama %s</string>
+  <string name="login_company">Mag-login %s</string>
+  <string name="connect_with_facebook">Kumonekta sa Facebook</string>
+  <string name="connect_with_google">Kumonekta sa Google</string>
+  <string name="accept_terms_signup">Sa pagsali sa Aptoide ikaw ay sumasang-ayon sa Mga Termino at Kondisyon ng Aptoide at Polisiya ng Nilalaman para sa mga Developer.</string>
+  <string name="recover_password">Kuning muli ang iyong password</string>
+  <string name="email">Email</string>
+  <string name="create_password">Lumikha ng Password</string>
+  <string name="store_suspended_message">Store ay suspendido</string>
+  <string name="facebook_login_cancelled">Facebook login ay nakansela</string>
+  <string name="google_login_cancelled">Google login ay nabigo</string>
+  <string name="login_separator_text">O kumonekta gamit ang iyong email</string>
+
+  <string name="add_store_dialog_title">Maaari kang makahanap ng eksklusibong pinasadyang nilalaman na ginawa para lamang sa yo sa iba-ibang mga store</string>
+  <string name="add_store_dialog_top_stores">TUKLASIN ANG MGA NANGUNGUNANG STORE</string>
+  <string name="add_store_dialog_top_stores_small_text">at makahanap ng eksklusibong nilalaman!</string>
+
+  <string name="activity_login_title">Mag-login</string>
+  <string name="activity_login_forgot_password_button">Nakalimutan ang password?</string>
+  <string name="activity_login_button">Mag-login</string>
+  <string name="activity_login_sign_up_button">Mag-Sign Up</string>
+  <string name="view_credentials_username_hint">Email</string>
+  <string name="view_credentials_password_hint">Password</string>
+
+  <string name="permission_access_deny">akses sa pagbabasa at pagsusulat sa panlabas na imbakan (internal storage) ay hindi pinayagan</string>
+  <string name="permission_account_deny">akses upang makakuha ng mga account ay hindi pinayagan</string>
+
+  <string name="addressbook_increase_network_message">Dagdagan ang iyong network.</string>
+  <string name="addressbook_connect_with_friends_message">Kumonekta sa mga kaibigan.</string>
+  <string name="addressbook_sync">I-sync ang Libro ng Address</string>
+  <string name="not_now">Hindi ngayon</string>
+  <string name="follow_friends">Sundan Ang Mga Kaibigan</string>
+  <string name="addressbook_data_about"><b>Paano Ginagamit ng %1$s ang iyong Datos</b>
+
+
+Ang %1$s ay maghahanap sa iyong libro ng address para sa mga kaibigan at pamilya na gumagamit ng iyong App Store. Gagamitin lamang namin ang impormasyong ito upang pagbutihin ang iyong %1$s na karanasan sa pamamagitan ng pagkonekta sa yo sa mas maraming tao na maaaring magbahagi sa yo ng nilalaman na may kaugnayan sa apps.
+
+
+Para maprotektahan ang iyong privacy, walang malinaw na pribadong datos
+ang ipapadala sa mga %1$s server. Isang anonimong lagda (hash) ay malilikha sa pamamagitan ng iyong datos
+at ang hash na iyon ay hindi maaaring ibalik sa orihinal na impormasyon ng contact.
+ </string>
+  <string name="addressbook_success">Tagumpay!</string>
+  <string name="addressbook_allow_friends_find">Pahintulutan ang mga kaibigan na hanapin ka</string>
+  <string name="google">Google</string>
+  <string name="done">Gawa na</string>
+  <string name="addressbook_share_phone">Ibahagi ang iyong numero ng telepono upang madali kang mahanap ng iyong mga kaibigan sa %s</string>
+  <string name="addressbook_phone_number">Numero ng telepono</string>
+  <string name="addressbook_insuccess_connection">Hindi namin nagawang makakonekta sa iyong libro ng address (address book)!</string>
+  <string name="addressbook_invite_friends">Imbitahin ang mga kaibigan na samahan ka!</string>
+  <string name="addressbook_thanks_for_connecting">Salamat sa pagkonekta</string>
+  <string name="addressbook_success_connected_friends">Matagumpay naming naikonekta ka sa %1$s mga kaibigan na gumagamit ng %2$s</string>
+  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">Wala kaming nahanap na sinumang mga contact na gumagamit ng %1$s</string>
+  <string name="addressbook_2nd_msg">Ang %1$s ay mag-babrowse sa iyong libro ng address para sa mga kaibigan at pamilya
+ na gumagamit ng aming App Store. Para maprotektahan ang iyong privacy, walang pribadong datos ang ipadadala sa mga %1$s na server</string>
+  <string name="addressbook_3rd_msg">MATUTUNAN ANG HIGIT PA</string>
+  <string name="address_book_twitter_error">Twitter awtorisasyon ng pagkakamali</string>
+  <string name="follow_my_store">Hello, sundan ang aking %1$s Store dito</string>
+  <string name="store_meta_apps">Mga Apps
+%s</string>
+  <string name="store_meta_following">Sinusundan
+%s</string>
+  <string name="store_meta_followers">Mga Tagasunod
+%s</string>
+  <string name="addressbook_about">Tungkol sa Libro ng Address (Address Book)</string>
+  <string name="addressbook_we_werent_able_to_connect_you">Hindi namin nagawang ikonekta ka</string>
+
+
+  <string name="spot_share_line_1">Magbahagi ng apps sa iyong mga kaibigan</string>
+  <string name="spot_share_line_2">Telepono sa telepono, walang Internet</string>
 
 </resources>

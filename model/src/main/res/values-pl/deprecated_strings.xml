@@ -164,13 +164,6 @@
 
     <string name="feedback_send_button">Wyślij opinię</string>
 
-    <string name="my_account">Moje konto</string>
-    <string name="setting_schdwntitle">Zaplanowane pobrania</string>
-    <string name="settings">Ustawienia</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Kopia zapasowa</string>
-
     <string name="menu_context_reparse">Odśwież</string>
     <string name="menu_context_remove">Usuń</string>
 

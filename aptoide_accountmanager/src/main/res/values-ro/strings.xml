@@ -4,7 +4,7 @@
     <string name="password">Parolă</string>
     <string name="link_device_webinstall">Conectează contul cu Webinstall</string>
     <string name="register">Înregistrare</string>
-    <string name="forgot_passwd">Ai uitat parola?</string>
+    <string name="forgot_passwd"><u>Ai uitat parola?</u></string>
     <string name="fields_cannot_empty">Te rugăm să îți verifici adresa de e-mail și parola.</string>
     <string name="password_validation_text">"Parola trebuie să aibă cel puțin 8 caractere și cel puțin o literă
 și un număr sau caractere speciale (!@#$%*)
@@ -29,13 +29,12 @@
   <string name="login_successful">Autentificare reușită</string>
   <string name="unknown_error">Eroare necunoscută</string>
     <string name="accept_terms">"Înregistrându-te declari că ești de acord cu Termenii Serviciului și
-Politica Conținutului pentru Developeri
+Politica Conținutului pentru Dezvoltatori
  "</string>
-    <string name="no_email_and_pass_error_message">"Te rugăm să introduci o adresă de e-mail și o parolă pentru
-a te înregistra.
+    <string name="no_email_and_pass_error_message">"Te rugăm să introduci o adresă de e-mail și o parolă.
  "</string>
-  <string name="no_pass_error_message">Introdu o parolă pentru a te înregistra.</string>
-  <string name="no_email_error_message">Introdu o adresă de e-mail pentru a te înregistra.</string>
+  <string name="no_pass_error_message">Introdu o parolă</string>
+  <string name="no_email_error_message">Introdu o adresă de e-mail</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
   <string name="error_invalid_grant">Combinație nume de utilizator și parolă nevalidă</string>
@@ -47,7 +46,7 @@ a te înregistra.
   <string name="ws_error_AUTH_100">Autentificare cu Google nereușită. Te rugăm să îți verifici contul Google (este posibil să fie nevoie să îți validezi adresa de e-mail)</string>
   <string name="ws_error_AUTH_102">Autentificare cu Facebook nereușită. Te rugăm să îți verifici contul de Facebook (este posibil să fie nevoie să îți validezi adresa de e-mail)</string>
   <string name="ws_error_invalid_grant">Combinație nume de utilizator și parolă nevalidă</string>
-  <string name="facebook_email_permission_regected_message">"Aptoide are nevoie de adresa ta de e-mail pentru a crea un
+  <string name="facebook_email_permission_regected_message">"Avem nevoie de e-mailul tău pentru a-ți crea un
 cont
  "</string>
   <string name="user_cancelled">Anulat de utilizator</string>
@@ -59,10 +58,10 @@ linii de pauză.</string>
     <string name="ws_error_REPO_6">Numele magazinului este deja atribuit, va trebui să alegi
 alt nume.</string>
   <string name="ws_error_WOP_3">Există deja un magazin cu acest nume. Te rugăm să alegi un alt nume pentru magazinul tău.</string>
-  <string name="ws_error_WOP_9">Această adresă de e-mail există deja în Aptoide</string>
-  <string name="ws_error_WOP_10">Adresa de e-mail nu există în Aptoide</string>
-  <string name="ws_error_QUOTA_2">Limita zilnică pentru utilizatori creați a fost atinsă astăzi. Dacă ai nevoie
-de o limită mai mare, te rugăm să contactezi echipa de suport la support@aptoide.com sau să creezi mai mulți utilizatori mâine</string>
+  <string name="ws_error_WOP_9">Această adresă de e-mail există deja</string>
+  <string name="ws_error_WOP_10">Adresa de e-mail nu este încă înregistrată</string>
+  <string name="ws_error_QUOTA_2">Limita zilnică pentru utilizatori noi a fost atinsă pentru ziua de azi. Dacă ai nevoie
+de o limită mai mare, contactează echipa de suport sau creează mai mulți utilizatori mâine</string>
     <string name="ws_error_AUTH_1">Adresa de e-mail sau parola nu sunt valide pentru autentificare (actualizare
 nume)</string>
   <string name="user_created">Utilizator creat</string>
@@ -124,5 +123,27 @@ nume)</string>
   <string name="nothing_inserted_user">Te rugăm să introduci un nume de utilizator și o fotografie (opțional) pentru a-ți crea profilul</string>
   <string name="create_user_bad_photo">Te rugăm să alegi o imagine cu o rezoluție de cel puțin 300x300</string>
   <string name="create_profile_logged_in_activity_title">Autentificat</string>
+
+<string name="facebook_grant_permission_button">Acordă permisiune</string>
+  <string name="ws_error_API_1">Imaginea nu este validă.</string>
+    <string name="edit_store_header">Personalizează-ți magazinul cu o imagine frumoasă și o descriere atractivă</string>
+  <string name="create_store_description_title">Descrierea Magazinului tău</string>
+  <string name="create_store_description_hint">Descrierea magazinului tău</string>
+  <string name="edit_store_title">Editează-ți magazinul</string>
+  <string name="save_edit_store">Salvează</string>
+
+  <string name="image_requirements_popup_message">Imaginea are următoarele probleme:
+</string>
+  <string name="image_requirements_error_min_height">- Înălțimea minimă este mai mică de 600px
+</string>
+  <string name="image_requirements_error_max_height">- Înălțimea maximă este mai mare de 10240px
+</string>
+  <string name="image_requirements_error_min_width">- Lățimea minimă este mai mică de 600px
+</string>
+  <string name="image_requirements_error_max_width">- Lățimea maximă este mai mare de 10240px
+</string>
+  <string name="image_requirements_error_max_file_size">- Dimensiunea maximă este mai mare de 5 MB
+</string>
+  <string name="image_requirements_error_popup_title">Imagine</string>
 
 </resources>

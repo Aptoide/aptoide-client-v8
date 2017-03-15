@@ -19,4 +19,7 @@
 
   <string name="more_info">更多信息</string>
 
-  </resources>
+  <string name="share_options_share_external">分享途径...</string>
+  <string name="share_options_share_in_timeline">在应用时间表中分享</string>
+
+</resources>

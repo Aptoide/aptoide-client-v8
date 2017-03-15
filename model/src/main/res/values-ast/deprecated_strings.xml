@@ -10,7 +10,6 @@
     <string name="ip_blacklisted">IP nel llistáu prietu</string>
     <string name="apk_not_found">Nun s\'alcontró l\'apk</string>
     <string name="version">Versión</string>
-    <string name="settings">Axustes</string>
     <string name="size">Tamañu</string>
     <string name="install">Instalar</string>
     <string name="error_MARG_202">Pase o usuariu/contraseña non válidos</string>
@@ -229,10 +228,6 @@
 
   <string name="feedback_send_button">Unviar feedback</string>
 
-  <string name="my_account">La mio cuenta</string>
-  <string name="setting_schdwntitle">Descargues planificaes</string>
-  <string name="facebook">Facebook</string>
-  <string name="twitter">Twitter</string>
   <string name="menu_context_reparse">Recargar</string>
   <string name="menu_context_remove">Desaniciar</string>
 

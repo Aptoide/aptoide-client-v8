@@ -4,14 +4,13 @@
     <string name="password">Password</string>
     <string name="link_device_webinstall">Collega account con Webinstall</string>
     <string name="register">Registrati</string>
-    <string name="forgot_passwd">Dimenticato la password?</string>
+    <string name="forgot_passwd"><u>Password dimenticata?</u></string>
     <string name="fields_cannot_empty">Per favore controlla il tuo indirizzo e-mail e la password.</string>
     <string name="unknown_error">Errore sconosciuto</string>
-    <string name="no_email_and_pass_error_message">"Si prega di inserire indirizzo e-mail e password per
- registrarsi.
+    <string name="no_email_and_pass_error_message">"Si prega di inserire indirizzo e-mail e password
  "</string>
-    <string name="no_pass_error_message">Inserire una password per registrarsi.</string>
-    <string name="no_email_error_message">Inserire una e-mail per registrarsi.</string>
+    <string name="no_pass_error_message">Inserire una password</string>
+    <string name="no_email_error_message">Inserire una e-mail</string>
     <string name="password_validation_text">"La password deve essere lunga almeno 8 caratteri e dovrebbe
  contenere almeno una lettera e un numero o caratteri speciali (!@#$%*)
  "</string>
@@ -36,7 +35,7 @@ le Norme dei Contenuti per gli Sviluppatori di Aptoide
  "</string>
     <string name="default_account_type">cm.aptoide.PT</string>
 
-    <string name="facebook_email_permission_regected_message">"Aptoide ha bisogno della tua e-mail per creare un
+    <string name="facebook_email_permission_regected_message">"Abbiamo bisogno della tua e-mail per creare un
 account
  "</string>
     <string name="error_invalid_grant">Combinazione nome utente e password non valida</string>
@@ -54,10 +53,10 @@ account
     <string name="ws_error_REPO_5">Il nome dello store deve essere lungo almeno 3 caratteri.</string>
     <string name="ws_error_REPO_6">Il nome dello store è già stato utilizzato, è necessario sceglierne un
  altro.</string>
-    <string name="ws_error_WOP_9">L\'indirizzo email fornito esiste già in Aptoide</string>
-    <string name="ws_error_WOP_10">L\'indirizzo email fornito non esiste ancora in Aptoide</string>
+    <string name="ws_error_WOP_9">L\'indirizzo email fornito esiste già</string>
+    <string name="ws_error_WOP_10">L\'indirizzo email fornito non è ancora registrato</string>
     <string name="ws_error_QUOTA_2">Raggiunto il limite giornaliero di utenti creati per oggi. Se si desidera
- aumentare questo limite si prega di contattare il supporto su support@aptoide.com o di creare più utenti domani</string>
+ aumentare questo limite si prega di contattare il supporto o di creare più utenti domani</string>
     <string name="ws_error_AUTH_1">E-mail o password non validi per effettuare il login (all\'aggiornamento del
  nome)</string>
     <string name="login_successful">Login effettuato</string>
@@ -107,10 +106,10 @@ account
 
 
   <string name="create_profile_pub_pri_suc_login">Login effettuato con successo</string>
-  <string name="create_profile_pub_pri_suc_login_sub_text">Ora i tuoi amici possono seguirti e vedere le tue condivisioni su Apps Timeline!</string>
-  <string name="create_profile_pub_pri">La Apps Timeline di Aptoide</string>
+  <string name="create_profile_pub_pri_suc_login_sub_text">Ora i tuoi amici possono seguirti e vedere le tue condivisioni sul Diario delle App!</string>
+  <string name="create_profile_pub_pri">Diario delle App di Aptoide</string>
   <string name="create_profile_pub_pri_sub_text_1">Ti permette di seguire i tuoi amici e familiari</string>
-  <string name="create_profile_pub_pri_sub_text_2">Con la Apps Timeline puoi condividere consigli sulle app e articoli coi tuoi follower, che vedranno quello che condividi.</string>
+  <string name="create_profile_pub_pri_sub_text_2">Con il Diario delle App puoi condividere consigli sulle app e articoli coi tuoi follower, che vedranno quello che condividi.</string>
   <string name="create_profile_pub_pri_sub_text_3">Puoi scegliere di rendere il profilo privato e non usufruire delle funzioni di condivisione.</string>
   <string name="create_profile_pub_pri_make_priv">Rendi privato il mio profilo</string>
 
@@ -125,5 +124,27 @@ account
   <string name="nothing_inserted_user">Si prega di inserire un nome utente e una foto (opzionale) per creare il tuo profilo</string>
   <string name="create_user_bad_photo">Si prega di scegliere un\'immagine con risoluzione di almeno 300 x 300</string>
   <string name="create_profile_logged_in_activity_title">Accesso effettuato</string>
+
+<string name="facebook_grant_permission_button">Concedi autorizzazione</string>
+  <string name="ws_error_API_1">L\'immagine non è valida.</string>
+    <string name="edit_store_header">Personalizza il tuo store con una bella immagine e una descrizione accattivante</string>
+  <string name="create_store_description_title">La descrizione del tuo Store</string>
+  <string name="create_store_description_hint">La descrizione del tuo store</string>
+  <string name="edit_store_title">Modifica il tuo Store</string>
+  <string name="save_edit_store">Salva</string>
+
+  <string name="image_requirements_popup_message">L\'immagine presenta le seguenti problematiche:
+</string>
+  <string name="image_requirements_error_min_height">-L\'altezza minima è minore di 600px
+</string>
+  <string name="image_requirements_error_max_height">-L\'altezza massima è maggiore di 10240px
+</string>
+  <string name="image_requirements_error_min_width">-La larghezza minima è minore di 600px
+</string>
+  <string name="image_requirements_error_max_width">-La larghezza massima è maggiore di 10240px
+</string>
+  <string name="image_requirements_error_max_file_size">-La dimensione massima è maggiore di 5 MB
+</string>
+  <string name="image_requirements_error_popup_title">Immagine</string>
 
 </resources>

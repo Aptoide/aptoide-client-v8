@@ -111,27 +111,13 @@ que no se siga actualizando.</string>
     <string name="followed_stores">Tiendas seguidas</string>
     <string name="storage_access_permission_request_message">Permite el acceso al almacenamiento de tu teléfono para que podamos descargar e instalar esta aplicación.</string>
 
-    <string name="wizard_welcome_message"><b>¡Bienvenido/a!</b></string>
-    <string name="wizard_sub_title_viewpager_one">Comienza un viaje <b>seguro</b> y <b>agradable</b>.</string>
-    <string name="wizard_description_part_one_viewpager_one"><b>Busca</b> aplicaciones con el
-distintivo de fiable para
-una instalación segura.</string>
-    <string name="wizard_description_part_two_viewpager_one"><b>Descubre</b> aplicaciones que
-querías, pero
-que nunca encontraste.</string>
+    <string name="wizard_sub_title_viewpager_one"><b>Mejores aplicaciones de vídeos y noticias</b> en un mismo lugar. 
+Descubre aplicaciones gracias a tus <b>amigos.</b></string>
+    <string name="wizard_title_viewpager_two">Ten tu propia Tienda<b>Timeline de las aplicaciones</b></string>
+    <string name="wizard_sub_title_viewpager_two">Personaliza tu tienda <b>para compartir aplicaciones
+ con tus amigos</b> y la<b>Comunidad Aptoide.</b></string>
 
-    <string name="wizard_title_viewpager_two"><b>Timeline de las aplicaciones</b></string>
-    <string name="wizard_sub_title_viewpager_two">Consigue las <b>últimas aplicaciones</b>, encuentra <b>tiendas temáticas</b>
-y accede a <b>contenidos personalizados.</b></string>
-
-    <string name="wizard_title_viewpager_three"><b>Únete a la comunidad</b></string>
-    <string name="wizard_description_part_one_viewpager_three"><b>Sigue</b> a tus amigos</string>
-    <string name="wizard_description_part_two_viewpager_three"><b>Reseña</b> y evalúa aplicaciones</string>
-    <string name="wizard_description_part_three_viewpager_three"><b>Crea</b> tu tienda</string>
-    <string name="wizard_register_now_button">Regístrate ahora</string>
-    <string name="wizard_be_a_part_of_aptoide">¡Sé una parte de Aptoide!</string>
-    <string name="wizard_or_login"><u>o inicia sesión</u></string>
-
+    <string name="wizard_title_viewpager_three">Sé parte<b>Únete a la comunidad</b></string>
     <string name="you_need_to_be_logged_in">Tienes que iniciar sesión</string>
     <string name="follow">Seguir</string>
     <string name="followed">Siguiendo</string>
@@ -168,11 +154,11 @@ y accede a <b>contenidos personalizados.</b></string>
     <string name="applications">Aplicaciones</string>
     <string name="arcade">Arcade</string>
     <string name="arcade_action">Arcade y Acción</string>
-    <string name="board">Tablero</string>
+    <string name="board">Panel</string>
     <string name="books_reference">Libros y Referencia</string>
     <string name="brain_puzzle">Mente y Puzzle</string>
     <string name="business">Negocios</string>
-    <string name="card">Cartas</string>
+    <string name="card">Carta</string>
     <string name="cards_casino">Cartas y Casino</string>
     <string name="casino">Casino</string>
     <string name="casual">Casual</string>
@@ -220,7 +206,7 @@ y accede a <b>contenidos personalizados.</b></string>
     <string name="travel_local">Viajes y Local</string>
     <string name="trending">Tendencias</string>
     <string name="trivia">Curiosidades</string>
-    <string name="word">Palabras</string>
+    <string name="word">Palabra</string>
     <string name="libraries_demo">Bibliotecas y Demo</string>
     <string name="shopping">Compras</string>
     <string name="weather">El tiempo</string>
@@ -269,14 +255,13 @@ y accede a <b>contenidos personalizados.</b></string>
   <string name="create_store_displayable_message">Crea ahora tu tienda y empieza a compartir tus aplicaciones.</string>
   <string name="create_store_displayable_button">CREAR TIENDA</string>
   <string name="my_store_created_displayable_message">Tu tienda de aplicaciones Android</string>
-  <string name="create_store_displayable_created_store_message">¡Acabas de crear tu Tienda!</string>
   <string name="create_store_displayable_explore_message">Entra y explora todas las posibilidades</string>
   <string name="create_store_displayable_explore_button">Explora</string>
 
   <string name="install_app_outter_pt1">Tu tienda no tiene aplicaciones todavía.</string>
   <string name="install_app_outter_pt2">y sube aplicaciones para compartirlas con todo el mundo.</string>
-  <string name="install_app_inner">Instala %1$s</string>
-  <string name="open_app_inner">Abre %1$s</string>
+  <string name="install_app_inner">" Instalar %1$s "</string>
+  <string name="open_app_inner">" Abrir %1$s "</string>
   <string name="downloads_count">Descargas: %1$s</string>
   <string name="version_number">Versión: %1$s</string>
   <string name="app_size">Tamaño: %1$s</string>
@@ -323,4 +308,123 @@ y accede a <b>contenidos personalizados.</b></string>
 
   <string name="timeline_stats_followers">Seguidores</string>
   <string name="timeline_login_message">¿Qué están instalando tus amigos?</string>
+<string name="password">Contraseña</string>
+  <string name="login">Iniciar sesión</string>
+  <string name="timeline"><b>Timeline</b></string>
+  <string name="create_store_displayable_created_store_short_term_message">¡Acabas de crear tu tienda!</string>
+  <string name="social_timeline_shared_by">compartido por %1$s</string>
+  <string name="social_timeline_who_liked">A quien le gustó</string>
+  <string name="social_timeline_users_private">%d son privados</string>
+
+  <string name="comment_store_title">Comentarios sobre esta Tienda</string>
+  <string name="private_followers_message">%d seguidores son privados</string>
+  <string name="private_following_message">estás siguiendo %d usuarios/tiendas privadas</string>
+
+  <string name="reviews_expand_button">%d Respuestas</string>
+  <string name="out_of_space_dialog_title">No queda espacio</string>
+  <string name="out_of_space_dialog_message">Por favor, libera espacio para poder continuar.</string>
+  <string name="setting_category_autoupdate">%s Actualizaciones</string>
+  <string name="setting_category_autoupdate_title">Obtén %s notificaciones de actualizaciones</string>
+  <string name="setting_category_autoupdate_message">Buscar nuevas versiones de %s de forma periódica</string>
+  <string name="store_added_long_time_suggestion_message">mostrar largo plazo</string>
+  <string name="store_added_short_time_suggestion_message">mostrar las acabadas de crear</string>
+  <string name="create_store_displayable_created_store_long_term_message">largo plazo</string>
+  <string name="create_store_displayable_explore_long_term_button">Ver Tienda</string>
+  <string name="create_store_displayable_empty_description_message">Añade una descripción para tu tienda. Una buena descripción te ayudará a obtener más seguidores e interacción.</string>
+
+  <string name="addressbook_increase_network_message">Incrementa tu red.</string>
+  <string name="addressbook_connect_with_friends_message">Conecta con tus amigos.</string>
+  <string name="addressbook_sync">Sincronizar el libro de direcciones</string>
+  <string name="not_now">No ahora</string>
+  <string name="follow_friends">Seguir amigos</string>
+  <string name="addressbook_data_about"><b>Cómo utiliza tus datos %1$s</b>
+ 
+
+%1$s buscará en tu libro de direcciones a tus amigos y familiares que estén utilizando nuestra Tienda de Aplicaciones.
+Sólo utilizaremos esta información para mejorar tu experiencia %1$s conectándote con más gente
+que pueda compartir contigo contenidos relaccionados con aplicaciones.
+
+
+Para proteger tu privacidad, no se enviarán datos privados
+a los servidores %1$s. Se creará una firma anónima (hash) con tus datos
+y el hash nunca será revertido a la información de contacto original.
+ </string>
+  <string name="addressbook_success">Hecho!</string>
+  <string name="addressbook_allow_friends_find">Permite que los amigos te encuentren</string>
+  <string name="google">Google</string>
+  <string name="done">Hecho</string>
+  <string name="addressbook_share_phone">Comparte tu número de teléfono para que tus amigos te puedan encontrar fácilmente en %s</string>
+  <string name="addressbook_phone_number">Número de teléfono</string>
+  <string name="edit_store">Editar</string>
+
+  <string name="addressbook_insuccess_connection">¡No pudimos acceder a tu libro de direcciones!</string>
+  <string name="addressbook_invite_friends">¡Invita a amigos a que se unan a ti!</string>
+  <string name="addressbook_thanks_for_connecting">Gracias por conectarte</string>
+  <string name="addressbook_success_connected_friends">Te hemos conectado con éxito a %1$s amigos que utilizan %2$s</string>
+  <string name="addressbook_2nd_msg">%1$s buscará en tu libro de direcciones a tus amigos y familia
+ que estén utilizando nuestra Tienda de Aplicaciones. Para proteger tu privacidad, no enviaremos datos privados a nuestros
+ servidores %1$s</string>
+  <string name="addressbook_3rd_msg">LEE MÁS</string>
+
+  <string name="join_company">Unirse a %s</string>
+  <string name="login_company">Iniciar sesión %s</string>
+  <string name="connect_with_facebook">Conectarse con Facebook</string>
+  <string name="connect_with_google">Conectarse con Google</string>
+  <string name="accept_terms_signup">Al unirte a Aptoide estás de acuerdo con sus Términos y Condiciones y con la Política de Contenidos de los Desarrolladores.</string>
+  <string name="recover_password">Recupera tu contraseña</string>
+  <string name="email">Email</string>
+  <string name="create_password">Crear contraseña</string>
+
+<string name="my_account">Mi cuenta</string>
+  <string name="setting_schdwntitle">Descargas programadas</string>
+  <string name="settings">Configuración</string>
+  <string name="facebook">Facebook</string>
+  <string name="twitter">Twitter</string>
+  <string name="backup_apps">Realizar copia de seguridad de las aplicaciones</string>
+
+  <string name="spot_share">Compartir</string>
+  <string name="follow_store">Seguir Tienda</string>
+
+  <string name="fragment_spot_share_preview_start_button">Comenzar</string>
+
+  <string name="store_suspended_message">Almacenamiento suspendido</string>
+
+  <string name="add_store_dialog_top_stores">Descubre Tiendas Top</string>
+  <string name="add_store_dialog_top_stores_small_text">y busca contenido exclusivo!</string>
+
+  <string name="activity_login_title">Login</string>
+  <string name="activity_login_forgot_password_button">¿Se te olvidó tu contraseña?</string>
+  <string name="activity_login_button">Login</string>
+  <string name="activity_login_sign_up_button">Regístrate</string>
+  <string name="view_credentials_username_hint">Email</string>
+  <string name="view_credentials_password_hint">Contraseña</string>
+
+  <string name="permission_access_deny">acceso a leer y escribir en el almacenamiento externo fue denegado</string>
+  <string name="permission_account_deny">El acceso a obtener cuentas fue denegado</string>
+
+  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">No encontramos ningún contacto que esté utilizando %1$s</string>
+  <string name="address_book_twitter_error">Error de autorización de Twitter</string>
+  <string name="follow_my_store">Hola, sigue mi tienda %1$s aquí</string>
+  <string name="addressbook_about">Acerca de la Libreta de direcciones</string>
+  <string name="addressbook_we_werent_able_to_connect_you">No pudimos conectar</string>
+
+<string name="add_store_dialog_title">Puedes encontrar contenidos exclusivos pensados para ti en distintas tiendas</string>
+  <string name="wizard_title_viewpager_one">¡Ahora con Timeline!</string>
+  <string name="wizard_sub_title_viewpager_three"><b>Busca gente</b> que comparta tus intereses respecto a las aplicaciones. 
+<b>Evalúa y comparte.</b></string>
+  <string name="wizard_sub_sub_title_viewpager_three">¡Únete a nosotros!</string>
+
+  <string name="facebook_login_cancelled">Inicio de sesión con Facebook cancelado</string>
+  <string name="google_login_cancelled">Inicio de sesión con Google cancelado</string>
+  <string name="login_separator_text">O conéctate utilizando tu email</string>
+
+  <string name="store_meta_apps">Aplicaciones
+%s</string>
+  <string name="store_meta_following">Siguiendo
+%s</string>
+  <string name="store_meta_followers">Seguidores
+%s</string>
+  <string name="spot_share_line_1">Comparte aplicaciones con tus amigos</string>
+  <string name="spot_share_line_2">De teléfono a teléfono, sin Internet</string>
+
 </resources>

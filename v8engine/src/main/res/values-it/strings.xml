@@ -106,25 +106,10 @@ app installate (via %s) compresa la versione e la data di installazione.</string
     <string name="followed_stores">Store Seguiti</string>
     <string name="storage_access_permission_request_message">Si prega di consentire l\'accesso alla memoria del telefono in modo che da poter scaricare e installare quest\'applicazione.</string>
 
-    <string name="wizard_welcome_message"><b>Benvenuto!</b></string>
-    <string name="wizard_description_part_one_viewpager_one"><b>Cerca</b>le app con il 
-Simbolo di Affidabilità 
-per un\'installazione sicura.</string>
-    <string name="wizard_description_part_two_viewpager_one"><b>Scopri</b> le app che
-desideravi, ma 
-che non avevi ancora trovato.</string>
+    <string name="wizard_sub_title_viewpager_two">Personalizza il tuo Store <b> per condividere app 
+con i tuoi amici </b> e la <b>Community di Aptoide.</b></string>
 
-    <string name="wizard_sub_title_viewpager_two">Ottieni le <b>ultime app</b>, trova gli <b>store tematici</b>
-ed accedi <b>a contenuti personalizzati</b></string>
-
-    <string name="wizard_title_viewpager_three"><b>Unisci alla comunità</b></string>
-    <string name="wizard_description_part_one_viewpager_three"><b>Segui</b> i tuoi amici</string>
-    <string name="wizard_description_part_two_viewpager_three"><b>Recensisci</b> e Vota app</string>
-    <string name="wizard_description_part_three_viewpager_three"><b>Crea</b> il tuo Store</string>
-    <string name="wizard_register_now_button">Registrati ora</string>
-    <string name="wizard_be_a_part_of_aptoide">Sii parte di Aptoide!</string>
-    <string name="wizard_or_login"><u>oppure Login</u></string>
-
+    <string name="wizard_title_viewpager_three">Entra a far parte<b>Unisci alla comunità</b></string>
     <string name="you_need_to_be_logged_in">Devi essere loggato</string>
     <string name="follow">Segui</string>
     <string name="followed">Seguiti</string>
@@ -132,8 +117,9 @@ ed accedi <b>a contenuti personalizzati</b></string>
     <string name="rate">Vota</string>
     <string name="rate_app">Vota %s</string>
     <string name="tap_a_star">Tocca una stella per votare</string>
-    <string name="wizard_title_viewpager_two"><b>Cronologia App</b></string>
-    <string name="wizard_sub_title_viewpager_one">Inizia un viaggio <b>sicuro</b> e <b>piacevole</b>.</string>
+    <string name="wizard_title_viewpager_two">Crea uno Store tutto tuo<b>Diario delle App</b></string>
+    <string name="wizard_sub_title_viewpager_one"><b>Le migliori app video e news</b> in un unico posto. 
+Scopri nuove app tramite i tuoi <b>amici.</b></string>
     <string name="appview_good_app_guaranteed">Ottima App Garantita!</string>
     <string name="appview_good_app_description">Quest\'applicazione ha superato il test di sicurezza per virus, malware e altri attacchi dannosi e non
 contiene minacce!</string>
@@ -156,7 +142,7 @@ contiene minacce!</string>
     <string name="community">Community</string>
     <string name="stores">Store</string>
     <string name="updates">Aggiornamenti</string>
-    <string name="social_timeline">Cronologia Social</string>
+    <string name="social_timeline">Diario Social</string>
     <string name="downloads">Download</string>
     <string name="latest_reviews">Ultime Recensioni</string>
     <string name="latest_comments">Ultimi Commenti</string>
@@ -230,11 +216,11 @@ contiene minacce!</string>
     <string name="summer_apps">App Estive</string>
     <string name="play_it">Gioca!</string>
 
-<string name="board">Giochi di Società</string>
+<string name="board">Di Società</string>
     <string name="subscribers">Abbonati</string>
   <string name="apps">App</string>
 
-  <string name="apps_timeline"><b>Cronologia App</b></string>
+  <string name="apps_timeline"><b>Diario delle App</b></string>
   <string name="displayable_social_timeline_article_related_to">Relativo a %1$s</string>
   <string name="appstimeline_update_app">app</string>
   <string name="customtabs_open_native_app">Aprire in App</string>
@@ -277,14 +263,13 @@ contiene minacce!</string>
   <string name="create_store_displayable_message">Crea il tuo Store ora e comincia a condividere le tue app!</string>
   <string name="create_store_displayable_button">CREA STORE</string>
   <string name="my_store_created_displayable_message">Il tuoi Store per App Android</string>
-  <string name="create_store_displayable_created_store_message">Hai appena creato il tuo Store!</string>
   <string name="create_store_displayable_explore_message">Entra e esplora tutte le possibilità</string>
   <string name="create_store_displayable_explore_button">Esplora</string>
 
   <string name="install_app_outter_pt1">Il tuo Store non ha ancora applicazioni.</string>
   <string name="install_app_outter_pt2">e carica app da condividere con il mondo!</string>
-  <string name="install_app_inner">Installa %1$s</string>
-  <string name="open_app_inner">Apri %1$s</string>
+  <string name="install_app_inner">" Installa %1$s "</string>
+  <string name="open_app_inner">" Apri %1$s "</string>
   <string name="downloads_count">Download: %1$s</string>
   <string name="version_number">Versione: %1$s</string>
   <string name="app_size">Dimensione: %1$s</string>
@@ -293,12 +278,12 @@ contiene minacce!</string>
 
   <string name="social_timeline_you_will_share">Cosa vedranno i tuoi follower:</string>
   <string name="social_timeline_share_title">Condividi la preview della carta</string>
-  <string name="social_timeline_share_title_checkbox">Rendi il mio profilo utente privato sulla Apps Timeline. Mostra/condividi soltanto le informazioni del mio Store.</string>
-  <string name="social_timeline_share_title_checkbox_fb">Permetti al mio profilo utente di essere pubblico sulla Apps Timeline</string>
+  <string name="social_timeline_share_title_checkbox">Rendi il mio profilo utente privato sul Diario delle App. Mostra/condividi soltanto le informazioni del mio Store.</string>
+  <string name="social_timeline_share_title_checkbox_fb">Permetti al mio profilo utente di essere pubblico sul Diario delle App</string>
   <string name="social_timeline_share_dialog_title">Grazie per la condivisione</string>
   <string name="social_timeline_share_dialog_opt_in_text_1">I tuoi amici potranno trovarti e seguirti.</string>
-  <string name="social_timeline_share_dialog_opt_in_text_2">Se vuoi che il tuo profilo sia privato sulla Apps Timeline modifica le impostazioni sulla privacy su <b>www.aptoide.com</b>.</string>
-  <string name="social_timeline_share_dialog_opt_out_text_1">Nascondendo il tuo profilo i tuoi amici non potranno trovarti e seguirti sulla Apps Timeline.</string>
+  <string name="social_timeline_share_dialog_opt_in_text_2">Se vuoi che il tuo profilo sia privato sul Diario delle App modifica le impostazioni sulla privacy su <b>www.aptoide.com</b>.</string>
+  <string name="social_timeline_share_dialog_opt_out_text_1">Nascondendo il tuo profilo i tuoi amici non potranno trovarti e seguirti sul Diario delle App.</string>
   <string name="social_timeline_share_dialog_opt_out_text_2">Accedi a <b>www.aptoide.com</b>, effettua il login al tuo account e vai su <b>Impostazioni</b> per cambiare le impostazioni sulla privacy.</string>
   <string name="social_timeline_share_dialog_installed_and_recommended">Installate e Consigliate</string>
   <string name="social_timeline_share_bar_login">Cosa stanno installando i tuoi amici?</string>
@@ -319,6 +304,126 @@ contiene minacce!</string>
   <string name="private_profile_create_store">Per avere un profilo privato, è necessario creare uno Store</string>
 
 
-  <string name="timeline_stats_followers">Followers</string>
+  <string name="timeline_stats_followers">Follower</string>
   <string name="timeline_login_message">Cosa stanno installando i tuoi amici?</string>
+<string name="timeline"><b>Diario</b></string>
+  <string name="create_store_displayable_created_store_short_term_message">Hai appena creato il tuo Store!</string>
+  <string name="social_timeline_shared_by">condiviso da %1$s</string>
+  <string name="social_timeline_who_liked">Chi ha messo \"mi piace\"</string>
+  <string name="social_timeline_users_private">%d sono privati</string>
+
+  <string name="edit_store">Modifica</string>
+
+  <string name="comment_store_title">Commenti su questo Store</string>
+  <string name="private_followers_message">%d followers sono privati</string>
+  <string name="private_following_message">stai seguendo %d utenti/store privati</string>
+
+  <string name="reviews_expand_button">%d Risposte</string>
+  <string name="out_of_space_dialog_title">Spazio esaurito</string>
+  <string name="out_of_space_dialog_message">Liberare dello spazio per poter procedere.</string>
+  <string name="setting_category_autoupdate">Update di %s</string>
+  <string name="setting_category_autoupdate_title">Ricevi notifiche di update di %s</string>
+  <string name="setting_category_autoupdate_message">Controlla periodicamente per nuove versioni di %s</string>
+  <string name="store_added_long_time_suggestion_message">mostra lungo termine</string>
+  <string name="store_added_short_time_suggestion_message">mostra creati di recente</string>
+  <string name="create_store_displayable_created_store_long_term_message">lungo termine</string>
+  <string name="create_store_displayable_explore_long_term_button">Visualizza Store</string>
+  <string name="create_store_displayable_empty_description_message">Aggiungi una descrizione al tuo Store. Una buona descrizione ti aiuta a ottenere più followers e interazioni.</string>
+
+  <string name="addressbook_increase_network_message">Espandi il tuo network.</string>
+  <string name="addressbook_connect_with_friends_message">Entra in contatto con i tuoi amici.</string>
+  <string name="addressbook_sync">Sincronizza Agenda</string>
+  <string name="not_now">Non ora</string>
+  <string name="follow_friends">Segui i tuoi amici</string>
+  <string name="addressbook_data_about"><b>Come %1$s Usa i tuoi Dati</b>
+ 
+
+%1$s cercherà nella tua agenda quali tra i tuoi amici e familiari usano il nostro App Store. Usiamo 
+queste informazioni con il solo scopo
+di migliorare la tua esperienza su %1$s mettendoti in contatto con altre persone 
+che possono condividere con te contenuti riguardanti le app. 
+
+
+Per proteggere la tua nessun dato privato 
+verrà inviato ai server di %1$s. Verrà creata una firma anonima (hash) con i tuoi dati
+e tale hash non potrà essere ritrasformato nelle informazioni originali.
+ </string>
+  <string name="addressbook_success">Successo!</string>
+  <string name="addressbook_allow_friends_find">Permetti ai tuoi amici di trovarti</string>
+  <string name="google">Google</string>
+  <string name="done">Fatto</string>
+  <string name="addressbook_share_phone">Condividi il tuo numero di telefono, così i tuoi amici potranno trovarti facilmente su %s</string>
+  <string name="addressbook_phone_number">Numero di telefono</string>
+  <string name="addressbook_insuccess_connection">Non è stato possibile collegarti alla tua agenda!</string>
+  <string name="addressbook_invite_friends">Invita i tuoi amici!</string>
+  <string name="addressbook_thanks_for_connecting">Grazie per esserti collegato</string>
+  <string name="addressbook_success_connected_friends">Ti abbiamo collegato con successo a %1$s amici che usano %2$s</string>
+  <string name="addressbook_2nd_msg">%1$s cercherà nella tua rubrica amici e parenti
+che usano il nostro App Store. Per proteggere la tua privacy non verrà inviato nessun dato privato ai server 
+di %1$s</string>
+  <string name="addressbook_3rd_msg">PER SAPERNE DI PIÙ</string>
+
+  <string name="join_company">Unisciti a %s</string>
+  <string name="login">Login</string>
+  <string name="login_company">Login %s</string>
+  <string name="connect_with_facebook">Connetti a Facebook</string>
+  <string name="connect_with_google">Connetti a Google</string>
+  <string name="accept_terms_signup">Entrando a far parte di Aptoide accetti i Termini e le Condizioni e la Politica dei Contenuti per Sviluppatori di Aptoide.</string>
+  <string name="recover_password">Recupera la password</string>
+  <string name="email">Email</string>
+  <string name="password">Password</string>
+  <string name="create_password">Crea Password</string>
+
+<string name="store_suspended_message">Store sospeso</string>
+
+  <string name="add_store_dialog_title">Puoi trovare contenuti fatti su misura per te in store diversi</string>
+  <string name="add_store_dialog_top_stores">SCOPRI I MIGLIORI STORE</string>
+  <string name="add_store_dialog_top_stores_small_text">e trova contenuti esclusivi!</string>
+
+<string name="my_account">Il mio Account</string>
+  <string name="spot_share">Spot&amp;Condividi</string>
+  <string name="setting_schdwntitle">Download programmati</string>
+  <string name="settings">Impostazioni</string>
+  <string name="facebook">Facebook</string>
+  <string name="twitter">Twitter</string>
+  <string name="backup_apps">App di Backup</string>
+
+  <string name="follow_store">Segui Store</string>
+
+  <string name="fragment_spot_share_preview_start_button">Inizia</string>
+
+  <string name="activity_login_title">Login</string>
+  <string name="activity_login_forgot_password_button">Password dimenticata?</string>
+  <string name="activity_login_button">Login</string>
+  <string name="activity_login_sign_up_button">Iscriviti</string>
+  <string name="view_credentials_username_hint">Email</string>
+  <string name="view_credentials_password_hint">Password</string>
+
+  <string name="permission_access_deny">accesso per leggere e scrivere su memoria esterna negato</string>
+  <string name="permission_account_deny">accesso negato per ottenere account</string>
+
+  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">Non abbiamo trovato nessun contatto che stia usando %1$s</string>
+  <string name="address_book_twitter_error">Errore autorizzazione Twitter</string>
+  <string name="follow_my_store">Ciao, segui il mio Store %1$s qui</string>
+  <string name="addressbook_about">Info su Rubrica</string>
+  <string name="addressbook_we_werent_able_to_connect_you">Non è stato possibile collegarti</string>
+
+<string name="wizard_title_viewpager_one">Ora con un Diario!</string>
+  <string name="wizard_sub_title_viewpager_three"><b>Trova persone</b> che condividono i tuoi interessi per le app. 
+<b>Vota e condividi.</b></string>
+  <string name="wizard_sub_sub_title_viewpager_three">Unisciti a noi!</string>
+
+  <string name="facebook_login_cancelled">Login a Facebook annullato</string>
+  <string name="google_login_cancelled">Login a Google fallito</string>
+  <string name="login_separator_text">Oppure connettiti via email</string>
+
+  <string name="store_meta_apps">App
+%s</string>
+  <string name="store_meta_following">Seguiti
+%s</string>
+  <string name="store_meta_followers">Follower
+%s</string>
+  <string name="spot_share_line_1">Condividi app con i tuoi amici</string>
+  <string name="spot_share_line_2">Via telefono, senza internet</string>
+
 </resources>

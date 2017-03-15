@@ -164,13 +164,6 @@
 
     <string name="feedback_send_button">إرسال ملاحظات</string>
 
-    <string name="my_account">الحساب الخاص بي</string>
-    <string name="setting_schdwntitle">التحميلات المجدولة</string>
-    <string name="settings">الإعدادات</string>
-    <string name="facebook">فيسبوك</string>
-    <string name="twitter">تويتر</string>
-    <string name="backup_apps">تطبيقات النسخ الاحتياطي</string>
-
     <string name="menu_context_reparse">إعادة تحميل</string>
     <string name="menu_context_remove">حذف</string>
 
@@ -485,8 +478,6 @@
     <string name="friends_to_invite">جميع أصدقاء فيسبوك الآخرين في أبتويد</string>
     <string name="upload_app_backup_apps_installed">انت بحاجة إلى تحميل هذا التطبيق لمتجرك أولاً. يمكنك استخدام تطبيقات النسخ الاحتياطي لدى أبتويد.</string>
     <string name="upload_app_backup_apps_not_installed">أنت بحاجة إلى تحميل هذا التطبيق لمتجرك أولاً. يرجى تثبيت واستخدام تطبيقات النسخ الاحتياطي في أبتويد.</string>
-    <string name="setting_category_autoupdate">التحديث التلقائي لمتجر %s</string>
-    <string name="setting_category_autoupdate_title">تفعيل التحديث التلقائي لمتجر %s</string>
     <string name="social_timeline_notifications_sum2">تفعيل إخطارات الحائط الزمني الاجتماعي في أبتويد. سوف تتلقى آخر الأخبار على شريط الإخطارات.</string>
     <string name="ignored">تم تجاهلها</string>
     <string name="application_signature_blacklisted">توقيع التطبيق ليس توقيعاً موثوقاً بها في منصة أبتويد لمكافحة البرامج الضارة لأنه قد استخدم لتسجيل تطبيق آخر يطابق التوقيع المتعلق بالمطور الشرعي.</string>
@@ -507,4 +498,6 @@
     <string name="change_theme_soon">قريباً</string>
   <string name="critical">حرج</string>
 
+  <string name="stand_by">استعد</string>
+  <string name="setting_general">عامة</string>
   </resources>

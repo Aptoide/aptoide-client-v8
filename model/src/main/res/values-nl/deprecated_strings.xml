@@ -164,13 +164,6 @@
 
     <string name="feedback_send_button">Feedback verzenden</string>
 
-    <string name="my_account">Mijn account</string>
-    <string name="setting_schdwntitle">Geplande downloads</string>
-    <string name="settings">Instellingen</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Apps back-uppen</string>
-
     <string name="menu_context_reparse">Opnieuw laden</string>
     <string name="menu_context_remove">Verwijderen</string>
 
@@ -488,8 +481,6 @@
   <string name="friends_to_invite">Alle andere Facebookvrienden in Aptoide</string>
   <string name="upload_app_backup_apps_installed">Je moet deze app eerst uploaden naar je winkel. Je kan gebruik maken van Aptoide app-back-ups.</string>
   <string name="upload_app_backup_apps_not_installed">Je moet deze app eerst uploaden naar je winkel. Installeer en gebruik hiervoor Aptoide app-back-ups.</string>
-  <string name="setting_category_autoupdate">%s automatische updates</string>
-  <string name="setting_category_autoupdate_title">%s automatische updates inschakelen</string>
   <string name="social_timeline_notifications_sum2">Aptoide socialetijdslijnmeldingen inschakelen. Je zal het laatste nieuws ontvangen in de meldingsbalk.</string>
   <string name="ignored">Genegeerd</string>
   <string name="application_signature_blacklisted">Applicatieondertekening is geen vertrouwde ondertekening op het Aptoide anti-malwareplatform omdat ze is gebruikt om een andere applicatie te ondertekenen die niet overeenkomt met de ondertekening van de echte ontwikkelaar.</string>
@@ -508,4 +499,6 @@
 <string name="change_theme_soon">Binnenkort</string>
   <string name="critical">Kritiek</string>
 
+  <string name="stand_by">In wachtrij</string>
+  <string name="setting_general">Algemeen</string>
   </resources>

@@ -17,4 +17,9 @@
 
 <string name="continue_option">Teruskan</string>
 
-  </resources>
+  <string name="more_info">Lebih info</string>
+
+  <string name="share_options_share_external">Berkongsi melalui...</string>
+  <string name="share_options_share_in_timeline">Kongsikan dalam Garis Masa Apl</string>
+
+</resources>

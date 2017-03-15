@@ -116,7 +116,7 @@
     <string name="starting_download">開始下載</string>
     <string name="installing">%s正在安裝…</string>
     <string name="finished_install">已安裝%s。</string>
-    <string name="aptoide_downloading">%s個正在下載</string>
+    <string name="aptoide_downloading">%s 個正在下載</string>
     <string name="remaining_time">剩余的</string>
     <string name="data_usage_constraint">「設定&gt;一般下載規則」中不允許下載</string>
     <string name="download_pending">正在等候</string>
@@ -158,13 +158,6 @@
     <string name="updates_tab">更新</string>
 
     <string name="feedback_send_button">傳送意見反應</string>
-
-    <string name="my_account">我的帳戶</string>
-    <string name="setting_schdwntitle">已計劃的下載</string>
-    <string name="settings">設定</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">備份應用</string>
 
     <string name="menu_context_reparse">重新加載</string>
     <string name="menu_context_remove">移除</string>
@@ -396,8 +389,6 @@
     <string name="friends_to_invite">Aptoide中的所有其他Facebook好友</string>
     <string name="upload_app_backup_apps_installed">您需要先將此應用上載至商店。您可以使用Aptoide備份應用。</string>
     <string name="upload_app_backup_apps_not_installed">您需要先將此應用上載至商店。請安裝和使用Aptoide備份應用。</string>
-    <string name="setting_category_autoupdate">%s自動更新</string>
-    <string name="setting_category_autoupdate_title">啟用%s自動更新</string>
     <string name="social_timeline_notifications_sum2">啟用Aptoide社交時間表通知。您將在通知列上接收最新訊息。</string>
     <string name="ignored">已忽略</string>
     <string name="application_signature_matched">應用簽章與應用開發人員相關的簽章匹配。</string>

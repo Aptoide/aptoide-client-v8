@@ -145,13 +145,13 @@
     <string name="facebook_logout_and_login">Déconnexion et connexion avec Facebook</string>
 
     <string name="schDown_nodownloadselect">Aucun téléchargement sélectionné</string>
-    <string name="no_sch_downloads">Vous parcourez les applications en utilisant les données mobiles et souhaitez les télécharger plus tard lorsque vous serez connecté en WIFI ? Utilisez les téléchargements programmés et modifiez vos préférences dans Réglages -&gt; Règles de téléchargement, sur Wifi.</string>
+    <string name="no_sch_downloads">Vous parcourez les applications en utilisant les données mobiles et souhaitez les télécharger plus tard lorsque vous serez connecté en WIFI ? Utilisez les téléchargements planifiés et modifiez vos préférences dans Réglages -&gt; Règles de téléchargement, sur Wifi.</string>
     <string name="schDown_installselected">Installer sélectionné</string>
     <string name="schDown_removeselected">Retirer la sélection</string>
     <string name="schDown_invertselection">Inverser la sélection</string>
 
-    <string name="schDwnBtn">Programmer le téléchargement</string>
-    <string name="schDown_install">Installer tous les téléchargements programmés ?</string>
+    <string name="schDwnBtn">Planifier le téléchargement</string>
+    <string name="schDown_install">Installer tous les téléchargements planifiés ?</string>
     <string name="dont_show_again">Ne plus afficher</string>
 
     <string name="see_more">Afficher plus</string>
@@ -162,13 +162,6 @@
     <string name="updates_tab">Mises à jour</string>
 
     <string name="feedback_send_button">Envoyer un avis</string>
-
-    <string name="my_account">Mon compte</string>
-    <string name="setting_schdwntitle">Téléchargements programmés</string>
-    <string name="settings">Paramètres</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Apps de Sauvegarde</string>
 
     <string name="menu_context_reparse">Recharger</string>
     <string name="menu_context_remove">Enlever</string>
@@ -229,7 +222,7 @@ votre opérateur téléphonique.
     <string name="unhide_post">AFFICHER</string>
     <string name="hide_post">MASQUER</string>
     <string name="like">J\'aime</string>
-    <string name="comment">Commentaire</string>
+    <string name="comment">Commenter</string>
     <string name="hide_post_info">Vos amis ne verront pas ce message</string>
     <string name="timeline_like">J\'aime</string>
     <string name="likes">Mentions \"J\'aime\"</string>
@@ -306,7 +299,7 @@ votre opérateur téléphonique.
     <string name="setting_auto_update_title">Autoriser les mises à jour automatiques</string>
     <string name="show_all_updates">Ne pas afficher les mises à jour pour les applications avec des signatures différentes</string>
     <string name="setting_allUpdates_filtering">Filtrer les mises à jour</string>
-    <string name="setting_schdwninstallsum">Installer automatiquement les téléchargements programmés dès qu\'une connexion Wifi est détectée</string>
+    <string name="setting_schdwninstallsum">Installer automatiquement les téléchargements planifiés dès qu\'une connexion Wifi est détectée</string>
     <string name="setting_schdwninstalltitle">Installer automatiquement</string>
     <string name="setting_clear_memory">Stockage</string>
     <string name="clearcontent_title">Supprimer données et configurations</string>
@@ -400,7 +393,7 @@ votre opérateur téléphonique.
     <string name="reason_failed">La signature de l\'application ne correspond pas à la signature du développeur. L\'application a pu être altérée.</string>
     <string name="reply_to">Répondre à %s</string>
     <string name="comment_submitted">Votre commentaire a été envoyé avec succès</string>
-    <string name="write_your_comment">Écrire un commentaire</string>
+    <string name="write_your_comment">Rédiger un commentaire</string>
     <string name="write_a_comment">Rédiger un commentaire</string>
     <string name="no_comment_be_the_first">Aucun commentaire. Soyez le premier !</string>
 
@@ -480,8 +473,6 @@ votre opérateur téléphonique.
     <string name="error_occured_retry_later">Une erreur est survenue. Aptoid ressayera automatiquement plus tard.</string>
     <string name="rollback_updated_at">Mise à jour à %1$s</string>
     <string name="friends_to_invite">Tous vos autres amis Facebook dans Aptoide</string>
-    <string name="setting_category_autoupdate">Mise à jour automatique pour %s</string>
-    <string name="setting_category_autoupdate_title">Activer la Mise à jour automatique pour %s</string>
     <string name="ignored">Ignoré</string>
     <string name="scanned_manually_by_aptoide_team">Vérifié manuellement par l\'équipe Aptoide :</string>
     <string name="scanned_verified_by_tester">L\'application a été vérifiée manuellement par un testeur de l\'équipe Aptoide ce qui garantit la sécurité de cette application.</string>
@@ -507,4 +498,5 @@ votre opérateur téléphonique.
   <string name="critical">Critique</string>
 
   <string name="stand_by">Supporté par</string>
+  <string name="setting_general">Paramètres généraux</string>
   </resources>

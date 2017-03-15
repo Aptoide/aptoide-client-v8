@@ -45,7 +45,7 @@
     <string name="error_IARG_108">Comentario no válido</string>
     <string name="error_IARG_109">Voto no válido</string>
     <string name="error_IARG_110">Comentario de respuesta no válido</string>
-    <string name="error_IARG_200">Token de inicio sesión no válido</string>
+    <string name="error_IARG_200">Token de inicio de sesión no válido</string>
     <string name="error_IARG_201">Modo de inicio de sesión no válido</string>
     <string name="error_IARG_300">Categoría personalizada no válida</string>
     <string name="error_IARG_301">Categoría no válida</string>
@@ -80,7 +80,7 @@
     <string name="error_SYS_1">Ha ocurrido un error desconocido. Por favor, inténtelo otra vez</string>
     <string name="error_SYS_2">Datos no encontrados, por favor inténtelo más tarde</string>
     <string name="error_SYS_3">El sistema está en mantenimiento, por favor, inténtelo más tarde</string>
-    <string name="error_SYS_4">Esta acción es incompatible con la actual versión de la API</string>
+    <string name="error_SYS_4">Esta acción no es compatible con la actual versión de la API</string>
     <string name="error_SYS_Billing">La facturación desde la app no es compatible con este dispositivo.</string>
 
     <string name="error_410">Lo sentimos, la aplicación solicitada no se encuentra en este servidor.</string>
@@ -159,13 +159,6 @@
 
     <string name="feedback_send_button">Enviar comentarios</string>
 
-    <string name="my_account">Mi cuenta</string>
-    <string name="setting_schdwntitle">Descargas programadas</string>
-    <string name="settings">Configuración</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
-    <string name="backup_apps">Copia de seguridad de las app</string>
-
     <string name="menu_context_reparse">Recargar</string>
     <string name="menu_context_remove">Eliminar</string>
 
@@ -215,7 +208,7 @@
     <string name="more_editors_choice">Más selecciones del editor</string>
     <string name="more_versions">Más versiones</string>
     <string name="facebook_friends_list_using_timeline_empty">El Timeline Social te permite compartir tus aplicaciones con tus amigos de Facebook. ¿Quieres unirte a la red?</string>
-    <string name="X_download_number">%s descargas.</string>
+    <string name="X_download_number">%s no funciona.</string>
     <string name="timeline_not_compatible">Ooohhh... Esta funcionalidad no es compatible con tu versión de Aptoide</string>
     <string name="sponsored">Patrocinado</string>
     <string name="friends_installs">Instalaciones de tus amigos</string>
@@ -230,7 +223,7 @@
     <string name="timeline_like">Me gusta</string>
     <string name="likes">Me gusta</string>
     <string name="unlike">Ya no me gusta</string>
-    <string name="timeline_empty_no_friends_send_email">Parece que tus amigos no han entrado aún en Aptoide con sus cuentas de Facebook. Envíales un email para que accedan con su cuenta de Facebook</string>
+    <string name="timeline_empty_no_friends_send_email">Parece que tus amigos no han entrado aún en Aptoide con sus cuentas de Facebook. Envíales un email para que accedan con sus cuentas de Facebook</string>
     <string name="timeline_empty_send_email_to_friends">Enviar email a tus amigos</string>
     <string name="aptoide_timeline">Timeline de Aptoide</string>
     <string name="timeline_email_invitation">Te ha invitado a que te unas a su Timeline Social de Aptoide. ¡Conéctate!</string>
@@ -448,7 +441,7 @@
     <string name="wizard_new_and_improved_bullet_4">Borrar interfaz de usuario</string>
     <string name="wizard_new_homepage">Nuevo diseño de la página de inicio</string>
     <string name="wizard_new_top">Nueva pestaña Top</string>
-    <string name="subscribe_apps_official_store">Subscríbete a aplicaciones de la Tienda de Aplicaciones Oficial de Aptoide</string>
+    <string name="subscribe_apps_official_store">Subscríbete a \'aplicaciones\' del App Store oficial de Aptoide</string>
     <string name="wizard_next">Siguiente</string>
     <string name="wizard_prev">Anterior</string>
     <string name="share">Compartir</string>
@@ -482,8 +475,6 @@
     <string name="friends_to_invite">Otros amigos de Facebook en Aptoide</string>
     <string name="upload_app_backup_apps_installed">Tienes que subir primero esta aplicación a tu tienda. Puedes utilizar Aptoide Backup Apps.</string>
     <string name="upload_app_backup_apps_not_installed">Tienes que subir primero esta aplicación a tu tienda. Instala y utiliza Aptoide Backup App primero.</string>
-    <string name="setting_category_autoupdate">Actualización automática %s</string>
-    <string name="setting_category_autoupdate_title">Permitir la actualización automática de %s</string>
     <string name="social_timeline_notifications_sum2">Permitir las notificaciones del timeline social de Aptoide. Recibirás las últimas noticias en la barra de notificaciones.</string>
     <string name="ignored">Ignoradas</string>
     <string name="application_signature_blacklisted">La firma de la aplicación no es una firma certificada por la plataforma Anti-Malware de Aptoide porque ha sido utilizada para firmar otra aplicación sin coincidir la firma relacionada con su desarrollador legítimo.</string>
@@ -504,4 +495,6 @@
     <string name="change_theme_soon">Próximamente</string>
   <string name="critical">Crítica</string>
 
+  <string name="stand_by">En espera</string>
+  <string name="setting_general">General</string>
   </resources>

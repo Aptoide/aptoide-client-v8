@@ -123,27 +123,13 @@
   <string name="remote_install_tip">از اتصال تلویزیون اندرویدی خود به وای‌فای مطمئن شوید</string>
   <string name="remote_install_retry">دوباره کاری</string>
   <string name="remote_install_help">کمک</string>
-  <string name="wizard_welcome_message"><b>خوش آمدید!</b></string>
-  <string name="wizard_sub_title_viewpager_one">سفری <b>امن</b> و <b>لذت‌بخش</b> را شروع کنید.</string>
-  <string name="wizard_description_part_one_viewpager_one">&lt;/b&gt;تیک سبز&lt;b&gt; کنار اپ
-نشانه سلامت و
-امنیت برنامه است.<b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
-  <string name="wizard_description_part_two_viewpager_one"><b>اپ‌هایی</b> را که
- همیشه به دنبالشان می‌گشتید
-به آسانی دانلود کنید.</string>
+  <string name="wizard_sub_title_viewpager_one"><b>بهترین ویدیوها و اخبار اپلیکیشن ها</b> در یک جا.
+اپلیکیشن ها را از طریق <b>دوستان</b> خود کشف کنید.</string>
+  <string name="wizard_title_viewpager_two">فروشگاه خودتان را داشته باشید<b>تایم‌لاین اپ‌توید</b></string>
+  <string name="wizard_sub_title_viewpager_two">فروشگاه خود را شخصی سازی کنید <b> برای به اشتراک گذاری اپلیکیشن ها
+ با دوستان</b> و <b>کاربران Aptoide.</b></string>
 
-  <string name="wizard_title_viewpager_two"><b>تایم‌لاین اپ‌توید</b></string>
-  <string name="wizard_sub_title_viewpager_two">&lt;b&gt;جدیدترین برنامه‌ها&lt;/b&gt; را بگیرید، &lt;b&gt;فروشگاه‌های موضوعی&lt;/b&gt; را دنبال کنید، 
-و &lt;/b&gt;محتوای انحصاری&lt;/b&gt; خود را دریافت کنید.<b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
-
-  <string name="wizard_title_viewpager_three"><b>به جمع اپ‌تویدی‌ها بپیوندید</b></string>
-  <string name="wizard_description_part_one_viewpager_three">دوستان خود را &lt;/b&gt;دنبال کنید&lt;b&gt;<b>Follow</b> your friends</string>
-  <string name="wizard_description_part_two_viewpager_three">&lt;/b&gt;نقد و بررسی&lt;/b&gt; بنویسید و به برنامه‌ها امتیاز بدهید<b>Review</b> and Rate apps</string>
-  <string name="wizard_description_part_three_viewpager_three">فروشگاه خود را <b>بسازید</b></string>
-  <string name="wizard_register_now_button">ثبت نام کنید</string>
-  <string name="wizard_be_a_part_of_aptoide">عضوی از خانواده اپ‌توید باشید!</string>
-  <string name="wizard_or_login"><u>یا وارد شوید</u></string>
-
+  <string name="wizard_title_viewpager_three">عضوی باشید<b>به جمع اپ‌تویدی‌ها بپیوندید</b></string>
   <string name="you_need_to_be_logged_in">باید وارد شوید</string>
   <string name="follow">دنبال کنید</string>
   <string name="followed">دنبال می‌کنید</string>
@@ -275,7 +261,6 @@
   <string name="create_store_displayable_message">فروشگاه‌ خود را بسازید و اپ‌های مورد علاقه‌تان را به اشتراک بگذارید!</string>
   <string name="create_store_displayable_button">ساخت فروشگاه</string>
   <string name="my_store_created_displayable_message">فروشگاه اندرویدی شما</string>
-  <string name="create_store_displayable_created_store_message">فروشگاه شما ساخته شد!</string>
   <string name="create_store_displayable_explore_message">به دنیای اپ‌توید قدم بگذارید</string>
   <string name="create_store_displayable_explore_button">گشت و گذار</string>
 
@@ -322,17 +307,117 @@
   <string name="private_followers_message">%d دنبال‌کننده‌ها دارای پروفایل خصوصی هستند</string>
   <string name="private_following_message">شما %d فروشگاه/کاربر خصوصی را دنبال می‌کنید</string>
 
-  <string name="item_payment_button_use">استفاده</string>
-  <string name="item_payment_button_register">ثبت نام</string>
-  <string name="item_payment_approving_text">منتظر تایید...</string>
-  <string name="activity_payment_more_payments_button">از روش پرداخت دیگری استفاده کنید</string>
-
-<string name="comment_store_title">نظرهای کاربران درباره این فروشگاه</string>
+  <string name="comment_store_title">دیدگاه ها برای این فروشگاه</string>
   <string name="social_timeline_who_liked">کسانی که لایک کرده‌اند</string>
   <string name="social_timeline_users_private">%d خصوصی هستند</string>
 
   <string name="reviews_expand_button">%d پاسخ‌ها</string>
   <string name="out_of_space_dialog_title">دستگاه شما فضای کافی ندارد</string>
   <string name="out_of_space_dialog_message">برای ادامه کار، باید بخشی از حافظه دستگاه خود را پاک کنید.</string>
+
+<string name="my_account">حساب کاربری من</string>
+  <string name="spot_share">ردیابی و اشتراک گذاری</string>
+  <string name="setting_schdwntitle">دانلودهای زمانبندی شده</string>
+  <string name="settings">تنظیمات</string>
+  <string name="facebook">فیسبوک</string>
+  <string name="twitter">تویتر</string>
+  <string name="backup_apps">اپلیکیشن های بکاپ</string>
+
+  <string name="timeline"><b>خط زمانی</b></string>
+  <string name="create_store_displayable_created_store_short_term_message">فروشگاه خودتان را هم اکنون ساختید!</string>
+  <string name="setting_category_autoupdate">%s آپدیت ها</string>
+  <string name="setting_category_autoupdate_title">دریافت %s اعلامیه های بروزرسانی</string>
+  <string name="setting_category_autoupdate_message">گاهی برای %s نسخه جدید بررسی کنید</string>
+  <string name="store_added_long_time_suggestion_message">نمایش زمان طولانی</string>
+  <string name="store_added_short_time_suggestion_message">نمایش تازه ساخته شده ها</string>
+  <string name="create_store_displayable_created_store_long_term_message">طولانی مدت</string>
+  <string name="create_store_displayable_explore_long_term_button">مشاهده فروشگاه</string>
+  <string name="create_store_displayable_empty_description_message">برای فروشگاه خود توضیحاتی بنویسید. توضیحات خوب به شما کمک می کند که فالوورها و ارتباطات بیشتری داشته باشید.</string>
+
+  <string name="addressbook_increase_network_message">رشد شبکه شما.</string>
+  <string name="addressbook_connect_with_friends_message">ارتباط با دوستان.</string>
+  <string name="addressbook_sync">اتصال دفترچه آدرس</string>
+  <string name="not_now">نه حالا</string>
+  <string name="follow_friends">دنبال کردن دوستان</string>
+  <string name="addressbook_data_about"><b>چگونه %1$s از اطلاعات شما استفاده می کند</b>
+
+
+%1$s دفترچه آدرس شما را برای یافتن دوستان و اعضای خانواده ای که فروشگاه اپلیکیشن ما را استفاده می کنند، جستجو می کند. ما
+تنها این اطلاعات را استفاده می کنیم تا تجربه %1$s شما را با اتصال شما به افراد بیشتر، تقویت کنیم تا اینکه
+آن ها بتوانند محتوای وابسته به اپلیکیشن را با شما به اشتراک بگذارند.
+
+
+برای حفظ حریم خصوصی شما، هیچ دیتای خصوصی مشخصی
+به %1$s سرورهای ما فرستاده نخواهند شد. یک امضای ناشناس (hash) با دیتای شما ساخته خواهد شد
+و آن hash قابل تبدیل به اطلاعات تماس ارجینال نخواهند شد.
+ </string>
+  <string name="addressbook_success">موفق!</string>
+  <string name="addressbook_allow_friends_find">به دوستان اجازه دهید شما را پیدا کنند</string>
+  <string name="google">گوگل</string>
+  <string name="done">انجام شد</string>
+  <string name="addressbook_share_phone">شماره تلفن خود را به اشتراک بگذارید تا دوستان شما بتوانند بسادگی شما را در %s پیدا کنند</string>
+  <string name="addressbook_phone_number">شماره تلفن</string>
+  <string name="addressbook_insuccess_connection">ما قادر به اتصال با دفترچه آدرس شما نبودیم!</string>
+  <string name="addressbook_invite_friends">دوستان خود را دعوت کنید که به شما متصل شوند!</string>
+  <string name="addressbook_thanks_for_connecting">تشکر از شما برای اتصال</string>
+  <string name="addressbook_success_connected_friends">با موفقیت شما را به %1$s دوست که از %2$s استفاده می کنند، متصل کردیم</string>
+  <string name="addressbook_2nd_msg">%1$s دفترچه آدرس شما را برای دوستان و خانواده ای
+که فروشگاه اپلیکیشن ما را استفاده می کنند، را مرور می کند. برای حفظ حریم خصوصی شما، هیچ دیتای خصوصی به %1$s سرور
+ارسال نخواهد شد</string>
+  <string name="addressbook_3rd_msg">یادگیری بیشتر</string>
+
+  <string name="join_company">عضویت %s</string>
+  <string name="login">ورود</string>
+  <string name="login_company">ورود %s</string>
+  <string name="connect_with_facebook">اتصال به فیسبوک</string>
+  <string name="connect_with_google">اتصال با گوگل</string>
+  <string name="accept_terms_signup">با عضویت در Aptoide شما موافقت خود را با شرایط و ضوابط محتوا برای برنامه نویسان، اعلام می کنید.</string>
+  <string name="recover_password">بازیابی رمز عبور شما</string>
+  <string name="email">ایمیل</string>
+  <string name="password">رمز عبور</string>
+  <string name="create_password">ایجاد رمز عبور</string>
+  <string name="store_suspended_message">فروشگاه معلق</string>
+
+  <string name="add_store_dialog_title">شما قادر به پیدا کردن محتوای اختصاصی فقط برای شما در فروشگاه های مختلف هستید</string>
+  <string name="add_store_dialog_top_stores">کشف بهترین فروشگاه ها</string>
+  <string name="add_store_dialog_top_stores_small_text">و پیدا کردن محتوای اختصاصی!</string>
+
+<string name="follow_store">دنبال کردن فروشگاه</string>
+
+  <string name="fragment_spot_share_preview_start_button">شروع</string>
+
+  <string name="activity_login_title">ورود</string>
+  <string name="activity_login_forgot_password_button">رمز عبور را فراموش کردید؟</string>
+  <string name="activity_login_button">ورود</string>
+  <string name="activity_login_sign_up_button">عضویت</string>
+  <string name="view_credentials_username_hint">ایمیل</string>
+  <string name="view_credentials_password_hint">رمز عبور</string>
+
+  <string name="permission_access_deny">دسترسی به حافظه خارجی داده نشد</string>
+  <string name="permission_account_deny">دسترسی به دریافت حساب های کاربری داده نشد</string>
+
+  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">هیچ اطلاعات تماسی که از %1$s استفاده کند، پیدا نشد</string>
+  <string name="address_book_twitter_error">خطا در مجوز توییتر</string>
+  <string name="follow_my_store">سلام، فروشگاه %1$s من را در اینجا دنبال کنید</string>
+  <string name="addressbook_about">درباره دفترچه تماس</string>
+  <string name="addressbook_we_werent_able_to_connect_you">ما قادر به اتصال شما نبودیم</string>
+
+<string name="wizard_title_viewpager_one">اکنون با خط زمانی!</string>
+  <string name="wizard_sub_title_viewpager_three"><b>اشخاصی را پیدا کنید</b> که علایق مشابه شما برای اپلیکیشن دارند.
+<b>رتبه بندی کنید و به اشتراک بگذارید.</b></string>
+  <string name="wizard_sub_sub_title_viewpager_three">عضو شوید!</string>
+
+  <string name="facebook_login_cancelled">ورود از طریق فیسبوک لغو شد</string>
+  <string name="google_login_cancelled">ورود از طریق گوگل رد شد</string>
+  <string name="login_separator_text">یا از طریق ایمیل خود متصل شوید</string>
+
+  <string name="store_meta_apps">اپلیکیشن ها
+%s</string>
+  <string name="store_meta_following">دنبال شوندگاه
+%s</string>
+  <string name="store_meta_followers">دنبال کنندگاه
+%s</string>
+  <string name="spot_share_line_1">اپلیکیشن ها را با دوستانتان به اشتراک بگذارید</string>
+  <string name="spot_share_line_2">تلفن به تلفن، بدون اینترنت</string>
 
 </resources>

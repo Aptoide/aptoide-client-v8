@@ -189,27 +189,12 @@
   <string name="storage_access_permission_request_message">Molimo vas da dopustite aplikaciji pristup mobilnoj memoriji da bismo mogli preuzeti i instalirati ovu aplikaciju.</string>
 
   <string name="wizard_skip"><b>PRESKOČI</b></string>
-  <string name="wizard_welcome_message"><b>Dobrodošli!</b></string>
   <string name="wizard_sub_title_viewpager_one">Započni <b>sigurno</b> i <b>ugodno</b> putovanje.</string>
-  <string name="wizard_description_part_one_viewpager_one"><b>Traži</b> aplikacije sa
-značkom Pouzdanosti za
-sigurniju instalaciju.</string>
-  <string name="wizard_description_part_two_viewpager_one"><b>Pronađi</b> aplikacije koje
-ste željeli, ali
-nikada niste našli.</string>
-
   <string name="wizard_title_viewpager_two"><b>Vremenska crta aplikacija</b></string>
   <string name="wizard_sub_title_viewpager_two">Preuzmite <b>najnovije aplikacije</b>, nađite <b>tematske trgovine</b>
 i pristupite <b>personaliziranom sadržaju.</b></string>
 
   <string name="wizard_title_viewpager_three"><b>Pridružite se zajednici</b></string>
-  <string name="wizard_description_part_one_viewpager_three"><b>Pratite</b> vaše prijatelje</string>
-  <string name="wizard_description_part_two_viewpager_three"><b>Recenzirajte</b> i ocijenite aplikacije</string>
-  <string name="wizard_description_part_three_viewpager_three"><b>Napravite</b> svoju trgovinu</string>
-  <string name="wizard_register_now_button">Registrirajte se</string>
-  <string name="wizard_be_a_part_of_aptoide">Budite dio Aptoide zajednice!</string>
-  <string name="wizard_or_login"><u>ili se Prijavite</u></string>
-
   <string name="you_need_to_be_logged_in">Morate biti prijavljeni</string>
   <string name="follow">Pratite</string>
   <string name="followed">Pratite</string>

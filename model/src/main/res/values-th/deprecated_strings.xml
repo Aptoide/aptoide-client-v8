@@ -158,13 +158,6 @@
 
     <string name="feedback_send_button">ส่งข้อเสนอแนะ</string>
 
-    <string name="my_account">บัญชีของฉัน</string>
-    <string name="setting_schdwntitle">ตารางเวลาการดาวน์โหลด</string>
-    <string name="settings">ติดตั้ง</string>
-    <string name="facebook">เฟสบุ๊ค</string>
-    <string name="twitter">ทวิตเตอร์</string>
-    <string name="backup_apps">สำรองข้อมูลแอป</string>
-
     <string name="menu_context_reparse">โหลดใหม่</string>
     <string name="menu_context_remove">ลบออก</string>
 
@@ -384,7 +377,7 @@
     <string name="application_signature_analysis">ลายเซ็นต์แอปพลิเคชั่นเทียบกับลายเซ็นต์ผู้พัฒนา:</string>
     <string name="application_signature_matched">ลายเซ็นต์แอปพลิเคชั่นสอดคล้องกับลายเซ็นต์ผู้พัฒนา</string>
     <string name="application_signature_not_matched">ลายเซ็นต์แอปพลิเคชั่นไม่สอดคล้องกับลายเซ็นต์ผู้พัฒนา แอปพลิเคชั่นอาจมีเนื่อหาสำหรับผู้ใหญ่</string>
-    <string name="warning">คำเตือน</string>
+    <string name="warning">เตือน</string>
     <string name="trusted_app">ความน่าเชื่อถือของแอป</string>
     <string name="unknown">ไม่ทราบ</string>
 
@@ -477,8 +470,6 @@
     <string name="friends_to_invite">เพื่อนอื่นๆบนเฟสบุ๊คในAptoide</string>
     <string name="upload_app_backup_apps_installed">คุณจำเป็นต้องอัพโหลดแอปนี้ไปยังร้านค้าของคุณก่อน คุณสามารถใช้แอปสำรองAptoideได้</string>
     <string name="upload_app_backup_apps_not_installed">คุณจำเป็นต้องอัพโหลดแอปนี้ไปยังร้านค้าของคุณก่อน โปรดติดตั้งและใช้แอปสำรองAptoide</string>
-    <string name="setting_category_autoupdate">อัพเดต%sอัตโนมัติ</string>
-    <string name="setting_category_autoupdate_title">เปิดการใช้งานการอัพเดต%sอัตโนมัติ</string>
     <string name="social_timeline_notifications_sum2">เปิดการใช้งานการแจ้งเตือนไทม์ไลน์โซเชียลAptoide คุณจะได้รับข่าวสารล่าสุดบนแถบการแจ้งเตือน</string>
     <string name="ignored">ไม่สนใจ</string>
     <string name="application_signature_blacklisted">ลงชื่อแอปพลิเคชั่นไม่ใช่การลงชื่อที่น่าเชื่อถือที่แพลตฟอร์มแอนตี้มัลแวร์ Aptoide เพราะมันถูกใช้เพื่อเซ็นต์แอปพลิเคชั่นอื่นซึ่งไม่เข้าคู่กับลายเซ็นต์ของนักพัฒนา</string>
