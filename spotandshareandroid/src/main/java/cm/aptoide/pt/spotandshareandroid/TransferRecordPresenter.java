@@ -278,8 +278,6 @@ public class TransferRecordPresenter implements Presenter {
 
   public void clickedOnClearHistoryButton() {
 
-    System.out.println(" Deleting history");
-
     if (listOfApps == null || listOfApps.isEmpty()) {
       System.out.println("Trying to delete the emtpy list ! ");
       view.showNoRecordsToDeleteToast();
