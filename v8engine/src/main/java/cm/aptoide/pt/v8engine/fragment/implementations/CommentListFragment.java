@@ -114,14 +114,17 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     return fragment;
   }
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    //this object is used in loadExtras and loadExtras is called in the super
+    storeCredentialsProvider =
+        new StoreCredentialsProviderImpl();
+    super.onCreate(savedInstanceState);
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     View v = super.onCreateView(inflater, container, savedInstanceState);
-
-    storeCredentialsProvider =
-        new StoreCredentialsProviderImpl(); //this object is used in loadExtras and loadExtras is called in the super
-    super.onCreate(savedInstanceState);
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
     aptoideClientUUID =
@@ -171,10 +174,11 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
     // extracting store data from the URL...
     if (commentType == CommentType.STORE) {
+
       BaseRequestWithStore.StoreCredentials storeCredentials =
           StoreUtils.getStoreCredentialsFromUrl(url, storeCredentialsProvider);
-      if (storeCredentials != null) {
 
+      if (storeCredentials != null) {
         Long id = storeCredentials.getId();
         if (id != null) {
           elementIdAsLong = id;
