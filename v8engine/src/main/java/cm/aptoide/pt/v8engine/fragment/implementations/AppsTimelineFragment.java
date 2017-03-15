@@ -49,7 +49,6 @@ import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.TimeLineStatsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.TimelineLoginDisplayable;
@@ -77,7 +76,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private SpannableFactory spannableFactory;
   private LinksHandlerFactory linksHandlerFactory;
   private DateCalculator dateCalculator;
-  private boolean loading;
+  private boolean isLoading;
   private int offset;
   private int total;
   private TimelineRepository timelineRepository;
@@ -107,46 +106,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     storeId = args.getLong(STORE_ID);
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    final Context applicationContext = getContext().getApplicationContext();
-
-    accountManager = ((V8Engine) applicationContext).getAccountManager();
-
-    final IdsRepositoryImpl idsRepository =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    final BodyInterceptor bodyInterceptor =
-        new BaseBodyInterceptor(idsRepository, accountManager);
-
-    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
-        AppEventsLogger.newLogger(applicationContext), bodyInterceptor);
-    dateCalculator = new DateCalculator();
-    spannableFactory = new SpannableFactory();
-    downloadFactory = new DownloadFactory();
-    linksHandlerFactory = new LinksHandlerFactory();
-    packageRepository = new PackageRepository(getContext().getPackageManager());
-
-    final PermissionManager permissionManager = new PermissionManager();
-    final Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
-    final SocialRepository socialRepository = new SocialRepository(accountManager, bodyInterceptor);
-    final StoreCredentialsProvider storeCredentialsProvider = new StoreCredentialsProviderImpl();
-    final InstallManager installManager =
-        new InstallManager(AptoideDownloadManager.getInstance(), installer);
-
-    timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
-        new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
-            AccessorFactory.getAccessorFor(Installed.class)), bodyInterceptor);
-
-    cardToDisplayable =
-        new CardToDisplayableConverter(socialRepository, timelineAnalytics, installManager,
-            permissionManager, accountManager, idsRepository, bodyInterceptor,
-            storeCredentialsProvider);
-  }
-
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-
     accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
   }
 
@@ -163,13 +124,16 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     Observable<Datalist<Displayable>> displayableObservable = accountManager.getAccountAsync()
         .map(account -> account.isLoggedIn())
         .onErrorReturn(throwable -> false)
-        .flatMapObservable(loggedIn -> packagesObservable.flatMap(
-            packages -> Observable.concat(getFreshDisplayables(refresh, packages, loggedIn),
-                getNextDisplayables(packages))));
+        .flatMapObservable(loggedIn -> packagesObservable.doOnNext(__ -> clearView())
+            .flatMap(
+                packages -> Observable.concat(getFreshDisplayables(refresh, packages, loggedIn),
+                    getNextDisplayables(packages))));
 
     displayableObservable.observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(items -> addItems(items, true), err -> {
+        .doOnNext(items -> addItems(items))
+        .subscribe(__ -> {
+        }, err -> {
           CrashReport.getInstance().log(err);
           finishLoading(err);
         });
@@ -180,6 +144,50 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
       outState.putStringArray(PACKAGE_LIST_KEY, packages.toArray(new String[packages.size()]));
     }
     super.onSaveInstanceState(outState);
+  }
+
+  @UiThread private Observable<Void> clearView() {
+    return Observable.fromCallable(() -> {
+      clearDisplayables();
+      return null;
+    });
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    final Context applicationContext = getContext().getApplicationContext();
+
+    accountManager = ((V8Engine) applicationContext).getAccountManager();
+
+    final IdsRepositoryImpl idsRepository =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+    final BodyInterceptor bodyInterceptor = new BaseBodyInterceptor(idsRepository, accountManager);
+
+    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(applicationContext), bodyInterceptor);
+    dateCalculator = new DateCalculator();
+    spannableFactory = new SpannableFactory();
+    downloadFactory = new DownloadFactory();
+    linksHandlerFactory = new LinksHandlerFactory();
+    packageRepository = new PackageRepository(getContext().getPackageManager());
+
+    final PermissionManager permissionManager = new PermissionManager();
+    final Installer installer =
+        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
+    final SocialRepository socialRepository = new SocialRepository(accountManager, bodyInterceptor);
+    final StoreCredentialsProvider storeCredentialsProvider = new StoreCredentialsProviderImpl();
+    final InstallManager installManager =
+        new InstallManager(AptoideDownloadManager.getInstance(), installer);
+
+    timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
+        new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
+            AccessorFactory.getAccessorFor(Installed.class)), bodyInterceptor);
+
+    cardToDisplayable =
+        new CardToDisplayableConverter(socialRepository, timelineAnalytics, installManager,
+            permissionManager, accountManager, idsRepository, bodyInterceptor,
+            storeCredentialsProvider);
   }
 
   @NonNull private Observable<List<String>> refreshPackages() {
@@ -195,8 +203,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
   @NonNull private Observable<Datalist<Displayable>> getFreshDisplayables(boolean refresh,
       List<String> packages, boolean loggedIn) {
-    return getDisplayableList(packages, 0, refresh).doOnSubscribe(
-        () -> getAdapter().clearDisplayables()).flatMap(displayableDatalist -> {
+    return getDisplayableList(packages, 0, refresh).flatMap(displayableDatalist -> {
       Long userId =
           getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
 
@@ -246,8 +253,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     return timelineRepository.getTimelineCards(SEARCH_LIMIT, offset, packages, refresh)
         .flatMap(datalist -> Observable.just(datalist)
             .flatMapIterable(dataList -> dataList.getList())
-            .map(card -> cardToDisplayable.convert(card, dateCalculator, spannableFactory, downloadFactory,
-                linksHandlerFactory))
+            .map(card -> cardToDisplayable.convert(card, dateCalculator, spannableFactory,
+                downloadFactory, linksHandlerFactory))
             .toList()
             .map(list -> createDisplayableDataList(datalist, list)));
   }
@@ -296,35 +303,25 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     }
   }
 
-  @UiThread private void addLoading() {
-    if (!loading) {
-      this.loading = true;
-      getAdapter().addDisplayable(new ProgressBarDisplayable().setFullRow());
-    }
+  protected boolean isLoading() {
+    return isLoading;
   }
 
-  @UiThread private void removeLoading() {
-    if (loading) {
-      loading = false;
-      getAdapter().popDisplayable();
-    }
+  protected void setLoading(boolean loading) {
+    this.isLoading = loading;
   }
 
-  private boolean isLoading() {
-    return loading;
-  }
-
-  @UiThread private void addItems(Datalist<Displayable> data, boolean hasFinished) {
-    removeLoading();
-    addDisplayables(data.getList(), hasFinished);
+  @UiThread private void addItems(Datalist<Displayable> data) {
+    setLoading(false);
     setTotal(data);
     setOffset(data);
+    addDisplayables(data.getList(), true);
   }
 
   @UiThread @NonNull private boolean onStopLoadNext(Throwable error) {
     if (isLoading()) {
+      setLoading(false);
       showErrorSnackbar(error);
-      removeLoading();
       return true;
     }
     return false;
@@ -332,8 +329,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
   @UiThread @NonNull private boolean onStartLoadNext() {
     if (!isTotal() && !isLoading()) {
+      setLoading(true);
       Analytics.AppsTimeline.endlessScrollLoadMore();
-      addLoading();
       return true;
     } else if (isTotal()) {
       //TODO - When you reach the end of the endless?
