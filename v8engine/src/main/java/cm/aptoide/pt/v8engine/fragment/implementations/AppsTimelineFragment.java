@@ -124,10 +124,10 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     Observable<Datalist<Displayable>> displayableObservable = accountManager.getAccountAsync()
         .map(account -> account.isLoggedIn())
         .onErrorReturn(throwable -> false)
-        .flatMapObservable(loggedIn -> packagesObservable.doOnNext(__ -> clearView())
-            .flatMap(
-                packages -> Observable.concat(getFreshDisplayables(refresh, packages, loggedIn),
-                    getNextDisplayables(packages))));
+        .flatMapObservable(loggedIn -> packagesObservable.observeOn(AndroidSchedulers.mainThread())
+            .flatMap(packages -> clearView().flatMap(
+                viewsCleared -> Observable.concat(getFreshDisplayables(refresh, packages, loggedIn),
+                    getNextDisplayables(packages)))));
 
     displayableObservable.observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
