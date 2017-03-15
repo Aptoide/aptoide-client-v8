@@ -658,6 +658,9 @@ public class HighwayTransferRecordActivity extends ActivityView
 
     if (adapter != null) {
       adapter.addTransferedItem(item);
+      if (adapter.getCount() - 1 >= 0) {
+        this.receivedAppListView.setSelection(adapter.getCount() - 1);
+      }
     }
   }
 
@@ -727,7 +730,6 @@ public class HighwayTransferRecordActivity extends ActivityView
 
                 setTransparencyClearHistory(true);
                 presenter.deleteAllApps();
-
               }
             })
         .setNegativeButton(this.getResources().getString(R.string.cancel),
