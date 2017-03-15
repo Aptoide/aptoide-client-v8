@@ -53,7 +53,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   private ImageView mainIcon;
   private TextView mainName;
   private TextView description;
-  private Button subscribeButton;
+  private Button followStoreButton;
   private Button editStoreButton;
   private TextView followersCountTv;
   private TextView appsCountTv;
@@ -74,7 +74,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     mainIcon = (ImageView) itemView.findViewById(R.id.main_icon);
     mainName = (TextView) itemView.findViewById(R.id.main_name);
     description = (TextView) itemView.findViewById(R.id.description);
-    subscribeButton = (Button) itemView.findViewById(R.id.follow_btn);
+    followStoreButton = (Button) itemView.findViewById(R.id.follow_btn);
     editStoreButton = (Button) itemView.findViewById(R.id.edit_store_btn);
     followersCountTv = (TextView) itemView.findViewById(R.id.number_of_followers);
     followingCountTv = (TextView) itemView.findViewById(R.id.number_of_following);
@@ -109,8 +109,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
           R.drawable.ic_avatar_apps, R.drawable.ic_store);
 
       updateSubscribeButtonText(isStoreSubscribed);
-      subscribeButton.setVisibility(View.VISIBLE);
-      compositeSubscription.add(RxView.clicks(subscribeButton)
+      followStoreButton.setVisibility(View.VISIBLE);
+      compositeSubscription.add(RxView.clicks(followStoreButton)
           .subscribe(
               handleSubscriptionLogic(new StoreWrapper(store, isStoreSubscribed), displayable),
               err -> {
@@ -166,7 +166,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         setSecondaryInfoVisibility(false);
       }
     } else {
-      subscribeButton.setVisibility(View.INVISIBLE);
+      followStoreButton.setVisibility(View.INVISIBLE);
       setupMainInfo(user.getName(), StoreThemeEnum.get("default"), getContext(),
           getHomeMeta.getData().getStats().getFollowers(),
           getHomeMeta.getData().getStats().getFollowing(), user.getAvatar(),
@@ -226,7 +226,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   }
 
   private void updateSubscribeButtonText(boolean isStoreSubscribed) {
-    subscribeButton.setText(isStoreSubscribed ? itemView.getContext().getString(R.string.followed)
+    followStoreButton.setText(isStoreSubscribed ? itemView.getContext().getString(R.string.followed)
         : itemView.getContext().getString(R.string.follow));
   }
 
@@ -297,7 +297,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
       d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
       containerLayout.setBackgroundDrawable(d);
     }
-    subscribeButton.setTextColor(color);
+    followStoreButton.setTextColor(color);
     editStoreButton.setTextColor(color);
   }
 

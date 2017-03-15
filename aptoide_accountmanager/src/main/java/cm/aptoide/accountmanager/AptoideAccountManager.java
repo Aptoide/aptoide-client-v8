@@ -284,7 +284,7 @@ public class AptoideAccountManager {
 
       weakRefAccount = new WeakReference<>(account);
 
-      return Completable.complete();
+      return storeDataPersist.persist(account.getSubscribedStores());
     }).subscribeOn(Schedulers.io());
   }
 
