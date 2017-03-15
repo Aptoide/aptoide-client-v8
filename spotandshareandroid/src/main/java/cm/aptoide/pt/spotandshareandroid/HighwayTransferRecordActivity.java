@@ -22,7 +22,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.spotandshareandroid.analytics.SpotAndShareAnalyticsInterface;
-import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -157,11 +156,11 @@ public class HighwayTransferRecordActivity extends ActivityView
     applicationSender = ApplicationSender.getInstance(getApplicationContext(), isHotspot);
     transferRecordManager = new TransferRecordManager(applicationsManager);
 
-    ApplicationDisconnecter applicationDisconnecter =
-        new ApplicationDisconnecter(getApplicationContext());
+    Disconnecter disconnecter =
+        new Disconnecter(getApplicationContext());
 
     presenter = new TransferRecordPresenter(this, applicationReceiver, applicationSender,
-        transferRecordManager, isHotspot, applicationDisconnecter,
+        transferRecordManager, isHotspot, disconnecter,
         ConnectionManager.getInstance(this.getApplicationContext()), analytics);
     attachPresenter(presenter);
   }

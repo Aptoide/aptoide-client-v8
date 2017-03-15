@@ -9,7 +9,7 @@ import android.content.IntentFilter;
  * Created by filipe on 14-03-2017.
  */
 
-public class ApplicationDisconnecter {
+public class Disconnecter {
 
   private Context context;
   private DisconnectListener listener;
@@ -28,7 +28,7 @@ public class ApplicationDisconnecter {
     }
   };
 
-  public ApplicationDisconnecter(Context context) {
+  public Disconnecter(Context context) {
     this.context = context;
     this.intentFilter = new IntentFilter();
     intentFilter.addAction("SERVER_DISCONNECT");

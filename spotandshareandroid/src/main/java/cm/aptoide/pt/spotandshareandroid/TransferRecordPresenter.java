@@ -12,7 +12,7 @@ import java.util.List;
 public class TransferRecordPresenter implements Presenter {
 
   private final ConnectionManager connectionManager;
-  private final ApplicationDisconnecter disconnecter;
+  private final Disconnecter disconnecter;
   private HighwayTransferRecordView view;
   private List<HighwayTransferRecordItem> listOfApps;
   private List<Host> connectedClients;
@@ -25,7 +25,7 @@ public class TransferRecordPresenter implements Presenter {
   public TransferRecordPresenter(HighwayTransferRecordView view,
       ApplicationReceiver applicationReceiver, ApplicationSender applicationSender,
       TransferRecordManager transferRecordManager, boolean isHotspot,
-      ApplicationDisconnecter disconnecter, ConnectionManager connectionManager,
+      Disconnecter disconnecter, ConnectionManager connectionManager,
       SpotAndShareAnalyticsInterface anaylitics) {
     this.view = view;
     this.applicationReceiver = applicationReceiver;
@@ -67,7 +67,7 @@ public class TransferRecordPresenter implements Presenter {
       @Override public void onErrorReceiving() {
         //handling error
         view.showGeneralErrorToast(isHotspot);
-        recoverNetworkState();
+        //recoverNetworkState();
         cleanAPTXNetworks();
         analytics.receiveApkFailed();
         view.dismiss();
@@ -75,7 +75,7 @@ public class TransferRecordPresenter implements Presenter {
 
       @Override public void onServerLeft() {
         view.showServerLeftMessage();
-        recoverNetworkState();
+        //recoverNetworkState();
         cleanAPTXNetworks();
         view.dismiss();
       }
@@ -307,7 +307,7 @@ public class TransferRecordPresenter implements Presenter {
   }
 
   public void listenToDisconnect() {
-    disconnecter.listenToDisconnect(new ApplicationDisconnecter.DisconnectListener() {
+    disconnecter.listenToDisconnect(new Disconnecter.DisconnectListener() {
       @Override public void onServerDisconnected() {
         recoverNetworkState();
         view.dismiss();
