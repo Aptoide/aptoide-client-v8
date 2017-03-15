@@ -54,7 +54,11 @@ public final class RepositoryFactory {
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), context);
     return new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
         AccessorFactory.getAccessorFor(Store.class), getAccountManager(context), aptoideClientUUID,
-        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), getAccountManager(context)));
+        new BaseBodyInterceptor(aptoideClientUUID, getAccountManager(context)));
+  }
+
+  private static AptoideAccountManager getAccountManager(Context context) {
+    return ((V8Engine) context.getApplicationContext()).getAccountManager();
   }
 
   public static InstalledRepository getInstalledRepository() {
@@ -69,6 +73,13 @@ public final class RepositoryFactory {
     return new DownloadRepository(AccessorFactory.getAccessorFor(Download.class));
   }
 
+  public static PaymentRepository getPaymentRepository(FragmentActivity activity, Product product) {
+    return new PaymentRepository(getProductRepository(activity, product),
+        getPaymentConfirmationRepository(activity, product),
+        getPaymentAuthorizationRepository(activity), new PaymentAuthorizationFactory(activity),
+        new PaymentFactory(activity));
+  }
+
   public static ProductRepository getProductRepository(Context context, Product product) {
     final PurchaseFactory purchaseFactory = new PurchaseFactory(new InAppBillingSerializer());
     final PaymentFactory paymentFactory = new PaymentFactory(context);
@@ -81,27 +92,6 @@ public final class RepositoryFactory {
       return new PaidAppProductRepository(getAppRepository(context), purchaseFactory,
           paymentFactory, (PaidAppProduct) product);
     }
-  }
-
-  public static PaymentRepository getPaymentRepository(FragmentActivity activity, Product product) {
-    return new PaymentRepository(getProductRepository(activity, product),
-        getPaymentConfirmationRepository(activity, product),
-        getPaymentAuthorizationRepository(activity), new PaymentAuthorizationFactory(activity),
-        new PaymentFactory(activity));
-  }
-
-  public static AppRepository getAppRepository(Context context) {
-    final AptoideClientUUID aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), context);
-    return new AppRepository(getNetworkOperatorManager(context), getAccountManager(context),
-        aptoideClientUUID,
-        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), getAccountManager(context)),
-        new StoreCredentialsProviderImpl());
-  }
-
-  private static NetworkOperatorManager getNetworkOperatorManager(Context context) {
-    return new NetworkOperatorManager(
-        (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
   }
 
   public static PaymentConfirmationRepository getPaymentConfirmationRepository(Context context,
@@ -119,24 +109,34 @@ public final class RepositoryFactory {
     }
   }
 
-  private static SyncAdapterBackgroundSync getBackgroundSync(Context context) {
-    return new SyncAdapterBackgroundSync(Application.getConfiguration(),
-        (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE),
-        new SyncDataConverter());
-  }
-
   public static PaymentAuthorizationRepository getPaymentAuthorizationRepository(Context context) {
     return new PaymentAuthorizationRepository(
         AccessorFactory.getAccessorFor(PaymentAuthorization.class), getBackgroundSync(context),
         new PaymentAuthorizationFactory(context), getAccountManager(context));
   }
 
+  private static NetworkOperatorManager getNetworkOperatorManager(Context context) {
+    return new NetworkOperatorManager(
+        (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
+  }
+
+  public static AppRepository getAppRepository(Context context) {
+    final AptoideClientUUID aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), context);
+    return new AppRepository(getNetworkOperatorManager(context), getAccountManager(context),
+        aptoideClientUUID,
+        new BaseBodyInterceptor(aptoideClientUUID, getAccountManager(context)),
+        new StoreCredentialsProviderImpl());
+  }
+
+  private static SyncAdapterBackgroundSync getBackgroundSync(Context context) {
+    return new SyncAdapterBackgroundSync(Application.getConfiguration(),
+        (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE),
+        new SyncDataConverter());
+  }
+
   public static InAppBillingRepository getInAppBillingRepository(Context context) {
     return new InAppBillingRepository(getNetworkOperatorManager(context),
         AccessorFactory.getAccessorFor(PaymentConfirmation.class), getAccountManager(context));
-  }
-
-  private static AptoideAccountManager getAccountManager(Context context) {
-    return ((V8Engine) context.getApplicationContext()).getAccountManager();
   }
 }

@@ -44,7 +44,7 @@ public abstract class TimeLineFollowFragment extends GridRecyclerSwipeWithToolba
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext());
     bodyDecorator =
-        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager);
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {

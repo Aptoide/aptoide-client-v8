@@ -151,7 +151,7 @@ import rx.android.schedulers.AndroidSchedulers;
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
     bodyInterceptor =
-        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager);
     downloadInstallEventConverter = new DownloadEventConverter(bodyInterceptor);
     installConverter = new InstallEventConverter(bodyInterceptor);
     analytics = Analytics.getInstance();

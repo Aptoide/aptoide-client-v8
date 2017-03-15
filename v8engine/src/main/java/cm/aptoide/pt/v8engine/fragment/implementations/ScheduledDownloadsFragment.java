@@ -91,7 +91,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext());
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
-    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID, accountManager);
     downloadConverter = new DownloadEventConverter(bodyInterceptor);
     installConverter = new InstallEventConverter(bodyInterceptor);
     analytics = Analytics.getInstance();

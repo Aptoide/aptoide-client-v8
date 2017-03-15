@@ -1,6 +1,5 @@
 package cm.aptoide.pt.spotandshareandroid;
 
-import android.R;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
@@ -187,7 +186,7 @@ public class HighwayClientService extends Service {
       ((NotificationCompat.Builder) mBuilderReceive).setContentText(
           this.getResources().getString(R.string.transfCompleted))
           // Removes the progress bar
-          .setSmallIcon(R.drawable.stat_sys_download_done)
+          .setSmallIcon(android.R.drawable.stat_sys_download_done)
           .setProgress(0, 0, false)
           .setAutoCancel(true);
 
@@ -244,7 +243,7 @@ public class HighwayClientService extends Service {
       ((NotificationCompat.Builder) mBuilderSend).setContentText(
           this.getResources().getString(R.string.transfCompleted))
           // Removes the progress bar
-          .setSmallIcon(R.drawable.stat_sys_download_done)
+          .setSmallIcon(android.R.drawable.stat_sys_download_done)
           .setProgress(0, 0, false)
           .setAutoCancel(true);
       if (mNotifyManager == null) {
@@ -333,6 +332,9 @@ public class HighwayClientService extends Service {
             }
           }
         });
+        Intent i = new Intent();
+        i.setAction("CLIENT_DISCONNECT");
+        sendBroadcast(i);
       }
     }
 

@@ -243,7 +243,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     final AptoideClientUUID aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     bodyInterceptor =
-        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager);
     socialRepository = new SocialRepository(accountManager, bodyInterceptor);
     productFactory = new ProductFactory();
     appRepository = RepositoryFactory.getAppRepository(getContext());

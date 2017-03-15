@@ -1,6 +1,5 @@
 package cm.aptoide.pt.spotandshareandroid;
 
-import android.R;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
@@ -186,7 +185,7 @@ public class HighwayServerService extends Service {
       ((NotificationCompat.Builder) mBuilderReceive).setContentText(
           this.getResources().getString(R.string.transfCompleted))
           // Removes the progress bar
-          .setSmallIcon(R.drawable.stat_sys_download_done)
+          .setSmallIcon(android.R.drawable.stat_sys_download_done)
           .setProgress(0, 0, false)
           .setAutoCancel(true);
 
@@ -240,17 +239,19 @@ public class HighwayServerService extends Service {
 
   private void finishSendNotification(AndroidAppInfo androidAppInfo) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-      ((NotificationCompat.Builder) mBuilderSend).setContentText(
-          this.getResources().getString(R.string.transfCompleted))
-          // Removes the progress bar
-          .setSmallIcon(R.drawable.stat_sys_download_done)
-          .setProgress(0, 0, false)
-          .setAutoCancel(true);
-      if (mNotifyManager == null) {
-        mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
+      if (mBuilderSend != null) {
+        ((NotificationCompat.Builder) mBuilderSend).setContentText(
+            this.getResources().getString(R.string.transfCompleted))
+            // Removes the progress bar
+            .setSmallIcon(android.R.drawable.stat_sys_download_done)
+            .setProgress(0, 0, false)
+            .setAutoCancel(true);
+        if (mNotifyManager == null) {
+          mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
+        }
+        mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
+            ((NotificationCompat.Builder) mBuilderSend).build());
       }
-      mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
-          ((NotificationCompat.Builder) mBuilderSend).build());
     }
   }
 
@@ -310,8 +311,7 @@ public class HighwayServerService extends Service {
 
         aptoideMessageClientController =
             new AptoideMessageClientController(externalStoragepath, storageCapacity,
-                fileServerLifecycle,
-                fileClientLifecycle);
+                fileServerLifecycle, fileClientLifecycle);
         (new AptoideMessageClientSocket("192.168.43.1", 55555,
             aptoideMessageClientController)).startAsync();
 
@@ -356,6 +356,9 @@ public class HighwayServerService extends Service {
         if (aptoideMessageServerSocket != null) {
           aptoideMessageServerSocket.shutdown();
         }
+        Intent i = new Intent();
+        i.setAction("SERVER_DISCONNECT");
+        sendBroadcast(i);
       }
     }
     return START_STICKY;

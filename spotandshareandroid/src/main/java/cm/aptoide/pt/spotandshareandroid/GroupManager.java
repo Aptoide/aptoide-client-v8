@@ -15,8 +15,8 @@ public class GroupManager {
       //flag to know if he is already joining a group (multiple clicks) or creating a group
   private boolean mobileDataDialog;
   private Group group;
-  private GroupListener joinGrouplistener;
-  private GroupListener createGrouplistener;
+  private JoinGroupListener joinGrouplistener;
+  private CreateGroupListener createGrouplistener;
   private String deviceName;
   private String randomAlphaNum;
   private JoinHotspotTask joinHotspotTask;
@@ -29,7 +29,7 @@ public class GroupManager {
     this.activateHotspotTask = new ActivateHotspotTask();
   }
 
-  public void joinGroup(Group group, GroupListener listener) {
+  public void joinGroup(Group group, JoinGroupListener listener) {
     if (interactingWithGroup) {
       return;
     }
@@ -71,11 +71,17 @@ public class GroupManager {
     joinTask = joinHotspotTask.execute();
   }
 
-  public void createGroup(String randomAlphaNum, String deviceName, GroupListener listener) {
+  public void createGroup(String randomAlphaNum, String deviceName, CreateGroupListener listener) {
     this.createGrouplistener = listener;
     this.randomAlphaNum = randomAlphaNum;
     this.deviceName = deviceName;
     createTask = activateHotspotTask.execute();
+  }
+
+  private String removeAPTXFromString(String keyword) {
+    String[] array = keyword.split("_");
+    String deviceName = array[2];
+    return deviceName;
   }
 
   public void cancel() {
@@ -91,11 +97,18 @@ public class GroupManager {
     interactingWithGroup = false;
   }
 
-  public interface GroupListener {
+  public interface JoinGroupListener {
+    void onSuccess(String groupName);
+
+    void onError(int result);
+  }
+
+  public interface CreateGroupListener {
     void onSuccess();
 
     void onError(int result);
   }
+
 
   private class JoinHotspotTask extends AsyncTask<Void, Void, Integer> {
 
@@ -117,7 +130,8 @@ public class GroupManager {
     protected void onPostExecute(Integer result) {
       if (joinGrouplistener != null) {
         if (result == ConnectionManager.SUCCESSFUL_JOIN) {
-          joinGrouplistener.onSuccess();
+          String hostDeviceName = removeAPTXFromString(group.getName());
+          joinGrouplistener.onSuccess(hostDeviceName);
         } else {
           joinGrouplistener.onError(result);
         }

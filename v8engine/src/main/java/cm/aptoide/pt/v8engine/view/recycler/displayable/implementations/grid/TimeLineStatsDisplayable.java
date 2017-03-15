@@ -72,7 +72,7 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
       navigationManager.navigateTo(V8Engine.getFragmentProvider()
           .newTimeLineFollowersUsingStoreIdFragment(storeId, getPojo().getData().getFollowers(),
               storeTheme));
-    } else if (userId > 0) {
+    } else if (userId != null && userId > 0) {
       navigationManager.navigateTo(V8Engine.getFragmentProvider()
           .newTimeLineFollowersUsingUserIdFragment(userId, getPojo().getData().getFollowers(),
               storeTheme));

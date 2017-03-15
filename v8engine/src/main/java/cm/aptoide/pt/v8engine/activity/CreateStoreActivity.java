@@ -21,14 +21,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -36,6 +35,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StoreBodyInterceptor;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -129,7 +129,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
         getApplicationContext());
     accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
     bodyInterceptor =
-        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager);
     requestBodyFactory = new RequestBodyFactory();
     serializer = new ObjectMapper();
     serializer.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -657,11 +657,6 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     }
   }
 
-  @NonNull private StoreBodyInterceptor createStoreInterceptor() {
-    return new StoreBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager,
-        requestBodyFactory, storeTheme, storeDescription, serializer);
-  }
-
   private void onCreateFail(@StringRes int reason) {
     ShowMessage.asSnack(content, reason);
   }
@@ -681,6 +676,11 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     if (storeDescription.equals("")) {
       storeDescription = null;
     }
+  }
+
+  @NonNull private StoreBodyInterceptor createStoreInterceptor() {
+    return new StoreBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager,
+        requestBodyFactory, storeTheme, storeDescription, serializer);
   }
 
   private String getRepoTheme() {

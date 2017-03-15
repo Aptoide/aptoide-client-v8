@@ -43,7 +43,7 @@ public interface HighwayTransferRecordView {
 
   void generateAdapter(List<HighwayTransferRecordItem> list);
 
-  void showGeneralErrorToast(boolean isHotspot);
+  void showGeneralErrorToast();
 
   void showRecoveringWifiStateToast();
 
@@ -60,6 +60,10 @@ public interface HighwayTransferRecordView {
   boolean getTransparencyClearHistory();
 
   void setTransparencyClearHistory(boolean transparency);
+
+  void setTextViewMessage(boolean availableClients);
+
+  void setInitialApConfig();
 
   interface TransferRecordListener {
     void onInstallApp(HighwayTransferRecordItem item);

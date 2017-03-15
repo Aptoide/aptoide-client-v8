@@ -55,6 +55,16 @@
       <!--android:visibility="gone"-->
       <!--android:id="@+id/hotspotLowTextView"/>-->
 
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_margin="18dp"
+          android:color="@color/medium_gray"
+          android:gravity="bottom|center"
+          android:text="@string/searching_groups"
+          android:textSize="20dp"
+          />
+
       <ProgressBar
           android:id="@+id/buttonsProgressBar"
           android:layout_width="wrap_content"
@@ -102,7 +112,7 @@
           android:id="@+id/createGroup"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_gravity="center"
+          android:layout_gravity="center_horizontal"
           android:layout_weight="0.333"
           android:background="@drawable/button_selector_main"
           android:baselineAligned="false"
@@ -135,42 +145,7 @@
 
       </LinearLayout>
 
-      <LinearLayout
-          android:id="@+id/joinGroup"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center"
-          android:layout_weight="0.333"
-          android:background="@drawable/button_selector_main"
-          android:baselineAligned="false"
-          android:clickable="true"
-          android:orientation="vertical"
-          android:weightSum="1"
-          >
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="4dp"
-            android:layout_weight="0.9"
-            android:adjustViewBounds="true"
-            android:src="@drawable/joingroup"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="0.1"
-            android:padding="5dp"
-            android:text="@string/joinGroup"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#FFFFFF"
-            android:textSize="10sp"
-            />
-
-      </LinearLayout>
 
     </LinearLayout>
 

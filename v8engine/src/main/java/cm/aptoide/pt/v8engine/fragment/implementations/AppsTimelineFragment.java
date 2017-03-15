@@ -146,7 +146,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
     idsRepository =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    bodyInterceptor = new BaseBodyInterceptor(idsRepository.getUniqueIdentifier(), accountManager);
+    bodyInterceptor = new BaseBodyInterceptor(idsRepository, accountManager);
     timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
         new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
             AccessorFactory.getAccessorFor(Installed.class)), bodyInterceptor);

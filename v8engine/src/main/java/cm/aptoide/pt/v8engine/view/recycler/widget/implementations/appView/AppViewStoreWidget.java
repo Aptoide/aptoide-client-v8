@@ -93,7 +93,7 @@ import rx.functions.Action1;
     final IdsRepositoryImpl aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager,
-        new BaseBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager),
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager),
         new StoreCredentialsProviderImpl(),
         AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class));
 
