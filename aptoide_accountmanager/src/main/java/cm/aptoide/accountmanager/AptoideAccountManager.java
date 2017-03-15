@@ -321,7 +321,7 @@ public class AptoideAccountManager {
       } else if (TextUtils.isEmpty(email)) {
         return Completable.error(
             new AccountValidationException(AccountValidationException.EMPTY_EMAIL));
-      } else if (validatePassword && password.length() < 8 || !has1number1letter(password)) {
+      } else if (validatePassword && (password.length() < 8 || !has1number1letter(password))) {
         return Completable.error(
             new AccountValidationException(AccountValidationException.INVALID_PASSWORD));
       }
