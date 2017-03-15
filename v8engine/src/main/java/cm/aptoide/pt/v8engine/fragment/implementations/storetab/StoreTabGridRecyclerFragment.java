@@ -57,6 +57,10 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
       StoreContext storeContext) {
     Bundle args = buildBundle(event, title, storeTheme, tag, storeContext);
     Fragment fragment = StoreTabFragmentChooser.choose(event.getName());
+    Bundle arguments = fragment.getArguments();
+    if (arguments != null) {
+      args.putAll(arguments);
+    }
     fragment.setArguments(args);
     return fragment;
   }
@@ -130,7 +134,8 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
       Observable<List<Displayable>> displayablesObservable = buildDisplayables(refresh, url);
       if (displayablesObservable != null) {
         DisplayableManager displayableManager = this;
-        displayablesObservable.compose(bindUntilEvent(LifecycleEvent.DESTROY))
+        displayablesObservable
+            .compose(bindUntilEvent(LifecycleEvent.DESTROY))
             .subscribe(displayables -> {
               displayableManager.clearDisplayables().addDisplayables(displayables, true);
             }, err -> {

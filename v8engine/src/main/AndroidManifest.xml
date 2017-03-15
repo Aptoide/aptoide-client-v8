@@ -65,7 +65,7 @@
     <activity android:name=".activity.WebAuthorizationActivity"/>
     <activity android:name=".activity.LoginActivity"/>
 
-    <activity android:name="cm.aptoide.pt.shareappsandroid.HighwayActivity" />
+    <activity android:name="cm.aptoide.pt.spotandshareandroid.HighwayActivity" />
 
     <activity
         android:name="com.facebook.FacebookActivity"
@@ -189,13 +189,6 @@
             android:scheme="http"/>
       </intent-filter>
     </activity>
-
-    <receiver android:name=".receivers.LoginBroadcastReceiver">
-      <intent-filter>
-        <action android:name="${applicationId}.accountmanager.broadcast.login"/>
-        <action android:name="${applicationId}.accountmanager.broadcast.logout"/>
-      </intent-filter>
-    </receiver>
 
     <receiver android:name=".install.InstalledBroadcastReceiver">
       <intent-filter android:priority="999">

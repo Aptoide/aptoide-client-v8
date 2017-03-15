@@ -7,9 +7,11 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.ws.Api;
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListFullReviews;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -32,61 +34,31 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   private static final int MAX_COMMENTS = 10;
   private String url;
 
-  protected ListFullReviewsRequest(Body body, String baseHost) {
-    super(body, baseHost);
+  protected ListFullReviewsRequest(Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  public ListFullReviewsRequest(String url, Body body, String baseHost) {
-    super(body, baseHost);
+  public ListFullReviewsRequest(String url, Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
     this.url = url;
   }
 
   public static ListFullReviewsRequest of(long storeId, int limit, int offset,
-      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken,
-      String aptoideClientUUID) {
-
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+      BaseRequestWithStore.StoreCredentials storeCredentials, BodyInterceptor bodyInterceptor) {
 
     Body body = new Body(storeId, limit, offset, ManagerPreferences.getAndResetForceServerRefresh(),
         storeCredentials);
-    return new ListFullReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+    return new ListFullReviewsRequest(body, bodyInterceptor);
   }
 
-  public static ListFullReviewsRequest ofAction(String url, boolean refresh, String accessToken,
-      String aptoideClientUUID, BaseRequestWithStore.StoreCredentials storeCredentials) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+  public static ListFullReviewsRequest ofAction(String url, boolean refresh,
+      BaseRequestWithStore.StoreCredentials storeCredentials, BodyInterceptor bodyInterceptor) {
     return new ListFullReviewsRequest(url.replace("listFullReviews", ""),
-        (Body) decorator.decorate(new Body(refresh, storeCredentials), accessToken), BASE_HOST);
-  }
-
-  public static ListFullReviewsRequest of(String storeName, String packageName, String accessToken,
-      String aptoideClientUUID) {
-    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, accessToken, aptoideClientUUID);
-  }
-
-  /**
-   * example call: http://ws75.aptoide.com/api/7/listFullReviews/store_name/apps/package_name/com.supercell.clashofclans/limit/10
-   */
-  public static ListFullReviewsRequest of(String storeName, String packageName, int maxReviews,
-      int maxComments, String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-
-    Body body = new Body(storeName, packageName, maxReviews, maxComments,
-        ManagerPreferences.getAndResetForceServerRefresh());
-    return new ListFullReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
-  }
-
-  /**
-   * example call: http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/sub_limit/0/limit/3
-   */
-  public static ListFullReviewsRequest ofTopReviews(String storeName, String packageName,
-      int maxReviews, String accessToken, String aptoideClientUUID) {
-
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-
-    Body body = new Body(storeName, packageName, maxReviews, 0,
-        ManagerPreferences.getAndResetForceServerRefresh());
-    return new ListFullReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+        new Body(refresh, storeCredentials), bodyInterceptor);
   }
 
   @Override protected Observable<ListFullReviews> loadDataFromNetwork(Interfaces interfaces,

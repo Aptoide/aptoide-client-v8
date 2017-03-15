@@ -7,18 +7,16 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,28 +28,19 @@ import rx.Observable;
  */
 
 public class StoreUtils {
+  public static final String STORE_SUSPENDED_ERROR_CODE = "STORE-7";
 
   public static final String PRIVATE_STORE_ERROR_CODE = "STORE-3";
   public static final String PRIVATE_STORE_WRONG_CREDENTIALS_ERROR_CODE = "STORE-4";
-  public static final String STORE_SUSPENDED_ERROR_CODE = "STORE-7";
 
-  private static StoreCredentialsProviderImpl storeCredentialsProvider;
-  private static AptoideClientUUID aptoideClientUUID;
-
-  static {
-    storeCredentialsProvider = new StoreCredentialsProviderImpl();
-
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-  }
-
-  @Deprecated
-  public static BaseRequestWithStore.StoreCredentials getStoreCredentials(long storeId) {
+  @Deprecated public static BaseRequestWithStore.StoreCredentials getStoreCredentials(long storeId,
+      StoreCredentialsProvider storeCredentialsProvider) {
     return storeCredentialsProvider.get(storeId);
   }
 
   @Partners @Deprecated public static @Nullable
-  BaseRequestWithStore.StoreCredentials getStoreCredentialsFromUrl(String url) {
+  BaseRequestWithStore.StoreCredentials getStoreCredentialsFromUrl(String url,
+      StoreCredentialsProvider storeCredentialsProvider) {
     return storeCredentialsProvider.fromUrl(url);
   }
 
@@ -61,10 +50,10 @@ public class StoreUtils {
    */
   @Deprecated public static void subscribeStore(String storeName,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
-      @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager) {
-    subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName),
-        accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier()),
-        successRequestListener, errorRequestListener, accountManager);
+      @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager,
+      BodyInterceptor bodyInterceptor, StoreCredentialsProvider storeCredentialsProvider) {
+    subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName, storeCredentialsProvider),
+        bodyInterceptor), successRequestListener, errorRequestListener, accountManager, null, null);
   }
 
   /**
@@ -73,38 +62,26 @@ public class StoreUtils {
    */
   @Deprecated public static void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
-      @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager) {
-    getStoreMetaRequest.execute(getStoreMeta -> {
+      @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager,
+      String storeUserName, String storePassword) {
+    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
 
+    getStoreMetaRequest.observe().flatMap(getStoreMeta -> {
       if (BaseV7Response.Info.Status.OK.equals(getStoreMeta.getInfo().getStatus())) {
-
-        StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-
-        Store store = new Store();
-
-        cm.aptoide.pt.model.v7.store.Store storeData = getStoreMeta.getData();
-        store.setStoreId(storeData.getId());
-        store.setStoreName(storeData.getName());
-        store.setDownloads(storeData.getStats().getDownloads());
-
-        store.setIconPath(storeData.getAvatar());
-        store.setTheme(storeData.getAppearance().getTheme());
-
-        if (isPrivateCredentialsSet(getStoreMetaRequest)) {
-          store.setUsername(getStoreMetaRequest.getBody().getStoreUser());
-          store.setPasswordSha1(getStoreMetaRequest.getBody().getStorePassSha1());
-        }
-
         // TODO: 18-05-2016 neuro private ainda na ta
         if (accountManager.isLoggedIn()) {
-          accountManager.subscribeStore(storeData.getName());
+          return accountManager.subscribeStore(getStoreMeta.getData().getName(), storeUserName,
+              storePassword).andThen(Observable.just(getStoreMeta));
+        } else {
+          return Observable.just(getStoreMeta);
         }
-
-        storeAccessor.save(store);
-
-        if (successRequestListener != null) {
-          successRequestListener.call(getStoreMeta);
-        }
+      } else {
+        return Observable.error(new Exception("Something went wrong while getting store meta"));
+      }
+    }).subscribe(getStoreMeta -> {
+      saveStore(getStoreMeta.getData(), getStoreMetaRequest, storeAccessor);
+      if (successRequestListener != null) {
+        successRequestListener.call(getStoreMeta);
       }
     }, (e) -> {
       if (errorRequestListener != null) {
@@ -114,9 +91,30 @@ public class StoreUtils {
     });
   }
 
-  @Deprecated
-  public static BaseRequestWithStore.StoreCredentials getStoreCredentials(String storeName) {
+  /**
+   * @see StoreCredentialsProvider
+   */
+  @Deprecated public static BaseRequestWithStore.StoreCredentials getStoreCredentials(
+      String storeName, StoreCredentialsProvider storeCredentialsProvider) {
     return storeCredentialsProvider.get(storeName);
+  }
+
+  private static void saveStore(cm.aptoide.pt.model.v7.store.Store storeData,
+      GetStoreMetaRequest getStoreMetaRequest, StoreAccessor storeAccessor) {
+    Store store = new Store();
+
+    store.setStoreId(storeData.getId());
+    store.setStoreName(storeData.getName());
+    store.setDownloads(storeData.getStats().getDownloads());
+
+    store.setIconPath(storeData.getAvatar());
+    store.setTheme(storeData.getAppearance().getTheme());
+
+    if (isPrivateCredentialsSet(getStoreMetaRequest)) {
+      store.setUsername(getStoreMetaRequest.getBody().getStoreUser());
+      store.setPasswordSha1(getStoreMetaRequest.getBody().getStorePassSha1());
+    }
+    storeAccessor.save(store);
   }
 
   private static boolean isPrivateCredentialsSet(GetStoreMetaRequest getStoreMetaRequest) {
@@ -180,12 +178,16 @@ public class StoreUtils {
     return storesAuthMap.size() > 0 ? storesAuthMap : null;
   }
 
-  public static void unsubscribeStore(String name, AptoideAccountManager accountManager) {
-    if (accountManager.isLoggedIn()) {
-      accountManager.unsubscribeStore(name);
-    }
-    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-    storeAccessor.remove(name);
+  public static void unSubscribeStore(String name, AptoideAccountManager accountManager,
+      StoreCredentialsProvider storeCredentialsProvider) {
+    accountManager.loginStatus().first().subscribe(isLoggedIn -> {
+      if (isLoggedIn) {
+        accountManager.unsubscribeStore(name, storeCredentialsProvider.get(name).getName(),
+            storeCredentialsProvider.get(name).getPasswordSha1());
+      }
+      StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+      storeAccessor.remove(name);
+    });
   }
 
   public static StoreError getErrorType(String code) {

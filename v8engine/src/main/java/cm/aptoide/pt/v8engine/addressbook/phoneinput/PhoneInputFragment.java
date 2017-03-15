@@ -4,19 +4,33 @@ import android.app.ProgressDialog;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
+import cm.aptoide.pt.v8engine.addressbook.navigation.AddressBookNavigationManager;
 import cm.aptoide.pt.v8engine.addressbook.utils.ContactUtils;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.UIComponentFragment;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 
 /**
@@ -24,6 +38,7 @@ import com.jakewharton.rxbinding.view.RxView;
  */
 public class PhoneInputFragment extends UIComponentFragment implements PhoneInputContract.View {
 
+  public static final String TAG = "TAG";
   private PhoneInputContract.UserActionsListener mActionsListener;
   private TextView mNotNowV;
   private TextView mSharePhoneV;
@@ -32,20 +47,38 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
   private EditText mPhoneNumber;
   private ProgressDialog mGenericPleaseWaitDialog;
   private ContactUtils contactUtils;
+  private String entranceTag;
 
-  public static PhoneInputFragment newInstance() {
+  public static PhoneInputFragment newInstance(String tag) {
     PhoneInputFragment phoneInputFragment = new PhoneInputFragment();
     Bundle extras = new Bundle();
+    extras.putString(TAG, tag);
     phoneInputFragment.setArguments(extras);
     return phoneInputFragment;
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    final AptoideClientUUID aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+    final AptoideAccountManager accountManager =
+        ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     this.mActionsListener = new PhoneInputPresenter(this, new ContactsRepositoryImpl(
-        ((V8Engine) getContext().getApplicationContext()).getAccountManager()));
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager),
+        aptoideClientUUID),
+        new AddressBookAnalytics(Analytics.getInstance(),
+            AppEventsLogger.newLogger(getContext().getApplicationContext())),
+        new AddressBookNavigationManager(NavigationManagerV4.Builder.buildWith(getActivity()),
+            entranceTag, getString(R.string.addressbook_about),
+            getString(R.string.addressbook_data_about,
+                Application.getConfiguration().getMarketName())));
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
     contactUtils = new ContactUtils();
+  }
+
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    entranceTag = (String) args.get(TAG);
   }
 
   @Override public void setupViews() {
@@ -55,8 +88,34 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
 
     String countryCodeE164 = contactUtils.getCountryCodeForRegion(getContext());
     if (!countryCodeE164.isEmpty()) {
-      mCountryNumber.setHint("+" + countryCodeE164);
+      mCountryNumber.setHint(countryCodeE164);
     }
+
+    mCountryNumber.addTextChangedListener(new TextWatcher() {
+      @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+      }
+
+      @Override
+      public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+      }
+
+      @Override public void afterTextChanged(Editable editable) {
+        if (editable.length() == 3) {
+          mPhoneNumber.requestFocus();
+        }
+      }
+    });
+
+    mPhoneNumber.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+      if ((keyEvent != null && (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId
+          == EditorInfo.IME_ACTION_DONE)) {
+        String countryCode = mCountryNumber.getText().toString();
+        mActionsListener.submitClicked(countryCode.concat(mPhoneNumber.getText().toString()));
+      }
+      return false;
+    });
 
     RxView.clicks(mNotNowV).subscribe(click -> this.mActionsListener.notNowClicked());
     RxView.clicks(mSaveNumber).subscribe(click -> {
@@ -93,11 +152,6 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
     } else {
       mGenericPleaseWaitDialog.dismiss();
     }
-  }
-
-  @Override public void showSubmissionSuccess() {
-    getNavigationManager().navigateTo(
-        V8Engine.getFragmentProvider().newThankYouConnectingFragment());
   }
 
   @Override public void showSubmissionError() {

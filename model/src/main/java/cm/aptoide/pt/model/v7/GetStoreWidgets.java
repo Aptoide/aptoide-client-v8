@@ -49,6 +49,7 @@ import lombok.experimental.Accessors;
       private String icon;
       private String message;
       private List<Data.Categories> categories; //only present if type": "DISPLAYS"
+      private Review.User user; //only on tabs (timeline)
 
       @lombok.Data public static class Categories {
 

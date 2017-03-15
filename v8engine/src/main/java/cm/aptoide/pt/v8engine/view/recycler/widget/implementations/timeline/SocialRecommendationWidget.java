@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -19,12 +20,10 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
   private final String CARD_TYPE_NAME = "SOCIAL_RECOMMENDATION";
   private TextView storeName;
   private TextView userName;
-  private ImageView storeAvatar;
-  private ImageView userAvatar;
   private ImageView appIcon;
   private TextView appName;
   private TextView getApp;
-  //private CardView cardView;
+  private CardView cardView;
   private RelativeLayout cardContent;
 
   public SocialRecommendationWidget(View itemView) {
@@ -35,15 +34,13 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
     super.assignViews(itemView);
     storeName = (TextView) itemView.findViewById(R.id.card_title);
     userName = (TextView) itemView.findViewById(R.id.card_subtitle);
-    storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
-    userAvatar = (ImageView) itemView.findViewById(R.id.card_user_avatar);
     appName = (TextView) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_similar_apps);
     appIcon =
         (ImageView) itemView.findViewById(R.id.displayable_social_timeline_recommendation_icon);
     getApp = (TextView) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_get_app_button);
-    //cardView = (CardView) itemView.findViewById(R.id.card);
+    cardView = (CardView) itemView.findViewById(R.id.card);
     cardContent = (RelativeLayout) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_card_content);
   }
@@ -78,6 +75,8 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
             .loadWithShadowCircleTransform(displayable.getUser().getAvatar(), storeAvatar);
       }
     }
+
+    setCardViewMargin(displayable, cardView);
 
     ImageLoader.with(context).load(displayable.getAppIcon(), appIcon);
 

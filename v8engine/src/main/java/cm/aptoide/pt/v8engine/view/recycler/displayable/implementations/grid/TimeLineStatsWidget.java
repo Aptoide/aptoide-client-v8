@@ -1,11 +1,13 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
+import android.support.annotation.UiThread;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Button;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import rx.Observable;
 
 /**
  * Created by trinkes on 15/12/2016.
@@ -13,34 +15,42 @@ import com.jakewharton.rxbinding.view.RxView;
 
 public class TimeLineStatsWidget extends Widget<TimeLineStatsDisplayable> {
 
-  private TextView followers;
-  private TextView following;
-  private TextView followFriends;
+  private Button followers;
+  private Button following;
+  private Button followFriends;
+  private View rightSeparator;
 
   public TimeLineStatsWidget(View itemView) {
     super(itemView);
   }
 
-  @Override protected void assignViews(View itemView) {
-    followers = (TextView) itemView.findViewById(R.id.followers);
-    following = (TextView) itemView.findViewById(R.id.following);
-    followFriends = (TextView) itemView.findViewById(R.id.follow_friends_button);
+  @UiThread @Override protected void assignViews(View itemView) {
+    followers = (Button) itemView.findViewById(R.id.followers);
+    following = (Button) itemView.findViewById(R.id.following);
+    followFriends = (Button) itemView.findViewById(R.id.follow_friends_button);
+    rightSeparator = itemView.findViewById(R.id.rightSeparator);
   }
 
-  @Override public void bindView(TimeLineStatsDisplayable displayable) {
+  @UiThread @Override public void bindView(TimeLineStatsDisplayable displayable) {
     followers.setText(displayable.getFollowersText(getContext()));
     following.setText(displayable.getFollowingText(getContext()));
-    compositeSubscription.add(RxView.clicks(followers)
-        .subscribe(click -> displayable.followersClick(getNavigationManager()), err -> {
-          CrashReport.getInstance().log(err);
-        }));
-    compositeSubscription.add(RxView.clicks(following)
-        .subscribe(click -> displayable.followingClick(getNavigationManager()), err -> {
-          CrashReport.getInstance().log(err);
-        }));
-    compositeSubscription.add(RxView.clicks(followFriends)
-        .subscribe(click -> displayable.followFriendsClick(getNavigationManager()), err -> {
-          CrashReport.getInstance().log(err);
-        }));
+
+    Observable<Void> followersClick =
+        RxView.clicks(followers).doOnNext(__ -> displayable.followersClick(getNavigationManager()));
+
+    Observable<Void> followingClick =
+        RxView.clicks(following).doOnNext(__ -> displayable.followingClick(getNavigationManager()));
+
+    Observable<Void> followFriendsClick = RxView.clicks(followFriends)
+        .doOnNext(__ -> displayable.followFriendsClick(getNavigationManager()));
+
+    compositeSubscription.add(Observable.merge(followersClick, followingClick, followFriendsClick)
+        .doOnError((throwable) -> CrashReport.getInstance().log(throwable))
+        .subscribe());
+
+    if (!displayable.isShouldShowAddFriends()) {
+      rightSeparator.setVisibility(View.GONE);
+      followFriends.setVisibility(View.GONE);
+    }
   }
 }

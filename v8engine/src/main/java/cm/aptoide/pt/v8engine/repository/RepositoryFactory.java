@@ -19,12 +19,13 @@ import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.iab.InAppBillingSerializer;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.Product;
@@ -33,6 +34,7 @@ import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
 import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
 import cm.aptoide.pt.v8engine.repository.sync.SyncDataConverter;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 
 /**
  * Created by sithengineer on 02/09/16.
@@ -48,9 +50,15 @@ public final class RepositoryFactory {
   }
 
   public static UpdateRepository getUpdateRepository(Context context) {
+    IdsRepositoryImpl aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), context);
     return new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
-        AccessorFactory.getAccessorFor(Store.class), getAccountManager(context),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), context));
+        AccessorFactory.getAccessorFor(Store.class), getAccountManager(context), aptoideClientUUID,
+        new BaseBodyInterceptor(aptoideClientUUID, getAccountManager(context)));
+  }
+
+  private static AptoideAccountManager getAccountManager(Context context) {
+    return ((V8Engine) context.getApplicationContext()).getAccountManager();
   }
 
   public static InstalledRepository getInstalledRepository() {
@@ -65,6 +73,13 @@ public final class RepositoryFactory {
     return new DownloadRepository(AccessorFactory.getAccessorFor(Download.class));
   }
 
+  public static PaymentRepository getPaymentRepository(FragmentActivity activity, Product product) {
+    return new PaymentRepository(getProductRepository(activity, product),
+        getPaymentConfirmationRepository(activity, product),
+        getPaymentAuthorizationRepository(activity), new PaymentAuthorizationFactory(activity),
+        new PaymentFactory(activity));
+  }
+
   public static ProductRepository getProductRepository(Context context, Product product) {
     final PurchaseFactory purchaseFactory = new PurchaseFactory(new InAppBillingSerializer());
     final PaymentFactory paymentFactory = new PaymentFactory(context);
@@ -77,24 +92,6 @@ public final class RepositoryFactory {
       return new PaidAppProductRepository(getAppRepository(context), purchaseFactory,
           paymentFactory, (PaidAppProduct) product);
     }
-  }
-
-  public static PaymentRepository getPaymentRepository(FragmentActivity activity, Product product) {
-    return new PaymentRepository(getProductRepository(activity, product),
-        getPaymentConfirmationRepository(activity, product),
-        getPaymentAuthorizationRepository(activity), new PaymentAuthorizationFactory(activity),
-        new PaymentFactory(activity));
-  }
-
-  public static AppRepository getAppRepository(Context context) {
-    return new AppRepository(getNetworkOperatorManager(context), getAccountManager(context),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
-  }
-
-  private static NetworkOperatorManager getNetworkOperatorManager(Context context) {
-    return new NetworkOperatorManager(
-        (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
   }
 
   public static PaymentConfirmationRepository getPaymentConfirmationRepository(Context context,
@@ -112,24 +109,34 @@ public final class RepositoryFactory {
     }
   }
 
-  private static SyncAdapterBackgroundSync getBackgroundSync(Context context) {
-    return new SyncAdapterBackgroundSync(Application.getConfiguration(),
-        (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE),
-        new SyncDataConverter());
-  }
-
   public static PaymentAuthorizationRepository getPaymentAuthorizationRepository(Context context) {
     return new PaymentAuthorizationRepository(
         AccessorFactory.getAccessorFor(PaymentAuthorization.class), getBackgroundSync(context),
         new PaymentAuthorizationFactory(context), getAccountManager(context));
   }
 
+  private static NetworkOperatorManager getNetworkOperatorManager(Context context) {
+    return new NetworkOperatorManager(
+        (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
+  }
+
+  public static AppRepository getAppRepository(Context context) {
+    final AptoideClientUUID aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), context);
+    return new AppRepository(getNetworkOperatorManager(context), getAccountManager(context),
+        aptoideClientUUID,
+        new BaseBodyInterceptor(aptoideClientUUID, getAccountManager(context)),
+        new StoreCredentialsProviderImpl());
+  }
+
+  private static SyncAdapterBackgroundSync getBackgroundSync(Context context) {
+    return new SyncAdapterBackgroundSync(Application.getConfiguration(),
+        (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE),
+        new SyncDataConverter());
+  }
+
   public static InAppBillingRepository getInAppBillingRepository(Context context) {
     return new InAppBillingRepository(getNetworkOperatorManager(context),
         AccessorFactory.getAccessorFor(PaymentConfirmation.class), getAccountManager(context));
-  }
-
-  private static AptoideAccountManager getAccountManager(Context context) {
-    return ((V8Engine) context.getApplicationContext()).getAccountManager();
   }
 }

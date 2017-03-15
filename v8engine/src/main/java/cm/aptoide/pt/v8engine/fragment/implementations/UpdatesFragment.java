@@ -7,12 +7,14 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -63,6 +65,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
   private int oldUpdateListHash = 0;
   private IdsRepositoryImpl idsRepository;
+  private BodyInterceptor bodyInterceptor;
 
   @NonNull public static UpdatesFragment newInstance() {
     return new UpdatesFragment();
@@ -76,14 +79,46 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     installManager = new InstallManager(AptoideDownloadManager.getInstance(),
         new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK));
     analytics = Analytics.getInstance();
-    downloadInstallEventConverter = new DownloadEventConverter(idsRepository, accountManager);
-    installConverter = new InstallEventConverter(idsRepository, accountManager);
+    bodyInterceptor = new BaseBodyInterceptor(idsRepository, accountManager);
+    downloadInstallEventConverter = new DownloadEventConverter(bodyInterceptor);
+    installConverter = new InstallEventConverter(bodyInterceptor);
 
     updatesDisplayablesList = new LinkedList<>();
     installedDisplayablesList = new LinkedList<>();
 
     installedRepository = RepositoryFactory.getInstalledRepository();
     updateRepository = RepositoryFactory.getUpdateRepository(getContext());
+  }
+
+  /**
+   * This method is called when pull to refresh is done. An update repository call is made to fetch
+   * new updates and this call will hit the network. When new updates are found the listener in the
+   * load() method above will be notified of those changes and update the list. The response of
+   * this repository call will show a notification according: the number of new updates, no more
+   * new updates or no updates at all.
+   */
+  @Override public void reload() {
+    super.reload();
+
+    if (updateReloadSubscription != null && !updateReloadSubscription.isUnsubscribed()) {
+      updateReloadSubscription.unsubscribe();
+    }
+
+    updateReloadSubscription = updateRepository.sync(true).subscribe(() -> finishLoading(), e -> {
+      if (e instanceof RepositoryItemNotFoundException) {
+        ShowMessage.asSnack(getView(), R.string.add_store);
+      }
+      CrashReport.getInstance().log(e);
+      finishLoading();
+    });
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+
+    if (updateReloadSubscription != null && !updateReloadSubscription.isUnsubscribed()) {
+      updateReloadSubscription.unsubscribe();
+    }
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -196,36 +231,5 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
       }
       return Observable.just(item);
     });
-  }
-
-  /**
-   * This method is called when pull to refresh is done. An update repository call is made to fetch
-   * new updates and this call will hit the network. When new updates are found the listener in the
-   * load() method above will be notified of those changes and update the list. The response of
-   * this repository call will show a notification according: the number of new updates, no more
-   * new updates or no updates at all.
-   */
-  @Override public void reload() {
-    super.reload();
-
-    if (updateReloadSubscription != null && !updateReloadSubscription.isUnsubscribed()) {
-      updateReloadSubscription.unsubscribe();
-    }
-
-    updateReloadSubscription = updateRepository.sync(true).subscribe(() -> finishLoading(), e -> {
-      if (e instanceof RepositoryItemNotFoundException) {
-        ShowMessage.asSnack(getView(), R.string.add_store);
-      }
-      CrashReport.getInstance().log(e);
-      finishLoading();
-    });
-  }
-
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-
-    if (updateReloadSubscription != null && !updateReloadSubscription.isUnsubscribed()) {
-      updateReloadSubscription.unsubscribe();
-    }
   }
 }

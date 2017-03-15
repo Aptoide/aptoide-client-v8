@@ -8,15 +8,16 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.util.Pair;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.model.v7.store.GetHomeMeta;
 import java.util.LinkedList;
 import java.util.List;
 import rx.Observable;
@@ -32,7 +33,8 @@ public class WSWidgetsUtils {
   public static Observable<GetStoreWidgets.WSWidget> loadWidgetNode(
       GetStoreWidgets.WSWidget wsWidget, BaseRequestWithStore.StoreCredentials storeCredentials,
       boolean refresh, String accessToken, String aptoideClientUuid,
-      boolean googlePlayServicesAvailable, String oemid, boolean mature) {
+      boolean googlePlayServicesAvailable, String oemid, boolean mature,
+      BodyInterceptor bodyInterceptor) {
 
     if (isKnownType(wsWidget.getType())) {
 
@@ -43,27 +45,26 @@ public class WSWidgetsUtils {
       }
       switch (wsWidget.getType()) {
         case APPS_GROUP:
-          return ListAppsRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUuid)
+          return ListAppsRequest.ofAction(url, storeCredentials, bodyInterceptor)
               .observe(refresh)
               .observeOn(Schedulers.io())
-              .doOnNext(wsWidget::setViewObject)
+              .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
 
         case STORES_GROUP:
-          return ListStoresRequest.ofAction(url, accessToken, aptoideClientUuid)
+          return ListStoresRequest.ofAction(url, bodyInterceptor)
               .observe(refresh)
               .observeOn(Schedulers.io())
-              .doOnNext(wsWidget::setViewObject)
+              .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
 
         case DISPLAYS:
-          return GetStoreDisplaysRequest.ofAction(url, storeCredentials, accessToken,
-              aptoideClientUuid)
+          return GetStoreDisplaysRequest.ofAction(url, storeCredentials, bodyInterceptor)
               .observe(refresh)
               .observeOn(Schedulers.io())
-              .doOnNext(wsWidget::setViewObject)
+              .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
 
@@ -72,21 +73,20 @@ public class WSWidgetsUtils {
               mature)
               .observe()
               .observeOn(Schedulers.io())
-              .doOnNext(wsWidget::setViewObject)
+              .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
 
-        case STORE_META:
-          return GetStoreMetaRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUuid)
+        case HOME_META:
+          return GetHomeMetaRequest.ofAction(url, storeCredentials, bodyInterceptor)
               .observe(refresh)
               .observeOn(Schedulers.io())
-              .doOnNext(wsWidget::setViewObject)
+              .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
 
         case COMMENTS_GROUP:
-          return ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, accessToken,
-              aptoideClientUuid)
+          return ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, bodyInterceptor)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(listComments -> wsWidget.setViewObject(
@@ -96,20 +96,19 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case REVIEWS_GROUP:
-          return ListFullReviewsRequest.ofAction(url, refresh, accessToken, aptoideClientUuid,
-              storeCredentials)
+          return ListFullReviewsRequest.ofAction(url, refresh, storeCredentials, bodyInterceptor)
               .observe(refresh)
               .observeOn(Schedulers.io())
-              .doOnNext(wsWidget::setViewObject)
+              .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
 
         case MY_STORES_SUBSCRIBED:
         case STORES_RECOMMENDED:
-          return GetMyStoreListRequest.of(url, accessToken, aptoideClientUuid)
+          return GetMyStoreListRequest.of(url, bodyInterceptor)
               .observe(refresh)
               .observeOn(Schedulers.io())
-              .doOnNext(wsWidget::setViewObject)
+              .doOnNext(obj -> wsWidget.setViewObject(obj))
               .doOnError(throwable -> {
                 LinkedList<String> errorsList = new LinkedList<>();
                 errorsList.add(USER_NOT_LOGGED_ERROR);
@@ -122,10 +121,16 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case MY_STORE_META:
-          return GetMyStoreMetaRequest.of(accessToken, aptoideClientUuid)
+          return GetMyStoreMetaRequest.of(bodyInterceptor)
               .observe(refresh)
-              .observeOn(Schedulers.io())
-              .doOnNext(wsWidget::setViewObject)
+              .observeOn(Schedulers.io()).map(getStoreMeta -> {
+                GetHomeMeta.Data data = new GetHomeMeta.Data();
+                data.setStore(getStoreMeta.getData());
+                GetHomeMeta homeMeta = new GetHomeMeta();
+                homeMeta.setData(data);
+                return homeMeta;
+              })
+              .doOnNext(obj -> wsWidget.setViewObject(obj))
               .doOnError(throwable -> {
                 LinkedList<String> errorsList = new LinkedList<>();
                 errorsList.add(USER_NOT_LOGGED_ERROR);
@@ -138,10 +143,10 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case APP_META:
-          return GetAppRequest.ofAction(url, accessToken, aptoideClientUuid)
+          return GetAppRequest.ofAction(url, bodyInterceptor)
               .observe(refresh)
               .observeOn(Schedulers.io())
-              .doOnNext(wsWidget::setViewObject)
+              .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
 

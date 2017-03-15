@@ -5,6 +5,9 @@
 
 package cm.aptoide.accountmanager;
 
+import android.text.TextUtils;
+import java.util.List;
+
 /**
  * Created by marcelobenites on 10/02/17.
  */
@@ -20,14 +23,16 @@ public class Account {
   private final Type type;
   private final String store;
   private final String storeAvatar;
-  private final boolean mature;
-  private final String access;
+  private final boolean adultContentEnabled;
+  private final Access access;
   private final boolean accessConfirmed;
-  private String password;
+  private final String password;
+  private final List<Store> subscribedStores;
 
   public Account(String id, String email, String nickname, String avatar, String refreshToken,
-      String token, String password, Type type, String store, String storeAvatar, boolean mature,
-      String access, boolean accessConfirmed) {
+      String token, String password, Type type, String store, String storeAvatar,
+      boolean adultContentEnabled, Access access, boolean accessConfirmed,
+      List<Store> subscribedStores) {
     this.id = id;
     this.email = email;
     this.nickname = nickname;
@@ -38,9 +43,14 @@ public class Account {
     this.type = type;
     this.store = store;
     this.storeAvatar = storeAvatar;
-    this.mature = mature;
+    this.adultContentEnabled = adultContentEnabled;
     this.access = access;
     this.accessConfirmed = accessConfirmed;
+    this.subscribedStores = subscribedStores;
+  }
+
+  public List<Store> getSubscribedStores() {
+    return subscribedStores;
   }
 
   public String getEmail() {
@@ -79,11 +89,11 @@ public class Account {
     return storeAvatar;
   }
 
-  public boolean isMature() {
-    return mature;
+  public boolean isAdultContentEnabled() {
+    return adultContentEnabled;
   }
 
-  public String getAccess() {
+  public Access getAccess() {
     return access;
   }
 
@@ -95,7 +105,16 @@ public class Account {
     return password;
   }
 
+  public boolean isLoggedIn() {
+    return (!TextUtils.isEmpty(getEmail()) && !TextUtils.isEmpty(getToken()) && !TextUtils.isEmpty(
+        getRefreshToken()) && !TextUtils.isEmpty(getPassword()));
+  }
+
   public enum Type {
     APTOIDE, GOOGLE, FACEBOOK, ABAN
+  }
+
+  public enum Access {
+    PUBLIC, PRIVATE, UNLISTED
   }
 }

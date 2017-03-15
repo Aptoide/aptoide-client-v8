@@ -13,16 +13,10 @@ public interface SyncResultContract {
 
     void showStore();
 
-    void showPhoneInputFragment();
-
     void setProgressIndicator(boolean active);
   }
 
   interface UserActionsListener {
-
-    void loadFriends();
-
-    void openFriend(Contact clickedContact);
 
     void allowFindClicked();
 

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.view.LoginSignUpCredentialsView;
 import cm.aptoide.pt.v8engine.view.View;
@@ -31,17 +32,22 @@ import rx.subscriptions.Subscriptions;
 
 public class LoginSignUpCredentialsPresenter implements Presenter {
 
+  private static final String TAG = LoginSignUpCredentialsPresenter.class.getName();
+
   private final LoginSignUpCredentialsView view;
   private final AptoideAccountManager accountManager;
   private final Collection<String> facebookRequiredPermissions;
+  private final boolean navigateToHome;
   private boolean dimissToNavigateToMainView;
 
-  public LoginSignUpCredentialsPresenter(LoginSignUpCredentialsView view, AptoideAccountManager accountManager,
-      Collection<String> facebookRequiredPermissions, boolean dimissToNavigateToMainView) {
+  public LoginSignUpCredentialsPresenter(LoginSignUpCredentialsView view,
+      AptoideAccountManager accountManager, Collection<String> facebookRequiredPermissions,
+      boolean dimissToNavigateToMainView, boolean navigateToHome) {
     this.view = view;
     this.accountManager = accountManager;
     this.facebookRequiredPermissions = facebookRequiredPermissions;
     this.dimissToNavigateToMainView = dimissToNavigateToMainView;
+    this.navigateToHome = navigateToHome;
   }
 
   @Override public void present() {
@@ -74,20 +80,13 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
             credentials.getToken(), credentials.getDisplayName())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnCompleted(() -> {
+              Logger.d(TAG, "google login successful");
               Analytics.Account.loginSuccess(Analytics.Account.LoginMethod.GOOGLE);
               navigateToMainView();
             })
             .doOnTerminate(() -> view.hideLoading())
             .doOnError(throwable -> view.showError(throwable))
             .toObservable()).retry();
-  }
-
-  private void navigateToMainView() {
-    if (dimissToNavigateToMainView) {
-      view.dismiss();
-    } else {
-      view.navigateToMainView();
-    }
   }
 
   private Observable<Void> facebookLoginClick() {
@@ -104,6 +103,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
                   credentials.getToken().getToken(), null)
                   .observeOn(AndroidSchedulers.mainThread())
                   .doOnCompleted(() -> {
+                    Logger.d(TAG, "facebook login successful");
                     Analytics.Account.loginSuccess(Analytics.Account.LoginMethod.FACEBOOK);
                     navigateToMainView();
                   })
@@ -113,50 +113,38 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
   }
 
   private Observable<Void> aptoideLoginClick() {
-    return view.aptoideLoginClick().doOnNext(selected -> {
+    return view.aptoideLoginClick().<Void>flatMap(credentials -> {
       view.hideKeyboard();
       view.showLoading();
-    }).<Void>flatMap(
-        credentials -> {
-          if (TextUtils.isEmpty(credentials.getPassword()) || TextUtils.isEmpty(
-              credentials.getUsername())) {
-            view.showCheckAptoideCredentialsMessage();
-            return Observable.empty();
-          }
-          return accountManager.login(Account.Type.APTOIDE, credentials.getUsername(),
-              credentials.getPassword(), null)
-              .observeOn(AndroidSchedulers.mainThread())
-              .doOnCompleted(() -> {
-                Analytics.Account.loginSuccess(Analytics.Account.LoginMethod.APTOIDE);
-                navigateToMainView();
-              })
-              .doOnTerminate(() -> view.hideLoading())
-              .doOnError(throwable -> view.showError(throwable))
-              .toObservable();
-        }).retry();
+      return accountManager.login(Account.Type.APTOIDE, credentials.getUsername(),
+          credentials.getPassword(), null)
+          .observeOn(AndroidSchedulers.mainThread())
+          .doOnCompleted(() -> {
+            Logger.d(TAG, "aptoide login successful");
+            Analytics.Account.loginSuccess(Analytics.Account.LoginMethod.APTOIDE);
+            navigateToMainView();
+          })
+          .doOnTerminate(() -> view.hideLoading())
+          .doOnError(throwable -> view.showError(throwable))
+          .toObservable();
+    }).retry();
   }
 
   private Observable<Void> aptoideSignUpClick() {
-    return view.aptoideSignUpClick().doOnNext(__ -> {
+    return view.aptoideSignUpClick().<Void>flatMap(credentials -> {
       view.hideKeyboard();
       view.showLoading();
-    }).<Void>flatMap(
-        credentials -> {
-          if (TextUtils.isEmpty(credentials.getPassword()) || TextUtils.isEmpty(
-              credentials.getUsername())) {
-            view.showCheckAptoideCredentialsMessage();
-            return Observable.empty();
-          }
-          return accountManager.createAccount(credentials.getUsername(), credentials.getPassword())
-              .observeOn(AndroidSchedulers.mainThread())
-              .doOnCompleted(() -> {
-                Analytics.Account.signInSuccessAptoide();
-                view.navigateToCreateProfile();
-              })
-              .doOnTerminate(() -> view.hideLoading())
-              .doOnError(throwable -> view.showError(throwable))
-              .toObservable();
-        }).retry();
+      return accountManager.createAccount(credentials.getUsername(), credentials.getPassword())
+          .observeOn(AndroidSchedulers.mainThread())
+          .doOnCompleted(() -> {
+            Logger.d(TAG, "aptoide sign up successful");
+            Analytics.Account.signInSuccessAptoide();
+            view.navigateToCreateProfile();
+          })
+          .doOnTerminate(() -> view.hideLoading())
+          .doOnError(throwable -> view.showError(throwable))
+          .toObservable();
+    }).retry();
   }
 
   private Observable<Void> aptoideShowLoginClick() {
@@ -194,6 +182,16 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
       view.showGoogleLogin();
     } else {
       view.hideGoogleLogin();
+    }
+  }
+
+  private void navigateToMainView() {
+    if (dimissToNavigateToMainView) {
+      view.dismiss();
+    } else if (navigateToHome) {
+      view.navigateToMainView();
+    } else {
+      view.goBack();
     }
   }
 

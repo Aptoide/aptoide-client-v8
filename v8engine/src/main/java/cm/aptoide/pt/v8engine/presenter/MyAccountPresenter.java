@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.presenter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.view.MyAccountView;
 import cm.aptoide.pt.v8engine.view.View;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -34,7 +35,8 @@ public class MyAccountPresenter implements Presenter {
   private Observable<Void> signOutClick() {
     return view.signOutClick().doOnNext(__ -> {
       signOut();
-      view.navigateToLoginAfterLogout();
+      ManagerPreferences.setAddressBookSyncValues(false);
+      view.navigateToHome();
     });
   }
 

@@ -9,14 +9,13 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
-import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
-import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
+import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
@@ -30,6 +29,7 @@ import lombok.Getter;
  */
 public class RecommendationDisplayable extends CardDisplayable {
 
+  public static final String CARD_TYPE_NAME = "RECOMMENDATION";
   @Getter private int avatarResource;
   @Getter private int titleResource;
   @Getter private long appId;
@@ -44,7 +44,7 @@ public class RecommendationDisplayable extends CardDisplayable {
   private Date timestamp;
   private DateCalculator dateCalculator;
   private SpannableFactory spannableFactory;
-  private TimelineMetricsManager timelineMetricsManager;
+  private TimelineAnalytics timelineAnalytics;
   private SocialRepository socialRepository;
 
   public RecommendationDisplayable() {
@@ -54,7 +54,7 @@ public class RecommendationDisplayable extends CardDisplayable {
       int titleResource, long appId, String packageName, String appName, String appIcon,
       String abUrl, List<String> similarAppsNames, List<String> similarPackageNames, Date date,
       Date timestamp, DateCalculator dateCalculator, SpannableFactory spannableFactory,
-      TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository) {
+      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
     super(recommendation);
     this.avatarResource = avatarResource;
     this.titleResource = titleResource;
@@ -69,12 +69,12 @@ public class RecommendationDisplayable extends CardDisplayable {
     this.timestamp = timestamp;
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
-    this.timelineMetricsManager = timelineMetricsManager;
+    this.timelineAnalytics = timelineAnalytics;
     this.socialRepository = socialRepository;
   }
 
   public static Displayable from(Recommendation recommendation, DateCalculator dateCalculator,
-      SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager,
+      SpannableFactory spannableFactory, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository) {
     final List<String> similarAppsNames = new ArrayList<>();
     final List<String> similarPackageNames = new ArrayList<>();
@@ -99,7 +99,7 @@ public class RecommendationDisplayable extends CardDisplayable {
         recommendation.getRecommendedApp().getName(), recommendation.getRecommendedApp().getIcon(),
         abTestingURL, similarAppsNames, similarPackageNames,
         recommendation.getRecommendedApp().getUpdated(), recommendation.getTimestamp(),
-        dateCalculator, spannableFactory, timelineMetricsManager, socialRepository);
+        dateCalculator, spannableFactory, timelineAnalytics, socialRepository);
   }
 
   public Spannable getStyledTitle(Context context) {
@@ -157,8 +157,9 @@ public class RecommendationDisplayable extends CardDisplayable {
     return R.layout.displayable_social_timeline_recommendation;
   }
 
-  public void sendClickEvent(SendEventRequest.Body.Data data, String eventName) {
-    timelineMetricsManager.sendEvent(data, eventName);
+  public void sendRecommendedOpenAppEvent() {
+    timelineAnalytics.sendRecommendedOpenAppEvent(CARD_TYPE_NAME, TimelineAnalytics
+        .SOURCE_APTOIDE, getSimilarAppPackageName(), getPackageName());
   }
 
   @Override public void share(Context context, boolean privacyResult) {

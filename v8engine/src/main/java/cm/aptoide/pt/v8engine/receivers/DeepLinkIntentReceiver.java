@@ -460,6 +460,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     public static final String LAYOUT = "layout";
     public static final String TITLE = "title";
     public static final String STORE_THEME = "storetheme";
+    public static final String SHOULD_INSTALL = "SHOULD_INSTALL";
   }
 
   class MyAppDownloader extends AsyncTask<String, Void, Void> {

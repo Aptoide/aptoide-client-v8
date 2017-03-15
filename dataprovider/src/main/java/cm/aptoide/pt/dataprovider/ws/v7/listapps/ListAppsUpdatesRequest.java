@@ -6,11 +6,14 @@
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import android.content.pm.PackageInfo;
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithAlphaBetaKey;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
@@ -36,22 +39,17 @@ import rx.schedulers.Schedulers;
 
   private static final int SPLIT_SIZE = 100;
 
-  private ListAppsUpdatesRequest(Body body, String baseHost) {
-    super(body, baseHost);
+  private ListAppsUpdatesRequest(Body body, String baseHost, BodyInterceptor bodyInterceptor) {
+    super(body, baseHost,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  private ListAppsUpdatesRequest(OkHttpClient httpClient, Converter.Factory converterFactory,
-      Body body, String baseHost) {
-    super(body, httpClient, converterFactory, baseHost);
-  }
-
-  public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String accessToken,
-      String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-
-    return new ListAppsUpdatesRequest((Body) decorator.decorate(
-        new Body(getInstalledApks(), subscribedStoresIds, aptoideClientUUID), accessToken),
-        BASE_HOST);
+  public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String aptoideClientUUID,
+      BodyInterceptor bodyInterceptor) {
+    return new ListAppsUpdatesRequest(
+        new Body(getInstalledApks(), subscribedStoresIds, aptoideClientUUID), BASE_HOST,
+        bodyInterceptor);
   }
 
   private static List<ApksData> getInstalledApks() {

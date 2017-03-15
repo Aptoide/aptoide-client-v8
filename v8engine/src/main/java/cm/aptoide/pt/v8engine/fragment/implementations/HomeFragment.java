@@ -30,20 +30,19 @@ import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.navigation.TabNavigator;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.shareappsandroid.HighwayActivity;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.BadgeView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
-import lombok.Getter;
-import lombok.Setter;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -59,7 +58,6 @@ public class HomeFragment extends StoreFragment {
 
   //private static final int SPOT_SHARE_PERMISSION_REQUEST_CODE = 6531;
 
-
   private DrawerLayout drawerLayout;
   private NavigationView navigationView;
   private BadgeView updatesBadge;
@@ -67,6 +65,9 @@ public class HomeFragment extends StoreFragment {
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
   private TabNavigator tabNavigator;
+  private TextView userEmail;
+  private TextView userUsername;
+  private ImageView userAvatarImage;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -83,47 +84,65 @@ public class HomeFragment extends StoreFragment {
     super.onAttach(activity);
 
     if (activity instanceof TabNavigator) {
-      tabNavigator = (TabNavigator)activity;
+      tabNavigator = (TabNavigator) activity;
     } else {
-      throw new IllegalStateException("Activity must implement " + TabNavigator.class
-          .getSimpleName());
+      throw new IllegalStateException(
+          "Activity must implement " + TabNavigator.class.getSimpleName());
     }
   }
 
   @Override public void onResume() {
     super.onResume();
-    setUserDataOnHeader();
+
     getToolbar().setTitle("");
+
+    if (navigationView == null || navigationView.getVisibility() != View.VISIBLE) {
+      // if the navigation view is not visible do nothing
+      return;
+    }
+
+    View baseHeaderView = navigationView.getHeaderView(0);
+    userEmail = (TextView) baseHeaderView.findViewById(R.id.profile_email_text);
+    userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
+    userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
+
+    accountManager.getAccountAsync()
+        .toObservable()
+        .onErrorResumeNext(
+            Observable.just(null))//fixme fix this in the account manager and remove this line
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.PAUSE))
+        .subscribe(account -> {
+          if (account == null) {
+            setInvisibleUserImageAndName();
+            return;
+          }
+          setVisibleUserImageAndName(account);
+        }, err -> CrashReport.getInstance().log(err));
+  }
+
+  private void setInvisibleUserImageAndName() {
+    userEmail.setText("");
+    userUsername.setText("");
+    userEmail.setVisibility(View.GONE);
+    userUsername.setVisibility(View.GONE);
+    ImageLoader.with(getContext()).load(R.drawable.user_account_white, userAvatarImage);
+  }
+
+  private void setVisibleUserImageAndName(Account account) {
+    userEmail.setVisibility(View.VISIBLE);
+    userUsername.setVisibility(View.VISIBLE);
+    userEmail.setText(account.getEmail());
+    userUsername.setText(account.getNickname());
+    ImageLoader.with(getContext())
+        .loadWithCircleTransformAndPlaceHolder(account.getAvatar(), userAvatarImage,
+            R.drawable.user_account_white);
   }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     return super.onCreateView(inflater, container, savedInstanceState);
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    tabNavigator.navigation()
-        .doOnNext(tab -> viewPager.setCurrentItem(
-            ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(getEventName(tab))))
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe();
-  }
-
-  private Event.Name getEventName(int tab) {
-    switch (tab) {
-      case TabNavigator.DOWNLOADS:
-        return Event.Name.myDownloads;
-      case TabNavigator.STORES:
-        return Event.Name.myStores;
-      case TabNavigator.TIMELINE:
-        return Event.Name.getUserTimeline;
-      case TabNavigator.UPDATES:
-        return Event.Name.myUpdates;
-        default:
-          throw new IllegalArgumentException("Invalid tab.");
-    }
   }
 
   @Override protected void setupViewPager() {
@@ -146,6 +165,12 @@ public class HomeFragment extends StoreFragment {
         .subscribe(size -> refreshUpdatesBadge(size), throwable -> {
           CrashReport.getInstance().log(throwable);
         });
+
+    tabNavigator.navigation()
+        .doOnNext(tab -> viewPager.setCurrentItem(
+            ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(getEventName(tab))))
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe();
   }
 
   public void refreshUpdatesBadge(int num) {
@@ -173,7 +198,7 @@ public class HomeFragment extends StoreFragment {
   }
 
   @Override protected void setupSearch(Menu menu) {
-    SearchUtils.setupGlobalSearchView(menu, getNavigationManager());
+    SearchUtils.setupGlobalSearchView(menu, this);
   }
 
   @Override public void setupViews() {
@@ -194,8 +219,8 @@ public class HomeFragment extends StoreFragment {
         } else {
           final NavigationManagerV4 navigationManager = getNavigationManager();
           if (itemId == R.id.shareapps) {
-            //requestPermissions();
-            startActivity(new Intent(getContext(), HighwayActivity.class));
+            SpotAndShareAnalytics.clickShareApps();
+            navigationManager.navigateTo(V8Engine.getFragmentProvider().newSpotShareFragment(true));
           } else if (itemId == R.id.navigation_item_rollback) {
             navigationManager.navigateTo(V8Engine.getFragmentProvider().newRollbackFragment());
           } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
@@ -302,41 +327,19 @@ public class HomeFragment extends StoreFragment {
     toolbar.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
   }
 
-  private void setUserDataOnHeader() {
-    if (navigationView == null || navigationView.getVisibility() != View.VISIBLE) {
-      // if the navigation view is not visible do nothing
-      return;
+  private Event.Name getEventName(int tab) {
+    switch (tab) {
+      case TabNavigator.DOWNLOADS:
+        return Event.Name.myDownloads;
+      case TabNavigator.STORES:
+        return Event.Name.myStores;
+      case TabNavigator.TIMELINE:
+        return Event.Name.getUserTimeline;
+      case TabNavigator.UPDATES:
+        return Event.Name.myUpdates;
+      default:
+        throw new IllegalArgumentException("Invalid tab.");
     }
-
-    View baseHeaderView = navigationView.getHeaderView(0);
-    TextView userEmail = (TextView) baseHeaderView.findViewById(R.id.profile_email_text);
-    TextView userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
-    ImageView userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
-
-    if (accountManager.isLoggedIn()) {
-
-      Account account = accountManager.getAccount();
-      if (account != null) {
-        userEmail.setVisibility(View.VISIBLE);
-        userUsername.setVisibility(View.VISIBLE);
-        userEmail.setText(account.getEmail());
-        userUsername.setText(account.getNickname());
-
-        ImageLoader.with(getContext())
-            .loadWithCircleTransformAndPlaceHolder(account.getAvatar(), userAvatarImage,
-                R.drawable.user_account_white);
-      }
-
-      return;
-    }
-
-    userEmail.setText("");
-    userUsername.setText("");
-
-    userEmail.setVisibility(View.GONE);
-    userUsername.setVisibility(View.GONE);
-
-    ImageLoader.with(getContext()).load(R.drawable.user_account_white, userAvatarImage);
   }
 
   @Override public void bindViews(View view) {
@@ -368,5 +371,4 @@ public class HomeFragment extends StoreFragment {
   private void closeDrawer() {
     drawerLayout.closeDrawers();
   }
-
 }

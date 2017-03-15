@@ -11,4 +11,5 @@ public interface SpotSharePreviewView extends View {
 
   void navigateToSpotShareView();
 
+  void showToolbar();
 }

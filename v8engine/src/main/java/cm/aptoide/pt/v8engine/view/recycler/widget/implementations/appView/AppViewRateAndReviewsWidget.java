@@ -24,6 +24,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -35,6 +36,7 @@ import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
@@ -84,6 +86,7 @@ import rx.functions.Action1;
   private String storeName;
   private int usersToVote;
   private TextView emptyReviewTextView;
+  private BodyInterceptor bodyInterceptor;
 
   public AppViewRateAndReviewsWidget(@NonNull View itemView) {
     super(itemView);
@@ -115,8 +118,9 @@ import rx.functions.Action1;
     aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID, accountManager);
     dialogUtils = new DialogUtils(accountManager, aptoideClientUUID,
-        new AccountNavigator(getContext(), getNavigationManager(), accountManager));
+        new AccountNavigator(getContext(), getNavigationManager(), accountManager), bodyInterceptor);
     appName = app.getName();
     packageName = app.getPackageName();
     storeName = app.getStore().getName();
@@ -171,9 +175,8 @@ import rx.functions.Action1;
   private void loadTopReviews(String storeName, String packageName,
       BaseRequestWithStore.StoreCredentials storeCredentials) {
     Subscription subscription =
-        ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS,
-            accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier(),
-            storeCredentials)
+        ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS, storeCredentials,
+            bodyInterceptor)
             .observe(true)
             .observeOn(AndroidSchedulers.mainThread())
             .map(listReviews -> {

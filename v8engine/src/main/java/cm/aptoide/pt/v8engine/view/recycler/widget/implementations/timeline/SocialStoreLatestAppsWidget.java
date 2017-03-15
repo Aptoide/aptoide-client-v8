@@ -11,18 +11,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialStoreLatestAppsDisplayable;
@@ -39,7 +42,6 @@ import rx.functions.Action1;
 public class SocialStoreLatestAppsWidget
     extends SocialCardWidget<SocialStoreLatestAppsDisplayable> {
 
-  private static final String CARD_TYPE_NAME = "SOCIAL_LATEST_APPS";
   private final LayoutInflater inflater;
   private TextView storeName;
   private TextView userName;
@@ -47,8 +49,6 @@ public class SocialStoreLatestAppsWidget
   private TextView sharedStoreSubscribersNumber;
   private TextView sharedStoreAppsNumber;
   private LinearLayout appsContaner;
-  private ImageView storeAvatar;
-  private ImageView userAvatar;
   private ImageView sharedStoreAvatar;
   private View store;
   private Map<View, Long> apps;
@@ -88,10 +88,12 @@ public class SocialStoreLatestAppsWidget
 
   @Override public void bindView(SocialStoreLatestAppsDisplayable displayable) {
     super.bindView(displayable);
-    final IdsRepositoryImpl aptoideClientUuid =
+    final AptoideClientUUID aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    storeUtilsProxy = new StoreUtilsProxy(aptoideClientUuid, accountManager);
+    storeUtilsProxy = new StoreUtilsProxy(accountManager,
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager),
+        new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class));
     storeName.setText(displayable.getStoreName());
     userName.setText(displayable.getUser().getName());
     setCardViewMargin(displayable, cardView);
@@ -148,14 +150,7 @@ public class SocialStoreLatestAppsWidget
         Analytics.AppsTimeline.clickOnCard(getCardTypeName(), packageName,
             Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
             Analytics.AppsTimeline.OPEN_APP_VIEW);
-        displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
-            .cardType(getCardTypeName())
-            .source(TimelineClickEvent.SOURCE_APTOIDE)
-            .specific(SendEventRequest.Body.Specific.builder()
-                .app(packageName)
-                .store(displayable.getStoreName())
-                .build())
-            .build(), TimelineClickEvent.OPEN_APP);
+        displayable.sendStoreOpenAppEvent(packageName);
         getNavigationManager().navigateTo(
             V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app), packageName));
       }));
@@ -166,12 +161,7 @@ public class SocialStoreLatestAppsWidget
       Analytics.AppsTimeline.clickOnCard(getCardTypeName(), Analytics.AppsTimeline.BLANK,
           Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
           Analytics.AppsTimeline.OPEN_STORE);
-      displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
-          .cardType(getCardTypeName())
-          .source(TimelineClickEvent.SOURCE_APTOIDE)
-          .specific(
-              SendEventRequest.Body.Specific.builder().store(displayable.getStoreName()).build())
-          .build(), TimelineClickEvent.OPEN_STORE);
+      displayable.sendOpenStoreEvent();
       getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
           .newStoreFragment(displayable.getStoreName(),
               displayable.getSharedStore().getAppearance().getTheme()));
@@ -182,13 +172,7 @@ public class SocialStoreLatestAppsWidget
       Analytics.AppsTimeline.clickOnCard(getCardTypeName(), Analytics.AppsTimeline.BLANK,
           Analytics.AppsTimeline.BLANK, displayable.getSharedStore().getName(),
           Analytics.AppsTimeline.OPEN_STORE);
-      displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
-          .cardType(getCardTypeName())
-          .source(TimelineClickEvent.SOURCE_APTOIDE)
-          .specific(SendEventRequest.Body.Specific.builder()
-              .store(displayable.getSharedStore().getName())
-              .build())
-          .build(), TimelineClickEvent.OPEN_STORE);
+      displayable.sendOpenSharedStoreEvent();
       getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
           .newStoreFragment(displayable.getSharedStore().getName(),
               displayable.getSharedStore().getAppearance().getTheme()));
@@ -211,7 +195,8 @@ public class SocialStoreLatestAppsWidget
           if (isSubscribed) {
             followStore.setText(R.string.followed);
             compositeSubscription.add(RxView.clicks(followStore).subscribe(__ -> {
-              storeUtilsProxy.unSubscribeStore(storeName);
+              storeUtilsProxy.unSubscribeStore(storeName,
+                  displayable.getStoreCredentialsProvider());
               ShowMessage.asSnack(itemView,
                   AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
                       storeName));
@@ -236,7 +221,7 @@ public class SocialStoreLatestAppsWidget
   }
 
   @Override String getCardTypeName() {
-    return CARD_TYPE_NAME;
+    return SocialStoreLatestAppsDisplayable.CARD_TYPE_NAME;
   }
 
   private void handleIsSubscribed(boolean isSubscribed, String storeName, String storeTheme) {

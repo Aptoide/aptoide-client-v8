@@ -1,12 +1,15 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.Api;
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListComments;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import rx.Observable;
 
@@ -19,13 +22,14 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
 
   private static String url;
 
-  private ListCommentsRequest(Body body, String baseHost) {
-    super(body, baseHost);
+  private ListCommentsRequest(Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static ListCommentsRequest ofStoreAction(String url, boolean refresh,
-      @Nullable BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken,
-      String aptoideClientUuid) {
+      @Nullable BaseRequestWithStore.StoreCredentials storeCredentials, BodyInterceptor bodyInterceptor) {
 
     ListCommentsRequest.url = url;
 
@@ -36,23 +40,15 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       body.setStoreId(storeCredentials.getId());
     }
 
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUuid);
-    return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+    return new ListCommentsRequest(body, bodyInterceptor);
   }
 
   public static ListCommentsRequest of(String url, long resourceId, int limit,
-      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken,
-      String aptoideClientUuid, boolean isReview) {
+      BaseRequestWithStore.StoreCredentials storeCredentials, boolean isReview,
+      BodyInterceptor bodyInterceptor) {
     ListCommentsRequest.url = url;
-    return of(resourceId, limit, storeCredentials, accessToken, aptoideClientUuid, isReview);
-  }
-
-  public static ListCommentsRequest of(long resourceId, int limit,
-      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken,
-      String aptoideClientUuid, boolean isReview) {
     String username = storeCredentials.getUsername();
     String password = storeCredentials.getPasswordSha1();
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUuid);
 
     Body body =
         new Body(limit, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc, username,
@@ -64,33 +60,23 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       body.setStoreId(resourceId);
     }
 
-    return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+    return new ListCommentsRequest(body, bodyInterceptor);
   }
 
-  public static ListCommentsRequest of(long resourceId, int offset, int limit, String accessToken,
-      String aptoideClientUuid, boolean isReview) {
-    ListCommentsRequest listCommentsRequest =
-        of(resourceId, limit, accessToken, aptoideClientUuid, isReview);
-    listCommentsRequest.getBody().setOffset(offset);
-    return listCommentsRequest;
+  public static ListCommentsRequest of(long resourceId, int offset, int limit, boolean isReview,
+      BodyInterceptor bodyInterceptor) {
+    final Body body = getBody(resourceId, limit, isReview);
+    body.setOffset(offset);
+    return new ListCommentsRequest(body, bodyInterceptor);
   }
 
-  public static ListCommentsRequest of(long resourceId, int limit, String accessToken,
-      String aptoideClientUuid, boolean isReview) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUuid);
-    Body body = new Body(limit, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc);
-
-    if (isReview) {
-      body.setReviewId(resourceId);
-    } else {
-      body.setStoreId(resourceId);
-    }
-
-    return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+  public static ListCommentsRequest of(long resourceId, int limit, boolean isReview, BodyInterceptor bodyInterceptor) {
+    final Body body = getBody(resourceId, limit, isReview);
+    return new ListCommentsRequest(body, bodyInterceptor);
   }
 
   public static ListCommentsRequest ofTimeline(String url, boolean refresh,
-      String timelineArticleId, String accessToken, String aptoideClientUuid) {
+      String timelineArticleId, BodyInterceptor bodyInterceptor) {
 
     ListCommentsRequest.url = url;
 
@@ -101,8 +87,19 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     body.setCommentType(null);
     body.setTimelineCardId(timelineArticleId);
 
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUuid);
-    return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+    return new ListCommentsRequest(body, bodyInterceptor);
+  }
+
+  private static Body getBody(long resourceId, int limit, boolean isReview) {
+    final Body body = new Body(limit, ManagerPreferences.getAndResetForceServerRefresh(), Order
+        .desc);
+
+    if (isReview) {
+      body.setReviewId(resourceId);
+    } else {
+      body.setStoreId(resourceId);
+    }
+    return body;
   }
 
   @Override protected Observable<ListComments> loadDataFromNetwork(Interfaces interfaces,

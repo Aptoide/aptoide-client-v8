@@ -18,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
@@ -28,9 +30,12 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 
 /**
  * Created with IntelliJ IDEA. User: rmateus Date: 29-11-2013 Time: 15:56 To change this template
@@ -47,6 +52,8 @@ public class PrivateStoreDialog extends BaseDialog {
   private String storeUser;
   private String storePassSha1;
   private boolean isInsideStore;
+  private StoreUtilsProxy storeUtilsProxy;
+  private BaseBodyInterceptor bodyInterceptor;
 
   public static PrivateStoreDialog newInstance(Fragment returnFragment, int requestCode,
       String storeName, boolean isInsideStore) {
@@ -68,9 +75,14 @@ public class PrivateStoreDialog extends BaseDialog {
 
   @Override public void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    bodyInterceptor =
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager);
+    storeUtilsProxy =
+        new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl(), AccessorFactory
+            .getAccessorFor(Store.class));
     final Bundle args = getArguments();
     if (args != null) {
       storeName = args.getString(BundleArgs.STORE_NAME.name());
@@ -98,8 +110,7 @@ public class PrivateStoreDialog extends BaseDialog {
               ((EditText) rootView.findViewById(R.id.edit_store_username)).getText().toString();
           storePassSha1 = AptoideUtils.AlgorithmU.computeSha1(
               ((EditText) rootView.findViewById(R.id.edit_store_password)).getText().toString());
-
-          StoreUtils.subscribeStore(buildRequest(), getStoreMeta -> {
+          storeUtilsProxy.subscribeStore(buildRequest(), getStoreMeta -> {
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
             dismissLoadingDialog();
             dismiss();
@@ -126,7 +137,7 @@ public class PrivateStoreDialog extends BaseDialog {
                   AddStoreDialog.PRIVATE_STORE_ERROR_CODE, null);
               dismiss();
             }
-          }, accountManager);
+          }, storeName, accountManager, storeUser, storePassSha1);
           showLoadingDialog();
         })
         .create();
@@ -148,7 +159,7 @@ public class PrivateStoreDialog extends BaseDialog {
   private GetStoreMetaRequest buildRequest() {
     return GetStoreMetaRequest.of(
         new BaseRequestWithStore.StoreCredentials(storeName, storeUser, storePassSha1),
-        accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier());
+        bodyInterceptor);
   }
 
   private void dismissLoadingDialog() {

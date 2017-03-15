@@ -55,7 +55,6 @@ dependencies {
   // inter-projects dependencies
   //
   compile project(path: ':aptoidepreferences', configuration: 'release')
-  compile project(path: ':networkclient', configuration: 'release')
   compile project(path: ':utils', configuration: 'release')
   compile project(path: ':utilsdesign', configuration: 'release')
 
@@ -90,6 +89,8 @@ dependencies {
   compile "com.google.android.gms:play-services-auth:${PLAY_SERVICES_VERSION}"
 
   compile "com.facebook.android:facebook-android-sdk:${FACEBOOK_ANDROID_SDK_VERSION}"
+
+  compile "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
 
   compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
   compile "io.reactivex:rxandroid:${RXANDROID_VERSION}"

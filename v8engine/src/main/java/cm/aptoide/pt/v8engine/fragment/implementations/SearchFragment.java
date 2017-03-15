@@ -22,10 +22,12 @@ import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.SearchPagerAdapter;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -62,6 +64,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
   private String storeName;
   private boolean onlyTrustedApps;
   private int selectedButton = 0;
+  private BodyInterceptor bodyInterceptor;
 
   public static SearchFragment newInstance(String query) {
     return newInstance(query, false);
@@ -94,6 +97,15 @@ public class SearchFragment extends BasePagerToolbarFragment {
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
     accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID, accountManager);
+  }
+
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+
+    query = args.getString(BundleCons.QUERY);
+    storeName = args.getString(BundleCons.STORE_NAME);
+    onlyTrustedApps = args.getBoolean(BundleCons.ONLY_TRUSTED, false);
   }
 
   @Override public void bindViews(View view) {
@@ -227,7 +239,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       shouldFinishLoading = true;
       ListSearchAppsRequest of =
           ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-              accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier());
+              bodyInterceptor);
       of.execute(listSearchApps -> {
         List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
@@ -241,7 +253,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       }, e -> finishLoading());
     } else {
       ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+          bodyInterceptor)
           .execute(listSearchApps -> {
             List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
@@ -256,7 +268,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
       // Other stores
       ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+          bodyInterceptor)
           .execute(listSearchApps -> {
             List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
@@ -307,31 +319,12 @@ public class SearchFragment extends BasePagerToolbarFragment {
     return R.layout.global_search_fragment;
   }
 
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-
-    query = args.getString(BundleCons.QUERY);
-    storeName = args.getString(BundleCons.STORE_NAME);
-    onlyTrustedApps = args.getBoolean(BundleCons.ONLY_TRUSTED, false);
-  }
-
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
 
     outState.putString(BundleCons.QUERY, query);
     outState.putString(BundleCons.STORE_NAME, storeName);
     outState.putInt(BundleCons.SELECTED_BUTTON, selectedButton);
-  }
-
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.menu_search, menu);
-
-    if (storeName != null) {
-      SearchUtils.setupInsideStoreSearchView(menu, getNavigationManager(), storeName);
-    } else {
-      SearchUtils.setupGlobalSearchView(menu, getNavigationManager());
-    }
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -342,6 +335,17 @@ public class SearchFragment extends BasePagerToolbarFragment {
       return true;
     }
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.menu_search, menu);
+
+    if (storeName != null) {
+      SearchUtils.setupInsideStoreSearchView(menu, this, storeName);
+    } else {
+      SearchUtils.setupGlobalSearchView(menu, this);
+    }
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

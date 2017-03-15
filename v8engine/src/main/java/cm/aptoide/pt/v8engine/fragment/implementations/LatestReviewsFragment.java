@@ -13,9 +13,12 @@ import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
@@ -34,13 +37,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
   private long storeId;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private List<Displayable> displayables;
-
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        getContext());
-  }
+  private StoreCredentialsProvider storeCredentialsProvider;
 
   public static LatestReviewsFragment newInstance(long storeId) {
     LatestReviewsFragment fragment = new LatestReviewsFragment();
@@ -48,6 +45,14 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
     args.putLong(STORE_ID, storeId);
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        getContext());
+    storeCredentialsProvider = new StoreCredentialsProviderImpl();
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -83,8 +88,8 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
     if (create) {
       ListFullReviewsRequest listFullReviewsRequest =
           ListFullReviewsRequest.of(storeId, REVIEWS_LIMIT, 0,
-              StoreUtils.getStoreCredentials(storeId), accountManager.getAccessToken(),
-              aptoideClientUUID.getUniqueIdentifier());
+              StoreUtils.getStoreCredentials(storeId, storeCredentialsProvider),
+              new BaseBodyInterceptor(aptoideClientUUID, accountManager));
       Action1<ListFullReviews> listFullReviewsAction = listTopFullReviews -> {
         List<FullReview> reviews = listTopFullReviews.getDatalist().getList();
         displayables = new LinkedList<>();
@@ -97,7 +102,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
       getRecyclerView().clearOnScrollListeners();
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), listFullReviewsRequest,
-              listFullReviewsAction, Throwable::printStackTrace, true);
+              listFullReviewsAction, err -> err.printStackTrace(), true);
       getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
       endlessRecyclerOnScrollListener.onLoadMore(refresh);
     } else {

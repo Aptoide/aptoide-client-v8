@@ -1,12 +1,11 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline;
 
 import android.content.Context;
-import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
-import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
+import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,13 +18,15 @@ import lombok.Getter;
  */
 public class StoreLatestAppsDisplayable extends CardDisplayable {
 
+  public static final String CARD_TYPE_NAME = "LATEST_APPS";
   @Getter private String storeName;
   @Getter private String avatarUrl;
   @Getter private List<LatestApp> latestApps;
   @Getter private String abUrl;
+  @Getter private String storeTheme;
   private DateCalculator dateCalculator;
   private Date date;
-  private TimelineMetricsManager timelineMetricsManager;
+  private TimelineAnalytics timelineAnalytics;
   private SocialRepository socialRepository;
 
   public StoreLatestAppsDisplayable() {
@@ -33,7 +34,8 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
 
   public StoreLatestAppsDisplayable(StoreLatestApps storeLatestApps, String storeName,
       String avatarUrl, List<LatestApp> latestApps, String abUrl, DateCalculator dateCalculator,
-      Date date, TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository) {
+      Date date, TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
+      String storeTheme) {
     super(storeLatestApps);
     this.storeName = storeName;
     this.avatarUrl = avatarUrl;
@@ -41,12 +43,13 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
     this.abUrl = abUrl;
     this.dateCalculator = dateCalculator;
     this.date = date;
-    this.timelineMetricsManager = timelineMetricsManager;
+    this.timelineAnalytics = timelineAnalytics;
     this.socialRepository = socialRepository;
+    this.storeTheme = storeTheme;
   }
 
   public static StoreLatestAppsDisplayable from(StoreLatestApps storeLatestApps,
-      DateCalculator dateCalculator, TimelineMetricsManager timelineMetricsManager,
+      DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository) {
     final List<LatestApp> latestApps = new ArrayList<>();
     for (App app : storeLatestApps.getApps()) {
@@ -61,7 +64,8 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
     }
     return new StoreLatestAppsDisplayable(storeLatestApps, storeLatestApps.getStore().getName(),
         storeLatestApps.getStore().getAvatar(), latestApps, abTestingURL, dateCalculator,
-        storeLatestApps.getLatestUpdate(), timelineMetricsManager, socialRepository);
+        storeLatestApps.getLatestUpdate(), timelineAnalytics, socialRepository,
+        storeLatestApps.getStore().getAppearance().getTheme());
   }
 
   public String getTimeSinceLastUpdate(Context context) {
@@ -72,8 +76,14 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
     return R.layout.displayable_social_timeline_store_latest_apps;
   }
 
-  public void sendClickEvent(SendEventRequest.Body.Data data, String eventName) {
-    timelineMetricsManager.sendEvent(data, eventName);
+  public void sendOpenStoreEvent() {
+    timelineAnalytics.sendOpenStoreEvent(CARD_TYPE_NAME, TimelineAnalytics.SOURCE_APTOIDE,
+        getStoreName());
+  }
+
+  public void sendOpenAppEvent(String packageName) {
+    timelineAnalytics.sendStoreOpenAppEvent(CARD_TYPE_NAME, TimelineAnalytics.SOURCE_APTOIDE,
+        packageName, storeName);
   }
 
   @Override public void share(Context context, boolean privacyResult) {

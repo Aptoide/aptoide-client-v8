@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
@@ -17,10 +18,12 @@ import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewStoreDisplayable;
@@ -87,9 +90,12 @@ import rx.functions.Action1;
     final String storeName = store.getName();
     final String storeTheme = store.getAppearance().getTheme();
 
-    final IdsRepositoryImpl clientUuid =
+    final IdsRepositoryImpl aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(clientUuid, accountManager);
+    final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager,
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager),
+        new StoreCredentialsProviderImpl(),
+        AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class));
 
     Action1<Void> openStore = __ -> {
       getNavigationManager().navigateTo(

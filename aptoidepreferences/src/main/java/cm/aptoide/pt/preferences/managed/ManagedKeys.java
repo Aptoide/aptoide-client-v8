@@ -11,7 +11,6 @@ package cm.aptoide.pt.preferences.managed;
 public class ManagedKeys {
 
   public static final String HWSPECS_FILTER = "hwspecsChkBox";
-  public static final String MATURE_CHECK_BOX = "matureChkBox";
   public static final String ANIMATIONS_ENABLED = "animationsEnabled";
   public static final String GENERAL_DOWNLOADS_WIFI = "generalnetworkwifi";
   public static final String GENERAL_DOWNLOADS_MOBILE = "generalnetworkmobile";
@@ -31,7 +30,7 @@ public class ManagedKeys {
   public static final String DEBUG = "debugmode";
   public static final String NOTIFICATION_TYPE = "notificationtype";
   public static final String PRIVACY_CONFIRMATION = "privacyconfirmation";
-  public static final String SHOW_SHARE_PREVIEW = "donotshowmeagain";
+  public static final String DONT_SHOW_ME_AGAIN = "dontshowmeagain";
   public static final String ACCESS = "access";
   public static final String ACCESS_CONFIRMED = "access_confirmed";
   public static final String FIRST_RUN_V7 = "firstrun";

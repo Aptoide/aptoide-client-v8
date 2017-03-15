@@ -1,7 +1,9 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -13,28 +15,27 @@ import rx.Observable;
 
 public class ShareInstallCardRequest extends V7<BaseV7Response, ShareInstallCardRequest.Body> {
 
-  private static String packageName;
-  private static String type;
-  private static String access_token;
+  private final String packageName;
+  private final String type;
 
-  protected ShareInstallCardRequest(ShareInstallCardRequest.Body body, String baseHost) {
-    super(body, baseHost);
+  protected ShareInstallCardRequest(Body body, String packageName, String type,
+      BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
+    this.packageName = packageName;
+    this.type = type;
   }
 
-  public static ShareInstallCardRequest of(String packageName, String accessToken, String shareType,
-      String aptoideClientUUID) {
-    ShareInstallCardRequest.packageName = packageName;
-    access_token = accessToken;
-    type = shareType;
+  public static ShareInstallCardRequest of(String packageName, String shareType,
+      BodyInterceptor bodyInterceptor) {
     ShareInstallCardRequest.Body body = new ShareInstallCardRequest.Body(packageName);
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    return new ShareInstallCardRequest(
-        (ShareInstallCardRequest.Body) decorator.decorate(body, accessToken), BASE_HOST);
+    return new ShareInstallCardRequest(body, packageName, shareType, bodyInterceptor);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.shareInstallCard(body, packageName, access_token, type);
+    return interfaces.shareInstallCard(body, packageName, body.getAccessToken(), type);
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body

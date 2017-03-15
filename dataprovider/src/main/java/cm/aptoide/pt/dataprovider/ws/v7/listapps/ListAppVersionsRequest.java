@@ -6,13 +6,15 @@
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import cm.aptoide.pt.dataprovider.ws.Api;
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithApp;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.Data;
@@ -30,55 +32,30 @@ import rx.Observable;
 
   private static final Integer MAX_LIMIT = 10;
 
-  private ListAppVersionsRequest(Body body, String baseHost) {
-    super(body, WebService.getDefaultConverter(), baseHost);
-  }
-
-  public static ListAppVersionsRequest of(String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    Body body = new Body();
-    body.setLimit(MAX_LIMIT);
-    return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
-  }
-
-  public static ListAppVersionsRequest of(int limit, int offset, String accessToken,
-      String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    Body body = new Body();
-    body.setLimit(limit);
-    body.setOffset(offset);
-    return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+  private ListAppVersionsRequest(Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static ListAppVersionsRequest of(String packageName, List<String> storeNames,
       String accessToken, String aptoideClientUUID,
-      HashMapNotNull<String, List<String>> storeCredentials) {
+      HashMapNotNull<String, List<String>> storeCredentials, BodyInterceptor bodyInterceptor) {
     if (storeNames != null && !storeNames.isEmpty()) {
-      BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
       Body body = new Body(packageName, storeNames, storeCredentials);
       body.setLimit(MAX_LIMIT);
-      return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+      return new ListAppVersionsRequest(body, bodyInterceptor);
     } else {
-      return of(packageName, accessToken, aptoideClientUUID, storeCredentials);
+      return of(packageName, accessToken, storeCredentials, bodyInterceptor);
     }
   }
 
   public static ListAppVersionsRequest of(String packageName, String accessToken,
-      String aptoideClientUUID, HashMapNotNull<String, List<String>> storeCredentials) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+      HashMapNotNull<String, List<String>> storeCredentials, BodyInterceptor bodyInterceptor) {
     Body body = new Body(packageName);
     body.setStoresAuthMap(storeCredentials);
     body.setLimit(MAX_LIMIT);
-    return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
-  }
-
-  public static ListAppVersionsRequest of(String packageName, int limit, int offset,
-      String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    Body body = new Body(packageName);
-    body.setLimit(limit);
-    body.setOffset(offset);
-    return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+    return new ListAppVersionsRequest(body, bodyInterceptor);
   }
 
   @Override protected Observable<ListAppVersions> loadDataFromNetwork(Interfaces interfaces,

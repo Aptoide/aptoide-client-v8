@@ -19,6 +19,7 @@ public class StoreTabFragmentChooser {
       case listApps:
         return fragmentProvider.newListAppsFragment();
       case getStore:
+      case getUser:
         return fragmentProvider.newGetStoreFragment();
       case getStoresRecommended:
       case getMyStoresSubscribed:
@@ -46,6 +47,7 @@ public class StoreTabFragmentChooser {
         case getStoresRecommended:
         case listApps:
         case getStore:
+        case getUser:
         case getStoreWidgets:
         case getReviews:
           //case getApkComments:

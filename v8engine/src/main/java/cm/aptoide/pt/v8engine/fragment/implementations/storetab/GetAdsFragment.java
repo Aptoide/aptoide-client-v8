@@ -1,6 +1,13 @@
 package cm.aptoide.pt.v8engine.fragment.implementations.storetab;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
@@ -16,7 +23,16 @@ import rx.Observable;
 
 public class GetAdsFragment extends StoreTabGridRecyclerFragment {
 
-  private static final AdsRepository adsRepository = new AdsRepository();
+  private AdsRepository adsRepository;
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    final AptoideAccountManager accountManager =
+        ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    adsRepository = new AdsRepository(
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
+        accountManager);
+  }
 
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
     return adsRepository.getAdsFromHomepageMore().map(minimalAds -> {

@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.UiThread;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -18,6 +18,7 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
@@ -35,6 +36,8 @@ import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.Video;
 import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -42,13 +45,15 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.PackageRepository;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
+import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.repository.TimelineCardFilter;
-import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.repository.TimelineRepository;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -69,13 +74,13 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.VideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.RxEndlessRecyclerView;
+import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Observable;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -84,7 +89,9 @@ import rx.android.schedulers.AndroidSchedulers;
 public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwipeFragment<T> {
 
   public static final int SEARCH_LIMIT = 20;
+  private static final String USER_ID_KEY = "USER_ID_KEY";
   private static final String ACTION_KEY = "ACTION";
+  private static final String STORE_ID = "STORE_ID";
   private static final String PACKAGE_LIST_KEY = "PACKAGE_LIST";
   private DownloadFactory downloadFactory;
   private SpannableFactory spannableFactory;
@@ -93,29 +100,40 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private boolean loading;
   private int offset;
   private int total;
-  private Subscription subscription;
   private TimelineRepository timelineRepository;
   private PackageRepository packageRepository;
   private List<String> packages;
   private Installer installer;
   private InstallManager installManager;
   private PermissionManager permissionManager;
-  private TimelineMetricsManager timelineMetricsManager;
+  private TimelineAnalytics timelineAnalytics;
   private SocialRepository socialRepository;
   private AptoideAccountManager accountManager;
   private IdsRepositoryImpl idsRepository;
   private AccountNavigator accountNavigator;
+  private BodyInterceptor bodyInterceptor;
+  private StoreCredentialsProvider storeCredentialsProvider;
+  private long storeId;
 
-  public static AppsTimelineFragment newInstance(String action, String storeName) {
+  public static AppsTimelineFragment newInstance(String action, Long userId, long storeId) {
     AppsTimelineFragment fragment = new AppsTimelineFragment();
 
     final Bundle args = new Bundle();
+    args.putLong(STORE_ID, storeId);
     args.putString(ACTION_KEY, action);
+    if (userId != null) {
+      args.putLong(USER_ID_KEY, userId);
+    }
     fragment.setArguments(args);
     return fragment;
   }
 
-  @Override public void bindViews(View view) {
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    storeId = args.getLong(STORE_ID);
+  }
+
+  @UiThread @Override public void bindViews(View view) {
     super.bindViews(view);
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
@@ -128,55 +146,40 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
     idsRepository =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+    bodyInterceptor = new BaseBodyInterceptor(idsRepository, accountManager);
     timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
         new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
-            AccessorFactory.getAccessorFor(Installed.class)), idsRepository, accountManager);
+            AccessorFactory.getAccessorFor(Installed.class)), bodyInterceptor);
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
-    timelineMetricsManager = new TimelineMetricsManager(accountManager, Analytics.getInstance());
-    socialRepository = new SocialRepository(accountManager, idsRepository);
+    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor);
+    socialRepository = new SocialRepository(accountManager, bodyInterceptor);
+    storeCredentialsProvider = new StoreCredentialsProviderImpl();
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
 
-    if (subscription != null) {
-      subscription.unsubscribe();
+    if (savedInstanceState != null && savedInstanceState.getStringArray(PACKAGE_LIST_KEY) != null) {
+      packages = Arrays.asList(savedInstanceState.getStringArray(PACKAGE_LIST_KEY));
     }
 
-    final Observable<List<String>> packagesObservable;
-    final Observable<Datalist<Displayable>> displayableObservable;
-    if (create) {
-      if (savedInstanceState != null
-          && savedInstanceState.getStringArray(PACKAGE_LIST_KEY) != null) {
-        packages = Arrays.asList(savedInstanceState.getStringArray(PACKAGE_LIST_KEY));
-        packagesObservable = Observable.just(packages);
-      } else {
-        packagesObservable = refreshPackages();
-      }
-      displayableObservable = packagesObservable.flatMap(
-          packages -> Observable.concat(getFreshDisplayables(refresh, packages),
-              getNextDisplayables(packages)));
-    } else {
+    Observable<List<String>> packagesObservable =
+        (packages != null) ? Observable.just(packages) : refreshPackages();
 
-      if (packages != null) {
-        packagesObservable = Observable.just(packages);
-      } else {
-        packagesObservable = refreshPackages();
-      }
+    Observable<Datalist<Displayable>> displayableObservable = accountManager.getAccountAsync()
+        .map(account -> account.isLoggedIn())
+        .onErrorReturn(throwable -> false)
+        .flatMapObservable(loggedIn -> packagesObservable.flatMap(
+            packages -> Observable.concat(getFreshDisplayables(refresh, packages, loggedIn),
+                getNextDisplayables(packages))));
 
-      if (getAdapter().getItemCount() == 0) {
-        displayableObservable = packagesObservable.flatMap(
-            packages -> Observable.concat(getFreshDisplayables(refresh, packages),
-                getNextDisplayables(packages)));
-      } else {
-        displayableObservable =
-            packagesObservable.flatMap(packages -> getNextDisplayables(packages));
-      }
-    }
-
-    subscription = displayableObservable.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(items -> addItems(items), throwable -> finishLoading(throwable));
+    displayableObservable.observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(items -> {
+          addItems(items);
+          finishLoading();
+        }, err -> finishLoading(err));
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -198,29 +201,88 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   }
 
   @NonNull private Observable<Datalist<Displayable>> getFreshDisplayables(boolean refresh,
+      List<String> packages, boolean loggedIn) {
+    return getDisplayableList(packages, 0, refresh).doOnSubscribe(
+        () -> getAdapter().clearDisplayables()).flatMap(displayableDatalist -> {
+      Long userId =
+          getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
+
+      if (loggedIn || userId != null) {
+        return getUserTimelineStats(refresh, displayableDatalist, userId);
+      } else {
+        displayableDatalist.getList()
+            .add(0, new TimelineLoginDisplayable().setAccountNavigator(accountNavigator));
+        return Observable.just(displayableDatalist);
+      }
+    });
+  }
+
+  /*
+  @NonNull private Observable<Datalist<Displayable>> getUserTimelineStats(boolean refresh,
+      Datalist<Displayable> displayableDatalist, Long userId) {
+    return timelineRepository.getTimelineStats(refresh, userId)
+        .observeOn(AndroidSchedulers.mainThread())
+        .map(timelineStats -> {
+          TimeLineStatsDisplayable timeLineStatsDisplayable =
+              new TimeLineStatsDisplayable(timelineStats, userId, spannableFactory, storeTheme,
+                  timelineAnalytics, userId == null);
+          displayableDatalist.getList().add(0, timeLineStatsDisplayable);
+          return displayableDatalist;
+        })
+        .onErrorReturn(throwable -> {
+          CrashReport.getInstance().log(throwable);
+          return displayableDatalist;
+        });
+  }
+  */
+  @NonNull private Observable<Datalist<Displayable>> getUserTimelineStats(boolean refresh,
+      Datalist<Displayable> displayableDatalist, Long userId) {
+    return timelineRepository.getTimelineStats(refresh, userId).map(timelineStats -> {
+      TimeLineStatsDisplayable timeLineStatsDisplayable =
+          new TimeLineStatsDisplayable(timelineStats, userId, spannableFactory, storeTheme,
+              timelineAnalytics, userId == null, storeId);
+      displayableDatalist.getList().add(0, timeLineStatsDisplayable);
+      return displayableDatalist;
+    }).onErrorReturn(throwable -> {
+      CrashReport.getInstance().log(throwable);
+      return displayableDatalist;
+    });
+  }
+
+  /*
+  @NonNull private Observable<Datalist<Displayable>> getFreshDisplayables(boolean refresh,
       List<String> packages) {
+    Long userId =
+        getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
+
     return getDisplayableList(packages, 0, refresh).doOnSubscribe(
         () -> getAdapter().clearDisplayables()).flatMap(displayableDatalist -> {
       if (!displayableDatalist.getList().isEmpty()) {
-        if (accountManager.isLoggedIn()) {
-          return timelineRepository.getTimelineStats(refresh).map(timelineStats -> {
-            displayableDatalist.getList()
-                .add(0, new TimeLineStatsDisplayable(timelineStats, spannableFactory, storeTheme));
-            return displayableDatalist;
-          }).onErrorReturn(throwable -> {
-            CrashReport.getInstance().log(throwable);
-            return displayableDatalist;
-          });
-        } else {
-          displayableDatalist.getList()
-              .add(0, new TimelineLoginDisplayable().setAccountNavigator(accountNavigator));
-          return Observable.just(displayableDatalist);
-        }
+        return getTimelineStatsOrLoginObservable(refresh, displayableDatalist, userId);
       } else {
         return Observable.just(displayableDatalist);
       }
     }).doOnUnsubscribe(() -> finishLoading());
   }
+
+  @NonNull
+  private Observable<Datalist<Displayable>> getTimelineStatsOrLoginObservable(boolean refresh,
+      Datalist<Displayable> displayableDatalist, Long userId) {
+    if (accountManager.isLoggedIn()) {
+      return timelineRepository.getTimelineStats(refresh, userId).map(timelineStats -> {
+        displayableDatalist.getList()
+            .add(0,
+                new TimeLineStatsDisplayable(timelineStats, userId, spannableFactory, storeTheme,
+                    timelineAnalytics, userId == null));
+        return displayableDatalist;
+      });
+    } else {
+      displayableDatalist.getList()
+          .add(0, new TimelineLoginDisplayable().setAccountNavigator(accountNavigator));
+      return Observable.just(displayableDatalist);
+    }
+  }
+  */
 
   @Override public void reload() {
     Analytics.AppsTimeline.pullToRefresh();
@@ -230,13 +292,11 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private Observable<Datalist<Displayable>> getNextDisplayables(List<String> packages) {
     return RxEndlessRecyclerView.loadMore(getRecyclerView(), getAdapter())
         .filter(item -> onStartLoadNext())
+        .observeOn(AndroidSchedulers.mainThread())
         .concatMap(item -> getDisplayableList(packages, getOffset(), false))
         .delay(1, TimeUnit.SECONDS)
-        .observeOn(AndroidSchedulers.mainThread())
-        .retryWhen(errors -> errors.delay(1, TimeUnit.SECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .filter(error -> onStopLoadNext(error)))
-        .doOnUnsubscribe(() -> removeLoading())
+        .retryWhen(
+            errors -> errors.delay(1, TimeUnit.SECONDS).filter(error -> onStopLoadNext(error)))
         .subscribeOn(AndroidSchedulers.mainThread());
   }
 
@@ -266,15 +326,14 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     return displayableDataList;
   }
 
-  private void showErrorSnackbar(Throwable error) {
+  @UiThread private void showErrorSnackbar(Throwable error) {
     @StringRes int errorString;
     if (ErrorUtils.isNoNetworkConnection(error)) {
       errorString = R.string.fragment_social_timeline_no_connection;
     } else {
       errorString = R.string.fragment_social_timeline_general_error;
     }
-    //Todo: switch to showmessage snack
-    Snackbar.make(getView(), errorString, Snackbar.LENGTH_SHORT).show();
+    ShowMessage.asSnack(getView(), errorString);
   }
 
   private boolean isTotal() {
@@ -297,14 +356,14 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     }
   }
 
-  private void addLoading() {
+  @UiThread private void addLoading() {
     if (!loading) {
       this.loading = true;
       getAdapter().addDisplayable(new ProgressBarDisplayable().setFullRow());
     }
   }
 
-  private void removeLoading() {
+  @UiThread private void removeLoading() {
     if (loading) {
       loading = false;
       getAdapter().popDisplayable();
@@ -315,14 +374,14 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     return loading;
   }
 
-  private void addItems(Datalist<Displayable> data) {
+  @UiThread private void addItems(Datalist<Displayable> data) {
     removeLoading();
     addDisplayables(data.getList());
     setTotal(data);
     setOffset(data);
   }
 
-  @NonNull private boolean onStopLoadNext(Throwable error) {
+  @UiThread @NonNull private boolean onStopLoadNext(Throwable error) {
     if (isLoading()) {
       showErrorSnackbar(error);
       removeLoading();
@@ -331,7 +390,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     return false;
   }
 
-  @NonNull private boolean onStartLoadNext() {
+  @UiThread @NonNull private boolean onStartLoadNext() {
     if (!isTotal() && !isLoading()) {
       Analytics.AppsTimeline.endlessScrollLoadMore();
       addLoading();
@@ -343,51 +402,52 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     return false;
   }
 
-  @NonNull private Displayable cardToDisplayable(TimelineCard card, DateCalculator dateCalculator,
+  @UiThread @NonNull
+  private Displayable cardToDisplayable(TimelineCard card, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, DownloadFactory downloadFactory,
       LinksHandlerFactory linksHandlerFactory) {
     if (card instanceof Article) {
       return ArticleDisplayable.from((Article) card, dateCalculator, spannableFactory,
-          linksHandlerFactory, timelineMetricsManager, socialRepository);
+          linksHandlerFactory, timelineAnalytics, socialRepository);
     } else if (card instanceof Video) {
       return VideoDisplayable.from((Video) card, dateCalculator, spannableFactory,
-          linksHandlerFactory, timelineMetricsManager, socialRepository);
+          linksHandlerFactory, timelineAnalytics, socialRepository);
     } else if (card instanceof SocialArticle) {
       return SocialArticleDisplayable.from(((SocialArticle) card), dateCalculator, spannableFactory,
-          linksHandlerFactory, timelineMetricsManager, socialRepository);
+          linksHandlerFactory, timelineAnalytics, socialRepository);
     } else if (card instanceof SocialVideo) {
       return SocialVideoDisplayable.from(((SocialVideo) card), dateCalculator, spannableFactory,
-          linksHandlerFactory, timelineMetricsManager, socialRepository);
+          linksHandlerFactory, timelineAnalytics, socialRepository);
     } else if (card instanceof SocialStoreLatestApps) {
       return SocialStoreLatestAppsDisplayable.from((SocialStoreLatestApps) card, dateCalculator,
-          timelineMetricsManager, socialRepository, spannableFactory);
+          timelineAnalytics, socialRepository, spannableFactory, storeCredentialsProvider);
     } else if (card instanceof Feature) {
       return FeatureDisplayable.from((Feature) card, dateCalculator, spannableFactory);
     } else if (card instanceof StoreLatestApps) {
       return StoreLatestAppsDisplayable.from((StoreLatestApps) card, dateCalculator,
-          timelineMetricsManager, socialRepository);
+          timelineAnalytics, socialRepository);
     } else if (card instanceof AppUpdate) {
       return AppUpdateDisplayable.from((AppUpdate) card, spannableFactory, downloadFactory,
-          dateCalculator, installManager, permissionManager, timelineMetricsManager, socialRepository,
-          idsRepository, accountManager);
+          dateCalculator, installManager, permissionManager, timelineAnalytics, socialRepository,
+          idsRepository, accountManager, bodyInterceptor);
     } else if (card instanceof Recommendation) {
       return RecommendationDisplayable.from((Recommendation) card, dateCalculator, spannableFactory,
-          timelineMetricsManager, socialRepository);
+          timelineAnalytics, socialRepository);
     } else if (card instanceof Similar) {
       return SimilarDisplayable.from((Similar) card, dateCalculator, spannableFactory,
-          timelineMetricsManager, socialRepository);
+          timelineAnalytics, socialRepository);
     } else if (card instanceof SocialInstall) {
-      return SocialInstallDisplayable.from((SocialInstall) card, timelineMetricsManager,
+      return SocialInstallDisplayable.from((SocialInstall) card, timelineAnalytics,
           spannableFactory, socialRepository, dateCalculator);
     } else if (card instanceof SocialRecommendation) {
-      return SocialRecommendationDisplayable.from((SocialRecommendation) card, timelineMetricsManager,
-          spannableFactory, socialRepository, dateCalculator);
+      return SocialRecommendationDisplayable.from((SocialRecommendation) card, spannableFactory,
+          socialRepository, dateCalculator);
     }
     throw new IllegalArgumentException(
         "Only articles, features, store latest apps, app updates, videos, recommendations and similar cards supported.");
   }
 
-  public void goToTop() {
+  @UiThread public void goToTop() {
     GridLayoutManager layoutManager = ((GridLayoutManager) getRecyclerView().getLayoutManager());
     int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
     if (lastVisibleItemPosition > 10) {

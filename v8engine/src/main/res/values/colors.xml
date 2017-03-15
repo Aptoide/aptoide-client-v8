@@ -177,6 +177,7 @@
   <color name="activity_payment_gray">#9b9b9b</color>
   <color name="activity_payment_green">#B4DC84</color>
 
+
   <color name="reviews_helpful_stroke_button">#d8d8d8</color>
 
   <!-- Add stores dialog -->
@@ -184,5 +185,14 @@
 
 
   <!-- Address book colors -->
-  <color name="twitter_color">#1ccaff</color>
+  <color name="twitter_color">#00aced</color>
+
+
+  <!-- Radar colors -->
+  <color name="radar_color_line">#cecece</color>
+  <color name="radar_color_dark">#efefef</color>
+  <color name="radar_color_light">#fafafa</color>
+  <color name="radar_color_2">#6c6c6c</color>
+
+
 </resources>

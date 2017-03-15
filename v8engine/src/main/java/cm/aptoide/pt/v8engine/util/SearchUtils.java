@@ -13,26 +13,27 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.activity.SearchActivity;
+import cm.aptoide.pt.v8engine.fragment.FragmentView;
 import cm.aptoide.pt.v8engine.websocket.SearchAppsWebSocket;
 
 /**
  * Created by neuro on 01-06-2016.
  */
+// FIXME: this call could leak the calling fragment
 public class SearchUtils {
 
   private static String SEARCH_WEBSOCKET = "9000";
 
-  public static void setupGlobalSearchView(Menu menu, NavigationManagerV4 navigationManager) {
-    setupSearchView(menu.findItem(R.id.action_search), navigationManager,
+  public static void setupGlobalSearchView(Menu menu, FragmentView fragmentView) {
+    setupSearchView(menu.findItem(R.id.action_search), fragmentView,
         s -> V8Engine.getFragmentProvider().newSearchFragment(s));
   }
 
-  private static void setupSearchView(MenuItem searchItem, NavigationManagerV4 navigationManager,
+  private static void setupSearchView(MenuItem searchItem, FragmentView fragmentView,
       CreateQueryFragmentInterface createSearchFragmentInterface) {
 
     // Get the SearchView and set the searchable configuration
@@ -43,7 +44,6 @@ public class SearchUtils {
     searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
     SearchAppsWebSocket searchAppsWebSocket = new SearchAppsWebSocket();
 
-
     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
       @Override public boolean onQueryTextSubmit(String s) {
         MenuItemCompat.collapseActionView(searchItem);
@@ -51,7 +51,7 @@ public class SearchUtils {
         boolean validQueryLength = s.length() > 1;
 
         if (validQueryLength) {
-          navigationManager.navigateTo(createSearchFragmentInterface.create(s));
+          fragmentView.getNavigationManager().navigateTo(createSearchFragmentInterface.create(s));
         } else {
           ShowMessage.asToast(V8Engine.getContext(), R.string.search_minimum_chars);
         }
@@ -72,7 +72,8 @@ public class SearchUtils {
       @Override public boolean onSuggestionClick(int position) {
         Cursor item = (Cursor) searchView.getSuggestionsAdapter().getItem(position);
 
-        navigationManager.navigateTo(createSearchFragmentInterface.create(item.getString(1)));
+        fragmentView.getNavigationManager()
+            .navigateTo(createSearchFragmentInterface.create(item.getString(1)));
 
         return true;
       }
@@ -87,9 +88,9 @@ public class SearchUtils {
     searchView.setOnSearchClickListener(v -> searchAppsWebSocket.connect(SEARCH_WEBSOCKET));
   }
 
-  public static void setupInsideStoreSearchView(Menu menu, NavigationManagerV4 navigationManager,
+  public static void setupInsideStoreSearchView(Menu menu, FragmentView fragmentView,
       String storeName) {
-    setupSearchView(menu.findItem(R.id.action_search), navigationManager,
+    setupSearchView(menu.findItem(R.id.action_search), fragmentView,
         s -> V8Engine.getFragmentProvider().newSearchFragment(s, storeName));
   }
 }

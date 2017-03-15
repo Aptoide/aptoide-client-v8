@@ -10,7 +10,6 @@ import cm.aptoide.pt.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
 import java.util.Date;
@@ -29,6 +28,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
   @Getter private Date date;
   @Getter private List<UserTimeline> userLikes;
   @Getter private boolean liked;
+  @Getter private String abUrl;
 
   SocialCardDisplayable() {
     numberOfLikes = 0;
@@ -38,7 +38,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
   SocialCardDisplayable(TimelineCard timelineCard, long numberOfLikes, long numberOfComments,
       Store store, Comment.User user, Comment.User userSharer, boolean liked,
       List<UserTimeline> userLikes, Date date, SpannableFactory spannableFactory,
-      DateCalculator dateCalculator) {
+      DateCalculator dateCalculator, String abUrl) {
     super(timelineCard);
     this.date = date;
     this.liked = liked;
@@ -50,6 +50,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
     this.userLikes = userLikes;
     this.spannableFactory = spannableFactory;
     this.store = store;
+    this.abUrl = abUrl;
   }
 
   public String getTimeSinceLastUpdate(Context context) {
@@ -66,7 +67,6 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
 
   public void likesPreviewClick(NavigationManagerV4 navigationManager) {
     navigationManager.navigateTo(V8Engine.getFragmentProvider()
-        .newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode.LIKE_PREVIEW,
-            "default", this.getTimelineCard().getCardId(), numberOfLikes));
+        .newTimeLineLikesFragment(this.getTimelineCard().getCardId(), numberOfLikes, "default"));
   }
 }

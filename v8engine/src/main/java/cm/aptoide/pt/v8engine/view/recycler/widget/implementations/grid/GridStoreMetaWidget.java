@@ -6,29 +6,31 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
+import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.Account;
-import cm.aptoide.accountmanager.AccountManagerPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.activity.CreateStoreActivity;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.model.v7.store.GetStoreMeta;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
+import cm.aptoide.pt.model.v7.store.GetHomeMeta;
+import cm.aptoide.pt.model.v7.store.HomeUser;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.activity.CreateStoreActivity;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
@@ -47,80 +49,105 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
 
   private AptoideAccountManager accountManager;
   private View containerLayout;
-  private View descriptionContentLayout;
   private LinearLayout socialChannelsLayout;
-  private ImageView image;
-  private TextView name;
+  private ImageView mainIcon;
+  private TextView mainName;
   private TextView description;
   private Button subscribeButton;
   private Button editStoreButton;
-  private TextView subscribersCount;
-  private TextView appsCount;
-  private TextView downloadsCount;
+  private TextView followersCountTv;
+  private TextView appsCountTv;
+  private TextView followingCountTv;
+  private ImageView secondaryIcon;
+  private TextView secondaryName;
+  private View backgroundView;
   private StoreUtilsProxy storeUtilsProxy;
 
   public GridStoreMetaWidget(View itemView) {
     super(itemView);
   }
 
-  @NonNull @Override LinearLayout getSocialLayout() {
-    return socialChannelsLayout;
-  }
-
   @Override protected void assignViews(View itemView) {
     containerLayout = itemView.findViewById(R.id.outter_layout);
-    descriptionContentLayout = itemView.findViewById(R.id.descriptionContent);
+    backgroundView = itemView.findViewById(R.id.background_view);
     socialChannelsLayout = (LinearLayout) itemView.findViewById(R.id.social_channels);
-    image = (ImageView) itemView.findViewById(R.id.image);
-    name = (TextView) itemView.findViewById(R.id.name);
+    mainIcon = (ImageView) itemView.findViewById(R.id.main_icon);
+    mainName = (TextView) itemView.findViewById(R.id.main_name);
     description = (TextView) itemView.findViewById(R.id.description);
     subscribeButton = (Button) itemView.findViewById(R.id.follow_btn);
     editStoreButton = (Button) itemView.findViewById(R.id.edit_store_btn);
-    subscribersCount = (TextView) itemView.findViewById(R.id.subscribers);
-    appsCount = (TextView) itemView.findViewById(R.id.apps);
-    downloadsCount = (TextView) itemView.findViewById(R.id.downloads);
+    followersCountTv = (TextView) itemView.findViewById(R.id.number_of_followers);
+    followingCountTv = (TextView) itemView.findViewById(R.id.number_of_following);
+    appsCountTv = (TextView) itemView.findViewById(R.id.number_of_apps);
+    secondaryName = (TextView) itemView.findViewById(R.id.secondary_name);
+    secondaryIcon = ((ImageView) itemView.findViewById(R.id.secondary_icon));
   }
 
   @Override public void bindView(GridStoreMetaDisplayable displayable) {
 
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    storeUtilsProxy = new StoreUtilsProxy(
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
-        accountManager);
-    final GetStoreMeta getStoreMeta = displayable.getPojo();
-    final cm.aptoide.pt.model.v7.store.Store store = getStoreMeta.getData();
-    final StoreThemeEnum theme = StoreThemeEnum.get(store.getAppearance().getTheme());
-    final Context context = itemView.getContext();
+    final AptoideClientUUID aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+    storeUtilsProxy = new StoreUtilsProxy(accountManager,
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager),
+        new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class));
+    final GetHomeMeta getHomeMeta = displayable.getPojo();
+    final cm.aptoide.pt.model.v7.store.Store store = getHomeMeta.getData().getStore();
+    HomeUser user = getHomeMeta.getData().getUser();
 
-    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-    boolean isStoreSubscribed =
-        storeAccessor.get(store.getId()).toBlocking().firstOrDefault(null) != null;
+    if (store != null) {
+      final StoreThemeEnum theme = StoreThemeEnum.get(
+          store.getAppearance() == null ? "default" : store.getAppearance().getTheme());
+      final Context context = itemView.getContext();
+      StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+      boolean isStoreSubscribed =
+          storeAccessor.get(store.getId()).toBlocking().firstOrDefault(null) != null;
 
-    showStoreImage(store, context);
-    showStoreData(store, theme, context);
+      setupMainInfo(store.getName(), theme, context, store.getStats().getApps(),
+          getHomeMeta.getData().getStats().getFollowers(),
+          getHomeMeta.getData().getStats().getFollowing(), true, store.getAvatar(),
+          R.drawable.ic_avatar_apps, R.drawable.ic_store);
 
-    updateSubscribeButtonText(isStoreSubscribed);
-    compositeSubscription.add(RxView.clicks(subscribeButton)
-        .subscribe(handleSubscriptionLogic(new StoreWrapper(store, isStoreSubscribed)), err -> {
-          CrashReport.getInstance().log(err);
-        }));
+      updateSubscribeButtonText(isStoreSubscribed);
+      subscribeButton.setVisibility(View.VISIBLE);
+      compositeSubscription.add(RxView.clicks(subscribeButton)
+          .subscribe(
+              handleSubscriptionLogic(new StoreWrapper(store, isStoreSubscribed), displayable),
+              err -> {
+                CrashReport.getInstance().log(err);
+              }));
 
-    List<cm.aptoide.pt.model.v7.store.Store.SocialChannel> socialChannels =
-        store.getSocialChannels();
-    setupSocialLinks(displayable.getSocialLinks());
+      List<cm.aptoide.pt.model.v7.store.Store.SocialChannel> socialChannels =
+          displayable.getSocialLinks();
+      setupSocialLinks(displayable.getSocialLinks(), socialChannelsLayout);
 
-    // if there is no channels nor description, hide that area
-    if (socialChannels == null || socialChannels.isEmpty()) {
-      if (TextUtils.isEmpty(store.getAppearance().getDescription())) {
-        descriptionContentLayout.setVisibility(View.GONE);
+      // if there is no channels or description, hide that area
+      if ((socialChannels == null || socialChannels.isEmpty()) && TextUtils.isEmpty(
+          store.getAppearance().getDescription())) {
+        setDescriptionSectionVisibility(false);
+      } else {
+        backgroundView.setVisibility(View.VISIBLE);
+        //show social channels if there are any
+        if (socialChannels != null && !socialChannels.isEmpty()) {
+          socialChannelsLayout.setVisibility(View.VISIBLE);
+        } else {
+          socialChannelsLayout.setVisibility(View.GONE);
+        }
+        //show description if exists
+        if (!TextUtils.isEmpty(store.getAppearance().getDescription())) {
+          description.setVisibility(View.VISIBLE);
+          description.setText(store.getAppearance().getDescription());
+        } else {
+          description.setVisibility(View.GONE);
+        }
       }
-      this.socialChannelsLayout.setVisibility(View.GONE);
-    }
 
-    final Account account = accountManager.getAccount();
-    if (account != null && !TextUtils.isEmpty(account.getStore())) {
-      if (account.getStore().equals(store.getName())) {
-        descriptionContentLayout.setVisibility(View.VISIBLE);
+      //check if the user is the store's owner
+      if (accountManager.isLoggedIn()
+          && accountManager.getAccount().getStore() != null
+          && accountManager.getAccount().getStore().equals(store.getName())) {
+        description.setVisibility(View.VISIBLE);
+        backgroundView.setVisibility(View.VISIBLE);
         if (TextUtils.isEmpty(store.getAppearance().getDescription())) {
           description.setText("Add a description to your store by editing it.");
         }
@@ -128,47 +155,74 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         compositeSubscription.add(RxView.clicks(editStoreButton)
             .subscribe(click -> editStore(store.getId(), store.getAppearance().getTheme(),
                 store.getAppearance().getDescription(), store.getAvatar())));
-        subscribeButton.setVisibility(View.GONE);
+      } else {
+        editStoreButton.setVisibility(View.GONE);
       }
+
+      if (user != null) {
+        setSecondaryInfoVisibility(true);
+        setupSecondaryInfo(context, user.getName(), user.getAvatar());
+      } else {
+        setSecondaryInfoVisibility(false);
+      }
+    } else {
+      subscribeButton.setVisibility(View.INVISIBLE);
+      setupMainInfo(user.getName(), StoreThemeEnum.get("default"), getContext(),
+          getHomeMeta.getData().getStats().getFollowers(),
+          getHomeMeta.getData().getStats().getFollowing(), user.getAvatar(),
+          R.drawable.user_default, R.drawable.user_shape_mini_icon);
+      setSecondaryInfoVisibility(false);
+      setDescriptionSectionVisibility(false);
     }
   }
 
-  private void showStoreImage(cm.aptoide.pt.model.v7.store.Store store, Context context) {
-    if (TextUtils.isEmpty(store.getAvatar())) {
-      ImageLoader.with(context).loadUsingCircleTransform(R.drawable.ic_avatar_apps, image);
+  private void setDescriptionSectionVisibility(boolean isVisible) {
+    int visibility = isVisible ? View.VISIBLE : View.GONE;
+    backgroundView.setVisibility(visibility);
+    description.setVisibility(visibility);
+    socialChannelsLayout.setVisibility(visibility);
+    editStoreButton.setVisibility(visibility);
+  }
+
+  private void showMainIcon(Context context, String mainIconUrl, int defaultMainIcon) {
+    if (TextUtils.isEmpty(mainIconUrl)) {
+      ImageLoader.with(context).loadWithShadowCircleTransform(defaultMainIcon, mainIcon);
     } else {
-      ImageLoader.with(context).loadUsingCircleTransform(store.getAvatar(), image);
+      ImageLoader.with(context).loadWithShadowCircleTransform(mainIconUrl, mainIcon);
     }
   }
 
-  private void showStoreData(cm.aptoide.pt.model.v7.store.Store store, StoreThemeEnum theme,
-      Context context) {
+  /**
+   * @param appsVisibility true if number of apps should be displayed, false otherwise
+   */
+  private void setupMainInfo(String name, StoreThemeEnum theme, Context context, long appsCount,
+      long followersCount, long followingCount, boolean appsVisibility, String mainIconUrl,
+      @DrawableRes int defaultMainIcon, @DrawableRes int mainNameDrawable) {
 
-    @ColorInt int color = getColorOrDefault(theme, context);
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-      Drawable d = context.getDrawable(R.drawable.dialog_bg_2);
-      d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-      containerLayout.setBackground(d);
-    } else {
-      Drawable d = context.getResources().getDrawable(R.drawable.dialog_bg_2);
-      d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-      containerLayout.setBackgroundDrawable(d);
-    }
-    subscribeButton.setTextColor(color);
-    editStoreButton.setTextColor(color);
+    setupTheme(theme, context);
 
-    name.setText(store.getName());
-    String descriptionText = store.getAppearance().getDescription();
-    if (TextUtils.isEmpty(descriptionText)) {
-      description.setVisibility(View.GONE);
+    mainName.setText(name);
+    Drawable drawable;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      drawable = getContext().getDrawable(mainNameDrawable);
     } else {
-      description.setText(descriptionText);
-      description.setVisibility(View.VISIBLE);
+      drawable = getContext().getResources().getDrawable(mainNameDrawable);
     }
-    appsCount.setText(
-        NumberFormat.getNumberInstance(Locale.getDefault()).format(store.getStats().getApps()));
-    downloadsCount.setText(AptoideUtils.StringU.withSuffix(store.getStats().getDownloads()));
-    subscribersCount.setText(AptoideUtils.StringU.withSuffix(store.getStats().getSubscribers()));
+    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+    mainName.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+    if (appsVisibility) {
+      appsCountTv.setText(AptoideUtils.StringU.getFormattedString(R.string.store_meta_apps,
+          NumberFormat.getNumberInstance(Locale.getDefault()).format(appsCount)));
+      appsCountTv.setVisibility(View.VISIBLE);
+    } else {
+      appsCountTv.setVisibility(View.INVISIBLE);
+    }
+    followersCountTv.setText(AptoideUtils.StringU.getFormattedString(R.string.store_meta_followers,
+        AptoideUtils.StringU.withSuffix(followersCount)));
+    followingCountTv.setText(AptoideUtils.StringU.getFormattedString(R.string.store_meta_following,
+        AptoideUtils.StringU.withSuffix(followingCount)));
+
+    showMainIcon(getContext(), mainIconUrl, defaultMainIcon);
   }
 
   private void updateSubscribeButtonText(boolean isStoreSubscribed) {
@@ -176,12 +230,18 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         : itemView.getContext().getString(R.string.follow));
   }
 
-  private Action1<Void> handleSubscriptionLogic(final StoreWrapper storeWrapper) {
+  private Action1<Void> handleSubscriptionLogic(final StoreWrapper storeWrapper,
+      GridStoreMetaDisplayable displayable) {
     return aVoid -> {
       if (storeWrapper.isStoreSubscribed()) {
         storeWrapper.setStoreSubscribed(false);
         if (accountManager.isLoggedIn()) {
-          accountManager.unsubscribeStore(storeWrapper.getStore().getName());
+          accountManager.unsubscribeStore(storeWrapper.getStore().getName(),
+              displayable.getStoreCredentialsProvider()
+                  .get(storeWrapper.getStore().getName())
+                  .getName(), displayable.getStoreCredentialsProvider()
+                  .get(storeWrapper.getStore().getName())
+                  .getPasswordSha1());
         }
         StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
         storeAccessor.remove(storeWrapper.getStore().getId());
@@ -211,6 +271,38 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     intent.putExtra("storeAvatar", storeAvatar);
     intent.putExtra("from", "store");
     getContext().startActivity(intent);
+  }
+
+  private void setSecondaryInfoVisibility(boolean userVisibility) {
+    secondaryIcon.setVisibility(userVisibility ? View.VISIBLE : View.GONE);
+    secondaryName.setVisibility(userVisibility ? View.VISIBLE : View.GONE);
+  }
+
+  private void setupSecondaryInfo(Context context, String name, String secondaryIconUrl) {
+    secondaryName.setText(name);
+    ImageLoader.with(context).loadWithShadowCircleTransform(secondaryIconUrl, secondaryIcon);
+  }
+
+  private void setupMainInfo(String name, StoreThemeEnum theme, Context context,
+      long followersCount, long followingCount, String mainIconUrl,
+      @DrawableRes int defaultMainIcon, @DrawableRes int mainNameDrawble) {
+    setupMainInfo(name, theme, context, 0, followersCount, followingCount, false, mainIconUrl,
+        defaultMainIcon, mainNameDrawble);
+  }
+
+  private void setupTheme(StoreThemeEnum theme, Context context) {
+    @ColorInt int color = getColorOrDefault(theme, context);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      Drawable d = context.getDrawable(R.drawable.dialog_bg_2);
+      d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+      containerLayout.setBackground(d);
+    } else {
+      Drawable d = context.getResources().getDrawable(R.drawable.dialog_bg_2);
+      d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+      containerLayout.setBackgroundDrawable(d);
+    }
+    subscribeButton.setTextColor(color);
+    editStoreButton.setTextColor(color);
   }
 
   private int getColorOrDefault(StoreThemeEnum theme, Context context) {

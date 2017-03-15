@@ -12,19 +12,19 @@ import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.CommentType;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForReview;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
 import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.CommentListFragment;
@@ -33,8 +33,8 @@ import com.trello.rxlifecycle.android.FragmentEvent;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class CommentDialogFragment extends
-    com.trello.rxlifecycle.components.support.RxDialogFragment {
+public class CommentDialogFragment
+    extends com.trello.rxlifecycle.components.support.RxDialogFragment {
 
   private static final String TAG = CommentDialogFragment.class.getName();
 
@@ -55,14 +55,7 @@ public class CommentDialogFragment extends
   private boolean reply;
   private CommentListFragment commentDialogCallbackContract;
   private AptoideAccountManager accountManager;
-
-  @Override public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
-    onEmptyTextError = AptoideUtils.StringU.getResString(R.string.error_MARG_107);
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-  }
+  private BodyInterceptor bodyInterceptor;
 
   public static CommentDialogFragment newInstanceStoreCommentReply(long storeId,
       long previousCommentId, String storeName) {
@@ -128,6 +121,15 @@ public class CommentDialogFragment extends
     CommentDialogFragment fragment = new CommentDialogFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    onEmptyTextError = AptoideUtils.StringU.getResString(R.string.error_MARG_107);
+    aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID, accountManager);
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -244,32 +246,24 @@ public class CommentDialogFragment extends
     switch (commentType) {
       case REVIEW:
         // new comment on a review
-        return PostCommentForReview.of(idAsLong, inputText, accountManager.getAccessToken(),
-            aptoideClientUUID.getUniqueIdentifier()).observe();
+        return PostCommentForReview.of(idAsLong, inputText, bodyInterceptor).observe();
 
       case STORE:
         // check if this is a new comment on a store or a reply to a previous one
         if (previousCommentId == null) {
-          return PostCommentForStore.of(idAsLong, inputText, accountManager.getAccessToken(),
-              aptoideClientUUID.getUniqueIdentifier()).observe();
+          return PostCommentForStore.of(idAsLong, inputText, bodyInterceptor).observe();
         }
 
-        return PostCommentForStore.of(idAsLong, previousCommentId, inputText,
-            accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
-            .observe();
+        return PostCommentForStore.of(idAsLong, previousCommentId, inputText, bodyInterceptor).observe();
 
       case TIMELINE:
         // check if this is a new comment on a article or a reply to a previous one
         if (previousCommentId == null) {
-          return PostCommentForTimelineArticle.of(idAsString, inputText,
-              accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
-              .observe();
+          return PostCommentForTimelineArticle.of(idAsString, inputText, bodyInterceptor).observe();
         }
 
-
         return PostCommentForTimelineArticle.of(idAsString, previousCommentId, inputText,
-            accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
-            .observe();
+            bodyInterceptor).observe();
     }
     // default case
     Logger.e(this.getTag(), "Unable to create reply due to missing comment type");

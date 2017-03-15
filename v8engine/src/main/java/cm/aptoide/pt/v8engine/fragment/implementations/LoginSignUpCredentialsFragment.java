@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
@@ -18,10 +19,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.OAuthException;
-import cm.aptoide.accountmanager.ws.AptoideWsV3Exception;
-import cm.aptoide.accountmanager.ws.responses.OAuth;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -29,12 +26,13 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import cm.aptoide.pt.v8engine.activity.CreateUserActivity;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.GoogleLoginFragment;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsPresenter;
+import cm.aptoide.pt.v8engine.view.AccountErrorMapper;
 import cm.aptoide.pt.v8engine.view.LoginSignUpCredentialsView;
+import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
 import cm.aptoide.pt.v8engine.viewModel.AptoideAccountViewModel;
 import cm.aptoide.pt.v8engine.viewModel.FacebookAccountViewModel;
 import com.facebook.CallbackManager;
@@ -46,7 +44,6 @@ import com.facebook.login.LoginResult;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import rx.Observable;
@@ -55,7 +52,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     implements LoginSignUpCredentialsView {
 
   private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
-  private static final String CLEAN_BACK_STACK = "dismiss_to_navigate_to_main_view";
+  private static final String CLEAN_BACK_STACK = "clean_back_stack";
 
   private ProgressDialog progressDialog;
   private CallbackManager callbackManager;
@@ -76,19 +73,22 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   private View loginSignupSelectionArea;
   private Button loginSelectionButton;
   private Button signUpSelectionButton;
+  private TextView termsAndConditions;
+  private View separator;
 
   private boolean isPasswordVisible = false;
   private View credentialsEditTextsArea;
   private BottomSheetBehavior<View> bottomSheetBehavior;
   private boolean dismissToNavigateToMainView;
-  private boolean cleanBackStack;
+  private boolean navigateToHome;
+  private ThrowableToStringMapper errorMapper;
 
-  public static LoginSignUpCredentialsFragment newInstance(boolean dimissToNavigateToMainView,
+  public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
     final LoginSignUpCredentialsFragment fragment = new LoginSignUpCredentialsFragment();
 
     final Bundle bundle = new Bundle();
-    bundle.putBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW, dimissToNavigateToMainView);
+    bundle.putBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW, dismissToNavigateToMainView);
     bundle.putBoolean(CLEAN_BACK_STACK, cleanBackStack);
     fragment.setArguments(bundle);
 
@@ -97,8 +97,9 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    errorMapper = new AccountErrorMapper(getContext());
     this.dismissToNavigateToMainView = getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);
-    this.cleanBackStack = getArguments().getBoolean(CLEAN_BACK_STACK);
+    this.navigateToHome = getArguments().getBoolean(CLEAN_BACK_STACK);
   }
 
   @Nullable @Override
@@ -114,16 +115,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public boolean onBackPressed() {
-
-    if (credentialsEditTextsArea.getVisibility() == View.VISIBLE) {
-      credentialsEditTextsArea.setVisibility(View.GONE);
-      loginSignupSelectionArea.setVisibility(View.VISIBLE);
-      loginArea.setVisibility(View.GONE);
-      signUpArea.setVisibility(View.GONE);
-      return true;
-    }
-
-    return super.onBackPressed();
+    return tryCloseLoginBottomSheet() || super.onBackPressed();
   }
 
   @Override public Observable<Void> showAptoideLoginAreaClick() {
@@ -138,6 +130,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     setAptoideSignUpLoginAreaVisible();
     loginArea.setVisibility(View.GONE);
     signUpArea.setVisibility(View.VISIBLE);
+    separator.setVisibility(View.GONE);
+    termsAndConditions.setVisibility(View.GONE);
   }
 
   private void setAptoideSignUpLoginAreaVisible() {
@@ -152,6 +146,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     setAptoideSignUpLoginAreaVisible();
     loginArea.setVisibility(View.VISIBLE);
     signUpArea.setVisibility(View.GONE);
+    separator.setVisibility(View.GONE);
+    termsAndConditions.setVisibility(View.GONE);
   }
 
   @Override public void showLoading() {
@@ -163,34 +159,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void showError(Throwable throwable) {
-    String message = getString(cm.aptoide.accountmanager.R.string.unknown_error);
-    try {
-      if (throwable instanceof OAuthException) {
-        final OAuth oAuth = ((OAuthException) throwable).getoAuth();
-        message = getString(
-            ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getErrors().get(0).getCode()));
-      } else if (throwable instanceof AptoideWsV3Exception) {
-        final AptoideWsV3Exception ex = ((AptoideWsV3Exception) throwable);
-        @StringRes int errorId =
-            getResources().getIdentifier("error_" + ex.getBaseResponse().getError(), "string",
-                getContext().getPackageName());
-        message = getString(errorId);
-      } else if (throwable instanceof cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception) {
-        final cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception ex =
-            ((cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception) throwable);
-        @StringRes int errorId =
-            getResources().getIdentifier("error_" + ex.getBaseResponse().getError(), "string",
-                getContext().getPackageName());
-        message = getString(errorId);
-      } else if (throwable instanceof IOException) {
-        message = getString(cm.aptoide.accountmanager.R.string.connection_error);
-      }
-    } catch (Exception e) {
-      CrashReport.getInstance().log(e);
-    }
-
     // FIXME: 23/2/2017 sithengineer find a better solution than this.
-    ShowMessage.asToast(getContext(), message);
+    ShowMessage.asToast(getContext(), errorMapper.map(throwable));
   }
 
   @Override public void showFacebookLogin() {
@@ -203,7 +173,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
       }
 
       @Override public void onCancel() {
-        showFacebookLoginError(cm.aptoide.accountmanager.R.string.unknown_error);
+        showFacebookLoginError(R.string.facebook_login_cancelled);
       }
 
       @Override public void onError(FacebookException error) {
@@ -216,18 +186,14 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     facebookEmailRequiredDialog.show();
   }
 
-  @Override public void showCheckAptoideCredentialsMessage() {
-    ShowMessage.asToast(getContext(), cm.aptoide.accountmanager.R.string.fields_cannot_empty);
-  }
-
   @Override public void hideFacebookLogin() {
     facebookLoginButton.setVisibility(View.GONE);
   }
 
   @Override public void navigateToForgotPasswordView() {
-    startActivity(new Intent(Intent.ACTION_VIEW,
-        Uri.parse("http://m.aptoide.com/account/password-recovery")));
-    // FIXME: 1/3/2017 sithengineer remove hardcoded links
+    // FIXME: remove hardcoded links
+    Uri mobilePageUri = Uri.parse("http://m.aptoide.com/account/password-recovery");
+    startActivity(new Intent(Intent.ACTION_VIEW, mobilePageUri));
   }
 
   @Override public void showPassword() {
@@ -249,20 +215,32 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void navigateToMainView() {
+    final NavigationManagerV4 navManager = getNavigationManager();
     Fragment home =
         HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
             V8Engine.getConfiguration().getDefaultTheme());
+    navManager.cleanBackStack();
+    navManager.navigateTo(home);
+  }
 
-    final NavigationManagerV4 navManager = getNavigationManager();
-    if (cleanBackStack) {
-      navManager.cleanBackStack();
-      navManager.navigateTo(home);
-    } else {
-      // close login / signup bottom sheet
-      onBackPressed();
-      // pop this fragment from stack
-      getActivity().onBackPressed();
+  @Override public void goBack() {
+    // close login / signup bottom sheet
+    onBackPressed();
+    // pop this fragment from stack
+    getActivity().onBackPressed();
+  }
+
+  private boolean tryCloseLoginBottomSheet() {
+    if (credentialsEditTextsArea.getVisibility() == View.VISIBLE) {
+      credentialsEditTextsArea.setVisibility(View.GONE);
+      loginSignupSelectionArea.setVisibility(View.VISIBLE);
+      loginArea.setVisibility(View.GONE);
+      signUpArea.setVisibility(View.GONE);
+      separator.setVisibility(View.VISIBLE);
+      termsAndConditions.setVisibility(View.VISIBLE);
+      return true;
     }
+    return false;
   }
 
   @Override public void dismiss() {
@@ -297,9 +275,10 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void navigateToCreateProfile() {
-    Intent goToCreateProfile = new Intent(getContext(), CreateUserActivity.class);
-    goToCreateProfile.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    getContext().startActivity(goToCreateProfile);
+    Intent i = new Intent(getContext(), CreateUserActivity.class);
+    FragmentActivity parent = getActivity();
+    parent.startActivity(i);
+    parent.finish();
   }
 
   private void showFacebookLoginError(@StringRes int errorRes) {
@@ -328,7 +307,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     attachPresenter(
         new LoginSignUpCredentialsPresenter(this, accountManager, facebookRequestedPermissions,
-            dismissToNavigateToMainView), savedInstanceState);
+            dismissToNavigateToMainView, navigateToHome), savedInstanceState);
   }
 
   private void bindViews(View view) {
@@ -365,6 +344,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         String.format(getString(R.string.join_company), getCompanyName()));
     loginArea = view.findViewById(R.id.login_button_area);
     signUpArea = view.findViewById(R.id.sign_up_button_area);
+    termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions);
+    separator = (View) view.findViewById(R.id.separator);
 
     final Context context = getContext();
 
@@ -379,8 +360,13 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
     progressDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
 
-    bottomSheetBehavior =
-        BottomSheetBehavior.from(view.getRootView().findViewById(R.id.login_signup_layout));
+    //FIXME this should be deleted [AN-1301]
+    if (view != null
+        && view.getRootView() != null
+        && view.getRootView().findViewById(R.id.login_signup_layout) != null) {
+      bottomSheetBehavior =
+          BottomSheetBehavior.from(view.getRootView().findViewById(R.id.login_signup_layout));
+    }
   }
 
   public String getCompanyName() {
@@ -388,6 +374,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override protected void showGoogleLoginError() {
-    ShowMessage.asToast(getContext(), cm.aptoide.accountmanager.R.string.unknown_error);
+    ShowMessage.asToast(getContext(), R.string.google_login_cancelled);
   }
 }

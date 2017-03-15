@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
@@ -27,14 +29,13 @@ public class RateAndReviewsPresenter implements Presenter {
   public RateAndReviewsPresenter(@NonNull long appId, @NonNull String storeName,
       @NonNull String packageName, @NonNull RateAndReviewsView view,
       @NonNull SchedulerProvider schedulerProvider, AptoideAccountManager accountManager,
-      String aptoideClientUUID) {
+      String aptoideClientUUID, BodyInterceptor bodyInterceptor) {
     this.view = view;
     this.schedulerProvider = schedulerProvider;
-    this.request = ListReviewsRequest.of(storeName, packageName, accountManager.getAccessToken(),
-        aptoideClientUUID, new BaseRequestWithStore.StoreCredentials());
-    this.ratingRequest =
-        GetAppRequest.of(appId, accountManager.getAccessToken(), aptoideClientUUID,
-            packageName);
+    this.request =
+        ListReviewsRequest.of(storeName, packageName, new BaseRequestWithStore.StoreCredentials(),
+            bodyInterceptor);
+    this.ratingRequest = GetAppRequest.of(packageName, bodyInterceptor, appId);
     this.subscriptions = new CompositeSubscription();
   }
 

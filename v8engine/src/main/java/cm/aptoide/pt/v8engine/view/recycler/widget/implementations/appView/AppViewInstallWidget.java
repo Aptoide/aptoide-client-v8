@@ -29,7 +29,9 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -43,6 +45,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
@@ -109,7 +112,8 @@ import rx.android.schedulers.AndroidSchedulers;
   private Analytics analytics;
   private InstallEventConverter installConverter;
   private AptoideAccountManager accountManager;
-  private IdsRepositoryImpl idsRepository;
+  private AptoideClientUUID aptoideClientUUID;
+  private BodyInterceptor bodyInterceptor;
 
   //private Subscription subscribe;
   //private long appID;
@@ -144,10 +148,12 @@ import rx.android.schedulers.AndroidSchedulers;
     downloadManager.initDownloadService(getContext());
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
     installManager = new InstallManager(downloadManager, installer);
-    idsRepository = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
-    downloadInstallEventConverter = new DownloadEventConverter(idsRepository, accountManager);
-    installConverter = new InstallEventConverter(idsRepository, accountManager);
+    bodyInterceptor =
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager);
+    downloadInstallEventConverter = new DownloadEventConverter(bodyInterceptor);
+    installConverter = new InstallEventConverter(bodyInterceptor);
     analytics = Analytics.getInstance();
 
     minimalAd = displayable.getMinimalAd();
@@ -240,10 +246,12 @@ import rx.android.schedulers.AndroidSchedulers;
 
     //check if the app is paid
     if (app.isPaid() && !app.getPay().isPaid()) {
-      actionButton.setText(
-          getContext().getString(R.string.buy) + " (" + app.getPay().getSymbol() + " " + app
-              .getPay()
-              .getPrice() + ")");
+      actionButton.setText(getContext().getString(R.string.buy)
+          + " ("
+          + app.getPay().getSymbol()
+          + " "
+          + app.getPay().getPrice()
+          + ")");
       actionButton.setOnClickListener(v -> buyApp(app));
       AppBoughtReceiver receiver = new AppBoughtReceiver() {
         @Override public void appBought(long appId, String path) {
@@ -275,7 +283,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
   private void buyApp(GetAppMeta.App app) {
     Fragment fragment = getNavigationManager().peekLast();
-    if (fragment!=null && Payments.class.isAssignableFrom(fragment.getClass())) {
+    if (fragment != null && Payments.class.isAssignableFrom(fragment.getClass())) {
       ((Payments) fragment).buyApp(app);
     }
   }
@@ -387,14 +395,15 @@ import rx.android.schedulers.AndroidSchedulers;
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
             if (accountManager.isLoggedIn()
-                && ManagerPreferences.getShowPreview()
+                && ManagerPreferences.isShowPreviewDialog()
                 && Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
               SharePreviewDialog sharePreviewDialog =
-                  new SharePreviewDialog(displayable, accountManager);
+                  new SharePreviewDialog(displayable, accountManager, true);
               AlertDialog.Builder alertDialog =
                   sharePreviewDialog.getPreviewDialogBuilder(getContext());
+
               SocialRepository socialRepository =
-                  new SocialRepository(accountManager, idsRepository);
+                  new SocialRepository(accountManager, bodyInterceptor);
 
               sharePreviewDialog.showShareCardPreviewDialog(
                   displayable.getPojo().getNodes().getMeta().getData().getPackageName(), "install",

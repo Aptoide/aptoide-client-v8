@@ -7,14 +7,13 @@ import android.text.Spannable;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.Video;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
-import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
+import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
 import java.util.ArrayList;
@@ -29,6 +28,7 @@ import rx.schedulers.Schedulers;
  */
 public class VideoDisplayable extends CardDisplayable {
 
+  public static final String CARD_TYPE_NAME = "VIDEO";
   @Getter private String videoTitle;
   @Getter private Link link;
   @Getter private Link baseLink;
@@ -42,7 +42,7 @@ public class VideoDisplayable extends CardDisplayable {
   private Date date;
   private DateCalculator dateCalculator;
   private SpannableFactory spannableFactory;
-  private TimelineMetricsManager timelineMetricsManager;
+  private TimelineAnalytics timelineAnalytics;
   private SocialRepository socialRepository;
 
   public VideoDisplayable() {
@@ -51,7 +51,7 @@ public class VideoDisplayable extends CardDisplayable {
   public VideoDisplayable(Video video, String videoTitle, Link link, Link baseLink, String title,
       String thumbnailUrl, String avatarUrl, long appId, String abUrl, List<App> relatedToAppsList,
       Date date, DateCalculator dateCalculator, SpannableFactory spannableFactory,
-      TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository) {
+      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
     super(video);
     this.videoTitle = videoTitle;
     this.link = link;
@@ -65,13 +65,13 @@ public class VideoDisplayable extends CardDisplayable {
     this.date = date;
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
-    this.timelineMetricsManager = timelineMetricsManager;
+    this.timelineAnalytics = timelineAnalytics;
     this.socialRepository = socialRepository;
   }
 
   public static VideoDisplayable from(Video video, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
-      TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository) {
+      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
     long appId = 0;
 
     String abTestingURL = null;
@@ -87,7 +87,7 @@ public class VideoDisplayable extends CardDisplayable {
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             video.getPublisher().getBaseUrl()), video.getPublisher().getName(),
         video.getThumbnailUrl(), video.getPublisher().getLogoUrl(), appId, abTestingURL,
-        video.getApps(), video.getDate(), dateCalculator, spannableFactory, timelineMetricsManager,
+        video.getApps(), video.getDate(), dateCalculator, spannableFactory, timelineAnalytics,
         socialRepository);
   }
 
@@ -130,8 +130,14 @@ public class VideoDisplayable extends CardDisplayable {
     return R.layout.displayable_social_timeline_video;
   }
 
-  public void sendOpenVideoEvent(SendEventRequest.Body.Data data, String eventName) {
-    timelineMetricsManager.sendEvent(data, eventName);
+  public void sendOpenVideoEvent(String packageName) {
+    timelineAnalytics.sendOpenVideoEvent(CARD_TYPE_NAME, getTitle(), getBaseLink().getUrl(),
+        packageName);
+  }
+
+  public void sendOpenChannelEvent(String packageName) {
+    timelineAnalytics.sendOpenChannelEvent(CARD_TYPE_NAME, getTitle(), getBaseLink().getUrl(),
+        packageName);
   }
 
   @Override public void share(Context context, boolean privacyResult) {

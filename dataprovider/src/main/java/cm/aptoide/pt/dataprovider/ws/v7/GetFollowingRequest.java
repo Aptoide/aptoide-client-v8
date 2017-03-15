@@ -1,7 +1,10 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
+import android.support.annotation.Nullable;
 import cm.aptoide.pt.model.v7.GetFollowers;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import rx.Observable;
 
 /**
@@ -10,16 +13,18 @@ import rx.Observable;
 
 public class GetFollowingRequest extends V7<GetFollowers, GetFollowersRequest.Body> {
 
-  protected GetFollowingRequest(GetFollowersRequest.Body body, String baseHost) {
-    super(body, baseHost);
+  protected GetFollowingRequest(GetFollowersRequest.Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  public static GetFollowingRequest of(String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-
-    return new GetFollowingRequest(
-        ((GetFollowersRequest.Body) decorator.decorate(new GetFollowersRequest.Body(),
-            accessToken)), BASE_HOST);
+  public static GetFollowingRequest of(BodyInterceptor bodyInterceptor, @Nullable Long userId,
+      @Nullable Long storeId) {
+    GetFollowersRequest.Body body = new GetFollowersRequest.Body();
+    body.setUserId(userId);
+    body.setStoreId(storeId);
+    return new GetFollowingRequest(body, bodyInterceptor);
   }
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,

@@ -16,6 +16,7 @@ import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
@@ -81,8 +82,8 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
 
   private Void reloadComments() {
     ManagerPreferences.setForceServerRefreshFlag(true);
-    compositeSubscription.add(ListCommentsRequest.of(storeId, 0, 3, accountManager.getAccessToken(),
-        aptoideClientUUID.getUniqueIdentifier(), false)
+    compositeSubscription.add(ListCommentsRequest.of(storeId, 0, 3,
+        false, new BaseBodyInterceptor(aptoideClientUUID, accountManager))
         .observe()
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())

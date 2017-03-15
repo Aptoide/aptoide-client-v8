@@ -10,8 +10,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -20,6 +18,8 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -28,14 +28,13 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
-import cm.aptoide.pt.navigation.TabNavigator;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.AutoUpdate;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.activity.BaseActivity;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.FragmentView;
 import cm.aptoide.pt.v8engine.fragment.WizardFragment;
@@ -50,9 +49,9 @@ import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.services.ContentPuller;
 import cm.aptoide.pt.v8engine.util.ApkFy;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
-import com.jakewharton.rxrelay.PublishRelay;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -75,9 +74,11 @@ public class MainActivity extends TabNavigatorActivity implements MainView, Frag
     setContentView(R.layout.frame_layout);
 
     accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
-    final IdsRepositoryImpl clientUuid =
+    final IdsRepositoryImpl aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
-    storeUtilsProxy = new StoreUtilsProxy(clientUuid, accountManager);
+    storeUtilsProxy = new StoreUtilsProxy(accountManager,
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager),
+        new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class));
     final AutoUpdate autoUpdate =
         new AutoUpdate(this, new InstallerFactory().create(this, InstallerFactory.DEFAULT),
             new DownloadFactory(), AptoideDownloadManager.getInstance(), new PermissionManager());
@@ -95,8 +96,9 @@ public class MainActivity extends TabNavigatorActivity implements MainView, Frag
   }
 
   @Override public void showHome() {
-    Fragment home = HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
-        V8Engine.getConfiguration().getDefaultTheme());
+    Fragment home =
+        HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
+            V8Engine.getConfiguration().getDefaultTheme());
     getNavigationManager().navigateToWithoutBackSave(home);
   }
 
@@ -271,11 +273,15 @@ public class MainActivity extends TabNavigatorActivity implements MainView, Frag
         return;
       }
     }
-    super.onBackPressed();
+    try {
+      super.onBackPressed();
+    } catch (Exception e) {
+      // Aptoide crashes here on apkfy :/
+      e.printStackTrace();
+    }
   }
 
   @Override public Fragment getLast() {
     return getNavigationManager().peekLast();
   }
-
 }

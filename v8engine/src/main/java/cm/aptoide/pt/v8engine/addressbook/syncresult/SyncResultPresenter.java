@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.addressbook.syncresult;
 
-import cm.aptoide.pt.v8engine.addressbook.data.Contact;
+import cm.aptoide.pt.v8engine.addressbook.AddressBookAnalytics;
+import cm.aptoide.pt.v8engine.addressbook.navigation.AddressBookNavigation;
 
 /**
  * Created by jdandrade on 13/02/2017.
@@ -9,26 +10,24 @@ import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 public class SyncResultPresenter implements SyncResultContract.UserActionsListener {
 
   private final SyncResultContract.View mSyncSuccessView;
+  private final AddressBookAnalytics analytics;
+  private final AddressBookNavigation addressBookNavigation;
 
-  public SyncResultPresenter(SyncResultContract.View syncSuccessView) {
+  public SyncResultPresenter(SyncResultContract.View syncSuccessView,
+      AddressBookAnalytics analytics, AddressBookNavigation addressBookNavigation) {
     this.mSyncSuccessView = syncSuccessView;
-  }
-
-  @Override public void loadFriends() {
-    //todo manipulate loading widget this.mSyncSuccessView.setProgressIndicator(true);
-
-    //todo loadfriends callback and hide loading widget this.mSyncSuccessView.setProgressIndicator(false);
-  }
-
-  @Override public void openFriend(Contact clickedContact) {
-
+    this.addressBookNavigation = addressBookNavigation;
+    this.analytics = analytics;
   }
 
   @Override public void allowFindClicked() {
-    this.mSyncSuccessView.showPhoneInputFragment();
+    analytics.sendNewConnectionsAllowFriendsToFindYouEvent(
+        AddressBookAnalytics.HAS_NEW_CONNECTIONS_SCREEN);
+    this.addressBookNavigation.navigateToPhoneInputView();
   }
 
   @Override public void doneClicked() {
-    this.mSyncSuccessView.finishView();
+    analytics.sendNewConnectionsDoneEvent(AddressBookAnalytics.HAS_NEW_CONNECTIONS_SCREEN);
+    this.addressBookNavigation.leaveAddressBook();
   }
 }

@@ -11,13 +11,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
@@ -31,11 +32,14 @@ import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.interfaces.CommentDialogCallbackContract;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.custom.HorizontalDividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -87,6 +91,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private FloatingActionButton floatingActionButton;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
+  private BaseBodyInterceptor bodyDecorator;
+  private StoreCredentialsProvider storeCredentialsProvider;
 
   public static Fragment newInstance(CommentType commentType, String timelineArticleId) {
     Bundle args = new Bundle();
@@ -108,13 +114,22 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     return fragment;
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    View v = super.onCreateView(inflater, container, savedInstanceState);
+
+    storeCredentialsProvider =
+        new StoreCredentialsProviderImpl(); //this object is used in loadExtras and loadExtras is called in the super
     super.onCreate(savedInstanceState);
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator =
-        new AccountNavigator(getContext(), getNavigationManager(), accountManager);
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
+    accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
+    aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+    bodyDecorator =
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager);
+
+    return v;
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -157,7 +172,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     // extracting store data from the URL...
     if (commentType == CommentType.STORE) {
       BaseRequestWithStore.StoreCredentials storeCredentials =
-          StoreUtils.getStoreCredentialsFromUrl(url);
+          StoreUtils.getStoreCredentialsFromUrl(url, storeCredentialsProvider);
       if (storeCredentials != null) {
 
         Long id = storeCredentials.getId();
@@ -199,7 +214,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     if (commentType == CommentType.TIMELINE) {
       caseListSocialTimelineComments(true);
     } else {
-      caseListStoreComments(url, StoreUtils.getStoreCredentialsFromUrl(url), true);
+      caseListStoreComments(url,
+          StoreUtils.getStoreCredentialsFromUrl(url, storeCredentialsProvider), true);
     }
   }
 
@@ -207,8 +223,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     String aptoideClientUuid = aptoideClientUUID.getUniqueIdentifier();
 
     ListCommentsRequest listCommentsRequest =
-        ListCommentsRequest.ofTimeline(url, refresh, elementIdAsString,
-            accountManager.getAccessToken(), aptoideClientUuid);
+        ListCommentsRequest.ofTimeline(url, refresh, elementIdAsString, bodyDecorator);
 
     Action1<ListComments> listCommentsAction = (listComments -> {
       if (listComments != null
@@ -232,7 +247,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     getRecyclerView().clearOnScrollListeners();
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(getAdapter(), listCommentsRequest, listCommentsAction,
-            Throwable::printStackTrace, true);
+            err -> err.printStackTrace(), true);
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
@@ -244,8 +259,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     String aptoideClientUuid = aptoideClientUUID.getUniqueIdentifier();
 
     ListCommentsRequest listCommentsRequest =
-        ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials,
-            accountManager.getAccessToken(), aptoideClientUuid);
+        ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, bodyDecorator);
 
     if (storeCredentials == null || storeCredentials.getId() == null) {
       IllegalStateException illegalStateException =
@@ -280,7 +294,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     getRecyclerView().clearOnScrollListeners();
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(getAdapter(), listCommentsRequest, listCommentsAction,
-            Throwable::printStackTrace, true);
+            err -> err.printStackTrace(), true);
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh);

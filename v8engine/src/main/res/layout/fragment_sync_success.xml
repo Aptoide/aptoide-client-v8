@@ -51,6 +51,7 @@
 
   <Button
       android:id="@+id/addressbook_done"
+      style="?attr/customButtonThinLine"
       android:layout_width="match_parent"
       android:layout_height="50dp"
       android:layout_gravity="center"
@@ -59,8 +60,6 @@
       android:layout_marginRight="20dp"
       android:layout_marginStart="20dp"
       android:layout_marginTop="5dp"
-      android:background="@drawable/addressbook_button_rectangle_orange_border_shape"
       android:text="@string/done"
-      android:textColor="@color/default_color"
-      />
+      android:textColor="@color/default_color" />
 </LinearLayout>

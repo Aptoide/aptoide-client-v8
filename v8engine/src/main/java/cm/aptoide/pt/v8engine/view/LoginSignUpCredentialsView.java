@@ -33,8 +33,6 @@ public interface LoginSignUpCredentialsView extends GoogleLoginView {
 
   void showPermissionsRequiredMessage();
 
-  void showCheckAptoideCredentialsMessage();
-
   void hideFacebookLogin();
 
   void navigateToForgotPasswordView();
@@ -48,6 +46,8 @@ public interface LoginSignUpCredentialsView extends GoogleLoginView {
   Observable<Void> forgotPasswordClick();
 
   void navigateToMainView();
+
+  void goBack();
 
   void dismiss();
 

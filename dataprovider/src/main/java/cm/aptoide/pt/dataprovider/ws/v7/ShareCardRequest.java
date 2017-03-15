@@ -1,8 +1,10 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -14,38 +16,28 @@ import rx.Observable;
 
 public class ShareCardRequest extends V7<BaseV7Response, ShareCardRequest.Body> {
 
-  //private static final String BASE_HOST = "http://54.171.127.167/shares/v1.0/";
+  private final String cardId;
 
-  private static String cardId;
-  private static String access_token;
-
-  protected ShareCardRequest(ShareCardRequest.Body body, String baseHost) {
-    super(body, baseHost);
+  protected ShareCardRequest(Body body, String cardId, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
+    this.cardId = cardId;
   }
 
-  public static ShareCardRequest of(TimelineCard timelineCard, String accessToken,
-      String aptoideClientUUID) {
-    cardId = timelineCard.getCardId();
-    access_token = accessToken;
-    ShareCardRequest.Body body = new ShareCardRequest.Body(timelineCard.getCardId());
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    return new ShareCardRequest((ShareCardRequest.Body) decorator.decorate(body, accessToken),
-        BASE_HOST);
+  public static ShareCardRequest of(TimelineCard timelineCard, BodyInterceptor bodyInterceptor) {
+    final ShareCardRequest.Body body = new ShareCardRequest.Body(timelineCard.getCardId());
+    return new ShareCardRequest(body, timelineCard.getCardId(), bodyInterceptor);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(V7.Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.shareCard(body, cardId, access_token);
+    return interfaces.shareCard(body, cardId, body.getAccessToken());
   }
 
-  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
-      extends BaseBody {
+  @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
 
-    private String cardId;
-
-    public Body(String cardId) {
-      this.cardId = cardId;
-    }
+    private final String cardId;
   }
 }
 

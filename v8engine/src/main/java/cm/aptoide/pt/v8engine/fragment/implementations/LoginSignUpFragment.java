@@ -26,21 +26,21 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
 
   private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
   private static final String BOTTOM_SHEET_WITH_BOTTOM_BAR = "bottom_sheet_expanded";
-  private static final String CLEAN_BACK_STACK = "dismiss_to_navigate_to_main_view";
+  private static final String NAVIGATE_TO_HOME = "clean_back_stack";
 
   private BottomSheetStateListener bottomSheetStateListener;
   private LoginSignUpCredentialsFragment loginFragment;
   private BottomSheetBehavior<View> bottomSheetBehavior;
   private boolean withBottomBar;
   private boolean dismissToNavigateToMainView;
-  private boolean cleanBackStack;
+  private boolean navigateToHome;
 
   public static LoginSignUpFragment newInstance(boolean withBottomBar,
-      boolean dimissToNavigateToMainView, boolean cleanBackStack) {
+      boolean dismissToNavigateToMainView, boolean navigateToHome) {
     Bundle args = new Bundle();
     args.putBoolean(BOTTOM_SHEET_WITH_BOTTOM_BAR, withBottomBar);
-    args.putBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW, dimissToNavigateToMainView);
-    args.putBoolean(CLEAN_BACK_STACK, cleanBackStack);
+    args.putBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW, dismissToNavigateToMainView);
+    args.putBoolean(NAVIGATE_TO_HOME, navigateToHome);
 
     LoginSignUpFragment fragment = new LoginSignUpFragment();
     fragment.setArguments(args);
@@ -49,36 +49,11 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    withBottomBar = getArguments().getBoolean(BOTTOM_SHEET_WITH_BOTTOM_BAR);
-    dismissToNavigateToMainView = getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);
-    cleanBackStack = getArguments().getBoolean(CLEAN_BACK_STACK);
-  }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(getLayoutId(), container, false);
-
-    loginFragment = LoginSignUpCredentialsFragment.newInstance(dismissToNavigateToMainView, cleanBackStack);
-    // nested fragments only work using dynamic fragment addition.
-    getActivity().getSupportFragmentManager()
-        .beginTransaction()
-        .add(R.id.login_signup_layout, loginFragment)
-        .commit();
-
-    return view;
-  }
-
-  @LayoutRes public int getLayoutId() {
-    return R.layout.fragment_login_sign_up;
-  }
-
-  @Override public boolean onBackPressed() {
-    if (loginFragment.onBackPressed()) {
-      bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-      return true;
-    }
-    return super.onBackPressed();
+    final Bundle args = getArguments();
+    withBottomBar = args.getBoolean(BOTTOM_SHEET_WITH_BOTTOM_BAR);
+    dismissToNavigateToMainView = args.getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);
+    navigateToHome = args.getBoolean(NAVIGATE_TO_HOME);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -133,6 +108,34 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
 
     ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
     actionBar.setDisplayHomeAsUpEnabled(true);
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    View view = inflater.inflate(getLayoutId(), container, false);
+
+    loginFragment =
+        LoginSignUpCredentialsFragment.newInstance(dismissToNavigateToMainView, navigateToHome);
+    // nested fragments only work using dynamic fragment addition.
+    getActivity().getSupportFragmentManager()
+        .beginTransaction()
+        .add(R.id.login_signup_layout, loginFragment)
+        .commit();
+
+    return view;
+  }
+
+  @LayoutRes public int getLayoutId() {
+    return R.layout.fragment_login_sign_up;
+  }
+
+  @Override public boolean onBackPressed() {
+    if (loginFragment.onBackPressed()) {
+      bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+      return true;
+    }
+    return super.onBackPressed();
   }
 
   public LoginSignUpFragment registerBottomSheetStateListener(

@@ -19,11 +19,13 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
@@ -64,6 +66,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
   private DownloadEventConverter downloadConverter;
   private Analytics analytics;
   private InstallEventConverter installConverter;
+  private BodyInterceptor bodyInterceptor;
 
   public ScheduledDownloadsFragment() {
   }
@@ -88,8 +91,9 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext());
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
-    downloadConverter = new DownloadEventConverter(aptoideClientUUID, accountManager);
-    installConverter = new InstallEventConverter(aptoideClientUUID, accountManager);
+    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID, accountManager);
+    downloadConverter = new DownloadEventConverter(bodyInterceptor);
+    installConverter = new InstallEventConverter(bodyInterceptor);
     analytics = Analytics.getInstance();
   }
 
