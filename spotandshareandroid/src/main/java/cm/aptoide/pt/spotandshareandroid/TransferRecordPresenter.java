@@ -12,7 +12,7 @@ import java.util.List;
 public class TransferRecordPresenter implements Presenter {
 
   private final ConnectionManager connectionManager;
-  private final ApplicationDisconnecter disconnecter;
+  private final Disconnecter disconnecter;
   private HighwayTransferRecordView view;
   private List<HighwayTransferRecordItem> listOfApps;
   private List<Host> connectedClients;
@@ -24,9 +24,8 @@ public class TransferRecordPresenter implements Presenter {
 
   public TransferRecordPresenter(HighwayTransferRecordView view,
       ApplicationReceiver applicationReceiver, ApplicationSender applicationSender,
-      TransferRecordManager transferRecordManager, boolean isHotspot,
-      ApplicationDisconnecter disconnecter, ConnectionManager connectionManager,
-      SpotAndShareAnalyticsInterface anaylitics) {
+      TransferRecordManager transferRecordManager, boolean isHotspot, Disconnecter disconnecter,
+      ConnectionManager connectionManager, SpotAndShareAnalyticsInterface anaylitics) {
     this.view = view;
     this.applicationReceiver = applicationReceiver;
     this.applicationSender = applicationSender;
@@ -66,7 +65,10 @@ public class TransferRecordPresenter implements Presenter {
 
       @Override public void onErrorReceiving() {
         //handling error
-        view.showGeneralErrorToast(isHotspot);
+        view.showGeneralErrorToast();
+        if (isHotspot) {
+          view.setInitialApConfig();
+        }
         recoverNetworkState();
         cleanAPTXNetworks();
         analytics.receiveApkFailed();
@@ -133,7 +135,7 @@ public class TransferRecordPresenter implements Presenter {
       @Override public void onErrorSendingApp() {
         //handle error
         analytics.sendApkFailed();
-        view.showGeneralErrorToast(isHotspot);
+        view.showGeneralErrorToast();
       }
     });
 
@@ -307,7 +309,7 @@ public class TransferRecordPresenter implements Presenter {
   }
 
   public void listenToDisconnect() {
-    disconnecter.listenToDisconnect(new ApplicationDisconnecter.DisconnectListener() {
+    disconnecter.listenToDisconnect(new Disconnecter.DisconnectListener() {
       @Override public void onServerDisconnected() {
         recoverNetworkState();
         view.dismiss();

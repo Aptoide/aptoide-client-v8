@@ -431,7 +431,8 @@ public class AptoideAccountManager {
 
   public void unsubscribeStore(String storeName, String storeUserName, String storePassword) {
     changeSubscription(storeName, storeUserName, storePassword,
-        ChangeStoreSubscriptionResponse.StoreSubscriptionState.SUBSCRIBED).subscribe();
+        ChangeStoreSubscriptionResponse.StoreSubscriptionState.UNSUBSCRIBED).subscribe(success -> {
+    }, throwable -> CrashReport.getInstance().log(throwable));
   }
 
   private Observable<ChangeStoreSubscriptionResponse> changeSubscription(String storeName,

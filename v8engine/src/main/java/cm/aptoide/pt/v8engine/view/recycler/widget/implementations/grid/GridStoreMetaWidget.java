@@ -236,12 +236,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
       if (storeWrapper.isStoreSubscribed()) {
         storeWrapper.setStoreSubscribed(false);
         if (accountManager.isLoggedIn()) {
-          accountManager.unsubscribeStore(storeWrapper.getStore().getName(),
-              displayable.getStoreCredentialsProvider()
-                  .get(storeWrapper.getStore().getName())
-                  .getName(), displayable.getStoreCredentialsProvider()
-                  .get(storeWrapper.getStore().getName())
-                  .getPasswordSha1());
+          accountManager.unsubscribeStore(displayable.getStoreName(),
+              displayable.getStoreUserName(), displayable.getStorePassword());
         }
         StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
         storeAccessor.remove(storeWrapper.getStore().getId());
