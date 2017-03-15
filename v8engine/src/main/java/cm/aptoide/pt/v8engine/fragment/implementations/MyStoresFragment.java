@@ -13,7 +13,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Fol
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -75,7 +74,7 @@ public class MyStoresFragment extends GetStoreWidgetsFragment {
     Observable<Boolean> loginObservable = accountManager.loginStatus().doOnNext(__ -> reloadData());
 
     Observable<List<Store>> storesObservable =
-        storeRepository.getAll().distinct().debounce(1, TimeUnit.MINUTES).doOnNext(__ -> {
+        storeRepository.getAll().skip(1).doOnNext(__ -> {
           Logger.d(TAG, "Store database changed, reloading...");
           reloadData();
         });
