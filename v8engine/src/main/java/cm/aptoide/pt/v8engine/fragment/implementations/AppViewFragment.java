@@ -646,10 +646,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int i = item.getItemId();
 
-    //if (i == android.R.id.home) {
-    //  getActivity().onBackPressed();
-    //  return true;
-    //} else
     if (i == R.id.menu_share) {
       shareApp(appName, packageName, wUrl);
       return true;

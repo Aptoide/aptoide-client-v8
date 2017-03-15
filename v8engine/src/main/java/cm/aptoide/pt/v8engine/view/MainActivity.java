@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.view.MenuItem;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.annotation.Partners;
@@ -252,16 +251,6 @@ public class MainActivity extends TabNavigatorActivity implements MainView, Frag
         && !TextUtils.isEmpty(queryName)
         && !TextUtils.isEmpty(queryAction)
         && StoreTabFragmentChooser.validateAcceptedName(Event.Name.valueOf(queryName));
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case android.R.id.home: {
-        onBackPressed();
-        break;
-      }
-    }
-    return super.onOptionsItemSelected(item);
   }
 
   @Override public void onBackPressed() {

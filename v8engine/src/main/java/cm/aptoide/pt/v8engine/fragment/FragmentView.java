@@ -64,6 +64,10 @@ public abstract class FragmentView extends RxFragment implements cm.aptoide.pt.v
    * MainActivity}.
    */
   @Override public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      getActivity().onBackPressed();
+      return true;
+    }
     return super.onOptionsItemSelected(item);
   }
 
