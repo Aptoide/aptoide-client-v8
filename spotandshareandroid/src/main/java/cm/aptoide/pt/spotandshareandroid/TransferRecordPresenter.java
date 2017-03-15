@@ -24,9 +24,8 @@ public class TransferRecordPresenter implements Presenter {
 
   public TransferRecordPresenter(HighwayTransferRecordView view,
       ApplicationReceiver applicationReceiver, ApplicationSender applicationSender,
-      TransferRecordManager transferRecordManager, boolean isHotspot,
-      Disconnecter disconnecter, ConnectionManager connectionManager,
-      SpotAndShareAnalyticsInterface anaylitics) {
+      TransferRecordManager transferRecordManager, boolean isHotspot, Disconnecter disconnecter,
+      ConnectionManager connectionManager, SpotAndShareAnalyticsInterface anaylitics) {
     this.view = view;
     this.applicationReceiver = applicationReceiver;
     this.applicationSender = applicationSender;
@@ -66,8 +65,11 @@ public class TransferRecordPresenter implements Presenter {
 
       @Override public void onErrorReceiving() {
         //handling error
-        view.showGeneralErrorToast(isHotspot);
-        //recoverNetworkState();
+        view.showGeneralErrorToast();
+        if (isHotspot) {
+          view.setInitialApConfig();
+        }
+        recoverNetworkState();
         cleanAPTXNetworks();
         analytics.receiveApkFailed();
         view.dismiss();
@@ -75,7 +77,7 @@ public class TransferRecordPresenter implements Presenter {
 
       @Override public void onServerLeft() {
         view.showServerLeftMessage();
-        //recoverNetworkState();
+        recoverNetworkState();
         cleanAPTXNetworks();
         view.dismiss();
       }
@@ -133,7 +135,7 @@ public class TransferRecordPresenter implements Presenter {
       @Override public void onErrorSendingApp() {
         //handle error
         analytics.sendApkFailed();
-        view.showGeneralErrorToast(isHotspot);
+        view.showGeneralErrorToast();
       }
     });
 

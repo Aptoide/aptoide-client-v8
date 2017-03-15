@@ -156,8 +156,7 @@ public class HighwayTransferRecordActivity extends ActivityView
     applicationSender = ApplicationSender.getInstance(getApplicationContext(), isHotspot);
     transferRecordManager = new TransferRecordManager(applicationsManager);
 
-    Disconnecter disconnecter =
-        new Disconnecter(getApplicationContext());
+    Disconnecter disconnecter = new Disconnecter(getApplicationContext());
 
     presenter = new TransferRecordPresenter(this, applicationReceiver, applicationSender,
         transferRecordManager, isHotspot, disconnecter,
@@ -324,7 +323,7 @@ public class HighwayTransferRecordActivity extends ActivityView
 
   //method to check apk archive's similar to receive
 
-  private void setInitialApConfig() {
+  public void setInitialApConfig() {
     if (wifimanager == null) {
       wifimanager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
     }
@@ -869,7 +868,7 @@ public class HighwayTransferRecordActivity extends ActivityView
     }
   }
 
-  @Override public void showGeneralErrorToast(boolean isHotspot) {
+  @Override public void showGeneralErrorToast() {
     Toast.makeText(this, R.string.generalError, Toast.LENGTH_LONG).show();
   }
 
