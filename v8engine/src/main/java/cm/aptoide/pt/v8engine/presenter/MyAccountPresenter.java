@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.presenter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.view.MyAccountView;
 import cm.aptoide.pt.v8engine.view.View;
@@ -29,7 +30,10 @@ public class MyAccountPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> signOutClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+        .subscribe(__ -> {
+        }, err -> {
+          CrashReport.getInstance().log(err);
+        });
   }
 
   private Observable<Void> signOutClick() {

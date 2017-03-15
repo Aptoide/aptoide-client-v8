@@ -169,8 +169,8 @@ public class HomeFragment extends StoreFragment {
     tabNavigator.navigation()
         .doOnNext(tab -> viewPager.setCurrentItem(
             ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(getEventName(tab))))
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe();
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(__ -> {
+    }, err -> CrashReport.getInstance().log(err));
   }
 
   public void refreshUpdatesBadge(int num) {

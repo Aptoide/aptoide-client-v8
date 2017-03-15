@@ -67,7 +67,7 @@ public class AptoideAccountManager {
   private final Analytics analytics;
   private final StoreDataPersist storeDataPersist;
   private final AptoidePreferencesConfiguration configuration;
-  private PublishRelay<Boolean> loginStatusRelay;
+  private PublishRelay<Account> accountSubject;
   private WeakReference<Account> weakRefAccount;
 
   public AptoideAccountManager(Context applicationContext,
@@ -83,35 +83,13 @@ public class AptoideAccountManager {
     this.accountType = accountType;
     this.storeDataPersist = storeDataPersist;
     weakRefAccount = new WeakReference<>(null);
-    loginStatusRelay = PublishRelay.create();
+    accountSubject = PublishRelay.create();
     this.requestFactory = requestFactory;
   }
 
-  public Observable<Boolean> loginStatus() {
-    return loginStatusRelay.startWith(isLoggedIn()).distinctUntilChanged();
-  }
-
-  /**
-   * Use {@link Account#isLoggedIn()} instead.
-   * @return true if user is logged in, false otherwise.
-   */
-  @Deprecated public boolean isLoggedIn() {
-    final Account account = getAccount();
-    return account != null && account.isLoggedIn();
-  }
-
-  /**
-   * Use {@link #getAccountAsync()} method instead.
-   *
-   * @return user Account
-   */
-  @Deprecated public Account getAccount() {
-    Account account = weakRefAccount.get();
-    if (account != null) {
-      return account;
-    }
-
-    return getAccountAsync().onErrorReturn(throwable -> null).toBlocking().value();
+  public Observable<Account> accountStatus() {
+    return Observable.merge(accountSubject,
+        getAccountAsync().onErrorReturn(throwable -> Account.empty()).toObservable());
   }
 
   public Single<Account> getAccountAsync() {
@@ -172,6 +150,30 @@ public class AptoideAccountManager {
     return accounts[0];
   }
 
+  /**
+   * Use {@link Account#isLoggedIn()} instead.
+   *
+   * @return true if user is logged in, false otherwise.
+   */
+  @Deprecated public boolean isLoggedIn() {
+    final Account account = getAccount();
+    return account != null && account.isLoggedIn();
+  }
+
+  /**
+   * Use {@link #getAccountAsync()} method instead.
+   *
+   * @return user Account
+   */
+  @Deprecated public Account getAccount() {
+    Account account = weakRefAccount.get();
+    if (account != null) {
+      return account;
+    }
+
+    return getAccountAsync().onErrorReturn(throwable -> null).toBlocking().value();
+  }
+
   public void logout(GoogleApiClient client) {
     try {
       if (isFacebookLoginEnabled()) {
@@ -188,7 +190,6 @@ public class AptoideAccountManager {
       CrashReport.getInstance().log(e);
     }
     removeAccount();
-    sendLoginEvent(false);
   }
 
   public boolean isFacebookLoginEnabled() {
@@ -207,6 +208,7 @@ public class AptoideAccountManager {
         androidAccountManager.removeAccount(androidAccount, null, null);
       }
       weakRefAccount = new WeakReference<>(null);
+      emitAccount(Account.empty());
     }).onErrorReturn(throwable -> null).toBlocking().value();
   }
 
@@ -214,13 +216,14 @@ public class AptoideAccountManager {
    * This method uses a 200 millis delay due to other bugs in the app (such as improper component
    * lifecycle in most fragments). After the proper component lifecycle is done, remove this delay.
    *
-   * @param isLoggedIn boolean that indicates the current state of the user log in. This will
-   * propagate to all listeners of {@link #loginStatus()}
+   * @param account boolean that indicates the current state of the user log in. This will
+   * propagate to all listeners of {@link #accountStatus()}
    */
-  private void sendLoginEvent(boolean isLoggedIn) {
+  private void emitAccount(Account account) {
     Observable.timer(650, TimeUnit.MILLISECONDS)
-        .doOnNext(__ -> loginStatusRelay.call(isLoggedIn))
-        .subscribe();
+        .doOnNext(__ -> accountSubject.call(account))
+        .subscribe(__ -> {
+        }, err -> CrashReport.getInstance().log(err));
 
     //loginStatusRelay.call(isLoggedIn);
   }
@@ -281,8 +284,8 @@ public class AptoideAccountManager {
           String.valueOf(account.isAccessConfirmed()));
 
       weakRefAccount = new WeakReference<>(account);
-
-      return Completable.complete();
+      emitAccount(account);
+      return storeDataPersist.persist(account.getSubscribedStores());
     }).subscribeOn(Schedulers.io());
   }
 
@@ -305,7 +308,7 @@ public class AptoideAccountManager {
       }
 
       return Completable.error(throwable);
-    }).doOnCompleted(() -> analytics.login(email)).doOnCompleted(() -> sendLoginEvent(true));
+    });
   }
 
   private Completable validateCredentials(String email, String password, boolean validatePassword) {
@@ -319,7 +322,7 @@ public class AptoideAccountManager {
       } else if (TextUtils.isEmpty(email)) {
         return Completable.error(
             new AccountValidationException(AccountValidationException.EMPTY_EMAIL));
-      } else if (validatePassword && password.length() < 8 || !has1number1letter(password)) {
+      } else if (validatePassword && (password.length() < 8 || !has1number1letter(password))) {
         return Completable.error(
             new AccountValidationException(AccountValidationException.INVALID_PASSWORD));
       }
@@ -347,7 +350,7 @@ public class AptoideAccountManager {
       }
 
       return Completable.error(throwable);
-    }).doOnCompleted(() -> analytics.login(email)).doOnCompleted(() -> sendLoginEvent(true));
+    }).doOnCompleted(() -> analytics.login(email));
   }
 
   private boolean has1number1letter(String password) {
@@ -422,6 +425,7 @@ public class AptoideAccountManager {
 
   /**
    * Use {@link Account#getToken()} instead.
+   *
    * @return account access token.
    */
   @Deprecated public String getAccessToken() {
@@ -431,7 +435,8 @@ public class AptoideAccountManager {
 
   public void unsubscribeStore(String storeName, String storeUserName, String storePassword) {
     changeSubscription(storeName, storeUserName, storePassword,
-        ChangeStoreSubscriptionResponse.StoreSubscriptionState.SUBSCRIBED).subscribe();
+        ChangeStoreSubscriptionResponse.StoreSubscriptionState.UNSUBSCRIBED).subscribe(success -> {
+    }, throwable -> CrashReport.getInstance().log(throwable));
   }
 
   private Observable<ChangeStoreSubscriptionResponse> changeSubscription(String storeName,
@@ -448,6 +453,7 @@ public class AptoideAccountManager {
 
   /**
    * Use {@link Account#getEmail()} instead.
+   *
    * @return user e-mail.
    */
   @Deprecated public String getUserEmail() {
@@ -457,6 +463,7 @@ public class AptoideAccountManager {
 
   /**
    * Use {@link Account#isAdultContentEnabled()} instead.
+   *
    * @return true if adult content enabled, false otherwise.
    */
   @Deprecated public boolean isAccountMature() {
@@ -466,6 +473,7 @@ public class AptoideAccountManager {
 
   /**
    * Use {@link Account#isAccessConfirmed()} instead.
+   *
    * @return true if user {@link Account.Access} level is confirmed, false otherwise.
    */
   @Deprecated public boolean isAccountAccessConfirmed() {
@@ -475,6 +483,7 @@ public class AptoideAccountManager {
 
   /**
    * Use {@link Account#getAccess()} instead.
+   *
    * @return user {@link Account.Access} level.
    */
   @Deprecated public Account.Access getAccountAccess() {

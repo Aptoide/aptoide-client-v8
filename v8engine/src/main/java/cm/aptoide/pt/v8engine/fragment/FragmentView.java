@@ -23,6 +23,11 @@ public abstract class FragmentView extends RxFragment implements cm.aptoide.pt.v
 
   private NavigationManagerV4 navigator;
 
+  /**
+   * The navigator is only available after {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+   *
+   * @return Navigation manager to move between fragments.
+   */
   public NavigationManagerV4 getNavigationManager() {
     return navigator;
   }
@@ -59,6 +64,10 @@ public abstract class FragmentView extends RxFragment implements cm.aptoide.pt.v
    * MainActivity}.
    */
   @Override public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      getActivity().onBackPressed();
+      return true;
+    }
     return super.onOptionsItemSelected(item);
   }
 

@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.authorizations.WebAuthorization;
@@ -42,7 +43,10 @@ public class WebAuthorizationPresenter implements Presenter {
         .flatMap(created -> view.urlLoad())
         .doOnNext(loaded -> view.hideLoading())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+        .subscribe(__ -> {
+        }, err -> {
+          CrashReport.getInstance().log(err);
+        });
 
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
@@ -50,7 +54,10 @@ public class WebAuthorizationPresenter implements Presenter {
         .doOnNext(loaded -> view.showLoading())
         .flatMap(loading -> aptoidePay.authorize(paymentId).toObservable())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+        .subscribe(__ -> {
+        }, err -> {
+          CrashReport.getInstance().log(err);
+        });
 
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
@@ -86,7 +93,10 @@ public class WebAuthorizationPresenter implements Presenter {
         .doOnError(throwable -> view.showErrorAndDismiss())
         .onErrorReturn(null)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+        .subscribe(__ -> {
+        }, err -> {
+          CrashReport.getInstance().log(err);
+        });
   }
 
   @Override public void saveState(Bundle state) {

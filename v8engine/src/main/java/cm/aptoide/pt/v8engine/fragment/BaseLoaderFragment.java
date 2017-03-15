@@ -45,6 +45,16 @@ public abstract class BaseLoaderFragment extends UIComponentFragment implements 
 
   @IdRes protected abstract int getViewToShowAfterLoadingId();
 
+  /**
+   * Called in {@link BaseLoaderFragment}.{@link BaseLoaderFragment#onViewCreated(View, Bundle)}
+   *
+   * @param create flags that the fragment is being created for the first time. Will be set to
+   * false
+   * on {@link BaseLoaderFragment#onStop()}.
+   * @param refresh flags that the fragment should refresh it's state, reload data from network and
+   * refresh its state.
+   * @param savedInstanceState savedInstanceState bundle.
+   */
   public abstract void load(boolean create, boolean refresh, Bundle savedInstanceState);
 
   @CallSuper @Override public void bindViews(View view) {

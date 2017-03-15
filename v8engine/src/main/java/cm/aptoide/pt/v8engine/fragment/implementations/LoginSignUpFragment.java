@@ -100,6 +100,7 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
   }
 
   private void setupToolbar(View view) {
+    setHasOptionsMenu(true);
     Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     toolbar.setLogo(R.drawable.logo_toolbar);
 

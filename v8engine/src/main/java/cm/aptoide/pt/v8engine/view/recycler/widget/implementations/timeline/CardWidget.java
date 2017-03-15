@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -28,7 +27,6 @@ import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import rx.Observable;
 
 /**
  * Created by jdandrade on 29/11/2016.
@@ -42,6 +40,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
   private AlertDialog alertDialog;
+  private Account account;
 
   CardWidget(View itemView) {
     super(itemView);
@@ -62,33 +61,27 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
 
-    Observable<Account> shareClick = RxView.clicks(shareButton)
-        .flatMap(__ -> accountManager.getAccountAsync()
-            .toObservable()
-            .onErrorResumeNext(Observable.just(null)));
-
-    Observable<Boolean> isAccountAccessConfirmedObservable =
-        Observable.fromCallable(() -> accountManager.isAccountAccessConfirmed());
-
     compositeSubscription.add(
-        Observable.zip(shareClick, accountManager.loginStatus(), isAccountAccessConfirmedObservable,
-            (account, isLoggedIn, isAccessAccountConfirmed) -> {
-              shareCard(displayable, account, isLoggedIn, isAccessAccountConfirmed);
-              return null;
-            }).subscribe(__ -> {
-        }, err -> CrashReport.getInstance().log(err)));
+        accountManager.accountStatus().doOnNext(account -> updateAccount(account)).subscribe());
+
+    compositeSubscription.add(RxView.clicks(shareButton)
+        .doOnNext(click -> shareCard(displayable, getAccount()))
+        .subscribe());
   }
 
-  private void shareCard(T displayable, Account account, boolean isLoggedIn,
-      boolean isAccessAccountConfirmed) {
-    if (!isLoggedIn) {
+  private void updateAccount(Account account) {
+    this.account = account;
+  }
+
+  private void shareCard(T displayable, Account account) {
+    if (!account.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> accountNavigator.navigateToAccountView());
       return;
     }
 
     if (TextUtils.isEmpty(account.getStore()) && !Account.Access.PUBLIC.equals(
-        accountManager.getAccountAccess())) {
+        account.getAccess())) {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
           R.string.create_store_create, snackView -> {
             Intent intent = new Intent(getContext(), CreateStoreActivity.class);
@@ -103,7 +96,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     final AlertDialog.Builder alertDialogBuilder =
         sharePreviewDialog.getPreviewDialogBuilder(getContext());
 
-    if (!isAccessAccountConfirmed) {
+    if (!account.isAccessConfirmed()) {
       alertDialogBuilder.setPositiveButton(R.string.share, (dialogInterface, i) -> {
         displayable.share(getContext(), sharePreviewDialog.getPrivacyResult());
         ShowMessage.asSnack(getContext(), R.string.social_timeline_share_dialog_title);
@@ -119,42 +112,10 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
       });
     }
     alertDialog = alertDialogBuilder.show();
+  }
 
-    /*
-    Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
-      if (!accountManager.isAccountAccessConfirmed()) {
-        alertDialogBuilder.setPositiveButton(R.string.share, (dialogInterface, i) -> {
-          displayable.share(getContext(), sharePreviewDialog.getPrivacyResult());
-          subscriber.onNext(GenericDialogs.EResponse.YES);
-          subscriber.onCompleted();
-        }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
-          subscriber.onNext(GenericDialogs.EResponse.NO);
-          subscriber.onCompleted();
-        });
-      } else {
-        alertDialogBuilder.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
-          displayable.share(getContext(), sharePreviewDialog.getPrivacyResult());
-          subscriber.onNext(GenericDialogs.EResponse.YES);
-          subscriber.onCompleted();
-        }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
-          subscriber.onNext(GenericDialogs.EResponse.NO);
-          subscriber.onCompleted();
-        });
-      }
-      AlertDialog alertDialog = alertDialogBuilder.show();
-      subscriber.add(Subscriptions.create(() -> alertDialog.dismiss()));
-    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(eResponse -> {
-      switch (eResponse) {
-        case YES:
-          ShowMessage.asSnack(getContext(), R.string.social_timeline_share_dialog_title);
-          break;
-        case NO:
-          break;
-        case CANCEL:
-          break;
-      }
-    });
-    */
+  private Account getAccount() {
+    return account;
   }
 
   abstract String getCardTypeName();

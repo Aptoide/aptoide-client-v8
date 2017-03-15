@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.install;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -27,6 +28,7 @@ import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.RollbackRepository;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
+import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
@@ -141,20 +143,13 @@ public class InstalledIntentService extends IntentService {
     StoreMinimalAdAccessor storeMinimalAdAccessor =
         AccessorFactory.getAccessorFor(StoredMinimalAd.class);
     Subscription unManagedSubscription =
-        storeMinimalAdAccessor.get(packageName).subscribe(storeMinimalAd -> {
+        storeMinimalAdAccessor.get(packageName).flatMap(storeMinimalAd -> {
           if (storeMinimalAd != null) {
-            ReferrerUtils.broadcastReferrer(packageName, storeMinimalAd.getReferrer());
-            DataproviderUtils.AdNetworksUtils.knockCpi(storeMinimalAd);
-            storeMinimalAdAccessor.remove(storeMinimalAd);
+            return knockCpi(packageName, storeMinimalAdAccessor, storeMinimalAd);
           } else {
-            adsRepository.getAdsFromSecondInstall(packageName)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(
-                    minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES,
-                        true, adsRepository))
-                .onErrorReturn(throwable1 -> null)
-                .subscribe();
+            return extractReferrer(packageName);
           }
+        }).subscribe(__ -> {
         }, err -> {
           CrashReport.getInstance().log(err);
         });
@@ -218,7 +213,6 @@ public class InstalledIntentService extends IntentService {
 
   /**
    * @param packageInfo packageInfo.
-   *
    * @return true if packageInfo is null, false otherwise.
    */
   private boolean checkAndLogNullPackageInfo(PackageInfo packageInfo, String packageName) {
@@ -229,5 +223,23 @@ public class InstalledIntentService extends IntentService {
     } else {
       return false;
     }
+  }
+
+  private Observable<Void> knockCpi(String packageName,
+      StoreMinimalAdAccessor storeMinimalAdAccessor, StoredMinimalAd storeMinimalAd) {
+    return Observable.fromCallable(() -> {
+      ReferrerUtils.broadcastReferrer(packageName, storeMinimalAd.getReferrer());
+      DataproviderUtils.AdNetworksUtils.knockCpi(storeMinimalAd);
+      storeMinimalAdAccessor.remove(storeMinimalAd);
+      return null;
+    });
+  }
+
+  @NonNull private Observable<Void> extractReferrer(String packageName) {
+    return adsRepository.getAdsFromSecondInstall(packageName)
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, true,
+            adsRepository))
+        .map(__ -> null);
   }
 }

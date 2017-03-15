@@ -6,6 +6,7 @@
 package cm.aptoide.accountmanager;
 
 import android.text.TextUtils;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,6 +30,23 @@ public class Account {
   private final String password;
   private final List<Store> subscribedStores;
 
+  private Account() {
+    this.id = "";
+    this.email = "";
+    this.nickname = "";
+    this.avatar = "";
+    this.refreshToken = "";
+    this.token = "";
+    this.password = "";
+    this.type = null;
+    this.store = "";
+    this.storeAvatar = "";
+    this.adultContentEnabled = false;
+    this.access = null;
+    this.accessConfirmed = false;
+    this.subscribedStores = Collections.emptyList();
+  }
+
   public Account(String id, String email, String nickname, String avatar, String refreshToken,
       String token, String password, Type type, String store, String storeAvatar,
       boolean adultContentEnabled, Access access, boolean accessConfirmed,
@@ -49,20 +67,12 @@ public class Account {
     this.subscribedStores = subscribedStores;
   }
 
+  public static Account empty() {
+    return new Account();
+  }
+
   public List<Store> getSubscribedStores() {
     return subscribedStores;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public String getRefreshToken() {
-    return refreshToken;
-  }
-
-  public String getToken() {
-    return token;
   }
 
   public Type getType() {
@@ -101,13 +111,25 @@ public class Account {
     return accessConfirmed;
   }
 
-  public String getPassword() {
-    return password;
-  }
-
   public boolean isLoggedIn() {
     return (!TextUtils.isEmpty(getEmail()) && !TextUtils.isEmpty(getToken()) && !TextUtils.isEmpty(
         getRefreshToken()) && !TextUtils.isEmpty(getPassword()));
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public String getToken() {
+    return token;
+  }
+
+  public String getRefreshToken() {
+    return refreshToken;
+  }
+
+  public String getPassword() {
+    return password;
   }
 
   public enum Type {

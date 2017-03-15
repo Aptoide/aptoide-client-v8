@@ -29,6 +29,7 @@ import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialCardDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
 abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWidget<T> {
@@ -111,6 +112,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
 
       compositeSubscription.add(RxView.clicks(likeButton)
           .flatMap(__ -> accountManager.getAccountAsync().toObservable())
+          .observeOn(AndroidSchedulers.mainThread())
           .subscribe(account -> {
             if (likeCard(displayable, 1, account)) {
               numberLikes.setText(String.valueOf(displayable.getNumberOfLikes() + 1));
@@ -128,7 +130,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
                 }
               }
             }
-          }));
+          }, err -> CrashReport.getInstance().log(err)));
 
       like.setVisibility(View.VISIBLE);
     } else {
@@ -155,9 +157,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     showLikesPreview(displayable);
 
     compositeSubscription.add(RxView.clicks(likePreviewContainer)
-        .subscribe(click -> displayable.likesPreviewClick(getNavigationManager()), (throwable) -> {
-          throwable.printStackTrace();
-        }));
+        .subscribe(click -> displayable.likesPreviewClick(getNavigationManager()),
+            err -> CrashReport.getInstance().log(err)));
 
     compositeSubscription.add(
         Observable.merge(RxView.clicks(storeAvatar), RxView.clicks(userAvatar)).subscribe(click -> {

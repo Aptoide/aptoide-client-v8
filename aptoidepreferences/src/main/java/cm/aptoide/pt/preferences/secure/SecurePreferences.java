@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 06/07/2016.
- */
-
 package cm.aptoide.pt.preferences.secure;
 
 import cm.aptoide.pt.annotation.Partners;
@@ -11,8 +6,6 @@ import cm.aptoide.pt.annotation.Partners;
  * Created by neuro on 21-04-2016.
  */
 public class SecurePreferences {
-
-  private static final String TAG = SecurePreferences.class.getSimpleName();
 
   /**
    * DO NOT USE THIS METHOD
@@ -90,7 +83,8 @@ public class SecurePreferences {
     SecurePreferencesImplementation.getInstance()
         .edit()
         .putBoolean(SecureKeys.WIZARD_AVAILABLE, available)
-        .apply();
+        //.apply();
+        .commit();
   }
 
   public static boolean isTimelineActive() {

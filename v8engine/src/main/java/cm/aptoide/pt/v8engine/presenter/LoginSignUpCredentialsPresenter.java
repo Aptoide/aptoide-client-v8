@@ -6,9 +6,9 @@
 package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.view.LoginSignUpCredentialsView;
@@ -59,14 +59,20 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
             aptoideLoginClick(), aptoideSignUpClick(), aptoideShowLoginClick(),
             aptoideShowSignUpClick()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+        .subscribe(__ -> {
+        }, err -> {
+          CrashReport.getInstance().log(err);
+        });
 
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
         .flatMap(resumed -> Observable.merge(forgotPasswordSelection(), showHidePassword())
             .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+        .subscribe(__ -> {
+        }, err -> {
+          CrashReport.getInstance().log(err);
+        });
   }
 
   private void showOrHideLogins() {

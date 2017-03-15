@@ -40,4 +40,16 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
   public StoreCredentialsProvider getStoreCredentialsProvider() {
     return storeCredentialsProvider;
   }
+
+  public String getStoreUserName() {
+    return storeCredentialsProvider.get(getStoreName()).getUsername();
+  }
+
+  public String getStoreName() {
+    return getPojo().getData().getStore().getName();
+  }
+
+  public String getStorePassword() {
+    return storeCredentialsProvider.get(getStoreName()).getPasswordSha1();
+  }
 }

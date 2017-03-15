@@ -173,34 +173,36 @@ public class StoreFragment extends BasePagerToolbarFragment {
               setupToolbarDetails(getToolbar());
             }
             setupViewPager();
-          }, (throwable) -> {
-            if (throwable instanceof AptoideWsV7Exception) {
-              BaseV7Response baseResponse = ((AptoideWsV7Exception) throwable).getBaseResponse();
-
-              switch (StoreUtils.getErrorType(baseResponse.getError().getCode())) {
-                case PRIVATE_STORE_ERROR:
-                case PRIVATE_STORE_WRONG_CREDENTIALS:
-                  DialogFragment dialogFragment =
-                      (DialogFragment) getFragmentManager().findFragmentByTag(
-                          PrivateStoreDialog.TAG);
-                  if (dialogFragment == null) {
-                    dialogFragment =
-                        PrivateStoreDialog.newInstance(this, PRIVATE_STORE_REQUEST_CODE, storeName,
-                            true);
-                    dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
-                  }
-                  break;
-                case STORE_SUSPENDED:
-                  showStoreSuspendedPopup(storeName);
-                default:
-                  finishLoading(throwable);
-              }
-            } else {
-              finishLoading(throwable);
-            }
-          });
+          }, (throwable) -> handleError(throwable));
     } else {
       setupViewPager();
+    }
+  }
+
+  private void handleError(Throwable throwable) {
+    if (throwable instanceof AptoideWsV7Exception) {
+      BaseV7Response baseResponse = ((AptoideWsV7Exception) throwable).getBaseResponse();
+
+      switch (StoreUtils.getErrorType(baseResponse.getError().getCode())) {
+        case PRIVATE_STORE_ERROR:
+        case PRIVATE_STORE_WRONG_CREDENTIALS:
+          DialogFragment dialogFragment =
+              (DialogFragment) getFragmentManager().findFragmentByTag(
+                  PrivateStoreDialog.TAG);
+          if (dialogFragment == null) {
+            dialogFragment =
+                PrivateStoreDialog.newInstance(this, PRIVATE_STORE_REQUEST_CODE, storeName,
+                    true);
+            dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
+          }
+          break;
+        case STORE_SUSPENDED:
+          showStoreSuspendedPopup(storeName);
+        default:
+          finishLoading(throwable);
+      }
+    } else {
+      finishLoading(throwable);
     }
   }
 
@@ -232,7 +234,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
         }
       }
     });
-
 
 
     /* Be careful maintaining this code

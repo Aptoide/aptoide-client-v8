@@ -216,18 +216,16 @@ public abstract class V8Engine extends DataProvider {
   }
 
   private Completable generateAptoideUuid() {
-    return Completable.fromCallable(() -> aptoideClientUuid.getUniqueIdentifier())
+    return Completable.fromAction(() -> aptoideClientUuid.getUniqueIdentifier())
         .subscribeOn(Schedulers.newThread());
   }
 
   private Completable regenerateUserAgent(final AptoideAccountManager accountManager) {
-    return Completable.fromCallable(() -> {
+    return Completable.fromAction(() -> {
       final String userAgent = AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUuid,
           () -> accountManager.getUserEmail(), AptoideUtils.Core.getDefaultVername(),
           getConfiguration().getPartnerId());
       SecurePreferences.setUserAgent(userAgent);
-
-      return null;
     }).subscribeOn(Schedulers.newThread());
   }
 
@@ -245,9 +243,9 @@ public abstract class V8Engine extends DataProvider {
       }
 
       // load picture, name and email
-      return setupFirstRun().andThen(accountManager.syncCurrentAccount())
-          .andThen(createShortcut())
-          .andThen(discoverAndSaveInstalledApps());
+      return setupFirstRun().andThen(
+          (accountManager.syncCurrentAccount()).mergeWith(createShortcut())
+              .mergeWith(discoverAndSaveInstalledApps()));
     } else {
       return discoverAndSaveInstalledApps();
     }
@@ -277,14 +275,15 @@ public abstract class V8Engine extends DataProvider {
     return accountManager;
   }
 
+  // todo re-factor all this code to proper Rx
   private Completable setupFirstRun() {
     return Completable.defer(() -> Completable.fromCallable(() -> {
       SecurePreferences.setFirstRun(false);
       if (accountManager.isLoggedIn()) {
 
         if (!SecurePreferences.isUserDataLoaded()) {
-          regenerateUserAgent(accountManager).doOnCompleted(
-              () -> SecurePreferences.setUserDataLoaded()).subscribe();
+          regenerateUserAgent(accountManager).subscribe(() -> SecurePreferences.setUserDataLoaded(),
+              err -> CrashReport.getInstance().log(err));
         }
         return null;
       }
