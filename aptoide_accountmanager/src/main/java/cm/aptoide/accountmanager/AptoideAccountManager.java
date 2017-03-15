@@ -67,7 +67,7 @@ public class AptoideAccountManager {
   private final Analytics analytics;
   private final StoreDataPersist storeDataPersist;
   private final AptoidePreferencesConfiguration configuration;
-  private PublishRelay<Boolean> loginStatusRelay;
+  private PublishRelay<Account> accountSubject;
   private WeakReference<Account> weakRefAccount;
 
   public AptoideAccountManager(Context applicationContext,
@@ -83,36 +83,13 @@ public class AptoideAccountManager {
     this.accountType = accountType;
     this.storeDataPersist = storeDataPersist;
     weakRefAccount = new WeakReference<>(null);
-    loginStatusRelay = PublishRelay.create();
+    accountSubject = PublishRelay.create();
     this.requestFactory = requestFactory;
   }
 
-  public Observable<Boolean> loginStatus() {
-    return loginStatusRelay.startWith(isLoggedIn()).distinctUntilChanged();
-  }
-
-  /**
-   * Use {@link Account#isLoggedIn()} instead.
-   *
-   * @return true if user is logged in, false otherwise.
-   */
-  @Deprecated public boolean isLoggedIn() {
-    final Account account = getAccount();
-    return account != null && account.isLoggedIn();
-  }
-
-  /**
-   * Use {@link #getAccountAsync()} method instead.
-   *
-   * @return user Account
-   */
-  @Deprecated public Account getAccount() {
-    Account account = weakRefAccount.get();
-    if (account != null) {
-      return account;
-    }
-
-    return getAccountAsync().onErrorReturn(throwable -> null).toBlocking().value();
+  public Observable<Account> accountStatus() {
+    return Observable.merge(accountSubject,
+        getAccountAsync().onErrorReturn(throwable -> Account.empty()).toObservable());
   }
 
   public Single<Account> getAccountAsync() {
@@ -173,6 +150,30 @@ public class AptoideAccountManager {
     return accounts[0];
   }
 
+  /**
+   * Use {@link Account#isLoggedIn()} instead.
+   *
+   * @return true if user is logged in, false otherwise.
+   */
+  @Deprecated public boolean isLoggedIn() {
+    final Account account = getAccount();
+    return account != null && account.isLoggedIn();
+  }
+
+  /**
+   * Use {@link #getAccountAsync()} method instead.
+   *
+   * @return user Account
+   */
+  @Deprecated public Account getAccount() {
+    Account account = weakRefAccount.get();
+    if (account != null) {
+      return account;
+    }
+
+    return getAccountAsync().onErrorReturn(throwable -> null).toBlocking().value();
+  }
+
   public void logout(GoogleApiClient client) {
     try {
       if (isFacebookLoginEnabled()) {
@@ -189,7 +190,6 @@ public class AptoideAccountManager {
       CrashReport.getInstance().log(e);
     }
     removeAccount();
-    sendLoginEvent(false);
   }
 
   public boolean isFacebookLoginEnabled() {
@@ -208,6 +208,7 @@ public class AptoideAccountManager {
         androidAccountManager.removeAccount(androidAccount, null, null);
       }
       weakRefAccount = new WeakReference<>(null);
+      emitAccount(Account.empty());
     }).onErrorReturn(throwable -> null).toBlocking().value();
   }
 
@@ -215,12 +216,12 @@ public class AptoideAccountManager {
    * This method uses a 200 millis delay due to other bugs in the app (such as improper component
    * lifecycle in most fragments). After the proper component lifecycle is done, remove this delay.
    *
-   * @param isLoggedIn boolean that indicates the current state of the user log in. This will
-   * propagate to all listeners of {@link #loginStatus()}
+   * @param account boolean that indicates the current state of the user log in. This will
+   * propagate to all listeners of {@link #accountStatus()}
    */
-  private void sendLoginEvent(boolean isLoggedIn) {
+  private void emitAccount(Account account) {
     Observable.timer(650, TimeUnit.MILLISECONDS)
-        .doOnNext(__ -> loginStatusRelay.call(isLoggedIn))
+        .doOnNext(__ -> accountSubject.call(account))
         .subscribe(__ -> {
         }, err -> CrashReport.getInstance().log(err));
 
@@ -283,7 +284,7 @@ public class AptoideAccountManager {
           String.valueOf(account.isAccessConfirmed()));
 
       weakRefAccount = new WeakReference<>(account);
-
+      emitAccount(account);
       return storeDataPersist.persist(account.getSubscribedStores());
     }).subscribeOn(Schedulers.io());
   }
@@ -307,7 +308,7 @@ public class AptoideAccountManager {
       }
 
       return Completable.error(throwable);
-    }).doOnCompleted(() -> analytics.login(email)).doOnCompleted(() -> sendLoginEvent(true));
+    });
   }
 
   private Completable validateCredentials(String email, String password, boolean validatePassword) {
@@ -349,7 +350,7 @@ public class AptoideAccountManager {
       }
 
       return Completable.error(throwable);
-    }).doOnCompleted(() -> analytics.login(email)).doOnCompleted(() -> sendLoginEvent(true));
+    }).doOnCompleted(() -> analytics.login(email));
   }
 
   private boolean has1number1letter(String password) {

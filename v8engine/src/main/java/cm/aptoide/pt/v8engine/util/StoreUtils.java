@@ -180,14 +180,17 @@ public class StoreUtils {
 
   public static void unSubscribeStore(String name, AptoideAccountManager accountManager,
       StoreCredentialsProvider storeCredentialsProvider) {
-    accountManager.loginStatus().first().subscribe(isLoggedIn -> {
-      if (isLoggedIn) {
-        accountManager.unsubscribeStore(name, storeCredentialsProvider.get(name).getName(),
-            storeCredentialsProvider.get(name).getPasswordSha1());
-      }
-      StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-      storeAccessor.remove(name);
-    });
+    accountManager.accountStatus()
+        .map(account -> account.isLoggedIn())
+        .first()
+        .subscribe(isLoggedIn -> {
+          if (isLoggedIn) {
+            accountManager.unsubscribeStore(name, storeCredentialsProvider.get(name).getName(),
+                storeCredentialsProvider.get(name).getPasswordSha1());
+          }
+          StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+          storeAccessor.remove(name);
+        });
   }
 
   public static StoreError getErrorType(String code) {
