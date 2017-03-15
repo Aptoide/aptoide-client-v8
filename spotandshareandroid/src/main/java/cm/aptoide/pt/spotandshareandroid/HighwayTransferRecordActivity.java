@@ -323,42 +323,6 @@ public class HighwayTransferRecordActivity extends ActivityView
 
   //method to check apk archive's similar to receive
 
-  public void setInitialApConfig() {
-    if (wifimanager == null) {
-      wifimanager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
-    }
-    Method[] methods = wifimanager.getClass().getDeclaredMethods();
-    WifiConfiguration wc = DataHolder.getInstance().getWcOnJoin();
-    for (Method m : methods) {
-      if (m.getName().equals("setWifiApConfiguration")) {
-
-        try {
-          Method setConfigMethod =
-              wifimanager.getClass().getMethod("setWifiApConfiguration", WifiConfiguration.class);
-          System.out.println("Re-seting the wifiAp configuration to what it was before !!! ");
-          setConfigMethod.invoke(wifimanager, wc);
-        } catch (NoSuchMethodException e) {
-          e.printStackTrace();
-        } catch (IllegalAccessException e) {
-          e.printStackTrace();
-        } catch (InvocationTargetException e) {
-          e.printStackTrace();
-        }
-      }
-      if (m.getName().equals("setWifiApEnabled")) {
-
-        try {
-          System.out.println("Desligar o hostpot ");
-          m.invoke(wifimanager, wc, false);
-        } catch (IllegalAccessException e) {
-          e.printStackTrace();
-        } catch (InvocationTargetException e) {
-          e.printStackTrace();
-        }
-      }
-    }
-  }
-
   private void sendServerShutdownMessage() {
     Intent shutdown = new Intent(this, HighwayServerService.class);
     shutdown.setAction("SHUTDOWN_SERVER");
@@ -468,6 +432,31 @@ public class HighwayTransferRecordActivity extends ActivityView
     }
   }
 
+  private void sendOutside(String name, String filePath) {
+    PackageInfo packageInfo = packageManager.getPackageArchiveInfo(filePath, 0);
+    if (packageInfo != null) {
+      packageInfo.applicationInfo.sourceDir = filePath;
+      packageInfo.applicationInfo.publicSourceDir = filePath;
+      Drawable icon = packageInfo.applicationInfo.loadIcon(packageManager);
+      String appName = (String) packageInfo.applicationInfo.loadLabel(packageManager);
+      String packageName = packageInfo.applicationInfo.packageName;
+      String versionName = packageInfo.versionName;
+
+      HighwayTransferRecordItem tmp =
+          new HighwayTransferRecordItem(icon, appName, packageName, receivedFilePath, false,
+              versionName);// received e o bool metido no intent.
+
+      tmp.setNeedReSend(false);
+      tmp.setSent(false);
+      tmp.setFromOutside("outside");
+
+      if (!listOfItems.contains(tmp)) {
+        listOfItems.add(tmp);
+        System.out.println("List of apps the size is : " + listOfItems.size());
+      }
+    }
+  }
+
   //    public void installApp(String filePath) {
   //        System.out.println("TransferRecordActivity : going to install the app with the following filepath : " + filePath);
   //        File f = new File(filePath);
@@ -516,31 +505,6 @@ public class HighwayTransferRecordActivity extends ActivityView
   //        sendIntent.setAction("SEND");
   //        startService(sendIntent);
   //    }
-
-  private void sendOutside(String name, String filePath) {
-    PackageInfo packageInfo = packageManager.getPackageArchiveInfo(filePath, 0);
-    if (packageInfo != null) {
-      packageInfo.applicationInfo.sourceDir = filePath;
-      packageInfo.applicationInfo.publicSourceDir = filePath;
-      Drawable icon = packageInfo.applicationInfo.loadIcon(packageManager);
-      String appName = (String) packageInfo.applicationInfo.loadLabel(packageManager);
-      String packageName = packageInfo.applicationInfo.packageName;
-      String versionName = packageInfo.versionName;
-
-      HighwayTransferRecordItem tmp =
-          new HighwayTransferRecordItem(icon, appName, packageName, receivedFilePath, false,
-              versionName);// received e o bool metido no intent.
-
-      tmp.setNeedReSend(false);
-      tmp.setSent(false);
-      tmp.setFromOutside("outside");
-
-      if (!listOfItems.contains(tmp)) {
-        listOfItems.add(tmp);
-        System.out.println("List of apps the size is : " + listOfItems.size());
-      }
-    }
-  }
 
   public void getReceivedApps() {//n sao so as recebidas e tmb para as enviadas.
 
@@ -697,6 +661,13 @@ public class HighwayTransferRecordActivity extends ActivityView
     }
   }
 
+  @Override public void updateItemStatus(int positionToReSend, boolean isSent, boolean needReSend) {
+    if (adapter != null) {
+      adapter.updateItem(positionToReSend, isSent, needReSend);
+      adapter.notifyDataSetChanged();
+    }
+  }
+
   //    private void deleteAllApps() {
   //        toRemoveList = new ArrayList<>();
   //
@@ -717,13 +688,6 @@ public class HighwayTransferRecordActivity extends ActivityView
   //            }
   //        }
   //    }
-
-  @Override public void updateItemStatus(int positionToReSend, boolean isSent, boolean needReSend) {
-    if (adapter != null) {
-      adapter.updateItem(positionToReSend, isSent, needReSend);
-      adapter.notifyDataSetChanged();
-    }
-  }
 
   @Override public void showNoConnectedClientsToast() {
     Toast.makeText(HighwayTransferRecordActivity.this,
@@ -761,15 +725,8 @@ public class HighwayTransferRecordActivity extends ActivityView
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int id) {
 
-                //put the text there are no records yet visible
+                setTransparencyClearHistory(true);
                 presenter.deleteAllApps();
-                //                        if (toRemoveList != null) {
-                //                            listOfItems.removeAll(toRemoveList);
-                //                            adapter.clearListOfItems(toRemoveList);
-                //                        }
-                //                        adapter.notifyDataSetChanged();
-                //                        textView.setVisibility(View.VISIBLE);
-                //                        receivedAppListView.setVisibility(View.GONE);
 
               }
             })
@@ -923,6 +880,42 @@ public class HighwayTransferRecordActivity extends ActivityView
       textView.setText(R.string.share_instruction);
     } else {
       textView.setText(R.string.waiting_group_friends);
+    }
+  }
+
+  public void setInitialApConfig() {
+    if (wifimanager == null) {
+      wifimanager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+    }
+    Method[] methods = wifimanager.getClass().getDeclaredMethods();
+    WifiConfiguration wc = DataHolder.getInstance().getWcOnJoin();
+    for (Method m : methods) {
+      if (m.getName().equals("setWifiApConfiguration")) {
+
+        try {
+          Method setConfigMethod =
+              wifimanager.getClass().getMethod("setWifiApConfiguration", WifiConfiguration.class);
+          System.out.println("Re-seting the wifiAp configuration to what it was before !!! ");
+          setConfigMethod.invoke(wifimanager, wc);
+        } catch (NoSuchMethodException e) {
+          e.printStackTrace();
+        } catch (IllegalAccessException e) {
+          e.printStackTrace();
+        } catch (InvocationTargetException e) {
+          e.printStackTrace();
+        }
+      }
+      if (m.getName().equals("setWifiApEnabled")) {
+
+        try {
+          System.out.println("Desligar o hostpot ");
+          m.invoke(wifimanager, wc, false);
+        } catch (IllegalAccessException e) {
+          e.printStackTrace();
+        } catch (InvocationTargetException e) {
+          e.printStackTrace();
+        }
+      }
     }
   }
 
