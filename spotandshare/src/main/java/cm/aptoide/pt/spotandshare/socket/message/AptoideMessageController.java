@@ -31,6 +31,7 @@ public abstract class AptoideMessageController implements Sender<Message> {
   @Getter private Host host;
   @Getter private Host localhost;
   private Socket socket;
+  @Getter private boolean connected;
 
   public AptoideMessageController(List<MessageHandler<? extends Message>> messageHandlers,
       OnError<IOException> onError) {
@@ -55,6 +56,7 @@ public abstract class AptoideMessageController implements Sender<Message> {
     objectInputStream = new ObjectInputStream(socket.getInputStream());
     localhost = Host.fromLocalhost(socket);
     host = Host.from(socket);
+    connected = true;
     startListening(objectInputStream);
   }
 
@@ -120,6 +122,12 @@ public abstract class AptoideMessageController implements Sender<Message> {
   }
 
   public synchronized boolean sendWithAck(Message message) throws InterruptedException {
+
+    if (!isConnected()) {
+      System.out.println(message.getClass().getSimpleName() + " not connected!");
+      return false;
+    }
+
     // TODO: 02-02-2017 neuro no ack waiting lol
     AckMessage ackMessage = null;
     System.out.println(Thread.currentThread().getId()
@@ -140,6 +148,12 @@ public abstract class AptoideMessageController implements Sender<Message> {
   }
 
   @Override public synchronized void send(Message message) {
+
+    if (!isConnected()) {
+      System.out.println(message.getClass().getSimpleName() + " not connected!");
+      return;
+    }
+
     System.out.println(
         Thread.currentThread().getId() + ": Sending message: " + message + ", " + message.getClass()
             .getSimpleName());
