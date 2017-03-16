@@ -169,6 +169,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
     }
 
     shutdown = true;
+    onError = null;
 
     if (ss != null && !ss.isClosed()) {//todo need to solve in the future this nullpointerexception
       try {

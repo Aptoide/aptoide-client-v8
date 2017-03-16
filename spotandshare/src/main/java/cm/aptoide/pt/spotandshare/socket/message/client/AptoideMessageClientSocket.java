@@ -18,8 +18,7 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
 
   protected final AptoideMessageClientController aptoideMessageController;
 
-  public AptoideMessageClientSocket(String host, int port,
-      AptoideMessageClientController aptoideMessageController, String rootDir,
+  public AptoideMessageClientSocket(String host, int port, String rootDir,
       StorageCapacity storageCapacity, FileServerLifecycle<AndroidAppInfo> serverLifecycle,
       FileClientLifecycle<AndroidAppInfo> fileClientLifecycle) {
     super(host, port);

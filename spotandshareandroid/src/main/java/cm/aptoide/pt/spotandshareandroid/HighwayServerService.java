@@ -16,7 +16,6 @@ import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.HostsChangedCallback;
-import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientController;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.spotandshare.socket.message.messages.RequestPermissionToSend;
@@ -41,9 +40,9 @@ public class HighwayServerService extends Service {
   private FileServerLifecycle<AndroidAppInfo> fileServerLifecycle;
 
   private List<App> listOfApps;
-  private AptoideMessageClientController aptoideMessageClientController;
 
   private AptoideMessageServerSocket aptoideMessageServerSocket;
+  private AptoideMessageClientSocket aptoideMessageClientSocket;
 
   @Override public void onCreate() {
     super.onCreate();
@@ -55,6 +54,11 @@ public class HighwayServerService extends Service {
       private ProgressFilter progressFilter;
 
       @Override public void onError(IOException e) {
+        // Não ta facil perceber pk é k isto cai aqui quando só há um cliente, martelo ftw :/
+        if (aptoideMessageServerSocket.getAptoideMessageControllers().size() <= 1) {
+          return;
+        }
+
         e.printStackTrace();
 
         Intent i = new Intent();
@@ -305,9 +309,10 @@ public class HighwayServerService extends Service {
 
         // TODO: 22-02-2017 fix this hardcoded ip
 
-        new AptoideMessageClientSocket("192.168.43.1", 55555, aptoideMessageClientController,
-            externalStoragepath, storageCapacity, fileServerLifecycle,
-            fileClientLifecycle).startAsync();
+        aptoideMessageClientSocket =
+            new AptoideMessageClientSocket("192.168.43.1", 55555, externalStoragepath,
+                storageCapacity, fileServerLifecycle, fileClientLifecycle);
+        aptoideMessageClientSocket.startAsync();
 
         System.out.println("Connected 342");
       } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
@@ -340,14 +345,15 @@ public class HighwayServerService extends Service {
 
           AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
             @Override public void run() {
-              aptoideMessageClientController.send(
-                  new RequestPermissionToSend(aptoideMessageClientController.getLocalhost(),
+              aptoideMessageClientSocket.send(
+                  new RequestPermissionToSend(aptoideMessageClientSocket.getLocalhost(),
                       appInfo));
             }
           });
         }
       } else if (intent.getAction() != null && intent.getAction().equals("SHUTDOWN_SERVER")) {
-        if (aptoideMessageServerSocket != null) { // TODO: 16-03-2017 filipe  
+        aptoideMessageClientSocket.disable();
+        if (aptoideMessageServerSocket != null) { // TODO: 16-03-2017 filipe
           aptoideMessageServerSocket.shutdown();
         }
         Intent i = new Intent();

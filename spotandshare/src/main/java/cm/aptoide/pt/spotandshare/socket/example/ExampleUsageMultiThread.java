@@ -36,8 +36,8 @@ public class ExampleUsageMultiThread {
   }
 
   private static AptoideMessageClientSocket newAptoideMessageClientSocket() {
-    return new AptoideMessageClientSocket("localhost", MESSAGE_SERVER_PORT,
-        new ExampleMessageController(null), null, null, null, null) {
+    return new AptoideMessageClientSocket("localhost", MESSAGE_SERVER_PORT, null, null, null,
+        null) {
 
       @Override protected void onConnected(Socket socket) throws IOException {
 
