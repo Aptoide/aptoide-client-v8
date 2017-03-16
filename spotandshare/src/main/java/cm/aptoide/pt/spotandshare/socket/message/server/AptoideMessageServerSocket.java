@@ -44,6 +44,7 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
     while (iterator.hasNext()) {
       AptoideMessageServerController aptoideMessageServerController = iterator.next();
       if (aptoideMessageServerController.getHost().getIp().equals(host.getIp())) {
+        aptoideMessageServerController.disable();
         iterator.remove();
         System.out.println("ShareApps: Host " + host + " removed from the server.");
         sendToOthers(host, new HostLeftMessage(getHost(), host));

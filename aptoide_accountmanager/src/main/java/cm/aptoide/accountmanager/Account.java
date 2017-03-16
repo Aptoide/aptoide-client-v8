@@ -5,7 +5,6 @@
 
 package cm.aptoide.accountmanager;
 
-import android.text.TextUtils;
 import java.util.Collections;
 import java.util.List;
 
@@ -112,8 +111,12 @@ public class Account {
   }
 
   public boolean isLoggedIn() {
-    return (!TextUtils.isEmpty(getEmail()) && !TextUtils.isEmpty(getToken()) && !TextUtils.isEmpty(
-        getRefreshToken()) && !TextUtils.isEmpty(getPassword()));
+    return (!isEmpty(getEmail()) && !isEmpty(getToken()) && !isEmpty(getRefreshToken()) && !isEmpty(
+        getPassword()));
+  }
+
+  private boolean isEmpty(String string) {
+    return string == null || string.trim().length() == 0;
   }
 
   public String getEmail() {

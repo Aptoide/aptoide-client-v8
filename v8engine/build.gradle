@@ -26,6 +26,8 @@ android {
     buildConfigField "String", "SIXPACK_PASSWORD", "\"" + project.SIXPACK_PASSWORD + "\""
     buildConfigField "String", "SIXPACK_URL", "\"" + project.SIXPACK_URL + "\""
     buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + project.GOOGLE_SENDER_ID + "\""
+
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 
   lintOptions {
@@ -120,6 +122,7 @@ dependencies {
   testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
   testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
   // Force usage of support annotations in the test app, since it is internally used by the runner module.
+  androidTestCompile "junit:junit:${JUNIT_VERSION}"
   androidTestCompile("com.android.support.test:runner:${RUNNER_VERSION}") {
     exclude group: "com.android.support", module: "support-annotations"
   }
@@ -209,4 +212,5 @@ dependencies {
 
   compile project(':spotandshareandroid')
   compile "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
+
 }

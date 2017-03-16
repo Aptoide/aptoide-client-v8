@@ -7,6 +7,7 @@ import cm.aptoide.pt.spotandshare.socket.file.ShareAppsFileClientSocket;
 import cm.aptoide.pt.spotandshare.socket.file.ShareAppsFileServerSocket;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
+import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Sender;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.spotandshare.socket.message.messages.AckMessage;
@@ -44,16 +45,17 @@ public class HandlersFactory {
 
     return messageHandlers;
   }
-
+  
   public static List<MessageHandler<? extends Message>> newDefaultClientHandlersList(String rootDir,
-      StorageCapacity storageCapacity, FileServerLifecycle<AndroidAppInfo> serverLifecycle,
-      FileClientLifecycle<AndroidAppInfo> fileClientLifecycle) {
+          StorageCapacity storageCapacity, FileServerLifecycle<AndroidAppInfo> serverLifecycle,
+          FileClientLifecycle<AndroidAppInfo> fileClientLifecycle,
+          AptoideMessageClientSocket aptoideMessageClientController) {
     List<MessageHandler<? extends Message>> messageHandlers = new LinkedList<>();
-
+    
     messageHandlers.add(new SendApkHandler(serverLifecycle));
     messageHandlers.add(new ReceiveApkHandler(rootDir, storageCapacity, fileClientLifecycle));
-    messageHandlers.add(new HostLeftMessageHandler());
-
+    messageHandlers.add(new HostLeftMessageHandler(aptoideMessageClientController));
+    
     return messageHandlers;
   }
 
@@ -159,12 +161,16 @@ public class HandlersFactory {
   }
 
   private static class HostLeftMessageHandler extends MessageHandler<HostLeftMessage> {
-
-    public HostLeftMessageHandler() {
+  
+    private final AptoideMessageClientSocket aptoideMessageClientSocket;
+  
+    public HostLeftMessageHandler(AptoideMessageClientSocket aptoideMessageClientSocket) {
       super(HostLeftMessage.class);
+      this.aptoideMessageClientSocket = aptoideMessageClientSocket;
     }
-
+  
     @Override public void handleMessage(HostLeftMessage message, Sender<Message> messageSender) {
+      aptoideMessageClientSocket.shutdown();
     }
   }
 }

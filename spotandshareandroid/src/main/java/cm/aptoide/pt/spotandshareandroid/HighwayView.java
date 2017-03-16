@@ -38,6 +38,8 @@ public interface HighwayView {
 
   void dismiss();
 
+  void hideSearchGroupsTextview(boolean hide);
+
   //    void setCreateGroupListener(View.OnClickListener listener );
   //
   //    void setJoinGroupListener(View.OnClickListener listener);

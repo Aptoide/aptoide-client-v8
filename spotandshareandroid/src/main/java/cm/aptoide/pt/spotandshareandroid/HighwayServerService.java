@@ -27,10 +27,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by filipegoncalves on 10-02-2017.
- */
-
 public class HighwayServerService extends Service {
 
   public static final int INSTALL_APP_NOTIFICATION_REQUEST_CODE = 147;
@@ -42,7 +38,7 @@ public class HighwayServerService extends Service {
   private long lastTimestampReceive;
   private long lastTimestampSend;
   private FileClientLifecycle<AndroidAppInfo> fileClientLifecycle;
-  private FileServerLifecycle fileServerLifecycle;
+  private FileServerLifecycle<AndroidAppInfo> fileServerLifecycle;
 
   private List<App> listOfApps;
   private AptoideMessageClientController aptoideMessageClientController;
@@ -309,11 +305,9 @@ public class HighwayServerService extends Service {
 
         // TODO: 22-02-2017 fix this hardcoded ip
 
-        aptoideMessageClientController =
-            new AptoideMessageClientController(externalStoragepath, storageCapacity,
-                fileServerLifecycle, fileClientLifecycle);
-        (new AptoideMessageClientSocket("192.168.43.1", 55555,
-            aptoideMessageClientController)).startAsync();
+        new AptoideMessageClientSocket("192.168.43.1", 55555, aptoideMessageClientController,
+            externalStoragepath, storageCapacity, fileServerLifecycle,
+            fileClientLifecycle).startAsync();
 
         System.out.println("Connected 342");
       } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
@@ -353,7 +347,7 @@ public class HighwayServerService extends Service {
           });
         }
       } else if (intent.getAction() != null && intent.getAction().equals("SHUTDOWN_SERVER")) {
-        if (aptoideMessageServerSocket != null) {
+        if (aptoideMessageServerSocket != null) { // TODO: 16-03-2017 filipe  
           aptoideMessageServerSocket.shutdown();
         }
         Intent i = new Intent();

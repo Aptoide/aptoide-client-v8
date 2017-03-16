@@ -54,6 +54,20 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
     attachPresenter(new SpotSharePreviewPresenter(this, showToolbar), savedInstanceState);
   }
 
+  protected Toolbar setupToolbar(View view, String title) {
+    setHasOptionsMenu(true);
+    Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    toolbar.setLogo(R.drawable.logo_toolbar);
+
+    toolbar.setTitle(title);
+    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    actionBar.setDisplayHomeAsUpEnabled(true);
+
+    return toolbar;
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
@@ -69,21 +83,11 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
     startActivity(new Intent(getContext(), HighwayActivity.class));
   }
 
-  protected Toolbar setupToolbar(View view, String title) {
-    setHasOptionsMenu(true);
-    Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-    toolbar.setLogo(R.drawable.logo_toolbar);
-
-    toolbar.setTitle(title);
-    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-    actionBar.setDisplayHomeAsUpEnabled(true);
-
-    return toolbar;
-  }
-
   @Override public void showToolbar() {
     toolbar.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void finish() {
+    getFragmentManager().popBackStack();
   }
 }
