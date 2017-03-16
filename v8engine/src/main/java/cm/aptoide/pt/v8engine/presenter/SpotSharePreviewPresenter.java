@@ -40,6 +40,9 @@ public class SpotSharePreviewPresenter implements Presenter {
     return view.startSelection().doOnNext(selection -> {
       SpotAndShareAnalytics.clickShareApps();
       view.navigateToSpotShareView();
+      if (showToolbar) {
+        view.finish();
+      }
     });
   }
 
