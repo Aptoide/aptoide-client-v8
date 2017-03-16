@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.spotandshareandroid.analytics.SpotAndShareAnalyticsInterface;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   public LinearLayout progressBarLayout;
   public String chosenHotspot = "";
   public LinearLayout groupButtonsLayout;
+  private TextView searchGroupsTextview;
   private Toolbar mToolbar;
   private ProgressBar buttonsProgressBar;//progress bar for when user click the buttons
 
@@ -65,7 +67,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     setUpToolbar();
     HighwayRadarScan radar = (HighwayRadarScan) findViewById(R.id.radar);
     radarTextView = (HighwayRadarTextView) findViewById(R.id.hotspotTextView);
-
+    searchGroupsTextview = (TextView) findViewById(R.id.searching_groups);
     progressBarLayout = (LinearLayout) findViewById(R.id.circular_progress_bar);
     groupButtonsLayout = (LinearLayout) findViewById(R.id.groupButtonsLayout);
 
@@ -109,7 +111,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int i = item.getItemId();
-    //    todo add check for the right button
+
     finish();
 
     return super.onOptionsItemSelected(item);
@@ -273,6 +275,20 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
+  @Override public void setUpListeners() {
+
+    createGroupButton.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+          hideSearchGroupsTextview(true);
+          presenter.clickCreateGroup();
+        } else {
+          showNougatErrorToast();
+        }
+      }
+    });
+  }
+
   @Override public boolean checkPermissions() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
@@ -296,19 +312,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
       }
     }
     return true;
-  }
-
-  @Override public void setUpListeners() {
-
-    createGroupButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-          presenter.clickCreateGroup();
-        } else {
-          showNougatErrorToast();
-        }
-      }
-    });
   }
 
   private void showNougatErrorToast() {
@@ -434,6 +437,28 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     finish();
   }
 
+  @Override
+  public void openChatHotspot(ArrayList<String> pathsFromOutsideShare, String deviceName) {
+    Intent history =
+        new Intent().setClass(HighwayActivity.this, HighwayTransferRecordActivity.class);
+    System.out.println("Highway activity : going to start the transferRecordActivity !!!!");
+    history.putExtra("isAHotspot", true);//vou precisar disto no appselection - e agora ?
+    history.putExtra("nickname", deviceName);
+    if (pathsFromOutsideShare != null) {
+      Bundle tmp = new Bundle();
+      tmp.putStringArrayList("pathsFromOutsideShare",
+          pathsFromOutsideShare);//change listOfAppsToInstall to listOfAppsTOSend
+      history.putExtra("bundle", tmp);
+      history.setAction("ShareFromOutsideHotspot");
+    }
+    startActivity(history);
+    finish();
+  }
+
+  @Override public void refreshRadar(ArrayList<String> clients) {
+    radarTextView.show(clients);
+  }
+
   @Override public void requestPermissions() {
     if (!checkPermissions() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       boolean specialPermissionNotGranted = false;
@@ -483,28 +508,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
-  @Override
-  public void openChatHotspot(ArrayList<String> pathsFromOutsideShare, String deviceName) {
-    Intent history =
-        new Intent().setClass(HighwayActivity.this, HighwayTransferRecordActivity.class);
-    System.out.println("Highway activity : going to start the transferRecordActivity !!!!");
-    history.putExtra("isAHotspot", true);//vou precisar disto no appselection - e agora ?
-    history.putExtra("nickname", deviceName);
-    if (pathsFromOutsideShare != null) {
-      Bundle tmp = new Bundle();
-      tmp.putStringArrayList("pathsFromOutsideShare",
-          pathsFromOutsideShare);//change listOfAppsToInstall to listOfAppsTOSend
-      history.putExtra("bundle", tmp);
-      history.setAction("ShareFromOutsideHotspot");
-    }
-    startActivity(history);
-    finish();
-  }
-
-  @Override public void refreshRadar(ArrayList<String> clients) {
-    radarTextView.show(clients);
-  }
-
   @Override public void refreshRadarLowerVersions(ArrayList<String> clients) {
     radarTextView.showForLowerVersions(clients);
   }
@@ -518,7 +521,16 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     finish();
   }
 
+  @Override public void hideSearchGroupsTextview(boolean hide) {
+    if (hide) {
+      searchGroupsTextview.setVisibility(View.GONE);
+    } else {
+      searchGroupsTextview.setVisibility(View.VISIBLE);
+    }
+  }
+
   public void joinSingleHotspot() {
+    hideSearchGroupsTextview(true);
     Group g = new Group(chosenHotspot);
     presenter.clickJoinGroup(g);
   }

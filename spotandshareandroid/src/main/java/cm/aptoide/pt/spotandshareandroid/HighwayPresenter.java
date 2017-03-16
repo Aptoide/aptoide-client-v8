@@ -150,6 +150,7 @@ public class HighwayPresenter implements Presenter {
             } else {
               view.hideButtonsProgressBar();
               view.enableButtons(true);
+              view.hideSearchGroupsTextview(false);
               view.showJoinGroupResult(ConnectionManager.ERROR_UNKNOWN);
             }
           }
@@ -159,6 +160,7 @@ public class HighwayPresenter implements Presenter {
       @Override public void onError(int result) {
         view.showJoinGroupResult(result);
         view.hideButtonsProgressBar();
+        view.hideSearchGroupsTextview(false);
         view.enableButtons(true);
       }
     });
@@ -184,6 +186,7 @@ public class HighwayPresenter implements Presenter {
         view.showCreateGroupResult(result);
         view.hideButtonsProgressBar();
         view.enableButtons(true);
+        view.hideSearchGroupsTextview(false);
       }
     });
   }

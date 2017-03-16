@@ -56,6 +56,7 @@
       <!--android:id="@+id/hotspotLowTextView"/>-->
 
       <TextView
+          android:id="@+id/searching_groups"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:layout_margin="18dp"
