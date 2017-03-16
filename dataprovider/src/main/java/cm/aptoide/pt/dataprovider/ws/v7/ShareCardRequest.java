@@ -1,6 +1,5 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -14,7 +13,7 @@ import rx.Observable;
  * Created by jdandrade on 24/11/2016.
  */
 
-public class ShareCardRequest extends V7<BaseV7Response, ShareCardRequest.Body> {
+public class ShareCardRequest extends V7<ShareCardResponse, ShareCardRequest.Body> {
 
   private final String cardId;
 
@@ -30,7 +29,7 @@ public class ShareCardRequest extends V7<BaseV7Response, ShareCardRequest.Body> 
     return new ShareCardRequest(body, timelineCard.getCardId(), bodyInterceptor);
   }
 
-  @Override protected Observable<BaseV7Response> loadDataFromNetwork(V7.Interfaces interfaces,
+  @Override protected Observable<ShareCardResponse> loadDataFromNetwork(V7.Interfaces interfaces,
       boolean bypassCache) {
     return interfaces.shareCard(body, cardId, body.getAccessToken());
   }

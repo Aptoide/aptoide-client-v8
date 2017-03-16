@@ -51,19 +51,23 @@ public class SharePreviewDialog {
 
   private final AptoideAccountManager accountManager;
   private final boolean dontShowMeAgainOption;
+  private final SharePreviewOpenMode openMode;
   @Nullable private Displayable displayable;
   private boolean privacyResult;
 
   public SharePreviewDialog(Displayable cardDisplayable, AptoideAccountManager accountManager,
-      boolean dontShowMeAgainOption) {
+      boolean dontShowMeAgainOption, SharePreviewOpenMode openMode) {
     this.displayable = cardDisplayable;
     this.accountManager = accountManager;
     this.dontShowMeAgainOption = dontShowMeAgainOption;
+    this.openMode = openMode;
   }
 
-  public SharePreviewDialog(AptoideAccountManager accountManager, boolean dontShowMeAgainOption) {
+  public SharePreviewDialog(AptoideAccountManager accountManager, boolean dontShowMeAgainOption,
+      SharePreviewOpenMode openMode) {
     this.accountManager = accountManager;
     this.dontShowMeAgainOption = dontShowMeAgainOption;
+    this.openMode = openMode;
   }
 
   public AlertDialog.Builder getPreviewDialogBuilder(Context context) {
@@ -336,6 +340,7 @@ public class SharePreviewDialog {
       like = (LinearLayout) view.findViewById(R.id.social_like);
       likeButtonView = (LikeButtonView) view.findViewById(R.id.social_like_button);
       comments = (TextView) view.findViewById(R.id.social_comment);
+      TextView numberOfComments = (TextView) view.findViewById(R.id.social_number_of_comments);
 
       cardView.setRadius(8);
       cardView.setCardElevation(10);
@@ -345,10 +350,19 @@ public class SharePreviewDialog {
       likeButtonView.setOnClickListener(null);
       likeButtonView.setOnTouchListener(null);
       likeButtonView.setVisibility(View.VISIBLE);
+      if (openMode.equals(SharePreviewOpenMode.LIKE)) {
+        likeButtonView.setHeartState(true);
+        alertadd.setTitle(R.string.social_timeline_you_will_share_like);
+      } else if (openMode.equals(SharePreviewOpenMode.COMMENT)) {
+        numberOfComments.setText("1");
+        numberOfComments.setVisibility(View.VISIBLE);
+        alertadd.setTitle(R.string.social_timeline_you_will_share_comment);
+      } else {
+        alertadd.setTitle(R.string.social_timeline_you_will_share);
+      }
       comments.setVisibility(View.VISIBLE);
 
       alertadd.setView(view).setCancelable(false);
-      alertadd.setTitle(R.string.social_timeline_you_will_share);
 
       if (!(displayable instanceof SocialCardDisplayable)) {
         storeName.setText(accountManager.getAccount().getStore());
@@ -601,5 +615,9 @@ public class SharePreviewDialog {
 
   public boolean getPrivacyResult() {
     return this.privacyResult;
+  }
+
+  public enum SharePreviewOpenMode {
+    COMMENT, LIKE, SHARE
   }
 }

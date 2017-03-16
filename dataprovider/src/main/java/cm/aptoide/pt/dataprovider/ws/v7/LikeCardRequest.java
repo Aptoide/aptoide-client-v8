@@ -31,10 +31,10 @@ public class LikeCardRequest extends V7<BaseV7Response, BaseBody> {
     this.rating = rating;
   }
 
-  public static LikeCardRequest of(TimelineCard timelineCard, String cardType, String ownerHash,
+  public static LikeCardRequest of(String timelineCardId, String cardType, String ownerHash,
       int rating, BodyInterceptor bodyInterceptor) {
     final BaseBody body = new BaseBody();
-    return new LikeCardRequest(body, timelineCard.getCardId(), rating, bodyInterceptor);
+    return new LikeCardRequest(body, timelineCardId, rating, bodyInterceptor);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

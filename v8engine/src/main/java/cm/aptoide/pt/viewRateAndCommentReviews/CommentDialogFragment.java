@@ -27,7 +27,8 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.fragment.implementations.CommentListFragment;
+import cm.aptoide.pt.v8engine.interfaces.CommentBeforeSubmissionCallback;
+import cm.aptoide.pt.v8engine.interfaces.CommentDialogCallbackContract;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import rx.Observable;
@@ -53,7 +54,8 @@ public class CommentDialogFragment
   private TextInputLayout textInputLayout;
   private Button commentButton;
   private boolean reply;
-  private CommentListFragment commentDialogCallbackContract;
+  private CommentDialogCallbackContract commentDialogCallbackContract;
+  private CommentBeforeSubmissionCallback commentBeforeSubmissionCallback;
   private AptoideAccountManager accountManager;
   private BodyInterceptor bodyInterceptor;
 
@@ -201,29 +203,34 @@ public class CommentDialogFragment
       }
     });
 
-    RxView.clicks(commentButton)
-        .flatMap(a -> Observable.just(getText()))
-        .filter(inputText -> {
-          if (TextUtils.isEmpty(inputText)) {
-            enableError(onEmptyTextError);
-            return false;
-          }
-          disableError();
-          return true;
-        })
-        .flatMap(inputText -> submitComment(inputText, idAsLong, previousCommentId,
-            idAsString).observeOn(AndroidSchedulers.mainThread()).doOnError(e -> {
-          CrashReport.getInstance().log(e);
-          ShowMessage.asSnack(this, R.string.error_occured);
-        }).retry().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)))
-        .subscribe(resp -> {
-          if (resp.isOk()) {
-            this.dismiss();
-            commentDialogCallbackContract.okSelected(resp, idAsLong, previousCommentId, idAsString);
-          } else {
-            ShowMessage.asSnack(this, R.string.error_occured);
-          }
-        }, throwable -> CrashReport.getInstance().log(throwable));
+    RxView.clicks(commentButton).flatMap(a -> Observable.just(getText())).filter(inputText -> {
+      if (TextUtils.isEmpty(inputText)) {
+        enableError(onEmptyTextError);
+        return false;
+      }
+      disableError();
+      return true;
+    }).flatMap(inputText -> {
+      if (commentBeforeSubmissionCallback != null) {
+        commentBeforeSubmissionCallback.onCommentBeforeSubmission(inputText);
+        this.dismiss();
+        return Observable.empty();
+      }
+      return submitComment(inputText, idAsLong, previousCommentId, idAsString).observeOn(
+          AndroidSchedulers.mainThread()).doOnError(e -> {
+        CrashReport.getInstance().log(e);
+        ShowMessage.asSnack(this, R.string.error_occured);
+      }).retry().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW));
+    }).subscribe(resp -> {
+      if (resp.isOk()) {
+        this.dismiss();
+        if (commentDialogCallbackContract != null) {
+          commentDialogCallbackContract.okSelected(resp, idAsLong, previousCommentId, idAsString);
+        }
+      } else {
+        ShowMessage.asSnack(this, R.string.error_occured);
+      }
+    }, throwable -> CrashReport.getInstance().log(throwable));
   }
 
   private void disableError() {
@@ -254,7 +261,8 @@ public class CommentDialogFragment
           return PostCommentForStore.of(idAsLong, inputText, bodyInterceptor).observe();
         }
 
-        return PostCommentForStore.of(idAsLong, previousCommentId, inputText, bodyInterceptor).observe();
+        return PostCommentForStore.of(idAsLong, previousCommentId, inputText, bodyInterceptor)
+            .observe();
 
       case TIMELINE:
         // check if this is a new comment on a article or a reply to a previous one
@@ -270,7 +278,12 @@ public class CommentDialogFragment
     return Observable.empty();
   }
 
-  public void setCommentDialogCallbackContract(CommentListFragment commentDialogCallbackContract) {
+  public void setCommentDialogCallbackContract(
+      CommentDialogCallbackContract commentDialogCallbackContract) {
     this.commentDialogCallbackContract = commentDialogCallbackContract;
+  }
+
+  public void setCommentBeforeSubmissionCallbackContract(CommentBeforeSubmissionCallback callback) {
+    this.commentBeforeSubmissionCallback = callback;
   }
 }

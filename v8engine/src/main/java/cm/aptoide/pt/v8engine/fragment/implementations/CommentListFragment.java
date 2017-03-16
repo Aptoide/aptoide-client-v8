@@ -489,7 +489,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
         user.setAvatar(accountManager.getAccount().getStoreAvatar());
       }
     }
-    user.setName(accountManager.getAccount().getStoreAvatar());
+    user.setName(accountManager.getAccount().getNickname());
     comment.setUser(user);
     comment.setBody(inputText);
     comment.setAdded(new Date());
