@@ -22,49 +22,66 @@ public class SpotAndShareAnalytics implements SpotAndShareAnalyticsInterface {
   public static String ACTION_SPOT_SHARE_SEND_UNSUCCESS = "Unsuccessful send";
   public static String ACTION_SPOT_SHARE_RCV_SUCCESS = "Success received";
   public static String ACTION_SPOT_SHARE_RCV_UNSUCCESS = "Unsuccessful received";
+  public static String ACTION_SPOT_SHARE_PERM_GRANTED = "Permission granted";
+  public static String ACTION_SPOT_SHARE_PERM_DENIED = "Permission not granted";
   private static String EVENT_NAME_SPOT_SHARE = "Share_Apps_Click_On_Share_Apps";
+  private static String EVENT_NAME_SPOT_SHARE_PERMISSIONS = "Write_Permissions_Problem";
 
   public SpotAndShareAnalytics() {
   }
 
   public static void clickShareApps() {
-    trackEvent(EVENT_NAME_SPOT_SHARE, null);
+    trackEvent(EVENT_NAME_SPOT_SHARE, null, false);
   }
 
-  public static void trackEvent(String eventName, Map<String, String> attributes) {
-    Analytics.getInstance().sendSpotAndShareEvents(eventName, attributes);
+  public static void trackEvent(String eventName, Map<String, String> attributes, boolean fabric) {
+    Analytics.getInstance().sendSpotAndShareEvents(eventName, attributes, fabric);
   }
 
   @Override public void joinGroupSuccess() {
-    groupClick(EVENT_NAME_SPOT_SHARE_JOIN, ACTION_SPOT_SHARE_SUCCESS);
+    groupClick(EVENT_NAME_SPOT_SHARE_JOIN, ACTION_SPOT_SHARE_SUCCESS, false);
   }
 
   @Override public void createGroupSuccess() {
-    groupClick(EVENT_NAME_SPOT_SHARE_CREATE, ACTION_SPOT_SHARE_SUCCESS);
+    groupClick(EVENT_NAME_SPOT_SHARE_CREATE, ACTION_SPOT_SHARE_SUCCESS, false);
   }
 
   @Override public void createGroupFailed() {
-    groupClick(EVENT_NAME_SPOT_SHARE_CREATE, ACTION_SPOT_SHARE_UNSUCCESS);
+    groupClick(EVENT_NAME_SPOT_SHARE_CREATE, ACTION_SPOT_SHARE_UNSUCCESS, false);
   }
 
   @Override public void joinGroupFailed() {
-    groupClick(EVENT_NAME_SPOT_SHARE_JOIN, ACTION_SPOT_SHARE_UNSUCCESS);
+    groupClick(EVENT_NAME_SPOT_SHARE_JOIN, ACTION_SPOT_SHARE_UNSUCCESS, false);
   }
 
   @Override public void sendApkSuccess() {
-    transferClick(EVENT_NAME_SPOT_SHARE_SEND_APP, ACTION_SPOT_SHARE_SEND_SUCCESS);
+    transferClick(EVENT_NAME_SPOT_SHARE_SEND_APP, ACTION_SPOT_SHARE_SEND_SUCCESS, false);
   }
 
   @Override public void sendApkFailed() {
-    transferClick(EVENT_NAME_SPOT_SHARE_SEND_APP, ACTION_SPOT_SHARE_SEND_UNSUCCESS);
+    transferClick(EVENT_NAME_SPOT_SHARE_SEND_APP, ACTION_SPOT_SHARE_SEND_UNSUCCESS, false);
   }
 
   @Override public void receiveApkSuccess() {
-    transferClick(EVENT_NAME_SPOT_SHARE_RECEIVE_APP, ACTION_SPOT_SHARE_RCV_SUCCESS);
+    transferClick(EVENT_NAME_SPOT_SHARE_RECEIVE_APP, ACTION_SPOT_SHARE_RCV_SUCCESS, false);
   }
 
   @Override public void receiveApkFailed() {
-    transferClick(EVENT_NAME_SPOT_SHARE_RECEIVE_APP, ACTION_SPOT_SHARE_RCV_UNSUCCESS);
+    transferClick(EVENT_NAME_SPOT_SHARE_RECEIVE_APP, ACTION_SPOT_SHARE_RCV_UNSUCCESS, false);
+  }
+
+  /**
+   * This event should only be sent to fabric, hence the third argument being true
+   */
+  @Override public void permissionsDenied() {
+    groupClick(EVENT_NAME_SPOT_SHARE_PERMISSIONS, ACTION_SPOT_SHARE_PERM_DENIED, true);
+  }
+
+  /**
+   * This event should only be sent to fabric, hence the third argument being true
+   */
+  @Override public void permissionsGranted() {
+    groupClick(EVENT_NAME_SPOT_SHARE_PERMISSIONS, ACTION_SPOT_SHARE_PERM_GRANTED, true);
   }
 
   /**
@@ -76,11 +93,11 @@ public class SpotAndShareAnalytics implements SpotAndShareAnalyticsInterface {
    * If the event is a Receive App, this action can be either "Successful received", "Unsuccessful
    * received"
    */
-  public static void transferClick(String eventName, String action) {
+  public static void transferClick(String eventName, String action, boolean fabric) {
     //TODO this is called in the wrong place
     Map<String, String> attributes = new HashMap<>();
     attributes.put("action", action);
-    trackEvent(eventName, attributes);
+    trackEvent(eventName, attributes, fabric);
   }
 
   /**
@@ -89,9 +106,9 @@ public class SpotAndShareAnalytics implements SpotAndShareAnalyticsInterface {
    * @param eventName Should be either "Join Group" or "Create Group"
    * @param result In both cases should be Success or Unsuccessful
    */
-  public static void groupClick(String eventName, String result) {
+  public static void groupClick(String eventName, String result, boolean fabric) {
     Map<String, String> attributes = new HashMap<>();
     attributes.put("results", result);
-    trackEvent(eventName, attributes);
+    trackEvent(eventName, attributes, fabric);
   }
 }

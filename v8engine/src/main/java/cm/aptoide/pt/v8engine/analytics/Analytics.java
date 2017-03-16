@@ -136,17 +136,6 @@ public class Analytics {
     }
   }
 
-  private static void logFabricEvent(String event, Map<String, String> map, int flags) {
-    if (checkAcceptability(flags, FABRIC)) {
-      CustomEvent customEvent = new CustomEvent(event);
-      for (Map.Entry<String, String> entry : map.entrySet()) {
-        customEvent.putCustomAttribute(entry.getKey(), entry.getValue());
-      }
-      Answers.getInstance().logCustom(customEvent);
-      Logger.d(TAG, "Fabric Event: " + event + ", Map: " + map);
-    }
-  }
-
   private static void logFacebookEvents(String eventName) {
     if (BuildConfig.BUILD_TYPE.equals("debug")) {
       return;
@@ -167,12 +156,32 @@ public class Analytics {
     saver.remove(event);
   }
 
-  public void sendSpotAndShareEvents(String eventName, Map<String, String> attributes) {
-    logFacebookEvents(eventName, attributes);
-    if (attributes != null) {
-      track(eventName, new HashMap<String, String>(attributes), LOCALYTICS);
+  /**
+   * This method is dealing with spot and share events only and should be refactored in case
+   * one would want to send the same event to fabric AND any other analytics platform
+   */
+  public void sendSpotAndShareEvents(String eventName, Map<String, String> attributes,
+      boolean fabric) {
+    if (fabric) {
+      logFabricEvent(eventName, attributes, FABRIC);
     } else {
-      track(eventName, LOCALYTICS);
+      logFacebookEvents(eventName, attributes);
+      if (attributes != null) {
+        track(eventName, new HashMap<String, String>(attributes), LOCALYTICS);
+      } else {
+        track(eventName, LOCALYTICS);
+      }
+    }
+  }
+
+  private static void logFabricEvent(String event, Map<String, String> map, int flags) {
+    if (checkAcceptability(flags, FABRIC)) {
+      CustomEvent customEvent = new CustomEvent(event);
+      for (Map.Entry<String, String> entry : map.entrySet()) {
+        customEvent.putCustomAttribute(entry.getKey(), entry.getValue());
+      }
+      Answers.getInstance().logCustom(customEvent);
+      Logger.d(TAG, "Fabric Event: " + event + ", Map: " + map);
     }
   }
 

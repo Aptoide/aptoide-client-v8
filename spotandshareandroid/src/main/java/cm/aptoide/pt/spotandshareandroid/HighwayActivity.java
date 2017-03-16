@@ -121,12 +121,15 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     super.onActivityResult(requestCode, resultCode, data);
 
     if (requestCode == WRITE_SETTINGS_REQUEST_CODE
-        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && permissionListener != null) {
+        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+        && permissionListener != null) {
 
       if (Settings.System.canWrite(this)) {
         permissionListener.onPermissionGranted();
+        analytics.permissionsDenied();
       } else {
         permissionListener.onPermissionDenied();
+        analytics.permissionsGranted();
       }
     } else if (requestCode == MOBILE_DATA_REQUEST_CODE) {
       Group group = new Group(chosenHotspot);
@@ -289,6 +292,11 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     });
   }
 
+  private void showNougatErrorToast() {
+    Toast.makeText(this, this.getResources().getString(R.string.hotspotCreationErrorNougat),
+        Toast.LENGTH_SHORT).show();
+  }
+
   @Override public boolean checkPermissions() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
@@ -312,11 +320,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
       }
     }
     return true;
-  }
-
-  private void showNougatErrorToast() {
-    Toast.makeText(this, this.getResources().getString(R.string.hotspotCreationErrorNougat),
-        Toast.LENGTH_SHORT).show();
   }
 
   @Override public void showMobileDataDialog() {
@@ -459,6 +462,15 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     radarTextView.show(clients);
   }
 
+  @Override public void refreshRadarLowerVersions(ArrayList<String> clients) {
+    radarTextView.showForLowerVersions(clients);
+  }
+
+  @Override public void showRecoveringWifiStateToast() {
+    Toast.makeText(this, this.getResources().getString(R.string.recoveringWifiState),
+        Toast.LENGTH_SHORT).show();
+  }
+
   @Override public void requestPermissions() {
     if (!checkPermissions() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       boolean specialPermissionNotGranted = false;
@@ -506,15 +518,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         permissionListener.onPermissionGranted();
       }
     }
-  }
-
-  @Override public void refreshRadarLowerVersions(ArrayList<String> clients) {
-    radarTextView.showForLowerVersions(clients);
-  }
-
-  @Override public void showRecoveringWifiStateToast() {
-    Toast.makeText(this, this.getResources().getString(R.string.recoveringWifiState),
-        Toast.LENGTH_SHORT).show();
   }
 
   @Override public void dismiss() {
@@ -574,10 +577,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   @Override public void registerListener(PermissionListener listener) {
     this.permissionListener = listener;
   }
-
-
-
-
 
   @Override public void removeListener() {
     this.permissionListener = null;
