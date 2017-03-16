@@ -78,8 +78,8 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
     // not calling super on purpose to avoid cleaning displayables
   }
 
-  @Override public void onViewCreated() {
-    super.onViewCreated();
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
 
     // TODO: 1/2/2017 optimize this listener splitting it in 3 listeners: one for each download state
 

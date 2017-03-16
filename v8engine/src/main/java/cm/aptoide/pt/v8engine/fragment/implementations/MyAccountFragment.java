@@ -90,23 +90,27 @@ public class MyAccountFragment extends GooglePlayServicesFragment implements MyA
     client = getClientBuilder().addApi(GOOGLE_SIGN_IN_API, options).build();
     usernameTextView.setText(accountManager.getUserEmail());
 
-    setupToolbar(view);
+    setupToolbar(view, getString(R.string.my_account));
 
     attachPresenter(new MyAccountPresenter(this, accountManager, client,
         getActivity().getSupportFragmentManager()), savedInstanceState);
   }
 
-  private void setupToolbar(View view) {
+  @Override protected void connect() {
+    client.connect();
+  }
+
+  protected Toolbar setupToolbar(View view, String title) {
+    setHasOptionsMenu(true);
     Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     toolbar.setLogo(R.drawable.logo_toolbar);
-    toolbar.setTitle(getString(R.string.my_account));
+
+    toolbar.setTitle(title);
     ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
     ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
     actionBar.setDisplayHomeAsUpEnabled(true);
-  }
 
-  @Override protected void connect() {
-    client.connect();
+    return toolbar;
   }
 }

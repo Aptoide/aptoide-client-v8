@@ -76,9 +76,16 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
   }
 
   public boolean hasStoreAndUser() {
-    return getPojo().getStore() != null
-        && !TextUtils.isEmpty(getPojo().getStore().getName())
-        && !TextUtils.isEmpty(getPojo().getName());
+    return hasStore() && hasUser();
+  }
+
+  public boolean hasStore() {
+    return getPojo().getStore() != null && (!TextUtils.isEmpty(getPojo().getStore().getName())
+        || (!TextUtils.isEmpty(getPojo().getStore().getAvatar())));
+  }
+
+  public boolean hasUser() {
+    return !TextUtils.isEmpty(getPojo().getName()) || !TextUtils.isEmpty(getPojo().getAvatar());
   }
 
   public int getStoreColor() {
@@ -99,14 +106,6 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
       storeThemeEnum = StoreThemeEnum.APTOIDE_STORE_THEME_ORANGE;
     }
     return storeThemeEnum.getButtonLayoutDrawable();
-  }
-
-  public boolean hasUser() {
-    return !TextUtils.isEmpty(getPojo().getName()) || !TextUtils.isEmpty(getPojo().getAvatar());
-  }
-
-  public boolean hasStore() {
-    return getPojo().getStore() != null && !TextUtils.isEmpty(getPojo().getStore().getName());
   }
 
   public void viewClicked(NavigationManagerV4 navigationManager) {

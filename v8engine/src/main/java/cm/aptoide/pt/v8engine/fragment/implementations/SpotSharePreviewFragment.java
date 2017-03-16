@@ -47,18 +47,18 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
     showToolbar = getArguments().getBoolean(SHOW_TOOLBAR_KEY);
   }
 
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    startButton = (Button) view.findViewById(R.id.fragment_spot_share_preview_start_button);
+    toolbar = setupToolbar(view, getContext().getString(R.string.spot_share));
+    attachPresenter(new SpotSharePreviewPresenter(this, showToolbar), savedInstanceState);
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
     return inflater.inflate(R.layout.fragment_spot_share_preview, container, false);
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    startButton = (Button) view.findViewById(R.id.fragment_spot_share_preview_start_button);
-    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-    attachPresenter(new SpotSharePreviewPresenter(this, showToolbar), savedInstanceState);
   }
 
   @Override public Observable<Void> startSelection() {
@@ -69,16 +69,21 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
     startActivity(new Intent(getContext(), HighwayActivity.class));
   }
 
-  @Override public void showToolbar() {
-    setupToolbar();
-    toolbar.setVisibility(View.VISIBLE);
-  }
+  protected Toolbar setupToolbar(View view, String title) {
+    setHasOptionsMenu(true);
+    Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    toolbar.setLogo(R.drawable.logo_toolbar);
 
-  public void setupToolbar() {
+    toolbar.setTitle(title);
     ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
     ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
     actionBar.setDisplayHomeAsUpEnabled(true);
-    actionBar.setTitle(getContext().getString(R.string.spot_share));
+
+    return toolbar;
+  }
+
+  @Override public void showToolbar() {
+    toolbar.setVisibility(View.VISIBLE);
   }
 }

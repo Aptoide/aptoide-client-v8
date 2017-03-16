@@ -4,6 +4,7 @@
   ~ Modified by Neurophobic Animal on 22/05/2016.
   -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aptoide="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/add_store_dialog_background"
@@ -55,6 +56,7 @@
           android:imeOptions="flagNoExtractUi|actionSearch"
           android:maxLines="1"
           android:queryHint="@string/store_name"
+          aptoide:iconifiedByDefault="false"
           >
       </android.support.v7.widget.SearchView>
 

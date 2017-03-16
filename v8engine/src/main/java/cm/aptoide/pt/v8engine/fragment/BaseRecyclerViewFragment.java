@@ -41,6 +41,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     recyclerView.setAdapter(adapter);
     layoutManager = createLayoutManager();
     recyclerView.setLayoutManager(layoutManager);
+    recyclerView.setSaveEnabled(true); //Controls whether the saving of this view's state is enabled
   }
 
   @CallSuper @Override public void bindViews(View view) {
@@ -130,7 +131,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
   }
 
   @Override @Nullable public Displayable getDisplayableAt(int index) {
-    if(displayables!=null && displayables.size()>index) {
+    if (displayables != null && displayables.size() > index) {
       return displayables.get(0);
     }
     return null;

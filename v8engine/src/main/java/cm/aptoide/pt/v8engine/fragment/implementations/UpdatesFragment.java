@@ -2,6 +2,8 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Installed;
@@ -126,8 +128,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     // overridden to avoid calling super, since it removes the displayables automatically
   }
 
-  @Override public void onViewCreated() {
-    super.onViewCreated();
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
 
     // show updates
     updateRepository.getAll(false)
