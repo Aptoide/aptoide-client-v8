@@ -23,7 +23,7 @@ public abstract class AptoideMessageController implements Sender<Message> {
   public static final long ACK_TIMEOUT = 5000;
 
   private final HashMap<Class, MessageHandler> messageHandlersMap;
-  private final OnError<IOException> onError;
+  private OnError<IOException> onError;
 
   private ObjectOutputStream objectOutputStream;
   private ObjectInputStream objectInputStream;
@@ -101,10 +101,32 @@ public abstract class AptoideMessageController implements Sender<Message> {
     return messageHandlersMap.containsKey(message.getClass());
   }
 
+  public void exit() {
+    try {
+      disable();
+      sendWithAck(new ExitMessage(getLocalhost()));
+      if (socket != null && !socket.isClosed()) {
+        socket.close();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void disable() {
+    onError = null;
+  }
+
   public synchronized boolean sendWithAck(Message message) throws InterruptedException {
     // TODO: 02-02-2017 neuro no ack waiting lol
     AckMessage ackMessage = null;
-    System.out.println(Thread.currentThread().getId() + ": Sending message with ack: " + message);
+    System.out.println(Thread.currentThread().getId()
+        + ": Sending message with ack: "
+        + message
+        + ", "
+        + message.getClass().getSimpleName());
     try {
       objectOutputStream.writeObject(message);
       ackMessage = ackMessages.poll(ACK_TIMEOUT, TimeUnit.MILLISECONDS);
@@ -115,17 +137,6 @@ public abstract class AptoideMessageController implements Sender<Message> {
     System.out.println(Thread.currentThread().getId() + ": Received ack: " + ackMessage);
 
     return ackMessage != null && ackMessage.isSuccess();
-  }
-
-  public void exit() {
-    send(new ExitMessage(getLocalhost()));
-    try {
-      if (socket != null && !socket.isClosed()) {
-        socket.close();
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
   @Override public synchronized void send(Message message) {

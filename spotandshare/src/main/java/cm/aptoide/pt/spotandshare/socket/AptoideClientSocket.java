@@ -14,6 +14,7 @@ public abstract class AptoideClientSocket extends AptoideSocket {
   private final int port;
   private String fallbackHostName;
   @Setter private int retries;
+  private Socket socket;
 
   public AptoideClientSocket(String hostName, String fallbackHostName, int port) {
     this(hostName, port);
@@ -38,7 +39,7 @@ public abstract class AptoideClientSocket extends AptoideSocket {
 
   @Override public AptoideSocket start() {
 
-    Socket socket = null;
+    socket = null;
 
     String[] hosts = new String[] { hostName, fallbackHostName };
 
@@ -94,4 +95,13 @@ public abstract class AptoideClientSocket extends AptoideSocket {
   }
 
   protected abstract void onConnected(Socket socket) throws IOException;
+
+  @Override public void shutdown() {
+    super.shutdown();
+    try {
+      socket.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 }

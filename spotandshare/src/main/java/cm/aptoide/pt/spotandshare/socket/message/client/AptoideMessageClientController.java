@@ -15,10 +15,11 @@ import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 public class AptoideMessageClientController extends AptoideMessageController
     implements Sender<Message> {
 
-  public AptoideMessageClientController(String rootDir, StorageCapacity storageCapacity,
+  public AptoideMessageClientController(AptoideMessageClientSocket aptoideMessageClientSocket,
+      String rootDir, StorageCapacity storageCapacity,
       FileServerLifecycle<AndroidAppInfo> serverLifecycle,
       FileClientLifecycle<AndroidAppInfo> fileClientLifecycle) {
     super(HandlersFactory.newDefaultClientHandlersList(rootDir, storageCapacity, serverLifecycle,
-        fileClientLifecycle), fileClientLifecycle);
+        fileClientLifecycle, aptoideMessageClientSocket), fileClientLifecycle);
   }
 }

@@ -4,6 +4,7 @@ import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientController;
+import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import java.io.IOException;
 
 /**
@@ -12,8 +13,9 @@ import java.io.IOException;
 
 public class ExampleMessageController extends AptoideMessageClientController {
 
-  public ExampleMessageController() {
-    super("/tmp/a", bytes -> true, newFileServerLifecycle(), newFileClientLifecycle());
+  public ExampleMessageController(AptoideMessageClientSocket aptoideMessageClientSocket) {
+    super(aptoideMessageClientSocket, "/tmp/a", bytes -> true, newFileServerLifecycle(),
+        newFileClientLifecycle());
   }
 
   private static FileServerLifecycle<AndroidAppInfo> newFileServerLifecycle() {
