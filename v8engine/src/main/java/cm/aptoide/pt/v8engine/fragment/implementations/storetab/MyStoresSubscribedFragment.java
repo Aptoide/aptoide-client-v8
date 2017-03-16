@@ -61,7 +61,13 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
   }
 
   @Override protected Action1<ListStores> buildAction() {
-    return listStores -> addDisplayables(getStoresDisplayable(listStores.getDatalist().getList()));
+    return listStores -> {
+      List<Store> list = new ArrayList<>();
+      list.addAll(
+          DisplayablesFactory.loadLocalSubscribedStores(storeRepository).toBlocking().first());
+      list.addAll(listStores.getDatalist().getList());
+      addDisplayables(getStoresDisplayable(list));
+    };
   }
 
   @Override protected ErrorRequestListener getErrorRequestListener() {
