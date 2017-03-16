@@ -69,9 +69,11 @@ public class AddStoreDialog extends BaseDialog {
   private LinearLayout topStoresButton;
   private TextView topStoreText1;
   private TextView topStoreText2;
+  private ImageView image;
   private String givenStoreName;
   private BaseBodyInterceptor bodyDecorator;
   private StoreCredentialsProvider storeCredentialsProvider;
+  private SearchView.SearchAutoComplete searchAutoComplete;
 
   public AddStoreDialog attachFragmentManager(NavigationManagerV4 navigationManager) {
     this.navigationManager = navigationManager;
@@ -173,12 +175,20 @@ public class AddStoreDialog extends BaseDialog {
     topStoresButton = (LinearLayout) view.findViewById(R.id.button_top_stores);
     topStoreText1 = (TextView) view.findViewById(R.id.top_stores_text_1);
     topStoreText2 = (TextView) view.findViewById(R.id.top_stores_text_2);
+    image = (ImageView) view.findViewById(R.id.search_mag_icon);
+    searchAutoComplete = (SearchView.SearchAutoComplete) view.findViewById(R.id.search_src_text);
   }
 
   private void setupSearchView(View view) {
     searchView.setIconifiedByDefault(false);
-    ImageView image = ((ImageView) view.findViewById(R.id.search_mag_icon));
     image.setImageDrawable(null);
+    searchAutoComplete.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+      @Override public void onFocusChange(View view, boolean b) {
+        if (!searchAutoComplete.isFocused()) {
+          dismiss();
+        }
+      }
+    });
   }
 
   private void setupStoreSearch(SearchView searchView) {
