@@ -63,7 +63,12 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
   }
 
   public void exit() {
+    disable();
     aptoideMessageController.exit();
+  }
+
+  public void disable() {
+    onError = null;
   }
 
   public void send(Message message) {
