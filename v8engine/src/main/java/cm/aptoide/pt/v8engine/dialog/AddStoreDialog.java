@@ -163,7 +163,6 @@ public class AddStoreDialog extends BaseDialog {
     givenStoreName = searchView.getQuery().toString();
     if (givenStoreName.length() > 0) {
       AddStoreDialog.this.storeName = givenStoreName;
-      AptoideUtils.SystemU.hideKeyboard(getActivity());
       getStore(givenStoreName);
       showLoadingDialog();
     }
@@ -287,10 +286,10 @@ public class AddStoreDialog extends BaseDialog {
                 dialogFragment.show(getFragmentManager(), PrivateStoreDialog.class.getName());
                 break;
               default:
-                ShowMessage.asSnack(getActivity(), error.getDescription());
+                ShowMessage.asSnack(this, error.getDescription());
             }
           } else {
-            ShowMessage.asSnack(getActivity(), R.string.error_occured);
+            ShowMessage.asSnack(this, R.string.error_occured);
           }
         }, storeName, accountManager);
   }
