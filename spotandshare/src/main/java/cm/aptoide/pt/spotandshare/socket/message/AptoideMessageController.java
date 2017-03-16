@@ -23,7 +23,7 @@ public abstract class AptoideMessageController implements Sender<Message> {
   public static final long ACK_TIMEOUT = 5000;
 
   private final HashMap<Class, MessageHandler> messageHandlersMap;
-  private final OnError<IOException> onError;
+  private OnError<IOException> onError;
 
   private ObjectOutputStream objectOutputStream;
   private ObjectInputStream objectInputStream;
@@ -31,6 +31,7 @@ public abstract class AptoideMessageController implements Sender<Message> {
   @Getter private Host host;
   @Getter private Host localhost;
   private Socket socket;
+  @Getter private boolean connected;
 
   public AptoideMessageController(List<MessageHandler<? extends Message>> messageHandlers,
       OnError<IOException> onError) {
@@ -55,6 +56,7 @@ public abstract class AptoideMessageController implements Sender<Message> {
     objectInputStream = new ObjectInputStream(socket.getInputStream());
     localhost = Host.fromLocalhost(socket);
     host = Host.from(socket);
+    connected = true;
     startListening(objectInputStream);
   }
 
@@ -101,10 +103,38 @@ public abstract class AptoideMessageController implements Sender<Message> {
     return messageHandlersMap.containsKey(message.getClass());
   }
 
+  public void exit() {
+    try {
+      disable();
+      sendWithAck(new ExitMessage(getLocalhost()));
+      if (socket != null && !socket.isClosed()) {
+        socket.close();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void disable() {
+    onError = null;
+  }
+
   public synchronized boolean sendWithAck(Message message) throws InterruptedException {
+
+    if (!isConnected()) {
+      System.out.println(message.getClass().getSimpleName() + " not connected!");
+      return false;
+    }
+
     // TODO: 02-02-2017 neuro no ack waiting lol
     AckMessage ackMessage = null;
-    System.out.println(Thread.currentThread().getId() + ": Sending message with ack: " + message);
+    System.out.println(Thread.currentThread().getId()
+        + ": Sending message with ack: "
+        + message
+        + ", "
+        + message.getClass().getSimpleName());
     try {
       objectOutputStream.writeObject(message);
       ackMessage = ackMessages.poll(ACK_TIMEOUT, TimeUnit.MILLISECONDS);
@@ -117,18 +147,13 @@ public abstract class AptoideMessageController implements Sender<Message> {
     return ackMessage != null && ackMessage.isSuccess();
   }
 
-  public void exit() {
-    send(new ExitMessage(getLocalhost()));
-    try {
-      if (socket != null && !socket.isClosed()) {
-        socket.close();
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
   @Override public synchronized void send(Message message) {
+
+    if (!isConnected()) {
+      System.out.println(message.getClass().getSimpleName() + " not connected!");
+      return;
+    }
+
     System.out.println(
         Thread.currentThread().getId() + ": Sending message: " + message + ", " + message.getClass()
             .getSimpleName());

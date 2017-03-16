@@ -39,6 +39,11 @@ public abstract class AptoideSocket {
 
   public abstract AptoideSocket start();
 
+  public void shutdown() {
+    onError = null;
+    executorService.shutdown();
+  }
+  
   public void shutdownExecutorService() {
     executorService.shutdown();
   }

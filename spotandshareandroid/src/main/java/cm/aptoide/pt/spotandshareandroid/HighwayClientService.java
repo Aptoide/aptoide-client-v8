@@ -12,10 +12,8 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
-import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
-import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientController;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.spotandshare.socket.message.messages.RequestPermissionToSend;
@@ -43,7 +41,6 @@ public class HighwayClientService extends Service {
   private long lastTimestampSend;
   private FileServerLifecycle<AndroidAppInfo> fileServerLifecycle;
   private FileClientLifecycle<AndroidAppInfo> fileClientLifecycle;
-  private AptoideMessageClientController aptoideMessageController;
   private AptoideMessageClientSocket aptoideMessageClientSocket;
 
   @Override public void onCreate() {
@@ -290,11 +287,10 @@ public class HighwayClientService extends Service {
           }
         };
 
-        aptoideMessageController =
-            new AptoideMessageClientController(externalStoragepath, storageCapacity,
+        aptoideMessageClientSocket =
+                new AptoideMessageClientSocket(serverIP, "192.168.43.1", port, externalStoragepath,
+                        storageCapacity,
                 fileServerLifecycle, fileClientLifecycle);
-        aptoideMessageClientSocket = new AptoideMessageClientSocket(serverIP, "192.168.43.1", port,
-            aptoideMessageController);
         aptoideMessageClientSocket.startAsync();
 
         System.out.println(" Connected ! ");
@@ -315,11 +311,11 @@ public class HighwayClientService extends Service {
 
           final AndroidAppInfo appInfo = new AndroidAppInfo(appName, packageName, fileInfoList);
 
-          Host host = aptoideMessageController.getHost();
           AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
             @Override public void run() {
-              aptoideMessageController.send(
-                  new RequestPermissionToSend(aptoideMessageController.getLocalhost(), appInfo));
+              aptoideMessageClientSocket.send(
+                      new RequestPermissionToSend(aptoideMessageClientSocket.getLocalhost(),
+                              appInfo));
             }
           });
         }
@@ -328,13 +324,13 @@ public class HighwayClientService extends Service {
         AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
           @Override public void run() {
             if (aptoideMessageClientSocket != null) {
-              aptoideMessageController.exit();
+              aptoideMessageClientSocket.exit();
             }
+            Intent i = new Intent();
+            i.setAction("CLIENT_DISCONNECT");
+            sendBroadcast(i);
           }
         });
-        Intent i = new Intent();
-        i.setAction("CLIENT_DISCONNECT");
-        sendBroadcast(i);
       }
     }
 

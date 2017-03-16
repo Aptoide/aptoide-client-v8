@@ -23,6 +23,7 @@ android {
     buildConfigField "String", "BACKUP_SIGNATURE", "\"" + project.BACKUP_SIGNATURE + "\""
     buildConfigField "String", "UPLOADER_SIGNATURE", "\"" + project.UPLOADER_SIGNATURE + "\""
 
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 
   lintOptions {
@@ -47,9 +48,18 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
+
+  testOptions {
+    unitTests.returnDefaultValues = true
+  }
 }
 
 dependencies {
+
+  // Testing-only dependencies
+  testCompile "junit:junit:${JUNIT_VERSION}"
+  testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
+  testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
 
   //
   // inter-projects dependencies
@@ -72,8 +82,6 @@ dependencies {
   //
   // from remote repos
   //
-
-  testCompile "junit:junit:${JUNIT_VERSION}"
 
   //Also present in v8engine
   compile "com.jakewharton.rxbinding:rxbinding:${JW_RX_BINDING_VERSION}"
