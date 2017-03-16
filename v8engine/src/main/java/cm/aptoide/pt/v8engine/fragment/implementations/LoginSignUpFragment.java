@@ -72,7 +72,7 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
       view.findViewById(R.id.appbar).setVisibility(View.GONE);
     } else {
       view.findViewById(R.id.appbar).setVisibility(View.VISIBLE);
-      setupToolbar(view);
+      setupToolbar(view, getString(R.string.my_account));
     }
     mainContent.setPadding(0, 0, 0, originalBottomPadding);
     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -97,18 +97,6 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
       @Override public void onSlide(@NonNull View bottomSheet, float slideOffset) {
       }
     });
-  }
-
-  private void setupToolbar(View view) {
-    setHasOptionsMenu(true);
-    Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-    toolbar.setLogo(R.drawable.logo_toolbar);
-
-    toolbar.setTitle(getString(R.string.my_account));
-    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-    actionBar.setDisplayHomeAsUpEnabled(true);
   }
 
   @Nullable @Override
@@ -149,5 +137,19 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
     void expanded();
 
     void hidden();
+  }
+
+  protected Toolbar setupToolbar(View view, String title) {
+    setHasOptionsMenu(true);
+    Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    toolbar.setLogo(R.drawable.logo_toolbar);
+
+    toolbar.setTitle(title);
+    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    actionBar.setDisplayHomeAsUpEnabled(true);
+
+    return toolbar;
   }
 }

@@ -1,6 +1,8 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.View;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -64,8 +66,8 @@ public class MyStoresFragment extends GetStoreWidgetsFragment {
     return displayables;
   }
 
-  @Override public void onViewCreated() {
-    super.onViewCreated();
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
     registerForViewChanges();
   }
 

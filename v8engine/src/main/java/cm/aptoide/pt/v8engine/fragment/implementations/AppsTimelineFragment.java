@@ -68,10 +68,12 @@ import rx.android.schedulers.AndroidSchedulers;
 public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwipeFragment<T> {
 
   public static final int SEARCH_LIMIT = 20;
+
   private static final String USER_ID_KEY = "USER_ID_KEY";
   private static final String ACTION_KEY = "ACTION";
   private static final String STORE_ID = "STORE_ID";
   private static final String PACKAGE_LIST_KEY = "PACKAGE_LIST";
+
   private DownloadFactory downloadFactory;
   private SpannableFactory spannableFactory;
   private LinksHandlerFactory linksHandlerFactory;
@@ -109,34 +111,38 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
+
+    if (savedInstanceState != null && savedInstanceState.getStringArray(PACKAGE_LIST_KEY) != null) {
+      packages = Arrays.asList(savedInstanceState.getStringArray(PACKAGE_LIST_KEY));
+    }
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
 
-    if (savedInstanceState != null && savedInstanceState.getStringArray(PACKAGE_LIST_KEY) != null) {
-      packages = Arrays.asList(savedInstanceState.getStringArray(PACKAGE_LIST_KEY));
+    if (create || refresh) {
+
+      Observable<List<String>> packagesObservable =
+          (packages != null) ? Observable.just(packages) : refreshPackages();
+
+      Observable<Datalist<Displayable>> displayableObservable = accountManager.getAccountAsync()
+          .map(account -> account.isLoggedIn())
+          .onErrorReturn(throwable -> false)
+          .flatMapObservable(
+              loggedIn -> packagesObservable.observeOn(AndroidSchedulers.mainThread())
+                  .flatMap(packages -> clearView().flatMap(viewsCleared -> Observable.concat(
+                      getFreshDisplayables(refresh, packages, loggedIn),
+                      getNextDisplayables(packages)))));
+
+      displayableObservable.observeOn(AndroidSchedulers.mainThread())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+          .doOnNext(items -> addItems(items))
+          .subscribe(__ -> {
+          }, err -> {
+            CrashReport.getInstance().log(err);
+            finishLoading(err);
+          });
     }
-
-    Observable<List<String>> packagesObservable =
-        (packages != null) ? Observable.just(packages) : refreshPackages();
-
-    Observable<Datalist<Displayable>> displayableObservable = accountManager.getAccountAsync()
-        .map(account -> account.isLoggedIn())
-        .onErrorReturn(throwable -> false)
-        .flatMapObservable(loggedIn -> packagesObservable.observeOn(AndroidSchedulers.mainThread())
-            .flatMap(packages -> clearView().flatMap(
-                viewsCleared -> Observable.concat(getFreshDisplayables(refresh, packages, loggedIn),
-                    getNextDisplayables(packages)))));
-
-    displayableObservable.observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .doOnNext(items -> addItems(items))
-        .subscribe(__ -> {
-        }, err -> {
-          CrashReport.getInstance().log(err);
-          finishLoading(err);
-        });
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -233,7 +239,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
   @Override public void reload() {
     Analytics.AppsTimeline.pullToRefresh();
-    load(true, true, null);
+    load(false, true, null);
   }
 
   private Observable<Datalist<Displayable>> getNextDisplayables(List<String> packages) {
