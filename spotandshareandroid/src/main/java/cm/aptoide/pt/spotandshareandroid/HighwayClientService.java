@@ -326,11 +326,11 @@ public class HighwayClientService extends Service {
             if (aptoideMessageClientSocket != null) {
               aptoideMessageClientSocket.exit();
             }
+            Intent i = new Intent();
+            i.setAction("CLIENT_DISCONNECT");
+            sendBroadcast(i);
           }
         });
-        Intent i = new Intent();
-        i.setAction("CLIENT_DISCONNECT");
-        sendBroadcast(i);
       }
     }
 
