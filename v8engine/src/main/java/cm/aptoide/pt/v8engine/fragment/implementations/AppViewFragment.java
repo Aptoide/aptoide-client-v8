@@ -695,7 +695,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
               if (accountManager.isLoggedIn() && Application.getConfiguration()
                   .isCreateStoreAndSetUserPrivacyAvailable()) {
                 SharePreviewDialog sharePreviewDialog =
-                    new SharePreviewDialog(accountManager, false);
+                    new SharePreviewDialog(accountManager, false,
+                        SharePreviewDialog.SharePreviewOpenMode.SHARE);
                 AlertDialog.Builder alertDialog =
                     sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(),
                         appName, app.getIcon());

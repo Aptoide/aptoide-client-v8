@@ -9,6 +9,7 @@ import cm.aptoide.pt.model.v7.timeline.SocialInstall;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.interfaces.ShareCardCallback;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -141,11 +142,16 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
         getPackageName());
   }
 
-  @Override public void share(Context context, boolean privacyResult) {
-
+  @Override
+  public void share(Context context, boolean privacyResult, ShareCardCallback shareCardCallback) {
+    socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);
   }
 
   @Override public void like(Context context, String cardType, int rating) {
-    socialRepository.like(getTimelineCard(), cardType, "", rating);
+    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating);
+  }
+
+  @Override public void like(Context context, String cardId, String cardType, int rating) {
+    socialRepository.like(cardId, cardType, "", rating);
   }
 }

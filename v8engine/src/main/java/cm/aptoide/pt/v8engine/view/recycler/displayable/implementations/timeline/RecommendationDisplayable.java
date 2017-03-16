@@ -14,6 +14,7 @@ import cm.aptoide.pt.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.interfaces.ShareCardCallback;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -113,13 +114,6 @@ public class RecommendationDisplayable extends CardDisplayable {
         Application.getConfiguration().getMarketName());
   }
 
-  public String getSimilarAppPackageName() {
-    if (similarPackageNames.size() != 0) {
-      return similarPackageNames.get(0);
-    }
-    return "";
-  }
-
   public Spannable getSimilarAppsText(Context context) {
     StringBuilder similarAppsText = new StringBuilder(
         context.getString(R.string.displayable_social_timeline_recommendation_similar_to,
@@ -158,11 +152,27 @@ public class RecommendationDisplayable extends CardDisplayable {
   }
 
   public void sendRecommendedOpenAppEvent() {
-    timelineAnalytics.sendRecommendedOpenAppEvent(CARD_TYPE_NAME, TimelineAnalytics
-        .SOURCE_APTOIDE, getSimilarAppPackageName(), getPackageName());
+    timelineAnalytics.sendRecommendedOpenAppEvent(CARD_TYPE_NAME, TimelineAnalytics.SOURCE_APTOIDE,
+        getSimilarAppPackageName(), getPackageName());
   }
 
-  @Override public void share(Context context, boolean privacyResult) {
-    socialRepository.share(getTimelineCard(), context, privacyResult);
+  public String getSimilarAppPackageName() {
+    if (similarPackageNames.size() != 0) {
+      return similarPackageNames.get(0);
+    }
+    return "";
+  }
+
+  @Override
+  public void share(Context context, boolean privacyResult, ShareCardCallback shareCardCallback) {
+    socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);
+  }
+
+  @Override public void like(Context context, String cardType, int rating) {
+    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating);
+  }
+
+  @Override public void like(Context context, String cardId, String cardType, int rating) {
+    socialRepository.like(cardId, cardType, "", rating);
   }
 }

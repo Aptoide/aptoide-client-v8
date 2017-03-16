@@ -14,6 +14,7 @@ import cm.aptoide.pt.model.v7.timeline.Similar;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.interfaces.ShareCardCallback;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -148,6 +149,11 @@ public class SimilarDisplayable extends CardDisplayable {
     return R.layout.displayable_social_timeline_similar;
   }
 
+  public void sendSimilarOpenAppEvent() {
+    timelineAnalytics.sendSimilarOpenAppEvent(CARD_TYPE_NAME, TimelineAnalytics.SOURCE_APTOIDE,
+        getPackageName(), getSimilarToAppPackageName());
+  }
+
   public String getSimilarToAppPackageName() {
     if (similarAppsPackageNames.size() != 0) {
       return similarAppsPackageNames.get(0);
@@ -155,12 +161,16 @@ public class SimilarDisplayable extends CardDisplayable {
     return "";
   }
 
-  public void sendSimilarOpenAppEvent() {
-    timelineAnalytics.sendSimilarOpenAppEvent(CARD_TYPE_NAME, TimelineAnalytics
-        .SOURCE_APTOIDE, getPackageName(), getSimilarToAppPackageName());
+  @Override
+  public void share(Context context, boolean privacyResult, ShareCardCallback shareCardCallback) {
+    socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);
   }
 
-  @Override public void share(Context context, boolean privacyResult) {
-    socialRepository.share(getTimelineCard(), context, privacyResult);
+  @Override public void like(Context context, String cardType, int rating) {
+    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating);
+  }
+
+  @Override public void like(Context context, String cardId, String cardType, int rating) {
+    socialRepository.like(cardId, cardType, "", rating);
   }
 }

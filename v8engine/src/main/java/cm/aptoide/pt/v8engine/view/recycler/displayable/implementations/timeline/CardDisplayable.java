@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.interfaces.ShareCardCallback;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 
 /**
@@ -44,5 +45,17 @@ public abstract class CardDisplayable extends Displayable {
     }
   }
 
-  public abstract void share(Context context, boolean privacyResult);
+  /**
+   * Shares the card and generates a corresponding Social card.
+   *
+   * @param shareCardCallback Listens to the result of the share operation. Pass null if you want
+   * to
+   * ignore it.
+   */
+  public abstract void share(Context context, boolean privacyResult,
+      ShareCardCallback shareCardCallback);
+
+  public abstract void like(Context context, String cardType, int rating);
+
+  public abstract void like(Context context, String cardId, String cardType, int rating);
 }

@@ -278,7 +278,7 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @retrofit2.http.Body AnalyticsEventRequest.Body body);
 
     @POST("user/shareTimeline/card_uid={cardUid}/access_token={accessToken}")
-    Observable<BaseV7Response> shareCard(@retrofit2.http.Body ShareCardRequest.Body body,
+    Observable<ShareCardResponse> shareCard(@retrofit2.http.Body ShareCardRequest.Body body,
         @Path(value = "cardUid") String card_id, @Path(value = "accessToken") String accessToken);
 
     @POST("user/shareTimeline/package_id={packageName}/access_token={accessToken}/type={type}")

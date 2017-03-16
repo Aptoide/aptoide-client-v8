@@ -63,8 +63,6 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
         ContextCompat.getColor(context, R.color.black), userSharer);
   }
 
-  public abstract void like(Context context, String cardType, int rating);
-
   public void likesPreviewClick(NavigationManagerV4 navigationManager) {
     navigationManager.navigateTo(V8Engine.getFragmentProvider()
         .newTimeLineLikesFragment(this.getTimelineCard().getCardId(), numberOfLikes, "default"));

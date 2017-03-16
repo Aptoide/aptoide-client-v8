@@ -398,7 +398,8 @@ import rx.android.schedulers.AndroidSchedulers;
                 && ManagerPreferences.isShowPreviewDialog()
                 && Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
               SharePreviewDialog sharePreviewDialog =
-                  new SharePreviewDialog(displayable, accountManager, true);
+                  new SharePreviewDialog(displayable, accountManager, true,
+                      SharePreviewDialog.SharePreviewOpenMode.SHARE);
               AlertDialog.Builder alertDialog =
                   sharePreviewDialog.getPreviewDialogBuilder(getContext());
 

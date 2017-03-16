@@ -323,6 +323,8 @@
 
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">What your followers will see:</string>
+  <string name="social_timeline_you_will_share_comment">Your followers will see your Comment:</string>
+  <string name="social_timeline_you_will_share_like">Your followers will see your Like:</string>
   <string name="social_timeline_share_title">Share card preview</string>
   <string name="social_timeline_share_title_checkbox">Make my user profile private in Apps Timeline. Only show/share my store info.</string>
   <string name="social_timeline_share_title_checkbox_fb">Allow my user\'s profile to be public on Apps Timeline</string>
