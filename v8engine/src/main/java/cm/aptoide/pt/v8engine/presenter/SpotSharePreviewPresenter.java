@@ -14,10 +14,13 @@ public class SpotSharePreviewPresenter implements Presenter {
 
   private final SpotSharePreviewView view;
   private final boolean showToolbar;
+  private final String toolbarTitle;
 
-  public SpotSharePreviewPresenter(SpotSharePreviewView view, boolean showToolbar) {
+  public SpotSharePreviewPresenter(SpotSharePreviewView view, boolean showToolbar,
+      String toolbarTitle) {
     this.view = view;
     this.showToolbar = showToolbar;
+    this.toolbarTitle = toolbarTitle;
   }
 
   @Override public void present() {
@@ -27,12 +30,10 @@ public class SpotSharePreviewPresenter implements Presenter {
             resumed -> startSelection().compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> {
-          CrashReport.getInstance().log(err);
-        });
+        }, err -> CrashReport.getInstance().log(err));
 
     if (showToolbar) {
-      view.showToolbar();
+      view.showToolbar(toolbarTitle);
     }
   }
 
