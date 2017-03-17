@@ -165,4 +165,6 @@ public interface FragmentProvider {
   Fragment newThankYouConnectingFragment(String tag);
 
   Fragment newTimeLineFollowersFragment(long followerNumber, String storeTheme);
+
+  Fragment newRecommendedStoresFragment();
 }

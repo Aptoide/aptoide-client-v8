@@ -87,7 +87,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
     };
   }
 
-  @NonNull private ArrayList<Displayable> getStoresDisplayable(List<Store> list) {
+  @NonNull protected ArrayList<Displayable> getStoresDisplayable(List<Store> list) {
     ArrayList<Displayable> storesDisplayables = new ArrayList<>(list.size());
     Collections.sort(list, (store, t1) -> store.getName().compareTo(t1.getName()));
     for (int i = 0; i < list.size(); i++) {
