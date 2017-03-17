@@ -61,13 +61,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
   }
 
   @Override protected Action1<ListStores> buildAction() {
-    return listStores -> {
-      List<Store> list = new ArrayList<>();
-      list.addAll(
-          DisplayablesFactory.loadLocalSubscribedStores(storeRepository).toBlocking().first());
-      list.addAll(listStores.getDatalist().getList());
-      addDisplayables(getStoresDisplayable(list));
-    };
+    return listStores -> addDisplayables(getStoresDisplayable(listStores.getDatalist().getList()));
   }
 
   @Override protected ErrorRequestListener getErrorRequestListener() {
@@ -87,14 +81,12 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
     };
   }
 
-  @NonNull protected ArrayList<Displayable> getStoresDisplayable(List<Store> list) {
+  @NonNull private ArrayList<Displayable> getStoresDisplayable(List<Store> list) {
     ArrayList<Displayable> storesDisplayables = new ArrayList<>(list.size());
     Collections.sort(list, (store, t1) -> store.getName().compareTo(t1.getName()));
     for (int i = 0; i < list.size(); i++) {
       if (i == 0 || list.get(i - 1).getId() != list.get(i).getId()) {
         if (layout == Layout.LIST) {
-          final IdsRepositoryImpl idsRepository =
-              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
           storesDisplayables.add(
               new RecommendedStoreDisplayable(list.get(i), storeRepository, accountManager,
                   new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider, AccessorFactory
