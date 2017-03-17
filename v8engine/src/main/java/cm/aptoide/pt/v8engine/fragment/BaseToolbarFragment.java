@@ -49,7 +49,7 @@ public abstract class BaseToolbarFragment extends UIComponentFragment {
 
       ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
       actionBar.setDisplayHomeAsUpEnabled(showUp);
-
+      actionBar.setTitle(toolbar.getTitle());
       setupToolbarDetails(toolbar);
     }
   }

@@ -50,16 +50,19 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     startButton = (Button) view.findViewById(R.id.fragment_spot_share_preview_start_button);
-    toolbar = setupToolbar(view, getContext().getString(R.string.spot_share));
-    attachPresenter(new SpotSharePreviewPresenter(this, showToolbar), savedInstanceState);
+    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    attachPresenter(
+        new SpotSharePreviewPresenter(this, showToolbar, getString(R.string.spot_share)),
+        savedInstanceState);
   }
 
-  protected Toolbar setupToolbar(View view, String title) {
+  private Toolbar setupToolbar(String title) {
     setHasOptionsMenu(true);
-    Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+
     toolbar.setLogo(R.drawable.logo_toolbar);
 
     toolbar.setTitle(title);
+
     ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
     ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
@@ -83,7 +86,8 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
     startActivity(new Intent(getContext(), HighwayActivity.class));
   }
 
-  @Override public void showToolbar() {
+  @Override public void showToolbar(String title) {
+    setupToolbar(title);
     toolbar.setVisibility(View.VISIBLE);
   }
 
