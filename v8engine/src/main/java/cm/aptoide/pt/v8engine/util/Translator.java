@@ -274,6 +274,10 @@ public class Translator {
       case "Comments on this store":
         translated = Application.getContext().getString(R.string.comment_store_title);
         break;
+      case "Spot & Share":
+      case "Spot&Share":
+        translated = Application.getContext().getString(R.string.spot_share);
+        break;
       default:
         translated = string;
         break;
