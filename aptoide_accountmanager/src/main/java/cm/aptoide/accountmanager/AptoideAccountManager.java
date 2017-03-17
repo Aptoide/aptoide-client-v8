@@ -103,25 +103,33 @@ public class AptoideAccountManager {
       final Account.Access access =
           getAccessFrom(androidAccountManager.getUserData(androidAccount, ACCESS));
 
-      return storeDataPersist.get()
-          .doOnSuccess(stores -> {
-            Logger.d("AptoideAccountManager", "nr stores= " + (stores != null ? stores.size() : 0));
-          })
-          .doOnError(err -> CrashReport.getInstance().log(err))
-          .map(stores -> new Account(androidAccountManager.getUserData(androidAccount, USER_ID),
-              androidAccount.name,
-              androidAccountManager.getUserData(androidAccount, USER_NICK_NAME),
-              androidAccountManager.getUserData(androidAccount, USER_AVATAR),
-              androidAccountManager.getUserData(androidAccount, REFRESH_TOKEN),
-              androidAccountManager.getUserData(androidAccount, ACCESS_TOKEN),
-              androidAccountManager.getPassword(androidAccount),
-              Account.Type.valueOf(androidAccountManager.getUserData(androidAccount, LOGIN_MODE)),
-              androidAccountManager.getUserData(androidAccount, USER_REPO),
-              androidAccountManager.getUserData(androidAccount, REPO_AVATAR),
-              Boolean.valueOf(androidAccountManager.getUserData(androidAccount, MATURE_SWITCH)),
-              access,
-              Boolean.valueOf(androidAccountManager.getUserData(androidAccount, ACCESS_CONFIRMED)),
-              stores));
+      return storeDataPersist.get().doOnSuccess(stores -> {
+        Logger.d("AptoideAccountManager", "nr stores= " + (stores != null ? stores.size() : 0));
+      }).doOnError(err -> CrashReport.getInstance().log(err)).map(stores -> {
+        final String userId = androidAccountManager.getUserData(androidAccount, USER_ID);
+        final String userNickName =
+            androidAccountManager.getUserData(androidAccount, USER_NICK_NAME);
+        final String userAvatar = androidAccountManager.getUserData(androidAccount, USER_AVATAR);
+        final String refreshToken =
+            androidAccountManager.getUserData(androidAccount, REFRESH_TOKEN);
+        final String accessToken = androidAccountManager.getUserData(androidAccount, ACCESS_TOKEN);
+        final String password = androidAccountManager.getPassword(androidAccount);
+        final String userRepo = androidAccountManager.getUserData(androidAccount, USER_REPO);
+        final String userRepoAvatar =
+            androidAccountManager.getUserData(androidAccount, REPO_AVATAR);
+
+        final String email = androidAccount.name;
+
+        final String adultContentEnabled =
+            androidAccountManager.getUserData(androidAccount, MATURE_SWITCH);
+        final String accessConfirmed =
+            androidAccountManager.getUserData(androidAccount, ACCESS_CONFIRMED);
+        final String loginMode = androidAccountManager.getUserData(androidAccount, LOGIN_MODE);
+
+        return new Account(userId, email, userNickName, userAvatar, refreshToken, accessToken,
+            password, Account.Type.valueOf(loginMode), userRepo, userRepoAvatar,
+            Boolean.valueOf(adultContentEnabled), access, Boolean.valueOf(accessConfirmed), stores);
+      });
     });
   }
 
