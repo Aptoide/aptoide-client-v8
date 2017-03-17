@@ -7,7 +7,7 @@
 
   <!-- NavDrawer List items -->
   <string name="my_account">My Account</string>
-  <string name="spot_share">Spot&amp;Share</string>
+  <string name="spot_share_title_drawer">Spot&amp;Share \ud83d\udd38</string>
   <string name="setting_schdwntitle">Scheduled Downloads</string>
   <string name="settings">Settings</string>
   <string name="facebook">Facebook</string>
