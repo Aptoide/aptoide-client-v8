@@ -54,10 +54,6 @@ public class HighwayRadarRippleView extends TextView {
     paint.setColor(effectColor);
   }
 
-  //    public HighwayRadarRippleView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-  //        super(context, attrs, defStyleAttr, defStyleRes);
-  //    }
-
   private void initAnimation() {
     objectAnimator = ObjectAnimator.ofInt(this, "currentProgress", 0, 100);
     objectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
@@ -69,9 +65,6 @@ public class HighwayRadarRippleView extends TextView {
 
   public HighwayRadarRippleView(Context context, AttributeSet attrs) {
     super(context, attrs);
-    //        keyword=this.getText().toString();
-    //        hotspotName=removeTransmissionFromString(keyword);
-    //        this.setText(hotspotName);
 
     initPaint();
     initAnimation();
@@ -79,9 +72,6 @@ public class HighwayRadarRippleView extends TextView {
 
   public HighwayRadarRippleView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    //        keyword=this.getText().toString();
-    //        hotspotName=removeTransmissionFromString(keyword);
-    //        this.setText(hotspotName);
 
     initPaint();
     initAnimation();
@@ -149,7 +139,6 @@ public class HighwayRadarRippleView extends TextView {
   }
 
   @Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    //super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     int resultWidth = 0;
     int modeWidth = MeasureSpec.getMode(widthMeasureSpec);
     int sizeWidth = MeasureSpec.getSize(widthMeasureSpec);

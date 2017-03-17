@@ -68,11 +68,6 @@ public class HighwayPresenter implements Presenter {
     if (permissionManager.checkPermissions()) {
       deactivateHotspot();
     }
-    //else if(!permissionManager.checkPermissions() ){//already requested the permissions but didn't accept all.
-    //  System.out.println("requesting permissions again, because he didn't accept all. ");
-    //  permissionManager.requestPermissions();
-    //}
-
   }
 
   private void deactivateHotspot() {
@@ -94,7 +89,6 @@ public class HighwayPresenter implements Presenter {
   }
 
   @Override public void onResume() {
-    //    connectionManager.resume();
     if (!permissionManager.checkPermissions() && !permissionRequested) {
       permissionManager.requestPermissions();
       permissionRequested = true;
@@ -103,7 +97,6 @@ public class HighwayPresenter implements Presenter {
 
   @Override public void onPause() {
     //call groupmanager.pause etc.
-    //nothing to put.
 
   }
 
@@ -119,9 +112,7 @@ public class HighwayPresenter implements Presenter {
   }
 
   @Override public void onStart() {
-    //if(!permissionManager.checkPermissions()){
-    //  permissionManager.requestPermissions();
-    //}
+
   }
 
   public void onActivityResult(Group group) {
@@ -192,7 +183,6 @@ public class HighwayPresenter implements Presenter {
   }
 
   public void scanNetworks() {
-    //view.showEnablingWifiToast();
     connectionManager.searchForAPTXNetworks(new ConnectionManager.InactivityListener() {
       @Override public void onInactivity(boolean inactive) {
         view.showInactivityToast();
@@ -218,17 +208,11 @@ public class HighwayPresenter implements Presenter {
 
   public void getAppFilePathFromOutside(Uri uri) {
     isOutsideShare = true;
-    //generateLocalyticsSettings();
     outsideShareManager.getApp(uri);
   }
-  //
-  //public void generateLocalyticsSettings() {
-  //  analytics.generateLocalyticsSettings();
-  //}
 
   public void getMultipleAppFilePathsFromOutside(ArrayList<Uri> list) {
     isOutsideShare = true;
-    //generateLocalyticsSettings();
     outsideShareManager.getMultipleApps(list);
   }
 

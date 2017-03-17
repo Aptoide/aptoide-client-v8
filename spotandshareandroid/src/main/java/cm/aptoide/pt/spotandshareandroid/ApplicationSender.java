@@ -95,7 +95,6 @@ public class ApplicationSender {
     Intent sendIntent = null;
     if (isHotspot) {
       sendIntent = new Intent(context, HighwayServerService.class);
-      //como sou servidor devo meter o firstSender a ""
     } else {
       sendIntent = new Intent(context, HighwayClientService.class);
       sendIntent.putExtra("targetIP", targetIPAddress);

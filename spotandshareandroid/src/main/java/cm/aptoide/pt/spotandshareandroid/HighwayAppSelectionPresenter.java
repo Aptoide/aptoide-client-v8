@@ -13,7 +13,6 @@ public class HighwayAppSelectionPresenter implements Presenter {
   private ApplicationSender applicationSender;
   private HighwayAppSelectionView view;
   private boolean isHotspot;
-  private List<App> providedApps;
   private List<AppViewModel> viewModelApps;
   private List<App> selectedApps;
 
@@ -81,13 +80,6 @@ public class HighwayAppSelectionPresenter implements Presenter {
 
   public void clickedSendButton() {
 
-    //        listOfSelectedApps = adapter.getListOfSelectedApps();
-    //        System.out.println("Appselection activity  - - Got the list of selected apps, its size is : ::: " + listOfSelectedApps.size());
-    //        if (listOfSelectedApps.size() > 0) {
-    //            sendMultipleFiles(listOfSelectedApps);
-    //        } else {
-    //            Toast.makeText(HighwayAppSelectionActivity.this, HighwayAppSelectionActivity.this.getResources().getString(R.string.noSelectedAppsToSend), Toast.LENGTH_SHORT).show();
-    //        }
     System.out.println("selectedApps size : " + selectedApps.size());
 
     if (selectedApps.size() > 0) {
@@ -96,7 +88,6 @@ public class HighwayAppSelectionPresenter implements Presenter {
     } else {
       view.showNoAppsSelectedToast();
     }
-    //        view.sendMultipleFiles(selectedApps);
 
   }
 }

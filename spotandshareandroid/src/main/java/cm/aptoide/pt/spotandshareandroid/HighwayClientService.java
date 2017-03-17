@@ -37,8 +37,6 @@ public class HighwayClientService extends Service {
   private NotificationManagerCompat mNotifyManager;
   private Object mBuilderSend;
   private Object mBuilderReceive;
-  private long lastTimestampReceive;
-  private long lastTimestampSend;
   private FileServerLifecycle<AndroidAppInfo> fileServerLifecycle;
   private FileClientLifecycle<AndroidAppInfo> fileClientLifecycle;
   private AptoideMessageClientSocket aptoideMessageClientSocket;
@@ -99,7 +97,6 @@ public class HighwayClientService extends Service {
       }
 
       @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
-        //System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
         if (progressFilter.shouldUpdate(progress)) {
           int actualProgress = Math.round(progress * PROGRESS_SPLIT_SIZE);
           showReceiveProgress(androidAppInfo.getAppName(), actualProgress, androidAppInfo);
@@ -126,7 +123,6 @@ public class HighwayClientService extends Service {
         i.setAction("SENDAPP");
         sendBroadcast(i);
 
-        //create notification for the app.
         createSendNotification();
       }
 
@@ -154,7 +150,6 @@ public class HighwayClientService extends Service {
       }
 
       @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
-        //System.out.println("onProgressChanged() called with: progress = [" + progress + "]");
 
         if (progressFilter.shouldUpdate(progress)) {
           int actualProgress = Math.round(progress * 100);
@@ -207,7 +202,6 @@ public class HighwayClientService extends Service {
   private void showReceiveProgress(String receivingAppName, int actual,
       AndroidAppInfo androidAppInfo) {
 
-    //if (System.currentTimeMillis() - lastTimestampReceive > 1000 / 3) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
       ((NotificationCompat.Builder) mBuilderReceive).setContentText(
           this.getResources().getString(R.string.receiving) + " " + receivingAppName);
@@ -219,8 +213,6 @@ public class HighwayClientService extends Service {
       mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
           ((NotificationCompat.Builder) mBuilderReceive).getNotification());
     }
-    lastTimestampReceive = System.currentTimeMillis();
-    //}
   }
 
   private void createSendNotification() {
@@ -253,7 +245,6 @@ public class HighwayClientService extends Service {
 
   private void showSendProgress(String sendingAppName, int actual, AndroidAppInfo androidAppInfo) {
 
-    //if (System.currentTimeMillis() - lastTimestampSend > 1000 / 3) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
       ((NotificationCompat.Builder) mBuilderSend).setContentText(
           this.getResources().getString(R.string.sending) + " " + sendingAppName);
@@ -264,8 +255,6 @@ public class HighwayClientService extends Service {
       mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
           ((NotificationCompat.Builder) mBuilderSend).getNotification());
     }
-    lastTimestampSend = System.currentTimeMillis();
-    //}
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
@@ -297,8 +286,6 @@ public class HighwayClientService extends Service {
       } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
         Bundle b = intent.getBundleExtra("bundle");
 
-        //        if (listOfApps == null || listOfApps.get(listOfApps.size() - 1)
-        //                .isOnChat()) { //null ou ultimo elemento ja acabado de enviar.
         listOfApps = b.getParcelableArrayList("listOfAppsToInstall");
         for (int i = 0; i < listOfApps.size(); i++) {
 

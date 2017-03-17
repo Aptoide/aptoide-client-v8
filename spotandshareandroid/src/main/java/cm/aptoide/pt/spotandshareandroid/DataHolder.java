@@ -81,31 +81,6 @@ public class DataHolder {
     this.connectedClients = connectedClients;
   }
 
-  //  public void addConnectedClient(String arg) {
-  //    if (arg != null && connectedClients != null) {
-  //      this.connectedClients.add(arg);
-  //    }
-  //  }
-
-  //  public void removeConnectedClient(String arg) {
-  //    if (connectedClients != null && arg != null) {
-  //
-  //      System.out.println("Size of the list before removing : " + connectedClients.size());
-  //      if (connectedClients.contains(arg)) {
-  //        List<String> listaTmp = new ArrayList<>();
-  //        for (int i = 0; i < connectedClients.size(); i++) {
-  //          if (connectedClients.get(i).equals(arg)) {
-  //            listaTmp.add(connectedClients.get(i));
-  //          }
-  //        }
-  //
-  //        if (listaTmp != null) {
-  //          connectedClients.removeAll(listaTmp);
-  //          System.out.println("removing arg, now size is : " + connectedClients.size());
-  //        }
-  //      }
-  //    }
-  //  }
 
   public void createConnectedClientsList() {
     this.connectedClients = new ArrayList<>();

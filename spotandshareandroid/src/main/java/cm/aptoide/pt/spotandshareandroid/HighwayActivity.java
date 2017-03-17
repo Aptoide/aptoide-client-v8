@@ -74,23 +74,20 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     buttonsProgressBar = (ProgressBar) findViewById(R.id.buttonsProgressBar);
     createGroupButton = (LinearLayout) findViewById(R.id.createGroup);//receive
     radarTextView.setActivity(this);
-    //setUpToolbar();
 
     presenter = new HighwayPresenter(this, deviceName, new DeactivateHotspotTask(connectionManager),
         connectionManager, analytics, groupManager, this);
     attachPresenter(presenter);
 
     if (getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_SEND)) {
-      //            pathsFromOutsideShare=new ArrayList<>();
-      //            presenter.generateLocalyticsSettings();
+
       outsideShareManager = new OutsideShareManager();
       presenter.setOutsideShareManager(outsideShareManager);
       Uri uri = (Uri) getIntent().getExtras().get("android.intent.extra.STREAM");
       presenter.getAppFilePathFromOutside(uri);
     } else if (getIntent().getAction() != null && getIntent().getAction()
         .equals(Intent.ACTION_SEND_MULTIPLE)) {
-      //            pathsFromOutsideShare=new ArrayList<>();
-      //            presenter.generateLocalyticsSettings();
+
       outsideShareManager = new OutsideShareManager();
       presenter.setOutsideShareManager(outsideShareManager);
       ArrayList<Uri> uriList =
@@ -138,18 +135,12 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   }
 
   @Override public void onBackPressed() {
-    //        try{
-    ////            unregisterReceiver(wifireceiver);
-    ////            unregisterReceiver(wfr);
-    //        }catch( IllegalArgumentException e){
-    //            System.out.println("Tried to to unregister a receiver that was already unregistered");
-    //        }
+
     recoverNetworkState();
     super.onBackPressed();
   }
 
   private void recoverNetworkState() {
-    //check if wifi was enabled before and re use it.
     presenter.recoverNetworkState();
   }
 
@@ -159,33 +150,20 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     outsideShare = false;
 
     if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_SEND)) {
-      //            pathsFromOutsideShare=new ArrayList<>();
-      //            presenter.generateLocalyticsSettings();
-      //            String tmp = intent.getStringExtra(Intent.EXTRA_STREAM);
-      //            outsideShare=true;
+
       outsideShareManager = new OutsideShareManager();
       presenter.setOutsideShareManager(outsideShareManager);
       Uri uri = (Uri) intent.getExtras().get("android.intent.extra.STREAM");
       presenter.getAppFilePathFromOutside(uri);
-      //            String way = uri.getPath();
-      //            pathsFromOutsideShare.add(way);
-      //            System.out.println("way is : : : "+way);
 
     } else if (intent.getAction() != null && intent.getAction()
         .equals(Intent.ACTION_SEND_MULTIPLE)) {
-      //            pathsFromOutsideShare=new ArrayList<>();
-      //            presenter.generateLocalyticsSettings();
-      //            outsideShare=true;
       outsideShareManager = new OutsideShareManager();
       presenter.setOutsideShareManager(outsideShareManager);
       ArrayList<Uri> uriList =
           (ArrayList<Uri>) intent.getExtras().get("android.intent.extra.STREAM");
       presenter.getMultipleAppFilePathsFromOutside(uriList);
-      //            for(int i=0;i<uriList.size();i++){
-      //                String way=uriList.get(i).getPath();
-      //                System.out.println("way is : : : "+way);
-      //                pathsFromOutsideShare.add(way);
-      //            }
+
     } else if (intent.getAction() != null && intent.getAction().equals("LEAVINGSHAREAPPSCLIENT")) {
       recoverNetworkState();
       forgetAPTXNetwork();
@@ -194,29 +172,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   private void forgetAPTXNetwork() {
     presenter.forgetAPTXNetwork();
-    //System.out.println("Forget APTX inside the mainactivity- called on the beggining");
-    //if(wm==null){
-    //  wm = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-    //}
-    //List<WifiConfiguration> list = wm.getConfiguredNetworks();
-    //if(list!=null){
-    //  for( WifiConfiguration i : list ) {
-    //    if(i.SSID!=null){
-    //      String[] separated=i.SSID.split("_");
-    //      String tmp=separated[0].trim();
-    //      System.out.println("Trying to remove a APTX network.");
-    //      System.out.println("This one is i : "+ i.SSID);
-    //      System.out.println("SEPARATED 0 is : "+ tmp );
-    //      if(tmp.contains("APTX")){
-    //        System.out.println("Trying to remove a network");
-    //        boolean remove = wm.removeNetwork(i.networkId);
-    //        System.out.println("removed the network : "+remove);
-    //      }
-    //    }
-    //
-    //
-    //  }
-    //}
 
   }
 
@@ -242,7 +197,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
             }
           }
         } else {
-          //in the future show dialog (?)
           if (permissionListener != null) {
             permissionListener.onPermissionDenied();
           }
@@ -297,6 +251,11 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         Toast.LENGTH_SHORT).show();
   }
 
+  @Override public void showMobileDataDialog() {
+    Dialog d = buildMobileDataDialog();
+    d.show();
+  }
+
   @Override public boolean checkPermissions() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
@@ -320,11 +279,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
       }
     }
     return true;
-  }
-
-  @Override public void showMobileDataDialog() {
-    Dialog d = buildMobileDataDialog();
-    d.show();
   }
 
   @Override public void showMobileDataToast() {
@@ -417,24 +371,16 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     Log.i("Highway Activity ", "Going to the list of Applications");
     history.putExtra("isAHotspot", false);
     history.putExtra("nickname", deviceName);
-    //        IPAddress=intToIp(wifimanager.getDhcpInfo().serverAddress);
     System.out.println("this is the valor of the IPADDRESS : :::::::::::" + ipAddress);
     System.out.println("I am going to send this IP Address " + ipAddress);
     history.putExtra("targetIP", ipAddress);
     if (pathsFromOutsideShare != null) {
-      //                    history.putExtra("pathFromOutsideShare", pathFromOutsideShare );
       Bundle tmp = new Bundle();
-      tmp.putStringArrayList("pathsFromOutsideShare",
-          pathsFromOutsideShare);//change listOfAppsToInstall to listOfAppsTOSend
+      tmp.putStringArrayList("pathsFromOutsideShare", pathsFromOutsideShare);
       history.putExtra("bundle", tmp);
       history.setAction("ShareFromOutsideRequest");
     }
-    //        try{
-    ////            unregisterReceiver(this);
-    ////            unregisterReceiver(wifireceiver);
-    //        }catch (IllegalArgumentException e){
-    //            System.out.println("There was an error while trying to unregister the wifireceiver and the wifireceiverforconnectingwifi");
-    //        }
+
     startActivity(history);
 
     finish();
@@ -445,12 +391,11 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     Intent history =
         new Intent().setClass(HighwayActivity.this, HighwayTransferRecordActivity.class);
     System.out.println("Highway activity : going to start the transferRecordActivity !!!!");
-    history.putExtra("isAHotspot", true);//vou precisar disto no appselection - e agora ?
+    history.putExtra("isAHotspot", true);
     history.putExtra("nickname", deviceName);
     if (pathsFromOutsideShare != null) {
       Bundle tmp = new Bundle();
-      tmp.putStringArrayList("pathsFromOutsideShare",
-          pathsFromOutsideShare);//change listOfAppsToInstall to listOfAppsTOSend
+      tmp.putStringArrayList("pathsFromOutsideShare", pathsFromOutsideShare);
       history.putExtra("bundle", tmp);
       history.setAction("ShareFromOutsideHotspot");
     }
@@ -469,6 +414,18 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   @Override public void showRecoveringWifiStateToast() {
     Toast.makeText(this, this.getResources().getString(R.string.recoveringWifiState),
         Toast.LENGTH_SHORT).show();
+  }
+
+  @Override public void dismiss() {
+    finish();
+  }
+
+  @Override public void hideSearchGroupsTextview(boolean hide) {
+    if (hide) {
+      searchGroupsTextview.setVisibility(View.GONE);
+    } else {
+      searchGroupsTextview.setVisibility(View.VISIBLE);
+    }
   }
 
   @Override public void requestPermissions() {
@@ -520,18 +477,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
-  @Override public void dismiss() {
-    finish();
-  }
-
-  @Override public void hideSearchGroupsTextview(boolean hide) {
-    if (hide) {
-      searchGroupsTextview.setVisibility(View.GONE);
-    } else {
-      searchGroupsTextview.setVisibility(View.VISIBLE);
-    }
-  }
-
   public void joinSingleHotspot() {
     hideSearchGroupsTextview(true);
     Group g = new Group(chosenHotspot);
@@ -548,21 +493,11 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   @Override protected void onResume() {
     presenter.onResume();
-    //        registerReceiver(activateButtons,new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
-    //        registerReceiver(wifireceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-    //        registerReceiver(wfr,new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION));
     super.onResume();
   }
 
   @Override protected void onDestroy() {
     presenter.onDestroy();
-    //        try{
-    ////            unregisterReceiver(wifireceiver);
-    ////            unregisterReceiver(wfr);
-    //        }catch( IllegalArgumentException e){
-    //            System.out.println("Tried to to unregister a receiver that was already unregistered");
-    //        }
-
     super.onDestroy();
   }
 

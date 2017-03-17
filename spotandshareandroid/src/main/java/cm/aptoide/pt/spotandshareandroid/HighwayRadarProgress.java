@@ -83,15 +83,14 @@ public class HighwayRadarProgress extends View {
     stopRotation();
   }
 
-  @Override protected void onMeasure(int widthMeasureSpec,
-      int heightMeasureSpec) {//define quald eve ser o tamanho relativamente ao parent
+  @Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
     super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
     int width = View.MeasureSpec.getSize(widthMeasureSpec);
     int height = MeasureSpec.getSize(heightMeasureSpec);
     raio = Math.min(width, height);
     setMeasuredDimension(width, height);
-    rect.set(17, 17, width - 17, height - 17);//mudar
+    rect.set(17, 17, width - 17, height - 17);
   }
 
   private void stopRotation() {

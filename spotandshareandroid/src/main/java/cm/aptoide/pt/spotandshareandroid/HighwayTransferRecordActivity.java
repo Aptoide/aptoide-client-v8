@@ -3,7 +3,6 @@ package cm.aptoide.pt.spotandshareandroid;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -212,7 +211,6 @@ public class HighwayTransferRecordActivity extends ActivityView
     if (isHotspot) {
       System.out.println("Send a file from outside - hotspot");
       sendIntent = new Intent(this, HighwayServerService.class);
-      //como sou servidor devo meter o firstSender a ""
     } else {
       System.out.println("Send a file from outside - not a hotspot");
       sendIntent = new Intent(this, HighwayClientService.class);
@@ -222,8 +220,7 @@ public class HighwayTransferRecordActivity extends ActivityView
     sendIntent.putExtra("isHotspot", isHotspot);
 
     Bundle tmp = new Bundle();
-    tmp.putParcelableArrayList("listOfAppsToInstall",
-        new ArrayList<Parcelable>(list));//change listOfAppsToInstall to listOfAppsTOSend
+    tmp.putParcelableArrayList("listOfAppsToInstall", new ArrayList<Parcelable>(list));
     sendIntent.putExtra("bundle", tmp);
     sendIntent.setAction("SEND");
     startService(sendIntent);
@@ -262,7 +259,6 @@ public class HighwayTransferRecordActivity extends ActivityView
   @Override public void onBackPressed() {
     Dialog onBack = createOnBackDialog();
     onBack.show();
-    //        super.onBackPressed();
   }
 
   private Dialog createOnBackDialog() {
@@ -272,14 +268,8 @@ public class HighwayTransferRecordActivity extends ActivityView
         adapter.clearListOfItems();
       }
     }
-    //        if(isHotspot==null){
-    //            if(DataHolder.getInstance().getWcOnJoin()!=null){
-    //                isHotspot="true";
-    //            }else{
-    //                isHotspot="false";
-    //            }
-    //        }
-    if (isHotspot) {//pq e uma String
+
+    if (isHotspot) {
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
       builder.setTitle(this.getResources().getString(R.string.alert))
@@ -321,7 +311,6 @@ public class HighwayTransferRecordActivity extends ActivityView
     }
   }
 
-  //method to check apk archive's similar to receive
 
   private void sendServerShutdownMessage() {
     Intent shutdown = new Intent(this, HighwayServerService.class);
@@ -341,14 +330,12 @@ public class HighwayTransferRecordActivity extends ActivityView
     outsideShare = false;
 
     System.out.println("I am here in the new intent");
-    //        textView.setVisibility(View.GONE);
-    //        receivedAppListView.setVisibility(View.VISIBLE);
+
     setIntent(intent);
     isHotspot = getIntent().getBooleanExtra("isHotspot", false);
 
     if (intent.getAction() != null && intent.getAction()
-        .equals(
-            "ShareFromOutsideHotspot")) {//if app is already open on the chat when the person tries to share - entra novo grupo. Problema? Se ja estivesse connectado?
+        .equals("ShareFromOutsideHotspot")) {
       textView.setVisibility(View.GONE);
       receivedAppListView.setVisibility(View.VISIBLE);
       outsideShare = true;
@@ -367,8 +354,7 @@ public class HighwayTransferRecordActivity extends ActivityView
       receivedFilePath = intent.getStringExtra("resSendFilePath");
       nameOfTheApp = getIntent().getStringExtra("nameOfTheApp");
       resendOutside(nameOfTheApp, receivedFilePath);
-    } else if (intent.getAction() != null && intent.getAction()
-        .equals("SendFromOutside")) {//send from outside - started sending - actualizar chat
+    } else if (intent.getAction() != null && intent.getAction().equals("SendFromOutside")) {
 
       textView.setVisibility(View.GONE);
       receivedAppListView.setVisibility(View.VISIBLE);
@@ -377,8 +363,7 @@ public class HighwayTransferRecordActivity extends ActivityView
       receivedFilePath = getIntent().getStringExtra("sendFilePath");
       sendOutside(nameOfTheApp, receivedFilePath);
     } else if (getIntent().getAction() != null && getIntent().getAction()
-        .equals(
-            "ShareFromOutsideConfirmed")) { // pode comecar a enviar - ja tem a conexao estabelecida
+        .equals("ShareFromOutsideConfirmed")) {
 
       itemsFromOutside = new ArrayList<App>();
       isHotspot = getIntent().getBooleanExtra("isAHotspot", false);
@@ -457,172 +442,6 @@ public class HighwayTransferRecordActivity extends ActivityView
     }
   }
 
-  //    public void installApp(String filePath) {
-  //        System.out.println("TransferRecordActivity : going to install the app with the following filepath : " + filePath);
-  //        File f = new File(filePath);
-  ////        Intent install = new Intent(Intent.ACTION_VIEW).setDataAndType(Uri.parse(filePath), "application/vnd.android.package-archive");
-  //        Intent install = new Intent(Intent.ACTION_VIEW).setDataAndType(Uri.fromFile(f), "application/vnd.android.package-archive");
-  //        System.out.println("TransferRecordACtivity going tos tart the intent - created this intent aqui  - supostamente e para instalar.");
-  //        startActivity(install);
-  //        System.out.println("Just started the activity for the install !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-  //    }
-
-  //    public void deleteAppFile(String filePath) {
-  //
-  //        File fdelete = new File(filePath);
-  //        if (fdelete.exists()) {
-  //            if (fdelete.delete()) {
-  //                System.out.println("[TransferRecordActivity] file Deleted !!|!|!!|!|!|!|!|!|!|!|!|!|!|!|!|!|:" + filePath);
-  //            } else {
-  //                System.out.println("[TransferREcordActivity] file not Deleted !!|!|!|!|!|!|!|!|!|!|!|!|!|!|!|!|! :" + filePath);
-  //            }
-  //        }
-  //    }
-
-  //    public void sendFiles(List<App> list, int positionToReSend) { //this method is onyl used on the customAdapter for the re-send
-  //        Intent sendIntent = null;
-  //        if (isHotspot) {
-  //            System.out.println("HIGHWAY APP SELECTION ACTIVITY I will try to send a message and i am a hostpot");
-  //            sendIntent = new Intent(this, HighwayServerComm.class);
-  //        } else {
-  //            System.out.println("HIGHWAY APP SELECTION ACTIVITY I will try to send a message and i am NOT NOT NOT NOT a hotspot");
-  //            sendIntent = new Intent(this, HighwayClientComm.class);
-  //            sendIntent.putExtra("targetIP", targetIPAddress);
-  //
-  //        }
-  //        sendIntent.putExtra("port", porto);
-  //        System.out.println("App selection activity  : o bool do isHotspot : " + isHotspot);
-  //        sendIntent.putExtra("isHotspot", isHotspot);
-  //
-  ////        sendIntent.putExtra("fromOutside",outsideShare);
-  //
-  //        sendIntent.putExtra("positionToReSend", positionToReSend);
-  //        Bundle tmp = new Bundle();
-  //        tmp.putParcelableArrayList("listOfAppsToInstall", new ArrayList<Parcelable>(list));//change listOfAppsToInstall to listOfAppsTOSend
-  //        sendIntent.putExtra("bundle", tmp);
-  //
-  //
-  //        sendIntent.setAction("SEND");
-  //        startService(sendIntent);
-  //    }
-
-  public void getReceivedApps() {//n sao so as recebidas e tmb para as enviadas.
-
-    packageManager = getPackageManager();
-    System.out.println("TRANSFER-RECORDActivity The received filePath is : " + receivedFilePath);
-    //so deve fazer isto assim se received for true.
-    //caso contrario nao pode ir ao acrchive manager !
-
-    if (received) {
-      //            PackageInfo packageInfo = packageManager.getPackageArchiveInfo(receivedFilePath, 0);
-      //            if (packageInfo != null) {
-      //                packageInfo.applicationInfo.sourceDir = receivedFilePath;
-      //                packageInfo.applicationInfo.publicSourceDir = receivedFilePath;
-      //                Drawable icon = packageInfo.applicationInfo.loadIcon(packageManager);
-      //                String appName = (String) packageInfo.applicationInfo.loadLabel(packageManager);
-      //                String packageName = packageInfo.applicationInfo.packageName;
-      //                String versionName = packageInfo.versionName;
-      ////            App aux=new App(icon,appName,receivedFilePath);
-      //                HighwayTransferRecordItem tmp = new HighwayTransferRecordItem(icon, appName, packageName, receivedFilePath, received, versionName);// received e o bool metido no intent.
-      //                tmp.setFromOutside("inside");
-      //                if (!listOfItems.contains(tmp)) {
-      //                    listOfItems.add(tmp);
-      //                    System.out.println("TransferRecordActivity : added the new element to the list . ");
-      //                    System.out.println("TransferRecordActivity : The size is now :  . " + listOfItems.size());
-      //                }
-      //            } else {
-      //                //EERO /storage/sdcard0/Download/Share Link(4).apk (at Binary XML file line #6): Requires newer sdk version #18 (current version is #16)
-      //
-      //                if (!needReSend) {// nao foi dos problemas do send e dos clientes, Ou seja, foi ele que nao conseguiu abrir mesmo.
-      //                    System.out.println("Inside the error part of the receiving app bigger version");
-      //                    HighwayTransferRecordItem tmp = new HighwayTransferRecordItem(getResources().getDrawable(android.R.drawable.sym_def_app_icon), tmpFilePath, "ErrorPackName", "Could not read the original filepath", received, "No version available");
-      //                    tmp.setFromOutside("inside");
-      //                    if (!listOfItems.contains(tmp)) {
-      //                        listOfItems.add(tmp);
-      //                    }
-      //                }
-      //
-      //
-      //            }
-
-    } else {
-      System.out.println(
-          "received is false, i am here in getReceivedApps else instruction");//fui eu que enviei
-
-      if (!isSent || needReSend) {
-
-        if (positionToReSend == 100000) {//inicio do envio
-          List<PackageInfo> packages =
-              packageManager.getInstalledPackages(PackageManager.GET_META_DATA);
-
-          ApplicationInfo applicationInfo;
-          for (PackageInfo pack : packages) {
-            applicationInfo = pack.applicationInfo;
-
-            if ((applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0
-                && applicationInfo.packageName != null) {
-
-              if (applicationInfo.loadLabel(packageManager).toString().equals(nameOfTheApp)
-                  && applicationInfo.packageName.equals(
-                  packageName)) {//compare with the packageName
-                //                       HighwayTransferRecordItem tmp=new HighwayTransferRecordItem(applicationInfo.loadIcon(packageManager),applicationInfo.loadLabel(packageManager).toString(),receivedFilePath,received, pack.versionName);
-                HighwayTransferRecordItem tmp =
-                    new HighwayTransferRecordItem(applicationInfo.loadIcon(packageManager),
-                        applicationInfo.loadLabel(packageManager).toString(), packageName,
-                        applicationInfo.sourceDir, received, pack.versionName);
-                //problema: as que envio tou a guardar na lista com filepath de environment downloads..
-                //sol: meter aqui o sourcedir no lugar do filepath. - podera dar problemas futuros porque a estrutura de envio pode estar errada
-
-                tmp.setNeedReSend(needReSend);
-                tmp.setSent(isSent);
-                tmp.setFromOutside("inside");
-
-                if (!listOfItems.contains(tmp)) {
-                  listOfItems.add(tmp);
-                  System.out.println("List of apps that i sent !! Added a new element to the list");
-                  System.out.println("List of apps the size is : " + listOfItems.size());
-                }
-              }
-            }
-          }
-        } else {
-          //deal with initial try to re-send
-          listOfItems.get(positionToReSend).setSent(isSent);
-          listOfItems.get(positionToReSend).setNeedReSend(needReSend);
-        }
-      } else {
-        //vai buscar o ultimo, muda as vars
-        //if need resend is true then add to the list aswell.
-        if (listOfItems.size() > 0) {
-          //                    listOfItems.get(listOfItems.size() - 1).setNeedReSend(needReSend);
-          //                    listOfItems.get(listOfItems.size() - 1).setSent(isSent);
-          if (positionToReSend == 100000) {//my default value, it will never be reached.
-
-            System.out.println("The name of the app is : " + nameOfTheApp);
-            System.out.println("The needResend is at :" + needReSend);
-            System.out.println("the isSent is at : " + isSent);
-            for (int i = listOfItems.size() - 1; i >= 0; i--) {
-              if (listOfItems.get(i).getAppName().equals(nameOfTheApp)
-                  && !received
-                  && !listOfItems.get(i).isSent()) {
-                listOfItems.get(i).setNeedReSend(needReSend);
-                listOfItems.get(i).setSent(isSent);
-                //                            i=-1;//to do only for the last app sent with this name.
-              }
-            }
-          } else {
-            //deal with final try to re-send
-            listOfItems.get(positionToReSend).setNeedReSend(needReSend);
-            listOfItems.get(positionToReSend).setSent(isSent);
-          }
-        }
-      }
-    }
-
-    //        adapter.notifyDataSetChanged();
-
-  }
-
   @Override protected void onDestroy() {
     presenter.onDestroy();
     super.onDestroy();
@@ -671,26 +490,6 @@ public class HighwayTransferRecordActivity extends ActivityView
     }
   }
 
-  //    private void deleteAllApps() {
-  //        toRemoveList = new ArrayList<>();
-  //
-  //        for (int i = 0; i < listOfItems.size(); i++) {
-  //
-  //            if (listOfItems.get(i).isSent() || listOfItems.get(i).isReceived()) {//no isSending or need resend
-  //
-  //                toRemoveList.add(listOfItems.get(i));
-  //                listOfItems.get(i).setDeleted(true);
-  //
-  //                if (listOfItems.get(i).isReceived()) {
-  //
-  //                    String tmpFilePath = listOfItems.get(i).getFilePath();
-  //                    System.out.println("GOing to delete this filepath : " + tmpFilePath);
-  //                    deleteAppFile(tmpFilePath);
-  //
-  //                }
-  //            }
-  //        }
-  //    }
 
   @Override public void showNoConnectedClientsToast() {
     Toast.makeText(HighwayTransferRecordActivity.this,

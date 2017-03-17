@@ -30,12 +30,9 @@ public class HighwayServerService extends Service {
 
   public static final int INSTALL_APP_NOTIFICATION_REQUEST_CODE = 147;
   private final int PROGRESS_SPLIT_SIZE = 10;
-  private int port;
   private NotificationManagerCompat mNotifyManager;
   private Object mBuilderSend;
   private Object mBuilderReceive;
-  private long lastTimestampReceive;
-  private long lastTimestampSend;
   private FileClientLifecycle<AndroidAppInfo> fileClientLifecycle;
   private FileServerLifecycle<AndroidAppInfo> fileServerLifecycle;
 
@@ -67,12 +64,9 @@ public class HighwayServerService extends Service {
       }
 
       @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
-        System.out.println(" Started receiving ");
 
         progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
 
-        String receivingAppName = androidAppInfo.getAppName();
-        //show notification
         createReceiveNotification(androidAppInfo.getAppName());
 
         Intent i = new Intent();
@@ -83,7 +77,6 @@ public class HighwayServerService extends Service {
       }
 
       @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
-        System.out.println(" Finished receiving " + androidAppInfo);
 
         finishReceiveNotification(androidAppInfo.getApk().getFilePath(),
             androidAppInfo.getPackageName(), androidAppInfo);
@@ -98,9 +91,7 @@ public class HighwayServerService extends Service {
         sendBroadcast(i);
       }
 
-      @Override public void onProgressChanged(AndroidAppInfo androidAppInfo,
-          float progress) {//todo add AndroidAPpInfo - to get appname
-        //System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
+      @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
 
         if (progressFilter.shouldUpdate(progress)) {
           int actualProgress = Math.round(progress * 100);
@@ -114,7 +105,6 @@ public class HighwayServerService extends Service {
       private ProgressFilter progressFilter;
 
       @Override public void onStartSending(AndroidAppInfo androidAppInfo) {
-        System.out.println("Server : started sending");
 
         progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
 
@@ -122,8 +112,7 @@ public class HighwayServerService extends Service {
 
         Intent i = new Intent();
         i.putExtra("isSent", false);
-        i.putExtra("needReSend",
-            false);//add field with pos to resend and change its value only if it is != 100000 (onstartcommand)
+        i.putExtra("needReSend", false);
         i.putExtra("appName", androidAppInfo.getAppName());
         i.putExtra("packageName", androidAppInfo.getPackageName());
         i.putExtra("positionToReSend", 100000);
@@ -155,7 +144,6 @@ public class HighwayServerService extends Service {
       }
 
       @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
-        //System.out.println("onProgressChanged() called with: progress = [" + progress + "]");
         if (progressFilter.shouldUpdate(progress)) {
           int actualProgress = Math.round(progress * 100);
           showSendProgress(androidAppInfo.getAppName(), actualProgress, androidAppInfo);
@@ -163,7 +151,6 @@ public class HighwayServerService extends Service {
       }
     };
 
-    System.out.println(" Inside the service of the server");
   }
 
   private void createReceiveNotification(String receivingAppName) {
@@ -184,7 +171,6 @@ public class HighwayServerService extends Service {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
       ((NotificationCompat.Builder) mBuilderReceive).setContentText(
           this.getResources().getString(R.string.transfCompleted))
-          // Removes the progress bar
           .setSmallIcon(android.R.drawable.stat_sys_download_done)
           .setProgress(0, 0, false)
           .setAutoCancel(true);
@@ -209,7 +195,6 @@ public class HighwayServerService extends Service {
   private void showReceiveProgress(String receivingAppName, int actual,
       AndroidAppInfo androidAppInfo) {
 
-    //if (System.currentTimeMillis() - lastTimestampReceive > 1000 / 3) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
       ((NotificationCompat.Builder) mBuilderReceive).setContentText(
           this.getResources().getString(R.string.receiving) + " " + receivingAppName);
@@ -221,8 +206,6 @@ public class HighwayServerService extends Service {
       mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
           ((NotificationCompat.Builder) mBuilderReceive).build());
     }
-    lastTimestampReceive = System.currentTimeMillis();
-    //}
   }
 
   private void createSendNotification() {
@@ -242,7 +225,6 @@ public class HighwayServerService extends Service {
       if (mBuilderSend != null) {
         ((NotificationCompat.Builder) mBuilderSend).setContentText(
             this.getResources().getString(R.string.transfCompleted))
-            // Removes the progress bar
             .setSmallIcon(android.R.drawable.stat_sys_download_done)
             .setProgress(0, 0, false)
             .setAutoCancel(true);
@@ -257,7 +239,6 @@ public class HighwayServerService extends Service {
 
   private void showSendProgress(String sendingAppName, int actual, AndroidAppInfo androidAppInfo) {
 
-    //if (System.currentTimeMillis() - lastTimestampSend > 1000 / 3) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
       ((NotificationCompat.Builder) mBuilderSend).setContentText(
           this.getResources().getString(R.string.sending) + " " + sendingAppName);
@@ -268,16 +249,12 @@ public class HighwayServerService extends Service {
       mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
           ((NotificationCompat.Builder) mBuilderSend).build());
     }
-    lastTimestampSend = System.currentTimeMillis();
-    //}
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
     if (intent != null) {
-      lastTimestampReceive = System.currentTimeMillis();
-      System.out.println("inside of startcommand in the service");
+
       if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
-        //port = intent.getIntExtra("port", 0);
         final String externalStoragepath = intent.getStringExtra("ExternalStoragePath");
 
         System.out.println("Going to start serving");
@@ -316,16 +293,9 @@ public class HighwayServerService extends Service {
 
         System.out.println("Connected 342");
       } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
-        //read parcelable
         Bundle b = intent.getBundleExtra("bundle");
-        //        if (listOfApps == null || listOfApps.get(listOfApps.size() - 1)
-        //                .isOnChat()) { //null ou ultimo elemento ja acabado de enviar.
-        listOfApps = b.getParcelableArrayList("listOfAppsToInstall");
-        System.out.println(
-            "serverComm : Just received the list of Apps :  the list of apps size is  :"
-                + listOfApps.size());
 
-        //create the mesage and send it.
+        listOfApps = b.getParcelableArrayList("listOfAppsToInstall");
 
         for (int i = 0; i < listOfApps.size(); i++) {
           String filePath = listOfApps.get(i).getFilePath();
@@ -333,7 +303,6 @@ public class HighwayServerService extends Service {
           String packageName = listOfApps.get(i).getPackageName();
           String obbsFilePath = listOfApps.get(i).getObbsFilePath();
 
-          System.out.println(" Filepath from app 0 (test) is:  " + filePath);
           File apk = new File(filePath);
 
           File mainObb = null;
@@ -370,11 +339,9 @@ public class HighwayServerService extends Service {
 
   public List<FileInfo> getFileInfo(String filePath, String obbsFilePath) {
     List<FileInfo> fileInfoList = new ArrayList<>();
-    //getApk
     File apk = new File(filePath);
     FileInfo apkFileInfo = new FileInfo(apk);
     fileInfoList.add(apkFileInfo);
-    //getObbs
 
     if (!obbsFilePath.equals("noObbs")) {
       File obbFolder = new File(obbsFilePath);

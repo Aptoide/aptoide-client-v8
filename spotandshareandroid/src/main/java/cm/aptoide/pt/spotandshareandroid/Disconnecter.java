@@ -43,7 +43,6 @@ public class Disconnecter {
   public void stop(){
     if (listener != null) {
       this.listener = null;
-      //unregister receiver
       try {
         context.unregisterReceiver(receiver);
       } catch (IllegalArgumentException e) {

@@ -86,7 +86,6 @@ public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
     }
 
     if (listOfItems.get(position).isReceived()) {
-      System.out.println("INSIDE THE GET VIEW TRANSF REC ADAPTER :  RECEIVED SOMETHING");
       viewHolder.senderInfo.setText(R.string.youReceived);
 
       myOnClickListenerToInstall = new MyOnClickListenerToInstall(position);
@@ -103,9 +102,7 @@ public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
         viewHolder.transfRecRecvRowDeletedMessage.setVisibility(View.GONE);
       }
     } else {
-      System.out.println("INSIDE THE GET VIEW TRANSF REC ADAPTER :  SENT SOMETHING");
-      System.out.println(
-          "o bool need resend esta a  :!::!:! " + listOfItems.get(position).isNeedReSend());
+
       if (listOfItems.get(position).isNeedReSend()) {
         viewHolder.reSendButton.setVisibility(View.VISIBLE);
         ReSendListener reSendListener = new ReSendListener(position);
@@ -138,10 +135,8 @@ public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
   @Override public int getItemViewType(int position) {
 
     if (listOfItems.get(position).isReceived()) {
-      System.out.println("GETVIEW TYPE :  : ::  This was a received item");
       return 0;
     } else {
-      System.out.println("Get View Type :: :: : THis was a sent item");
       return 1;
     }
   }
@@ -201,75 +196,8 @@ public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
         listener.onInstallApp(getItem(position));
       }
 
-      //
-      //            appName=listOfItems.get(position).getAppName();
-      //            filePath=listOfItems.get(position).getFilePath();
-      //            versionName=listOfItems.get(position).getVersionName();
-      //
-      //
-      //            if(filePath.equals("Could not read the original filepath")){
-      ////                tmp=createErrorDialog(appName);
-      //                transferRecordView.showInstallErrorDialog(appName);
-      //            }else{
-      //                System.out.println("I will install the app " + appName);
-      //                transferRecordView.showDialogToInstall(appName, filePath);
-      ////                tmp=createDialogToInstall();
-      //            }
     }
   }
-
-  //    public Dialog createDialogToInstall(){
-  //
-  //        String message = String.format(activity.getResources().getString(R.string.alertInstallApp),appName);
-  //
-  //        AlertDialog.Builder builder;
-  //        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1){
-  //            builder = new AlertDialog.Builder(context, AlertDialog.THEME_HOLO_LIGHT);
-  //        }else {
-  //            builder = new AlertDialog.Builder(context);
-  //        }
-  //        builder.setTitle(activity.getResources().getString(R.string.alert));
-  //        builder.setMessage(message);
-  //        builder.setPositiveButton(activity.getResources().getString(R.string.install), new DialogInterface.OnClickListener() {
-  //                    public void onClick(DialogInterface dialog, int id) {
-  //                        System.out.println("PERSON PRESSED INSTALL  : TESTES TESTE TESTE TESTE ");
-  //
-  //                        System.out.println("I am going to install  this APP hehehe :  "+appName);
-  //
-  //                        transferRecordView.installApp(filePath);
-  //                    }
-  //                })
-  //                .setNegativeButton(context.getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-  //                    public void onClick(DialogInterface dialog, int id) {
-  //                        // User cancelled the dialog
-  //                        System.out.println("TransferREcordsCustomAdapter : Person pressed the CANCEL BUTTON !!!!!!!! ");
-  //                    }
-  //                });
-  //        return builder.create();
-  //
-  //    }
-
-  //    public Dialog createErrorDialog(String name){
-  //
-  //        String message=String.format(activity.getResources().getString(R.string.errorAppVersionNew), name, name);
-  //
-  //        AlertDialog.Builder builder;
-  //        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1){
-  //            builder = new AlertDialog.Builder(context, AlertDialog.THEME_HOLO_LIGHT);
-  //        }else {
-  //            builder = new AlertDialog.Builder(context);
-  //        }
-  //
-  //        builder.setMessage(message);
-  //        builder.setPositiveButton(activity.getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-  //            public void onClick(DialogInterface dialog, int id) {
-  //                System.out.println("Pressed OK in the error of the app version");
-  //            }
-  //        });
-  //
-  //        AlertDialog dialog = builder.create();
-  //        return dialog;
-  //    }
 
   class MyOnClickListenerToDelete implements View.OnClickListener {
     private final int position;
@@ -284,51 +212,10 @@ public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
         listener.onDeleteApp(getItem(position));
       }
 
-      //            appName=listOfItems.get(position).getAppName();
-      //            filePath=listOfItems.get(position).getFilePath();
-      //
-      //
-      //            Dialog deleteDialog =  createDialogToDelete(v, position);
-      //            deleteDialog.show();
 
     }
   }
 
-  //    public Dialog createDialogToDelete(final View v, final int position){
-  //        String message = String.format(activity.getResources().getString(R.string.alertDeleteApp),appName);
-  //        AlertDialog.Builder builder;
-  //        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1){
-  //            builder = new AlertDialog.Builder(activity, AlertDialog.THEME_HOLO_LIGHT);
-  //        }else {
-  //            builder = new AlertDialog.Builder(activity);
-  //        }
-  //
-  //        builder.setTitle(activity.getResources().getString(R.string.alert));
-  //        builder.setMessage(message);
-  //        builder.setPositiveButton(activity.getResources().getString(R.string.delete), new DialogInterface.OnClickListener() {
-  //                    public void onClick(DialogInterface dialog, int id) {
-  //                        System.out.println("PERSON PRESSED DELETE  : TESTES TESTE TESTE TESTE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE");
-  //
-  //                        System.out.println("I am going to DELETE  this APP hehehe :  "+appName);
-  //
-  //                        ((HighwayTransferRecordActivity)activity).deleteAppFile(filePath);
-  //
-  //                        listOfItems.get(position).setDeleted(true);
-  //                        System.out.println("setted the position as deleted");
-  //                        notifyDataSetChanged();
-  //
-  //
-  //                    }
-  //                })
-  //                .setNegativeButton(activity.getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-  //                    public void onClick(DialogInterface dialog, int id) {
-  //                        // User cancelled the dialog
-  //                        System.out.println("TransferREcordsCustomAdapter : Person pressed the CANCEL BUTTON !!!!!!!! ");
-  //                    }
-  //                });
-  //        return builder.create();
-  //
-  //    }
 
   class ReSendListener implements View.OnClickListener {
     private final int position;
@@ -342,27 +229,6 @@ public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
       if (listener != null) {
         listener.onReSendApp(getItem(position), position);
       }
-      //call a method from the activity (transferRecordActivity to send the files.
-      //            String filePathToReSend = listOfItems.get(position).getFilePath();
-      //            String appName = listOfItems.get(position).getAppName();
-      //            String packageName = listOfItems.get(position).getPackageName();
-      //            Drawable imageIcon= listOfItems.get(position).getIcon();
-      //            String origin=listOfItems.get(position).getFromOutside();
-      //            System.out.println("TransferRecordAdapter : here is the filePathToResend :  "+filePathToReSend);
-      //            List<App> list= new ArrayList<App>();
-      //            App tmpItem = new App(imageIcon, appName, packageName, filePathToReSend, origin);
-      //
-      //            String obbsFilePath=((HighwayTransferRecordActivity) activity).checkIfHasObb(packageName);
-      //            //add obb path
-      //            tmpItem.setObbsFilePath(obbsFilePath);
-      //
-      //
-      //            list.add(tmpItem);
-      //
-      //            System.out.println("RE-SEND !!!!!  : : : : trying to send the list ");
-      //            System.out.println("the size of the list is : "+list.size());
-      //
-      //            ((HighwayTransferRecordActivity)activity).sendFiles(list, position) ;
 
     }
   }

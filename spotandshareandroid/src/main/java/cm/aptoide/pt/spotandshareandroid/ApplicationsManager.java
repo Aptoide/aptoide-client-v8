@@ -92,7 +92,7 @@ public class ApplicationsManager {
     Intent intent = new Intent(Intent.ACTION_VIEW);
 
     Uri photoURI = null;
-    //read: https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en
+    // https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en
     if (Build.VERSION.SDK_INT > 23) {
       //content://....apk for nougat
       photoURI = FileProvider.getUriForFile(context, "cm.aptoide.pt.provider", file);
@@ -166,26 +166,18 @@ public class ApplicationsManager {
       String name = (String) packageInfo.applicationInfo.loadLabel(packageManager);
       String packageName = packageInfo.applicationInfo.packageName;
       String versionName = packageInfo.versionName;
-      //            App aux=new App(icon,appName,receivedFilePath);
       HighwayTransferRecordItem tmp =
-          new HighwayTransferRecordItem(icon, name, packageName, filePath, true,
-              versionName);// received e o bool metido no intent.
+          new HighwayTransferRecordItem(icon, name, packageName, filePath, true, versionName);
       tmp.setFromOutside("inside");
-      //            if (!listOfItems.contains(tmp)) {
-      //                listOfItems.add(tmp);
-      //                System.out.println("TransferRecordActivity : added the new element to the list . ");
-      //                System.out.println("TransferRecordActivity : The size is now :  . " + listOfItems.size());
-      //            }
+
       return tmp;
     } else {
-      //            if (!needReSend) {// nao foi dos problemas do send e dos clientes, Ou seja, foi ele que nao conseguiu abrir mesmo.
       System.out.println("Inside the error part of the receiving app bigger version");
       HighwayTransferRecordItem tmp = new HighwayTransferRecordItem(
           context.getResources().getDrawable(R.drawable.sym_def_app_icon), appName,
           "ErrorPackName", "Could not read the original filepath", true, "No version available");
       tmp.setFromOutside("inside");
       return tmp;
-      //            }
     }
   }
 
@@ -203,24 +195,16 @@ public class ApplicationsManager {
 
         if (applicationInfo.loadLabel(packageManager).toString().equals(nameOfTheApp)
             && applicationInfo.packageName.equals(packageName)) {//compare with the packageName
-          //                       HighwayTransferRecordItem tmp=new HighwayTransferRecordItem(applicationInfo.loadIcon(packageManager),applicationInfo.loadLabel(packageManager).toString(),receivedFilePath,received, pack.versionName);
           HighwayTransferRecordItem tmp =
               new HighwayTransferRecordItem(applicationInfo.loadIcon(packageManager),
                   applicationInfo.loadLabel(packageManager).toString(), packageName,
                   applicationInfo.sourceDir, false, pack.versionName);
-          //problema: as que envio tou a guardar na lista com filepath de environment downloads..
-          //sol: meter aqui o sourcedir no lugar do filepath. - podera dar problemas futuros porque a estrutura de envio pode estar errada
 
           tmp.setNeedReSend(needReSend);
           tmp.setSent(isSent);
           tmp.setFromOutside("inside");
 
           return tmp;
-          //                    if (!listOfItems.contains(tmp)) {
-          //                        listOfItems.add(tmp);
-          //                        System.out.println("List of apps that i sent !! Added a new element to the list");
-          //                        System.out.println("List of apps the size is : " + listOfItems.size());
-          //                    }
         }
       }
     }

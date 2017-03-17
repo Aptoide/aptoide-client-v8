@@ -70,19 +70,13 @@ public class Utils {
       return capitalize(model);
     }
     String result = capitalize(manufacturer) + " " + model + id;
-    System.out.println("THE DEVICE NAME MODEL MANUFACTURER ID IS :::::::::: " + result);
     if (result.length() > 20) {
-      System.out.println("THe size will be bigger than 32");
       result = "" + model + id;
-      System.out.println("THE DEVICE NAME MODEL MANUFACTURER ID IS :::::::::: " + result);
     }
     if (result.length() > 20) {
-      System.out.println("just the model+id was also bigger than 19");
       result = "" + model;
-      System.out.println("THE DEVICE NAME MODEL MANUFACTURER ID IS :::::::::: " + result);
     }
     if (result.length() > 20) {
-      //save just the 20 carachters from it
       String aux = result.substring(0, 20);
       result = aux;
     }

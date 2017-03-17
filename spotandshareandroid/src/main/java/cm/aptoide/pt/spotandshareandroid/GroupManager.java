@@ -12,7 +12,6 @@ public class GroupManager {
   private final ConnectionManager connectionManager;
   private AsyncTask<Void, Void, Integer> joinTask;
   private boolean interactingWithGroup;
-      //flag to know if he is already joining a group (multiple clicks) or creating a group
   private boolean mobileDataDialog;
   private Group group;
   private JoinGroupListener joinGrouplistener;
@@ -47,7 +46,6 @@ public class GroupManager {
     try {
       joinTask = joinHotspotTask.execute();
     } catch (IllegalStateException e) {
-      //TODO ERROR bc highwayActivity is singletask->doesn't create new groupManager + lazzy patern (reuse task)
       joinTask = new JoinHotspotTask().execute();
     }
   }

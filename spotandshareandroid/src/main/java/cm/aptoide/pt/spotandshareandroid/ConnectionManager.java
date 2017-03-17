@@ -71,13 +71,10 @@ public class ConnectionManager {
     @Override public void onReceive(Context context, Intent intent) {
       System.out.println("TOU AQUI NO WIFI RECEIVER !! ");
       System.out.println("o noHotspotsFOundCounter esta a : " + noHotspotsFoundCounter);
-      //            WifiManager wifimanager = (WifiManager) getSystemService(c.WIFI_SERVICE);
-      //            wifimanager.setWifiEnabled(true);
       List<String> scanResultsSSID = new ArrayList<>();
       if (clients == null) {
         clients = new ArrayList<String>();
       }
-      //            keywords=radarTextView.getKeyWords();
 
       List<ScanResult> connResults = wifimanager.getScanResults();
 
@@ -90,25 +87,20 @@ public class ConnectionManager {
 
           if (ssid.contains("APTX") && !clients.contains(ssid)) {
             System.out.println("Estou no : " + connResults.get(i).toString());
-            //                    ssid.startsWith();
-            //                        radarTextView.addKeyWord(ssid);
+
             clients.add(ssid);
-            // aqui ao adicionar removo a parte do aptx e random. crio uma nova string sem aptx e random !
             changes = true;
           }
         }
-        //                     contar se ha alguma que tenha aptx. Se nao houver nenhuma ent mostra Toast please, you or your friend should create a hotspot.
         if (noHotspotsFoundCounter >= 2 && clients.size() < 1 && !showedNoHotspotMessage) {
           showedNoHotspotMessage = true;
           inactivityListener.onInactivity(true);
         }
 
-        //se houver alguma que esteja no vetorKeyWords e nao esteja aqui no scan results, entao deve dar remove.
         for (int j = 0; j < clients.size(); j++) {
           String tmp = clients.get(j);
           System.out.println("this is one of the keyword : " + tmp);
           if (!scanResultsSSID.contains(tmp)) {
-            //                        radarTextView.removeKeyWord(tmp);
             clients.remove(tmp);
             changes = true;
             System.out.println("removed this : " + tmp);
@@ -388,8 +380,7 @@ public class ConnectionManager {
                 "i.networkId " + i.networkId + "\n" + "o net id do add esta a : " + netid);
             System.out.println("o boolean do resetHotspot : " + enab);
 
-            //System.out.println("Correctly joined the network");
-            //return SUCCESSFUL_JOIN;
+
             try {
               Thread.sleep(2000);
             } catch (InterruptedException e) {
@@ -462,7 +453,7 @@ public class ConnectionManager {
           }
         }
       }
-    } else {//maneira antiga
+    } else {
       isMobileDataEnabled();
     }
     return isOn;
@@ -511,7 +502,7 @@ public class ConnectionManager {
         & 0xFF);
   }
 
-  public void resume() {//not being called. Receivers were being registered twice.
+  public void resume() {
     context.registerReceiver(activateButtonsReceiver,
         new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
     context.registerReceiver(connectingWifi,

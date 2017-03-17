@@ -139,31 +139,23 @@ public class HighwayRadarTextView extends FrameLayout
           txt.setMode(HighwayRadarRippleView.MODE_OUT);
         }
         final String hotspotName = removeAPTXFromString(keyword);
-        System.out.println("RADAR TEXT VIEW : KEYWORD IS : " + keyword);
         txt.setText(hotspotName);
-        System.out.println("RADAR TEXT VIEW hotspotName is : : " + hotspotName);
         txt.setTextColor(ranColor);
 
         txt.setTextSize(TypedValue.COMPLEX_UNIT_SP, txtSize);
         txt.setGravity(Gravity.CENTER);
         txt.setOnClickListener(new OnClickListener() {
           @Override public void onClick(View view) {
-            System.out.println(
-                "HgihwayRadarTextView - not a textview but a framelayout, just clicked on a rippleview from the radar");
-            //                        hotspotName=keyword;
+
             String aux = activity.getChosenHotspot();
-            System.out.println("o aux/chosen hotspot ta a : " + aux);
-            System.out.println("o o hotspot keyword : " + keyword);
+
             if (!activity.isJoinGroupFlag()) {
-              if (aux.equals(keyword)) {//se o chosen hotspot ja for este
-                //deseleciona-o
+              if (aux.equals(keyword)) {
                 deselectHotspot(keyword);
               } else {
                 if (aux != "") {
-                  //deselecionar a antiga tmb
                   deselectHotspot(aux);
                 }
-                //select o novo
                 activity.setChosenHotspot(keyword);
                 txt.setEffectColor(Color.parseColor("#e17117"));
                 txt.postInvalidate();
@@ -195,7 +187,7 @@ public class HighwayRadarTextView extends FrameLayout
           listTxtTop.add(txt);
         }
 
-        listOfHotspot.add(txt);//list para o select e unselect
+        listOfHotspot.add(txt);
       }
 
       attach2Screen(listTxtTop, xCenter, yCenter, yItem);
@@ -340,7 +332,6 @@ public class HighwayRadarTextView extends FrameLayout
         } else {
           txt.setMode(HighwayRadarRippleView.MODE_OUT);
         }
-        //                String hotspotName=removeAPTXFromString(keyword);
         txt.setText(keyword);
         txt.setTextColor(ranColor);
         txt.setTextSize(TypedValue.COMPLEX_UNIT_SP, txtSize);
@@ -348,20 +339,13 @@ public class HighwayRadarTextView extends FrameLayout
         txt.setOnClickListener(new OnClickListener() {
           @Override public void onClick(View view) {
 
-            System.out.println(
-                "HgihwayRadarTextView - not a textview but a framelayout, just clicked on a rippleview from the radar");
-            //                        hotspotName=keyword;
             String aux = activity.getChosenHotspot();
-            System.out.println("o aux/chosen hotspot ta a : " + aux);
-            if (aux.equals(keyword)) {//se o chosen hotspot ja for este
-              //deseleciona-o
+            if (aux.equals(keyword)) {
               deselectHotspotLowVersion(keyword);
             } else {
               if (aux != "") {
-                //deselecionar a antiga tmb
                 deselectHotspotLowVersion(aux);
               }
-              //select o novo
               activity.setChosenHotspot(keyword);
 
               activity.joinSingleHotspot();
@@ -387,7 +371,7 @@ public class HighwayRadarTextView extends FrameLayout
           listTxtTop.add(txt);
         }
 
-        listOfHotspotLow.add(txt);//list para o select e unselect
+        listOfHotspotLow.add(txt);
       }
 
       attach2ScreenLow(listTxtTop, xCenter, yCenter, yItem);
