@@ -171,6 +171,7 @@ public class HandlersFactory {
   
     @Override public void handleMessage(HostLeftMessage message, Sender<Message> messageSender) {
       aptoideMessageClientSocket.shutdown();
+      messageSender.send(new AckMessage(messageSender.getHost()));
     }
   }
 }
