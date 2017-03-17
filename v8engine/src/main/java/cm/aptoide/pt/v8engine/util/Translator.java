@@ -33,6 +33,9 @@ public class Translator {
       case "Apps Timeline":
         translated = Application.getContext().getString(R.string.apps_timeline);
         break;
+      case "Timeline":
+        translated = Application.getContext().getString(R.string.timeline);
+        break;
       case "Latest Reviews":
         translated = Application.getContext().getString(R.string.latest_reviews);
         break;
