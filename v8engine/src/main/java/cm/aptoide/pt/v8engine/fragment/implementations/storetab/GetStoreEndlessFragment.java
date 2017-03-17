@@ -20,6 +20,11 @@ public abstract class GetStoreEndlessFragment<T extends BaseV7EndlessResponse>
 
   protected EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
 
+  @Override public void onDestroyView() {
+    endlessRecyclerOnScrollListener.stopLoading();
+    super.onDestroyView();
+  }
+
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
 
