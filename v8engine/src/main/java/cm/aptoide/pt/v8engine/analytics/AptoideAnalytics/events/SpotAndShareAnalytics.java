@@ -25,7 +25,7 @@ public class SpotAndShareAnalytics implements SpotAndShareAnalyticsInterface {
   public static String ACTION_SPOT_SHARE_PERM_GRANTED = "Permission granted";
   public static String ACTION_SPOT_SHARE_PERM_DENIED = "Permission not granted";
   private static String EVENT_NAME_SPOT_SHARE = "Share_Apps_Click_On_Share_Apps";
-  private static String EVENT_NAME_SPOT_SHARE_PERMISSIONS = "Write_Permissions_Problem";
+  private static String EVENT_NAME_SPOT_SHARE_PERMISSIONS = "Spot_Share_Write_Permissions_Problem";
 
   public SpotAndShareAnalytics() {
   }
