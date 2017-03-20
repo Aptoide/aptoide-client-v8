@@ -229,6 +229,9 @@ public class HighwayClientService extends Service {
 
   private void finishSendNotification(AndroidAppInfo androidAppInfo) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+      if (mBuilderSend == null) {
+        mBuilderSend = new NotificationCompat.Builder(this);
+      }
       ((NotificationCompat.Builder) mBuilderSend).setContentText(
           this.getResources().getString(R.string.transfCompleted))
           // Removes the progress bar
@@ -277,9 +280,8 @@ public class HighwayClientService extends Service {
         };
 
         aptoideMessageClientSocket =
-                new AptoideMessageClientSocket(serverIP, "192.168.43.1", port, externalStoragepath,
-                        storageCapacity,
-                fileServerLifecycle, fileClientLifecycle);
+            new AptoideMessageClientSocket(serverIP, "192.168.43.1", port, externalStoragepath,
+                storageCapacity, fileServerLifecycle, fileClientLifecycle);
         aptoideMessageClientSocket.startAsync();
 
         System.out.println(" Connected ! ");
@@ -301,8 +303,7 @@ public class HighwayClientService extends Service {
           AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
             @Override public void run() {
               aptoideMessageClientSocket.send(
-                      new RequestPermissionToSend(aptoideMessageClientSocket.getLocalhost(),
-                              appInfo));
+                  new RequestPermissionToSend(aptoideMessageClientSocket.getLocalhost(), appInfo));
             }
           });
         }

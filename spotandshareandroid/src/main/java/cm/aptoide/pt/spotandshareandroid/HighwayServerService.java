@@ -223,6 +223,8 @@ public class HighwayServerService extends Service {
   private void finishSendNotification(AndroidAppInfo androidAppInfo) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
       if (mBuilderSend != null) {
+        mBuilderSend = new NotificationCompat.Builder(this);
+      }
         ((NotificationCompat.Builder) mBuilderSend).setContentText(
             this.getResources().getString(R.string.transfCompleted))
             .setSmallIcon(android.R.drawable.stat_sys_download_done)
@@ -322,7 +324,7 @@ public class HighwayServerService extends Service {
         }
       } else if (intent.getAction() != null && intent.getAction().equals("SHUTDOWN_SERVER")) {
         aptoideMessageClientSocket.disable();
-        if (aptoideMessageServerSocket != null) { // TODO: 16-03-2017 filipe
+        if (aptoideMessageServerSocket != null) { // TODO: 16-03-2017 filipe check problem
           aptoideMessageServerSocket.shutdown();
         }
         Intent i = new Intent();
