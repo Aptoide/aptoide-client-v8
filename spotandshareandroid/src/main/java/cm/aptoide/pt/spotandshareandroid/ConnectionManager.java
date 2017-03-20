@@ -64,7 +64,7 @@ public class ConnectionManager {
       }
     }
   };
-  private BroadcastReceiver scanAPTXNetworks = new BroadcastReceiver() {
+  private BroadcastReceiver scanAPTXVNetworks = new BroadcastReceiver() {
     public boolean showedNoHotspotMessage;
     public int noHotspotsFoundCounter;
 
@@ -85,7 +85,7 @@ public class ConnectionManager {
 
           scanResultsSSID.add(ssid);
 
-          if (ssid.contains("APTX") && !clients.contains(ssid)) {
+          if (ssid.contains("APTXV") && !clients.contains(ssid)) {
             System.out.println("Estou no : " + connResults.get(i).toString());
 
             clients.add(ssid);
@@ -107,7 +107,7 @@ public class ConnectionManager {
           }
         }
       } else {
-        System.out.println("tHERE ARE NO APTX NETWORKS");
+        System.out.println("tHERE ARE NO APTXV NETWORKS");
         if (noHotspotsFoundCounter >= 2 && !showedNoHotspotMessage) {
           showedNoHotspotMessage = true;
           inactivityListener.onInactivity(true);
@@ -140,7 +140,7 @@ public class ConnectionManager {
               if (info.isAvailable() && info.isConnected()) {
 
                 WifiInfo wifiInfo = wifimanager.getConnectionInfo();
-                if (wifiInfo.getSSID().contains("APTX")) {
+                if (wifiInfo.getSSID().contains("APTXV")) {
                   isWifiConnected = true;
                   break;
                 } else {//connected to the wrong network
@@ -167,14 +167,14 @@ public class ConnectionManager {
               && inf.getType() == ConnectivityManager.TYPE_WIFI) {
 
             WifiInfo wifiInfo = wifimanager.getConnectionInfo();
-            if (wifiInfo.getSSID().contains("APTX")) {
+            if (wifiInfo.getSSID().contains("APTXV")) {
               isWifiConnected = true;
               break;
             } else {
               listenerJoinWifi.onStateChanged(false);
               try {
                 context.unregisterReceiver(this);
-                context.unregisterReceiver(scanAPTXNetworks);
+                context.unregisterReceiver(scanAPTXVNetworks);
               } catch (IllegalArgumentException e) {
                 System.out.println(
                     "There was an error while trying to unregister the wifireceiver and the wifireceiverforconnectingwifi");
@@ -188,7 +188,7 @@ public class ConnectionManager {
         listenerJoinWifi.onStateChanged(true);
         try {
           context.unregisterReceiver(this);
-          context.unregisterReceiver(scanAPTXNetworks);
+          context.unregisterReceiver(scanAPTXVNetworks);
         } catch (IllegalArgumentException e) {
           System.out.println(
               "There was an error while trying to unregister the wifireceiver and the wifireceiverforconnectingwifi");
@@ -227,12 +227,12 @@ public class ConnectionManager {
         new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION));
   }
 
-  public void searchForAPTXNetworks(InactivityListener inactivityListener,
+  public void searchForAPTXVNetworks(InactivityListener inactivityListener,
       ClientsConnectedListener clientsConnectedListener) {
     this.inactivityListener = inactivityListener;
     this.clientsConnectedListener = clientsConnectedListener;
 
-    context.registerReceiver(scanAPTXNetworks,
+    context.registerReceiver(scanAPTXVNetworks,
         new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
 
     scheduleScan();
@@ -301,10 +301,9 @@ public class ConnectionManager {
       if (method.getName().equals("setWifiApEnabled")) {
         methodFound = true;
         WifiConfiguration netConfig = new WifiConfiguration();
-        netConfig.SSID = "" + "APTX" + "_" + randomAlphaNum + "_" + deviceName + "";
+        netConfig.SSID = "" + "APTXV" + "_" + randomAlphaNum + "_" + deviceName + "";
         System.out.println("THE NEW SSID IS NOW : : : :"
-            + ""
-            + "APTX"
+            + "" + "APTXV"
             + "_"
             + randomAlphaNum
             + "_"
@@ -367,7 +366,7 @@ public class ConnectionManager {
       for (WifiConfiguration i : list) {
         Log.i("config network", "list of config networks is : " + i.toString());
         if (i.SSID != null && i.SSID.equals("\"" + chosenHotspot + "\"")) {
-          Log.d("cONFIG nETOWKRS", "Found List of COnfigured Networks APTX");
+          Log.d("cONFIG nETOWKRS", "Found List of COnfigured Networks APTXV");
           try {
             boolean b = wifimanager.disconnect();
             System.out.println("o boolean do disconnect " + b);
@@ -417,15 +416,15 @@ public class ConnectionManager {
       for (WifiConfiguration i : list) {
         String[] separated = i.SSID.split("_");
         String tmp = separated[0].trim();
-        System.out.println("Trying to remove a APTX network.");
+        System.out.println("Trying to remove a APTXV network.");
         System.out.println("This one is i : " + i.SSID);
         System.out.println("SEPARATED 0 is : " + tmp);
-        if (tmp.contains("APTX")) {
+        if (tmp.contains("APTXV")) {
           System.out.println("TRying to remove a network");
           boolean remove = wifimanager.removeNetwork(i.networkId);
           System.out.println("boolean from remove network is : " + remove);
         } else {
-          System.out.println("tmp is not aptx can not remove this network;");
+          System.out.println("tmp is not aptxV can not remove this network;");
         }
       }
     }
@@ -507,7 +506,7 @@ public class ConnectionManager {
         new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
     context.registerReceiver(connectingWifi,
         new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION));
-    context.registerReceiver(scanAPTXNetworks,
+    context.registerReceiver(scanAPTXVNetworks,
         new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
   }
 
@@ -522,7 +521,7 @@ public class ConnectionManager {
     this.inactivityListener = null;
     try {
       context.unregisterReceiver(activateButtonsReceiver);
-      context.unregisterReceiver(scanAPTXNetworks);
+      context.unregisterReceiver(scanAPTXVNetworks);
       context.unregisterReceiver(connectingWifi);
     } catch (IllegalArgumentException e) {
     }

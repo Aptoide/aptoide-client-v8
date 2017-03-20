@@ -76,7 +76,7 @@ public class GroupManager {
     createTask = activateHotspotTask.execute();
   }
 
-  private String removeAPTXFromString(String keyword) {
+  private String removeAPTXVFromString(String keyword) {
     String[] array = keyword.split("_");
     String deviceName = array[2];
     return deviceName;
@@ -128,7 +128,7 @@ public class GroupManager {
     protected void onPostExecute(Integer result) {
       if (joinGrouplistener != null) {
         if (result == ConnectionManager.SUCCESSFUL_JOIN) {
-          String hostDeviceName = removeAPTXFromString(group.getName());
+          String hostDeviceName = removeAPTXVFromString(group.getName());
           joinGrouplistener.onSuccess(hostDeviceName);
         } else {
           joinGrouplistener.onError(result);

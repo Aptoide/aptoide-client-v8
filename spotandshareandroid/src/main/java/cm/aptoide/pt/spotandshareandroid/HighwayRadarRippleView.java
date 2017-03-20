@@ -177,9 +177,4 @@ public class HighwayRadarRippleView extends TextView {
     setMeasuredDimension(resultWidth, resultHeight);
   }
 
-  private String removeAPTXFromString(String keyword) {
-    String[] array = keyword.split("_");
-    String deviceName = array[2];
-    return deviceName;
-  }
 }

@@ -138,7 +138,7 @@ public class HighwayRadarTextView extends FrameLayout
         } else {
           txt.setMode(HighwayRadarRippleView.MODE_OUT);
         }
-        final String hotspotName = removeAPTXFromString(keyword);
+        final String hotspotName = removeAPTXVFromString(keyword);
         txt.setText(hotspotName);
         txt.setTextColor(ranColor);
 
@@ -203,14 +203,14 @@ public class HighwayRadarTextView extends FrameLayout
     return arr;
   }
 
-  private String removeAPTXFromString(String keyword) {
+  private String removeAPTXVFromString(String keyword) {
     String[] array = keyword.split("_");
-    String deviceName = array[2];//0 is aptx, 1 is the random chars
+    String deviceName = array[2];//0 is aptxv, 1 is the random chars
     return deviceName;
   }
 
   public void deselectHotspot(String keyword) {
-    String aux = removeAPTXFromString(keyword);
+    String aux = removeAPTXVFromString(keyword);
     for (int i = 0; i < listOfHotspot.size(); i++) {
       if (listOfHotspot.get(i).getText().toString().equals(aux)) {
         activity.setChosenHotspot("");
