@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -54,6 +55,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Tim
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.TimelineLoginDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.RxEndlessRecyclerView;
 import com.facebook.appevents.AppEventsLogger;
+import com.jakewharton.rxrelay.BehaviorRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -73,6 +75,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private static final String ACTION_KEY = "ACTION";
   private static final String STORE_ID = "STORE_ID";
   private static final String PACKAGE_LIST_KEY = "PACKAGE_LIST";
+  private static final String LIST_STATE_KEY = "LIST_STATE";
 
   private DownloadFactory downloadFactory;
   private SpannableFactory spannableFactory;
@@ -89,6 +92,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private AccountNavigator accountNavigator;
   private long storeId;
   private CardToDisplayable cardToDisplayable;
+  private BehaviorRelay<Boolean> refreshSubject;
+  private Parcelable listState;
 
   public static AppsTimelineFragment newInstance(String action, Long userId, long storeId) {
     AppsTimelineFragment fragment = new AppsTimelineFragment();
@@ -108,40 +113,60 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     storeId = args.getLong(STORE_ID);
   }
 
+  @Override public void onDestroyView() {
+    listState = getRecyclerView().getLayoutManager().onSaveInstanceState();
+    super.onDestroyView();
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
 
-    if (savedInstanceState != null && savedInstanceState.getStringArray(PACKAGE_LIST_KEY) != null) {
-      packages = Arrays.asList(savedInstanceState.getStringArray(PACKAGE_LIST_KEY));
+    if (savedInstanceState != null) {
+      if (savedInstanceState.containsKey(PACKAGE_LIST_KEY)) {
+        packages = Arrays.asList(savedInstanceState.getStringArray(PACKAGE_LIST_KEY));
+      }
     }
+
+    Observable<List<String>> packagesObservable =
+        (packages != null) ? Observable.just(packages) : refreshPackages();
+
+    Observable<Datalist<Displayable>> displayableObservable = accountManager.getAccountAsync()
+        .map(account -> account.isLoggedIn())
+        .onErrorReturn(throwable -> false)
+        .flatMapObservable(loggedIn -> packagesObservable.observeOn(AndroidSchedulers.mainThread())
+            .flatMap(packages -> Observable.merge(refreshSubject.flatMap(
+                refreshed -> clearView().flatMap(
+                    refresh -> getFreshDisplayables(refreshed, packages, loggedIn))),
+                getNextDisplayables(packages))));
+
+    displayableObservable.observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .doOnNext(items -> {
+          addItems(items);
+          if (listState != null) {
+            getRecyclerView().getLayoutManager().onRestoreInstanceState(listState);
+            listState = null;
+          }
+          if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(LIST_STATE_KEY)) {
+              getRecyclerView().getLayoutManager()
+                  .onRestoreInstanceState(savedInstanceState.getParcelable(LIST_STATE_KEY));
+              savedInstanceState.putParcelable(LIST_STATE_KEY, null);
+            }
+          }
+        })
+        .subscribe(__ -> {
+        }, err -> {
+          CrashReport.getInstance().log(err);
+          finishLoading(err);
+        });
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
-
     if (create || refresh) {
-
-      Observable<List<String>> packagesObservable =
-          (packages != null) ? Observable.just(packages) : refreshPackages();
-
-      Observable<Datalist<Displayable>> displayableObservable = accountManager.getAccountAsync()
-          .map(account -> account.isLoggedIn())
-          .onErrorReturn(throwable -> false)
-          .flatMapObservable(
-              loggedIn -> packagesObservable.observeOn(AndroidSchedulers.mainThread())
-                  .flatMap(packages -> clearView().flatMap(viewsCleared -> Observable.concat(
-                      getFreshDisplayables(refresh, packages, loggedIn),
-                      getNextDisplayables(packages)))));
-
-      displayableObservable.observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .doOnNext(items -> addItems(items))
-          .subscribe(__ -> {
-          }, err -> {
-            CrashReport.getInstance().log(err);
-            finishLoading(err);
-          });
+      refreshSubject.call(refresh);
     }
   }
 
@@ -149,6 +174,10 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     if (packages != null) {
       outState.putStringArray(PACKAGE_LIST_KEY, packages.toArray(new String[packages.size()]));
     }
+
+    outState.putParcelable(LIST_STATE_KEY,
+        getRecyclerView().getLayoutManager().onSaveInstanceState());
+
     super.onSaveInstanceState(outState);
   }
 
@@ -194,6 +223,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
         new CardToDisplayableConverter(socialRepository, timelineAnalytics, installManager,
             permissionManager, accountManager, idsRepository, bodyInterceptor,
             storeCredentialsProvider);
+
+    refreshSubject = BehaviorRelay.create();
   }
 
   @NonNull private Observable<List<String>> refreshPackages() {
@@ -238,8 +269,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   }
 
   @Override public void reload() {
+    super.reload();
     Analytics.AppsTimeline.pullToRefresh();
-    load(false, true, null);
   }
 
   private Observable<Datalist<Displayable>> getNextDisplayables(List<String> packages) {
