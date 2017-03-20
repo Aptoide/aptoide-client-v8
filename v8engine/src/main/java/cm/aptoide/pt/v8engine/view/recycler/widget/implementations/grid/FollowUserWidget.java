@@ -119,7 +119,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
               follow.setText(R.string.followed);
               compositeSubscription.add(RxView.clicks(follow).subscribe(openStore));
             } else {
-              follow.setText(R.string.appview_follow_store_button_text);
+              follow.setText(R.string.follow);
               compositeSubscription.add(RxView.clicks(follow).subscribe(subscribeStore));
             }
           }, (throwable) -> {

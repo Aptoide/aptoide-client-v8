@@ -166,12 +166,12 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
     } else if (intent.getAction() != null && intent.getAction().equals("LEAVINGSHAREAPPSCLIENT")) {
       recoverNetworkState();
-      forgetAPTXNetwork();
+      forgetAPTXVNetwork();
     }
   }
 
-  private void forgetAPTXNetwork() {
-    presenter.forgetAPTXNetwork();
+  private void forgetAPTXVNetwork() {
+    presenter.forgetAPTXVNetwork();
 
   }
 
@@ -256,6 +256,12 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     d.show();
   }
 
+  @Override public void showMobileDataToast() {
+    Toast.makeText(HighwayActivity.this,
+        HighwayActivity.this.getResources().getString(R.string.mDataJoinGroup), Toast.LENGTH_SHORT)
+        .show();
+  }
+
   @Override public boolean checkPermissions() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
@@ -279,12 +285,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
       }
     }
     return true;
-  }
-
-  @Override public void showMobileDataToast() {
-    Toast.makeText(HighwayActivity.this,
-        HighwayActivity.this.getResources().getString(R.string.mDataJoinGroup), Toast.LENGTH_SHORT)
-        .show();
   }
 
   @Override public void showJoinGroupResult(int result) {
@@ -428,6 +428,16 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
+  public void joinSingleHotspot() {
+    hideSearchGroupsTextview(true);
+    Group g = new Group(chosenHotspot);
+    presenter.clickJoinGroup(g);
+  }
+
+  public String getChosenHotspot() {
+    return chosenHotspot;
+  }
+
   @Override public void requestPermissions() {
     if (!checkPermissions() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       boolean specialPermissionNotGranted = false;
@@ -475,16 +485,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         permissionListener.onPermissionGranted();
       }
     }
-  }
-
-  public void joinSingleHotspot() {
-    hideSearchGroupsTextview(true);
-    Group g = new Group(chosenHotspot);
-    presenter.clickJoinGroup(g);
-  }
-
-  public String getChosenHotspot() {
-    return chosenHotspot;
   }
 
   public void setChosenHotspot(String chosenHotspot) {

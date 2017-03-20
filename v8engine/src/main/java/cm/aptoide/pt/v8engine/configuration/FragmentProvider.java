@@ -166,5 +166,4 @@ public interface FragmentProvider {
 
   Fragment newTimeLineFollowersFragment(long followerNumber, String storeTheme);
 
-  Fragment newRecommendedStoresFragment();
 }

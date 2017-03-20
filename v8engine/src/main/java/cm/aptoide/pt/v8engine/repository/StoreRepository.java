@@ -17,7 +17,7 @@ public class StoreRepository implements Repository<Store, Integer> {
   }
 
   public Observable<Boolean> isSubscribed(long storeId) {
-    return storeAccessor.get(storeId).map(store -> store != null);
+    return storeAccessor.getAsList(storeId).map(stores -> stores != null && stores.size() > 0);
   }
 
   public Observable<Boolean> isSubscribed(String storeName) {

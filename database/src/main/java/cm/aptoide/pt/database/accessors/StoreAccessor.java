@@ -36,4 +36,8 @@ public class StoreAccessor extends SimpleAccessor<Store> {
   public void save(Store store) {
     database.insert(store);
   }
+
+  public Observable<List<Store>> getAsList(long storeId) {
+    return database.getAsList(Store.class, Store.STORE_ID, storeId);
+  }
 }

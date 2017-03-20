@@ -50,7 +50,7 @@ public abstract class BaseLoaderToolbarFragment extends BaseLoaderFragment {
 
       ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
       actionBar.setDisplayHomeAsUpEnabled(showUp);
-
+      actionBar.setTitle(toolbar.getTitle());
       setupToolbarDetails(toolbar);
     }
   }

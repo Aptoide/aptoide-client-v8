@@ -89,8 +89,7 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
 
   private void setButtonText(RecommendedStoreDisplayable displayable) {
     followButton.setVisibility(View.GONE);
-    displayable.isFollowing()
-        .first()
+    compositeSubscription.add(displayable.isFollowing()
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(isSubscribed -> {
           int message;
@@ -102,6 +101,6 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
           followButton.setText(
               AptoideUtils.StringU.getFormattedString(message, displayable.getPojo().getName()));
           followButton.setVisibility(View.VISIBLE);
-        });
+        }));
   }
 }

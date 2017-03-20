@@ -7,7 +7,7 @@
 
   <!-- NavDrawer List items -->
   <string name="my_account">My Account</string>
-  <string name="spot_share">Spot&amp;Share</string>
+  <string name="spot_share_title_drawer">Spot&amp;Share </string>
   <string name="setting_schdwntitle">Scheduled Downloads</string>
   <string name="settings">Settings</string>
   <string name="facebook">Facebook</string>
@@ -168,11 +168,11 @@
 
   <string name="you_need_to_be_logged_in">You need to be logged in</string>
   <string name="follow">Follow</string>
+
   <!--need translation-->
   <string name="followed">Following</string>
   <string name="unfollow_yes_no">Are you sure you want to unfollow?</string>
   <string name="unfollow">Unfollow</string>
-  <string name="appview_follow_store_button_text">Follow?</string>
   <string name="unfollowing_store_message">Unfollowing %s</string>
   <string name="store_followed">Store %s followed</string>
   <string name="subscribers">Subscribers</string>

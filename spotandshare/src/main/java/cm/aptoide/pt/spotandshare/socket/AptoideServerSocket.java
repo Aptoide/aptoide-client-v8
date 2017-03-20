@@ -60,7 +60,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
       ss = new ServerSocket(port);
       serverSocketTimeoutManager = new ServerSocketTimeoutManager(ss, timeout);
       serverSocketTimeoutManager.reserTimeout();
-      host = Host.from(ss);
+      host = new Host("192.168.43.1", ss.getLocalPort());
       System.out.println(Thread.currentThread().getId()
           + ": Starting server in port "
           + port

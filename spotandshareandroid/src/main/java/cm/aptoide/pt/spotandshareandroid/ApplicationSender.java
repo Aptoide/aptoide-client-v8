@@ -31,6 +31,7 @@ public class ApplicationSender {
       new BroadcastReceiver() {//todo extract to a ClientsManager class
         @Override public void onReceive(Context context, Intent intent) {
           if (intent.getAction() != null && intent.getAction().equals("SHOW_SEND_BUTTON")) {
+            System.out.println("Ordering to show send button");
             hostsListener.onAvailableClients();
           } else if (intent.getAction() != null && intent.getAction().equals("HIDE_SEND_BUTTON")) {
             hostsListener.onNoClients();

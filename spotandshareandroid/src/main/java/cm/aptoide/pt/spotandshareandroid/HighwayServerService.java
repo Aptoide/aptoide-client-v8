@@ -150,7 +150,6 @@ public class HighwayServerService extends Service {
         }
       }
     };
-
   }
 
   private void createReceiveNotification(String receivingAppName) {
@@ -223,17 +222,18 @@ public class HighwayServerService extends Service {
   private void finishSendNotification(AndroidAppInfo androidAppInfo) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
       if (mBuilderSend != null) {
-        ((NotificationCompat.Builder) mBuilderSend).setContentText(
-            this.getResources().getString(R.string.transfCompleted))
-            .setSmallIcon(android.R.drawable.stat_sys_download_done)
-            .setProgress(0, 0, false)
-            .setAutoCancel(true);
-        if (mNotifyManager == null) {
-          mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
-        }
-        mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
-            ((NotificationCompat.Builder) mBuilderSend).build());
+        mBuilderSend = new NotificationCompat.Builder(this);
       }
+      ((NotificationCompat.Builder) mBuilderSend).setContentText(
+          this.getResources().getString(R.string.transfCompleted))
+          .setSmallIcon(android.R.drawable.stat_sys_download_done)
+          .setProgress(0, 0, false)
+          .setAutoCancel(true);
+      if (mNotifyManager == null) {
+        mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
+      }
+      mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
+          ((NotificationCompat.Builder) mBuilderSend).build());
     }
   }
 
@@ -265,6 +265,7 @@ public class HighwayServerService extends Service {
             DataHolder.getInstance().setConnectedClients(hostList);
             Intent i = new Intent();
             if (hostList.size() >= 2) {
+              System.out.println("sending broadcast of show_send_button");
               i.setAction("SHOW_SEND_BUTTON");
               sendBroadcast(i);
             } else {
@@ -315,14 +316,13 @@ public class HighwayServerService extends Service {
           AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
             @Override public void run() {
               aptoideMessageClientSocket.send(
-                  new RequestPermissionToSend(aptoideMessageClientSocket.getLocalhost(),
-                      appInfo));
+                  new RequestPermissionToSend(aptoideMessageClientSocket.getLocalhost(), appInfo));
             }
           });
         }
       } else if (intent.getAction() != null && intent.getAction().equals("SHUTDOWN_SERVER")) {
         aptoideMessageClientSocket.disable();
-        if (aptoideMessageServerSocket != null) { // TODO: 16-03-2017 filipe
+        if (aptoideMessageServerSocket != null) { // TODO: 16-03-2017 filipe check problem
           aptoideMessageServerSocket.shutdown();
         }
         Intent i = new Intent();

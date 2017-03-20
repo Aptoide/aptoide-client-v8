@@ -183,7 +183,7 @@ public class HighwayPresenter implements Presenter {
   }
 
   public void scanNetworks() {
-    connectionManager.searchForAPTXNetworks(new ConnectionManager.InactivityListener() {
+    connectionManager.searchForAPTXVNetworks(new ConnectionManager.InactivityListener() {
       @Override public void onInactivity(boolean inactive) {
         view.showInactivityToast();
       }
@@ -225,7 +225,7 @@ public class HighwayPresenter implements Presenter {
     view.showRecoveringWifiStateToast();
   }
 
-  public void forgetAPTXNetwork() {
+  public void forgetAPTXVNetwork() {
     connectionManager.cleanNetworks();
   }
 }

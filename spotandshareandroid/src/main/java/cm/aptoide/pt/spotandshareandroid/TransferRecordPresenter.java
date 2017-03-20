@@ -70,7 +70,7 @@ public class TransferRecordPresenter implements Presenter {
           view.setInitialApConfig();
         }
         recoverNetworkState();
-        cleanAPTXNetworks();
+        cleanAPTXVNetworks();
         analytics.receiveApkFailed();
         view.dismiss();
       }
@@ -78,7 +78,7 @@ public class TransferRecordPresenter implements Presenter {
       @Override public void onServerLeft() {
         view.showServerLeftMessage();
         recoverNetworkState();
-        cleanAPTXNetworks();
+        cleanAPTXVNetworks();
         view.dismiss();
       }
     });
@@ -140,7 +140,9 @@ public class TransferRecordPresenter implements Presenter {
       }
 
       @Override public void onAvailableClients() {
+        System.out.println("inside onAvailableClients");
         if (!view.getTransparencySend()) {
+          System.out.println("ordered to change transparency");
           view.setTransparencySend(false);
           view.setTextViewMessage(true);
         }
@@ -185,7 +187,7 @@ public class TransferRecordPresenter implements Presenter {
     }
   }
 
-  public void cleanAPTXNetworks() {
+  public void cleanAPTXVNetworks() {
     if (connectionManager != null) {
       connectionManager.cleanNetworks();
     }
@@ -289,7 +291,7 @@ public class TransferRecordPresenter implements Presenter {
 
       @Override public void onClientDisconnected() {
         recoverNetworkState();
-        cleanAPTXNetworks();
+        cleanAPTXVNetworks();
         view.dismiss();
       }
     });

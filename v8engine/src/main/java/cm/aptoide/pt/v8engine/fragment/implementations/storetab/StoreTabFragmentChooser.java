@@ -22,7 +22,6 @@ public class StoreTabFragmentChooser {
       case getUser:
         return fragmentProvider.newGetStoreFragment();
       case getStoresRecommended:
-        return fragmentProvider.newRecommendedStoresFragment();
       case getMyStoresSubscribed:
         return fragmentProvider.newMyStoresSubscribedFragment();
       case myStores:

@@ -26,10 +26,12 @@ import cm.aptoide.pt.model.v3.PaymentAuthorizationsResponse;
 import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import java.io.IOException;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import retrofit2.Converter;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.FieldMap;
@@ -59,6 +61,11 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
   protected V3(BaseBody baseBody, OkHttpClient httpClient, Converter.Factory converterFactory) {
     super(Interfaces.class, httpClient, converterFactory, BASE_HOST);
     this.map = baseBody;
+  }
+
+  protected V3(OkHttpClient okHttpClient, Converter.Factory converterFactory) {
+    super(Interfaces.class, okHttpClient, converterFactory, BASE_HOST);
+    this.map = new BaseBody();
   }
 
   @NonNull public static String getErrorMessage(BaseV3Response response) {
@@ -175,7 +182,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("createUser") @Multipart Observable<BaseV3Response> createUserWithFile(
-        @Part MultipartBody.Part user_avatar, @PartMap() BaseBody args,
+        @Part MultipartBody.Part user_avatar, @PartMap() HashMapNotNull<String, RequestBody> args,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("changeUserSettings") @FormUrlEncoded Observable<BaseV3Response> changeUserSettings(
