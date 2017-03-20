@@ -125,7 +125,7 @@ import rx.functions.Action1;
           } else {
             //int plusMarkDrawable = storeThemeEnum.getPlusmarkDrawable();
             //followButton.setCompoundDrawablesWithIntrinsicBounds(plusMarkDrawable, 0, 0, 0);
-            followButton.setText(R.string.appview_follow_store_button_text);
+            followButton.setText(R.string.follow);
             compositeSubscription.add(RxView.clicks(followButton).subscribe(subscribeStore));
           }
         }, throwable -> CrashReport.getInstance().log(throwable)));

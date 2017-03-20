@@ -244,7 +244,7 @@ public class SocialStoreLatestAppsWidget
           CrashReport.getInstance().log(err);
         }, accountManager);
       };
-      followStore.setText(R.string.appview_follow_store_button_text);
+      followStore.setText(R.string.follow);
       compositeSubscription.add(RxView.clicks(followStore).subscribe(subscribeStore));
     }
   }
