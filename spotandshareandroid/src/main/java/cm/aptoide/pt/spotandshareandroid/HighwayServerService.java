@@ -150,7 +150,6 @@ public class HighwayServerService extends Service {
         }
       }
     };
-
   }
 
   private void createReceiveNotification(String receivingAppName) {
@@ -225,17 +224,16 @@ public class HighwayServerService extends Service {
       if (mBuilderSend != null) {
         mBuilderSend = new NotificationCompat.Builder(this);
       }
-        ((NotificationCompat.Builder) mBuilderSend).setContentText(
-            this.getResources().getString(R.string.transfCompleted))
-            .setSmallIcon(android.R.drawable.stat_sys_download_done)
-            .setProgress(0, 0, false)
-            .setAutoCancel(true);
-        if (mNotifyManager == null) {
-          mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
-        }
-        mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
-            ((NotificationCompat.Builder) mBuilderSend).build());
+      ((NotificationCompat.Builder) mBuilderSend).setContentText(
+          this.getResources().getString(R.string.transfCompleted))
+          .setSmallIcon(android.R.drawable.stat_sys_download_done)
+          .setProgress(0, 0, false)
+          .setAutoCancel(true);
+      if (mNotifyManager == null) {
+        mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
       }
+      mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
+          ((NotificationCompat.Builder) mBuilderSend).build());
     }
   }
 
@@ -317,8 +315,7 @@ public class HighwayServerService extends Service {
           AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
             @Override public void run() {
               aptoideMessageClientSocket.send(
-                  new RequestPermissionToSend(aptoideMessageClientSocket.getLocalhost(),
-                      appInfo));
+                  new RequestPermissionToSend(aptoideMessageClientSocket.getLocalhost(), appInfo));
             }
           });
         }
