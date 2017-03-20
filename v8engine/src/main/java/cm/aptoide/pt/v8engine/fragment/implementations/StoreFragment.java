@@ -32,7 +32,7 @@ import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Event;
-import cm.aptoide.pt.model.v7.store.GetHome;
+import cm.aptoide.pt.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
@@ -50,6 +50,7 @@ import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import com.astuetz.PagerSlidingTabStrip;
 import com.trello.rxlifecycle.android.FragmentEvent;
+import java.util.List;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -66,13 +67,14 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private AptoideAccountManager accountManager;
   private String storeName;
   private StoreContext storeContext;
-  private GetHome getHome;
   private String storeTheme;
   private StoreCredentialsProvider storeCredentialsProvider;
   private Event.Name defaultTab;
   @Nullable private Long userId;
   private OpenType openType;
   private BaseBodyInterceptor bodyInterceptor;
+  private List<GetStoreTabs.Tab> tabs;
+  private long storeId;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -120,8 +122,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    bodyInterceptor =
-        new BaseBodyInterceptor(aptoideClientUUID, accountManager);
+    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID, accountManager);
   }
 
   @Override public void onDestroy() {
@@ -161,15 +162,11 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    if (create || getHome == null) {
+    if (create || tabs == null) {
       getRequest(refresh, openType).observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe((getHome) -> {
-            this.getHome = getHome;
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(name -> {
             if (storeContext != StoreContext.home) {
-              storeName =
-                  storeName == null ? getHome.getNodes().getMeta().getData().getUser().getName()
-                      : storeName;
+              storeName = storeName == null ? name : storeName;
               setupToolbarDetails(getToolbar());
             }
             setupViewPager();
@@ -187,12 +184,10 @@ public class StoreFragment extends BasePagerToolbarFragment {
         case PRIVATE_STORE_ERROR:
         case PRIVATE_STORE_WRONG_CREDENTIALS:
           DialogFragment dialogFragment =
-              (DialogFragment) getFragmentManager().findFragmentByTag(
-                  PrivateStoreDialog.TAG);
+              (DialogFragment) getFragmentManager().findFragmentByTag(PrivateStoreDialog.TAG);
           if (dialogFragment == null) {
             dialogFragment =
-                PrivateStoreDialog.newInstance(this, PRIVATE_STORE_REQUEST_CODE, storeName,
-                    true);
+                PrivateStoreDialog.newInstance(this, PRIVATE_STORE_REQUEST_CODE, storeName, true);
             dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
           }
           break;
@@ -255,7 +250,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override protected PagerAdapter createPagerAdapter() {
-    return new StorePagerAdapter(getChildFragmentManager(), getHome, storeContext);
+    return new StorePagerAdapter(getChildFragmentManager(), tabs, storeContext, storeId,
+        storeTheme);
   }
 
   @Override public int getContentViewId() {
@@ -274,22 +270,34 @@ public class StoreFragment extends BasePagerToolbarFragment {
     }
   }
 
-  private Observable<GetHome> getRequest(boolean refresh, OpenType openType) {
+  private Observable<String> getRequest(boolean refresh, OpenType openType) {
     switch (openType) {
       case GetHome:
         return GetHomeRequest.of(
             StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), userId,
-            storeContext, bodyInterceptor).observe(refresh);
+            storeContext, bodyInterceptor).observe(refresh).map(getHome -> {
+          setupVariables(getHome.getNodes().getTabs().getList(),
+              getHome.getNodes().getMeta().getData().getStore().getId(),
+              getHome.getNodes().getMeta().getData().getStore().getName());
+          return getHome.getNodes().getMeta().getData().getStore().getName();
+        });
       case GetStore:
       default:
         return GetStoreRequest.of(
             StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), storeContext,
             bodyInterceptor).observe(refresh).map(getStore -> {
-          GetHome getHome = new GetHome();
-          getHome.setNodes(getStore.getNodes());
-          return getHome;
+          setupVariables(getStore.getNodes().getTabs().getList(),
+              getStore.getNodes().getMeta().getData().getId(),
+              getStore.getNodes().getMeta().getData().getName());
+          return getStore.getNodes().getMeta().getData().getName();
         });
     }
+  }
+
+  private void setupVariables(List<GetStoreTabs.Tab> tabs, long storeId, String storeName) {
+    this.tabs = tabs;
+    this.storeId = storeId;
+    this.storeName = storeName;
   }
 
   private void showStoreSuspendedPopup(String storeName) {
