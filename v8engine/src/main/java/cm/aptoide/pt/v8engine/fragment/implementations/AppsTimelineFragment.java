@@ -165,8 +165,10 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
       outState.putStringArray(PACKAGE_LIST_KEY, packages.toArray(new String[packages.size()]));
     }
 
-    outState.putParcelable(LIST_STATE_KEY,
-        getRecyclerView().getLayoutManager().onSaveInstanceState());
+    if (getRecyclerView() != null) {
+      outState.putParcelable(LIST_STATE_KEY,
+          getRecyclerView().getLayoutManager().onSaveInstanceState());
+    }
 
     super.onSaveInstanceState(outState);
   }
