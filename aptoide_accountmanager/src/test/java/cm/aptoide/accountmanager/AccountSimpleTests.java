@@ -15,17 +15,17 @@ import static org.junit.Assert.assertFalse;
 public class AccountSimpleTests {
 
   @Test public void emptyAccountIsNotLoggedIn() throws Exception {
-    Account emptyAccount = Account.empty();
+    Account emptyAccount = new LocalAccount();
     assertFalse(emptyAccount.isLoggedIn());
   }
 
   @Test public void emptyAccountIsNotConfirmed() throws Exception {
-    Account emptyAccount = Account.empty();
+    Account emptyAccount = new LocalAccount();
     assertFalse(emptyAccount.isAccessConfirmed());
   }
 
   @Test public void emptyAccountHasNotAdultContentEnabled() throws Exception {
-    Account emptyAccount = Account.empty();
+    Account emptyAccount = new LocalAccount();
     assertFalse(emptyAccount.isAdultContentEnabled());
   }
 }

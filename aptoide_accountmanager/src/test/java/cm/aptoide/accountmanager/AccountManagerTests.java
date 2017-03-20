@@ -22,25 +22,23 @@ public class AccountManagerTests {
     Observable<Account> accountObservable = accountManager.accountStatus();
     accountObservable.subscribe(testSubscriber);
 
-    assertThat(testSubscriber.getOnNextEvents(), hasItem(Account.empty()));
+    assertThat(testSubscriber.getOnNextEvents(), hasItem(new LocalAccount()));
     testSubscriber.assertNoErrors();
     testSubscriber.assertValueCount(1);
   }
 
   private AptoideAccountManager getMockedAccountManager() {
     Context context = mock(Context.class);
-    AptoidePreferencesConfiguration preferencesConfiguration =
-        mock(AptoidePreferencesConfiguration.class);
     AccountManager accountManager = mock(AccountManager.class);
     AptoideClientUUID aptoideClientUUID = mock(AptoideClientUUID.class);
-    LoginAvailability loginAvailability = mock(LoginAvailability.class);
     Analytics analytics = mock(Analytics.class);
     String accountType = "aptoide";
     AccountRequestFactory requestFactory = mock(AccountRequestFactory.class);
     StoreDataPersist storeDataPersist = mock(StoreDataPersist.class);
-
-    return new AptoideAccountManager(context, preferencesConfiguration, accountManager,
-        aptoideClientUUID, loginAvailability, analytics, accountType, requestFactory,
-        storeDataPersist);
+    CredentialsValidator credentialsValidator= mock(CredentialsValidator.class);
+    ExternalAccountFactory externalAccountFactory = mock(ExternalAccountFactory.class);
+    return new AptoideAccountManager(accountManager,
+        aptoideClientUUID, analytics, accountType, requestFactory,
+        storeDataPersist, credentialsValidator, externalAccountFactory);
   }
 }

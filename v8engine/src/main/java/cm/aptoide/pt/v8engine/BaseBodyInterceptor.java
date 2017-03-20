@@ -19,22 +19,25 @@ public class BaseBodyInterceptor implements BodyInterceptor<BaseBody> {
   private final AptoideClientUUID aptoideClientUUID;
   private final AptoideAccountManager accountManager;
 
-  public BaseBodyInterceptor(AptoideClientUUID aptoideClientUUID, AptoideAccountManager accountManager) {
+  public BaseBodyInterceptor(AptoideClientUUID aptoideClientUUID,
+      AptoideAccountManager accountManager) {
     this.aptoideClientUUID = aptoideClientUUID;
     this.accountManager = accountManager;
   }
 
   public Single<BaseBody> intercept(BaseBody body) {
-    return Single.<BaseBody>fromCallable(() -> {
-      if (!TextUtils.isEmpty(accountManager.getAccessToken())) {
-        body.setAccessToken(accountManager.getAccessToken());
-      }
+    return addBasicData(body).flatMap(
+        bodyWithoutAccountData -> addAccountData(bodyWithoutAccountData))
+        .subscribeOn(Schedulers.computation());
+  }
 
+  private Single<BaseBody> addBasicData(BaseBody body) {
+    return Single.<BaseBody> fromCallable(() -> {
       body.setAptoideId(aptoideClientUUID.getUniqueIdentifier());
       body.setAptoideVercode(AptoideUtils.Core.getVerCode());
       body.setCdn("pool");
       body.setLang(Api.LANG);
-      body.setMature(accountManager.isAccountMature());
+
       if (ManagerPreferences.getHWSpecsFilter()) {
         body.setQ(Api.Q);
       }
@@ -44,8 +47,17 @@ public class BaseBodyInterceptor implements BodyInterceptor<BaseBody> {
           body.setCountry(forceCountry);
         }
       }
-
       return body;
-    }).subscribeOn(Schedulers.computation());
+    });
+  }
+
+  private Single<BaseBody> addAccountData(BaseBody body) {
+    return accountManager.getAccountAsync().map(account -> {
+      if (!TextUtils.isEmpty(accountManager.getAccessToken())) {
+        body.setAccessToken(accountManager.getAccessToken());
+      }
+      body.setMature(accountManager.isAccountMature());
+      return body;
+    }).onErrorReturn(throwable -> body);
   }
 }

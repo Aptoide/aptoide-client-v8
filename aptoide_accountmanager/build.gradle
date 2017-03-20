@@ -17,9 +17,6 @@ android {
   defaultConfig {
     minSdkVersion 15
 
-    buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
-    resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID + "\""
-
     buildConfigField "String", "BACKUP_SIGNATURE", "\"" + project.BACKUP_SIGNATURE + "\""
     buildConfigField "String", "UPLOADER_SIGNATURE", "\"" + project.UPLOADER_SIGNATURE + "\""
 
@@ -90,13 +87,6 @@ dependencies {
   compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
   //noinspection GradleDependency
   compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
-
-  //noinspection GradleDependency
-  compile "com.google.android.gms:play-services-basement:${PLAY_SERVICES_VERSION}"
-  //noinspection GradleDependency
-  compile "com.google.android.gms:play-services-auth:${PLAY_SERVICES_VERSION}"
-
-  compile "com.facebook.android:facebook-android-sdk:${FACEBOOK_ANDROID_SDK_VERSION}"
 
   compile "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
 

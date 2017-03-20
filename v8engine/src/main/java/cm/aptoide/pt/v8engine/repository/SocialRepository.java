@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.repository;
 
 import android.content.Context;
 import cm.aptoide.accountmanager.Account;
+import cm.aptoide.accountmanager.AptoideAccount;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
@@ -65,7 +66,7 @@ public class SocialRepository {
     }, throwable -> throwable.printStackTrace());
   }
 
-  private Account.Access getAccountAccess(boolean privacy) {
+  private AptoideAccount.Access getAccountAccess(boolean privacy) {
     return privacy ? Account.Access.UNLISTED : Account.Access.PUBLIC;
   }
 }

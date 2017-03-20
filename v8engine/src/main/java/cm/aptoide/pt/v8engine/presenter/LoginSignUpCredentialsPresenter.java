@@ -10,6 +10,7 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.account.LoginPreferences;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.view.LoginSignUpCredentialsView;
 import cm.aptoide.pt.v8engine.view.View;
@@ -37,15 +38,18 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
   private final LoginSignUpCredentialsView view;
   private final AptoideAccountManager accountManager;
   private final Collection<String> facebookRequiredPermissions;
+  private final LoginPreferences loginAvailability;
   private final boolean navigateToHome;
   private boolean dimissToNavigateToMainView;
 
   public LoginSignUpCredentialsPresenter(LoginSignUpCredentialsView view,
       AptoideAccountManager accountManager, Collection<String> facebookRequiredPermissions,
-      boolean dimissToNavigateToMainView, boolean navigateToHome) {
+      LoginPreferences loginAvailability, boolean dimissToNavigateToMainView,
+      boolean navigateToHome) {
     this.view = view;
     this.accountManager = accountManager;
     this.facebookRequiredPermissions = facebookRequiredPermissions;
+    this.loginAvailability = loginAvailability;
     this.dimissToNavigateToMainView = dimissToNavigateToMainView;
     this.navigateToHome = navigateToHome;
   }
@@ -176,7 +180,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
   }
 
   private void showOrHideFacebookLogin() {
-    if (accountManager.isFacebookLoginEnabled()) {
+    if (loginAvailability.isFacebookLoginEnabled()) {
       view.showFacebookLogin();
     } else {
       view.hideFacebookLogin();
@@ -184,7 +188,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
   }
 
   private void showOrHideGoogleLogin() {
-    if (accountManager.isGoogleLoginEnabled()) {
+    if (loginAvailability.isGoogleLoginEnabled()) {
       view.showGoogleLogin();
     } else {
       view.hideGoogleLogin();

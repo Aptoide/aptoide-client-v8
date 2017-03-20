@@ -1,145 +1,49 @@
-/*
- * Copyright (c) 2017.
- * Modified by Marcelo Benites on 10/02/2017.
- */
-
 package cm.aptoide.accountmanager;
 
-import java.util.Collections;
 import java.util.List;
+import rx.Completable;
 
-/**
- * Created by marcelobenites on 10/02/17.
- */
+public interface Account {
 
-public class Account {
+  Completable logout();
 
-  private final String id;
-  private final String email;
-  private final String nickname;
-  private final String avatar;
-  private final String refreshToken;
-  private final String token;
-  private final Type type;
-  private final String store;
-  private final String storeAvatar;
-  private final boolean adultContentEnabled;
-  private final Access access;
-  private final boolean accessConfirmed;
-  private final String password;
-  private final List<Store> subscribedStores;
+  Completable refreshToken();
 
-  private Account() {
-    this.id = "";
-    this.email = "";
-    this.nickname = "";
-    this.avatar = "";
-    this.refreshToken = "";
-    this.token = "";
-    this.password = "";
-    this.type = null;
-    this.store = "";
-    this.storeAvatar = "";
-    this.adultContentEnabled = false;
-    this.access = null;
-    this.accessConfirmed = false;
-    this.subscribedStores = Collections.emptyList();
-  }
+  List<Store> getSubscribedStores();
 
-  public Account(String id, String email, String nickname, String avatar, String refreshToken,
-      String token, String password, Type type, String store, String storeAvatar,
-      boolean adultContentEnabled, Access access, boolean accessConfirmed,
-      List<Store> subscribedStores) {
-    this.id = id;
-    this.email = email;
-    this.nickname = nickname;
-    this.avatar = avatar;
-    this.refreshToken = refreshToken;
-    this.token = token;
-    this.password = password;
-    this.type = type;
-    this.store = store;
-    this.storeAvatar = storeAvatar;
-    this.adultContentEnabled = adultContentEnabled;
-    this.access = access;
-    this.accessConfirmed = accessConfirmed;
-    this.subscribedStores = subscribedStores;
-  }
+  String getId();
 
-  public static Account empty() {
-    return new Account();
-  }
+  String getNickname();
 
-  public List<Store> getSubscribedStores() {
-    return subscribedStores;
-  }
+  String getAvatar();
 
-  public Type getType() {
-    return type;
-  }
+  String getStore();
 
-  public String getId() {
-    return id;
-  }
+  String getStoreAvatar();
 
-  public String getNickname() {
-    return nickname;
-  }
+  boolean isAdultContentEnabled();
 
-  public String getAvatar() {
-    return avatar;
-  }
+  Access getAccess();
 
-  public String getStore() {
-    return store;
-  }
+  boolean isAccessConfirmed();
 
-  public String getStoreAvatar() {
-    return storeAvatar;
-  }
+  boolean isLoggedIn();
 
-  public boolean isAdultContentEnabled() {
-    return adultContentEnabled;
-  }
+  String getEmail();
 
-  public Access getAccess() {
-    return access;
-  }
+  String getToken();
 
-  public boolean isAccessConfirmed() {
-    return accessConfirmed;
-  }
+  String getRefreshToken();
 
-  public boolean isLoggedIn() {
-    return (!isEmpty(getEmail()) && !isEmpty(getToken()) && !isEmpty(getRefreshToken()) && !isEmpty(
-        getPassword()));
-  }
+  String getPassword();
 
-  private boolean isEmpty(String string) {
-    return string == null || string.trim().length() == 0;
-  }
+  Account.Type getType();
 
-  public String getEmail() {
-    return email;
-  }
-
-  public String getToken() {
-    return token;
-  }
-
-  public String getRefreshToken() {
-    return refreshToken;
-  }
-
-  public String getPassword() {
-    return password;
+  enum Access {
+    PUBLIC, PRIVATE, UNLISTED
   }
 
   public enum Type {
-    APTOIDE, GOOGLE, FACEBOOK, ABAN
-  }
-
-  public enum Access {
-    PUBLIC, PRIVATE, UNLISTED
+    LOCAL, APTOIDE, GOOGLE, FACEBOOK, ABAN
   }
 }

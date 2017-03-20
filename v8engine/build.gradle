@@ -28,6 +28,8 @@ android {
     buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + project.GOOGLE_SENDER_ID + "\""
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
+    resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID + "\""
   }
 
   lintOptions {
@@ -212,5 +214,12 @@ dependencies {
 
   compile project(':spotandshareandroid')
   compile "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
+  //noinspection GradleDependency
+  compile "com.google.android.gms:play-services-basement:${PLAY_SERVICES_VERSION}"
+  //noinspection GradleDependency
+  compile "com.google.android.gms:play-services-auth:${PLAY_SERVICES_VERSION}"
+
+  compile "com.facebook.android:facebook-android-sdk:${FACEBOOK_ANDROID_SDK_VERSION}"
+
 
 }

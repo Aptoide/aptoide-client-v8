@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
-import cm.aptoide.accountmanager.BuildConfig;
+import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.view.GoogleLoginView;
 import cm.aptoide.pt.v8engine.viewModel.GoogleAccountViewModel;
 import com.google.android.gms.auth.api.Auth;

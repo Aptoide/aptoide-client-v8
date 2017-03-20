@@ -16,8 +16,8 @@ import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.v8engine.fragment.implementations.LoginSignUpFragment;
 import cm.aptoide.pt.v8engine.view.MainActivity;
-import com.facebook.login.LoginFragment;
 
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 
@@ -78,7 +78,7 @@ class AccountAuthenticator extends AbstractAccountAuthenticator {
   private Intent createAuthActivityIntent(AccountAuthenticatorResponse response, String accountType,
       String authTokenType, Bundle options) {
     Intent intent = new Intent(Application.getContext(), MainActivity.class);
-    intent.putExtra(MainActivity.FRAGMENT, LoginFragment.class.getName());
+    intent.putExtra(MainActivity.FRAGMENT, LoginSignUpFragment.class.getName());
     // FIXME: 14/2/2017 sithengineer add this funtionality in main Activity
     intent.putExtra(ARG_ACCOUNT_TYPE, accountType);
     intent.putExtra(ARG_AUTH_TYPE, authTokenType);

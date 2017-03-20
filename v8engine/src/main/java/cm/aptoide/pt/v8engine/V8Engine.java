@@ -13,6 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.CredentialsValidator;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -40,8 +41,8 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.account.AccountDynamicRequestFactory;
+import cm.aptoide.pt.v8engine.account.SocialAccountFactory;
 import cm.aptoide.pt.v8engine.account.DatabaseStoreDataPersist;
-import cm.aptoide.pt.v8engine.account.ExternalServicesLoginAvailability;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AccountAnalytcs;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.SpotAndShareAnalytics;
@@ -60,7 +61,10 @@ import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.MainActivity;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import com.flurry.android.FlurryAgent;
-import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.Scopes;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
 import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
@@ -69,6 +73,8 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.schedulers.Schedulers;
+
+import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
 /**
  * Created by neuro on 14-04-2016.
@@ -174,7 +180,7 @@ public abstract class V8Engine extends DataProvider {
         .init(this, new DownloadNotificationActionsActionsInterface(),
             new DownloadManagerSettingsI(), downloadAccessor, CacheHelper.build(),
             new FileUtils(action -> Analytics.File.moveFile(action)),
-            new TokenHttpClient(aptoideClientUuid, () -> accountManager.getUserEmail(),
+            new TokenHttpClient(aptoideClientUuid, () -> accountManager.getAccountEmail(),
                 getConfiguration().getPartnerId(), accountManager).customMake(),
             new DownloadAnalytics(Analytics.getInstance()));
 
@@ -190,7 +196,7 @@ public abstract class V8Engine extends DataProvider {
   @Override protected TokenInvalidator getTokenInvalidator() {
     return new TokenInvalidator() {
       @Override public Single<String> invalidateAccessToken() {
-        return accountManager.refreshAccountToken()
+        return accountManager.refreshToken()
             .andThen(accountManager.getAccountAsync())
             .map(account -> account.getToken());
       }
@@ -217,7 +223,7 @@ public abstract class V8Engine extends DataProvider {
   private Completable regenerateUserAgent(final AptoideAccountManager accountManager) {
     return Completable.fromAction(() -> {
       final String userAgent = AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUuid,
-          () -> accountManager.getUserEmail(), AptoideUtils.Core.getDefaultVername(),
+          () -> accountManager.getAccountEmail(), AptoideUtils.Core.getDefaultVername(),
           getConfiguration().getPartnerId());
       SecurePreferences.setUserAgent(userAgent);
     }).subscribeOn(Schedulers.newThread());
@@ -255,16 +261,17 @@ public abstract class V8Engine extends DataProvider {
           new DatabaseStoreDataPersist(AccessorFactory.getAccessorFor(Store.class),
               new DatabaseStoreDataPersist.DatabaseStoreMapper());
 
-      final ExternalServicesLoginAvailability loginAvailability =
-          new ExternalServicesLoginAvailability(this, getConfiguration(),
-              GoogleApiAvailability.getInstance());
-
       final AccountDynamicRequestFactory requestFactory =
           new AccountDynamicRequestFactory(aptoideClientUUID);
 
-      accountManager = new AptoideAccountManager(this, getConfiguration(), AccountManager.get(this),
-          aptoideClientUUID, loginAvailability, new AccountAnalytcs(),
-          getConfiguration().getAccountType(), requestFactory, dataPersist);
+      accountManager = new AptoideAccountManager(AccountManager.get(this), aptoideClientUUID,
+          new AccountAnalytcs(), getConfiguration().getAccountType(), requestFactory, dataPersist,
+          new CredentialsValidator(), new SocialAccountFactory(this, new GoogleApiClient.Builder(this).addApi(GOOGLE_SIGN_IN_API,
+              new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
+                  .requestScopes(new Scope("https://www.googleapis.com/auth/contacts.readonly"))
+                  .requestScopes(new Scope(Scopes.PROFILE))
+                  .requestServerAuthCode(BuildConfig.GMS_SERVER_ID)
+                  .build()).build()));
     }
     return accountManager;
   }

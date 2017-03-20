@@ -18,10 +18,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.BuildConfig;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.fragment.FragmentView;
 import cm.aptoide.pt.v8engine.fragment.GooglePlayServicesFragment;
 import cm.aptoide.pt.v8engine.presenter.MyAccountPresenter;
 import cm.aptoide.pt.v8engine.view.MyAccountView;
@@ -37,14 +39,21 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 /**
  * Created by trinkes on 5/2/16.
  */
-public class MyAccountFragment extends GooglePlayServicesFragment implements MyAccountView {
+public class MyAccountFragment extends FragmentView implements MyAccountView {
+
+  private AptoideAccountManager accountManager;
 
   private Button logoutButton;
   private TextView usernameTextView;
-  private GoogleApiClient client;
 
   public static Fragment newInstance() {
     return new MyAccountFragment();
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    accountManager =
+        ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
   }
 
   @Nullable @Override
@@ -77,30 +86,14 @@ public class MyAccountFragment extends GooglePlayServicesFragment implements MyA
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    AptoideAccountManager accountManager =
-        ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
-
-    final GoogleSignInOptions options =
-        new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
-            .requestScopes(new Scope("https://www.googleapis.com/auth/contacts.readonly"))
-            .requestScopes(new Scope(Scopes.PROFILE))
-            .requestServerAuthCode(BuildConfig.GMS_SERVER_ID)
-            .build();
-
-    client = getClientBuilder().addApi(GOOGLE_SIGN_IN_API, options).build();
-    usernameTextView.setText(accountManager.getUserEmail());
+    usernameTextView.setText(accountManager.getAccountEmail());
 
     setupToolbar(view, getString(R.string.my_account));
 
-    attachPresenter(new MyAccountPresenter(this, accountManager, client,
-        getActivity().getSupportFragmentManager()), savedInstanceState);
+    attachPresenter(new MyAccountPresenter(this, accountManager, CrashReport.getInstance()), savedInstanceState);
   }
 
-  @Override protected void connect() {
-    client.connect();
-  }
-
-  protected Toolbar setupToolbar(View view, String title) {
+  private Toolbar setupToolbar(View view, String title) {
     setHasOptionsMenu(true);
     Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     toolbar.setLogo(R.drawable.logo_toolbar);
