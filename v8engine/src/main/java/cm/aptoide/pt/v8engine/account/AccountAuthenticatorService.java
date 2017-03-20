@@ -18,7 +18,7 @@ import static cm.aptoide.pt.preferences.Application.getContext;
 public class AccountAuthenticatorService extends Service {
 
   @Override public IBinder onBind(Intent intent) {
-    AccountAuthenticator authenticator = new AccountAuthenticator(this,
+    final AccountAuthenticator authenticator = new AccountAuthenticator(this,
         ((V8Engine) getContext().getApplicationContext()).getAccountManager());
     return authenticator.getIBinder();
   }

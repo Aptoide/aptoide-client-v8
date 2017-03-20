@@ -122,15 +122,4 @@ public class SecurePreferences {
         .apply();
   }
 
-  public static void setLogoutUser(boolean logoutUser) {
-    SecurePreferencesImplementation.getInstance()
-        .edit()
-        .putBoolean(SecureKeys.LOGOUT_USER, logoutUser)
-        .apply();
-  }
-
-  public static boolean shouldLogoutUser() {
-    return SecurePreferencesImplementation.getInstance()
-        .getBoolean(SecureKeys.LOGOUT_USER, true);
-  }
 }

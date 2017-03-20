@@ -24,25 +24,26 @@ import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 /**
  * Created by brutus on 09-12-2013.
  */
-public class AccountAuthenticator extends AbstractAccountAuthenticator {
+class AccountAuthenticator extends AbstractAccountAuthenticator {
 
-  public static final String INVALID_AUTH_TOKEN_TYPE = "invalid authTokenType";
-  public static final String AUTHTOKEN_TYPE_FULL_ACCESS = "Full access";
-  public static final String AUTHTOKEN_TYPE_READ_ONLY = "Read only";
-  public static final String AUTHTOKEN_TYPE_READ_ONLY_LABEL =
+  private static final String INVALID_AUTH_TOKEN_TYPE = "invalid authTokenType";
+  private static final String AUTHTOKEN_TYPE_FULL_ACCESS = "Full access";
+  private static final String AUTHTOKEN_TYPE_READ_ONLY = "Read only";
+  private static final String AUTHTOKEN_TYPE_READ_ONLY_LABEL =
       "Read only access to an Aptoide " + "account";
   /**
    * Auth token types
    */
-  public static final String AUTHTOKEN_TYPE_FULL_ACCESS_LABEL = "Full access to an Aptoide " + "account";
-  public final static String ARG_OPTIONS_BUNDLE = "BE";
-  public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
-  public final static String ARG_AUTH_TYPE = "AUTH_TYPE";
-  public final static String ARG_IS_ADDING_NEW_ACCOUNT = "IS_ADDING_ACCOUNT";
+  private static final String AUTHTOKEN_TYPE_FULL_ACCESS_LABEL =
+      "Full access to an Aptoide " + "account";
+  private final static String ARG_OPTIONS_BUNDLE = "BE";
+  private final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
+  private final static String ARG_AUTH_TYPE = "AUTH_TYPE";
+  private final static String ARG_IS_ADDING_NEW_ACCOUNT = "IS_ADDING_ACCOUNT";
   private static final String TAG = AccountAuthenticator.class.getSimpleName();
   private final AptoideAccountManager accountManager;
 
-  public AccountAuthenticator(Context context, AptoideAccountManager accountManager) {
+  AccountAuthenticator(Context context, AptoideAccountManager accountManager) {
     super(context);
     this.accountManager = accountManager;
   }
@@ -58,13 +59,12 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
   @Override public Bundle addAccount(AccountAuthenticatorResponse response, String accountType,
       String authTokenType, String[] requiredFeatures, Bundle options)
       throws NetworkErrorException {
-    Logger.d(TAG, "Adding account: type=" + accountType);
-
+    Logger.v(TAG, "Adding account: type=" + accountType);
     return createAuthActivityIntentBundle(response, accountType, requiredFeatures, authTokenType,
         null, options);
   }
 
-  protected Bundle createAuthActivityIntentBundle(AccountAuthenticatorResponse response,
+  private Bundle createAuthActivityIntentBundle(AccountAuthenticatorResponse response,
       String accountType, String[] requiredFeatures, String authTokenType, String password,
       Bundle options) {
 
@@ -75,8 +75,8 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
     return bundle;
   }
 
-  protected Intent createAuthActivityIntent(AccountAuthenticatorResponse response,
-      String accountType, String authTokenType, Bundle options) {
+  private Intent createAuthActivityIntent(AccountAuthenticatorResponse response, String accountType,
+      String authTokenType, Bundle options) {
     Intent intent = new Intent(Application.getContext(), MainActivity.class);
     intent.putExtra(MainActivity.FRAGMENT, LoginFragment.class.getName());
     // FIXME: 14/2/2017 sithengineer add this funtionality in main Activity
@@ -110,7 +110,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
     String authToken = am.peekAuthToken(account, authTokenType);
 
-    Logger.d("udinic", TAG + "> peekAuthToken returned - " + account + " " + authToken);
+    Logger.v(TAG, "peekAuthToken returned - " + account + " " + authToken);
 
     // Lets give another try to authenticate the user
 
@@ -120,7 +120,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
     result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
     result.putString(AccountManager.KEY_AUTHTOKEN, authToken);
 
-    Logger.d("udinic", TAG + "> getAuthToken returning - " + account + " " + authToken);
+    Logger.v(TAG,"getAuthToken returning - " + account + " " + authToken);
 
     return result;
 
@@ -155,14 +155,22 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
   @Override
   public Bundle getAccountRemovalAllowed(AccountAuthenticatorResponse response, Account account)
       throws NetworkErrorException {
-    final Bundle result = super.getAccountRemovalAllowed(response, account);
-    if (result != null
-        && result.containsKey(AccountManager.KEY_BOOLEAN_RESULT)
-        && !result.containsKey(AccountManager.KEY_INTENT)) {
-      if (result.getBoolean(AccountManager.KEY_BOOLEAN_RESULT)) {
-        accountManager.logout(null);
-      }
-    }
+    //final Bundle result = super.getAccountRemovalAllowed(response, account);
+    //if (result != null
+    //    && result.containsKey(AccountManager.KEY_BOOLEAN_RESULT)
+    //    && !result.containsKey(AccountManager.KEY_INTENT)) {
+    //  if (result.getBoolean(AccountManager.KEY_BOOLEAN_RESULT)) {
+    //    accountManager.logout(null);
+    //  }
+    //}
+
+    //
+    // this indicates that the user must explicitly logout inside Aptoide and is not able to
+    // logout from the Settings -> Accounts
+    //
+
+    Bundle result = new Bundle();
+    result.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, false);
     return result;
   }
 }

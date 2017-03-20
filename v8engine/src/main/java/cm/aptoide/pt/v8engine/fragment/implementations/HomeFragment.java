@@ -113,7 +113,7 @@ public class HomeFragment extends StoreFragment {
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.PAUSE))
         .subscribe(account -> {
-          if (account == null) {
+          if (account == null || !account.isLoggedIn()) {
             setInvisibleUserImageAndName();
             return;
           }

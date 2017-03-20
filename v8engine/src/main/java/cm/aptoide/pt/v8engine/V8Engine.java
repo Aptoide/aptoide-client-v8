@@ -149,12 +149,6 @@ public abstract class V8Engine extends DataProvider {
     SQLiteDatabase db = new SQLiteDatabaseHelper(this).getWritableDatabase();
     db.close();
 
-    final AptoideAccountManager accountManager = getAccountManager();
-    if (SecurePreferences.shouldLogoutUser()) {
-      accountManager.removeAccount();
-      SecurePreferences.setLogoutUser(false);
-    }
-
     SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
     Analytics.LocalyticsSessionControl.firstSession(sPref);
     Analytics.Lifecycle.Application.onCreate(this);
