@@ -144,17 +144,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .doOnNext(items -> {
           addItems(items);
-          if (listState != null) {
-            getRecyclerView().getLayoutManager().onRestoreInstanceState(listState);
-            listState = null;
-          }
-          if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(LIST_STATE_KEY)) {
-              getRecyclerView().getLayoutManager()
-                  .onRestoreInstanceState(savedInstanceState.getParcelable(LIST_STATE_KEY));
-              savedInstanceState.putParcelable(LIST_STATE_KEY, null);
-            }
-          }
+          restoreListState(savedInstanceState);
         })
         .subscribe(__ -> {
         }, err -> {
@@ -179,6 +169,20 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
         getRecyclerView().getLayoutManager().onSaveInstanceState());
 
     super.onSaveInstanceState(outState);
+  }
+
+  private void restoreListState(@Nullable Bundle savedInstanceState) {
+    if (listState != null) {
+      getRecyclerView().getLayoutManager().onRestoreInstanceState(listState);
+      listState = null;
+    }
+    if (savedInstanceState != null) {
+      if (savedInstanceState.containsKey(LIST_STATE_KEY)) {
+        getRecyclerView().getLayoutManager()
+            .onRestoreInstanceState(savedInstanceState.getParcelable(LIST_STATE_KEY));
+        savedInstanceState.putParcelable(LIST_STATE_KEY, null);
+      }
+    }
   }
 
   @UiThread private Observable<Void> clearView() {
