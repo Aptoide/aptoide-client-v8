@@ -10,9 +10,6 @@ import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
-/**
- * Created by marcelobenites on 10/02/17.
- */
 public class LoginPreferences {
 
   private final Context context;

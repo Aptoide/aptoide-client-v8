@@ -13,7 +13,7 @@ public class LocalAccount implements Account {
   }
 
   @Override public Completable refreshToken() {
-    return Completable.error(new Exception("Can not refresh token of logged out account."));
+    return Completable.error(new Exception("Can not refresh token of local account."));
   }
 
   @Override public List<Store> getSubscribedStores() {

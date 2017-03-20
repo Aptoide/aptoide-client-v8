@@ -12,6 +12,7 @@ import android.content.pm.PackageInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.CredentialsValidator;
 import cm.aptoide.pt.annotation.Partners;
@@ -40,6 +41,7 @@ import cm.aptoide.pt.spotandshareandroid.ShareApps;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
+import cm.aptoide.pt.v8engine.account.AndroidAccountDataPersist;
 import cm.aptoide.pt.v8engine.account.BaseBodyInterceptorFactory;
 import cm.aptoide.pt.v8engine.account.DatabaseStoreDataPersist;
 import cm.aptoide.pt.v8engine.account.SocialAccountFactory;
@@ -239,7 +241,7 @@ public abstract class V8Engine extends DataProvider {
     if (SecurePreferences.isFirstRun()) {
       PreferenceManager.setDefaultValues(this, R.xml.settings, false);
       if (accountManager.isLoggedIn() && ManagerPreferences.isFirstRunV7()) {
-        accountManager.removeAccount();
+        accountManager.removeAccount().onErrorComplete().subscribe();
       }
 
       // load picture, name and email
@@ -264,15 +266,20 @@ public abstract class V8Engine extends DataProvider {
       final BaseBodyInterceptorFactory bodyInterceptorFactory =
           new BaseBodyInterceptorFactory(aptoideClientUUID);
 
-      accountManager = new AptoideAccountManager(AccountManager.get(this), aptoideClientUUID,
-          new AccountAnalytcs(), getConfiguration().getAccountType(), bodyInterceptorFactory,
-          dataPersist, new CredentialsValidator(), new SocialAccountFactory(this,
-          new GoogleApiClient.Builder(this).addApi(GOOGLE_SIGN_IN_API,
-              new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
-                  .requestScopes(new Scope("https://www.googleapis.com/auth/contacts.readonly"))
-                  .requestScopes(new Scope(Scopes.PROFILE))
-                  .requestServerAuthCode(BuildConfig.GMS_SERVER_ID)
-                  .build()).build()));
+      final AccountFactory accountFactory = new AccountFactory(aptoideClientUUID,
+          new SocialAccountFactory(this,
+              new GoogleApiClient.Builder(this).addApi(GOOGLE_SIGN_IN_API,
+                  new GoogleSignInOptions.Builder(
+                      GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
+                      .requestScopes(new Scope("https://www.googleapis.com/auth/contacts.readonly"))
+                      .requestScopes(new Scope(Scopes.PROFILE))
+                      .requestServerAuthCode(BuildConfig.GMS_SERVER_ID)
+                      .build()).build()));
+
+      accountManager = new AptoideAccountManager(aptoideClientUUID,
+          new AccountAnalytcs(), bodyInterceptorFactory, new CredentialsValidator(), accountFactory,
+          new AndroidAccountDataPersist(getConfiguration().getAccountType(),
+              AccountManager.get(this), dataPersist, accountFactory));
     }
     return accountManager;
   }
