@@ -40,9 +40,9 @@ import cm.aptoide.pt.spotandshareandroid.ShareApps;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
-import cm.aptoide.pt.v8engine.account.AccountDynamicRequestFactory;
-import cm.aptoide.pt.v8engine.account.SocialAccountFactory;
+import cm.aptoide.pt.v8engine.account.BaseBodyInterceptorFactory;
 import cm.aptoide.pt.v8engine.account.DatabaseStoreDataPersist;
+import cm.aptoide.pt.v8engine.account.SocialAccountFactory;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AccountAnalytcs;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.SpotAndShareAnalytics;
@@ -261,12 +261,13 @@ public abstract class V8Engine extends DataProvider {
           new DatabaseStoreDataPersist(AccessorFactory.getAccessorFor(Store.class),
               new DatabaseStoreDataPersist.DatabaseStoreMapper());
 
-      final AccountDynamicRequestFactory requestFactory =
-          new AccountDynamicRequestFactory(aptoideClientUUID);
+      final BaseBodyInterceptorFactory bodyInterceptorFactory =
+          new BaseBodyInterceptorFactory(aptoideClientUUID);
 
       accountManager = new AptoideAccountManager(AccountManager.get(this), aptoideClientUUID,
-          new AccountAnalytcs(), getConfiguration().getAccountType(), requestFactory, dataPersist,
-          new CredentialsValidator(), new SocialAccountFactory(this, new GoogleApiClient.Builder(this).addApi(GOOGLE_SIGN_IN_API,
+          new AccountAnalytcs(), getConfiguration().getAccountType(), bodyInterceptorFactory,
+          dataPersist, new CredentialsValidator(), new SocialAccountFactory(this,
+          new GoogleApiClient.Builder(this).addApi(GOOGLE_SIGN_IN_API,
               new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
                   .requestScopes(new Scope("https://www.googleapis.com/auth/contacts.readonly"))
                   .requestScopes(new Scope(Scopes.PROFILE))

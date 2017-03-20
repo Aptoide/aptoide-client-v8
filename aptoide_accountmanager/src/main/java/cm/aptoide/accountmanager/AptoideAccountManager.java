@@ -18,7 +18,9 @@ import cm.aptoide.pt.dataprovider.ws.v3.GetUserRepoSubscriptionRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.OAuth2AuthenticationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
@@ -54,7 +56,7 @@ public class AptoideAccountManager {
   private final String accountType;
   private final AptoideClientUUID aptoideClientUUID;
   private final AccountManager androidAccountManager;
-  private final AccountRequestFactory requestFactory;
+  private final BodyInterceptorFactory interceptorFactory;
   private final Analytics analytics;
   private final StoreDataPersist storeDataPersist;
   private final CredentialsValidator credentialsValidator;
@@ -65,7 +67,7 @@ public class AptoideAccountManager {
 
   public AptoideAccountManager(AccountManager androidAccountManager,
       AptoideClientUUID aptoideClientUUID, Analytics analytics, String accountType,
-      AccountRequestFactory requestFactory, StoreDataPersist storeDataPersist,
+      BodyInterceptorFactory bodyInteceptorFactory, StoreDataPersist storeDataPersist,
       CredentialsValidator credentialsValidator, ExternalAccountFactory accountFactory) {
     this.aptoideClientUUID = aptoideClientUUID;
     this.credentialsValidator = credentialsValidator;
@@ -75,13 +77,12 @@ public class AptoideAccountManager {
     this.storeDataPersist = storeDataPersist;
     this.accountFactory = accountFactory;
     this.accountSubject = PublishRelay.create();
-    this.requestFactory = requestFactory;
+    this.interceptorFactory = bodyInteceptorFactory;
   }
 
   public Observable<Account> accountStatus() {
     return Observable.merge(accountSubject,
-        getAccountAsync().onErrorReturn(throwable -> createLocalAccount())
-            .toObservable());
+        getAccountAsync().onErrorReturn(throwable -> createLocalAccount()).toObservable());
   }
 
   public Single<Account> getAccountAsync() {
@@ -377,8 +378,8 @@ public class AptoideAccountManager {
   private Observable<ChangeStoreSubscriptionResponse> changeSubscription(String storeName,
       String storeUserName, String sha1Password,
       ChangeStoreSubscriptionResponse.StoreSubscriptionState subscription) {
-    return requestFactory.createChangeStoreSubscription(storeName, storeUserName, sha1Password,
-        subscription, this).observe();
+    return ChangeStoreSubscriptionRequest.of(storeName, subscription, storeUserName, sha1Password,
+        interceptorFactory.create(this)).observe();
   }
 
   public Completable subscribeStore(String storeName, String storeUserName, String storePassword) {
@@ -449,7 +450,7 @@ public class AptoideAccountManager {
 
   public Completable updateAccount(Account.Access access) {
     return getAccountAsync().flatMapCompletable(account -> {
-      return requestFactory.createSetUser(access.name(), this)
+      return SetUserRequest.of(access.name(), interceptorFactory.create(this))
           .observe(true)
           .toSingle()
           .flatMapCompletable(response -> {
