@@ -140,7 +140,9 @@ public class TransferRecordPresenter implements Presenter {
       }
 
       @Override public void onAvailableClients() {
+        System.out.println("inside onAvailableClients");
         if (!view.getTransparencySend()) {
+          System.out.println("ordered to change transparency");
           view.setTransparencySend(false);
           view.setTextViewMessage(true);
         }

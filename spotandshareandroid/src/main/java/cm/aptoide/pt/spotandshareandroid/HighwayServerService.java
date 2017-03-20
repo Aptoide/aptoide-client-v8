@@ -265,6 +265,7 @@ public class HighwayServerService extends Service {
             DataHolder.getInstance().setConnectedClients(hostList);
             Intent i = new Intent();
             if (hostList.size() >= 2) {
+              System.out.println("sending broadcast of show_send_button");
               i.setAction("SHOW_SEND_BUTTON");
               sendBroadcast(i);
             } else {
