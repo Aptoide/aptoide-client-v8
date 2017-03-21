@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshare.socket.message;
+package cm.aptoide.pt.spotandshare.socket.message.handlers.v1;
 
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
@@ -7,11 +7,12 @@ import cm.aptoide.pt.spotandshare.socket.file.ShareAppsFileClientSocket;
 import cm.aptoide.pt.spotandshare.socket.file.ShareAppsFileServerSocket;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
+import cm.aptoide.pt.spotandshare.socket.message.Message;
+import cm.aptoide.pt.spotandshare.socket.message.MessageHandler;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Sender;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.AckMessage;
-import cm.aptoide.pt.spotandshare.socket.message.messages.v1.AndroidAppInfoMessage;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ExitMessage;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.HostLeftMessage;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ReceiveApk;
@@ -19,50 +20,16 @@ import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionTo
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.SendApk;
 import cm.aptoide.pt.spotandshare.socket.message.server.AptoideMessageServerSocket;
 import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by neuro on 02-02-2017.
  */
 
-public class HandlersFactory {
+public class HandlersFactoryV1 {
 
-  @Deprecated public static List<MessageHandler<? extends Message>> newDefaultServerHandlersList(
-      AptoideMessageServerSocket aptoideMessageServerSocket) {
-    List<MessageHandler<? extends Message>> messageHandlers = new LinkedList<>();
+  static class RequestPermissionToSendHandler extends MessageHandler<RequestPermissionToSend> {
 
-    MessageHandler<AndroidAppInfoMessage> messageHandler =
-        new MessageHandler<AndroidAppInfoMessage>(AndroidAppInfoMessage.class) {
-          @Override
-          public void handleMessage(AndroidAppInfoMessage message, Sender<Message> messageSender) {
-          }
-        };
-
-    messageHandlers.add(messageHandler);
-    messageHandlers.add(new RequestPermissionToSendHandler(aptoideMessageServerSocket));
-    messageHandlers.add(new ExitMessageHandler(aptoideMessageServerSocket));
-
-    return messageHandlers;
-  }
-  
-  public static List<MessageHandler<? extends Message>> newDefaultClientHandlersList(String rootDir,
-          StorageCapacity storageCapacity, FileServerLifecycle<AndroidAppInfo> serverLifecycle,
-          FileClientLifecycle<AndroidAppInfo> fileClientLifecycle,
-          AptoideMessageClientSocket aptoideMessageClientController) {
-    List<MessageHandler<? extends Message>> messageHandlers = new LinkedList<>();
-    
-    messageHandlers.add(new SendApkHandler(serverLifecycle));
-    messageHandlers.add(new ReceiveApkHandler(rootDir, storageCapacity, fileClientLifecycle));
-    messageHandlers.add(new HostLeftMessageHandler(aptoideMessageClientController));
-    
-    return messageHandlers;
-  }
-
-  private static class RequestPermissionToSendHandler
-      extends MessageHandler<RequestPermissionToSend> {
-
-    private final AptoideMessageServerSocket messageServerSocket;
+    final AptoideMessageServerSocket messageServerSocket;
 
     public RequestPermissionToSendHandler(AptoideMessageServerSocket messageServerSocket) {
       super(RequestPermissionToSend.class);
@@ -75,9 +42,9 @@ public class HandlersFactory {
     }
   }
 
-  private static class SendApkHandler extends MessageHandler<SendApk> {
+  static class SendApkHandler extends MessageHandler<SendApk> {
 
-    private final FileServerLifecycle<AndroidAppInfo> fileServerLifecycle;
+    final FileServerLifecycle<AndroidAppInfo> fileServerLifecycle;
 
     public SendApkHandler(FileServerLifecycle<AndroidAppInfo> fileServerLifecycle) {
       super(SendApk.class);
@@ -96,11 +63,11 @@ public class HandlersFactory {
     }
   }
 
-  private static class ReceiveApkHandler extends MessageHandler<ReceiveApk> {
+  static class ReceiveApkHandler extends MessageHandler<ReceiveApk> {
 
-    private final String root;
-    private final StorageCapacity storageCapacity;
-    private final FileClientLifecycle<AndroidAppInfo> fileClientLifecycle;
+    final String root;
+    final StorageCapacity storageCapacity;
+    final FileClientLifecycle<AndroidAppInfo> fileClientLifecycle;
 
     public ReceiveApkHandler(String root, StorageCapacity storageCapacity,
         FileClientLifecycle<AndroidAppInfo> fileClientLifecycle) {
@@ -134,7 +101,7 @@ public class HandlersFactory {
       }
     }
 
-    private String changeFilesRootDir(AndroidAppInfo androidAppInfo) {
+    String changeFilesRootDir(AndroidAppInfo androidAppInfo) {
       String packageName = androidAppInfo.getPackageName();
       String rootToFiles = root + File.separatorChar + packageName;
 
@@ -146,9 +113,9 @@ public class HandlersFactory {
     }
   }
 
-  private static class ExitMessageHandler extends MessageHandler<ExitMessage> {
+  static class ExitMessageHandler extends MessageHandler<ExitMessage> {
 
-    private final AptoideMessageServerSocket aptoideMessageServerSocket;
+    final AptoideMessageServerSocket aptoideMessageServerSocket;
 
     public ExitMessageHandler(AptoideMessageServerSocket aptoideMessageServerSocket) {
       super(ExitMessage.class);
@@ -161,15 +128,15 @@ public class HandlersFactory {
     }
   }
 
-  private static class HostLeftMessageHandler extends MessageHandler<HostLeftMessage> {
-  
-    private final AptoideMessageClientSocket aptoideMessageClientSocket;
-  
+  static class HostLeftMessageHandler extends MessageHandler<HostLeftMessage> {
+
+    final AptoideMessageClientSocket aptoideMessageClientSocket;
+
     public HostLeftMessageHandler(AptoideMessageClientSocket aptoideMessageClientSocket) {
       super(HostLeftMessage.class);
       this.aptoideMessageClientSocket = aptoideMessageClientSocket;
     }
-  
+
     @Override public void handleMessage(HostLeftMessage message, Sender<Message> messageSender) {
       messageSender.send(new AckMessage(messageSender.getHost()));
     }
