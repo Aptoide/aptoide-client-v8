@@ -148,6 +148,6 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> implements Lifecyc
 
   public void removeDisplayable(Displayable displayable) {
     displayables.remove(displayable);
-    notifyItemRemoved(displayables.size());
+    notifyItemRemoved(displayables.getPosition(displayable));
   }
 }

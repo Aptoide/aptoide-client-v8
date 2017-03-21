@@ -50,6 +50,7 @@ import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.TimeLineStatsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.TimelineLoginDisplayable;
@@ -94,6 +95,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private CardToDisplayable cardToDisplayable;
   private BehaviorRelay<Boolean> refreshSubject;
   private Parcelable listState;
+  private Displayable spinnerProgressDisplayable;
 
   public static AppsTimelineFragment newInstance(String action, Long userId, long storeId) {
     AppsTimelineFragment fragment = new AppsTimelineFragment();
@@ -212,6 +214,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     downloadFactory = new DownloadFactory();
     linksHandlerFactory = new LinksHandlerFactory();
     packageRepository = new PackageRepository(getContext().getPackageManager());
+    spinnerProgressDisplayable = new ProgressBarDisplayable().setFullRow();
 
     final PermissionManager permissionManager = new PermissionManager();
     final Installer installer =
@@ -281,12 +284,13 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
   private Observable<Datalist<Displayable>> getNextDisplayables(List<String> packages) {
     return RxEndlessRecyclerView.loadMore(getRecyclerView(), getAdapter())
-        .filter(item -> onStartLoadNext())
         .observeOn(AndroidSchedulers.mainThread())
+        .filter(item -> onStartLoadNext())
         .concatMap(item -> getDisplayableList(packages, getOffset(), false))
         .delay(1, TimeUnit.SECONDS)
-        .retryWhen(
-            errors -> errors.delay(1, TimeUnit.SECONDS).filter(error -> onStopLoadNext(error)))
+        .retryWhen(errors -> errors.delay(1, TimeUnit.SECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .filter(error -> onStopLoadNext(error)))
         .subscribeOn(AndroidSchedulers.mainThread());
   }
 
@@ -354,8 +358,22 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     this.isLoading = loading;
   }
 
+  @UiThread private void removeLoading() {
+    if (isLoading) {
+      isLoading = false;
+      getAdapter().removeDisplayable(spinnerProgressDisplayable);
+    }
+  }
+
+  @UiThread private void addLoading() {
+    if (!isLoading) {
+      isLoading = true;
+      getAdapter().addDisplayable(spinnerProgressDisplayable);
+    }
+  }
+
   @UiThread private void addItems(Datalist<Displayable> data) {
-    setLoading(false);
+    removeLoading();
     setTotal(data);
     setOffset(data);
     addDisplayables(data.getList(), true);
@@ -363,7 +381,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
   @UiThread @NonNull private boolean onStopLoadNext(Throwable error) {
     if (isLoading()) {
-      setLoading(false);
+      removeLoading();
       showErrorSnackbar(error);
       return true;
     }
@@ -372,7 +390,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
   @UiThread @NonNull private boolean onStartLoadNext() {
     if (!isTotal() && !isLoading()) {
-      setLoading(true);
+      addLoading();
       Analytics.AppsTimeline.endlessScrollLoadMore();
       return true;
     } else if (isTotal()) {

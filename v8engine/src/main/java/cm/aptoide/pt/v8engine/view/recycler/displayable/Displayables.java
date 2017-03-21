@@ -152,6 +152,10 @@ public class Displayables implements LifecycleSchim {
     displayables.remove(displayable);
   }
 
+  public int getPosition(Displayable displayable) {
+    return displayables.indexOf(displayable);
+  }
+
   public void clear() {
     displayables.clear();
   }
