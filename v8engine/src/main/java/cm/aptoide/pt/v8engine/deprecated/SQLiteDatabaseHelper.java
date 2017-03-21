@@ -148,7 +148,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
     String[] migrationKeys = {
         "userId", "username", "useravatar", "refresh_token", "access_token",
-        "aptoide_account_manager_login_mode", "userRepo", "useravatar", "access"
+        "aptoide_account_manager_login_mode", "userRepo", "useravatar", "access", "access"
     };
 
     try {

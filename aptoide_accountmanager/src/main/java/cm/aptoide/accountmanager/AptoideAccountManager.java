@@ -120,11 +120,13 @@ public class AptoideAccountManager {
 
         final String email = androidAccount.name;
 
+        final String loginMode = androidAccountManager.getUserData(androidAccount, LOGIN_MODE);
+
         final String adultContentEnabled =
             androidAccountManager.getUserData(androidAccount, MATURE_SWITCH);
+
         final String accessConfirmed =
             androidAccountManager.getUserData(androidAccount, ACCESS_CONFIRMED);
-        final String loginMode = androidAccountManager.getUserData(androidAccount, LOGIN_MODE);
 
         return new Account(userId, email, userNickName, userAvatar, refreshToken, accessToken,
             password, Account.Type.valueOf(loginMode), userRepo, userRepoAvatar,
@@ -285,9 +287,9 @@ public class AptoideAccountManager {
       androidAccountManager.setUserData(androidAccount, LOGIN_MODE, account.getType().name());
       androidAccountManager.setUserData(androidAccount, USER_REPO, account.getStore());
       androidAccountManager.setUserData(androidAccount, REPO_AVATAR, account.getStoreAvatar());
+      androidAccountManager.setUserData(androidAccount, ACCESS, account.getAccess().name());
       androidAccountManager.setUserData(androidAccount, MATURE_SWITCH,
           String.valueOf(account.isAdultContentEnabled()));
-      androidAccountManager.setUserData(androidAccount, ACCESS, account.getAccess().name());
       androidAccountManager.setUserData(androidAccount, ACCESS_CONFIRMED,
           String.valueOf(account.isAccessConfirmed()));
 
