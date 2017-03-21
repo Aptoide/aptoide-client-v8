@@ -12,6 +12,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
+import cm.aptoide.pt.spotandshare.socket.exception.ServerLeftException;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
@@ -20,7 +21,6 @@ import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionTo
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
 import java.io.IOException;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +57,7 @@ public class HighwayClientService extends Service {
         System.out.println("Fell on error  Client !! ");
 
         Intent i = new Intent();
-        if (e instanceof SocketException) {
+        if (e instanceof ServerLeftException) {
           i.setAction("SERVER_LEFT");
         } else {
           i.setAction("ERRORRECEIVING");

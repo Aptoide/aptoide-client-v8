@@ -1,10 +1,12 @@
 package cm.aptoide.pt.spotandshare.socket.message;
 
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
+import cm.aptoide.pt.spotandshare.socket.exception.ServerLeftException;
 import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Sender;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.AckMessage;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ExitMessage;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -72,7 +74,11 @@ public abstract class AptoideMessageController implements Sender<Message> {
       }
     } catch (IOException e) {
       if (onError != null) {
-        onError.onError(e);
+        if (isServerLeft(e)) {
+          onError.onError(new ServerLeftException(e));
+        } else {
+          onError.onError(e);
+        }
       }
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
@@ -96,6 +102,10 @@ public abstract class AptoideMessageController implements Sender<Message> {
             "Can't handle messages of type " + message.getClass().getSimpleName());
       }
     }
+  }
+
+  private boolean isServerLeft(IOException e) {
+    return e instanceof EOFException;
   }
 
   private boolean canHandle(Message message) {

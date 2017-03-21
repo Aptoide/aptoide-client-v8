@@ -327,7 +327,6 @@ public class HighwayServerService extends Service {
       } else if (intent.getAction() != null && intent.getAction().equals("SHUTDOWN_SERVER")) {
         aptoideMessageClientSocket.disable();
         if (aptoideMessageServerSocket != null) { // TODO: 16-03-2017 filipe check problem
-          aptoideMessageClientSocket.disable();
           aptoideMessageServerSocket.shutdown(new Runnable() {
             @Override public void run() {
               setInitialApConfig();//to not interfere with recovering wifi state
@@ -341,6 +340,31 @@ public class HighwayServerService extends Service {
       }
     }
     return START_STICKY;
+  }
+
+  @Nullable @Override public IBinder onBind(Intent intent) {
+    return null;
+  }
+
+  public List<FileInfo> getFileInfo(String filePath, String obbsFilePath) {
+    List<FileInfo> fileInfoList = new ArrayList<>();
+    File apk = new File(filePath);
+    FileInfo apkFileInfo = new FileInfo(apk);
+    fileInfoList.add(apkFileInfo);
+
+    if (!obbsFilePath.equals("noObbs")) {
+      File obbFolder = new File(obbsFilePath);
+      File[] list = obbFolder.listFiles();
+      if (list != null) {
+        if (list.length > 0) {
+          for (int i = 0; i < list.length; i++) {
+            fileInfoList.add(new FileInfo(list[i]));
+          }
+        }
+      }
+    }
+
+    return fileInfoList;
   }
 
   /**
@@ -379,30 +403,5 @@ public class HighwayServerService extends Service {
         }
       }
     }
-  }
-
-  @Nullable @Override public IBinder onBind(Intent intent) {
-    return null;
-  }
-
-  public List<FileInfo> getFileInfo(String filePath, String obbsFilePath) {
-    List<FileInfo> fileInfoList = new ArrayList<>();
-    File apk = new File(filePath);
-    FileInfo apkFileInfo = new FileInfo(apk);
-    fileInfoList.add(apkFileInfo);
-
-    if (!obbsFilePath.equals("noObbs")) {
-      File obbFolder = new File(obbsFilePath);
-      File[] list = obbFolder.listFiles();
-      if (list != null) {
-        if (list.length > 0) {
-          for (int i = 0; i < list.length; i++) {
-            fileInfoList.add(new FileInfo(list[i]));
-          }
-        }
-      }
-    }
-
-    return fileInfoList;
   }
 }
