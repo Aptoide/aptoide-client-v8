@@ -144,8 +144,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
 
       //check if the user is the store's owner
       if (accountManager.isLoggedIn()
-          && accountManager.getAccount().getStore() != null
-          && accountManager.getAccount().getStore().equals(store.getName())) {
+          && accountManager.getAccount().getStoreName() != null
+          && accountManager.getAccount().getStoreName().equals(store.getName())) {
         description.setVisibility(View.VISIBLE);
         backgroundView.setVisibility(View.VISIBLE);
         if (TextUtils.isEmpty(store.getAppearance().getDescription())) {

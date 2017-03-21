@@ -32,7 +32,7 @@ public class LocalAccount implements Account {
     return "";
   }
 
-  @Override public String getStore() {
+  @Override public String getStoreName() {
     return "";
   }
 

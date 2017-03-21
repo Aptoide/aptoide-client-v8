@@ -91,7 +91,7 @@ public final class AptoideAccount implements Account {
     return avatar;
   }
 
-  @Override public String getStore() {
+  @Override public String getStoreName() {
     return store;
   }
 

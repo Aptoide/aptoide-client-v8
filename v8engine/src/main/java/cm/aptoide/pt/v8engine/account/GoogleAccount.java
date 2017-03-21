@@ -1,9 +1,7 @@
 package cm.aptoide.pt.v8engine.account;
 
 import cm.aptoide.accountmanager.Account;
-import cm.aptoide.accountmanager.AptoideAccount;
 import cm.aptoide.accountmanager.Store;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
 import java.util.List;
@@ -49,8 +47,8 @@ public class GoogleAccount implements Account {
     return account.getAvatar();
   }
 
-  @Override public String getStore() {
-    return account.getStore();
+  @Override public String getStoreName() {
+    return account.getStoreName();
   }
 
   @Override public String getStoreAvatar() {

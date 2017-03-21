@@ -365,7 +365,7 @@ public class SharePreviewDialog {
       alertadd.setView(view).setCancelable(false);
 
       if (!(displayable instanceof SocialCardDisplayable)) {
-        storeName.setText(accountManager.getAccount().getStore());
+        storeName.setText(accountManager.getAccount().getStoreName());
         setCardHeader(context, storeName, userName, storeAvatar, userAvatar);
       } else {
         sharedBy = (TextView) view.findViewById(R.id.social_shared_by);
@@ -385,7 +385,7 @@ public class SharePreviewDialog {
 
   private void setCardHeader(Context context, TextView storeName, TextView userName,
       ImageView storeAvatar, ImageView userAvatar) {
-    if (accountManager.getAccount().getStore() != null) {
+    if (accountManager.getAccount().getStoreName() != null) {
       if (Account.Access.PUBLIC.equals(accountManager.getAccountAccess())) {
         storeAvatar.setVisibility(View.VISIBLE);
         userAvatar.setVisibility(View.VISIBLE);
@@ -394,7 +394,7 @@ public class SharePreviewDialog {
                 storeAvatar);
         ImageLoader.with(context)
             .loadWithShadowCircleTransform(accountManager.getAccount().getAvatar(), userAvatar);
-        storeName.setText(accountManager.getAccount().getStore());
+        storeName.setText(accountManager.getAccount().getStoreName());
         userName.setText(accountManager.getAccount().getNickname());
       } else {
         storeAvatar.setVisibility(View.VISIBLE);
@@ -404,7 +404,7 @@ public class SharePreviewDialog {
                 storeAvatar);
         ImageLoader.with(context)
             .loadWithShadowCircleTransform(accountManager.getAccount().getAvatar(), userAvatar);
-        storeName.setText(accountManager.getAccount().getStore());
+        storeName.setText(accountManager.getAccount().getStoreName());
         userName.setText(accountManager.getAccount().getNickname());
         userName.setVisibility(View.GONE);
       }
@@ -428,7 +428,7 @@ public class SharePreviewDialog {
           accountManager.getAccount().getNickname()));
     } else {
       sharedBy.setText(String.format(context.getString(R.string.social_timeline_shared_by),
-          accountManager.getAccount().getStore()));
+          accountManager.getAccount().getStoreName()));
     }
   }
 
@@ -554,7 +554,7 @@ public class SharePreviewDialog {
     alertadd.setView(view).setCancelable(false);
     alertadd.setTitle(R.string.social_timeline_you_will_share);
 
-    storeName.setText(accountManager.getAccount().getStore());
+    storeName.setText(accountManager.getAccount().getStoreName());
     setCardHeader(context, storeName, userName, storeAvatar, userAvatar);
 
     if (!accountManager.isAccountAccessConfirmed()) {

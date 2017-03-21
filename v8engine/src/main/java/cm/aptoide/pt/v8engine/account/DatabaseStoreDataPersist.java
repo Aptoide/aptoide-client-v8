@@ -43,7 +43,7 @@ public class DatabaseStoreDataPersist {
     public cm.aptoide.pt.database.realm.Store toDatabase(Store store) {
       cm.aptoide.pt.database.realm.Store result = new cm.aptoide.pt.database.realm.Store();
       result.setDownloads(store.getDownloadCount());
-      result.setIconPath(store.getIcon());
+      result.setIconPath(store.getAvatar());
       result.setStoreId(store.getId());
       result.setStoreName(store.getName());
       result.setTheme(store.getTheme());

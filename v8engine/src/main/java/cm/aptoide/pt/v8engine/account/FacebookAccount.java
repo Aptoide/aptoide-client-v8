@@ -2,9 +2,7 @@ package cm.aptoide.pt.v8engine.account;
 
 import android.content.Context;
 import cm.aptoide.accountmanager.Account;
-import cm.aptoide.accountmanager.AptoideAccount;
 import cm.aptoide.accountmanager.Store;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import java.util.List;
@@ -47,8 +45,8 @@ public class FacebookAccount implements Account {
     return account.getAvatar();
   }
 
-  @Override public String getStore() {
-    return account.getStore();
+  @Override public String getStoreName() {
+    return account.getStoreName();
   }
 
   @Override public String getStoreAvatar() {
