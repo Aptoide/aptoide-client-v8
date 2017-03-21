@@ -11,6 +11,8 @@ import lombok.ToString;
  */
 @ToString(callSuper = true) public class AckMessage extends Message {
 
+  private static final long serialVersionUID = -5038798843482552911L;
+
   @Getter @Setter private boolean success;
 
   public AckMessage(Host localhost) {

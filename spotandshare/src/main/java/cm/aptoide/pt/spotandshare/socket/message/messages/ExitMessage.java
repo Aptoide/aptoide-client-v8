@@ -9,6 +9,8 @@ import cm.aptoide.pt.spotandshare.socket.message.Message;
 
 public class ExitMessage extends Message {
 
+  private static final long serialVersionUID = 3171074727404858798L;
+
   public ExitMessage(Host localhost) {
     super(localhost);
   }

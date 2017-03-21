@@ -10,6 +10,8 @@ import lombok.Getter;
 
 public class HostLeftMessage extends Message {
 
+  private static final long serialVersionUID = 6476552013615482398L;
+
   @Getter private final Host hostThatLeft;
 
   public HostLeftMessage(Host localhost, Host hostThatLeft) {

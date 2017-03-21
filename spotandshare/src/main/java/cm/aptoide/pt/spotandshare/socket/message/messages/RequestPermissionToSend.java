@@ -11,6 +11,8 @@ import lombok.ToString;
 @ToString(callSuper = true) public class RequestPermissionToSend extends AndroidAppInfoMessage
     implements Serializable {
 
+  private static final long serialVersionUID = -7964770150534506715L;
+
   public RequestPermissionToSend(Host localhost, AndroidAppInfo androidAppInfo) {
     super(localhost, androidAppInfo);
   }

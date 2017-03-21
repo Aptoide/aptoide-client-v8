@@ -11,6 +11,8 @@ import lombok.ToString;
  */
 @ToString(callSuper = true) public abstract class AndroidAppInfoMessage extends Message {
 
+  private static final long serialVersionUID = 2694553209958755261L;
+
   @Getter private final AndroidAppInfo androidAppInfo;
 
   public AndroidAppInfoMessage(Host localhost, AndroidAppInfo androidAppInfo) {
