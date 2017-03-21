@@ -137,6 +137,7 @@ public class TransferRecordPresenter implements Presenter {
     applicationSender.setHostsListener(new ApplicationSender.HostsListener() {
       @Override public void onNoClients() {
         view.setTransparencySend(true);
+        view.setTextViewMessage(false);
       }
 
       @Override public void onAvailableClients() {

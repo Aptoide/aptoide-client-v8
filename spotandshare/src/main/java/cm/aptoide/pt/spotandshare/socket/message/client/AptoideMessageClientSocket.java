@@ -3,6 +3,7 @@ package cm.aptoide.pt.spotandshare.socket.message.client;
 import cm.aptoide.pt.spotandshare.socket.AptoideClientSocket;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
+import cm.aptoide.pt.spotandshare.socket.exception.ServerLeftException;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
@@ -73,5 +74,13 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
 
   public void send(Message message) {
     aptoideMessageController.send(message);
+  }
+
+  public void serverLeft() {
+    System.out.println("serverLeft called");
+    if (onError != null) {
+      onError.onError(new ServerLeftException("Server Left"));
+    }
+    disable();
   }
 }

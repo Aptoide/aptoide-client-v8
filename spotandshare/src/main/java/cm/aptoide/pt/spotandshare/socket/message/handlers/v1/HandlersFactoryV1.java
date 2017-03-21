@@ -18,6 +18,7 @@ import cm.aptoide.pt.spotandshare.socket.message.messages.v1.HostLeftMessage;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ReceiveApk;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.SendApk;
+import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ServerLeftMessage;
 import cm.aptoide.pt.spotandshare.socket.message.server.AptoideMessageServerSocket;
 import java.io.File;
 
@@ -138,6 +139,21 @@ public class HandlersFactoryV1 {
     }
 
     @Override public void handleMessage(HostLeftMessage message, Sender<Message> messageSender) {
+      messageSender.send(new AckMessage(messageSender.getHost()));
+    }
+  }
+
+  static class ServerLeftHandler extends MessageHandler<ServerLeftMessage> {
+
+    private final AptoideMessageClientSocket aptoideMessageClientSocket;
+
+    public ServerLeftHandler(AptoideMessageClientSocket aptoideMessageClientSocket) {
+      super(ServerLeftMessage.class);
+      this.aptoideMessageClientSocket = aptoideMessageClientSocket;
+    }
+
+    @Override public void handleMessage(ServerLeftMessage message, Sender<Message> messageSender) {
+      aptoideMessageClientSocket.serverLeft();
       messageSender.send(new AckMessage(messageSender.getHost()));
     }
   }
