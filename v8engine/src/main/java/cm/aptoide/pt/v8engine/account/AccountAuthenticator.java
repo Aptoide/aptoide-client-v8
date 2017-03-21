@@ -155,22 +155,23 @@ class AccountAuthenticator extends AbstractAccountAuthenticator {
   @Override
   public Bundle getAccountRemovalAllowed(AccountAuthenticatorResponse response, Account account)
       throws NetworkErrorException {
-    //final Bundle result = super.getAccountRemovalAllowed(response, account);
-    //if (result != null
-    //    && result.containsKey(AccountManager.KEY_BOOLEAN_RESULT)
-    //    && !result.containsKey(AccountManager.KEY_INTENT)) {
-    //  if (result.getBoolean(AccountManager.KEY_BOOLEAN_RESULT)) {
-    //    accountManager.logout(null);
-    //  }
-    //}
+    final Bundle result = super.getAccountRemovalAllowed(response, account);
+    if (result != null
+        && result.containsKey(AccountManager.KEY_BOOLEAN_RESULT)
+        && !result.containsKey(AccountManager.KEY_INTENT)) {
+      if (result.getBoolean(AccountManager.KEY_BOOLEAN_RESULT)) {
+        accountManager.logout(null);
+      }
+    }
+    return result;
 
     //
     // this indicates that the user must explicitly logout inside Aptoide and is not able to
     // logout from the Settings -> Accounts
     //
 
-    Bundle result = new Bundle();
-    result.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, false);
-    return result;
+    //Bundle result = new Bundle();
+    //result.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, false);
+    //return result;
   }
 }

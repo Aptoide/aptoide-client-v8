@@ -3,7 +3,6 @@ package cm.aptoide.pt.spotandshareandroid;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.StatFs;
@@ -35,8 +34,6 @@ public class HighwayClientService extends Service {
   private int port;
   private ArrayList<App> listOfApps;
   private NotificationManagerCompat mNotifyManager;
-  private Object mBuilderSend;
-  private Object mBuilderReceive;
   private FileServerLifecycle<AndroidAppInfo> fileServerLifecycle;
   private FileClientLifecycle<AndroidAppInfo> fileClientLifecycle;
   private AptoideMessageClientSocket aptoideMessageClientSocket;
@@ -160,104 +157,98 @@ public class HighwayClientService extends Service {
   }
 
   private void createReceiveNotification(String receivingAppName) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      mBuilderReceive = new NotificationCompat.Builder(this);
-      ((NotificationCompat.Builder) mBuilderReceive).setContentTitle(
-          this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
-              .getString(R.string.receive))
-          .setContentText(
-              this.getResources().getString(R.string.receiving) + " " + receivingAppName)
-          .setSmallIcon(R.mipmap.ic_launcher);
-    }
+    NotificationCompat.Builder mBuilderReceive = new NotificationCompat.Builder(this);
+    mBuilderReceive.setContentTitle(
+        this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
+            .getString(R.string.receive))
+        .setContentText(this.getResources().getString(R.string.receiving) + " " + receivingAppName)
+        .setSmallIcon(R.mipmap.ic_launcher);
   }
 
   private void finishReceiveNotification(String receivedApkFilePath, String packageName,
       AndroidAppInfo androidAppInfo) {
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-      ((NotificationCompat.Builder) mBuilderReceive).setContentText(
-          this.getResources().getString(R.string.transfCompleted))
-          // Removes the progress bar
-          .setSmallIcon(android.R.drawable.stat_sys_download_done)
-          .setProgress(0, 0, false)
-          .setAutoCancel(true);
+    NotificationCompat.Builder mBuilderReceive = new NotificationCompat.Builder(this);
+    mBuilderReceive.setContentTitle(
+        this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
+            .getString(R.string.receive))
+        .setContentText(this.getResources().getString(R.string.transfCompleted))
+        .setSmallIcon(android.R.drawable.stat_sys_download_done)
+        .setProgress(0, 0, false)
+        .setAutoCancel(true);
 
-      Intent intent = new Intent();
-      intent.setAction("INSTALL_APP_NOTIFICATION");
-      intent.putExtra("filePath", receivedApkFilePath);
-      intent.putExtra("packageName", packageName);
-      PendingIntent contentIntent =
-          PendingIntent.getBroadcast(this, INSTALL_APP_NOTIFICATION_REQUEST_CODE, intent,
-              PendingIntent.FLAG_CANCEL_CURRENT);
+    Intent intent = new Intent();
+    intent.setAction("INSTALL_APP_NOTIFICATION");
+    intent.putExtra("filePath", receivedApkFilePath);
+    intent.putExtra("packageName", packageName);
+    PendingIntent contentIntent =
+        PendingIntent.getBroadcast(this, INSTALL_APP_NOTIFICATION_REQUEST_CODE, intent,
+            PendingIntent.FLAG_CANCEL_CURRENT);
 
-      ((NotificationCompat.Builder) mBuilderReceive).setContentIntent(contentIntent);
-      if (mNotifyManager == null) {
-        mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
-      }
-      mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
-          ((NotificationCompat.Builder) mBuilderReceive).getNotification());
+    mBuilderReceive.setContentIntent(contentIntent);
+    if (mNotifyManager == null) {
+      mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
     }
+    mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(), mBuilderReceive.build());
   }
 
   private void showReceiveProgress(String receivingAppName, int actual,
       AndroidAppInfo androidAppInfo) {
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-      ((NotificationCompat.Builder) mBuilderReceive).setContentText(
-          this.getResources().getString(R.string.receiving) + " " + receivingAppName);
+    NotificationCompat.Builder mBuilderReceive = new NotificationCompat.Builder(this);
+    mBuilderReceive.setContentTitle(
+        this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
+            .getString(R.string.receive))
+        .setContentText(this.getResources().getString(R.string.receiving) + " " + receivingAppName)
+        .setSmallIcon(R.mipmap.ic_launcher);
 
-      ((NotificationCompat.Builder) mBuilderReceive).setProgress(100, actual, false);
-      if (mNotifyManager == null) {
-        mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
-      }
-      mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
-          ((NotificationCompat.Builder) mBuilderReceive).getNotification());
+    mBuilderReceive.setProgress(100, actual, false);
+    if (mNotifyManager == null) {
+      mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
     }
+    mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(), mBuilderReceive.build());
   }
 
   private void createSendNotification() {
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      mBuilderSend = new NotificationCompat.Builder(this);
-      ((NotificationCompat.Builder) mBuilderSend).setContentTitle(
-          this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
-              .getString(R.string.send))
-          .setContentText(this.getResources().getString(R.string.preparingSend))
-          .setSmallIcon(R.mipmap.ic_launcher);
-    }
+    NotificationCompat.Builder mBuilderSend = new NotificationCompat.Builder(this);
+    mBuilderSend.setContentTitle(
+        this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
+            .getString(R.string.send))
+        .setContentText(this.getResources().getString(R.string.preparingSend))
+        .setSmallIcon(R.mipmap.ic_launcher);
   }
 
   private void finishSendNotification(AndroidAppInfo androidAppInfo) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-      if (mBuilderSend == null) {
-        mBuilderSend = new NotificationCompat.Builder(this);
-      }
-      ((NotificationCompat.Builder) mBuilderSend).setContentText(
-          this.getResources().getString(R.string.transfCompleted))
-          // Removes the progress bar
-          .setSmallIcon(android.R.drawable.stat_sys_download_done)
-          .setProgress(0, 0, false)
-          .setAutoCancel(true);
-      if (mNotifyManager == null) {
-        mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
-      }
-      mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
-          ((NotificationCompat.Builder) mBuilderSend).getNotification());
+    NotificationCompat.Builder mBuilderSend = new NotificationCompat.Builder(this);
+    mBuilderSend.setContentTitle(
+        this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
+            .getString(R.string.send))
+        .setContentText(this.getResources().getString(R.string.transfCompleted))
+        // Removes the progress bar
+        .setSmallIcon(android.R.drawable.stat_sys_download_done)
+        .setProgress(0, 0, false)
+        .setAutoCancel(true);
+    if (mNotifyManager == null) {
+      mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
     }
+    mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(), mBuilderSend.build());
   }
 
   private void showSendProgress(String sendingAppName, int actual, AndroidAppInfo androidAppInfo) {
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-      ((NotificationCompat.Builder) mBuilderSend).setContentText(
-          this.getResources().getString(R.string.sending) + " " + sendingAppName);
-      ((NotificationCompat.Builder) mBuilderSend).setProgress(100, actual, false);
-      if (mNotifyManager == null) {
-        mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
-      }
-      mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
-          ((NotificationCompat.Builder) mBuilderSend).getNotification());
+    NotificationCompat.Builder mBuilderSend = new NotificationCompat.Builder(this);
+    mBuilderSend.setContentTitle(
+        this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
+            .getString(R.string.send))
+        .setContentText(this.getResources().getString(R.string.sending) + " " + sendingAppName)
+        .setSmallIcon(R.mipmap.ic_launcher);
+
+    mBuilderSend.setProgress(100, actual, false);
+    if (mNotifyManager == null) {
+      mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
     }
+    mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(), mBuilderSend.build());
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
