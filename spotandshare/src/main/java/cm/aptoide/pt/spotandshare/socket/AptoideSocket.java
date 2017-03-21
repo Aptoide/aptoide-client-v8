@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public abstract class AptoideSocket {
 
@@ -71,5 +72,17 @@ public abstract class AptoideSocket {
       }
       totalBytesRead += bytesRead;
     }
+  }
+
+  public void shutdown(Runnable onDisconnect) {
+    shutdown();
+
+    try {
+      executorService.awaitTermination(5, TimeUnit.MILLISECONDS);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+
+    onDisconnect.run();
   }
 }

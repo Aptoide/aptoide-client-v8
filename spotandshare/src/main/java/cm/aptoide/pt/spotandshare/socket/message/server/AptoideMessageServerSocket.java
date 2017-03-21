@@ -3,10 +3,10 @@ package cm.aptoide.pt.spotandshare.socket.message.server;
 import cm.aptoide.pt.spotandshare.socket.AptoideServerSocket;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
-import cm.aptoide.pt.spotandshare.socket.message.messages.HostLeftMessage;
-import cm.aptoide.pt.spotandshare.socket.message.messages.ReceiveApk;
-import cm.aptoide.pt.spotandshare.socket.message.messages.RequestPermissionToSend;
-import cm.aptoide.pt.spotandshare.socket.message.messages.SendApk;
+import cm.aptoide.pt.spotandshare.socket.message.messages.v1.HostLeftMessage;
+import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ReceiveApk;
+import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
+import cm.aptoide.pt.spotandshare.socket.message.messages.v1.SendApk;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Iterator;
@@ -24,17 +24,18 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
 
   @Getter private final ConcurrentLinkedQueue<AptoideMessageServerController>
       aptoideMessageControllers = new ConcurrentLinkedQueue<>();
+  private AptoideMessageServerController aptoideMessageServerController;
 
   public AptoideMessageServerSocket(int port, int timeout) {
     super(port, timeout);
   }
 
   @Override protected void onNewClient(Socket socket) throws IOException {
-    AptoideMessageServerController shareAppsMessageController =
+    aptoideMessageServerController =
         new AptoideMessageServerController(this, Host.fromLocalhost(socket), Host.from(socket),
             onError);
-    aptoideMessageControllers.add(shareAppsMessageController);
-    shareAppsMessageController.onConnect(socket);
+    aptoideMessageControllers.add(aptoideMessageServerController);
+    aptoideMessageServerController.onConnect(socket);
   }
 
   @Override public void removeHost(Host host) {
@@ -44,12 +45,23 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
     while (iterator.hasNext()) {
       AptoideMessageServerController aptoideMessageServerController = iterator.next();
       if (aptoideMessageServerController.getHost().getIp().equals(host.getIp())) {
+        sendToOthers(host, new HostLeftMessage(getHost(), host));
         aptoideMessageServerController.disable();
         iterator.remove();
-        System.out.println("ShareApps: Host " + host + " removed from the server.");
-        sendToOthers(host, new HostLeftMessage(getHost(), host));
+        System.out.println(
+            "AptoideMessageServerSocket: Host " + host + " removed from the server.");
       }
     }
+  }
+
+  @Override public void shutdown() {
+    onError = null;
+    for (AptoideMessageServerController aptoideMessageClientController : getAptoideMessageControllers()) {
+      aptoideMessageClientController.disable();
+    }
+    aptoideMessageServerController.disable();
+
+    super.shutdown();
   }
 
   public void sendToOthers(Host host, Message message) {
@@ -73,7 +85,8 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
         localExecutorService.awaitTermination(5, TimeUnit.SECONDS);
       } catch (InterruptedException e) {
         e.printStackTrace();
-        System.out.println("ShareApps: Executor service took too long to complete requests.");
+        System.out.println(
+            "AptoideMessageServerSocket: Executor service took too long to complete requests.");
       }
     });
   }

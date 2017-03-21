@@ -4,8 +4,8 @@ import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
 import cm.aptoide.pt.spotandshare.socket.message.AptoideMessageController;
-import cm.aptoide.pt.spotandshare.socket.message.HandlersFactory;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
+import cm.aptoide.pt.spotandshare.socket.message.handlers.v1.DefaultClientHandlersListV1;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Sender;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 
@@ -19,7 +19,7 @@ public class AptoideMessageClientController extends AptoideMessageController
       String rootDir, StorageCapacity storageCapacity,
       FileServerLifecycle<AndroidAppInfo> serverLifecycle,
       FileClientLifecycle<AndroidAppInfo> fileClientLifecycle) {
-    super(HandlersFactory.newDefaultClientHandlersList(rootDir, storageCapacity, serverLifecycle,
+    super(DefaultClientHandlersListV1.create(rootDir, storageCapacity, serverLifecycle,
         fileClientLifecycle, aptoideMessageClientSocket), fileClientLifecycle);
   }
 }

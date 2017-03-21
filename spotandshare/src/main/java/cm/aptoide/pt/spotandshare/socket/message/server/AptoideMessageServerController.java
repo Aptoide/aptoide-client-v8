@@ -3,8 +3,8 @@ package cm.aptoide.pt.spotandshare.socket.message.server;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
 import cm.aptoide.pt.spotandshare.socket.message.AptoideMessageController;
-import cm.aptoide.pt.spotandshare.socket.message.HandlersFactory;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
+import cm.aptoide.pt.spotandshare.socket.message.handlers.v1.DefaultServerHandlersListV1;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Sender;
 import java.io.IOException;
 import lombok.Getter;
@@ -21,7 +21,7 @@ public class AptoideMessageServerController extends AptoideMessageController
 
   public AptoideMessageServerController(AptoideMessageServerSocket aptoideMessageServerSocket,
       Host localHost, Host host, OnError<IOException> onError) {
-    super(HandlersFactory.newDefaultServerHandlersList(aptoideMessageServerSocket), onError);
+    super(DefaultServerHandlersListV1.create(aptoideMessageServerSocket), onError);
     this.localHost = localHost;
     this.host = host;
   }
