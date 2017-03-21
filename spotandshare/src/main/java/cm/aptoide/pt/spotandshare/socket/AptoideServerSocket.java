@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
@@ -25,7 +26,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
 
   private final int port;
   private ServerSocketTimeoutManager serverSocketTimeoutManager;
-  private List<Socket> connectedSockets = new LinkedList<>();
+  private List<Socket> connectedSockets = new CopyOnWriteArrayList<>();
   private ServerSocket ss;
   private boolean serving = false;
   private boolean shutdown = false;
@@ -177,9 +178,11 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
         e.printStackTrace();
       }
 
-      for (Socket socket : connectedSockets) {
+      Iterator<Socket> iterator = connectedSockets.iterator();
+      while (iterator.hasNext()) {
+        Socket next = iterator.next();
         try {
-          socket.close();
+          next.close();
         } catch (IOException e) {
           e.printStackTrace();
         }
@@ -212,7 +215,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
     while (iterator.hasNext()) {
       Socket socket = iterator.next();
       if (socket.getInetAddress().getHostAddress().equals(host.getIp())) {
-        iterator.remove();
+        connectedSockets.remove(socket);
         hostsChangedCallbackCallback.hostsChanged(getConnectedHosts());
         System.out.println("AptoideServerSocket: Host " + host + " removed from the server.");
       }

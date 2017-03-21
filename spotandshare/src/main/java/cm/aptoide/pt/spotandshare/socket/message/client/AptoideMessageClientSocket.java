@@ -67,6 +67,7 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
   }
 
   public void disable() {
+    aptoideMessageController.disable();
     onError = null;
   }
 
