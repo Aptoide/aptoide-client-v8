@@ -5,7 +5,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.StatFs;
@@ -14,10 +13,8 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
-import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
-import cm.aptoide.pt.spotandshare.socket.interfaces.HostsChangedCallback;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
@@ -157,102 +154,98 @@ public class HighwayServerService extends Service {
   }
 
   private void createReceiveNotification(String receivingAppName) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      mBuilderReceive = new NotificationCompat.Builder(this);
-      ((NotificationCompat.Builder) mBuilderReceive).setContentTitle(
-          this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
-              .getString(R.string.receive))
-          .setContentText(
-              this.getResources().getString(R.string.receiving) + " " + receivingAppName)
-          .setSmallIcon(R.mipmap.ic_launcher);
-    }
+
+    NotificationCompat.Builder mBuilderReceive = new NotificationCompat.Builder(this);
+    mBuilderReceive.setContentTitle(
+        this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
+            .getString(R.string.receive))
+        .setContentText(this.getResources().getString(R.string.receiving) + " " + receivingAppName)
+        .setSmallIcon(R.mipmap.ic_launcher);
   }
 
   private void finishReceiveNotification(String receivedApkFilePath, String packageName,
       AndroidAppInfo androidAppInfo) {
+    NotificationCompat.Builder mBuilderReceive = new NotificationCompat.Builder(this);
+    mBuilderReceive.setContentTitle(
+        this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
+            .getString(R.string.receive))
+        .setContentText(this.getResources().getString(R.string.transfCompleted))
+        .setSmallIcon(android.R.drawable.stat_sys_download_done)
+        .setProgress(0, 0, false)
+        .setAutoCancel(true);
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-      ((NotificationCompat.Builder) mBuilderReceive).setContentText(
-          this.getResources().getString(R.string.transfCompleted))
-          .setSmallIcon(android.R.drawable.stat_sys_download_done)
-          .setProgress(0, 0, false)
-          .setAutoCancel(true);
+    Intent intent = new Intent();
+    intent.setAction("INSTALL_APP_NOTIFICATION");
+    intent.putExtra("filePath", receivedApkFilePath);
+    intent.putExtra("packageName", packageName);
+    PendingIntent contentIntent =
+        PendingIntent.getBroadcast(this, INSTALL_APP_NOTIFICATION_REQUEST_CODE, intent,
+            PendingIntent.FLAG_CANCEL_CURRENT);
 
-      Intent intent = new Intent();
-      intent.setAction("INSTALL_APP_NOTIFICATION");
-      intent.putExtra("filePath", receivedApkFilePath);
-      intent.putExtra("packageName", packageName);
-      PendingIntent contentIntent =
-          PendingIntent.getBroadcast(this, INSTALL_APP_NOTIFICATION_REQUEST_CODE, intent,
-              PendingIntent.FLAG_CANCEL_CURRENT);
-
-      ((NotificationCompat.Builder) mBuilderReceive).setContentIntent(contentIntent);
-      if (mNotifyManager == null) {
-        mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
-      }
-      mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
-          ((NotificationCompat.Builder) mBuilderReceive).build());
+    mBuilderReceive.setContentIntent(contentIntent);
+    if (mNotifyManager == null) {
+      mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
     }
+    mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(), mBuilderReceive.build());
   }
 
   private void showReceiveProgress(String receivingAppName, int actual,
       AndroidAppInfo androidAppInfo) {
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-      ((NotificationCompat.Builder) mBuilderReceive).setContentText(
-          this.getResources().getString(R.string.receiving) + " " + receivingAppName);
+    NotificationCompat.Builder mBuilderReceive = new NotificationCompat.Builder(this);
+    mBuilderReceive.setContentTitle(
+        this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
+            .getString(R.string.receive))
+        .setContentText(this.getResources().getString(R.string.receiving) + " " + receivingAppName)
+        .setSmallIcon(R.mipmap.ic_launcher);
 
-      ((NotificationCompat.Builder) mBuilderReceive).setProgress(100, actual, false);
-      if (mNotifyManager == null) {
-        mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
-      }
-      mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
-          ((NotificationCompat.Builder) mBuilderReceive).build());
+    mBuilderReceive.setProgress(100, actual, false);
+    if (mNotifyManager == null) {
+      mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
     }
+    mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(), mBuilderReceive.build());
   }
 
   private void createSendNotification() {
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      mBuilderSend = new NotificationCompat.Builder(this);
-      ((NotificationCompat.Builder) mBuilderSend).setContentTitle(
-          this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
-              .getString(R.string.send))
-          .setContentText(this.getResources().getString(R.string.preparingSend))
-          .setSmallIcon(R.mipmap.ic_launcher);
-    }
+    NotificationCompat.Builder mBuilderSend = new NotificationCompat.Builder(this);
+    mBuilderSend.setContentTitle(
+        this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
+            .getString(R.string.send))
+        .setContentText(this.getResources().getString(R.string.preparingSend))
+        .setSmallIcon(R.mipmap.ic_launcher);
   }
 
   private void finishSendNotification(AndroidAppInfo androidAppInfo) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-      if (mBuilderSend != null) {
-        mBuilderSend = new NotificationCompat.Builder(this);
-      }
-      ((NotificationCompat.Builder) mBuilderSend).setContentText(
-          this.getResources().getString(R.string.transfCompleted))
-          .setSmallIcon(android.R.drawable.stat_sys_download_done)
-          .setProgress(0, 0, false)
-          .setAutoCancel(true);
-      if (mNotifyManager == null) {
-        mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
-      }
-      mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
-          ((NotificationCompat.Builder) mBuilderSend).build());
+
+    NotificationCompat.Builder mBuilderSend = new NotificationCompat.Builder(this);
+    mBuilderSend.setContentTitle(
+        this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
+            .getString(R.string.send))
+        .setContentText(this.getResources().getString(R.string.transfCompleted))
+        .setSmallIcon(android.R.drawable.stat_sys_download_done)
+        .setProgress(0, 0, false)
+        .setAutoCancel(true);
+    if (mNotifyManager == null) {
+      mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
     }
+    mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(), mBuilderSend.build());
   }
 
   private void showSendProgress(String sendingAppName, int actual, AndroidAppInfo androidAppInfo) {
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-      ((NotificationCompat.Builder) mBuilderSend).setContentText(
-          this.getResources().getString(R.string.sending) + " " + sendingAppName);
-      ((NotificationCompat.Builder) mBuilderSend).setProgress(100, actual, false);
-      if (mNotifyManager == null) {
-        mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
-      }
-      mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(),
-          ((NotificationCompat.Builder) mBuilderSend).build());
+    NotificationCompat.Builder mBuilderSend = new NotificationCompat.Builder(this);
+    mBuilderSend.setContentTitle(
+        this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
+            .getString(R.string.send))
+        .setContentText(this.getResources().getString(R.string.sending) + " " + sendingAppName)
+        .setSmallIcon(R.mipmap.ic_launcher);
+
+    mBuilderSend.setProgress(100, actual, false);
+    if (mNotifyManager == null) {
+      mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
     }
+    mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(), mBuilderSend.build());
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
@@ -263,21 +256,8 @@ public class HighwayServerService extends Service {
 
         System.out.println("Going to start serving");
         aptoideMessageServerSocket = new AptoideMessageServerSocket(55555, Integer.MAX_VALUE);
-        aptoideMessageServerSocket.setHostsChangedCallbackCallback(new HostsChangedCallback() {
-          @Override public void hostsChanged(List<Host> hostList) {
-            System.out.println("hostsChanged() called with: " + "hostList = [" + hostList + "]");
-            DataHolder.getInstance().setConnectedClients(hostList);
-            Intent i = new Intent();
-            if (hostList.size() >= 2) {
-              System.out.println("sending broadcast of show_send_button");
-              i.setAction("SHOW_SEND_BUTTON");
-              sendBroadcast(i);
-            } else {
-              i.setAction("HIDE_SEND_BUTTON");
-              sendBroadcast(i);
-            }
-          }
-        });
+        aptoideMessageServerSocket.setHostsChangedCallbackCallback(
+            new HostsCallbackManager(this.getApplicationContext()));
         aptoideMessageServerSocket.startAsync();
 
         StorageCapacity storageCapacity = new StorageCapacity() {
@@ -343,6 +323,31 @@ public class HighwayServerService extends Service {
     return START_STICKY;
   }
 
+  @Nullable @Override public IBinder onBind(Intent intent) {
+    return null;
+  }
+
+  public List<FileInfo> getFileInfo(String filePath, String obbsFilePath) {
+    List<FileInfo> fileInfoList = new ArrayList<>();
+    File apk = new File(filePath);
+    FileInfo apkFileInfo = new FileInfo(apk);
+    fileInfoList.add(apkFileInfo);
+
+    if (!obbsFilePath.equals("noObbs")) {
+      File obbFolder = new File(obbsFilePath);
+      File[] list = obbFolder.listFiles();
+      if (list != null) {
+        if (list.length > 0) {
+          for (int i = 0; i < list.length; i++) {
+            fileInfoList.add(new FileInfo(list[i]));
+          }
+        }
+      }
+    }
+
+    return fileInfoList;
+  }
+
   /**
    * @deprecated Duplicated! {@link HighwayTransferRecordActivity#setInitialApConfig()}
    */
@@ -379,30 +384,5 @@ public class HighwayServerService extends Service {
         }
       }
     }
-  }
-
-  @Nullable @Override public IBinder onBind(Intent intent) {
-    return null;
-  }
-
-  public List<FileInfo> getFileInfo(String filePath, String obbsFilePath) {
-    List<FileInfo> fileInfoList = new ArrayList<>();
-    File apk = new File(filePath);
-    FileInfo apkFileInfo = new FileInfo(apk);
-    fileInfoList.add(apkFileInfo);
-
-    if (!obbsFilePath.equals("noObbs")) {
-      File obbFolder = new File(obbsFilePath);
-      File[] list = obbFolder.listFiles();
-      if (list != null) {
-        if (list.length > 0) {
-          for (int i = 0; i < list.length; i++) {
-            fileInfoList.add(new FileInfo(list[i]));
-          }
-        }
-      }
-    }
-
-    return fileInfoList;
   }
 }
