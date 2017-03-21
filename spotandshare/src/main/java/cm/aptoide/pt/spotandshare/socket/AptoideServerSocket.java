@@ -177,9 +177,11 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
         e.printStackTrace();
       }
 
-      for (Socket socket : connectedSockets) {
+      Iterator<Socket> iterator = connectedSockets.iterator();
+      while (iterator.hasNext()) {
+        Socket next = iterator.next();
         try {
-          socket.close();
+          next.close();
         } catch (IOException e) {
           e.printStackTrace();
         }
