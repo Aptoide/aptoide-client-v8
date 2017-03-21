@@ -92,6 +92,7 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
   }
 
   @Override protected void onDestroy() {
+    applicationSender.unregisterReceiver();
     adapter.removeListener();
     presenter.onDestroy();
     super.onDestroy();

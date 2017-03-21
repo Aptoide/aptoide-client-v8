@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,24 +28,28 @@ public class ApplicationSender {
   private String port;
   private String targetIPAddress;
   private BroadcastReceiver send;
-  private BroadcastReceiver hostsReceiver =
-      new BroadcastReceiver() {//todo extract to a ClientsManager class
-        @Override public void onReceive(Context context, Intent intent) {
-          if (intent.getAction() != null && intent.getAction().equals("SHOW_SEND_BUTTON")) {
-            System.out.println("Ordering to show send button");
-            hostsListener.onAvailableClients();
-          } else if (intent.getAction() != null && intent.getAction().equals("HIDE_SEND_BUTTON")) {
-            hostsListener.onNoClients();
-          }
-        }
-      };
+  private BroadcastReceiver hostsReceiver;
   private IntentFilter intentFilter;
   private IntentFilter hostsFilter;
-
   public ApplicationSender(Context context, boolean isHotspot) {
     this.context = context;
     this.isHotspot = isHotspot;
-    this.intentFilter = new IntentFilter();
+  }
+
+  public static ApplicationSender getInstance(Context context, boolean isHotspot) {
+    if (instance == null) {
+      instance = new ApplicationSender(context, isHotspot);
+    }
+
+    instance.registerReceiver();
+
+    return instance;
+  }
+
+  private void registerReceiver() {
+    hostsReceiver = createBroadcastReceiver();
+
+    intentFilter = new IntentFilter();
     intentFilter.addAction("SENDAPP");
     intentFilter.addAction("ERRORSENDING");
     if (isHotspot) {
@@ -55,11 +60,17 @@ public class ApplicationSender {
     }
   }
 
-  public static ApplicationSender getInstance(Context context, boolean isHotspot) {
-    if (instance == null) {
-      instance = new ApplicationSender(context, isHotspot);
-    }
-    return instance;
+  @NonNull private BroadcastReceiver createBroadcastReceiver() {
+    return new BroadcastReceiver() {//todo extract to a ClientsManager class
+      @Override public void onReceive(Context context, Intent intent) {
+        if (intent.getAction() != null && intent.getAction().equals("SHOW_SEND_BUTTON")) {
+          System.out.println("Ordering to show send button");
+          hostsListener.onAvailableClients();
+        } else if (intent.getAction() != null && intent.getAction().equals("HIDE_SEND_BUTTON")) {
+          hostsListener.onNoClients();
+        }
+      }
+    };
   }
 
   public void sendApp(List<App> selectedApps) {
@@ -160,6 +171,10 @@ public class ApplicationSender {
       } catch (IllegalArgumentException e) {
       }
     }
+  }
+
+  public void unregisterReceiver() {
+    context.unregisterReceiver(hostsReceiver);
   }
 
   public interface SendListener {
