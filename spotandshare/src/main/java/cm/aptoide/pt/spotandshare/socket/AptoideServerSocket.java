@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
@@ -25,7 +26,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
 
   private final int port;
   private ServerSocketTimeoutManager serverSocketTimeoutManager;
-  private List<Socket> connectedSockets = new LinkedList<>();
+  private List<Socket> connectedSockets = new CopyOnWriteArrayList<>();
   private ServerSocket ss;
   private boolean serving = false;
   private boolean shutdown = false;
