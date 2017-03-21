@@ -71,7 +71,6 @@ public abstract class AptoideMessageController implements Sender<Message> {
         handle(message);
       }
     } catch (IOException e) {
-      e.printStackTrace();
       if (onError != null) {
         onError.onError(e);
       }
