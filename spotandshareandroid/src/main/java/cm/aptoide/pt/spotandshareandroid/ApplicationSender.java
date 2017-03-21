@@ -47,12 +47,12 @@ public class ApplicationSender {
     this.intentFilter = new IntentFilter();
     intentFilter.addAction("SENDAPP");
     intentFilter.addAction("ERRORSENDING");
-    if (isHotspot) {
+    //if (isHotspot) {
       hostsFilter = new IntentFilter();
       hostsFilter.addAction("SHOW_SEND_BUTTON");
       hostsFilter.addAction("HIDE_SEND_BUTTON");
       context.registerReceiver(hostsReceiver, hostsFilter);
-    }
+    //}
   }
 
   public static ApplicationSender getInstance(Context context, boolean isHotspot) {
