@@ -46,6 +46,7 @@ import cm.aptoide.pt.v8engine.fragment.implementations.storetab.ListAppsFragment
 import cm.aptoide.pt.v8engine.fragment.implementations.storetab.ListReviewsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.storetab.ListStoresFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.storetab.MyStoresSubscribedFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.storetab.RecommendedStoresFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.storetab.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewsFragment;
 import java.util.ArrayList;
@@ -330,6 +331,10 @@ public class FragmentProviderImpl implements FragmentProvider {
 
   @Override public Fragment newThankYouConnectingFragment(String tag) {
     return ThankYouConnectingFragment.newInstance(tag);
+  }
+
+  @Override public Fragment newRecommendedStoresFragment() {
+    return new RecommendedStoresFragment();
   }
 
   @Override public Fragment newTimeLineFollowersFragment(long followerNumber, String storeTheme) {
