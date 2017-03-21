@@ -1,11 +1,13 @@
 package cm.aptoide.pt.v8engine.fragment;
 
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,14 +57,16 @@ public class WizardFragment extends FragmentView
     View view = inflater.inflate(getLayoutId(), container, false);
     bind(view);
 
+    final FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
+    final Context context = getContext();
     accountManager.accountStatus()
         .first()
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(account -> {
-          createViewsAndButtons(account.isLoggedIn());
+          createViewsAndButtons(account.isLoggedIn(), supportFragmentManager, context);
         }, err -> {
           CrashReport.getInstance().log(err);
-          createViewsAndButtons(false);
+          createViewsAndButtons(false, supportFragmentManager, context);
         });
 
     return view;
@@ -80,7 +84,8 @@ public class WizardFragment extends FragmentView
     nextIcon = view.findViewById(R.id.next_icon);
   }
 
-  private void createViewsAndButtons(boolean userIsLoggedIn) {
+  private void createViewsAndButtons(boolean userIsLoggedIn, FragmentManager fragmentManager,
+      Context context) {
     ArrayList<Fragment> fragmentList = new ArrayList<>();
     fragmentList.add(WizardPageOneFragment.newInstance());
     fragmentList.add(WizardPageTwoFragment.newInstance());
@@ -91,24 +96,24 @@ public class WizardFragment extends FragmentView
           .registerBottomSheetStateListener(WizardFragment.this));
     }
 
-    viewPagerAdapter = new DumbEagerFragmentPagerAdapter(getActivity().getSupportFragmentManager());
+    viewPagerAdapter = new DumbEagerFragmentPagerAdapter(fragmentManager);
     viewPagerAdapter.attachFragments(fragmentList);
 
     viewPager.setAdapter(viewPagerAdapter);
     viewPager.setCurrentItem(0);
 
-    createRadioButtons();
+    createRadioButtons(context);
     setupHandlers();
   }
 
-  private void createRadioButtons() {
+  private void createRadioButtons(Context context) {
     RadioGroup.LayoutParams layoutParams =
         new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT,
             RadioGroup.LayoutParams.WRAP_CONTENT);
 
     wizardButtons = new ArrayList<>(viewPagerAdapter.getCount());
     for (int i = 0; i < viewPagerAdapter.getCount(); i++) {
-      RadioButton radioButton = new RadioButton(getContext());
+      RadioButton radioButton = new RadioButton(context);
       radioButton.setBackgroundResource(R.drawable.wizard_custom_indicator);
       radioButton.setButtonDrawable(android.R.color.transparent);
       radioButton.setClickable(false);
