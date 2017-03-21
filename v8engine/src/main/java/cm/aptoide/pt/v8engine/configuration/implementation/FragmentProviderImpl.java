@@ -194,8 +194,9 @@ public class FragmentProviderImpl implements FragmentProvider {
     return new ListStoresFragment();
   }
 
-  @Override public Fragment newAppsTimelineFragment(String action, Long userId, long storeId) {
-    return AppsTimelineFragment.newInstance(action, userId, storeId);
+  @Override public Fragment newAppsTimelineFragment(String action, Long userId, long storeId,
+      StoreContext storeContext) {
+    return AppsTimelineFragment.newInstance(action, userId, storeId, storeContext);
   }
 
   @Override

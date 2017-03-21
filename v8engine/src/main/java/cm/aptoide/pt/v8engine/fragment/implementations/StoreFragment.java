@@ -33,6 +33,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
+import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
@@ -74,7 +75,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private OpenType openType;
   private BaseBodyInterceptor bodyInterceptor;
   private List<GetStoreTabs.Tab> tabs;
-  private long storeId;
+  private Long storeId;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -164,7 +165,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create || tabs == null) {
       getRequest(refresh, openType).observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(name -> {
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+          .subscribe(name -> {
             if (storeContext != StoreContext.home) {
               storeName = storeName == null ? name : storeName;
               setupToolbarDetails(getToolbar());
@@ -276,10 +278,11 @@ public class StoreFragment extends BasePagerToolbarFragment {
         return GetHomeRequest.of(
             StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), userId,
             storeContext, bodyInterceptor).observe(refresh).map(getHome -> {
-          setupVariables(getHome.getNodes().getTabs().getList(),
-              getHome.getNodes().getMeta().getData().getStore().getId(),
-              getHome.getNodes().getMeta().getData().getStore().getName());
-          return getHome.getNodes().getMeta().getData().getStore().getName();
+          Store store = getHome.getNodes().getMeta().getData().getStore();
+          String storeName = store != null ? store.getName() : null;
+          Long storeId = store != null ? store.getId() : null;
+          setupVariables(getHome.getNodes().getTabs().getList(), storeId, storeName);
+          return storeName;
         });
       case GetStore:
       default:
@@ -294,7 +297,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     }
   }
 
-  private void setupVariables(List<GetStoreTabs.Tab> tabs, long storeId, String storeName) {
+  private void setupVariables(List<GetStoreTabs.Tab> tabs, Long storeId, String storeName) {
     this.tabs = tabs;
     this.storeId = storeId;
     this.storeName = storeName;
