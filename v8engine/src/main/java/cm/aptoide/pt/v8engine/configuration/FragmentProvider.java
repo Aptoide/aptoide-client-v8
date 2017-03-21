@@ -97,7 +97,7 @@ public interface FragmentProvider {
 
   Fragment newListStoresFragment();
 
-  Fragment newAppsTimelineFragment(String action, Long userId, long storeId,
+  Fragment newAppsTimelineFragment(String action, Long userId, Long storeId,
       StoreContext storeContext);
 
   Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag);

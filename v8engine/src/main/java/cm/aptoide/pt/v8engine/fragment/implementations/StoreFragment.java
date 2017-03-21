@@ -15,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +34,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
+import cm.aptoide.pt.model.v7.store.HomeUser;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -67,6 +69,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private AptoideClientUUID aptoideClientUUID;
   private AptoideAccountManager accountManager;
   private String storeName;
+  private String title;
   private StoreContext storeContext;
   private String storeTheme;
   private StoreCredentialsProvider storeCredentialsProvider;
@@ -164,11 +167,10 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create || tabs == null) {
-      getRequest(refresh, openType).observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe(name -> {
+      loadData(refresh, openType).observeOn(AndroidSchedulers.mainThread())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(title -> {
+        this.title = title;
             if (storeContext != StoreContext.home) {
-              storeName = storeName == null ? name : storeName;
               setupToolbarDetails(getToolbar());
             }
             setupViewPager();
@@ -272,7 +274,10 @@ public class StoreFragment extends BasePagerToolbarFragment {
     }
   }
 
-  private Observable<String> getRequest(boolean refresh, OpenType openType) {
+  /**
+   * @return an observable with the title that should be displayed
+   */
+  private Observable<String> loadData(boolean refresh, OpenType openType) {
     switch (openType) {
       case GetHome:
         return GetHomeRequest.of(
@@ -282,7 +287,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
           String storeName = store != null ? store.getName() : null;
           Long storeId = store != null ? store.getId() : null;
           setupVariables(getHome.getNodes().getTabs().getList(), storeId, storeName);
-          return storeName;
+          HomeUser user = getHome.getNodes().getMeta().getData().getUser();
+          return TextUtils.isEmpty(storeName) ? user.getName() : storeName;
         });
       case GetStore:
       default:
@@ -349,7 +355,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setTitle(storeName);
+    toolbar.setTitle(title);
     if (userId != null) {
       toolbar.setLogo(R.drawable.ic_user_icon);
     } else {

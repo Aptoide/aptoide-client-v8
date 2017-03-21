@@ -93,12 +93,14 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private CardToDisplayable cardToDisplayable;
   private StoreContext storeContext;
 
-  public static AppsTimelineFragment newInstance(String action, Long userId, long storeId,
+  public static AppsTimelineFragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
     AppsTimelineFragment fragment = new AppsTimelineFragment();
 
     final Bundle args = new Bundle();
-    args.putLong(STORE_ID, storeId);
+    if (storeId != null) {
+      args.putLong(STORE_ID, storeId);
+    }
     args.putString(ACTION_KEY, action);
     if (userId != null) {
       args.putLong(USER_ID_KEY, userId);
@@ -110,7 +112,9 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
-    storeId = args.getLong(STORE_ID);
+    if (args.containsKey(STORE_ID)) {
+      storeId = args.getLong(STORE_ID);
+    }
     storeContext = (StoreContext) args.getSerializable(STORE_CONTEXT);
   }
 
