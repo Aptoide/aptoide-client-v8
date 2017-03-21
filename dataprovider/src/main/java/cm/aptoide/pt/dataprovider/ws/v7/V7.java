@@ -14,6 +14,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetRecommendedStoresRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
@@ -59,7 +60,6 @@ import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Url;
 import rx.Observable;
-import rx.Single;
 import rx.schedulers.Schedulers;
 
 /**
@@ -193,6 +193,11 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
     @POST("getStoreWidgets{url}") Observable<GetStoreWidgets> getStoreWidgets(
         @Path(value = "url", encoded = true) String path, @retrofit2.http.Body
         GetStoreWidgetsRequest.Body body,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("{url}") Observable<ListStores> getRecommendedStore(
+        @Path(value = "url", encoded = true) String path,
+        @retrofit2.http.Body GetRecommendedStoresRequest.EndlessBody body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("user/get{url}") Observable<GetStore> getUser(

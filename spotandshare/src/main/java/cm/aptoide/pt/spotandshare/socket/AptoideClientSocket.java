@@ -45,16 +45,18 @@ public abstract class AptoideClientSocket extends AptoideSocket {
 
     for (String host : hosts) {
       if (host != null) {
-        retries = 3;
+        retries = 5;
 
-        while (socket == null && retries-- > 0) {
+        while (socket == null && retries-- >= 0) {
           try {
             socket = new Socket(hostName, port);
           } catch (IOException e) {
-            e.printStackTrace(System.out);
-            System.out.println("Failed to connect to " + hostName + ":" + port);
-            if (onError != null) {
-              onError.onError(e);
+            System.out.println(
+                "Failed to connect to " + hostName + ":" + port + ", retries = " + retries);
+            if (retries == 0) {
+              if (onError != null) {
+                onError.onError(e);
+              }
             }
             try {
               Thread.sleep(1000);
