@@ -145,4 +145,9 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> implements Lifecyc
   public void onViewStateRestored(Bundle savedInstanceState) {
     displayables.onViewStateRestored(savedInstanceState);
   }
+
+  public void removeDisplayable(Displayable displayable) {
+    displayables.remove(displayable);
+    notifyItemRemoved(displayables.getPosition(displayable));
+  }
 }
