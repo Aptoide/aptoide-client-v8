@@ -54,6 +54,7 @@ public class ConnectionManager {
   private InactivityListener inactivityListener;
   private ClientsConnectedListener clientsConnectedListener;
   private Timer scanner;
+  private String chosenHotspot;
   private BroadcastReceiver activateButtonsReceiver = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
       if (wifimanager == null) {
@@ -122,6 +123,7 @@ public class ConnectionManager {
       }
     }
   };
+  private boolean reconnected;
   private BroadcastReceiver connectingWifi = new BroadcastReceiver() {
 
     @Override public void onReceive(Context context, Intent intent) {
@@ -144,14 +146,19 @@ public class ConnectionManager {
                   isWifiConnected = true;
                   break;
                 } else {//connected to the wrong network
-                  listenerJoinWifi.onStateChanged(false);
-                  try {
-                    context.unregisterReceiver(this);
-                  } catch (IllegalArgumentException e) {
-                    System.out.println(
-                        "There was an error while trying to unregister the wifireceiver and the wifireceiverforconnectingwifi");
+                  if (!reconnected && !chosenHotspot.isEmpty()) {
+                    joinHotspot(chosenHotspot, true);//retry again with reconnect
+                  } else {
+                    listenerJoinWifi.onStateChanged(false);
+                    try {
+                      context.unregisterReceiver(this);
+                    } catch (IllegalArgumentException e) {
+                      System.out.println(
+                          "There was an error while trying to unregister the wifireceiver and the wifireceiverforconnectingwifi");
+                    }
+                    reconnected = false;
+                    break;
                   }
-                  break;
                 }
               }
             }
@@ -302,8 +309,7 @@ public class ConnectionManager {
         methodFound = true;
         WifiConfiguration netConfig = new WifiConfiguration();
         netConfig.SSID = "" + "APTXV" + "_" + randomAlphaNum + "_" + deviceName + "";
-        System.out.println("THE NEW SSID IS NOW : : : :"
-            + "" + "APTXV"
+        System.out.println("THE NEW SSID IS NOW : : : :" + "" + "APTXV"
             + "_"
             + randomAlphaNum
             + "_"
@@ -347,10 +353,9 @@ public class ConnectionManager {
     return ConnectionManager.ERROR_UNKNOWN;
   }
 
-  public int joinHotspot(String chosenHotspot) {
+  public int joinHotspot(String chosenHotspot, boolean shouldReconnect) {
 
     WifiConfiguration conf = new WifiConfiguration();
-
     System.out.println("chosen hotspot is : " + chosenHotspot);
     conf.SSID = "\"" + chosenHotspot + "\"";
     conf.preSharedKey = "\"passwordAptoide\"";
@@ -379,24 +384,28 @@ public class ConnectionManager {
                 "i.networkId " + i.networkId + "\n" + "o net id do add esta a : " + netid);
             System.out.println("o boolean do resetHotspot : " + enab);
 
-
-            try {
-              Thread.sleep(2000);
-            } catch (InterruptedException e) {
-            }
-            boolean recon = wifimanager.reconnect();
-            System.out.println("O boolean do reconnect ta a : " + recon);
-
             try {
               Thread.sleep(2000);
             } catch (InterruptedException e) {
             }
 
-            if (recon) {
-              System.out.println("Correctly joined the network");
-              return SUCCESSFUL_JOIN;
+            if (shouldReconnect) {
+              boolean recon = wifimanager.reconnect();
+              System.out.println("O boolean do reconnect ta a : " + recon);
+              try {
+                Thread.sleep(2000);
+              } catch (InterruptedException e) {
+              }
+
+              if (recon) {
+                System.out.println("Correctly joined the network");
+                return SUCCESSFUL_JOIN;
+              } else {
+                return ERROR_ON_RECONNECT;
+              }
             } else {
-              return ERROR_ON_RECONNECT;
+              this.chosenHotspot = chosenHotspot;//to save in case of needing to reconnect
+              return SUCCESSFUL_JOIN;
             }
           } catch (Exception e) {
             e.printStackTrace();
