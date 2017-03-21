@@ -21,6 +21,7 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
@@ -73,6 +74,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private static final String ACTION_KEY = "ACTION";
   private static final String STORE_ID = "STORE_ID";
   private static final String PACKAGE_LIST_KEY = "PACKAGE_LIST";
+  private static final String STORE_CONTEXT = "STORE_CONTEXT";
 
   private DownloadFactory downloadFactory;
   private SpannableFactory spannableFactory;
@@ -89,23 +91,31 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private AccountNavigator accountNavigator;
   private long storeId;
   private CardToDisplayable cardToDisplayable;
+  private StoreContext storeContext;
 
-  public static AppsTimelineFragment newInstance(String action, Long userId, long storeId) {
+  public static AppsTimelineFragment newInstance(String action, Long userId, Long storeId,
+      StoreContext storeContext) {
     AppsTimelineFragment fragment = new AppsTimelineFragment();
 
     final Bundle args = new Bundle();
-    args.putLong(STORE_ID, storeId);
+    if (storeId != null) {
+      args.putLong(STORE_ID, storeId);
+    }
     args.putString(ACTION_KEY, action);
     if (userId != null) {
       args.putLong(USER_ID_KEY, userId);
     }
+    args.putSerializable(STORE_CONTEXT, storeContext);
     fragment.setArguments(args);
     return fragment;
   }
 
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
-    storeId = args.getLong(STORE_ID);
+    if (args.containsKey(STORE_ID)) {
+      storeId = args.getLong(STORE_ID);
+    }
+    storeContext = (StoreContext) args.getSerializable(STORE_CONTEXT);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -228,7 +238,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     return timelineRepository.getTimelineStats(refresh, userId).map(timelineStats -> {
       TimeLineStatsDisplayable timeLineStatsDisplayable =
           new TimeLineStatsDisplayable(timelineStats, userId, spannableFactory, storeTheme,
-              timelineAnalytics, userId == null, storeId);
+              timelineAnalytics, userId == null, storeContext == StoreContext.home ? 0 : storeId);
       displayableDatalist.getList().add(0, timeLineStatsDisplayable);
       return displayableDatalist;
     }).onErrorReturn(throwable -> {

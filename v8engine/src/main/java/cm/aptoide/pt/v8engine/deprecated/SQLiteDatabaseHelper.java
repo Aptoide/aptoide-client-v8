@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -148,13 +149,13 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
     String[] migrationKeys = {
         "userId", "username", "useravatar", "refresh_token", "access_token",
-        "aptoide_account_manager_login_mode", "userRepo", "useravatar", "access"
+        "aptoide_account_manager_login_mode", "userRepo", "useravatar", "access", "access"
     };
 
     try {
-      SharedPreferences sharedPreferences = SecurePreferencesImplementation.getInstance(appContext);
+      SharedPreferences secureSharedPreferences = SecurePreferencesImplementation.getInstance(appContext);
 
-      if (!accountNeedsMigration(migrationKeys, sharedPreferences)) {
+      if (!accountNeedsMigration(migrationKeys, secureSharedPreferences)) {
         return;
       }
 
@@ -185,47 +186,32 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
       String sharedPrefsData;
       for (String key : migrationKeys) {
-        sharedPrefsData = sharedPreferences.getString(key, null);
+        sharedPrefsData = secureSharedPreferences.getString(key, null);
         androidAccountManager.setUserData(androidAccount, key, sharedPrefsData);
       }
 
+      // remove all keys from shared preferences
+      cleanKeysFromPreferences(migrationKeys, secureSharedPreferences);
+
       String matureSwitchKey = "aptoide_account_manager_mature_switch";
-      sharedPrefsData = String.valueOf(sharedPreferences.getString(matureSwitchKey, "false"));
+      sharedPrefsData = secureSharedPreferences.getString(matureSwitchKey, "false");
       androidAccountManager.setUserData(androidAccount, matureSwitchKey, sharedPrefsData);
 
+      // access_confirmed is registered in the default shared preferences and not in the
+      // secure shared preferences
       String accessConfirmedKey = "access_confirmed";
-      sharedPrefsData = String.valueOf(sharedPreferences.getString(accessConfirmedKey, "false"));
+      SharedPreferences defaultSharedPreferences =
+          PreferenceManager.getDefaultSharedPreferences(appContext);
+      sharedPrefsData = Boolean.toString(defaultSharedPreferences.getBoolean(accessConfirmedKey, false));
       androidAccountManager.setUserData(androidAccount, accessConfirmedKey, sharedPrefsData);
 
       // account.name -> user email. we don't need to change this
       androidAccountManager.setPassword(androidAccount, plainTextPassword);
 
-      // remove all keys from shared preferences
-      cleanKeysFromPreferences(migrationKeys, sharedPreferences);
-
       Log.w(TAG, "Account migration from <8.1.2.1 to >8.2.0.0 succeeded");
     } catch (Exception e) {
       Log.e(TAG, "Account migration from <8.1.2.1 to >8.2.0.0 failed", e);
     }
-  }
-
-  private void cleanKeysFromPreferences(String[] migrationKeys,
-      SharedPreferences sharedPreferences) {
-    for (int i = 0; i < migrationKeys.length; ++i) {
-      if (sharedPreferences.contains(migrationKeys[i])) {
-        sharedPreferences.edit().remove(migrationKeys[i]).commit();
-      }
-    }
-  }
-
-  private boolean accountNeedsMigration(String[] migrationKeys,
-      SharedPreferences sharedPreferences) {
-    for(int i = 0 ; i < migrationKeys.length ; ++i){
-      if(sharedPreferences.contains(migrationKeys[i])){
-        return true;
-      }
-    }
-    return false;
   }
 
   private void logException(Exception ex) {
@@ -235,6 +221,25 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
       aggregateExceptions = ex;
     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       aggregateExceptions.addSuppressed(ex);
+    }
+  }
+
+  private boolean accountNeedsMigration(String[] migrationKeys,
+      SharedPreferences sharedPreferences) {
+    for (int i = 0; i < migrationKeys.length; ++i) {
+      if (sharedPreferences.contains(migrationKeys[i])) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private void cleanKeysFromPreferences(String[] migrationKeys,
+      SharedPreferences sharedPreferences) {
+    for (int i = 0; i < migrationKeys.length; ++i) {
+      if (sharedPreferences.contains(migrationKeys[i])) {
+        sharedPreferences.edit().remove(migrationKeys[i]).commit();
+      }
     }
   }
 }
