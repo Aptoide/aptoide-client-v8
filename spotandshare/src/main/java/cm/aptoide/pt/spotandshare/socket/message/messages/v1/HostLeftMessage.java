@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshare.socket.message.messages;
+package cm.aptoide.pt.spotandshare.socket.message.messages.v1;
 
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.message.Message;

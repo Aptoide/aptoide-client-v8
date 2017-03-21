@@ -20,7 +20,7 @@ import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.HostsChangedCallback;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
-import cm.aptoide.pt.spotandshare.socket.message.messages.RequestPermissionToSend;
+import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
 import cm.aptoide.pt.spotandshare.socket.message.server.AptoideMessageServerSocket;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
