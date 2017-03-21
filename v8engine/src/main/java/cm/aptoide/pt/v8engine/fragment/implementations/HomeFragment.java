@@ -169,8 +169,9 @@ public class HomeFragment extends StoreFragment {
     tabNavigator.navigation()
         .doOnNext(tab -> viewPager.setCurrentItem(
             ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(getEventName(tab))))
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(__ -> {
-    }, err -> CrashReport.getInstance().log(err));
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(__ -> {
+        }, err -> CrashReport.getInstance().log(err));
   }
 
   public void refreshUpdatesBadge(int num) {
@@ -210,6 +211,15 @@ public class HomeFragment extends StoreFragment {
 
   private void setupNavigationView() {
     if (navigationView != null) {
+
+      try {
+        //TODO emoji did not work on xml file. this sould be deleted in the next release
+        navigationView.getMenu()
+            .findItem(R.id.shareapps)
+            .setTitle(getString(R.string.spot_share) + new String(" \uD83D\uDD38"));
+      } catch (Exception e) {
+        CrashReport.getInstance().log(e);
+      }
       navigationView.setItemIconTintList(null);
       navigationView.setNavigationItemSelectedListener(menuItem -> {
 

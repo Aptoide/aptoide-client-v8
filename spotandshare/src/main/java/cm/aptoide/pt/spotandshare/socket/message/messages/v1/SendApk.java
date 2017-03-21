@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshare.socket.message.messages;
+package cm.aptoide.pt.spotandshare.socket.message.messages.v1;
 
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
@@ -12,6 +12,8 @@ import lombok.ToString;
  */
 @ToString(callSuper = true) @Getter public class SendApk extends AndroidAppInfoMessage
     implements Serializable {
+
+  private static final long serialVersionUID = -68949027607957107L;
 
   private final List<Host> hosts;
   private final int serverPort;

@@ -3,6 +3,8 @@ package cm.aptoide.pt.spotandshareandroid;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -18,11 +20,13 @@ import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.HostsChangedCallback;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
-import cm.aptoide.pt.spotandshare.socket.message.messages.RequestPermissionToSend;
+import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
 import cm.aptoide.pt.spotandshare.socket.message.server.AptoideMessageServerSocket;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -323,14 +327,58 @@ public class HighwayServerService extends Service {
       } else if (intent.getAction() != null && intent.getAction().equals("SHUTDOWN_SERVER")) {
         aptoideMessageClientSocket.disable();
         if (aptoideMessageServerSocket != null) { // TODO: 16-03-2017 filipe check problem
-          aptoideMessageServerSocket.shutdown();
+          aptoideMessageClientSocket.disable();
+          aptoideMessageServerSocket.shutdown(new Runnable() {
+            @Override public void run() {
+              setInitialApConfig();//to not interfere with recovering wifi state
+
+              Intent i = new Intent();
+              i.setAction("SERVER_DISCONNECT");
+              sendBroadcast(i);
+            }
+          });
         }
-        Intent i = new Intent();
-        i.setAction("SERVER_DISCONNECT");
-        sendBroadcast(i);
       }
     }
     return START_STICKY;
+  }
+
+  /**
+   * @deprecated Duplicated! {@link HighwayTransferRecordActivity#setInitialApConfig()}
+   */
+  @Deprecated public void setInitialApConfig() {
+    WifiManager wifimanager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+
+    Method[] methods = wifimanager.getClass().getDeclaredMethods();
+    WifiConfiguration wc = DataHolder.getInstance().getWcOnJoin();
+    for (Method m : methods) {
+      if (m.getName().equals("setWifiApConfiguration")) {
+
+        try {
+          Method setConfigMethod =
+              wifimanager.getClass().getMethod("setWifiApConfiguration", WifiConfiguration.class);
+          System.out.println("Re-seting the wifiAp configuration to what it was before !!! ");
+          setConfigMethod.invoke(wifimanager, wc);
+        } catch (NoSuchMethodException e) {
+          e.printStackTrace();
+        } catch (IllegalAccessException e) {
+          e.printStackTrace();
+        } catch (InvocationTargetException e) {
+          e.printStackTrace();
+        }
+      }
+      if (m.getName().equals("setWifiApEnabled")) {
+
+        try {
+          System.out.println("Desligar o hostpot ");
+          m.invoke(wifimanager, wc, false);
+        } catch (IllegalAccessException e) {
+          e.printStackTrace();
+        } catch (InvocationTargetException e) {
+          e.printStackTrace();
+        }
+      }
+    }
   }
 
   @Nullable @Override public IBinder onBind(Intent intent) {

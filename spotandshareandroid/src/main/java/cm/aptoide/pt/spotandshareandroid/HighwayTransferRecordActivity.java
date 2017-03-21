@@ -277,9 +277,8 @@ public class HighwayTransferRecordActivity extends ActivityView
           .setPositiveButton(this.getResources().getString(R.string.leave),
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                  setInitialApConfig();//to not interfere with recovering wifi state
-                  presenter.listenToDisconnect();
                   sendServerShutdownMessage();
+                  presenter.listenToDisconnect();
                 }
               })
           .setNegativeButton(this.getResources().getString(R.string.cancel),
