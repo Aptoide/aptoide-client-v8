@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -193,8 +194,11 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
       sharedPrefsData = String.valueOf(sharedPreferences.getString(matureSwitchKey, "false"));
       androidAccountManager.setUserData(androidAccount, matureSwitchKey, sharedPrefsData);
 
+      // access_confirmed is registered in the default shared preferences and not in the
+      // secure shared preferences
       String accessConfirmedKey = "access_confirmed";
-      sharedPrefsData = String.valueOf(sharedPreferences.getString(accessConfirmedKey, "false"));
+      sharedPrefsData = PreferenceManager.getDefaultSharedPreferences(appContext).getString(accessConfirmedKey,
+          "false");
       androidAccountManager.setUserData(androidAccount, accessConfirmedKey, sharedPrefsData);
 
       // account.name -> user email. we don't need to change this
