@@ -32,8 +32,6 @@ public class HighwayServerService extends Service {
   public static final int INSTALL_APP_NOTIFICATION_REQUEST_CODE = 147;
   private final int PROGRESS_SPLIT_SIZE = 10;
   private NotificationManagerCompat mNotifyManager;
-  private Object mBuilderSend;
-  private Object mBuilderReceive;
   private FileClientLifecycle<AndroidAppInfo> fileClientLifecycle;
   private FileServerLifecycle<AndroidAppInfo> fileServerLifecycle;
 
