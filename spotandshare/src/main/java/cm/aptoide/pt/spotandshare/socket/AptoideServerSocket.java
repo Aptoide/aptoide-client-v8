@@ -215,7 +215,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
     while (iterator.hasNext()) {
       Socket socket = iterator.next();
       if (socket.getInetAddress().getHostAddress().equals(host.getIp())) {
-        iterator.remove();
+        connectedSockets.remove(socket);
         hostsChangedCallbackCallback.hostsChanged(getConnectedHosts());
         System.out.println("AptoideServerSocket: Host " + host + " removed from the server.");
       }
