@@ -157,6 +157,7 @@ public class HandlersFactory {
 
     @Override public void handleMessage(ExitMessage message, Sender<Message> messageSender) {
       aptoideMessageServerSocket.removeHost(message.getLocalHost());
+      messageSender.send(new AckMessage(messageSender.getHost()));
     }
   }
 
