@@ -3,6 +3,7 @@ package cm.aptoide.pt.spotandshare.socket.message.server;
 import cm.aptoide.pt.spotandshare.socket.AptoideServerSocket;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
+import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ExitMessage;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.HostLeftMessage;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ReceiveApk;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
@@ -38,6 +39,17 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
     aptoideMessageServerController.onConnect(socket);
   }
 
+  @Override public void shutdown() {
+    onError = null;
+    for (AptoideMessageServerController aptoideMessageClientController : getAptoideMessageControllers()) {
+      aptoideMessageClientController.disable();
+    }
+    sendToOthers(null, new ExitMessage(getHost()));
+    aptoideMessageServerController.disable();
+
+    super.shutdown();
+  }
+
   @Override public void removeHost(Host host) {
     super.removeHost(host);
 
@@ -54,21 +66,11 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
     }
   }
 
-  @Override public void shutdown() {
-    onError = null;
-    for (AptoideMessageServerController aptoideMessageClientController : getAptoideMessageControllers()) {
-      aptoideMessageClientController.disable();
-    }
-    aptoideMessageServerController.disable();
-
-    super.shutdown();
-  }
-
   public void sendToOthers(Host host, Message message) {
     dispatchServerAction(() -> {
       ExecutorService localExecutorService = Executors.newCachedThreadPool();
       for (AptoideMessageServerController aptoideMessageClientController : getAptoideMessageControllers()) {
-        if (!host.equals(aptoideMessageClientController.getHost())) {
+        if (!aptoideMessageClientController.getHost().equals(host)) {
           localExecutorService.execute(() -> {
             try {
               aptoideMessageClientController.sendWithAck(message);
