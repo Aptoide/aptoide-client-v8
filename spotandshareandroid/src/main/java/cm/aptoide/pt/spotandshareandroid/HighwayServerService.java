@@ -14,10 +14,8 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
-import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
-import cm.aptoide.pt.spotandshare.socket.interfaces.HostsChangedCallback;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
@@ -263,21 +261,8 @@ public class HighwayServerService extends Service {
 
         System.out.println("Going to start serving");
         aptoideMessageServerSocket = new AptoideMessageServerSocket(55555, Integer.MAX_VALUE);
-        aptoideMessageServerSocket.setHostsChangedCallbackCallback(new HostsChangedCallback() {
-          @Override public void hostsChanged(List<Host> hostList) {
-            System.out.println("hostsChanged() called with: " + "hostList = [" + hostList + "]");
-            DataHolder.getInstance().setConnectedClients(hostList);
-            Intent i = new Intent();
-            if (hostList.size() >= 2) {
-              System.out.println("sending broadcast of show_send_button");
-              i.setAction("SHOW_SEND_BUTTON");
-              sendBroadcast(i);
-            } else {
-              i.setAction("HIDE_SEND_BUTTON");
-              sendBroadcast(i);
-            }
-          }
-        });
+        aptoideMessageServerSocket.setHostsChangedCallbackCallback(
+            new HostsCallbackManager(this.getApplicationContext()));
         aptoideMessageServerSocket.startAsync();
 
         StorageCapacity storageCapacity = new StorageCapacity() {
@@ -343,6 +328,31 @@ public class HighwayServerService extends Service {
     return START_STICKY;
   }
 
+  @Nullable @Override public IBinder onBind(Intent intent) {
+    return null;
+  }
+
+  public List<FileInfo> getFileInfo(String filePath, String obbsFilePath) {
+    List<FileInfo> fileInfoList = new ArrayList<>();
+    File apk = new File(filePath);
+    FileInfo apkFileInfo = new FileInfo(apk);
+    fileInfoList.add(apkFileInfo);
+
+    if (!obbsFilePath.equals("noObbs")) {
+      File obbFolder = new File(obbsFilePath);
+      File[] list = obbFolder.listFiles();
+      if (list != null) {
+        if (list.length > 0) {
+          for (int i = 0; i < list.length; i++) {
+            fileInfoList.add(new FileInfo(list[i]));
+          }
+        }
+      }
+    }
+
+    return fileInfoList;
+  }
+
   /**
    * @deprecated Duplicated! {@link HighwayTransferRecordActivity#setInitialApConfig()}
    */
@@ -379,30 +389,5 @@ public class HighwayServerService extends Service {
         }
       }
     }
-  }
-
-  @Nullable @Override public IBinder onBind(Intent intent) {
-    return null;
-  }
-
-  public List<FileInfo> getFileInfo(String filePath, String obbsFilePath) {
-    List<FileInfo> fileInfoList = new ArrayList<>();
-    File apk = new File(filePath);
-    FileInfo apkFileInfo = new FileInfo(apk);
-    fileInfoList.add(apkFileInfo);
-
-    if (!obbsFilePath.equals("noObbs")) {
-      File obbFolder = new File(obbsFilePath);
-      File[] list = obbFolder.listFiles();
-      if (list != null) {
-        if (list.length > 0) {
-          for (int i = 0; i < list.length; i++) {
-            fileInfoList.add(new FileInfo(list[i]));
-          }
-        }
-      }
-    }
-
-    return fileInfoList;
   }
 }
