@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  * Created by jdandrade on 18-07-2016.
  * This class determines how many pages exist and which fragment to display for each page.
  */
-public class DumbEagerFragmentPagerAdapter extends FragmentPagerAdapter {
+public class DumbEagerFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
   private final ArrayList<Fragment> fragments = new ArrayList<>();
 
