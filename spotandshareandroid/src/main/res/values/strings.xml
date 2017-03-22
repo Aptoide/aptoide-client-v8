@@ -94,5 +94,8 @@
   <string name="warning">Warning</string>
   <string name="clear_history_warning">If you didn’t install the apps shared they will be deleted.</string>
 
+  <string name="locationDialog">We will not be able to join groups if location is off</string>
+  <string name="turn_on">turn on</string>
+
 </resources>
 

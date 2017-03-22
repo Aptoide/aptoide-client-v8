@@ -22,7 +22,7 @@ public interface SpotAndShareAnalyticsInterface {
 
   void receiveApkFailed();
 
-  void permissionsDenied();
+  void specialSettingsDenied();
 
-  void permissionsGranted();
+  void specialSettingsGranted();
 }
