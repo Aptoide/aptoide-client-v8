@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.SharedPreferences;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
@@ -11,7 +10,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.fragment.BaseLoaderFragment;
+import cm.aptoide.pt.v8engine.interfaces.ReloadInterface;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
 import cm.aptoide.pt.v8engine.preferences.SecurePreferences;
@@ -60,7 +59,8 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
     trackAnalytics = true;
   }
 
-  @Override public void bindView(AdultRowDisplayable displayable) {
+  @Override public void bindView(final AdultRowDisplayable displayable) {
+    final ReloadInterface reloader = displayable;
     final SharedPreferences sharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(getContext());
     adultContent =
@@ -94,7 +94,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
                 .doOnCompleted(() -> trackLock())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnTerminate(() -> adultSwitch.setEnabled(true))
-                .doOnTerminate(() -> reload())
+                .doOnTerminate(() -> reload(reloader))
                 .toObservable();
           }
         }).retry().subscribe());
@@ -111,7 +111,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
                 .doOnCompleted(() -> trackLock())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnTerminate(() -> adultPinSwitch.setEnabled(true))
-                .doOnTerminate(() -> reload())
+                .doOnTerminate(() -> reload(reloader))
                 .toObservable();
           }
         }).retry().subscribe());
@@ -122,7 +122,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
             .doOnCompleted(() -> trackUnlock())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnTerminate(() -> adultSwitch.setEnabled(true))
-            .doOnTerminate(() -> reload())
+            .doOnTerminate(() -> reload(reloader))
             .toObservable())
         .retry()
         .subscribe());
@@ -138,7 +138,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
               }
             })
             .doOnTerminate(() -> adultPinSwitch.setEnabled(true))
-            .doOnTerminate(() -> reload())
+            .doOnTerminate(() -> reload(reloader))
             .toObservable())
         .retry()
         .subscribe());
@@ -189,10 +189,8 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
     }
   }
 
-  private void reload() {
-    FragmentManager supportFragmentManager = getContext().getSupportFragmentManager();
-    ((BaseLoaderFragment) supportFragmentManager.getFragments()
-        .get(supportFragmentManager.getBackStackEntryCount())).load(true, true, null);
+  private void reload(ReloadInterface reloader) {
+    reloader.load(true, true, null);
   }
 
   private void rollbackCheck(SwitchCompat adultSwitch) {
