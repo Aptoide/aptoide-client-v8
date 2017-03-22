@@ -122,12 +122,14 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
     if (requestCode == WRITE_SETTINGS_REQUEST_CODE) {
       if (checkSpecialSettingsPermission()) {
+        analytics.specialSettingsGranted();
         if (checkLocationPermission()) {
           onPermissionsGranted();
         } else {
-          requestLocationPermission();
+          askForLocationPermission();
         }
       } else {
+        analytics.specialSettingsDenied();
         onPermissionsDenied();
       }
     } else if (requestCode == MOBILE_DATA_REQUEST_CODE) {
@@ -139,13 +141,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
       } else {
         onPermissionsDenied();
       }
-    }
-  }
-
-  private void onPermissionsGranted() {
-    analytics.permissionsGranted();
-    if (permissionListener != null) {
-      permissionListener.onPermissionGranted();
     }
   }
 
@@ -196,7 +191,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
           if (!checkSpecialSettingsPermission()) {
             requestSpecialSettingsPermission();
           } else if (!checkLocationPermission()) {
-            requestLocationPermission();
+            askForLocationPermission();
           } else {
             onPermissionsGranted();
           }
@@ -209,11 +204,23 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 
-  private void onPermissionsDenied() {
-    analytics.permissionsDenied();
-    if (permissionListener != null) {
-      permissionListener.onPermissionDenied();
+  private boolean checkNormalPermissions() {
+    if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+        != PackageManager.PERMISSION_GRANTED) {
+      return false;
     }
+
+    if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        != PackageManager.PERMISSION_GRANTED) {
+      return false;
+    }
+
+    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+        != PackageManager.PERMISSION_GRANTED) {
+      return false;
+    }
+
+    return true;
   }
 
   private void requestSpecialSettingsPermission() {
@@ -222,8 +229,93 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     startActivityForResult(intent, WRITE_SETTINGS_REQUEST_CODE);
   }
 
+  @TargetApi(23) private boolean checkSpecialSettingsPermission() {
+    return Settings.System.canWrite(this);
+  }
+
+  private boolean checkLocationPermission() {
+    int locationMode = 0;
+    String locationProviders;
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      try {
+        locationMode =
+            Settings.Secure.getInt(this.getContentResolver(), Settings.Secure.LOCATION_MODE);
+      } catch (Settings.SettingNotFoundException e) {
+        e.printStackTrace();
+        return false;
+      }
+
+      return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+    } else {
+      locationProviders = Settings.Secure.getString(this.getContentResolver(),
+          Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+      return !TextUtils.isEmpty(locationProviders);
+    }
+  }
+
+  private void onPermissionsGranted() {
+    if (permissionListener != null) {
+      permissionListener.onPermissionGranted();
+    }
+  }
+
+  private void askForLocationPermission() {//old requestLocationPermission
+    Dialog d = buildLocationPermissionDialog();
+    d.show();
+  }
+
+  private void onPermissionsDenied() {
+    if (permissionListener != null) {
+      permissionListener.onPermissionDenied();
+    }
+  }
+
+  private Dialog buildLocationPermissionDialog() {
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+    builder.setTitle(this.getResources().getString(R.string.warning))
+        .setMessage(this.getResources().getString(R.string.locationDialog))
+        .setPositiveButton(this.getResources().getString(R.string.turn_on),
+            new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int id) {
+                requestLocationPermission();
+              }
+            })
+        .setNegativeButton(this.getResources().getString(R.string.cancel),
+            new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                onPermissionsDenied();
+              }
+            });
+    return builder.create();
+  }
+
+  private void requestLocationPermission() {
+    Intent locationIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+    startActivityForResult(locationIntent, LOCATION_REQUEST_CODE);
+  }
+
   @Override public void showConnections() {
     presenter.scanNetworks();
+  }
+
+  @Override public boolean checkPermissions() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      if (!checkNormalPermissions()) {
+        return false;
+      }
+
+      if (!checkSpecialSettingsPermission()) {
+        return false;
+      }
+
+      if (!checkLocationPermission()) {
+        return false;
+      }
+    }
+    return true;
   }
 
   @Override public void enableButtons(boolean enable) {
@@ -265,50 +357,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     Toast.makeText(HighwayActivity.this,
         HighwayActivity.this.getResources().getString(R.string.mDataJoinGroup), Toast.LENGTH_SHORT)
         .show();
-  }
-
-  @Override public boolean checkPermissions() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      if (!checkNormalPermissions()) {
-        return false;
-      }
-
-      if (!checkSpecialSettingsPermission()) {
-        return false;
-      }
-
-      if (!checkLocationPermission()) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  @TargetApi(23) private boolean checkSpecialSettingsPermission() {
-    return Settings.System.canWrite(this);
-  }
-
-  private boolean checkNormalPermissions() {
-    if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-        != PackageManager.PERMISSION_GRANTED) {
-      return false;
-    }
-
-    if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        != PackageManager.PERMISSION_GRANTED) {
-      return false;
-    }
-
-    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-        != PackageManager.PERMISSION_GRANTED) {
-      return false;
-    }
-
-    if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_SETTINGS)
-        != PackageManager.PERMISSION_GRANTED) {
-      return false;
-    }
-    return true;
   }
 
   @Override public void showJoinGroupResult(int result) {
@@ -452,16 +500,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
-  public void joinSingleHotspot() {
-    hideSearchGroupsTextview(true);
-    Group g = new Group(chosenHotspot);
-    presenter.clickJoinGroup(g);
-  }
-
-  public String getChosenHotspot() {
-    return chosenHotspot;
-  }
-
   @Override public void requestPermissions() {
     if (!checkPermissions() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       final List<String> missingPermissions = new ArrayList<>();
@@ -483,11 +521,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         missingPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
       }
 
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_SETTINGS)
-          != PackageManager.PERMISSION_GRANTED) {
-        missingPermissions.add(Manifest.permission.WRITE_SETTINGS);
-      }
-
       if (missingPermissions.size() > 0) {
 
         String[] permissionsToRequest = new String[missingPermissions.size()];
@@ -499,7 +532,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         if (!checkSpecialSettingsPermission()) {
           requestSpecialSettingsPermission();
         } else if (!checkLocationPermission()) {
-          requestLocationPermission();
+          askForLocationPermission();
         } else {
           onPermissionsGranted();
         }
@@ -509,9 +542,14 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
-  private void requestLocationPermission() {
-    Intent locationIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-    startActivityForResult(locationIntent, LOCATION_REQUEST_CODE);
+  public void joinSingleHotspot() {
+    hideSearchGroupsTextview(true);
+    Group g = new Group(chosenHotspot);
+    presenter.clickJoinGroup(g);
+  }
+
+  public String getChosenHotspot() {
+    return chosenHotspot;
   }
 
   public void setChosenHotspot(String chosenHotspot) {
@@ -544,24 +582,5 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     this.permissionListener = null;
   }
 
-  private boolean checkLocationPermission() {
-    int locationMode = 0;
-    String locationProviders;
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      try {
-        locationMode =
-            Settings.Secure.getInt(this.getContentResolver(), Settings.Secure.LOCATION_MODE);
-      } catch (Settings.SettingNotFoundException e) {
-        e.printStackTrace();
-        return false;
-      }
-
-      return locationMode != Settings.Secure.LOCATION_MODE_OFF;
-    } else {
-      locationProviders = Settings.Secure.getString(this.getContentResolver(),
-          Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-      return !TextUtils.isEmpty(locationProviders);
-    }
-  }
 }

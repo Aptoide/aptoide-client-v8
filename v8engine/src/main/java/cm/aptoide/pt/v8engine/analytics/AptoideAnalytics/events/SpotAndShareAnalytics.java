@@ -73,14 +73,14 @@ public class SpotAndShareAnalytics implements SpotAndShareAnalyticsInterface {
   /**
    * This event should only be sent to fabric, hence the third argument being true
    */
-  @Override public void permissionsDenied() {
+  @Override public void specialSettingsDenied() {
     groupClick(EVENT_NAME_SPOT_SHARE_PERMISSIONS, ACTION_SPOT_SHARE_PERM_DENIED, true);
   }
 
   /**
    * This event should only be sent to fabric, hence the third argument being true
    */
-  @Override public void permissionsGranted() {
+  @Override public void specialSettingsGranted() {
     groupClick(EVENT_NAME_SPOT_SHARE_PERMISSIONS, ACTION_SPOT_SHARE_PERM_GRANTED, true);
   }
 
