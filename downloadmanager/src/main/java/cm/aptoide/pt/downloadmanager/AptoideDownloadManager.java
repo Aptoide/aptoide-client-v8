@@ -21,6 +21,7 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import okhttp3.OkHttpClient;
+import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -300,15 +301,23 @@ public class AptoideDownloadManager {
         });
   }
 
-  public Void pauseDownload(String md5) {
-    downloadAccessor.get(md5).first().map(download -> {
+  public Completable pauseDownloadSync(String md5) {
+    return internalPause(md5).toCompletable();
+  }
+
+  @NonNull private Observable<Download> internalPause(String md5) {
+    return downloadAccessor.get(md5).first().map(download -> {
       download.setOverallDownloadStatus(Download.PAUSED);
       downloadAccessor.save(download);
       for (int i = download.getFilesToDownload().size() - 1; i >= 0; i--) {
         FileDownloader.getImpl().pause(download.getFilesToDownload().get(i).getDownloadId());
       }
       return download;
-    }).subscribe(download -> {
+    });
+  }
+
+  public Void pauseDownload(String md5) {
+    internalPause(md5).subscribe(download -> {
       Logger.d(TAG, "Download with " + md5 + " paused");
     }, throwable -> {
       if (throwable instanceof DownloadNotFoundException) {

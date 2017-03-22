@@ -115,7 +115,7 @@ public class InstallService extends Service {
   }
 
   private Observable<Boolean> stopDownload(String md5) {
-    return hasNextDownload().doOnSubscribe(() -> downloadManager.pauseDownload(md5));
+    return downloadManager.pauseDownloadSync(md5).andThen(hasNextDownload());
   }
 
   private void stopAllDownloads() {

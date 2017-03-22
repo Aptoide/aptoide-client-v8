@@ -277,6 +277,10 @@
   <string name="summer_apps">Summer Apps</string>
   <string name="play_it">Play-It!</string>
 
+
+  <!--home Fragment-->
+  <string name="featured_stores">Featured Stores</string>
+
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Related to %1$s</string>
   <string name="appstimeline_update_app">app</string>

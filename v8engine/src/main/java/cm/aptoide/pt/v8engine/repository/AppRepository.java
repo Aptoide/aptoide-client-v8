@@ -6,16 +6,13 @@
 package cm.aptoide.pt.v8engine.repository;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v7.GetApp;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
@@ -81,7 +78,6 @@ public class AppRepository {
             .getData()
             .getPay()
             .setProductId(paidApp.getPayment().getMetadata().getId());
-        getApp.getNodes().getMeta().getData().getPay().setPrice(paidApp.getPayment().getAmount());
         getApp.getNodes()
             .getMeta()
             .getData()
@@ -92,13 +88,10 @@ public class AppRepository {
             .getData()
             .getPay()
             .setTaxRate(paidApp.getPayment().getPaymentServices().get(0).getTaxRate());
-        getApp.getNodes()
-            .getMeta()
-            .getData()
-            .getPay()
-            .setSymbol(paidApp.getPayment().getSymbol());
-        getApp.getNodes().getMeta().getData().getPay().setStatus(paidApp.getPayment().getStatus());
       }
+      getApp.getNodes().getMeta().getData().getPay().setPrice(paidApp.getPayment().getAmount());
+      getApp.getNodes().getMeta().getData().getPay().setSymbol(paidApp.getPayment().getSymbol());
+      getApp.getNodes().getMeta().getData().getPay().setStatus(paidApp.getPayment().getStatus());
       return getApp;
     }).onErrorResumeNext(throwable -> {
       if (throwable instanceof RepositoryItemNotFoundException) {

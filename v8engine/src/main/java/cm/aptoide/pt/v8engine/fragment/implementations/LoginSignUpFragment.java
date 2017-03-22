@@ -99,6 +99,20 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
     });
   }
 
+  protected Toolbar setupToolbar(View view, String title) {
+    setHasOptionsMenu(true);
+    Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    toolbar.setLogo(R.drawable.logo_toolbar);
+
+    toolbar.setTitle(title);
+    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    actionBar.setDisplayHomeAsUpEnabled(true);
+
+    return toolbar;
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
@@ -107,8 +121,7 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
     loginFragment =
         LoginSignUpCredentialsFragment.newInstance(dismissToNavigateToMainView, navigateToHome);
     // nested fragments only work using dynamic fragment addition.
-    getActivity().getSupportFragmentManager()
-        .beginTransaction()
+    getChildFragmentManager().beginTransaction()
         .add(R.id.login_signup_layout, loginFragment)
         .commit();
 
@@ -137,19 +150,5 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
     void expanded();
 
     void hidden();
-  }
-
-  protected Toolbar setupToolbar(View view, String title) {
-    setHasOptionsMenu(true);
-    Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-    toolbar.setLogo(R.drawable.logo_toolbar);
-
-    toolbar.setTitle(title);
-    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-    actionBar.setDisplayHomeAsUpEnabled(true);
-
-    return toolbar;
   }
 }

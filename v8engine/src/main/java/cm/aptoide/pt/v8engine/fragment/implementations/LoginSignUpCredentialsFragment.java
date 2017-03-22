@@ -357,13 +357,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
     progressDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
 
-    //FIXME this should be deleted [AN-1301]
-    if (view != null
-        && view.getRootView() != null
-        && view.getRootView().findViewById(R.id.login_signup_layout) != null) {
-      bottomSheetBehavior =
-          BottomSheetBehavior.from(view.getRootView().findViewById(R.id.login_signup_layout));
-    }
+    bottomSheetBehavior =
+        BottomSheetBehavior.from(view.getRootView().findViewById(R.id.login_signup_layout));
   }
 
   public String getCompanyName() {

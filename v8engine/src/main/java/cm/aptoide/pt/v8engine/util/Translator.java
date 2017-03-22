@@ -273,6 +273,15 @@ public class Translator {
       case "Spot&Share":
         translated = Application.getContext().getString(R.string.spot_share);
         break;
+      case "Followed Stores":
+        translated = Application.getContext().getString(R.string.followed_stores);
+        break;
+      case "Recommended Stores":
+        translated = Application.getContext().getString(R.string.recommended_stores);
+        break;
+      case "Featured Stores":
+        translated = Application.getContext().getString(R.string.featured_stores);
+        break;
       default:
         translated = string;
         break;

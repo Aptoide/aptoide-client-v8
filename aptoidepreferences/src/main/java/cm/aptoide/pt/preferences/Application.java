@@ -17,7 +17,7 @@ public abstract class Application extends android.app.Application {
 
   @Getter private static AptoidePreferencesConfiguration configuration;
 
-  @Partners public static Context getContext() {
+  @Deprecated @Partners public static Context getContext() {
     return AptoideUtils.getContext();
   }
 
