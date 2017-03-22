@@ -1,6 +1,7 @@
 package cm.aptoide.pt.spotandshareandroid;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +35,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   public static final int MOBILE_DATA_REQUEST_CODE = 0010;
   private static final int PERMISSION_REQUEST_CODE = 6531;
   private static final int WRITE_SETTINGS_REQUEST_CODE = 5;
+  private static final int LOCATION_REQUEST_CODE = 789;
   public String deviceName;
   public LinearLayout createGroupButton;
   public HighwayRadarTextView radarTextView;
@@ -117,20 +120,32 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
 
-    if (requestCode == WRITE_SETTINGS_REQUEST_CODE
-        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-        && permissionListener != null) {
-
-      if (Settings.System.canWrite(this)) {
-        permissionListener.onPermissionGranted();
-        analytics.permissionsDenied();
+    if (requestCode == WRITE_SETTINGS_REQUEST_CODE) {
+      if (checkSpecialSettingsPermission()) {
+        if (checkLocationPermission()) {
+          onPermissionsGranted();
+        } else {
+          requestLocationPermission();
+        }
       } else {
-        permissionListener.onPermissionDenied();
-        analytics.permissionsGranted();
+        onPermissionsDenied();
       }
     } else if (requestCode == MOBILE_DATA_REQUEST_CODE) {
       Group group = new Group(chosenHotspot);
       presenter.onActivityResult(group);
+    } else if (requestCode == LOCATION_REQUEST_CODE) {
+      if (checkLocationPermission()) {
+        onPermissionsGranted();
+      } else {
+        onPermissionsDenied();
+      }
+    }
+  }
+
+  private void onPermissionsGranted() {
+    analytics.permissionsGranted();
+    if (permissionListener != null) {
+      permissionListener.onPermissionGranted();
     }
   }
 
@@ -155,7 +170,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
       presenter.setOutsideShareManager(outsideShareManager);
       Uri uri = (Uri) intent.getExtras().get("android.intent.extra.STREAM");
       presenter.getAppFilePathFromOutside(uri);
-
     } else if (intent.getAction() != null && intent.getAction()
         .equals(Intent.ACTION_SEND_MULTIPLE)) {
       outsideShareManager = new OutsideShareManager();
@@ -163,7 +177,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
       ArrayList<Uri> uriList =
           (ArrayList<Uri>) intent.getExtras().get("android.intent.extra.STREAM");
       presenter.getMultipleAppFilePathsFromOutside(uriList);
-
     } else if (intent.getAction() != null && intent.getAction().equals("LEAVINGSHAREAPPSCLIENT")) {
       recoverNetworkState();
       forgetAPTXVNetwork();
@@ -172,46 +185,38 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   private void forgetAPTXVNetwork() {
     presenter.forgetAPTXVNetwork();
-
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
     switch (requestCode) {
       case PERMISSION_REQUEST_CODE: {
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          System.out.println("write settings permission granted ! ");
-          if (permissionListener != null) {
-            System.out.println("can not write the settings");
 
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_SETTINGS)
-                != PackageManager.PERMISSION_GRANTED
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && !Settings.System.canWrite(this)) {
-
-              requestSpecialPermission();
-            } else {
-              if (permissionListener != null) {
-                permissionListener.onPermissionGranted();
-              }
-            }
+        if (checkNormalPermissions()) {
+          if (!checkSpecialSettingsPermission()) {
+            requestSpecialSettingsPermission();
+          } else if (!checkLocationPermission()) {
+            requestLocationPermission();
+          } else {
+            onPermissionsGranted();
           }
         } else {
-          if (permissionListener != null) {
-            permissionListener.onPermissionDenied();
-          }
-          System.out.println("write settings permission failed to be granted");
+          onPermissionsDenied();
         }
         break;
       }
     }
-
-    super.
-
-        onRequestPermissionsResult(requestCode, permissions, grantResults);
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 
-  private void requestSpecialPermission() {
+  private void onPermissionsDenied() {
+    analytics.permissionsDenied();
+    if (permissionListener != null) {
+      permissionListener.onPermissionDenied();
+    }
+  }
+
+  private void requestSpecialSettingsPermission() {
     Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
     intent.setData(Uri.parse("package:" + getPackageName()));
     startActivityForResult(intent, WRITE_SETTINGS_REQUEST_CODE);
@@ -264,25 +269,44 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   @Override public boolean checkPermissions() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-          != PackageManager.PERMISSION_GRANTED) {
+      if (!checkNormalPermissions()) {
         return false;
       }
 
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-          != PackageManager.PERMISSION_GRANTED) {
+      if (!checkSpecialSettingsPermission()) {
         return false;
       }
 
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-          != PackageManager.PERMISSION_GRANTED) {
+      if (!checkLocationPermission()) {
         return false;
       }
+    }
+    return true;
+  }
 
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_SETTINGS)
-          != PackageManager.PERMISSION_GRANTED && !Settings.System.canWrite(this)) {//special
-        return false;
-      }
+  @TargetApi(23) private boolean checkSpecialSettingsPermission() {
+    return Settings.System.canWrite(this);
+  }
+
+  private boolean checkNormalPermissions() {
+    if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+        != PackageManager.PERMISSION_GRANTED) {
+      return false;
+    }
+
+    if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        != PackageManager.PERMISSION_GRANTED) {
+      return false;
+    }
+
+    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+        != PackageManager.PERMISSION_GRANTED) {
+      return false;
+    }
+
+    if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_SETTINGS)
+        != PackageManager.PERMISSION_GRANTED) {
+      return false;
     }
     return true;
   }
@@ -440,51 +464,54 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   @Override public void requestPermissions() {
     if (!checkPermissions() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      boolean specialPermissionNotGranted = false;
+      final List<String> missingPermissions = new ArrayList<>();
 
-      //check if already has the permissions
-      ArrayList<String> permissionsArray = new ArrayList<>();
       if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
           != PackageManager.PERMISSION_GRANTED) {
 
-        permissionsArray.add(Manifest.permission.READ_PHONE_STATE);
+        missingPermissions.add(Manifest.permission.READ_PHONE_STATE);
       }
 
       if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
           != PackageManager.PERMISSION_GRANTED) {
-        permissionsArray.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        missingPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
       }
 
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+      if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
           != PackageManager.PERMISSION_GRANTED) {
 
-        permissionsArray.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        missingPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
       }
 
       if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_SETTINGS)
-          != PackageManager.PERMISSION_GRANTED) {//special
-        if (Settings.System.canWrite(this)) {
-          permissionsArray.add(Manifest.permission.WRITE_SETTINGS);
-          System.out.println("can write settings!");
+          != PackageManager.PERMISSION_GRANTED) {
+        missingPermissions.add(Manifest.permission.WRITE_SETTINGS);
+      }
+
+      if (missingPermissions.size() > 0) {
+
+        String[] permissionsToRequest = new String[missingPermissions.size()];
+        permissionsToRequest = missingPermissions.toArray(permissionsToRequest);
+
+        ActivityCompat.requestPermissions(this, permissionsToRequest, PERMISSION_REQUEST_CODE);
+      } else {
+        // All normal permissions granted
+        if (!checkSpecialSettingsPermission()) {
+          requestSpecialSettingsPermission();
+        } else if (!checkLocationPermission()) {
+          requestLocationPermission();
         } else {
-          specialPermissionNotGranted = true;
+          onPermissionsGranted();
         }
       }
-
-      if (permissionsArray.size() > 0) {
-
-        String[] missingPermissions = new String[permissionsArray.size()];
-        missingPermissions = permissionsArray.toArray(missingPermissions);
-
-        ActivityCompat.requestPermissions(this, missingPermissions, PERMISSION_REQUEST_CODE);
-      } else if (specialPermissionNotGranted) {
-        requestSpecialPermission();
-      }
     } else {
-      if (permissionListener != null) {
-        permissionListener.onPermissionGranted();
-      }
+      onPermissionsGranted();
     }
+  }
+
+  private void requestLocationPermission() {
+    Intent locationIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+    startActivityForResult(locationIntent, LOCATION_REQUEST_CODE);
   }
 
   public void setChosenHotspot(String chosenHotspot) {
@@ -515,5 +542,26 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   @Override public void removeListener() {
     this.permissionListener = null;
+  }
+
+  private boolean checkLocationPermission() {
+    int locationMode = 0;
+    String locationProviders;
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      try {
+        locationMode =
+            Settings.Secure.getInt(this.getContentResolver(), Settings.Secure.LOCATION_MODE);
+      } catch (Settings.SettingNotFoundException e) {
+        e.printStackTrace();
+        return false;
+      }
+
+      return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+    } else {
+      locationProviders = Settings.Secure.getString(this.getContentResolver(),
+          Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+      return !TextUtils.isEmpty(locationProviders);
+    }
   }
 }

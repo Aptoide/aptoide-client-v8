@@ -73,7 +73,7 @@ public class HighwayPresenter implements Presenter {
   private void deactivateHotspot() {
     deactivateHotspotTask.setListener(new SimpleListener() {
       @Override public void onEvent() {
-        view.showConnections();//fillTheRadar
+        view.showConnections();
         view.setUpListeners();
         connectionManager.start(new ConnectionManager.WifiStateListener() {
           @Override public void onStateChanged(boolean enabled) {
@@ -96,7 +96,6 @@ public class HighwayPresenter implements Presenter {
   }
 
   @Override public void onPause() {
-    //call groupmanager.pause etc.
 
   }
 
