@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.StatFs;
@@ -157,8 +158,12 @@ public class HighwayServerService extends Service {
     mBuilderReceive.setContentTitle(
         this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
             .getString(R.string.receive))
-        .setContentText(this.getResources().getString(R.string.receiving) + " " + receivingAppName)
-        .setSmallIcon(R.mipmap.ic_launcher);
+        .setContentText(this.getResources().getString(R.string.receiving) + " " + receivingAppName);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      mBuilderReceive.setSmallIcon(R.drawable.ic_stat_aptoide_notification);
+    } else {
+      mBuilderReceive.setSmallIcon(R.mipmap.ic_launcher);
+    }
   }
 
   private void finishReceiveNotification(String receivedApkFilePath, String packageName,
@@ -194,8 +199,12 @@ public class HighwayServerService extends Service {
     mBuilderReceive.setContentTitle(
         this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
             .getString(R.string.receive))
-        .setContentText(this.getResources().getString(R.string.receiving) + " " + receivingAppName)
-        .setSmallIcon(R.mipmap.ic_launcher);
+        .setContentText(this.getResources().getString(R.string.receiving) + " " + receivingAppName);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      mBuilderReceive.setSmallIcon(R.drawable.ic_stat_aptoide_notification);
+    } else {
+      mBuilderReceive.setSmallIcon(R.mipmap.ic_launcher);
+    }
 
     mBuilderReceive.setProgress(100, actual, false);
     if (mNotifyManager == null) {
@@ -210,8 +219,12 @@ public class HighwayServerService extends Service {
     mBuilderSend.setContentTitle(
         this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
             .getString(R.string.send))
-        .setContentText(this.getResources().getString(R.string.preparingSend))
-        .setSmallIcon(R.mipmap.ic_launcher);
+        .setContentText(this.getResources().getString(R.string.preparingSend));
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      mBuilderSend.setSmallIcon(R.drawable.ic_stat_aptoide_notification);
+    } else {
+      mBuilderSend.setSmallIcon(R.mipmap.ic_launcher);
+    }
   }
 
   private void finishSendNotification(AndroidAppInfo androidAppInfo) {
@@ -236,8 +249,12 @@ public class HighwayServerService extends Service {
     mBuilderSend.setContentTitle(
         this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
             .getString(R.string.send))
-        .setContentText(this.getResources().getString(R.string.sending) + " " + sendingAppName)
-        .setSmallIcon(R.mipmap.ic_launcher);
+        .setContentText(this.getResources().getString(R.string.sending) + " " + sendingAppName);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      mBuilderSend.setSmallIcon(R.drawable.ic_stat_aptoide_notification);
+    } else {
+      mBuilderSend.setSmallIcon(R.mipmap.ic_launcher);
+    }
 
     mBuilderSend.setProgress(100, actual, false);
     if (mNotifyManager == null) {
