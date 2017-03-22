@@ -1,5 +1,6 @@
 package cm.aptoide.pt.spotandshareandroid;
 
+import android.net.Network;
 import android.net.wifi.WifiConfiguration;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -18,6 +19,7 @@ import java.util.Map;
  */
 public class DataHolder {
   private static final DataHolder holder = new DataHolder();
+  public Network network;
   private AsyncTask<String, String, String> dlfile;
   private TextView textView;
   private Map<String, Long> updateStartingTimestamp = new HashMap<>();

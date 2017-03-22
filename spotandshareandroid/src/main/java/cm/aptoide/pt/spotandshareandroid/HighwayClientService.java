@@ -15,6 +15,7 @@ import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
 import cm.aptoide.pt.spotandshare.socket.exception.ServerLeftException;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
+import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
@@ -32,6 +33,7 @@ public class HighwayClientService extends Service {
 
   public static final int INSTALL_APP_NOTIFICATION_REQUEST_CODE = 147;
   private final int PROGRESS_SPLIT_SIZE = 10;
+  private final SocketBinder socketBinder = Utils.Socket.newDefaultSocketBinder();
   private int port;
   private ArrayList<App> listOfApps;
   private NotificationManagerCompat mNotifyManager;
@@ -289,7 +291,8 @@ public class HighwayClientService extends Service {
 
         aptoideMessageClientSocket =
             new AptoideMessageClientSocket(serverIP, "192.168.43.1", port, externalStoragepath,
-                storageCapacity, fileServerLifecycle, fileClientLifecycle);
+                storageCapacity, fileServerLifecycle, fileClientLifecycle, socketBinder);
+        aptoideMessageClientSocket.setSocketBinder(socketBinder);
         aptoideMessageClientSocket.startAsync();
 
         System.out.println(" Connected ! ");

@@ -16,6 +16,7 @@ import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
+import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
@@ -32,12 +33,11 @@ public class HighwayServerService extends Service {
 
   public static final int INSTALL_APP_NOTIFICATION_REQUEST_CODE = 147;
   private final int PROGRESS_SPLIT_SIZE = 10;
+  private final SocketBinder socketBinder = Utils.Socket.newDefaultSocketBinder();
   private NotificationManagerCompat mNotifyManager;
   private FileClientLifecycle<AndroidAppInfo> fileClientLifecycle;
   private FileServerLifecycle<AndroidAppInfo> fileServerLifecycle;
-
   private List<App> listOfApps;
-
   private AptoideMessageServerSocket aptoideMessageServerSocket;
   private AptoideMessageClientSocket aptoideMessageClientSocket;
 
@@ -288,7 +288,7 @@ public class HighwayServerService extends Service {
 
         aptoideMessageClientSocket =
             new AptoideMessageClientSocket("192.168.43.1", 55555, externalStoragepath,
-                storageCapacity, fileServerLifecycle, fileClientLifecycle);
+                storageCapacity, fileServerLifecycle, fileClientLifecycle, socketBinder);
         aptoideMessageClientSocket.startAsync();
 
         System.out.println("Connected 342");

@@ -1,6 +1,8 @@
 package cm.aptoide.pt.spotandshare.socket;
 
+import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import lombok.Setter;
 
@@ -15,6 +17,7 @@ public abstract class AptoideClientSocket extends AptoideSocket {
   private String fallbackHostName;
   @Setter private int retries;
   private Socket socket;
+  @Setter private SocketBinder socketBinder;
 
   public AptoideClientSocket(String hostName, String fallbackHostName, int port) {
     this(hostName, port);
@@ -44,12 +47,17 @@ public abstract class AptoideClientSocket extends AptoideSocket {
     String[] hosts = new String[] { hostName, fallbackHostName };
 
     for (String host : hosts) {
-      if (host != null) {
+      if (host != null && (socket == null || !socket.isConnected())) {
         retries = 5;
 
-        while (socket == null && retries-- >= 0) {
+        while ((socket == null || !socket.isConnected()) && retries-- >= 0) {
           try {
-            socket = new Socket(hostName, port);
+            socket = new Socket();
+            if (socketBinder != null) {
+              socketBinder.bind(socket);
+            }
+            socket.connect(new InetSocketAddress(host, port));
+            System.out.println("Socket connected to " + host + ":" + port);
           } catch (IOException e) {
             System.out.println(
                 "Failed to connect to " + hostName + ":" + port + ", retries = " + retries);
