@@ -12,6 +12,7 @@ import lombok.Setter;
 
 public abstract class AptoideClientSocket extends AptoideSocket {
 
+  private static final String TAG = AptoideClientSocket.class.getSimpleName();
   private final String hostName;
   private final int port;
   private String fallbackHostName;
@@ -41,7 +42,7 @@ public abstract class AptoideClientSocket extends AptoideSocket {
   }
 
   @Override public AptoideSocket start() {
-
+    Log.d(TAG, "start() called with: " + "");
     socket = null;
 
     String[] hosts = new String[] { hostName, fallbackHostName };
@@ -57,10 +58,10 @@ public abstract class AptoideClientSocket extends AptoideSocket {
               socketBinder.bind(socket);
             }
             socket.connect(new InetSocketAddress(host, port));
-            System.out.println("Socket connected to " + host + ":" + port);
+            Log.d(TAG, "start: Socket connected to " + host + ":" + port);
           } catch (IOException e) {
-            System.out.println(
-                "Failed to connect to " + hostName + ":" + port + ", retries = " + retries);
+            Log.d(TAG,
+                "start: Failed to connect to " + hostName + ":" + port + ", retries = " + retries);
             if (retries == 0) {
               if (onError != null) {
                 onError.onError(e);
@@ -87,7 +88,6 @@ public abstract class AptoideClientSocket extends AptoideSocket {
     try {
       onConnected(socket);
     } catch (IOException e) {
-      e.printStackTrace(System.out);
       if (onError != null) {
         onError.onError(e);
       }
@@ -99,7 +99,7 @@ public abstract class AptoideClientSocket extends AptoideSocket {
       }
     }
 
-    System.out.println("ShareApps: Thread "
+    Log.d(TAG, "start: ShareApps: Thread "
         + Thread.currentThread().getId()
         + " finished "
         + getClass().getSimpleName());
