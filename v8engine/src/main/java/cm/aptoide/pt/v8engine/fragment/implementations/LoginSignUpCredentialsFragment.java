@@ -200,11 +200,13 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   @Override public void showPassword() {
     isPasswordVisible = true;
     aptoidePasswordEditText.setTransformationMethod(null);
+    hideShowAptoidePasswordButton.setBackgroundResource(R.drawable.icon_open_eye);
   }
 
   @Override public void hidePassword() {
     isPasswordVisible = false;
     aptoidePasswordEditText.setTransformationMethod(new PasswordTransformationMethod());
+    hideShowAptoidePasswordButton.setBackgroundResource(R.drawable.icon_closed_eye);
   }
 
   @Override public Observable<Void> showHidePasswordClick() {
