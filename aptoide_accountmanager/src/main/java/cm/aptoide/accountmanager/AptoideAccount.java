@@ -25,7 +25,7 @@ public final class AptoideAccount implements Account {
   private final String password;
   private final List<Store> subscribedStores;
   private final AptoideClientUUID aptoideClientUUID;
-  private final AccountManagerService accountManagerService;
+  private final AccountService accountService;
 
   private String token;
 
@@ -33,7 +33,7 @@ public final class AptoideAccount implements Account {
       String refreshToken, String token, String password, Type type, String store,
       String storeAvatar, boolean adultContentEnabled, Access access, boolean accessConfirmed,
       List<Store> subscribedStores, AptoideClientUUID aptoideClientUUID,
-      AccountManagerService accountManagerService) {
+      AccountService accountService) {
     this.id = id;
     this.email = email;
     this.nickname = nickname;
@@ -49,7 +49,7 @@ public final class AptoideAccount implements Account {
     this.accessConfirmed = accessConfirmed;
     this.subscribedStores = subscribedStores;
     this.aptoideClientUUID = aptoideClientUUID;
-    this.accountManagerService = accountManagerService;
+    this.accountService = accountService;
   }
 
   @Override public Completable logout() {
@@ -57,7 +57,7 @@ public final class AptoideAccount implements Account {
   }
 
   @Override public Completable refreshToken() {
-    return accountManagerService.refreshToken(getRefreshToken())
+    return accountService.refreshToken(getRefreshToken())
         .doOnSuccess(token -> refreshToken(token)).toCompletable();
   }
 

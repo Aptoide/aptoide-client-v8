@@ -1,41 +1,33 @@
 package cm.aptoide.accountmanager;
 
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
+import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.CreateUserRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.GetUserRepoSubscriptionRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.OAuth2AuthenticationRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
+import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
 import cm.aptoide.pt.model.v3.OAuth;
+import cm.aptoide.pt.model.v3.Subscription;
+import java.util.List;
 import rx.Completable;
 import rx.Single;
-import rx.schedulers.Schedulers;
 
 public class AccountManagerService {
 
   private final AptoideClientUUID aptoideClientUUID;
   private final BodyInterceptorFactory interceptorFactory;
+  private final AccountFactory accountFactory;
 
   public AccountManagerService(AptoideClientUUID aptoideClientUUID,
-      BodyInterceptorFactory interceptorFactory) {
+      BodyInterceptorFactory interceptorFactory, AccountFactory accountFactory) {
     this.aptoideClientUUID = aptoideClientUUID;
     this.interceptorFactory = interceptorFactory;
-  }
-
-  public Single<String> refreshToken(String refreshToken) {
-    return OAuth2AuthenticationRequest.of(refreshToken, aptoideClientUUID.getUniqueIdentifier())
-        .observe()
-        .subscribeOn(Schedulers.io())
-        .toSingle()
-        .flatMap(oAuth -> {
-          if (!oAuth.hasErrors()) {
-            return Single.just(oAuth.getAccessToken());
-          } else {
-            return Single.error(new AccountException(oAuth.getError()));
-          }
-        });
+    this.accountFactory = accountFactory;
   }
 
   public Completable createAccount(String email, String password) {
@@ -120,5 +112,51 @@ public class AccountManagerService {
       ChangeStoreSubscriptionResponse.StoreSubscriptionState subscription) {
     return ChangeStoreSubscriptionRequest.of(storeName, subscription, storeUserName, storePassword,
         interceptorFactory.create(accountManager)).observe().toSingle().toCompletable();
+  }
+
+  private Single<List<Store>> getSubscribedStores(String accessToken) {
+    return GetUserRepoSubscriptionRequest.of(accessToken)
+        .observe()
+        .map(getUserRepoSubscription -> getUserRepoSubscription.getSubscription())
+        .flatMapIterable(list -> list)
+        .map(store -> mapToStore(store))
+        .toList()
+        .toSingle();
+  }
+
+  private Store mapToStore(Subscription subscription) {
+    Store store = new Store(Long.parseLong(subscription.getDownloads()),
+        subscription.getAvatarHd() != null ? subscription.getAvatarHd() : subscription.getAvatar(),
+        subscription.getId().longValue(), subscription.getName(), subscription.getTheme(), null,
+        null);
+    return store;
+  }
+
+  public Single<Account> getAccount(String accessToken, String refreshToken,
+      String encryptedPassword, String type) {
+    return Single.zip(getServerAccount(accessToken), getSubscribedStores(accessToken),
+        (response, stores) -> mapServerAccountToAccount(response, refreshToken, accessToken,
+            encryptedPassword, type, stores));
+  }
+
+  private Single<CheckUserCredentialsJson> getServerAccount(String accessToken) {
+    return CheckUserCredentialsRequest.of(accessToken).observe().toSingle().flatMap(response -> {
+      if (response.getStatus().equals("OK")) {
+        return Single.just(response);
+      }
+      return Single.error(new IllegalStateException("Failed to get user account"));
+    });
+  }
+
+  private Account mapServerAccountToAccount(CheckUserCredentialsJson serverUser,
+      String refreshToken, String accessToken, String encryptedPassword, String type,
+      List<Store> subscribedStores) {
+    return accountFactory.createAccount(serverUser.getAccess(), subscribedStores,
+        String.valueOf(serverUser.getId()), serverUser.getEmail(), serverUser.getUsername(),
+        serverUser.getAvatar(), refreshToken, accessToken, encryptedPassword, Account.Type
+            .valueOf(type),
+        serverUser.getRepo(), serverUser.getRavatarHd(),
+        serverUser.getSettings().getMatureswitch().equals("active"),
+        serverUser.isAccessConfirmed());
   }
 }

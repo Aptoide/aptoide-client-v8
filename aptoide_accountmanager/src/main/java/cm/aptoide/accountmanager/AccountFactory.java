@@ -8,13 +8,13 @@ public class AccountFactory {
 
   private final AptoideClientUUID aptoideClientUUID;
   private final ExternalAccountFactory externalAccountFactory;
-  private final AccountManagerService accountManagerService;
+  private final AccountService accountService;
 
   public AccountFactory(AptoideClientUUID aptoideClientUUID,
-      ExternalAccountFactory externalAccountFactory, AccountManagerService accountManagerService) {
+      ExternalAccountFactory externalAccountFactory, AccountService accountService) {
     this.aptoideClientUUID = aptoideClientUUID;
     this.externalAccountFactory = externalAccountFactory;
-    this.accountManagerService = accountManagerService;
+    this.accountService = accountService;
   }
 
   public Account createAccount(String access, List<Store> stores, String id, String name,
@@ -24,7 +24,7 @@ public class AccountFactory {
     final Account aptoideAccount =
         new AptoideAccount(id, name, nickname, avatar, refreshToken, token, password, type, store,
             storeAvatar, adultContentEnabled, getAccessFrom(access), accessConfirmed, stores,
-            aptoideClientUUID, accountManagerService);
+            aptoideClientUUID, accountService);
     switch (type) {
       case APTOIDE:
         return aptoideAccount;

@@ -14,6 +14,7 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountManagerService;
+import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.CredentialsValidator;
 import cm.aptoide.pt.annotation.Partners;
@@ -286,13 +287,14 @@ public abstract class V8Engine extends DataProvider {
           new BaseBodyInterceptorFactory(getAptoideClientUUID(), getPreferences(),
               getSecurePreferences());
 
-      final AccountManagerService accountManagerService =
-          new AccountManagerService(getAptoideClientUUID(), bodyInterceptorFactory);
-
       final AccountFactory accountFactory = new AccountFactory(getAptoideClientUUID(),
-          new SocialAccountFactory(this, getGoogleSignInClient()), accountManagerService);
+          new SocialAccountFactory(this, getGoogleSignInClient()),
+          new AccountService(getAptoideClientUUID()));
 
-      accountManager = new AptoideAccountManager(new AccountAnalytcs(), new CredentialsValidator(), accountFactory,
+      final AccountManagerService accountManagerService =
+          new AccountManagerService(getAptoideClientUUID(), bodyInterceptorFactory, accountFactory);
+
+      accountManager = new AptoideAccountManager(new AccountAnalytcs(), new CredentialsValidator(),
           new AndroidAccountDataPersist(getConfiguration().getAccountType(),
               AccountManager.get(this), dataPersist, accountFactory), accountManagerService);
     }
@@ -302,8 +304,7 @@ public abstract class V8Engine extends DataProvider {
   public GoogleApiClient getGoogleSignInClient() {
     if (googleSignInClient == null) {
       return new GoogleApiClient.Builder(this).addApi(GOOGLE_SIGN_IN_API,
-          new GoogleSignInOptions.Builder(
-              GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
+          new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
               .requestScopes(new Scope("https://www.googleapis.com/auth/contacts.readonly"))
               .requestScopes(new Scope(Scopes.PROFILE))
               .requestServerAuthCode(BuildConfig.GMS_SERVER_ID)

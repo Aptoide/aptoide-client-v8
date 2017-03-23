@@ -8,14 +8,9 @@ package cm.aptoide.accountmanager;
 import android.text.TextUtils;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v3.ChangeUserSettingsRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.GetUserRepoSubscriptionRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
-import cm.aptoide.pt.model.v3.Subscription;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.net.SocketTimeoutException;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
@@ -29,15 +24,13 @@ public class AptoideAccountManager {
   private final Analytics analytics;
   private final CredentialsValidator credentialsValidator;
   private final PublishRelay<Account> accountSubject;
-  private final AccountFactory accountFactory;
   private final AccountDataPersist dataPersist;
   private final AccountManagerService accountManagerService;
 
   public AptoideAccountManager(Analytics analytics, CredentialsValidator credentialsValidator,
-      AccountFactory accountFactory, AccountDataPersist dataPersist, AccountManagerService accountManagerService) {
+      AccountDataPersist dataPersist, AccountManagerService accountManagerService) {
     this.credentialsValidator = credentialsValidator;
     this.analytics = analytics;
-    this.accountFactory = accountFactory;
     this.dataPersist = dataPersist;
     this.accountManagerService = accountManagerService;
     this.accountSubject = PublishRelay.create();
@@ -135,47 +128,9 @@ public class AptoideAccountManager {
 
   private Completable syncAccount(String accessToken, String refreshToken, String encryptedPassword,
       Account.Type type) {
-    return Single.zip(getServerAccount(accessToken), getSubscribedStores(accessToken),
-        (response, stores) -> mapServerAccountToAccount(response, refreshToken, accessToken,
-            encryptedPassword, type, stores)).flatMapCompletable(account -> saveAccount(account));
-  }
-
-  private Single<CheckUserCredentialsJson> getServerAccount(String accessToken) {
-    return CheckUserCredentialsRequest.of(accessToken).observe().toSingle().flatMap(response -> {
-      if (response.getStatus().equals("OK")) {
-        return Single.just(response);
-      }
-      return Single.error(new IllegalStateException("Failed to get user account"));
-    });
-  }
-
-  private Single<List<Store>> getSubscribedStores(String accessToken) {
-    return GetUserRepoSubscriptionRequest.of(accessToken)
-        .observe()
-        .map(getUserRepoSubscription -> getUserRepoSubscription.getSubscription())
-        .flatMapIterable(list -> list)
-        .map(store -> mapToStore(store))
-        .toList()
-        .toSingle();
-  }
-
-  private Account mapServerAccountToAccount(CheckUserCredentialsJson serverUser,
-      String refreshToken, String accessToken, String encryptedPassword, Account.Type accountType,
-      List<Store> subscribedStores) {
-    return accountFactory.createAccount(serverUser.getAccess(), subscribedStores,
-        String.valueOf(serverUser.getId()), serverUser.getEmail(), serverUser.getUsername(),
-        serverUser.getAvatar(), refreshToken, accessToken, encryptedPassword, accountType,
-        serverUser.getRepo(), serverUser.getRavatarHd(),
-        serverUser.getSettings().getMatureswitch().equals("active"),
-        serverUser.isAccessConfirmed());
-  }
-
-  private Store mapToStore(Subscription subscription) {
-    Store store = new Store(Long.parseLong(subscription.getDownloads()),
-        subscription.getAvatarHd() != null ? subscription.getAvatarHd() : subscription.getAvatar(),
-        subscription.getId().longValue(), subscription.getName(), subscription.getTheme(), null,
-        null);
-    return store;
+    return accountManagerService.getAccount(accessToken, refreshToken, encryptedPassword,
+        type.name())
+        .flatMapCompletable(account -> saveAccount(account));
   }
 
   public void unsubscribeStore(String storeName, String storeUserName, String storePassword) {
