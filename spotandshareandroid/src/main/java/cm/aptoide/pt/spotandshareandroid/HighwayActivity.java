@@ -59,6 +59,8 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    ApplicationSender.reset();
+
     deviceName = getIntent().getStringExtra("deviceName");
     connectionManager = ConnectionManager.getInstance(this.getApplicationContext());
     analytics = ShareApps.getAnalytics();
@@ -215,12 +217,8 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
       return false;
     }
 
-    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-        != PackageManager.PERMISSION_GRANTED) {
-      return false;
-    }
-
-    return true;
+    return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+        == PackageManager.PERMISSION_GRANTED;
   }
 
   private void requestSpecialSettingsPermission() {
@@ -301,23 +299,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     presenter.scanNetworks();
   }
 
-  @Override public boolean checkPermissions() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      if (!checkNormalPermissions()) {
-        return false;
-      }
-
-      if (!checkSpecialSettingsPermission()) {
-        return false;
-      }
-
-      if (!checkLocationPermission()) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   @Override public void enableButtons(boolean enable) {
     if (enable) {
       progressBarLayout.setVisibility(View.GONE);
@@ -341,6 +322,23 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         }
       }
     });
+  }
+
+  @Override public boolean checkPermissions() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      if (!checkNormalPermissions()) {
+        return false;
+      }
+
+      if (!checkSpecialSettingsPermission()) {
+        return false;
+      }
+
+      if (!checkLocationPermission()) {
+        return false;
+      }
+    }
+    return true;
   }
 
   private void showNougatErrorToast() {
@@ -500,6 +498,25 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
+  public void joinSingleHotspot() {
+    hideSearchGroupsTextview(true);
+    Group g = new Group(chosenHotspot);
+    presenter.clickJoinGroup(g);
+  }
+
+  public String getChosenHotspot() {
+    return chosenHotspot;
+  }
+
+  public void setChosenHotspot(String chosenHotspot) {
+    this.chosenHotspot = chosenHotspot;
+  }
+
+  @Override protected void onResume() {
+    presenter.onResume();
+    super.onResume();
+  }
+
   @Override public void requestPermissions() {
     if (!checkPermissions() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       final List<String> missingPermissions = new ArrayList<>();
@@ -540,25 +557,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     } else {
       onPermissionsGranted();
     }
-  }
-
-  public void joinSingleHotspot() {
-    hideSearchGroupsTextview(true);
-    Group g = new Group(chosenHotspot);
-    presenter.clickJoinGroup(g);
-  }
-
-  public String getChosenHotspot() {
-    return chosenHotspot;
-  }
-
-  public void setChosenHotspot(String chosenHotspot) {
-    this.chosenHotspot = chosenHotspot;
-  }
-
-  @Override protected void onResume() {
-    presenter.onResume();
-    super.onResume();
   }
 
   @Override protected void onDestroy() {

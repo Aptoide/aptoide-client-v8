@@ -246,12 +246,14 @@ public class Utils {
     public static SocketBinder newDefaultSocketBinder() {
       return new SocketBinder() {
         @Override public void bind(java.net.Socket socket) {
-          try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-              DataHolder.getInstance().network.bindSocket(socket);
+          if (DataHolder.getInstance().network != null) {
+            try {
+              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                DataHolder.getInstance().network.bindSocket(socket);
+              }
+            } catch (IOException e) {
+              e.printStackTrace();
             }
-          } catch (IOException e) {
-            e.printStackTrace();
           }
         }
       };

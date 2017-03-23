@@ -321,7 +321,7 @@ public class HighwayServerService extends Service {
         }
       } else if (intent.getAction() != null && intent.getAction().equals("SHUTDOWN_SERVER")) {
         if (aptoideMessageServerSocket != null) { // TODO: 16-03-2017 filipe check problem
-          aptoideMessageClientSocket.disable();
+          aptoideMessageClientSocket.shutdown();
           aptoideMessageServerSocket.shutdown(new Runnable() {
             @Override public void run() {
               setInitialApConfig();//to not interfere with recovering wifi state
