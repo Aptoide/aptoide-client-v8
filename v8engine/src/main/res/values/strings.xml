@@ -64,7 +64,6 @@
         apps (via %s) including version and install date.</string>
 
   <!-- Timeline Fragment -->
-  <string name="menu_card_timeline_clear">Clear</string>
   <string name="fragment_social_timeline_aptoide_team">Aptoide Team</string>
   <string name="fragment_social_timeline_no_connection">No network connection</string>
   <string name="fragment_social_timeline_general_error">Having some trouble. Can you retry later?</string>
@@ -170,11 +169,9 @@
 
   <!--need translation-->
   <string name="followed">Following</string>
-  <string name="unfollow_yes_no">Are you sure you want to unfollow?</string>
   <string name="unfollow">Unfollow</string>
   <string name="unfollowing_store_message">Unfollowing %s</string>
   <string name="store_followed">Store %s followed</string>
-  <string name="subscribers">Subscribers</string>
   <string name="apps">Apps</string>
 
   <!---->
@@ -200,7 +197,6 @@
   <string name="community">Community</string>
   <string name="stores">Stores</string>
   <string name="updates">Updates</string>
-  <string name="social_timeline">Social Timeline</string>
   <string name="downloads">Downloads</string>
   <string name="apps_timeline"><b>Apps Timeline</b></string>
   <string name="timeline"><b>Timeline</b></string>
@@ -346,7 +342,6 @@
   <string name="social_timeline_recommends">Recommends</string>
   <string name="private_profile_create_store">To have a private profile, you need to create a store</string>
   <string name="social_timeline_shared_by">shared by %1$s</string>
-  <string name="social_timeline_who_liked">Who liked</string>
   <string name="social_timeline_users_private">%d are private</string>
 
   <!-- Store Meta widget -->
@@ -373,8 +368,6 @@
   <string name="setting_category_autoupdate">%s Updates</string>
   <string name="setting_category_autoupdate_title">Get %s Update notifications</string>
   <string name="setting_category_autoupdate_message">Periodically check for %s new versions</string>
-  <string name="store_added_long_time_suggestion_message">show long term</string>
-  <string name="store_added_short_time_suggestion_message">show just created</string>
   <string name="create_store_displayable_created_store_long_term_message">long term</string>
   <string name="create_store_displayable_explore_long_term_button">View Store</string>
   <string name="create_store_displayable_empty_description_message">Add a description for your Store. A good description helps you to get more followers and interaction.</string>
@@ -390,7 +383,6 @@
   <string name="recover_password">Recover your password</string>
   <string name="email">Email</string>
   <string name="password">Password</string>
-  <string name="create_password">Create Password</string>
   <string name="store_suspended_message">Store suspended</string>
   <string name="facebook_login_cancelled">Facebook login canceled</string>
   <string name="google_login_cancelled">Google login failed</string>
@@ -402,15 +394,6 @@
   <string name="add_store_dialog_top_stores_small_text">and find exclusive content!</string>
 
   <!-- Login -->
-  <string name="activity_login_title">Login</string>
-  <string name="activity_login_forgot_password_button">Forgot password?</string>
-  <string name="activity_login_button">Login</string>
-  <string name="activity_login_sign_up_button">Sign Up</string>
-  <string name="view_credentials_username_hint">Email</string>
-  <string name="view_credentials_password_hint">Password</string>
-
-  <string name="permission_access_deny">access to read and write to external storage was denied</string>
-  <string name="permission_account_deny">access to get accounts was denied</string>
 
   <!-- Address book -->
   <string name="addressbook_increase_network_message">Increase your network.</string>
@@ -427,7 +410,6 @@
   </string>
   <string name="addressbook_success">Success!</string>
   <string name="addressbook_allow_friends_find">Allow friends to find you</string>
-  <string name="google">Google</string>
   <string name="done">Done</string>
   <string name="addressbook_share_phone">Share your phone number so your friends can easily find you on %s</string>
   <string name="addressbook_phone_number">Phone number</string>
