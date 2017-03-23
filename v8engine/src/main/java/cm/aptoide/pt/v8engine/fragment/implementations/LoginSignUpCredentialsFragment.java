@@ -18,6 +18,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxrelay.PublishRelay;
+import com.trello.rxlifecycle.android.FragmentEvent;
+
+import java.util.Arrays;
+import java.util.List;
+
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
@@ -35,17 +49,6 @@ import cm.aptoide.pt.v8engine.view.LoginSignUpCredentialsView;
 import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
 import cm.aptoide.pt.v8engine.viewModel.AptoideAccountViewModel;
 import cm.aptoide.pt.v8engine.viewModel.FacebookAccountViewModel;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxrelay.PublishRelay;
-import com.trello.rxlifecycle.android.FragmentEvent;
-import java.util.Arrays;
-import java.util.List;
 import rx.Observable;
 
 public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
@@ -199,11 +202,13 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   @Override public void showPassword() {
     isPasswordVisible = true;
     aptoidePasswordEditText.setTransformationMethod(null);
+    hideShowAptoidePasswordButton.setBackgroundResource(R.drawable.icon_open_eye);
   }
 
   @Override public void hidePassword() {
     isPasswordVisible = false;
     aptoidePasswordEditText.setTransformationMethod(new PasswordTransformationMethod());
+    hideShowAptoidePasswordButton.setBackgroundResource(R.drawable.icon_closed_eye);
   }
 
   @Override public Observable<Void> showHidePasswordClick() {
