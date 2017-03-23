@@ -186,6 +186,7 @@ public class AddStoreDialog extends BaseDialog {
         if (!searchAutoComplete.isFocused()) {
           dismiss();
         }
+        po
       }
     });
   }
