@@ -84,7 +84,7 @@ public class AptoideAccountManager {
     return dataPersist.saveAccount(account).doOnCompleted(() -> accountRelay.call(account));
   }
 
-  public Completable createAccount(String email, String password) {
+  public Completable signUp(String email, String password) {
     return credentialsValidator.validate(email, password, true)
         .andThen(accountManagerService.createAccount(email, password))
         .andThen(login(Account.Type.APTOIDE, email, password, null))

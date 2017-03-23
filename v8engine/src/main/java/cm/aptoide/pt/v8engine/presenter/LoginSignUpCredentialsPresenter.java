@@ -144,7 +144,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
     return view.aptoideSignUpClick().<Void>flatMap(credentials -> {
       view.hideKeyboard();
       view.showLoading();
-      return accountManager.createAccount(credentials.getUsername(), credentials.getPassword())
+      return accountManager.signUp(credentials.getUsername(), credentials.getPassword())
           .observeOn(AndroidSchedulers.mainThread())
           .doOnCompleted(() -> {
             Logger.d(TAG, "aptoide sign up successful");
