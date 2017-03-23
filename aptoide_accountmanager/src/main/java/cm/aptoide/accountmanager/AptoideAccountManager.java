@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import cm.aptoide.pt.crashreports.CrashReport;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.net.SocketTimeoutException;
-import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -21,21 +20,22 @@ public class AptoideAccountManager {
 
   private final Analytics analytics;
   private final CredentialsValidator credentialsValidator;
-  private final PublishRelay<Account> accountSubject;
+  private final PublishRelay<Account> accountRelay;
   private final AccountDataPersist dataPersist;
   private final AccountManagerService accountManagerService;
 
   public AptoideAccountManager(Analytics analytics, CredentialsValidator credentialsValidator,
-      AccountDataPersist dataPersist, AccountManagerService accountManagerService) {
+      AccountDataPersist dataPersist, AccountManagerService accountManagerService,
+      PublishRelay<Account> accountRelay) {
     this.credentialsValidator = credentialsValidator;
     this.analytics = analytics;
     this.dataPersist = dataPersist;
     this.accountManagerService = accountManagerService;
-    this.accountSubject = PublishRelay.create();
+    this.accountRelay = accountRelay;
   }
 
   public Observable<Account> accountStatus() {
-    return Observable.merge(accountSubject,
+    return Observable.merge(accountRelay,
         getAccountAsync().onErrorReturn(throwable -> createLocalAccount()).toObservable());
   }
 
@@ -72,23 +72,7 @@ public class AptoideAccountManager {
   }
 
   public Completable removeAccount() {
-    return dataPersist.removeAccount().doOnCompleted(() -> {
-      emitAccount(createLocalAccount());
-    });
-  }
-
-  /**
-   * This method uses a 200 millis delay due to other bugs in the app (such as improper component
-   * lifecycle in most fragments). After the proper component lifecycle is done, remove this delay.
-   *
-   * @param account boolean that indicates the current state of the user log in. This will
-   * propagate to all listeners of {@link #accountStatus()}
-   */
-  private void emitAccount(Account account) {
-    Observable.timer(650, TimeUnit.MILLISECONDS)
-        .doOnNext(__ -> accountSubject.call(account))
-        .subscribe(__ -> {
-        }, err -> CrashReport.getInstance().log(err));
+    return dataPersist.removeAccount().doOnCompleted(() -> accountRelay.call(createLocalAccount()));
   }
 
   public Completable refreshToken() {
@@ -97,9 +81,7 @@ public class AptoideAccountManager {
   }
 
   private Completable saveAccount(Account account) {
-    return dataPersist.saveAccount(account).doOnCompleted(() -> {
-      emitAccount(account);
-    });
+    return dataPersist.saveAccount(account).doOnCompleted(() -> accountRelay.call(account));
   }
 
   public Completable createAccount(String email, String password) {

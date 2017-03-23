@@ -1,6 +1,7 @@
 package cm.aptoide.accountmanager;
 
 import cm.aptoide.pt.model.v3.OAuth;
+import com.jakewharton.rxrelay.PublishRelay;
 import org.junit.Before;
 import org.junit.Test;
 import rx.Completable;
@@ -21,6 +22,7 @@ public class AptoideAccountManagerTest {
   private AccountDataPersist dataPersistMock;
   private AccountManagerService serviceMock;
   private AptoideAccountManager accountManager;
+  private PublishRelay accountRelayMock;
 
   @Before public void before() {
     analyticsMock = mock(Analytics.class);
@@ -28,9 +30,10 @@ public class AptoideAccountManagerTest {
     accountFactoryMock = mock(AccountFactory.class);
     dataPersistMock = mock(AccountDataPersist.class);
     serviceMock = mock(AccountManagerService.class);
+    accountRelayMock = mock(PublishRelay.class);
     accountManager =
         new AptoideAccountManager(analyticsMock, credentialsValidatorMock, dataPersistMock,
-            serviceMock);
+            serviceMock, accountRelayMock);
   }
 
   @Test public void shouldLogin() throws Exception {
@@ -61,5 +64,6 @@ public class AptoideAccountManagerTest {
     testSubscriber.assertNoErrors();
 
     verify(analyticsMock).login("marcelo.benites@aptoide.com");
+    verify(accountRelayMock).call(accountMock);
   }
 }

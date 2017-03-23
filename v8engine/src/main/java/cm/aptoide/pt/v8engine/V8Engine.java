@@ -74,6 +74,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
+import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
@@ -296,7 +297,8 @@ public abstract class V8Engine extends DataProvider {
 
       accountManager = new AptoideAccountManager(new AccountAnalytcs(), new CredentialsValidator(),
           new AndroidAccountDataPersist(getConfiguration().getAccountType(),
-              AccountManager.get(this), dataPersist, accountFactory), accountManagerService);
+              AccountManager.get(this), dataPersist, accountFactory), accountManagerService,
+          PublishRelay.create());
     }
     return accountManager;
   }
