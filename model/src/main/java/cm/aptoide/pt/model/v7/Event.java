@@ -28,6 +28,7 @@ import lombok.experimental.Accessors;
     // Api
     listApps,
     listStores,
+    getUser,
     getStore,
     getStoreWidgets,
     //getReviews,
@@ -53,7 +54,7 @@ import lombok.experimental.Accessors;
     twitter,
     youtube,
 
-    // v3
+    mySpotShare, // v3
     getReviews
   }
 }

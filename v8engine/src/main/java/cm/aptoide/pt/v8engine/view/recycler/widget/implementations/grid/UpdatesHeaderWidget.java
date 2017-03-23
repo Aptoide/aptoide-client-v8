@@ -5,26 +5,22 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.Event;
-import cm.aptoide.pt.v8engine.Progress;
+import cm.aptoide.pt.navigation.TabNavigator;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdatesHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.ArrayList;
-import rx.Observable;
 import rx.schedulers.Schedulers;
 
 /**
@@ -35,12 +31,20 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
   private static final String TAG = UpdatesHeaderWidget.class.getSimpleName();
   private TextView title;
   private Button more;
+  private TabNavigator tabNavigator;
 
   public UpdatesHeaderWidget(View itemView) {
     super(itemView);
   }
 
   @Override protected void assignViews(View itemView) {
+
+    if (itemView.getContext() instanceof TabNavigator) {
+      tabNavigator = (TabNavigator) itemView.getContext();
+    } else {
+      throw new IllegalStateException("Context must implement " + TabNavigator.class
+          .getSimpleName());
+    }
     title = (TextView) itemView.findViewById(R.id.title);
     more = (Button) itemView.findViewById(R.id.more);
   }
@@ -49,34 +53,9 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
     title.setText(displayable.getLabel());
     more.setText(R.string.update_all);
     more.setVisibility(View.VISIBLE);
-    /*
-    more.setOnClickListener((view) -> {
-      PermissionManager permissionManager = new PermissionManager();
-      UpdatesAccessor updatesAccessor = AccessorFactory.getAccessorFor(Update.class);
 
-      subscription =
-          permissionManager.requestExternalStoragePermission((PermissionRequest) getContext())
-              .flatMap(success -> permissionManager.requestDownloadAccess(
-                  (PermissionRequest) getContext()))
-              .flatMap(success -> updatesAccessor.getUpdates())
-              .first()
-              .observeOn(Schedulers.io())
-              .flatMapIterable(updates -> updates)
-              .map(update -> new DownloadFactory().create(update))
-              .flatMap(downloading -> displayable.install(UpdatesHeaderWidget.this.getContext(),
-                  downloading))
-              .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
-                  throwable -> throwable.printStackTrace());
-
-      Intent intent = new Intent();
-      intent.setAction(HomeFragment.ChangeTabReceiver.SET_TAB_EVENT);
-      intent.putExtra(HomeFragment.ChangeTabReceiver.SET_TAB_EVENT, Event.Name.myDownloads);
-      getContext().sendBroadcast(intent);
-      Analytics.Updates.updateAll();
-    });
-    */
     more.setOnClickListener((view) -> {
-      ((PermissionRequest) getContext()).requestAccessToExternalFileSystem(() -> {
+      ((PermissionService) getContext()).requestAccessToExternalFileSystem(() -> {
         UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
         compositeSubscription.add(
             updateAccessor.getAll(false)
@@ -90,22 +69,14 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
                   }
                   return downloadList;
                 })
-                .flatMapIterable(downloads -> downloads)
-                .map(download -> displayable.getInstallManager()
-                    .install(UpdatesHeaderWidget.this.getContext(), download)
-                    .doOnSubscribe(() -> displayable.setupDownloadEvent(download)))
-                .toList()
-                .flatMap(observables -> Observable.merge(observables))
-                .filter(downloading -> downloading.getState() == Progress.DONE)
+                .flatMap(downloads -> displayable.getInstallManager()
+                    .startInstalls(downloads, getContext()))
                 .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
                     throwable -> throwable.printStackTrace()));
       }, () -> {
       });
 
-      Intent intent = new Intent();
-      intent.setAction(HomeFragment.ChangeTabReceiver.SET_TAB_EVENT);
-      intent.putExtra(HomeFragment.ChangeTabReceiver.SET_TAB_EVENT, Event.Name.myDownloads);
-      getContext().sendBroadcast(intent);
+      tabNavigator.navigate(TabNavigator.DOWNLOADS);
       Analytics.Updates.updateAll();
     });
   }

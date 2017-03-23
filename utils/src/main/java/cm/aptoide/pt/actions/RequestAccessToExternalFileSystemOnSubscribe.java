@@ -13,9 +13,9 @@ import rx.Subscriber;
  */
 public class RequestAccessToExternalFileSystemOnSubscribe implements Observable.OnSubscribe<Void> {
 
-  private final PermissionRequest permissionRequest;
+  private final PermissionService permissionRequest;
 
-  public RequestAccessToExternalFileSystemOnSubscribe(PermissionRequest permissionRequest) {
+  public RequestAccessToExternalFileSystemOnSubscribe(PermissionService permissionRequest) {
     this.permissionRequest = permissionRequest;
   }
 

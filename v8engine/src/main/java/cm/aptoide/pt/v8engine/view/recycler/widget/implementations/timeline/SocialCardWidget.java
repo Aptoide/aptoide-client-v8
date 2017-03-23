@@ -11,27 +11,33 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.UserTimeline;
+import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.customviews.LikeButtonView;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialCardDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
 abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWidget<T> {
 
   private static final String TAG = SocialCardWidget.class.getName();
   private final LayoutInflater inflater;
+  protected ImageView userAvatar;
+  protected ImageView storeAvatar;
   private TextView comments;
   private LinearLayout like;
   private LikeButtonView likeButton;
@@ -41,6 +47,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
   private TextView time;
   private RelativeLayout likePreviewContainer;
   private int marginOfTheNextLikePreview;
+  private AptoideAccountManager accountManager;
+  private AccountNavigator accountNavigator;
 
   SocialCardWidget(View itemView) {
     super(itemView);
@@ -58,10 +66,14 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     sharedBy = (TextView) itemView.findViewById(R.id.social_shared_by);
     likePreviewContainer = (RelativeLayout) itemView.findViewById(
         R.id.displayable_social_timeline_likes_preview_container);
+    storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
+    userAvatar = (ImageView) itemView.findViewById(R.id.card_user_avatar);
   }
 
   @Override @CallSuper public void bindView(T displayable) {
     super.bindView(displayable);
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
 
     if (displayable.getUserSharer() != null) {
       if (displayable.getUserSharer().getName() != null && !displayable.getUser()
@@ -78,9 +90,9 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     }
 
     if (comments != null) {
-      compositeSubscription.add(
-          RxView.clicks(comments).flatMap(aVoid -> showComments(displayable)).subscribe(aVoid -> {
-          }, showError()));
+      compositeSubscription.add(RxView.clicks(comments)
+          .flatMap(aVoid -> showComments(displayable))
+          .subscribe(aVoid -> knockWithSixpackCredentials(displayable.getAbUrl()), showError()));
 
       comments.setVisibility(View.VISIBLE);
     } else {
@@ -98,23 +110,27 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
         likeButton.setHeartState(false);
       }
 
-      likeButton.setOnClickListener(view -> {
-        if (likeCard(displayable, 1)) {
-          numberLikes.setText(String.valueOf(displayable.getNumberOfLikes() + 1));
-          numberLikes.setVisibility(View.VISIBLE);
-          if (likePreviewContainer.getChildCount() < 4) {
-            if (!displayable.isLiked()) {
-              UserTimeline user = new UserTimeline();
-              Store store = new Store();
-              store.setAvatar(AptoideAccountManager.getUserData().getUserAvatarRepo());
-              user.setAvatar(AptoideAccountManager.getUserData().getUserAvatar());
-              user.setStore(store);
-              addUserToPreview(marginOfTheNextLikePreview, user);
-              likePreviewContainer.invalidate();
+      compositeSubscription.add(RxView.clicks(likeButton)
+          .flatMap(__ -> accountManager.getAccountAsync().toObservable())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(account -> {
+            if (likeCard(displayable, 1, account)) {
+              numberLikes.setText(String.valueOf(displayable.getNumberOfLikes() + 1));
+              numberLikes.setVisibility(View.VISIBLE);
+              if (likePreviewContainer.getChildCount() < 4) {
+                if (!displayable.isLiked()) {
+                  knockWithSixpackCredentials(displayable.getAbUrl());
+                  UserTimeline user = new UserTimeline();
+                  Store store = new Store();
+                  store.setAvatar(account.getStoreAvatar());
+                  user.setAvatar(account.getAvatar());
+                  user.setStore(store);
+                  addUserToPreview(marginOfTheNextLikePreview, user);
+                  likePreviewContainer.invalidate();
+                }
+              }
             }
-          }
-        }
-      });
+          }, err -> CrashReport.getInstance().log(err)));
 
       like.setVisibility(View.VISIBLE);
     } else {
@@ -141,10 +157,18 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     showLikesPreview(displayable);
 
     compositeSubscription.add(RxView.clicks(likePreviewContainer)
-        .subscribe(click -> displayable.likesPreviewClick(((FragmentShower) getContext())),
-            (throwable) -> {
-              throwable.printStackTrace();
-            }));
+        .subscribe(click -> displayable.likesPreviewClick(getNavigationManager()),
+            err -> CrashReport.getInstance().log(err)));
+
+    compositeSubscription.add(
+        Observable.merge(RxView.clicks(storeAvatar), RxView.clicks(userAvatar)).subscribe(click -> {
+          if (displayable.getStore() == null) {
+            openStore(displayable.getUser().getId(), "DEFAULT");
+          } else {
+            openStore(displayable.getStore().getName(),
+                displayable.getStore().getAppearance().getTheme());
+          }
+        }));
   }
 
   private Observable<Void> showComments(T displayable) {
@@ -152,7 +176,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
       final String elementId = displayable.getTimelineCard().getCardId();
       Fragment fragment = V8Engine.getFragmentProvider()
           .newCommentGridRecyclerFragment(CommentType.TIMELINE, elementId);
-      ((FragmentShower) getContext()).pushFragmentV4(fragment);
+      getNavigationManager().navigateTo(fragment);
       return null;
     });
   }
@@ -161,11 +185,11 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     return err -> CrashReport.getInstance().log(err);
   }
 
-  private boolean likeCard(T displayable, int rating) {
-    if (!AptoideAccountManager.isLoggedIn()) {
+  private boolean likeCard(T displayable, int rating, Account account) {
+    if (!account.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            AptoideAccountManager.openAccountManager(snackView.getContext());
+            accountNavigator.navigateToAccountView();
           });
       return false;
     }
@@ -204,7 +228,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     for (int j = 0; j < displayable.getNumberOfLikes(); j++) {
 
       UserTimeline user = null;
-      if (j < displayable.getUserLikes().size()) {
+      if (displayable.getUserLikes() != null && j < displayable.getUserLikes().size()) {
         user = displayable.getUserLikes().get(j);
       }
       addUserToPreview(marginOfTheNextLikePreview, user);
@@ -212,5 +236,17 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
         break;
       }
     }
+  }
+
+  private void openStore(long userId, String storeTheme) {
+    getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+        .newStoreFragment(userId, storeTheme, Event.Name.getUserTimeline,
+            StoreFragment.OpenType.GetHome));
+  }
+
+  private void openStore(String storeName, String storeTheme) {
+    getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+        .newStoreFragment(storeName, storeTheme, Event.Name.getUserTimeline,
+            StoreFragment.OpenType.GetHome));
   }
 }

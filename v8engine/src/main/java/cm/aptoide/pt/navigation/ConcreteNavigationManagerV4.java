@@ -2,21 +2,23 @@ package cm.aptoide.pt.navigation;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import java.lang.ref.WeakReference;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.List;
 
 class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
 
+  private static final String TAG = ConcreteNavigationManagerV4.class.getName();
+
   private static final int EXIT_ANIMATION = android.R.anim.fade_out;
   private static final int ENTER_ANIMATION = android.R.anim.fade_in;
-
-  private final AtomicInteger atomicInt = new AtomicInteger(0);
 
   private final WeakReference<FragmentActivity> weakReference;
 
@@ -24,8 +26,8 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     this.weakReference = new WeakReference<>(fragmentActivity);
   }
 
-  @Override public void navigateUsing(Event event, String storeTheme, String title, String tag) {
-
+  @Override public void navigateUsing(Event event, String storeTheme, String title, String tag,
+      StoreContext storeContext) {
     Fragment fragment;
 
     // TODO: 22/12/2016 sithengineer refactor this using the rules present in "StoreTabGridRecyclerFragment.java"
@@ -37,28 +39,178 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
           V8Engine.getFragmentProvider().newCommentGridRecyclerFragmentUrl(CommentType.STORE, url);
     } else {
       fragment = V8Engine.getFragmentProvider()
-          .newStoreTabGridRecyclerFragment(event, title, storeTheme, tag);
+          .newStoreTabGridRecyclerFragment(event, title, storeTheme, tag, storeContext);
     }
 
     navigateTo(fragment);
   }
 
-  @Override public void navigateTo(Fragment fragment) {
-    final String tag = fragment.getClass().getSimpleName() + "_" + atomicInt.incrementAndGet();
+  @Override public String navigateTo(Fragment fragment) {
     FragmentActivity activity = weakReference.get();
 
     if (activity == null) {
       CrashReport.getInstance()
           .log(new RuntimeException(
               "Activity is null in " + ConcreteNavigationManagerV4.class.getName()));
-      return;
+      return null;
     }
 
-    activity.getSupportFragmentManager()
-        .beginTransaction()
+    final FragmentManager fragmentManager = activity.getSupportFragmentManager();
+
+    // add current fragment
+    String tag = Integer.toString(fragmentManager.getBackStackEntryCount());
+    fragmentManager.beginTransaction()
         .setCustomAnimations(ENTER_ANIMATION, EXIT_ANIMATION, ENTER_ANIMATION, EXIT_ANIMATION)
         .addToBackStack(tag)
         .replace(R.id.fragment_placeholder, fragment, tag)
         .commit();
+
+    return tag;
+  }
+
+  @Override public void cleanBackStack() {
+    FragmentActivity activity = weakReference.get();
+
+    if (activity == null) {
+      CrashReport.getInstance().log(new RuntimeException("Activity is null in " + TAG));
+      return;
+    }
+
+    cleanBackStack(activity.getSupportFragmentManager());
+  }
+
+  /**
+   * @inheritDoc - doc in the interface ^
+   */
+  @Override public boolean cleanBackStackUntil(String fragmentTag) {
+    FragmentActivity activity = weakReference.get();
+
+    if (activity == null) {
+      CrashReport.getInstance().log(new RuntimeException("Activity is null in " + TAG));
+      return false;
+    }
+
+    return cleanBackStackUntil(fragmentTag, activity.getSupportFragmentManager());
+  }
+
+  @Override public Fragment peekLast() {
+    FragmentActivity activity = weakReference.get();
+
+    if (activity == null) {
+      CrashReport.getInstance().log(new RuntimeException("Activity is null in " + TAG));
+      return null;
+    }
+
+    final FragmentManager fragmentManager = activity.getSupportFragmentManager();
+
+    if (fragmentManager.getBackStackEntryCount() > 0) {
+      FragmentManager.BackStackEntry backStackEntry =
+          fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
+      return fragmentManager.findFragmentByTag(backStackEntry.getName());
+    }
+
+    return null;
+  }
+
+  /**
+   * Using all the active fragments instead of only the ones in the back stack
+   */
+  @Override public Fragment peekLastFromAll() {
+    FragmentActivity activity = weakReference.get();
+
+    if (activity == null) {
+      CrashReport.getInstance().log(new RuntimeException("Activity is null in " + TAG));
+      return null;
+    }
+
+    final FragmentManager fragmentManager = activity.getSupportFragmentManager();
+
+    List<Fragment> fragments = fragmentManager.getFragments();
+    if (fragments != null && fragments.size() > 0) {
+      return fragments.get(fragments.size() - 1);
+    }
+
+    return null;
+  }
+
+  @Override public Fragment peekFirst() {
+    FragmentActivity activity = weakReference.get();
+
+    if (activity == null) {
+      CrashReport.getInstance().log(new RuntimeException("Activity is null in " + TAG));
+      return null;
+    }
+
+    final FragmentManager fragmentManager = activity.getSupportFragmentManager();
+
+    if (fragmentManager.getBackStackEntryCount() > 0) {
+      FragmentManager.BackStackEntry backStackEntry = fragmentManager.getBackStackEntryAt(0);
+      return fragmentManager.findFragmentByTag(backStackEntry.getName());
+    }
+
+    return null;
+  }
+
+  /**
+   * Using all the active fragments instead of only the ones in the back stack
+   */
+  @Override public Fragment peekFirstFromAll() {
+    FragmentActivity activity = weakReference.get();
+
+    if (activity == null) {
+      CrashReport.getInstance().log(new RuntimeException("Activity is null in " + TAG));
+      return null;
+    }
+
+    final FragmentManager fragmentManager = activity.getSupportFragmentManager();
+
+    List<Fragment> fragments = fragmentManager.getFragments();
+    if (fragments != null && fragments.size() > 0) {
+      return fragments.get(0);
+    }
+
+    return null;
+  }
+
+  @Override public void navigateToWithoutBackSave(Fragment fragment) {
+    FragmentActivity activity = weakReference.get();
+
+    if (activity == null) {
+      CrashReport.getInstance().log(new RuntimeException("Activity is null in " + TAG));
+      return;
+    }
+
+    final FragmentManager fragmentManager = activity.getSupportFragmentManager();
+
+    // add current fragment
+    fragmentManager.beginTransaction()
+        .setCustomAnimations(ENTER_ANIMATION, EXIT_ANIMATION, ENTER_ANIMATION, EXIT_ANIMATION)
+        .replace(R.id.fragment_placeholder, fragment)
+        .commit();
+  }
+
+  private boolean cleanBackStackUntil(String fragmentTag, FragmentManager fragmentManager) {
+    if (fragmentManager.getBackStackEntryCount() == 0) {
+      return false;
+    }
+
+    boolean popped = false;
+
+    while (fragmentManager.getBackStackEntryCount() > 0 && !popped) {
+      if (fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1)
+          .getName()
+          .equals(fragmentTag)) {
+        popped = true;
+      }
+      fragmentManager.popBackStackImmediate();
+    }
+    return popped;
+  }
+
+  private void cleanBackStack(FragmentManager fragmentManager) {
+    for (int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i) {
+      fragmentManager.popBackStack();
+    }
+    fragmentManager.executePendingTransactions();
   }
 }

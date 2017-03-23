@@ -10,6 +10,8 @@ import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentConfirmationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
+import cm.aptoide.pt.v8engine.payment.Product;
+import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
 import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
@@ -21,18 +23,18 @@ import rx.Observable;
  */
 public class InAppPaymentConfirmationRepository extends PaymentConfirmationRepository {
 
-  private final InAppBillingProduct product;
+  private final AptoideAccountManager accountManager;
 
   public InAppPaymentConfirmationRepository(NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor paymentDatabase, SyncAdapterBackgroundSync backgroundSync,
-      PaymentConfirmationFactory confirmationFactory, InAppBillingProduct product) {
+      PaymentConfirmationFactory confirmationFactory, AptoideAccountManager accountManager) {
     super(operatorManager, paymentDatabase, backgroundSync, confirmationFactory);
-    this.product = product;
+    this.accountManager = accountManager;
   }
 
-  @Override public Completable createPaymentConfirmation(int paymentId) {
+  @Override public Completable createPaymentConfirmation(int paymentId, Product product) {
     return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId, operatorManager,
-        product.getDeveloperPayload(), AptoideAccountManager.getAccessToken())
+        ((InAppBillingProduct)product).getDeveloperPayload(), accountManager.getAccessToken())
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -46,7 +48,8 @@ public class InAppPaymentConfirmationRepository extends PaymentConfirmationRepos
   }
 
   @Override
-  public Completable createPaymentConfirmation(int paymentId, String paymentConfirmationId) {
+  public Completable createPaymentConfirmation(int paymentId, String paymentConfirmationId,
+      Product product) {
     return createPaymentConfirmation(product, paymentId, paymentConfirmationId);
   }
 }

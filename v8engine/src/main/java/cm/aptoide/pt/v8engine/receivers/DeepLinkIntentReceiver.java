@@ -250,13 +250,6 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
   }
 
   public void startFromPackageName(String packageName) {
-    //@Cleanup Realm realm = DeprecatedDatabase.get();
-    //if (DeprecatedDatabase.InstalledQ.isInstalled(packageName, realm)) {
-    //  startFromAppView(packageName);
-    //} else {
-    //  startFromSearch(packageName);
-    //}
-
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
     installedAccessor.get(packageName).subscribe(installed -> {
       if (installed != null) {
@@ -467,6 +460,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     public static final String LAYOUT = "layout";
     public static final String TITLE = "title";
     public static final String STORE_THEME = "storetheme";
+    public static final String SHOULD_INSTALL = "SHOULD_INSTALL";
   }
 
   class MyAppDownloader extends AsyncTask<String, Void, Void> {

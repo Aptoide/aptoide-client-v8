@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 06/07/2016.
- */
-
 package cm.aptoide.pt.preferences.secure;
 
 import cm.aptoide.pt.annotation.Partners;
@@ -11,8 +6,6 @@ import cm.aptoide.pt.annotation.Partners;
  * Created by neuro on 21-04-2016.
  */
 public class SecurePreferences {
-
-  private static final String TAG = SecurePreferences.class.getSimpleName();
 
   /**
    * DO NOT USE THIS METHOD
@@ -90,35 +83,13 @@ public class SecurePreferences {
     SecurePreferencesImplementation.getInstance()
         .edit()
         .putBoolean(SecureKeys.WIZARD_AVAILABLE, available)
-        .apply();
-  }
-
-  public static int getAdultContentPin() {
-    return SecurePreferencesImplementation.getInstance().getInt(SecureKeys.ADULT_CONTENT_PIN, -1);
-  }
-
-  public static void setAdultContentPin(int pin) {
-    SecurePreferencesImplementation.getInstance()
-        .edit()
-        .putInt(SecureKeys.ADULT_CONTENT_PIN, pin)
-        .apply();
+        //.apply();
+        .commit();
   }
 
   public static boolean isTimelineActive() {
     return SecurePreferencesImplementation.getInstance()
         .getBoolean(SecureKeys.IS_TIMELINE_ACTIVE, false);
-  }
-
-  public static void setAdultSwitch(boolean active) {
-    SecurePreferencesImplementation.getInstance()
-        .edit()
-        .putBoolean(SecureKeys.ADULT_CONTENT_SWITCH, active)
-        .apply();
-  }
-
-  @Partners public static boolean isAdultSwitchActive() {
-    return SecurePreferencesImplementation.getInstance()
-        .getBoolean(SecureKeys.ADULT_CONTENT_SWITCH, false);
   }
 
   public static boolean isRootDialogShowed() {
@@ -150,4 +121,5 @@ public class SecurePreferences {
         .putString(SecureKeys.USER_AGENT, userAgent)
         .apply();
   }
+
 }

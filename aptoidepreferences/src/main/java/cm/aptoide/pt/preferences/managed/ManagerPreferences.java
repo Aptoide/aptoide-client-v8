@@ -60,9 +60,19 @@ public class ManagerPreferences {
         .getBoolean(ManagedKeys.ANIMATIONS_ENABLED, true);
   }
 
-  public static boolean isAutoUpdateEnable() {
+  public static boolean isCheckAutoUpdateEnable() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
         .getBoolean(ManagedKeys.CHECK_AUTO_UPDATE, true);
+  }
+
+  public static boolean isAutoUpdateEnable() {
+    //the default value should match with auto_update from settings.xml
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getBoolean(ManagedKeys.AUTO_UPDATE_ENABLE, false);
+  }
+
+  public static void setAutoUpdateEnable(boolean state) {
+    Preferences.get().edit().putBoolean(ManagedKeys.AUTO_UPDATE_ENABLE, state).apply();
   }
 
   public static boolean isAllwaysUpdate() {
@@ -163,35 +173,50 @@ public class ManagerPreferences {
         .getBoolean(ManagedKeys.PRIVACY_CONFIRMATION, true);
   }
 
-  public static boolean getShowPreview() {
+  public static boolean isShowPreviewDialog() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getBoolean(ManagedKeys.SHOW_SHARE_PREVIEW, true);
+        .getBoolean(ManagedKeys.DONT_SHOW_ME_AGAIN, true);
   }
 
-  public static void setShowPreview(boolean previewShower) {
-    Preferences.get().edit().putBoolean(ManagedKeys.SHOW_SHARE_PREVIEW, previewShower).apply();
-  }
-
-  public static String getUserAccess() {
-    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getString(ManagedKeys.ACCESS, "UNLISTED");
-  }
-
-  public static void setUserAccess(String access) {
-    Preferences.get().edit().putString(ManagedKeys.ACCESS, access).apply();
-  }
-
-  public static Boolean getUserAccessConfirmed() {
-    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getBoolean(ManagedKeys.ACCESS_CONFIRMED, false);
-  }
-
-  public static void setUserAccessConfirmed(Boolean accessConfirmed) {
-    Preferences.get().edit().putBoolean(ManagedKeys.ACCESS_CONFIRMED, accessConfirmed).apply();
+  public static void setShowPreviewDialog(boolean showPreviewDialog) {
+    Preferences.get().edit().putBoolean(ManagedKeys.DONT_SHOW_ME_AGAIN, showPreviewDialog).apply();
   }
 
   public static boolean isFirstRunV7() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
         .getBoolean(ManagedKeys.FIRST_RUN_V7, true);
+  }
+
+  public static boolean getAddressBookSyncState() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getBoolean(ManagedKeys.ADDRESS_BOOK_SYNC, false);
+  }
+
+  public static void setAddressBookAsSynced() {
+    Preferences.get().edit().putBoolean(ManagedKeys.ADDRESS_BOOK_SYNC, true).apply();
+  }
+
+  public static boolean getTwitterSyncState() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getBoolean(ManagedKeys.TWITTER_SYNC, false);
+  }
+
+  public static void setTwitterAsSynced() {
+    Preferences.get().edit().putBoolean(ManagedKeys.TWITTER_SYNC, true).apply();
+  }
+
+  public static boolean getFacebookSyncState() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getBoolean(ManagedKeys.FACEBOOK_SYNC, false);
+  }
+
+  public static void setFacebookAsSynced() {
+    Preferences.get().edit().putBoolean(ManagedKeys.FACEBOOK_SYNC, true).apply();
+  }
+
+  public static void setAddressBookSyncValues(Boolean value) {
+    Preferences.get().edit().putBoolean(ManagedKeys.ADDRESS_BOOK_SYNC, value).apply();
+    Preferences.get().edit().putBoolean(ManagedKeys.TWITTER_SYNC, value).apply();
+    Preferences.get().edit().putBoolean(ManagedKeys.FACEBOOK_SYNC, value).apply();
   }
 }

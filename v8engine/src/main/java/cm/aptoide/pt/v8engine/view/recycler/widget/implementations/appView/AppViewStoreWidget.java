@@ -7,17 +7,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewStoreDisplayable;
@@ -37,6 +43,7 @@ import rx.functions.Action1;
   private Button followButton;
   private View storeLayout;
   private StoreRepository storeRepository;
+  private AptoideAccountManager accountManager;
 
   public AppViewStoreWidget(View itemView) {
     super(itemView);
@@ -52,10 +59,8 @@ import rx.functions.Action1;
   }
 
   @Override public void bindView(AppViewStoreDisplayable displayable) {
-    setupStoreInfo(displayable.getPojo());
-  }
-
-  private void setupStoreInfo(GetApp getApp) {
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    GetApp getApp = displayable.getPojo();
 
     GetAppMeta.App app = getApp.getNodes().getMeta().getData();
     Store store = app.getStore();
@@ -85,18 +90,25 @@ import rx.functions.Action1;
     final String storeName = store.getName();
     final String storeTheme = store.getAppearance().getTheme();
 
+    final IdsRepositoryImpl aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+    final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager,
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager),
+        new StoreCredentialsProviderImpl(),
+        AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class));
+
     Action1<Void> openStore = __ -> {
       getNavigationManager().navigateTo(
           V8Engine.getFragmentProvider().newStoreFragment(storeName, storeTheme));
     };
 
     Action1<Void> subscribeStore = __ -> {
-      StoreUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
+      storeUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
         ShowMessage.asSnack(itemView,
             AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
       }, err -> {
         CrashReport.getInstance().log(err);
-      });
+      }, accountManager);
     };
 
     followButton.setTextColor(storeThemeEnum.getStoreHeaderInt());
@@ -113,7 +125,7 @@ import rx.functions.Action1;
           } else {
             //int plusMarkDrawable = storeThemeEnum.getPlusmarkDrawable();
             //followButton.setCompoundDrawablesWithIntrinsicBounds(plusMarkDrawable, 0, 0, 0);
-            followButton.setText(R.string.appview_follow_store_button_text);
+            followButton.setText(R.string.follow);
             compositeSubscription.add(RxView.clicks(followButton).subscribe(subscribeStore));
           }
         }, throwable -> CrashReport.getInstance().log(throwable)));

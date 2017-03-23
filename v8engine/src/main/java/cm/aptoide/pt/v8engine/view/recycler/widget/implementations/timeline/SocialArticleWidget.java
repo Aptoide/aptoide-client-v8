@@ -7,11 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialArticleDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -22,13 +20,9 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayable> {
 
-  private static final String CARD_TYPE_NAME = "SOCIAL_ARTICLE";
-
   private TextView title;
   private TextView subtitle;
   //private TextView time;
-  private ImageView storeAvatar;
-  private ImageView userAvatar;
   private TextView articleTitle;
   private ImageView thumbnail;
   private View url;
@@ -45,7 +39,7 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
   }
 
   @Override String getCardTypeName() {
-    return CARD_TYPE_NAME;
+    return SocialArticleDisplayable.CARD_TYPE_NAME;
   }
 
   @Override protected void assignViews(View itemView) {
@@ -109,17 +103,10 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
     url.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
       displayable.getLink().launch(context);
-      Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
+      Analytics.AppsTimeline.clickOnCard(SocialArticleDisplayable.CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
           displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE);
-      displayable.sendOpenArticleEvent(SendEventRequest.Body.Data.builder()
-          .cardType(CARD_TYPE_NAME)
-          .source(displayable.getTitle())
-          .specific(SendEventRequest.Body.Specific.builder()
-              .url(displayable.getLink().getUrl())
-              .app(packageName)
-              .build())
-          .build(), TimelineClickEvent.OPEN_ARTICLE);
+      displayable.sendOpenArticleEvent();
     });
 
     compositeSubscription.add(displayable.getRelatedToApplication()
@@ -145,17 +132,10 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
     compositeSubscription.add(RxView.clicks(articleHeader).subscribe(click -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
       displayable.getDeveloperLink().launch(context);
-      Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
+      Analytics.AppsTimeline.clickOnCard(SocialArticleDisplayable.CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
           displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
-      displayable.sendOpenArticleEvent(SendEventRequest.Body.Data.builder()
-          .cardType(CARD_TYPE_NAME)
-          .source(displayable.getTitle())
-          .specific(SendEventRequest.Body.Specific.builder()
-              .url(displayable.getDeveloperLink().getUrl())
-              .app(packageName)
-              .build())
-          .build(), TimelineClickEvent.OPEN_BLOG);
+      displayable.sendOpenBlogEvent();
     }));
   }
 

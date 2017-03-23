@@ -16,26 +16,17 @@ public class AptoidePayment implements Payment {
 
   private final PaymentConfirmationRepository confirmationRepository;
   private final int id;
-  private final String type;
   private final String name;
-  private final Product product;
-  private final Price price;
   private final String description;
-  private final boolean requiresAuthorization;
+  private final Authorization authorization;
 
-  private Authorization authorization;
-
-  public AptoidePayment(int id, String type, String name, String description, Product product,
-      Price price, boolean requiresAuthorization,
-      PaymentConfirmationRepository confirmationRepository) {
+  public AptoidePayment(int id, String name, String description, PaymentConfirmationRepository confirmationRepository,
+      Authorization authorization) {
     this.id = id;
-    this.type = type;
     this.name = name;
-    this.product = product;
-    this.price = price;
     this.description = description;
-    this.requiresAuthorization = requiresAuthorization;
     this.confirmationRepository = confirmationRepository;
+    this.authorization = authorization;
   }
 
   @Override public int getId() {
@@ -46,18 +37,6 @@ public class AptoidePayment implements Payment {
     return name;
   }
 
-  @Override public String getType() {
-    return type;
-  }
-
-  @Override public Product getProduct() {
-    return product;
-  }
-
-  @Override public Price getPrice() {
-    return price;
-  }
-
   @Override public String getDescription() {
     return description;
   }
@@ -66,15 +45,7 @@ public class AptoidePayment implements Payment {
     return authorization;
   }
 
-  @Override public void setAuthorization(Authorization authorization) {
-    this.authorization = authorization;
-  }
-
-  @Override public boolean isAuthorizationRequired() {
-    return requiresAuthorization;
-  }
-
-  @Override public Completable process() {
-    return confirmationRepository.createPaymentConfirmation(id);
+  @Override public Completable process(Product product) {
+    return confirmationRepository.createPaymentConfirmation(id, product);
   }
 }

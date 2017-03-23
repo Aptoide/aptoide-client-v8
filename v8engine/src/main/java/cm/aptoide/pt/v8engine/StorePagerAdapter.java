@@ -8,8 +8,8 @@ package cm.aptoide.pt.v8engine;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.Event;
-import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.v8engine.util.Translator;
 import java.util.EnumMap;
@@ -22,21 +22,24 @@ import java.util.List;
 public class StorePagerAdapter extends FragmentStatePagerAdapter {
 
   private final List<GetStoreTabs.Tab> tabs;
+  private final StoreContext storeContext;
   private final EnumMap<Event.Name, Integer> availableEventsMap = new EnumMap<>(Event.Name.class);
   private String storeTheme;
-  private long storeId;
+  private Long storeId;
 
-  public StorePagerAdapter(FragmentManager fm, GetStore getStore) {
+  public StorePagerAdapter(FragmentManager fm, List<GetStoreTabs.Tab> tabs,
+      StoreContext storeContext, Long storeId, String storeTheme) {
     super(fm);
-    this.storeId = getStore.getNodes().getMeta().getData().getId();
-    tabs = getStore.getNodes().getTabs().getList();
-    translateTabs(tabs);
-    if (getStore.getNodes().getMeta().getData().getId() != 15) {
-      storeTheme = getStore.getNodes().getMeta().getData().getAppearance().getTheme();
+    this.storeId = storeId;
+    if (storeId != null && storeId != 15) {
+      this.storeTheme = storeTheme;
     }
+    this.tabs = tabs;
+    this.storeContext = storeContext;
+    translateTabs(this.tabs);
     validateGetStore();
 
-    fillAvailableEventsMap(getStore);
+    fillAvailableEventsMap(tabs);
   }
 
   private void translateTabs(List<GetStoreTabs.Tab> tabs) {
@@ -55,8 +58,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
     }
   }
 
-  private void fillAvailableEventsMap(GetStore getStore) {
-    List<GetStoreTabs.Tab> list = getStore.getNodes().getTabs().getList();
+  private void fillAvailableEventsMap(List<GetStoreTabs.Tab> list) {
     for (int i = 0; i < list.size(); i++) {
       Event event = list.get(i).getEvent();
 
@@ -75,28 +77,40 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
     GetStoreTabs.Tab tab = tabs.get(position);
     Event event = tab.getEvent();
 
+    Fragment fragment;
     switch (event.getType()) {
-      case API:
-        return caseAPI(tab);
-      case CLIENT:
-        return caseClient(event, tab);
-      case v3:
-        return caseV3(event);
+      case API: {
+        fragment = caseAPI(tab);
+        break;
+      }
+      case CLIENT: {
+        fragment = caseClient(event, tab);
+        break;
+      }
+      case v3: {
+        fragment = caseV3(event);
+        break;
+      }
       default:
         // Safe to throw exception as the tab should be filtered prior to getting here.
         throw new RuntimeException("Fragment type not implemented!");
     }
+    return fragment;
   }
 
   private Fragment caseAPI(GetStoreTabs.Tab tab) {
     Event event = tab.getEvent();
     switch (event.getName()) {
       case getUserTimeline:
+        Long userId = null;
+        if (event.getData() != null && event.getData().getUser() != null) {
+          userId = event.getData().getUser().getId();
+        }
         return V8Engine.getFragmentProvider()
-            .newAppsTimelineFragment(event.getAction(), storeTheme);
+            .newAppsTimelineFragment(event.getAction(), userId, storeId, storeContext);
       default:
         return V8Engine.getFragmentProvider()
-            .newStoreTabGridRecyclerFragment(event, storeTheme, tab.getTag());
+            .newStoreTabGridRecyclerFragment(event, storeTheme, tab.getTag(), storeContext);
     }
   }
 
@@ -106,9 +120,11 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
         return V8Engine.getFragmentProvider().newUpdatesFragment();
       case myDownloads:
         return V8Engine.getFragmentProvider().newDownloadsFragment();
+      case mySpotShare:
+        return V8Engine.getFragmentProvider().newSpotShareFragment(false);
       case myStores:
         return V8Engine.getFragmentProvider()
-            .newSubscribedStoresFragment(event, tab.getLabel(), storeTheme, tab.getTag());
+            .newSubscribedStoresFragment(event, storeTheme, tab.getTag());
       default:
         // Safe to throw exception as the tab should be filtered prior to getting here.
         throw new RuntimeException("Fragment type not implemented!");
@@ -136,7 +152,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
    * @return returns a positive integer 0...X if there is an Event with requested name, else returns
    * -1.
    */
-  public Integer getEventNamePosition(Event.Name name) {
+  public int getEventNamePosition(Event.Name name) {
     final Integer integer = availableEventsMap.get(name);
     if (integer == null) {
       return -1;

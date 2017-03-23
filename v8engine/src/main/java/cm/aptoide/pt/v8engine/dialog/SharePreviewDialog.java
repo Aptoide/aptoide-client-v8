@@ -12,8 +12,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.BaseActivity;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -46,17 +46,28 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by jdandrade on 09/12/2016.
  */
-
+// FIXME: 27/2/2017 convert into a class that extends "BaseDialog"
 public class SharePreviewDialog {
+
+  private final AptoideAccountManager accountManager;
+  private final boolean dontShowMeAgainOption;
+  private final SharePreviewOpenMode openMode;
   @Nullable private Displayable displayable;
   private boolean privacyResult;
 
-  public SharePreviewDialog(Displayable cardDisplayable) {
+  public SharePreviewDialog(Displayable cardDisplayable, AptoideAccountManager accountManager,
+      boolean dontShowMeAgainOption, SharePreviewOpenMode openMode) {
     this.displayable = cardDisplayable;
+    this.accountManager = accountManager;
+    this.dontShowMeAgainOption = dontShowMeAgainOption;
+    this.openMode = openMode;
   }
 
-  public SharePreviewDialog() {
-
+  public SharePreviewDialog(AptoideAccountManager accountManager, boolean dontShowMeAgainOption,
+      SharePreviewOpenMode openMode) {
+    this.accountManager = accountManager;
+    this.dontShowMeAgainOption = dontShowMeAgainOption;
+    this.openMode = openMode;
   }
 
   public AlertDialog.Builder getPreviewDialogBuilder(Context context) {
@@ -329,6 +340,7 @@ public class SharePreviewDialog {
       like = (LinearLayout) view.findViewById(R.id.social_like);
       likeButtonView = (LikeButtonView) view.findViewById(R.id.social_like_button);
       comments = (TextView) view.findViewById(R.id.social_comment);
+      TextView numberOfComments = (TextView) view.findViewById(R.id.social_number_of_comments);
 
       cardView.setRadius(8);
       cardView.setCardElevation(10);
@@ -338,20 +350,29 @@ public class SharePreviewDialog {
       likeButtonView.setOnClickListener(null);
       likeButtonView.setOnTouchListener(null);
       likeButtonView.setVisibility(View.VISIBLE);
+      if (openMode.equals(SharePreviewOpenMode.LIKE)) {
+        likeButtonView.setHeartState(true);
+        alertadd.setTitle(R.string.social_timeline_you_will_share_like);
+      } else if (openMode.equals(SharePreviewOpenMode.COMMENT)) {
+        numberOfComments.setText("1");
+        numberOfComments.setVisibility(View.VISIBLE);
+        alertadd.setTitle(R.string.social_timeline_you_will_share_comment);
+      } else {
+        alertadd.setTitle(R.string.social_timeline_you_will_share);
+      }
       comments.setVisibility(View.VISIBLE);
 
       alertadd.setView(view).setCancelable(false);
-      alertadd.setTitle(R.string.social_timeline_you_will_share);
 
       if (!(displayable instanceof SocialCardDisplayable)) {
-        storeName.setText(AptoideAccountManager.getUserData().getUserRepo());
+        storeName.setText(accountManager.getAccount().getStore());
         setCardHeader(context, storeName, userName, storeAvatar, userAvatar);
       } else {
         sharedBy = (TextView) view.findViewById(R.id.social_shared_by);
         setSharedByText(context, sharedBy);
         setSocialCardHeader(context, storeName, userName, storeAvatar, userAvatar);
       }
-      if (!ManagerPreferences.getUserAccessConfirmed()) {
+      if (!accountManager.isAccountAccessConfirmed()) {
         privacyText.setOnClickListener(click -> checkBox.toggle());
         checkBox.setClickable(true);
         storeAvatar.setVisibility(View.VISIBLE);
@@ -364,41 +385,36 @@ public class SharePreviewDialog {
 
   private void setCardHeader(Context context, TextView storeName, TextView userName,
       ImageView storeAvatar, ImageView userAvatar) {
-    if (AptoideAccountManager.getUserData().getUserRepo() != null) {
-      if (BaseActivity.UserAccessState.PUBLIC.toString()
-          .equals(ManagerPreferences.getUserAccess())) {
+    if (accountManager.getAccount().getStore() != null) {
+      if (Account.Access.PUBLIC.equals(accountManager.getAccountAccess())) {
         storeAvatar.setVisibility(View.VISIBLE);
         userAvatar.setVisibility(View.VISIBLE);
         ImageLoader.with(context)
-            .loadWithShadowCircleTransform(AptoideAccountManager.getUserData().getUserAvatarRepo(),
+            .loadWithShadowCircleTransform(accountManager.getAccount().getStoreAvatar(),
                 storeAvatar);
         ImageLoader.with(context)
-            .loadWithShadowCircleTransform(AptoideAccountManager.getUserData().getUserAvatar(),
-                userAvatar);
-        storeName.setText(AptoideAccountManager.getUserData().getUserRepo());
-        userName.setText(AptoideAccountManager.getUserData().getUserName());
+            .loadWithShadowCircleTransform(accountManager.getAccount().getAvatar(), userAvatar);
+        storeName.setText(accountManager.getAccount().getStore());
+        userName.setText(accountManager.getAccount().getNickname());
       } else {
         storeAvatar.setVisibility(View.VISIBLE);
         userAvatar.setVisibility(View.INVISIBLE);
         ImageLoader.with(context)
-            .loadWithShadowCircleTransform(AptoideAccountManager.getUserData().getUserAvatarRepo(),
+            .loadWithShadowCircleTransform(accountManager.getAccount().getStoreAvatar(),
                 storeAvatar);
         ImageLoader.with(context)
-            .loadWithShadowCircleTransform(AptoideAccountManager.getUserData().getUserAvatar(),
-                userAvatar);
-        storeName.setText(AptoideAccountManager.getUserData().getUserRepo());
-        userName.setText(AptoideAccountManager.getUserData().getUserName());
+            .loadWithShadowCircleTransform(accountManager.getAccount().getAvatar(), userAvatar);
+        storeName.setText(accountManager.getAccount().getStore());
+        userName.setText(accountManager.getAccount().getNickname());
         userName.setVisibility(View.GONE);
       }
     } else {
-      if ((BaseActivity.UserAccessState.PUBLIC.toString()).equals(
-          ManagerPreferences.getUserAccess())) {
+      if ((Account.Access.PUBLIC).equals(accountManager.getAccountAccess())) {
         storeAvatar.setVisibility(View.VISIBLE);
         ImageLoader.with(context)
-            .loadWithShadowCircleTransform(AptoideAccountManager.getUserData().getUserAvatar(),
-                storeAvatar);
+            .loadWithShadowCircleTransform(accountManager.getAccount().getAvatar(), storeAvatar);
         userAvatar.setVisibility(View.INVISIBLE);
-        storeName.setText(AptoideAccountManager.getUserData().getUserName());
+        storeName.setText(accountManager.getAccount().getNickname());
         userName.setVisibility(View.GONE);
       }
     }
@@ -407,12 +423,12 @@ public class SharePreviewDialog {
   private void setSharedByText(Context context, TextView sharedBy) {
     sharedBy.setVisibility(View.VISIBLE);
 
-    if (BaseActivity.UserAccessState.PUBLIC.toString().equals(ManagerPreferences.getUserAccess())) {
+    if (Account.Access.PUBLIC.equals(accountManager.getAccountAccess())) {
       sharedBy.setText(String.format(context.getString(R.string.social_timeline_shared_by),
-          AptoideAccountManager.getUserData().getUserName()));
+          accountManager.getAccount().getNickname()));
     } else {
       sharedBy.setText(String.format(context.getString(R.string.social_timeline_shared_by),
-          AptoideAccountManager.getUserData().getUserRepo()));
+          accountManager.getAccount().getStore()));
     }
   }
 
@@ -538,10 +554,10 @@ public class SharePreviewDialog {
     alertadd.setView(view).setCancelable(false);
     alertadd.setTitle(R.string.social_timeline_you_will_share);
 
-    storeName.setText(AptoideAccountManager.getUserData().getUserRepo());
+    storeName.setText(accountManager.getAccount().getStore());
     setCardHeader(context, storeName, userName, storeAvatar, userAvatar);
 
-    if (!ManagerPreferences.getUserAccessConfirmed()) {
+    if (!accountManager.isAccountAccessConfirmed()) {
       privacyText.setOnClickListener(click -> checkBox.toggle());
       checkBox.setClickable(true);
       storeAvatar.setVisibility(View.VISIBLE);
@@ -556,7 +572,7 @@ public class SharePreviewDialog {
       SharePreviewDialog sharePreviewDialog, AlertDialog.Builder alertDialog,
       SocialRepository socialRepository) {
     Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
-      if (!ManagerPreferences.getUserAccessConfirmed()) {
+      if (!accountManager.isAccountAccessConfirmed()) {
         alertDialog.setPositiveButton(R.string.share, (dialogInterface, i) -> {
           socialRepository.share(packageName, shareType, sharePreviewDialog.getPrivacyResult());
           subscriber.onNext(GenericDialogs.EResponse.YES);
@@ -573,11 +589,14 @@ public class SharePreviewDialog {
         }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
           subscriber.onNext(GenericDialogs.EResponse.NO);
           subscriber.onCompleted();
-        }).setNeutralButton(R.string.dont_show_again, (dialogInterface, i) -> {
-          subscriber.onNext(GenericDialogs.EResponse.CANCEL);
-          subscriber.onCompleted();
-          ManagerPreferences.setShowPreview(false);
         });
+        if (dontShowMeAgainOption) {
+          alertDialog.setNeutralButton(R.string.dont_show_again, (dialogInterface, i) -> {
+            subscriber.onNext(GenericDialogs.EResponse.CANCEL);
+            subscriber.onCompleted();
+            ManagerPreferences.setShowPreviewDialog(false);
+          });
+        }
       }
 
       alertDialog.show();
@@ -596,5 +615,9 @@ public class SharePreviewDialog {
 
   public boolean getPrivacyResult() {
     return this.privacyResult;
+  }
+
+  public enum SharePreviewOpenMode {
+    COMMENT, LIKE, SHARE
   }
 }

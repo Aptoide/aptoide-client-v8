@@ -2,18 +2,17 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -22,9 +21,12 @@ import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.BaseLoaderToolbarFragment;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
@@ -40,7 +42,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   @Getter private static final String STORE_THEME = "store_theme";
   @Getter private static final String DESCRIPTION = "description";
   @Getter private static final String APP_NAME = "APP_NAME";
-  private final AptoideClientUUID aptoideClientUUID;
+  private AptoideClientUUID aptoideClientUUID;
   private boolean hasAppId = false;
   private long appId;
   private String packageName;
@@ -50,11 +52,9 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   private String storeTheme;
   private String description;
   private String appName;
-
-  public DescriptionFragment() {
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-  }
+  private AptoideAccountManager accountManager;
+  private BaseBodyInterceptor bodyDecorator;
+  private StoreCredentialsProvider storeCredentialsProvider;
 
   public static DescriptionFragment newInstance(String appName, String description,
       String storeTheme) {
@@ -77,6 +77,15 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     args.putString(STORE_THEME, storeTheme);
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    storeCredentialsProvider = new StoreCredentialsProviderImpl();
+    aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    bodyDecorator = new BaseBodyInterceptor(aptoideClientUUID, accountManager);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -123,9 +132,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
       finishLoading();
     } else if (hasAppId) {
       GetAppRequest.of(appId, V8Engine.getConfiguration().getPartnerId() == null ? null : storeName,
-          StoreUtils.getStoreCredentials(storeName), AptoideAccountManager.getAccessToken(),
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getUniqueIdentifier(), packageName).execute(getApp -> {
+          StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName, bodyDecorator).execute(getApp -> {
         setupAppDescription(getApp);
         setupTitle(getApp);
         finishLoading();
@@ -197,14 +204,5 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_empty, menu);
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int itemId = item.getItemId();
-    if (itemId == android.R.id.home) {
-      getActivity().onBackPressed();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
   }
 }

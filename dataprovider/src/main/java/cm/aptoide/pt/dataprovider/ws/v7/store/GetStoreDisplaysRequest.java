@@ -5,15 +5,16 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -24,23 +25,18 @@ import rx.Observable;
 
   private String url;
 
-  GetStoreDisplaysRequest(String url, Body body, String baseHost) {
-    super(body, baseHost);
-    this.url = url;
-  }
-
-  GetStoreDisplaysRequest(String url, Body body, OkHttpClient httpClient,
-      Converter.Factory converterFactory, String baseHost) {
-    super(body, httpClient, converterFactory, baseHost);
+  GetStoreDisplaysRequest(String url, Body body, BodyInterceptor bodyInterceptor) {
+    super(body,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
     this.url = url;
   }
 
   public static GetStoreDisplaysRequest ofAction(String url, StoreCredentials storeCredentials,
-      String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+      BodyInterceptor bodyInterceptor) {
 
     return new GetStoreDisplaysRequest(new V7Url(url).remove("getStoreDisplays").get(),
-        (Body) decorator.decorate(new Body(storeCredentials), accessToken), BASE_HOST);
+        new Body(storeCredentials), bodyInterceptor);
   }
 
   @Override protected Observable<GetStoreDisplays> loadDataFromNetwork(Interfaces interfaces,

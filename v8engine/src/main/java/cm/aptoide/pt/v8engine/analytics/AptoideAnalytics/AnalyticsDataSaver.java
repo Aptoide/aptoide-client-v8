@@ -8,22 +8,18 @@ import java.util.Map;
  * Created by trinkes on 30/12/2016.
  */
 public class AnalyticsDataSaver {
-  private Map<String, Event> map;
+  private final Map<String, Event> map;
 
   public AnalyticsDataSaver() {
     map = new HashMap<>();
   }
 
   public void save(String key, Event event) {
-    map.put(key, event);
+    map.put(key + event.getClass().getName(), event);
   }
 
   public Event get(String key) {
     return map.get(key);
-  }
-
-  public void remove(String key) {
-    map.remove(key);
   }
 
   public void remove(@NonNull Event event) {

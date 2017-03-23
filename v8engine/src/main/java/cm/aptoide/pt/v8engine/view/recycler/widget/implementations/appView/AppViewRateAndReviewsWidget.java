@@ -6,6 +6,8 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,8 +22,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -29,11 +32,13 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
+import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
 import cm.aptoide.pt.v8engine.util.LinearLayoutManagerWithSmoothScroller;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateAndCommentsDisplayable;
@@ -58,8 +63,9 @@ import rx.functions.Action1;
   public static final long TIME_BETWEEN_SCROLL = 2 * DateUtils.SECOND_IN_MILLIS;
   private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();
   private static final int MAX_COMMENTS = 3;
-  private final AptoideClientUUID aptoideClientUUID;
-  private final DialogUtils dialogUtils;
+  private AptoideClientUUID aptoideClientUUID;
+  private DialogUtils dialogUtils;
+  private AptoideAccountManager accountManager;
   private View emptyReviewsLayout;
   private View ratingLayout;
   private View commentsLayout;
@@ -80,13 +86,10 @@ import rx.functions.Action1;
   private String storeName;
   private int usersToVote;
   private TextView emptyReviewTextView;
+  private BodyInterceptor bodyInterceptor;
 
-  public AppViewRateAndReviewsWidget(View itemView) {
+  public AppViewRateAndReviewsWidget(@NonNull View itemView) {
     super(itemView);
-
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-    dialogUtils = new DialogUtils();
   }
 
   @Override protected void assignViews(View itemView) {
@@ -112,6 +115,12 @@ import rx.functions.Action1;
     GetAppMeta.App app = pojo.getNodes().getMeta().getData();
     GetAppMeta.Stats stats = app.getStats();
 
+    aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID, accountManager);
+    dialogUtils = new DialogUtils(accountManager, aptoideClientUUID,
+        new AccountNavigator(getContext(), getNavigationManager(), accountManager), bodyInterceptor);
     appName = app.getName();
     packageName = app.getPackageName();
     storeName = app.getStore().getName();
@@ -126,21 +135,24 @@ import rx.functions.Action1;
     Action1<Throwable> handleError = throwable -> CrashReport.getInstance().log(throwable);
 
     final FragmentActivity context = getContext();
-    Action1<Void> rateOnClickHandler =
-        __ -> dialogUtils.showRateDialog(context, appName, packageName, storeName,
-            () -> loadReviews());
-    compositeSubscription.add(
-        RxView.clicks(rateThisButton).subscribe(rateOnClickHandler, handleError));
-    compositeSubscription.add(
-        RxView.clicks(rateThisButtonLarge).subscribe(rateOnClickHandler, handleError));
-    compositeSubscription.add(
-        RxView.clicks(ratingLayout).subscribe(rateOnClickHandler, handleError));
+    Observable<GenericDialogs.EResponse> showRateDialog =
+        dialogUtils.showRateDialog(context, appName, packageName, storeName);
 
-    final FragmentShower fragmentShower = (FragmentShower) context;
+    compositeSubscription.add(
+        RxView.clicks(rateThisButton).flatMap(__ -> showRateDialog).subscribe(__ -> {
+        }, handleError));
+    compositeSubscription.add(
+        RxView.clicks(rateThisButtonLarge).flatMap(__ -> showRateDialog).subscribe(__ -> {
+        }, handleError));
+    compositeSubscription.add(
+        RxView.clicks(ratingLayout).flatMap(__ -> showRateDialog).subscribe(__ -> {
+        }, handleError));
+
     Action1<Void> commentsOnClickListener = __ -> {
-      fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider()
+      Fragment fragment = V8Engine.getFragmentProvider()
           .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
-              app.getPackageName(), app.getStore().getAppearance().getTheme()));
+              app.getPackageName(), app.getStore().getAppearance().getTheme());
+      getNavigationManager().navigateTo(fragment);
     };
     compositeSubscription.add(
         RxView.clicks(readAllButton).subscribe(commentsOnClickListener, handleError));
@@ -153,17 +165,18 @@ import rx.functions.Action1;
     // because otherwise the AppBar won't be collapsed
     topReviewsList.setNestedScrollingEnabled(false);
 
-    loadReviews();
+    loadReviews(displayable.getStoreCredentials());
   }
 
-  private void loadReviews() {
-    loadTopReviews(storeName, packageName);
+  private void loadReviews(BaseRequestWithStore.StoreCredentials storeCredentials) {
+    loadTopReviews(storeName, packageName, storeCredentials);
   }
 
-  private void loadTopReviews(String storeName, String packageName) {
+  private void loadTopReviews(String storeName, String packageName,
+      BaseRequestWithStore.StoreCredentials storeCredentials) {
     Subscription subscription =
-        ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS,
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+        ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS, storeCredentials,
+            bodyInterceptor)
             .observe(true)
             .observeOn(AndroidSchedulers.mainThread())
             .map(listReviews -> {

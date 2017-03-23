@@ -3,15 +3,15 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timelin
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
-import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.SocialInstall;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.interfaces.ShareCardCallback;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
-import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
+import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
@@ -23,6 +23,7 @@ import lombok.Getter;
  */
 public class SocialInstallDisplayable extends SocialCardDisplayable {
 
+  public static final String CARD_TYPE_NAME = "SOCIAL_INSTALL";
   @Getter private int avatarResource;
   @Getter private int titleResource;
   @Getter private Comment.User user;
@@ -32,7 +33,7 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
   @Getter private String appIcon;
   @Getter private String abUrl;
 
-  private TimelineMetricsManager timelineMetricsManager;
+  private TimelineAnalytics timelineAnalytics;
   private SpannableFactory spannableFactory;
   private SocialRepository socialRepository;
 
@@ -42,11 +43,11 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
   public SocialInstallDisplayable(SocialInstall socialInstall, int icon, Store store,
       int titleResource, Comment.User user, long appId, String packageName, String appName,
       String appIcon, String abTestingURL, long likes, long comments, Date date,
-      TimelineMetricsManager timelineMetricsManager, SpannableFactory spannableFactory,
+      TimelineAnalytics timelineAnalytics, SpannableFactory spannableFactory,
       SocialRepository socialRepository, DateCalculator dateCalculator) {
     super(socialInstall, likes, comments, store, socialInstall.getUser(),
         socialInstall.getUserSharer(), socialInstall.getMy().isLiked(), socialInstall.getLikes(),
-        date, spannableFactory, dateCalculator);
+        date, spannableFactory, dateCalculator, abTestingURL);
     this.avatarResource = icon;
     this.titleResource = titleResource;
     this.user = user;
@@ -55,14 +56,14 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
     this.appName = appName;
     this.appIcon = appIcon;
     this.abUrl = abTestingURL;
-    this.timelineMetricsManager = timelineMetricsManager;
+    this.timelineAnalytics = timelineAnalytics;
     this.spannableFactory = spannableFactory;
     this.socialRepository = socialRepository;
   }
 
-  public static Displayable from(SocialInstall socialInstall,
-      TimelineMetricsManager timelineMetricsManager, SpannableFactory spannableFactory,
-      SocialRepository socialRepository, DateCalculator dateCalculator) {
+  public static Displayable from(SocialInstall socialInstall, TimelineAnalytics timelineAnalytics,
+      SpannableFactory spannableFactory, SocialRepository socialRepository,
+      DateCalculator dateCalculator) {
 
     //for (App similarApp : socialInstall.getSimilarApps()) {
     //  similarAppsNames.add(similarApp.getName());
@@ -83,7 +84,7 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
         socialInstall.getUser(), socialInstall.getApp().getId(),
         socialInstall.getApp().getPackageName(), socialInstall.getApp().getName(),
         socialInstall.getApp().getIcon(), abTestingURL, socialInstall.getStats().getLikes(),
-        socialInstall.getStats().getComments(), socialInstall.getDate(), timelineMetricsManager,
+        socialInstall.getStats().getComments(), socialInstall.getDate(), timelineAnalytics,
         spannableFactory, socialRepository, dateCalculator);
   }
 
@@ -136,15 +137,21 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
     return R.layout.displayable_social_timeline_social_install;
   }
 
-  public void sendClickEvent(SendEventRequest.Body.Data data, String eventName) {
-    timelineMetricsManager.sendEvent(data, eventName);
+  public void sendOpenAppEvent() {
+    timelineAnalytics.sendOpenAppEvent(CARD_TYPE_NAME, TimelineAnalytics.SOURCE_APTOIDE,
+        getPackageName());
   }
 
-  @Override public void share(Context context, boolean privacyResult) {
-
+  @Override
+  public void share(Context context, boolean privacyResult, ShareCardCallback shareCardCallback) {
+    socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);
   }
 
   @Override public void like(Context context, String cardType, int rating) {
-    socialRepository.like(getTimelineCard(), cardType, "", rating);
+    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating);
+  }
+
+  @Override public void like(Context context, String cardId, String cardType, int rating) {
+    socialRepository.like(cardId, cardType, "", rating);
   }
 }

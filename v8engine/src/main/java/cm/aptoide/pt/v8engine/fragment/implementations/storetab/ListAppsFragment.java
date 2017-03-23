@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations.storetab;
 
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
@@ -40,14 +41,14 @@ public class ListAppsFragment extends GetStoreEndlessFragment<ListApps> {
           default:
             for (App app : list) {
               app.getStore().setAppearance(new Store.Appearance(storeTheme, null));
-              displayables.add(new GridAppDisplayable(app, tag, false));
+              displayables.add(new GridAppDisplayable(app, tag, storeContext == StoreContext.home));
             }
             break;
         }
       } else {
         for (App app : list) {
           app.getStore().setAppearance(new Store.Appearance(storeTheme, null));
-          displayables.add(new GridAppDisplayable(app, tag, false));
+          displayables.add(new GridAppDisplayable(app, tag, storeContext == StoreContext.home));
         }
       }
 

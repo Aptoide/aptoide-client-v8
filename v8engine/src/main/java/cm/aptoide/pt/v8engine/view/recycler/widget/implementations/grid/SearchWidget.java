@@ -63,7 +63,7 @@ import rx.functions.Action1;
 
     final Action0 clickCallback = displayable.getClickCallback();
     final Action1<Void> clickToOpenStore =
-        __ -> handleClickToOpenStore(clickCallback, overflowImageView, searchAppsApp);
+        __ -> handleClickToOpenPopupMenu(clickCallback, overflowImageView, searchAppsApp);
     compositeSubscription.add(RxView.clicks(overflowImageView).subscribe(clickToOpenStore));
 
     nameTextView.setText(searchAppsApp.getName());
@@ -125,7 +125,7 @@ import rx.functions.Action1;
     compositeSubscription.add(RxView.clicks(itemView).subscribe(clickToOpenAppView));
   }
 
-  private void handleClickToOpenStore(Action0 clickCallback, View view,
+  private void handleClickToOpenPopupMenu(Action0 clickCallback, View view,
       ListSearchApps.SearchAppsApp searchAppsApp) {
 
     final PopupMenu popup = new PopupMenu(view.getContext(), view);

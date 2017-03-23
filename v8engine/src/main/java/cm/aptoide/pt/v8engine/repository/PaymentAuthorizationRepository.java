@@ -17,21 +17,24 @@ import java.util.List;
 import rx.Completable;
 import rx.Observable;
 
-public class PaymentAuthorizationRepository implements Repository<Authorization, Integer> {
+public class PaymentAuthorizationRepository {
 
   private final PaymentAuthorizationAccessor authotizationAccessor;
   private final SyncAdapterBackgroundSync backgroundSync;
   private final PaymentAuthorizationFactory authorizationFactory;
+  private final AptoideAccountManager accountManager;
 
   PaymentAuthorizationRepository(PaymentAuthorizationAccessor authorizationAccessor,
-      SyncAdapterBackgroundSync backgroundSync, PaymentAuthorizationFactory authorizationFactory) {
+      SyncAdapterBackgroundSync backgroundSync, PaymentAuthorizationFactory authorizationFactory,
+      AptoideAccountManager accountManager) {
     this.authotizationAccessor = authorizationAccessor;
     this.backgroundSync = backgroundSync;
     this.authorizationFactory = authorizationFactory;
+    this.accountManager = accountManager;
   }
 
   public Completable createPaymentAuthorization(int paymentId) {
-    return CreatePaymentAuthorizationRequest.of(AptoideAccountManager.getAccessToken(), paymentId)
+    return CreatePaymentAuthorizationRequest.of(accountManager.getAccessToken(), paymentId)
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -41,14 +44,6 @@ public class PaymentAuthorizationRepository implements Repository<Authorization,
               new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
         })
         .toCompletable();
-  }
-
-  @Override public void save(Authorization entity) {
-    /* no-op */
-  }
-
-  @Override public Observable<Authorization> get(Integer id) {
-    return null;
   }
 
   public Observable<Authorization> getPaymentAuthorization(int paymentId, String payerId) {

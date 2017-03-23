@@ -57,7 +57,7 @@ import rx.functions.Action1;
       if (StoreTabFragmentChooser.validateAcceptedName(name)) {
         getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
             .newStoreTabGridRecyclerFragment(event, pojo.getLabel(), displayable.getStoreTheme(),
-                displayable.getTag()));
+                displayable.getTag(), displayable.getStoreContext()));
       } else {
         switch (name) {
           case facebook:

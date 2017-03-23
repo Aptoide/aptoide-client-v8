@@ -11,12 +11,15 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.abtesting.ABTest;
 import cm.aptoide.pt.v8engine.analytics.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.analytics.abtesting.SearchTabOptions;
@@ -39,7 +42,8 @@ import rx.functions.Action0;
  */
 public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
-  private final AptoideClientUUID aptoideClientUUID;
+  private AptoideClientUUID aptoideClientUUID;
+  private AptoideAccountManager accountManager;
 
   private AdsRepository adsRepository;
 
@@ -81,11 +85,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
         addDisplayables(displayables);
       };
-
-  public SearchPagerTabFragment() {
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-  }
+  private BodyInterceptor bodyInterceptor;
 
   public static SearchPagerTabFragment newInstance(String query, boolean subscribedStores,
       boolean hasMultipleFragments) {
@@ -112,8 +112,13 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    adsRepository = new AdsRepository();
-
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    bodyInterceptor =
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager);
+    adsRepository = new AdsRepository(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext()), accountManager);
     super.onCreate(savedInstanceState);
   }
 
@@ -137,7 +142,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
       adsRepository.getAdsFromSearch(query)
           .onErrorReturn(throwable -> null)
           .filter(minimalAd -> minimalAd != null)
-          .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
+          .compose(bindUntilEvent(LifecycleEvent.DESTROY))
           .subscribe(minimalAd -> {
             refreshed = true;
             addDisplayable(0, new SearchAdDisplayable(minimalAd), false);
@@ -147,15 +152,15 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
       ListSearchAppsRequest of;
       if (storeName != null) {
         of = ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier());
+            bodyInterceptor);
       } else {
         of = ListSearchAppsRequest.of(query, addSubscribedStores,
             StoreUtils.getSubscribedStoresIds(), StoreUtils.getSubscribedStoresAuthMap(),
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier());
+            bodyInterceptor);
       }
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,
-              listSearchAppsSuccessRequestListener, Throwable::printStackTrace, refresh);
+              listSearchAppsSuccessRequestListener, err -> err.printStackTrace(), refresh);
       getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
       endlessRecyclerOnScrollListener.onLoadMore(refresh);
     } else {

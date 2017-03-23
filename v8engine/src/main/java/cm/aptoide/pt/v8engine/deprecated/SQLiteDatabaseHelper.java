@@ -1,14 +1,15 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
- */
-
 package cm.aptoide.pt.v8engine.deprecated;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
+import android.support.v7.preference.PreferenceManager;
+import android.text.TextUtils;
+import android.util.Log;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
@@ -16,21 +17,21 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.deprecated.tables.Downloads;
 import cm.aptoide.pt.v8engine.deprecated.tables.Excluded;
 import cm.aptoide.pt.v8engine.deprecated.tables.Repo;
 import cm.aptoide.pt.v8engine.deprecated.tables.Rollback;
 import cm.aptoide.pt.v8engine.deprecated.tables.Scheduled;
 
-/**
- * Created by sithengineer on 24/08/16.
- */
 public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
   private static final String TAG = SQLiteDatabaseHelper.class.getSimpleName();
-  private static final int DATABASE_VERSION = 55;
-  private Throwable agregateExceptions;
+  private static final int DATABASE_VERSION = 59;
+  private Throwable aggregateExceptions;
 
   public SQLiteDatabaseHelper(Context context) {
     super(context, "aptoide.db", null, DATABASE_VERSION);
@@ -52,9 +53,8 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
         + "]");
 
     migrate(db);
-
+    checkAndMigrateUserAccount(oldVersion, newVersion);
     ManagerPreferences.setNeedsSqliteDbMigration(false);
-
     SecurePreferences.setWizardAvailable(true);
   }
 
@@ -132,19 +132,120 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     // table "AmazonABTesting" was deliberedly left out due to its irrelevance in the DB upgrade
     // table "ExcludedAd" was deliberedly left out due to its irrelevance in the DB upgrade
 
-    if (agregateExceptions != null) {
-      CrashReport.getInstance().log(agregateExceptions);
+    if (aggregateExceptions != null) {
+      CrashReport.getInstance().log(aggregateExceptions);
     }
     Logger.w(TAG, "Migrating database finished.");
+  }
+
+  /**
+   * This method can be deleted in future releases, when version 8.1.2.1 is no longer supported /
+   * relevant
+   * @param oldVersion
+   * @param newVersion
+   */
+  private void checkAndMigrateUserAccount(int oldVersion, int newVersion) {
+    final Context appContext = V8Engine.getContext();
+    final AccountManager androidAccountManager = AccountManager.get(appContext);
+    final android.accounts.Account[] accounts =
+        androidAccountManager.getAccountsByType(V8Engine.getConfiguration().getAccountType());
+
+    String[] migrationKeys = {
+        "userId", "username", "useravatar", "refresh_token", "access_token",
+        "aptoide_account_manager_login_mode", "userRepo", "useravatar", "access", "access"
+    };
+
+    try {
+      SharedPreferences secureSharedPreferences = SecurePreferencesImplementation.getInstance(appContext);
+
+      if (!accountNeedsMigration(migrationKeys, secureSharedPreferences)) {
+        return;
+      }
+
+      Account androidAccount = accounts[0];
+      String encryptedPassword = androidAccountManager.getPassword(androidAccount);
+      String plainTextPassword =
+          new SecureCoderDecoder.Builder(appContext).create().decrypt(encryptedPassword);
+      if (oldVersion<=55 || TextUtils.isEmpty(plainTextPassword)) {
+        plainTextPassword = encryptedPassword;
+      }
+
+
+      /*
+
+      androidAccountManager.setUserData(androidAccount, USER_ID, account.getId());
+      androidAccountManager.setUserData(androidAccount, USER_NICK_NAME, account.getNickname());
+      androidAccountManager.setUserData(androidAccount, USER_AVATAR, account.getAvatar());
+      androidAccountManager.setUserData(androidAccount, REFRESH_TOKEN, account.getRefreshToken());
+      androidAccountManager.setUserData(androidAccount, ACCESS_TOKEN, account.getToken());
+      androidAccountManager.setUserData(androidAccount, LOGIN_MODE, account.getType().name());
+      androidAccountManager.setUserData(androidAccount, USER_REPO, account.getStore());
+      androidAccountManager.setUserData(androidAccount, REPO_AVATAR, account.getStoreAvatar());
+      androidAccountManager.setUserData(androidAccount, ACCESS, account.getAccess().name());
+
+      androidAccountManager.setUserData(androidAccount, MATURE_SWITCH,
+          String.valueOf(account.isAdultContentEnabled()));
+      androidAccountManager.setUserData(androidAccount, ACCESS_CONFIRMED,
+          String.valueOf(account.isAccessConfirmed()));
+
+      */
+
+      String sharedPrefsData;
+      for (String key : migrationKeys) {
+        sharedPrefsData = secureSharedPreferences.getString(key, null);
+        androidAccountManager.setUserData(androidAccount, key, sharedPrefsData);
+      }
+
+      // remove all keys from shared preferences
+      cleanKeysFromPreferences(migrationKeys, secureSharedPreferences);
+
+      String matureSwitchKey = "aptoide_account_manager_mature_switch";
+      sharedPrefsData = secureSharedPreferences.getString(matureSwitchKey, "false");
+      androidAccountManager.setUserData(androidAccount, matureSwitchKey, sharedPrefsData);
+
+      // access_confirmed is registered in the default shared preferences and not in the
+      // secure shared preferences
+      String accessConfirmedKey = "access_confirmed";
+      SharedPreferences defaultSharedPreferences =
+          PreferenceManager.getDefaultSharedPreferences(appContext);
+      sharedPrefsData = Boolean.toString(defaultSharedPreferences.getBoolean(accessConfirmedKey, false));
+      androidAccountManager.setUserData(androidAccount, accessConfirmedKey, sharedPrefsData);
+
+      // account.name -> user email. we don't need to change this
+      androidAccountManager.setPassword(androidAccount, plainTextPassword);
+
+      Log.w(TAG, "Account migration from <8.1.2.1 to >8.2.0.0 succeeded");
+    } catch (Exception e) {
+      Log.e(TAG, "Account migration from <8.1.2.1 to >8.2.0.0 failed", e);
+    }
   }
 
   private void logException(Exception ex) {
     CrashReport.getInstance().log(ex);
 
-    if (agregateExceptions == null) {
-      agregateExceptions = ex;
+    if (aggregateExceptions == null) {
+      aggregateExceptions = ex;
     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      agregateExceptions.addSuppressed(ex);
+      aggregateExceptions.addSuppressed(ex);
+    }
+  }
+
+  private boolean accountNeedsMigration(String[] migrationKeys,
+      SharedPreferences sharedPreferences) {
+    for (int i = 0; i < migrationKeys.length; ++i) {
+      if (sharedPreferences.contains(migrationKeys[i])) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private void cleanKeysFromPreferences(String[] migrationKeys,
+      SharedPreferences sharedPreferences) {
+    for (int i = 0; i < migrationKeys.length; ++i) {
+      if (sharedPreferences.contains(migrationKeys[i])) {
+        sharedPreferences.edit().remove(migrationKeys[i]).commit();
+      }
     }
   }
 }

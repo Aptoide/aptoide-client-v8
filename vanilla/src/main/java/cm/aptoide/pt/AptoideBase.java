@@ -18,6 +18,7 @@ public class AptoideBase extends V8Engine {
   @Override public void onCreate() {
     setupCrashReports(BuildConfig.CRASH_REPORTS_DISABLED);
     super.onCreate();
+    //setupStrictMode();
   }
 
   @Override protected void attachBaseContext(Context base) {
@@ -25,7 +26,7 @@ public class AptoideBase extends V8Engine {
     MultiDex.install(this);
   }
 
-  @Override protected AptoidePreferencesConfiguration createConfiguration() {
+  @Override public AptoidePreferencesConfiguration createConfiguration() {
     return new VanillaConfiguration();
   }
 }

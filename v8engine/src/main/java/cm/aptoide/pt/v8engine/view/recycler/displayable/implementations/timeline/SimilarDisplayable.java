@@ -9,14 +9,14 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
-import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.Similar;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.interfaces.ShareCardCallback;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
-import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
+import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
@@ -30,6 +30,7 @@ import lombok.Getter;
  */
 public class SimilarDisplayable extends CardDisplayable {
 
+  public static final String CARD_TYPE_NAME = "SIMILAR";
   @Getter private int avatarResource;
   @Getter private int titleResource;
   @Getter private long appId;
@@ -44,7 +45,7 @@ public class SimilarDisplayable extends CardDisplayable {
   private Date timestamp;
   private DateCalculator dateCalculator;
   private SpannableFactory spannableFactory;
-  private TimelineMetricsManager timelineMetricsManager;
+  private TimelineAnalytics timelineAnalytics;
   private SocialRepository socialRepository;
 
   public SimilarDisplayable() {
@@ -54,7 +55,7 @@ public class SimilarDisplayable extends CardDisplayable {
       String packageName, String appName, String appIcon, String abUrl,
       List<String> similarAppsNames, List<String> similarAppsPackageNames, Date date,
       Date timestamp, DateCalculator dateCalculator, SpannableFactory spannableFactory,
-      TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository) {
+      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
     super(similar);
     this.avatarResource = avatarResource;
     this.titleResource = titleResource;
@@ -69,12 +70,12 @@ public class SimilarDisplayable extends CardDisplayable {
     this.timestamp = timestamp;
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
-    this.timelineMetricsManager = timelineMetricsManager;
+    this.timelineAnalytics = timelineAnalytics;
     this.socialRepository = socialRepository;
   }
 
   public static Displayable from(Similar similar, DateCalculator dateCalculator,
-      SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager,
+      SpannableFactory spannableFactory, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository) {
     final List<String> similarAppsNames = new ArrayList<>();
     final List<String> similarAppsPackageNames = new ArrayList<>();
@@ -96,7 +97,7 @@ public class SimilarDisplayable extends CardDisplayable {
         similar.getRecommendedApp().getId(), similar.getRecommendedApp().getPackageName(),
         similar.getRecommendedApp().getName(), similar.getRecommendedApp().getIcon(), abTestingURL,
         similarAppsNames, similarAppsPackageNames, similar.getRecommendedApp().getUpdated(),
-        similar.getTimestamp(), dateCalculator, spannableFactory, timelineMetricsManager,
+        similar.getTimestamp(), dateCalculator, spannableFactory, timelineAnalytics,
         socialRepository);
   }
 
@@ -148,6 +149,11 @@ public class SimilarDisplayable extends CardDisplayable {
     return R.layout.displayable_social_timeline_similar;
   }
 
+  public void sendSimilarOpenAppEvent() {
+    timelineAnalytics.sendSimilarOpenAppEvent(CARD_TYPE_NAME, TimelineAnalytics.SOURCE_APTOIDE,
+        getPackageName(), getSimilarToAppPackageName());
+  }
+
   public String getSimilarToAppPackageName() {
     if (similarAppsPackageNames.size() != 0) {
       return similarAppsPackageNames.get(0);
@@ -155,11 +161,16 @@ public class SimilarDisplayable extends CardDisplayable {
     return "";
   }
 
-  public void sendClickEvent(SendEventRequest.Body.Data data, String eventName) {
-    timelineMetricsManager.sendEvent(data, eventName);
+  @Override
+  public void share(Context context, boolean privacyResult, ShareCardCallback shareCardCallback) {
+    socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);
   }
 
-  @Override public void share(Context context, boolean privacyResult) {
-    socialRepository.share(getTimelineCard(), context, privacyResult);
+  @Override public void like(Context context, String cardType, int rating) {
+    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating);
+  }
+
+  @Override public void like(Context context, String cardId, String cardType, int rating) {
+    socialRepository.like(cardId, cardType, "", rating);
   }
 }

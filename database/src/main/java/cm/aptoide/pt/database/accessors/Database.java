@@ -18,6 +18,7 @@ import io.realm.RealmResults;
 import java.util.List;
 import lombok.Cleanup;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by sithengineer on 16/05/16.
@@ -28,7 +29,6 @@ public final class Database {
 
   public static final int SCHEMA_VERSION = 8081; // if you bump this value, also add changes to the
   //private static final String TAG = Database.class.getName();
-  private static final String KEY = "KRbjij20wgVyUFhMxm2gUHg0s1HwPUX7DLCp92VKMCt";
   private static final String DB_NAME = "aptoide.realm.db";
   private static final String DB_NAME_E = "aptoide_mobile.db";
 
@@ -122,7 +122,8 @@ public final class Database {
   <E extends RealmObject> Observable<List<E>> copyFromRealm(RealmResults<E> results) {
     return Observable.just(results)
         .filter(data -> data.isLoaded())
-        .map(realmObjects -> Database.getInternal().copyFromRealm(realmObjects));
+        .map(realmObjects -> Database.getInternal().copyFromRealm(realmObjects))
+        .observeOn(Schedulers.io());
   }
 
   /**
@@ -180,10 +181,11 @@ public final class Database {
         .defaultIfEmpty(null);
   }
 
-  <E extends RealmObject> Observable<E> copyFromRealm(E object) {
+  private <E extends RealmObject> Observable<E> copyFromRealm(E object) {
     return Observable.just(object)
         .filter(data -> data.isLoaded())
-        .map(realmObject -> Database.getInternal().copyFromRealm(realmObject));
+        .map(realmObject -> Database.getInternal().copyFromRealm(realmObject))
+        .observeOn(Schedulers.io());
   }
 
   public <E extends RealmObject> Observable<E> get(Class<E> clazz, String key, Integer value) {
@@ -272,14 +274,6 @@ public final class Database {
     @Cleanup Realm realm = get();
     realm.beginTransaction();
     realm.delete(clazz);
-    realm.commitTransaction();
-  }
-
-  public <E extends RealmObject> void updateAll(Class<E> clazz, List<E> objects) {
-    @Cleanup Realm realm = get();
-    realm.beginTransaction();
-    realm.delete(clazz);
-    realm.insertOrUpdate(objects);
     realm.commitTransaction();
   }
 

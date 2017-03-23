@@ -6,8 +6,10 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import rx.Observable;
@@ -22,30 +24,22 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
 
-  protected PostReviewRequest(Body body, String baseHost) {
-    super(body, baseHost);
+  protected PostReviewRequest(Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static PostReviewRequest of(String storeName, String packageName, String title,
-      String textBody, Integer rating, String accessToken, String aptoideClientUUID) {
-    //
-    //  http://ws75-primary.aptoide.com/api/7/setReview/package_name/cm.aptoide
-    // .pt/store_name/apps/title/Best%20app%20store/rating/5/access_token/ca01ee1e05ab4d82d99ef143e2816e667333c6ef
-    //
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    Body body = new Body(storeName, packageName, title, textBody, rating);
-    return new PostReviewRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+      String textBody, Integer rating, BodyInterceptor bodyInterceptor) {
+    final Body body = new Body(storeName, packageName, title, textBody, rating);
+    return new PostReviewRequest(body, bodyInterceptor);
   }
 
   public static PostReviewRequest of(String packageName, String title, String textBody,
-      Integer rating, String accessToken, String aptoideClientUUID) {
-    //
-    //  http://ws75-primary.aptoide.com/api/7/setReview/package_name/cm.aptoide
-    // .pt/store_name/apps/title/Best%20app%20store/rating/5/access_token/ca01ee1e05ab4d82d99ef143e2816e667333c6ef
-    //
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    Body body = new Body(packageName, title, textBody, rating);
-    return new PostReviewRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+      Integer rating, BodyInterceptor bodyInterceptor) {
+    final Body body = new Body(packageName, title, textBody, rating);
+    return new PostReviewRequest(body, bodyInterceptor);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

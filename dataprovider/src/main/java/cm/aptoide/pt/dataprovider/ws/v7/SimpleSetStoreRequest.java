@@ -1,7 +1,10 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,47 +18,46 @@ import rx.Observable;
 
 public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequest.Body> {
 
-  private static final String BASE_HOST = "https://ws75-primary.aptoide.com/api/7/";
+  private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+      + "://"
+      + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
+      + "/api/7/";
 
-  protected SimpleSetStoreRequest(Body body, String baseHost) {
-    super(body, baseHost);
+  protected SimpleSetStoreRequest(Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  public static SimpleSetStoreRequest of(String accessToken, String aptoideClientUUID,
-      String storeName, String storeTheme) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    Body body = new Body(accessToken, storeName, storeTheme);
-    return new SimpleSetStoreRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+  public static SimpleSetStoreRequest of(String storeName, String storeTheme,
+      BodyInterceptor bodyInterceptor) {
+    Body body = new Body(storeName, storeTheme);
+    return new SimpleSetStoreRequest(body, bodyInterceptor);
   }
 
-  public static SimpleSetStoreRequest of(String accessToken, String aptoideClientUUID, long storeId,
-      String storeTheme, String storeDescription) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    Body body = new Body(accessToken, storeId, storeTheme, storeDescription);
-    return new SimpleSetStoreRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+  public static SimpleSetStoreRequest of(long storeId, String storeTheme, String storeDescription,
+      BodyInterceptor bodyInterceptor) {
+    Body body = new Body(storeId, storeTheme, storeDescription);
+    return new SimpleSetStoreRequest(body, bodyInterceptor);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.editStore(body);
+    return interfaces.editStore((Body) body);
   }
 
   @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
 
     private String storeName;
-    //private String storeProperties;
-    private String accessToken;
     private Long storeId;
     @Getter @Setter private StoreProperties storeProperties;
 
-    public Body(String accessToken, String storeName, String storeTheme) {
-      this.accessToken = accessToken;
+    public Body(String storeName, String storeTheme) {
       this.storeName = storeName;
       storeProperties = new StoreProperties(storeTheme, null);
     }
 
-    public Body(String accessToken, long storeId, String storeTheme, String storeDescription) {
-      this.accessToken = accessToken;
+    public Body(long storeId, String storeTheme, String storeDescription) {
       this.storeId = storeId;
       storeProperties = new StoreProperties(storeTheme, storeDescription);
     }

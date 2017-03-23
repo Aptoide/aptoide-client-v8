@@ -33,11 +33,14 @@ public class TokenHttpClient {
   private final AptoideClientUUID aptoideClientUUID;
   private final UserData userData;
   private final String oemid;
+  private final AptoideAccountManager accountManager;
 
-  public TokenHttpClient(AptoideClientUUID aptoideClientUUID, UserData userData, String oemid) {
+  public TokenHttpClient(AptoideClientUUID aptoideClientUUID, UserData userData, String oemid,
+      AptoideAccountManager accountManager) {
     this.aptoideClientUUID = aptoideClientUUID;
     this.userData = userData;
     this.oemid = oemid;
+    this.accountManager = accountManager;
   }
 
   public OkHttpClient.Builder customMake() {
@@ -49,7 +52,7 @@ public class TokenHttpClient {
       if (request.url().host().contains(BuildConfig.APTOIDE_WEB_SERVICES_HOST)) {
         request = request.newBuilder()
             .post(RequestBody.create(MediaType.parse("application/json"),
-                "{\"access_token\" : \"" + AptoideAccountManager.getAccessToken() + "\"}"))
+                "{\"access_token\" : \"" + accountManager.getAccessToken() + "\"}"))
             .build();
       }
       return chain.proceed(request);

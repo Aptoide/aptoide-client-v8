@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -13,7 +14,6 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -50,8 +50,9 @@ import com.jakewharton.rxbinding.view.RxView;
     if (!TextUtils.isEmpty(media.getDescription())) {
       descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
       compositeSubscription.add(RxView.clicks(readMoreBtn).subscribe(click -> {
-        ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
-            .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme));
+        Fragment fragment = V8Engine.getFragmentProvider()
+            .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme);
+        getNavigationManager().navigateTo(fragment);
       }));
     } else {
       // only show "default" description if the app doesn't have one
@@ -62,8 +63,9 @@ import com.jakewharton.rxbinding.view.RxView;
     if (!TextUtils.isEmpty(media.getDescription())) {
       descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
       compositeSubscription.add(RxView.clicks(readMoreBtn).subscribe(click -> {
-        ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
-            .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme));
+        Fragment fragment = V8Engine.getFragmentProvider()
+            .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme);
+        getNavigationManager().navigateTo(fragment);
       }));
     } else {
       // only show "default" description if the app doesn't have one

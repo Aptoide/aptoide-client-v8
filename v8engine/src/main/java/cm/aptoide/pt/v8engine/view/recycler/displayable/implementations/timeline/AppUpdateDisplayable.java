@@ -10,13 +10,17 @@ import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.TextUtils;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
@@ -26,8 +30,9 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventCon
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadInstallBaseEvent;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
+import cm.aptoide.pt.v8engine.interfaces.ShareCardCallback;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
-import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
+import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
@@ -40,9 +45,11 @@ import rx.Observable;
  */
 public class AppUpdateDisplayable extends CardDisplayable {
 
+  public static final String CARD_TYPE_NAME = "APP_UPDATE";
   @Getter private String appIconUrl;
   @Getter private String storeIconUrl;
   @Getter private String storeName;
+  @Getter private String storeTheme;
 
   private Date dateUpdated;
   private String appVersionName;
@@ -55,11 +62,13 @@ public class AppUpdateDisplayable extends CardDisplayable {
   @Getter private String abUrl;
   private InstallManager installManager;
   private PermissionManager permissionManager;
-  private TimelineMetricsManager timelineMetricsManager;
+  private TimelineAnalytics timelineAnalytics;
   private SocialRepository socialRepository;
   private DownloadEventConverter downloadConverter;
   private InstallEventConverter installConverter;
   private Analytics analytics;
+  private AptoideAccountManager accountManager;
+  private AptoideClientUUID aptoideClientUUID;
 
   public AppUpdateDisplayable() {
   }
@@ -68,9 +77,10 @@ public class AppUpdateDisplayable extends CardDisplayable {
       String storeName, Date dateUpdated, String appVersionName, SpannableFactory spannableFactory,
       String appName, String packageName, Download download, DateCalculator dateCalculator,
       long appId, String abUrl, InstallManager installManager, PermissionManager permissionManager,
-      TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository,
+      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
       DownloadEventConverter downloadConverter, InstallEventConverter installConverter,
-      Analytics analytics) {
+      Analytics analytics, AptoideAccountManager accountManager,
+      AptoideClientUUID aptoideClientUUID, String storeTheme) {
     super(appUpdate);
     this.appIconUrl = appIconUrl;
     this.storeIconUrl = storeIconUrl;
@@ -86,17 +96,21 @@ public class AppUpdateDisplayable extends CardDisplayable {
     this.abUrl = abUrl;
     this.installManager = installManager;
     this.permissionManager = permissionManager;
-    this.timelineMetricsManager = timelineMetricsManager;
+    this.timelineAnalytics = timelineAnalytics;
     this.socialRepository = socialRepository;
     this.downloadConverter = downloadConverter;
     this.installConverter = installConverter;
     this.analytics = analytics;
+    this.accountManager = accountManager;
+    this.aptoideClientUUID = aptoideClientUUID;
+    this.storeTheme = storeTheme;
   }
 
   public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory,
       DownloadFactory downloadFactory, DateCalculator dateCalculator, InstallManager installManager,
-      PermissionManager permissionManager, TimelineMetricsManager timelineMetricsManager,
-      SocialRepository socialRepository) {
+      PermissionManager permissionManager, TimelineAnalytics timelineAnalytics,
+      SocialRepository socialRepository, IdsRepositoryImpl idsRepository,
+      AptoideAccountManager accountManager, BodyInterceptor bodyInterceptor) {
     String abTestingURL = null;
 
     if (appUpdate.getAb() != null
@@ -109,8 +123,10 @@ public class AppUpdateDisplayable extends CardDisplayable {
         appUpdate.getFile().getVername(), spannableFactory, appUpdate.getName(),
         appUpdate.getPackageName(), downloadFactory.create(appUpdate, Download.ACTION_UPDATE),
         dateCalculator, appUpdate.getId(), abTestingURL, installManager, permissionManager,
-        timelineMetricsManager, socialRepository, new DownloadEventConverter(),
-        new InstallEventConverter(), Analytics.getInstance());
+        timelineAnalytics, socialRepository, new DownloadEventConverter(bodyInterceptor),
+        new InstallEventConverter(
+            new BaseBodyInterceptor(idsRepository, accountManager)), Analytics.getInstance(),
+        accountManager, idsRepository, appUpdate.getStore().getAppearance().getTheme());
   }
 
   public Observable<Progress<Download>> update(Context context) {
@@ -198,7 +214,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
   }
 
   public Observable<Void> requestPermission(Context context) {
-    return permissionManager.requestExternalStoragePermission(((PermissionRequest) context));
+    return permissionManager.requestExternalStoragePermission(((PermissionService) context));
   }
 
   public boolean isInstalling(Progress<Download> downloadProgress) {
@@ -209,12 +225,32 @@ public class AppUpdateDisplayable extends CardDisplayable {
     return installManager.isDownloading(downloadProgress);
   }
 
-  public void sendClickEvent(SendEventRequest.Body.Data data, String eventName) {
-    timelineMetricsManager.sendEvent(data, eventName);
+  public void sendOpenAppEvent() {
+    timelineAnalytics.sendOpenAppEvent(CARD_TYPE_NAME, TimelineAnalytics.SOURCE_APTOIDE,
+        getPackageName());
   }
 
-  @Override public void share(Context context, boolean privacyResult) {
-    socialRepository.share(getTimelineCard(), context, privacyResult);
+  public void sendUpdateAppEvent() {
+    timelineAnalytics.sendUpdateAppEvent(CARD_TYPE_NAME, TimelineAnalytics.SOURCE_APTOIDE,
+        getPackageName());
+  }
+
+  public void sendOpenStoreEvent() {
+    timelineAnalytics.sendAppUpdateOpenStoreEvent(CARD_TYPE_NAME, TimelineAnalytics.SOURCE_APTOIDE,
+        getPackageName(), getStoreName());
+  }
+
+  @Override
+  public void share(Context context, boolean privacyResult, ShareCardCallback shareCardCallback) {
+    socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);
+  }
+
+  @Override public void like(Context context, String cardType, int rating) {
+    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating);
+  }
+
+  @Override public void like(Context context, String cardId, String cardType, int rating) {
+    socialRepository.like(cardId, cardType, "", rating);
   }
 
   public String getErrorMessage(Context context, int error) {

@@ -1,12 +1,7 @@
 package cm.aptoide.pt.v8engine.repository.request;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
-import cm.aptoide.pt.interfaces.AccessToken;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 
@@ -15,20 +10,16 @@ import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
  */
 class ListAppsRequestFactory {
 
-  private final AptoideClientUUID aptoideClientUUID;
-  private final AccessToken accessToken;
   private final StoreCredentialsProvider storeCredentialsProvider;
+  private final BodyInterceptor bodyInterceptor;
 
-  public ListAppsRequestFactory() {
-    aptoideClientUUID = () -> new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext()).getUniqueIdentifier();
-
-    accessToken = AptoideAccountManager::getAccessToken;
-    storeCredentialsProvider = new StoreCredentialsProviderImpl();
+  public ListAppsRequestFactory(BodyInterceptor bodyInterceptor,
+      StoreCredentialsProvider storeCredentialsProvider) {
+    this.storeCredentialsProvider = storeCredentialsProvider;
+    this.bodyInterceptor = bodyInterceptor;
   }
 
   public ListAppsRequest newListAppsRequest(String url) {
-    return ListAppsRequest.ofAction(url, storeCredentialsProvider.fromUrl(url), accessToken.get(),
-        aptoideClientUUID.getUniqueIdentifier());
+    return ListAppsRequest.ofAction(url, storeCredentialsProvider.fromUrl(url), bodyInterceptor);
   }
 }

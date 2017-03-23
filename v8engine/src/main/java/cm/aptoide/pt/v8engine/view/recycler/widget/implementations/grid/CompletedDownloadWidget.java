@@ -12,7 +12,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -69,7 +69,7 @@ import rx.schedulers.Schedulers;
         .flatMap(click -> displayable.downloadStatus()
             .filter(status -> status == Download.COMPLETED)
             .flatMap(
-                status -> displayable.installOrOpenDownload(context, (PermissionRequest) context)))
+                status -> displayable.installOrOpenDownload(context, (PermissionService) context)))
         .retry()
         .subscribe(success -> {
         }, throwable -> throwable.printStackTrace()));
@@ -77,7 +77,7 @@ import rx.schedulers.Schedulers;
     compositeSubscription.add(RxView.clicks(resumeDownloadButton)
         .flatMap(click -> displayable.downloadStatus()
             .filter(status -> status == Download.PAUSED || status == Download.ERROR)
-            .flatMap(status -> displayable.resumeDownload(context, (PermissionRequest) context)))
+            .flatMap(status -> displayable.resumeDownload(context, (PermissionService) context)))
         .retry()
         .subscribe(success -> {
         }, throwable -> throwable.printStackTrace()));

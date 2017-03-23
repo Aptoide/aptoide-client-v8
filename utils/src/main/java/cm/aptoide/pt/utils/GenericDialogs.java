@@ -18,7 +18,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.Subscriptions;
 
 /**
- * Created by trinkes on 5/9/16. <li>{@link #createGenericYesNoCancelMessage(Context, String,
+ * Created by trinkes on 5/9/16. <li>{@link #createGenericYesNoCancelMessage(Context, String, *
  * String)}</li> <li>{@link #createGenericOkCancelMessage(Context, String, String)}</li> <li>{@link
  * #createGenericPleaseWaitDialog(Context)}</li>
  */
@@ -53,7 +53,7 @@ public class GenericDialogs {
           })
           .create();
       // cleaning up
-      subscriber.add(Subscriptions.create(dialog::dismiss));
+      subscriber.add(Subscriptions.create(() -> dialog.dismiss()));
       dialog.show();
     }).subscribeOn(AndroidSchedulers.mainThread());
   }
@@ -140,7 +140,7 @@ public class GenericDialogs {
           })
           .create();
       // cleaning up
-      subscriber.add(Subscriptions.create(ad::dismiss));
+      subscriber.add(Subscriptions.create(() -> ad.dismiss()));
       ad.show();
     });
   }
@@ -164,7 +164,7 @@ public class GenericDialogs {
           })
           .create();
       // cleaning up
-      subscriber.add(Subscriptions.create(ad::dismiss));
+      subscriber.add(Subscriptions.create(() -> ad.dismiss()));
       ad.show();
     });
   }
@@ -222,7 +222,7 @@ public class GenericDialogs {
           })
           .create();
       // cleaning up
-      subscriber.add(Subscriptions.create(alertDialog::dismiss));
+      subscriber.add(Subscriptions.create(() -> alertDialog.dismiss()));
       alertDialog.show();
     });
   }
@@ -236,12 +236,10 @@ public class GenericDialogs {
     /**
      * Used when yes/ok button is pressed
      */
-    YES,
-    /**
+    YES, /**
      * Used when no/cancel button is pressed
      */
-    NO,
-    /**
+    NO, /**
      * Used when user cancels the dialog by pressing back or clicking out of the dialog
      */
     CANCEL,

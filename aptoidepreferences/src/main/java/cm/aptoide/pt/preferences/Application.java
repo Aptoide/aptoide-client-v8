@@ -17,7 +17,7 @@ public abstract class Application extends android.app.Application {
 
   @Getter private static AptoidePreferencesConfiguration configuration;
 
-  @Partners public static Context getContext() {
+  @Deprecated @Partners public static Context getContext() {
     return AptoideUtils.getContext();
   }
 
@@ -33,7 +33,7 @@ public abstract class Application extends android.app.Application {
     AptoideUtils.setContext(this);
   }
 
-  @Partners protected abstract AptoidePreferencesConfiguration createConfiguration();
+  @Partners public abstract AptoidePreferencesConfiguration createConfiguration();
 
   @Override public void onCreate() {
     super.onCreate();

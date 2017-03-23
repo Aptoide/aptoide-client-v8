@@ -33,6 +33,9 @@ public class Translator {
       case "Apps Timeline":
         translated = Application.getContext().getString(R.string.apps_timeline);
         break;
+      case "Timeline":
+        translated = Application.getContext().getString(R.string.timeline);
+        break;
       case "Latest Reviews":
         translated = Application.getContext().getString(R.string.latest_reviews);
         break;
@@ -232,8 +235,6 @@ public class Translator {
         translated = Application.getContext().getString(R.string.top_apps);
         break;
       case "Latest Apps":
-        translated = Application.getContext().getString(R.string.latest_applications);
-        break;
       case "Latest Applications":
         translated = Application.getContext().getString(R.string.latest_applications);
         break;
@@ -260,16 +261,26 @@ public class Translator {
         translated = Application.getContext().getString(R.string.play_it);
         break;
       case "More Editors Choice":
-        translated = Application.getContext().getString(R.string.more_editors_choice);
-        break;
       case "More Editor's Choice":
-        translated = Application.getContext().getString(R.string.more_editors_choice);
-        break;
       case "More Editors' Choice":
         translated = Application.getContext().getString(R.string.more_editors_choice);
         break;
       case "Comments in this store":
+      case "Comments on this store":
         translated = Application.getContext().getString(R.string.comment_store_title);
+        break;
+      case "Spot & Share":
+      case "Spot&Share":
+        translated = Application.getContext().getString(R.string.spot_share);
+        break;
+      case "Followed Stores":
+        translated = Application.getContext().getString(R.string.followed_stores);
+        break;
+      case "Recommended Stores":
+        translated = Application.getContext().getString(R.string.recommended_stores);
+        break;
+      case "Featured Stores":
+        translated = Application.getContext().getString(R.string.featured_stores);
         break;
       default:
         translated = string;

@@ -2,16 +2,24 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.View;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
@@ -42,6 +50,7 @@ import rx.android.schedulers.AndroidSchedulers;
 public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
   private static final String TAG = UpdatesFragment.class.getName();
+  private AptoideAccountManager accountManager;
 
   private List<Displayable> updatesDisplayablesList;
   private List<Displayable> installedDisplayablesList;
@@ -57,6 +66,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   private Subscription updateReloadSubscription;
 
   private int oldUpdateListHash = 0;
+  private IdsRepositoryImpl idsRepository;
+  private BodyInterceptor bodyInterceptor;
 
   @NonNull public static UpdatesFragment newInstance() {
     return new UpdatesFragment();
@@ -65,17 +76,43 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   @Override public void setupViews() {
     super.setupViews();
 
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    idsRepository = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     installManager = new InstallManager(AptoideDownloadManager.getInstance(),
         new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK));
     analytics = Analytics.getInstance();
-    downloadInstallEventConverter = new DownloadEventConverter();
-    installConverter = new InstallEventConverter();
+    bodyInterceptor = new BaseBodyInterceptor(idsRepository, accountManager);
+    downloadInstallEventConverter = new DownloadEventConverter(bodyInterceptor);
+    installConverter = new InstallEventConverter(bodyInterceptor);
 
     updatesDisplayablesList = new LinkedList<>();
     installedDisplayablesList = new LinkedList<>();
 
     installedRepository = RepositoryFactory.getInstalledRepository();
-    updateRepository = RepositoryFactory.getUpdateRepository();
+    updateRepository = RepositoryFactory.getUpdateRepository(getContext());
+  }
+
+  /**
+   * This method is called when pull to refresh is done. An update repository call is made to fetch
+   * new updates and this call will hit the network. When new updates are found the listener in the
+   * load() method above will be notified of those changes and update the list. The response of
+   * this repository call will show a notification according: the number of new updates, no more
+   * new updates or no updates at all.
+   */
+  @Override public void reload() {
+    super.reload();
+
+    if (updateReloadSubscription != null && !updateReloadSubscription.isUnsubscribed()) {
+      updateReloadSubscription.unsubscribe();
+    }
+
+    updateReloadSubscription = updateRepository.sync(true).subscribe(() -> finishLoading(), e -> {
+      if (e instanceof RepositoryItemNotFoundException) {
+        ShowMessage.asSnack(getView(), R.string.add_store);
+      }
+      CrashReport.getInstance().log(e);
+      finishLoading();
+    });
   }
 
   @Override public void onDestroyView() {
@@ -91,8 +128,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     // overridden to avoid calling super, since it removes the displayables automatically
   }
 
-  @Override public void onViewCreated() {
-    super.onViewCreated();
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
 
     // show updates
     updateRepository.getAll(false)
@@ -195,29 +232,6 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
         return Observable.empty();
       }
       return Observable.just(item);
-    });
-  }
-
-  /**
-   * This method is called when pull to refresh is done. An update repository call is made to fetch
-   * new updates and this call will hit the network. When new updates are found the listener in the
-   * load() method above will be notified of those changes and update the list. The response of
-   * this repository call will show a notification according: the number of new updates, no more
-   * new updates or no updates at all.
-   */
-  @Override public void reload() {
-    super.reload();
-
-    if (updateReloadSubscription != null && !updateReloadSubscription.isUnsubscribed()) {
-      updateReloadSubscription.unsubscribe();
-    }
-
-    updateReloadSubscription = updateRepository.sync(true).subscribe(() -> finishLoading(), e -> {
-      if (e instanceof RepositoryItemNotFoundException) {
-        ShowMessage.asSnack(getView(), R.string.add_store);
-      }
-      CrashReport.getInstance().log(e);
-      finishLoading();
     });
   }
 }

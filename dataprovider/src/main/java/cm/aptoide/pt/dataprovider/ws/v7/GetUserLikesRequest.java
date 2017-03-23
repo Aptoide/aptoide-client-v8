@@ -1,7 +1,9 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.GetFollowers;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import rx.Observable;
@@ -11,16 +13,14 @@ import rx.Observable;
  */
 
 public class GetUserLikesRequest extends V7<GetFollowers, GetUserLikesRequest.Body> {
-  protected GetUserLikesRequest(Body body, String baseHost) {
-    super(body, baseHost);
+  protected GetUserLikesRequest(Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  public static GetUserLikesRequest of(String accessToken, String aptoideClientUUID,
-      String cardUid) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-
-    return new GetUserLikesRequest(((Body) decorator.decorate(new Body(cardUid), accessToken)),
-        BASE_HOST);
+  public static GetUserLikesRequest of(String cardUid, BodyInterceptor bodyInterceptor) {
+    return new GetUserLikesRequest(new Body(cardUid), bodyInterceptor);
   }
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,

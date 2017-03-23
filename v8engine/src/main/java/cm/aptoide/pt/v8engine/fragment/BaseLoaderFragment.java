@@ -5,10 +5,6 @@
 
 package cm.aptoide.pt.v8engine.fragment;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.IdRes;
@@ -17,9 +13,8 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
 import cm.aptoide.pt.v8engine.layouthandler.LoaderLayoutHandler;
 import lombok.Getter;
@@ -27,17 +22,14 @@ import lombok.Getter;
 /**
  * Created by neuro on 16-04-2016.
  */
-public abstract class BaseLoaderFragment extends SupportV4BaseFragment implements LoadInterface {
+public abstract class BaseLoaderFragment extends UIComponentFragment implements LoadInterface {
 
   private LoaderLayoutHandler loaderLayoutHandler;
   @Getter private boolean create = true;
-  private BroadcastReceiver receiver;
 
   @CallSuper @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     load(create, false, savedInstanceState);
-
-    registerReceiverForAccountManager();
   }
 
   @Partners @CallSuper @Nullable @Override
@@ -53,18 +45,17 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
 
   @IdRes protected abstract int getViewToShowAfterLoadingId();
 
+  /**
+   * Called in {@link BaseLoaderFragment}.{@link BaseLoaderFragment#onViewCreated(View, Bundle)}
+   *
+   * @param create flags that the fragment is being created for the first time. Will be set to
+   * false
+   * on {@link BaseLoaderFragment#onStop()}.
+   * @param refresh flags that the fragment should refresh it's state, reload data from network and
+   * refresh its state.
+   * @param savedInstanceState savedInstanceState bundle.
+   */
   public abstract void load(boolean create, boolean refresh, Bundle savedInstanceState);
-
-  protected void registerReceiverForAccountManager() {
-    receiver = new BroadcastReceiver() {
-      @Override public void onReceive(Context context, Intent intent) {
-        load(false, true, null);
-      }
-    };
-    IntentFilter intentFilter = new IntentFilter(AptoideAccountManager.LOGIN);
-    intentFilter.addAction(AptoideAccountManager.LOGOUT);
-    getContext().registerReceiver(receiver, intentFilter);
-  }
 
   @CallSuper @Override public void bindViews(View view) {
     if (loaderLayoutHandler != null) {
@@ -87,16 +78,11 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
   }
 
   @CallSuper @Override public void onDestroyView() {
+    super.onDestroyView();
     if (loaderLayoutHandler != null) {
       loaderLayoutHandler.unbindViews();
       loaderLayoutHandler = null;
     }
-    unregisterReceiverForAccountManager();
-    super.onDestroyView();
-  }
-
-  private void unregisterReceiverForAccountManager() {
-    getContext().unregisterReceiver(receiver);
   }
 
   @Partners @CallSuper protected void finishLoading(Throwable throwable) {

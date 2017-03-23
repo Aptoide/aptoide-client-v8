@@ -11,18 +11,25 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Scheduled;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEvent;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
@@ -50,6 +57,8 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
       "aptoide://cm.aptoide.pt/" + SCHEDULE_DOWNLOADS + "?openMode=AskInstallAll";
   public static final String OPEN_MODE = "openMode";
   private static final String TAG = ScheduledDownloadsFragment.class.getSimpleName();
+  private AptoideAccountManager accountManager;
+  private IdsRepositoryImpl aptoideClientUUID;
   private InstallManager installManager;
   private TextView emptyData;
   private ScheduledDownloadRepository scheduledDownloadRepository;
@@ -57,6 +66,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
   private DownloadEventConverter downloadConverter;
   private Analytics analytics;
   private InstallEventConverter installConverter;
+  private BodyInterceptor bodyInterceptor;
 
   public ScheduledDownloadsFragment() {
   }
@@ -76,9 +86,14 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext());
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
-    downloadConverter = new DownloadEventConverter();
-    installConverter = new InstallEventConverter();
+    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID, accountManager);
+    downloadConverter = new DownloadEventConverter(bodyInterceptor);
+    installConverter = new InstallEventConverter(bodyInterceptor);
     analytics = Analytics.getInstance();
   }
 
@@ -140,7 +155,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
 
     Context context = getContext();
     PermissionManager permissionManager = new PermissionManager();
-    PermissionRequest permissionRequest = ((PermissionRequest) context);
+    PermissionService permissionRequest = ((PermissionService) context);
     DownloadFactory downloadFactory = new DownloadFactory();
     InstallerFactory installerFactory = new InstallerFactory();
 

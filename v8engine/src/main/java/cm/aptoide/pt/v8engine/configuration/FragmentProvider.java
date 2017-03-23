@@ -5,10 +5,13 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.Event;
+import cm.aptoide.pt.v8engine.addressbook.data.Contact;
+import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsContract;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Interface from which all fragments should be requested.
@@ -21,12 +24,20 @@ public interface FragmentProvider {
 
   Fragment newStoreFragment(String storeName, String storeTheme);
 
-  Fragment newStoreFragment(String storeName);
+  Fragment newStoreFragment(String storeName, String storeTheme, StoreFragment.OpenType openType);
 
-  Fragment newStoreFragment(String storeName, StoreContext storeContext, String storeTheme);
+  Fragment newStoreFragment(String storeName, String storeTheme, Event.Name defaultTab,
+      StoreFragment.OpenType openType);
 
-  Fragment newStoreFragment(String storeName, StoreContext storeContext);
+  Fragment newStoreFragment(long userId, String storeTheme, Event.Name defaultTab,
+      StoreFragment.OpenType openType);
 
+  Fragment newStoreFragment(long userId, String storeTheme, StoreFragment.OpenType openType);
+
+  /**
+   * @param storeContext is needed to give context to fragment ex: store downloads vs global
+   * downloads
+   */
   Fragment newHomeFragment(String storeName, StoreContext storeContext, String storeTheme);
 
   Fragment newSearchFragment(String query);
@@ -56,10 +67,19 @@ public interface FragmentProvider {
 
   Fragment newLatestReviewsFragment(long storeId);
 
-  Fragment newStoreTabGridRecyclerFragment(Event event, String storeTheme, String tag);
+  /**
+   * @param storeContext is needed to give context to fragment ex: store downloads vs global
+   * downloads
+   */
+  Fragment newStoreTabGridRecyclerFragment(Event event, String storeTheme, String tag,
+      StoreContext storeContext);
 
-  Fragment newStoreTabGridRecyclerFragment(Event event, String title, String storeTheme,
-      String tag);
+  /**
+   * @param storeContext is needed to give context to fragment ex: store downloads vs global
+   * downloads
+   */
+  Fragment newStoreTabGridRecyclerFragment(Event event, String title, String storeTheme, String tag,
+      StoreContext storeContext);
 
   Fragment newListAppsFragment();
 
@@ -77,9 +97,10 @@ public interface FragmentProvider {
 
   Fragment newListStoresFragment();
 
-  Fragment newAppsTimelineFragment(String action, String storeTheme);
+  Fragment newAppsTimelineFragment(String action, Long userId, Long storeId,
+      StoreContext storeContext);
 
-  Fragment newSubscribedStoresFragment(Event event, String title, String storeTheme, String tag);
+  Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag);
 
   Fragment newSearchPagerTabFragment(String query, boolean subscribedStores,
       boolean hasMultipleFragments);
@@ -115,13 +136,36 @@ public interface FragmentProvider {
 
   Fragment newCreateUserFragment();
 
-  Fragment newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode openMode,
-      long followNumber, String storeTheme);
+  Fragment newTimeLineFollowersUsingUserIdFragment(Long id, long followerNumber, String storeTheme);
 
-  Fragment newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode openMode,
-      String storeTheme, String cardUid, long numberOfLikes);
+  Fragment newTimeLineFollowingFragmentUsingUserId(Long id, long followingNumber,
+      String storeTheme);
+
+  Fragment newTimeLineFollowersUsingStoreIdFragment(Long id, long followerNumber,
+      String storeTheme);
+
+  Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, long followerNumber,
+      String storeTheme);
+
+  Fragment newTimeLineLikesFragment(String cardUid, long numberOfLikes, String storeTheme);
 
   Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId);
 
   Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url);
+
+  Fragment newAddressBookFragment();
+
+  Fragment newSyncSuccessFragment(List<Contact> contacts, String tag);
+
+  Fragment newPhoneInputFragment(String tag);
+
+  Fragment newInviteFriendsFragment(InviteFriendsContract.View.OpenMode openMode, String tag);
+
+  Fragment newSpotShareFragment(boolean showToolbar);
+
+  Fragment newThankYouConnectingFragment(String tag);
+
+  Fragment newTimeLineFollowersFragment(long followerNumber, String storeTheme);
+
+  Fragment newRecommendedStoresFragment();
 }

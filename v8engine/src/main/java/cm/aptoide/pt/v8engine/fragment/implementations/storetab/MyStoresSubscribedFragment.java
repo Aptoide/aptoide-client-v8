@@ -1,10 +1,13 @@
 package cm.aptoide.pt.v8engine.fragment.implementations.storetab;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
@@ -15,6 +18,11 @@ import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
+import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
@@ -31,18 +39,23 @@ import rx.functions.Action1;
 
 public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStores> {
 
-  private final AptoideClientUUID aptoideClientUUID;
+  private AptoideClientUUID aptoideClientUUID;
+  private AptoideAccountManager accountManager;
+  private BodyInterceptor bodyInterceptor;
+  private StoreCredentialsProvider storeCredentialsProvider;
 
-  public MyStoresSubscribedFragment() {
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    storeCredentialsProvider = new StoreCredentialsProviderImpl();
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+    bodyInterceptor =
+        new BaseBodyInterceptor(aptoideClientUUID, accountManager);
   }
 
   @Override protected V7<ListStores, ? extends Endless> buildRequest(boolean refresh, String url) {
-
-    GetMyStoreListRequest request =
-        GetMyStoreListRequest.of(url, AptoideAccountManager.getAccessToken(),
-            aptoideClientUUID.getUniqueIdentifier(), true);
+    GetMyStoreListRequest request = GetMyStoreListRequest.of(url, true, bodyInterceptor);
 
     return request;
   }
@@ -58,7 +71,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
       errorsList.add(WSWidgetsUtils.USER_NOT_LOGGED_ERROR);
       if (WSWidgetsUtils.shouldAddObjectView(errorsList, throwable)) {
         DisplayablesFactory.loadLocalSubscribedStores(storeRepository)
-            .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
+            .compose(bindUntilEvent(LifecycleEvent.DESTROY))
             .subscribe(stores -> addDisplayables(getStoresDisplayable(stores)), err -> {
               CrashReport.getInstance().log(err);
             });
@@ -74,7 +87,11 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
     for (int i = 0; i < list.size(); i++) {
       if (i == 0 || list.get(i - 1).getId() != list.get(i).getId()) {
         if (layout == Layout.LIST) {
-          storesDisplayables.add(new RecommendedStoreDisplayable(list.get(i), storeRepository));
+          storesDisplayables.add(
+              new RecommendedStoreDisplayable(list.get(i), storeRepository, accountManager,
+                  new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider, AccessorFactory
+                      .getAccessorFor(cm.aptoide.pt.database.realm.Store.class)),
+                  storeCredentialsProvider));
         } else {
           storesDisplayables.add(new GridStoreDisplayable(list.get(i)));
         }
