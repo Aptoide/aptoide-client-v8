@@ -35,9 +35,7 @@ import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
 import lombok.Getter;
 import lombok.Setter;
 import rx.functions.Action1;
@@ -211,16 +209,13 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
     mainName.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
     if (appsVisibility) {
-      appsCountTv.setText(AptoideUtils.StringU.getFormattedString(R.string.store_meta_apps,
-          NumberFormat.getNumberInstance(Locale.getDefault()).format(appsCount)));
+      appsCountTv.setText(String.valueOf(appsCount));
       appsCountTv.setVisibility(View.VISIBLE);
     } else {
       appsCountTv.setVisibility(View.INVISIBLE);
     }
-    followersCountTv.setText(AptoideUtils.StringU.getFormattedString(R.string.store_meta_followers,
-        AptoideUtils.StringU.withSuffix(followersCount)));
-    followingCountTv.setText(AptoideUtils.StringU.getFormattedString(R.string.store_meta_following,
-        AptoideUtils.StringU.withSuffix(followingCount)));
+    followersCountTv.setText(String.valueOf(followersCount));
+    followingCountTv.setText(String.valueOf(followingCount));
 
     showMainIcon(getContext(), mainIconUrl, defaultMainIcon);
   }
