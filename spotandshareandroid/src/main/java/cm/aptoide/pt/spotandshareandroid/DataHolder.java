@@ -18,7 +18,7 @@ import java.util.Map;
  * Created by FilipeGonçalves on 10-08-2015.
  */
 public class DataHolder {
-  private static final DataHolder holder = new DataHolder();
+  private static DataHolder holder;
   public Network network;
   private AsyncTask<String, String, String> dlfile;
   private TextView textView;
@@ -29,7 +29,15 @@ public class DataHolder {
   private List<Host> connectedClients;
 
   public static DataHolder getInstance() {
+    if (holder == null) {
+      holder = new DataHolder();
+    }
+
     return holder;
+  }
+
+  public static void reset() {
+    holder = null;
   }
 
   public Map<String, Long> getUpdateStartingTimestamp() {
@@ -82,7 +90,6 @@ public class DataHolder {
   public void setConnectedClients(List<Host> connectedClients) {
     this.connectedClients = connectedClients;
   }
-
 
   public void createConnectedClientsList() {
     this.connectedClients = new ArrayList<>();

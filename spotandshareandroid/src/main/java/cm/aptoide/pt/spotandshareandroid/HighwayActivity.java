@@ -60,6 +60,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     super.onCreate(savedInstanceState);
 
     ApplicationSender.reset();
+    DataHolder.reset();
 
     deviceName = getIntent().getStringExtra("deviceName");
     connectionManager = ConnectionManager.getInstance(this.getApplicationContext());
@@ -324,6 +325,11 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     });
   }
 
+  private void showNougatErrorToast() {
+    Toast.makeText(this, this.getResources().getString(R.string.hotspotCreationErrorNougat),
+        Toast.LENGTH_SHORT).show();
+  }
+
   @Override public boolean checkPermissions() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       if (!checkNormalPermissions()) {
@@ -339,11 +345,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
       }
     }
     return true;
-  }
-
-  private void showNougatErrorToast() {
-    Toast.makeText(this, this.getResources().getString(R.string.hotspotCreationErrorNougat),
-        Toast.LENGTH_SHORT).show();
   }
 
   @Override public void showMobileDataDialog() {
@@ -517,6 +518,15 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     super.onResume();
   }
 
+  @Override protected void onDestroy() {
+    presenter.onDestroy();
+    super.onDestroy();
+  }
+
+  public boolean isJoinGroupFlag() {
+    return joinGroupFlag;
+  }
+
   @Override public void requestPermissions() {
     if (!checkPermissions() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       final List<String> missingPermissions = new ArrayList<>();
@@ -557,15 +567,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     } else {
       onPermissionsGranted();
     }
-  }
-
-  @Override protected void onDestroy() {
-    presenter.onDestroy();
-    super.onDestroy();
-  }
-
-  public boolean isJoinGroupFlag() {
-    return joinGroupFlag;
   }
 
   public void setJoinGroupFlag(boolean joinGroupFlag) {
