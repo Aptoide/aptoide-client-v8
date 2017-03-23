@@ -20,7 +20,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.navigation.AccountNavigator;
@@ -105,8 +104,6 @@ public class DialogUtils {
 
         if (TextUtils.isEmpty(reviewTitle)) {
           titleTextInputLayout.setError(AptoideUtils.StringU.getResString(R.string.error_MARG_107));
-          subscriber.onNext(GenericDialogs.EResponse.CANCEL);
-          subscriber.onCompleted();
           return;
         }
 
