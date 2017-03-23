@@ -24,7 +24,7 @@ import rx.Observable;
  */
 public class AdsRepository {
 
-  private AptoideClientUUID aptoideClientUUID;
+  private final AptoideClientUUID aptoideClientUUID;
   private final AptoideAccountManager accountManager;
   private GooglePlayServicesAvailabilityChecker googlePlayServicesAvailabilityChecker;
   private PartnerIdProvider partnerIdProvider;

@@ -25,8 +25,9 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
@@ -34,7 +35,6 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.activity.StoreSearchActivity;
@@ -58,7 +58,6 @@ public class AddStoreDialog extends BaseDialog {
   private static final String TAG = AddStoreDialog.class.getName();
   private static StoreAutoCompleteWebSocket storeAutoCompleteWebSocket;
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
-  private AptoideClientUUID aptoideClientUUID;
   private AptoideAccountManager accountManager;
   private NavigationManagerV4 navigationManager;
   private String storeName;
@@ -71,7 +70,7 @@ public class AddStoreDialog extends BaseDialog {
   private TextView topStoreText2;
   private ImageView image;
   private String givenStoreName;
-  private BaseBodyInterceptor bodyDecorator;
+  private BodyInterceptor<BaseBody> baseBodyBodyInterceptor;
   private StoreCredentialsProvider storeCredentialsProvider;
   private SearchView.SearchAutoComplete searchAutoComplete;
 
@@ -103,9 +102,8 @@ public class AddStoreDialog extends BaseDialog {
     super.onCreate(savedInstanceState);
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
-    aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    bodyDecorator = new BaseBodyInterceptor(aptoideClientUUID, accountManager);
+    baseBodyBodyInterceptor =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
     mSubscriptions = new CompositeSubscription();
     if (savedInstanceState != null) {
       storeName = savedInstanceState.getString(BundleArgs.STORE_NAME.name());
@@ -260,13 +258,14 @@ public class AddStoreDialog extends BaseDialog {
 
   private GetStoreMetaRequest buildRequest(String storeName) {
     return GetStoreMetaRequest.of(
-        StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), bodyDecorator);
+        StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider),
+        baseBodyBodyInterceptor);
   }
 
   private void executeRequest(GetStoreMetaRequest getHomeMetaRequest) {
     final IdsRepositoryImpl clientUuid =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    new StoreUtilsProxy(accountManager, bodyDecorator, storeCredentialsProvider,
+    new StoreUtilsProxy(accountManager, baseBodyBodyInterceptor, storeCredentialsProvider,
         AccessorFactory.getAccessorFor(Store.class)).subscribeStore(getHomeMetaRequest,
         getStoreMeta1 -> {
           ShowMessage.asSnack(getView(),

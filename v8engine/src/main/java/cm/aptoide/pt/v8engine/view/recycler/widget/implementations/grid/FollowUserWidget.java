@@ -14,12 +14,13 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -73,8 +74,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
 
   @Override public void bindView(FollowUserDisplayable displayable) {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    final AptoideClientUUID aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+    final BodyInterceptor<BaseBody> bodyInterceptor =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
 
     if (!displayable.isLike()) {
       followLayout.setVisibility(View.GONE);
@@ -93,9 +94,9 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       final String storeName = displayable.getStoreName();
       final String storeTheme = V8Engine.getConfiguration().getDefaultTheme();
 
-      final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager,
-          new BaseBodyInterceptor(aptoideClientUUID, accountManager),
-          new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class));
+      final StoreUtilsProxy storeUtilsProxy =
+          new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl(),
+              AccessorFactory.getAccessorFor(Store.class));
 
       Action1<Void> openStore = __ -> {
         getNavigationManager().navigateTo(

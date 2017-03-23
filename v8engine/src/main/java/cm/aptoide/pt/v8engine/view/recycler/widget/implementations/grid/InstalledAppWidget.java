@@ -15,19 +15,15 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -46,7 +42,6 @@ import java.util.Locale;
 
   private static final Locale LOCALE = Locale.getDefault();
   private static final String TAG = InstalledAppWidget.class.getSimpleName();
-  private AptoideClientUUID aptoideClientUUID;
   private AptoideAccountManager accountManager;
   private DialogUtils dialogUtils;
 
@@ -59,7 +54,7 @@ import java.util.Locale;
   private String appName;
   private String packageName;
   private AccountNavigator accountNavigator;
-  private BodyInterceptor bodyInterceptor;
+  private BodyInterceptor<BaseBody> bodyInterceptor;
 
   public InstalledAppWidget(View itemView) {
     super(itemView);
@@ -76,15 +71,14 @@ import java.util.Locale;
   @Override public void bindView(InstalledAppDisplayable displayable) {
     Installed pojo = displayable.getPojo();
 
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    this.bodyInterceptor =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+
     final AccountNavigator accountNavigator =
         new AccountNavigator(getContext(), getNavigationManager(), accountManager);
     this.accountNavigator = accountNavigator;
-    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID, accountManager);
-    dialogUtils =
-        new DialogUtils(accountManager, aptoideClientUUID, accountNavigator, bodyInterceptor);
+    dialogUtils = new DialogUtils(accountManager, accountNavigator, bodyInterceptor);
     appName = pojo.getName();
     packageName = pojo.getPackageName();
 

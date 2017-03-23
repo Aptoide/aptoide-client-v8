@@ -12,6 +12,7 @@ import android.content.pm.PackageInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.CredentialsValidator;
@@ -28,13 +29,16 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.spotandshareandroid.ShareApps;
@@ -57,6 +61,8 @@ import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
 import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
+import cm.aptoide.pt.v8engine.preferences.AdultContent;
+import cm.aptoide.pt.v8engine.preferences.Preferences;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
@@ -85,23 +91,19 @@ public abstract class V8Engine extends DataProvider {
 
   private static final String TAG = V8Engine.class.getName();
 
-  //@Getter static DownloadService downloadService;
   @Getter private static FragmentProvider fragmentProvider;
   @Getter private static ActivityProvider activityProvider;
   @Getter private static DisplayableWidgetMapping displayableWidgetMapping;
   @Setter @Getter private static boolean autoUpdateWasCalled = false;
   @Getter @Setter private static ShareApps shareApps;
 
-  private static AptoideClientUUID aptoideClientUuid;
   private AptoideAccountManager accountManager;
-
-  //public static void clearUserData(AptoideAccountManager accountManager) {
-  //  AccessorFactory.getAccessorFor(Store.class).removeAll();
-  //  StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null, accountManager,
-  //      new BaseBodyInterceptor(aptoideClientUuid, accountManager),
-  //      new StoreCredentialsProviderImpl());
-  //  regenerateUserAgent(accountManager);
-  //}
+  private BodyInterceptor<BaseBody> baseBodyInterceptor;
+  private Preferences preferences;
+  private cm.aptoide.pt.v8engine.preferences.SecurePreferences securePreferences;
+  private SecureCoderDecoder secureCodeDecoder;
+  private AdultContent adultContent;
+  private AptoideClientUUID aptoideClientUUID;
 
   /**
    * call after this instance onCreate()
@@ -133,7 +135,6 @@ public abstract class V8Engine extends DataProvider {
     fragmentProvider = createFragmentProvider();
     activityProvider = createActivityProvider();
     displayableWidgetMapping = createDisplayableWidgetMapping();
-    aptoideClientUuid = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
     shareApps = new ShareApps(new SpotAndShareAnalytics());
 
     //
@@ -182,7 +183,7 @@ public abstract class V8Engine extends DataProvider {
         .init(this, new DownloadNotificationActionsActionsInterface(),
             new DownloadManagerSettingsI(), downloadAccessor, CacheHelper.build(),
             new FileUtils(action -> Analytics.File.moveFile(action)),
-            new TokenHttpClient(aptoideClientUuid, () -> accountManager.getAccountEmail(),
+            new TokenHttpClient(getAptoideClientUUID(), () -> accountManager.getAccountEmail(),
                 getConfiguration().getPartnerId(), accountManager).customMake(),
             new DownloadAnalytics(Analytics.getInstance()));
 
@@ -193,6 +194,14 @@ public abstract class V8Engine extends DataProvider {
         });
 
     Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
+  }
+
+  public AptoideClientUUID getAptoideClientUUID() {
+    if (aptoideClientUUID == null) {
+      aptoideClientUUID =
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
+    }
+    return aptoideClientUUID;
   }
 
   @Override protected TokenInvalidator getTokenInvalidator() {
@@ -218,13 +227,13 @@ public abstract class V8Engine extends DataProvider {
   }
 
   private Completable generateAptoideUuid() {
-    return Completable.fromAction(() -> aptoideClientUuid.getUniqueIdentifier())
+    return Completable.fromAction(() -> getAptoideClientUUID().getUniqueIdentifier())
         .subscribeOn(Schedulers.newThread());
   }
 
   private Completable regenerateUserAgent(final AptoideAccountManager accountManager) {
     return Completable.fromAction(() -> {
-      final String userAgent = AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUuid,
+      final String userAgent = AptoideUtils.NetworkUtils.getDefaultUserAgent(getAptoideClientUUID(),
           () -> accountManager.getAccountEmail(), AptoideUtils.Core.getDefaultVername(),
           getConfiguration().getPartnerId());
       SecurePreferences.setUserAgent(userAgent);
@@ -233,7 +242,7 @@ public abstract class V8Engine extends DataProvider {
 
   private Completable initAbTestManager() {
     return Completable.defer(() -> ABTestManager.getInstance()
-        .initialize(aptoideClientUuid.getUniqueIdentifier())
+        .initialize(getAptoideClientUUID().getUniqueIdentifier())
         .toCompletable());
   }
 
@@ -256,17 +265,15 @@ public abstract class V8Engine extends DataProvider {
   public AptoideAccountManager getAccountManager() {
     if (accountManager == null) {
 
-      final IdsRepositoryImpl aptoideClientUUID =
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
-
       final DatabaseStoreDataPersist dataPersist =
           new DatabaseStoreDataPersist(AccessorFactory.getAccessorFor(Store.class),
               new DatabaseStoreDataPersist.DatabaseStoreMapper());
 
       final BaseBodyInterceptorFactory bodyInterceptorFactory =
-          new BaseBodyInterceptorFactory(aptoideClientUUID);
+          new BaseBodyInterceptorFactory(getAptoideClientUUID(), getPreferences(),
+              getSecurePreferences());
 
-      final AccountFactory accountFactory = new AccountFactory(aptoideClientUUID,
+      final AccountFactory accountFactory = new AccountFactory(getAptoideClientUUID(),
           new SocialAccountFactory(this,
               new GoogleApiClient.Builder(this).addApi(GOOGLE_SIGN_IN_API,
                   new GoogleSignInOptions.Builder(
@@ -276,8 +283,8 @@ public abstract class V8Engine extends DataProvider {
                       .requestServerAuthCode(BuildConfig.GMS_SERVER_ID)
                       .build()).build()));
 
-      accountManager = new AptoideAccountManager(aptoideClientUUID,
-          new AccountAnalytcs(), bodyInterceptorFactory, new CredentialsValidator(), accountFactory,
+      accountManager = new AptoideAccountManager(getAptoideClientUUID(), new AccountAnalytcs(),
+          bodyInterceptorFactory, new CredentialsValidator(), accountFactory,
           new AndroidAccountDataPersist(getConfiguration().getAccountType(),
               AccountManager.get(this), dataPersist, accountFactory));
     }
@@ -297,24 +304,59 @@ public abstract class V8Engine extends DataProvider {
         return null;
       }
 
-      final BaseBodyInterceptor bodyInterceptor =
-          new BaseBodyInterceptor(aptoideClientUuid, accountManager);
-
       final StoreCredentialsProviderImpl storeCredentials = new StoreCredentialsProviderImpl();
 
-      StoreUtilsProxy proxy = new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentials,
-          AccessorFactory.getAccessorFor(Store.class));
+      StoreUtilsProxy proxy =
+          new StoreUtilsProxy(accountManager, getBaseBodyInterceptor(), storeCredentials,
+              AccessorFactory.getAccessorFor(Store.class));
 
       BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
           storeCredentials.get(getConfiguration().getDefaultStore());
 
-      generateAptoideUuid().andThen(
-          proxy.addDefaultStore(GetStoreMetaRequest.of(defaultStoreCredentials, bodyInterceptor),
-              accountManager, defaultStoreCredentials).andThen(refreshUpdates()).toObservable())
-          .subscribe(__ -> {
-          }, err -> CrashReport.getInstance().log(err));
+      generateAptoideUuid().andThen(proxy.addDefaultStore(
+          GetStoreMetaRequest.of(defaultStoreCredentials, getBaseBodyInterceptor()), accountManager,
+          defaultStoreCredentials).andThen(refreshUpdates()).toObservable()).subscribe(__ -> {
+      }, err -> CrashReport.getInstance().log(err));
       return null;
     }));
+  }
+
+  public BodyInterceptor<BaseBody> getBaseBodyInterceptor() {
+    if (baseBodyInterceptor == null) {
+      baseBodyInterceptor = new BaseBodyInterceptor(getAptoideClientUUID(), getAccountManager(),
+          getAdultContent(getSecurePreferences()));
+    }
+    return baseBodyInterceptor;
+  }
+
+  public AdultContent getAdultContent(
+      cm.aptoide.pt.v8engine.preferences.SecurePreferences securePreferences) {
+    if (adultContent == null) {
+      adultContent = new AdultContent(accountManager, getPreferences(), securePreferences);
+    }
+    return adultContent;
+  }
+
+  public cm.aptoide.pt.v8engine.preferences.SecurePreferences getSecurePreferences() {
+    if (securePreferences == null) {
+      securePreferences = new cm.aptoide.pt.v8engine.preferences.SecurePreferences(
+          PreferenceManager.getDefaultSharedPreferences(this), getSecureCoderDecoder());
+    }
+    return securePreferences;
+  }
+
+  public SecureCoderDecoder getSecureCoderDecoder() {
+    if (secureCodeDecoder == null) {
+      secureCodeDecoder = new SecureCoderDecoder.Builder(this).create();
+    }
+    return secureCodeDecoder;
+  }
+
+  public Preferences getPreferences() {
+    if (preferences == null) {
+      preferences = new Preferences(PreferenceManager.getDefaultSharedPreferences(this));
+    }
+    return preferences;
   }
 
   public Completable createShortcut() {
@@ -364,16 +406,6 @@ public abstract class V8Engine extends DataProvider {
     intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
     getApplicationContext().sendBroadcast(intent);
   }
-
-  //private static void checkUpdates() {
-  //  UpdateRepository repository = RepositoryFactory.getUpdateRepository(DataProvider.getContext());
-  //  repository.sync(true)
-  //      .andThen(repository.getAll(false))
-  //      .first()
-  //      .subscribe(updates -> Logger.d(TAG, "updates are up to date now"), throwable -> {
-  //        CrashReport.getInstance().log(throwable);
-  //      });
-  //}
 
   /**
    * Use {@link #createShortcut()} using a {@link Completable}

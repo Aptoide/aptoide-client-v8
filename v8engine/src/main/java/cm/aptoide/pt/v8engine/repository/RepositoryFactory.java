@@ -20,12 +20,11 @@ import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.iab.InAppBillingSerializer;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.Product;
@@ -50,11 +49,13 @@ public final class RepositoryFactory {
   }
 
   public static UpdateRepository getUpdateRepository(Context context) {
-    IdsRepositoryImpl aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), context);
     return new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
-        AccessorFactory.getAccessorFor(Store.class), getAccountManager(context), aptoideClientUUID,
-        new BaseBodyInterceptor(aptoideClientUUID, getAccountManager(context)));
+        AccessorFactory.getAccessorFor(Store.class), getAccountManager(context),
+        getAptoideClientUUID(context), getBaseBodyInterceptor(context));
+  }
+
+  private static AptoideClientUUID getAptoideClientUUID(Context context) {
+    return ((V8Engine) context.getApplicationContext()).getAptoideClientUUID();
   }
 
   private static AptoideAccountManager getAccountManager(Context context) {
@@ -121,12 +122,12 @@ public final class RepositoryFactory {
   }
 
   public static AppRepository getAppRepository(Context context) {
-    final AptoideClientUUID aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), context);
     return new AppRepository(getNetworkOperatorManager(context), getAccountManager(context),
-        aptoideClientUUID,
-        new BaseBodyInterceptor(aptoideClientUUID, getAccountManager(context)),
-        new StoreCredentialsProviderImpl());
+        getBaseBodyInterceptor(context), new StoreCredentialsProviderImpl());
+  }
+
+  private static BodyInterceptor<BaseBody> getBaseBodyInterceptor(Context context) {
+    return ((V8Engine) context.getApplicationContext()).getBaseBodyInterceptor();
   }
 
   private static SyncAdapterBackgroundSync getBackgroundSync(Context context) {

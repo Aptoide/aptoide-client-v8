@@ -19,6 +19,8 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -32,6 +34,7 @@ import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
+import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
@@ -45,8 +48,6 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   private static final String TAG = OtherVersionsFragment.class.getSimpleName();
 
-  private AptoideClientUUID aptoideClientUUID;
-  private AptoideAccountManager accountManager;
   // vars
   private String appName;
   private String appImgUrl;
@@ -54,6 +55,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
   private CollapsingToolbarLayout collapsingToolbarLayout;
   // views
   private ViewHeader header;
+  private BodyInterceptor<BaseBody> baseBodyInterceptor;
   //private TextView emptyData;
 
   /**
@@ -76,9 +78,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
+    baseBodyInterceptor = ((V8Engine)getContext().getApplicationContext()).getBaseBodyInterceptor();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -131,9 +131,8 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(),
-            ListAppVersionsRequest.of(appPackge, storeNames, accountManager.getAccessToken(),
-                aptoideClientUUID.getUniqueIdentifier(), StoreUtils.getSubscribedStoresAuthMap(),
-                new BaseBodyInterceptor(aptoideClientUUID, accountManager)),
+            ListAppVersionsRequest.of(appPackge, storeNames, StoreUtils.getSubscribedStoresAuthMap(),
+                baseBodyInterceptor),
             otherVersionsSuccessRequestListener, err -> err.printStackTrace());
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);

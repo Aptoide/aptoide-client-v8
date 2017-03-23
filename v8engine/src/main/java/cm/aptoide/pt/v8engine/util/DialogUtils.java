@@ -45,8 +45,8 @@ public class DialogUtils {
   private final AccountNavigator accountNavigator;
   private BodyInterceptor bodyInterceptor;
 
-  public DialogUtils(AptoideAccountManager accountManager, AptoideClientUUID aptoideClientUUID,
-      AccountNavigator accountNavigator, BodyInterceptor bodyInterceptor) {
+  public DialogUtils(AptoideAccountManager accountManager, AccountNavigator accountNavigator,
+      BodyInterceptor bodyInterceptor) {
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.bodyInterceptor = bodyInterceptor;

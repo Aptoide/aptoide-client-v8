@@ -10,13 +10,10 @@ import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
  */
 class GetStoreRequestFactory {
 
-  private final AptoideAccountManager accountManager;
   private final StoreCredentialsProvider storeCredentialsProvider;
   private final BodyInterceptor bodyInterceptor;
 
-  public GetStoreRequestFactory(AptoideAccountManager accountManager, StoreCredentialsProvider storeCredentialsProvider,
-      BodyInterceptor bodyInterceptor) {
-    this.accountManager = accountManager;
+  public GetStoreRequestFactory(StoreCredentialsProvider storeCredentialsProvider, BodyInterceptor bodyInterceptor) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.bodyInterceptor = bodyInterceptor;
   }

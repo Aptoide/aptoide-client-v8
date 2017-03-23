@@ -39,19 +39,17 @@ import rx.Observable;
   }
 
   public static ListAppVersionsRequest of(String packageName, List<String> storeNames,
-      String accessToken, String aptoideClientUUID,
       HashMapNotNull<String, List<String>> storeCredentials, BodyInterceptor bodyInterceptor) {
     if (storeNames != null && !storeNames.isEmpty()) {
       Body body = new Body(packageName, storeNames, storeCredentials);
       body.setLimit(MAX_LIMIT);
       return new ListAppVersionsRequest(body, bodyInterceptor);
     } else {
-      return of(packageName, accessToken, storeCredentials, bodyInterceptor);
+      return of(packageName, storeCredentials, bodyInterceptor);
     }
   }
 
-  public static ListAppVersionsRequest of(String packageName, String accessToken,
-      HashMapNotNull<String, List<String>> storeCredentials, BodyInterceptor bodyInterceptor) {
+  public static ListAppVersionsRequest of(String packageName, HashMapNotNull<String, List<String>> storeCredentials, BodyInterceptor bodyInterceptor) {
     Body body = new Body(packageName);
     body.setStoresAuthMap(storeCredentials);
     body.setLimit(MAX_LIMIT);

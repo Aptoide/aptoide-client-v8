@@ -29,10 +29,8 @@ import rx.schedulers.Schedulers;
 public class ContactsRepositoryImpl implements ContactsRepository {
 
   private final BodyInterceptor bodyInterceptor;
-  private final AptoideClientUUID aptoideClientUUID;
 
-  public ContactsRepositoryImpl(BodyInterceptor bodyInterceptor, AptoideClientUUID aptoideClientUUID) {
-    this.aptoideClientUUID = aptoideClientUUID;
+  public ContactsRepositoryImpl(BodyInterceptor bodyInterceptor) {
     this.bodyInterceptor = bodyInterceptor;
   }
 

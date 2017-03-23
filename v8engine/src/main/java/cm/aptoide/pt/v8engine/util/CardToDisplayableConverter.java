@@ -1,10 +1,7 @@
 package cm.aptoide.pt.v8engine.util;
 
 import android.support.annotation.UiThread;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.Feature;
@@ -19,6 +16,9 @@ import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.Video;
 import cm.aptoide.pt.v8engine.InstallManager;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
@@ -49,28 +49,25 @@ public class CardToDisplayableConverter implements CardToDisplayable {
   private final TimelineAnalytics timelineAnalytics;
   private final InstallManager installManager;
   private final PermissionManager permissionManager;
-  private final AptoideAccountManager accountManager;
-  private final IdsRepositoryImpl idsRepository;
-  private final BodyInterceptor bodyInterceptor;
   private final StoreCredentialsProvider storeCredentialsProvider;
+  private final InstallEventConverter installEventConverter;
+  private final Analytics analytics;
+  private final DownloadEventConverter downloadEventConverter;
 
   public CardToDisplayableConverter(SocialRepository socialRepository,
       TimelineAnalytics timelineAnalytics, InstallManager installManager,
-      PermissionManager permissionManager, AptoideAccountManager accountManager,
-      IdsRepositoryImpl idsRepository, BodyInterceptor bodyInterceptor,
-      StoreCredentialsProvider storeCredentialsProvider) {
-
+      PermissionManager permissionManager, StoreCredentialsProvider storeCredentialsProvider,
+      InstallEventConverter installEventConverter, Analytics analytics,
+      DownloadEventConverter downloadEventConverter) {
     this.socialRepository = socialRepository;
     this.timelineAnalytics = timelineAnalytics;
     this.installManager = installManager;
     this.permissionManager = permissionManager;
-    this.accountManager = accountManager;
-    this.idsRepository = idsRepository;
-    this.bodyInterceptor = bodyInterceptor;
     this.storeCredentialsProvider = storeCredentialsProvider;
-
-    converters = new HashMap<>();
-
+    this.installEventConverter = installEventConverter;
+    this.analytics = analytics;
+    this.downloadEventConverter = downloadEventConverter;
+    this.converters = new HashMap<>();
     init();
   }
 
@@ -137,7 +134,7 @@ public class CardToDisplayableConverter implements CardToDisplayable {
 
         return AppUpdateDisplayable.from((AppUpdate) card, spannableFactory, downloadFactory,
             dateCalculator, installManager, permissionManager, timelineAnalytics, socialRepository,
-            idsRepository, accountManager, bodyInterceptor);
+            installEventConverter, analytics, downloadEventConverter);
       }
     });
 

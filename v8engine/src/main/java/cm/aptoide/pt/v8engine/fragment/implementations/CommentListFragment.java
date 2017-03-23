@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -19,9 +20,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.CommentType;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.BaseV7Response;
@@ -30,6 +34,7 @@ import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.SetComment;
 import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
@@ -38,6 +43,9 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.interfaces.CommentDialogCallbackContract;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.preferences.AdultContent;
+import cm.aptoide.pt.v8engine.preferences.Preferences;
+import cm.aptoide.pt.v8engine.preferences.SecurePreferences;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
@@ -71,7 +79,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private static final String URL_VAL = "url_val";
   // control setComment retry
   protected long lastTotal;
-  private AptoideClientUUID aptoideClientUUID;
   //
   // vars
   //
@@ -91,7 +98,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private FloatingActionButton floatingActionButton;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
-  private BaseBodyInterceptor bodyDecorator;
+  private BodyInterceptor<BaseBody> bodyDecorator;
   private StoreCredentialsProvider storeCredentialsProvider;
 
   public static Fragment newInstance(CommentType commentType, String timelineArticleId) {
@@ -126,12 +133,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
       @Nullable Bundle savedInstanceState) {
     View v = super.onCreateView(inflater, container, savedInstanceState);
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    bodyDecorator = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
     accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
-    aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    bodyDecorator =
-        new BaseBodyInterceptor(aptoideClientUUID, accountManager);
-
     return v;
   }
 
@@ -224,8 +227,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   }
 
   void caseListSocialTimelineComments(boolean refresh) {
-    String aptoideClientUuid = aptoideClientUUID.getUniqueIdentifier();
-
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofTimeline(url, refresh, elementIdAsString, bodyDecorator);
 
@@ -259,8 +260,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   void caseListStoreComments(String url, BaseRequestWithStore.StoreCredentials storeCredentials,
       boolean refresh) {
-
-    String aptoideClientUuid = aptoideClientUUID.getUniqueIdentifier();
 
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, bodyDecorator);

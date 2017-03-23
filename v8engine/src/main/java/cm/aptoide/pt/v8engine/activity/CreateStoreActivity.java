@@ -23,19 +23,18 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StoreBodyInterceptor;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -113,23 +112,20 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
   private String from;
   private String storeRemoteUrl;
 
-  private AptoideClientUUID aptoideClientUUID;
-
   private int CREATE_STORE_REQUEST_CODE = 0; //1: all (Multipart)  2: user and theme 3:user 4/5:edit
   private AptoideAccountManager accountManager;
-  private BaseBodyInterceptor bodyInterceptor;
+  private BodyInterceptor<BaseBody> bodyInterceptor;
   private RequestBodyFactory requestBodyFactory;
   private ObjectMapper serializer;
+  private AptoideClientUUID aptoideClientUUID;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     getData();
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        getApplicationContext());
     accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
-    bodyInterceptor =
-        new BaseBodyInterceptor(aptoideClientUUID, accountManager);
+    bodyInterceptor = ((V8Engine) getApplicationContext()).getBaseBodyInterceptor();
+    aptoideClientUUID = ((V8Engine) getApplicationContext()).getAptoideClientUUID();
     requestBodyFactory = new RequestBodyFactory();
     serializer = new ObjectMapper();
     serializer.setSerializationInclusion(JsonInclude.Include.NON_NULL);

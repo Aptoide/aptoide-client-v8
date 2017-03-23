@@ -15,12 +15,9 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
@@ -67,8 +64,6 @@ public class AppUpdateDisplayable extends CardDisplayable {
   private DownloadEventConverter downloadConverter;
   private InstallEventConverter installConverter;
   private Analytics analytics;
-  private AptoideAccountManager accountManager;
-  private AptoideClientUUID aptoideClientUUID;
 
   public AppUpdateDisplayable() {
   }
@@ -79,8 +74,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
       long appId, String abUrl, InstallManager installManager, PermissionManager permissionManager,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
       DownloadEventConverter downloadConverter, InstallEventConverter installConverter,
-      Analytics analytics, AptoideAccountManager accountManager,
-      AptoideClientUUID aptoideClientUUID, String storeTheme) {
+      Analytics analytics, String storeTheme) {
     super(appUpdate);
     this.appIconUrl = appIconUrl;
     this.storeIconUrl = storeIconUrl;
@@ -101,16 +95,14 @@ public class AppUpdateDisplayable extends CardDisplayable {
     this.downloadConverter = downloadConverter;
     this.installConverter = installConverter;
     this.analytics = analytics;
-    this.accountManager = accountManager;
-    this.aptoideClientUUID = aptoideClientUUID;
     this.storeTheme = storeTheme;
   }
 
   public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory,
       DownloadFactory downloadFactory, DateCalculator dateCalculator, InstallManager installManager,
       PermissionManager permissionManager, TimelineAnalytics timelineAnalytics,
-      SocialRepository socialRepository, IdsRepositoryImpl idsRepository,
-      AptoideAccountManager accountManager, BodyInterceptor bodyInterceptor) {
+      SocialRepository socialRepository, InstallEventConverter installConverter, Analytics analytics,
+      DownloadEventConverter downloadConverter) {
     String abTestingURL = null;
 
     if (appUpdate.getAb() != null
@@ -123,10 +115,8 @@ public class AppUpdateDisplayable extends CardDisplayable {
         appUpdate.getFile().getVername(), spannableFactory, appUpdate.getName(),
         appUpdate.getPackageName(), downloadFactory.create(appUpdate, Download.ACTION_UPDATE),
         dateCalculator, appUpdate.getId(), abTestingURL, installManager, permissionManager,
-        timelineAnalytics, socialRepository, new DownloadEventConverter(bodyInterceptor),
-        new InstallEventConverter(
-            new BaseBodyInterceptor(idsRepository, accountManager)), Analytics.getInstance(),
-        accountManager, idsRepository, appUpdate.getStore().getAppearance().getTheme());
+        timelineAnalytics, socialRepository, downloadConverter,
+        installConverter, analytics, appUpdate.getStore().getAppearance().getTheme());
   }
 
   public Observable<Progress<Download>> update(Context context) {

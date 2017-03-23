@@ -14,8 +14,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
@@ -25,8 +24,6 @@ import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.navigation.AccountNavigator;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.adapters.CommentsAdapter;
@@ -70,7 +67,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private StoreCredentialsProvider storeCredentialsProvider;
   private AptoideAccountManager accountManager;
-  private BodyInterceptor bodyInterceptor;
+  private BodyInterceptor<BaseBody> baseBodyInterceptor;
 
   public static RateAndReviewsFragment newInstance(long appId, String appName, String storeName,
       String packageName, String storeTheme) {
@@ -178,7 +175,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   }
 
   private void fetchRating(boolean refresh) {
-    GetAppRequest.of(packageName, bodyInterceptor, appId)
+    GetAppRequest.of(packageName, baseBodyInterceptor, appId)
         .observe(refresh)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
@@ -198,13 +195,13 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private void fetchReviews() {
     ListReviewsRequest reviewsRequest =
         ListReviewsRequest.of(storeName, packageName, storeCredentialsProvider.get(storeName),
-            bodyInterceptor);
+            baseBodyInterceptor);
 
     getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
-            new ListFullReviewsSuccessRequestListener(this, accountManager, aptoideClientUUID,
-                new StoreCredentialsProviderImpl()), (throwable) -> throwable.printStackTrace());
+            new ListFullReviewsSuccessRequestListener(this, new StoreCredentialsProviderImpl(),
+                baseBodyInterceptor), (throwable) -> throwable.printStackTrace());
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }
@@ -228,11 +225,12 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID, accountManager);
-    dialogUtils = new DialogUtils(accountManager, aptoideClientUUID,
-        new AccountNavigator(getContext(), getNavigationManager(), accountManager), bodyInterceptor);
+    aptoideClientUUID = ((V8Engine) getContext().getApplicationContext()).getAptoideClientUUID();
+    baseBodyInterceptor =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+    dialogUtils = new DialogUtils(accountManager,
+        new AccountNavigator(getContext(), getNavigationManager(), accountManager),
+        baseBodyInterceptor);
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
   }
 

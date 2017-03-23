@@ -11,13 +11,12 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.abtesting.ABTest;
@@ -42,9 +41,7 @@ import rx.functions.Action0;
  */
 public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
-  private AptoideClientUUID aptoideClientUUID;
-  private AptoideAccountManager accountManager;
-
+  private BodyInterceptor<BaseBody> bodyInterceptor;
   private AdsRepository adsRepository;
 
   private String query;
@@ -85,7 +82,6 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
         addDisplayables(displayables);
       };
-  private BodyInterceptor bodyInterceptor;
 
   public static SearchPagerTabFragment newInstance(String query, boolean subscribedStores,
       boolean hasMultipleFragments) {
@@ -112,13 +108,12 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
-    bodyInterceptor =
-        new BaseBodyInterceptor(aptoideClientUUID, accountManager);
-    adsRepository = new AdsRepository(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext()), accountManager);
+    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+    final AptoideAccountManager accountManager =
+        ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    adsRepository = new AdsRepository(
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()), accountManager);
     super.onCreate(savedInstanceState);
   }
 
