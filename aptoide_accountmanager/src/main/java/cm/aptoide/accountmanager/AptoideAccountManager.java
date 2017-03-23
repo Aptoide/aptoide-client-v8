@@ -7,8 +7,6 @@ package cm.aptoide.accountmanager;
 
 import android.text.TextUtils;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.ws.v3.ChangeUserSettingsRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
@@ -129,8 +127,7 @@ public class AptoideAccountManager {
   private Completable syncAccount(String accessToken, String refreshToken, String encryptedPassword,
       Account.Type type) {
     return accountManagerService.getAccount(accessToken, refreshToken, encryptedPassword,
-        type.name())
-        .flatMapCompletable(account -> saveAccount(account));
+        type.name()).flatMapCompletable(account -> saveAccount(account));
   }
 
   public void unsubscribeStore(String storeName, String storeUserName, String storePassword) {
@@ -189,19 +186,11 @@ public class AptoideAccountManager {
   }
 
   public Completable updateAccount(boolean adultContentEnabled) {
-    return getAccountAsync().flatMapCompletable(account -> {
-      return ChangeUserSettingsRequest.of(adultContentEnabled, account.getToken())
-          .observe(true)
-          .toSingle()
-          .flatMapCompletable(response -> {
-            if (response.getStatus().equals("OK")) {
-              return syncAccount(account.getToken(), account.getRefreshToken(),
-                  account.getPassword(), account.getType());
-            } else {
-              return Completable.error(new Exception(V3.getErrorMessage(response)));
-            }
-          });
-    });
+    return getAccountAsync().flatMapCompletable(
+        account -> accountManagerService.updateAccount(adultContentEnabled, account.getToken())
+            .andThen(
+                syncAccount(account.getToken(), account.getRefreshToken(), account.getPassword(),
+                    account.getType())));
   }
 
   public Completable updateAccount(Account.Access access) {

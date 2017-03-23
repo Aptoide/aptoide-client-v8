@@ -1,10 +1,12 @@
 package cm.aptoide.accountmanager;
 
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
+import cm.aptoide.pt.dataprovider.ws.v3.ChangeUserSettingsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.CreateUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.GetUserRepoSubscriptionRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.OAuth2AuthenticationRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
@@ -158,5 +160,18 @@ public class AccountManagerService {
         serverUser.getRepo(), serverUser.getRavatarHd(),
         serverUser.getSettings().getMatureswitch().equals("active"),
         serverUser.isAccessConfirmed());
+  }
+
+  public Completable updateAccount(boolean adultContentEnabled, String accessToken) {
+    return ChangeUserSettingsRequest.of(adultContentEnabled, accessToken)
+        .observe(true)
+        .toSingle()
+        .flatMapCompletable(response -> {
+          if (response.getStatus().equals("OK")) {
+            return Completable.complete();
+          } else {
+            return Completable.error(new Exception(V3.getErrorMessage(response)));
+          }
+        });
   }
 }
