@@ -85,7 +85,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
-    if (create) {
+    if (create || refresh) {
       ListFullReviewsRequest listFullReviewsRequest =
           ListFullReviewsRequest.of(storeId, REVIEWS_LIMIT, 0,
               StoreUtils.getStoreCredentials(storeId, storeCredentialsProvider),
