@@ -33,7 +33,7 @@ public class AptoideAccountManagerTest {
             serviceMock);
   }
 
-  @Test public void shouldCreateAccount() throws Exception {
+  @Test public void shouldLogin() throws Exception {
 
     final OAuth oAuthMock = mock(OAuth.class);
     final Account accountMock = mock(Account.class);
