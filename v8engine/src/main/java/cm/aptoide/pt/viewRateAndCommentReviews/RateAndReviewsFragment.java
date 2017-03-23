@@ -225,14 +225,19 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     fetchReviews();
   }
 
+  @Override public void onViewCreated() {
+    super.onViewCreated();
+    dialogUtils = new DialogUtils(accountManager, aptoideClientUUID,
+        new AccountNavigator(getContext(), getNavigationManager(), accountManager),
+        bodyInterceptor);
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
     bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID, accountManager);
-    dialogUtils = new DialogUtils(accountManager, aptoideClientUUID,
-        new AccountNavigator(getContext(), getNavigationManager(), accountManager), bodyInterceptor);
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
   }
 
