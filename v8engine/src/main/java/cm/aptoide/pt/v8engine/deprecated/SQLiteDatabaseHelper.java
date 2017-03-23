@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.support.v7.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -52,7 +53,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
         + "]");
 
     migrate(db);
-    checkAndMigrateUserAccount();
+    checkAndMigrateUserAccount(oldVersion, newVersion);
     ManagerPreferences.setNeedsSqliteDbMigration(false);
     SecurePreferences.setWizardAvailable(true);
   }
@@ -140,8 +141,10 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
   /**
    * This method can be deleted in future releases, when version 8.1.2.1 is no longer supported /
    * relevant
+   * @param oldVersion
+   * @param newVersion
    */
-  private void checkAndMigrateUserAccount() {
+  private void checkAndMigrateUserAccount(int oldVersion, int newVersion) {
     final Context appContext = V8Engine.getContext();
     final AccountManager androidAccountManager = AccountManager.get(appContext);
     final android.accounts.Account[] accounts =
@@ -163,6 +166,9 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
       String encryptedPassword = androidAccountManager.getPassword(androidAccount);
       String plainTextPassword =
           new SecureCoderDecoder.Builder(appContext).create().decrypt(encryptedPassword);
+      if (oldVersion<=55 || TextUtils.isEmpty(plainTextPassword)) {
+        plainTextPassword = encryptedPassword;
+      }
 
 
       /*
