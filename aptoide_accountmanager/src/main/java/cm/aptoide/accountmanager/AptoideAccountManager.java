@@ -7,18 +7,10 @@ package cm.aptoide.accountmanager;
 
 import android.text.TextUtils;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
 import cm.aptoide.pt.dataprovider.ws.v3.ChangeUserSettingsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.CreateUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.GetUserRepoSubscriptionRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.OAuth2AuthenticationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
-import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
 import cm.aptoide.pt.model.v3.Subscription;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -35,24 +27,21 @@ public class AptoideAccountManager {
   public static final String IS_FACEBOOK_OR_GOOGLE = "facebook_google";
   private final static String TAG = AptoideAccountManager.class.getSimpleName();
 
-  private final AptoideClientUUID aptoideClientUUID;
-  private final BodyInterceptorFactory interceptorFactory;
   private final Analytics analytics;
   private final CredentialsValidator credentialsValidator;
   private final PublishRelay<Account> accountSubject;
   private final AccountFactory accountFactory;
   private final AccountDataPersist dataPersist;
+  private final AccountManagerService accountManagerService;
 
-  public AptoideAccountManager(AptoideClientUUID aptoideClientUUID, Analytics analytics,
-      BodyInterceptorFactory bodyIntecerptorFactory, CredentialsValidator credentialsValidator,
-      AccountFactory accountFactory, AccountDataPersist dataPersist) {
-    this.aptoideClientUUID = aptoideClientUUID;
+  public AptoideAccountManager(Analytics analytics, CredentialsValidator credentialsValidator,
+      AccountFactory accountFactory, AccountDataPersist dataPersist, AccountManagerService accountManagerService) {
     this.credentialsValidator = credentialsValidator;
     this.analytics = analytics;
     this.accountFactory = accountFactory;
     this.dataPersist = dataPersist;
+    this.accountManagerService = accountManagerService;
     this.accountSubject = PublishRelay.create();
-    this.interceptorFactory = bodyIntecerptorFactory;
   }
 
   public Observable<Account> accountStatus() {
@@ -125,26 +114,13 @@ public class AptoideAccountManager {
 
   public Completable createAccount(String email, String password) {
     return credentialsValidator.validate(email, password, true)
-        .andThen(CreateUserRequest.of(email.toLowerCase(), password,
-            aptoideClientUUID.getUniqueIdentifier()).observe(true))
-        .toSingle()
-        .flatMapCompletable(response -> {
-          if (response.hasErrors()) {
-            return Completable.error(new AccountException(response.getErrors()));
-          }
-          return login(Account.Type.APTOIDE, email, password, null);
-        })
+        .andThen(accountManagerService.createAccount(email, password))
+        .andThen(login(Account.Type.APTOIDE, email, password, null))
         .doOnCompleted(() -> analytics.signUp())
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof SocketTimeoutException) {
             return login(Account.Type.APTOIDE, email, password, null);
           }
-
-          if (throwable instanceof AptoideWsV3Exception) {
-            return Completable.error(new AccountException(
-                ((AptoideWsV3Exception) throwable).getBaseResponse().getError()));
-          }
-
           return Completable.error(throwable);
         });
   }
@@ -152,25 +128,9 @@ public class AptoideAccountManager {
   public Completable login(Account.Type type, final String email, final String password,
       final String name) {
     return credentialsValidator.validate(email, password, false)
-        .andThen(OAuth2AuthenticationRequest.of(email, password, type.name(), name,
-            aptoideClientUUID.getUniqueIdentifier())
-            .observe()
-            .toSingle()
-            .flatMapCompletable(oAuth -> {
-              if (!oAuth.hasErrors()) {
-                return syncAccount(oAuth.getAccessToken(), oAuth.getRefreshToken(), password, type);
-              } else {
-                return Completable.error(new AccountException(oAuth.getError()));
-              }
-            }))
-        .onErrorResumeNext(throwable -> {
-          if (throwable instanceof AptoideWsV3Exception) {
-            return Completable.error(new AccountException(
-                ((AptoideWsV3Exception) throwable).getBaseResponse().getError()));
-          }
-
-          return Completable.error(throwable);
-        })
+        .andThen(accountManagerService.login(type.name(), email, password, name))
+        .flatMapCompletable(
+            oAuth -> syncAccount(oAuth.getAccessToken(), oAuth.getRefreshToken(), password, type))
         .doOnCompleted(() -> analytics.login(email));
   }
 
@@ -221,21 +181,13 @@ public class AptoideAccountManager {
   }
 
   public void unsubscribeStore(String storeName, String storeUserName, String storePassword) {
-    changeSubscription(storeName, storeUserName, storePassword,
-        ChangeStoreSubscriptionResponse.StoreSubscriptionState.UNSUBSCRIBED).subscribe(success -> {
-    }, throwable -> CrashReport.getInstance().log(throwable));
-  }
-
-  private Observable<ChangeStoreSubscriptionResponse> changeSubscription(String storeName,
-      String storeUserName, String sha1Password,
-      ChangeStoreSubscriptionResponse.StoreSubscriptionState subscription) {
-    return ChangeStoreSubscriptionRequest.of(storeName, subscription, storeUserName, sha1Password,
-        interceptorFactory.create(this)).observe();
+    accountManagerService.unsubscribeStore(storeName, storeUserName, storePassword, this)
+        .subscribe(() -> {
+        }, throwable -> CrashReport.getInstance().log(throwable));
   }
 
   public Completable subscribeStore(String storeName, String storeUserName, String storePassword) {
-    return changeSubscription(storeName, storeUserName, storePassword,
-        ChangeStoreSubscriptionResponse.StoreSubscriptionState.SUBSCRIBED).toCompletable();
+    return accountManagerService.subscribeStore(storeName, storeUserName, storePassword, this);
   }
 
   /**
@@ -300,40 +252,26 @@ public class AptoideAccountManager {
   }
 
   public Completable updateAccount(Account.Access access) {
-    return getAccountAsync().flatMapCompletable(account -> {
-      return SetUserRequest.of(access.name(), interceptorFactory.create(this))
-          .observe(true)
-          .toSingle()
-          .flatMapCompletable(response -> {
-            if (response.isOk()) {
-              return syncAccount(account.getToken(), account.getRefreshToken(),
-                  account.getPassword(), account.getType());
-            } else {
-              return Completable.error(new Exception(V7.getErrorMessage(response)));
-            }
-          });
-    });
+    return getAccountAsync().flatMapCompletable(
+        account -> accountManagerService.updateAccount(access.name(), this)
+            .andThen(
+                syncAccount(account.getToken(), account.getRefreshToken(), account.getPassword(),
+                    account.getType())));
   }
 
   public Completable updateAccount(String nickname, String avatarPath) {
-    return getAccountAsync().flatMapObservable(account -> {
+    return getAccountAsync().flatMapCompletable(account -> {
       if (TextUtils.isEmpty(nickname) && TextUtils.isEmpty(avatarPath)) {
-        return Observable.error(
+        return Completable.error(
             new AccountValidationException(AccountValidationException.EMPTY_NAME_AND_AVATAR));
       } else if (TextUtils.isEmpty(nickname)) {
-        return Observable.error(
+        return Completable.error(
             new AccountValidationException(AccountValidationException.EMPTY_NAME));
       }
-      return CreateUserRequest.of(account.getEmail(), nickname, account.getPassword(),
-          (TextUtils.isEmpty(avatarPath) ? "" : avatarPath),
-          aptoideClientUUID.getUniqueIdentifier(), getAccessToken()).observe(true);
-    }).flatMap(response -> {
-      if (!response.hasErrors()) {
-        return Observable.just(response);
-      } else {
-        return Observable.error(new AccountException(response.getErrors()));
-      }
-    }).toCompletable();
+      return accountManagerService.updateAccount(account.getEmail(), nickname,
+          account.getPassword(), TextUtils.isEmpty(avatarPath) ? "" : avatarPath,
+          account.getToken());
+    });
   }
 
   /**

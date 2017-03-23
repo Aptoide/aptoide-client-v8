@@ -13,6 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import cm.aptoide.accountmanager.AccountFactory;
+import cm.aptoide.accountmanager.AccountManagerService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.CredentialsValidator;
 import cm.aptoide.pt.annotation.Partners;
@@ -103,6 +104,7 @@ public abstract class V8Engine extends DataProvider {
   private SecureCoderDecoder secureCodeDecoder;
   private AdultContent adultContent;
   private AptoideClientUUID aptoideClientUUID;
+  private GoogleApiClient googleSignInClient;
 
   /**
    * call after this instance onCreate()
@@ -284,22 +286,30 @@ public abstract class V8Engine extends DataProvider {
           new BaseBodyInterceptorFactory(getAptoideClientUUID(), getPreferences(),
               getSecurePreferences());
 
-      final AccountFactory accountFactory = new AccountFactory(getAptoideClientUUID(),
-          new SocialAccountFactory(this,
-              new GoogleApiClient.Builder(this).addApi(GOOGLE_SIGN_IN_API,
-                  new GoogleSignInOptions.Builder(
-                      GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
-                      .requestScopes(new Scope("https://www.googleapis.com/auth/contacts.readonly"))
-                      .requestScopes(new Scope(Scopes.PROFILE))
-                      .requestServerAuthCode(BuildConfig.GMS_SERVER_ID)
-                      .build()).build()));
+      final AccountManagerService accountManagerService =
+          new AccountManagerService(getAptoideClientUUID(), bodyInterceptorFactory);
 
-      accountManager = new AptoideAccountManager(getAptoideClientUUID(), new AccountAnalytcs(),
-          bodyInterceptorFactory, new CredentialsValidator(), accountFactory,
+      final AccountFactory accountFactory = new AccountFactory(getAptoideClientUUID(),
+          new SocialAccountFactory(this, getGoogleSignInClient()), accountManagerService);
+
+      accountManager = new AptoideAccountManager(new AccountAnalytcs(), new CredentialsValidator(), accountFactory,
           new AndroidAccountDataPersist(getConfiguration().getAccountType(),
-              AccountManager.get(this), dataPersist, accountFactory));
+              AccountManager.get(this), dataPersist, accountFactory), accountManagerService);
     }
     return accountManager;
+  }
+
+  public GoogleApiClient getGoogleSignInClient() {
+    if (googleSignInClient == null) {
+      return new GoogleApiClient.Builder(this).addApi(GOOGLE_SIGN_IN_API,
+          new GoogleSignInOptions.Builder(
+              GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
+              .requestScopes(new Scope("https://www.googleapis.com/auth/contacts.readonly"))
+              .requestScopes(new Scope(Scopes.PROFILE))
+              .requestServerAuthCode(BuildConfig.GMS_SERVER_ID)
+              .build()).build();
+    }
+    return googleSignInClient;
   }
 
   // todo re-factor all this code to proper Rx

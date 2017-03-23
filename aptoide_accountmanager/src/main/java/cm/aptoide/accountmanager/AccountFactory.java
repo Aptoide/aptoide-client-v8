@@ -1,6 +1,5 @@
 package cm.aptoide.accountmanager;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import java.util.List;
@@ -9,11 +8,13 @@ public class AccountFactory {
 
   private final AptoideClientUUID aptoideClientUUID;
   private final ExternalAccountFactory externalAccountFactory;
+  private final AccountManagerService accountManagerService;
 
   public AccountFactory(AptoideClientUUID aptoideClientUUID,
-      ExternalAccountFactory externalAccountFactory) {
+      ExternalAccountFactory externalAccountFactory, AccountManagerService accountManagerService) {
     this.aptoideClientUUID = aptoideClientUUID;
     this.externalAccountFactory = externalAccountFactory;
+    this.accountManagerService = accountManagerService;
   }
 
   public Account createAccount(String access, List<Store> stores, String id, String name,
@@ -23,7 +24,7 @@ public class AccountFactory {
     final Account aptoideAccount =
         new AptoideAccount(id, name, nickname, avatar, refreshToken, token, password, type, store,
             storeAvatar, adultContentEnabled, getAccessFrom(access), accessConfirmed, stores,
-            aptoideClientUUID);
+            aptoideClientUUID, accountManagerService);
     switch (type) {
       case APTOIDE:
         return aptoideAccount;
