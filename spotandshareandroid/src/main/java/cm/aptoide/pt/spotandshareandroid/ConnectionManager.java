@@ -144,6 +144,7 @@ public class ConnectionManager {
                 WifiInfo wifiInfo = wifimanager.getConnectionInfo();
                 if (wifiInfo.getSSID().contains("APTXV")) {
                   isWifiConnected = true;
+                  DataHolder.getInstance().network = network;
                   break;
                 } else {//connected to the wrong network
                   if (!reconnected && !chosenHotspot.isEmpty()) {

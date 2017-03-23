@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class AptoideSocket {
 
+  private static final String TAG = AptoideSocket.class.getSimpleName();
   protected final ExecutorService executorService;
   protected final int bufferSize;
   protected OnError<IOException> onError = Throwable::printStackTrace;
@@ -27,29 +28,36 @@ public abstract class AptoideSocket {
   public AptoideSocket(int bufferSize) {
     this(Executors.newCachedThreadPool(), bufferSize);
   }
-
   public AptoideSocket(ExecutorService executorService) {
     this(executorService, 8192);
   }
 
   public AptoideSocket startAsync() {
-    new Thread(this::start).start();
-    System.out.println("ShareApps: Started " + getClass().getSimpleName() + " AptoideSocket.");
+    Log.d(TAG, "startAsync() called");
+    new Thread(this::innerStart).start();
     return this;
   }
 
   public abstract AptoideSocket start();
 
+  private AptoideSocket innerStart() {
+    Log.d(TAG, "start() called");
+    return start();
+  }
+
   public void shutdown() {
+    Log.d(TAG, "shutdown() called");
     onError = null;
     executorService.shutdown();
   }
   
   public void shutdownExecutorService() {
+    Log.d(TAG, "shutdownExecutorService() called");
     executorService.shutdown();
   }
 
   public void forceShutdownExecutorService() {
+    Log.d(TAG, "forceShutdownExecutorService() called");
     executorService.shutdownNow();
   }
 
@@ -75,6 +83,7 @@ public abstract class AptoideSocket {
   }
 
   public void shutdown(Runnable onDisconnect) {
+    Log.d(TAG, "shutdown() called with: onDisconnect = [" + onDisconnect + "]");
     shutdown();
 
     try {

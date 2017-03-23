@@ -6,6 +6,7 @@ import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.exception.ServerLeftException;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
+import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import java.io.IOException;
@@ -21,20 +22,20 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
 
   public AptoideMessageClientSocket(String host, int port, String rootDir,
       StorageCapacity storageCapacity, FileServerLifecycle<AndroidAppInfo> serverLifecycle,
-      FileClientLifecycle<AndroidAppInfo> fileClientLifecycle) {
+      FileClientLifecycle<AndroidAppInfo> fileClientLifecycle, SocketBinder socketBinder) {
     super(host, port);
     this.aptoideMessageController =
         new AptoideMessageClientController(this, rootDir, storageCapacity, serverLifecycle,
-            fileClientLifecycle);
+            fileClientLifecycle, socketBinder);
   }
 
   public AptoideMessageClientSocket(String host, String fallbackHostName, int port, String rootDir,
       StorageCapacity storageCapacity, FileServerLifecycle<AndroidAppInfo> serverLifecycle,
-      FileClientLifecycle<AndroidAppInfo> fileClientLifecycle) {
+      FileClientLifecycle<AndroidAppInfo> fileClientLifecycle, SocketBinder socketBinder) {
     super(host, fallbackHostName, port);
     this.aptoideMessageController =
         new AptoideMessageClientController(this, rootDir, storageCapacity, serverLifecycle,
-            fileClientLifecycle);
+            fileClientLifecycle, socketBinder);
   }
 
   @Override protected void onConnected(Socket socket) throws IOException {

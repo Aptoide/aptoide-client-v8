@@ -7,6 +7,7 @@ import cm.aptoide.pt.spotandshare.socket.file.ShareAppsFileClientSocket;
 import cm.aptoide.pt.spotandshare.socket.file.ShareAppsFileServerSocket;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
+import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
 import cm.aptoide.pt.spotandshare.socket.message.MessageHandler;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
@@ -69,13 +70,15 @@ public class HandlersFactoryV1 {
     final String root;
     final StorageCapacity storageCapacity;
     final FileClientLifecycle<AndroidAppInfo> fileClientLifecycle;
+    private final SocketBinder socketBinder;
 
     public ReceiveApkHandler(String root, StorageCapacity storageCapacity,
-        FileClientLifecycle<AndroidAppInfo> fileClientLifecycle) {
+        FileClientLifecycle<AndroidAppInfo> fileClientLifecycle, SocketBinder socketBinder) {
       super(ReceiveApk.class);
       this.root = root;
       this.storageCapacity = storageCapacity;
       this.fileClientLifecycle = fileClientLifecycle;
+      this.socketBinder = socketBinder;
     }
 
     @Override public void handleMessage(ReceiveApk receiveApk, Sender<Message> messageSender) {
@@ -96,6 +99,7 @@ public class HandlersFactoryV1 {
         if (fileClientLifecycle != null) {
           shareAppsFileClientSocket.setFileClientLifecycle(androidAppInfo, fileClientLifecycle);
         }
+        shareAppsFileClientSocket.setSocketBinder(socketBinder);
         shareAppsFileClientSocket.startAsync();
       } else {
         messageSender.send(ackMessage);
@@ -155,6 +159,7 @@ public class HandlersFactoryV1 {
     @Override public void handleMessage(ServerLeftMessage message, Sender<Message> messageSender) {
       aptoideMessageClientSocket.serverLeft();
       messageSender.send(new AckMessage(messageSender.getHost()));
+      aptoideMessageClientSocket.shutdown();
     }
   }
 }

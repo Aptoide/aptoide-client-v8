@@ -15,7 +15,7 @@ public class ExampleMessageController extends AptoideMessageClientController {
 
   public ExampleMessageController(AptoideMessageClientSocket aptoideMessageClientSocket) {
     super(aptoideMessageClientSocket, "/tmp/a", bytes -> true, newFileServerLifecycle(),
-        newFileClientLifecycle());
+        newFileClientLifecycle(), null);
   }
 
   private static FileServerLifecycle<AndroidAppInfo> newFileServerLifecycle() {

@@ -62,6 +62,10 @@ public class ApplicationSender {
     return instance;
   }
 
+  public static void reset() {
+    instance = null;
+  }
+
   public void sendApp(List<App> selectedApps) {
     Intent intent = generateIntentToSend(selectedApps);
     context.startService(intent);

@@ -11,7 +11,9 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
+import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 
 /**
@@ -236,6 +238,25 @@ public class Utils {
           return All;
         }
       }
+    }
+  }
+
+  public static class Socket {
+
+    public static SocketBinder newDefaultSocketBinder() {
+      return new SocketBinder() {
+        @Override public void bind(java.net.Socket socket) {
+          if (DataHolder.getInstance().network != null) {
+            try {
+              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                DataHolder.getInstance().network.bindSocket(socket);
+              }
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
+          }
+        }
+      };
     }
   }
 }

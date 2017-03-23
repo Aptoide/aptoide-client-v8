@@ -1,5 +1,6 @@
 package cm.aptoide.pt.spotandshare.socket.message;
 
+import cm.aptoide.pt.spotandshare.socket.Log;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.exception.ServerLeftException;
 import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
@@ -23,10 +24,9 @@ import lombok.Getter;
 public abstract class AptoideMessageController implements Sender<Message> {
 
   public static final long ACK_TIMEOUT = 5000;
-
+  private static final String TAG = AptoideMessageController.class.getSimpleName();
   private final HashMap<Class, MessageHandler> messageHandlersMap;
   private OnError<IOException> onError;
-
   private ObjectOutputStream objectOutputStream;
   private ObjectInputStream objectInputStream;
   private LinkedBlockingQueue<AckMessage> ackMessages = new LinkedBlockingQueue<>();
@@ -66,9 +66,10 @@ public abstract class AptoideMessageController implements Sender<Message> {
     try {
       while (true) {
         Object o = objectInputStream.readObject();
-        System.out.println(
-            Thread.currentThread().getId() + ": Received input object. " + o.getClass()
-                .getSimpleName());
+        Log.d(TAG, "startListening: "
+            + Thread.currentThread().getId()
+            + ": Received input object. "
+            + o.getClass().getSimpleName());
         Message message = (Message) o;
         handle(message);
       }
@@ -94,8 +95,8 @@ public abstract class AptoideMessageController implements Sender<Message> {
       }
     } else {
       if (canHandle(message)) {
-        System.out.println(
-            "Handling message " + message + ", " + message.getClass().getSimpleName());
+        Log.d(TAG,
+            "handle: Handling message " + message + ", " + message.getClass().getSimpleName());
         messageHandlersMap.get(message.getClass()).handleMessage(message, this);
       } else {
         throw new IllegalArgumentException(
@@ -132,14 +133,16 @@ public abstract class AptoideMessageController implements Sender<Message> {
 
   public synchronized boolean sendWithAck(Message message) throws InterruptedException {
 
+    Log.d(TAG, "sendWithAck() called with: message = [" + message + "]");
+
     if (!isConnected()) {
-      System.out.println(message.getClass().getSimpleName() + " not connected!");
+      Log.d(TAG, "sendWithAck: " + message.getClass().getSimpleName() + " not connected!");
       return false;
     }
 
     // TODO: 02-02-2017 neuro no ack waiting lol
     AckMessage ackMessage = null;
-    System.out.println(Thread.currentThread().getId()
+    Log.d(TAG, "sendWithAck: " + Thread.currentThread().getId()
         + ": Sending message with ack: "
         + message
         + ", "
@@ -148,23 +151,26 @@ public abstract class AptoideMessageController implements Sender<Message> {
       objectOutputStream.writeObject(message);
       ackMessage = ackMessages.poll(ACK_TIMEOUT, TimeUnit.MILLISECONDS);
     } catch (IOException e) {
+      Log.d(TAG, "sendWithAck: " + Thread.currentThread().getId() + ": Failed to receive ack!");
       e.printStackTrace();
     }
 
-    System.out.println(Thread.currentThread().getId() + ": Received ack: " + ackMessage);
+    Log.d(TAG, "sendWithAck: " + Thread.currentThread().getId() + ": Received ack: " + ackMessage);
 
     return ackMessage != null && ackMessage.isSuccess();
   }
 
   @Override public synchronized void send(Message message) {
+    Log.d(TAG, "send() called with: message = [" + message + "]");
 
     if (!isConnected()) {
-      System.out.println(message.getClass().getSimpleName() + " not connected!");
+      Log.d(TAG, "send: " + message.getClass().getSimpleName() + " not connected!");
       return;
     }
 
-    System.out.println(
-        Thread.currentThread().getId() + ": Sending message: " + message + ", " + message.getClass()
+    Log.d(TAG,
+        "send: " + Thread.currentThread().getId() + ": Sending message: " + message + ", " + message
+            .getClass()
             .getSimpleName());
     try {
       if (objectOutputStream != null) {

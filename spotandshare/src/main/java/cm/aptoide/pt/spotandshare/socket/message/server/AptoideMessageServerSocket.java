@@ -3,11 +3,11 @@ package cm.aptoide.pt.spotandshare.socket.message.server;
 import cm.aptoide.pt.spotandshare.socket.AptoideServerSocket;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
-import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ExitMessage;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.HostLeftMessage;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ReceiveApk;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.SendApk;
+import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ServerLeftMessage;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Iterator;
@@ -44,7 +44,7 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
     for (AptoideMessageServerController aptoideMessageClientController : getAptoideMessageControllers()) {
       aptoideMessageClientController.disable();
     }
-    sendToOthers(null, new ExitMessage(getHost()));
+    sendToOthers(null, new ServerLeftMessage(getHost()));
     aptoideMessageServerController.disable();
 
     super.shutdown();

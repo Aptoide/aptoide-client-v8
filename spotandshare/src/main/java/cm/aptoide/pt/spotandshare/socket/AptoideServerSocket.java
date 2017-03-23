@@ -24,6 +24,7 @@ import lombok.Setter;
 // TODO: 01-02-2017 neuro messagereceiver nao é! lol
 public abstract class AptoideServerSocket extends AptoideSocket implements ServerActionDispatcher {
 
+  private static final String TAG = AptoideServerSocket.class.getSimpleName();
   private final int port;
   private ServerSocketTimeoutManager serverSocketTimeoutManager;
   private List<Socket> connectedSockets = new CopyOnWriteArrayList<>();
@@ -51,7 +52,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
     executorService.execute(dispatcherLooper);
 
     if (serving) {
-      System.out.println("ShareApps: AptoideFileServerSocket already serving!");
+      Log.d(TAG, "start: ShareApps: AptoideFileServerSocket already serving!");
       return this;
     } else {
       serving = true;
@@ -62,7 +63,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
       serverSocketTimeoutManager = new ServerSocketTimeoutManager(ss, timeout);
       serverSocketTimeoutManager.reserTimeout();
       host = new Host("192.168.43.1", ss.getLocalPort());
-      System.out.println(Thread.currentThread().getId()
+      Log.d(TAG, "start: " + Thread.currentThread().getId()
           + ": Starting server in port "
           + port
           + " and ip "
@@ -78,7 +79,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
 
         executorService.execute(() -> {
           try {
-            System.out.println(Thread.currentThread().getId()
+            Log.d(TAG, "start: " + Thread.currentThread().getId()
                 + ": "
                 + this.getClass().getSimpleName()
                 + ": Adding new client "
@@ -95,7 +96,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
             try {
               serverSocketTimeoutManager.reserTimeout();
               connectedSockets.remove(socket);
-              System.out.println("ShareApps: Closing " + getClass().getSimpleName() + " socket.");
+              Log.d(TAG, "start: ShareApps: Closing " + getClass().getSimpleName() + " socket.");
               socket.close();
             } catch (IOException e) {
               e.printStackTrace();
@@ -105,7 +106,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
       }
     } catch (IOException e) {
       // Ignore, when socket is closed during accept() it lands here.
-      System.out.println("ShareApps: Server explicitly closed " + this.getClass().getSimpleName());
+      Log.d(TAG, "start: ShareApps: Server explicitly closed " + this.getClass().getSimpleName());
       dispatcherLooper.stop();
       try {
         // Hammered. To unlock queuedServerActions.
@@ -164,7 +165,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
   public void shutdown() {
 
     if (shutdown) {
-      System.out.println("ShareApps: Server already shut down!");
+      Log.w(TAG, "shutdown: ShareApps: Server already shut down!");
       return;
     }
 
@@ -194,15 +195,13 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
-    } else {
-      System.out.println("ShareApps: AptoideFileServerSocket already shutdown!");
     }
 
     shutdownExecutorService();
   }
 
   @Override public void dispatchServerAction(ServerAction serverAction) {
-    System.out.println(Thread.currentThread().getId() + ": Adding action to serverActions.");
+    Log.d(TAG, "dispatchServerAction() called with: serverAction = [" + serverAction + "]");
     try {
       queuedServerActions.put(serverAction);
     } catch (InterruptedException e) {
@@ -217,7 +216,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
       if (socket.getInetAddress().getHostAddress().equals(host.getIp())) {
         connectedSockets.remove(socket);
         hostsChangedCallbackCallback.hostsChanged(getConnectedHosts());
-        System.out.println("AptoideServerSocket: Host " + host + " removed from the server.");
+        Log.d(TAG, "removeHost: AptoideServerSocket: Host " + host + " removed from the server.");
       }
     }
 
