@@ -181,8 +181,10 @@ public class AddStoreDialog extends BaseDialog {
     image.setImageDrawable(null);
     searchAutoComplete.setOnFocusChangeListener(new View.OnFocusChangeListener() {
       @Override public void onFocusChange(View view, boolean b) {
-        if (!searchAutoComplete.isFocused()) {
-          dismiss();
+        if (getDialog() != null) {
+          if (!searchAutoComplete.isFocused() && getDialog().isShowing() && isResumed()) {
+            dismiss();
+          }
         }
       }
     });
