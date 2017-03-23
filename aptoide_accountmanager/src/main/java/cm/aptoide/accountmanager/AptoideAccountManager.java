@@ -20,7 +20,6 @@ import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
-import rx.android.schedulers.AndroidSchedulers;
 
 public class AptoideAccountManager {
 
@@ -153,7 +152,6 @@ public class AptoideAccountManager {
   private Single<List<Store>> getSubscribedStores(String accessToken) {
     return GetUserRepoSubscriptionRequest.of(accessToken)
         .observe()
-        .observeOn(AndroidSchedulers.mainThread())
         .map(getUserRepoSubscription -> getUserRepoSubscription.getSubscription())
         .flatMapIterable(list -> list)
         .map(store -> mapToStore(store))
