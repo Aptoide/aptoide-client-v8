@@ -10,7 +10,6 @@
 
   <string name="ok">OK</string>
 
-  <string name="enablingWifi">Enabling the Wifi functionality</string>
   <string name="noHotspotYet">Please, you or your friend(s) should create a hotspot</string>
   <string name="couldNotCreateHotspot">Couldn\'t create the hotspot</string>
   <string name="unkownHotspotError">We are sorry, there was an error while trying to create the hotspot</string>
@@ -30,16 +29,9 @@
   <string name="receive">Receive</string>
   <string name="receiving">Receiving </string>
 
-  <string name="hotspotLeft">The creator of the group left !</string>
-  <string name="noSpaceForApp">You have no space available to the app: </string>
-  <string name="fileProblem">There was a problem with the file of </string>
-
-  <string name="welcome">Welcome </string>
   <string name="alertCreatorLeave">You are the creator of this group, if you leave it will be closed </string>
   <string name="leave">Leave</string>
   <string name="alertClientLeave">Are you sure you want to leave this group?</string>
-  <string name="alertClearApps1">This action will not just clear the history, but it will also delete the application files.</string>
-  <string name="alertClearApps2">Are you sure you want to delete?</string>
   <string name="delete">Delete</string>
 
   <string name="alertInstallApp">Are you sure you want to install the %1$s application?</string>
@@ -51,7 +43,6 @@
   <string name="alertDeleteApp">Are you sure you want to delete the %1$s application?</string>
 
   <string name="createGroup">Create Group</string>
-  <string name="joinGroup">Join Group</string>
   <string name="upperInstall">INSTALL</string>
   <string name="upperDelete">DELETE </string>
   <string name="upperResend">RESEND</string>
