@@ -66,6 +66,7 @@
           android:layout_width="15dp"
           android:layout_height="15dp"
           android:layout_alignEnd="@+id/card_custom_view_line_separator"
+          android:layout_alignRight="@+id/card_custom_view_line_separator"
           android:layout_marginTop="@dimen/appstimeline_card_icon"
           android:src="@drawable/appstimeline_video_play_icon"
           />
