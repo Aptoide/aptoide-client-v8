@@ -105,8 +105,6 @@ public class DialogUtils {
 
         if (TextUtils.isEmpty(reviewTitle)) {
           titleTextInputLayout.setError(AptoideUtils.StringU.getResString(R.string.error_MARG_107));
-          subscriber.onNext(GenericDialogs.EResponse.CANCEL);
-          subscriber.onCompleted();
           return;
         }
 
