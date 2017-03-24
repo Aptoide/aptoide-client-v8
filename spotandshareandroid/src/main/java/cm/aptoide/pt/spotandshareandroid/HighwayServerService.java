@@ -324,6 +324,10 @@ public class HighwayServerService extends Service {
           aptoideMessageClientSocket.shutdown();
           aptoideMessageServerSocket.shutdown(new Runnable() {
             @Override public void run() {
+              if (mNotifyManager != null) {
+                mNotifyManager.cancelAll();
+              }
+
               setInitialApConfig();//to not interfere with recovering wifi state
 
               Intent i = new Intent();
