@@ -22,11 +22,11 @@ import rx.Single;
 public class AccountManagerService {
 
   private final AptoideClientUUID aptoideClientUUID;
-  private final BodyInterceptorFactory interceptorFactory;
+  private final BasebBodyInterceptorFactory interceptorFactory;
   private final AccountFactory accountFactory;
 
   public AccountManagerService(AptoideClientUUID aptoideClientUUID,
-      BodyInterceptorFactory interceptorFactory, AccountFactory accountFactory) {
+      BasebBodyInterceptorFactory interceptorFactory, AccountFactory accountFactory) {
     this.aptoideClientUUID = aptoideClientUUID;
     this.interceptorFactory = interceptorFactory;
     this.accountFactory = accountFactory;

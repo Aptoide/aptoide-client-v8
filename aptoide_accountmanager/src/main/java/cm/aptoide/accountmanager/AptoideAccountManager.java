@@ -7,6 +7,7 @@ package cm.aptoide.accountmanager;
 
 import android.text.TextUtils;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.net.SocketTimeoutException;
 import rx.Completable;
@@ -18,17 +19,17 @@ public class AptoideAccountManager {
   public static final String IS_FACEBOOK_OR_GOOGLE = "facebook_google";
   private final static String TAG = AptoideAccountManager.class.getSimpleName();
 
-  private final Analytics analytics;
+  private final AccountAnalytics accountAnalytics;
   private final CredentialsValidator credentialsValidator;
   private final PublishRelay<Account> accountRelay;
   private final AccountDataPersist dataPersist;
   private final AccountManagerService accountManagerService;
 
-  public AptoideAccountManager(Analytics analytics, CredentialsValidator credentialsValidator,
-      AccountDataPersist dataPersist, AccountManagerService accountManagerService,
-      PublishRelay<Account> accountRelay) {
+  private AptoideAccountManager(AccountAnalytics accountAnalytics,
+      CredentialsValidator credentialsValidator, AccountDataPersist dataPersist,
+      AccountManagerService accountManagerService, PublishRelay<Account> accountRelay) {
     this.credentialsValidator = credentialsValidator;
-    this.analytics = analytics;
+    this.accountAnalytics = accountAnalytics;
     this.dataPersist = dataPersist;
     this.accountManagerService = accountManagerService;
     this.accountRelay = accountRelay;
@@ -88,7 +89,7 @@ public class AptoideAccountManager {
     return credentialsValidator.validate(email, password, true)
         .andThen(accountManagerService.createAccount(email, password))
         .andThen(login(Account.Type.APTOIDE, email, password, null))
-        .doOnCompleted(() -> analytics.signUp())
+        .doOnCompleted(() -> accountAnalytics.signUp())
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof SocketTimeoutException) {
             return login(Account.Type.APTOIDE, email, password, null);
@@ -103,13 +104,13 @@ public class AptoideAccountManager {
         .andThen(accountManagerService.login(type.name(), email, password, name))
         .flatMapCompletable(
             oAuth -> syncAccount(oAuth.getAccessToken(), oAuth.getRefreshToken(), password, type))
-        .doOnCompleted(() -> analytics.login(email));
+        .doOnCompleted(() -> accountAnalytics.login(email));
   }
 
-  private Completable syncAccount(String accessToken, String refreshToken, String encryptedPassword,
+  private Completable syncAccount(String accessToken, String refreshToken, String password,
       Account.Type type) {
-    return accountManagerService.getAccount(accessToken, refreshToken, encryptedPassword,
-        type.name()).flatMapCompletable(account -> saveAccount(account));
+    return accountManagerService.getAccount(accessToken, refreshToken, password, type.name())
+        .flatMapCompletable(account -> saveAccount(account));
   }
 
   public void unsubscribeStore(String storeName, String storeUserName, String storePassword) {
@@ -163,24 +164,23 @@ public class AptoideAccountManager {
 
   public Completable syncCurrentAccount() {
     return getAccountAsync().flatMapCompletable(
-        account -> syncAccount(account.getToken(), account.getRefreshToken(), account.getPassword(),
-            account.getType()));
+        account -> syncAccount(account.getAccessToken(), account.getRefreshToken(),
+            account.getPassword(), account.getType()));
   }
 
   public Completable updateAccount(boolean adultContentEnabled) {
     return getAccountAsync().flatMapCompletable(
-        account -> accountManagerService.updateAccount(adultContentEnabled, account.getToken())
-            .andThen(
-                syncAccount(account.getToken(), account.getRefreshToken(), account.getPassword(),
-                    account.getType())));
+        account -> accountManagerService.updateAccount(adultContentEnabled,
+            account.getAccessToken())
+            .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
+                account.getPassword(), account.getType())));
   }
 
   public Completable updateAccount(Account.Access access) {
     return getAccountAsync().flatMapCompletable(
         account -> accountManagerService.updateAccount(access.name(), this)
-            .andThen(
-                syncAccount(account.getToken(), account.getRefreshToken(), account.getPassword(),
-                    account.getType())));
+            .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
+                account.getPassword(), account.getType())));
   }
 
   public Completable updateAccount(String nickname, String avatarPath) {
@@ -194,17 +194,137 @@ public class AptoideAccountManager {
       }
       return accountManagerService.updateAccount(account.getEmail(), nickname,
           account.getPassword(), TextUtils.isEmpty(avatarPath) ? "" : avatarPath,
-          account.getToken());
+          account.getAccessToken());
     });
   }
 
   /**
-   * Use {@link Account#getToken()} instead.
+   * Use {@link Account#getAccessToken()} instead.
    *
    * @return account access token.
    */
   @Deprecated public String getAccessToken() {
     final Account account = getAccount();
-    return account == null ? null : account.getToken();
+    return account == null ? null : account.getAccessToken();
+  }
+
+  public static class Builder {
+
+    private CredentialsValidator credentialsValidator;
+    private AccountManagerService accountManagerService;
+    private PublishRelay<Account> accountRelay;
+    private AccountAnalytics accountAnalytics;
+    private AccountDataPersist accountDataPersist;
+    private AccountFactory accountFactory;
+
+    private AptoideClientUUID aptoideClientUUID;
+    private BasebBodyInterceptorFactory baseBodyInterceptorFactory;
+    private ExternalAccountFactory externalAccountFactory;
+    private AccountService accountService;
+
+    public Builder setCredentialsValidator(CredentialsValidator credentialsValidator) {
+      this.credentialsValidator = credentialsValidator;
+      return this;
+    }
+
+    public Builder setAccountManagerService(AccountManagerService accountManagerService) {
+      this.accountManagerService = accountManagerService;
+      return this;
+    }
+
+    public Builder setAccountRelay(PublishRelay<Account> accountRelay) {
+      this.accountRelay = accountRelay;
+      return this;
+    }
+
+    public Builder setAccountAnalytics(AccountAnalytics accountAnalytics) {
+      this.accountAnalytics = accountAnalytics;
+      return this;
+    }
+
+    public Builder setAccountDataPersist(AccountDataPersist accountDataPersist) {
+      this.accountDataPersist = accountDataPersist;
+      return this;
+    }
+
+    public Builder setAptoideClientUUID(AptoideClientUUID aptoideClientUUID) {
+      this.aptoideClientUUID = aptoideClientUUID;
+      return this;
+    }
+
+    public Builder setBaseBodyInterceptorFactory(
+        BasebBodyInterceptorFactory baseBodyInterceptorFactory) {
+      this.baseBodyInterceptorFactory = baseBodyInterceptorFactory;
+      return this;
+    }
+
+    public Builder setExternalAccountFactory(ExternalAccountFactory externalAccountFactory) {
+      this.externalAccountFactory = externalAccountFactory;
+      return this;
+    }
+
+    public Builder setAccountService(AccountService accountService) {
+      this.accountService = accountService;
+      return this;
+    }
+
+    public Builder setAccountFactory(AccountFactory accountFactory) {
+      this.accountFactory = accountFactory;
+      return this;
+    }
+
+    public AptoideAccountManager build() {
+
+      if (accountAnalytics == null) {
+        throw new IllegalArgumentException("AccountAnalytics is mandatory.");
+      }
+
+      if (accountDataPersist == null) {
+        throw new IllegalArgumentException("AccountDataPersist is mandatory.");
+      }
+
+      if (accountManagerService == null) {
+
+        if (aptoideClientUUID == null) {
+          throw new IllegalArgumentException(
+              "AptoideClientUUID is mandatory if AccountManagerService is not provided.");
+        }
+
+        if (baseBodyInterceptorFactory == null) {
+          throw new IllegalArgumentException("BasebBodyInterceptorFactory is mandatory if "
+              + "AccountManagerService is not provided.");
+        }
+
+        if (accountFactory == null) {
+
+          if (externalAccountFactory == null) {
+            throw new IllegalArgumentException(
+                "ExternalAccountFactory is mandatory if AccountFactory is not provided.");
+          }
+
+          if (accountService == null) {
+            this.accountService = new AccountService(aptoideClientUUID);
+          }
+
+          this.accountFactory =
+              new AccountFactory(aptoideClientUUID, externalAccountFactory, accountService);
+        }
+
+        accountManagerService =
+            new AccountManagerService(aptoideClientUUID, baseBodyInterceptorFactory,
+                accountFactory);
+      }
+
+      if (credentialsValidator == null) {
+        credentialsValidator = new CredentialsValidator();
+      }
+
+      if (accountRelay == null) {
+        accountRelay = PublishRelay.create();
+      }
+
+      return new AptoideAccountManager(accountAnalytics, credentialsValidator, accountDataPersist,
+          accountManagerService, accountRelay);
+    }
   }
 }

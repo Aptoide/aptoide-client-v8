@@ -13,10 +13,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import cm.aptoide.accountmanager.AccountFactory;
-import cm.aptoide.accountmanager.AccountManagerService;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.CredentialsValidator;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -51,7 +49,7 @@ import cm.aptoide.pt.v8engine.account.BaseBodyInterceptorFactory;
 import cm.aptoide.pt.v8engine.account.DatabaseStoreDataPersist;
 import cm.aptoide.pt.v8engine.account.SocialAccountFactory;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AccountAnalytcs;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AccountEventsAnalytcs;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.analytics.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.configuration.ActivityProvider;
@@ -74,7 +72,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
-import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
@@ -149,11 +146,12 @@ public abstract class V8Engine extends DataProvider {
     //}
 
     Database.initialize(this);
+    final AptoideAccountManager accountManager = getAccountManager();
 
     generateAptoideUuid().observeOn(Schedulers.computation())
-        .andThen(regenerateUserAgent(accountManager))
+        .andThen(regenerateUserAgent(getAccountManager()))
         .andThen(initAbTestManager())
-        .andThen(prepareApp().onErrorComplete(err -> {
+        .andThen(prepareApp(accountManager).onErrorComplete(err -> {
           // in case we have an error preparing the app, log that error and continue
           CrashReport.getInstance().log(err);
           return true;
@@ -190,8 +188,9 @@ public abstract class V8Engine extends DataProvider {
         .init(this, new DownloadNotificationActionsActionsInterface(),
             new DownloadManagerSettingsI(), downloadAccessor, CacheHelper.build(),
             new FileUtils(action -> Analytics.File.moveFile(action)),
-            new TokenHttpClient(getAptoideClientUUID(), () -> accountManager.getAccountEmail(),
-                getConfiguration().getPartnerId(), accountManager).customMake(),
+            new TokenHttpClient(getAptoideClientUUID(), () -> {
+              return accountManager.getAccountEmail();
+            }, getConfiguration().getPartnerId(), accountManager).customMake(),
             new DownloadAnalytics(Analytics.getInstance()));
 
     fileManager.purgeCache()
@@ -206,9 +205,10 @@ public abstract class V8Engine extends DataProvider {
   @Override protected TokenInvalidator getTokenInvalidator() {
     return new TokenInvalidator() {
       @Override public Single<String> invalidateAccessToken() {
+        final AptoideAccountManager accountManager = getAccountManager();
         return accountManager.refreshToken()
             .andThen(accountManager.getAccountAsync())
-            .map(account -> account.getToken());
+            .map(account -> account.getAccessToken());
       }
     };
   }
@@ -253,7 +253,7 @@ public abstract class V8Engine extends DataProvider {
         .toCompletable());
   }
 
-  private Completable prepareApp() {
+  private Completable prepareApp(AptoideAccountManager accountManager) {
     return accountManager.accountStatus().first().toSingle().flatMapCompletable(account -> {
       if (SecurePreferences.isFirstRun()) {
 
@@ -269,7 +269,7 @@ public abstract class V8Engine extends DataProvider {
         //}
         //return prepare;
 
-        return setupFirstRun().andThen(
+        return setupFirstRun(accountManager).andThen(
             Completable.merge(accountManager.syncCurrentAccount(), createShortcut()));
       }
 
@@ -292,13 +292,17 @@ public abstract class V8Engine extends DataProvider {
           new SocialAccountFactory(this, getGoogleSignInClient()),
           new AccountService(getAptoideClientUUID()));
 
-      final AccountManagerService accountManagerService =
-          new AccountManagerService(getAptoideClientUUID(), bodyInterceptorFactory, accountFactory);
-
-      accountManager = new AptoideAccountManager(new AccountAnalytcs(), new CredentialsValidator(),
+      final AndroidAccountDataPersist androidAccountDataPersist =
           new AndroidAccountDataPersist(getConfiguration().getAccountType(),
-              AccountManager.get(this), dataPersist, accountFactory), accountManagerService,
-          PublishRelay.create());
+              AccountManager.get(this), dataPersist, accountFactory);
+
+      accountManager =
+          new AptoideAccountManager.Builder().setAccountAnalytics(new AccountEventsAnalytcs())
+              .setAccountDataPersist(androidAccountDataPersist)
+              .setAptoideClientUUID(getAptoideClientUUID())
+              .setBaseBodyInterceptorFactory(bodyInterceptorFactory)
+              .setAccountFactory(accountFactory)
+              .build();
     }
     return accountManager;
   }
@@ -316,7 +320,7 @@ public abstract class V8Engine extends DataProvider {
   }
 
   // todo re-factor all this code to proper Rx
-  private Completable setupFirstRun() {
+  private Completable setupFirstRun(AptoideAccountManager accountManager) {
     return Completable.defer(() -> Completable.fromCallable(() -> {
       SecurePreferences.setFirstRun(false);
       if (accountManager.isLoggedIn()) {
@@ -355,7 +359,7 @@ public abstract class V8Engine extends DataProvider {
   public AdultContent getAdultContent(
       cm.aptoide.pt.v8engine.preferences.SecurePreferences securePreferences) {
     if (adultContent == null) {
-      adultContent = new AdultContent(accountManager, getPreferences(), securePreferences);
+      adultContent = new AdultContent(getAccountManager(), getPreferences(), securePreferences);
     }
     return adultContent;
   }

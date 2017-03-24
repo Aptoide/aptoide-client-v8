@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 
 public class AptoideAccountManagerTest {
 
-  private Analytics analyticsMock;
+  private AccountAnalytics accountAnalyticsMock;
   private CredentialsValidator credentialsValidatorMock;
   private AccountFactory accountFactoryMock;
   private AccountDataPersist dataPersistMock;
@@ -25,15 +25,18 @@ public class AptoideAccountManagerTest {
   private PublishRelay accountRelayMock;
 
   @Before public void before() {
-    analyticsMock = mock(Analytics.class);
+    accountAnalyticsMock = mock(AccountAnalytics.class);
     credentialsValidatorMock = mock(CredentialsValidator.class);
     accountFactoryMock = mock(AccountFactory.class);
     dataPersistMock = mock(AccountDataPersist.class);
     serviceMock = mock(AccountManagerService.class);
     accountRelayMock = mock(PublishRelay.class);
-    accountManager =
-        new AptoideAccountManager(analyticsMock, credentialsValidatorMock, dataPersistMock,
-            serviceMock, accountRelayMock);
+    accountManager = new AptoideAccountManager.Builder().setAccountAnalytics(accountAnalyticsMock)
+        .setCredentialsValidator(credentialsValidatorMock)
+        .setAccountDataPersist(dataPersistMock)
+        .setAccountManagerService(serviceMock)
+        .setAccountRelay(accountRelayMock)
+        .build();
   }
 
   @Test public void shouldLogin() throws Exception {
@@ -63,7 +66,7 @@ public class AptoideAccountManagerTest {
     testSubscriber.assertCompleted();
     testSubscriber.assertNoErrors();
 
-    verify(analyticsMock).login("marcelo.benites@aptoide.com");
+    verify(accountAnalyticsMock).login("marcelo.benites@aptoide.com");
     verify(accountRelayMock).call(accountMock);
   }
 
@@ -96,8 +99,8 @@ public class AptoideAccountManagerTest {
     testSubscriber.assertCompleted();
     testSubscriber.assertNoErrors();
 
-    verify(analyticsMock).login("john.lennon@aptoide.com");
-    verify(analyticsMock).signUp();
+    verify(accountAnalyticsMock).login("john.lennon@aptoide.com");
+    verify(accountAnalyticsMock).signUp();
     verify(accountRelayMock).call(accountMock);
   }
 }

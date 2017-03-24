@@ -88,7 +88,7 @@ public interface Account {
    * rules.
    * @see #refreshToken()
    */
-  String getToken();
+  String getAccessToken();
 
   /**
    * Returns refresh token used to refresh access token when it expires.

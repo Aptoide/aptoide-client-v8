@@ -59,6 +59,8 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class MainActivity extends TabNavigatorActivity implements MainView, FragmentShower {
 
+  public final static String FRAGMENT = "FRAGMENT";
+
   private static final String TAG = MainActivity.class.getSimpleName();
   private StoreUtilsProxy storeUtilsProxy;
 

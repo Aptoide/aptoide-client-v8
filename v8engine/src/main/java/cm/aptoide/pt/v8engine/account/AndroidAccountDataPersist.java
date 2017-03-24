@@ -64,7 +64,7 @@ public class AndroidAccountDataPersist implements AccountDataPersist {
       androidAccountManager.setUserData(androidAccount, ACCOUNT_NICKNAME, account.getNickname());
       androidAccountManager.setUserData(androidAccount, ACCOUNT_AVATAR_URL, account.getAvatar());
       androidAccountManager.setUserData(androidAccount, ACCOUNT_REFRESH_TOKEN, account.getRefreshToken());
-      androidAccountManager.setUserData(androidAccount, ACCOUNT_ACCESS_TOKEN, account.getToken());
+      androidAccountManager.setUserData(androidAccount, ACCOUNT_ACCESS_TOKEN, account.getAccessToken());
       androidAccountManager.setUserData(androidAccount, ACCOUNT_TYPE, account.getType().name());
       androidAccountManager.setUserData(androidAccount, ACCOUNT_STORE_NAME, account.getStoreName());
       androidAccountManager.setUserData(androidAccount, ACCOUNT_STORE_AVATAR_URL, account.getStoreAvatar());

@@ -75,8 +75,8 @@ public class GoogleAccount implements Account {
     return account.getEmail();
   }
 
-  @Override public String getToken() {
-    return account.getToken();
+  @Override public String getAccessToken() {
+    return account.getAccessToken();
   }
 
   @Override public String getRefreshToken() {

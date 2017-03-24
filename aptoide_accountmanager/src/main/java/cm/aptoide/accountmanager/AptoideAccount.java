@@ -98,7 +98,7 @@ public final class AptoideAccount implements Account {
   }
 
   @Override public boolean isLoggedIn() {
-    return (!isEmpty(getEmail()) && !isEmpty(getToken()) && !isEmpty(getRefreshToken()) && !isEmpty(
+    return (!isEmpty(getEmail()) && !isEmpty(getAccessToken()) && !isEmpty(getRefreshToken()) && !isEmpty(
         getPassword()));
   }
 
@@ -106,7 +106,7 @@ public final class AptoideAccount implements Account {
     return email;
   }
 
-  @Override public String getToken() {
+  @Override public String getAccessToken() {
     return token;
   }
 

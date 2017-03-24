@@ -60,7 +60,7 @@ public class LocalAccount implements Account {
     return "";
   }
 
-  @Override public String getToken() {
+  @Override public String getAccessToken() {
     return "";
   }
 

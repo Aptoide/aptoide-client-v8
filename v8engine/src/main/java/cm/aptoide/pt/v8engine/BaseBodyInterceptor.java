@@ -30,7 +30,7 @@ public class BaseBodyInterceptor implements BodyInterceptor<BaseBody> {
             .first().toSingle(),
         (adultContentEnabled, account) -> {
           if (account.isLoggedIn()) {
-            body.setAccessToken(account.getToken());
+            body.setAccessToken(account.getAccessToken());
           }
 
           body.setAptoideId(aptoideClientUUID.getUniqueIdentifier());

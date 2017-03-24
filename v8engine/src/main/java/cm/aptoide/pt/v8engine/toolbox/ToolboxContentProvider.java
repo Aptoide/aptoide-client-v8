@@ -81,7 +81,7 @@ public class ToolboxContentProvider extends ContentProvider {
         case TOKEN:
           if (account != null) {
             final MatrixCursor tokenCursor = new MatrixCursor(new String[] { "userToken" }, 1);
-            tokenCursor.addRow(new Object[] { account.getToken() });
+            tokenCursor.addRow(new Object[] { account.getAccessToken() });
             return tokenCursor;
           }
           throw new IllegalStateException("User not logged in.");

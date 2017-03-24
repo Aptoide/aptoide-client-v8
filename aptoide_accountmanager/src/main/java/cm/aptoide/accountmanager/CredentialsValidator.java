@@ -3,7 +3,14 @@ package cm.aptoide.accountmanager;
 import rx.Completable;
 
 public class CredentialsValidator {
-
+  /**
+   * Returns true if email and password are not empty. If validate password content is enable
+   * returns true if password is at least 8 characters long and has at least 1 number and 1 letter.
+   *
+   * @param email to be validated.
+   * @param password to be validated.
+   * @param validatePassword whether password content should be validated.
+   */
   public Completable validate(String email, String password, boolean validatePassword) {
     return Completable.defer(() -> {
       if (isEmpty(email) && isEmpty(password)) {
