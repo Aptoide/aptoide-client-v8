@@ -317,7 +317,10 @@ public class AptoideAccountManager {
 
   public Completable updateAccount(String nickname, String avatarPath) {
     return getAccountAsync().flatMapObservable(account -> {
-      if (TextUtils.isEmpty(nickname)) {
+      if (TextUtils.isEmpty(nickname) && TextUtils.isEmpty(avatarPath)) {
+        return Observable.error(
+            new AccountValidationException(AccountValidationException.EMPTY_NAME_AND_AVATAR));
+      } else if (TextUtils.isEmpty(nickname)) {
         return Observable.error(
             new AccountValidationException(AccountValidationException.EMPTY_NAME));
       }
