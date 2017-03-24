@@ -2,6 +2,7 @@ package cm.aptoide.accountmanager;
 
 import cm.aptoide.pt.model.v3.OAuth;
 import com.jakewharton.rxrelay.PublishRelay;
+import java.net.SocketTimeoutException;
 import org.junit.Before;
 import org.junit.Test;
 import rx.Completable;
@@ -11,6 +12,7 @@ import rx.observers.TestSubscriber;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -102,5 +104,37 @@ public class AptoideAccountManagerTest {
     verify(accountAnalyticsMock).login("john.lennon@aptoide.com");
     verify(accountAnalyticsMock).signUp();
     verify(accountRelayMock).call(accountMock);
+  }
+
+  @Test public void shouldLoginOnSignUpTimeout() throws Exception {
+
+    when(credentialsValidatorMock.validate(eq("john.lennon@aptoide.com"), eq("imagine"),
+        anyBoolean())).thenReturn(Completable.complete());
+
+    when(serviceMock.createAccount("john.lennon@aptoide.com", "imagine")).thenReturn(
+        Completable.error(new SocketTimeoutException()));
+
+    final OAuth oAuthMock = mock(OAuth.class);
+    final Account accountMock = mock(Account.class);
+
+    when(serviceMock.login("APTOIDE", "john.lennon@aptoide.com", "imagine", null)).thenReturn(
+        Single.just(oAuthMock));
+
+    when(oAuthMock.getAccessToken()).thenReturn("ABCD");
+    when(oAuthMock.getRefreshToken()).thenReturn("EFG");
+
+    when(serviceMock.getAccount("ABCD", "EFG", "imagine", "APTOIDE")).thenReturn(
+        Single.just(accountMock));
+
+    when(dataPersistMock.saveAccount(accountMock)).thenReturn(Completable.complete());
+
+    final TestSubscriber testSubscriber = TestSubscriber.create();
+
+    accountManager.signUp("john.lennon@aptoide.com", "imagine").subscribe(testSubscriber);
+
+    testSubscriber.assertCompleted();
+    testSubscriber.assertNoErrors();
+
+    verify(accountAnalyticsMock, never()).signUp();
   }
 }
