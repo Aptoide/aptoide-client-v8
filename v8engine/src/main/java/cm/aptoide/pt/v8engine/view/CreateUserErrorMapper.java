@@ -28,10 +28,10 @@ public class CreateUserErrorMapper implements ThrowableToStringMapper {
       message = context.getString(cm.aptoide.accountmanager.R.string.user_upload_photo_failed);
     } else if (throwable instanceof AccountValidationException) {
       switch (((AccountValidationException) throwable).getCode()) {
-        case 5:
+        case AccountValidationException.EMPTY_NAME:
           message = AptoideUtils.StringU.getResString(R.string.no_username_inserted);
           break;
-        case 6:
+        case AccountValidationException.EMPTY_NAME_AND_AVATAR:
           message = AptoideUtils.StringU.getResString(R.string.nothing_inserted_user);
           break;
       }

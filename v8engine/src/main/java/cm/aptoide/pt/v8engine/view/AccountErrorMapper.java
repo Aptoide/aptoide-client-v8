@@ -40,6 +40,7 @@ public class AccountErrorMapper implements ThrowableToStringMapper {
           break;
         case AccountValidationException.EMPTY_NAME:
           message = context.getString(cm.aptoide.accountmanager.R.string.nothing_inserted_user);
+          break;
         case AccountValidationException.EMPTY_PASSWORD:
           message = context.getString(cm.aptoide.accountmanager.R.string.no_pass_error_message);
           break;
