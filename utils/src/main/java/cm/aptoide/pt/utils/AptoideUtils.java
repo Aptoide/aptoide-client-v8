@@ -148,19 +148,17 @@ public class AptoideUtils {
 
       String cpuAbi = SystemU.getAbis();
 
-      String filters =
-          (Build.DEVICE.equals("alien_jolla_bionic") ? "apkdwn=myapp&" : "")
-              + "maxSdk="
-              + minSdk
-              +
-              "&maxScreen="
-              + minScreen
-              + "&maxGles="
-              + minGlEs
-              + "&myCPU="
-              + cpuAbi
-              + "&myDensity="
-              + density;
+      String filters = (Build.DEVICE.equals("alien_jolla_bionic") ? "apkdwn=myapp&" : "")
+          + "maxSdk="
+          + minSdk
+          + "&maxScreen="
+          + minScreen
+          + "&maxGles="
+          + minGlEs
+          + "&myCPU="
+          + cpuAbi
+          + "&myDensity="
+          + density;
       filters = addOpenGLExtensions(filters);
 
       return Base64.encodeToString(filters.getBytes(), 0)
@@ -536,8 +534,7 @@ public class AptoideUtils {
       // but we assume their ratio is correct.
       double screenWidthInPixels = (double) config.screenWidthDp * dm.density;
       double screenHeightInPixels = screenWidthInPixels * dm.heightPixels / dm.widthPixels;
-      return (int) (screenWidthInPixels + .5) + "x" +
-          (int) (screenHeightInPixels + .5);
+      return (int) (screenWidthInPixels + .5) + "x" + (int) (screenHeightInPixels + .5);
     }
 
     public enum Size {
@@ -1632,8 +1629,7 @@ public class AptoideUtils {
           + methodName
           + " - Total execution time: "
           + (endTime - startTime)
-          +
-          "ms");
+          + "ms");
     }
   }
 
@@ -1715,8 +1711,23 @@ public class AptoideUtils {
       //String currentUserId = getUserId();
       //String myscr = sPref.getInt(EnumPreferences.SCREEN_WIDTH.name(), 0) + "x" + sPref.getInt(EnumPreferences.SCREEN_HEIGHT.name(), 0);
 
-      DisplayMetrics displayMetrics = new DisplayMetrics();
-      String myscr = displayMetrics.widthPixels + "x" + displayMetrics.heightPixels;
+      //DisplayMetrics displayMetrics = new DisplayMetrics();
+      String myscr; //= displayMetrics.widthPixels + "x" + displayMetrics.heightPixels;
+
+      WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+      if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2) {
+        Display display = wm.getDefaultDisplay();
+        int width = display.getWidth();
+        int height = display.getHeight();
+        myscr = width + "x" + height;
+      } else {
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+        myscr = width + "x" + height;
+      }
 
       StringBuilder sb =
           new StringBuilder(vername + ";" + SystemU.TERMINAL_INFO + ";" + myscr + ";id:");
