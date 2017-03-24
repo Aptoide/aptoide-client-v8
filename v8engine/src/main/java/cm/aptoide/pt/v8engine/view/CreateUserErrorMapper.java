@@ -1,6 +1,9 @@
 package cm.aptoide.pt.v8engine.view;
 
 import android.content.Context;
+import cm.aptoide.accountmanager.AccountValidationException;
+import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.R;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeoutException;
 
@@ -23,6 +26,15 @@ public class CreateUserErrorMapper implements ThrowableToStringMapper {
 
     if (throwable instanceof SocketTimeoutException || throwable instanceof TimeoutException) {
       message = context.getString(cm.aptoide.accountmanager.R.string.user_upload_photo_failed);
+    } else if (throwable instanceof AccountValidationException) {
+      switch (((AccountValidationException) throwable).getCode()) {
+        case 5:
+          message = AptoideUtils.StringU.getResString(R.string.no_username_inserted);
+          break;
+        case 6:
+          message = AptoideUtils.StringU.getResString(R.string.nothing_inserted_user);
+          break;
+      }
     }
     return message;
   }

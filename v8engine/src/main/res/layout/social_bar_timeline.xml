@@ -1,131 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="65dp"
     android:background="?attr/backgroundCardColor"
-    android:clipChildren="false"
-    >
+    android:clipChildren="false">
 
   <RelativeLayout
       android:id="@+id/displayable_social_timeline_likes_preview_container"
-      android:layout_width="100dp"
-      android:layout_height="40dp"
-      android:layout_alignBottom="@+id/social_share"
-      android:layout_marginEnd="15dp"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
       android:layout_marginLeft="5dp"
-      android:layout_marginRight="15dp"
-      android:layout_marginStart="5dp"
-      android:layout_marginTop="8dp"
       android:orientation="horizontal"
       android:padding="4dp"
-      />
-
-
-  <TextView
-      android:id="@+id/social_number_of_likes"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginEnd="4dp"
-      android:layout_marginTop="16dp"
-      android:layout_toLeftOf="@+id/social_like"
-      android:layout_toStartOf="@id/social_like"
-      android:text="@string/zero"
-      android:textSize="@dimen/text_size_small"
-      android:visibility="invisible"
-      tools:text="10"
-      tools:visibility="visible"
-      />
+      android:gravity="center"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@+id/social_like_layout"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toLeftOf="@id/social_like_layout"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:layout_constraintBottom_creator="1"
+      tools:layout_constraintLeft_creator="1"
+      tools:layout_constraintTop_creator="1" />
 
 
   <LinearLayout
-      android:id="@+id/social_like"
-      android:layout_width="40dp"
-      android:layout_height="62dp"
-      android:layout_marginEnd="65dp"
-      android:layout_marginRight="65dp"
-      android:layout_toLeftOf="@+id/social_comment"
-      android:layout_toStartOf="@+id/social_comment"
-      android:clickable="true"
-      android:clipChildren="false"
+      android:id="@+id/social_like_layout"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
       android:gravity="center"
-      android:orientation="vertical"
-      android:visibility="invisible"
-      tools:visibility="visible"
-      >
-
-    <cm.aptoide.pt.v8engine.customviews.LikeButtonView
-        android:id="@+id/social_like_button"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_gravity="center"
-        android:clickable="false"
-        />
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@+id/social_comment_layout"
+      app:layout_constraintLeft_toRightOf="@id/displayable_social_timeline_likes_preview_container"
+      app:layout_constraintRight_toLeftOf="@id/social_comment_layout"
+      app:layout_constraintStart_toEndOf="@id/displayable_social_timeline_likes_preview_container"
+      app:layout_constraintTop_toTopOf="parent">
 
     <TextView
+        android:id="@+id/social_number_of_likes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:text="@string/like"
-        android:textAllCaps="true"
-        android:textSize="@dimen/text_size_extra_small"
-        />
+        android:text="@string/zero"
+        android:textSize="@dimen/text_size_small"
+        android:visibility="invisible"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1"
+        tools:text="10"
+        tools:visibility="visible" />
 
+
+    <LinearLayout
+        android:id="@+id/social_like"
+        android:layout_width="40dp"
+        android:layout_height="62dp"
+        android:clickable="true"
+        android:clipChildren="false"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintTop_creator="1"
+        tools:visibility="visible">
+
+      <cm.aptoide.pt.v8engine.customviews.LikeButtonView
+          android:id="@+id/social_like_button"
+          android:layout_width="20dp"
+          android:layout_height="20dp"
+          android:layout_gravity="center"
+          android:clickable="false" />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="6dp"
+          android:text="@string/like"
+          android:textAllCaps="true"
+          android:textSize="@dimen/text_size_extra_small" />
+
+    </LinearLayout>
   </LinearLayout>
 
-  <TextView
-      android:id="@+id/social_number_of_comments"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignTop="@id/social_number_of_likes"
-      android:layout_marginRight="3dp"
-      android:layout_toLeftOf="@+id/social_comment"
-      android:layout_toStartOf="@id/social_comment"
-      android:text="@string/zero"
-      android:textSize="@dimen/text_size_small"
-      android:visibility="invisible"
-      tools:text="10"
-      tools:visibility="visible"
-      />
-
-  <TextView
-      android:id="@+id/social_comment"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignTop="@+id/social_like"
-      android:layout_marginEnd="65dp"
-      android:layout_marginRight="66dp"
-      android:layout_marginTop="13dp"
-      android:layout_toLeftOf="@+id/social_share"
-      android:layout_toStartOf="@id/social_share"
-      android:clickable="true"
-      android:drawablePadding="4.4dp"
-      android:drawableTop="@drawable/timeline_comment"
+  <LinearLayout
+      android:id="@+id/social_comment_layout"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
       android:gravity="center"
-      android:orientation="vertical"
-      android:text="@string/comment"
-      android:textAllCaps="true"
-      android:textSize="@dimen/text_size_extra_small"
-      android:visibility="invisible"
-      tools:visibility="visible"
-      />
+      android:orientation="horizontal"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@+id/social_share_layout"
+      app:layout_constraintLeft_toRightOf="@id/social_like_layout"
+      app:layout_constraintRight_toLeftOf="@id/social_share_layout"
+      app:layout_constraintStart_toEndOf="@id/social_like_layout"
+      app:layout_constraintTop_toTopOf="parent">
 
-  <TextView
-      android:id="@id/social_share"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentEnd="true"
-      android:layout_alignTop="@id/social_like"
-      android:layout_marginEnd="25.7dp"
-      android:layout_marginRight="25.7dp"
-      android:layout_marginTop="13dp"
-      android:clickable="true"
-      android:drawablePadding="3.5dp"
-      android:drawableTop="@drawable/timeline_share"
+    <TextView
+        android:id="@+id/social_number_of_comments"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/zero"
+        android:textSize="@dimen/text_size_small"
+        android:visibility="invisible"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1"
+        tools:text="10"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/social_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:drawablePadding="6dp"
+        android:drawableTop="@drawable/timeline_comment"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:text="@string/comment"
+        android:textAllCaps="true"
+        android:textSize="@dimen/text_size_extra_small"
+        android:visibility="invisible"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1"
+        tools:visibility="visible" />
+  </LinearLayout>
+
+  <LinearLayout
+      android:id="@+id/social_share_layout"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
       android:gravity="center"
-      android:orientation="vertical"
-      android:text="@string/share"
-      android:textAllCaps="true"
-      android:textSize="@dimen/text_size_extra_small"
-      />
-</RelativeLayout>
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintLeft_toRightOf="@id/social_comment_layout"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintStart_toEndOf="@id/social_comment_layout"
+      app:layout_constraintTop_toTopOf="parent">
+
+    <TextView
+        android:id="@+id/social_share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:drawablePadding="5dp"
+        android:drawableTop="@drawable/timeline_share"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:text="@string/share"
+        android:textAllCaps="true"
+        android:textSize="@dimen/text_size_extra_small"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
+  </LinearLayout>
+</android.support.constraint.ConstraintLayout>
