@@ -209,16 +209,13 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
     mainName.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
     if (appsVisibility) {
-      appsCountTv.setText(AptoideUtils.StringU.getFormattedString(R.string.store_meta_apps,
-          NumberFormat.getNumberInstance(Locale.getDefault()).format(appsCount)));
+      appsCountTv.setText(NumberFormat.getNumberInstance(Locale.getDefault()).format(appsCount));
       appsCountTv.setVisibility(View.VISIBLE);
     } else {
       appsCountTv.setVisibility(View.INVISIBLE);
     }
-    followersCountTv.setText(AptoideUtils.StringU.getFormattedString(R.string.store_meta_followers,
-        AptoideUtils.StringU.withSuffix(followersCount)));
-    followingCountTv.setText(AptoideUtils.StringU.getFormattedString(R.string.store_meta_following,
-        AptoideUtils.StringU.withSuffix(followingCount)));
+    followersCountTv.setText(AptoideUtils.StringU.withSuffix(followersCount));
+    followingCountTv.setText(AptoideUtils.StringU.withSuffix(followingCount));
 
     showMainIcon(getContext(), mainIconUrl, defaultMainIcon);
   }
