@@ -15,9 +15,9 @@
   <ImageView
       android:id="@+id/addressbook_friends_graphic"
       android:layout_width="0dp"
-      android:layout_height="wrap_content"
+      android:layout_height="0dp"
       android:src="@drawable/addressbook_graphic"
-      app:layout_constraintBottom_toTopOf="@+id/addressbook_1st_msg"
+      app:layout_constraintBottom_toTopOf="@+id/guideline"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
@@ -26,6 +26,15 @@
       tools:layout_conversion_absoluteX="30dp"
       tools:layout_conversion_absoluteY="24dp"
       tools:layout_editor_absoluteX="30dp" />
+
+  <android.support.constraint.Guideline
+      android:id="@+id/guideline"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintBottom_toTopOf="@+id/addressbook_1st_msg"
+      app:layout_constraintGuide_percent="0.25"
+      app:layout_constraintTop_toBottomOf="@id/addressbook_friends_graphic" />
 
   <LinearLayout
       android:id="@+id/addressbook_1st_msg"
@@ -36,7 +45,7 @@
       app:layout_constraintBottom_toTopOf="@+id/addressbook_sync_button"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/addressbook_friends_graphic"
+      app:layout_constraintTop_toBottomOf="@+id/guideline"
       tools:layout_editor_absoluteX="0dp">
 
     <TextView
