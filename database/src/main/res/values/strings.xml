@@ -9,4 +9,5 @@
   <string name="download_progress">Download in progress</string>
   <string name="download_queue">In Queue</string>
   <string name="out_of_space_error">Out of space</string>
+  <string name="simple_error_occured">An error occurred.</string>
 </resources>
