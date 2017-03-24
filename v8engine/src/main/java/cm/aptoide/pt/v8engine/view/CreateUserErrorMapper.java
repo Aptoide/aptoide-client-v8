@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.view;
 
 import android.content.Context;
+import cm.aptoide.pt.v8engine.R;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeoutException;
 
@@ -22,7 +23,7 @@ public class CreateUserErrorMapper implements ThrowableToStringMapper {
     String message = accountErrorMapper.map(throwable);
 
     if (throwable instanceof SocketTimeoutException || throwable instanceof TimeoutException) {
-      message = context.getString(cm.aptoide.accountmanager.R.string.user_upload_photo_failed);
+      message = context.getString(R.string.user_upload_photo_failed);
     }
     return message;
   }

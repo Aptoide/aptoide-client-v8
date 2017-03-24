@@ -349,11 +349,10 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     final Context context = getContext();
 
     facebookEmailRequiredDialog = new AlertDialog.Builder(context).setMessage(
-        cm.aptoide.accountmanager.R.string.facebook_email_permission_regected_message)
-        .setPositiveButton(cm.aptoide.accountmanager.R.string.facebook_grant_permission_button,
-            (dialog, which) -> {
-              facebookLoginManager.logInWithReadPermissions(this, Arrays.asList("email"));
-            })
+        R.string.facebook_email_permission_regected_message)
+        .setPositiveButton(R.string.facebook_grant_permission_button, (dialog, which) -> {
+          facebookLoginManager.logInWithReadPermissions(this, Arrays.asList("email"));
+        })
         .setNegativeButton(android.R.string.cancel, null)
         .create();
 

@@ -250,8 +250,8 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
         ImageLoader.with(this).loadUsingCircleTransform(storeRemoteUrl, mStoreAvatar);
       }
       handleThemeTick(storeTheme, "visible");
-      mCreateStore.setText(cm.aptoide.accountmanager.R.string.save_edit_store);
-      mSkip.setText(cm.aptoide.accountmanager.R.string.cancel);
+      mCreateStore.setText(R.string.save_edit_store);
+      mSkip.setText(R.string.cancel);
     }
   }
 
@@ -275,7 +275,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
           storeDescription = mStoreDescription.getText().toString().trim();
           validateData();
           progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
-              getApplicationContext().getString(cm.aptoide.accountmanager.R.string.please_wait_upload));
+              getApplicationContext().getString(R.string.please_wait_upload));
           if (CREATE_STORE_REQUEST_CODE == 1
               || CREATE_STORE_REQUEST_CODE == 2
               || CREATE_STORE_REQUEST_CODE == 3) {
@@ -560,7 +560,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
         }
       } else {
         CREATE_STORE_REQUEST_CODE = 0;
-        onCreateFail(cm.aptoide.accountmanager.R.string.nothing_inserted_store);
+        onCreateFail(R.string.nothing_inserted_store);
       }
     }
     return CREATE_STORE_REQUEST_CODE;
@@ -573,7 +573,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
   }
 
   private void onCreateSuccess(ProgressDialog progressDialog) {
-    ShowMessage.asSnack(this, cm.aptoide.accountmanager.R.string.create_store_store_created);
+    ShowMessage.asSnack(this, R.string.create_store_store_created);
     if (CREATE_STORE_REQUEST_CODE == 1) {
       /*
        * Multipart
@@ -591,8 +591,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
           }, throwable -> {
             if (throwable.getClass().equals(SocketTimeoutException.class)) {
               progressDialog.dismiss();
-              ShowMessage.asLongObservableSnack(this,
-                  cm.aptoide.accountmanager.R.string.store_upload_photo_failed)
+              ShowMessage.asLongObservableSnack(this, R.string.store_upload_photo_failed)
                   .subscribe(visibility -> {
                     if (visibility == ShowMessage.DISMISSED) {
                       goToMainActivity();
@@ -600,8 +599,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
                   });
             } else if (throwable.getClass().equals(TimeoutException.class)) {
               progressDialog.dismiss();
-              ShowMessage.asLongObservableSnack(this,
-                  cm.aptoide.accountmanager.R.string.store_upload_photo_failed)
+              ShowMessage.asLongObservableSnack(this, R.string.store_upload_photo_failed)
                   .subscribe(visibility -> {
                     if (visibility == ShowMessage.DISMISSED) {
                       goToMainActivity();
@@ -613,12 +611,12 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
                 .getCode()
                 .equals("API-1")) {
               progressDialog.dismiss();
-              ShowMessage.asLongObservableSnack(this,
-                  cm.aptoide.accountmanager.R.string.ws_error_API_1).subscribe(visibility -> {
-                if (visibility == ShowMessage.DISMISSED) {
-                  goToMainActivity();
-                }
-              });
+              ShowMessage.asLongObservableSnack(this, R.string.ws_error_API_1)
+                  .subscribe(visibility -> {
+                    if (visibility == ShowMessage.DISMISSED) {
+                      goToMainActivity();
+                    }
+                  });
             } else {
               progressDialog.dismiss();
               ShowMessage.asLongObservableSnack(this,
