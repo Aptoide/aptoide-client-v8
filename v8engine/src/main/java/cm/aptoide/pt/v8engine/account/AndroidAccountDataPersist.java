@@ -132,7 +132,7 @@ public class AndroidAccountDataPersist implements AccountDataPersist {
           androidAccountManager.getAccountsByType(accountType);
 
       if (accounts.length == 0) {
-        Single.error(new IllegalStateException("No account found."));
+        return Single.error(new IllegalStateException("No account found."));
       }
       return Single.just(accounts[0]);
     }).observeOn(Schedulers.from(Executors.newSingleThreadExecutor()));

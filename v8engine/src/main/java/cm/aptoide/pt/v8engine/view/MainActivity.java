@@ -59,17 +59,14 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class MainActivity extends TabNavigatorActivity implements MainView, FragmentShower {
 
-  public final static String FRAGMENT = "FRAGMENT";
-
   private static final String TAG = MainActivity.class.getSimpleName();
   private StoreUtilsProxy storeUtilsProxy;
-  private AptoideAccountManager accountManager;
 
   @Partners @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.frame_layout);
-
-    accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
+	  
+	  AptoideAccountManager accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
     storeUtilsProxy = new StoreUtilsProxy(accountManager,
         ((V8Engine) getApplicationContext()).getBaseBodyInterceptor(),
         new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class));

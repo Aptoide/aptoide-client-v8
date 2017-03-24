@@ -12,7 +12,6 @@ import android.content.pm.PackageInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.CredentialsValidator;
@@ -150,9 +149,13 @@ public abstract class V8Engine extends DataProvider {
     generateAptoideUuid().observeOn(Schedulers.computation())
         .andThen(regenerateUserAgent(accountManager))
         .andThen(initAbTestManager())
-        .andThen(prepareApp())
-        .subscribe(() -> {
-        }, error -> CrashReport.getInstance().log(error));
+        .andThen(prepareApp().onErrorComplete(err -> {
+          // in case we have an error preparing the app, log that error and continue
+          CrashReport.getInstance().log(err);
+          return true;
+        }))
+        .andThen(discoverAndSaveInstalledApps())
+        .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance().log(error));
 
     // this will trigger the migration if needed
     SQLiteDatabase db = new SQLiteDatabaseHelper(this).getWritableDatabase();
@@ -196,14 +199,6 @@ public abstract class V8Engine extends DataProvider {
     Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
   }
 
-  public AptoideClientUUID getAptoideClientUUID() {
-    if (aptoideClientUUID == null) {
-      aptoideClientUUID =
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
-    }
-    return aptoideClientUUID;
-  }
-
   @Override protected TokenInvalidator getTokenInvalidator() {
     return new TokenInvalidator() {
       @Override public Single<String> invalidateAccessToken() {
@@ -212,6 +207,14 @@ public abstract class V8Engine extends DataProvider {
             .map(account -> account.getToken());
       }
     };
+  }
+
+  public AptoideClientUUID getAptoideClientUUID() {
+    if (aptoideClientUUID == null) {
+      aptoideClientUUID =
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
+    }
+    return aptoideClientUUID;
   }
 
   @Partners protected FragmentProvider createFragmentProvider() {
@@ -247,19 +250,27 @@ public abstract class V8Engine extends DataProvider {
   }
 
   private Completable prepareApp() {
-    if (SecurePreferences.isFirstRun()) {
-      PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-      if (accountManager.isLoggedIn() && ManagerPreferences.isFirstRunV7()) {
-        accountManager.removeAccount().onErrorComplete().subscribe();
+    return accountManager.accountStatus().first().toSingle().flatMapCompletable(account -> {
+      if (SecurePreferences.isFirstRun()) {
+
+        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+
+        //Completable prepare;
+        //if (account.isLoggedIn() && ManagerPreferences.isFirstRunV7()) {
+        //  prepare = accountManager.logout();
+        //} else{
+          // load picture, name and email
+          //prepare = setupFirstRun().andThen(
+          //    Completable.merge(accountManager.syncCurrentAccount(), createShortcut()));
+        //}
+        //return prepare;
+
+        return setupFirstRun().andThen(
+            Completable.merge(accountManager.syncCurrentAccount(), createShortcut()));
       }
 
-      // load picture, name and email
-      return setupFirstRun().andThen(
-          (accountManager.syncCurrentAccount()).mergeWith(createShortcut())
-              .mergeWith(discoverAndSaveInstalledApps()));
-    } else {
-      return discoverAndSaveInstalledApps();
-    }
+      return Completable.complete();
+    });
   }
 
   public AptoideAccountManager getAccountManager() {
@@ -298,10 +309,10 @@ public abstract class V8Engine extends DataProvider {
       if (accountManager.isLoggedIn()) {
 
         if (!SecurePreferences.isUserDataLoaded()) {
-          regenerateUserAgent(accountManager).subscribe(() -> SecurePreferences.setUserDataLoaded(),
-              err -> CrashReport.getInstance().log(err));
+          return regenerateUserAgent(accountManager).doOnCompleted(
+              () -> SecurePreferences.setUserDataLoaded())
+              .doOnError(err -> CrashReport.getInstance().log(err));
         }
-        return null;
       }
 
       final StoreCredentialsProviderImpl storeCredentials = new StoreCredentialsProviderImpl();
@@ -313,11 +324,10 @@ public abstract class V8Engine extends DataProvider {
       BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
           storeCredentials.get(getConfiguration().getDefaultStore());
 
-      generateAptoideUuid().andThen(proxy.addDefaultStore(
+      return generateAptoideUuid().andThen(proxy.addDefaultStore(
           GetStoreMetaRequest.of(defaultStoreCredentials, getBaseBodyInterceptor()), accountManager,
-          defaultStoreCredentials).andThen(refreshUpdates()).toObservable()).subscribe(__ -> {
-      }, err -> CrashReport.getInstance().log(err));
-      return null;
+          defaultStoreCredentials).andThen(refreshUpdates()).toObservable())
+          .doOnError(err -> CrashReport.getInstance().log(err));
     }));
   }
 
@@ -395,6 +405,13 @@ public abstract class V8Engine extends DataProvider {
     return RepositoryFactory.getUpdateRepository(DataProvider.getContext()).sync(true);
   }
 
+  /**
+   * Use {@link #createShortcut()} using a {@link Completable}
+   */
+  @Deprecated @Partners public void createShortCut() {
+    createAppShortcut();
+  }
+
   private void createAppShortcut() {
     Intent shortcutIntent = new Intent(this, MainActivity.class);
     shortcutIntent.setAction(Intent.ACTION_MAIN);
@@ -405,13 +422,6 @@ public abstract class V8Engine extends DataProvider {
         Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.mipmap.ic_launcher));
     intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
     getApplicationContext().sendBroadcast(intent);
-  }
-
-  /**
-   * Use {@link #createShortcut()} using a {@link Completable}
-   */
-  @Deprecated @Partners public void createShortCut() {
-    createAppShortcut();
   }
 
   @Partners protected void setupCrashReports(boolean isDisabled) {

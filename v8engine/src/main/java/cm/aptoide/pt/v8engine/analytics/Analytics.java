@@ -214,7 +214,6 @@ public class Analytics {
         FlurryAgent.logEvent(event);
         Logger.d(TAG, "Flurry Event: " + event);
       }
-
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -331,18 +330,24 @@ public class Analytics {
 
       public static void onCreate(android.app.Activity activity) {
 
-        if (!ACTIVATE_LOCALYTICS) return;
+        if (!ACTIVATE_LOCALYTICS) {
+          return;
+        }
         Localytics.registerPush(BuildConfig.GOOGLE_SENDER_ID);
       }
 
       public static void onDestroy(android.app.Activity activity) {
 
-        if (!ACTIVATE_LOCALYTICS) return;
+        if (!ACTIVATE_LOCALYTICS) {
+          return;
+        }
       }
 
       public static void onResume(android.app.Activity activity) {
 
-        if (!ACTIVATE_LOCALYTICS) return;
+        if (!ACTIVATE_LOCALYTICS) {
+          return;
+        }
 
         Localytics.onActivityResume(activity);
 
@@ -362,14 +367,18 @@ public class Analytics {
       }
 
       public static void onPause(android.app.Activity activity) {
-        if (!ACTIVATE_LOCALYTICS && !isFirstSession) return;
+        if (!ACTIVATE_LOCALYTICS && !isFirstSession) {
+          return;
+        }
 
         Localytics.onActivityPaused(activity);
       }
 
       public static void onStart(android.app.Activity activity) {
 
-        if (!ACTIVATE_FLURRY) return;
+        if (!ACTIVATE_FLURRY) {
+          return;
+        }
 
         Logger.d(TAG, "FlurryAgent.onStartSession called");
         FlurryAgent.onStartSession(activity, BuildConfig.FLURRY_KEY);
@@ -377,7 +386,9 @@ public class Analytics {
 
       public static void onStop(android.app.Activity activity) {
 
-        if (!ACTIVATE_FLURRY) return;
+        if (!ACTIVATE_FLURRY) {
+          return;
+        }
 
         Logger.d(TAG, "FlurryAgent.onEndSession called");
         FlurryAgent.onEndSession(activity);
@@ -406,6 +417,7 @@ public class Analytics {
   }
 
   public static class Account {
+
     private static final String LOGIN_SIGN_UP_START_SCREEN = "Account_Login_Signup_Start_Screen";
     private static final String SIGNUP_SCREEN = "Account_Signup_Screen";
     private static final String LOGIN_SCREEN = "Account_Login_Screen";
@@ -532,6 +544,7 @@ public class Analytics {
   }
 
   public static class Stores {
+
     public static final String EVENT_NAME = "Stores";
 
     public static final String STORE_NAME = "Store Name";
@@ -580,6 +593,7 @@ public class Analytics {
   }
 
   public static class Updates {
+
     public static final String EVENT_NAME = "Updates";
 
     public static final String CLICKED_ON_CREATE_REVIEW = "Create Review";
@@ -600,6 +614,7 @@ public class Analytics {
   }
 
   public static class Search {
+
     //event names
     public static final String EVENT_NAME_SEARCH_TERM = "Search Term";
     public static final String EVENT_NAME_NO_SEARCH_RESULTS = "No Search Result";
@@ -617,6 +632,7 @@ public class Analytics {
   }
 
   public static class ApplicationInstall {
+
     public static final String EVENT_NAME = "Application Install";
 
     private static final String TYPE = "Type";
@@ -708,6 +724,7 @@ public class Analytics {
   }
 
   public static class ClickedOnInstallButton {
+
     private static final String EVENT_NAME = "Clicked on install button";
 
     //attributes
@@ -855,6 +872,7 @@ public class Analytics {
   }
 
   public static class Dimensions {
+
     public static final String VERTICAL = V8Engine.getConfiguration().getVerticalDimension();
     public static final String PARTNER = V8Engine.getConfiguration().getPartnerDimension();
     public static final String UNKNOWN = "unknown";
@@ -996,6 +1014,7 @@ public class Analytics {
   }
 
   public static class LTV {
+
     public static void cpi(String packageName) {
       ltv("CPI Click", packageName);
     }
@@ -1044,6 +1063,7 @@ public class Analytics {
   }
 
   public static class LocalyticsSessionControl {
+
     public static void firstSession(SharedPreferences sPref) {
       SharedPreferences.Editor edit = sPref.edit();
       edit.putBoolean(IS_LOCALYTICS_FIRST_SESSION, false);
