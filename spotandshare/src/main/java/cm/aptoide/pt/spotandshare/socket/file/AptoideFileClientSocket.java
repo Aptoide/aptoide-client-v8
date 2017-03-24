@@ -45,7 +45,7 @@ public class AptoideFileClientSocket<T> extends AptoideClientSocket {
     }
 
     ProgressAccumulator progressAccumulator =
-        new MultiProgressAccumulator<T>(computeTotalSize(fileInfos), fileClientLifecycle,
+        new MultiProgressAccumulatorClient(computeTotalSize(fileInfos), fileClientLifecycle,
             fileDescriptor);
 
     for (FileInfo fileInfo : fileInfos) {
@@ -76,5 +76,26 @@ public class AptoideFileClientSocket<T> extends AptoideClientSocket {
     this.fileClientLifecycle = fileClientLifecycle;
 
     return this;
+  }
+
+  public class MultiProgressAccumulatorClient extends MultiProgressAccumulator<T> {
+
+    private final FileClientLifecycle<T> fileClientLifecycle;
+
+    public MultiProgressAccumulatorClient(long totalProgress,
+        FileClientLifecycle<T> fileClientLifecycle, T androidAppInfo) {
+      super(totalProgress, fileClientLifecycle, androidAppInfo);
+      this.fileClientLifecycle = fileClientLifecycle;
+    }
+
+    @Override public void onProgressChanged(float progress) {
+      super.onProgressChanged(progress);
+
+      if (progress > 0.9999999999999999999999999) {
+        if (fileClientLifecycle != null) {
+          fileClientLifecycle.onFinishReceiving(t);
+        }
+      }
+    }
   }
 }
