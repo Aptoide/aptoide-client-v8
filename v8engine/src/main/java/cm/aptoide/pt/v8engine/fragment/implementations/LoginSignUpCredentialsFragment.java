@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -116,6 +117,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public boolean onBackPressed() {
+    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     return tryCloseLoginBottomSheet() || super.onBackPressed();
   }
 

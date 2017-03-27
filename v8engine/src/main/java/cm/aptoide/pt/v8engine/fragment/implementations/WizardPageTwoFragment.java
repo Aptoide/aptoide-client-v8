@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,12 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.fragment.FragmentView;
 
 /**
  * Created by jdandrade on 18-07-2016.
  * This Fragment is responsible for setting up and inflating the Second page in the Wizard.
  */
-public class WizardPageTwoFragment extends Fragment {
+public class WizardPageTwoFragment extends FragmentView {
 
   public static Fragment newInstance() {
     return new WizardPageTwoFragment();
@@ -31,5 +33,10 @@ public class WizardPageTwoFragment extends Fragment {
     ((TextView) view.findViewById(android.R.id.text2)).setText(
         R.string.wizard_sub_title_viewpager_two);
     ((ImageView) view.findViewById(android.R.id.icon)).setImageResource(R.drawable.wizard_two);
+  }
+
+  @Override public boolean onBackPressed() {
+    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+    return super.onBackPressed();
   }
 }
