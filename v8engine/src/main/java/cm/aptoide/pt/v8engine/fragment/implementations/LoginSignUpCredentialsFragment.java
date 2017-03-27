@@ -281,7 +281,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     Intent i = new Intent(getContext(), CreateUserActivity.class);
     FragmentActivity parent = getActivity();
     parent.startActivity(i);
-    parent.finish();
+    getNavigationManager().cleanBackStack();
   }
 
   private void showFacebookLoginError(@StringRes int errorRes) {
