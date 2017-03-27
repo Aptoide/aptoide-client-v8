@@ -13,15 +13,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.AddressBookAnalytics;
@@ -59,19 +56,16 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    final AptoideClientUUID aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    final AptoideAccountManager accountManager =
-        ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    this.mActionsListener = new PhoneInputPresenter(this, new ContactsRepositoryImpl(
-        new BaseBodyInterceptor(aptoideClientUUID, accountManager),
-        aptoideClientUUID),
-        new AddressBookAnalytics(Analytics.getInstance(),
-            AppEventsLogger.newLogger(getContext().getApplicationContext())),
-        new AddressBookNavigationManager(NavigationManagerV4.Builder.buildWith(getActivity()),
-            entranceTag, getString(R.string.addressbook_about),
-            getString(R.string.addressbook_data_about,
-                Application.getConfiguration().getMarketName())));
+    final BodyInterceptor<BaseBody> baseBodyInterceptor =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+    this.mActionsListener =
+        new PhoneInputPresenter(this, new ContactsRepositoryImpl(baseBodyInterceptor),
+            new AddressBookAnalytics(Analytics.getInstance(),
+                AppEventsLogger.newLogger(getContext().getApplicationContext())),
+            new AddressBookNavigationManager(NavigationManagerV4.Builder.buildWith(getActivity()),
+                entranceTag, getString(R.string.addressbook_about),
+                getString(R.string.addressbook_data_about,
+                    Application.getConfiguration().getMarketName())));
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
     contactUtils = new ContactUtils();
   }

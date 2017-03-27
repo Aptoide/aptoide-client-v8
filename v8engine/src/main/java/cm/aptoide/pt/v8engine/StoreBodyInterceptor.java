@@ -5,7 +5,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.RequestBody;
@@ -46,7 +45,7 @@ public class StoreBodyInterceptor implements BodyInterceptor<HashMapNotNull<Stri
           } catch (JsonProcessingException e) {
             Single.error(e);
           }
-          body.put("access_token", requestBodyFactory.createBodyPartFromString(account.getToken()));
+          body.put("access_token", requestBodyFactory.createBodyPartFromString(account.getAccessToken()));
 
           return Single.just(body);
         });

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.CallSuper;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,10 +13,14 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigation.AccountNavigator;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -27,6 +32,9 @@ import cm.aptoide.pt.v8engine.activity.CreateStoreActivity;
 import cm.aptoide.pt.v8engine.customviews.LikeButtonView;
 import cm.aptoide.pt.v8engine.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.interfaces.ShareCardCallback;
+import cm.aptoide.pt.v8engine.preferences.AdultContent;
+import cm.aptoide.pt.v8engine.preferences.Preferences;
+import cm.aptoide.pt.v8engine.preferences.SecurePreferences;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.CardDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.viewRateAndCommentReviews.CommentDialogFragment;
@@ -50,10 +58,9 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
 
   private static final String TAG = CardWidget.class.getName();
   TextView shareButton;
-  private IdsRepositoryImpl idsRepository;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
-  private BaseBodyInterceptor bodyInterceptor;
+  private BodyInterceptor<BaseBody> bodyInterceptor;
   private LinearLayout like;
   private LikeButtonView likeButton;
   private TextView comment;
@@ -80,15 +87,11 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
 
   @CallSuper @Override public void bindView(T displayable) {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
     accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
 
     compositeSubscription.add(
         accountManager.accountStatus().doOnNext(account -> updateAccount(account)).subscribe());
-
-
-    idsRepository =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    bodyInterceptor = new BaseBodyInterceptor(idsRepository, accountManager);
     like.setVisibility(View.VISIBLE);
     comment.setVisibility(View.VISIBLE);
 
@@ -134,7 +137,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
       return;
     }
 
-    if (TextUtils.isEmpty(account.getStore()) && !Account.Access.PUBLIC.equals(
+    if (TextUtils.isEmpty(account.getStoreName()) && !Account.Access.PUBLIC.equals(
         account.getAccess())) {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
           R.string.create_store_create, snackView -> {

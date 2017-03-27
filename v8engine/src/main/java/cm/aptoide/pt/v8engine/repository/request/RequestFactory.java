@@ -27,19 +27,18 @@ public class RequestFactory {
   private final GetUserRequestFactory getUserRequestFactory;
   private final GetStoreRecommendedRequestFactory getStoreRecommendedRequestFactory;
 
-  public RequestFactory(AptoideClientUUID aptoideClientUUID, AptoideAccountManager accountManager,
-      StoreCredentialsProvider storeCredentialsProvider, BodyInterceptor bodyInterceptor) {
+  public RequestFactory(StoreCredentialsProvider storeCredentialsProvider, BodyInterceptor bodyInterceptor) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     listStoresRequestFactory =
-        new ListStoresRequestFactory(aptoideClientUUID, accountManager, bodyInterceptor);
+        new ListStoresRequestFactory(bodyInterceptor);
     listAppsRequestFactory =
         new ListAppsRequestFactory(bodyInterceptor, storeCredentialsProvider);
     listFullReviewsRequestFactory =
-        new ListFullReviewsRequestFactory(aptoideClientUUID, accountManager, bodyInterceptor);
+        new ListFullReviewsRequestFactory(bodyInterceptor);
     getStoreRequestFactory =
-        new GetStoreRequestFactory(accountManager, storeCredentialsProvider, bodyInterceptor);
+        new GetStoreRequestFactory(storeCredentialsProvider, bodyInterceptor);
     getStoreWidgetsRequestFactory =
-        new GetStoreWidgetsRequestFactory(accountManager, storeCredentialsProvider, bodyInterceptor);
+        new GetStoreWidgetsRequestFactory(storeCredentialsProvider, bodyInterceptor);
     getUserRequestFactory = new GetUserRequestFactory(bodyInterceptor);
 
     getStoreRecommendedRequestFactory = new GetStoreRecommendedRequestFactory(bodyInterceptor);

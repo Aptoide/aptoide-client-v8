@@ -2,11 +2,15 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowersRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FollowUserDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.MessageWhiteBgDisplayable;
@@ -21,6 +25,7 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
 
   private Long userId;
   private Long storeId;
+  private BodyInterceptor<BaseBody> baseBodyInterceptor;
 
   public static TimeLineFollowFragment newInstanceUsingUser(Long id, long followNumber,
       String storeTheme) {
@@ -56,6 +61,12 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
     return fragment;
   }
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    baseBodyInterceptor = ((V8Engine) getContext().getApplicationContext())
+        .getBaseBodyInterceptor();
+  }
+
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     if (args.containsKey(BundleKeys.USER_ID)) {
@@ -67,7 +78,7 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
   }
 
   @Override protected V7 buildRequest() {
-    return GetFollowersRequest.of(getBodyDecorator(), userId, storeId);
+    return GetFollowersRequest.of(baseBodyInterceptor, userId, storeId);
   }
 
   @Override protected Displayable createUserDisplayable(GetFollowers.TimelineUser user) {

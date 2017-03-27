@@ -19,21 +19,21 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.navigation.AccountNavigator;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
@@ -212,11 +212,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     final Context applicationContext = getContext().getApplicationContext();
 
     accountManager = ((V8Engine) applicationContext).getAccountManager();
-
-    final IdsRepositoryImpl idsRepository =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    final BodyInterceptor bodyInterceptor = new BaseBodyInterceptor(idsRepository, accountManager);
-
+    final BodyInterceptor<BaseBody> bodyInterceptor =
+        ((V8Engine) applicationContext).getBaseBodyInterceptor();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(applicationContext), bodyInterceptor);
     dateCalculator = new DateCalculator();
@@ -240,8 +237,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
     cardToDisplayable =
         new CardToDisplayableConverter(socialRepository, timelineAnalytics, installManager,
-            permissionManager, accountManager, idsRepository, bodyInterceptor,
-            storeCredentialsProvider);
+            permissionManager, storeCredentialsProvider, new InstallEventConverter(bodyInterceptor),
+            Analytics.getInstance(), new DownloadEventConverter(bodyInterceptor));
 
     refreshSubject = BehaviorRelay.create();
   }

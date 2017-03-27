@@ -10,7 +10,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
-import cm.aptoide.accountmanager.BuildConfig;
+import cm.aptoide.pt.v8engine.BuildConfig;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.GoogleLoginView;
 import cm.aptoide.pt.v8engine.viewModel.GoogleAccountViewModel;
 import com.google.android.gms.auth.api.Auth;
@@ -90,17 +91,8 @@ public abstract class GoogleLoginFragment extends GooglePlayServicesFragment
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-
     googleLoginSubject = PublishRelay.create();
-
-    final GoogleSignInOptions options =
-        new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
-            .requestScopes(new Scope("https://www.googleapis.com/auth/contacts.readonly"))
-            .requestScopes(new Scope(Scopes.PROFILE))
-            .requestServerAuthCode(BuildConfig.GMS_SERVER_ID)
-            .build();
-
-    client = getClientBuilder().addApi(GOOGLE_SIGN_IN_API, options).build();
+    client = ((V8Engine) getContext().getApplicationContext()).getGoogleSignInClient();
   }
 
   protected abstract void showGoogleLoginError();

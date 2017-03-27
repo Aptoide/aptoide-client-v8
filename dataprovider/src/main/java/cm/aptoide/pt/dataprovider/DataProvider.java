@@ -7,7 +7,6 @@ package cm.aptoide.pt.dataprovider;
 
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.preferences.Application;
-import rx.Observable;
 import rx.Single;
 
 /**

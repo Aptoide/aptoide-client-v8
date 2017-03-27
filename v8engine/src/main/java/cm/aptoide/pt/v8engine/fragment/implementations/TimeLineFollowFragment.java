@@ -6,15 +6,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.GetFollowers;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeWithToolbarFragment;
@@ -34,20 +30,7 @@ import rx.functions.Action1;
 public abstract class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment {
 
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
-  @Getter(AccessLevel.PROTECTED) private BaseBodyInterceptor bodyDecorator;
-
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    final AptoideAccountManager accountManager =
-        ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    final AptoideClientUUID aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext());
-    bodyDecorator =
-        new BaseBodyInterceptor(aptoideClientUUID, accountManager);
-  }
-
-  @Override protected boolean displayHomeUpAsEnabled() {
+    @Override protected boolean displayHomeUpAsEnabled() {
     return true;
   }
 

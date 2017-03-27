@@ -26,16 +26,13 @@ import rx.Observable;
 public class AppRepository {
 
   private final NetworkOperatorManager operatorManager;
-  private final AptoideClientUUID aptoideClientUUID;
   private final AptoideAccountManager accountManager;
   private final BodyInterceptor bodyInterceptor;
   private final StoreCredentialsProvider storeCredentialsProvider;
 
   AppRepository(NetworkOperatorManager operatorManager, AptoideAccountManager accountManager,
-      AptoideClientUUID aptoideClientUUID, BodyInterceptor bodyInterceptor,
-      StoreCredentialsProviderImpl storeCredentialsProvider) {
+      BodyInterceptor bodyInterceptor, StoreCredentialsProviderImpl storeCredentialsProvider) {
     this.operatorManager = operatorManager;
-    this.aptoideClientUUID = aptoideClientUUID;
     this.accountManager = accountManager;
     this.bodyInterceptor = bodyInterceptor;
     this.storeCredentialsProvider = storeCredentialsProvider;

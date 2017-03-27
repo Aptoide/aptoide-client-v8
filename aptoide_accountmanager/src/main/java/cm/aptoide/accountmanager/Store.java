@@ -2,17 +2,17 @@ package cm.aptoide.accountmanager;
 
 public class Store {
   private final long downloadCount;
-  private final String icon;
+  private final String avatar;
   private final long id;
   private final String name;
   private final String theme;
   private final String username;
   private final String password;
 
-  public Store(long downloadCount, String icon, long id, String name, String theme, String username,
+  public Store(long downloadCount, String avatar, long id, String name, String theme, String username,
       String password) {
     this.downloadCount = downloadCount;
-    this.icon = icon;
+    this.avatar = avatar;
     this.id = id;
     this.name = name;
     this.theme = theme;
@@ -32,8 +32,8 @@ public class Store {
     return downloadCount;
   }
 
-  public String getIcon() {
-    return icon;
+  public String getAvatar() {
+    return avatar;
   }
 
   public long getId() {

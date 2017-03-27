@@ -11,17 +11,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.BaseLoaderToolbarFragment;
@@ -42,7 +39,6 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   @Getter private static final String STORE_THEME = "store_theme";
   @Getter private static final String DESCRIPTION = "description";
   @Getter private static final String APP_NAME = "APP_NAME";
-  private AptoideClientUUID aptoideClientUUID;
   private boolean hasAppId = false;
   private long appId;
   private String packageName;
@@ -52,8 +48,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   private String storeTheme;
   private String description;
   private String appName;
-  private AptoideAccountManager accountManager;
-  private BaseBodyInterceptor bodyDecorator;
+  private BodyInterceptor<BaseBody> baseBodyBodyInterceptor;
   private StoreCredentialsProvider storeCredentialsProvider;
 
   public static DescriptionFragment newInstance(String appName, String description,
@@ -82,10 +77,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
-    aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    bodyDecorator = new BaseBodyInterceptor(aptoideClientUUID, accountManager);
+    baseBodyBodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -132,7 +124,8 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
       finishLoading();
     } else if (hasAppId) {
       GetAppRequest.of(appId, V8Engine.getConfiguration().getPartnerId() == null ? null : storeName,
-          StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName, bodyDecorator).execute(getApp -> {
+          StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
+          baseBodyBodyInterceptor).execute(getApp -> {
         setupAppDescription(getApp);
         setupTitle(getApp);
         finishLoading();

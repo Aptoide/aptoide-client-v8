@@ -10,20 +10,14 @@ import cm.aptoide.pt.interfaces.AptoideClientUUID;
  */
 class ListStoresRequestFactory {
 
-  private final AptoideClientUUID aptoideClientUUID;
-  private final AptoideAccountManager accountManager;
   private BodyInterceptor bodyInterceptor;
 
-  public ListStoresRequestFactory(AptoideClientUUID aptoideClientUUID,
-      AptoideAccountManager accountManager, BodyInterceptor baseBodyInterceptor) {
-    this.aptoideClientUUID = aptoideClientUUID;
-    this.accountManager = accountManager;
+  public ListStoresRequestFactory(BodyInterceptor baseBodyInterceptor) {
     this.bodyInterceptor = baseBodyInterceptor;
   }
 
   public ListStoresRequest newListStoresRequest(int offset, int limit) {
-    return ListStoresRequest.ofTopStores(offset, limit, accountManager.getAccessToken(),
-        bodyInterceptor);
+    return ListStoresRequest.ofTopStores(offset, limit, bodyInterceptor);
   }
 
   public ListStoresRequest newListStoresRequest(String url) {

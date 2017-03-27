@@ -33,7 +33,7 @@ public class UpdateRepository implements Repository<Update, String> {
   private final BodyInterceptor bodyInterceptor;
 
   UpdateRepository(UpdateAccessor updateAccessor, StoreAccessor storeAccessor,
-      AptoideAccountManager accountManager, IdsRepositoryImpl idsRepository,
+      AptoideAccountManager accountManager, AptoideClientUUID idsRepository,
       BodyInterceptor bodyInterceptor) {
     this.updateAccessor = updateAccessor;
     this.storeAccessor = storeAccessor;

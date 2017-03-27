@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.account;
 
 import cm.aptoide.accountmanager.Store;
-import cm.aptoide.accountmanager.StoreDataPersist;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.logger.Logger;
 import java.util.List;
@@ -9,7 +8,7 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-public class DatabaseStoreDataPersist implements StoreDataPersist {
+public class DatabaseStoreDataPersist {
 
   private final StoreAccessor accessor;
   private final DatabaseStoreMapper databaseStoreMapper;
@@ -19,7 +18,7 @@ public class DatabaseStoreDataPersist implements StoreDataPersist {
     this.databaseStoreMapper = databaseStoreMapper;
   }
 
-  @Override public Completable persist(List<Store> stores) {
+  public Completable persist(List<Store> stores) {
     return Observable.from(stores)
         .map(store -> databaseStoreMapper.toDatabase(store))
         .toList()
@@ -27,7 +26,7 @@ public class DatabaseStoreDataPersist implements StoreDataPersist {
         .toCompletable();
   }
 
-  @Override public Single<List<Store>> get() {
+  public Single<List<Store>> get() {
     return accessor.getAll()
         .first()
         .flatMapIterable(list -> list)
@@ -44,7 +43,7 @@ public class DatabaseStoreDataPersist implements StoreDataPersist {
     public cm.aptoide.pt.database.realm.Store toDatabase(Store store) {
       cm.aptoide.pt.database.realm.Store result = new cm.aptoide.pt.database.realm.Store();
       result.setDownloads(store.getDownloadCount());
-      result.setIconPath(store.getIcon());
+      result.setIconPath(store.getAvatar());
       result.setStoreId(store.getId());
       result.setStoreName(store.getName());
       result.setTheme(store.getTheme());

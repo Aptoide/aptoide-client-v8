@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -30,6 +32,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.view.AccountErrorMapper;
 import cm.aptoide.pt.v8engine.view.CreateUserErrorMapper;
 import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
@@ -172,6 +175,14 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
       avatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
     }
     checkAvatarRequirements(avatarPath, avatarUrl);
+  }
+
+  @Override public void onBackPressed() {
+    Fragment homeFragment =
+        HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
+            V8Engine.getConfiguration().getDefaultTheme());
+    getNavigationManager().navigateToWithoutBackSave(homeFragment);
+    finish();
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,

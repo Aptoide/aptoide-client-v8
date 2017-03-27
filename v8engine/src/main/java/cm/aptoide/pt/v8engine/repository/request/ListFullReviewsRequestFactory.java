@@ -14,8 +14,7 @@ class ListFullReviewsRequestFactory {
 
   private final BodyInterceptor bodyInterceptor;
 
-  public ListFullReviewsRequestFactory(AptoideClientUUID aptoideClientUUID,
-      AptoideAccountManager accountManager, BodyInterceptor bodyInterceptor) {
+  public ListFullReviewsRequestFactory(BodyInterceptor bodyInterceptor) {
     this.bodyInterceptor = bodyInterceptor;
   }
 

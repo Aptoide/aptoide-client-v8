@@ -22,8 +22,6 @@ import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import rx.Completable;
 import rx.Single;
 
@@ -73,7 +71,7 @@ public class PaymentConfirmationSync extends RepositorySync {
   @Override public void sync(SyncResult syncResult) {
     try {
       final String accessToken = accountManager.getAccessToken();
-      final String payerId = accountManager.getUserEmail();
+      final String payerId = accountManager.getAccountEmail();
       final Single<PaymentConfirmation> serverPaymentConfirmation;
       if (paymentConfirmationId != null) {
         final int paymentId = Integer.valueOf(this.paymentId);

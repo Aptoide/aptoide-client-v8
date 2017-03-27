@@ -7,14 +7,10 @@ package cm.aptoide.pt.viewRateAndCommentReviews;
 
 import android.view.View;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.ListComments;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -37,17 +33,11 @@ public class CommentsReadMoreWidget extends Widget<CommentsReadMoreDisplayable> 
   }
 
   @Override public void bindView(CommentsReadMoreDisplayable displayable) {
-    AptoideClientUUID aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext());
-
-    AptoideAccountManager accountManager =
-        ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-
+    final BodyInterceptor<BaseBody> baseBodyInterceptor =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
     Observable<ListComments> listCommentsObservable =
         ListCommentsRequest.of(displayable.getResourceId(), displayable.getNext(), 100,
-            displayable.isReview(), new BaseBodyInterceptor(aptoideClientUUID, accountManager))
-            .observe();
+            displayable.isReview(), baseBodyInterceptor).observe();
 
     compositeSubscription.add(RxView.clicks(readMoreButton)
         .flatMap(__ -> listCommentsObservable)

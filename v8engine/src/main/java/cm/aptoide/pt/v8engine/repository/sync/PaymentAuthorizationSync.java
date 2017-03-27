@@ -42,7 +42,7 @@ public class PaymentAuthorizationSync extends RepositorySync {
   @Override public void sync(SyncResult syncResult) {
     try {
       final String accessToken = accountManager.getAccessToken();
-      final String payerId = accountManager.getUserEmail();
+      final String payerId = accountManager.getAccountEmail();
       getServerAuthorizations(accessToken).doOnSuccess(
           response -> saveAndReschedulePendingAuthorization(response, syncResult, paymentIds,
               payerId)).onErrorReturn(throwable -> {

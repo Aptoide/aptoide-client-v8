@@ -5,9 +5,9 @@
 
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
+
 retrolambda {
   jvmArgs '-noverify'
-  //defaultMethods true
 }
 
 android {
@@ -16,14 +16,6 @@ android {
 
   defaultConfig {
     minSdkVersion 15
-
-    buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
-    resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID + "\""
-
-    buildConfigField "String", "BACKUP_SIGNATURE", "\"" + project.BACKUP_SIGNATURE + "\""
-    buildConfigField "String", "UPLOADER_SIGNATURE", "\"" + project.UPLOADER_SIGNATURE + "\""
-
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 
   lintOptions {
@@ -56,56 +48,14 @@ android {
 
 dependencies {
 
-  // Testing-only dependencies
   testCompile "junit:junit:${JUNIT_VERSION}"
-  testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
   testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-
-  //
-  // inter-projects dependencies
-  //
-  compile project(path: ':aptoidepreferences', configuration: 'release')
-  compile project(path: ':utils', configuration: 'release')
-  compile project(path: ':utilsdesign', configuration: 'release')
 
   internalCompile project(path: ':dataprovider', configuration: 'internalRelease')
   prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
 
-  compile project(path: ':imageloader', configuration: 'release')
-
-  //
-  // custom libs in folders
-  //
-
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-
-  //
-  // from remote repos
-  //
-
-  //Also present in v8engine
-  compile "com.jakewharton.rxbinding:rxbinding:${JW_RX_BINDING_VERSION}"
-
-  //noinspection GradleDependency
-  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-  //noinspection GradleDependency
-  compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
-
-  //noinspection GradleDependency
-  compile "com.google.android.gms:play-services-basement:${PLAY_SERVICES_VERSION}"
-  //noinspection GradleDependency
-  compile "com.google.android.gms:play-services-auth:${PLAY_SERVICES_VERSION}"
-
-  compile "com.facebook.android:facebook-android-sdk:${FACEBOOK_ANDROID_SDK_VERSION}"
-
   compile "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
-
   compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
-  compile "io.reactivex:rxandroid:${RXANDROID_VERSION}"
-  // And ProGuard rules for RxJava!
   compile "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
 
-  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
-  // Just for lombok not to complain
-  provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
 }

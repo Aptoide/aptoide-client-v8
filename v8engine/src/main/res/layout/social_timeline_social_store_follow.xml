@@ -46,7 +46,7 @@
         >
 
       <TextView
-          android:id="@+id/number_of_followers"
+          android:id="@+id/number_of_followers_text"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:drawableLeft="@drawable/user_shape"
@@ -57,7 +57,7 @@
           />
 
       <TextView
-          android:id="@+id/number_of_apps"
+          android:id="@+id/number_of_apps_text"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginLeft="10dp"
@@ -75,6 +75,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
       android:layout_centerVertical="true"
       >
 

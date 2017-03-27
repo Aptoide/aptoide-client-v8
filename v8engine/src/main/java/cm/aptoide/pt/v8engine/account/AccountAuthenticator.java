@@ -14,10 +14,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.v8engine.fragment.implementations.LoginSignUpFragment;
 import cm.aptoide.pt.v8engine.view.MainActivity;
-import com.facebook.login.LoginFragment;
 
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 
@@ -42,10 +43,13 @@ class AccountAuthenticator extends AbstractAccountAuthenticator {
   private final static String ARG_IS_ADDING_NEW_ACCOUNT = "IS_ADDING_ACCOUNT";
   private static final String TAG = AccountAuthenticator.class.getSimpleName();
   private final AptoideAccountManager accountManager;
+  private final CrashReport crashReport;
 
-  AccountAuthenticator(Context context, AptoideAccountManager accountManager) {
+  AccountAuthenticator(Context context, AptoideAccountManager accountManager,
+      CrashReport crashReport) {
     super(context);
     this.accountManager = accountManager;
+    this.crashReport = crashReport;
   }
 
   @Override
@@ -78,7 +82,7 @@ class AccountAuthenticator extends AbstractAccountAuthenticator {
   private Intent createAuthActivityIntent(AccountAuthenticatorResponse response, String accountType,
       String authTokenType, Bundle options) {
     Intent intent = new Intent(Application.getContext(), MainActivity.class);
-    intent.putExtra(MainActivity.FRAGMENT, LoginFragment.class.getName());
+    intent.putExtra(MainActivity.FRAGMENT, LoginSignUpFragment.class.getName());
     // FIXME: 14/2/2017 sithengineer add this funtionality in main Activity
     intent.putExtra(ARG_ACCOUNT_TYPE, accountType);
     intent.putExtra(ARG_AUTH_TYPE, authTokenType);
@@ -120,7 +124,7 @@ class AccountAuthenticator extends AbstractAccountAuthenticator {
     result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
     result.putString(AccountManager.KEY_AUTHTOKEN, authToken);
 
-    Logger.v(TAG,"getAuthToken returning - " + account + " " + authToken);
+    Logger.v(TAG, "getAuthToken returning - " + account + " " + authToken);
 
     return result;
 
@@ -160,7 +164,10 @@ class AccountAuthenticator extends AbstractAccountAuthenticator {
         && result.containsKey(AccountManager.KEY_BOOLEAN_RESULT)
         && !result.containsKey(AccountManager.KEY_INTENT)) {
       if (result.getBoolean(AccountManager.KEY_BOOLEAN_RESULT)) {
-        accountManager.logout(null);
+        accountManager.logout()
+            .doOnError(throwable -> crashReport.log(throwable))
+            .onErrorComplete()
+            .subscribe();
       }
     }
     return result;

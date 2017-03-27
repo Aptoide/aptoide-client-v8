@@ -24,9 +24,12 @@ import cm.aptoide.pt.v8engine.view.LoginSignUpView;
  */
 public class LoginSignUpFragment extends FragmentView implements LoginSignUpView {
 
-  private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
   private static final String BOTTOM_SHEET_WITH_BOTTOM_BAR = "bottom_sheet_expanded";
+  private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
   private static final String NAVIGATE_TO_HOME = "clean_back_stack";
+  private static final String ACCOUNT_TYPE = "account_type";
+  private static final String AUTH_TYPE = "auth_type";
+  private static final String IS_NEW_ACCOUNT = "is_new_account";
 
   private BottomSheetStateListener bottomSheetStateListener;
   private LoginSignUpCredentialsFragment loginFragment;
@@ -34,13 +37,25 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
   private boolean withBottomBar;
   private boolean dismissToNavigateToMainView;
   private boolean navigateToHome;
+  private String accountType;
+  private String authType;
+  private boolean isNewAccount;
 
   public static LoginSignUpFragment newInstance(boolean withBottomBar,
       boolean dismissToNavigateToMainView, boolean navigateToHome) {
+    return newInstance(withBottomBar, dismissToNavigateToMainView, navigateToHome, "", "", true);
+  }
+
+  public static LoginSignUpFragment newInstance(boolean withBottomBar,
+      boolean dismissToNavigateToMainView, boolean navigateToHome, String accountType,
+      String authType, boolean isNewAccount) {
     Bundle args = new Bundle();
     args.putBoolean(BOTTOM_SHEET_WITH_BOTTOM_BAR, withBottomBar);
     args.putBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW, dismissToNavigateToMainView);
     args.putBoolean(NAVIGATE_TO_HOME, navigateToHome);
+    args.putString(ACCOUNT_TYPE, accountType);
+    args.putString(AUTH_TYPE, authType);
+    args.putBoolean(IS_NEW_ACCOUNT, isNewAccount);
 
     LoginSignUpFragment fragment = new LoginSignUpFragment();
     fragment.setArguments(args);
@@ -49,11 +64,13 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
     final Bundle args = getArguments();
     withBottomBar = args.getBoolean(BOTTOM_SHEET_WITH_BOTTOM_BAR);
     dismissToNavigateToMainView = args.getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);
     navigateToHome = args.getBoolean(NAVIGATE_TO_HOME);
+    accountType = args.getString(ACCOUNT_TYPE, "");
+    authType = args.getString(AUTH_TYPE, "");
+    isNewAccount = args.getBoolean(IS_NEW_ACCOUNT);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

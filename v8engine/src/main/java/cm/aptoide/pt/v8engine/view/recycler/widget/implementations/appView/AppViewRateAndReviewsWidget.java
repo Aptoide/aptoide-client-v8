@@ -23,6 +23,7 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
@@ -36,7 +37,6 @@ import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
@@ -63,7 +63,6 @@ import rx.functions.Action1;
   public static final long TIME_BETWEEN_SCROLL = 2 * DateUtils.SECOND_IN_MILLIS;
   private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();
   private static final int MAX_COMMENTS = 3;
-  private AptoideClientUUID aptoideClientUUID;
   private DialogUtils dialogUtils;
   private AptoideAccountManager accountManager;
   private View emptyReviewsLayout;
@@ -86,7 +85,7 @@ import rx.functions.Action1;
   private String storeName;
   private int usersToVote;
   private TextView emptyReviewTextView;
-  private BodyInterceptor bodyInterceptor;
+  private BodyInterceptor<BaseBody> bodyInterceptor;
 
   public AppViewRateAndReviewsWidget(@NonNull View itemView) {
     super(itemView);
@@ -115,11 +114,9 @@ import rx.functions.Action1;
     GetAppMeta.App app = pojo.getNodes().getMeta().getData();
     GetAppMeta.Stats stats = app.getStats();
 
-    aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    bodyInterceptor = new BaseBodyInterceptor(aptoideClientUUID, accountManager);
-    dialogUtils = new DialogUtils(accountManager, aptoideClientUUID,
+    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+    dialogUtils = new DialogUtils(accountManager,
         new AccountNavigator(getContext(), getNavigationManager(), accountManager), bodyInterceptor);
     appName = app.getName();
     packageName = app.getPackageName();

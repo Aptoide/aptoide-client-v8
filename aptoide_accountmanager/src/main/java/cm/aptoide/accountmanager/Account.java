@@ -1,145 +1,156 @@
-/*
- * Copyright (c) 2017.
- * Modified by Marcelo Benites on 10/02/2017.
- */
-
 package cm.aptoide.accountmanager;
 
-import java.util.Collections;
+import cm.aptoide.pt.annotation.Partners;
 import java.util.List;
+import rx.Completable;
 
 /**
- * Created by marcelobenites on 10/02/17.
+ * User account information such as subscribed stores, credentials, preferences.
  */
+public interface Account {
 
-public class Account {
+  /**
+   * Changes state of the account to logged out. This method should not be called directly use
+   * {@link AptoideAccountManager#logout()} instead.
+   * @see AptoideAccountManager#login(Type, String, String, String)
+   * @return Completable to perform logout.
+   */
+  Completable logout();
 
-  private final String id;
-  private final String email;
-  private final String nickname;
-  private final String avatar;
-  private final String refreshToken;
-  private final String token;
-  private final Type type;
-  private final String store;
-  private final String storeAvatar;
-  private final boolean adultContentEnabled;
-  private final Access access;
-  private final boolean accessConfirmed;
-  private final String password;
-  private final List<Store> subscribedStores;
+  /**
+   * Refreshes the account token. This method should not be called directly use
+   * {@link AptoideAccountManager#refreshToken()} instead.
+   * @return Completable to perform logout.
+   */
+  Completable refreshToken();
 
-  private Account() {
-    this.id = "";
-    this.email = "";
-    this.nickname = "";
-    this.avatar = "";
-    this.refreshToken = "";
-    this.token = "";
-    this.password = "";
-    this.type = null;
-    this.store = "";
-    this.storeAvatar = "";
-    this.adultContentEnabled = false;
-    this.access = null;
-    this.accessConfirmed = false;
-    this.subscribedStores = Collections.emptyList();
+  /**
+   * Returns the stores which this account has subscribed to.
+   * @see Store
+   */
+  List<Store> getSubscribedStores();
+
+  /**
+   * Returns the id of the account.
+   */
+  String getId();
+
+  /**
+   * Returns the user's nickname.
+   */
+  String getNickname();
+
+  /**
+   * Returns the user's avatar URL.
+   */
+  String getAvatar();
+
+  /**
+   * Returns the user's store name.
+   */
+  String getStoreName();
+
+  /**
+   * Returns the user's store avatar URL.
+   */
+  String getStoreAvatar();
+
+  /**
+   * Returns whether adult content should be displayed for account.
+   */
+  boolean isAdultContentEnabled();
+
+  /**
+   * Returns account information access level e.g. whether user's nickname and avatar are
+   * going to be visible in social timeline.
+   * @see Access
+   */
+  Access getAccess();
+
+  /**
+   * Returns whether user confirmed its access level or not.
+   * @see #getAccess()
+   */
+  boolean isAccessConfirmed();
+
+  /**
+   * Returns whether user is logged in or not.
+   */
+  boolean isLoggedIn();
+
+  /**
+   * Returns user's e-mail.
+   */
+  String getEmail();
+
+  /**
+   * Returns access token for server side interaction. The token may expire according to server
+   * rules.
+   * @see #refreshToken()
+   */
+  String getAccessToken();
+
+  /**
+   * Returns refresh token used to refresh access token when it expires.
+   * @see #refreshToken()
+   */
+  String getRefreshToken();
+
+  /**
+   * Returns account's password.
+   */
+  String getPassword();
+
+  /**
+   * Returns account's type.
+   * @see Type
+   */
+  Account.Type getType();
+
+  /**
+   * Account information access level.
+   */
+  enum Access {
+    /**
+     * Account information is going to be visible e.g. user's nickname and avatar are
+     * going to be visible in social timeline.
+     */
+    PUBLIC,
+    /**
+     * Account information is going to be hidden e.g. user's nickname and avatar are
+     * not going to be visible in social timeline.
+     */
+    PRIVATE,
+    /**
+     * User did not confirm the account access level yet. By all means account is considered
+     * {@link #PRIVATE}.
+     */
+    UNLISTED
   }
 
-  public Account(String id, String email, String nickname, String avatar, String refreshToken,
-      String token, String password, Type type, String store, String storeAvatar,
-      boolean adultContentEnabled, Access access, boolean accessConfirmed,
-      List<Store> subscribedStores) {
-    this.id = id;
-    this.email = email;
-    this.nickname = nickname;
-    this.avatar = avatar;
-    this.refreshToken = refreshToken;
-    this.token = token;
-    this.password = password;
-    this.type = type;
-    this.store = store;
-    this.storeAvatar = storeAvatar;
-    this.adultContentEnabled = adultContentEnabled;
-    this.access = access;
-    this.accessConfirmed = accessConfirmed;
-    this.subscribedStores = subscribedStores;
-  }
-
-  public static Account empty() {
-    return new Account();
-  }
-
-  public List<Store> getSubscribedStores() {
-    return subscribedStores;
-  }
-
-  public Type getType() {
-    return type;
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public String getNickname() {
-    return nickname;
-  }
-
-  public String getAvatar() {
-    return avatar;
-  }
-
-  public String getStore() {
-    return store;
-  }
-
-  public String getStoreAvatar() {
-    return storeAvatar;
-  }
-
-  public boolean isAdultContentEnabled() {
-    return adultContentEnabled;
-  }
-
-  public Access getAccess() {
-    return access;
-  }
-
-  public boolean isAccessConfirmed() {
-    return accessConfirmed;
-  }
-
-  public boolean isLoggedIn() {
-    return (!isEmpty(getEmail()) && !isEmpty(getToken()) && !isEmpty(getRefreshToken()) && !isEmpty(
-        getPassword()));
-  }
-
-  private boolean isEmpty(String string) {
-    return string == null || string.trim().length() == 0;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public String getToken() {
-    return token;
-  }
-
-  public String getRefreshToken() {
-    return refreshToken;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
+  /**
+   * Account type.
+   */
   public enum Type {
-    APTOIDE, GOOGLE, FACEBOOK, ABAN
-  }
-
-  public enum Access {
-    PUBLIC, PRIVATE, UNLISTED
+    /**
+     * Default account when user did not login yet.
+     */
+    LOCAL,
+    /**
+     * Account created when user has logged in using Aptoide services.
+     */
+    APTOIDE,
+    /**
+     * Account created when user has logged in using Google services.
+     */
+    GOOGLE,
+    /**
+     * Account created when user has logged in using Facebook services.
+     */
+    FACEBOOK,
+    /**
+     * Account created when user has logged in using ABAN services.
+     */
+    @Partners ABAN
   }
 }

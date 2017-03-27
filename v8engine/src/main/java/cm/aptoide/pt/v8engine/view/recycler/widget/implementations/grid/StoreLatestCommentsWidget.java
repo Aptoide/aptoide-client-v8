@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -9,16 +10,22 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.preferences.AdultContent;
+import cm.aptoide.pt.v8engine.preferences.Preferences;
+import cm.aptoide.pt.v8engine.preferences.SecurePreferences;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.view.custom.HorizontalDividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
@@ -38,14 +45,13 @@ import rx.schedulers.Schedulers;
 
 public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplayable> {
 
-  private AptoideClientUUID aptoideClientUUID;
-
   private RecyclerView recyclerView;
 
   private long storeId;
   private String storeName;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
+  private BodyInterceptor<BaseBody> baseBodyInterceptor;
 
   public StoreLatestCommentsWidget(View itemView) {
     super(itemView);
@@ -57,10 +63,9 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
 
   @Override public void bindView(StoreLatestCommentsDisplayable displayable) {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    baseBodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
     accountNavigator =
         new AccountNavigator(getContext(), getNavigationManager(), accountManager);
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
     LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     recyclerView.setLayoutManager(layoutManager);
@@ -83,7 +88,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
   private Void reloadComments() {
     ManagerPreferences.setForceServerRefreshFlag(true);
     compositeSubscription.add(ListCommentsRequest.of(storeId, 0, 3,
-        false, new BaseBodyInterceptor(aptoideClientUUID, accountManager))
+        false, baseBodyInterceptor)
         .observe()
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())

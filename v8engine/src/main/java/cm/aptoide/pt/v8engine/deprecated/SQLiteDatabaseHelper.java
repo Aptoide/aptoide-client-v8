@@ -41,6 +41,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     Logger.w(TAG, "onCreate() called");
 
     // do nothing here.
+    checkAndMigrateUserAccount(0);
     ManagerPreferences.setNeedsSqliteDbMigration(false);
   }
 
@@ -53,7 +54,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
         + "]");
 
     migrate(db);
-    checkAndMigrateUserAccount(oldVersion, newVersion);
+    checkAndMigrateUserAccount(oldVersion);
     ManagerPreferences.setNeedsSqliteDbMigration(false);
     SecurePreferences.setWizardAvailable(true);
   }
@@ -142,9 +143,8 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
    * This method can be deleted in future releases, when version 8.1.2.1 is no longer supported /
    * relevant
    * @param oldVersion
-   * @param newVersion
    */
-  private void checkAndMigrateUserAccount(int oldVersion, int newVersion) {
+  private void checkAndMigrateUserAccount(int oldVersion) {
     final Context appContext = V8Engine.getContext();
     final AccountManager androidAccountManager = AccountManager.get(appContext);
     final android.accounts.Account[] accounts =
@@ -166,7 +166,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
       String encryptedPassword = androidAccountManager.getPassword(androidAccount);
       String plainTextPassword =
           new SecureCoderDecoder.Builder(appContext).create().decrypt(encryptedPassword);
-      if (oldVersion<=55 || TextUtils.isEmpty(plainTextPassword)) {
+      if (oldVersion <= 55 || TextUtils.isEmpty(plainTextPassword)) {
         plainTextPassword = encryptedPassword;
       }
 
@@ -208,7 +208,8 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
       String accessConfirmedKey = "access_confirmed";
       SharedPreferences defaultSharedPreferences =
           PreferenceManager.getDefaultSharedPreferences(appContext);
-      sharedPrefsData = Boolean.toString(defaultSharedPreferences.getBoolean(accessConfirmedKey, false));
+      sharedPrefsData =
+          Boolean.toString(defaultSharedPreferences.getBoolean(accessConfirmedKey, false));
       androidAccountManager.setUserData(androidAccount, accessConfirmedKey, sharedPrefsData);
 
       // account.name -> user email. we don't need to change this

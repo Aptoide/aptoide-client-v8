@@ -45,7 +45,7 @@ public class InviteFriendsPresenter implements InviteFriendsContract.UserActions
     String shareText =
         context.getString(R.string.follow_my_store, V8Engine.getConfiguration().getMarketName())
             + " http://"
-            + accountManager.getAccount().getStore()
+            + accountManager.getAccount().getStoreName()
             + ".store.aptoide.com";
     Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
     sharingIntent.setType("text/plain");

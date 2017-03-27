@@ -5,9 +5,7 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-import android.content.Context;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.navigation.AccountNavigator;
 
 /**
  * Created by marcelobenites on 06/01/17.
@@ -21,6 +19,6 @@ public class Payer {
   }
 
   public String getId() {
-    return accountManager.getUserEmail();
+    return accountManager.getAccountEmail();
   }
 }

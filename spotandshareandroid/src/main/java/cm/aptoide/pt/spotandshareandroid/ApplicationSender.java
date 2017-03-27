@@ -63,7 +63,21 @@ public class ApplicationSender {
   }
 
   public static void reset() {
+    if (instance != null) {
+      instance.removeSendListener();
+    }
     instance = null;
+
+  }
+
+  public void removeSendListener() {
+    if (sendListener != null) {
+      this.sendListener = null;
+      try {
+        context.unregisterReceiver(send);
+      } catch (IllegalArgumentException e) {
+      }
+    }
   }
 
   public void sendApp(List<App> selectedApps) {
@@ -144,16 +158,6 @@ public class ApplicationSender {
   public void stop() {
     //removeSendListeners();
     //removeHostsListener();
-  }
-
-  public void removeSendListener() {
-    if (sendListener != null) {
-      this.sendListener = null;
-      try {
-        context.unregisterReceiver(send);
-      } catch (IllegalArgumentException e) {
-      }
-    }
   }
 
   private void removeHostsListener() {

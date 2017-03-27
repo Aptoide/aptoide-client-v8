@@ -14,12 +14,13 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -88,12 +89,12 @@ public class SocialStoreLatestAppsWidget
 
   @Override public void bindView(SocialStoreLatestAppsDisplayable displayable) {
     super.bindView(displayable);
-    final AptoideClientUUID aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    storeUtilsProxy = new StoreUtilsProxy(accountManager,
-        new BaseBodyInterceptor(aptoideClientUUID, accountManager),
-        new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class));
+    final BodyInterceptor<BaseBody> baseBodyInterceptor =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+    storeUtilsProxy =
+        new StoreUtilsProxy(accountManager, baseBodyInterceptor, new StoreCredentialsProviderImpl(),
+            AccessorFactory.getAccessorFor(Store.class));
     storeName.setText(displayable.getStoreName());
     userName.setText(displayable.getUser().getName());
     setCardViewMargin(displayable, cardView);

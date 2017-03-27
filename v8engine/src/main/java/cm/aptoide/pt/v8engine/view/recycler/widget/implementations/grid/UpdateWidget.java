@@ -12,6 +12,7 @@ import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -48,17 +49,15 @@ import rx.android.schedulers.AndroidSchedulers;
 
   private static final String TAG = UpdateWidget.class.getSimpleName();
 
-  private View updateRowRelativeLayout;
+  private View updateRowLayout;
   private TextView labelTextView;
-  private ImageView iconImageView;
+  private ImageView icon;
   private ImageView imgUpdateLayout;
-  private TextView installedVernameTextView;
-  private TextView updateVernameTextView;
+  private TextView installedVersionName;
+  private TextView updateVersionName;
   private TextView textUpdateLayout;
   private ViewGroup updateButtonLayout;
-  //private UpdateDisplayable displayable;
   private ProgressBar progressBar;
-  private boolean shouldShowProgress = false;
 
   private UpdateRepository updateRepository;
 
@@ -67,11 +66,11 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   @Override protected void assignViews(View itemView) {
-    updateRowRelativeLayout = itemView.findViewById(R.id.updateRowRelativeLayout);
+    updateRowLayout = itemView.findViewById(R.id.updateRowRelativeLayout);
     labelTextView = (TextView) itemView.findViewById(R.id.name);
-    iconImageView = (ImageView) itemView.findViewById(R.id.icon);
-    installedVernameTextView = (TextView) itemView.findViewById(R.id.app_installed_version);
-    updateVernameTextView = (TextView) itemView.findViewById(R.id.app_update_version);
+    icon = (ImageView) itemView.findViewById(R.id.icon);
+    installedVersionName = (TextView) itemView.findViewById(R.id.app_installed_version);
+    updateVersionName = (TextView) itemView.findViewById(R.id.app_update_version);
     updateButtonLayout = (ViewGroup) itemView.findViewById(R.id.updateButtonLayout);
     imgUpdateLayout = (ImageView) itemView.findViewById(R.id.img_update_layout);
     textUpdateLayout = (TextView) itemView.findViewById(R.id.text_update_layout);
@@ -89,10 +88,10 @@ import rx.android.schedulers.AndroidSchedulers;
     FragmentActivity context = getContext();
 
     labelTextView.setText(updateDisplayable.getLabel());
-    updateVernameTextView.setText(updateDisplayable.getUpdateVersionName());
+    updateVersionName.setText(updateDisplayable.getUpdateVersionName());
 
     // load row image
-    ImageLoader.with(context).load(updateDisplayable.getIcon(), iconImageView);
+    ImageLoader.with(context).load(updateDisplayable.getIcon(), icon);
 
     final Observable<Void> handleUpdateButtonClick =
         handleUpdateButtonClick(updateDisplayable, context);
@@ -126,8 +125,9 @@ import rx.android.schedulers.AndroidSchedulers;
       InstalledAccessor accessor) {
     return accessor.get(packageName)
         .first()
+        .filter(installed -> installed != null && !TextUtils.isEmpty(installed.getVersionName()))
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(installed -> installedVernameTextView.setText(installed.getVersionName()))
+        .doOnNext(installed -> installedVersionName.setText(installed.getVersionName()))
         .map(__ -> null);
   }
 
@@ -140,12 +140,12 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   private Observable<Void> handleLongClicks(String packageName, FragmentActivity context) {
-    return RxView.longClicks(updateRowRelativeLayout)
+    return RxView.longClicks(updateRowLayout)
         .flatMap(__ -> getLongClickListener(packageName, context));
   }
 
   @NonNull private Observable<Void> handleUpdateRowClick(UpdateDisplayable updateDisplayable) {
-    return RxView.clicks(updateRowRelativeLayout).doOnNext(v -> {
+    return RxView.clicks(updateRowLayout).doOnNext(v -> {
       final Fragment fragment = V8Engine.getFragmentProvider()
           .newAppViewFragment(updateDisplayable.getAppId(), updateDisplayable.getPackageName());
       getNavigationManager().navigateTo(fragment);

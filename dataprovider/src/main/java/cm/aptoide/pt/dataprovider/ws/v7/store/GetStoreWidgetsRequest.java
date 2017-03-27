@@ -35,7 +35,7 @@ import rx.Observable;
   }
 
   public static GetStoreWidgetsRequest ofAction(String url, StoreCredentials storeCredentials,
-      String accessToken, BodyInterceptor bodyInterceptor) {
+      BodyInterceptor bodyInterceptor) {
 
     final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
 

@@ -20,7 +20,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.navigation.AccountNavigator;
@@ -45,8 +44,8 @@ public class DialogUtils {
   private final AccountNavigator accountNavigator;
   private BodyInterceptor bodyInterceptor;
 
-  public DialogUtils(AptoideAccountManager accountManager, AptoideClientUUID aptoideClientUUID,
-      AccountNavigator accountNavigator, BodyInterceptor bodyInterceptor) {
+  public DialogUtils(AptoideAccountManager accountManager, AccountNavigator accountNavigator,
+      BodyInterceptor bodyInterceptor) {
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.bodyInterceptor = bodyInterceptor;

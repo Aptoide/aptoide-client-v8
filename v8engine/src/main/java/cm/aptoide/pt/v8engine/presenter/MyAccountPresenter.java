@@ -1,28 +1,24 @@
 package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.view.MyAccountView;
 import cm.aptoide.pt.v8engine.view.View;
-import com.google.android.gms.common.api.GoogleApiClient;
 import rx.Observable;
 
 public class MyAccountPresenter implements Presenter {
 
   private final MyAccountView view;
   private final AptoideAccountManager accountManager;
-  private final GoogleApiClient client;
-  private final FragmentManager fragmentManager;
+  private final CrashReport crashReport;
 
   public MyAccountPresenter(MyAccountView view, AptoideAccountManager accountManager,
-      GoogleApiClient client, FragmentManager fragmentManager) {
+      CrashReport crashReport) {
     this.view = view;
     this.accountManager = accountManager;
-    this.client = client;
-    this.fragmentManager = fragmentManager;
+    this.crashReport = crashReport;
   }
 
   @Override public void present() {
@@ -30,22 +26,14 @@ public class MyAccountPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> signOutClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> {
-          CrashReport.getInstance().log(err);
-        });
+        .subscribe();
   }
 
   private Observable<Void> signOutClick() {
-    return view.signOutClick().doOnNext(__ -> {
-      signOut();
+    return view.signOutClick().flatMap(click -> accountManager.logout().doOnCompleted(() -> {
       ManagerPreferences.setAddressBookSyncValues(false);
       view.navigateToHome();
-    });
-  }
-
-  private void signOut() {
-    accountManager.logout(client);
+    }).doOnError(throwable -> crashReport.log(throwable)).<Void> toObservable()).retry();
   }
 
   @Override public void saveState(Bundle state) {

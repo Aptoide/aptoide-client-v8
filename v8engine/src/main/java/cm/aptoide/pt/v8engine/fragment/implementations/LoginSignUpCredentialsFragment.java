@@ -18,21 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxrelay.PublishRelay;
-import com.trello.rxlifecycle.android.FragmentEvent;
-
-import java.util.Arrays;
-import java.util.List;
-
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -40,6 +25,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.account.LoginPreferences;
 import cm.aptoide.pt.v8engine.activity.CreateUserActivity;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.GoogleLoginFragment;
@@ -49,6 +35,18 @@ import cm.aptoide.pt.v8engine.view.LoginSignUpCredentialsView;
 import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
 import cm.aptoide.pt.v8engine.viewModel.AptoideAccountViewModel;
 import cm.aptoide.pt.v8engine.viewModel.FacebookAccountViewModel;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxrelay.PublishRelay;
+import com.trello.rxlifecycle.android.FragmentEvent;
+import java.util.Arrays;
+import java.util.List;
 import rx.Observable;
 
 public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
@@ -62,7 +60,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   private PublishRelay<FacebookAccountViewModel> facebookLoginSubject;
   private LoginManager facebookLoginManager;
   private AlertDialog facebookEmailRequiredDialog;
-  private List<String> facebookRequestedPermissions;
   private Button googleLoginButton;
   private View facebookLoginButton;
   private Button hideShowAptoidePasswordButton;
@@ -82,9 +79,9 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   private boolean isPasswordVisible = false;
   private View credentialsEditTextsArea;
   private BottomSheetBehavior<View> bottomSheetBehavior;
-  private boolean dismissToNavigateToMainView;
-  private boolean navigateToHome;
   private ThrowableToStringMapper errorMapper;
+  private LoginSignUpCredentialsPresenter presenter;
+  private List<String> facebookRequestedPermissions;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
@@ -101,20 +98,21 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     errorMapper = new AccountErrorMapper(getContext());
-    this.dismissToNavigateToMainView = getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);
-    this.navigateToHome = getArguments().getBoolean(CLEAN_BACK_STACK);
+    facebookRequestedPermissions = Arrays.asList("email", "user_friends");
+    presenter = new LoginSignUpCredentialsPresenter(this,
+        ((V8Engine) getContext().getApplicationContext()).getAccountManager(),
+        facebookRequestedPermissions,
+        new LoginPreferences(getContext(), V8Engine.getConfiguration(),
+            GoogleApiAvailability.getInstance()),
+        getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW),
+        getArguments().getBoolean(CLEAN_BACK_STACK));
   }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
-    facebookRequestedPermissions = Arrays.asList("email", "user_friends");
-    return inflater.inflate(getLayoutId(), container, false);
-  }
-
-  protected int getLayoutId() {
-    return R.layout.fragment_login_sign_up_credentials;
+    return inflater.inflate(R.layout.fragment_login_sign_up_credentials, container, false);
   }
 
   @Override public boolean onBackPressed() {
@@ -283,7 +281,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     Intent i = new Intent(getContext(), CreateUserActivity.class);
     FragmentActivity parent = getActivity();
     parent.startActivity(i);
-    parent.finish();
+    getNavigationManager().cleanBackStack();
   }
 
   private void showFacebookLoginError(@StringRes int errorRes) {
@@ -308,11 +306,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
     bindViews(view);
 
-    final AptoideAccountManager accountManager =
-        ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    attachPresenter(
-        new LoginSignUpCredentialsPresenter(this, accountManager, facebookRequestedPermissions,
-            dismissToNavigateToMainView, navigateToHome), savedInstanceState);
+    attachPresenter(presenter, savedInstanceState);
   }
 
   private void bindViews(View view) {

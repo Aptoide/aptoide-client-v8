@@ -23,13 +23,13 @@ import android.util.Log;
 import android.widget.Toast;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.BuildConfig;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.services.PullingContentService;
 import java.util.Locale;
@@ -81,7 +81,7 @@ public class ToolboxContentProvider extends ContentProvider {
         case TOKEN:
           if (account != null) {
             final MatrixCursor tokenCursor = new MatrixCursor(new String[] { "userToken" }, 1);
-            tokenCursor.addRow(new Object[] { account.getToken() });
+            tokenCursor.addRow(new Object[] { account.getAccessToken() });
             return tokenCursor;
           }
           throw new IllegalStateException("User not logged in.");
@@ -96,7 +96,7 @@ public class ToolboxContentProvider extends ContentProvider {
         case REPO:
           if (account != null) {
             final MatrixCursor userRepoCursor = new MatrixCursor(new String[] { "userRepo" }, 1);
-            userRepoCursor.addRow(new Object[] { account.getStore() });
+            userRepoCursor.addRow(new Object[] { account.getStoreName() });
             return userRepoCursor;
           }
           throw new IllegalStateException("User not logged in.");

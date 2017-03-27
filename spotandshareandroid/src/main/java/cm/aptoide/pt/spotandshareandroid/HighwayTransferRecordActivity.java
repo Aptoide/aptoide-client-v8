@@ -444,6 +444,8 @@ public class HighwayTransferRecordActivity extends ActivityView
   @Override protected void onDestroy() {
     presenter.onDestroy();
     super.onDestroy();
+    ApplicationSender.reset();
+    DataHolder.reset();
   }
 
   @Override public void setUpSendButtonListener() {

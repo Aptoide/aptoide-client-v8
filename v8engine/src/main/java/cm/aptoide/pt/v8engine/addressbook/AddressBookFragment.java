@@ -9,20 +9,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.FacebookModel;
 import cm.aptoide.pt.model.v7.TwitterModel;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
@@ -80,19 +77,17 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    final AptoideClientUUID aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    final AptoideAccountManager accountManager = ((V8Engine) getContext()
-        .getApplicationContext()).getAccountManager();
     analytics = new AddressBookAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
-    mActionsListener = new AddressBookPresenter(this, new ContactsRepositoryImpl(
-        new BaseBodyInterceptor(aptoideClientUUID, accountManager),
-        aptoideClientUUID), analytics,
-        new AddressBookNavigationManager(NavigationManagerV4.Builder.buildWith(getActivity()),
-            getTag(), getString(R.string.addressbook_about),
-            getString(R.string.addressbook_data_about,
-                Application.getConfiguration().getMarketName())));
+    final BodyInterceptor<BaseBody> baseBodyBodyInterceptor =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+    mActionsListener =
+        new AddressBookPresenter(this, new ContactsRepositoryImpl(baseBodyBodyInterceptor),
+            analytics,
+            new AddressBookNavigationManager(NavigationManagerV4.Builder.buildWith(getActivity()),
+                getTag(), getString(R.string.addressbook_about),
+                getString(R.string.addressbook_data_about,
+                    Application.getConfiguration().getMarketName())));
     callbackManager = CallbackManager.Factory.create();
     registerFacebookCallback();
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());

@@ -56,6 +56,10 @@ public class HighwayClientService extends Service {
       @Override public void onError(IOException e) {
         System.out.println("Fell on error  Client !! ");
 
+        if (mNotifyManager != null) {
+          mNotifyManager.cancelAll();
+        }
+
         Intent i = new Intent();
         if (e instanceof ServerLeftException) {
           i.setAction("SERVER_LEFT");
@@ -143,6 +147,10 @@ public class HighwayClientService extends Service {
 
       @Override public void onError(IOException e) {
         e.printStackTrace();
+
+        if (mNotifyManager != null) {
+          mNotifyManager.cancelAll();
+        }
 
         Intent i = new Intent();
         i.setAction("ERRORSENDING");
@@ -325,6 +333,11 @@ public class HighwayClientService extends Service {
             if (aptoideMessageClientSocket != null) {
               aptoideMessageClientSocket.exit();
             }
+
+            if (mNotifyManager != null) {
+              mNotifyManager.cancelAll();
+            }
+
             Intent i = new Intent();
             i.setAction("CLIENT_DISCONNECT");
             sendBroadcast(i);
