@@ -119,11 +119,12 @@ public class AptoideFileServerSocket<T> extends AptoideServerSocket {
     @Override public void onProgressChanged(float progress) {
       super.onProgressChanged(progress);
 
-      if (progress > 0.9999999999999999999999999) {
+      if (progress == 1) {
         if (fileServerLifecycle != null) {
           fileServerLifecycle.onFinishSending(t);
         }
       }
+      System.out.println("Filipe: " + progress + ", " + (progress > 0.9999999999999999999999999));
     }
   }
 }

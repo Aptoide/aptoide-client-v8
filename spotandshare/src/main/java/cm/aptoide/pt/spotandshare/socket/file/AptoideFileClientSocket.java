@@ -91,7 +91,7 @@ public class AptoideFileClientSocket<T> extends AptoideClientSocket {
     @Override public void onProgressChanged(float progress) {
       super.onProgressChanged(progress);
 
-      if (progress > 0.9999999999999999999999999) {
+      if (progress == 1) {
         if (fileClientLifecycle != null) {
           fileClientLifecycle.onFinishReceiving(t);
         }

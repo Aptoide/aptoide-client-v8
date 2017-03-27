@@ -25,6 +25,16 @@ public class MultiProgressAccumulator<T> implements ProgressAccumulator {
     onProgressChanged(1.0f * addedProgress / totalProgress);
   }
 
+  //@Override public void addProgress(long progress) {
+  //  addedProgress += progress;
+  //  System.out.println("Filipe PEdro: " + addedProgress + ", " + totalProgress);
+  //  if (addedProgress != totalProgress) {
+  //    onProgressChanged(1.0f * addedProgress / totalProgress);
+  //  } else {
+  //    onProgressChanged(1);
+  //  }
+  //}
+
   @Override public void accumulate(long progressToAdd) {
     totalProgress += progressToAdd;
   }
