@@ -149,6 +149,7 @@ public class ConnectionManager {
                 } else {//connected to the wrong network
                   if (!reconnected && !chosenHotspot.isEmpty()) {
                     joinHotspot(chosenHotspot, true);//retry again with reconnect
+                    reconnected = true;
                   } else {
                     listenerJoinWifi.onStateChanged(false);
                     try {
@@ -554,6 +555,13 @@ public class ConnectionManager {
     } else {
       wifimanager.setWifiEnabled(false);
     }
+  }
+
+  public void enableWifi(boolean enable) {
+    if (wifimanager == null) {
+      wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+    }
+    wifimanager.setWifiEnabled(enable);
   }
 
   public interface WifiStateListener {
