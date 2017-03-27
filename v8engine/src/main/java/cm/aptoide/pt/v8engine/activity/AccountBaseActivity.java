@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 
@@ -19,11 +20,13 @@ public abstract class AccountBaseActivity extends AppCompatActivity {
 
   protected static final int LOGGED_IN_SECOND_STEP_CODE = 126;
   private static final String TAG = AccountBaseActivity.class.getSimpleName();
+  private NavigationManagerV4 navigator;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setTitle(getActivityTitle());
     getTheme().applyStyle(Application.getConfiguration().getDefaultThemeRes(), true);
+    navigator = NavigationManagerV4.Builder.buildWith(this);
   }
 
   public abstract String getActivityTitle();
@@ -36,5 +39,9 @@ public abstract class AccountBaseActivity extends AppCompatActivity {
       finish();
     }
     return super.onOptionsItemSelected(item);
+  }
+
+  public NavigationManagerV4 getNavigationManager() {
+    return navigator;
   }
 }
