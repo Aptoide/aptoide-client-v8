@@ -26,6 +26,7 @@ import cm.aptoide.pt.v8engine.deprecated.tables.Excluded;
 import cm.aptoide.pt.v8engine.deprecated.tables.Repo;
 import cm.aptoide.pt.v8engine.deprecated.tables.Rollback;
 import cm.aptoide.pt.v8engine.deprecated.tables.Scheduled;
+import java.util.Arrays;
 
 public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
@@ -41,7 +42,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     Logger.w(TAG, "onCreate() called");
 
     // do nothing here.
-    checkAndMigrateUserAccount(0);
+    checkAndMigrateUserAccount(-1);
     ManagerPreferences.setNeedsSqliteDbMigration(false);
   }
 
@@ -142,7 +143,6 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
   /**
    * This method can be deleted in future releases, when version 8.1.2.1 is no longer supported /
    * relevant
-   * @param oldVersion
    */
   private void checkAndMigrateUserAccount(int oldVersion) {
     final Context appContext = V8Engine.getContext();
@@ -152,23 +152,72 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
     String[] migrationKeys = {
         "userId", "username", "useravatar", "refresh_token", "access_token",
-        "aptoide_account_manager_login_mode", "userRepo", "useravatar", "access", "access"
+        "aptoide_account_manager_login_mode", "userRepo", "useravatar", "access"
     };
+    Account androidAccount = null;
 
     try {
-      SharedPreferences secureSharedPreferences = SecurePreferencesImplementation.getInstance(appContext);
+      SharedPreferences secureSharedPreferences =
+          SecurePreferencesImplementation.getInstance(appContext);
+      SharedPreferences defaultSharedPreferences =
+          PreferenceManager.getDefaultSharedPreferences(appContext);
 
-      if (!accountNeedsMigration(migrationKeys, secureSharedPreferences)) {
-        return;
-      }
+      Log.w(TAG, "accounts = " + Arrays.toString(accounts));
 
-      Account androidAccount = accounts[0];
-      String encryptedPassword = androidAccountManager.getPassword(androidAccount);
-      String plainTextPassword =
-          new SecureCoderDecoder.Builder(appContext).create().decrypt(encryptedPassword);
-      if (oldVersion <= 55 || TextUtils.isEmpty(plainTextPassword)) {
-        plainTextPassword = encryptedPassword;
-      }
+      androidAccount = accounts[0];
+
+      Log.w(TAG, "aptoide account name = " + androidAccount.name);
+
+      //
+      // migration from v7 to this v8
+      //
+      if (oldVersion < 43) {
+        // here we will migrate from V7 directly to the new Account Manager and Account
+        // all data is saved in shared prefs except the access token, which was saved in the
+        // secure shared prefs
+
+        Log.w(TAG, "migrating from v7");
+
+        //androidAccount = new Account(defaultSharedPreferences.getString("username", "Aptoide"),
+        //    V8Engine.getConfiguration().getAccountType());
+        ////androidAccountManager.setPassword(androidAccount, "");
+        //androidAccountManager.addAccountExplicitly(androidAccount, "", null);
+
+        String sharedPrefsData;
+        for (String key : migrationKeys) {
+          sharedPrefsData = defaultSharedPreferences.getString(key, null);
+          androidAccountManager.setUserData(androidAccount, key, sharedPrefsData);
+        }
+
+        Log.w(TAG, "migrated keys from v7 to account");
+
+        String matureSwitchKey = "aptoide_account_manager_mature_switch";
+        sharedPrefsData = defaultSharedPreferences.getString(matureSwitchKey, "false");
+        androidAccountManager.setUserData(androidAccount, matureSwitchKey, sharedPrefsData);
+
+        Log.w(TAG, "migrated mature switch from v7 to account");
+
+        // remove all keys from shared preferences
+        cleanKeysFromPreferences(migrationKeys, defaultSharedPreferences);
+
+        Log.w(TAG, "Account migration from 7.x to >8.2.0.0 succeeded");
+      } else {
+        //
+        // migration from an older v8.x to this v8
+        //
+
+        if (!accountNeedsMigration(migrationKeys, secureSharedPreferences)
+            || accounts.length == 0) {
+          return;
+        }
+        String encryptedPassword = androidAccountManager.getPassword(androidAccount);
+        String plainTextPassword =
+            new SecureCoderDecoder.Builder(appContext).create().decrypt(encryptedPassword);
+        //
+        if (oldVersion <= 55 || TextUtils.isEmpty(plainTextPassword)) {
+          // previously we store the password encrypted but we stopped doing it at DB version 55
+          plainTextPassword = encryptedPassword;
+        }
 
 
       /*
@@ -190,32 +239,31 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
       */
 
-      String sharedPrefsData;
-      for (String key : migrationKeys) {
-        sharedPrefsData = secureSharedPreferences.getString(key, null);
-        androidAccountManager.setUserData(androidAccount, key, sharedPrefsData);
+        String sharedPrefsData;
+        for (String key : migrationKeys) {
+          sharedPrefsData = secureSharedPreferences.getString(key, null);
+          androidAccountManager.setUserData(androidAccount, key, sharedPrefsData);
+        }
+
+        // remove all keys from shared preferences
+        cleanKeysFromPreferences(migrationKeys, secureSharedPreferences);
+
+        String matureSwitchKey = "aptoide_account_manager_mature_switch";
+        sharedPrefsData = secureSharedPreferences.getString(matureSwitchKey, "false");
+        androidAccountManager.setUserData(androidAccount, matureSwitchKey, sharedPrefsData);
+
+        // access_confirmed is registered in the default shared preferences and not in the
+        // secure shared preferences
+        String accessConfirmedKey = "access_confirmed";
+        sharedPrefsData =
+            Boolean.toString(defaultSharedPreferences.getBoolean(accessConfirmedKey, false));
+        androidAccountManager.setUserData(androidAccount, accessConfirmedKey, sharedPrefsData);
+
+        // account.name -> user email. we don't need to change this
+        androidAccountManager.setPassword(androidAccount, plainTextPassword);
+
+        Log.w(TAG, "Account migration from <8.1.2.1 to >8.2.0.0 succeeded");
       }
-
-      // remove all keys from shared preferences
-      cleanKeysFromPreferences(migrationKeys, secureSharedPreferences);
-
-      String matureSwitchKey = "aptoide_account_manager_mature_switch";
-      sharedPrefsData = secureSharedPreferences.getString(matureSwitchKey, "false");
-      androidAccountManager.setUserData(androidAccount, matureSwitchKey, sharedPrefsData);
-
-      // access_confirmed is registered in the default shared preferences and not in the
-      // secure shared preferences
-      String accessConfirmedKey = "access_confirmed";
-      SharedPreferences defaultSharedPreferences =
-          PreferenceManager.getDefaultSharedPreferences(appContext);
-      sharedPrefsData =
-          Boolean.toString(defaultSharedPreferences.getBoolean(accessConfirmedKey, false));
-      androidAccountManager.setUserData(androidAccount, accessConfirmedKey, sharedPrefsData);
-
-      // account.name -> user email. we don't need to change this
-      androidAccountManager.setPassword(androidAccount, plainTextPassword);
-
-      Log.w(TAG, "Account migration from <8.1.2.1 to >8.2.0.0 succeeded");
     } catch (Exception e) {
       Log.e(TAG, "Account migration from <8.1.2.1 to >8.2.0.0 failed", e);
     }
