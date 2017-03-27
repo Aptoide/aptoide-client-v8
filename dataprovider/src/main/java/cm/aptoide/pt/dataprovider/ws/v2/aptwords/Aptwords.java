@@ -8,11 +8,13 @@ package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import rx.Observable;
 
@@ -33,7 +35,8 @@ abstract class Aptwords<U> extends WebService<Aptwords.Interfaces, U> {
   interface Interfaces {
 
     @POST("getAds") @FormUrlEncoded Observable<GetAdsResponse> getAds(
-        @FieldMap HashMapNotNull<String, String> arg);
+        @FieldMap HashMapNotNull<String, String> arg,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("registerAdReferer") @FormUrlEncoded
     Observable<RegisterAdRefererRequest.DefaultResponse> load(

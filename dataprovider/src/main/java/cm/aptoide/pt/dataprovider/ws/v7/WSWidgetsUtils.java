@@ -71,7 +71,7 @@ public class WSWidgetsUtils {
         case ADS:
           return GetAdsRequest.ofHomepage(aptoideClientUuid, googlePlayServicesAvailable, oemid,
               mature)
-              .observe()
+              .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
