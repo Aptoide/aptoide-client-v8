@@ -14,7 +14,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -24,25 +23,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.model.v7.store.HomeUser;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -50,9 +43,6 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.PrivateStoreDialog;
 import cm.aptoide.pt.v8engine.fragment.BasePagerToolbarFragment;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
-import cm.aptoide.pt.v8engine.preferences.AdultContent;
-import cm.aptoide.pt.v8engine.preferences.Preferences;
-import cm.aptoide.pt.v8engine.preferences.SecurePreferences;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
@@ -130,7 +120,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     super.onCreate(savedInstanceState);
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    bodyInterceptor = ((V8Engine)getContext().getApplicationContext()).getBaseBodyInterceptor();
+    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
   }
 
   @Override public void onDestroy() {
@@ -165,15 +155,20 @@ public class StoreFragment extends BasePagerToolbarFragment {
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
+  @Override protected int[] getViewsToShowAfterLoadingId() {
+    return new int[] { R.id.pager, R.id.tabs };
+  }
+
   @Override protected int getViewToShowAfterLoadingId() {
-    return R.id.app_bar_layout;
+    return -1;
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create || tabs == null) {
       loadData(refresh, openType).observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(title -> {
-        this.title = title;
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+          .subscribe(title -> {
+            this.title = title;
             if (storeContext != StoreContext.home) {
               setupToolbarDetails(getToolbar());
             }
@@ -181,31 +176,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
           }, (throwable) -> handleError(throwable));
     } else {
       setupViewPager();
-    }
-  }
-
-  private void handleError(Throwable throwable) {
-    if (throwable instanceof AptoideWsV7Exception) {
-      BaseV7Response baseResponse = ((AptoideWsV7Exception) throwable).getBaseResponse();
-
-      switch (StoreUtils.getErrorType(baseResponse.getError().getCode())) {
-        case PRIVATE_STORE_ERROR:
-        case PRIVATE_STORE_WRONG_CREDENTIALS:
-          DialogFragment dialogFragment =
-              (DialogFragment) getFragmentManager().findFragmentByTag(PrivateStoreDialog.TAG);
-          if (dialogFragment == null) {
-            dialogFragment =
-                PrivateStoreDialog.newInstance(this, PRIVATE_STORE_REQUEST_CODE, storeName, true);
-            dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
-          }
-          break;
-        case STORE_SUSPENDED:
-          showStoreSuspendedPopup(storeName);
-        default:
-          finishLoading(throwable);
-      }
-    } else {
-      finishLoading(throwable);
     }
   }
 
@@ -307,10 +277,46 @@ public class StoreFragment extends BasePagerToolbarFragment {
     }
   }
 
+  private void handleError(Throwable throwable) {
+    if (throwable instanceof AptoideWsV7Exception) {
+      BaseV7Response baseResponse = ((AptoideWsV7Exception) throwable).getBaseResponse();
+
+      switch (StoreUtils.getErrorType(baseResponse.getError().getCode())) {
+        case PRIVATE_STORE_ERROR:
+        case PRIVATE_STORE_WRONG_CREDENTIALS:
+          DialogFragment dialogFragment =
+              (DialogFragment) getFragmentManager().findFragmentByTag(PrivateStoreDialog.TAG);
+          if (dialogFragment == null) {
+            dialogFragment =
+                PrivateStoreDialog.newInstance(this, PRIVATE_STORE_REQUEST_CODE, storeName, true);
+            dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
+          }
+          break;
+        case STORE_SUSPENDED:
+          showStoreSuspendedPopup(storeName);
+        default:
+          finishLoading(throwable);
+      }
+    } else {
+      finishLoading(throwable);
+    }
+  }
+
   private void setupVariables(List<GetStoreTabs.Tab> tabs, Long storeId, String storeName) {
     this.tabs = tabs;
     this.storeId = storeId;
     this.storeName = storeName;
+  }
+
+  protected void changeToTab(Event.Name tabToChange) {
+    if (tabToChange != null) {
+      StorePagerAdapter storePagerAdapter = viewPager.getAdapter() instanceof StorePagerAdapter
+          ? ((StorePagerAdapter) viewPager.getAdapter()) : null;
+      if (storePagerAdapter != null) {
+        viewPager.setCurrentItem(
+            ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(tabToChange));
+      }
+    }
   }
 
   private void showStoreSuspendedPopup(String storeName) {
@@ -325,17 +331,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
           break;
       }
     });
-  }
-
-  protected void changeToTab(Event.Name tabToChange) {
-    if (tabToChange != null) {
-      StorePagerAdapter storePagerAdapter = viewPager.getAdapter() instanceof StorePagerAdapter
-          ? ((StorePagerAdapter) viewPager.getAdapter()) : null;
-      if (storePagerAdapter != null) {
-        viewPager.setCurrentItem(
-            ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(tabToChange));
-      }
-    }
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

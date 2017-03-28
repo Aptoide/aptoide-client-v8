@@ -21,6 +21,9 @@ public abstract class GridRecyclerSwipeFragment<T extends BaseAdapter>
   protected String storeTheme;
 
   @NonNull @Override protected LoaderLayoutHandler createLoaderLayoutHandler() {
+    if (getViewsToShowAfterLoadingId().length > 0) {
+      return new SwipeLoaderLayoutHandler(getViewsToShowAfterLoadingId(), this);
+    }
     return new SwipeLoaderLayoutHandler(getViewToShowAfterLoadingId(), this);
   }
 

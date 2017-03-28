@@ -77,7 +77,8 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
-    baseBodyBodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+    baseBodyBodyInterceptor =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -106,6 +107,10 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     if (args.containsKey(APP_NAME)) {
       appName = args.getString(APP_NAME);
     }
+  }
+
+  @Override protected int[] getViewsToShowAfterLoadingId() {
+    return new int[] {};
   }
 
   @Override protected int getViewToShowAfterLoadingId() {
