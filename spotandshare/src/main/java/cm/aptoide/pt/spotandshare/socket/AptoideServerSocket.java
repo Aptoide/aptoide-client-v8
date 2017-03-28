@@ -52,7 +52,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
     executorService.execute(dispatcherLooper);
 
     if (serving) {
-      Log.d(TAG, "start: ShareApps: AptoideFileServerSocket already serving!");
+      Print.d(TAG, "start: ShareApps: AptoideFileServerSocket already serving!");
       return this;
     } else {
       serving = true;
@@ -63,7 +63,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
       serverSocketTimeoutManager = new ServerSocketTimeoutManager(ss, timeout);
       serverSocketTimeoutManager.reserTimeout();
       host = new Host("192.168.43.1", ss.getLocalPort());
-      Log.d(TAG, "start: " + Thread.currentThread().getId()
+      Print.d(TAG, "start: " + Thread.currentThread().getId()
           + ": Starting server in port "
           + port
           + " and ip "
@@ -79,7 +79,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
 
         executorService.execute(() -> {
           try {
-            Log.d(TAG, "start: " + Thread.currentThread().getId()
+            Print.d(TAG, "start: " + Thread.currentThread().getId()
                 + ": "
                 + this.getClass().getSimpleName()
                 + ": Adding new client "
@@ -96,7 +96,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
             try {
               serverSocketTimeoutManager.reserTimeout();
               connectedSockets.remove(socket);
-              Log.d(TAG, "start: ShareApps: Closing " + getClass().getSimpleName() + " socket.");
+              Print.d(TAG, "start: ShareApps: Closing " + getClass().getSimpleName() + " socket.");
               socket.close();
             } catch (IOException e) {
               e.printStackTrace();
@@ -106,7 +106,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
       }
     } catch (IOException e) {
       // Ignore, when socket is closed during accept() it lands here.
-      Log.d(TAG, "start: ShareApps: Server explicitly closed " + this.getClass().getSimpleName());
+      Print.d(TAG, "start: ShareApps: Server explicitly closed " + this.getClass().getSimpleName());
       dispatcherLooper.stop();
       try {
         // Hammered. To unlock queuedServerActions.
@@ -165,7 +165,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
   public void shutdown() {
 
     if (shutdown) {
-      Log.w(TAG, "shutdown: ShareApps: Server already shut down!");
+      Print.w(TAG, "shutdown: ShareApps: Server already shut down!");
       return;
     }
 
@@ -201,7 +201,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
   }
 
   @Override public void dispatchServerAction(ServerAction serverAction) {
-    Log.d(TAG, "dispatchServerAction() called with: serverAction = [" + serverAction + "]");
+    Print.d(TAG, "dispatchServerAction() called with: serverAction = [" + serverAction + "]");
     try {
       queuedServerActions.put(serverAction);
     } catch (InterruptedException e) {
@@ -216,7 +216,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
       if (socket.getInetAddress().getHostAddress().equals(host.getIp())) {
         connectedSockets.remove(socket);
         hostsChangedCallbackCallback.hostsChanged(getConnectedHosts());
-        Log.d(TAG, "removeHost: AptoideServerSocket: Host " + host + " removed from the server.");
+        Print.d(TAG, "removeHost: AptoideServerSocket: Host " + host + " removed from the server.");
       }
     }
 
