@@ -148,12 +148,18 @@ public class ConnectionManager {
                   break;
                 } else {//connected to the wrong network
                   if (!reconnected && !chosenHotspot.isEmpty()) {
-                    joinHotspot(chosenHotspot, true);//retry again with reconnect
                     reconnected = true;
+                    new Thread(new Runnable() {
+                      @Override public void run() {
+                        joinHotspot(chosenHotspot, true);
+                      }
+                    }).start();
+
                   } else {
                     listenerJoinWifi.onStateChanged(false);
                     try {
                       context.unregisterReceiver(this);
+                      //// TODO: 28-03-2017 filipe  add unregister scanAptxNETWORKS
                     } catch (IllegalArgumentException e) {
                       System.out.println(
                           "There was an error while trying to unregister the wifireceiver and the wifireceiverforconnectingwifi");
@@ -179,15 +185,26 @@ public class ConnectionManager {
             if (wifiInfo.getSSID().contains("APTXV")) {
               isWifiConnected = true;
               break;
+              //// TODO: 28-03-2017 filipe add reconnect to these lower versions
             } else {
-              listenerJoinWifi.onStateChanged(false);
-              try {
-                context.unregisterReceiver(this);
-                context.unregisterReceiver(scanAPTXVNetworks);
-              } catch (IllegalArgumentException e) {
-                System.out.println(
-                    "There was an error while trying to unregister the wifireceiver and the wifireceiverforconnectingwifi");
+              if (!reconnected && !chosenHotspot.isEmpty()) {
+                reconnected = true;
+                new Thread(new Runnable() {
+                  @Override public void run() {
+                    joinHotspot(chosenHotspot, true);
+                  }
+                }).start();
+              } else {
+                listenerJoinWifi.onStateChanged(false);
+                try {
+                  context.unregisterReceiver(this);
+                  context.unregisterReceiver(scanAPTXVNetworks);
+                } catch (IllegalArgumentException e) {
+                  System.out.println(
+                      "There was an error while trying to unregister the wifireceiver and the wifireceiverforconnectingwifi");
+                }
               }
+              reconnected = false;
               break;
             }
           }
@@ -563,6 +580,14 @@ public class ConnectionManager {
     }
     wifimanager.setWifiEnabled(enable);
   }
+
+  //public void reconnectToGroup(final String group) {
+  //  executor.execute(new Runnable() {
+  //    @Override public void run() {
+  //      joinHotspot(group, true);
+  //    }
+  //  });
+  //}
 
   public interface WifiStateListener {
     void onStateChanged(boolean enabled);
