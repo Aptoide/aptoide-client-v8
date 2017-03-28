@@ -42,7 +42,7 @@ public abstract class AptoideClientSocket extends AptoideSocket {
   }
 
   @Override public AptoideSocket start() {
-    Log.d(TAG, "start() called with: " + "");
+    Print.d(TAG, "start() called with: " + "");
     socket = null;
 
     String[] hosts = new String[] { hostName, fallbackHostName };
@@ -58,9 +58,9 @@ public abstract class AptoideClientSocket extends AptoideSocket {
               socketBinder.bind(socket);
             }
             socket.connect(new InetSocketAddress(host, port));
-            Log.d(TAG, "start: Socket connected to " + host + ":" + port);
+            Print.d(TAG, "start: Socket connected to " + host + ":" + port);
           } catch (IOException e) {
-            Log.d(TAG,
+            Print.d(TAG,
                 "start: Failed to connect to " + hostName + ":" + port + ", retries = " + retries);
             if (retries == 0) {
               if (onError != null) {
@@ -99,7 +99,7 @@ public abstract class AptoideClientSocket extends AptoideSocket {
       }
     }
 
-    Log.d(TAG, "start: ShareApps: Thread "
+    Print.d(TAG, "start: ShareApps: Thread "
         + Thread.currentThread().getId()
         + " finished "
         + getClass().getSimpleName());
