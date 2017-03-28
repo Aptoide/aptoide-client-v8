@@ -35,7 +35,7 @@ public class GetAdsFragment extends StoreTabGridRecyclerFragment {
   }
 
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
-    return adsRepository.getAdsFromHomepageMore().map(minimalAds -> {
+    return adsRepository.getAdsFromHomepageMore(refresh).map(minimalAds -> {
       List<Displayable> displayables = new LinkedList<>();
       for (MinimalAd minimalAd : minimalAds) {
         displayables.add(new GridAdDisplayable(minimalAd, tag));

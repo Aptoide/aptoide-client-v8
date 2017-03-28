@@ -122,20 +122,20 @@
         android:summary="@string/settings_maxFileCache_sum"
         android:title="@string/settings_maxFileCache_title"/>
   </PreferenceCategory>
-  <PreferenceCategory
-      android:key="changetheme"
-      android:title="@string/change_theme">
+  <!--<PreferenceCategory-->
+      <!--android:key="changetheme"-->
+      <!--android:title="@string/change_theme">-->
 
-    <Preference
-        android:key="soon"
-        android:title="@string/change_theme_soon"/>
-    <!--<ListPreference-->
-    <!--android:defaultValue="light"-->
-    <!--android:entries="@array/theme_names"-->
-    <!--android:entryValues="@array/themes"-->
-    <!--android:key="theme"-->
-    <!--android:title="@string/theme"/>-->
-  </PreferenceCategory>
+    <!--<Preference-->
+        <!--android:key="soon"-->
+        <!--android:title="@string/change_theme_soon"/>-->
+    <!--&lt;!&ndash;<ListPreference&ndash;&gt;-->
+    <!--&lt;!&ndash;android:defaultValue="light"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:entries="@array/theme_names"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:entryValues="@array/themes"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:key="theme"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:title="@string/theme"/>&ndash;&gt;-->
+  <!--</PreferenceCategory>-->
   <PreferenceCategory
       android:key="rootCategory"
       android:title="@string/root">

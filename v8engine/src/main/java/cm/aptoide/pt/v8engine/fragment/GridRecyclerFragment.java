@@ -29,6 +29,10 @@ public abstract class GridRecyclerFragment<T extends BaseAdapter>
     this.adapterClass = adapterClass;
   }
 
+  @Override protected int[] getViewsToShowAfterLoadingId() {
+    return new int[] {};
+  }
+
   @Override protected int getViewToShowAfterLoadingId() {
     return R.id.recycler_view;
   }

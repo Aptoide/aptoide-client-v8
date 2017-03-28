@@ -1,7 +1,6 @@
 package cm.aptoide.pt.spotandshare.socket.file;
 
 import cm.aptoide.pt.spotandshare.socket.AptoideServerSocket;
-import cm.aptoide.pt.spotandshare.socket.AptoideSocket;
 import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.ProgressAccumulator;
@@ -38,14 +37,6 @@ public class AptoideFileServerSocket<T> extends AptoideServerSocket {
     this.fileInfos = fileInfos;
   }
 
-  @Override public AptoideSocket start() {
-    AptoideSocket start = super.start();
-    if (fileServerLifecycle != null) {
-      fileServerLifecycle.onFinishSending(fileDescriptor);
-    }
-    return start;
-  }
-
   @Override protected void onNewClient(Socket socket) {
 
     if (!startedSending && fileServerLifecycle != null) {
@@ -55,7 +46,7 @@ public class AptoideFileServerSocket<T> extends AptoideServerSocket {
 
     if (progressAccumulator == null) {
       progressAccumulator =
-          new MultiProgressAccumulator<>(computeTotalSize(fileInfos), fileServerLifecycle,
+          new MultiProgressAccumulatorServer(computeTotalSize(fileInfos), fileServerLifecycle,
               fileDescriptor);
     } else {
       progressAccumulator.accumulate(computeTotalSize(fileInfos));
@@ -113,5 +104,27 @@ public class AptoideFileServerSocket<T> extends AptoideServerSocket {
     this.onError = fileServerLifecycle;
 
     return this;
+  }
+
+  public class MultiProgressAccumulatorServer extends MultiProgressAccumulator<T> {
+
+    private final FileServerLifecycle<T> fileServerLifecycle;
+
+    public MultiProgressAccumulatorServer(long totalProgress,
+        FileServerLifecycle<T> fileServerLifecycle, T androidAppInfo) {
+      super(totalProgress, fileServerLifecycle, androidAppInfo);
+      this.fileServerLifecycle = fileServerLifecycle;
+    }
+
+    @Override public void onProgressChanged(float progress) {
+      super.onProgressChanged(progress);
+
+      if (progress == 1) {
+        if (fileServerLifecycle != null) {
+          fileServerLifecycle.onFinishSending(t);
+        }
+      }
+      System.out.println("Filipe: " + progress + ", " + (progress > 0.9999999999999999999999999));
+    }
   }
 }

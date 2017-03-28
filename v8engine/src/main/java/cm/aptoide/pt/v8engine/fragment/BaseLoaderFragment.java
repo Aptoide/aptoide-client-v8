@@ -40,9 +40,26 @@ public abstract class BaseLoaderFragment extends UIComponentFragment implements 
   }
 
   @NonNull protected LoaderLayoutHandler createLoaderLayoutHandler() {
-    return new LoaderLayoutHandler(getViewToShowAfterLoadingId(), this);
+    if (getViewsToShowAfterLoadingId().length > 0) {
+      return new LoaderLayoutHandler(this, getViewsToShowAfterLoadingId());
+    }
+    return new LoaderLayoutHandler(this, getViewToShowAfterLoadingId());
   }
 
+  /**
+   * Use this method to allow {@link LoaderLayoutHandler} to know what views it needs to hide (swap)
+   * to show the Progress spinner during an operation (call network).
+   * EITHER USE THIS METHOD OR {@link #getViewToShowAfterLoadingId}, if you dont want to use this
+   * method, override it with new int[]{}
+   */
+  @IdRes protected abstract int[] getViewsToShowAfterLoadingId();
+
+  /**
+   * Use this method to allow {@link LoaderLayoutHandler} to know what view it needs to hide (swap)
+   * to show the Progress spinner during an operation (call network).
+   * EITHER USE THIS METHOD OR {@link #getViewsToShowAfterLoadingId}, if you dont want to use this
+   * method, override it with -1.
+   */
   @IdRes protected abstract int getViewToShowAfterLoadingId();
 
   /**

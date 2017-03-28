@@ -8,7 +8,6 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
-import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,18 +17,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.ListSearchApps;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.SearchPagerAdapter;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -38,9 +30,6 @@ import cm.aptoide.pt.v8engine.analytics.abtesting.ABTest;
 import cm.aptoide.pt.v8engine.analytics.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.analytics.abtesting.SearchTabOptions;
 import cm.aptoide.pt.v8engine.fragment.BasePagerToolbarFragment;
-import cm.aptoide.pt.v8engine.preferences.AdultContent;
-import cm.aptoide.pt.v8engine.preferences.Preferences;
-import cm.aptoide.pt.v8engine.preferences.SecurePreferences;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import java.util.List;
@@ -97,7 +86,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    bodyInterceptor = ((V8Engine)getContext().getApplicationContext()).getBaseBodyInterceptor();
+    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -253,33 +242,31 @@ public class SearchFragment extends BasePagerToolbarFragment {
       }, e -> finishLoading());
     } else {
       ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          bodyInterceptor)
-          .execute(listSearchApps -> {
-            List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
+          bodyInterceptor).execute(listSearchApps -> {
+        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
-            if (list != null && list.size() > 0) {
-              hasSubscribedResults = true;
-              handleFinishLoading(create);
-            } else {
-              hasSubscribedResults = false;
-              handleFinishLoading(create);
-            }
-          }, e -> finishLoading());
+        if (list != null && list.size() > 0) {
+          hasSubscribedResults = true;
+          handleFinishLoading(create);
+        } else {
+          hasSubscribedResults = false;
+          handleFinishLoading(create);
+        }
+      }, e -> finishLoading());
 
       // Other stores
       ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          bodyInterceptor)
-          .execute(listSearchApps -> {
-            List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
+          bodyInterceptor).execute(listSearchApps -> {
+        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
-            if (list != null && list.size() > 0) {
-              hasEverywhereResults = true;
-              handleFinishLoading(create);
-            } else {
-              hasEverywhereResults = false;
-              handleFinishLoading(create);
-            }
-          }, e -> finishLoading());
+        if (list != null && list.size() > 0) {
+          hasEverywhereResults = true;
+          handleFinishLoading(create);
+        } else {
+          hasEverywhereResults = false;
+          handleFinishLoading(create);
+        }
+      }, e -> finishLoading());
 
       // could this be a solution ?? despite the boolean flags
       //			Observable.concat(ListSearchAppsRequest.of(query, true).observe(),ListSearchAppsRequest.of(query, false).observe()).subscribe
@@ -355,6 +342,10 @@ public class SearchFragment extends BasePagerToolbarFragment {
       storeName = savedInstanceState.getString(BundleCons.STORE_NAME);
       setButtonBackgrounds(savedInstanceState.getInt(BundleCons.SELECTED_BUTTON));
     }
+  }
+
+  @Override protected int[] getViewsToShowAfterLoadingId() {
+    return new int[] {};
   }
 
   @Override protected int getViewToShowAfterLoadingId() {

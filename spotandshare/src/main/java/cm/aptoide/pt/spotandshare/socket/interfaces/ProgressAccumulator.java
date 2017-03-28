@@ -9,4 +9,6 @@ public interface ProgressAccumulator {
   void addProgress(long progress);
 
   void accumulate(long progress);
+
+  void onProgressChanged(float progress);
 }

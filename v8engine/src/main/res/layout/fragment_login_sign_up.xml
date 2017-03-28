@@ -42,7 +42,7 @@ android:fitsSystemWindows="true"
           android:layout_height="50dp"
           android:layout_gravity="center_horizontal"
           android:layout_margin="20dp"
-          android:src="@drawable/logo_aptoide_wizard"
+          android:src="@drawable/logo"
           />
 
       <TextView

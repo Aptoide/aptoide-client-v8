@@ -65,10 +65,10 @@ public class AdsRepository {
         && ads.get(0).getPartner().getData() != null;
   }
 
-  public Observable<List<MinimalAd>> getAdsFromHomepageMore() {
+  public Observable<List<MinimalAd>> getAdsFromHomepageMore(boolean refresh) {
     return mapToMinimalAds(GetAdsRequest.ofHomepageMore(aptoideClientUUID.getUniqueIdentifier(),
         googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
-        partnerIdProvider.getPartnerId(), accountManager.isAccountMature()).observe());
+        partnerIdProvider.getPartnerId(), accountManager.isAccountMature()).observe(refresh));
   }
 
   private Observable<List<MinimalAd>> mapToMinimalAds(
