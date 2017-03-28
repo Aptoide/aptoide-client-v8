@@ -56,9 +56,6 @@ public class AptoideFileClientSocket<T> extends AptoideClientSocket {
       out.close();
     }
 
-    if (fileClientLifecycle != null) {
-      fileClientLifecycle.onFinishReceiving(fileDescriptor);
-    }
   }
 
   public AptoideFileClientSocket<T> setFileClientLifecycle(T fileDescriptor,
