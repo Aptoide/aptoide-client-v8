@@ -32,6 +32,14 @@ android {
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
     resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID + "\""
+    buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
+    buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
+    buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
+        "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
+    buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST",
+        "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
+    buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY + "\""
+    buildConfigField "String", "TWITTER_SECRET", "\"" + project.TWITTER_SECRET + "\""
   }
 
   lintOptions {
@@ -53,16 +61,9 @@ android {
       buildConfigField "String", "TWITTER_SECRET",
           "\"" + project.TWITTER_SECRET_INTERNAL + "\""
     }
-    prod {
-      buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
-      buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
-      buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
-          "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
-      buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST",
-          "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
-      buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY + "\""
-      buildConfigField "String", "TWITTER_SECRET", "\"" + project.TWITTER_SECRET + "\""
-    }
+    prod {}
+
+    leak {}
   }
 
   buildTypes {
@@ -104,6 +105,9 @@ dependencies {
 
   prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
   prodCompile project(path: ':aptoide_accountmanager', configuration: 'prodRelease')
+
+  leakCompile project(path: ':dataprovider', configuration: 'prodRelease')
+  leakCompile project(path: ':aptoide_accountmanager', configuration: 'prodRelease')
 
   compile project(path: ':utils', configuration: 'release')
   compile project(path: ':utilsdesign', configuration: 'release')
@@ -224,4 +228,5 @@ dependencies {
   compile "com.facebook.android:facebook-android-sdk:${FACEBOOK_ANDROID_SDK_VERSION}"
 
 
+  leakCompile "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
 }

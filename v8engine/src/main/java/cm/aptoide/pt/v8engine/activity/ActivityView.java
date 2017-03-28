@@ -14,13 +14,12 @@ import cm.aptoide.pt.v8engine.view.View;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.ActivityEvent;
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import rx.Observable;
 
 /**
  * Created by marcelobenites on 8/19/16.
  */
-public abstract class ActivityView extends RxAppCompatActivity implements View {
+public abstract class ActivityView extends LeakActivity implements View {
 
   private Presenter presenter;
 

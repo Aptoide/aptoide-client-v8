@@ -42,6 +42,11 @@ android {
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     multiDexEnabled true
+    resValue "string", "authenticator_account_type", APPLICATION_ID
+    versionCode project.PROD_VERSION_CODE.toInteger()
+    versionName "8.2.0.1"
+    resValue "string", "content_authority", APPLICATION_ID + ".StubProvider"
+    buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider\""
   }
 
   lintOptions {
@@ -97,12 +102,9 @@ android {
     }
 
     prod {
-      versionCode project.PROD_VERSION_CODE.toInteger()
-      versionName "8.2.0.1"
-      resValue "string", "authenticator_account_type", APPLICATION_ID
-      resValue "string", "content_authority", APPLICATION_ID + ".StubProvider"
-      buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider\""
     }
+
+    leak {}
   }
 
   buildTypes {
@@ -174,6 +176,7 @@ dependencies {
 
   devCompile project(path: ':v8engine', configuration: 'prodRelease')
   prodCompile project(path: ':v8engine', configuration: 'prodRelease')
+  leakCompile project(path: ':v8engine', configuration: 'leakRelease')
   internalCompile project(path: ':v8engine', configuration: 'internalRelease')
 
   // Testing-only dependencies

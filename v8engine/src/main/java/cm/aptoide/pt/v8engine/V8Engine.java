@@ -56,6 +56,7 @@ import cm.aptoide.pt.v8engine.configuration.ActivityProvider;
 import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.configuration.implementation.ActivityProviderImpl;
 import cm.aptoide.pt.v8engine.configuration.implementation.FragmentProviderImpl;
+import cm.aptoide.pt.v8engine.debugTools.LeakTool;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
 import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
@@ -104,12 +105,20 @@ public abstract class V8Engine extends DataProvider {
   private AdultContent adultContent;
   private AptoideClientUUID aptoideClientUUID;
   private GoogleApiClient googleSignInClient;
+  private LeakTool leakTool;
 
   /**
    * call after this instance onCreate()
    */
   protected void activateLogger() {
     Logger.setDBG(true);
+  }
+
+  public LeakTool getLeakTool() {
+    if (leakTool == null) {
+      leakTool = new LeakTool();
+    }
+    return leakTool;
   }
 
   @Partners @Override public void onCreate() {
@@ -127,6 +136,7 @@ public abstract class V8Engine extends DataProvider {
     //
     super.onCreate();
 
+    getLeakTool().setup(this);
     //
     // onCreate
     //
