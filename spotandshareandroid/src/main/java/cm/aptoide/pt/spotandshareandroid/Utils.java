@@ -15,6 +15,7 @@ import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Random;
 
 /**
  * Created by jandrade on 21-08-2015.
@@ -72,14 +73,14 @@ public class Utils {
       return capitalize(model);
     }
     String result = capitalize(manufacturer) + " " + model + id;
-    if (result.length() > 20) {
+    if (result.length() > 16) {
       result = "" + model + id;
     }
-    if (result.length() > 20) {
+    if (result.length() > 16) {
       result = "" + model;
     }
-    if (result.length() > 20) {
-      String aux = result.substring(0, 20);
+    if (result.length() > 16) {
+      String aux = result.substring(0, 16);
       result = aux;
     }
     return result;
@@ -105,6 +106,17 @@ public class Utils {
     }
 
     return phrase.toString();
+  }
+
+  public static String generateRandomAlphanumericString(int lengthWanted) {
+    char[] array = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+    StringBuilder sb = new StringBuilder();
+    Random r = new Random();
+    for (int i = 0; i < lengthWanted; i++) {
+      char c = array[r.nextInt(array.length)];
+      sb.append(c);
+    }
+    return sb.toString();
   }
 
   public static long getFolderSize(File dir) {
