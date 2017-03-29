@@ -132,7 +132,6 @@ public class AndroidAccountDataMigration {
 
       final Account[] accounts =
           accountManager.getAccountsByType(V8Engine.getConfiguration().getAccountType());
-      final Account oldAccount = accounts[0];
 
       if (!accountHasKeysForMigration(MIGRATION_KEYS, secureSharedPreferences)
           || accounts.length == 0) {
@@ -142,6 +141,8 @@ public class AndroidAccountDataMigration {
         markMigrated();
         return Completable.complete();
       }
+
+      final Account oldAccount = accounts[0];
 
       String encryptedPassword = accountManager.getPassword(oldAccount);
       // new SecureCoderDecoder.Builder(context).create()

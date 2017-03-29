@@ -236,12 +236,17 @@ public abstract class V8Engine extends DataProvider {
           new SocialAccountFactory(context, getGoogleSignInClient()),
           new AccountService(getAptoideClientUUID()));
 
-      SQLiteDatabase db = SQLiteDatabase.openDatabase(
-          context.getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME).getPath(), null,
-          SQLiteDatabase.OPEN_READONLY, null);
-      int oldVersion = db.getVersion();
-      if (db.isOpen()) {
-        db.close();
+      int oldVersion = SQLiteDatabaseHelper.DATABASE_VERSION;
+      try {
+        SQLiteDatabase db = SQLiteDatabase.openDatabase(
+            context.getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME).getPath(), null,
+            SQLiteDatabase.OPEN_READONLY, null);
+        oldVersion = db.getVersion();
+        if (db.isOpen()) {
+          db.close();
+        }
+      } catch (Exception ex) {
+        // db does not exist. it's a fresh install
       }
 
       final AndroidAccountDataMigration accountDataMigration =
