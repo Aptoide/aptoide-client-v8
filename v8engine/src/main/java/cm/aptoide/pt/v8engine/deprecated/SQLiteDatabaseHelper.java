@@ -1,15 +1,9 @@
 package cm.aptoide.pt.v8engine.deprecated;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
-import android.support.v7.preference.PreferenceManager;
-import android.text.TextUtils;
-import android.util.Log;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
@@ -17,32 +11,31 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.deprecated.tables.Downloads;
 import cm.aptoide.pt.v8engine.deprecated.tables.Excluded;
 import cm.aptoide.pt.v8engine.deprecated.tables.Repo;
 import cm.aptoide.pt.v8engine.deprecated.tables.Rollback;
 import cm.aptoide.pt.v8engine.deprecated.tables.Scheduled;
-import java.util.Arrays;
 
 public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
+  public static final int DATABASE_VERSION = 59;
+  public static final String DATABASE_NAME = "aptoide.db";
+
   private static final String TAG = SQLiteDatabaseHelper.class.getSimpleName();
-  private static final int DATABASE_VERSION = 59;
+
   private Throwable aggregateExceptions;
 
   public SQLiteDatabaseHelper(Context context) {
-    super(context, "aptoide.db", null, DATABASE_VERSION);
+    super(context, DATABASE_NAME, null, DATABASE_VERSION);
   }
 
   @Override public void onCreate(SQLiteDatabase db) {
     Logger.w(TAG, "onCreate() called");
 
     // do nothing here.
-    checkAndMigrateUserAccount(-1);
+
     ManagerPreferences.setNeedsSqliteDbMigration(false);
   }
 
@@ -55,7 +48,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
         + "]");
 
     migrate(db);
-    checkAndMigrateUserAccount(oldVersion);
+
     ManagerPreferences.setNeedsSqliteDbMigration(false);
     SecurePreferences.setWizardAvailable(true);
   }
@@ -68,6 +61,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
         + "], newVersion = ["
         + newVersion
         + "]");
+
     migrate(db);
 
     ManagerPreferences.setNeedsSqliteDbMigration(false);
@@ -140,135 +134,6 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     Logger.w(TAG, "Migrating database finished.");
   }
 
-  /**
-   * This method can be deleted in future releases, when version 8.1.2.1 is no longer supported /
-   * relevant
-   */
-  private void checkAndMigrateUserAccount(int oldVersion) {
-    final Context appContext = V8Engine.getContext();
-    final AccountManager androidAccountManager = AccountManager.get(appContext);
-    final android.accounts.Account[] accounts =
-        androidAccountManager.getAccountsByType(V8Engine.getConfiguration().getAccountType());
-
-    String[] migrationKeys = {
-        "userId", "username", "useravatar", "refresh_token", "access_token",
-        "aptoide_account_manager_login_mode", "userRepo", "useravatar", "access"
-    };
-    Account androidAccount = null;
-
-    try {
-      SharedPreferences secureSharedPreferences =
-          SecurePreferencesImplementation.getInstance(appContext);
-      SharedPreferences defaultSharedPreferences =
-          PreferenceManager.getDefaultSharedPreferences(appContext);
-
-      Log.w(TAG, "accounts = " + Arrays.toString(accounts));
-
-      androidAccount = accounts[0];
-
-      Log.w(TAG, "aptoide account name = " + androidAccount.name);
-
-      //
-      // migration from v7 to this v8
-      //
-      if (oldVersion < 43) {
-        // here we will migrate from V7 directly to the new Account Manager and Account
-        // all data is saved in shared prefs except the access token, which was saved in the
-        // secure shared prefs
-
-        Log.w(TAG, "migrating from v7");
-
-        //androidAccount = new Account(defaultSharedPreferences.getString("username", "Aptoide"),
-        //    V8Engine.getConfiguration().getAccountType());
-        ////androidAccountManager.setPassword(androidAccount, "");
-        //androidAccountManager.addAccountExplicitly(androidAccount, "", null);
-
-        String sharedPrefsData;
-        for (String key : migrationKeys) {
-          sharedPrefsData = defaultSharedPreferences.getString(key, null);
-          androidAccountManager.setUserData(androidAccount, key, sharedPrefsData);
-        }
-
-        Log.w(TAG, "migrated keys from v7 to account");
-
-        String matureSwitchKey = "aptoide_account_manager_mature_switch";
-        sharedPrefsData = defaultSharedPreferences.getString(matureSwitchKey, "false");
-        androidAccountManager.setUserData(androidAccount, matureSwitchKey, sharedPrefsData);
-
-        Log.w(TAG, "migrated mature switch from v7 to account");
-
-        // remove all keys from shared preferences
-        cleanKeysFromPreferences(migrationKeys, defaultSharedPreferences);
-
-        Log.w(TAG, "Account migration from 7.x to >8.2.0.0 succeeded");
-      } else {
-        //
-        // migration from an older v8.x to this v8
-        //
-
-        if (!accountNeedsMigration(migrationKeys, secureSharedPreferences)
-            || accounts.length == 0) {
-          return;
-        }
-        String encryptedPassword = androidAccountManager.getPassword(androidAccount);
-        String plainTextPassword =
-            new SecureCoderDecoder.Builder(appContext).create().decrypt(encryptedPassword);
-        //
-        if (oldVersion <= 55 || TextUtils.isEmpty(plainTextPassword)) {
-          // previously we store the password encrypted but we stopped doing it at DB version 55
-          plainTextPassword = encryptedPassword;
-        }
-
-
-      /*
-
-      androidAccountManager.setUserData(androidAccount, USER_ID, account.getId());
-      androidAccountManager.setUserData(androidAccount, USER_NICK_NAME, account.getNickname());
-      androidAccountManager.setUserData(androidAccount, USER_AVATAR, account.getAvatar());
-      androidAccountManager.setUserData(androidAccount, REFRESH_TOKEN, account.getRefreshToken());
-      androidAccountManager.setUserData(androidAccount, ACCESS_TOKEN, account.getToken());
-      androidAccountManager.setUserData(androidAccount, LOGIN_MODE, account.getType().name());
-      androidAccountManager.setUserData(androidAccount, USER_REPO, account.getStore());
-      androidAccountManager.setUserData(androidAccount, REPO_AVATAR, account.getStoreAvatar());
-      androidAccountManager.setUserData(androidAccount, ACCESS, account.getAccess().name());
-
-      androidAccountManager.setUserData(androidAccount, MATURE_SWITCH,
-          String.valueOf(account.isAdultContentEnabled()));
-      androidAccountManager.setUserData(androidAccount, ACCESS_CONFIRMED,
-          String.valueOf(account.isAccessConfirmed()));
-
-      */
-
-        String sharedPrefsData;
-        for (String key : migrationKeys) {
-          sharedPrefsData = secureSharedPreferences.getString(key, null);
-          androidAccountManager.setUserData(androidAccount, key, sharedPrefsData);
-        }
-
-        // remove all keys from shared preferences
-        cleanKeysFromPreferences(migrationKeys, secureSharedPreferences);
-
-        String matureSwitchKey = "aptoide_account_manager_mature_switch";
-        sharedPrefsData = secureSharedPreferences.getString(matureSwitchKey, "false");
-        androidAccountManager.setUserData(androidAccount, matureSwitchKey, sharedPrefsData);
-
-        // access_confirmed is registered in the default shared preferences and not in the
-        // secure shared preferences
-        String accessConfirmedKey = "access_confirmed";
-        sharedPrefsData =
-            Boolean.toString(defaultSharedPreferences.getBoolean(accessConfirmedKey, false));
-        androidAccountManager.setUserData(androidAccount, accessConfirmedKey, sharedPrefsData);
-
-        // account.name -> user email. we don't need to change this
-        androidAccountManager.setPassword(androidAccount, plainTextPassword);
-
-        Log.w(TAG, "Account migration from <8.1.2.1 to >8.2.0.0 succeeded");
-      }
-    } catch (Exception e) {
-      Log.e(TAG, "Account migration from <8.1.2.1 to >8.2.0.0 failed", e);
-    }
-  }
-
   private void logException(Exception ex) {
     CrashReport.getInstance().log(ex);
 
@@ -276,25 +141,6 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
       aggregateExceptions = ex;
     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       aggregateExceptions.addSuppressed(ex);
-    }
-  }
-
-  private boolean accountNeedsMigration(String[] migrationKeys,
-      SharedPreferences sharedPreferences) {
-    for (int i = 0; i < migrationKeys.length; ++i) {
-      if (sharedPreferences.contains(migrationKeys[i])) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private void cleanKeysFromPreferences(String[] migrationKeys,
-      SharedPreferences sharedPreferences) {
-    for (int i = 0; i < migrationKeys.length; ++i) {
-      if (sharedPreferences.contains(migrationKeys[i])) {
-        sharedPreferences.edit().remove(migrationKeys[i]).commit();
-      }
     }
   }
 }

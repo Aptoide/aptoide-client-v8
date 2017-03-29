@@ -129,4 +129,50 @@ public final class AptoideAccount implements Account {
   private boolean isEmpty(String string) {
     return string == null || string.trim().length() == 0;
   }
+
+  @Override public String toString() {
+    return "AptoideAccount{"
+        + "id='"
+        + id
+        + '\''
+        + ", email='"
+        + email
+        + '\''
+        + ", nickname='"
+        + nickname
+        + '\''
+        + ", avatar='"
+        + avatar
+        + '\''
+        + ", refreshToken='"
+        + refreshToken
+        + '\''
+        + ", type="
+        + type
+        + ", store='"
+        + store
+        + '\''
+        + ", storeAvatar='"
+        + storeAvatar
+        + '\''
+        + ", adultContentEnabled="
+        + adultContentEnabled
+        + ", access="
+        + access
+        + ", accessConfirmed="
+        + accessConfirmed
+        + ", password='"
+        + password
+        + '\''
+        + ", subscribedStores="
+        + subscribedStores
+        + ", aptoideClientUUID="
+        + aptoideClientUUID
+        + ", accountService="
+        + accountService
+        + ", token='"
+        + token
+        + '\''
+        + '}';
+  }
 }

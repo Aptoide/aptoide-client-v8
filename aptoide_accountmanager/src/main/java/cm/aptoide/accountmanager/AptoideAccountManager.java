@@ -17,7 +17,6 @@ import rx.Single;
 public class AptoideAccountManager {
 
   public static final String IS_FACEBOOK_OR_GOOGLE = "facebook_google";
-  private final static String TAG = AptoideAccountManager.class.getSimpleName();
 
   private final AccountAnalytics accountAnalytics;
   private final CredentialsValidator credentialsValidator;
@@ -37,7 +36,10 @@ public class AptoideAccountManager {
 
   public Observable<Account> accountStatus() {
     return Observable.merge(accountRelay,
-        getAccountAsync().onErrorReturn(throwable -> createLocalAccount()).toObservable());
+        getAccountAsync().onErrorReturn(throwable -> {
+          CrashReport.getInstance().log(throwable);
+          return createLocalAccount();
+        }).toObservable());
   }
 
   public Single<Account> getAccountAsync() {

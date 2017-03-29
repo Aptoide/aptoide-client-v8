@@ -148,19 +148,17 @@ public class AptoideUtils {
 
       String cpuAbi = SystemU.getAbis();
 
-      String filters =
-          (Build.DEVICE.equals("alien_jolla_bionic") ? "apkdwn=myapp&" : "")
-              + "maxSdk="
-              + minSdk
-              +
-              "&maxScreen="
-              + minScreen
-              + "&maxGles="
-              + minGlEs
-              + "&myCPU="
-              + cpuAbi
-              + "&myDensity="
-              + density;
+      String filters = (Build.DEVICE.equals("alien_jolla_bionic") ? "apkdwn=myapp&" : "")
+          + "maxSdk="
+          + minSdk
+          + "&maxScreen="
+          + minScreen
+          + "&maxGles="
+          + minGlEs
+          + "&myCPU="
+          + cpuAbi
+          + "&myDensity="
+          + density;
       filters = addOpenGLExtensions(filters);
 
       return Base64.encodeToString(filters.getBytes(), 0)
@@ -538,8 +536,7 @@ public class AptoideUtils {
       // but we assume their ratio is correct.
       double screenWidthInPixels = (double) config.screenWidthDp * dm.density;
       double screenHeightInPixels = screenWidthInPixels * dm.heightPixels / dm.widthPixels;
-      return (int) (screenWidthInPixels + .5) + "x" +
-          (int) (screenHeightInPixels + .5);
+      return (int) (screenWidthInPixels + .5) + "x" + (int) (screenHeightInPixels + .5);
     }
 
     public enum Size {
@@ -1060,6 +1057,15 @@ public class AptoideUtils {
       }
     }
 
+    @NonNull public static String getStack() {
+      StringBuilder stringBuilder = new StringBuilder();
+      for (StackTraceElement stackTraceElement : Thread.currentThread().getStackTrace()) {
+        stringBuilder.append(stackTraceElement);
+        stringBuilder.append("\n");
+      }
+      return stringBuilder.toString();
+    }
+
     public static boolean isUiThread() {
       return Looper.getMainLooper().getThread() == Thread.currentThread();
     }
@@ -1164,6 +1170,24 @@ public class AptoideUtils {
       return instance;
     }
 
+    /**
+     * Checks if the given date is yesterday.
+     *
+     * @param date - Date to check.
+     * @return TRUE if the date is yesterday, FALSE otherwise.
+     */
+    private static boolean isYesterday(long date) {
+
+      final Calendar currentDate = Calendar.getInstance();
+      currentDate.setTimeInMillis(date);
+
+      final Calendar yesterdayDate = Calendar.getInstance();
+      yesterdayDate.add(Calendar.DATE, -1);
+
+      return yesterdayDate.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR)
+          && yesterdayDate.get(Calendar.DAY_OF_YEAR) == currentDate.get(Calendar.DAY_OF_YEAR);
+    }
+
     public String getTimeDiffAll(Context context, long time) {
 
       long diffTime = new Date().getTime() - time;
@@ -1194,24 +1218,6 @@ public class AptoideUtils {
       }
 
       return getTimeDiffString(context, time);
-    }
-
-    /**
-     * Checks if the given date is yesterday.
-     *
-     * @param date - Date to check.
-     * @return TRUE if the date is yesterday, FALSE otherwise.
-     */
-    private static boolean isYesterday(long date) {
-
-      final Calendar currentDate = Calendar.getInstance();
-      currentDate.setTimeInMillis(date);
-
-      final Calendar yesterdayDate = Calendar.getInstance();
-      yesterdayDate.add(Calendar.DATE, -1);
-
-      return yesterdayDate.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR)
-          && yesterdayDate.get(Calendar.DAY_OF_YEAR) == currentDate.get(Calendar.DAY_OF_YEAR);
     }
 
     /**
@@ -1634,8 +1640,7 @@ public class AptoideUtils {
           + methodName
           + " - Total execution time: "
           + (endTime - startTime)
-          +
-          "ms");
+          + "ms");
     }
   }
 
