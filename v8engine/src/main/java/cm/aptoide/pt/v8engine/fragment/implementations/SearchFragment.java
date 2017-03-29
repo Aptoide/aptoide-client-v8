@@ -124,7 +124,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
         String s = noSearchLayoutSearchQuery.getText().toString();
 
         if (s.length() > 1) {
-          getNavigationManager().navigateTo(
+          getFragmentNavigator().navigateTo(
               V8Engine.getFragmentProvider().newSearchFragment(s, storeName));
         }
       });

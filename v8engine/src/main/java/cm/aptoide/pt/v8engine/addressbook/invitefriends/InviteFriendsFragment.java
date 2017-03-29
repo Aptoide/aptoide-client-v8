@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.addressbook.AddressBookAnalytics;
@@ -46,7 +45,7 @@ public class InviteFriendsFragment extends UIComponentFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     mActionsListener = new InviteFriendsPresenter(this,
-        new AddressBookNavigationManager(NavigationManagerV4.Builder.buildWith(getActivity()),
+        new AddressBookNavigationManager(getFragmentNavigator(),
             entranceTag, getString(R.string.addressbook_about),
             getString(R.string.addressbook_data_about,
                 Application.getConfiguration().getMarketName())), openMode,

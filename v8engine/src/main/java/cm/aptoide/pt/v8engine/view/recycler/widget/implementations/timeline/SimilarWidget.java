@@ -82,7 +82,7 @@ public class SimilarWidget extends CardWidget<SimilarDisplayable> {
           Analytics.AppsTimeline.BLANK, displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_APP_VIEW);
       displayable.sendSimilarOpenAppEvent();
-      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     });
   }

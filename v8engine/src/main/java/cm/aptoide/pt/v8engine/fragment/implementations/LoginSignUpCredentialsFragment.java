@@ -20,7 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
+import cm.aptoide.pt.navigation.FragmentNavigator;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -220,7 +220,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void navigateToMainView() {
-    final NavigationManagerV4 navManager = getNavigationManager();
+    final FragmentNavigator navManager = getFragmentNavigator();
     Fragment home =
         HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
             V8Engine.getConfiguration().getDefaultTheme());
@@ -283,7 +283,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     Intent i = new Intent(getContext(), CreateUserActivity.class);
     FragmentActivity parent = getActivity();
     parent.startActivity(i);
-    getNavigationManager().cleanBackStack();
+    getFragmentNavigator().cleanBackStack();
   }
 
   private void showFacebookLoginError(@StringRes int errorRes) {

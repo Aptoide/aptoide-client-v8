@@ -52,7 +52,7 @@ import com.jakewharton.rxbinding.view.RxView;
       compositeSubscription.add(RxView.clicks(readMoreBtn).subscribe(click -> {
         Fragment fragment = V8Engine.getFragmentProvider()
             .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme);
-        getNavigationManager().navigateTo(fragment);
+        getFragmentNavigator().navigateTo(fragment);
       }));
     } else {
       // only show "default" description if the app doesn't have one
@@ -65,7 +65,7 @@ import com.jakewharton.rxbinding.view.RxView;
       compositeSubscription.add(RxView.clicks(readMoreBtn).subscribe(click -> {
         Fragment fragment = V8Engine.getFragmentProvider()
             .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme);
-        getNavigationManager().navigateTo(fragment);
+        getFragmentNavigator().navigateTo(fragment);
       }));
     } else {
       // only show "default" description if the app doesn't have one

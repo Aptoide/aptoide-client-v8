@@ -48,7 +48,7 @@ import rx.functions.Action1;
 
     storeLayout.setBackgroundColor(Color.WHITE);
 
-    final Action1<Void> handleStoreClick = v -> getNavigationManager().navigateTo(
+    final Action1<Void> handleStoreClick = v -> getFragmentNavigator().navigateTo(
         V8Engine.getFragmentProvider()
             .newStoreFragment(gridStoreDisplayable.getPojo().getName(),
                 store.getAppearance().getTheme()));

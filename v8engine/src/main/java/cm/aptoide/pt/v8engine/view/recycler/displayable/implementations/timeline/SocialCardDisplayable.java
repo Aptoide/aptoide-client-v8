@@ -7,7 +7,7 @@ import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.UserTimeline;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
+import cm.aptoide.pt.navigation.FragmentNavigator;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -63,8 +63,8 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
         ContextCompat.getColor(context, R.color.black), userSharer);
   }
 
-  public void likesPreviewClick(NavigationManagerV4 navigationManager) {
-    navigationManager.navigateTo(V8Engine.getFragmentProvider()
+  public void likesPreviewClick(FragmentNavigator navigator) {
+    navigator.navigateTo(V8Engine.getFragmentProvider()
         .newTimeLineLikesFragment(this.getTimelineCard().getCardId(), numberOfLikes, "default"));
   }
 }

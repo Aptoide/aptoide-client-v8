@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -62,7 +61,7 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
         new PhoneInputPresenter(this, new ContactsRepositoryImpl(baseBodyInterceptor),
             new AddressBookAnalytics(Analytics.getInstance(),
                 AppEventsLogger.newLogger(getContext().getApplicationContext())),
-            new AddressBookNavigationManager(NavigationManagerV4.Builder.buildWith(getActivity()),
+            new AddressBookNavigationManager(getFragmentNavigator(),
                 entranceTag, getString(R.string.addressbook_about),
                 getString(R.string.addressbook_data_about,
                     Application.getConfiguration().getMarketName())));

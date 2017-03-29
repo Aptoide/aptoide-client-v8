@@ -26,7 +26,6 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.activity.ActivityView;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import com.facebook.FacebookSdk;
 import rx.functions.Action0;
 
@@ -232,14 +231,7 @@ public abstract class PermissionServiceActivity extends ActivityView implements 
         @Override public void onNext(GenericDialogs.EResponse eResponse) {
           super.onNext(eResponse);
           if (eResponse == GenericDialogs.EResponse.YES) {
-            if (PermissionServiceActivity.this instanceof FragmentShower) {
-              getNavigationManager().navigateTo(
-                  V8Engine.getFragmentProvider().newSettingsFragment());
-            } else {
-              Logger.e(PermissionServiceActivity.class.getSimpleName(),
-                  new IllegalArgumentException(
-                      "The Fragment should be an instance of the " + "Activity Context"));
-            }
+            getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider().newSettingsFragment());
           } else {
             if (toRunWhenAccessIsDenied != null) {
               toRunWhenAccessIsDenied.call();
@@ -261,7 +253,7 @@ public abstract class PermissionServiceActivity extends ActivityView implements 
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    Fragment fragment = getNavigationManager().peekLast();
+    Fragment fragment = getFragmentNavigator().peekLast();
     if (fragment != null) {
       fragment.onActivityResult(requestCode, resultCode, data);
     } else {
@@ -304,9 +296,7 @@ public abstract class PermissionServiceActivity extends ActivityView implements 
             toRunWhenAccessToFileSystemIsDenied.call();
           }
           ShowMessage.asSnack(findViewById(android.R.id.content),
-              "access to read and write to external " +
-                  "storage" +
-                  " was denied");
+              "access to read and write to external " + "storage" + " was denied");
         }
         break;
 

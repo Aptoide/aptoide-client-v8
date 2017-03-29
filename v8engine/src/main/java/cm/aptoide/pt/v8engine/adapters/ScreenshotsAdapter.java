@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
+import cm.aptoide.pt.navigation.FragmentNavigator;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import java.util.ArrayList;
@@ -29,12 +29,12 @@ public class ScreenshotsAdapter
   private final List<GetAppMeta.Media.Video> videos;
   private final List<GetAppMeta.Media.Screenshot> screenshots;
   private final ArrayList<String> imageUris;
-  private final NavigationManagerV4 navigationManager;
+  private final FragmentNavigator navigator;
 
-  public ScreenshotsAdapter(GetAppMeta.Media media, NavigationManagerV4 navigationManager) {
+  public ScreenshotsAdapter(GetAppMeta.Media media, FragmentNavigator navigator) {
     this.videos = media.getVideos();
     this.screenshots = media.getScreenshots();
-    this.navigationManager = navigationManager;
+    this.navigator = navigator;
 
     imageUris = new ArrayList<>(screenshots.size());
     for (GetAppMeta.Media.Screenshot screenshot : screenshots) {
@@ -46,7 +46,7 @@ public class ScreenshotsAdapter
     View inflate = LayoutInflater.from(parent.getContext())
         .inflate(R.layout.row_item_screenshots_gallery, parent, false);
 
-    return new ScreenshotsViewHolder(inflate, navigationManager);
+    return new ScreenshotsViewHolder(inflate, navigator);
   }
 
   @Override public void onBindViewHolder(ScreenshotsViewHolder holder, int position) {
@@ -75,15 +75,15 @@ public class ScreenshotsAdapter
 
   static class ScreenshotsViewHolder extends RecyclerView.ViewHolder {
 
-    private final NavigationManagerV4 navigationManager;
+    private final FragmentNavigator navigator;
     private ImageView screenshot;
     private ImageView play_button;
     private FrameLayout media_layout;
 
-    ScreenshotsViewHolder(View itemView, NavigationManagerV4 navigationManager) {
+    ScreenshotsViewHolder(View itemView, FragmentNavigator navigator) {
       super(itemView);
       assignViews(itemView);
-      this.navigationManager = navigationManager;
+      this.navigator = navigator;
     }
 
     protected void assignViews(View itemView) {
@@ -129,7 +129,7 @@ public class ScreenshotsAdapter
 
       itemView.setOnClickListener(v -> {
         // TODO improve this call
-        navigationManager.navigateTo(
+        navigator.navigateTo(
             V8Engine.getFragmentProvider().newScreenshotsViewerFragment(imagesUris, position));
       });
     }

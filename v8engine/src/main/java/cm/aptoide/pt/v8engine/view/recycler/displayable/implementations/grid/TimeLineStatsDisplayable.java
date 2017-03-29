@@ -5,7 +5,7 @@ import android.graphics.Color;
 import android.text.ParcelableSpan;
 import android.text.style.ForegroundColorSpan;
 import cm.aptoide.pt.model.v7.TimelineStats;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
+import cm.aptoide.pt.navigation.FragmentNavigator;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
@@ -67,37 +67,37 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
         String.valueOf(getPojo().getData().getFollowing()));
   }
 
-  public Void followersClick(NavigationManagerV4 navigationManager) {
+  public Void followersClick(FragmentNavigator navigator) {
     if (storeId > 0) {
-      navigationManager.navigateTo(V8Engine.getFragmentProvider()
+      navigator.navigateTo(V8Engine.getFragmentProvider()
           .newTimeLineFollowersUsingStoreIdFragment(storeId, getPojo().getData().getFollowers(),
               storeTheme));
     } else if (userId != null && userId > 0) {
-      navigationManager.navigateTo(V8Engine.getFragmentProvider()
+      navigator.navigateTo(V8Engine.getFragmentProvider()
           .newTimeLineFollowersUsingUserIdFragment(userId, getPojo().getData().getFollowers(),
               storeTheme));
     } else {
-      navigationManager.navigateTo(V8Engine.getFragmentProvider()
+      navigator.navigateTo(V8Engine.getFragmentProvider()
           .newTimeLineFollowersFragment(getPojo().getData().getFollowers(), storeTheme));
     }
     return null;
   }
 
-  public Void followingClick(NavigationManagerV4 navigationManager) {
+  public Void followingClick(FragmentNavigator navigator) {
     if (storeId > 0) {
-      navigationManager.navigateTo(V8Engine.getFragmentProvider()
+      navigator.navigateTo(V8Engine.getFragmentProvider()
           .newTimeLineFollowingFragmentUsingStoreId(storeId, getPojo().getData().getFollowing(),
               storeTheme));
     } else {
-      navigationManager.navigateTo(V8Engine.getFragmentProvider()
+      navigator.navigateTo(V8Engine.getFragmentProvider()
           .newTimeLineFollowingFragmentUsingUserId(userId, getPojo().getData().getFollowing(),
               storeTheme));
     }
     return null;
   }
 
-  void followFriendsClick(NavigationManagerV4 navigationManager) {
+  void followFriendsClick(FragmentNavigator navigator) {
     timelineAnalytics.sendFollowFriendsEvent();
-    navigationManager.navigateTo(V8Engine.getFragmentProvider().newAddressBookFragment());
+    navigator.navigateTo(V8Engine.getFragmentProvider().newAddressBookFragment());
   }
 }

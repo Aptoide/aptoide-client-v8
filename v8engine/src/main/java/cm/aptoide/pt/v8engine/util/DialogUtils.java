@@ -22,7 +22,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.navigation.AccountNavigator;
+import cm.aptoide.pt.v8engine.account.AccountNavigator;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;

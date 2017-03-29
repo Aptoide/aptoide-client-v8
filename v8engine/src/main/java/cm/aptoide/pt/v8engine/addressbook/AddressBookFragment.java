@@ -16,7 +16,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.FacebookModel;
 import cm.aptoide.pt.model.v7.TwitterModel;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -83,11 +82,9 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
     mActionsListener =
         new AddressBookPresenter(this, new ContactsRepositoryImpl(baseBodyBodyInterceptor),
-            analytics,
-            new AddressBookNavigationManager(NavigationManagerV4.Builder.buildWith(getActivity()),
-                getTag(), getString(R.string.addressbook_about),
-                getString(R.string.addressbook_data_about,
-                    Application.getConfiguration().getMarketName())));
+            analytics, new AddressBookNavigationManager(getFragmentNavigator(), getTag(),
+            getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
+            Application.getConfiguration().getMarketName())));
     callbackManager = CallbackManager.Factory.create();
     registerFacebookCallback();
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());

@@ -54,7 +54,6 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
-import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -64,6 +63,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.activity.PaymentActivity;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.DialogBadgeV7;
@@ -234,6 +234,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    accountNavigator =
+        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
     permissionManager = new PermissionManager();
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
@@ -267,11 +269,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public int getContentViewId() {
     return VIEW_ID;
-  }
-
-  @Override public void setupViews() {
-    super.setupViews();
-    accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
   }
 
   @Partners @Override public void bindViews(View view) {

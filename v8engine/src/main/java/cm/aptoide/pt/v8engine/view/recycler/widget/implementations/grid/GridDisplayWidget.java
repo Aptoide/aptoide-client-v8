@@ -55,7 +55,7 @@ import rx.functions.Action1;
       Event event = pojo.getEvent();
       Event.Name name = event.getName();
       if (StoreTabFragmentChooser.validateAcceptedName(name)) {
-        getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+        getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
             .newStoreTabGridRecyclerFragment(event, pojo.getLabel(), displayable.getStoreTheme(),
                 displayable.getTag(), displayable.getStoreContext()));
       } else {

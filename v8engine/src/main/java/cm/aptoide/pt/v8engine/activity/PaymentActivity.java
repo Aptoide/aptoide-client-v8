@@ -24,9 +24,9 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.iab.ErrorCodeFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.Product;
@@ -113,14 +113,15 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
         ((V8Engine) getApplicationContext()).getAccountManager();
     final Payer payer = new Payer(accountManager);
     attachPresenter(new PaymentPresenter(this,
-        new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
-            RepositoryFactory.getPaymentAuthorizationRepository(this),
-            new PaymentAuthorizationFactory(this),
-            RepositoryFactory.getPaymentRepository(this, product),
-            RepositoryFactory.getProductRepository(this, product), payer), product, accountManager,
-        new PaymentSelector(PAYPAL_PAYMENT_ID,
-            PreferenceManager.getDefaultSharedPreferences(getApplicationContext())),
-        new AccountNavigator(this, getNavigationManager(), accountManager)), savedInstanceState);
+            new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
+                RepositoryFactory.getPaymentAuthorizationRepository(this),
+                new PaymentAuthorizationFactory(this),
+                RepositoryFactory.getPaymentRepository(this, product),
+                RepositoryFactory.getProductRepository(this, product), payer), product, accountManager,
+            new PaymentSelector(PAYPAL_PAYMENT_ID,
+                PreferenceManager.getDefaultSharedPreferences(getApplicationContext())),
+            new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator())),
+        savedInstanceState);
   }
 
   @Override public Observable<PaymentViewModel> paymentSelection() {
@@ -178,8 +179,8 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     ImageLoader.with(this).load(product.getIcon(), productIcon);
     productName.setText(product.getTitle());
     productDescription.setText(product.getDescription());
-    productPrice.setText(product.getPrice().getCurrencySymbol() + " " +
-        product.getPrice().getAmount());
+    productPrice.setText(
+        product.getPrice().getCurrencySymbol() + " " + product.getPrice().getAmount());
   }
 
   @Override public void hideLoading() {

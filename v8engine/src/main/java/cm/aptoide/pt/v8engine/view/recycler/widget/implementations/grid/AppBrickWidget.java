@@ -41,7 +41,7 @@ import com.jakewharton.rxbinding.view.RxView;
 
     compositeSubscription.add(RxView.clicks(itemView).subscribe(v -> {
       Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
-      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getPojo().getId(),
               displayable.getPojo().getPackageName()));
       Analytics.HomePageEditorsChoice.clickOnEditorsChoiceItem(getAdapterPosition(),

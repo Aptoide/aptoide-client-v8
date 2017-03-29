@@ -26,11 +26,11 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
-import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
@@ -132,7 +132,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
+    accountNavigator =
+        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
 
     if (savedInstanceState != null) {
       if (savedInstanceState.containsKey(PACKAGE_LIST_KEY)) {

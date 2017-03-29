@@ -37,7 +37,7 @@ import rx.functions.Action1;
 
     final Action1<Void> handleButtonClick = __ -> {
       Event event = displayable.getPojo().getActions().get(0).getEvent();
-      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
           .newStoreTabGridRecyclerFragment(event,
               Translator.translate(displayable.getPojo().getTitle()), null, displayable.getTag(),
               displayable.getStoreContext()));

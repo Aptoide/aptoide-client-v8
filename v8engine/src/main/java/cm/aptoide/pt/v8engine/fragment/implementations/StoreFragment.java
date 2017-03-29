@@ -200,6 +200,12 @@ public class StoreFragment extends BasePagerToolbarFragment {
     StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
     pagerSlidingTabStrip.setOnTabReselectedListener(position -> {
       if (Event.Name.getUserTimeline.equals(adapter.getEventName(position))) {
+         //TODO We should not call fragment public methods since we do NOT know about its internal
+         //life cycle. A fragment A should call its activity in order to communicate with
+         //fragment B. Then when fragment B is ready it should register a listener
+         //with its activity in order receive external communication. Activity
+         //should buffer calls if there is no listener registered and deliver them
+         //after registration happens.
         for (Fragment fragment : getChildFragmentManager().getFragments()) {
           if (fragment != null && fragment instanceof AppsTimelineFragment) {
             ((AppsTimelineFragment) fragment).goToTop();

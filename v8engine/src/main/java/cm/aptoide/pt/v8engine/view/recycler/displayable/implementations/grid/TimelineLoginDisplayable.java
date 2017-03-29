@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.navigation.AccountNavigator;
+import cm.aptoide.pt.v8engine.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 
 /**

@@ -7,7 +7,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
+import cm.aptoide.pt.navigation.FragmentNavigator;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -61,9 +61,9 @@ public class RowReviewWidget extends Widget<RowReviewDisplayable> {
         .loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(), avatar,
             R.drawable.layer_1);
 
-    final NavigationManagerV4 navigationManager = getNavigationManager();
+    final FragmentNavigator navigator = getFragmentNavigator();
     compositeSubscription.add(RxView.clicks(itemView).subscribe(aVoid -> {
-      navigationManager.navigateTo(V8Engine.getFragmentProvider()
+      navigator.navigateTo(V8Engine.getFragmentProvider()
           .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
               app.getPackageName(), review.getId()));
     }));

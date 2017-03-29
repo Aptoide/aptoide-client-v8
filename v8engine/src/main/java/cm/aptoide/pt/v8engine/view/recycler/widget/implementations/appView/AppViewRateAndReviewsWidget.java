@@ -22,19 +22,17 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
-import cm.aptoide.pt.navigation.AccountNavigator;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.navigation.ActivityNavigator;
+import cm.aptoide.pt.v8engine.account.AccountNavigator;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
@@ -117,7 +115,7 @@ import rx.functions.Action1;
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
     dialogUtils = new DialogUtils(accountManager,
-        new AccountNavigator(getContext(), getNavigationManager(), accountManager), bodyInterceptor);
+        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()), bodyInterceptor);
     appName = app.getName();
     packageName = app.getPackageName();
     storeName = app.getStore().getName();
@@ -149,7 +147,7 @@ import rx.functions.Action1;
       Fragment fragment = V8Engine.getFragmentProvider()
           .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
               app.getPackageName(), app.getStore().getAppearance().getTheme());
-      getNavigationManager().navigateTo(fragment);
+      getFragmentNavigator().navigateTo(fragment);
     };
     compositeSubscription.add(
         RxView.clicks(readAllButton).subscribe(commentsOnClickListener, handleError));

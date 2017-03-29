@@ -23,9 +23,9 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
-import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.adapters.CommentsAdapter;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
@@ -122,7 +122,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
       return true;
     }
     if (itemId == R.id.menu_install) {
-      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
           .newAppViewFragment(packageName, storeName, AppViewFragment.OpenType.OPEN_AND_INSTALL));
       return true;
     }
@@ -177,7 +177,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Override public void onViewCreated() {
     super.onViewCreated();
     dialogUtils = new DialogUtils(accountManager,
-        new AccountNavigator(getContext(), getNavigationManager(), accountManager),
+        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
         baseBodyInterceptor);
   }
 
