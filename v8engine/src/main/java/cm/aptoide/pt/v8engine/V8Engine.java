@@ -16,6 +16,7 @@ import android.preference.PreferenceManager;
 import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -173,7 +174,6 @@ public abstract class V8Engine extends DataProvider {
     //
     checkAppSecurity().andThen(generateAptoideUuid())
         .observeOn(Schedulers.computation())
-        .andThen(regenerateUserAgent(getAccountManager()))
         .andThen(initAbTestManager())
         .andThen(prepareApp(V8Engine.this.getAccountManager()).onErrorComplete(err -> {
           // in case we have an error preparing the app, log that error and continue
@@ -181,9 +181,10 @@ public abstract class V8Engine extends DataProvider {
           return true;
         }))
         .andThen(discoverAndSaveInstalledApps())
-        .andThen(clearFileCache())
-        .andThen(initializeDownloadManager(V8Engine.this.getAccountManager()))
         .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance().log(error));
+
+    regenerateUserAgent(getAccountManager()).subscribe(__ -> { /* do nothing */},
+        error -> CrashReport.getInstance().log(error));
 
     //
     // app synchronous initialization
@@ -194,6 +195,10 @@ public abstract class V8Engine extends DataProvider {
     sendAppStartToAnalytics(sharedPreferences);
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
+
+    clearFileCache();
+
+    initializeDownloadManager(V8Engine.this.getAccountManager());
 
     //
     // this will trigger the migration if needed
@@ -214,7 +219,7 @@ public abstract class V8Engine extends DataProvider {
       @Override public Single<String> invalidateAccessToken() {
         final AptoideAccountManager accountManager = getAccountManager();
         return accountManager.refreshToken()
-            .andThen(accountManager.getAccountAsync())
+            .andThen(accountManager.accountStatus().first().toSingle())
             .map(account -> account.getAccessToken());
       }
     };
@@ -236,12 +241,17 @@ public abstract class V8Engine extends DataProvider {
           new SocialAccountFactory(context, getGoogleSignInClient()),
           new AccountService(getAptoideClientUUID()));
 
-      SQLiteDatabase db = SQLiteDatabase.openDatabase(
-          context.getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME).getPath(), null,
-          SQLiteDatabase.OPEN_READONLY, null);
-      int oldVersion = db.getVersion();
-      if (db.isOpen()) {
-        db.close();
+      int oldVersion = SQLiteDatabaseHelper.DATABASE_VERSION;
+      try {
+        SQLiteDatabase db = SQLiteDatabase.openDatabase(
+            context.getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME).getPath(), null,
+            SQLiteDatabase.OPEN_READONLY, null);
+        oldVersion = db.getVersion();
+        if (db.isOpen()) {
+          db.close();
+        }
+      } catch (Exception ex) {
+        // db does not exist. it's a fresh install
       }
 
       final AndroidAccountDataMigration accountDataMigration =
@@ -307,33 +317,31 @@ public abstract class V8Engine extends DataProvider {
     return secureCodeDecoder;
   }
 
-  private Completable clearFileCache() {
-    return FileManager.build()
+  private void clearFileCache() {
+    FileManager.build()
         .purgeCache()
         .first()
         .toSingle()
-        .doOnSuccess(cleanedSize -> Logger.d(TAG,
-            "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)))
-        .toCompletable();
+        .subscribe(cleanedSize -> Logger.d(TAG,
+            "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)),
+            err -> CrashReport.getInstance().log(err));
   }
 
   private void initializeFlurry(Context context, String flurryKey) {
     new FlurryAgent.Builder().withLogEnabled(false).build(context, flurryKey);
   }
 
-  private Completable initializeDownloadManager(AptoideAccountManager accountManager) {
-    return accountManager.getAccountAsync().flatMapCompletable(account -> {
-      final String accountEmail = account.getEmail();
-      AptoideDownloadManager.getInstance()
-          .init(this, new DownloadNotificationActionsActionsInterface(),
-              new DownloadManagerSettingsI(), AccessorFactory.getAccessorFor(Download.class),
-              CacheHelper.build(), new FileUtils(action -> Analytics.File.moveFile(action)),
-              new TokenHttpClient(getAptoideClientUUID(), () -> accountEmail,
-                  getConfiguration().getPartnerId(), accountManager).customMake(),
-              new DownloadAnalytics(Analytics.getInstance()));
-
-      return Completable.complete();
-    });
+  private void initializeDownloadManager(AptoideAccountManager accountManager) {
+    AptoideDownloadManager.getInstance()
+        .init(this, new DownloadNotificationActionsActionsInterface(),
+            new DownloadManagerSettingsI(), AccessorFactory.getAccessorFor(Download.class),
+            CacheHelper.build(), new FileUtils(action -> Analytics.File.moveFile(action)),
+            new TokenHttpClient(getAptoideClientUUID(), new UserData() {
+              @Override public String getEmail() {
+                return accountManager.getAccountEmail();
+              }
+            }, getConfiguration().getPartnerId(), accountManager).customMake(),
+            new DownloadAnalytics(Analytics.getInstance()));
   }
 
   private void sendAppStartToAnalytics(SharedPreferences sPref) {
@@ -342,7 +350,7 @@ public abstract class V8Engine extends DataProvider {
   }
 
   private Completable checkAppSecurity() {
-    return Completable.defer(() -> Completable.fromCallable(() -> {
+    return Completable.fromAction(() -> {
       if (SecurityUtils.checkAppSignature(this) != SecurityUtils.VALID_APP_SIGNATURE) {
         Logger.w(TAG, "app signature is not valid!");
       }
@@ -354,8 +362,7 @@ public abstract class V8Engine extends DataProvider {
       if (SecurityUtils.checkDebuggable(this)) {
         Logger.w(TAG, "application has debug flag active");
       }
-      return Completable.complete();
-    }));
+    });
   }
 
   @Partners protected FragmentProvider createFragmentProvider() {
@@ -375,14 +382,13 @@ public abstract class V8Engine extends DataProvider {
         .subscribeOn(Schedulers.newThread());
   }
 
-  private Completable regenerateUserAgent(final AptoideAccountManager accountManager) {
-    return accountManager.getAccountAsync().flatMapCompletable(account -> {
+  private Observable<Void> regenerateUserAgent(final AptoideAccountManager accountManager) {
+    return accountManager.accountStatus().doOnNext(account -> {
       final String userAgent = AptoideUtils.NetworkUtils.getDefaultUserAgent(getAptoideClientUUID(),
           () -> account.getEmail(), AptoideUtils.Core.getDefaultVername(),
           getConfiguration().getPartnerId());
       SecurePreferences.setUserAgent(userAgent);
-      return Completable.complete();
-    }).subscribeOn(Schedulers.newThread());
+    }).subscribeOn(Schedulers.newThread()).flatMap(__ -> null);
   }
 
   private Completable initAbTestManager() {
@@ -407,16 +413,8 @@ public abstract class V8Engine extends DataProvider {
 
   // todo re-factor all this code to proper Rx
   private Completable setupFirstRun(final AptoideAccountManager accountManager) {
-    return Completable.defer(() -> accountManager.getAccountAsync().flatMapCompletable(account -> {
+    return Completable.defer(() -> {
       SecurePreferences.setFirstRun(false);
-      if (account.isLoggedIn()) {
-
-        if (!SecurePreferences.isUserDataLoaded()) {
-          return regenerateUserAgent(accountManager).doOnCompleted(
-              () -> SecurePreferences.setUserDataLoaded())
-              .doOnError(err -> CrashReport.getInstance().log(err));
-        }
-      }
 
       final StoreCredentialsProviderImpl storeCredentials = new StoreCredentialsProviderImpl();
 
@@ -431,7 +429,7 @@ public abstract class V8Engine extends DataProvider {
           GetStoreMetaRequest.of(defaultStoreCredentials, getBaseBodyInterceptor()), accountManager,
           defaultStoreCredentials).andThen(refreshUpdates()))
           .doOnError(err -> CrashReport.getInstance().log(err));
-    }));
+    });
   }
 
   public BodyInterceptor<BaseBody> getBaseBodyInterceptor() {
