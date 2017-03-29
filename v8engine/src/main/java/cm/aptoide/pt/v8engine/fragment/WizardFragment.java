@@ -62,6 +62,7 @@ public class WizardFragment extends FragmentView
     accountManager.accountStatus()
         .first()
         .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(account -> {
           createViewsAndButtons(account.isLoggedIn(), supportFragmentManager, context);
         }, err -> {
