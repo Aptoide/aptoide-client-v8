@@ -206,17 +206,17 @@ public abstract class AccountPermissionsBaseActivity extends AccountBaseActivity
 
   protected void checkAvatarRequirements(String avatarPath, Uri avatarUrl) {
     if (!TextUtils.isEmpty(avatarPath)) {
-      List<AptoideUtils.IconSizeU.ImageSizeErrors> imageSizeErrors =
+      List<AptoideUtils.IconSizeU.ImageErrors> imageErrors =
           AptoideUtils.IconSizeU.checkIconSizeProperties(avatarPath,
               getResources().getInteger(R.integer.min_avatar_height),
               getResources().getInteger(R.integer.max_avatar_height),
               getResources().getInteger(R.integer.min_avatar_width),
               getResources().getInteger(R.integer.max_avatar_width),
               getResources().getInteger(R.integer.max_avatar_Size));
-      if (imageSizeErrors.isEmpty()) {
+      if (imageErrors.isEmpty()) {
         loadImage(avatarUrl);
       } else {
-        showIconPropertiesError(getErrorsMessage(imageSizeErrors));
+        showIconPropertiesError(getErrorsMessage(imageErrors));
       }
     }
   }
@@ -225,10 +225,10 @@ public abstract class AccountPermissionsBaseActivity extends AccountBaseActivity
 
   public abstract void showIconPropertiesError(String errors);
 
-  private String getErrorsMessage(List<AptoideUtils.IconSizeU.ImageSizeErrors> imageSizeErrors) {
+  private String getErrorsMessage(List<AptoideUtils.IconSizeU.ImageErrors> imageErrors) {
     StringBuilder message = new StringBuilder();
     message.append(getString(cm.aptoide.accountmanager.R.string.image_requirements_popup_message));
-    for (AptoideUtils.IconSizeU.ImageSizeErrors imageSizeError : imageSizeErrors) {
+    for (AptoideUtils.IconSizeU.ImageErrors imageSizeError : imageErrors) {
       switch (imageSizeError) {
         case MIN_HEIGHT:
           message.append(
@@ -249,6 +249,9 @@ public abstract class AccountPermissionsBaseActivity extends AccountBaseActivity
         case MAX_IMAGE_SIZE:
           message.append(
               getString(cm.aptoide.accountmanager.R.string.image_requirements_error_max_file_size));
+          break;
+        case ERROR_DECODING:
+          message.append(getString(R.string.image_requirements_error_open_image));
           break;
       }
     }
