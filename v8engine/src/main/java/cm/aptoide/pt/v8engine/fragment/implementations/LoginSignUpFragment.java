@@ -150,7 +150,7 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
   }
 
   @Override public boolean onBackPressed() {
-    if (loginFragment.onBackPressed()) {
+    if (loginFragment != null && loginFragment.onBackPressed()) {
       bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
       return true;
     }
