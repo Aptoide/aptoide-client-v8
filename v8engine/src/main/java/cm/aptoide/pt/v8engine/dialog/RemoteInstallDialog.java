@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +29,7 @@ import java.util.List;
 /**
  * Created by franciscoaleixo on 18-08-2016.
  */
-public class RemoteInstallDialog extends DialogFragment
-    implements RemoteInstallationSenderListener {
+public class RemoteInstallDialog extends BaseDialog implements RemoteInstallationSenderListener {
   private final static String APP_ID_TAG = "appid";
   private ProgressBar pBar;
   private ListView listView;

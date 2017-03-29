@@ -50,9 +50,9 @@ public class ViewPagerAdapterScreenshots extends PagerAdapter {
     int id;
     if (context.getResources().getConfiguration().orientation
         == Configuration.ORIENTATION_PORTRAIT) {
-      id = R.drawable.placeholder_144x240;
+      id = R.drawable.placeholder_9_16;
     } else {
-      id = R.drawable.placeholder_256x160;
+      id = R.drawable.placeholder_16_9;
     }
     return id;
   }

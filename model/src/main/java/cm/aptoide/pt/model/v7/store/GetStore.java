@@ -18,7 +18,6 @@ import lombok.EqualsAndHashCode;
   private Nodes nodes;
 
   @Data public static class Nodes {
-
     private GetStoreMeta meta;
     private GetStoreTabs tabs;
     private GetStoreWidgets widgets;

@@ -14,7 +14,7 @@ import lombok.Getter;
 /**
  * Created by jdandrade on 15/12/2016.
  */
-@EqualsAndHashCode(exclude = { "app" }) public class SocialInstall extends SocialCard
+@EqualsAndHashCode(exclude = { "app" }, callSuper = false) public class SocialInstall extends SocialCard
     implements TimelineCard {
 
   @Getter private final String cardId;

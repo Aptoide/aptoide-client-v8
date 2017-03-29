@@ -8,6 +8,7 @@ package cm.aptoide.pt.downloadmanager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
@@ -113,7 +114,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
     Observable.fromCallable(() -> {
       downloadAccessor.save(download);
       return null;
-    }).subscribeOn(Schedulers.io()).subscribe();
+    }).subscribeOn(Schedulers.io()).subscribe(__ -> {}, err -> CrashReport.getInstance().log(err));
   }
 
   private void setDownloadStatus(@Download.DownloadState int status, Download download,
@@ -200,6 +201,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
               file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
             } else {
               Logger.e(TAG, "Download md5 is not correct");
+              download.setDownloadError(Download.GENERIC_ERROR);
               setDownloadStatus(Download.ERROR, download, task);
             }
           });

@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -47,6 +46,9 @@ public class Analytics {
 
   // Constantes globais a todos os eventos.
   public static final String ACTION = "Action";
+  public static final String IS_LOCALYTICS_ENABLE_KEY = "IS_LOCALYTICS_ENABLE_KEY";
+  public static final String IS_LOCALYTICS_FIRST_SESSION = "IS_LOCALYTICS_FIRST_SESSION";
+  private static final String METHOD = "Method";
   private static final String TAG = Analytics.class.getSimpleName();
   private static final boolean ACTIVATE_FLURRY = true;
   private static final int ALL = Integer.MAX_VALUE;
@@ -77,14 +79,12 @@ public class Analytics {
     this.saver = saver;
   }
 
-  public static boolean checkBuildVariant() {
-    return BuildConfig.BUILD_TYPE.contains("release") && BuildConfig.FLAVOR.contains("dev");
-  }
-
   private static void track(String event, String key, String attr, int flags) {
 
     try {
-      if (!ACTIVATE_LOCALYTICS && !ACTIVATE_FLURRY) return;
+      if (!ACTIVATE_LOCALYTICS && !ACTIVATE_FLURRY) {
+        return;
+      }
 
       HashMap stringObjectHashMap = new HashMap<>();
 
@@ -136,23 +136,42 @@ public class Analytics {
     }
   }
 
-  private static void logFacebookEvents(String eventName, Map<String, String> map) {
-    if (BuildConfig.BUILD_TYPE.equals("debug") && map == null) {
-      return;
-    }
-    Bundle parameters = new Bundle();
-    for (String s : map.keySet()) {
-      parameters.putString(s, map.get(s));
-    }
-    logFacebookEvents(eventName, parameters);
-  }
-
-  private static void logFacebookEvents(String eventName, Bundle parameters) {
+  private static void logFacebookEvents(String eventName) {
     if (BuildConfig.BUILD_TYPE.equals("debug")) {
       return;
     }
+    facebookLogger.logEvent(eventName);
+  }
 
-    facebookLogger.logEvent(eventName, parameters);
+  public void save(@NonNull String key, @NonNull Event event) {
+    saver.save(key, event);
+  }
+
+  public @Nullable Event get(String key, Class<? extends Event> clazz) {
+    return saver.get(key + clazz.getName());
+  }
+
+  public void sendEvent(Event event) {
+    event.send();
+    saver.remove(event);
+  }
+
+  /**
+   * This method is dealing with spot and share events only and should be refactored in case
+   * one would want to send the same event to fabric AND any other analytics platform
+   */
+  public void sendSpotAndShareEvents(String eventName, Map<String, String> attributes,
+      boolean fabric) {
+    if (fabric) {
+      logFabricEvent(eventName, attributes, FABRIC);
+    } else {
+      logFacebookEvents(eventName, attributes);
+      if (attributes != null) {
+        track(eventName, new HashMap<String, String>(attributes), LOCALYTICS);
+      } else {
+        track(eventName, LOCALYTICS);
+      }
+    }
   }
 
   private static void logFabricEvent(String event, Map<String, String> map, int flags) {
@@ -166,36 +185,46 @@ public class Analytics {
     }
   }
 
+  private static void logFacebookEvents(String eventName, Map<String, String> map) {
+    if (BuildConfig.BUILD_TYPE.equals("debug") && map == null) {
+      return;
+    }
+    Bundle parameters = new Bundle();
+    if (map != null) {
+      for (String s : map.keySet()) {
+        parameters.putString(s, map.get(s));
+      }
+    }
+    logFacebookEvents(eventName, parameters);
+  }
+
   private static void track(String event, int flags) {
 
     try {
-      if (!ACTIVATE_LOCALYTICS && !ACTIVATE_FLURRY) return;
+      if (!ACTIVATE_LOCALYTICS && !ACTIVATE_FLURRY) {
+        return;
+      }
 
-      if (checkAcceptability(flags, LOCALYTICS)) Localytics.tagEvent(event);
+      if (checkAcceptability(flags, LOCALYTICS)) {
+        Localytics.tagEvent(event);
+        Logger.d(TAG, "Localytics Event: " + event);
+      }
 
-      if (checkAcceptability(flags, FLURRY)) FlurryAgent.logEvent(event);
-
-      Logger.d(TAG, "Event: " + event);
+      if (checkAcceptability(flags, FLURRY)) {
+        FlurryAgent.logEvent(event);
+        Logger.d(TAG, "Flurry Event: " + event);
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-  public void save(@NonNull String key, @NonNull Event event) {
-    saver.save(key + event.getClass().getName(), event);
-  }
+  private static void logFacebookEvents(String eventName, Bundle parameters) {
+    if (BuildConfig.BUILD_TYPE.equals("debug")) {
+      return;
+    }
 
-  public @Nullable Event get(String key, Class<? extends Event> clazz) {
-    return saver.get(key + clazz.getName());
-  }
-
-  public void sendEvent(Event event) {
-    event.send();
-    remove(event);
-  }
-
-  private void remove(@NonNull Event event) {
-    saver.remove(event);
+    facebookLogger.logEvent(eventName, parameters);
   }
 
   public static class Lifecycle {
@@ -213,8 +242,8 @@ public class Analytics {
         SharedPreferences sPref =
             PreferenceManager.getDefaultSharedPreferences(application.getBaseContext());
         ACTIVATE_LOCALYTICS =
-            ACTIVATE_LOCALYTICS && (sPref.getBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY, false));
-        isFirstSession = sPref.getBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, false);
+            ACTIVATE_LOCALYTICS && (sPref.getBoolean(IS_LOCALYTICS_ENABLE_KEY, false));
+        isFirstSession = sPref.getBoolean(IS_LOCALYTICS_FIRST_SESSION, false);
         if (ACTIVATE_LOCALYTICS || isFirstSession) {
           // Integrate Localytics
           Localytics.autoIntegrate(application);
@@ -301,23 +330,31 @@ public class Analytics {
 
       public static void onCreate(android.app.Activity activity) {
 
-        if (!ACTIVATE_LOCALYTICS) return;
+        if (!ACTIVATE_LOCALYTICS) {
+          return;
+        }
         Localytics.registerPush(BuildConfig.GOOGLE_SENDER_ID);
       }
 
       public static void onDestroy(android.app.Activity activity) {
 
-        if (!ACTIVATE_LOCALYTICS) return;
+        if (!ACTIVATE_LOCALYTICS) {
+          return;
+        }
       }
 
       public static void onResume(android.app.Activity activity) {
 
-        if (!ACTIVATE_LOCALYTICS) return;
+        if (!ACTIVATE_LOCALYTICS) {
+          return;
+        }
 
         Localytics.onActivityResume(activity);
 
         if (isFirstSession) {
-          if (!AptoideAccountManager.isLoggedIn()) {
+          final AptoideAccountManager accountManager =
+              ((V8Engine) activity.getApplicationContext()).getAccountManager();
+          if (!accountManager.isLoggedIn()) {
             Localytics.setCustomDimension(0, "Not Logged In");
           } else {
             Localytics.setCustomDimension(0, "Logged In");
@@ -325,34 +362,23 @@ public class Analytics {
         }
 
         String cpuid = aptoideClientUuid.getUniqueIdentifier();
-
         Localytics.setCustomerId(cpuid);
-
-        //                String cpuid = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext())
-        //                        .getString(EnumPreferences.aptoideClientUuid.name(), "NoInfo");
-
-        //                Localytics.setCustomerId(cpuid);
-        //
-        //                if (screenName != null) {
-        //                    Localytics.tagScreen(screenName);
-        //                }
-        //
         Localytics.handleTestMode(activity.getIntent());
-        //
-        //                Logger.d("Analytics", "Event: CPU_ID: " + cpuid);
-        //                Logger.d("Analytics", "Screen: " + screenName);
-
       }
 
       public static void onPause(android.app.Activity activity) {
-        if (!ACTIVATE_LOCALYTICS && !isFirstSession) return;
+        if (!ACTIVATE_LOCALYTICS && !isFirstSession) {
+          return;
+        }
 
         Localytics.onActivityPaused(activity);
       }
 
       public static void onStart(android.app.Activity activity) {
 
-        if (!ACTIVATE_FLURRY) return;
+        if (!ACTIVATE_FLURRY) {
+          return;
+        }
 
         Logger.d(TAG, "FlurryAgent.onStartSession called");
         FlurryAgent.onStartSession(activity, BuildConfig.FLURRY_KEY);
@@ -360,7 +386,9 @@ public class Analytics {
 
       public static void onStop(android.app.Activity activity) {
 
-        if (!ACTIVATE_FLURRY) return;
+        if (!ACTIVATE_FLURRY) {
+          return;
+        }
 
         Logger.d(TAG, "FlurryAgent.onEndSession called");
         FlurryAgent.onEndSession(activity);
@@ -375,53 +403,9 @@ public class Analytics {
     }
   }
 
-  public static class Screens {
-
-    public static void tagScreen(String screenName) {
-
-      if (!ACTIVATE_LOCALYTICS) return;
-
-      Logger.d(TAG, "Localytics: Screens: " + screenName);
-
-      Localytics.tagScreen(screenName);
-      Localytics.upload();
-    }
-  }
-
-  // TODO
-  public static class Tutorial {
-    public static final String EVENT_NAME = "Tutorial";
-    public static final String STEP_ACCOMPLISHED = "Step Accomplished";
-
-    public static void finishedTutorial(int lastFragment) {
-      try {
-        track(EVENT_NAME, STEP_ACCOMPLISHED, Integer.toString(lastFragment), ALL);
-      } catch (NullPointerException e) {
-        e.printStackTrace();
-      }
-    }
-  }
-
-  public static class UserRegister {
-
-    public static final String EVENT_NAME = "User Registered";
-
-    public static void registered() {
-      track(EVENT_NAME, ALL);
-    }
-  }
-
-  // Novos
   public static class Rollback {
 
-    private static final String EVENT_NAME = "Rollback";
     private static final String EVENT_NAME_DOWNGRADE_DIALOG = "Downgrade_Dialog";
-    private static final String DOWNGRADED = "Downgraded";
-    private static final String CLEAR = "Clear";
-
-    public static void downgraded() {
-      //            track(EVENT_NAME, ACTION, DOWNGRADED, ALL);
-    }
 
     public static void downgradeDialogContinue() {
       track(EVENT_NAME_DOWNGRADE_DIALOG, ACTION, "Continue", FLURRY);
@@ -430,131 +414,116 @@ public class Analytics {
     public static void downgradeDialogCancel() {
       track(EVENT_NAME_DOWNGRADE_DIALOG, ACTION, "Cancel", FLURRY);
     }
-
-    public static void clear() {
-      //            track(EVENT_NAME, ACTION, CLEAR, ALL);
-    }
   }
 
-  public static class ScheduledDownloads {
-    public static final String EVENT_NAME = "Scheduled Downloads";
-    private static final String CLICK_ON_INSTALL_SELECTED = "Clicked on Install Selected";
-    private static final String CLICK_ON_INVERT_SELECTION = "Clicked on Invert Selection";
-    private static final String CLICK_ON_REMOVE_SELECTED = "Clicked on Remove Selected";
+  public static class Account {
 
-    public static void clickOnInstallSelected() {
-      //            track(EVENT_NAME, ACTION, CLICK_ON_INSTALL_SELECTED, ALL);
+    private static final String LOGIN_SIGN_UP_START_SCREEN = "Account_Login_Signup_Start_Screen";
+    private static final String SIGNUP_SCREEN = "Account_Signup_Screen";
+    private static final String LOGIN_SCREEN = "Account_Login_Screen";
+    private static final String CREATE_USER_PROFILE = "Account_Create_A_User_Profile_Screen";
+    private static final String PROFILE_SETTINGS = "Account_Profile_Settings_Screen";
+    private static final String CREATE_YOUR_STORE = "Account_Create_Your_Store_Screen";
+    private static final String HAS_PICTURE = "has_picture";
+
+    public static void clickIn(StartupClick clickEvent) {
+      track(LOGIN_SIGN_UP_START_SCREEN, ACTION, clickEvent.getClickEvent(), ALL);
+      Map<String, String> map = new HashMap<>();
+      map.put(ACTION, clickEvent.getClickEvent());
+      logFacebookEvents(LOGIN_SIGN_UP_START_SCREEN, map);
     }
 
-    public static void clickOnInvertSelection() {
-      //            track(EVENT_NAME, ACTION, CLICK_ON_INVERT_SELECTION, ALL);
+    public static void signInSuccessAptoide() {
+      track(SIGNUP_SCREEN, ALL);
+      logFacebookEvents(SIGNUP_SCREEN);
     }
 
-    public static void clickOnRemoveSelected() {
-      //            track(EVENT_NAME, ACTION, CLICK_ON_REMOVE_SELECTED, ALL);
-    }
-  }
-
-  public static class SendFeedback {
-
-    public static final String EVENT_NAME = "Send Feedback";
-    private static final String SEND_FEEDBACK = EVENT_NAME;
-
-    public static void sendFeedback() {
-      track(EVENT_NAME, ACTION, SEND_FEEDBACK, ALL);
-    }
-  }
-
-  public static class ExcludedUpdates {
-    private static final String EVENT_NAME = "Excluded Updates";
-    private static final String RESTORE_UPDATES = "Restore Updates";
-
-    public static void restoreUpdates() {
-      track(EVENT_NAME, ACTION, RESTORE_UPDATES, ALL);
-    }
-  }
-
-  /**
-   * Incomplete
-   */
-  public static class Settings {
-
-    public static final String EVENT_NAME = "Settings";
-    private static final String CHECKED = "Checked";
-
-    public static void onSettingChange(String s) {
-      //            track(EVENT_NAME, ACTION, s, ALL);
+    public static void loginSuccess(LoginMethod loginMethod) {
+      track(LOGIN_SCREEN, METHOD, loginMethod.getMethod(), ALL);
+      Map<String, String> map = new HashMap<>();
+      map.put(METHOD, loginMethod.getMethod());
+      logFacebookEvents(LOGIN_SCREEN, map);
     }
 
-    public static void onSettingChange(String s, boolean checked) {
-      //            track(EVENT_NAME, ACTION, s, ALL);
-      //
-      //            HashMap<String, String> objectObjectHashMap = new HashMap<>();
-      //            objectObjectHashMap.put(ACTION, s);
-      //            objectObjectHashMap.put(CHECKED, Boolean.valueOf(checked).toString());
-    }
-  }
-
-  public static class Facebook {
-
-    public static final String EVENT_NAME = "Facebook";
-
-    public static final String JOIN = "Join";
-    public static final String LOGIN = "Login";
-
-    public static void join() {
-      track(EVENT_NAME, ACTION, JOIN, ALL);
+    public static void createdUserProfile(boolean hasPicture) {
+      track(CREATE_USER_PROFILE, HAS_PICTURE, hasPicture ? "True" : "False", ALL);
+      Map<String, String> map = new HashMap<>();
+      map.put(HAS_PICTURE, hasPicture ? "True" : "False");
+      logFacebookEvents(CREATE_USER_PROFILE, map);
     }
 
-    public static void login() {
-      track(EVENT_NAME, ACTION, LOGIN, ALL);
-    }
-  }
-
-  public static class BackupApps {
-    public static final String EVENT_NAME = "Opened Backup Apps";
-
-    public static void open() {
-      track(EVENT_NAME, ALL);
-    }
-  }
-
-  public static class Home {
-    public static final String EVENT_NAME = "Home";
-
-    public static final String CLICK_ON_MORE_ = "Click on More ";
-    public static final String CLICK_ON_EDITORS_CHOISE = "Click On Editor's Choise";
-    public static final String CLICK_ON_HIGHLIGHTED = "Click On Highlighted";
-    public static final String CLICK_ON_HIGHLIGHTED_MORE = "Click On Highlighted More";
-    public static final String CLICK_ON_APPLICATIONS = "Click On Applications";
-    public static final String CLICK_ON_APPLICATIONS_MORE = "Click On Applications More";
-    public static final String CLICK_ON_GAMES = "Click On Games";
-    public static final String CLICK_ON_GAMES_MORE = "Click On Games More";
-    public static final String CLICK_ON_REVIEWS = "Click On Reviews";
-    public static final String CLICK_ON_REVIEWS_MORE = "Click On Reviews More";
-    public static final String CLICK_ON_PUBLISHERS = "Click On Publishers";
-    public static final String CLICK_ON_PUBLISHERS_MORE = "Click On Publishers More";
-    public static final String CLICK_ON_APPS_ESSENTIALS = "Click On Apps Essentials";
-    public static final String CLICK_ON_APPS_FOR_KIDS = "Click On Apps For Kids";
-
-    public static void clickOnHighlighted() {
-      //            track(EVENT_NAME, ACTION, CLICK_ON_HIGHLIGHTED_MORE, ALL);
+    public static void accountProfileAction(int screen, ProfileAction action) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(ACTION, action.getAction());
+      map.put("screen", Integer.toString(screen));
+      track(PROFILE_SETTINGS, map, ALL);
+      logFacebookEvents(PROFILE_SETTINGS, map);
     }
 
-    public static void generic(String s) {
-      track(EVENT_NAME, ACTION, s, ALL);
+    public static void createStore(boolean hasPicture, CreateStoreAction action) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(ACTION, action.getAction());
+      map.put(HAS_PICTURE, hasPicture ? "True" : "False");
+      track(CREATE_YOUR_STORE, map, ALL);
+      logFacebookEvents(CREATE_YOUR_STORE, map);
     }
 
-    //        public static void clickOnApplicationsMore() {
-    //            track(EVENT_NAME, ACTION, CLICK_ON_APPLICATIONS_MORE, ALL);
-    //        }
+    public enum StartupClick {
+      JOIN_APTOIDE("Join Aptoide"), LOGIN("Login"), CONNECT_FACEBOOK(
+          "Connect with FB"), CONNECT_GOOGLE("Connect with Google");
 
-    public static void clickOnReviewsMore() {
-      //            track(EVENT_NAME, ACTION, CLICK_ON_REVIEWS_MORE, ALL);
+      private final String clickEvent;
+
+      StartupClick(String clickEvent) {
+        this.clickEvent = clickEvent;
+      }
+
+      public String getClickEvent() {
+        return clickEvent;
+      }
     }
 
-    public static void clickOnMoreWidget(String widgetname) {
-      //            track(EVENT_NAME, ACTION, CLICK_ON_MORE_ + widgetname, ALL);
+    public enum LoginMethod {
+      APTOIDE("Aptoide"), FACEBOOK("FB"), GOOGLE("Google");
+
+      private final String method;
+
+      LoginMethod(String method) {
+        this.method = method;
+      }
+
+      public String getMethod() {
+        return method;
+      }
+    }
+
+    public enum ProfileAction {
+      MORE_INFO("More info"), CONTINUE("Continue"), PRIVATE_PROFILE(
+          "Make my profile private"), PUBLIC_PROFILE("Make my profile public");
+
+      private final String action;
+
+      ProfileAction(String action) {
+        this.action = action;
+      }
+
+      public String getAction() {
+        return action;
+      }
+    }
+
+    public enum CreateStoreAction {
+      SKIP("Skip"), CREATE("Create store");
+
+      private final String action;
+
+      CreateStoreAction(String action) {
+        this.action = action;
+      }
+
+      public String getAction() {
+        return action;
+      }
     }
   }
 
@@ -574,15 +543,8 @@ public class Analytics {
     }
   }
 
-  public static class Top {
-    public static final String EVENT_NAME = "Top";
-
-    public static final String CLICK_ON_LOCAL_TOP_APPS_MORE = "Click on Local Top Apps More";
-    public static final String CLICK_ON_TOP_APPLICATIONS_MORE = "Click on Top Applications More";
-    public static final String CLICK_ON_LOCAL_TOP_STORES_MORE = "Click on Local Top Stores More";
-  }
-
   public static class Stores {
+
     public static final String EVENT_NAME = "Stores";
 
     public static final String STORE_NAME = "Store Name";
@@ -612,9 +574,26 @@ public class Analytics {
         e.printStackTrace();
       }
     }
+
+    /**
+     * this method still does nothing...
+     */
+    public static void unSubscribe(String storeName) {
+      try {
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(ACTION, "Unsubscribe");
+        map.put(STORE_NAME, storeName);
+
+        //track(EVENT_NAME, map, LOCALYTICS);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   public static class Updates {
+
     public static final String EVENT_NAME = "Updates";
 
     public static final String CLICKED_ON_CREATE_REVIEW = "Create Review";
@@ -634,24 +613,8 @@ public class Analytics {
     }
   }
 
-  // TODO: Não está implementado na v6
-  public static class DownloadManager {
-    public static final String EVENT_NAME = "Download Manager";
-
-    public static void clearDownloadComplete() {
-      //            track(EVENT_NAME, ACTION, "Clear download complete", ALL);
-    }
-
-    public static void clickDownloadComplete() {
-      //            track(EVENT_NAME, ACTION, "Click download complete", ALL);
-    }
-
-    public static void clearTopMenu() {
-      //            track(EVENT_NAME, ACTION, "Clear topmenu", ALL);
-    }
-  }
-
   public static class Search {
+
     //event names
     public static final String EVENT_NAME_SEARCH_TERM = "Search Term";
     public static final String EVENT_NAME_NO_SEARCH_RESULTS = "No Search Result";
@@ -669,6 +632,7 @@ public class Analytics {
   }
 
   public static class ApplicationInstall {
+
     public static final String EVENT_NAME = "Application Install";
 
     private static final String TYPE = "Type";
@@ -706,10 +670,6 @@ public class Analytics {
 
     public static void replaced(String packageName, String trustedBadge) {
       innerTrack(packageName, REPLACED, trustedBadge, ALL);
-    }
-
-    public static void downgraded(String packageName, String trustedBadge) {
-      innerTrack(packageName, DOWNGRADED_ROLLBACK, trustedBadge, ALL);
     }
   }
 
@@ -764,6 +724,7 @@ public class Analytics {
   }
 
   public static class ClickedOnInstallButton {
+
     private static final String EVENT_NAME = "Clicked on install button";
 
     //attributes
@@ -911,6 +872,7 @@ public class Analytics {
   }
 
   public static class Dimensions {
+
     public static final String VERTICAL = V8Engine.getConfiguration().getVerticalDimension();
     public static final String PARTNER = V8Engine.getConfiguration().getPartnerDimension();
     public static final String UNKNOWN = "unknown";
@@ -1052,6 +1014,7 @@ public class Analytics {
   }
 
   public static class LTV {
+
     public static void cpi(String packageName) {
       ltv("CPI Click", packageName);
     }
@@ -1100,22 +1063,24 @@ public class Analytics {
   }
 
   public static class LocalyticsSessionControl {
+
     public static void firstSession(SharedPreferences sPref) {
       SharedPreferences.Editor edit = sPref.edit();
-      edit.putBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, false);
-      Logger.d(TAG, "contains" + sPref.contains(Constants.IS_LOCALYTICS_ENABLE_KEY));
-      if (!sPref.contains(Constants.IS_LOCALYTICS_ENABLE_KEY)) {
+      edit.putBoolean(IS_LOCALYTICS_FIRST_SESSION, false);
+      Logger.d(TAG, "contains" + sPref.contains(IS_LOCALYTICS_ENABLE_KEY));
+      if (!sPref.contains(IS_LOCALYTICS_ENABLE_KEY)) {
         Random random = new Random();
         int i = random.nextInt(10);
         Logger.d(TAG, "firstSession: " + i);
-        edit.putBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, true);
-        edit.putBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY, i == 0);
+        edit.putBoolean(IS_LOCALYTICS_FIRST_SESSION, true);
+        edit.putBoolean(IS_LOCALYTICS_ENABLE_KEY, i == 0);
       }
       edit.apply();
       Logger.d(TAG, "firstSession: IS_LOCALYTICS_FIRST_SESSION: " + sPref.getBoolean(
-          Constants.IS_LOCALYTICS_FIRST_SESSION, false));
-      Logger.d(TAG, "firstSession: IS_LOCALYTICS_ENABLE_KEY: " + sPref.getBoolean(
-          Constants.IS_LOCALYTICS_ENABLE_KEY, false));
+          IS_LOCALYTICS_FIRST_SESSION, false));
+      Logger.d(TAG,
+          "firstSession: IS_LOCALYTICS_ENABLE_KEY: " + sPref.getBoolean(IS_LOCALYTICS_ENABLE_KEY,
+              false));
     }
   }
 

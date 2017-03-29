@@ -7,8 +7,9 @@ package cm.aptoide.pt.v8engine.repository;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetTimelineStatsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -16,7 +17,7 @@ import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.TimelineStats;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
@@ -28,21 +29,25 @@ public class TimelineRepository {
 
   private final String action;
   private final TimelineCardFilter filter;
-  private final AptoideClientUUID aptoideClientUUID;
+  private final BodyInterceptor bodyInterceptor;
 
-  public TimelineRepository(String action, TimelineCardFilter filter) {
+  public TimelineRepository(String action, TimelineCardFilter filter, BodyInterceptor bodyInterceptor) {
     this.action = action;
     this.filter = filter;
-
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
+    this.bodyInterceptor = bodyInterceptor;
   }
 
   public Observable<Datalist<TimelineCard>> getTimelineCards(Integer limit, int offset,
       List<String> packageNames, boolean refresh) {
-    return GetUserTimelineRequest.of(action, limit, offset, packageNames,
-        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+    return GetUserTimelineRequest.of(action, limit, offset, packageNames, bodyInterceptor)
         .observe(refresh)
+        .flatMap(response -> {
+          if (response.isOk()) {
+            return Observable.just(response);
+          }
+          return Observable.error(
+              new RepositoryItemNotFoundException("Could not retrieve timeline."));
+        })
         .doOnNext(item -> filter.clear())
         .map(getUserTimeline -> getUserTimeline.getDatalist())
         .flatMap(itemDataList -> Observable.from(getTimelineList(itemDataList))
@@ -76,8 +81,7 @@ public class TimelineRepository {
     return cardDataList;
   }
 
-  public Observable<TimelineStats> getTimelineStats(boolean byPassCache) {
-    return GetTimelineStatsRequest.of(AptoideAccountManager.getAccessToken(),
-        aptoideClientUUID.getUniqueIdentifier()).observe(byPassCache);
+  public Observable<TimelineStats> getTimelineStats(boolean byPassCache, Long userId) {
+    return GetTimelineStatsRequest.of(bodyInterceptor, userId).observe(byPassCache);
   }
 }

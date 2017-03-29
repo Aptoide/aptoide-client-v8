@@ -4,10 +4,10 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
@@ -17,15 +17,14 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
 public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.TimelineUser> {
 
-  private TimeLineFollowFragment.FollowFragmentOpenMode openMode;
+  private boolean isLike;
 
   public FollowUserDisplayable() {
   }
 
-  public FollowUserDisplayable(GetFollowers.TimelineUser pojo,
-      TimeLineFollowFragment.FollowFragmentOpenMode openMode) {
+  public FollowUserDisplayable(GetFollowers.TimelineUser pojo, boolean isLike) {
     super(pojo);
-    this.openMode = openMode;
+    this.isLike = isLike;
   }
 
   @Override protected Configs getConfig() {
@@ -65,7 +64,7 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
   }
 
   public String getStoreName() {
-    return getPojo().getStore().getName();
+    return getPojo().getStore() == null ? null : getPojo().getStore().getName();
   }
 
   public String getStoreAvatar() {
@@ -77,9 +76,16 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
   }
 
   public boolean hasStoreAndUser() {
-    return getPojo().getStore() != null
-        && !TextUtils.isEmpty(getPojo().getStore().getName())
-        && !TextUtils.isEmpty(getPojo().getName());
+    return hasStore() && hasUser();
+  }
+
+  public boolean hasStore() {
+    return getPojo().getStore() != null && (!TextUtils.isEmpty(getPojo().getStore().getName())
+        || (!TextUtils.isEmpty(getPojo().getStore().getAvatar())));
+  }
+
+  public boolean hasUser() {
+    return !TextUtils.isEmpty(getPojo().getName()) || !TextUtils.isEmpty(getPojo().getAvatar());
   }
 
   public int getStoreColor() {
@@ -102,28 +108,32 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
     return storeThemeEnum.getButtonLayoutDrawable();
   }
 
-  public boolean hasUser() {
-    return !TextUtils.isEmpty(getPojo().getName());
-  }
-
-  public boolean hasStore() {
-    return getPojo().getStore() != null && !TextUtils.isEmpty(getPojo().getStore().getName());
-  }
-
-  public void viewClicked(FragmentShower shower) {
+  public void viewClicked(NavigationManagerV4 navigationManager) {
     Store store = getPojo().getStore();
+    String theme = getStoreTheme(store);
+
+    if (store != null) {
+      navigationManager.navigateTo(V8Engine.getFragmentProvider()
+          .newStoreFragment(store.getName(), theme, StoreFragment.OpenType.GetHome));
+    } else {
+      navigationManager.navigateTo(V8Engine.getFragmentProvider()
+          .newStoreFragment(getPojo().getId(), theme, StoreFragment.OpenType.GetHome));
+    }
+  }
+
+  private String getStoreTheme(Store store) {
     String theme;
-    if (store.getAppearance() != null) {
+    if (store != null && store.getAppearance() != null) {
       theme =
           store.getAppearance().getTheme() == null ? V8Engine.getConfiguration().getDefaultTheme()
               : store.getAppearance().getTheme();
     } else {
       theme = V8Engine.getConfiguration().getDefaultTheme();
     }
-    shower.pushFragmentV4(V8Engine.getFragmentProvider().newStoreFragment(store.getName(), theme));
+    return theme;
   }
 
-  public TimeLineFollowFragment.FollowFragmentOpenMode getOpenMode() {
-    return openMode;
+  public boolean isLike() {
+    return isLike;
   }
 }

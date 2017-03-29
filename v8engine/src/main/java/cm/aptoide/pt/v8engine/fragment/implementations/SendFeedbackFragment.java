@@ -9,8 +9,10 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,6 +47,9 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
   private String screenShotPath;
   private EditText messageBodyEdit;
   private EditText subgectEdit;
+  private Subscription unManagedSubscription;
+
+  private final String KEY_SCREENSHOT_PATH = "screenShotPath";
 
   public static SendFeedbackFragment newInstance(String screenshotFilePath) {
     SendFeedbackFragment sendFeedbackFragment = new SendFeedbackFragment();
@@ -68,6 +73,28 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     return super.onOptionsItemSelected(item);
   }
 
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    if (savedInstanceState != null) {
+      screenShotPath = savedInstanceState.getString(KEY_SCREENSHOT_PATH);
+    }
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    if (unManagedSubscription != null) {
+      unManagedSubscription.unsubscribe();
+    }
+  }
+
   @Override public void setupViews() {
     super.setupViews();
     setHasOptionsMenu(true);
@@ -86,6 +113,11 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     messageBodyEdit = (EditText) view.findViewById(R.id.FeedBacktext);
     sendFeedbackBtn = (Button) view.findViewById(R.id.FeedBackSendButton);
     logsAndScreenshotsCb = (CheckBox) view.findViewById(R.id.FeedBackCheckBox);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putString(KEY_SCREENSHOT_PATH, screenShotPath);
   }
 
   private void sendFeedback() {
@@ -131,7 +163,9 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
       //}
 
       InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-      Subscription unManagedSubscription = installedAccessor.get(getContext().getPackageName())
+      //attach screenshots and logs
+      //				Analytics.SendFeedback.sendFeedback();
+      unManagedSubscription = installedAccessor.get(getContext().getPackageName()).first()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(installed1 -> {
             String versionName = "";
@@ -145,18 +179,15 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
             //attach screenshots and logs
             if (logsAndScreenshotsCb.isChecked()) {
               ArrayList<Uri> uris = new ArrayList<Uri>();
-              File ss = new File(screenShotPath);
-              if (ss != null) {
-                Uri urifile = Uri.fromFile(ss);
-                uris.add(urifile);
+              if (screenShotPath != null) {
+                File ss = new File(screenShotPath);
+                uris.add(getUriFromFile(ss));
               }
-
               File logs =
                   AptoideUtils.SystemU.readLogs(Application.getConfiguration().getCachePath(),
                       LOGS_FILE_NAME);
               if (logs != null) {
-                Uri urifile = Uri.fromFile(logs);
-                uris.add(urifile);
+                uris.add(getUriFromFile(logs));
               }
               emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
             }
@@ -177,16 +208,18 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     return !TextUtils.isEmpty(subgectEdit.getText().toString());
   }
 
-  @Override public void onAttach(Activity activity) {
-    super.onAttach(activity);
-  }
-
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
+  private Uri getUriFromFile(File file) {
+    Uri photoURI;
+    //read: https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en
+    if (Build.VERSION.SDK_INT > 23) {
+      //content://....apk for nougat
+      photoURI = FileProvider.getUriForFile(getContext(),
+          V8Engine.getConfiguration().getAppId() + ".provider", file);
+    } else {
+      //file://....apk for < nougat
+      photoURI = Uri.fromFile(file);
+    }
+    return photoURI;
   }
 
   @Override public int getContentViewId() {

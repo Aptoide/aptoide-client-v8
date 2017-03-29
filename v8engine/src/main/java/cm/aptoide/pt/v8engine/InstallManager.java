@@ -247,12 +247,26 @@ public class InstallManager {
     boolean wasRootDialogShowed = SecurePreferences.isRootDialogShowed();
     boolean isRooted = AptoideUtils.SystemU.isRooted();
     boolean canGiveRoot = ManagerPreferences.allowRootInstallation();
-    return isRooted && !wasRootDialogShowed && canGiveRoot;
+    return isRooted && !wasRootDialogShowed && !canGiveRoot;
   }
 
   public void rootInstallAllowed(boolean allowRoot) {
-    SecurePreferences.setRootDialogShowed(allowRoot);
+    SecurePreferences.setRootDialogShowed(true);
     ManagerPreferences.setAllowRootInstallation(allowRoot);
     AptoideUtils.SystemU.askForRoot();
+  }
+
+  /**
+   * @return true if all downloads started with success, false otherwise
+   */
+  public Observable<Boolean> startInstalls(List<Download> downloads, Context context) {
+    return Observable.from(downloads)
+        .map(download -> install(context, download))
+        .toList()
+        .flatMap(observables -> Observable.merge(observables))
+        .filter(downloading -> downloading.getState() == Progress.DONE)
+        .toList()
+        .map(progresses -> true)
+        .onErrorReturn(throwable -> false);
   }
 }

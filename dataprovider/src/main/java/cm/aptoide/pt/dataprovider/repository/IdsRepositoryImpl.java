@@ -8,10 +8,13 @@ package cm.aptoide.pt.dataprovider.repository;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
+import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
+import cm.aptoide.pt.utils.AptoideUtils;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import java.security.SecureRandom;
 import java.util.UUID;
@@ -31,13 +34,14 @@ public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
   private final Context context;
   private final String deviceId;
 
-  public IdsRepositoryImpl(SharedPreferences sharedPreferences, Context context, String deviceId) {
+  public IdsRepositoryImpl(SharedPreferences sharedPreferences, Context context,
+      String deviceId) {
     this.sharedPreferences = sharedPreferences;
     this.context = context;
     this.deviceId = deviceId;
   }
 
-  @Deprecated
+  @Deprecated @Partners
   /**
    * Use the constructor were all the needed dependencies for this entity are injected.
    */ public IdsRepositoryImpl(SharedPreferences sharedPreferences, Context context) {
@@ -71,10 +75,15 @@ public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
     return aptoideId;
   }
 
-  @Override public synchronized String getGoogleAdvertisingId() {
+  @WorkerThread @Override public synchronized String getGoogleAdvertisingId() {
+
     String googleAdvertisingId = sharedPreferences.getString(GOOGLE_ADVERTISING_ID_CLIENT, null);
     if (!TextUtils.isEmpty(googleAdvertisingId)) {
       return googleAdvertisingId;
+    }
+
+    if (AptoideUtils.ThreadU.isUiThread()) {
+      throw new IllegalStateException("You cannot run this method from the main thread");
     }
 
     if (DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context)) {
@@ -87,6 +96,7 @@ public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
 
     sharedPreferences.edit().putString(GOOGLE_ADVERTISING_ID_CLIENT, googleAdvertisingId).apply();
     sharedPreferences.edit().putBoolean(GOOGLE_ADVERTISING_ID_CLIENT_SET, true).apply();
+
     return googleAdvertisingId;
   }
 

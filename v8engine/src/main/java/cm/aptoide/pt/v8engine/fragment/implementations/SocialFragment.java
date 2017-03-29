@@ -36,6 +36,10 @@ public class SocialFragment extends BaseLoaderToolbarFragment {
     return R.layout.social_fragment_layout;
   }
 
+  @Override protected int[] getViewsToShowAfterLoadingId() {
+    return new int[] {};
+  }
+
   @Override protected int getViewToShowAfterLoadingId() {
     return R.id.social_fragment_layout;
   }

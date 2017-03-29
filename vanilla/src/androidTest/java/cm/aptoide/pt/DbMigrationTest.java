@@ -60,7 +60,7 @@ import static org.junit.Assert.fail;
 
   @Before public void setup() {
     db = SQLiteDatabase.openDatabase(":memory:", null, SQLiteDatabase.OPEN_READWRITE);
-    dbHelper = new SQLiteDatabaseHelper(InstrumentationRegistry.getTargetContext());
+    dbHelper = new SQLiteDatabaseHelper(InstrumentationRegistry.getTargetContext(), accountManager);
 
     StringBuilder statement = new StringBuilder();
     // db table creation script

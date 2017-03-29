@@ -1,10 +1,15 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.store.ListStores;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,25 +22,25 @@ import rx.Observable;
 public class GetMyStoreListRequest extends V7<ListStores, GetMyStoreListRequest.EndlessBody> {
 
   private static boolean useEndless;
-  private final String url;
+  @Nullable private String url;
 
-  public GetMyStoreListRequest(String url, EndlessBody body, String baseHost) {
-    super(body, baseHost);
+  public GetMyStoreListRequest(String url, EndlessBody body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
     this.url = url;
   }
 
-  public static GetMyStoreListRequest of(String url, String accessToken, String aptoideClientUuid) {
-    return of(url, accessToken, aptoideClientUuid, false);
+  public static GetMyStoreListRequest of(String url, BodyInterceptor bodyInterceptor) {
+    return of(url, false, bodyInterceptor);
   }
 
-  public static GetMyStoreListRequest of(String url, String accessToken, String aptoideClientUuid,
-      boolean useEndless) {
+  public static GetMyStoreListRequest of(String url, boolean useEndless,
+      BodyInterceptor bodyInterceptor) {
     GetMyStoreListRequest.useEndless = useEndless;
 
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUuid);
-    return new GetMyStoreListRequest(url,
-        (EndlessBody) decorator.decorate(new EndlessBody(WidgetsArgs.createDefault()), accessToken),
-        BASE_HOST);
+    return new GetMyStoreListRequest(url, new EndlessBody(WidgetsArgs.createDefault()),
+        bodyInterceptor);
   }
 
   @Override
@@ -43,10 +48,14 @@ public class GetMyStoreListRequest extends V7<ListStores, GetMyStoreListRequest.
     if (url.contains("getSubscribed")) {
       body.setRefresh(bypassCache);
     }
-    if (useEndless) {
-      return interfaces.getMyStoreListEndless(url, body, bypassCache);
+    if (TextUtils.isEmpty(url)) {
+      return interfaces.getMyStoreList(body, bypassCache);
     } else {
-      return interfaces.getMyStoreList(url, body, bypassCache);
+      if (useEndless) {
+        return interfaces.getMyStoreListEndless(url, body, bypassCache);
+      } else {
+        return interfaces.getMyStoreList(url, body, bypassCache);
+      }
     }
   }
 

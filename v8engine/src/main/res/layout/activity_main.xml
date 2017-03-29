@@ -11,7 +11,7 @@
     android:layout_height="match_parent"
     >
 
-  <include layout="@layout/store_activity"/>
+  <include layout="@layout/store_activity_with_logo"/>
 
   <!-- The navigation drawer -->
   <android.support.design.widget.NavigationView

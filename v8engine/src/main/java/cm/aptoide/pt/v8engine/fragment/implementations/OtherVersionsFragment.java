@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.view.Menu;
@@ -15,8 +16,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -26,8 +30,11 @@ import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
+import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
@@ -36,28 +43,20 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Oth
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
 
 public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   private static final String TAG = OtherVersionsFragment.class.getSimpleName();
 
-  @Getter private static final String APP_NAME = "app_name";
-  @Getter private static final String APP_IMG_URL = "app_img_url";
-  @Getter private static final String APP_PACKAGE = "app_package";
-  private final AptoideClientUUID aptoideClientUUID;
   // vars
   private String appName;
   private String appImgUrl;
   private String appPackge;
+  private CollapsingToolbarLayout collapsingToolbarLayout;
   // views
   private ViewHeader header;
+  private BodyInterceptor<BaseBody> baseBodyInterceptor;
   //private TextView emptyData;
-
-  public OtherVersionsFragment() {
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-  }
 
   /**
    * @param appName
@@ -70,18 +69,23 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
       String appPackage) {
     OtherVersionsFragment fragment = new OtherVersionsFragment();
     Bundle args = new Bundle();
-    args.putString(APP_NAME, appName);
-    args.putString(APP_IMG_URL, appImgUrl);
-    args.putString(APP_PACKAGE, appPackage);
+    args.putString(BundleCons.APP_NAME, appName);
+    args.putString(BundleCons.APP_IMG_URL, appImgUrl);
+    args.putString(BundleCons.APP_PACKAGE, appPackage);
     fragment.setArguments(args);
     return fragment;
   }
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    baseBodyInterceptor = ((V8Engine)getContext().getApplicationContext()).getBaseBodyInterceptor();
+  }
+
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
-    appName = args.getString(APP_NAME);
-    appImgUrl = args.getString(APP_IMG_URL);
-    appPackge = args.getString(APP_PACKAGE);
+    appName = args.getString(BundleCons.APP_NAME);
+    appImgUrl = args.getString(BundleCons.APP_IMG_URL);
+    appPackge = args.getString(BundleCons.APP_PACKAGE);
   }
 
   @Override public int getContentViewId() {
@@ -92,6 +96,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     super.bindViews(view);
     final Context context = getContext();
     header = new ViewHeader(context, view);
+    collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
     //emptyData = (TextView) view.findViewById(R.id.empty_data);
     setHasOptionsMenu(true);
   }
@@ -100,7 +105,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     super.onViewCreated(view, savedInstanceState);
   }
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+  @Partners @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     //super.load(create, refresh, savedInstanceState);
     Logger.d(TAG, "Other versions should refresh? " + create);
 
@@ -112,7 +117,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     super.onResume();
   }
 
-  protected void fetchOtherVersions(List<String> storeNames) {
+  @Partners protected void fetchOtherVersions(List<String> storeNames) {
 
     final SuccessRequestListener<ListAppVersions> otherVersionsSuccessRequestListener =
         listAppVersions -> {
@@ -126,15 +131,15 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(),
-            ListAppVersionsRequest.of(appPackge, storeNames, AptoideAccountManager.getAccessToken(),
-                aptoideClientUUID.getUniqueIdentifier(), StoreUtils.getSubscribedStoresAuthMap()),
-            otherVersionsSuccessRequestListener, Throwable::printStackTrace);
+            ListAppVersionsRequest.of(appPackge, storeNames, StoreUtils.getSubscribedStoresAuthMap(),
+                baseBodyInterceptor),
+            otherVersionsSuccessRequestListener, err -> err.printStackTrace());
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }
 
-  protected void setHeader() {
+  @Partners protected void setHeader() {
     if (header != null) {
       header.setImage(appImgUrl);
       setTitle(appName);
@@ -144,6 +149,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
   private void setTitle(String title) {
     if (hasToolbar()) {
       getToolbar().setTitle(title);
+      collapsingToolbarLayout.setTitle(title);
     }
   }
 
@@ -233,5 +239,14 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     private void setImage(String imgUrl) {
       ImageLoader.with(context).load(imgUrl, appIcon);
     }
+  }
+
+  /**
+   * Bundle of Constants
+   */
+  @Partners public class BundleCons {
+    public static final String APP_NAME = "app_name";
+    public static final String APP_IMG_URL = "app_img_url";
+    public static final String APP_PACKAGE = "app_package";
   }
 }

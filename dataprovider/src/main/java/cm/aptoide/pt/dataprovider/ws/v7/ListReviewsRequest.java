@@ -6,7 +6,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.ws.Api;
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -34,49 +33,46 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
   private static final int MAX_REVIEWS = 10;
   private static final int MAX_COMMENTS = 10;
 
-  private ListReviewsRequest(Body body, String baseHost) {
-    super(body, OkHttpClientFactory.getSingletonClient(new UserAgentGenerator() {
+  private ListReviewsRequest(Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST, OkHttpClientFactory.getSingletonClient(new UserAgentGenerator() {
       @Override public String generateUserAgent() {
         return SecurePreferences.getUserAgent();
       }
-    }, isDebug()), WebService.getDefaultConverter(), baseHost);
+    }, false), WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  public static ListReviewsRequest of(String storeName, String packageName, String accessToken,
-      String aptoideClientUUID) {
-    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, accessToken, aptoideClientUUID);
+  public static ListReviewsRequest of(String storeName, String packageName,
+      BaseRequestWithStore.StoreCredentials storecredentials, BodyInterceptor bodyInterceptor) {
+    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, storecredentials, bodyInterceptor);
   }
 
   /**
    * example call: http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/limit/10
    */
   public static ListReviewsRequest of(String storeName, String packageName, int maxReviews,
-      int maxComments, String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    Body body = new Body(storeName, packageName, maxReviews, maxComments,
-        ManagerPreferences.getAndResetForceServerRefresh());
-    return new ListReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+      int maxComments, BaseRequestWithStore.StoreCredentials storecredentials,
+      BodyInterceptor bodyInterceptor) {
+    final Body body = new Body(storeName, packageName, maxReviews, maxComments,
+        ManagerPreferences.getAndResetForceServerRefresh(), storecredentials);
+    return new ListReviewsRequest(body, bodyInterceptor);
   }
 
   /**
    * example call: http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/sub_limit/0/limit/3
    */
   public static ListReviewsRequest ofTopReviews(String storeName, String packageName,
-      int maxReviews, String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    Body body = new Body(storeName, packageName, maxReviews, 0,
-        ManagerPreferences.getAndResetForceServerRefresh());
-    return new ListReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+      int maxReviews, BaseRequestWithStore.StoreCredentials storeCredentials,
+      BodyInterceptor bodyInterceptor) {
+    return of(storeName, packageName, maxReviews, 0, storeCredentials, bodyInterceptor);
   }
 
   @Override protected Observable<ListReviews> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    //bypassCache is not used, for reviews always get new data
     return interfaces.listReviews(body, true);
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
-      extends BaseBody implements Endless {
+      extends BaseBodyWithStore implements Endless {
 
     @Getter private Integer limit;
     @Getter @Setter private int offset;
@@ -93,22 +89,19 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
     private String packageName;
     private String storeName;
     private Integer subLimit;
-    private String store_user;
-    private String store_pass_sha1;
 
-    public Body(long storeId, int limit, int subLimit, boolean refresh, String username,
-        String password) {
-
+    public Body(long storeId, int limit, int subLimit, boolean refresh,
+        BaseRequestWithStore.StoreCredentials storeCredentials) {
+      super(storeCredentials);
       this.storeId = storeId;
       this.limit = limit;
       this.subLimit = subLimit;
       this.refresh = refresh;
-      this.store_user = username;
-      this.store_pass_sha1 = password;
     }
 
-    public Body(String storeName, String packageName, int limit, int subLimit, boolean refresh) {
-
+    public Body(String storeName, String packageName, int limit, int subLimit, boolean refresh,
+        BaseRequestWithStore.StoreCredentials storeCredentials) {
+      super(storeCredentials);
       this.packageName = packageName;
       this.storeName = storeName;
       this.limit = limit;

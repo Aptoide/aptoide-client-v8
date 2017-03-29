@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.fragment.implementations.storetab;
 
 import android.support.v4.app.Fragment;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
@@ -13,13 +14,15 @@ public class StoreTabFragmentChooser {
 
   private static FragmentProvider fragmentProvider = V8Engine.getFragmentProvider();
 
-  public static Fragment choose(Event.Name name) {
+  @Partners public static Fragment choose(Event.Name name) {
     switch (name) {
       case listApps:
         return fragmentProvider.newListAppsFragment();
       case getStore:
+      case getUser:
         return fragmentProvider.newGetStoreFragment();
       case getStoresRecommended:
+        return fragmentProvider.newRecommendedStoresFragment();
       case getMyStoresSubscribed:
         return fragmentProvider.newMyStoresSubscribedFragment();
       case myStores:
@@ -45,6 +48,7 @@ public class StoreTabFragmentChooser {
         case getStoresRecommended:
         case listApps:
         case getStore:
+        case getUser:
         case getStoreWidgets:
         case getReviews:
           //case getApkComments:

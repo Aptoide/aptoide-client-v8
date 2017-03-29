@@ -14,11 +14,9 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.VideoDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -28,7 +26,6 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class VideoWidget extends CardWidget<VideoDisplayable> {
 
-  private static final String CARD_TYPE_NAME = "VIDEO";
   private TextView title;
   private TextView subtitle;
   private ImageView image;
@@ -88,17 +85,10 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
 
     media_layout.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
-      Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
+      Analytics.AppsTimeline.clickOnCard(VideoDisplayable.CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
           displayable.getVideoTitle(), displayable.getTitle(), Analytics.AppsTimeline.OPEN_VIDEO);
       displayable.getLink().launch(context);
-      displayable.sendOpenVideoEvent(SendEventRequest.Body.Data.builder()
-          .cardType(CARD_TYPE_NAME)
-          .source(displayable.getTitle())
-          .specific(SendEventRequest.Body.Specific.builder()
-              .url(displayable.getLink().getUrl())
-              .app(packageName)
-              .build())
-          .build(), TimelineClickEvent.OPEN_VIDEO);
+      displayable.sendOpenVideoEvent(packageName);
     });
 
     compositeSubscription.add(displayable.getRelatedToApplication()
@@ -124,22 +114,15 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
     compositeSubscription.add(RxView.clicks(videoHeader).subscribe(click -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
       displayable.getBaseLink().launch(context);
-      Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
+      Analytics.AppsTimeline.clickOnCard(VideoDisplayable.CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
           displayable.getVideoTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_VIDEO_HEADER);
-      displayable.sendOpenVideoEvent(SendEventRequest.Body.Data.builder()
-          .cardType(CARD_TYPE_NAME)
-          .source(displayable.getTitle())
-          .specific(SendEventRequest.Body.Specific.builder()
-              .url(displayable.getBaseLink().getUrl())
-              .app(packageName)
-              .build())
-          .build(), TimelineClickEvent.OPEN_CHANNEL);
+      displayable.sendOpenChannelEvent(packageName);
     }));
   }
 
   @Override String getCardTypeName() {
-    return CARD_TYPE_NAME;
+    return VideoDisplayable.CARD_TYPE_NAME;
   }
 
   private void setAppNameToFirstLinkedApp(VideoDisplayable displayable) {

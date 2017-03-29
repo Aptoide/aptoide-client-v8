@@ -11,7 +11,6 @@ import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -54,7 +53,7 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
     setFollowButtonListener(displayable);
     setButtonText(displayable);
     compositeSubscription.add(RxView.clicks(itemView)
-        .subscribe(click -> displayable.openStoreFragment((FragmentShower) context),
+        .subscribe(click -> displayable.openStoreFragment(getNavigationManager()),
             throwable -> CrashReport.getInstance().log(throwable)));
   }
 
@@ -68,7 +67,7 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
             if (isSubscribed) {
               displayable.unsubscribeStore();
             } else {
-              displayable.subscribeStore();
+              displayable.subscribeStore(getContext());
             }
             return !isSubscribed;
           });
@@ -90,19 +89,18 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
 
   private void setButtonText(RecommendedStoreDisplayable displayable) {
     followButton.setVisibility(View.GONE);
-    displayable.isFollowing()
-        .first()
+    compositeSubscription.add(displayable.isFollowing()
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(isSubscribed -> {
           int message;
           if (isSubscribed) {
             message = R.string.followed;
           } else {
-            message = R.string.appview_follow_store_button_text;
+            message = R.string.follow;
           }
           followButton.setText(
               AptoideUtils.StringU.getFormattedString(message, displayable.getPojo().getName()));
           followButton.setVisibility(View.VISIBLE);
-        });
+        }));
   }
 }

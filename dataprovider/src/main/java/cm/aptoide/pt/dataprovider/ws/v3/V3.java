@@ -13,25 +13,34 @@ import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import cm.aptoide.pt.model.v3.BaseV3Response;
+import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
 import cm.aptoide.pt.model.v3.ErrorResponse;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
+import cm.aptoide.pt.model.v3.GetUserRepoSubscription;
 import cm.aptoide.pt.model.v3.InAppBillingAvailableResponse;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
+import cm.aptoide.pt.model.v3.OAuth;
 import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v3.PaymentAuthorizationsResponse;
 import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
 import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.io.IOException;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import retrofit2.Converter;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -49,20 +58,19 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
   private final String INVALID_ACCESS_TOKEN_CODE = "invalid_token";
   private boolean accessTokenRetry = false;
 
-  protected V3(String baseHost) {
-    this(baseHost, new BaseBody());
+  protected V3(BaseBody baseBody, OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(Interfaces.class, httpClient, converterFactory, BASE_HOST);
+    this.map = baseBody;
   }
 
-  protected V3(String baseHost, BaseBody baseBody) {
-    super(Interfaces.class,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), isDebug()),
-        WebService.getDefaultConverter(), baseHost);
-    this.map = baseBody;
+  protected V3(OkHttpClient okHttpClient, Converter.Factory converterFactory) {
+    super(Interfaces.class, okHttpClient, converterFactory, BASE_HOST);
+    this.map = new BaseBody();
   }
 
   @NonNull public static String getErrorMessage(BaseV3Response response) {
     final StringBuilder builder = new StringBuilder();
-    if (response != null) {
+    if (response != null && response.getErrors() != null) {
       for (ErrorResponse error : response.getErrors()) {
         builder.append(error.msg);
         builder.append(". ");
@@ -103,7 +111,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
             if (!accessTokenRetry) {
               accessTokenRetry = true;
-              return DataProvider.invalidateAccessToken().flatMap(s -> {
+              return DataProvider.invalidateAccessToken().flatMapObservable(s -> {
                 this.map.setAccess_token(s);
                 return V3.this.observe(bypassCache).observeOn(AndroidSchedulers.mainThread());
               });
@@ -156,5 +164,35 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
     @POST("createPurchaseAuthorization") @FormUrlEncoded
     Observable<BaseV3Response> createPaymentAuthorization(@FieldMap BaseBody args);
+
+    @POST("oauth2Authentication") @FormUrlEncoded Observable<OAuth> oauth2Authentication(
+        @FieldMap BaseBody args,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("getUserInfo") @FormUrlEncoded Observable<CheckUserCredentialsJson> getUserInfo(
+        @FieldMap BaseBody args,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("checkUserCredentials") @FormUrlEncoded
+    Observable<CheckUserCredentialsJson> checkUserCredentials(@FieldMap BaseBody args,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("createUser") @FormUrlEncoded Observable<BaseV3Response> createUser(
+        @FieldMap BaseBody args,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("createUser") @Multipart Observable<BaseV3Response> createUserWithFile(
+        @Part MultipartBody.Part user_avatar, @PartMap() HashMapNotNull<String, RequestBody> args,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("changeUserSettings") @FormUrlEncoded Observable<BaseV3Response> changeUserSettings(
+        @FieldMap BaseBody args,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("changeUserRepoSubscription") @FormUrlEncoded
+    Observable<BaseV3Response> changeUserRepoSubscription(@FieldMap BaseBody args);
+
+    @POST("getUserRepoSubscription") @FormUrlEncoded
+    Observable<GetUserRepoSubscription> getUserRepos(@FieldMap BaseBody args);
   }
 }

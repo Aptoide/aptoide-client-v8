@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
@@ -84,7 +84,7 @@ public class CompletedDownloadDisplayable extends Displayable {
   }
 
   public Observable<Progress<Download>> installOrOpenDownload(Context context,
-      PermissionRequest permissionRequest) {
+      PermissionService permissionRequest) {
     return installManager.getInstallation(download.getMd5()).flatMap(installed -> {
       if (installed.getState() == Progress.DONE) {
         AptoideUtils.SystemU.openApp(download.getFilesToDownload().get(0).getPackageName());
@@ -95,7 +95,7 @@ public class CompletedDownloadDisplayable extends Displayable {
   }
 
   public Observable<Progress<Download>> resumeDownload(Context context,
-      PermissionRequest permissionRequest) {
+      PermissionService permissionRequest) {
     PermissionManager permissionManager = new PermissionManager();
     return permissionManager.requestExternalStoragePermission(permissionRequest)
         .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))

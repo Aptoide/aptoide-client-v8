@@ -1,7 +1,8 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.app.FragmentManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -9,13 +10,22 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.Comment;
+import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.preferences.AdultContent;
+import cm.aptoide.pt.v8engine.preferences.Preferences;
+import cm.aptoide.pt.v8engine.preferences.SecurePreferences;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.view.custom.HorizontalDividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
@@ -35,18 +45,16 @@ import rx.schedulers.Schedulers;
 
 public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplayable> {
 
-  private final AptoideClientUUID aptoideClientUUID;
-
   private RecyclerView recyclerView;
 
   private long storeId;
   private String storeName;
+  private AptoideAccountManager accountManager;
+  private AccountNavigator accountNavigator;
+  private BodyInterceptor<BaseBody> baseBodyInterceptor;
 
   public StoreLatestCommentsWidget(View itemView) {
     super(itemView);
-
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
   }
 
   @Override protected void assignViews(View itemView) {
@@ -54,10 +62,13 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
   }
 
   @Override public void bindView(StoreLatestCommentsDisplayable displayable) {
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    baseBodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+    accountNavigator =
+        new AccountNavigator(getContext(), getNavigationManager(), accountManager);
     LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     recyclerView.setLayoutManager(layoutManager);
-
     recyclerView.addItemDecoration(new HorizontalDividerItemDecoration(getContext()));
 
     storeId = displayable.getStoreId();
@@ -69,32 +80,37 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
   }
 
   private void setAdapter(List<Comment> comments) {
-    recyclerView.setAdapter(
-        new CommentListAdapter(storeId, storeName, comments, getContext().getFragmentManager(),
-            recyclerView, Observable.fromCallable(() -> reloadComments())));
+    recyclerView.setAdapter(new CommentListAdapter(storeId, storeName, comments,
+        getContext().getSupportFragmentManager(), recyclerView,
+        Observable.fromCallable(() -> reloadComments()), accountManager, accountNavigator));
   }
 
   private Void reloadComments() {
     ManagerPreferences.setForceServerRefreshFlag(true);
-    compositeSubscription.add(
-        ListCommentsRequest.of(storeId, 0, 3, AptoideAccountManager.getAccessToken(),
-            aptoideClientUUID.getUniqueIdentifier(), false)
-            .observe()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(listComments -> {
-              setAdapter(listComments.getDatalist().getList());
-            }, err -> {
-              CrashReport.getInstance().log(err);
-            }));
+    compositeSubscription.add(ListCommentsRequest.of(storeId, 0, 3,
+        false, baseBodyInterceptor)
+        .observe()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(listComments -> {
+          setAdapter(listComments.getDatalist().getList());
+        }, err -> {
+          CrashReport.getInstance().log(err);
+        }));
     return null;
   }
 
   private static class CommentListAdapter extends BaseAdapter {
 
+    private final AptoideAccountManager accountManager;
+    private AccountNavigator accountNavigator;
+
     CommentListAdapter(long storeId, @NonNull String storeName, @NonNull List<Comment> comments,
         @NonNull FragmentManager fragmentManager, @NonNull View view,
-        Observable<Void> reloadComments) {
+        Observable<Void> reloadComments, AptoideAccountManager accountManager,
+        AccountNavigator accountNavigator) {
+      this.accountManager = accountManager;
+      this.accountNavigator = accountNavigator;
 
       final CommentOperations commentOperations = new CommentOperations();
       List<CommentNode> sortedComments =
@@ -114,7 +130,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
         @NonNull final FragmentManager fragmentManager, @NonNull final View view,
         Observable<Void> reloadComments) {
 
-      return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
+      return Observable.just(accountManager.isLoggedIn()).flatMap(isLoggedIn -> {
 
         if (isLoggedIn) {
           // show fragment CommentDialog
@@ -136,7 +152,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
     private Observable<Void> showSignInMessage(@NonNull final View view) {
       return ShowMessage.asObservableSnack(view, R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            AptoideAccountManager.openAccountManager(view.getContext());
+            accountNavigator.navigateToAccountView();
           }).flatMap(a -> Observable.empty());
     }
   }

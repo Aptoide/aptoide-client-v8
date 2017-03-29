@@ -46,11 +46,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
   private static final String TAG = ReferrerUtils.class.getSimpleName();
 
-  private static final AdsRepository adsRepository = new AdsRepository();
-
   public static void extractReferrer(MinimalAd minimalAd, final int retries,
-      boolean broadcastReferrer) {
-
+      boolean broadcastReferrer, AdsRepository adsRepository) {
     String packageName = minimalAd.getPackageName();
     long networkId = minimalAd.getNetworkId();
     String clickUrl = minimalAd.getClickUrl();
@@ -183,7 +180,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
                       .onErrorReturn(throwable -> null)
                       .filter(minimalAd1 -> minimalAd != null)
                       .subscribe(
-                          minimalAd1 -> extractReferrer(minimalAd1, retries - 1, broadcastReferrer),
+                          minimalAd1 -> extractReferrer(minimalAd1, retries - 1, broadcastReferrer,
+                              adsRepository),
                           throwable -> clearExcludedNetworks(packageName));
                 } else {
                   // A lista de excluded networks deve ser limpa a cada "ronda"

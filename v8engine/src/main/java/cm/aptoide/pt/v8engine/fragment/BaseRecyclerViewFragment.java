@@ -5,6 +5,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.DisplayableManager;
 import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
@@ -40,6 +41,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     recyclerView.setAdapter(adapter);
     layoutManager = createLayoutManager();
     recyclerView.setLayoutManager(layoutManager);
+    recyclerView.setSaveEnabled(true); //Controls whether the saving of this view's state is enabled
   }
 
   @CallSuper @Override public void bindViews(View view) {
@@ -70,7 +72,8 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     addDisplayable(displayable, true);
   }
 
-  @CallSuper @Deprecated public void addDisplayables(List<? extends Displayable> displayables) {
+  @Partners @CallSuper @Deprecated
+  public void addDisplayables(List<? extends Displayable> displayables) {
     addDisplayables(displayables, true);
   }
 
@@ -78,6 +81,23 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
   public BaseRecyclerViewFragment addDisplayable(int position, Displayable displayable,
       boolean finishedLoading) {
     adapter.addDisplayable(position, displayable);
+    this.displayables.add(position, displayable);
+
+    if (finishedLoading) {
+      finishLoading();
+    }
+    return this;
+  }
+
+  @Override @CallSuper
+  public BaseRecyclerViewFragment replaceDisplayable(int position, Displayable displayable,
+      boolean finishedLoading) {
+
+    adapter.removeDisplayable(position);
+    adapter.addDisplayable(position, displayable);
+    adapter.notifyItemChanged(position);
+
+    this.displayables.remove(position);
     this.displayables.add(position, displayable);
 
     if (finishedLoading) {
@@ -106,7 +126,15 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     if (finishedLoading) {
       finishLoading();
     }
+
     return this;
+  }
+
+  @Override @Nullable public Displayable getDisplayableAt(int index) {
+    if (displayables != null && displayables.size() > index) {
+      return displayables.get(0);
+    }
+    return null;
   }
 
   @Override @CallSuper public BaseRecyclerViewFragment addDisplayables(int position,
@@ -127,7 +155,12 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     return this;
   }
 
-  @CallSuper @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+  @Override public boolean hasDisplayables() {
+    return displayables != null && displayables.size() > 0;
+  }
+
+  @Partners @CallSuper @Override
+  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     if (adapter == null) {
       adapter = createAdapter();
     }
@@ -137,7 +170,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     this.onViewCreated();
   }
 
-  @CallSuper @Override
+  @Partners @CallSuper @Override
   public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create || refresh) {
       clearDisplayables();
@@ -217,7 +250,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     return layoutManager;
   }
 
-  public RecyclerView getRecyclerView() {
+  @Partners public RecyclerView getRecyclerView() {
     return recyclerView;
   }
 }

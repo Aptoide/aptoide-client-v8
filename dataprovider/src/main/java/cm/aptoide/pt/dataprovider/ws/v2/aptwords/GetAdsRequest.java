@@ -6,11 +6,13 @@
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
 import android.text.TextUtils;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -23,6 +25,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -31,8 +34,6 @@ import rx.Observable;
 @Data @Accessors(chain = true) @EqualsAndHashCode(callSuper = true) public class GetAdsRequest
     extends Aptwords<GetAdsResponse> {
 
-  private static final OkHttpClient client =
-      OkHttpClientFactory.newClient(SecurePreferences::getUserAgent, isDebug());
   @Getter @Setter private static String forcedCountry = null;
   private final String aptoideClientUUID;
   private final boolean googlePlayServicesAvailable;
@@ -48,8 +49,8 @@ import rx.Observable;
   private boolean mature;
 
   private GetAdsRequest(String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid,
-      boolean mature) {
-    super(client);
+      boolean mature, Converter.Factory converterFactory, OkHttpClient httpClient) {
+    super(httpClient, converterFactory);
     this.aptoideClientUUID = aptoideClientUUID;
     this.googlePlayServicesAvailable = googlePlayServicesAvailable;
     this.oemid = oemid;
@@ -71,8 +72,10 @@ import rx.Observable;
 
   public static GetAdsRequest of(Location location, String keyword, Integer limit,
       String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, boolean mature) {
-    return new GetAdsRequest(aptoideClientUUID, googlePlayServicesAvailable, oemid,
-        mature).setLocation(location).setKeyword(keyword).setLimit(limit);
+    return new GetAdsRequest(aptoideClientUUID, googlePlayServicesAvailable, oemid, mature,
+        WebService.getDefaultConverter(),
+        OkHttpClientFactory.getSingletonClient(SecurePreferences::getUserAgent, false)).setLocation(
+        location).setKeyword(keyword).setLimit(limit);
   }
 
   public static GetAdsRequest ofHomepageMore(String aptoideClientUUID,
@@ -139,7 +142,7 @@ import rx.Observable;
         googlePlayServicesAvailable, oemid, mature);
   }
 
-  public static GetAdsRequest ofFirstInstall(String aptoideClientUUID,
+  @Partners public static GetAdsRequest ofFirstInstall(String aptoideClientUUID,
       boolean googlePlayServicesAvailable, String oemid, int numberOfAds, boolean mature) {
     return of(Location.firstinstall, numberOfAds, aptoideClientUUID, googlePlayServicesAvailable,
         oemid, mature);
@@ -182,7 +185,7 @@ import rx.Observable;
 
     parameters.put("excluded_partners", excludedNetworks);
 
-    Observable<GetAdsResponse> result = interfaces.getAds(parameters).doOnNext(getAdsResponse -> {
+    Observable<GetAdsResponse> result = interfaces.getAds(parameters, bypassCache).doOnNext(getAdsResponse -> {
 
       // Impression click for those networks who need it
       for (GetAdsResponse.Ad ad : getAdsResponse.getAds()) {
@@ -210,14 +213,10 @@ import rx.Observable;
   }
 
   public enum Location {
-    homepage("native-aptoide:homepage"),
-    appview("native-aptoide:appview"),
-    middleappview("native-aptoide:middleappview"),
-    search("native-aptoide:search"),
-    secondinstall("native-aptoide:secondinstall"),
-    secondtry("native-aptoide:secondtry"),
-    aptoidesdk("sdk-aptoide:generic"),
-    firstinstall("native-aptoide:first-install");
+    homepage("native-aptoide:homepage"), appview("native-aptoide:appview"), middleappview(
+        "native-aptoide:middleappview"), search("native-aptoide:search"), secondinstall(
+        "native-aptoide:secondinstall"), secondtry("native-aptoide:secondtry"), aptoidesdk(
+        "sdk-aptoide:generic"), firstinstall("native-aptoide:first-install");
 
     private final String value;
 

@@ -10,7 +10,7 @@ import cm.aptoide.pt.v8engine.R;
 /**
  * Created by neuro on 06-05-2016.
  */
-public abstract class BaseToolbarFragment extends SupportV4BaseFragment {
+public abstract class BaseToolbarFragment extends UIComponentFragment {
 
   private Toolbar toolbar;
 
@@ -49,7 +49,7 @@ public abstract class BaseToolbarFragment extends SupportV4BaseFragment {
 
       ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
       actionBar.setDisplayHomeAsUpEnabled(showUp);
-
+      actionBar.setTitle(toolbar.getTitle());
       setupToolbarDetails(toolbar);
     }
   }

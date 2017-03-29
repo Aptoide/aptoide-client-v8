@@ -49,8 +49,8 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> implements Lifecyc
   }
 
   @Override public void onViewRecycled(Widget holder) {
-    super.onViewRecycled(holder);
     holder.unbindView();
+    super.onViewRecycled(holder);
   }
 
   public Displayable popDisplayable() {
@@ -144,5 +144,10 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> implements Lifecyc
 
   public void onViewStateRestored(Bundle savedInstanceState) {
     displayables.onViewStateRestored(savedInstanceState);
+  }
+
+  public void removeDisplayable(Displayable displayable) {
+    displayables.remove(displayable);
+    notifyItemRemoved(displayables.getPosition(displayable));
   }
 }

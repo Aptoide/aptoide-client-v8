@@ -15,7 +15,6 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
@@ -52,7 +51,7 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
 
     itemView.setOnClickListener(view -> {
       //	        AptoideUtils.FlurryAppviewOrigin.addAppviewOrigin("Suggested_Search Result");
-      ((FragmentShower) view.getContext()).pushFragmentV4(
+      getNavigationManager().navigateTo(
           V8Engine.getFragmentProvider().newAppViewFragment(minimalAd));
     });
   }

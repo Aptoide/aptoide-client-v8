@@ -23,6 +23,7 @@ import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 import lombok.Getter;
 
+// FIXME: 27/2/2017 convert this into a class that extends "BaseDialog"
 public class InstallWarningDialog {
 
   private final boolean trustedVersionAvailable;

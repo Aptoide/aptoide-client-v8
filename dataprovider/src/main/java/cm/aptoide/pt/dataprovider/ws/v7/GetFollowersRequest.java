@@ -1,8 +1,12 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.GetFollowers;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import rx.Observable;
 
 /**
@@ -10,14 +14,23 @@ import rx.Observable;
  */
 
 public class GetFollowersRequest extends V7<GetFollowers, GetFollowersRequest.Body> {
-  protected GetFollowersRequest(Body body, String baseHost) {
-    super(body, baseHost);
+  protected GetFollowersRequest(Body body, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  public static GetFollowersRequest of(String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+  public static GetFollowersRequest of(BodyInterceptor bodyInterceptor, Long userId, Long storeId) {
+    Body body = new Body();
+    body.setUserId(userId);
+    body.setStoreId(storeId);
+    return new GetFollowersRequest(body, bodyInterceptor);
+  }
 
-    return new GetFollowersRequest(((Body) decorator.decorate(new Body(), accessToken)), BASE_HOST);
+  public static GetFollowersRequest ofStore(BodyInterceptor bodyInterceptor, Long storeId) {
+    Body body = new Body();
+    body.setStoreId(storeId);
+    return new GetFollowersRequest(body, bodyInterceptor);
   }
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,
@@ -30,10 +43,8 @@ public class GetFollowersRequest extends V7<GetFollowers, GetFollowersRequest.Bo
 
     private int limit = 25;
     private int offset;
-
-    public Body() {
-      super();
-    }
+    @Setter @Getter private Long userId;
+    @Setter @Getter private Long storeId;
 
     @Override public int getOffset() {
       return offset;

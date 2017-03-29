@@ -34,13 +34,19 @@ android {
     minSdkVersion 15
     targetSdkVersion TARGET_SDK_VERSION
     testProguardFile 'proguard-rules-test.pro'
-    manifestPlaceholders = [toolboxProviderAuthority   : "cm.aptoide.pt.StubProvider",
-                            suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider",
-                            currentApplicationId       : "cm.aptoide.pt",
-                            fabricApiKey               : project.FABRIC_API_KEY]
+    manifestPlaceholders = [toolboxProviderAuthority        : "cm.aptoide.pt.StubProvider",
+                            suggestionProviderAuthority     : "cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider",
+                            storeSuggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.StoreSearchSuggestionProvider",
+                            currentApplicationId            : "cm.aptoide.pt",
+                            fabricApiKey                    : project.FABRIC_API_KEY]
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     multiDexEnabled true
+    resValue "string", "authenticator_account_type", APPLICATION_ID
+    versionCode project.PROD_VERSION_CODE.toInteger()
+    versionName "8.2.0.1"
+    resValue "string", "content_authority", APPLICATION_ID + ".StubProvider"
+    buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider\""
   }
 
   lintOptions {
@@ -63,7 +69,7 @@ android {
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
       applicationIdSuffix ".internal"
 
-      versionName "8.1.2." + getDate()
+      versionName "8.2.0." + getDate()
       versionCode project.INTERNAL_VERSION_CODE.toInteger()
 
       resValue "string", "authenticator_account_type", APPLICATION_ID + ".internal"
@@ -71,9 +77,10 @@ android {
       buildConfigField "String", "CONTENT_AUTHORITY",
           "\"" + APPLICATION_ID + ".StubProvider.internal\""
 
-      manifestPlaceholders = [toolboxProviderAuthority   : "cm.aptoide.pt.StubProvider.internal",
-                              suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider.internal",
-                              currentApplicationId       : "cm.aptoide.pt.internal"]
+      manifestPlaceholders = [toolboxProviderAuthority        : "cm.aptoide.pt.StubProvider.internal",
+                              suggestionProviderAuthority     : "cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider.internal",
+                              storeSuggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.StoreSearchSuggestionProvider.internal",
+                              currentApplicationId            : "cm.aptoide.pt.internal"]
     }
 
     dev {
@@ -81,25 +88,23 @@ android {
       applicationIdSuffix ".dev"
 
 
-      versionName "8.1.2." + getDate()
+      versionName "8.2.0." + getDate()
       versionCode project.DEV_VERSION_CODE.toInteger()
 
       resValue "string", "authenticator_account_type", APPLICATION_ID + ".dev"
       resValue "string", "content_authority", APPLICATION_ID + ".StubProvider.dev"
       buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider.dev\""
 
-      manifestPlaceholders = [toolboxProviderAuthority   : "cm.aptoide.pt.StubProvider.dev",
-                              suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider.dev",
-                              currentApplicationId       : "cm.aptoide.pt.dev"]
+      manifestPlaceholders = [toolboxProviderAuthority        : "cm.aptoide.pt.StubProvider.dev",
+                              suggestionProviderAuthority     : "cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider.dev",
+                              storeSuggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.StoreSearchSuggestionProvider.dev",
+                              currentApplicationId            : "cm.aptoide.pt.dev"]
     }
 
     prod {
-      versionCode project.PROD_VERSION_CODE.toInteger()
-      versionName "8.1.2.0"
-      resValue "string", "authenticator_account_type", APPLICATION_ID
-      resValue "string", "content_authority", APPLICATION_ID + ".StubProvider"
-      buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider\""
     }
+
+    leak {}
   }
 
   buildTypes {
@@ -141,19 +146,22 @@ android {
     pickFirst 'META-INF/LGPL2.1'
   }
 
-  applicationVariants.all { variant ->
-    if (variant.buildType.name == buildTypes.release.name) {
+  testOptions {
+    unitTests.returnDefaultValues = true
+  }
 
-      variant.outputs.each { output ->
-        project.ext { appName = 'aptoide' }
-        def newName = output.outputFile.name
-        newName = newName.replace("vanilla-", "$project.ext.appName-")
-        //"MyAppName" -> I set my app variables in the root project
-        newName = newName.replace("prod-release", versionName)
-        newName = newName.replace("release", versionName)
-        //noinspection GroovyAssignabilityCheck
-        output.outputFile = new File(output.outputFile.parent, newName)
-      }
+  applicationVariants.all { variant ->
+    variant.outputs.each { output ->
+      def project = "vanilla"
+      def SEP = "_"
+      def flavor = variant.productFlavors[0].name
+      def buildType = variant.variantData.variantConfiguration.buildType.name
+      def versionName = variant.versionName
+      def versionCode = variant.versionCode
+
+      def newApkName = project + SEP + flavor + SEP + buildType + SEP + versionName + SEP + versionCode + ".apk"
+
+      output.outputFile = new File(output.outputFile.parent, newApkName)
     }
   }
 
@@ -168,6 +176,7 @@ dependencies {
 
   devCompile project(path: ':v8engine', configuration: 'prodRelease')
   prodCompile project(path: ':v8engine', configuration: 'prodRelease')
+  leakCompile project(path: ':v8engine', configuration: 'leakRelease')
   internalCompile project(path: ':v8engine', configuration: 'internalRelease')
 
   // Testing-only dependencies
@@ -182,7 +191,9 @@ dependencies {
   androidTestCompile("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}") {
     exclude group: "com.android.support", module: "support-annotations"
   }
-  androidTestCompile "com.android.support:support-annotations:${SUPPORT_ANNOTATIONS_LIB_VERSION}"
+  androidTestCompile "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+
+  androidTestCompile "io.reactivex:rxjava:${RXJAVA_VERSION}"
 
   compile("com.android.support:multidex:${MULTIDEX_VERSION}") {
     exclude group: "com.android.support", module: "support-annotations"

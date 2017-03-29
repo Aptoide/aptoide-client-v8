@@ -25,7 +25,7 @@ public class TimelineLoginWidget extends Widget<TimelineLoginDisplayable> {
 
   @Override public void bindView(TimelineLoginDisplayable displayable) {
     compositeSubscription.add(
-        RxView.clicks(button).subscribe(click -> displayable.login(getContext()), err -> {
+        RxView.clicks(button).subscribe(click -> displayable.login(), err -> {
           CrashReport.getInstance().log(err);
         }));
   }

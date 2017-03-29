@@ -140,6 +140,7 @@
 
   <color name="link">#2070DE</color>
   <color name="facebook">#3b5998</color>
+  <color name="google">#cc4a41</color>
   <color name="default_progress_bar_color">#FF33B5E5</color>
   <color name="background_holo_light">#fff3f3f3</color>
   <color name="appview_rating_text">#FAB000</color>
@@ -176,5 +177,22 @@
   <color name="activity_payment_gray">#9b9b9b</color>
   <color name="activity_payment_green">#B4DC84</color>
 
+
   <color name="reviews_helpful_stroke_button">#d8d8d8</color>
+
+  <!-- Add stores dialog -->
+  <color name="add_store_dialog_background">#e7e7e7</color>
+
+
+  <!-- Address book colors -->
+  <color name="twitter_color">#00aced</color>
+
+
+  <!-- Radar colors -->
+  <color name="radar_color_line">#cecece</color>
+  <color name="radar_color_dark">#efefef</color>
+  <color name="radar_color_light">#fafafa</color>
+  <color name="radar_color_2">#6c6c6c</color>
+
+
 </resources>

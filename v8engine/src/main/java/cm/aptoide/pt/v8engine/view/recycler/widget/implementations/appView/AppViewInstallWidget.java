@@ -22,12 +22,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -56,6 +58,7 @@ import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -98,12 +101,14 @@ import rx.android.schedulers.AndroidSchedulers;
 
   private App trustedVersion;
   //private DownloadServiceHelper downloadServiceHelper;
-  private PermissionRequest permissionRequest;
+  private PermissionService permissionRequest;
   private InstallManager installManager;
   private boolean isUpdate;
   private DownloadEventConverter downloadInstallEventConverter;
   private Analytics analytics;
   private InstallEventConverter installConverter;
+  private AptoideAccountManager accountManager;
+  private BodyInterceptor bodyInterceptor;
 
   //private Subscription subscribe;
   //private long appID;
@@ -133,12 +138,14 @@ import rx.android.schedulers.AndroidSchedulers;
   @Override public void bindView(AppViewInstallDisplayable displayable) {
     displayable.setInstallButton(actionButton);
 
-    AptoideDownloadManager downloadManager = AptoideDownloadManager.getInstance();
+    final AptoideDownloadManager downloadManager = AptoideDownloadManager.getInstance();
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     downloadManager.initDownloadService(getContext());
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
     installManager = new InstallManager(downloadManager, installer);
-    downloadInstallEventConverter = new DownloadEventConverter();
-    installConverter = new InstallEventConverter();
+    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+    downloadInstallEventConverter = new DownloadEventConverter(bodyInterceptor);
+    installConverter = new InstallEventConverter(bodyInterceptor);
     analytics = Analytics.getInstance();
 
     minimalAd = displayable.getMinimalAd();
@@ -151,7 +158,7 @@ import rx.android.schedulers.AndroidSchedulers;
       Fragment fragment = V8Engine.getFragmentProvider()
           .newOtherVersionsFragment(currentApp.getName(), currentApp.getIcon(),
               currentApp.getPackageName());
-      fragmentShower.pushFragmentV4(fragment);
+      getNavigationManager().navigateTo(fragment);
     });
 
     final boolean[] isSetupView = { true };
@@ -174,7 +181,7 @@ import rx.android.schedulers.AndroidSchedulers;
       latestAvailableLayout.setVisibility(View.GONE);
     }
 
-    permissionRequest = ((PermissionRequest) getContext());
+    permissionRequest = ((PermissionService) getContext());
   }
 
   private void updateUi(AppViewInstallDisplayable displayable, GetApp getApp,
@@ -198,7 +205,7 @@ import rx.android.schedulers.AndroidSchedulers;
         //App not installed
         setDownloadBarInvisible();
         setupInstallOrBuyButton(displayable, getApp);
-        ((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
+        ((AppMenuOptions) getNavigationManager().peekLast()).setUnInstallMenuOptionVisible(null);
         break;
       case AppViewInstallDisplayable.ACTION_DOWNGRADE:
         //downgrade
@@ -237,7 +244,7 @@ import rx.android.schedulers.AndroidSchedulers;
           + " "
           + app.getPay().getPrice()
           + ")");
-      actionButton.setOnClickListener(v -> displayable.buyApp(getContext(), app));
+      actionButton.setOnClickListener(v -> buyApp(app));
       AppBoughtReceiver receiver = new AppBoughtReceiver() {
         @Override public void appBought(long appId, String path) {
           if (app.getId() == appId) {
@@ -266,10 +273,17 @@ import rx.android.schedulers.AndroidSchedulers;
     }
   }
 
+  private void buyApp(GetAppMeta.App app) {
+    Fragment fragment = getNavigationManager().peekLast();
+    if (fragment != null && Payments.class.isAssignableFrom(fragment.getClass())) {
+      ((Payments) fragment).buyApp(app);
+    }
+  }
+
   private View.OnClickListener downgradeListener(final GetAppMeta.App app) {
     return view -> {
       final Context context = view.getContext();
-      final PermissionRequest permissionRequest = (PermissionRequest) getContext();
+      final PermissionService permissionRequest = (PermissionService) getContext();
 
       permissionRequest.requestAccessToExternalFileSystem(() -> {
 
@@ -372,13 +386,17 @@ import rx.android.schedulers.AndroidSchedulers;
           .first()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
-            if (AptoideAccountManager.isLoggedIn()
-                && ManagerPreferences.getShowPreview()
+            if (accountManager.isLoggedIn()
+                && ManagerPreferences.isShowPreviewDialog()
                 && Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
-              SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable);
+              SharePreviewDialog sharePreviewDialog =
+                  new SharePreviewDialog(displayable, accountManager, true,
+                      SharePreviewDialog.SharePreviewOpenMode.SHARE);
               AlertDialog.Builder alertDialog =
                   sharePreviewDialog.getPreviewDialogBuilder(getContext());
-              SocialRepository socialRepository = new SocialRepository();
+
+              SocialRepository socialRepository =
+                  new SocialRepository(accountManager, bodyInterceptor);
 
               sharePreviewDialog.showShareCardPreviewDialog(
                   displayable.getPojo().getNodes().getMeta().getData().getPackageName(), "install",
@@ -406,7 +424,7 @@ import rx.android.schedulers.AndroidSchedulers;
         // search for a trusted version
         fragment = V8Engine.getFragmentProvider().newSearchFragment(app.getName(), true);
       }
-      ((FragmentShower) context).pushFragmentV4(fragment);
+      getNavigationManager().navigateTo(fragment);
     };
 
     return v -> {
@@ -462,7 +480,10 @@ import rx.android.schedulers.AndroidSchedulers;
   private void showErrorMessage(@Download.DownloadError int downloadError) {
     switch (downloadError) {
       case Download.GENERIC_ERROR:
-        ShowMessage.asSnack(getContext(), R.string.error_occured);
+        GenericDialogs.createGenericOkMessage(getContext(), "",
+            getContext().getString(R.string.error_occured))
+            .subscribe(eResponse -> Logger.d(TAG, "Error dialog"),
+                throwable -> CrashReport.getInstance().log(throwable));
         break;
       case Download.NOT_ENOUGH_SPACE_ERROR:
         GenericDialogs.createGenericOkMessage(getContext(),
@@ -490,7 +511,7 @@ import rx.android.schedulers.AndroidSchedulers;
       PermissionManager permissionManager = new PermissionManager();
       compositeSubscription.add(permissionManager.requestDownloadAccess(permissionRequest)
           .flatMap(permissionGranted -> permissionManager.requestExternalStoragePermission(
-              (PermissionRequest) getContext()))
+              (PermissionService) getContext()))
           .flatMap(success -> {
             Download download =
                 new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),

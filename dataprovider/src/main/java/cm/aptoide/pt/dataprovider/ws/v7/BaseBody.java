@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
  * should
  * be extended.
  */
-@Data @EqualsAndHashCode public class BaseBody implements AccessTokenBody {
+@Data @EqualsAndHashCode public class BaseBody {
 
   @JsonProperty("aptoide_uid") private String aptoideId;
   private String accessToken;

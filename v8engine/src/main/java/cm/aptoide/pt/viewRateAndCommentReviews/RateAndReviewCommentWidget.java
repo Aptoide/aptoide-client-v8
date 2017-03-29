@@ -5,10 +5,11 @@
 
 package cm.aptoide.pt.viewRateAndCommentReviews;
 
-import android.app.FragmentManager;
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -18,6 +19,8 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetReviewRatingRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -26,11 +29,18 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.Review;
+import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.preferences.AdultContent;
+import cm.aptoide.pt.v8engine.preferences.Preferences;
+import cm.aptoide.pt.v8engine.preferences.SecurePreferences;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -47,7 +57,6 @@ import rx.Observable;
   private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
   private static final Locale LOCALE = Locale.getDefault();
   private static final int DEFAULT_LIMIT = 3;
-  private final AptoideClientUUID aptoideClientUUID;
   private TextView reply;
   private TextView showHideReplies;
   private TextView flagHelfull;
@@ -64,12 +73,12 @@ import rx.Observable;
   private boolean isCommentsCollapsed = false;
   private View notHelpfullButtonLayout;
   private View helpfullButtonLayout;
+  private AptoideAccountManager accountManager;
+  private AccountNavigator accountNavigator;
+  private BodyInterceptor<BaseBody> bodyInterceptor;
 
   public RateAndReviewCommentWidget(View itemView) {
     super(itemView);
-
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
   }
 
   @Override protected void assignViews(View itemView) {
@@ -94,6 +103,9 @@ import rx.Observable;
     final Review review = displayable.getPojo().getReview();
     final String appName = displayable.getPojo().getAppName();
 
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+    accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
     final FragmentActivity context = getContext();
     ImageLoader.with(context)
         .loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(), userImage,
@@ -113,8 +125,8 @@ import rx.Observable;
     final long reviewId = review.getId();
 
     compositeSubscription.add(RxView.clicks(reply).flatMap(a -> {
-      if (AptoideAccountManager.isLoggedIn()) {
-        FragmentManager fm = context.getFragmentManager();
+      if (accountManager.isLoggedIn()) {
+        FragmentManager fm = context.getSupportFragmentManager();
         CommentDialogFragment commentDialogFragment =
             CommentDialogFragment.newInstanceReview(review.getId(), appName);
         commentDialogFragment.show(fm, "fragment_comment_dialog");
@@ -130,7 +142,7 @@ import rx.Observable;
       } else {
         return ShowMessage.asObservableSnack(ratingBar, R.string.you_need_to_be_logged_in,
             R.string.login, snackView -> {
-              AptoideAccountManager.openAccountManager(snackView.getContext());
+              accountNavigator.navigateToAccountView();
             });
       }
     }).subscribe(a -> { /* do nothing */ }, err -> {
@@ -179,8 +191,7 @@ import rx.Observable;
   }
 
   private void loadCommentsForThisReview(long reviewId, int limit, CommentAdder commentAdder) {
-    ListCommentsRequest.of(reviewId, limit, AptoideAccountManager.getAccessToken(),
-        aptoideClientUUID.getUniqueIdentifier(), true).execute(listComments -> {
+    ListCommentsRequest.of(reviewId, limit, true, bodyInterceptor).execute(listComments -> {
       if (listComments.isOk()) {
         List<Comment> comments = listComments.getDatalist().getList();
         commentAdder.addComment(comments);
@@ -197,9 +208,8 @@ import rx.Observable;
   private void setReviewRating(long reviewId, boolean positive) {
     setHelpButtonsClickable(false);
 
-    if (AptoideAccountManager.isLoggedIn()) {
-      SetReviewRatingRequest.of(reviewId, positive, AptoideAccountManager.getAccessToken(),
-          aptoideClientUUID.getUniqueIdentifier()).execute(response -> {
+    if (accountManager.isLoggedIn()) {
+      SetReviewRatingRequest.of(reviewId, positive, bodyInterceptor).execute(response -> {
         if (response == null) {
           Logger.e(TAG, "empty response");
           return;
@@ -231,7 +241,7 @@ import rx.Observable;
     } else {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            AptoideAccountManager.openAccountManager(snackView.getContext());
+            accountNavigator.navigateToAccountView();
           });
       setHelpButtonsClickable(true);
     }

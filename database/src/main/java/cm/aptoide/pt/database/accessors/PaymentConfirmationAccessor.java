@@ -27,7 +27,7 @@ public class PaymentConfirmationAccessor extends SimpleAccessor<PaymentConfirmat
         .flatMap(query -> database.findAsList(query));
   }
 
-  public void save(PaymentConfirmation paymentConfirmation) {
-    database.insert(paymentConfirmation);
+  public void save(PaymentConfirmation confirmation) {
+    database.insert(confirmation);
   }
 }

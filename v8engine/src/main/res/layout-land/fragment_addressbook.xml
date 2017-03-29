@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/addressbook_fragment_id"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginEnd="30dp"
+    android:layout_marginLeft="30dp"
+    android:layout_marginRight="30dp"
+    android:layout_marginStart="30dp"
+    android:fillViewport="true">
+
+
+  <ImageView
+      android:id="@+id/addressbook_friends_graphic"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:src="@drawable/addressbook_graphic"
+      app:layout_constraintBottom_toTopOf="@+id/guideline"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:layout_conversion_absoluteHeight="171dp"
+      tools:layout_conversion_absoluteWidth="351dp"
+      tools:layout_conversion_absoluteX="30dp"
+      tools:layout_conversion_absoluteY="24dp"
+      tools:layout_editor_absoluteX="30dp" />
+
+  <android.support.constraint.Guideline
+      android:id="@+id/guideline"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintBottom_toTopOf="@+id/addressbook_1st_msg"
+      app:layout_constraintGuide_percent="0.25"
+      app:layout_constraintTop_toBottomOf="@id/addressbook_friends_graphic" />
+
+  <LinearLayout
+      android:id="@+id/addressbook_1st_msg"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:orientation="vertical"
+      app:layout_constraintBottom_toTopOf="@+id/addressbook_sync_button"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/guideline"
+      tools:layout_editor_absoluteX="0dp">
+
+    <TextView
+        android:id="@+id/addressbook_increase_network"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:gravity="center"
+        android:text="@string/addressbook_increase_network_message"
+        android:textColor="@color/dark_gray"
+        android:textSize="16sp"
+        tools:layout_conversion_absoluteHeight="21dp"
+        tools:layout_conversion_absoluteWidth="351dp"
+        tools:layout_conversion_absoluteX="30dp"
+        tools:layout_conversion_absoluteY="215dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="215dp" />
+
+    <TextView
+        android:id="@+id/addressbook_connect_with_friends"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:gravity="center"
+        android:text="@string/addressbook_connect_with_friends_message"
+        android:textColor="@color/dark_gray"
+        android:textSize="16sp"
+        tools:layout_conversion_absoluteHeight="21dp"
+        tools:layout_conversion_absoluteWidth="351dp"
+        tools:layout_conversion_absoluteX="30dp"
+        tools:layout_conversion_absoluteY="242dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="242dp" />
+
+  </LinearLayout>
+
+  <RelativeLayout
+      android:id="@+id/addressbook_sync_button"
+      android:layout_width="0dp"
+      android:layout_height="42dp"
+      android:layout_marginEnd="5dp"
+      android:layout_marginRight="5dp"
+      android:background="@drawable/addressbook_aptoide_button_rectangle_shape"
+      app:layout_constraintBottom_toTopOf="@+id/facebook_sync_button"
+      app:layout_constraintEnd_toStartOf="@id/addressbook_allow_find"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/addressbook_1st_msg"
+      tools:layout_conversion_absoluteHeight="42dp"
+      tools:layout_conversion_absoluteWidth="166dp"
+      tools:layout_conversion_absoluteX="30dp"
+      tools:layout_conversion_absoluteY="333dp"
+      tools:layout_editor_absoluteX="30dp">
+
+    <ImageView
+        android:id="@+id/aptoide_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="19dp"
+        android:layout_marginLeft="19dp"
+        android:src="@drawable/ic_action_addewaa" />
+
+    <ImageView
+        android:id="@+id/check_or_reload_addressbook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:padding="5dp"
+        android:src="@drawable/reload" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/addressbook_text"
+        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:text="@string/addressbook_sync"
+        android:textAllCaps="false"
+        android:textColor="@color/aptoide_orange" />
+  </RelativeLayout>
+
+  <Button
+      android:id="@+id/addressbook_allow_find"
+      android:layout_width="0dp"
+      android:layout_height="42dp"
+      android:layout_marginLeft="5dp"
+      android:layout_marginStart="5dp"
+      android:background="@drawable/addressbook_button_rectangle_shape"
+      android:text="@string/addressbook_allow_friends_find"
+      app:layout_constraintBottom_toTopOf="@+id/facebook_sync_button"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toEndOf="@id/addressbook_sync_button"
+      app:layout_constraintTop_toBottomOf="@+id/addressbook_1st_msg"
+      tools:layout_conversion_absoluteHeight="40dp"
+      tools:layout_conversion_absoluteWidth="351dp"
+      tools:layout_conversion_absoluteX="30dp"
+      tools:layout_conversion_absoluteY="415dp"
+      tools:layout_editor_absoluteX="30dp" />
+
+
+  <RelativeLayout
+      android:id="@+id/facebook_sync_button"
+      android:layout_width="0dp"
+      android:layout_height="42dp"
+      android:layout_marginEnd="5dp"
+      android:layout_marginRight="5dp"
+      android:background="@drawable/addressbook_facebook_button_rectangle_shape"
+      app:layout_constraintBottom_toTopOf="@+id/addressbook_2nd_msg"
+      app:layout_constraintEnd_toStartOf="@+id/twitter_sync_button"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/addressbook_sync_button"
+      tools:layout_conversion_absoluteHeight="42dp"
+      tools:layout_conversion_absoluteWidth="166dp"
+      tools:layout_conversion_absoluteX="30dp"
+      tools:layout_conversion_absoluteY="333dp"
+      tools:layout_editor_absoluteX="30dp">
+
+    <ImageView
+        android:id="@+id/facebook_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="9dp"
+        android:layout_marginRight="9dp"
+        android:padding="10dp"
+        android:src="@drawable/ic_action_facebook" />
+
+    <ImageView
+        android:id="@+id/check_or_reload_facebook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:padding="5dp"
+        android:src="@drawable/reload" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/facebook_text"
+        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:text="@string/facebook"
+        android:textAllCaps="false"
+        android:textColor="@color/facebook" />
+
+  </RelativeLayout>
+
+  <RelativeLayout
+      android:id="@+id/twitter_sync_button"
+      android:layout_width="0dp"
+      android:layout_height="42dp"
+      android:layout_marginLeft="5dp"
+      android:layout_marginStart="5dp"
+      android:background="@drawable/addressbook_twitter_button_rectangle_shape"
+      android:gravity="center"
+      app:layout_constraintBottom_toBottomOf="@+id/facebook_sync_button"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toEndOf="@id/facebook_sync_button"
+      app:layout_constraintTop_toTopOf="@+id/facebook_sync_button"
+      tools:layout_conversion_absoluteHeight="42dp"
+      tools:layout_conversion_absoluteWidth="166dp"
+      tools:layout_conversion_absoluteX="214dp"
+      tools:layout_conversion_absoluteY="333dp"
+      tools:layout_editor_absoluteX="214dp">
+
+    <ImageView
+        android:id="@+id/twitter_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:src="@drawable/ic_action_twitter" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/twitter_text"
+        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:text="@string/twitter"
+        android:textAllCaps="false"
+        android:textColor="@color/twitter_color" />
+
+    <ImageView
+        android:id="@+id/check_or_reload_twitter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:padding="5dp"
+        android:src="@drawable/reload" />
+
+  </RelativeLayout>
+
+  <TextView
+      android:id="@+id/addressbook_2nd_msg"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:clickable="false"
+      android:gravity="center"
+      android:text="@string/addressbook_2nd_msg"
+      android:textAlignment="center"
+      android:textColor="?android:attr/textColorSecondary"
+      app:layout_constraintBottom_toTopOf="@+id/addressbook_about"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/facebook_sync_button"
+      tools:layout_conversion_absoluteHeight="60dp"
+      tools:layout_conversion_absoluteWidth="351dp"
+      tools:layout_conversion_absoluteX="30dp"
+      tools:layout_conversion_absoluteY="512dp"
+      tools:layout_editor_absoluteX="30dp" />
+
+  <TextView
+      android:id="@+id/addressbook_about"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:text="@string/addressbook_3rd_msg"
+      android:textColor="?android:attr/textColorSecondary"
+      app:layout_constraintBottom_toTopOf="@+id/addressbook_done"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/addressbook_2nd_msg"
+      tools:layout_conversion_absoluteHeight="16dp"
+      tools:layout_conversion_absoluteWidth="351dp"
+      tools:layout_conversion_absoluteX="30dp"
+      tools:layout_conversion_absoluteY="592dp"
+      tools:layout_editor_absoluteX="30dp" />
+
+  <Button
+      android:id="@+id/addressbook_done"
+      style="?attr/customButtonThinLine"
+      android:layout_width="0dp"
+      android:layout_height="42dp"
+      android:layout_gravity="center"
+      android:text="@string/done"
+      android:textColor="@color/default_color"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/addressbook_about"
+      tools:layout_editor_absoluteX="0dp" />
+
+</android.support.constraint.ConstraintLayout>

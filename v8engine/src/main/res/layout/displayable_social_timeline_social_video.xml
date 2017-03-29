@@ -64,7 +64,7 @@
             android:layout_height="120dp"
             android:scaleType="centerCrop"
             tools:ignore="contentDescription"
-            tools:src="@drawable/icon_brand_aptoide"
+            tools:src="@drawable/placeholder_16_9"
             />
 
         <ImageView

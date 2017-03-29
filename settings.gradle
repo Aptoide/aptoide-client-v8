@@ -3,7 +3,7 @@
  * Modified by Neurophobic Animal on 24/05/2016.
  */
 
-include ':vanilla',
+include 'vanilla',
     ':v8engine',
     ':dataprovider',
     ':model',
@@ -15,4 +15,6 @@ include ':vanilla',
     ':aptoide_accountmanager',
     ':database',
     ':imageloader',
-    ':downloadmanager'
+    ':downloadmanager',
+    ':spotandshare',
+    ':spotandshareandroid'

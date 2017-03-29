@@ -15,6 +15,7 @@ import cm.aptoide.pt.v8engine.util.RecyclerViewPositionHelper;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
 import lombok.Setter;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -43,6 +44,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   private int totalItemCount;
   private int visibleItemCount;
   private RecyclerViewPositionHelper mRecyclerViewHelper;
+  private Subscription subscription;
 
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
       V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
@@ -104,7 +106,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     if (!loading) {
       loading = true;
       adapter.addDisplayable(new ProgressBarDisplayable());
-      v7request.observe(bypassCache)
+      subscription = v7request.observe(bypassCache)
           .observeOn(Schedulers.io())
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(response -> {
@@ -158,6 +160,12 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   public void removeListeners() {
     onFirstLoadListener = null;
     onEndOfListReachedListener = null;
+  }
+
+  public void stopLoading() {
+    if (subscription != null && !subscription.isUnsubscribed()) {
+      subscription.unsubscribe();
+    }
   }
 
   public interface BooleanAction<T extends BaseV7Response> {

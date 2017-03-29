@@ -10,6 +10,16 @@
     android:title="@string/settings_title_bar">
 
   <PreferenceCategory
+      android:title="@string/setting_general"
+      >
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="updatesFilterAlphaBetaKey"
+        android:summary="@string/updates_filter_summary"
+        android:title="@string/updates_filter_setting_title"/>
+
+  </PreferenceCategory>
+  <PreferenceCategory
       android:title="@string/setting_general_download_rules"
       >
 
@@ -54,13 +64,29 @@
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="matureChkBox"
+        android:persistent="false"
         android:summary="@string/setting_dont_show_mature_content"
         android:title="@string/setting_mature_filtering"/>
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="matureChkBoxWithPin"
+        android:persistent="false"
+        android:summary="@string/setting_dont_show_mature_content"
+        android:title="@string/setting_mature_filtering"
+        android:visible="false"/>
     <Preference
         android:inputType="number"
         android:key="Maturepin"
+        android:persistent="false"
         android:summary="@string/set_mature_pin_summary"
         android:title="@string/set_mature_pin_title"/>
+    <Preference
+        android:inputType="number"
+        android:key="removeMaturepin"
+        android:persistent="false"
+        android:summary="@string/remove_mature_pin_summary"
+        android:title="@string/remove_mature_pin_title"
+        android:visible="false"/>
   </PreferenceCategory>
 
   <PreferenceCategory android:title="@string/setting_updates">
@@ -69,15 +95,6 @@
         android:key="showUpdatesNotification"
         android:summary="@string/setting_updates_notification_sum"
         android:title="@string/setting_updates_notification_title"/>
-    <CheckBoxPreference
-        android:key="auto_update"
-        android:summary="@string/setting_auto_update_sum"
-        android:title="@string/setting_auto_update_title"/>
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="updatesFilterAlphaBetaKey"
-        android:summary="@string/updates_filter_summary"
-        android:title="@string/updates_filter_setting_title"/>
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="updatesSystemAppsKey"
@@ -105,24 +122,31 @@
         android:summary="@string/settings_maxFileCache_sum"
         android:title="@string/settings_maxFileCache_title"/>
   </PreferenceCategory>
-  <PreferenceCategory
-      android:key="changetheme"
-      android:title="@string/change_theme">
+  <!--<PreferenceCategory-->
+      <!--android:key="changetheme"-->
+      <!--android:title="@string/change_theme">-->
 
-    <Preference
-        android:key="soon"
-        android:title="@string/change_theme_soon"/>
-    <!--<ListPreference-->
-    <!--android:defaultValue="light"-->
-    <!--android:entries="@array/theme_names"-->
-    <!--android:entryValues="@array/themes"-->
-    <!--android:key="theme"-->
-    <!--android:title="@string/theme"/>-->
-  </PreferenceCategory>
-  <PreferenceCategory android:title="@string/root">
+    <!--<Preference-->
+        <!--android:key="soon"-->
+        <!--android:title="@string/change_theme_soon"/>-->
+    <!--&lt;!&ndash;<ListPreference&ndash;&gt;-->
+    <!--&lt;!&ndash;android:defaultValue="light"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:entries="@array/theme_names"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:entryValues="@array/themes"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:key="theme"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:title="@string/theme"/>&ndash;&gt;-->
+  <!--</PreferenceCategory>-->
+  <PreferenceCategory
+      android:key="rootCategory"
+      android:title="@string/root">
     <CheckBoxPreference
         android:key="allowRoot"
         android:title="@string/allow_root"/>
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="auto_update"
+        android:summary="@string/setting_auto_update_sum"
+        android:title="@string/setting_auto_update_title"/>
   </PreferenceCategory>
 
   <PreferenceCategory

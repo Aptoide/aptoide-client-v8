@@ -5,18 +5,11 @@
 
 package cm.aptoide.pt.v8engine.fragment;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.ReloadInterface;
 import cm.aptoide.pt.v8engine.layouthandler.LoaderLayoutHandler;
 import cm.aptoide.pt.v8engine.layouthandler.SwipeLoaderLayoutHandler;
-import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
-import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 
 /**
@@ -27,18 +20,10 @@ public abstract class GridRecyclerSwipeFragment<T extends BaseAdapter>
 
   protected String storeTheme;
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    if (storeTheme == null) {
-      storeTheme = "default";
-    }
-    ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-    ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
-    return super.onCreateView(inflater, container, savedInstanceState);
-  }
-
   @NonNull @Override protected LoaderLayoutHandler createLoaderLayoutHandler() {
+    if (getViewsToShowAfterLoadingId().length > 0) {
+      return new SwipeLoaderLayoutHandler(getViewsToShowAfterLoadingId(), this);
+    }
     return new SwipeLoaderLayoutHandler(getViewToShowAfterLoadingId(), this);
   }
 

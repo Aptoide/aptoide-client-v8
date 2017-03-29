@@ -1,18 +1,20 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
@@ -51,6 +53,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
   private Analytics analytics;
   private InstallEventConverter installConverter;
   private DownloadEventConverter downloadConverter;
+  private View noDownloadsView;
 
   public static DownloadsFragment newInstance() {
     return new DownloadsFragment();
@@ -60,12 +63,18 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
     return R.layout.recycler_fragment_downloads;
   }
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+    noDownloadsView = view.findViewById(R.id.no_apps_downloaded);
+  }
+
+  @SuppressLint("MissingSuperCall") @Override
+  public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     // not calling super on purpose to avoid cleaning displayables
   }
 
-  @Override public void onViewCreated() {
-    super.onViewCreated();
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
 
     // TODO: 1/2/2017 optimize this listener splitting it in 3 listeners: one for each download state
 
@@ -140,10 +149,18 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 
   private Completable updateUi() {
     return Completable.fromCallable(() -> {
-      clearDisplayables().
-          addDisplayables(downloadingDisplayables, false).
-          addDisplayables(standingByDisplayables, false).
-          addDisplayables(completedDisplayables, true);
+      if (emptyDownloadList()) {
+        clearDisplayables();
+        finishLoading();
+        noDownloadsView.setVisibility(View.VISIBLE);
+      } else {
+        noDownloadsView.setVisibility(View.GONE);
+
+        clearDisplayables().
+            addDisplayables(downloadingDisplayables, false).
+            addDisplayables(standingByDisplayables, false).
+            addDisplayables(completedDisplayables, true);
+      }
       return null;
     });
   }
@@ -159,10 +176,17 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
         || progress.getOverallDownloadStatus() == Download.IN_QUEUE;
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
+  private boolean emptyDownloadList() {
+    return downloadingDisplayables != null
+        && downloadingDisplayables.size() == 0
+        && standingByDisplayables != null
+        && standingByDisplayables.size() == 0
+        && completedDisplayables != null
+        && completedDisplayables.size() == 0;
+  }
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
     // variables initialization
 
     downloadingDisplayables = new ArrayList<>();
@@ -171,11 +195,10 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 
     installManager = new InstallManager(AptoideDownloadManager.getInstance(),
         new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK));
-
     analytics = Analytics.getInstance();
-    installConverter = new InstallEventConverter();
-    downloadConverter = new DownloadEventConverter();
-
-    return super.onCreateView(inflater, container, savedInstanceState);
+    final BodyInterceptor<BaseBody> baseBodyBodyInterceptor =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+    installConverter = new InstallEventConverter(baseBodyBodyInterceptor);
+    downloadConverter = new DownloadEventConverter(baseBodyBodyInterceptor);
   }
 }

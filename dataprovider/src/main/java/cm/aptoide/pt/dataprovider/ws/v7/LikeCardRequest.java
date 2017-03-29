@@ -1,9 +1,11 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -12,41 +14,32 @@ import rx.Observable;
 /**
  * Created by jdandrade on 06/12/2016.
  */
-public class LikeCardRequest extends V7<BaseV7Response, LikeCardRequest.Body> {
+public class LikeCardRequest extends V7<BaseV7Response, BaseBody> {
 
   private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
       + "://"
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
-  private static String access_token;
-  private static String cardId;
-  private static int rating;
+  private final String cardId;
+  private final int rating;
 
-  public LikeCardRequest(LikeCardRequest.Body body, String baseHost) {
-    super(body, baseHost);
+  public LikeCardRequest(BaseBody body, String cardId, int rating, BodyInterceptor bodyInterceptor) {
+    super(body, BASE_HOST,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
+    this.cardId = cardId;
+    this.rating = rating;
   }
 
-  public static LikeCardRequest of(TimelineCard timelineCard, String cardType, String ownerHash,
-      String accessToken, String aptoideClientUUID, int ratng) {
-    access_token = accessToken;
-    cardId = timelineCard.getCardId();
-    rating = ratng;
-    LikeCardRequest.Body body = new LikeCardRequest.Body();
-
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    return new LikeCardRequest((LikeCardRequest.Body) decorator.decorate(body, accessToken),
-        BASE_HOST);
+  public static LikeCardRequest of(String timelineCardId, String cardType, String ownerHash,
+      int rating, BodyInterceptor bodyInterceptor) {
+    final BaseBody body = new BaseBody();
+    return new LikeCardRequest(body, timelineCardId, rating, bodyInterceptor);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.setReview(body, cardId, access_token, String.valueOf(rating), true);
-  }
-
-  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
-      extends BaseBody {
-
-    public Body() {
-    }
+    return interfaces.setReview(body, cardId, body.getAccessToken(), String.valueOf(rating),
+            true);
   }
 }

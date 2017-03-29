@@ -5,16 +5,18 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -25,38 +27,20 @@ import rx.Observable;
 
   private final String url;
 
-  private GetStoreWidgetsRequest(String url, String baseHost, Body body) {
-    super(body, baseHost);
+  private GetStoreWidgetsRequest(String url, Body body, BodyInterceptor bodyInterceptor) {
+    super(body,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter(), bodyInterceptor);
     this.url = url;
-  }
-
-  private GetStoreWidgetsRequest(String url, OkHttpClient httpClient,
-      Converter.Factory converterFactory, String baseHost, Body body) {
-    super(body, httpClient, converterFactory, baseHost);
-    this.url = url;
-  }
-
-  public static GetStoreWidgetsRequest ofActionFirstInstall(String url,
-      StoreCredentials storeCredentials, String accessToken, String storeName,
-      String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-
-    final Body body =
-        new Body(storeCredentials, WidgetsArgs.createDefault(), StoreContext.first_install,
-            storeName);
-
-    return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets").get(), BASE_HOST,
-        (Body) decorator.decorate(body, accessToken));
   }
 
   public static GetStoreWidgetsRequest ofAction(String url, StoreCredentials storeCredentials,
-      String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+      BodyInterceptor bodyInterceptor) {
 
     final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
 
-    return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets").get(), BASE_HOST,
-        (Body) decorator.decorate(body, accessToken));
+    return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets").get(), body,
+        bodyInterceptor);
   }
 
   @Override protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces,

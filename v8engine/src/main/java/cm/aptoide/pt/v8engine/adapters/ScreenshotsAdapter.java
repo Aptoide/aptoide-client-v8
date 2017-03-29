@@ -12,9 +12,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,10 +29,12 @@ public class ScreenshotsAdapter
   private final List<GetAppMeta.Media.Video> videos;
   private final List<GetAppMeta.Media.Screenshot> screenshots;
   private final ArrayList<String> imageUris;
+  private final NavigationManagerV4 navigationManager;
 
-  public ScreenshotsAdapter(GetAppMeta.Media media) {
+  public ScreenshotsAdapter(GetAppMeta.Media media, NavigationManagerV4 navigationManager) {
     this.videos = media.getVideos();
     this.screenshots = media.getScreenshots();
+    this.navigationManager = navigationManager;
 
     imageUris = new ArrayList<>(screenshots.size());
     for (GetAppMeta.Media.Screenshot screenshot : screenshots) {
@@ -44,7 +46,7 @@ public class ScreenshotsAdapter
     View inflate = LayoutInflater.from(parent.getContext())
         .inflate(R.layout.row_item_screenshots_gallery, parent, false);
 
-    return new ScreenshotsViewHolder(inflate);
+    return new ScreenshotsViewHolder(inflate, navigationManager);
   }
 
   @Override public void onBindViewHolder(ScreenshotsViewHolder holder, int position) {
@@ -73,13 +75,15 @@ public class ScreenshotsAdapter
 
   static class ScreenshotsViewHolder extends RecyclerView.ViewHolder {
 
+    private final NavigationManagerV4 navigationManager;
     private ImageView screenshot;
     private ImageView play_button;
     private FrameLayout media_layout;
 
-    ScreenshotsViewHolder(View itemView) {
+    ScreenshotsViewHolder(View itemView, NavigationManagerV4 navigationManager) {
       super(itemView);
       assignViews(itemView);
+      this.navigationManager = navigationManager;
     }
 
     protected void assignViews(View itemView) {
@@ -93,7 +97,7 @@ public class ScreenshotsAdapter
       final Context context = itemView.getContext();
 
       ImageLoader.with(context)
-          .load(item.getThumbnail(), R.drawable.placeholder_300x300, screenshot);
+          .load(item.getThumbnail(), R.drawable.placeholder_square, screenshot);
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         media_layout.setForeground(
@@ -125,7 +129,7 @@ public class ScreenshotsAdapter
 
       itemView.setOnClickListener(v -> {
         // TODO improve this call
-        ((FragmentShower) v.getContext()).pushFragmentV4(
+        navigationManager.navigateTo(
             V8Engine.getFragmentProvider().newScreenshotsViewerFragment(imagesUris, position));
       });
     }
@@ -133,9 +137,9 @@ public class ScreenshotsAdapter
     private int getPlaceholder(String orient) {
       int id;
       if (orient != null && orient.equals("portrait")) {
-        id = R.drawable.placeholder_144x240;
+        id = R.drawable.placeholder_9_16;
       } else {
-        id = R.drawable.placeholder_256x160;
+        id = R.drawable.placeholder_16_9;
       }
       return id;
     }

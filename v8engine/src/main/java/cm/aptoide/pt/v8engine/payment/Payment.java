@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
+import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
 import rx.Completable;
 
 /**
@@ -16,19 +17,10 @@ public interface Payment {
 
   String getName();
 
-  String getType();
-
-  Product getProduct();
-
-  Price getPrice();
-
   String getDescription();
 
   Authorization getAuthorization();
 
-  void setAuthorization(Authorization authorization);
+  Completable process(Product product);
 
-  boolean isAuthorizationRequired();
-
-  Completable process();
 }

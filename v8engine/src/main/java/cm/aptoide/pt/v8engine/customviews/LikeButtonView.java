@@ -16,8 +16,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 
 public class LikeButtonView extends FrameLayout implements View.OnClickListener {
   private static final DecelerateInterpolator DECCELERATE_INTERPOLATOR =
@@ -112,7 +112,7 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
     }
 
     if (!isChecked) {
-      if (AptoideAccountManager.isLoggedIn()) {
+      if (((V8Engine)getContext().getApplicationContext()).getAccountManager().isLoggedIn()) {
         vHeart.setImageResource(R.drawable.heart_on);
         vHeart.animate().cancel();
         vHeart.setScaleX(0);

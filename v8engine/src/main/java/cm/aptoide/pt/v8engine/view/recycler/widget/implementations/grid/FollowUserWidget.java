@@ -9,16 +9,23 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FollowUserDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -44,6 +51,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
   private LinearLayout followNumbers;
   private LinearLayout followLayout;
   private View separatorView;
+  private AptoideAccountManager accountManager;
 
   public FollowUserWidget(View itemView) {
     super(itemView);
@@ -65,8 +73,11 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
   }
 
   @Override public void bindView(FollowUserDisplayable displayable) {
-    if (!displayable.getOpenMode()
-        .equals(TimeLineFollowFragment.FollowFragmentOpenMode.LIKE_PREVIEW)) {
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    final BodyInterceptor<BaseBody> bodyInterceptor =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+
+    if (!displayable.isLike()) {
       followLayout.setVisibility(View.GONE);
       followNumbers.setVisibility(View.VISIBLE);
       separatorView.setVisibility(View.VISIBLE);
@@ -83,18 +94,22 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       final String storeName = displayable.getStoreName();
       final String storeTheme = V8Engine.getConfiguration().getDefaultTheme();
 
+      final StoreUtilsProxy storeUtilsProxy =
+          new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl(),
+              AccessorFactory.getAccessorFor(Store.class));
+
       Action1<Void> openStore = __ -> {
         getNavigationManager().navigateTo(
             V8Engine.getFragmentProvider().newStoreFragment(storeName, storeTheme));
       };
 
       Action1<Void> subscribeStore = __ -> {
-        StoreUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
+        storeUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
           ShowMessage.asSnack(itemView,
               AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
         }, err -> {
           CrashReport.getInstance().log(err);
-        });
+        }, accountManager);
       };
 
       StoreRepository storeRepository = RepositoryFactory.getStoreRepository();
@@ -105,7 +120,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
               follow.setText(R.string.followed);
               compositeSubscription.add(RxView.clicks(follow).subscribe(openStore));
             } else {
-              follow.setText(R.string.appview_follow_store_button_text);
+              follow.setText(R.string.follow);
               compositeSubscription.add(RxView.clicks(follow).subscribe(subscribeStore));
             }
           }, (throwable) -> {
@@ -146,13 +161,10 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     followedTv.setTextColor(displayable.getStoreColor());
     followingTv.setTextColor(displayable.getStoreColor());
 
-    final FragmentShower fragmentShower = (FragmentShower) getContext();
-    if (displayable.hasStore()) {
-      compositeSubscription.add(RxView.clicks(itemView)
-          .subscribe(click -> displayable.viewClicked(fragmentShower), err -> {
-            CrashReport.getInstance().log(err);
-          }));
-    }
+    compositeSubscription.add(RxView.clicks(itemView)
+        .subscribe(click -> displayable.viewClicked(getNavigationManager()), err -> {
+          CrashReport.getInstance().log(err);
+        }));
   }
 
   private void setFollowColor(FollowUserDisplayable displayable) {

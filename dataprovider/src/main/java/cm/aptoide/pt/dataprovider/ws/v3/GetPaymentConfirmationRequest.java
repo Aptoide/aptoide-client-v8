@@ -7,6 +7,9 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import rx.Observable;
 
 /**
@@ -15,8 +18,10 @@ import rx.Observable;
 
 public class GetPaymentConfirmationRequest extends V3<PaymentConfirmationResponse> {
 
-  public GetPaymentConfirmationRequest(String baseHost, BaseBody baseBody) {
-    super(baseHost, baseBody);
+  public GetPaymentConfirmationRequest(BaseBody baseBody) {
+    super(baseBody,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
+        WebService.getDefaultConverter());
   }
 
   public static GetPaymentConfirmationRequest of(int productId,
@@ -24,7 +29,7 @@ public class GetPaymentConfirmationRequest extends V3<PaymentConfirmationRespons
     final BaseBody args = getBaseBody(productId, operatorManager, accessToken);
     args.put("reqtype", "iabpurchasestatus");
     args.put("apiversion", String.valueOf(apiVersion));
-    return new GetPaymentConfirmationRequest(BASE_HOST, args);
+    return new GetPaymentConfirmationRequest(args);
   }
 
   private static BaseBody getBaseBody(int productId, NetworkOperatorManager operatorManager,
@@ -43,7 +48,7 @@ public class GetPaymentConfirmationRequest extends V3<PaymentConfirmationRespons
       NetworkOperatorManager operatorManager, String accessToken) {
     final BaseBody args = getBaseBody(productId, operatorManager, accessToken);
     args.put("reqtype", "apkpurchasestatus");
-    return new GetPaymentConfirmationRequest(BASE_HOST, args);
+    return new GetPaymentConfirmationRequest(args);
   }
 
   @Override

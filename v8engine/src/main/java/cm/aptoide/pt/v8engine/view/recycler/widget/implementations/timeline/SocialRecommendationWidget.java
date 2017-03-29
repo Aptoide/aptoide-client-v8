@@ -10,7 +10,6 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialRecommendationDisplayable;
 
 /**
@@ -21,8 +20,6 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
   private final String CARD_TYPE_NAME = "SOCIAL_RECOMMENDATION";
   private TextView storeName;
   private TextView userName;
-  private ImageView storeAvatar;
-  private ImageView userAvatar;
   private ImageView appIcon;
   private TextView appName;
   private TextView getApp;
@@ -37,8 +34,6 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
     super.assignViews(itemView);
     storeName = (TextView) itemView.findViewById(R.id.card_title);
     userName = (TextView) itemView.findViewById(R.id.card_subtitle);
-    storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
-    userAvatar = (ImageView) itemView.findViewById(R.id.card_user_avatar);
     appName = (TextView) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_similar_apps);
     appIcon =
@@ -80,7 +75,8 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
             .loadWithShadowCircleTransform(displayable.getUser().getAvatar(), storeAvatar);
       }
     }
-    //setCardviewMargin(displayable, cardView);
+
+    setCardViewMargin(displayable, cardView);
 
     ImageLoader.with(context).load(displayable.getAppIcon(), appIcon);
 
@@ -94,15 +90,7 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
       Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, displayable.getPackageName(),
           Analytics.AppsTimeline.BLANK, displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_APP_VIEW);
-      //displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
-      //    .cardType(CARD_TYPE_NAME)
-      //    .source(AptoideAnalytics.SOURCE_APTOIDE)
-      //    .specific(SendEventRequest.Body.Specific.builder()
-      //        .app(displayable.getPackageName())
-      //        .based_on(displayable.getSimilarAppPackageName())
-      //        .build())
-      //    .build(), AptoideAnalytics.OPEN_APP);
-      ((FragmentShower) context).pushFragmentV4(V8Engine.getFragmentProvider()
+      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     });
   }

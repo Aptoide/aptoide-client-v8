@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.layouthandler;
 
 import android.support.annotation.CallSuper;
-import android.support.annotation.IdRes;
 import android.support.annotation.UiThread;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -15,6 +14,8 @@ import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
+import java.util.ArrayList;
+import java.util.List;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -26,28 +27,43 @@ import rx.android.schedulers.AndroidSchedulers;
 public class LoaderLayoutHandler {
 
   final LoadInterface loadInterface;
-  @IdRes private final int viewToShowAfterLoadingId;
+  private final List<Integer> viewsToShowAfterLoadingId = new ArrayList<>();
   protected ProgressBar progressBar;
-  private View viewToShowAfterLoading;
+  private List<View> viewsToShowAfterLoading = new ArrayList<>();
   private View genericErrorView;
   private View noNetworkConnectionView;
   private View retryErrorView;
   private View retryNoNetworkView;
 
-  public LoaderLayoutHandler(int viewToShowAfterLoadingId, LoadInterface loadInterface) {
-    this.viewToShowAfterLoadingId = viewToShowAfterLoadingId;
+  public LoaderLayoutHandler(LoadInterface loadInterface, int viewToShowAfterLoadingId) {
+    this.viewsToShowAfterLoadingId.add(viewToShowAfterLoadingId);
+    this.loadInterface = loadInterface;
+  }
+
+  public LoaderLayoutHandler(LoadInterface loadInterface, int... viewsToShowAfterLoadingId) {
+    for (int viewToShowAfterLoadingId : viewsToShowAfterLoadingId) {
+      this.viewsToShowAfterLoadingId.add(viewToShowAfterLoadingId);
+    }
     this.loadInterface = loadInterface;
   }
 
   @SuppressWarnings("unchecked") public void bindViews(View view) {
-    viewToShowAfterLoading = view.findViewById(viewToShowAfterLoadingId);
-    viewToShowAfterLoading.setVisibility(View.GONE);
+    for (int id : this.viewsToShowAfterLoadingId) {
+      this.viewsToShowAfterLoading.add(view.findViewById(id));
+    }
+    hideViewsToShowAfterLoading();
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     progressBar.setVisibility(View.VISIBLE);
     genericErrorView = view.findViewById(R.id.generic_error);
     noNetworkConnectionView = view.findViewById(R.id.no_network_connection);
     retryErrorView = genericErrorView.findViewById(R.id.retry);
     retryNoNetworkView = noNetworkConnectionView.findViewById(R.id.retry);
+  }
+
+  private void hideViewsToShowAfterLoading() {
+    for (View view : this.viewsToShowAfterLoading) {
+      view.setVisibility(View.GONE);
+    }
   }
 
   public void finishLoading(Throwable throwable) {
@@ -58,7 +74,7 @@ public class LoaderLayoutHandler {
 
   protected void onFinishLoading(Throwable throwable) {
     progressBar.setVisibility(View.GONE);
-    viewToShowAfterLoading.setVisibility(View.GONE);
+    hideViewsToShowAfterLoading();
 
     if (ErrorUtils.isNoNetworkConnection(throwable)) {
       genericErrorView.setVisibility(View.GONE);
@@ -95,7 +111,13 @@ public class LoaderLayoutHandler {
 
   @UiThread protected void onFinishLoading() {
     progressBar.setVisibility(View.GONE);
-    viewToShowAfterLoading.setVisibility(View.VISIBLE);
+    showViewsToShowAfterLoading();
+  }
+
+  private void showViewsToShowAfterLoading() {
+    for (View view : this.viewsToShowAfterLoading) {
+      view.setVisibility(View.VISIBLE);
+    }
   }
 
   @CallSuper public void unbindViews() {
