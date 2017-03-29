@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * This class serves as an API to the navigation manager for the Address Book navigation. All the
- * navigation
+ * navigation inside the AddressBook feature should use this.
  *
  * Created by jdandrade on 02/03/2017.
  */
@@ -58,6 +58,7 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
             .newInviteFriendsFragment(
                 InviteFriendsContract.View.OpenMode.CONTACTS_PERMISSION_DENIAL,
                 exitNavigationFragmentTag));
+        break;
       default:
         Logger.d(this.getClass().getSimpleName(), "Wrong openMode type.");
     }

@@ -51,7 +51,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
 
   public static final int TWITTER_REQUEST_CODE = 140;
   public static final int FACEBOOK_REQUEST_CODE = 64206;
-  TwitterAuthClient mTwitterAuthClient;
+  private TwitterAuthClient mTwitterAuthClient;
   private AddressBookContract.UserActionsListener mActionsListener;
   private Button addressBookSyncButton;
   private Button allowFriendsFindButton;
@@ -218,14 +218,6 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
       mGenericPleaseWaitDialog.show();
     } else {
       mGenericPleaseWaitDialog.dismiss();
-    }
-  }
-
-  private void changeSyncState(boolean checked, Button button) {
-    if (checked) {
-      button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check, 0);
-    } else {
-      button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.reload, 0);
     }
   }
 
