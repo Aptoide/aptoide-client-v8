@@ -15,7 +15,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 public class Vanilla extends AptoideBase {
 
   @Override public void onCreate() {
-    clearAppDataOnNewBuild();
+    //clearAppDataOnNewBuild();
     super.onCreate();
     activateLogger();
   }

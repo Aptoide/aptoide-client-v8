@@ -1,17 +1,12 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
- */
-
 package cm.aptoide.pt.database.accessors;
 
 import android.content.Context;
-import android.text.TextUtils;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.BuildConfig;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmMigration;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -21,16 +16,14 @@ import rx.Observable;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by sithengineer on 16/05/16.
+ * Created on 16/05/16.
  *
  * This is the main class responsible to offer {@link Realm} database instances
  */
 public final class Database {
 
-  public static final int SCHEMA_VERSION = 8081; // if you bump this value, also add changes to the
-  //private static final String TAG = Database.class.getName();
+  private static final int SCHEMA_VERSION = 8081; // if you bump this value, also add changes to the
   private static final String DB_NAME = "aptoide.realm.db";
-  private static final String DB_NAME_E = "aptoide_mobile.db";
 
   private static boolean isInitialized = false;
 
@@ -42,10 +35,17 @@ public final class Database {
   protected Database() {
   }
 
-  private static String extract(String str) {
-    return TextUtils.substring(str, str.lastIndexOf('.'), str.length());
-  }
-
+  /**
+   * <p>
+   * Initialize this database. Initialization takes care of schema and data migration using a
+   * {@link RealmMigration} entity.
+   * </p>
+   * <p>
+   * Database encryption should be setup here in the future.
+   * </p>
+   *
+   * @param context Application context
+   */
   public static void initialize(Context context) {
     if (isInitialized) return;
 
