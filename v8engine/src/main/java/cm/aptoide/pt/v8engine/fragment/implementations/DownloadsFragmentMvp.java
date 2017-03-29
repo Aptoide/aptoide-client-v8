@@ -8,9 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.adapters.DownloadsAdapter;
 import cm.aptoide.pt.v8engine.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.presenter.DownloadsPresenter;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.DownloadsView;
@@ -27,7 +30,7 @@ public class DownloadsFragmentMvp extends FragmentView implements DownloadsView 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.recycler_fragment_downloads, null, false);
+    View view = inflater.inflate(R.layout.recycler_fragment_downloads, container, false);
 
     RecyclerView downloadsRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
     downloadsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -35,7 +38,10 @@ public class DownloadsFragmentMvp extends FragmentView implements DownloadsView 
     adapter = new DownloadsAdapter(getContext());
     downloadsRecyclerView.setAdapter(adapter);
 
-    attachPresenter(new DownloadsPresenter(this, RepositoryFactory.getDownloadRepository()),
+    InstallManager installManager = new InstallManager(AptoideDownloadManager.getInstance(),
+        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK));
+    attachPresenter(
+        new DownloadsPresenter(this, RepositoryFactory.getDownloadRepository(), installManager),
         savedInstanceState);
 
     return view;

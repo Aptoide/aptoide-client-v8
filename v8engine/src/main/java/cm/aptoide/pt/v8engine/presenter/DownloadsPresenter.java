@@ -1,8 +1,10 @@
 package cm.aptoide.pt.v8engine.presenter;
 
+import android.content.Context;
 import android.os.Bundle;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.repository.DownloadRepository;
 import cm.aptoide.pt.v8engine.view.DownloadsView;
 import cm.aptoide.pt.v8engine.view.View;
@@ -16,10 +18,13 @@ public class DownloadsPresenter implements Presenter {
 
   private final DownloadsView view;
   private final DownloadRepository downloadRepository;
+  private final InstallManager installManager;
 
-  public DownloadsPresenter(DownloadsView downloadsView, DownloadRepository downloadRepository) {
+  public DownloadsPresenter(DownloadsView downloadsView, DownloadRepository downloadRepository,
+      InstallManager installManager) {
     this.view = downloadsView;
     this.downloadRepository = downloadRepository;
+    this.installManager = installManager;
   }
 
   @Override public void present() {
@@ -27,22 +32,20 @@ public class DownloadsPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.RESUME)
         .first()
-        .flatMap(created ->
-          downloadRepository.getAll()
-              .observeOn(Schedulers.computation())
-              .sample(100, TimeUnit.MILLISECONDS)
-              .flatMap(downloads -> {
-                if(downloads==null || downloads.isEmpty()) {
-                  return Observable.fromCallable(() -> {
-                    view.showEmptyDownloadList();
-                    return null;
-                  });
-                }
-                return Observable.merge(setActive(downloads), setStandBy(downloads),
-                    setCompleted(downloads));
-              })
-        )
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY_VIEW))
+        .flatMap(created -> downloadRepository.getAll()
+            .observeOn(Schedulers.computation())
+            .sample(100, TimeUnit.MILLISECONDS)
+            .flatMap(downloads -> {
+              if (downloads == null || downloads.isEmpty()) {
+                return Observable.fromCallable(() -> {
+                  view.showEmptyDownloadList();
+                  return null;
+                });
+              }
+              return Observable.merge(setActive(downloads), setStandBy(downloads),
+                  setCompleted(downloads));
+            }))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
           // does nothing
         }, err -> {
@@ -105,6 +108,10 @@ public class DownloadsPresenter implements Presenter {
       status = DownloadsView.DownloadViewModel.Status.COMPLETED;
     }
     return new DownloadsView.DownloadViewModel(download.getOverallProgress(), download.getMd5(),
-        download.getAppName(), status);
+        download.getAppName(), status, download.getIcon(), download.getDownloadSpeed());
+  }
+
+  public void pauseInstall(Context context, DownloadsView.DownloadViewModel download) {
+    installManager.stopInstallation(context, download.getAppMd5());
   }
 }
