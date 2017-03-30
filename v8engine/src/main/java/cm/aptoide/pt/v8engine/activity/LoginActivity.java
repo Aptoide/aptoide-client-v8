@@ -23,11 +23,10 @@ public class LoginActivity extends ActivityView {
 
     loadExtras(getIntent());
 
-    getSupportFragmentManager().beginTransaction()
-        .replace(R.id.replace_fragment,
-            LoginSignUpFragment.newInstance(false, true, false, accountType, authType,
-                isNewAccount))
-        .commit();
+    if (savedInstanceState == null) {
+      getFragmentNavigator().navigateTo(
+          LoginSignUpFragment.newInstance(false, true, false, accountType, authType, isNewAccount));
+    }
   }
 
   @LayoutRes private int getLayoutId() {

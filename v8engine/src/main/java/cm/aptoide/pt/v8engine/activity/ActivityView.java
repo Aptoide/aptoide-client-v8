@@ -25,11 +25,14 @@ public abstract class ActivityView extends LeakActivity implements View {
   private ActivityNavigator activityNavigator;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
     fragmentNavigator =
         new FragmentNavigator(getSupportFragmentManager(), R.id.fragment_placeholder,
             android.R.anim.fade_in, android.R.anim.fade_out);
     activityNavigator = new ActivityNavigator(this);
+    // super.onCreate handles fragment creation using FragmentManager.
+    // Make sure navigator instances are already created when fragments are created,
+    // else getFragmentNavigator and getActivityNavigator will return null.
+    super.onCreate(savedInstanceState);
   }
 
   @Override protected void onDestroy() {
