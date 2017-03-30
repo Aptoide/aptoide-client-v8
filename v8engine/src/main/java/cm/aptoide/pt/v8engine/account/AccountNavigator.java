@@ -5,8 +5,6 @@
 
 package cm.aptoide.pt.v8engine.account;
 
-import android.content.ComponentName;
-import android.content.Intent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.navigation.ActivityNavigator;
 import cm.aptoide.pt.navigation.FragmentNavigator;

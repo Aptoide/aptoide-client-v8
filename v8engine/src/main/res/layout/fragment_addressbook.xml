@@ -9,7 +9,8 @@
     android:layout_marginLeft="30dp"
     android:layout_marginRight="30dp"
     android:layout_marginStart="30dp"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    >
 
 
   <ImageView
@@ -25,7 +26,8 @@
       tools:layout_conversion_absoluteWidth="351dp"
       tools:layout_conversion_absoluteX="30dp"
       tools:layout_conversion_absoluteY="24dp"
-      tools:layout_editor_absoluteX="30dp" />
+      tools:layout_editor_absoluteX="30dp"
+      />
 
   <android.support.constraint.Guideline
       android:id="@+id/guideline"
@@ -34,7 +36,8 @@
       android:orientation="horizontal"
       app:layout_constraintBottom_toTopOf="@+id/addressbook_1st_msg"
       app:layout_constraintGuide_percent="0.25"
-      app:layout_constraintTop_toBottomOf="@id/addressbook_friends_graphic" />
+      app:layout_constraintTop_toBottomOf="@id/addressbook_friends_graphic"
+      />
 
   <LinearLayout
       android:id="@+id/addressbook_1st_msg"
@@ -46,7 +49,8 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/guideline"
-      tools:layout_editor_absoluteX="0dp">
+      tools:layout_editor_absoluteX="0dp"
+      >
 
     <TextView
         android:id="@+id/addressbook_increase_network"
@@ -63,7 +67,8 @@
         tools:layout_conversion_absoluteX="30dp"
         tools:layout_conversion_absoluteY="215dp"
         tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="215dp" />
+        tools:layout_editor_absoluteY="215dp"
+        />
 
     <TextView
         android:id="@+id/addressbook_connect_with_friends"
@@ -80,7 +85,8 @@
         tools:layout_conversion_absoluteX="30dp"
         tools:layout_conversion_absoluteY="242dp"
         tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="242dp" />
+        tools:layout_editor_absoluteY="242dp"
+        />
 
   </LinearLayout>
 
@@ -97,16 +103,18 @@
       tools:layout_conversion_absoluteWidth="166dp"
       tools:layout_conversion_absoluteX="30dp"
       tools:layout_conversion_absoluteY="333dp"
-      tools:layout_editor_absoluteX="30dp">
+      tools:layout_editor_absoluteX="30dp"
+      >
 
     <ImageView
         android:id="@+id/aptoide_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginStart="19dp"
         android:layout_marginLeft="19dp"
-        android:src="@drawable/ic_action_addewaa" />
+        android:layout_marginStart="19dp"
+        android:src="@drawable/ic_action_addewaa"
+        />
 
     <ImageView
         android:id="@+id/check_or_reload_addressbook"
@@ -116,18 +124,20 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
         android:padding="5dp"
-        android:src="@drawable/reload" />
+        android:src="@drawable/reload"
+        />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/addressbook_text"
-        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:gravity="center"
         android:text="@string/addressbook_sync"
         android:textAllCaps="false"
-        android:textColor="@color/aptoide_orange" />
+        android:textColor="@color/aptoide_orange"
+        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+        />
   </RelativeLayout>
 
 
@@ -146,7 +156,8 @@
       tools:layout_conversion_absoluteWidth="166dp"
       tools:layout_conversion_absoluteX="30dp"
       tools:layout_conversion_absoluteY="333dp"
-      tools:layout_editor_absoluteX="30dp">
+      tools:layout_editor_absoluteX="30dp"
+      >
 
     <ImageView
         android:id="@+id/facebook_icon"
@@ -155,7 +166,8 @@
         android:layout_marginEnd="9dp"
         android:layout_marginRight="9dp"
         android:padding="10dp"
-        android:src="@drawable/ic_action_facebook" />
+        android:src="@drawable/ic_action_facebook"
+        />
 
     <ImageView
         android:id="@+id/check_or_reload_facebook"
@@ -165,11 +177,11 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
         android:padding="5dp"
-        android:src="@drawable/reload" />
+        android:src="@drawable/reload"
+        />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/facebook_text"
-        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
@@ -177,7 +189,9 @@
         android:gravity="center"
         android:text="@string/facebook"
         android:textAllCaps="false"
-        android:textColor="@color/facebook" />
+        android:textColor="@color/facebook"
+        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+        />
 
   </RelativeLayout>
 
@@ -197,25 +211,28 @@
       tools:layout_conversion_absoluteWidth="166dp"
       tools:layout_conversion_absoluteX="214dp"
       tools:layout_conversion_absoluteY="333dp"
-      tools:layout_editor_absoluteX="214dp">
+      tools:layout_editor_absoluteX="214dp"
+      >
 
     <ImageView
         android:id="@+id/twitter_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:src="@drawable/ic_action_twitter" />
+        android:src="@drawable/ic_action_twitter"
+        />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/twitter_text"
-        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerVertical="true"
         android:gravity="center"
         android:text="@string/twitter"
         android:textAllCaps="false"
-        android:textColor="@color/twitter_color" />
+        android:textColor="@color/twitter_color"
+        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+        />
 
     <ImageView
         android:id="@+id/check_or_reload_twitter"
@@ -225,7 +242,8 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
         android:padding="5dp"
-        android:src="@drawable/reload" />
+        android:src="@drawable/reload"
+        />
 
   </RelativeLayout>
 
@@ -244,7 +262,8 @@
       tools:layout_conversion_absoluteWidth="351dp"
       tools:layout_conversion_absoluteX="30dp"
       tools:layout_conversion_absoluteY="415dp"
-      tools:layout_editor_absoluteX="30dp" />
+      tools:layout_editor_absoluteX="30dp"
+      />
 
   <TextView
       android:id="@+id/addressbook_2nd_msg"
@@ -264,7 +283,8 @@
       tools:layout_conversion_absoluteWidth="351dp"
       tools:layout_conversion_absoluteX="30dp"
       tools:layout_conversion_absoluteY="512dp"
-      tools:layout_editor_absoluteX="30dp" />
+      tools:layout_editor_absoluteX="30dp"
+      />
 
   <TextView
       android:id="@+id/addressbook_about"
@@ -281,11 +301,11 @@
       tools:layout_conversion_absoluteWidth="351dp"
       tools:layout_conversion_absoluteX="30dp"
       tools:layout_conversion_absoluteY="592dp"
-      tools:layout_editor_absoluteX="30dp" />
+      tools:layout_editor_absoluteX="30dp"
+      />
 
   <Button
       android:id="@+id/addressbook_done"
-      style="?attr/customButtonThinLine"
       android:layout_width="0dp"
       android:layout_height="48dp"
       android:layout_gravity="center"
@@ -296,6 +316,8 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/addressbook_about"
-      tools:layout_editor_absoluteX="0dp" />
+      tools:layout_editor_absoluteX="0dp"
+      style="?attr/customButtonThinLine"
+      />
 
 </android.support.constraint.ConstraintLayout>

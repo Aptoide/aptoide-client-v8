@@ -66,8 +66,9 @@ public enum WidgetLoader {
           }
 
           Class<?> widgetClass = dexFile.loadClass(className.getKey(), classLoader);
-          if (widgetClass != null && Widget.class.isAssignableFrom(widgetClass) &&
-              widgetClass.isAnnotationPresent(Displayables.class)) {
+          if (widgetClass != null
+              && Widget.class.isAssignableFrom(widgetClass)
+              && widgetClass.isAnnotationPresent(Displayables.class)) {
             Displayables annotation = widgetClass.getAnnotation(Displayables.class);
             Class<? extends Displayable>[] displayableClasses = annotation.value();
             WidgetMeta wMeta;
@@ -105,6 +106,7 @@ public enum WidgetLoader {
   /**
    * @param view to pass the {@link Widget} constructor
    * @param viewType to find which {@link Widget} to use
+   *
    * @return freshly created {@link Widget} or a previously created one
    */
   @NonNull public Widget newWidget(@NonNull View view, int viewType) {

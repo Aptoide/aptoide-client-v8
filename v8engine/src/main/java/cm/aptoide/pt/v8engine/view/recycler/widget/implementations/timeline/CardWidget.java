@@ -16,13 +16,12 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.navigation.ActivityNavigator;
-import cm.aptoide.pt.v8engine.account.AccountNavigator;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.activity.CreateStoreActivity;
 import cm.aptoide.pt.v8engine.customviews.LikeButtonView;
 import cm.aptoide.pt.v8engine.dialog.SharePreviewDialog;
@@ -80,8 +79,8 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   @CallSuper @Override public void bindView(T displayable) {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
-    accountNavigator = new AccountNavigator(getFragmentNavigator(), accountManager,
-        getActivityNavigator());
+    accountNavigator =
+        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
 
     compositeSubscription.add(
         accountManager.accountStatus().doOnNext(account -> updateAccount(account)).subscribe());
@@ -92,13 +91,11 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
         .subscribe(click -> likeButton.performClick(),
             throwable -> CrashReport.getInstance().log(throwable)));
 
-    compositeSubscription.add(RxView.clicks(likeButton)
-        .subscribe(click -> {
-              shareCard(displayable, (String cardId) -> likeCard(displayable, cardId, 1),
-                  SharePreviewDialog.SharePreviewOpenMode.LIKE);
-              likeButton.setHeartState(false);
-            },
-            throwable -> CrashReport.getInstance().log(throwable)));
+    compositeSubscription.add(RxView.clicks(likeButton).subscribe(click -> {
+      shareCard(displayable, (String cardId) -> likeCard(displayable, cardId, 1),
+          SharePreviewDialog.SharePreviewOpenMode.LIKE);
+      likeButton.setHeartState(false);
+    }, throwable -> CrashReport.getInstance().log(throwable)));
 
     compositeSubscription.add(RxView.clicks(comment).subscribe(click -> {
       FragmentManager fm = getContext().getSupportFragmentManager();
@@ -118,6 +115,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
             click -> shareCard(displayable, null, SharePreviewDialog.SharePreviewOpenMode.SHARE),
             err -> CrashReport.getInstance().log(err)));
   }
+
   private void updateAccount(Account account) {
     this.account = account;
   }

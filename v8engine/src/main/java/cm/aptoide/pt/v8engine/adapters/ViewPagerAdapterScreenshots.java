@@ -46,6 +46,14 @@ public class ViewPagerAdapterScreenshots extends PagerAdapter {
     return rootView;
   }
 
+  @Override public void destroyItem(ViewGroup container, int position, Object object) {
+    container.removeView((View) object);
+  }
+
+  @Override public boolean isViewFromObject(View view, Object object) {
+    return view.equals(object); // ??
+  }
+
   private int getPlaceholder(Context context) {
     int id;
     if (context.getResources().getConfiguration().orientation
@@ -55,13 +63,5 @@ public class ViewPagerAdapterScreenshots extends PagerAdapter {
       id = R.drawable.placeholder_16_9;
     }
     return id;
-  }
-
-  @Override public void destroyItem(ViewGroup container, int position, Object object) {
-    container.removeView((View) object);
-  }
-
-  @Override public boolean isViewFromObject(View view, Object object) {
-    return view.equals(object); // ??
   }
 }

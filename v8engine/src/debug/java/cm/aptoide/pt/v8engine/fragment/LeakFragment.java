@@ -1,7 +1,5 @@
 package cm.aptoide.pt.v8engine.fragment;
 
-import cm.aptoide.pt.v8engine.V8Engine;
-import com.squareup.leakcanary.RefWatcher;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
 /**

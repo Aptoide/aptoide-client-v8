@@ -25,11 +25,6 @@ public interface View {
   void attachPresenter(Presenter presenter, Bundle savedInstanceState);
 
   enum LifecycleEvent {
-    CREATE,
-    START,
-    RESUME,
-    PAUSE,
-    STOP,
-    DESTROY,
+    CREATE, START, RESUME, PAUSE, STOP, DESTROY,
   }
 }

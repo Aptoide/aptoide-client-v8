@@ -13,13 +13,12 @@ import static com.jakewharton.rxbinding.internal.Preconditions.checkNotNull;
 
 public class RxSwitch {
 
-  @CheckResult @NonNull
-  public static Observable<Boolean> checks(SwitchCompat switchCompat) {
-    checkNotNull(switchCompat, "switchCompat == null");
-    return Observable.create(new SwitchOnCheckOnSubscribe(switchCompat));
-  }
-
   private RxSwitch() {
     throw new AssertionError("No instances.");
+  }
+
+  @CheckResult @NonNull public static Observable<Boolean> checks(SwitchCompat switchCompat) {
+    checkNotNull(switchCompat, "switchCompat == null");
+    return Observable.create(new SwitchOnCheckOnSubscribe(switchCompat));
   }
 }

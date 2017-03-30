@@ -58,7 +58,8 @@ public final class AptoideAccount implements Account {
 
   @Override public Completable refreshToken() {
     return accountService.refreshToken(getRefreshToken())
-        .doOnSuccess(token -> refreshToken(token)).toCompletable();
+        .doOnSuccess(token -> refreshToken(token))
+        .toCompletable();
   }
 
   @Override public List<Store> getSubscribedStores() {
@@ -98,8 +99,10 @@ public final class AptoideAccount implements Account {
   }
 
   @Override public boolean isLoggedIn() {
-    return (!isEmpty(getEmail()) && !isEmpty(getAccessToken()) && !isEmpty(getRefreshToken()) && !isEmpty(
-        getPassword()));
+    return (!isEmpty(getEmail())
+        && !isEmpty(getAccessToken())
+        && !isEmpty(getRefreshToken())
+        && !isEmpty(getPassword()));
   }
 
   @Override public String getEmail() {

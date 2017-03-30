@@ -40,7 +40,7 @@ public class PaymentAuthorizationRepository {
           if (response != null && response.isOk()) {
             return Observable.just(null);
           }
-          return Observable.<Void>error(
+          return Observable.<Void> error(
               new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
         })
         .toCompletable();

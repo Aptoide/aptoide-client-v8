@@ -15,7 +15,8 @@ public class PaymentConfirmation {
   private final String paymentConfirmationId;
   private Status status;
 
-  public PaymentConfirmation(int productId, String payerId, String paymentConfirmationId, Status status) {
+  public PaymentConfirmation(int productId, String payerId, String paymentConfirmationId,
+      Status status) {
     this.productId = productId;
     this.payerId = payerId;
     this.paymentConfirmationId = paymentConfirmationId;
@@ -53,17 +54,10 @@ public class PaymentConfirmation {
   }
 
   public boolean isFailed() {
-    return Status.CANCELED.equals(status)
-        || Status.FAILED.equals(status);
+    return Status.CANCELED.equals(status) || Status.FAILED.equals(status);
   }
 
   public enum Status {
-    NEW,
-    CREATED,
-    PROCESSING,
-    PENDING,
-    COMPLETED,
-    FAILED,
-    CANCELED
+    NEW, CREATED, PROCESSING, PENDING, COMPLETED, FAILED, CANCELED
   }
 }

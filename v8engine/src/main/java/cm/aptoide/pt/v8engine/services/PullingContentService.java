@@ -56,6 +56,14 @@ public class PullingContentService extends Service {
   private CompositeSubscription subscriptions;
   private InstallManager installManager;
 
+  public static void setAlarm(AlarmManager am, Context context, String action, long time) {
+    Intent intent = new Intent(context, PullingContentService.class);
+    intent.setAction(action);
+    PendingIntent pendingIntent =
+        PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 5000, time, pendingIntent);
+  }
+
   @Override public void onCreate() {
     super.onCreate();
     installManager = new InstallManager(AptoideDownloadManager.getInstance(),
@@ -69,20 +77,6 @@ public class PullingContentService extends Service {
     if (!isAlarmUp(this, UPDATES_ACTION)) {
       setAlarm(alarm, this, UPDATES_ACTION, UPDATES_INTERVAL);
     }
-  }
-
-  private boolean isAlarmUp(Context context, String action) {
-    Intent intent = new Intent(context, PullingContentService.class);
-    intent.setAction(action);
-    return (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) != null);
-  }
-
-  public static void setAlarm(AlarmManager am, Context context, String action, long time) {
-    Intent intent = new Intent(context, PullingContentService.class);
-    intent.setAction(action);
-    PendingIntent pendingIntent =
-        PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 5000, time, pendingIntent);
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
@@ -103,6 +97,21 @@ public class PullingContentService extends Service {
       }
     }
     return START_NOT_STICKY;
+  }
+
+  @Override public void onDestroy() {
+    subscriptions.clear();
+    super.onDestroy();
+  }
+
+  @Nullable @Override public IBinder onBind(Intent intent) {
+    return null;
+  }
+
+  private boolean isAlarmUp(Context context, String action) {
+    Intent intent = new Intent(context, PullingContentService.class);
+    intent.setAction(action);
+    return (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) != null);
   }
 
   /**
@@ -260,14 +269,5 @@ public class PullingContentService extends Service {
       managerNotification.notify(PUSH_NOTIFICATION_ID, notification);
     }
     stopSelf(startId);
-  }
-
-  @Override public void onDestroy() {
-    subscriptions.clear();
-    super.onDestroy();
-  }
-
-  @Nullable @Override public IBinder onBind(Intent intent) {
-    return null;
   }
 }

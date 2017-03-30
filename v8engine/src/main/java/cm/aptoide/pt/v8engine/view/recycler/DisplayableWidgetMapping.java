@@ -165,6 +165,16 @@ public class DisplayableWidgetMapping {
     parseMappings(createMapping());
   }
 
+  @Partners public DisplayableWidgetMapping(Class<? extends Widget> widgetClass,
+      Class<? extends Displayable> displayableClass) {
+    this.displayableClass = displayableClass;
+    this.widgetClass = widgetClass;
+  }
+
+  public static DisplayableWidgetMapping getInstance() {
+    return instance;
+  }
+
   @Partners protected void parseMappings(@NonNull List<DisplayableWidgetMapping> mapping) {
     for (DisplayableWidgetMapping displayableWidgetMapping : mapping) {
       viewTypeMapping.put(displayableWidgetMapping.newDisplayable().getViewLayout(),
@@ -372,16 +382,6 @@ public class DisplayableWidgetMapping {
       Logger.e(TAG, errMsg, e);
       throw new RuntimeException(errMsg);
     }
-  }
-
-  @Partners public DisplayableWidgetMapping(Class<? extends Widget> widgetClass,
-      Class<? extends Displayable> displayableClass) {
-    this.displayableClass = displayableClass;
-    this.widgetClass = widgetClass;
-  }
-
-  public static DisplayableWidgetMapping getInstance() {
-    return instance;
   }
 
   public Widget newWidget(View view, int viewType) {

@@ -23,7 +23,6 @@ public interface Scrollable {
   void itemChanged(int pos);
 
   enum Position {
-    FIRST,
-    LAST
+    FIRST, LAST
   }
 }

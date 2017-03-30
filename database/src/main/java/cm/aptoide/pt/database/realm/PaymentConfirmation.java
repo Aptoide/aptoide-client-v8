@@ -49,5 +49,4 @@ public class PaymentConfirmation extends RealmObject {
   public String getStatus() {
     return status;
   }
-
 }

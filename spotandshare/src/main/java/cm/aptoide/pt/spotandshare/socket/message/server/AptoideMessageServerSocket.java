@@ -31,14 +31,6 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
     super(port, timeout);
   }
 
-  @Override protected void onNewClient(Socket socket) throws IOException {
-    aptoideMessageServerController =
-        new AptoideMessageServerController(this, Host.fromLocalhost(socket), Host.from(socket),
-            onError);
-    aptoideMessageControllers.add(aptoideMessageServerController);
-    aptoideMessageServerController.onConnect(socket);
-  }
-
   @Override public void shutdown() {
     onError = null;
     for (AptoideMessageServerController aptoideMessageClientController : getAptoideMessageControllers()) {
@@ -48,6 +40,14 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
     aptoideMessageServerController.disable();
 
     super.shutdown();
+  }
+
+  @Override protected void onNewClient(Socket socket) throws IOException {
+    aptoideMessageServerController =
+        new AptoideMessageServerController(this, Host.fromLocalhost(socket), Host.from(socket),
+            onError);
+    aptoideMessageControllers.add(aptoideMessageServerController);
+    aptoideMessageServerController.onConnect(socket);
   }
 
   @Override public void removeHost(Host host) {

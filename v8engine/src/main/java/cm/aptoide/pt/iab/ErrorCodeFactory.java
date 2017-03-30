@@ -19,8 +19,7 @@ public class ErrorCodeFactory {
   public int create(Throwable throwable) {
     int errorCode = BillingBinder.RESULT_ERROR;
 
-    if (throwable instanceof PaymentCancellationException
-        || throwable instanceof LoginException) {
+    if (throwable instanceof PaymentCancellationException || throwable instanceof LoginException) {
       errorCode = BillingBinder.RESULT_USER_CANCELLED;
     }
 

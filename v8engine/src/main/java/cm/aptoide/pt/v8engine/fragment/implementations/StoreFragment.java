@@ -200,12 +200,12 @@ public class StoreFragment extends BasePagerToolbarFragment {
     StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
     pagerSlidingTabStrip.setOnTabReselectedListener(position -> {
       if (Event.Name.getUserTimeline.equals(adapter.getEventName(position))) {
-         //TODO We should not call fragment public methods since we do NOT know about its internal
-         //life cycle. A fragment A should call its activity in order to communicate with
-         //fragment B. Then when fragment B is ready it should register a listener
-         //with its activity in order receive external communication. Activity
-         //should buffer calls if there is no listener registered and deliver them
-         //after registration happens.
+        //TODO We should not call fragment public methods since we do NOT know about its internal
+        //life cycle. A fragment A should call its activity in order to communicate with
+        //fragment B. Then when fragment B is ready it should register a listener
+        //with its activity in order receive external communication. Activity
+        //should buffer calls if there is no listener registered and deliver them
+        //after registration happens.
         for (Fragment fragment : getChildFragmentManager().getFragments()) {
           if (fragment != null && fragment instanceof AppsTimelineFragment) {
             ((AppsTimelineFragment) fragment).goToTop();
@@ -252,6 +252,13 @@ public class StoreFragment extends BasePagerToolbarFragment {
           break;
       }
     }
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.menu_search, menu);
+
+    setupSearch(menu);
   }
 
   /**
@@ -339,13 +346,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     });
   }
 
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.menu_search, menu);
-
-    setupSearch(menu);
-  }
-
   protected void setupSearch(Menu menu) {
     SearchUtils.setupInsideStoreSearchView(menu, this, storeName);
   }
@@ -353,6 +353,13 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void setupViews() {
     super.setupViews();
     setHasOptionsMenu(true);
+  }
+
+  @Partners @CallSuper @Override public void setupToolbar() {
+    super.setupToolbar();
+    // FIXME: 17/1/2017 sithengineer is this the right place to have this event ?? why ??
+    Logger.d(TAG, "LOCALYTICS TESTING - STORES ACTION ENTER " + storeName);
+    Analytics.Stores.enter(storeName == null ? String.valueOf(userId) : storeName);
   }
 
   protected boolean displayHomeUpAsEnabled() {
@@ -366,13 +373,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     } else {
       toolbar.setLogo(R.drawable.ic_store);
     }
-  }
-
-  @Partners @CallSuper @Override public void setupToolbar() {
-    super.setupToolbar();
-    // FIXME: 17/1/2017 sithengineer is this the right place to have this event ?? why ??
-    Logger.d(TAG, "LOCALYTICS TESTING - STORES ACTION ENTER " + storeName);
-    Analytics.Stores.enter(storeName == null ? String.valueOf(userId) : storeName);
   }
 
   public enum OpenType {

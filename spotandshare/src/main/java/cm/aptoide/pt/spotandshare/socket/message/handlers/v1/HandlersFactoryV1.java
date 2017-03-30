@@ -81,6 +81,17 @@ public class HandlersFactoryV1 {
       this.socketBinder = socketBinder;
     }
 
+    String changeFilesRootDir(AndroidAppInfo androidAppInfo) {
+      String packageName = androidAppInfo.getPackageName();
+      String rootToFiles = root + File.separatorChar + packageName;
+
+      for (FileInfo fileInfo : androidAppInfo.getFiles()) {
+        fileInfo.setParentDirectory(rootToFiles);
+      }
+
+      return rootToFiles;
+    }
+
     @Override public void handleMessage(ReceiveApk receiveApk, Sender<Message> messageSender) {
       AckMessage ackMessage = new AckMessage(messageSender.getHost());
       AndroidAppInfo androidAppInfo = receiveApk.getAndroidAppInfo();
@@ -106,16 +117,7 @@ public class HandlersFactoryV1 {
       }
     }
 
-    String changeFilesRootDir(AndroidAppInfo androidAppInfo) {
-      String packageName = androidAppInfo.getPackageName();
-      String rootToFiles = root + File.separatorChar + packageName;
 
-      for (FileInfo fileInfo : androidAppInfo.getFiles()) {
-        fileInfo.setParentDirectory(rootToFiles);
-      }
-
-      return rootToFiles;
-    }
   }
 
   static class ExitMessageHandler extends MessageHandler<ExitMessage> {

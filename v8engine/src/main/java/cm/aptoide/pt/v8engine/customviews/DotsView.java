@@ -45,13 +45,6 @@ public class DotsView extends View {
     init();
   }
 
-  private void init() {
-    for (int i = 0; i < circlePaints.length; i++) {
-      circlePaints[i] = new Paint();
-      circlePaints[i].setStyle(Paint.Style.FILL);
-    }
-  }
-
   public DotsView(Context context, AttributeSet attrs) {
     super(context, attrs);
     init();
@@ -60,6 +53,13 @@ public class DotsView extends View {
   public DotsView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     init();
+  }
+
+  private void init() {
+    for (int i = 0; i < circlePaints.length; i++) {
+      circlePaints[i] = new Paint();
+      circlePaints[i].setStyle(Paint.Style.FILL);
+    }
   }
 
   @Override protected void onSizeChanged(int w, int h, int oldw, int oldh) {

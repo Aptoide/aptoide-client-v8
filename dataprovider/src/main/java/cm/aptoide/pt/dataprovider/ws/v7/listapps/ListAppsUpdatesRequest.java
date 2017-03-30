@@ -24,8 +24,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -138,12 +136,6 @@ import rx.schedulers.Schedulers;
       setSystemAppsUpdates();
     }
 
-    private void setSystemAppsUpdates() {
-      if (!ManagerPreferences.getUpdatesSystemAppsKey()) {
-        this.notPackageTags = "system";
-      }
-    }
-
     public Body(Body body) {
       this.apksData = body.getApksData();
       this.storeIds = body.getStoreIds();
@@ -153,6 +145,12 @@ import rx.schedulers.Schedulers;
       this.aaid = body.getAaid();
       this.setAptoideId(body.getAptoideId());
       this.notPackageTags = body.getNotPackageTags();
+    }
+
+    private void setSystemAppsUpdates() {
+      if (!ManagerPreferences.getUpdatesSystemAppsKey()) {
+        this.notPackageTags = "system";
+      }
     }
   }
 

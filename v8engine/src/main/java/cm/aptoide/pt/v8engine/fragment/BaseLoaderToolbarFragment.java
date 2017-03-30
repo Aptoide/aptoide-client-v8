@@ -28,18 +28,6 @@ public abstract class BaseLoaderToolbarFragment extends BaseLoaderFragment {
     setupToolbar();
   }
 
-  @Partners protected boolean hasToolbar() {
-    return toolbar != null;
-  }
-
-  protected boolean displayHomeUpAsEnabled() {
-    return false;
-  }
-
-  protected void setupToolbarDetails(Toolbar toolbar) {
-    // does nothing. placeholder method.
-  }
-
   /**
    * Setup the toolbar, if present.
    */
@@ -53,6 +41,18 @@ public abstract class BaseLoaderToolbarFragment extends BaseLoaderFragment {
       actionBar.setTitle(toolbar.getTitle());
       setupToolbarDetails(toolbar);
     }
+  }
+
+  @Partners protected boolean hasToolbar() {
+    return toolbar != null;
+  }
+
+  protected boolean displayHomeUpAsEnabled() {
+    return false;
+  }
+
+  protected void setupToolbarDetails(Toolbar toolbar) {
+    // does nothing. placeholder method.
   }
 
   @CallSuper @Override public void bindViews(View view) {

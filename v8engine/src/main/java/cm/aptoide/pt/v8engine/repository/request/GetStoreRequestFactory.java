@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.repository.request;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
@@ -13,7 +12,8 @@ class GetStoreRequestFactory {
   private final StoreCredentialsProvider storeCredentialsProvider;
   private final BodyInterceptor bodyInterceptor;
 
-  public GetStoreRequestFactory(StoreCredentialsProvider storeCredentialsProvider, BodyInterceptor bodyInterceptor) {
+  public GetStoreRequestFactory(StoreCredentialsProvider storeCredentialsProvider,
+      BodyInterceptor bodyInterceptor) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.bodyInterceptor = bodyInterceptor;
   }

@@ -113,8 +113,9 @@ public class DisplayablesFactory {
           return Observable.from(createMyStoreDisplayables(widget.getViewObject()));
 
         case STORES_RECOMMENDED:
-          return Observable.just(createRecommendedStores(widget, storeTheme, storeRepository, storeContext,
-              context, accountManager, storeUtilsProxy));
+          return Observable.just(
+              createRecommendedStores(widget, storeTheme, storeRepository, storeContext, context,
+                  accountManager, storeUtilsProxy));
 
         case COMMENTS_GROUP:
           return Observable.from(createCommentsGroup(widget));

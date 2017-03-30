@@ -53,6 +53,55 @@ public abstract class AccountPermissionsBaseActivity extends AccountBaseActivity
   private File avatar;
   private CompositeSubscription mSubscriptions;
 
+  public static String checkAndAskPermission(final AppCompatActivity activity, String type) {
+
+    if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+      if (type.equals(TYPE_STORAGE)) {
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+
+          if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
+              Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+            ActivityCompat.requestPermissions(activity,
+                new String[] { Manifest.permission.READ_EXTERNAL_STORAGE }, STORAGE_REQUEST_CODE);
+            return STORAGE_PERMISSION_REQUESTED;
+          } else {
+            ActivityCompat.requestPermissions(activity,
+                new String[] { Manifest.permission.READ_EXTERNAL_STORAGE }, STORAGE_REQUEST_CODE);
+          }
+        } else {
+          return STORAGE_PERMISSION_GIVEN;
+        }
+      } else if (type.equals(TYPE_CAMERA)) {
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA)
+            != PackageManager.PERMISSION_GRANTED) {
+          if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
+              Manifest.permission.CAMERA)) {
+
+            ActivityCompat.requestPermissions(activity, new String[] {
+                Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
+            }, CAMERA_REQUEST_CODE);
+            return CAMERA_PERMISSION_REQUESTED;
+          } else {
+            ActivityCompat.requestPermissions(activity, new String[] {
+                Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
+            }, CAMERA_REQUEST_CODE);
+          }
+        } else {
+          return CAMERA_PERMISSION_GIVEN;
+        }
+      }
+    } else {
+      if (type.equals(TYPE_CAMERA)) {
+        return CAMERA_PERMISSION_GIVEN;
+      } else if (type.equals(TYPE_STORAGE)) {
+        return STORAGE_PERMISSION_GIVEN;
+      }
+    }
+    return "";
+  }
+
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     mSubscriptions = new CompositeSubscription();
@@ -101,55 +150,6 @@ public abstract class AccountPermissionsBaseActivity extends AccountBaseActivity
         callGallery();
         break;
     }
-  }
-
-  public static String checkAndAskPermission(final AppCompatActivity activity, String type) {
-
-    if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-      if (type.equals(TYPE_STORAGE)) {
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED) {
-
-          if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
-              Manifest.permission.READ_EXTERNAL_STORAGE)) {
-
-            ActivityCompat.requestPermissions(activity,
-                new String[] { Manifest.permission.READ_EXTERNAL_STORAGE }, STORAGE_REQUEST_CODE);
-            return STORAGE_PERMISSION_REQUESTED;
-          } else {
-            ActivityCompat.requestPermissions(activity,
-                new String[] { Manifest.permission.READ_EXTERNAL_STORAGE }, STORAGE_REQUEST_CODE);
-          }
-        } else {
-          return STORAGE_PERMISSION_GIVEN;
-        }
-      } else if (type.equals(TYPE_CAMERA)) {
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA)
-            != PackageManager.PERMISSION_GRANTED) {
-          if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
-              Manifest.permission.CAMERA)) {
-
-            ActivityCompat.requestPermissions(activity, new String[] {
-                Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
-            }, CAMERA_REQUEST_CODE);
-            return CAMERA_PERMISSION_REQUESTED;
-          } else {
-            ActivityCompat.requestPermissions(activity, new String[] {
-                Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
-            }, CAMERA_REQUEST_CODE);
-          }
-        } else {
-          return CAMERA_PERMISSION_GIVEN;
-        }
-      }
-    } else {
-      if (type.equals(TYPE_CAMERA)) {
-        return CAMERA_PERMISSION_GIVEN;
-      } else if (type.equals(TYPE_STORAGE)) {
-        return STORAGE_PERMISSION_GIVEN;
-      }
-    }
-    return "";
   }
 
   public void changePermissionValue(boolean b) {

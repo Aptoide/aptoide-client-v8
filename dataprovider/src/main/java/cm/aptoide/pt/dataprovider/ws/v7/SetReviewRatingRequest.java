@@ -31,7 +31,8 @@ public class SetReviewRatingRequest extends V7<BaseV7Response, SetReviewRatingRe
         WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  public static SetReviewRatingRequest of(long reviewId, boolean helpful, BodyInterceptor bodyInterceptor) {
+  public static SetReviewRatingRequest of(long reviewId, boolean helpful,
+      BodyInterceptor bodyInterceptor) {
     final Body body = new Body(reviewId, helpful ? "up" : "down");
     return new SetReviewRatingRequest(body, bodyInterceptor);
   }

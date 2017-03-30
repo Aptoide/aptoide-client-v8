@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
   <TextView
       android:layout_width="wrap_content"
@@ -13,7 +14,8 @@
       android:text="@string/addressbook_success"
       android:textColor="@color/greenapple"
       android:textSize="25sp"
-      android:textStyle="bold" />
+      android:textStyle="bold"
+      />
 
   <TextView
       android:id="@+id/addressbook_successful_message"
@@ -28,14 +30,16 @@
       android:gravity="center"
       android:lines="3"
       android:text="@string/addressbook_success_connected_friends"
-      android:textSize="16.9sp" />
+      android:textSize="16.9sp"
+      />
 
   <android.support.v7.widget.RecyclerView
       android:id="@+id/addressbook_contacts_list"
       android:layout_width="match_parent"
       android:layout_height="300dp"
       android:layout_gravity="center"
-      android:padding="8dp" />
+      android:padding="8dp"
+      />
 
   <Button
       android:id="@+id/addressbook_allow_find"
@@ -47,11 +51,11 @@
       android:layout_marginRight="20dp"
       android:layout_marginStart="20dp"
       android:background="@drawable/addressbook_button_rectangle_shape"
-      android:text="@string/addressbook_allow_friends_find" />
+      android:text="@string/addressbook_allow_friends_find"
+      />
 
   <Button
       android:id="@+id/addressbook_done"
-      style="?attr/customButtonThinLine"
       android:layout_width="match_parent"
       android:layout_height="50dp"
       android:layout_gravity="center"
@@ -61,5 +65,7 @@
       android:layout_marginStart="20dp"
       android:layout_marginTop="5dp"
       android:text="@string/done"
-      android:textColor="@color/default_color" />
+      android:textColor="@color/default_color"
+      style="?attr/customButtonThinLine"
+      />
 </LinearLayout>

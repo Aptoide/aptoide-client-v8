@@ -15,5 +15,4 @@ public interface TabNavigator {
   void navigate(int tab);
 
   Observable<Integer> navigation();
-
 }

@@ -52,7 +52,6 @@ public class AptoideFileServerSocket<T> extends AptoideServerSocket {
       progressAccumulator.accumulate(computeTotalSize(fileInfos));
     }
 
-
     InputStream in = null;
 
     try {

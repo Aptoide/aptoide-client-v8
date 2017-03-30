@@ -47,6 +47,20 @@ public class HighwayRadarRippleView extends TextView {
     initAnimation();
   }
 
+  public HighwayRadarRippleView(Context context, AttributeSet attrs) {
+    super(context, attrs);
+
+    initPaint();
+    initAnimation();
+  }
+
+  public HighwayRadarRippleView(Context context, AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+
+    initPaint();
+    initAnimation();
+  }
+
   private void initPaint() {
     paint = new Paint();
     paint.setAntiAlias(true);
@@ -61,20 +75,6 @@ public class HighwayRadarRippleView extends TextView {
     objectAnimator.setInterpolator(new LinearInterpolator());
     objectAnimator.setEvaluator(mProgressEvaluator);
     objectAnimator.setDuration(time);
-  }
-
-  public HighwayRadarRippleView(Context context, AttributeSet attrs) {
-    super(context, attrs);
-
-    initPaint();
-    initAnimation();
-  }
-
-  public HighwayRadarRippleView(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-
-    initPaint();
-    initAnimation();
   }
 
   public void setEffectColor(int color) {
@@ -176,5 +176,4 @@ public class HighwayRadarRippleView extends TextView {
 
     setMeasuredDimension(resultWidth, resultHeight);
   }
-
 }

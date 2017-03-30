@@ -125,43 +125,6 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
     return this;
   }
 
-  protected Stoppable newOrderDispatcherLooper() {
-    return new Stoppable() {
-
-      private boolean running;
-
-      @Override public void stop() {
-        running = false;
-      }
-
-      @Override public void run() {
-        running = true;
-
-        try {
-          while (running) {
-            ServerAction take = queuedServerActions.take();
-            take.execute();
-          }
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-      }
-    };
-  }
-
-  public List<Host> getConnectedHosts() {
-    List<Host> hosts = new LinkedList<>();
-
-    for (Socket connectedSocket : connectedSockets) {
-      hosts.add(
-          new Host(connectedSocket.getInetAddress().getHostAddress(), connectedSocket.getPort()));
-    }
-
-    return hosts;
-  }
-
-  protected abstract void onNewClient(Socket socket) throws IOException;
-
   public void shutdown() {
 
     if (shutdown) {
@@ -200,6 +163,43 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
     shutdownExecutorService();
   }
 
+  protected Stoppable newOrderDispatcherLooper() {
+    return new Stoppable() {
+
+      private boolean running;
+
+      @Override public void stop() {
+        running = false;
+      }
+
+      @Override public void run() {
+        running = true;
+
+        try {
+          while (running) {
+            ServerAction take = queuedServerActions.take();
+            take.execute();
+          }
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    };
+  }
+
+  public List<Host> getConnectedHosts() {
+    List<Host> hosts = new LinkedList<>();
+
+    for (Socket connectedSocket : connectedSockets) {
+      hosts.add(
+          new Host(connectedSocket.getInetAddress().getHostAddress(), connectedSocket.getPort()));
+    }
+
+    return hosts;
+  }
+
+  protected abstract void onNewClient(Socket socket) throws IOException;
+
   @Override public void dispatchServerAction(ServerAction serverAction) {
     Print.d(TAG, "dispatchServerAction() called with: serverAction = [" + serverAction + "]");
     try {
@@ -219,6 +219,5 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
         Print.d(TAG, "removeHost: AptoideServerSocket: Host " + host + " removed from the server.");
       }
     }
-
   }
 }

@@ -5,16 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="65dp"
     android:background="?attr/backgroundCardColor"
-    android:clipChildren="false">
+    android:clipChildren="false"
+    >
 
   <RelativeLayout
       android:id="@+id/displayable_social_timeline_likes_preview_container"
       android:layout_width="0dp"
       android:layout_height="0dp"
       android:layout_marginLeft="5dp"
+      android:gravity="center"
       android:orientation="horizontal"
       android:padding="4dp"
-      android:gravity="center"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toStartOf="@+id/social_like_layout"
       app:layout_constraintLeft_toLeftOf="parent"
@@ -23,7 +24,8 @@
       app:layout_constraintTop_toTopOf="parent"
       tools:layout_constraintBottom_creator="1"
       tools:layout_constraintLeft_creator="1"
-      tools:layout_constraintTop_creator="1" />
+      tools:layout_constraintTop_creator="1"
+      />
 
 
   <LinearLayout
@@ -36,7 +38,8 @@
       app:layout_constraintLeft_toRightOf="@id/displayable_social_timeline_likes_preview_container"
       app:layout_constraintRight_toLeftOf="@id/social_comment_layout"
       app:layout_constraintStart_toEndOf="@id/displayable_social_timeline_likes_preview_container"
-      app:layout_constraintTop_toTopOf="parent">
+      app:layout_constraintTop_toTopOf="parent"
+      >
 
     <TextView
         android:id="@+id/social_number_of_likes"
@@ -48,7 +51,8 @@
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1"
         tools:text="10"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        />
 
 
     <LinearLayout
@@ -62,14 +66,16 @@
         android:visibility="invisible"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1"
-        tools:visibility="visible">
+        tools:visibility="visible"
+        >
 
       <cm.aptoide.pt.v8engine.customviews.LikeButtonView
           android:id="@+id/social_like_button"
           android:layout_width="20dp"
           android:layout_height="20dp"
           android:layout_gravity="center"
-          android:clickable="false" />
+          android:clickable="false"
+          />
 
       <TextView
           android:layout_width="wrap_content"
@@ -77,7 +83,8 @@
           android:layout_marginTop="6dp"
           android:text="@string/like"
           android:textAllCaps="true"
-          android:textSize="@dimen/text_size_extra_small" />
+          android:textSize="@dimen/text_size_extra_small"
+          />
 
     </LinearLayout>
   </LinearLayout>
@@ -93,7 +100,8 @@
       app:layout_constraintLeft_toRightOf="@id/social_like_layout"
       app:layout_constraintRight_toLeftOf="@id/social_share_layout"
       app:layout_constraintStart_toEndOf="@id/social_like_layout"
-      app:layout_constraintTop_toTopOf="parent">
+      app:layout_constraintTop_toTopOf="parent"
+      >
 
     <TextView
         android:id="@+id/social_number_of_comments"
@@ -105,7 +113,8 @@
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1"
         tools:text="10"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        />
 
     <TextView
         android:id="@+id/social_comment"
@@ -123,7 +132,8 @@
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        />
   </LinearLayout>
 
   <LinearLayout
@@ -136,7 +146,8 @@
       app:layout_constraintLeft_toRightOf="@id/social_comment_layout"
       app:layout_constraintRight_toRightOf="parent"
       app:layout_constraintStart_toEndOf="@id/social_comment_layout"
-      app:layout_constraintTop_toTopOf="parent">
+      app:layout_constraintTop_toTopOf="parent"
+      >
 
     <TextView
         android:id="@+id/social_share"
@@ -151,6 +162,7 @@
         android:textAllCaps="true"
         android:textSize="@dimen/text_size_extra_small"
         tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
+        tools:layout_constraintTop_creator="1"
+        />
   </LinearLayout>
 </android.support.constraint.ConstraintLayout>

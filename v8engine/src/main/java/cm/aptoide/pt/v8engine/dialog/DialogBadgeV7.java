@@ -82,10 +82,9 @@ public class DialogBadgeV7 extends BaseDialog {
 
     if (malware != null && malware.getReason() != null) {
       if (malware.getReason().getScanned() != null
-          && malware.getReason().getScanned().getStatus() != null
-          &&
-          (Status.passed.equals(malware.getReason().getScanned().getStatus()) || Status.warn.equals(
-              malware.getReason().getScanned().getStatus()))) {
+          && malware.getReason().getScanned().getStatus() != null && (Status.passed.equals(
+          malware.getReason().getScanned().getStatus()) || Status.warn.equals(
+          malware.getReason().getScanned().getStatus()))) {
 
         if (malware.getReason().getScanned().getAvInfo() != null) {
           v.findViewById(R.id.tr_scanned).setVisibility(View.VISIBLE);
@@ -125,9 +124,8 @@ public class DialogBadgeV7 extends BaseDialog {
       }
 
       if (malware.getReason().getManual() != null
-          && malware.getReason().getManual().getStatus() != null
-          &&
-          Status.passed.equals(malware.getReason().getManual().getStatus())) {
+          && malware.getReason().getManual().getStatus() != null && Status.passed.equals(
+          malware.getReason().getManual().getStatus())) {
         v.findViewById(R.id.tr_manual).setVisibility(View.VISIBLE);
       }
     }

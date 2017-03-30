@@ -10,11 +10,9 @@ import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.TextUtils;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -101,8 +99,8 @@ public class AppUpdateDisplayable extends CardDisplayable {
   public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory,
       DownloadFactory downloadFactory, DateCalculator dateCalculator, InstallManager installManager,
       PermissionManager permissionManager, TimelineAnalytics timelineAnalytics,
-      SocialRepository socialRepository, InstallEventConverter installConverter, Analytics analytics,
-      DownloadEventConverter downloadConverter) {
+      SocialRepository socialRepository, InstallEventConverter installConverter,
+      Analytics analytics, DownloadEventConverter downloadConverter) {
     String abTestingURL = null;
 
     if (appUpdate.getAb() != null
@@ -115,8 +113,8 @@ public class AppUpdateDisplayable extends CardDisplayable {
         appUpdate.getFile().getVername(), spannableFactory, appUpdate.getName(),
         appUpdate.getPackageName(), downloadFactory.create(appUpdate, Download.ACTION_UPDATE),
         dateCalculator, appUpdate.getId(), abTestingURL, installManager, permissionManager,
-        timelineAnalytics, socialRepository, downloadConverter,
-        installConverter, analytics, appUpdate.getStore().getAppearance().getTheme());
+        timelineAnalytics, socialRepository, downloadConverter, installConverter, analytics,
+        appUpdate.getStore().getAppearance().getTheme());
   }
 
   public Observable<Progress<Download>> update(Context context) {

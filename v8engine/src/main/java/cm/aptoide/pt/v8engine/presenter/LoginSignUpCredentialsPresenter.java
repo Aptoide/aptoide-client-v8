@@ -79,13 +79,21 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
         });
   }
 
+  @Override public void saveState(Bundle state) {
+    // does nothing
+  }
+
+  @Override public void restoreState(Bundle state) {
+    // does nothing
+  }
+
   private void showOrHideLogins() {
     showOrHideFacebookLogin();
     showOrHideGoogleLogin();
   }
 
   private Observable<Void> googleLoginClick() {
-    return view.googleLoginClick().doOnNext(selected -> view.showLoading()).<Void>flatMap(
+    return view.googleLoginClick().doOnNext(selected -> view.showLoading()).<Void> flatMap(
         credentials -> accountManager.login(Account.Type.GOOGLE, credentials.getEmail(),
             credentials.getToken(), credentials.getDisplayName())
             .observeOn(AndroidSchedulers.mainThread())
@@ -100,7 +108,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
   }
 
   private Observable<Void> facebookLoginClick() {
-    return view.facebookLoginClick().doOnNext(selected -> view.showLoading()).<Void>flatMap(
+    return view.facebookLoginClick().doOnNext(selected -> view.showLoading()).<Void> flatMap(
         credentials -> {
           if (declinedRequiredPermissions(credentials.getDeniedPermissions())) {
             view.hideLoading();
@@ -123,7 +131,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
   }
 
   private Observable<Void> aptoideLoginClick() {
-    return view.aptoideLoginClick().<Void>flatMap(credentials -> {
+    return view.aptoideLoginClick().<Void> flatMap(credentials -> {
       view.hideKeyboard();
       view.showLoading();
       return accountManager.login(Account.Type.APTOIDE, credentials.getUsername(),
@@ -141,7 +149,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
   }
 
   private Observable<Void> aptoideSignUpClick() {
-    return view.aptoideSignUpClick().<Void>flatMap(credentials -> {
+    return view.aptoideSignUpClick().<Void> flatMap(credentials -> {
       view.hideKeyboard();
       view.showLoading();
       return accountManager.signUp(credentials.getUsername(), credentials.getPassword())
@@ -235,13 +243,5 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
         request.executeAsync();
       }
     });
-  }
-
-  @Override public void saveState(Bundle state) {
-    // does nothing
-  }
-
-  @Override public void restoreState(Bundle state) {
-    // does nothing
   }
 }

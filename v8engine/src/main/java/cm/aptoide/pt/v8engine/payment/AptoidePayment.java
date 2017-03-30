@@ -20,8 +20,8 @@ public class AptoidePayment implements Payment {
   private final String description;
   private final Authorization authorization;
 
-  public AptoidePayment(int id, String name, String description, PaymentConfirmationRepository confirmationRepository,
-      Authorization authorization) {
+  public AptoidePayment(int id, String name, String description,
+      PaymentConfirmationRepository confirmationRepository, Authorization authorization) {
     this.id = id;
     this.name = name;
     this.description = description;

@@ -15,8 +15,7 @@ public interface AddressBookNavigation {
 
   void navigateToPhoneInputView();
 
-  void navigateToInviteFriendsView(
-      @NonNull InviteFriendsContract.View.OpenMode openMode);
+  void navigateToInviteFriendsView(@NonNull InviteFriendsContract.View.OpenMode openMode);
 
   void showAboutFragment();
 

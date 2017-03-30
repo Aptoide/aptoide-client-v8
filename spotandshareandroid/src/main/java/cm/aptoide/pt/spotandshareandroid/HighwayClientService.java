@@ -167,6 +167,81 @@ public class HighwayClientService extends Service {
     };
   }
 
+  @Override public int onStartCommand(Intent intent, int flags, int startId) {
+
+    if (intent != null) {
+
+      if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
+        String serverIP = intent.getStringExtra("targetIP");
+        port = intent.getIntExtra("port", 0);
+
+        final String externalStoragepath = intent.getStringExtra("ExternalStoragePath");
+
+        StorageCapacity storageCapacity = new StorageCapacity() {
+          @Override public boolean hasCapacity(long bytes) {
+            long availableSpace = -1L;
+            StatFs stat = new StatFs(externalStoragepath);
+            availableSpace = (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
+            return availableSpace > bytes;
+          }
+        };
+
+        aptoideMessageClientSocket =
+            new AptoideMessageClientSocket(serverIP, "192.168.43.1", port, externalStoragepath,
+                storageCapacity, fileServerLifecycle, fileClientLifecycle, socketBinder);
+        aptoideMessageClientSocket.setSocketBinder(socketBinder);
+        aptoideMessageClientSocket.startAsync();
+
+        System.out.println(" Connected ! ");
+      } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
+        Bundle b = intent.getBundleExtra("bundle");
+
+        listOfApps = b.getParcelableArrayList("listOfAppsToInstall");
+        for (int i = 0; i < listOfApps.size(); i++) {
+
+          String filePath = listOfApps.get(i).getFilePath();
+          String appName = listOfApps.get(i).getAppName();
+          String packageName = listOfApps.get(i).getPackageName();
+          String obbsFilePath = listOfApps.get(i).getObbsFilePath();
+
+          List<FileInfo> fileInfoList = getFileInfo(filePath, obbsFilePath);
+
+          final AndroidAppInfo appInfo = new AndroidAppInfo(appName, packageName, fileInfoList);
+
+          AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
+            @Override public void run() {
+              aptoideMessageClientSocket.send(
+                  new RequestPermissionToSend(aptoideMessageClientSocket.getLocalhost(), appInfo));
+            }
+          });
+        }
+      } else if (intent.getAction() != null && intent.getAction().equals("DISCONNECT")) {
+        System.out.println("Requested to disconnect !");
+        AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
+          @Override public void run() {
+            if (aptoideMessageClientSocket != null) {
+              aptoideMessageClientSocket.exit();
+            }
+
+            if (mNotifyManager != null) {
+              mNotifyManager.cancelAll();
+            }
+
+            Intent i = new Intent();
+            i.setAction("CLIENT_DISCONNECT");
+            sendBroadcast(i);
+          }
+        });
+      }
+    }
+
+    return START_STICKY;
+  }
+
+  @Nullable @Override public IBinder onBind(Intent intent) {
+    return null;
+  }
+
   private void createReceiveNotification(String receivingAppName) {
     NotificationCompat.Builder mBuilderReceive = new NotificationCompat.Builder(this);
     mBuilderReceive.setContentTitle(
@@ -276,81 +351,6 @@ public class HighwayClientService extends Service {
       mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
     }
     mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(), mBuilderSend.build());
-  }
-
-  @Override public int onStartCommand(Intent intent, int flags, int startId) {
-
-    if (intent != null) {
-
-      if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
-        String serverIP = intent.getStringExtra("targetIP");
-        port = intent.getIntExtra("port", 0);
-
-        final String externalStoragepath = intent.getStringExtra("ExternalStoragePath");
-
-        StorageCapacity storageCapacity = new StorageCapacity() {
-          @Override public boolean hasCapacity(long bytes) {
-            long availableSpace = -1L;
-            StatFs stat = new StatFs(externalStoragepath);
-            availableSpace = (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
-            return availableSpace > bytes;
-          }
-        };
-
-        aptoideMessageClientSocket =
-            new AptoideMessageClientSocket(serverIP, "192.168.43.1", port, externalStoragepath,
-                storageCapacity, fileServerLifecycle, fileClientLifecycle, socketBinder);
-        aptoideMessageClientSocket.setSocketBinder(socketBinder);
-        aptoideMessageClientSocket.startAsync();
-
-        System.out.println(" Connected ! ");
-      } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
-        Bundle b = intent.getBundleExtra("bundle");
-
-        listOfApps = b.getParcelableArrayList("listOfAppsToInstall");
-        for (int i = 0; i < listOfApps.size(); i++) {
-
-          String filePath = listOfApps.get(i).getFilePath();
-          String appName = listOfApps.get(i).getAppName();
-          String packageName = listOfApps.get(i).getPackageName();
-          String obbsFilePath = listOfApps.get(i).getObbsFilePath();
-
-          List<FileInfo> fileInfoList = getFileInfo(filePath, obbsFilePath);
-
-          final AndroidAppInfo appInfo = new AndroidAppInfo(appName, packageName, fileInfoList);
-
-          AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
-            @Override public void run() {
-              aptoideMessageClientSocket.send(
-                  new RequestPermissionToSend(aptoideMessageClientSocket.getLocalhost(), appInfo));
-            }
-          });
-        }
-      } else if (intent.getAction() != null && intent.getAction().equals("DISCONNECT")) {
-        System.out.println("Requested to disconnect !");
-        AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
-          @Override public void run() {
-            if (aptoideMessageClientSocket != null) {
-              aptoideMessageClientSocket.exit();
-            }
-
-            if (mNotifyManager != null) {
-              mNotifyManager.cancelAll();
-            }
-
-            Intent i = new Intent();
-            i.setAction("CLIENT_DISCONNECT");
-            sendBroadcast(i);
-          }
-        });
-      }
-    }
-
-    return START_STICKY;
-  }
-
-  @Nullable @Override public IBinder onBind(Intent intent) {
-    return null;
   }
 
   public List<FileInfo> getFileInfo(String filePath, String obbsFilePath) {

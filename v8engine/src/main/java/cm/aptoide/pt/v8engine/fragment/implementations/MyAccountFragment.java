@@ -44,8 +44,7 @@ public class MyAccountFragment extends FragmentView implements MyAccountView {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    accountManager =
-        ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
+    accountManager = ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
   }
 
   @Nullable @Override
@@ -82,7 +81,8 @@ public class MyAccountFragment extends FragmentView implements MyAccountView {
 
     setupToolbar(view, getString(R.string.my_account));
 
-    attachPresenter(new MyAccountPresenter(this, accountManager, CrashReport.getInstance()), savedInstanceState);
+    attachPresenter(new MyAccountPresenter(this, accountManager, CrashReport.getInstance()),
+        savedInstanceState);
   }
 
   private Toolbar setupToolbar(View view, String title) {

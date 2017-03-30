@@ -106,8 +106,6 @@ public abstract class AptoideClientSocket extends AptoideSocket {
     return this;
   }
 
-  protected abstract void onConnected(Socket socket) throws IOException;
-
   @Override public void shutdown() {
     super.shutdown();
     try {
@@ -116,4 +114,6 @@ public abstract class AptoideClientSocket extends AptoideSocket {
       e.printStackTrace();
     }
   }
+
+  protected abstract void onConnected(Socket socket) throws IOException;
 }

@@ -24,6 +24,7 @@ public class CommentsAdapter<T extends Displayable> extends BaseAdapter {
    * <code>displayable</code>.
    *
    * @param itemNumber number of the review
+   *
    * @return next review's position or -1 if there are no more reviews
    */
   public int getItemPosition(int itemNumber) {

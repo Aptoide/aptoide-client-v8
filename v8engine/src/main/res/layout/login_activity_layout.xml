@@ -55,7 +55,6 @@
 
       <TextView
           android:id="@+id/or_message"
-          android:visibility="gone"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_gravity="center"
@@ -65,6 +64,7 @@
           android:gravity="center"
           android:text="@string/or"
           android:textColor="?android:attr/textColorSecondary"
+          android:visibility="gone"
           />
 
       <include layout="@layout/credentials_edit_texts"/>

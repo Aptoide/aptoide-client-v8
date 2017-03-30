@@ -54,7 +54,8 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
     super(body, baseHost, httpClient, converterFactory, bodyInterceptor);
   }
 
-  public static ListStoresRequest ofTopStores(int offset, int limit, BodyInterceptor bodyInterceptor) {
+  public static ListStoresRequest ofTopStores(int offset, int limit,
+      BodyInterceptor bodyInterceptor) {
 
     final Body baseBody = new Body();
     baseBody.setOffset(offset);

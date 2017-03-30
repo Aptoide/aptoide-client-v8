@@ -53,17 +53,17 @@ public abstract class UIComponentFragment extends PermissionServiceFragment impl
     // optional method
   }
 
-  @CallSuper @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    super.onCreateView(inflater, container, savedInstanceState);
-    return inflater.inflate(getContentViewId(), container, false);
-  }
-
   @Override public void setUserVisibleHint(boolean isVisibleToUser) {
     super.setUserVisibleHint(isVisibleToUser);
     if (isVisibleToUser) {
       ScreenTrackingUtils.getInstance().addScreenToHistory(getClass().getSimpleName());
     }
+  }
+
+  @CallSuper @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    super.onCreateView(inflater, container, savedInstanceState);
+    return inflater.inflate(getContentViewId(), container, false);
   }
 }

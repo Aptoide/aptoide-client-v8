@@ -38,13 +38,13 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
             fileClientLifecycle, socketBinder);
   }
 
-  @Override protected void onConnected(Socket socket) throws IOException {
-    aptoideMessageController.onConnect(socket);
-  }
-
   @Override public void shutdown() {
     aptoideMessageController.disable();
     super.shutdown();
+  }
+
+  @Override protected void onConnected(Socket socket) throws IOException {
+    aptoideMessageController.onConnect(socket);
   }
 
   public Host getHost() {

@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.view.binding;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -34,12 +33,12 @@ public class RxAlertDialog implements DialogInterface {
     dialog.show();
   }
 
-  @Override public void dismiss() {
-    dialog.dismiss();
-  }
-
   @Override public void cancel() {
     dialog.cancel();
+  }
+
+  @Override public void dismiss() {
+    dialog.dismiss();
   }
 
   public Observable<DialogInterface> positiveClicks() {

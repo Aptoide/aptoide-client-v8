@@ -103,16 +103,18 @@ public class SettingsFragment extends PreferenceFragmentCompat
     fileManager = FileManager.build();
     subscriptions = new CompositeSubscription();
     permissionManager = new PermissionManager();
-    adultContentConfirmationDialog = new RxAlertDialog.Builder(getContext()).setMessage(R.string.are_you_adult)
-        .setPositiveButton(R.string.yes)
-        .setNegativeButton(R.string.no)
-        .build();
-    enableAdultContentPinDialog = new PinDialog.Builder(getContext()).setMessage(R.string.request_adult_pin)
-        .setPositiveButton(R.string.ok)
-        .setNegativeButton(R.string.cancel)
-        .setView(R.layout.dialog_requestpin)
-        .setEditText(R.id.pininput)
-        .build();
+    adultContentConfirmationDialog =
+        new RxAlertDialog.Builder(getContext()).setMessage(R.string.are_you_adult)
+            .setPositiveButton(R.string.yes)
+            .setNegativeButton(R.string.no)
+            .build();
+    enableAdultContentPinDialog =
+        new PinDialog.Builder(getContext()).setMessage(R.string.request_adult_pin)
+            .setPositiveButton(R.string.ok)
+            .setNegativeButton(R.string.cancel)
+            .setView(R.layout.dialog_requestpin)
+            .setEditText(R.id.pininput)
+            .build();
     removePinDialog = new PinDialog.Builder(getContext()).setMessage(R.string.request_adult_pin)
         .setPositiveButton(R.string.ok)
         .setNegativeButton(R.string.cancel)
@@ -180,7 +182,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
       }
     }
 
-    adultContentPreferenceView = (CheckBoxPreference) findPreference(ADULT_CONTENT_PREFERENCE_VIEW_KEY);
+    adultContentPreferenceView =
+        (CheckBoxPreference) findPreference(ADULT_CONTENT_PREFERENCE_VIEW_KEY);
     adultContentWithPinPreferenceView =
         (CheckBoxPreference) findPreference(ADULT_CONTENT_WITH_PIN_PREFERENCE_VIEW_KEY);
     pinPreferenceView = findPreference(ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
@@ -219,41 +222,35 @@ public class SettingsFragment extends PreferenceFragmentCompat
         .retry()
         .subscribe());
 
-    subscriptions.add(RxPreference.checks(adultContentPreferenceView)
-        .flatMap(checked -> {
-          rollbackCheck(adultContentPreferenceView);
-          if (checked) {
-            adultContentConfirmationDialog.show();
-            return Observable.empty();
-          } else {
-            adultContentPreferenceView.setEnabled(false);
-            return adultContent.disable()
-                .doOnCompleted(() -> trackLock())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnTerminate(() -> adultContentPreferenceView.setEnabled(true))
-                .toObservable();
-          }
-        })
-        .retry()
-        .subscribe());
+    subscriptions.add(RxPreference.checks(adultContentPreferenceView).flatMap(checked -> {
+      rollbackCheck(adultContentPreferenceView);
+      if (checked) {
+        adultContentConfirmationDialog.show();
+        return Observable.empty();
+      } else {
+        adultContentPreferenceView.setEnabled(false);
+        return adultContent.disable()
+            .doOnCompleted(() -> trackLock())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnTerminate(() -> adultContentPreferenceView.setEnabled(true))
+            .toObservable();
+      }
+    }).retry().subscribe());
 
-    subscriptions.add(RxPreference.checks(adultContentWithPinPreferenceView)
-        .flatMap(checked -> {
-          rollbackCheck(adultContentWithPinPreferenceView);
-          if (checked) {
-            enableAdultContentPinDialog.show();
-            return Observable.empty();
-          } else {
-            adultContentWithPinPreferenceView.setEnabled(false);
-            return adultContent.disable()
-                .doOnCompleted(() -> trackLock())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnTerminate(() -> adultContentWithPinPreferenceView.setEnabled(true))
-                .toObservable();
-          }
-        })
-        .retry()
-        .subscribe());
+    subscriptions.add(RxPreference.checks(adultContentWithPinPreferenceView).flatMap(checked -> {
+      rollbackCheck(adultContentWithPinPreferenceView);
+      if (checked) {
+        enableAdultContentPinDialog.show();
+        return Observable.empty();
+      } else {
+        adultContentWithPinPreferenceView.setEnabled(false);
+        return adultContent.disable()
+            .doOnCompleted(() -> trackLock())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnTerminate(() -> adultContentWithPinPreferenceView.setEnabled(true))
+            .toObservable();
+      }
+    }).retry().subscribe());
 
     subscriptions.add(adultContent.pinRequired()
         .observeOn(AndroidSchedulers.mainThread())

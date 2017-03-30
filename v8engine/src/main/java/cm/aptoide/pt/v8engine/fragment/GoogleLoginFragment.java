@@ -10,21 +10,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
-import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.GoogleLoginView;
 import cm.aptoide.pt.v8engine.viewModel.GoogleAccountViewModel;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
-
-import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
 /**
  * Created by marcelobenites on 08/02/17.
@@ -47,20 +41,16 @@ public abstract class GoogleLoginFragment extends GooglePlayServicesFragment
     });
   }
 
+  @Override public void onPause() {
+    super.onPause();
+    getGoogleButton().setOnClickListener(null);
+  }
+
   public void googleLoginClicked() {
     // does nothing
   }
 
   protected abstract Button getGoogleButton();
-
-  @Override protected void connect() {
-    client.connect();
-  }
-
-  @Override public void onPause() {
-    super.onPause();
-    getGoogleButton().setOnClickListener(null);
-  }
 
   @Override public void showGoogleLogin() {
     getGoogleButton().setVisibility(View.VISIBLE);
@@ -93,6 +83,10 @@ public abstract class GoogleLoginFragment extends GooglePlayServicesFragment
     super.onViewCreated(view, savedInstanceState);
     googleLoginSubject = PublishRelay.create();
     client = ((V8Engine) getContext().getApplicationContext()).getGoogleSignInClient();
+  }
+
+  @Override protected void connect() {
+    client.connect();
   }
 
   protected abstract void showGoogleLoginError();

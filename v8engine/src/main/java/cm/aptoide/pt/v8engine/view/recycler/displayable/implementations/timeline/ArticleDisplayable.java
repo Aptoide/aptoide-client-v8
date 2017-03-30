@@ -96,7 +96,8 @@ public class ArticleDisplayable extends CardDisplayable {
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             article.getPublisher().getBaseUrl()), article.getPublisher().getName(),
         article.getThumbnailUrl(), article.getPublisher().getLogoUrl(), appId, abTestingURL,
-        article.getApps(), article.getDate(), dateCalculator, spannableFactory, timelineAnalytics, socialRepository);
+        article.getApps(), article.getDate(), dateCalculator, spannableFactory, timelineAnalytics,
+        socialRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -143,8 +144,8 @@ public class ArticleDisplayable extends CardDisplayable {
     return R.layout.displayable_social_timeline_article;
   }
 
-  @Override public void share(Context context, boolean privacyResult,
-      ShareCardCallback shareCardCallback) {
+  @Override
+  public void share(Context context, boolean privacyResult, ShareCardCallback shareCardCallback) {
     socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);
   }
 

@@ -109,16 +109,16 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         getArguments().getBoolean(CLEAN_BACK_STACK));
   }
 
+  @Override public boolean onBackPressed() {
+    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+    return tryCloseLoginBottomSheet() || super.onBackPressed();
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
     return inflater.inflate(R.layout.fragment_login_sign_up_credentials, container, false);
-  }
-
-  @Override public boolean onBackPressed() {
-    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-    return tryCloseLoginBottomSheet() || super.onBackPressed();
   }
 
   @Override public Observable<Void> showAptoideLoginAreaClick() {
@@ -135,14 +135,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     signUpArea.setVisibility(View.VISIBLE);
     separator.setVisibility(View.GONE);
     termsAndConditions.setVisibility(View.GONE);
-  }
-
-  private void setAptoideSignUpLoginAreaVisible() {
-    credentialsEditTextsArea.setVisibility(View.VISIBLE);
-    loginSignupSelectionArea.setVisibility(View.GONE);
-    if (bottomSheetBehavior != null) {
-      bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-    }
   }
 
   @Override public void showAptoideLoginArea() {
@@ -235,19 +227,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     getActivity().onBackPressed();
   }
 
-  private boolean tryCloseLoginBottomSheet() {
-    if (credentialsEditTextsArea.getVisibility() == View.VISIBLE) {
-      credentialsEditTextsArea.setVisibility(View.GONE);
-      loginSignupSelectionArea.setVisibility(View.VISIBLE);
-      loginArea.setVisibility(View.GONE);
-      signUpArea.setVisibility(View.GONE);
-      separator.setVisibility(View.VISIBLE);
-      termsAndConditions.setVisibility(View.VISIBLE);
-      return true;
-    }
-    return false;
-  }
-
   @Override public void dismiss() {
     getActivity().finish();
   }
@@ -286,6 +265,27 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     getFragmentNavigator().cleanBackStack();
   }
 
+  private void setAptoideSignUpLoginAreaVisible() {
+    credentialsEditTextsArea.setVisibility(View.VISIBLE);
+    loginSignupSelectionArea.setVisibility(View.GONE);
+    if (bottomSheetBehavior != null) {
+      bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
+  }
+
+  private boolean tryCloseLoginBottomSheet() {
+    if (credentialsEditTextsArea.getVisibility() == View.VISIBLE) {
+      credentialsEditTextsArea.setVisibility(View.GONE);
+      loginSignupSelectionArea.setVisibility(View.VISIBLE);
+      loginArea.setVisibility(View.GONE);
+      signUpArea.setVisibility(View.GONE);
+      separator.setVisibility(View.VISIBLE);
+      termsAndConditions.setVisibility(View.VISIBLE);
+      return true;
+    }
+    return false;
+  }
+
   private void showFacebookLoginError(@StringRes int errorRes) {
     ShowMessage.asToast(getContext(), errorRes);
   }
@@ -309,6 +309,10 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     bindViews(view);
 
     attachPresenter(presenter, savedInstanceState);
+  }
+
+  @Override protected void showGoogleLoginError() {
+    ShowMessage.asToast(getContext(), R.string.google_login_cancelled);
   }
 
   private void bindViews(View view) {
@@ -367,9 +371,5 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   public String getCompanyName() {
     return ((V8Engine) getActivity().getApplication()).createConfiguration().getMarketName();
-  }
-
-  @Override protected void showGoogleLoginError() {
-    ShowMessage.asToast(getContext(), R.string.google_login_cancelled);
   }
 }

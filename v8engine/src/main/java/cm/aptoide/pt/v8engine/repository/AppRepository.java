@@ -10,7 +10,6 @@ import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -47,20 +46,18 @@ public class AppRepository {
     return GetAppRequest.of(appId,
         V8Engine.getConfiguration().getPartnerId() == null ? null : storeName,
         StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
-        bodyInterceptor)
-        .observe(refresh)
-        .flatMap(response -> {
-          if (response != null && response.isOk()) {
-            if (response.getNodes().getMeta().getData().isPaid()) {
-              return addPayment(sponsored, response, refresh);
-            } else {
-              return Observable.just(response);
-            }
-          } else {
-            return Observable.error(
-                new RepositoryItemNotFoundException("No app found for app id " + appId));
-          }
-        });
+        bodyInterceptor).observe(refresh).flatMap(response -> {
+      if (response != null && response.isOk()) {
+        if (response.getNodes().getMeta().getData().isPaid()) {
+          return addPayment(sponsored, response, refresh);
+        } else {
+          return Observable.just(response);
+        }
+      } else {
+        return Observable.error(
+            new RepositoryItemNotFoundException("No app found for app id " + appId));
+      }
+    });
   }
 
   private Observable<GetApp> addPayment(boolean sponsored, GetApp getApp, boolean refresh) {
@@ -106,26 +103,27 @@ public class AppRepository {
         return Observable.just(response);
       } else {
         return Observable.error(new RepositoryItemNotFoundException(
-            "No paid app found for app id " + appId + " in store " +
-                storeName));
+            "No paid app found for app id " + appId + " in store " + storeName));
       }
     });
   }
 
   public Observable<GetApp> getApp(String packageName, boolean refresh, boolean sponsored,
       String storeName) {
-    return GetAppRequest.of(packageName, storeName, bodyInterceptor).observe(refresh).flatMap(response -> {
-      if (response != null && response.isOk()) {
-        if (response.getNodes().getMeta().getData().isPaid()) {
-          return addPayment(sponsored, response, refresh);
-        } else {
-          return Observable.just(response);
-        }
-      } else {
-        return Observable.error(
-            new RepositoryItemNotFoundException("No app found for app package" + packageName));
-      }
-    });
+    return GetAppRequest.of(packageName, storeName, bodyInterceptor)
+        .observe(refresh)
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            if (response.getNodes().getMeta().getData().isPaid()) {
+              return addPayment(sponsored, response, refresh);
+            } else {
+              return Observable.just(response);
+            }
+          } else {
+            return Observable.error(
+                new RepositoryItemNotFoundException("No app found for app package" + packageName));
+          }
+        });
   }
 
   public Observable<GetApp> getAppFromMd5(String md5, boolean refresh, boolean sponsored) {

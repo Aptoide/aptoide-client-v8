@@ -49,11 +49,6 @@ public class CircleView extends View {
     init();
   }
 
-  private void init() {
-    circlePaint.setStyle(Paint.Style.FILL);
-    maskPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-  }
-
   public CircleView(Context context, AttributeSet attrs) {
     super(context, attrs);
     init();
@@ -62,6 +57,11 @@ public class CircleView extends View {
   public CircleView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     init();
+  }
+
+  private void init() {
+    circlePaint.setStyle(Paint.Style.FILL);
+    maskPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
   }
 
   @Override protected void onSizeChanged(int w, int h, int oldw, int oldh) {

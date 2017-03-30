@@ -57,11 +57,6 @@ public class SetStoreRequest extends V7<BaseV7Response, HashMapNotNull<String, R
         bodyInterceptor);
   }
 
-  @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
-      boolean bypassCache) {
-    return interfaces.editStore(multipartBody, body);
-  }
-
   @NonNull private static OkHttpClient getLongerTimeoutClient() {
     return OkHttpClientFactory.newClient(() -> SecurePreferences.getUserAgent())
         .newBuilder()
@@ -69,5 +64,10 @@ public class SetStoreRequest extends V7<BaseV7Response, HashMapNotNull<String, R
         .readTimeout(2, TimeUnit.MINUTES)
         .writeTimeout(2, TimeUnit.MINUTES)
         .build();
+  }
+
+  @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
+      boolean bypassCache) {
+    return interfaces.editStore(multipartBody, body);
   }
 }

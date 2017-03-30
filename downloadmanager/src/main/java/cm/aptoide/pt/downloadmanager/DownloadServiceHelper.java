@@ -77,6 +77,7 @@ import rx.schedulers.Schedulers;
    * Starts a download. If there is a download running it is added to queue
    *
    * @param download Download to provide info to be able to make the download
+   *
    * @return An observable that reports the download state
    */
   public Observable<Download> startDownload(DownloadAccessor downloadAccessor,
@@ -105,6 +106,7 @@ import rx.schedulers.Schedulers;
    * This method finds the download with the appId
    *
    * @param md5 md5 sum of the app file
+   *
    * @return an observable with the download
    */
   public Observable<Download> getDownload(String md5) {

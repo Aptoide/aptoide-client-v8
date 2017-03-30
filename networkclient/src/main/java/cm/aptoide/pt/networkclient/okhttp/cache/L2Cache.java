@@ -129,6 +129,33 @@ public class L2Cache extends StringBaseCache<Request, Response> {
     }
   }
 
+  @Override public Response get(String key, Request request) {
+    ResponseCacheEntry response = cache.get(key);
+
+    if (persistenceCounter.incrementAndGet() >= MAX_COUNT && response != null && !isPersisting) {
+      persist();
+    }
+    return response.getResponse(request);
+  }
+
+  @Override public boolean contains(String key) {
+    return cache.containsKey(key);
+  }
+
+  @Override public boolean isValid(String key) {
+    ResponseCacheEntry cachedResponse = contains(key) ? cache.get(key) : null;
+    if (cachedResponse != null) {
+      return cachedResponse.isValid();
+    }
+    return false;
+  }
+
+  @Override void remove(String key) {
+    if (contains(key)) {
+      cache.remove(key);
+    }
+  }
+
   private int shouldCacheUntil(Response response) {
     try {
       Headers headers = response.headers();
@@ -163,33 +190,6 @@ public class L2Cache extends StringBaseCache<Request, Response> {
       return Integer.parseInt(group);
     }
     return 0;
-  }
-
-  @Override public Response get(String key, Request request) {
-    ResponseCacheEntry response = cache.get(key);
-
-    if (persistenceCounter.incrementAndGet() >= MAX_COUNT && response != null && !isPersisting) {
-      persist();
-    }
-    return response.getResponse(request);
-  }
-
-  @Override public boolean contains(String key) {
-    return cache.containsKey(key);
-  }
-
-  @Override public boolean isValid(String key) {
-    ResponseCacheEntry cachedResponse = contains(key) ? cache.get(key) : null;
-    if (cachedResponse != null) {
-      return cachedResponse.isValid();
-    }
-    return false;
-  }
-
-  @Override void remove(String key) {
-    if (contains(key)) {
-      cache.remove(key);
-    }
   }
 
   public void clean() {

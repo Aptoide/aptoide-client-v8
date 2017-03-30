@@ -42,14 +42,13 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
 
   public static final String SCREENSHOT_PATH = "SCREENSHOT_PATH";
   public static final String LOGS_FILE_NAME = "logs.txt";
+  private final String KEY_SCREENSHOT_PATH = "screenShotPath";
   private Button sendFeedbackBtn;
   private CheckBox logsAndScreenshotsCb;
   private String screenShotPath;
   private EditText messageBodyEdit;
   private EditText subgectEdit;
   private Subscription unManagedSubscription;
-
-  private final String KEY_SCREENSHOT_PATH = "screenShotPath";
 
   public static SendFeedbackFragment newInstance(String screenshotFilePath) {
     SendFeedbackFragment sendFeedbackFragment = new SendFeedbackFragment();
@@ -62,15 +61,6 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
   @Override public void setArguments(Bundle args) {
     super.setArguments(args);
     screenShotPath = args.getString(SCREENSHOT_PATH);
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int itemId = item.getItemId();
-    if (itemId == android.R.id.home) {
-      getActivity().onBackPressed();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
   }
 
   @Override public void onAttach(Activity activity) {
@@ -118,6 +108,15 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     outState.putString(KEY_SCREENSHOT_PATH, screenShotPath);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int itemId = item.getItemId();
+    if (itemId == android.R.id.home) {
+      getActivity().onBackPressed();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   private void sendFeedback() {

@@ -44,14 +44,14 @@ public class PaymentRepository {
   public Observable<List<Payment>> getPayments(String payerId) {
     return productRepository.getPayments()
         .map(payments -> sortedPayments(payments))
-        .flatMapObservable(payments -> Observable.combineLatest(
-            getAuthorizations(payments, payerId), Observable.just(payments),
-            (authorizations, paymentList) -> {
-              if (payments.isEmpty() || authorizations.isEmpty()) {
-                return Observable.<List<Payment>>empty();
-              }
-              return getPaymentsWithAuthorizations(payments, authorizations, payerId);
-            }))
+        .flatMapObservable(
+            payments -> Observable.combineLatest(getAuthorizations(payments, payerId),
+                Observable.just(payments), (authorizations, paymentList) -> {
+                  if (payments.isEmpty() || authorizations.isEmpty()) {
+                    return Observable.<List<Payment>> empty();
+                  }
+                  return getPaymentsWithAuthorizations(payments, authorizations, payerId);
+                }))
         .flatMap(result -> result);
   }
 
@@ -64,8 +64,8 @@ public class PaymentRepository {
     return payments;
   }
 
-  private Observable<List<Payment>> getPaymentsWithAuthorizations(List<PaymentServiceResponse> payments,
-      List<Authorization> authorizations, String payerId) {
+  private Observable<List<Payment>> getPaymentsWithAuthorizations(
+      List<PaymentServiceResponse> payments, List<Authorization> authorizations, String payerId) {
     return Observable.zip(Observable.from(payments), Observable.from(authorizations),
         (payment, authorization) -> {
           if (!payment.isAuthorizationRequired()) {

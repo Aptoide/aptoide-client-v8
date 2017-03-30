@@ -1,7 +1,5 @@
 package cm.aptoide.pt.spotandshareandroid;
 
-import android.content.Context;
-
 /**
  * Created by filipe on 23-02-2017.
  */

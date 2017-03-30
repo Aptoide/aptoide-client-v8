@@ -19,8 +19,8 @@ public class ProductFactory {
   public Product create(GetAppMeta.App app) {
     return new PaidAppProduct(app.getPay().getProductId(), app.getIcon(), app.getName(),
         app.getMedia().getDescription(), app.getId(), app.getStore().getName(),
-        new Price(app.getPay().getPrice(), app.getPay().getCurrency(),
-            app.getPay().getSymbol(), app.getPay().getTaxRate()));
+        new Price(app.getPay().getPrice(), app.getPay().getCurrency(), app.getPay().getSymbol(),
+            app.getPay().getTaxRate()));
   }
 
   public Product create(int apiVersion, String developerPayload, String packageName,

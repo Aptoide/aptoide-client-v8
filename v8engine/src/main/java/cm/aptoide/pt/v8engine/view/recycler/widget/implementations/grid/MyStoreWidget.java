@@ -85,5 +85,4 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
       return context.getResources().getColor(theme.getStoreHeader());
     }
   }
-
 }

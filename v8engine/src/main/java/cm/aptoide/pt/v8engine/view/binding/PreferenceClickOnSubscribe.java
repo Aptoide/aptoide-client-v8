@@ -1,11 +1,9 @@
 package cm.aptoide.pt.v8engine.view.binding;
 
 import android.support.v7.preference.Preference;
-import android.view.*;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.MainThreadSubscription;
-import rx.observables.SyncOnSubscribe;
 
 import static rx.android.MainThreadSubscription.verifyMainThread;
 
@@ -13,7 +11,7 @@ import static rx.android.MainThreadSubscription.verifyMainThread;
  * Created by marcelobenites on 07/03/17.
  */
 
-class PreferenceClickOnSubscribe implements Observable.OnSubscribe<Preference>  {
+class PreferenceClickOnSubscribe implements Observable.OnSubscribe<Preference> {
 
   private final Preference preference;
 

@@ -28,8 +28,8 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
 
   public Widget(@NonNull View itemView) {
     super(itemView);
-    fragmentNavigator = ((ActivityView)getContext()).getFragmentNavigator();
-    activityNavigator = ((ActivityView)getContext()).getActivityNavigator();
+    fragmentNavigator = ((ActivityView) getContext()).getFragmentNavigator();
+    activityNavigator = ((ActivityView) getContext()).getActivityNavigator();
 
     try {
       assignViews(itemView);

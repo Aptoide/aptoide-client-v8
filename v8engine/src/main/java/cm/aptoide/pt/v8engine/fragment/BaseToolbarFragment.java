@@ -27,18 +27,6 @@ public abstract class BaseToolbarFragment extends UIComponentFragment {
     setupToolbar();
   }
 
-  protected boolean hasToolbar() {
-    return toolbar != null;
-  }
-
-  protected boolean displayHomeUpAsEnabled() {
-    return false;
-  }
-
-  protected void setupToolbarDetails(Toolbar toolbar) {
-    // does nothing. placeholder method.
-  }
-
   /**
    * Setup the toolbar, if present.
    */
@@ -52,6 +40,18 @@ public abstract class BaseToolbarFragment extends UIComponentFragment {
       actionBar.setTitle(toolbar.getTitle());
       setupToolbarDetails(toolbar);
     }
+  }
+
+  protected boolean hasToolbar() {
+    return toolbar != null;
+  }
+
+  protected boolean displayHomeUpAsEnabled() {
+    return false;
+  }
+
+  protected void setupToolbarDetails(Toolbar toolbar) {
+    // does nothing. placeholder method.
   }
 
   @Override public void bindViews(View view) {

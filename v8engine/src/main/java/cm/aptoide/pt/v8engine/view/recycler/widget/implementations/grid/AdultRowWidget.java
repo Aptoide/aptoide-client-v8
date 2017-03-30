@@ -155,7 +155,6 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
             ignorePinCheck = true;
             adultPinSwitch.setChecked(enabled);
           }
-
         }).subscribe());
   }
 

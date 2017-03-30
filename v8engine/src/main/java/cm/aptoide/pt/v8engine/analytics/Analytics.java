@@ -122,6 +122,7 @@ public class Analytics {
    *
    * @param flag flags fornecidas
    * @param accepted flags aceitáveis
+   *
    * @return true caso as flags fornecidas constem em accepted.
    */
   private static boolean checkAcceptability(int flag, int accepted) {
@@ -141,37 +142,6 @@ public class Analytics {
       return;
     }
     facebookLogger.logEvent(eventName);
-  }
-
-  public void save(@NonNull String key, @NonNull Event event) {
-    saver.save(key, event);
-  }
-
-  public @Nullable Event get(String key, Class<? extends Event> clazz) {
-    return saver.get(key + clazz.getName());
-  }
-
-  public void sendEvent(Event event) {
-    event.send();
-    saver.remove(event);
-  }
-
-  /**
-   * This method is dealing with spot and share events only and should be refactored in case
-   * one would want to send the same event to fabric AND any other analytics platform
-   */
-  public void sendSpotAndShareEvents(String eventName, Map<String, String> attributes,
-      boolean fabric) {
-    if (fabric) {
-      logFabricEvent(eventName, attributes, FABRIC);
-    } else {
-      logFacebookEvents(eventName, attributes);
-      if (attributes != null) {
-        track(eventName, new HashMap<String, String>(attributes), LOCALYTICS);
-      } else {
-        track(eventName, LOCALYTICS);
-      }
-    }
   }
 
   private static void logFabricEvent(String event, Map<String, String> map, int flags) {
@@ -225,6 +195,37 @@ public class Analytics {
     }
 
     facebookLogger.logEvent(eventName, parameters);
+  }
+
+  public void save(@NonNull String key, @NonNull Event event) {
+    saver.save(key, event);
+  }
+
+  public @Nullable Event get(String key, Class<? extends Event> clazz) {
+    return saver.get(key + clazz.getName());
+  }
+
+  public void sendEvent(Event event) {
+    event.send();
+    saver.remove(event);
+  }
+
+  /**
+   * This method is dealing with spot and share events only and should be refactored in case
+   * one would want to send the same event to fabric AND any other analytics platform
+   */
+  public void sendSpotAndShareEvents(String eventName, Map<String, String> attributes,
+      boolean fabric) {
+    if (fabric) {
+      logFabricEvent(eventName, attributes, FABRIC);
+    } else {
+      logFacebookEvents(eventName, attributes);
+      if (attributes != null) {
+        track(eventName, new HashMap<String, String>(attributes), LOCALYTICS);
+      } else {
+        track(eventName, LOCALYTICS);
+      }
+    }
   }
 
   public static class Lifecycle {

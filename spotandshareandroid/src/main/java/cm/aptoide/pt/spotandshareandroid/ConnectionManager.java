@@ -154,7 +154,6 @@ public class ConnectionManager {
                         joinHotspot(chosenHotspot, true);
                       }
                     }).start();
-
                   } else {
                     listenerJoinWifi.onStateChanged(false);
                     try {

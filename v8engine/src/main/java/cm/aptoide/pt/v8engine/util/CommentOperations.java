@@ -13,6 +13,7 @@ public class CommentOperations {
    * Uses depth-first search to transverse and flatten all the {@link CommentNode}
    *
    * @param comments a list of {@link CommentNode}
+   *
    * @return list of all {@link CommentNode} and children, sorted by depth
    */
   public List<CommentNode> flattenByDepth(List<CommentNode> comments) {

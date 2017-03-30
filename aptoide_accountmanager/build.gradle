@@ -57,5 +57,4 @@ dependencies {
   compile "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
   compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
   compile "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
-
 }

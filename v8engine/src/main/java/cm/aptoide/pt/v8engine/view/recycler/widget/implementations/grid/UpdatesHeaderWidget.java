@@ -42,8 +42,8 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
     if (itemView.getContext() instanceof TabNavigator) {
       tabNavigator = (TabNavigator) itemView.getContext();
     } else {
-      throw new IllegalStateException("Context must implement " + TabNavigator.class
-          .getSimpleName());
+      throw new IllegalStateException(
+          "Context must implement " + TabNavigator.class.getSimpleName());
     }
     title = (TextView) itemView.findViewById(R.id.title);
     more = (Button) itemView.findViewById(R.id.more);

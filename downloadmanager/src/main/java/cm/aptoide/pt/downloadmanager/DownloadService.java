@@ -81,6 +81,15 @@ import rx.subscriptions.CompositeSubscription;
     return START_STICKY;
   }
 
+  @Override public void onDestroy() {
+    subscriptions.unsubscribe();
+    super.onDestroy();
+  }
+
+  @Nullable @Override public IBinder onBind(Intent intent) {
+    return null;
+  }
+
   private void startDownload(String md5) throws DownloadNotFoundException {
     if (!TextUtils.isEmpty(md5)) {
       subscriptions.add(downloadManager.getDownload(md5).first().subscribe(download -> {
@@ -209,14 +218,5 @@ import rx.subscriptions.CompositeSubscription;
           });
       subscriptions.add(stopMechanismSubscription);
     }
-  }
-
-  @Override public void onDestroy() {
-    subscriptions.unsubscribe();
-    super.onDestroy();
-  }
-
-  @Nullable @Override public IBinder onBind(Intent intent) {
-    return null;
   }
 }

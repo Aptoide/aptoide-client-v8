@@ -149,6 +149,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
    * Returns the position of an Event, given a name.
    *
    * @param name name of the Event {@link Event.Name}
+   *
    * @return returns a positive integer 0...X if there is an Event with requested name, else returns
    * -1.
    */

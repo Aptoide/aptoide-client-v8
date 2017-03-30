@@ -47,12 +47,6 @@ public class HighwayRadarTextView extends FrameLayout
     init(null, context);
   }
 
-  private void init(AttributeSet attrs, Context context) {
-    random = new Random();
-    vetorKeywords = new ArrayList<String>(MAX);
-    getViewTreeObserver().addOnGlobalLayoutListener(this);
-  }
-
   public HighwayRadarTextView(Context context, AttributeSet attrs) {
     super(context, attrs);
     init(attrs, context);
@@ -61,6 +55,12 @@ public class HighwayRadarTextView extends FrameLayout
   public HighwayRadarTextView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     init(attrs, context);
+  }
+
+  private void init(AttributeSet attrs, Context context) {
+    random = new Random();
+    vetorKeywords = new ArrayList<String>(MAX);
+    getViewTreeObserver().addOnGlobalLayoutListener(this);
   }
 
   public Activity getActivity() {
@@ -217,7 +217,6 @@ public class HighwayRadarTextView extends FrameLayout
         activity.setJoinGroupFlag(false);
         listOfHotspot.get(i).setTypeface(null, Typeface.NORMAL);
         listOfHotspot.get(i).setEffectColor(rippleViewDefaultColor);
-
       }
     }
   }

@@ -12,7 +12,8 @@ public class TimelineLoginDisplayable extends Displayable {
 
   private AccountNavigator accountNavigator;
 
-  public TimelineLoginDisplayable() {}
+  public TimelineLoginDisplayable() {
+  }
 
   @Override protected Configs getConfig() {
     return new Configs(1, true);

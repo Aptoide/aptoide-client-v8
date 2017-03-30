@@ -80,6 +80,35 @@ public class BadgeView extends TextView {
     init(context, target, tabIndex);
   }
 
+  public BadgeView(Context context, AttributeSet attrs) {
+    this(context, attrs, android.R.attr.textViewStyle);
+  }
+
+  /**
+   * Constructor -
+   * <p>
+   * create a new BadgeView instance attached to a target {@link View}.
+   *
+   * @param context context for this view.
+   * @param target the View to attach the badge to.
+   */
+  public BadgeView(Context context, View target) {
+    this(context, null, android.R.attr.textViewStyle, target, 0);
+  }
+
+  /**
+   * Constructor -
+   * <p>
+   * create a new BadgeView instance attached to a target {@link TabWidget} tab at a given index.
+   *
+   * @param context context for this view.
+   * @param target the TabWidget to attach the badge to.
+   * @param index the position of the tab within the target.
+   */
+  public BadgeView(Context context, TabWidget target, int index) {
+    this(context, null, android.R.attr.textViewStyle, target, index);
+  }
+
   private void init(Context context, View target, int tabIndex) {
 
     this.context = context;
@@ -221,35 +250,6 @@ public class BadgeView extends TextView {
     }
 
     setLayoutParams(lp);
-  }
-
-  public BadgeView(Context context, AttributeSet attrs) {
-    this(context, attrs, android.R.attr.textViewStyle);
-  }
-
-  /**
-   * Constructor -
-   * <p>
-   * create a new BadgeView instance attached to a target {@link View}.
-   *
-   * @param context context for this view.
-   * @param target the View to attach the badge to.
-   */
-  public BadgeView(Context context, View target) {
-    this(context, null, android.R.attr.textViewStyle, target, 0);
-  }
-
-  /**
-   * Constructor -
-   * <p>
-   * create a new BadgeView instance attached to a target {@link TabWidget} tab at a given index.
-   *
-   * @param context context for this view.
-   * @param target the TabWidget to attach the badge to.
-   * @param index the position of the tab within the target.
-   */
-  public BadgeView(Context context, TabWidget target, int index) {
-    this(context, null, android.R.attr.textViewStyle, target, index);
   }
 
   /**

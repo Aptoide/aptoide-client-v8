@@ -26,7 +26,8 @@ public class GetUserRepoSubscriptionRequest extends V3<GetUserRepoSubscription> 
     return new GetUserRepoSubscriptionRequest(body);
   }
 
-  @Override protected Observable<GetUserRepoSubscription> loadDataFromNetwork(V3.Interfaces interfaces,
+  @Override
+  protected Observable<GetUserRepoSubscription> loadDataFromNetwork(V3.Interfaces interfaces,
       boolean bypassCache) {
     return interfaces.getUserRepos(map);
   }

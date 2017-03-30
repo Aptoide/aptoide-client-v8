@@ -68,6 +68,18 @@ public class DateCalculator {
         .getString(cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_years_ago);
   }
 
+  private static boolean isYesterday(long date) {
+
+    final Calendar currentDate = Calendar.getInstance();
+    currentDate.setTimeInMillis(date);
+
+    final Calendar yesterdayDate = Calendar.getInstance();
+    yesterdayDate.add(Calendar.DATE, -1);
+
+    return yesterdayDate.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR)
+        && yesterdayDate.get(Calendar.DAY_OF_YEAR) == currentDate.get(Calendar.DAY_OF_YEAR);
+  }
+
   public String getTimeSinceDate(Context context, Date date) {
     if (date == null) {
       return "";
@@ -107,18 +119,6 @@ public class DateCalculator {
     }
 
     return getTimeDiffString(context, time);
-  }
-
-  private static boolean isYesterday(long date) {
-
-    final Calendar currentDate = Calendar.getInstance();
-    currentDate.setTimeInMillis(date);
-
-    final Calendar yesterdayDate = Calendar.getInstance();
-    yesterdayDate.add(Calendar.DATE, -1);
-
-    return yesterdayDate.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR)
-        && yesterdayDate.get(Calendar.DAY_OF_YEAR) == currentDate.get(Calendar.DAY_OF_YEAR);
   }
 
   private String getTimeDiffString(Context context, long timedate) {

@@ -63,21 +63,6 @@ public class HighwayRadarProgress extends View {
     startRotation(1 * 1000);
   }
 
-  private void startRotation(long duration) {
-    HighwayCustomAnimation animation = new HighwayCustomAnimation();
-    animation.setDuration(duration);
-    animation.setRepeatCount(Animation.INFINITE);
-    animation.setInterpolator(new LinearInterpolator());
-    animation.setMyCustomListener(new HighwayCustomAnimation.myCustomListener() {
-      @Override public void applyTans(float time)// time p a interpolacao
-      {
-        initialAngle = 360 * time;
-        invalidate();
-      }
-    });
-    startAnimation(animation);
-  }
-
   @Override protected void onDetachedFromWindow() {
     super.onDetachedFromWindow();
     stopRotation();
@@ -91,6 +76,21 @@ public class HighwayRadarProgress extends View {
     raio = Math.min(width, height);
     setMeasuredDimension(width, height);
     rect.set(17, 17, width - 17, height - 17);
+  }
+
+  private void startRotation(long duration) {
+    HighwayCustomAnimation animation = new HighwayCustomAnimation();
+    animation.setDuration(duration);
+    animation.setRepeatCount(Animation.INFINITE);
+    animation.setInterpolator(new LinearInterpolator());
+    animation.setMyCustomListener(new HighwayCustomAnimation.myCustomListener() {
+      @Override public void applyTans(float time)// time p a interpolacao
+      {
+        initialAngle = 360 * time;
+        invalidate();
+      }
+    });
+    startAnimation(animation);
   }
 
   private void stopRotation() {

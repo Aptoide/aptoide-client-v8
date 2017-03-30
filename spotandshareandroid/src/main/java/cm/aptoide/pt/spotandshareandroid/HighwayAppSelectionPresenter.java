@@ -88,6 +88,5 @@ public class HighwayAppSelectionPresenter implements Presenter {
     } else {
       view.showNoAppsSelectedToast();
     }
-
   }
 }

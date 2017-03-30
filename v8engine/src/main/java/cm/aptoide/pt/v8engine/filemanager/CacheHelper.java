@@ -133,6 +133,7 @@ public class CacheHelper implements CacheManager {
    *
    * @param foldersToCleanPath folders to handle
    * @param folder folder to check
+   *
    * @return true if folder is in foldersToCleanPath
    */
   private boolean checkIfInFoldersToClean(List<FolderToManage> foldersToCleanPath, File folder) {

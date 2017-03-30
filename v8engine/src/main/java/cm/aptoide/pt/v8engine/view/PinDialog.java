@@ -1,15 +1,12 @@
 package cm.aptoide.pt.v8engine.view;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.widget.EditText;
 import cm.aptoide.pt.v8engine.view.binding.RxAlertDialog;
-import rx.Observable;
-import rx.Subscription;
 
 /**
  * Created by marcelobenites on 09/03/17.

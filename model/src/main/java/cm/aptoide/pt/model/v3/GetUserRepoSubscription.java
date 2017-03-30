@@ -12,8 +12,8 @@ import lombok.EqualsAndHashCode;
 /**
  * Created by rmateus on 16-02-2015.
  */
-@EqualsAndHashCode(callSuper = false)
-@Data public class GetUserRepoSubscription extends BaseV3Response {
+@EqualsAndHashCode(callSuper = false) @Data public class GetUserRepoSubscription
+    extends BaseV3Response {
 
   private List<Subscription> subscription;
 }

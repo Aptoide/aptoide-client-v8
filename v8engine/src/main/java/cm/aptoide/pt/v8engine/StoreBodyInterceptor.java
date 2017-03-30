@@ -45,7 +45,8 @@ public class StoreBodyInterceptor implements BodyInterceptor<HashMapNotNull<Stri
           } catch (JsonProcessingException e) {
             Single.error(e);
           }
-          body.put("access_token", requestBodyFactory.createBodyPartFromString(account.getAccessToken()));
+          body.put("access_token",
+              requestBodyFactory.createBodyPartFromString(account.getAccessToken()));
 
           return Single.just(body);
         });

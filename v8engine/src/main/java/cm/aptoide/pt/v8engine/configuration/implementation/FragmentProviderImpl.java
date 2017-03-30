@@ -328,11 +328,11 @@ public class FragmentProviderImpl implements FragmentProvider {
     return ThankYouConnectingFragment.newInstance(tag);
   }
 
-  @Override public Fragment newRecommendedStoresFragment() {
-    return new RecommendedStoresFragment();
-  }
-
   @Override public Fragment newTimeLineFollowersFragment(long followerNumber, String storeTheme) {
     return TimeLineFollowersFragment.newInstanceUsingUser(followerNumber, storeTheme);
+  }
+
+  @Override public Fragment newRecommendedStoresFragment() {
+    return new RecommendedStoresFragment();
   }
 }

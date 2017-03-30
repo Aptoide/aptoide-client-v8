@@ -68,30 +68,6 @@ class AccountAuthenticator extends AbstractAccountAuthenticator {
         null, options);
   }
 
-  private Bundle createAuthActivityIntentBundle(AccountAuthenticatorResponse response,
-      String accountType, String[] requiredFeatures, String authTokenType, String password,
-      Bundle options) {
-
-    final Bundle bundle = new Bundle();
-    final Intent intent = createAuthActivityIntent(response, accountType, authTokenType, options);
-    bundle.putParcelable(AccountManager.KEY_INTENT, intent);
-
-    return bundle;
-  }
-
-  private Intent createAuthActivityIntent(AccountAuthenticatorResponse response, String accountType,
-      String authTokenType, Bundle options) {
-    Intent intent = new Intent(Application.getContext(), MainActivity.class);
-    intent.putExtra(MainActivity.FRAGMENT, LoginSignUpFragment.class.getName());
-    // FIXME: 14/2/2017 sithengineer add this funtionality in main Activity
-    intent.putExtra(ARG_ACCOUNT_TYPE, accountType);
-    intent.putExtra(ARG_AUTH_TYPE, authTokenType);
-    intent.putExtra(ARG_IS_ADDING_NEW_ACCOUNT, true);
-    intent.putExtra(ARG_OPTIONS_BUNDLE, options);
-    intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
-    return intent;
-  }
-
   @Override public Bundle confirmCredentials(AccountAuthenticatorResponse response, Account account,
       Bundle options) throws NetworkErrorException {
     return null;
@@ -180,5 +156,29 @@ class AccountAuthenticator extends AbstractAccountAuthenticator {
     //Bundle result = new Bundle();
     //result.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, false);
     //return result;
+  }
+
+  private Bundle createAuthActivityIntentBundle(AccountAuthenticatorResponse response,
+      String accountType, String[] requiredFeatures, String authTokenType, String password,
+      Bundle options) {
+
+    final Bundle bundle = new Bundle();
+    final Intent intent = createAuthActivityIntent(response, accountType, authTokenType, options);
+    bundle.putParcelable(AccountManager.KEY_INTENT, intent);
+
+    return bundle;
+  }
+
+  private Intent createAuthActivityIntent(AccountAuthenticatorResponse response, String accountType,
+      String authTokenType, Bundle options) {
+    Intent intent = new Intent(Application.getContext(), MainActivity.class);
+    intent.putExtra(MainActivity.FRAGMENT, LoginSignUpFragment.class.getName());
+    // FIXME: 14/2/2017 sithengineer add this funtionality in main Activity
+    intent.putExtra(ARG_ACCOUNT_TYPE, accountType);
+    intent.putExtra(ARG_AUTH_TYPE, authTokenType);
+    intent.putExtra(ARG_IS_ADDING_NEW_ACCOUNT, true);
+    intent.putExtra(ARG_OPTIONS_BUNDLE, options);
+    intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
+    return intent;
   }
 }

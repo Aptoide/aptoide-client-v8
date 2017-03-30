@@ -19,8 +19,8 @@ public class AccountException extends Exception {
   private String code;
 
   public AccountException(List<ErrorResponse> errors) {
-    code = errors != null && !errors.isEmpty()? errors.get(0).code : null;
-    error = errors != null && !errors.isEmpty()? errors.get(0).msg : null;
+    code = errors != null && !errors.isEmpty() ? errors.get(0).code : null;
+    error = errors != null && !errors.isEmpty() ? errors.get(0).msg : null;
   }
 
   public AccountException(String error) {

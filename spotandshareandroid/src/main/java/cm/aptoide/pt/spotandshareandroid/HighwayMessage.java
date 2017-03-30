@@ -66,7 +66,6 @@ public class HighwayMessage {
   }
 
   public enum Type {
-    RECEIVE,
-    SEND
+    RECEIVE, SEND
   }
 }

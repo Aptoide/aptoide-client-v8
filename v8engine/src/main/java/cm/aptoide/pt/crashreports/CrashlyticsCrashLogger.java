@@ -1,8 +1,8 @@
 package cm.aptoide.pt.crashreports;
 
 import android.content.Context;
-import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.BuildConfig;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.twitter.sdk.android.core.TwitterAuthConfig;

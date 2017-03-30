@@ -67,11 +67,6 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
     noDownloadsView = view.findViewById(R.id.no_apps_downloaded);
   }
 
-  @SuppressLint("MissingSuperCall") @Override
-  public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    // not calling super on purpose to avoid cleaning displayables
-  }
-
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
@@ -101,6 +96,11 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
         }, err -> {
           CrashReport.getInstance().log(err);
         });
+  }
+
+  @SuppressLint("MissingSuperCall") @Override
+  public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    // not calling super on purpose to avoid cleaning displayables
   }
 
   private Completable createDisplayableForDownload(Download download) {
