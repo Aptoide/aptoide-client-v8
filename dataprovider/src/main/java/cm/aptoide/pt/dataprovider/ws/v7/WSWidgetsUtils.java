@@ -122,8 +122,7 @@ public class WSWidgetsUtils {
 
         case MY_STORE_META:
           return GetMyStoreMetaRequest.of(bodyInterceptor)
-              .observe(refresh)
-              .observeOn(Schedulers.io()).map(getStoreMeta -> {
+              .observe(refresh).observeOn(Schedulers.io()).map(getStoreMeta -> {
                 GetHomeMeta.Data data = new GetHomeMeta.Data();
                 data.setStore(getStoreMeta.getData());
                 GetHomeMeta homeMeta = new GetHomeMeta();

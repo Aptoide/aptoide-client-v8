@@ -23,13 +23,13 @@
       android:layout_width="match_parent"
       android:layout_height="48dp"
       android:layout_alignParentBottom="true"
+      android:background="@color/default_color"
       android:measureWithLargestChild="false"
       android:minHeight="82dp"
       android:orientation="horizontal"
       android:weightSum="4"
       tools:background="@color/red"
       tools:visibility="visible"
-      android:background="@color/default_color"
       >
 
     <!-- this view only uses some room to keep everything tidy -->

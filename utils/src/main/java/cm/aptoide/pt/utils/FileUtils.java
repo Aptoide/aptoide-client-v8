@@ -87,6 +87,10 @@ public class FileUtils {
     return false;
   }
 
+  public static boolean fileExists(String path) {
+    return !TextUtils.isEmpty(path) && new File(path).exists();
+  }
+
   public long deleteDir(File dir) {
     if (dir == null) {
       throw new RuntimeException("The file to be deleted can't be null");
@@ -152,10 +156,6 @@ public class FileUtils {
     } else if (sendFileMoveEvent != null) {
       sendFileMoveEvent.call(MOVE);
     }
-  }
-
-  public static boolean fileExists(String path) {
-    return !TextUtils.isEmpty(path) && new File(path).exists();
   }
 
   /**

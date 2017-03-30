@@ -35,10 +35,10 @@ public class AptoideAccountManager {
   }
 
   public Observable<Account> accountStatus() {
-    return Observable.merge(accountRelay, dataPersist.getAccount().onErrorReturn(throwable -> {
-          CrashReport.getInstance().log(throwable);
-          return createLocalAccount();
-        }).toObservable());
+    return Observable.merge(accountRelay, getAccountAsync().onErrorReturn(throwable -> {
+      CrashReport.getInstance().log(throwable);
+      return createLocalAccount();
+    }).toObservable());
   }
 
   private Single<Account> singleAccountStatus() {

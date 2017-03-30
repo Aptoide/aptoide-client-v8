@@ -66,8 +66,8 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
   @Partners @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.frame_layout);
-	  
-	  AptoideAccountManager accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
+
+    AptoideAccountManager accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
     storeUtilsProxy = new StoreUtilsProxy(accountManager,
         ((V8Engine) getApplicationContext()).getBaseBodyInterceptor(),
         new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class));

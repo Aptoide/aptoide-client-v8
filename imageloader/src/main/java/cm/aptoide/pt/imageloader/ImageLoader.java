@@ -72,6 +72,7 @@ public class ImageLoader {
    * Blocking call to load a bitmap.
    *
    * @param apkIconPath Path for the bitmap to be loaded.
+   *
    * @return Loaded bitmap or null.
    */
   @WorkerThread public @Nullable Bitmap loadBitmap(String apkIconPath) {
@@ -102,14 +103,14 @@ public class ImageLoader {
    * @param imageView destination container for the image
    * @param placeHolderDrawableId placeholder while the image is loading or when is not loaded
    */
-  public Target<GlideDrawable> loadWithCircleTransformAndPlaceHolderAvatarSize(String url, ImageView imageView,
-      @DrawableRes int placeHolderDrawableId) {
+  public Target<GlideDrawable> loadWithCircleTransformAndPlaceHolderAvatarSize(String url,
+      ImageView imageView, @DrawableRes int placeHolderDrawableId) {
     return loadWithCircleTransformAndPlaceHolder(AptoideUtils.IconSizeU.generateStringAvatar(url),
         imageView, placeHolderDrawableId);
   }
 
-  public Target<GlideDrawable> loadWithCircleTransformAndPlaceHolder(String url, ImageView imageView,
-      @DrawableRes int placeHolderDrawableId) {
+  public Target<GlideDrawable> loadWithCircleTransformAndPlaceHolder(String url,
+      ImageView imageView, @DrawableRes int placeHolderDrawableId) {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context)
@@ -123,7 +124,8 @@ public class ImageLoader {
     return null;
   }
 
-  public Target<GlideDrawable> loadWithCircleTransform(Uri url, ImageView imageView, boolean cache) {
+  public Target<GlideDrawable> loadWithCircleTransform(Uri url, ImageView imageView,
+      boolean cache) {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context)
@@ -151,7 +153,8 @@ public class ImageLoader {
     return null;
   }
 
-  public Target<GlideDrawable> loadWithShadowCircleTransform(@DrawableRes int drawableId, ImageView imageView) {
+  public Target<GlideDrawable> loadWithShadowCircleTransform(@DrawableRes int drawableId,
+      ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context)
@@ -179,8 +182,8 @@ public class ImageLoader {
     return null;
   }
 
-  public Target<GlideDrawable> loadWithShadowCircleTransform(@DrawableRes int drawableId, ImageView imageView,
-      @ColorInt int shadowColor) {
+  public Target<GlideDrawable> loadWithShadowCircleTransform(@DrawableRes int drawableId,
+      ImageView imageView, @ColorInt int shadowColor) {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context)
@@ -194,7 +197,8 @@ public class ImageLoader {
     return null;
   }
 
-  public NotificationTarget loadImageToNotification(NotificationTarget notificationTarget, String url) {
+  public NotificationTarget loadImageToNotification(NotificationTarget notificationTarget,
+      String url) {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context.getApplicationContext())
@@ -231,7 +235,8 @@ public class ImageLoader {
     return null;
   }
 
-  public Target<GlideDrawable> load(String url, @DrawableRes int loadingPlaceHolder, ImageView imageView) {
+  public Target<GlideDrawable> load(String url, @DrawableRes int loadingPlaceHolder,
+      ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context).load(url).placeholder(loadingPlaceHolder).into(imageView);
@@ -255,6 +260,7 @@ public class ImageLoader {
    * Loads a Drawable resource from the app bundle.
    *
    * @param drawableId drawable id
+   *
    * @return {@link Drawable} with the passing drawable id or null if id = 0
    */
   public Drawable load(@DrawableRes int drawableId) {
@@ -300,7 +306,8 @@ public class ImageLoader {
     return null;
   }
 
-  public Target<GlideDrawable> loadUsingCircleTransform(@DrawableRes int drawableId, ImageView imageView) {
+  public Target<GlideDrawable> loadUsingCircleTransform(@DrawableRes int drawableId,
+      ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context)
@@ -314,11 +321,13 @@ public class ImageLoader {
     return null;
   }
 
-  public Target<GlideDrawable> loadUsingCircleTransform(@NonNull Uri url, @NonNull ImageView imageView) {
+  public Target<GlideDrawable> loadUsingCircleTransform(@NonNull Uri url,
+      @NonNull ImageView imageView) {
     return loadUsingCircleTransform(url.toString(), imageView);
   }
 
-  public Target<GlideDrawable> loadUsingCircleTransform(@NonNull String url, @NonNull ImageView imageView) {
+  public Target<GlideDrawable> loadUsingCircleTransform(@NonNull String url,
+      @NonNull ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context).load(url).transform(new CircleTransform(context)).into(imageView);

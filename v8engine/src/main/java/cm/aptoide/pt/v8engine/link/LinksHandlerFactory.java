@@ -15,6 +15,7 @@ public class LinksHandlerFactory {
    *
    * @param type Type of the object to return
    * @param url Url to be parsed by the object returned
+   *
    * @return {@link Link} implementation.
    */
   public Link get(int type, String url) {

@@ -61,10 +61,9 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
         new PhoneInputPresenter(this, new ContactsRepositoryImpl(baseBodyInterceptor),
             new AddressBookAnalytics(Analytics.getInstance(),
                 AppEventsLogger.newLogger(getContext().getApplicationContext())),
-            new AddressBookNavigationManager(getFragmentNavigator(),
-                entranceTag, getString(R.string.addressbook_about),
-                getString(R.string.addressbook_data_about,
-                    Application.getConfiguration().getMarketName())));
+            new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
+                getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
+                Application.getConfiguration().getMarketName())));
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
     contactUtils = new ContactUtils();
   }

@@ -16,8 +16,8 @@ public class LoginPreferences {
   private final AptoidePreferencesConfiguration configuration;
   private final GoogleApiAvailability googleApiAvailability;
 
-  public LoginPreferences(Context context,
-      AptoidePreferencesConfiguration configuration, GoogleApiAvailability googleApiAvailability) {
+  public LoginPreferences(Context context, AptoidePreferencesConfiguration configuration,
+      GoogleApiAvailability googleApiAvailability) {
     this.context = context;
     this.configuration = configuration;
     this.googleApiAvailability = googleApiAvailability;

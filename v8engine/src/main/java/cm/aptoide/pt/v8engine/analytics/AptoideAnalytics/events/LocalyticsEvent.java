@@ -31,6 +31,7 @@ public class LocalyticsEvent implements Event {
       } else {
         Localytics.tagEvent(name);
       }
-    } catch (Exception e) {}
+    } catch (Exception e) {
+    }
   }
 }

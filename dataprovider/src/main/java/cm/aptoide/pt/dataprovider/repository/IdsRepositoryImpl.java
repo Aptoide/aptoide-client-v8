@@ -34,8 +34,7 @@ public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
   private final Context context;
   private final String deviceId;
 
-  public IdsRepositoryImpl(SharedPreferences sharedPreferences, Context context,
-      String deviceId) {
+  public IdsRepositoryImpl(SharedPreferences sharedPreferences, Context context, String deviceId) {
     this.sharedPreferences = sharedPreferences;
     this.context = context;
     this.deviceId = deviceId;

@@ -5,7 +5,6 @@ import android.widget.CompoundButton;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.MainThreadSubscription;
-import rx.observables.SyncOnSubscribe;
 
 import static rx.android.MainThreadSubscription.verifyMainThread;
 

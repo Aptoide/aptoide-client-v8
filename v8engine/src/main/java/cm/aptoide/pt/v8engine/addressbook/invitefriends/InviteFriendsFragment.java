@@ -45,10 +45,9 @@ public class InviteFriendsFragment extends UIComponentFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     mActionsListener = new InviteFriendsPresenter(this,
-        new AddressBookNavigationManager(getFragmentNavigator(),
-            entranceTag, getString(R.string.addressbook_about),
-            getString(R.string.addressbook_data_about,
-                Application.getConfiguration().getMarketName())), openMode,
+        new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
+            getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
+            Application.getConfiguration().getMarketName())), openMode,
         new AddressBookAnalytics(Analytics.getInstance(),
             AppEventsLogger.newLogger(getContext().getApplicationContext())));
   }

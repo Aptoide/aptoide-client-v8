@@ -85,8 +85,9 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
 
     media_layout.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
-      Analytics.AppsTimeline.clickOnCard(VideoDisplayable.CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
-          displayable.getVideoTitle(), displayable.getTitle(), Analytics.AppsTimeline.OPEN_VIDEO);
+      Analytics.AppsTimeline.clickOnCard(VideoDisplayable.CARD_TYPE_NAME,
+          Analytics.AppsTimeline.BLANK, displayable.getVideoTitle(), displayable.getTitle(),
+          Analytics.AppsTimeline.OPEN_VIDEO);
       displayable.getLink().launch(context);
       displayable.sendOpenVideoEvent(packageName);
     });
@@ -114,8 +115,8 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
     compositeSubscription.add(RxView.clicks(videoHeader).subscribe(click -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
       displayable.getBaseLink().launch(context);
-      Analytics.AppsTimeline.clickOnCard(VideoDisplayable.CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
-          displayable.getVideoTitle(), displayable.getTitle(),
+      Analytics.AppsTimeline.clickOnCard(VideoDisplayable.CARD_TYPE_NAME,
+          Analytics.AppsTimeline.BLANK, displayable.getVideoTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_VIDEO_HEADER);
       displayable.sendOpenChannelEvent(packageName);
     }));

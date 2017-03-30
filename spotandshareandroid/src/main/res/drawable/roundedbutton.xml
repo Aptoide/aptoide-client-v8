@@ -7,11 +7,11 @@
     <shape android:shape="oval">
       <stroke
           android:color="#509E9E9E"
-          android:width="2dp" />
-      <solid android:color="#50757575" />
+          android:width="2dp"/>
+      <solid android:color="#50757575"/>
       <size
           android:height="50dp"
-          android:width="50dp" />
+          android:width="50dp"/>
     </shape>
 
 
@@ -24,11 +24,11 @@
     <shape android:shape="oval">
       <stroke
           android:color="#00B0C5"
-          android:width="0dp" />
-      <solid android:color="#00B0C5" />
+          android:width="0dp"/>
+      <solid android:color="#00B0C5"/>
       <size
           android:height="50dp"
-          android:width="50dp" />
+          android:width="50dp"/>
     </shape>
 
 

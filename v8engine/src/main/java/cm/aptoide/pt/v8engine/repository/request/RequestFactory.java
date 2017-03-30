@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.repository.request;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
@@ -9,7 +8,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 
 /**
@@ -27,16 +25,13 @@ public class RequestFactory {
   private final GetUserRequestFactory getUserRequestFactory;
   private final GetStoreRecommendedRequestFactory getStoreRecommendedRequestFactory;
 
-  public RequestFactory(StoreCredentialsProvider storeCredentialsProvider, BodyInterceptor bodyInterceptor) {
+  public RequestFactory(StoreCredentialsProvider storeCredentialsProvider,
+      BodyInterceptor bodyInterceptor) {
     this.storeCredentialsProvider = storeCredentialsProvider;
-    listStoresRequestFactory =
-        new ListStoresRequestFactory(bodyInterceptor);
-    listAppsRequestFactory =
-        new ListAppsRequestFactory(bodyInterceptor, storeCredentialsProvider);
-    listFullReviewsRequestFactory =
-        new ListFullReviewsRequestFactory(bodyInterceptor);
-    getStoreRequestFactory =
-        new GetStoreRequestFactory(storeCredentialsProvider, bodyInterceptor);
+    listStoresRequestFactory = new ListStoresRequestFactory(bodyInterceptor);
+    listAppsRequestFactory = new ListAppsRequestFactory(bodyInterceptor, storeCredentialsProvider);
+    listFullReviewsRequestFactory = new ListFullReviewsRequestFactory(bodyInterceptor);
+    getStoreRequestFactory = new GetStoreRequestFactory(storeCredentialsProvider, bodyInterceptor);
     getStoreWidgetsRequestFactory =
         new GetStoreWidgetsRequestFactory(storeCredentialsProvider, bodyInterceptor);
     getUserRequestFactory = new GetUserRequestFactory(bodyInterceptor);

@@ -55,13 +55,6 @@ public abstract class Authorization {
   }
 
   public enum Status {
-    NONE,
-    INACTIVE,
-    ACTIVE,
-    INITIATED,
-    PENDING,
-    CANCELLED,
-    EXPIRED,
-    SESSION_EXPIRED,
+    NONE, INACTIVE, ACTIVE, INITIATED, PENDING, CANCELLED, EXPIRED, SESSION_EXPIRED,
   }
 }

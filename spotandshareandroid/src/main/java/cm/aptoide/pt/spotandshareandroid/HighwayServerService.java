@@ -152,6 +152,88 @@ public class HighwayServerService extends Service {
     };
   }
 
+  @Override public int onStartCommand(Intent intent, int flags, int startId) {
+    if (intent != null) {
+
+      if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
+        final String externalStoragepath = intent.getStringExtra("ExternalStoragePath");
+
+        System.out.println("Going to start serving");
+        aptoideMessageServerSocket = new AptoideMessageServerSocket(55555, Integer.MAX_VALUE);
+        aptoideMessageServerSocket.setHostsChangedCallbackCallback(
+            new HostsCallbackManager(this.getApplicationContext()));
+        aptoideMessageServerSocket.startAsync();
+
+        StorageCapacity storageCapacity = new StorageCapacity() {
+          @Override public boolean hasCapacity(long bytes) {
+            long availableSpace = -1L;
+            StatFs stat = new StatFs(externalStoragepath);
+            availableSpace = (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
+            return availableSpace > bytes;
+          }
+        };
+
+        // TODO: 22-02-2017 fix this hardcoded ip
+
+        aptoideMessageClientSocket =
+            new AptoideMessageClientSocket("192.168.43.1", 55555, externalStoragepath,
+                storageCapacity, fileServerLifecycle, fileClientLifecycle, socketBinder);
+        aptoideMessageClientSocket.startAsync();
+
+        System.out.println("Connected 342");
+      } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
+        Bundle b = intent.getBundleExtra("bundle");
+
+        listOfApps = b.getParcelableArrayList("listOfAppsToInstall");
+
+        for (int i = 0; i < listOfApps.size(); i++) {
+          String filePath = listOfApps.get(i).getFilePath();
+          String appName = listOfApps.get(i).getAppName();
+          String packageName = listOfApps.get(i).getPackageName();
+          String obbsFilePath = listOfApps.get(i).getObbsFilePath();
+
+          File apk = new File(filePath);
+
+          File mainObb = null;
+          File patchObb = null;
+
+          List<FileInfo> fileInfoList = getFileInfo(filePath, obbsFilePath);
+
+          final AndroidAppInfo appInfo = new AndroidAppInfo(appName, packageName, fileInfoList);
+
+          AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
+            @Override public void run() {
+              aptoideMessageClientSocket.send(
+                  new RequestPermissionToSend(aptoideMessageClientSocket.getLocalhost(), appInfo));
+            }
+          });
+        }
+      } else if (intent.getAction() != null && intent.getAction().equals("SHUTDOWN_SERVER")) {
+        if (aptoideMessageServerSocket != null) { // TODO: 16-03-2017 filipe check problem
+          aptoideMessageClientSocket.shutdown();
+          aptoideMessageServerSocket.shutdown(new Runnable() {
+            @Override public void run() {
+              if (mNotifyManager != null) {
+                mNotifyManager.cancelAll();
+              }
+
+              setInitialApConfig();//to not interfere with recovering wifi state
+
+              Intent i = new Intent();
+              i.setAction("SERVER_DISCONNECT");
+              sendBroadcast(i);
+            }
+          });
+        }
+      }
+    }
+    return START_STICKY;
+  }
+
+  @Nullable @Override public IBinder onBind(Intent intent) {
+    return null;
+  }
+
   private void createReceiveNotification(String receivingAppName) {
 
     NotificationCompat.Builder mBuilderReceive = new NotificationCompat.Builder(this);
@@ -261,88 +343,6 @@ public class HighwayServerService extends Service {
       mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
     }
     mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(), mBuilderSend.build());
-  }
-
-  @Override public int onStartCommand(Intent intent, int flags, int startId) {
-    if (intent != null) {
-
-      if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
-        final String externalStoragepath = intent.getStringExtra("ExternalStoragePath");
-
-        System.out.println("Going to start serving");
-        aptoideMessageServerSocket = new AptoideMessageServerSocket(55555, Integer.MAX_VALUE);
-        aptoideMessageServerSocket.setHostsChangedCallbackCallback(
-            new HostsCallbackManager(this.getApplicationContext()));
-        aptoideMessageServerSocket.startAsync();
-
-        StorageCapacity storageCapacity = new StorageCapacity() {
-          @Override public boolean hasCapacity(long bytes) {
-            long availableSpace = -1L;
-            StatFs stat = new StatFs(externalStoragepath);
-            availableSpace = (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
-            return availableSpace > bytes;
-          }
-        };
-
-        // TODO: 22-02-2017 fix this hardcoded ip
-
-        aptoideMessageClientSocket =
-            new AptoideMessageClientSocket("192.168.43.1", 55555, externalStoragepath,
-                storageCapacity, fileServerLifecycle, fileClientLifecycle, socketBinder);
-        aptoideMessageClientSocket.startAsync();
-
-        System.out.println("Connected 342");
-      } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
-        Bundle b = intent.getBundleExtra("bundle");
-
-        listOfApps = b.getParcelableArrayList("listOfAppsToInstall");
-
-        for (int i = 0; i < listOfApps.size(); i++) {
-          String filePath = listOfApps.get(i).getFilePath();
-          String appName = listOfApps.get(i).getAppName();
-          String packageName = listOfApps.get(i).getPackageName();
-          String obbsFilePath = listOfApps.get(i).getObbsFilePath();
-
-          File apk = new File(filePath);
-
-          File mainObb = null;
-          File patchObb = null;
-
-          List<FileInfo> fileInfoList = getFileInfo(filePath, obbsFilePath);
-
-          final AndroidAppInfo appInfo = new AndroidAppInfo(appName, packageName, fileInfoList);
-
-          AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
-            @Override public void run() {
-              aptoideMessageClientSocket.send(
-                  new RequestPermissionToSend(aptoideMessageClientSocket.getLocalhost(), appInfo));
-            }
-          });
-        }
-      } else if (intent.getAction() != null && intent.getAction().equals("SHUTDOWN_SERVER")) {
-        if (aptoideMessageServerSocket != null) { // TODO: 16-03-2017 filipe check problem
-          aptoideMessageClientSocket.shutdown();
-          aptoideMessageServerSocket.shutdown(new Runnable() {
-            @Override public void run() {
-              if (mNotifyManager != null) {
-                mNotifyManager.cancelAll();
-              }
-
-              setInitialApConfig();//to not interfere with recovering wifi state
-
-              Intent i = new Intent();
-              i.setAction("SERVER_DISCONNECT");
-              sendBroadcast(i);
-            }
-          });
-        }
-      }
-    }
-    return START_STICKY;
-  }
-
-  @Nullable @Override public IBinder onBind(Intent intent) {
-    return null;
   }
 
   public List<FileInfo> getFileInfo(String filePath, String obbsFilePath) {

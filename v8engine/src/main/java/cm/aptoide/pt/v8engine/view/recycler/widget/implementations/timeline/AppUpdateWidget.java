@@ -95,8 +95,8 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
 
     compositeSubscription.add(RxView.clicks(store).subscribe(click -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
-      Analytics.AppsTimeline.clickOnCard(AppUpdateDisplayable.CARD_TYPE_NAME, displayable.getPackageName(),
-          Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
+      Analytics.AppsTimeline.clickOnCard(AppUpdateDisplayable.CARD_TYPE_NAME,
+          displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
           Analytics.AppsTimeline.OPEN_STORE);
 
       displayable.sendOpenStoreEvent();
@@ -113,8 +113,8 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
 
     compositeSubscription.add(RxView.clicks(updateButton).flatMap(click -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
-      Analytics.AppsTimeline.clickOnCard(AppUpdateDisplayable.CARD_TYPE_NAME, displayable.getPackageName(),
-          Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
+      Analytics.AppsTimeline.clickOnCard(AppUpdateDisplayable.CARD_TYPE_NAME,
+          displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
           Analytics.AppsTimeline.UPDATE_APP);
       displayable.sendUpdateAppEvent();
       return displayable.requestPermission(context).flatMap(success -> displayable.update(context));

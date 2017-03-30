@@ -1,6 +1,5 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.util.CommentType;
@@ -29,7 +28,8 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
   }
 
   public static ListCommentsRequest ofStoreAction(String url, boolean refresh,
-      @Nullable BaseRequestWithStore.StoreCredentials storeCredentials, BodyInterceptor bodyInterceptor) {
+      @Nullable BaseRequestWithStore.StoreCredentials storeCredentials,
+      BodyInterceptor bodyInterceptor) {
 
     ListCommentsRequest.url = url;
 
@@ -70,7 +70,8 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     return new ListCommentsRequest(body, bodyInterceptor);
   }
 
-  public static ListCommentsRequest of(long resourceId, int limit, boolean isReview, BodyInterceptor bodyInterceptor) {
+  public static ListCommentsRequest of(long resourceId, int limit, boolean isReview,
+      BodyInterceptor bodyInterceptor) {
     final Body body = getBody(resourceId, limit, isReview);
     return new ListCommentsRequest(body, bodyInterceptor);
   }
@@ -91,8 +92,8 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
   }
 
   private static Body getBody(long resourceId, int limit, boolean isReview) {
-    final Body body = new Body(limit, ManagerPreferences.getAndResetForceServerRefresh(), Order
-        .desc);
+    final Body body =
+        new Body(limit, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc);
 
     if (isReview) {
       body.setReviewId(resourceId);

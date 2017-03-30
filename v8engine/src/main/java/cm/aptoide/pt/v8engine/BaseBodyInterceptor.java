@@ -26,9 +26,8 @@ public class BaseBodyInterceptor implements BodyInterceptor<BaseBody> {
   }
 
   public Single<BaseBody> intercept(BaseBody body) {
-    return Single.zip(adultContent.enabled().first().toSingle(), accountManager.accountStatus()
-            .first().toSingle(),
-        (adultContentEnabled, account) -> {
+    return Single.zip(adultContent.enabled().first().toSingle(),
+        accountManager.accountStatus().first().toSingle(), (adultContentEnabled, account) -> {
           if (account.isLoggedIn()) {
             body.setAccessToken(account.getAccessToken());
           }

@@ -96,9 +96,9 @@ public class PaymentPresenter implements Presenter {
             aptoidePay.payments().observeOn(AndroidSchedulers.mainThread()),
             aptoidePay.confirmation(product).observeOn(AndroidSchedulers.mainThread()),
             (payments, confirmation) -> {
-              return showProductAndPayments(payments).<Purchase>andThen(
+              return showProductAndPayments(payments).<Purchase> andThen(
                   treatLoadingAndGetPurchase(confirmation));
-            })).<Purchase>flatMap(observable -> observable).compose(
+            })).<Purchase> flatMap(observable -> observable).compose(
         view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(purchase -> dismiss(purchase), throwable -> dismiss(throwable));

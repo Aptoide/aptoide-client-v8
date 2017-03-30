@@ -16,8 +16,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 import rx.Observable;
 
 /**

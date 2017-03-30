@@ -28,12 +28,12 @@ public class EditableTextDialog implements DialogInterface {
     dialog.show();
   }
 
-  @Override public void dismiss() {
-    dialog.dismiss();
-  }
-
   @Override public void cancel() {
     dialog.cancel();
+  }
+
+  @Override public void dismiss() {
+    dialog.dismiss();
   }
 
   public Observable<CharSequence> positiveClicks() {
@@ -96,8 +96,7 @@ public class EditableTextDialog implements DialogInterface {
     public EditableTextDialog build() {
 
       if (viewRes != 0 && editTextId != 0) {
-        final android.view.View view =
-            layoutInflater.inflate(viewRes, null, false);
+        final android.view.View view = layoutInflater.inflate(viewRes, null, false);
         final EditText pinEditText = ((EditText) view.findViewById(editTextId));
         builder.setView(view);
         final RxAlertDialog dialog = builder.build();

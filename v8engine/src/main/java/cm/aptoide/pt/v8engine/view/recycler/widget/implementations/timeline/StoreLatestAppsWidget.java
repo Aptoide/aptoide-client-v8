@@ -90,8 +90,8 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
 
     compositeSubscription.add(RxView.clicks(store).subscribe(click -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
-      Analytics.AppsTimeline.clickOnCard(StoreLatestAppsDisplayable.CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
-          Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
+      Analytics.AppsTimeline.clickOnCard(StoreLatestAppsDisplayable.CARD_TYPE_NAME,
+          Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
           Analytics.AppsTimeline.OPEN_STORE);
       displayable.sendOpenStoreEvent();
       getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()

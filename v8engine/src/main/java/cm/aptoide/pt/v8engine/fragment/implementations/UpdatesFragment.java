@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
@@ -117,11 +116,6 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     }
   }
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    //super.load(create, refresh, savedInstanceState);
-    // overridden to avoid calling super, since it removes the displayables automatically
-  }
-
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
@@ -146,6 +140,11 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
           CrashReport.getInstance().log(err);
           finishLoading();
         });
+  }
+
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    //super.load(create, refresh, savedInstanceState);
+    // overridden to avoid calling super, since it removes the displayables automatically
   }
 
   private void setUpdates(List<Update> updateList) {

@@ -1,7 +1,5 @@
 package cm.aptoide.pt.v8engine.addressbook.syncresult;
 
-import cm.aptoide.pt.v8engine.addressbook.data.Contact;
-
 /**
  * Created by jdandrade on 13/02/2017.
  */

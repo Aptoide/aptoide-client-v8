@@ -22,18 +22,18 @@ public class WidgetsArgs extends HashMapNotNull<WidgetsArgs.Key, WidgetsArgs.Gri
     add(Key.STORES_GROUP, storesRowSize);
   }
 
-  public WidgetsArgs add(Key key, int gridRowSize) {
-    if (!containsKey(key)) {
-      put(key, new GridSizeObject(gridRowSize));
-    }
-    return this;
-  }
-
   public static WidgetsArgs createDefault() {
     return new WidgetsArgs().add(Key.APPS_GROUP, Type.APPS_GROUP.getPerLineCount())
         .add(Key.STORES_GROUP, Type.STORES_GROUP.getPerLineCount())
         .add(Key.MY_STORES_SUBSCRIBED, Type.MY_STORES_SUBSCRIBED.getPerLineCount())
         .add(Key.STORES_RECOMMENDED, Type.STORES_RECOMMENDED.getPerLineCount());
+  }
+
+  public WidgetsArgs add(Key key, int gridRowSize) {
+    if (!containsKey(key)) {
+      put(key, new GridSizeObject(gridRowSize));
+    }
+    return this;
   }
 
   // FIXME Parece me redundante com Type! Confirmar!

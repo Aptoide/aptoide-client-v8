@@ -29,18 +29,18 @@ public class MyAccountPresenter implements Presenter {
         .subscribe();
   }
 
-  private Observable<Void> signOutClick() {
-    return view.signOutClick().flatMap(click -> accountManager.logout().doOnCompleted(() -> {
-      ManagerPreferences.setAddressBookSyncValues(false);
-      view.navigateToHome();
-    }).doOnError(throwable -> crashReport.log(throwable)).<Void> toObservable()).retry();
-  }
-
   @Override public void saveState(Bundle state) {
     // does nothing
   }
 
   @Override public void restoreState(Bundle state) {
     // does nothing
+  }
+
+  private Observable<Void> signOutClick() {
+    return view.signOutClick().flatMap(click -> accountManager.logout().doOnCompleted(() -> {
+      ManagerPreferences.setAddressBookSyncValues(false);
+      view.navigateToHome();
+    }).doOnError(throwable -> crashReport.log(throwable)).<Void> toObservable()).retry();
   }
 }

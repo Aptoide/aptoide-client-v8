@@ -119,8 +119,8 @@ public class CardToDisplayableConverter implements CardToDisplayable {
           SpannableFactory spannableFactory, DownloadFactory downloadFactory,
           LinksHandlerFactory linksHandlerFactory) {
 
-        return RecommendationDisplayable.from((Recommendation) card, dateCalculator, spannableFactory,
-            timelineAnalytics, socialRepository);
+        return RecommendationDisplayable.from((Recommendation) card, dateCalculator,
+            spannableFactory, timelineAnalytics, socialRepository);
       }
     });
 
@@ -197,8 +197,8 @@ public class CardToDisplayableConverter implements CardToDisplayable {
           SpannableFactory spannableFactory, DownloadFactory downloadFactory,
           LinksHandlerFactory linksHandlerFactory) {
 
-        return SocialArticleDisplayable.from(((SocialArticle) card), dateCalculator, spannableFactory,
-            linksHandlerFactory, timelineAnalytics, socialRepository);
+        return SocialArticleDisplayable.from(((SocialArticle) card), dateCalculator,
+            spannableFactory, linksHandlerFactory, timelineAnalytics, socialRepository);
       }
     });
 
@@ -227,7 +227,6 @@ public class CardToDisplayableConverter implements CardToDisplayable {
             linksHandlerFactory, timelineAnalytics, socialRepository);
       }
     });
-
   }
 
   @UiThread @Override public Displayable convert(TimelineCard card, DateCalculator dateCalculator,

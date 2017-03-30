@@ -39,6 +39,22 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
     init();
   }
 
+  public LikeButtonView(Context context, AttributeSet attrs) {
+    super(context, attrs);
+    init();
+  }
+
+  public LikeButtonView(Context context, AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+    init();
+  }
+
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+  public LikeButtonView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    super(context, attrs, defStyleAttr, defStyleRes);
+    init();
+  }
+
   private void init() {
     LayoutInflater.from(getContext()).inflate(R.layout.view_like_button, this, true);
     vHeart = (ImageView) findViewById(R.id.vHeart);
@@ -90,29 +106,13 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
     return true;
   }
 
-  public LikeButtonView(Context context, AttributeSet attrs) {
-    super(context, attrs);
-    init();
-  }
-
-  public LikeButtonView(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-    init();
-  }
-
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-  public LikeButtonView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-    super(context, attrs, defStyleAttr, defStyleRes);
-    init();
-  }
-
   @Override public void onClick(View v) {
     if (animatorSet != null) {
       animatorSet.cancel();
     }
 
     if (!isChecked) {
-      if (((V8Engine)getContext().getApplicationContext()).getAccountManager().isLoggedIn()) {
+      if (((V8Engine) getContext().getApplicationContext()).getAccountManager().isLoggedIn()) {
         vHeart.setImageResource(R.drawable.heart_on);
         vHeart.animate().cancel();
         vHeart.setScaleX(0);

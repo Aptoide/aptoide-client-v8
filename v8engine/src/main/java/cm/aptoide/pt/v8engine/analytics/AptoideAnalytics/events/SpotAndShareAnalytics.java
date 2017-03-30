@@ -38,6 +38,34 @@ public class SpotAndShareAnalytics implements SpotAndShareAnalyticsInterface {
     Analytics.getInstance().sendSpotAndShareEvents(eventName, attributes, fabric);
   }
 
+  /**
+   * Method to register the transfer events.
+   *
+   * @param eventName should be either "Send App" or "Receive App"
+   * @param action In case the event is a Send App, this action can be "Send app", "Successful
+   * send", "Unsuccessful send".
+   * If the event is a Receive App, this action can be either "Successful received", "Unsuccessful
+   * received"
+   */
+  public static void transferClick(String eventName, String action, boolean fabric) {
+    //TODO this is called in the wrong place
+    Map<String, String> attributes = new HashMap<>();
+    attributes.put("action", action);
+    trackEvent(eventName, attributes, fabric);
+  }
+
+  /**
+   * Method to register the clicks that represent interactions with group creation or join group.
+   *
+   * @param eventName Should be either "Join Group" or "Create Group"
+   * @param result In both cases should be Success or Unsuccessful
+   */
+  public static void groupClick(String eventName, String result, boolean fabric) {
+    Map<String, String> attributes = new HashMap<>();
+    attributes.put("results", result);
+    trackEvent(eventName, attributes, fabric);
+  }
+
   @Override public void joinGroupSuccess() {
     groupClick(EVENT_NAME_SPOT_SHARE_JOIN, ACTION_SPOT_SHARE_SUCCESS, false);
   }
@@ -82,33 +110,5 @@ public class SpotAndShareAnalytics implements SpotAndShareAnalyticsInterface {
    */
   @Override public void specialSettingsGranted() {
     groupClick(EVENT_NAME_SPOT_SHARE_PERMISSIONS, ACTION_SPOT_SHARE_PERM_GRANTED, true);
-  }
-
-  /**
-   * Method to register the transfer events.
-   *
-   * @param eventName should be either "Send App" or "Receive App"
-   * @param action In case the event is a Send App, this action can be "Send app", "Successful
-   * send", "Unsuccessful send".
-   * If the event is a Receive App, this action can be either "Successful received", "Unsuccessful
-   * received"
-   */
-  public static void transferClick(String eventName, String action, boolean fabric) {
-    //TODO this is called in the wrong place
-    Map<String, String> attributes = new HashMap<>();
-    attributes.put("action", action);
-    trackEvent(eventName, attributes, fabric);
-  }
-
-  /**
-   * Method to register the clicks that represent interactions with group creation or join group.
-   *
-   * @param eventName Should be either "Join Group" or "Create Group"
-   * @param result In both cases should be Success or Unsuccessful
-   */
-  public static void groupClick(String eventName, String result, boolean fabric) {
-    Map<String, String> attributes = new HashMap<>();
-    attributes.put("results", result);
-    trackEvent(eventName, attributes, fabric);
   }
 }

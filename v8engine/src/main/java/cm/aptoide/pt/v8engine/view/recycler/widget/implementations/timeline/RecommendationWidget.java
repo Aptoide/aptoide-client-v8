@@ -80,8 +80,8 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
     compositeSubscription.add(RxView.clicks(cardContent).subscribe(a -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
 
-      Analytics.AppsTimeline.clickOnCard(RecommendationDisplayable.CARD_TYPE_NAME, displayable.getPackageName(),
-          Analytics.AppsTimeline.BLANK, displayable.getTitle(),
+      Analytics.AppsTimeline.clickOnCard(RecommendationDisplayable.CARD_TYPE_NAME,
+          displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_APP_VIEW);
       displayable.sendRecommendedOpenAppEvent();
       getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()

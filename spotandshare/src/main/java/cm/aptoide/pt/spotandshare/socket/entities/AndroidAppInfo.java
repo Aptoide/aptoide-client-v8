@@ -52,9 +52,9 @@ import lombok.Data;
   }
 
   public long getFilesSize() {
-    long total=0;
-    if(fileInfos!=null){
-      for(int i=0;i<fileInfos.size();i++){
+    long total = 0;
+    if (fileInfos != null) {
+      for (int i = 0; i < fileInfos.size(); i++) {
         total += fileInfos.get(i).getSize();
       }
     }

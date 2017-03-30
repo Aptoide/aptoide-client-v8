@@ -66,6 +66,13 @@ public class AptoideDownloadManager {
     return context;
   }
 
+  public static AptoideDownloadManager getInstance() {
+    if (instance == null) {
+      instance = new AptoideDownloadManager();
+    }
+    return instance;
+  }
+
   public void initDownloadService(Context context) {
     AptoideDownloadManager.context = context;
     createDownloadDirs();
@@ -79,8 +86,10 @@ public class AptoideDownloadManager {
 
   /**
    * @param download info about the download to be made.
+   *
    * @return Observable to be subscribed if download updates needed or null if download is done
    * already
+   *
    * @throws IllegalArgumentException if the appToDownload object is not filled correctly, this
    * exception will be thrown with the cause in the detail
    * message.
@@ -155,13 +164,6 @@ public class AptoideDownloadManager {
       }
     }
     return downloadStatus;
-  }
-
-  public static AptoideDownloadManager getInstance() {
-    if (instance == null) {
-      instance = new AptoideDownloadManager();
-    }
-    return instance;
   }
 
   public Observable<Download> getCurrentDownload() {

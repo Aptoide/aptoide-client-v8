@@ -20,7 +20,7 @@ public class InAppBillingService extends Service {
     super.onCreate();
     billingBinder = new BillingBinder(this, RepositoryFactory.getInAppBillingRepository(this),
         new InAppBillingSerializer(), new ErrorCodeFactory(), new PurchaseErrorCodeFactory(),
-        new ProductFactory(), ((V8Engine)getApplicationContext()).getAccountManager());
+        new ProductFactory(), ((V8Engine) getApplicationContext()).getAccountManager());
   }
 
   @Override public IBinder onBind(Intent intent) {

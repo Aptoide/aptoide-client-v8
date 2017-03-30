@@ -48,10 +48,10 @@ public class ApplicationSender {
     intentFilter.addAction("SENDAPP");
     intentFilter.addAction("ERRORSENDING");
     //if (isHotspot) {
-      hostsFilter = new IntentFilter();
-      hostsFilter.addAction("SHOW_SEND_BUTTON");
-      hostsFilter.addAction("HIDE_SEND_BUTTON");
-      context.registerReceiver(hostsReceiver, hostsFilter);
+    hostsFilter = new IntentFilter();
+    hostsFilter.addAction("SHOW_SEND_BUTTON");
+    hostsFilter.addAction("HIDE_SEND_BUTTON");
+    context.registerReceiver(hostsReceiver, hostsFilter);
     //}
   }
 
@@ -67,7 +67,6 @@ public class ApplicationSender {
       instance.removeSendListener();
     }
     instance = null;
-
   }
 
   public void removeSendListener() {

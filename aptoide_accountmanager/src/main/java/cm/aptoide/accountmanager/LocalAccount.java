@@ -1,7 +1,5 @@
 package cm.aptoide.accountmanager;
 
-import cm.aptoide.accountmanager.Store;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import java.util.Collections;
 import java.util.List;
 import rx.Completable;

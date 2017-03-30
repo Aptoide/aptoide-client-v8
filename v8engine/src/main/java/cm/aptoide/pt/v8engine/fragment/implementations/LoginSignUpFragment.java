@@ -76,6 +76,14 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
     isNewAccount = args.getBoolean(IS_NEW_ACCOUNT);
   }
 
+  @Override public boolean onBackPressed() {
+    if (loginFragment != null && loginFragment.onBackPressed()) {
+      bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+      return true;
+    }
+    return super.onBackPressed();
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     bindViews(view);
@@ -145,14 +153,6 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
 
   @LayoutRes public int getLayoutId() {
     return R.layout.fragment_login_sign_up;
-  }
-
-  @Override public boolean onBackPressed() {
-    if (loginFragment != null && loginFragment.onBackPressed()) {
-      bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-      return true;
-    }
-    return super.onBackPressed();
   }
 
   public LoginSignUpFragment registerBottomSheetStateListener(

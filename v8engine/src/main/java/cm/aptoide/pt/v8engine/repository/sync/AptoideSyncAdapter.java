@@ -73,7 +73,8 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
       if (paymentConfirmationId == null) {
         new PaymentConfirmationSync(
             RepositoryFactory.getPaymentConfirmationRepository(getContext(), product), product,
-            operatorManager, confirmationAccessor, confirmationConverter, accountManager).sync(syncResult);
+            operatorManager, confirmationAccessor, confirmationConverter, accountManager).sync(
+            syncResult);
       } else {
         new PaymentConfirmationSync(
             RepositoryFactory.getPaymentConfirmationRepository(getContext(), product), product,

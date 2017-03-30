@@ -106,7 +106,7 @@ public class DefaultInstaller implements Installer {
     final IntentFilter intentFilter = new IntentFilter();
     intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
     intentFilter.addDataScheme("package");
-    return Observable.<Void>fromCallable(() -> {
+    return Observable.<Void> fromCallable(() -> {
       startUninstallIntent(context, packageName, uri);
       return null;
     }).flatMap(uninstallStarted -> waitPackageIntent(context, intentFilter, packageName));
@@ -208,7 +208,7 @@ public class DefaultInstaller implements Installer {
     intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
     intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
     intentFilter.addDataScheme("package");
-    return Observable.<Void>fromCallable(() -> {
+    return Observable.<Void> fromCallable(() -> {
       startInstallIntent(context, file);
       return null;
     }).flatMap(installStarted -> waitPackageIntent(context, intentFilter, packageName));

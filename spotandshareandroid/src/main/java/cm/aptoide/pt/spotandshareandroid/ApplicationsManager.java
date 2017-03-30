@@ -174,8 +174,8 @@ public class ApplicationsManager {
     } else {
       System.out.println("Inside the error part of the receiving app bigger version");
       HighwayTransferRecordItem tmp = new HighwayTransferRecordItem(
-          context.getResources().getDrawable(R.drawable.sym_def_app_icon), appName,
-          "ErrorPackName", "Could not read the original filepath", true, "No version available");
+          context.getResources().getDrawable(R.drawable.sym_def_app_icon), appName, "ErrorPackName",
+          "Could not read the original filepath", true, "No version available");
       tmp.setFromOutside("inside");
       return tmp;
     }
@@ -217,5 +217,4 @@ public class ApplicationsManager {
     } catch (IllegalArgumentException e) {
     }
   }
-
 }

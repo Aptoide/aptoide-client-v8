@@ -185,13 +185,14 @@ import rx.Observable;
 
     parameters.put("excluded_partners", excludedNetworks);
 
-    Observable<GetAdsResponse> result = interfaces.getAds(parameters, bypassCache).doOnNext(getAdsResponse -> {
+    Observable<GetAdsResponse> result =
+        interfaces.getAds(parameters, bypassCache).doOnNext(getAdsResponse -> {
 
-      // Impression click for those networks who need it
-      for (GetAdsResponse.Ad ad : getAdsResponse.getAds()) {
-        DataproviderUtils.AdNetworksUtils.knockImpression(ad);
-      }
-    });
+          // Impression click for those networks who need it
+          for (GetAdsResponse.Ad ad : getAdsResponse.getAds()) {
+            DataproviderUtils.AdNetworksUtils.knockImpression(ad);
+          }
+        });
 
     // TODO: 28-07-2016 Baikova getAds called.
 

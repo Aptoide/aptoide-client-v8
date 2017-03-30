@@ -4,28 +4,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
   <android.support.constraint.Guideline
       android:id="@+id/guidelineLeft"
       android:layout_width="1dp"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_percent="0.15" />
+      app:layout_constraintGuide_percent="0.15"
+      />
 
   <android.support.constraint.Guideline
       android:id="@+id/guidelineRight"
       android:layout_width="1dp"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      app:layout_constraintGuide_percent="0.85" />
+      app:layout_constraintGuide_percent="0.85"
+      />
 
   <android.support.constraint.Guideline
       android:id="@+id/guidelineBottom"
       android:layout_width="1dp"
       android:layout_height="wrap_content"
       android:orientation="horizontal"
-      app:layout_constraintGuide_percent="0.65" />
+      app:layout_constraintGuide_percent="0.65"
+      />
 
   <TextView
       android:id="@+id/addressbook_share_phone_message"
@@ -44,7 +48,8 @@
       tools:layout_constraintBottom_creator="1"
       tools:layout_constraintLeft_creator="1"
       tools:layout_constraintRight_creator="1"
-      tools:layout_constraintTop_creator="1" />
+      tools:layout_constraintTop_creator="1"
+      />
 
 
   <EditText
@@ -63,7 +68,8 @@
       app:layout_constraintTop_toBottomOf="@id/addressbook_share_phone_message"
       tools:layout_constraintLeft_creator="1"
       tools:layout_constraintRight_creator="1"
-      tools:layout_constraintTop_creator="1" />
+      tools:layout_constraintTop_creator="1"
+      />
 
   <EditText
       android:id="@+id/addressbook_phone_number"
@@ -82,7 +88,8 @@
       tools:layout_conversion_absoluteHeight="42dp"
       tools:layout_conversion_absoluteWidth="200dp"
       tools:layout_conversion_absoluteX="138dp"
-      tools:layout_conversion_absoluteY="140dp" />
+      tools:layout_conversion_absoluteY="140dp"
+      />
 
   <Button
       android:id="@+id/addressbook_phone_input_save"
@@ -107,7 +114,8 @@
       tools:layout_constraintBottom_creator="1"
       tools:layout_constraintLeft_creator="1"
       tools:layout_constraintRight_creator="1"
-      tools:layout_constraintTop_creator="1" />
+      tools:layout_constraintTop_creator="1"
+      />
 
   <TextView
       android:id="@+id/addressbook_not_now"
@@ -122,5 +130,6 @@
       app:layout_constraintStart_toStartOf="parent"
       tools:layout_constraintBottom_creator="1"
       tools:layout_constraintRight_creator="1"
-      tools:layout_constraintTop_creator="1" />
+      tools:layout_constraintTop_creator="1"
+      />
 </android.support.constraint.ConstraintLayout>

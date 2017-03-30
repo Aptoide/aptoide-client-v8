@@ -37,5 +37,4 @@ public class Price {
   public double getTaxRate() {
     return taxRate;
   }
-
 }

@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

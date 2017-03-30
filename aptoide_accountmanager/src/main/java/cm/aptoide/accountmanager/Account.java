@@ -12,20 +12,24 @@ public interface Account {
   /**
    * Changes state of the account to logged out. This method should not be called directly use
    * {@link AptoideAccountManager#logout()} instead.
-   * @see AptoideAccountManager#login(Type, String, String, String)
+   *
    * @return Completable to perform logout.
+   *
+   * @see AptoideAccountManager#login(Type, String, String, String)
    */
   Completable logout();
 
   /**
    * Refreshes the account token. This method should not be called directly use
    * {@link AptoideAccountManager#refreshToken()} instead.
+   *
    * @return Completable to perform logout.
    */
   Completable refreshToken();
 
   /**
    * Returns the stores which this account has subscribed to.
+   *
    * @see Store
    */
   List<Store> getSubscribedStores();
@@ -63,12 +67,14 @@ public interface Account {
   /**
    * Returns account information access level e.g. whether user's nickname and avatar are
    * going to be visible in social timeline.
+   *
    * @see Access
    */
   Access getAccess();
 
   /**
    * Returns whether user confirmed its access level or not.
+   *
    * @see #getAccess()
    */
   boolean isAccessConfirmed();
@@ -86,12 +92,14 @@ public interface Account {
   /**
    * Returns access token for server side interaction. The token may expire according to server
    * rules.
+   *
    * @see #refreshToken()
    */
   String getAccessToken();
 
   /**
    * Returns refresh token used to refresh access token when it expires.
+   *
    * @see #refreshToken()
    */
   String getRefreshToken();
@@ -103,6 +111,7 @@ public interface Account {
 
   /**
    * Returns account's type.
+   *
    * @see Type
    */
   Account.Type getType();
@@ -115,13 +124,11 @@ public interface Account {
      * Account information is going to be visible e.g. user's nickname and avatar are
      * going to be visible in social timeline.
      */
-    PUBLIC,
-    /**
+    PUBLIC, /**
      * Account information is going to be hidden e.g. user's nickname and avatar are
      * not going to be visible in social timeline.
      */
-    PRIVATE,
-    /**
+    PRIVATE, /**
      * User did not confirm the account access level yet. By all means account is considered
      * {@link #PRIVATE}.
      */
@@ -135,20 +142,16 @@ public interface Account {
     /**
      * Default account when user did not login yet.
      */
-    LOCAL,
-    /**
+    LOCAL, /**
      * Account created when user has logged in using Aptoide services.
      */
-    APTOIDE,
-    /**
+    APTOIDE, /**
      * Account created when user has logged in using Google services.
      */
-    GOOGLE,
-    /**
+    GOOGLE, /**
      * Account created when user has logged in using Facebook services.
      */
-    FACEBOOK,
-    /**
+    FACEBOOK, /**
      * Account created when user has logged in using ABAN services.
      */
     @Partners ABAN

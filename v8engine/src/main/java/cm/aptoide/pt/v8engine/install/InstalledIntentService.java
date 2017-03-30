@@ -72,7 +72,8 @@ public class InstalledIntentService extends IntentService {
 
       confirmAction(packageName, action);
 
-      if (!TextUtils.equals(action, Intent.ACTION_PACKAGE_REPLACED) && intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) {
+      if (!TextUtils.equals(action, Intent.ACTION_PACKAGE_REPLACED) && intent.getBooleanExtra(
+          Intent.EXTRA_REPLACING, false)) {
         // do nothing if its a replacement ongoing. we are only interested in
         // already replaced apps
         return;
@@ -214,6 +215,7 @@ public class InstalledIntentService extends IntentService {
 
   /**
    * @param packageInfo packageInfo.
+   *
    * @return true if packageInfo is null, false otherwise.
    */
   private boolean checkAndLogNullPackageInfo(PackageInfo packageInfo, String packageName) {

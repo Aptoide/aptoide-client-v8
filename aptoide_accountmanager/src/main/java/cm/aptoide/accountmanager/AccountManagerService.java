@@ -155,9 +155,8 @@ public class AccountManagerService {
       List<Store> subscribedStores) {
     return accountFactory.createAccount(serverUser.getAccess(), subscribedStores,
         String.valueOf(serverUser.getId()), serverUser.getEmail(), serverUser.getUsername(),
-        serverUser.getAvatar(), refreshToken, accessToken, encryptedPassword, Account.Type
-            .valueOf(type),
-        serverUser.getRepo(), serverUser.getRavatarHd(),
+        serverUser.getAvatar(), refreshToken, accessToken, encryptedPassword,
+        Account.Type.valueOf(type), serverUser.getRepo(), serverUser.getRavatarHd(),
         serverUser.getSettings().getMatureswitch().equals("active"),
         serverUser.isAccessConfirmed());
   }

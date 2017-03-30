@@ -32,6 +32,11 @@ public abstract class ActivityView extends LeakActivity implements View {
     activityNavigator = new ActivityNavigator(this);
   }
 
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    presenter = null;
+  }
+
   @NonNull @Override
   public final <T> LifecycleTransformer<T> bindUntilEvent(@NonNull LifecycleEvent lifecycleEvent) {
     return RxLifecycle.bindUntilEvent(getLifecycle(), lifecycleEvent);
@@ -71,11 +76,6 @@ public abstract class ActivityView extends LeakActivity implements View {
   @Override protected void onSaveInstanceState(Bundle outState) {
     presenter.saveState(outState);
     super.onSaveInstanceState(outState);
-  }
-
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    presenter = null;
   }
 
   public ActivityNavigator getActivityNavigator() {

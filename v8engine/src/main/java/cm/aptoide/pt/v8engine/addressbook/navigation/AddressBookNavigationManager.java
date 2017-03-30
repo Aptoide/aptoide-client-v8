@@ -22,9 +22,8 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
   private final String aboutFragmentActionBarTitle;
   private final String aboutFragmentBodyMessage;
 
-  public AddressBookNavigationManager(FragmentNavigator navigator,
-      String exitNavigatonFragmentTag, String aboutFragmentActionBarTitle,
-      String aboutFragmentBodyMessage) {
+  public AddressBookNavigationManager(FragmentNavigator navigator, String exitNavigatonFragmentTag,
+      String aboutFragmentActionBarTitle, String aboutFragmentBodyMessage) {
     this.navigator = navigator;
     this.exitNavigationFragmentTag = exitNavigatonFragmentTag;
     this.aboutFragmentActionBarTitle = aboutFragmentActionBarTitle;

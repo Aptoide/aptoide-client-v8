@@ -181,7 +181,8 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   private void updateUi(AppViewInstallDisplayable displayable, GetApp getApp,
-      GetAppMeta.App currentApp, AppViewInstallDisplayable.WidgetState widgetState, boolean shouldShowError) {
+      GetAppMeta.App currentApp, AppViewInstallDisplayable.WidgetState widgetState,
+      boolean shouldShowError) {
     Logger.d(TAG, "updateUi() called with: " + shouldShowError + "]");
     if (widgetState.getProgress() != null) {
       downloadStatusUpdate(widgetState.getProgress(), currentApp, shouldShowError);

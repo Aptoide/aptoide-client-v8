@@ -40,6 +40,12 @@ public class AdultContent {
         });
   }
 
+  public Completable enable() {
+    return accountManager.updateAccount(true)
+        .andThen(preferences.save(ADULT_CONTENT_PREFERENCES_KEY, true))
+        .onErrorResumeNext(throwable -> preferences.save(ADULT_CONTENT_PREFERENCES_KEY, true));
+  }
+
   public Completable disable() {
     return accountManager.updateAccount(false)
         .andThen(preferences.save(ADULT_CONTENT_PREFERENCES_KEY, false))
@@ -70,11 +76,5 @@ public class AdultContent {
           }
           return Completable.error(new SecurityException("Pin does not match."));
         });
-  }
-
-  public Completable enable() {
-    return accountManager.updateAccount(true)
-        .andThen(preferences.save(ADULT_CONTENT_PREFERENCES_KEY, true))
-        .onErrorResumeNext(throwable -> preferences.save(ADULT_CONTENT_PREFERENCES_KEY, true));
   }
 }

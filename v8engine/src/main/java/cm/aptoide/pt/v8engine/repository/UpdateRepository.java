@@ -5,7 +5,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -60,11 +59,12 @@ public class UpdateRepository implements Repository<Update, String> {
 
   private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
     Logger.d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
-    return ListAppsUpdatesRequest.of(storeIds, aptoideClientUUID.getUniqueIdentifier(), bodyInterceptor).observe(bypassCache).map(result -> {
+    return ListAppsUpdatesRequest.of(storeIds, aptoideClientUUID.getUniqueIdentifier(),
+        bodyInterceptor).observe(bypassCache).map(result -> {
       if (result != null && result.isOk()) {
         return result.getList();
       }
-      return Collections.<App>emptyList();
+      return Collections.<App> emptyList();
     });
   }
 

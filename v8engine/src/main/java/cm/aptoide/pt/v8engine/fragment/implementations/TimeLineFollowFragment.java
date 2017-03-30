@@ -1,26 +1,20 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeWithToolbarFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.MessageWhiteBgDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import java.util.LinkedList;
 import java.util.List;
-import lombok.AccessLevel;
-import lombok.Getter;
 import rx.functions.Action1;
 
 /**
@@ -30,7 +24,8 @@ import rx.functions.Action1;
 public abstract class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment {
 
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
-    @Override protected boolean displayHomeUpAsEnabled() {
+
+  @Override protected boolean displayHomeUpAsEnabled() {
     return true;
   }
 

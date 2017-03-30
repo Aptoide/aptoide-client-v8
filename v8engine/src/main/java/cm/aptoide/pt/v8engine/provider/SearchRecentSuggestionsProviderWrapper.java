@@ -29,8 +29,6 @@ public abstract class SearchRecentSuggestionsProviderWrapper
     return super.onCreate();
   }
 
-  public abstract String getSearchProvider();
-
   @Override public Cursor query(final Uri uri, String[] projection, String selection,
       final String[] selectionArgs, String sortOrder) {
     Log.d(TAG, "search-query: " + selectionArgs[0]);
@@ -66,6 +64,8 @@ public abstract class SearchRecentSuggestionsProviderWrapper
       return null;
     }
   }
+
+  public abstract String getSearchProvider();
 
   public abstract WebSocketManager getWebSocket();
 

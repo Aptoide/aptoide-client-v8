@@ -55,7 +55,6 @@ public class AptoideFileClientSocket<T> extends AptoideClientSocket {
       copy(socket.getInputStream(), out, fileInfo.getSize(), progressAccumulator);
       out.close();
     }
-
   }
 
   public AptoideFileClientSocket<T> setFileClientLifecycle(T fileDescriptor,

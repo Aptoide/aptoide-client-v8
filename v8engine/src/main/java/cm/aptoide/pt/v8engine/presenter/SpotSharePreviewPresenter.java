@@ -37,6 +37,14 @@ public class SpotSharePreviewPresenter implements Presenter {
     }
   }
 
+  @Override public void saveState(Bundle state) {
+
+  }
+
+  @Override public void restoreState(Bundle state) {
+
+  }
+
   private Observable<Void> startSelection() {
     return view.startSelection().doOnNext(selection -> {
       SpotAndShareAnalytics.clickShareApps();
@@ -45,13 +53,5 @@ public class SpotSharePreviewPresenter implements Presenter {
         view.finish();
       }
     });
-  }
-
-  @Override public void saveState(Bundle state) {
-
-  }
-
-  @Override public void restoreState(Bundle state) {
-
   }
 }

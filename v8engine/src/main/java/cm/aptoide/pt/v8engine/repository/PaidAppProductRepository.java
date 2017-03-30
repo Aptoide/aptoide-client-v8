@@ -47,8 +47,7 @@ public class PaidAppProductRepository implements ProductRepository {
   }
 
   @Override public Single<List<PaymentServiceResponse>> getPayments() {
-    return getServerPaidAppPaymentServices(product.getAppId(), false,
-        product.getStoreName(), true);
+    return getServerPaidAppPaymentServices(product.getAppId(), false, product.getStoreName(), true);
   }
 
   private Single<List<PaymentServiceResponse>> getServerPaidAppPaymentServices(long appId,

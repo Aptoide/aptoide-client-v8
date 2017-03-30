@@ -42,6 +42,7 @@ import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.BadgeView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -170,6 +171,32 @@ public class HomeFragment extends StoreFragment {
         }, err -> CrashReport.getInstance().log(err));
   }
 
+  @Override public int getContentViewId() {
+    return R.layout.activity_main;
+  }
+
+  @Override protected void setupSearch(Menu menu) {
+    SearchUtils.setupGlobalSearchView(menu, this);
+  }
+
+  @Override public void setupViews() {
+    super.setupViews();
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    accountNavigator =
+        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
+    setupNavigationView();
+  }
+
+  protected boolean displayHomeUpAsEnabled() {
+    return false;
+  }
+
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setTitle("");
+    toolbar.setNavigationIcon(R.drawable.ic_drawer);
+    toolbar.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+  }
+
   public void refreshUpdatesBadge(int num) {
     // No updates present
     if (updatesBadge == null) {
@@ -188,37 +215,6 @@ public class HomeFragment extends StoreFragment {
         updatesBadge.hide(true);
       }
     }
-  }
-
-  private Event.Name getEventName(int tab) {
-    switch (tab) {
-      case TabNavigator.DOWNLOADS:
-        return Event.Name.myDownloads;
-      case TabNavigator.STORES:
-        return Event.Name.myStores;
-      case TabNavigator.TIMELINE:
-        return Event.Name.getUserTimeline;
-      case TabNavigator.UPDATES:
-        return Event.Name.myUpdates;
-      default:
-        throw new IllegalArgumentException("Invalid tab.");
-    }
-  }
-
-  @Override public int getContentViewId() {
-    return R.layout.activity_main;
-  }
-
-  @Override protected void setupSearch(Menu menu) {
-    SearchUtils.setupGlobalSearchView(menu, this);
-  }
-
-  @Override public void setupViews() {
-    super.setupViews();
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator =
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
-    setupNavigationView();
   }
 
   private void setupNavigationView() {
@@ -337,14 +333,19 @@ public class HomeFragment extends StoreFragment {
         });
   }
 
-  protected boolean displayHomeUpAsEnabled() {
-    return false;
-  }
-
-  @Override public void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setTitle("");
-    toolbar.setNavigationIcon(R.drawable.ic_drawer);
-    toolbar.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+  private Event.Name getEventName(int tab) {
+    switch (tab) {
+      case TabNavigator.DOWNLOADS:
+        return Event.Name.myDownloads;
+      case TabNavigator.STORES:
+        return Event.Name.myStores;
+      case TabNavigator.TIMELINE:
+        return Event.Name.getUserTimeline;
+      case TabNavigator.UPDATES:
+        return Event.Name.myUpdates;
+      default:
+        throw new IllegalArgumentException("Invalid tab.");
+    }
   }
 
   @Override public void bindViews(View view) {

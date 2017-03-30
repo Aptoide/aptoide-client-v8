@@ -49,7 +49,8 @@ import rx.Observable;
     }
   }
 
-  public static ListAppVersionsRequest of(String packageName, HashMapNotNull<String, List<String>> storeCredentials, BodyInterceptor bodyInterceptor) {
+  public static ListAppVersionsRequest of(String packageName,
+      HashMapNotNull<String, List<String>> storeCredentials, BodyInterceptor bodyInterceptor) {
     Body body = new Body(packageName);
     body.setStoresAuthMap(storeCredentials);
     body.setLimit(MAX_LIMIT);

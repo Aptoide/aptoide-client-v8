@@ -2,20 +2,20 @@
     package="cm.aptoide.pt.spotandshareandroid">
 
 
-  <uses-permission android:name="android.permission.INTERNET" />
-  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-  <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-  <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
-  <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-  <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-  <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+  <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
+  <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+  <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+  <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
 
-  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
   <application
       android:allowBackup="true"
@@ -26,34 +26,34 @@
         android:name="cm.aptoide.pt.spotandshareandroid.HighwayActivity"
         android:screenOrientation="portrait">
       <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
+        <action android:name="android.intent.action.VIEW"/>
 
-        <category android:name="android.intent.category.LAUNCHER" />
+        <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
 
       <intent-filter>
-        <action android:name="android.intent.action.SEND" />
+        <action android:name="android.intent.action.SEND"/>
 
-        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.DEFAULT"/>
 
-        <data android:mimeType="application/vnd.android.package-archive" />
+        <data android:mimeType="application/vnd.android.package-archive"/>
       </intent-filter>
 
       <intent-filter>
-        <action android:name="android.intent.action.SEND_MULTIPLE" />
+        <action android:name="android.intent.action.SEND_MULTIPLE"/>
 
-        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.DEFAULT"/>
 
-        <data android:mimeType="application/vnd.android.package-archive" />
+        <data android:mimeType="application/vnd.android.package-archive"/>
       </intent-filter>
     </activity>
 
-    <activity android:name="cm.aptoide.pt.spotandshareandroid.HighwayAppSelectionActivity" />
+    <activity android:name="cm.aptoide.pt.spotandshareandroid.HighwayAppSelectionActivity"/>
 
     <service
         android:name="cm.aptoide.pt.spotandshareandroid.HighwayClientComm"
         android:enabled="true"
-        android:exported="true" />
+        android:exported="true"/>
     <!--<service-->
     <!--android:name=".HighwayServerComm"-->
     <!--android:enabled="true"-->
@@ -62,11 +62,11 @@
     <service
         android:name="cm.aptoide.pt.spotandshareandroid.HighwayClientService"
         android:enabled="true"
-        android:exported="true" />
+        android:exported="true"/>
     <service
         android:name="cm.aptoide.pt.spotandshareandroid.HighwayServerService"
         android:enabled="true"
-        android:exported="true" />
+        android:exported="true"/>
 
     <activity
         android:name="cm.aptoide.pt.spotandshareandroid.HighwayTransferRecordActivity"

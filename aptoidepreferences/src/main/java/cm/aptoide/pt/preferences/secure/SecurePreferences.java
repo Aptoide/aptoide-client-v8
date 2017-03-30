@@ -121,5 +121,4 @@ public class SecurePreferences {
         .putString(SecureKeys.USER_AGENT, userAgent)
         .apply();
   }
-
 }

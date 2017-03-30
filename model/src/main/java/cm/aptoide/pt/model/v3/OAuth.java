@@ -5,10 +5,7 @@
 
 package cm.aptoide.pt.model.v3;
 
-import cm.aptoide.pt.model.v3.BaseV3Response;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
-import lombok.Data;
 
 /**
  * Created by rmateus on 01-07-2014.

@@ -74,8 +74,8 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
     url.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
       displayable.getLink().launch(context);
-      Analytics.AppsTimeline.clickOnCard(ArticleDisplayable.CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
-          displayable.getArticleTitle(), displayable.getTitle(),
+      Analytics.AppsTimeline.clickOnCard(ArticleDisplayable.CARD_TYPE_NAME,
+          Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE);
       displayable.sendOpenArticleEvent(packageName);
     });
@@ -103,8 +103,8 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
     compositeSubscription.add(RxView.clicks(articleHeader).subscribe(click -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
       displayable.getDeveloperLink().launch(context);
-      Analytics.AppsTimeline.clickOnCard(ArticleDisplayable.CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
-          displayable.getArticleTitle(), displayable.getTitle(),
+      Analytics.AppsTimeline.clickOnCard(ArticleDisplayable.CARD_TYPE_NAME,
+          Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
       displayable.sendOpenArticleEvent(packageName);
     }));

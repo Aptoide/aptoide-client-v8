@@ -34,7 +34,7 @@ public class PaidAppPaymentConfirmationRepository extends PaymentConfirmationRep
 
   @Override public Completable createPaymentConfirmation(int paymentId, Product product) {
     return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId, operatorManager,
-        ((PaidAppProduct)product).getStoreName(), accountManager.getAccessToken())
+        ((PaidAppProduct) product).getStoreName(), accountManager.getAccessToken())
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {

@@ -94,24 +94,22 @@ public class ContactsRepositoryImpl implements ContactsRepository {
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext());
     SyncAddressBookRequest.of(facebookModel.getId(), facebookModel.getAccessToken(),
-        bodyInterceptor)
-        .observe()
-        .subscribe(getFriends -> {
-          List<Contact> contactList = new ArrayList<>();
-          for (GetFollowers.TimelineUser user : getFriends.getDatalist().getList()) {
-            Contact contact = new Contact();
-            contact.setStore(user.getStore());
-            Comment.User person = new Comment.User();
-            person.setAvatar(user.getAvatar());
-            person.setName(user.getName());
-            contact.setPerson(person);
-            contactList.add(contact);
-          }
-          callback.onContactsLoaded(contactList, true);
-        }, throwable -> {
-          throwable.printStackTrace();
-          callback.onContactsLoaded(null, false);
-        });
+        bodyInterceptor).observe().subscribe(getFriends -> {
+      List<Contact> contactList = new ArrayList<>();
+      for (GetFollowers.TimelineUser user : getFriends.getDatalist().getList()) {
+        Contact contact = new Contact();
+        contact.setStore(user.getStore());
+        Comment.User person = new Comment.User();
+        person.setAvatar(user.getAvatar());
+        person.setName(user.getName());
+        contact.setPerson(person);
+        contactList.add(contact);
+      }
+      callback.onContactsLoaded(contactList, true);
+    }, throwable -> {
+      throwable.printStackTrace();
+      callback.onContactsLoaded(null, false);
+    });
   }
 
   @Override

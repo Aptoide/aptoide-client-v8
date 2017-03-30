@@ -19,40 +19,20 @@ import lombok.experimental.Accessors;
   private GetStoreWidgets.WSWidget.Data data;
 
   public enum Type {
-    API,
-    CLIENT,
-    v3
+    API, CLIENT, v3
   }
 
   public enum Name {
     // Api
-    listApps,
-    listStores,
-    getUser,
-    getStore,
-    getStoreWidgets,
-    //getReviews,
+    listApps, listStores, getUser, getStore, getStoreWidgets, //getReviews,
     //getApkComments,
-    getUserTimeline,
-    listReviews,
-    listComments,
-    getMyStoresSubscribed,
-    getStoresRecommended,
+    getUserTimeline, listReviews, listComments, getMyStoresSubscribed, getStoresRecommended,
 
     // Client
-    myStores,
-    myUpdates,
-    myExcludedUpdates,
-    myScheduledDownloads,
-    myRollbacks,
-    getAds,
-    myDownloads,
+    myStores, myUpdates, myExcludedUpdates, myScheduledDownloads, myRollbacks, getAds, myDownloads,
 
     // Displays
-    facebook,
-    twitch,
-    twitter,
-    youtube,
+    facebook, twitch, twitter, youtube,
 
     mySpotShare, // v3
     getReviews

@@ -146,7 +146,8 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
                 .map(response -> productFactory.create(apiVersion, developerPayload, packageName,
                     response))
                 .map(product -> PendingIntent.getActivity(context, 0,
-                    PaymentActivity.getIntent(context, (ParcelableProduct) product), PendingIntent.FLAG_UPDATE_CURRENT))
+                    PaymentActivity.getIntent(context, (ParcelableProduct) product),
+                    PendingIntent.FLAG_UPDATE_CURRENT))
                 .toBlocking()
                 .first();
 

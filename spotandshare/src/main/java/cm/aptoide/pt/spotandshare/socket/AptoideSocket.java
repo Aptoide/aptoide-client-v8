@@ -28,6 +28,7 @@ public abstract class AptoideSocket {
   public AptoideSocket(int bufferSize) {
     this(Executors.newCachedThreadPool(), bufferSize);
   }
+
   public AptoideSocket(ExecutorService executorService) {
     this(executorService, 8192);
   }

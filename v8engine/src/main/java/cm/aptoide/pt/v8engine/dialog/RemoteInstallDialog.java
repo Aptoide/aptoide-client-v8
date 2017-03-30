@@ -141,20 +141,6 @@ public class RemoteInstallDialog extends BaseDialog implements RemoteInstallatio
     }
   }
 
-  private void showErrorLayout(Error error) {
-    pBar.setVisibility(View.GONE);
-    if (error == Error.NO_DEVICES_FOUND) {
-      aptoideTVInstalledText.setText(R.string.remote_install_notinstallated);
-      errorText.setText(R.string.remote_install_nodevices);
-    } else if (error == Error.NO_NETWORK) {
-      aptoideTVInstalledText.setText(R.string.remote_install_nowifi_tip);
-      errorText.setText(R.string.remote_install_nowifi);
-    }
-
-    listLayout.setVisibility(View.GONE);
-    errorLayout.setVisibility(View.VISIBLE);
-  }
-
   @Override public void onAptoideTVServiceLost(ReceiverDevice device) {
     adapter.remove(device);
   }
@@ -175,6 +161,20 @@ public class RemoteInstallDialog extends BaseDialog implements RemoteInstallatio
 
   @Override public void onNoNetworkAccess() {
     showErrorLayout(Error.NO_NETWORK);
+  }
+
+  private void showErrorLayout(Error error) {
+    pBar.setVisibility(View.GONE);
+    if (error == Error.NO_DEVICES_FOUND) {
+      aptoideTVInstalledText.setText(R.string.remote_install_notinstallated);
+      errorText.setText(R.string.remote_install_nodevices);
+    } else if (error == Error.NO_NETWORK) {
+      aptoideTVInstalledText.setText(R.string.remote_install_nowifi_tip);
+      errorText.setText(R.string.remote_install_nowifi);
+    }
+
+    listLayout.setVisibility(View.GONE);
+    errorLayout.setVisibility(View.VISIBLE);
   }
 
   private enum Error {NO_NETWORK, NO_DEVICES_FOUND}

@@ -1,7 +1,5 @@
 package cm.aptoide.pt.v8engine.addressbook.data;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.store.Store;
 import lombok.Data;

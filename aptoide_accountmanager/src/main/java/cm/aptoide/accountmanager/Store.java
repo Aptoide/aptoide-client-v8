@@ -9,8 +9,8 @@ public class Store {
   private final String username;
   private final String password;
 
-  public Store(long downloadCount, String avatar, long id, String name, String theme, String username,
-      String password) {
+  public Store(long downloadCount, String avatar, long id, String name, String theme,
+      String username, String password) {
     this.downloadCount = downloadCount;
     this.avatar = avatar;
     this.id = id;

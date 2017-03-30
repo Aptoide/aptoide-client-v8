@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;

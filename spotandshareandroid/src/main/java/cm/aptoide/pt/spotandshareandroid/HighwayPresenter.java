@@ -70,25 +70,6 @@ public class HighwayPresenter implements Presenter {
     }
   }
 
-  private void deactivateHotspot() {
-    deactivateHotspotTask.setListener(new SimpleListener() {
-      @Override public void onEvent() {
-        connectionManager.start(new ConnectionManager.WifiStateListener() {
-          @Override public void onStateChanged(boolean enabled) {
-            if (enabled) {
-              connectionManager.cleanNetworks();
-              view.showConnections();
-              view.setUpListeners();
-              view.enableButtons(true);
-            }
-          }
-        });
-        connectionManager.enableWifi(true);
-      }
-    });
-    deactivateHotspotTask.execute();
-  }
-
   @Override public void onResume() {
     if (!permissionManager.checkPermissions() && !permissionRequested) {
       permissionManager.requestPermissions();
@@ -113,6 +94,25 @@ public class HighwayPresenter implements Presenter {
 
   @Override public void onStart() {
 
+  }
+
+  private void deactivateHotspot() {
+    deactivateHotspotTask.setListener(new SimpleListener() {
+      @Override public void onEvent() {
+        connectionManager.start(new ConnectionManager.WifiStateListener() {
+          @Override public void onStateChanged(boolean enabled) {
+            if (enabled) {
+              connectionManager.cleanNetworks();
+              view.showConnections();
+              view.setUpListeners();
+              view.enableButtons(true);
+            }
+          }
+        });
+        connectionManager.enableWifi(true);
+      }
+    });
+    deactivateHotspotTask.execute();
   }
 
   public void onActivityResult(Group group) {

@@ -132,17 +132,6 @@ public abstract class WebSocketManager extends WebSocketListener implements WebS
     return result[0];
   }
 
-  public WebSocket connect(String port) {
-    request =
-        new Request.Builder().url(WEBSOCKETS_SCHEME + WEBSOCKETS_HOST + ":" + getPort()).build();
-    client = new OkHttpClient();
-    webSocket = client.newWebSocket(request, new StoreAutoCompleteWebSocket());
-
-    return webSocket;
-  }
-
-  protected abstract String getPort();
-
   @Override public boolean send(ByteString bytes) {
     return false;
   }
@@ -155,4 +144,15 @@ public abstract class WebSocketManager extends WebSocketListener implements WebS
   @Override public void cancel() {
     webSocket.cancel();
   }
+
+  public WebSocket connect(String port) {
+    request =
+        new Request.Builder().url(WEBSOCKETS_SCHEME + WEBSOCKETS_HOST + ":" + getPort()).build();
+    client = new OkHttpClient();
+    webSocket = client.newWebSocket(request, new StoreAutoCompleteWebSocket());
+
+    return webSocket;
+  }
+
+  protected abstract String getPort();
 }

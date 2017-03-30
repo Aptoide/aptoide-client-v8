@@ -44,10 +44,6 @@ public class CrashReport implements CrashLogger {
     }
   }
 
-  private boolean isInitialized() {
-    return crashLoggers != null && !crashLoggers.isEmpty();
-  }
-
   @Override public void log(String key, String value) {
     if (!isInitialized()) {
       Log.e(TAG, "not initialized");
@@ -57,6 +53,10 @@ public class CrashReport implements CrashLogger {
     for (int i = 0; i < crashLoggers.size(); i++) {
       crashLoggers.get(i).log(key, value);
     }
+  }
+
+  private boolean isInitialized() {
+    return crashLoggers != null && !crashLoggers.isEmpty();
   }
 
   public CrashLogger getLogger(Class<? extends CrashLogger> clazz) {

@@ -8,7 +8,6 @@ package cm.aptoide.pt.v8engine.activity;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.view.MenuItem;
-import cm.aptoide.pt.navigation.FragmentNavigator;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 

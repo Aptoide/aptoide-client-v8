@@ -5,10 +5,10 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccount;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.LikeCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ShareCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ShareInstallCardRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.v8engine.interfaces.ShareCardCallback;
@@ -29,7 +29,8 @@ public class SocialRepository {
     this.bodyInterceptor = bodyInterceptor;
   }
 
-  public void share(TimelineCard timelineCard, Context context, boolean privacy, ShareCardCallback shareCardCallback) {
+  public void share(TimelineCard timelineCard, Context context, boolean privacy,
+      ShareCardCallback shareCardCallback) {
     ShareCardRequest.of(timelineCard, bodyInterceptor)
         .observe()
         .toSingle()
@@ -55,15 +56,18 @@ public class SocialRepository {
   }
 
   public void share(String packageName, String shareType, boolean privacy) {
-    ShareInstallCardRequest.of(packageName, shareType,
-        bodyInterceptor).observe().toSingle().flatMapCompletable(response -> {
-      if (response.isOk()) {
-        return accountManager.updateAccount(getAccountAccess(privacy));
-      }
-      return Completable.error(
-          new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
-    }).subscribe(() -> {
-    }, throwable -> throwable.printStackTrace());
+    ShareInstallCardRequest.of(packageName, shareType, bodyInterceptor)
+        .observe()
+        .toSingle()
+        .flatMapCompletable(response -> {
+          if (response.isOk()) {
+            return accountManager.updateAccount(getAccountAccess(privacy));
+          }
+          return Completable.error(
+              new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
+        })
+        .subscribe(() -> {
+        }, throwable -> throwable.printStackTrace());
   }
 
   private AptoideAccount.Access getAccountAccess(boolean privacy) {

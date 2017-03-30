@@ -68,8 +68,7 @@ public class WebAuthorizationActivity extends ActivityView implements WebAuthori
           RepositoryFactory.getPaymentAuthorizationRepository(this),
           new PaymentAuthorizationFactory(this),
           RepositoryFactory.getPaymentRepository(this, product),
-          RepositoryFactory.getProductRepository(this, product),
-          new Payer(accountManager));
+          RepositoryFactory.getProductRepository(this, product), new Payer(accountManager));
 
       webView = (WebView) findViewById(R.id.activity_boa_compra_authorization_web_view);
       webView.getSettings().setJavaScriptEnabled(true);

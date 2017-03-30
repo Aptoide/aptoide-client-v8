@@ -30,8 +30,10 @@ public class GenericDialogs {
    *
    * @param title Title to apply on AlertDialog
    * @param message Message to asSnack on AlertDialog
+   *
    * @return A Observable that shows the dialog when subscribed and return the action made by
    * user. This action is represented by EResponse
+   *
    * @see EResponse
    */
   public static Observable<EResponse> createGenericYesNoCancelMessage(@NonNull Context context,
@@ -64,8 +66,10 @@ public class GenericDialogs {
    *
    * @param title Title to apply on AlertDialog
    * @param message Message to asSnack on AlertDialog
+   *
    * @return A Observable that shows the dialog when subscribed and return the action made by
    * user. This action is represented by EResponse
+   *
    * @see EResponse
    */
   public static Observable<EResponse> createGenericOkCancelMessage(Context context, String title,
@@ -94,8 +98,10 @@ public class GenericDialogs {
    *
    * @param title Title to apply on AlertDialog
    * @param message Message to asSnack on AlertDialog
+   *
    * @return A Observable that shows the dialog when subscribed and return the action made by
    * user. This action is represented by EResponse
+   *
    * @see EResponse
    */
   public static Observable<EResponse> createGenericOkMessage(Context context, String title,

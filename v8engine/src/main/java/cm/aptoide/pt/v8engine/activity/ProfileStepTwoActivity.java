@@ -120,6 +120,7 @@ public class ProfileStepTwoActivity extends AccountBaseActivity {
       dismiss();
     }
   }
+
   private void dismiss() {
     pleaseWaitDialog.dismiss();
     finish();

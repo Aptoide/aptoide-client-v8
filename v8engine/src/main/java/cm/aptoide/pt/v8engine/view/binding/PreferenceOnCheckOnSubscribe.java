@@ -5,7 +5,6 @@ import android.support.v7.preference.Preference;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.MainThreadSubscription;
-import rx.observables.SyncOnSubscribe;
 
 import static rx.android.MainThreadSubscription.verifyMainThread;
 
@@ -27,7 +26,7 @@ class PreferenceOnCheckOnSubscribe implements Observable.OnSubscribe<Boolean> {
     Preference.OnPreferenceClickListener listener = new Preference.OnPreferenceClickListener() {
       @Override public boolean onPreferenceClick(Preference preference) {
         if (!subscriber.isUnsubscribed()) {
-          subscriber.onNext(((CheckBoxPreference)preference).isChecked());
+          subscriber.onNext(((CheckBoxPreference) preference).isChecked());
           return true;
         }
         return true;
