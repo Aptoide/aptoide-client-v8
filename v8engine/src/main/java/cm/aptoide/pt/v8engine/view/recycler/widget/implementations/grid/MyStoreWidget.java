@@ -72,7 +72,7 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
 
     storeName.setText(store.getName());
     compositeSubscription.add(RxView.clicks(exploreButton)
-        .subscribe(click -> getNavigationManager().navigateTo(
+        .subscribe(click -> getFragmentNavigator().navigateTo(
             V8Engine.getFragmentProvider().newStoreFragment(store.getName(), storeTheme))));
 
     setupSocialLinks(displayable.getSocialChannels(), socialChannelsLayout);

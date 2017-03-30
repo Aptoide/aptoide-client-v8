@@ -148,7 +148,7 @@ import rx.android.schedulers.AndroidSchedulers;
     return RxView.clicks(updateRowLayout).doOnNext(v -> {
       final Fragment fragment = V8Engine.getFragmentProvider()
           .newAppViewFragment(updateDisplayable.getAppId(), updateDisplayable.getPackageName());
-      getNavigationManager().navigateTo(fragment);
+      getFragmentNavigator().navigateTo(fragment);
     });
   }
 

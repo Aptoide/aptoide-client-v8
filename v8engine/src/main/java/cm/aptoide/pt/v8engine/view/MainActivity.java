@@ -39,7 +39,6 @@ import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.storetab.StoreTabFragmentChooser;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.presenter.MainPresenter;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.services.ContentPuller;
@@ -57,7 +56,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by neuro on 06-05-2016.
  */
-public class MainActivity extends TabNavigatorActivity implements MainView, FragmentShower {
+public class MainActivity extends TabNavigatorActivity implements MainView {
 
   public final static String FRAGMENT = "FRAGMENT";
 
@@ -85,14 +84,14 @@ public class MainActivity extends TabNavigatorActivity implements MainView, Frag
   }
 
   @Override public void showWizard() {
-    getNavigationManager().navigateTo(new WizardFragment());
+    getFragmentNavigator().navigateTo(new WizardFragment());
   }
 
   @Override public void showHome() {
     Fragment home =
         HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
             V8Engine.getConfiguration().getDefaultTheme());
-    getNavigationManager().navigateToWithoutBackSave(home);
+    getFragmentNavigator().navigateToWithoutBackSave(home);
   }
 
   @Override public void showDeepLink() {
@@ -138,25 +137,25 @@ public class MainActivity extends TabNavigatorActivity implements MainView, Frag
   }
 
   private void appViewDeepLink(String md5) {
-    getNavigationManager().navigateTo(AppViewFragment.newInstance(md5));
+    getFragmentNavigator().navigateTo(AppViewFragment.newInstance(md5));
   }
 
   private void appViewDeepLink(long appId, String packageName, boolean showPopup) {
     AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
         : AppViewFragment.OpenType.OPEN_ONLY;
-    getNavigationManager().navigateTo(
+    getFragmentNavigator().navigateTo(
         V8Engine.getFragmentProvider().newAppViewFragment(appId, packageName, openType));
   }
 
   private void appViewDeepLink(String packageName, String storeName, boolean showPopup) {
     AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
         : AppViewFragment.OpenType.OPEN_ONLY;
-    getNavigationManager().navigateTo(
+    getFragmentNavigator().navigateTo(
         V8Engine.getFragmentProvider().newAppViewFragment(packageName, storeName, openType));
   }
 
   private void searchDeepLink(String query) {
-    getNavigationManager().navigateTo(V8Engine.getFragmentProvider().newSearchFragment(query));
+    getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider().newSearchFragment(query));
   }
 
   private void newrepoDeepLink(ArrayList<String> repos) {
@@ -217,7 +216,7 @@ public class MainActivity extends TabNavigatorActivity implements MainView, Frag
         GetStoreWidgets.WSWidget.Data data = new GetStoreWidgets.WSWidget.Data();
         data.setLayout(Layout.valueOf(queryLayout));
         event.setData(data);
-        getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+        getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
             .newStoreTabGridRecyclerFragment(event,
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME),
@@ -232,7 +231,7 @@ public class MainActivity extends TabNavigatorActivity implements MainView, Frag
     if (uri != null) {
       String openMode = uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.OPEN_MODE);
       if (!TextUtils.isEmpty(openMode)) {
-        getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+        getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
             .newScheduledDownloadsFragment(ScheduledDownloadsFragment.OpenMode.valueOf(openMode)));
       }
     }
@@ -248,7 +247,7 @@ public class MainActivity extends TabNavigatorActivity implements MainView, Frag
   }
 
   @Override public void onBackPressed() {
-    final Fragment f = getLast();
+    final Fragment f = getFragmentNavigator().peekLast();
     if (f != null && FragmentView.class.isAssignableFrom(f.getClass())) {
       // similar code in FragmentActivity#onBackPressed()
       boolean handledBackPressed = ((FragmentView) f).onBackPressed();
@@ -262,9 +261,5 @@ public class MainActivity extends TabNavigatorActivity implements MainView, Frag
       // Aptoide crashes here on apkfy :/
       e.printStackTrace();
     }
-  }
-
-  @Override public Fragment getLast() {
-    return getNavigationManager().peekLast();
   }
 }

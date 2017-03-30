@@ -40,7 +40,7 @@ public class ThankYouConnectingFragment extends UIComponentFragment {
 
   @Override public void setupViews() {
     AddressBookNavigationManager addressBookNavigationManager =
-        new AddressBookNavigationManager(getNavigationManager(), entranceTag,
+        new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about), getString(R.string.addressbook_data_about));
     RxView.clicks(done)
         .subscribe(clicks -> addressBookNavigationManager.leaveAddressBook(),

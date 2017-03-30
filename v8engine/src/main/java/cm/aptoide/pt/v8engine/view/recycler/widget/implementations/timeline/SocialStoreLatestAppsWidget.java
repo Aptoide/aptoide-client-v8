@@ -13,12 +13,9 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -152,7 +149,7 @@ public class SocialStoreLatestAppsWidget
             Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
             Analytics.AppsTimeline.OPEN_APP_VIEW);
         displayable.sendStoreOpenAppEvent(packageName);
-        getNavigationManager().navigateTo(
+        getFragmentNavigator().navigateTo(
             V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app), packageName));
       }));
     }
@@ -163,7 +160,7 @@ public class SocialStoreLatestAppsWidget
           Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
           Analytics.AppsTimeline.OPEN_STORE);
       displayable.sendOpenStoreEvent();
-      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
           .newStoreFragment(displayable.getStoreName(),
               displayable.getSharedStore().getAppearance().getTheme()));
     }));
@@ -174,7 +171,7 @@ public class SocialStoreLatestAppsWidget
           Analytics.AppsTimeline.BLANK, displayable.getSharedStore().getName(),
           Analytics.AppsTimeline.OPEN_STORE);
       displayable.sendOpenSharedStoreEvent();
-      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
           .newStoreFragment(displayable.getSharedStore().getName(),
               displayable.getSharedStore().getAppearance().getTheme()));
     }));
@@ -229,7 +226,7 @@ public class SocialStoreLatestAppsWidget
     if (isSubscribed) {
       // set store already followed button text and open store action
       Action1<Void> openStore = __ -> {
-        getNavigationManager().navigateTo(
+        getFragmentNavigator().navigateTo(
             V8Engine.getFragmentProvider().newStoreFragment(storeName, storeTheme));
       };
       followStore.setText(R.string.followed);

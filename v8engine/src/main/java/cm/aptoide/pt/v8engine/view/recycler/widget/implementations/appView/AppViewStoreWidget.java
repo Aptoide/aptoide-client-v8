@@ -97,7 +97,7 @@ import rx.functions.Action1;
             AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class));
 
     Action1<Void> openStore = __ -> {
-      getNavigationManager().navigateTo(
+      getFragmentNavigator().navigateTo(
           V8Engine.getFragmentProvider().newStoreFragment(storeName, storeTheme));
     };
 

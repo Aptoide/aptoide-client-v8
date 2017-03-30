@@ -32,7 +32,7 @@ public class FollowStoreWidget extends Widget<FollowStoreDisplayable> {
   @Override public void bindView(FollowStoreDisplayable displayable) {
     FragmentManager fragmentManager = getContext().getSupportFragmentManager();
     compositeSubscription.add(RxView.clicks(storeLayout)
-        .subscribe(click -> new AddStoreDialog().attachFragmentManager(getNavigationManager())
+        .subscribe(click -> new AddStoreDialog().attachFragmentManager(getFragmentNavigator())
             .show(fragmentManager, "addStoreDialog")));
   }
 }

@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import cm.aptoide.pt.navigation.FragmentNavigator;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.FragmentView;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpPresenter;
@@ -40,6 +41,7 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
   private String accountType;
   private String authType;
   private boolean isNewAccount;
+  private FragmentNavigator navigator;
 
   public static LoginSignUpFragment newInstance(boolean withBottomBar,
       boolean dismissToNavigateToMainView, boolean navigateToHome) {
@@ -64,6 +66,7 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    navigator = getFragmentChildNavigator(R.id.login_signup_layout);
     final Bundle args = getArguments();
     withBottomBar = args.getBoolean(BOTTOM_SHEET_WITH_BOTTOM_BAR);
     dismissToNavigateToMainView = args.getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);
@@ -134,14 +137,9 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(getLayoutId(), container, false);
-
     loginFragment =
         LoginSignUpCredentialsFragment.newInstance(dismissToNavigateToMainView, navigateToHome);
-    // nested fragments only work using dynamic fragment addition.
-    getChildFragmentManager().beginTransaction()
-        .add(R.id.login_signup_layout, loginFragment)
-        .commit();
-
+    navigator.navigateTo(loginFragment);
     return view;
   }
 
@@ -150,7 +148,7 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
   }
 
   @Override public boolean onBackPressed() {
-    if (loginFragment.onBackPressed()) {
+    if (loginFragment != null && loginFragment.onBackPressed()) {
       bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
       return true;
     }

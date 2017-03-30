@@ -29,7 +29,6 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -57,7 +56,6 @@ import cm.aptoide.pt.v8engine.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
@@ -151,20 +149,18 @@ import rx.android.schedulers.AndroidSchedulers;
     minimalAd = displayable.getMinimalAd();
     GetApp getApp = displayable.getPojo();
     GetAppMeta.App currentApp = getApp.getNodes().getMeta().getData();
-    final FragmentShower fragmentShower = ((FragmentShower) getContext());
-
     versionName.setText(currentApp.getFile().getVername());
     otherVersions.setOnClickListener(v -> {
       Fragment fragment = V8Engine.getFragmentProvider()
           .newOtherVersionsFragment(currentApp.getName(), currentApp.getIcon(),
               currentApp.getPackageName());
-      getNavigationManager().navigateTo(fragment);
+      getFragmentNavigator().navigateTo(fragment);
     });
 
     final boolean[] isSetupView = { true };
     compositeSubscription.add(
         displayable.getState().observeOn(AndroidSchedulers.mainThread()).subscribe(widgetState -> {
-          updateUi(displayable, getApp, currentApp, fragmentShower, widgetState, !isSetupView[0]);
+          updateUi(displayable, getApp, currentApp, widgetState, !isSetupView[0]);
           isSetupView[0] = false;
         }, (throwable) -> {
           Logger.v(TAG, throwable.getMessage());
@@ -185,8 +181,7 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   private void updateUi(AppViewInstallDisplayable displayable, GetApp getApp,
-      GetAppMeta.App currentApp, FragmentShower fragmentShower,
-      AppViewInstallDisplayable.WidgetState widgetState, boolean shouldShowError) {
+      GetAppMeta.App currentApp, AppViewInstallDisplayable.WidgetState widgetState, boolean shouldShowError) {
     Logger.d(TAG, "updateUi() called with: " + shouldShowError + "]");
     if (widgetState.getProgress() != null) {
       downloadStatusUpdate(widgetState.getProgress(), currentApp, shouldShowError);
@@ -205,7 +200,7 @@ import rx.android.schedulers.AndroidSchedulers;
         //App not installed
         setDownloadBarInvisible();
         setupInstallOrBuyButton(displayable, getApp);
-        ((AppMenuOptions) getNavigationManager().peekLast()).setUnInstallMenuOptionVisible(null);
+        ((AppMenuOptions) getFragmentNavigator().peekLast()).setUnInstallMenuOptionVisible(null);
         break;
       case AppViewInstallDisplayable.ACTION_DOWNGRADE:
         //downgrade
@@ -274,7 +269,7 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   private void buyApp(GetAppMeta.App app) {
-    Fragment fragment = getNavigationManager().peekLast();
+    Fragment fragment = getFragmentNavigator().peekLast();
     if (fragment != null && Payments.class.isAssignableFrom(fragment.getClass())) {
       ((Payments) fragment).buyApp(app);
     }
@@ -424,7 +419,7 @@ import rx.android.schedulers.AndroidSchedulers;
         // search for a trusted version
         fragment = V8Engine.getFragmentProvider().newSearchFragment(app.getName(), true);
       }
-      getNavigationManager().navigateTo(fragment);
+      getFragmentNavigator().navigateTo(fragment);
     };
 
     return v -> {

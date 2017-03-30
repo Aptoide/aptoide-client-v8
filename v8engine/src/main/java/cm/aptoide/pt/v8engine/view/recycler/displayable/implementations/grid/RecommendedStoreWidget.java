@@ -53,7 +53,7 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
     setFollowButtonListener(displayable);
     setButtonText(displayable);
     compositeSubscription.add(RxView.clicks(itemView)
-        .subscribe(click -> displayable.openStoreFragment(getNavigationManager()),
+        .subscribe(click -> displayable.openStoreFragment(getFragmentNavigator()),
             throwable -> CrashReport.getInstance().log(throwable)));
   }
 

@@ -144,7 +144,7 @@ import rx.functions.Action1;
         String icon = searchAppsApp.getIcon();
         String packageName = searchAppsApp.getPackageName();
 
-        getNavigationManager().navigateTo(
+        getFragmentNavigator().navigateTo(
             V8Engine.getFragmentProvider().newOtherVersionsFragment(name, icon, packageName));
       }));
     }
@@ -154,7 +154,7 @@ import rx.functions.Action1;
       if (clickCallback != null) {
         clickCallback.call();
       }
-      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
           .newStoreFragment(searchAppsApp.getStore().getName(),
               searchAppsApp.getStore().getAppearance().getTheme()));
     }));
@@ -167,7 +167,7 @@ import rx.functions.Action1;
     if (clickCallback != null) {
       clickCallback.call();
     }
-    getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+    getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
         .newAppViewFragment(searchAppsApp.getId(), searchAppsApp.getPackageName(),
             searchAppsApp.getStore().getAppearance().getTheme(),
             searchAppsApp.getStore().getName()));

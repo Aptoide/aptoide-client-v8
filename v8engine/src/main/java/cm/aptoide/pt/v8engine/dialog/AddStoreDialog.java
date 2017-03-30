@@ -30,7 +30,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
+import cm.aptoide.pt.navigation.FragmentNavigator;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -59,7 +59,7 @@ public class AddStoreDialog extends BaseDialog {
   private static StoreAutoCompleteWebSocket storeAutoCompleteWebSocket;
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
   private AptoideAccountManager accountManager;
-  private NavigationManagerV4 navigationManager;
+  private FragmentNavigator navigator;
   private String storeName;
   private Dialog loadingDialog;
   private CompositeSubscription mSubscriptions;
@@ -74,21 +74,21 @@ public class AddStoreDialog extends BaseDialog {
   private StoreCredentialsProvider storeCredentialsProvider;
   private SearchView.SearchAutoComplete searchAutoComplete;
 
-  public AddStoreDialog attachFragmentManager(NavigationManagerV4 navigationManager) {
-    this.navigationManager = navigationManager;
+  public AddStoreDialog attachFragmentManager(FragmentNavigator navigator) {
+    this.navigator = navigator;
     return this;
   }
 
   @Override public void show(FragmentManager manager, String tag) {
-    if (navigationManager == null) {
-      Logger.w(TAG, NavigationManagerV4.class.getName() + " is null.");
+    if (navigator == null) {
+      Logger.w(TAG, FragmentNavigator.class.getName() + " is null.");
     }
     super.show(manager, tag);
   }
 
   @Override public int show(FragmentTransaction transaction, String tag) {
-    if (navigationManager == null) {
-      Logger.w(TAG, NavigationManagerV4.class.getName() + " is null.");
+    if (navigator == null) {
+      Logger.w(TAG, FragmentNavigator.class.getName() + " is null.");
     }
     return super.show(transaction, tag);
   }
@@ -252,7 +252,7 @@ public class AddStoreDialog extends BaseDialog {
   }
 
   private void topStoresAction() {
-    navigationManager.navigateTo(V8Engine.getFragmentProvider().newFragmentTopStores());
+    navigator.navigateTo(V8Engine.getFragmentProvider().newFragmentTopStores());
     if (isAdded()) {
       dismiss();
     }

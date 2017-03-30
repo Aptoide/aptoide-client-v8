@@ -1,14 +1,14 @@
 package cm.aptoide.pt.v8engine.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
+import cm.aptoide.pt.navigation.ActivityNavigator;
+import cm.aptoide.pt.navigation.FragmentNavigator;
+import cm.aptoide.pt.v8engine.activity.ActivityView;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.view.MainActivity;
 import com.trello.rxlifecycle.LifecycleTransformer;
@@ -20,30 +20,26 @@ public abstract class FragmentView extends LeakFragment
     implements cm.aptoide.pt.v8engine.view.View {
 
   private Presenter presenter;
+  private FragmentNavigator fragmentNavigator;
+  private ActivityNavigator activityNavigator;
 
-  private NavigationManagerV4 navigator;
-
-  /**
-   * The navigator is only available after {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
-   *
-   * @return Navigation manager to move between fragments.
-   */
-  public NavigationManagerV4 getNavigationManager() {
-    return navigator;
+  public FragmentNavigator getFragmentNavigator() {
+    return fragmentNavigator;
   }
 
-  // TODO: move navigation manager creation to here and fix all the extending classes
-  //
-  //@Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-  //  navigator = NavigationManagerV4.Builder.buildWith(getActivity());
-  //  super.onActivityCreated(savedInstanceState);
-  //}
+  public ActivityNavigator getActivityNavigator() {
+    return activityNavigator;
+  }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    navigator = NavigationManagerV4.Builder.buildWith(getActivity());
-    return super.onCreateView(inflater, container, savedInstanceState);
+  public FragmentNavigator getFragmentChildNavigator(@IdRes int containerId) {
+    return new FragmentNavigator(getChildFragmentManager(), containerId, android.R.anim.fade_in,
+        android.R.anim.fade_out);
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    fragmentNavigator = ((ActivityView) getActivity()).getFragmentNavigator();
+    activityNavigator = ((ActivityView) getActivity()).getActivityNavigator();
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {

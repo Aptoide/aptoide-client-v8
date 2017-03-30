@@ -81,7 +81,7 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
         Rollback.Action action = Rollback.Action.valueOf(pojo.getAction());
         switch (action) {
           case DOWNGRADE:
-            displayable.update(getNavigationManager());
+            displayable.update(getFragmentNavigator());
             break;
           case INSTALL:
             //only if the app is installed
@@ -94,11 +94,11 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
             break;
 
           case UNINSTALL:
-            displayable.install(getNavigationManager());
+            displayable.install(getFragmentNavigator());
             break;
 
           case UPDATE:
-            displayable.update(getNavigationManager());
+            displayable.update(getFragmentNavigator());
             break;
         }
       }, () -> {

@@ -4,7 +4,8 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.navigation.AccountNavigator;
+import cm.aptoide.pt.navigation.ActivityNavigator;
+import cm.aptoide.pt.v8engine.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.activity.CreateStoreActivity;
@@ -33,7 +34,7 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
   @Override public void bindView(CreateStoreDisplayable displayable) {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator =
-        new AccountNavigator(getContext(), getNavigationManager(), accountManager);
+        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
     if (accountManager.isLoggedIn()) {
       button.setText(R.string.create_store_displayable_button);
     } else {

@@ -100,14 +100,14 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
           Analytics.AppsTimeline.OPEN_STORE);
 
       displayable.sendOpenStoreEvent();
-      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
           .newStoreFragment(displayable.getStoreName(), displayable.getStoreTheme()));
     }));
 
     compositeSubscription.add(RxView.clicks(appIcon).subscribe(click -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
       displayable.sendOpenAppEvent();
-      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     }));
 

@@ -135,7 +135,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
         Fragment appView = V8Engine.getFragmentProvider()
             .newAppViewFragment(appData.getPackageName(),
                 AppViewFragment.OpenType.OPEN_AND_INSTALL);
-        getNavigationManager().navigateTo(appView);
+        getFragmentNavigator().navigateTo(appView);
       }
     }, err -> {
       CrashReport.getInstance().log(err);

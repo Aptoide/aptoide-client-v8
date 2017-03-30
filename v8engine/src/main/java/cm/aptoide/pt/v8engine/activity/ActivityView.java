@@ -8,7 +8,9 @@ package cm.aptoide.pt.v8engine.activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
+import cm.aptoide.pt.navigation.ActivityNavigator;
+import cm.aptoide.pt.navigation.FragmentNavigator;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.view.View;
 import com.trello.rxlifecycle.LifecycleTransformer;
@@ -16,22 +18,18 @@ import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.ActivityEvent;
 import rx.Observable;
 
-/**
- * Created by marcelobenites on 8/19/16.
- */
 public abstract class ActivityView extends LeakActivity implements View {
 
   private Presenter presenter;
-
-  private NavigationManagerV4 navigator;
-
-  public NavigationManagerV4 getNavigationManager() {
-    return navigator;
-  }
+  private FragmentNavigator fragmentNavigator;
+  private ActivityNavigator activityNavigator;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    navigator = NavigationManagerV4.Builder.buildWith(this);
+    fragmentNavigator =
+        new FragmentNavigator(getSupportFragmentManager(), R.id.fragment_placeholder,
+            android.R.anim.fade_in, android.R.anim.fade_out);
+    activityNavigator = new ActivityNavigator(this);
   }
 
   @NonNull @Override
@@ -78,5 +76,13 @@ public abstract class ActivityView extends LeakActivity implements View {
   @Override protected void onDestroy() {
     super.onDestroy();
     presenter = null;
+  }
+
+  public ActivityNavigator getActivityNavigator() {
+    return activityNavigator;
+  }
+
+  public FragmentNavigator getFragmentNavigator() {
+    return fragmentNavigator;
   }
 }

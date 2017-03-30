@@ -3,7 +3,7 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 import android.content.Context;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
+import cm.aptoide.pt.navigation.FragmentNavigator;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
@@ -62,8 +62,8 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
     StoreUtils.unSubscribeStore(getPojo().getName(), accountManager, storeCredentialsProvider);
   }
 
-  void openStoreFragment(NavigationManagerV4 navigationManager) {
-    navigationManager.navigateTo(V8Engine.getFragmentProvider()
+  void openStoreFragment(FragmentNavigator navigator) {
+    navigator.navigateTo(V8Engine.getFragmentProvider()
         .newStoreFragment(getPojo().getName(), getPojo().getAppearance().getTheme()));
   }
 }

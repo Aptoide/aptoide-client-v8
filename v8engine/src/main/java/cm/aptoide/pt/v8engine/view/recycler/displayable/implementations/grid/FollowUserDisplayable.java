@@ -4,7 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
+import cm.aptoide.pt.navigation.FragmentNavigator;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
@@ -108,15 +108,15 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
     return storeThemeEnum.getButtonLayoutDrawable();
   }
 
-  public void viewClicked(NavigationManagerV4 navigationManager) {
+  public void viewClicked(FragmentNavigator navigator) {
     Store store = getPojo().getStore();
     String theme = getStoreTheme(store);
 
     if (store != null) {
-      navigationManager.navigateTo(V8Engine.getFragmentProvider()
+      navigator.navigateTo(V8Engine.getFragmentProvider()
           .newStoreFragment(store.getName(), theme, StoreFragment.OpenType.GetHome));
     } else {
-      navigationManager.navigateTo(V8Engine.getFragmentProvider()
+      navigator.navigateTo(V8Engine.getFragmentProvider()
           .newStoreFragment(getPojo().getId(), theme, StoreFragment.OpenType.GetHome));
     }
   }

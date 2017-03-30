@@ -1576,43 +1576,49 @@ public class AptoideUtils {
       return originalUrl;
     }
 
-    public static List<ImageSizeErrors> checkIconSizeProperties(String avatarPath, int minHeight,
+    public static List<ImageErrors> checkIconSizeProperties(String avatarPath, int minHeight,
         int maxHeight, int minWidth, int maxWidth, int maxImageSize) {
       ImageInfo imageInfo = getImageInfo(avatarPath);
-      List<ImageSizeErrors> errors = new LinkedList<>();
-      if (imageInfo.getHeight() < minHeight) {
-        errors.add(ImageSizeErrors.MIN_HEIGHT);
-      }
-      if (imageInfo.getWidth() < minWidth) {
-        errors.add(ImageSizeErrors.MIN_WIDTH);
-      }
-      if (imageInfo.getHeight() > maxHeight) {
-        errors.add(ImageSizeErrors.MAX_HEIGHT);
-      }
-      if (imageInfo.getWidth() > maxWidth) {
-        errors.add(ImageSizeErrors.MAX_WIDTH);
-      }
-      if (imageInfo.getSize() > maxImageSize) {
-        errors.add(ImageSizeErrors.MAX_IMAGE_SIZE);
+      List<ImageErrors> errors = new LinkedList<>();
+      if (imageInfo == null) {
+        errors.add(ImageErrors.ERROR_DECODING);
+      } else {
+        if (imageInfo.getHeight() < minHeight) {
+          errors.add(ImageErrors.MIN_HEIGHT);
+        }
+        if (imageInfo.getWidth() < minWidth) {
+          errors.add(ImageErrors.MIN_WIDTH);
+        }
+        if (imageInfo.getHeight() > maxHeight) {
+          errors.add(ImageErrors.MAX_HEIGHT);
+        }
+        if (imageInfo.getWidth() > maxWidth) {
+          errors.add(ImageErrors.MAX_WIDTH);
+        }
+        if (imageInfo.getSize() > maxImageSize) {
+          errors.add(ImageErrors.MAX_IMAGE_SIZE);
+        }
       }
       return errors;
     }
 
-    public static ImageInfo getImageInfo(String imagePath) {
-      ImageInfo imageInfo = new ImageInfo();
+    static ImageInfo getImageInfo(String imagePath) {
+      ImageInfo imageInfo = null;
       Bitmap image = BitmapFactory.decodeFile(imagePath);
-      imageInfo.setWidth(image.getWidth());
-      imageInfo.setHeight(image.getHeight());
-      imageInfo.setSize(new File(imagePath).length());
-
+      if (image != null) {
+        imageInfo = new ImageInfo();
+        imageInfo.setWidth(image.getWidth());
+        imageInfo.setHeight(image.getHeight());
+        imageInfo.setSize(new File(imagePath).length());
+      }
       return imageInfo;
     }
 
-    public enum ImageSizeErrors {
-      MIN_HEIGHT, MAX_HEIGHT, MIN_WIDTH, MAX_WIDTH, MAX_IMAGE_SIZE
+    public enum ImageErrors {
+      ERROR_DECODING, MIN_HEIGHT, MAX_HEIGHT, MIN_WIDTH, MAX_WIDTH, MAX_IMAGE_SIZE
     }
 
-    @Data public static class ImageInfo {
+    @Data static class ImageInfo {
       int height, width;
       long size;
     }

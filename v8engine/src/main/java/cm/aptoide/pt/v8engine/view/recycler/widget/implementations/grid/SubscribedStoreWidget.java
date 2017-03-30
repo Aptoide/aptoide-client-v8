@@ -48,7 +48,7 @@ import com.jakewharton.rxbinding.view.RxView;
     compositeSubscription.add(RxView.clicks(storeLayout).subscribe(__ -> {
       final Fragment fragment = V8Engine.getFragmentProvider()
           .newStoreFragment(displayable.getPojo().getStoreName(), displayable.getPojo().getTheme());
-      getNavigationManager().navigateTo(fragment);
+      getFragmentNavigator().navigateTo(fragment);
     }));
 
     final Context context = getContext();

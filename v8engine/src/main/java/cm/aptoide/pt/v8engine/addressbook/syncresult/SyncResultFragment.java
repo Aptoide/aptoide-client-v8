@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.addressbook.AddressBookAnalytics;
@@ -68,10 +67,9 @@ public class SyncResultFragment extends UIComponentFragment implements SyncResul
     mActionsListener = new SyncResultPresenter(this,
         new AddressBookAnalytics(Analytics.getInstance(),
             AppEventsLogger.newLogger(getContext().getApplicationContext())),
-        new AddressBookNavigationManager(NavigationManagerV4.Builder.buildWith(getActivity()),
-            entranceTag, getString(R.string.addressbook_about),
-            getString(R.string.addressbook_data_about,
-                Application.getConfiguration().getMarketName())));
+        new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
+            getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
+            Application.getConfiguration().getMarketName())));
     mListAdapter = new SyncResultAdapter((ArrayList<Contact>) contacts, getContext());
   }
 

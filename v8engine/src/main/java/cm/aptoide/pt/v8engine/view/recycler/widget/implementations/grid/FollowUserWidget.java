@@ -13,12 +13,9 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -99,7 +96,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
               AccessorFactory.getAccessorFor(Store.class));
 
       Action1<Void> openStore = __ -> {
-        getNavigationManager().navigateTo(
+        getFragmentNavigator().navigateTo(
             V8Engine.getFragmentProvider().newStoreFragment(storeName, storeTheme));
       };
 
@@ -162,7 +159,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     followingTv.setTextColor(displayable.getStoreColor());
 
     compositeSubscription.add(RxView.clicks(itemView)
-        .subscribe(click -> displayable.viewClicked(getNavigationManager()), err -> {
+        .subscribe(click -> displayable.viewClicked(getFragmentNavigator()), err -> {
           CrashReport.getInstance().log(err);
         }));
   }
