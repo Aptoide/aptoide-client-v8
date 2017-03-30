@@ -42,7 +42,6 @@ import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.BadgeView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -106,10 +105,7 @@ public class HomeFragment extends StoreFragment {
     userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
     userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
 
-    accountManager.getAccountAsync()
-        .toObservable()
-        .onErrorResumeNext(
-            Observable.just(null))//fixme fix this in the account manager and remove this line
+    accountManager.accountStatus()
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.PAUSE))
         .subscribe(account -> {
@@ -191,6 +187,21 @@ public class HomeFragment extends StoreFragment {
       if (updatesBadge.isShown()) {
         updatesBadge.hide(true);
       }
+    }
+  }
+
+  private Event.Name getEventName(int tab) {
+    switch (tab) {
+      case TabNavigator.DOWNLOADS:
+        return Event.Name.myDownloads;
+      case TabNavigator.STORES:
+        return Event.Name.myStores;
+      case TabNavigator.TIMELINE:
+        return Event.Name.getUserTimeline;
+      case TabNavigator.UPDATES:
+        return Event.Name.myUpdates;
+      default:
+        throw new IllegalArgumentException("Invalid tab.");
     }
   }
 
@@ -334,21 +345,6 @@ public class HomeFragment extends StoreFragment {
     toolbar.setTitle("");
     toolbar.setNavigationIcon(R.drawable.ic_drawer);
     toolbar.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
-  }
-
-  private Event.Name getEventName(int tab) {
-    switch (tab) {
-      case TabNavigator.DOWNLOADS:
-        return Event.Name.myDownloads;
-      case TabNavigator.STORES:
-        return Event.Name.myStores;
-      case TabNavigator.TIMELINE:
-        return Event.Name.getUserTimeline;
-      case TabNavigator.UPDATES:
-        return Event.Name.myUpdates;
-      default:
-        throw new IllegalArgumentException("Invalid tab.");
-    }
   }
 
   @Override public void bindViews(View view) {

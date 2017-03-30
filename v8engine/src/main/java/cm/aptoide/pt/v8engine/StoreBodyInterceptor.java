@@ -36,18 +36,18 @@ public class StoreBodyInterceptor implements BodyInterceptor<HashMapNotNull<Stri
 
   @Override public Single<HashMapNotNull<String, RequestBody>> intercept(
       HashMapNotNull<String, RequestBody> body) {
-    return accountManager.getAccountAsync().<HashMapNotNull<String, RequestBody>> flatMap(
-        account -> {
-          try {
-            body.put("store_properties", requestBodyFactory.createBodyPartFromString(
-                serializer.writeValueAsString(
-                    new SimpleSetStoreRequest.StoreProperties(storeTheme, storeDescription))));
-          } catch (JsonProcessingException e) {
-            Single.error(e);
-          }
-          body.put("access_token", requestBodyFactory.createBodyPartFromString(account.getAccessToken()));
+    return accountManager.accountStatus().first().toSingle().flatMap(account -> {
+      try {
+        body.put("store_properties", requestBodyFactory.createBodyPartFromString(
+            serializer.writeValueAsString(
+                new SimpleSetStoreRequest.StoreProperties(storeTheme, storeDescription))));
+      } catch (JsonProcessingException e) {
+        Single.error(e);
+      }
+      body.put("access_token",
+          requestBodyFactory.createBodyPartFromString(account.getAccessToken()));
 
-          return Single.just(body);
-        });
+      return Single.just(body);
+    });
   }
 }

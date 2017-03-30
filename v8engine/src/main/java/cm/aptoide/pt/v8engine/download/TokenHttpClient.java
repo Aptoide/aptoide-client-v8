@@ -73,7 +73,7 @@ public class TokenHttpClient {
             Request request = chain.request();
             String v = request.header(Constants.VERSION_CODE);
             String packageName = request.header(Constants.PACKAGE);
-            int fileType = Integer.valueOf(request.header(Constants.FILE_TYPE));
+            int fileType = Integer.parseInt(request.header(Constants.FILE_TYPE));
 
             Response response = chain.proceed(request.newBuilder()
                 .removeHeader(Constants.VERSION_CODE)

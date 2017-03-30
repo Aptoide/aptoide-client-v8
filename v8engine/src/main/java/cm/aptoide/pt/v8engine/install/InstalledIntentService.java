@@ -241,7 +241,6 @@ public class InstalledIntentService extends IntentService {
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, true,
             adsRepository))
-        .map(__ -> null)
         .toCompletable();
   }
 }

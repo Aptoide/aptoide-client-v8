@@ -40,12 +40,6 @@ public class AdultContent {
         });
   }
 
-  public Completable enable() {
-    return accountManager.updateAccount(true)
-        .andThen(preferences.save(ADULT_CONTENT_PREFERENCES_KEY, true))
-        .onErrorResumeNext(throwable -> preferences.save(ADULT_CONTENT_PREFERENCES_KEY, true));
-  }
-
   public Completable disable() {
     return accountManager.updateAccount(false)
         .andThen(preferences.save(ADULT_CONTENT_PREFERENCES_KEY, false))
@@ -53,11 +47,17 @@ public class AdultContent {
   }
 
   public Observable<Boolean> enabled() {
-    return accountManager.getAccountAsync()
-        .flatMapCompletable(
-            account -> preferences.save(ADULT_CONTENT_PREFERENCES_KEY, account.isAdultContentEnabled()))
-        .onErrorComplete()
-        .andThen(preferences.getBoolean(ADULT_CONTENT_PREFERENCES_KEY, false));
+    return Observable.combineLatest(accountManager.accountStatus(),
+        preferences.getBoolean(ADULT_CONTENT_PREFERENCES_KEY, false),
+        (account, isLocalAdultContentEnabled) -> {
+          if (account.isLoggedIn()) {
+            return account.isAdultContentEnabled();
+          }
+          return isLocalAdultContentEnabled;
+        })
+        .distinctUntilChanged()
+        .flatMap(status -> preferences.save(ADULT_CONTENT_PREFERENCES_KEY, status)
+            .andThen(Observable.just(status)));
   }
 
   public Completable enable(int pin) {
@@ -70,5 +70,11 @@ public class AdultContent {
           }
           return Completable.error(new SecurityException("Pin does not match."));
         });
+  }
+
+  public Completable enable() {
+    return accountManager.updateAccount(true)
+        .andThen(preferences.save(ADULT_CONTENT_PREFERENCES_KEY, true))
+        .onErrorResumeNext(throwable -> preferences.save(ADULT_CONTENT_PREFERENCES_KEY, true));
   }
 }

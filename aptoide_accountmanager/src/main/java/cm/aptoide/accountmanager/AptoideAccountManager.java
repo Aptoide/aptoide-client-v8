@@ -35,15 +35,14 @@ public class AptoideAccountManager {
   }
 
   public Observable<Account> accountStatus() {
-    return Observable.merge(accountRelay,
-        getAccountAsync().onErrorReturn(throwable -> {
+    return Observable.merge(accountRelay, dataPersist.getAccount().onErrorReturn(throwable -> {
           CrashReport.getInstance().log(throwable);
           return createLocalAccount();
         }).toObservable());
   }
 
-  public Single<Account> getAccountAsync() {
-    return dataPersist.getAccount();
+  private Single<Account> singleAccountStatus() {
+    return accountStatus().first().toSingle();
   }
 
   private Account createLocalAccount() {
@@ -61,16 +60,16 @@ public class AptoideAccountManager {
   }
 
   /**
-   * Use {@link #getAccountAsync()} method instead.
+   * Use {@link #accountStatus()} method instead.
    *
    * @return user Account
    */
   @Deprecated public Account getAccount() {
-    return getAccountAsync().onErrorReturn(throwable -> null).toBlocking().value();
+    return accountStatus().onErrorReturn(throwable -> null).first().toSingle().toBlocking().value();
   }
 
   public Completable logout() {
-    return getAccountAsync().flatMapCompletable(
+    return singleAccountStatus().flatMapCompletable(
         account -> account.logout().andThen(removeAccount()));
   }
 
@@ -79,7 +78,7 @@ public class AptoideAccountManager {
   }
 
   public Completable refreshToken() {
-    return getAccountAsync().flatMapCompletable(
+    return singleAccountStatus().flatMapCompletable(
         account -> account.refreshToken().andThen(saveAccount(account)));
   }
 
@@ -165,13 +164,13 @@ public class AptoideAccountManager {
   }
 
   public Completable syncCurrentAccount() {
-    return getAccountAsync().flatMapCompletable(
+    return singleAccountStatus().flatMapCompletable(
         account -> syncAccount(account.getAccessToken(), account.getRefreshToken(),
             account.getPassword(), account.getType()));
   }
 
   public Completable updateAccount(boolean adultContentEnabled) {
-    return getAccountAsync().flatMapCompletable(
+    return singleAccountStatus().flatMapCompletable(
         account -> accountManagerService.updateAccount(adultContentEnabled,
             account.getAccessToken())
             .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
@@ -179,14 +178,14 @@ public class AptoideAccountManager {
   }
 
   public Completable updateAccount(Account.Access access) {
-    return getAccountAsync().flatMapCompletable(
+    return singleAccountStatus().flatMapCompletable(
         account -> accountManagerService.updateAccount(access.name(), this)
             .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
                 account.getPassword(), account.getType())));
   }
 
   public Completable updateAccount(String nickname, String avatarPath) {
-    return getAccountAsync().flatMapCompletable(account -> {
+    return singleAccountStatus().flatMapCompletable(account -> {
       if (TextUtils.isEmpty(nickname) && TextUtils.isEmpty(avatarPath)) {
         return Completable.error(
             new AccountValidationException(AccountValidationException.EMPTY_NAME_AND_AVATAR));

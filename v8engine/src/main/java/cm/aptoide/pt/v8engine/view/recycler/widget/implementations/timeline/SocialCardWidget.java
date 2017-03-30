@@ -113,7 +113,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
       }
 
       compositeSubscription.add(RxView.clicks(likeButton)
-          .flatMap(__ -> accountManager.getAccountAsync().toObservable())
+          .flatMap(__ -> accountManager.accountStatus().first().toSingle().toObservable())
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(account -> {
             if (likeCard(displayable, 1, account)) {

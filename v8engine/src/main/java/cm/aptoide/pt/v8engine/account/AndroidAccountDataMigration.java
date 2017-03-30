@@ -3,12 +3,10 @@ package cm.aptoide.pt.v8engine.account;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import rx.Completable;
 
 /**
@@ -31,19 +29,17 @@ public class AndroidAccountDataMigration {
   private final AccountManager accountManager;
   private final SecureCoderDecoder secureCoderDecoder;
   private final int currentVersion;
-  private String databasePath;
-
   private int oldVersion;
 
   public AndroidAccountDataMigration(SharedPreferences secureSharedPreferences,
       SharedPreferences defaultSharedPreferences, AccountManager accountManager,
-      SecureCoderDecoder secureCoderDecoder, int currentVersion, String databasePath) {
+      SecureCoderDecoder secureCoderDecoder, int oldVersion, int currentVersion) {
     this.secureSharedPreferences = secureSharedPreferences;
     this.defaultSharedPreferences = defaultSharedPreferences;
     this.accountManager = accountManager;
     this.secureCoderDecoder = secureCoderDecoder;
+    this.oldVersion = oldVersion;
     this.currentVersion = currentVersion;
-    this.databasePath = databasePath;
   }
 
   Completable migrate() {
@@ -58,8 +54,6 @@ public class AndroidAccountDataMigration {
         if (isMigrated()) {
           return Completable.complete();
         }
-
-        generateOldVersion();
 
         Log.i(TAG, String.format("Migrating from version %d to %d", oldVersion, currentVersion));
 
@@ -229,21 +223,5 @@ public class AndroidAccountDataMigration {
       }
     }
     return false;
-  }
-
-  private void generateOldVersion() {
-    int oldVersion = SQLiteDatabaseHelper.DATABASE_VERSION;
-    try {
-      SQLiteDatabase db =
-          SQLiteDatabase.openDatabase(databasePath, null, SQLiteDatabase.OPEN_READONLY, null);
-      oldVersion = db.getVersion();
-      if (db.isOpen()) {
-        db.close();
-      }
-    } catch (Exception ex) {
-      // db does not exist. it's a fresh install
-    }
-    ;
-    this.oldVersion = oldVersion;
   }
 }
