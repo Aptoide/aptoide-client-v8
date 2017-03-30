@@ -134,8 +134,6 @@ public interface FragmentProvider {
 
   Fragment newSettingsFragment();
 
-  Fragment newCreateUserFragment();
-
   Fragment newTimeLineFollowersUsingUserIdFragment(Long id, long followerNumber, String storeTheme);
 
   Fragment newTimeLineFollowingFragmentUsingUserId(Long id, long followingNumber,

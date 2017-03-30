@@ -16,7 +16,6 @@ import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppsTimelineFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.CommentListFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.CreateUserFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.DescriptionFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.DownloadsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ExcludedUpdatesFragment;
@@ -266,10 +265,6 @@ public class FragmentProviderImpl implements FragmentProvider {
 
   @Override public Fragment newSettingsFragment() {
     return SettingsFragment.newInstance();
-  }
-
-  @Override public Fragment newCreateUserFragment() {
-    return CreateUserFragment.newInstance();
   }
 
   @Override
