@@ -17,12 +17,17 @@ public class BaseBodyInterceptor implements BodyInterceptor<BaseBody> {
   private final AptoideClientUUID aptoideClientUUID;
   private final AptoideAccountManager accountManager;
   private final AdultContent adultContent;
+  private final String aptoideMd5sum;
+  private final String aptoidePackage;
 
   public BaseBodyInterceptor(AptoideClientUUID aptoideClientUUID,
-      AptoideAccountManager accountManager, AdultContent adultContent) {
+      AptoideAccountManager accountManager, AdultContent adultContent, String aptoideMd5sum,
+      String aptoidePackage) {
     this.aptoideClientUUID = aptoideClientUUID;
     this.accountManager = accountManager;
     this.adultContent = adultContent;
+    this.aptoideMd5sum = aptoideMd5sum;
+    this.aptoidePackage = aptoidePackage;
   }
 
   public Single<BaseBody> intercept(BaseBody body) {
@@ -46,6 +51,8 @@ public class BaseBodyInterceptor implements BodyInterceptor<BaseBody> {
               body.setCountry(forceCountry);
             }
           }
+          body.setAptoideMd5sum(aptoideMd5sum);
+          body.setAptoidePackage(aptoidePackage);
 
           return body;
         }).subscribeOn(Schedulers.computation());

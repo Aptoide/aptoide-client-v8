@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -108,6 +109,7 @@ public abstract class V8Engine extends DataProvider {
   private AptoideClientUUID aptoideClientUUID;
   private GoogleApiClient googleSignInClient;
   private LeakTool leakTool;
+  private String aptoideMd5sum;
 
   /**
    * call after this instance onCreate()
@@ -235,7 +237,7 @@ public abstract class V8Engine extends DataProvider {
 
       final BaseBodyInterceptorFactory bodyInterceptorFactory =
           new BaseBodyInterceptorFactory(getAptoideClientUUID(), getPreferences(),
-              getSecurePreferences());
+              getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage());
 
       final AccountFactory accountFactory = new AccountFactory(getAptoideClientUUID(),
           new SocialAccountFactory(context, getGoogleSignInClient()),
@@ -435,9 +437,30 @@ public abstract class V8Engine extends DataProvider {
   public BodyInterceptor<BaseBody> getBaseBodyInterceptor() {
     if (baseBodyInterceptor == null) {
       baseBodyInterceptor = new BaseBodyInterceptor(getAptoideClientUUID(), getAccountManager(),
-          getAdultContent(getSecurePreferences()));
+          getAdultContent(getSecurePreferences()), getAptoideMd5sum(), getAptoidePackage());
     }
     return baseBodyInterceptor;
+  }
+
+  private String getAptoideMd5sum() {
+    if (aptoideMd5sum == null) {
+      aptoideMd5sum = caculateMd5Sum();
+    }
+    return aptoideMd5sum;
+  }
+
+  private String caculateMd5Sum() {
+    try {
+      return AptoideUtils.AlgorithmU.computeMd5(
+          getPackageManager().getPackageInfo(getConfiguration().getAppId(), 0));
+    } catch (PackageManager.NameNotFoundException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  private String getAptoidePackage() {
+    return getConfiguration().getAppId();
   }
 
   public AdultContent getAdultContent(

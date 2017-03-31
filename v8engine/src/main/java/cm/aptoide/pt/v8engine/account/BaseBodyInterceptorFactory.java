@@ -15,16 +15,21 @@ public class BaseBodyInterceptorFactory implements BasebBodyInterceptorFactory {
   private final AptoideClientUUID aptoideClientUUID;
   private final Preferences preferences;
   private final SecurePreferences securePreferences;
+  private final String aptoideMd5sum;
+  private final String aptoidePackage;
 
   public BaseBodyInterceptorFactory(AptoideClientUUID aptoideClientUUID, Preferences preferences,
-      SecurePreferences securePreferences) {
+      SecurePreferences securePreferences, String aptoideMd5sum, String aptoidePackage) {
     this.aptoideClientUUID = aptoideClientUUID;
     this.preferences = preferences;
     this.securePreferences = securePreferences;
+    this.aptoideMd5sum = aptoideMd5sum;
+    this.aptoidePackage = aptoidePackage;
   }
 
   @Override public BodyInterceptor<BaseBody> create(AptoideAccountManager accountManager) {
     return new BaseBodyInterceptor(aptoideClientUUID, accountManager,
-        new AdultContent(accountManager, preferences, securePreferences));
+        new AdultContent(accountManager, preferences, securePreferences), aptoideMd5sum,
+        aptoidePackage);
   }
 }
