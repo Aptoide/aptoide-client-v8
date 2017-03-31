@@ -18,10 +18,6 @@ public class Group {
     this.deviceID = deviceID;
   }
 
-  public String getSsid() {
-    return ssid;
-  }
-
   public String getDeviceName() {
     return deviceName;
   }
@@ -34,5 +30,15 @@ public class Group {
     return deviceID;
   }
 
+  @Override public boolean equals(Object obj) {
+    Group group = (Group) obj;
+    if (ssid.equals(group.getSsid())) {
+      return true;
+    }
+    return false;
+  }
 
+  public String getSsid() {
+    return ssid;
+  }
 }

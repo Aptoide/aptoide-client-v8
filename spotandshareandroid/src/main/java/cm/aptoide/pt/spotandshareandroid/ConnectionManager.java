@@ -91,9 +91,11 @@ public class ConnectionManager {
             Group group = groupParser.parse(connResults.get(i).SSID);
             scanResultsSSID.add(group);
 
-            clients.add(group);
-            changes = true;
-            System.out.println("Estou no : " + connResults.get(i).toString());
+            if (!clients.contains(group)) {
+              clients.add(group);
+              changes = true;
+              System.out.println("Estou no : " + connResults.get(i).toString());
+            }
 
           }
 
