@@ -11,12 +11,10 @@ import lombok.Getter;
  */
 public class ActiveDownloadsHeaderDisplayable extends Displayable {
 
-  private static final String TAG = ActiveDownloadsHeaderDisplayable.class.getSimpleName();
   @Getter private String label;
   private InstallManager installManager;
 
-  public ActiveDownloadsHeaderDisplayable() {
-  }
+  public ActiveDownloadsHeaderDisplayable() { }
 
   public ActiveDownloadsHeaderDisplayable(String label, InstallManager installManager) {
     this.label = label;

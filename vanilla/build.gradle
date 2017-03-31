@@ -22,17 +22,16 @@ retrolambda {
   //defaultMethods true
 }
 
-
 android {
 
-  compileSdkVersion COMPILE_SDK_VERSION
+  compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
   buildToolsVersion BUILD_TOOLS_VERSION
 
   // keep the "applicationId" var in third place for the jenkins build script hack
   defaultConfig {
     applicationId "${APPLICATION_ID}"
-    minSdkVersion 15
-    targetSdkVersion TARGET_SDK_VERSION
+    minSdkVersion project.MINIMUM_SDK_VERSION
+    targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
     testProguardFile 'proguard-rules-test.pro'
     manifestPlaceholders = [toolboxProviderAuthority        : "cm.aptoide.pt.StubProvider",
                             suggestionProviderAuthority     : "cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider",

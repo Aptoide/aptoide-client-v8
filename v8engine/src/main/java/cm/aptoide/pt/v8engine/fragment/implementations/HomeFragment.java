@@ -106,10 +106,7 @@ public class HomeFragment extends StoreFragment {
     userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
     userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
 
-    accountManager.getAccountAsync()
-        .toObservable()
-        .onErrorResumeNext(
-            Observable.just(null))//fixme fix this in the account manager and remove this line
+    accountManager.accountStatus()
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.PAUSE))
         .subscribe(account -> {

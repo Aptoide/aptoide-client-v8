@@ -106,7 +106,7 @@ public class AdsRepository {
   }
 
   public Observable<MinimalAd> getAdsFromSecondInstall(String packageName) {
-    return accountManager.getAccountAsync()
+    return accountManager.accountStatus().first().toSingle()
         .flatMapObservable(account -> mapToMinimalAd(
             GetAdsRequest.ofSecondInstall(packageName, aptoideClientUUID.getUniqueIdentifier(),
                 googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),

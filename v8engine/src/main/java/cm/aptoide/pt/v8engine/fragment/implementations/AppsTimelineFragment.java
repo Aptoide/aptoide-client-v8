@@ -144,7 +144,9 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     Observable<List<String>> packagesObservable =
         (packages != null) ? Observable.just(packages) : refreshPackages();
 
-    Observable<Datalist<Displayable>> displayableObservable = accountManager.getAccountAsync()
+    Observable<Datalist<Displayable>> displayableObservable = accountManager.accountStatus()
+        .first()
+        .toSingle()
         .map(account -> account.isLoggedIn())
         .onErrorReturn(throwable -> false)
         .flatMapObservable(loggedIn -> packagesObservable.observeOn(AndroidSchedulers.mainThread())

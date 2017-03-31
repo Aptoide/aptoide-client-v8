@@ -8,21 +8,32 @@ import android.view.View;
 
 /**
  * Created by fabio on 22-10-2015.
+ *
+ *
  */
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
-  private static final int LEFT = 1;
-  private static final int RIGHT = 2;
-  private static final int BOTTOM = 4;
-  private static final int ALL = 7;
+  public static final int LEFT = 1;
+  public static final int RIGHT = 2;
+  public static final int BOTTOM = 4;
+  public static final int ALL = 7;
 
   private final int spacingFlag;
   private final int space;
 
+  /**
+   *
+   * @param space in pixels for the spacing between items
+   */
   public DividerItemDecoration(int space) {
     this(space, ALL);
   }
 
+  /**
+   *
+   * @param space in pixels for the spacing between items
+   * @param spacingFlag specifies in which part of the item the spacing is applied
+   */
   public DividerItemDecoration(int space, int spacingFlag) {
     this.space = space;
     this.spacingFlag = spacingFlag;

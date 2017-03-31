@@ -17,7 +17,7 @@ import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppsTimelineFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.CommentListFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.DescriptionFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.DownloadsFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.DownloadsFragmentMvp;
 import cm.aptoide.pt.v8engine.fragment.implementations.ExcludedUpdatesFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.FragmentTopStores;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
@@ -214,7 +214,8 @@ public class FragmentProviderImpl implements FragmentProvider {
   }
 
   @Override public Fragment newDownloadsFragment() {
-    return DownloadsFragment.newInstance();
+    //return DownloadsFragment.newInstance();
+    return DownloadsFragmentMvp.newInstance();
   }
 
   @Override
