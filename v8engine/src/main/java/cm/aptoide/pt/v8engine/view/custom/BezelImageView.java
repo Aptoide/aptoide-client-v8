@@ -19,16 +19,16 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
-import android.widget.ImageView;
+import android.support.v7.widget.AppCompatImageView;
 import cm.aptoide.pt.v8engine.R;
 
 /**
- * An {@link ImageView} that draws its contents inside a mask and draws a border drawable on top.
+ * An {@link AppCompatImageView} that draws its contents inside a mask and draws a border drawable on top.
  * This is useful for applying a beveled look to image contents, but is also flexible enough for
  * use
  * with other desired aesthetics.
  */
-public class BezelImageView extends ImageView {
+public class BezelImageView extends AppCompatImageView {
 
   private Paint mBlackPaint;
   private Paint mMaskedPaint;

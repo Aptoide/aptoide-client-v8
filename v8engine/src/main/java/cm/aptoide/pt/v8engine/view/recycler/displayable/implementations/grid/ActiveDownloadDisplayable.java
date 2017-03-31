@@ -33,7 +33,7 @@ public class ActiveDownloadDisplayable extends Displayable {
   }
 
   @Override public int getViewLayout() {
-    return R.layout.active_donwload_row_layout;
+    return R.layout.active_download_row_layout;
   }
 
   @Override public void onResume() {

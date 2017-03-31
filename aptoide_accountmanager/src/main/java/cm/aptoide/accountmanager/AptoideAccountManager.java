@@ -35,8 +35,8 @@ public class AptoideAccountManager {
   }
 
   public Observable<Account> accountStatus() {
-    return Observable.merge(accountRelay, getAccountAsync().onErrorReturn(throwable -> {
-      CrashReport.getInstance().log(throwable);
+    return Observable.merge(accountRelay, dataPersist.getAccount().onErrorReturn(throwable -> {
+      //CrashReport.getInstance().log(throwable);
       return createLocalAccount();
     }).toObservable());
   }
@@ -65,7 +65,7 @@ public class AptoideAccountManager {
    * @return user Account
    */
   @Deprecated public Account getAccount() {
-    return accountStatus().onErrorReturn(throwable -> null).first().toSingle().toBlocking().value();
+    return singleAccountStatus().onErrorReturn(throwable -> null).toBlocking().value();
   }
 
   public Completable logout() {

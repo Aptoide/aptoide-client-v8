@@ -58,6 +58,6 @@ public class ActiveDownloadViewHolder extends RecyclerViewHolder<DownloadsView.D
   }
 
   @Override public int getViewResource() {
-    return R.layout.active_donwload_row_layout;
+    return R.layout.active_download_row_layout;
   }
 }

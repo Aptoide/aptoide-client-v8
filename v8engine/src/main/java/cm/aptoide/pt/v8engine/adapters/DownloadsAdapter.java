@@ -6,11 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
@@ -48,8 +50,11 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
         new InstallerFactory().create(context, InstallerFactory.ROLLBACK));
 
     analytics = Analytics.getInstance();
-    installConverter = new InstallEventConverter();
-    downloadConverter = new DownloadEventConverter();
+
+    final BodyInterceptor bodyInterceptor =
+        ((V8Engine) context.getApplicationContext()).getBaseBodyInterceptor();
+    installConverter = new InstallEventConverter(bodyInterceptor);
+    downloadConverter = new DownloadEventConverter(bodyInterceptor);
   }
 
   public void setActiveDownloads(List<Download> downloads) {
@@ -87,7 +92,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
       }
       case ActiveDownload: {
         view = LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.active_donwload_row_layout, parent, false);
+            .inflate(R.layout.active_download_row_layout, parent, false);
         return new ActiveDownloadWidget(view);
       }
       case CompletedDownload:
@@ -107,70 +112,38 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
         bindHeader(holder, position);
         break;
       }
+
       case ActiveDownloadHeader: {
         bindActiveDownloadHeader(holder);
         break;
       }
+
       case ActiveDownload: {
         // remove active download header
         position -= 1;
         bindActiveDownload(holder, activeDownloads.get(position));
         break;
       }
+
       case StandByDownload: {
-        // remove active downloads (with header) and stand by header
-        position -= !activeDownloads.isEmpty() ? activeDownloads.size() + 1 : 1;
+        // remove active downloads (with header)
+        position -= !activeDownloads.isEmpty() ? (activeDownloads.size() + 1) : 0;
+        // remove stand by header
+        position -= 1;
         bindStandByDownload(holder, standByDownloads.get(position));
         break;
       }
+
       case CompletedDownload: {
-        // remove active downloads (with header) and stand by header
+        // remove active downloads (with header) and active by header
         // remove standby downloads (with header) and stand by header
-        position -= !activeDownloads.isEmpty() ? activeDownloads.size() + 1 : 0;
-        position -= !standByDownloads.isEmpty() ? activeDownloads.size() + 1 : 0;
+        position -= !activeDownloads.isEmpty() ? (activeDownloads.size() + 1) : 0;
+        position -= !standByDownloads.isEmpty() ? (standByDownloads.size() + 1) : 0;
         position -= 1; // remove completed downloads header
         bindCompletedDownload(holder, completedDownloads.get(position));
         break;
       }
     }
-  }
-
-  private void bindHeader(Widget holder, int position) {
-    // discover if it's the header for stand by or completed downloads
-    position -= (activeDownloads.isEmpty() ? 0 : activeDownloads.size() + 1);
-
-    StoreGridHeaderWidget header = (StoreGridHeaderWidget) holder;
-    if (position < standByDownloads.size()) {
-      // is the header from stand by downloads
-      header.bindView(new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(
-          AptoideUtils.StringU.getResString(R.string.stand_by))));
-    } else {
-      // is the header from completed downloads
-      header.bindView(new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(
-          AptoideUtils.StringU.getResString(R.string.completed))));
-    }
-  }
-
-  private void bindActiveDownloadHeader(Widget holder) {
-    holder.internalBindView(
-        new ActiveDownloadsHeaderDisplayable(AptoideUtils.StringU.getResString(R.string.active),
-            installManager));
-  }
-
-  private void bindActiveDownload(Widget holder, Download download) {
-    holder.internalBindView(new ActiveDownloadDisplayable(download, installManager));
-  }
-
-  private void bindStandByDownload(Widget holder, Download download) {
-    holder.internalBindView(
-        new CompletedDownloadDisplayable(download, installManager, downloadConverter, analytics,
-            installConverter));
-  }
-
-  private void bindCompletedDownload(Widget holder, Download download) {
-    holder.internalBindView(
-        new CompletedDownloadDisplayable(download, installManager, downloadConverter, analytics,
-            installConverter));
   }
 
   @Override public int getItemViewType(int position) {
@@ -233,6 +206,44 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
   @Override public void onViewRecycled(Widget holder) {
     holder.unbindView();
     super.onViewRecycled(holder);
+  }
+
+  private void bindHeader(Widget holder, int position) {
+    // discover if it's the header for stand by or completed downloads
+    position -= (activeDownloads.isEmpty() ? 0 : activeDownloads.size() + 1);
+
+    StoreGridHeaderWidget header = (StoreGridHeaderWidget) holder;
+    if (position < standByDownloads.size()) {
+      // is the header from stand by downloads
+      header.bindView(new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(
+          AptoideUtils.StringU.getResString(R.string.stand_by))));
+    } else {
+      // is the header from completed downloads
+      header.bindView(new StoreGridHeaderDisplayable(new GetStoreWidgets.WSWidget().setTitle(
+          AptoideUtils.StringU.getResString(R.string.completed))));
+    }
+  }
+
+  private void bindActiveDownloadHeader(Widget holder) {
+    holder.internalBindView(
+        new ActiveDownloadsHeaderDisplayable(AptoideUtils.StringU.getResString(R.string.active),
+            installManager));
+  }
+
+  private void bindActiveDownload(Widget holder, Download download) {
+    holder.internalBindView(new ActiveDownloadDisplayable(download, installManager));
+  }
+
+  private void bindStandByDownload(Widget holder, Download download) {
+    holder.internalBindView(
+        new CompletedDownloadDisplayable(download, installManager, downloadConverter, analytics,
+            installConverter));
+  }
+
+  private void bindCompletedDownload(Widget holder, Download download) {
+    holder.internalBindView(
+        new CompletedDownloadDisplayable(download, installManager, downloadConverter, analytics,
+            installConverter));
   }
 
   public void clearAll() {

@@ -110,7 +110,7 @@ public class CommentWidget extends Widget<CommentDisplayable> {
 
   private void setLayoutLeftPadding(ComplexComment complexComment) {
     final int level = complexComment.getLevel();
-    int baseMargin = AptoideUtils.ScreenU.getPixels(MARGIN_IN_DIP);
+    int baseMargin = AptoideUtils.ScreenU.getPixelsForDip(MARGIN_IN_DIP);
     @Dimension int leftMargin = level < 2 ? baseMargin : baseMargin * level;
     outerLayout.setPadding(leftMargin, outerLayout.getPaddingTop(), baseMargin,
         outerLayout.getPaddingBottom());

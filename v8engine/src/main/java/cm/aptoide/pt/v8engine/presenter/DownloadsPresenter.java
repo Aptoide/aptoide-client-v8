@@ -32,15 +32,14 @@ public class DownloadsPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.RESUME)
         .first()
+        .observeOn(Schedulers.computation())
         .flatMap(created -> downloadRepository.getAll()
-            .observeOn(Schedulers.computation())
             .sample(100, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
             .flatMap(downloads -> {
               if (downloads == null || downloads.isEmpty()) {
-                return Observable.fromCallable(() -> {
-                  view.showEmptyDownloadList();
-                  return null;
-                });
+                view.showEmptyDownloadList();
+                return Observable.empty();
               }
               return Observable.merge(setActive(downloads), setStandBy(downloads),
                   setCompleted(downloads));
@@ -52,6 +51,12 @@ public class DownloadsPresenter implements Presenter {
           CrashReport.getInstance().log(err);
           view.showEmptyDownloadList();
         });
+  }
+
+  @Override public void saveState(Bundle state) {
+  }
+
+  @Override public void restoreState(Bundle state) {
   }
 
   private Observable<Void> setActive(List<Download> downloads) {
@@ -90,12 +95,6 @@ public class DownloadsPresenter implements Presenter {
         || progress.getOverallDownloadStatus() == Download.PENDING
         || progress.getOverallDownloadStatus() == Download.PAUSED
         || progress.getOverallDownloadStatus() == Download.IN_QUEUE;
-  }
-
-  @Override public void saveState(Bundle state) {
-  }
-
-  @Override public void restoreState(Bundle state) {
   }
 
   private DownloadsView.DownloadViewModel convertToViewModelDownload(Download download) {

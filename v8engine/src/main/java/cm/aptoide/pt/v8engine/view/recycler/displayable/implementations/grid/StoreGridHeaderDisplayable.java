@@ -15,6 +15,8 @@ public class StoreGridHeaderDisplayable extends Displayable {
   @Getter private StoreContext storeContext;
   @Getter @Setter private boolean moreVisible;
 
+  // this constructor is necessary due to reflection code that generates displayables. that code
+  // needs to go as this.
   public StoreGridHeaderDisplayable() {
     this(null, null, null, null);
   }

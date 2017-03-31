@@ -105,7 +105,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
   }
 
   private Completable createDisplayableForDownload(Download download) {
-    return Completable.fromCallable(() -> {
+    return Completable.fromAction(() -> {
       if (isDownloading(download)) {
         downloadingDisplayables.add(new ActiveDownloadDisplayable(download, installManager));
       } else if (isStandingBy(download)) {
@@ -118,12 +118,11 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
             new CompletedDownloadDisplayable(download, installManager, downloadConverter, analytics,
                 installConverter));
       }
-      return null;
     });
   }
 
   private Completable addListHeaders() {
-    return Completable.fromCallable(() -> {
+    return Completable.fromAction(() -> {
 
       // add each list header displayable
 
@@ -143,12 +142,11 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
             new GetStoreWidgets.WSWidget().setTitle(
                 AptoideUtils.StringU.getResString(R.string.completed))));
       }
-      return null;
     });
   }
 
   private Completable updateUi() {
-    return Completable.fromCallable(() -> {
+    return Completable.fromAction(() -> {
       if (emptyDownloadList()) {
         clearDisplayables();
         finishLoading();
@@ -161,7 +159,6 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
             addDisplayables(standingByDisplayables, false).
             addDisplayables(completedDisplayables, true);
       }
-      return null;
     });
   }
 

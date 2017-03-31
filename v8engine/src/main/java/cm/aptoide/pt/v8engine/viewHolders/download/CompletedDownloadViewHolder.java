@@ -1,27 +1,26 @@
 package cm.aptoide.pt.v8engine.viewHolders.download;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.os.Build;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.DownloadsView;
 import cm.aptoide.pt.v8engine.viewHolders.RecyclerViewHolder;
-import com.jakewharton.rxbinding.view.RxView;
-import java.util.concurrent.TimeUnit;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class CompletedDownloadViewHolder
     extends RecyclerViewHolder<DownloadsView.DownloadViewModel> {
 
+  protected CompletedDownloadViewHolder(View itemView) {
+    super(itemView);
+  }
+
+  @Override protected void update(Context context, DownloadsView.DownloadViewModel viewModel) {
+
+  }
+
+  @Override public int getViewResource() {
+    return 0;
+  }
+
+  /*
   private final TextView appName;
   private final ImageView appIcon;
   private final TextView status;
@@ -105,4 +104,5 @@ public class CompletedDownloadViewHolder
   @Override public int getViewResource() {
     return R.layout.completed_donwload_row_layout;
   }
+  */
 }

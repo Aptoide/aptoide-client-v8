@@ -437,7 +437,7 @@ public class AptoideUtils {
       return context.getResources().getConfiguration().orientation;
     }
 
-    public static int getPixels(int dipValue) {
+    public static int getPixelsForDip(int dipValue) {
       Resources r = context.getResources();
       int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue,
           r.getDisplayMetrics());

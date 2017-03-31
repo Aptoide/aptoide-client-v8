@@ -7,11 +7,11 @@ retrolambda {
 }
 
 android {
-  compileSdkVersion COMPILE_SDK_VERSION
+  compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
   buildToolsVersion BUILD_TOOLS_VERSION
 
   defaultConfig {
-    minSdkVersion 9
+    minSdkVersion project.MINIMUM_SDK_VERSION
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
