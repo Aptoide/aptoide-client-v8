@@ -5,13 +5,34 @@ package cm.aptoide.pt.spotandshareandroid;
  */
 public class Group {
 
-  private final String name;
+  private final String ssid;
+  private final String deviceName;
+  private final String hotspotControlCounter;
+  private String deviceID;
 
-  public Group(String name) {
-    this.name = name;
+  public Group(String ssid, String deviceName, String hotspotControlCounter, String deviceID) {
+
+    this.ssid = ssid;
+    this.deviceName = deviceName;
+    this.hotspotControlCounter = hotspotControlCounter;
+    this.deviceID = deviceID;
   }
 
-  public String getName() {
-    return name;
+  public String getSsid() {
+    return ssid;
   }
+
+  public String getDeviceName() {
+    return deviceName;
+  }
+
+  public String getHotspotControlCounter() {
+    return hotspotControlCounter;
+  }
+
+  public String getDeviceID() {
+    return deviceID;
+  }
+
+
 }
