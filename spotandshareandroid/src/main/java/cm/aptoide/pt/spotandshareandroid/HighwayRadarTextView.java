@@ -47,6 +47,12 @@ public class HighwayRadarTextView extends FrameLayout
     init(null, context);
   }
 
+  private void init(AttributeSet attrs, Context context) {
+    random = new Random();
+    vetorKeywords = new ArrayList<String>(MAX);
+    getViewTreeObserver().addOnGlobalLayoutListener(this);
+  }
+
   public HighwayRadarTextView(Context context, AttributeSet attrs) {
     super(context, attrs);
     init(attrs, context);
@@ -55,12 +61,6 @@ public class HighwayRadarTextView extends FrameLayout
   public HighwayRadarTextView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     init(attrs, context);
-  }
-
-  private void init(AttributeSet attrs, Context context) {
-    random = new Random();
-    vetorKeywords = new ArrayList<String>(MAX);
-    getViewTreeObserver().addOnGlobalLayoutListener(this);
   }
 
   public Activity getActivity() {
@@ -106,7 +106,7 @@ public class HighwayRadarTextView extends FrameLayout
     }
   }
 
-  public void show(ArrayList<String> vetorKeywords) {
+  public void show(final ArrayList<Group> vetorKeywords) {
     this.removeAllViews();
 
     if (width > 0 && height > 0 && vetorKeywords != null && vetorKeywords.size() > 0) {
@@ -127,7 +127,8 @@ public class HighwayRadarTextView extends FrameLayout
       listOfHotspot = new ArrayList<HighwayRadarRippleView>();
 
       for (int i = 0; i < size; i++) {
-        final String keyword = vetorKeywords.get(i);
+        final Group group = vetorKeywords.get(i);
+        final String keyword = group.getSsid();
         int ranColor = fontColor;
         int xy[] = randomXY(random, listX, listY, xItem);
         int txtSize = textSize;
@@ -147,17 +148,21 @@ public class HighwayRadarTextView extends FrameLayout
         txt.setOnClickListener(new OnClickListener() {
           @Override public void onClick(View view) {
 
-            String aux = activity.getChosenHotspot();
+            Group g = activity.getChosenHotspot();
+            String aux = "";
+            if (g != null) {
+              aux = activity.getChosenHotspot().getSsid();
+            }
 
             if (!activity.isJoinGroupFlag()) {
               if (aux.equals(keyword)) {
                 deselectHotspot(keyword);
               } else {
-                if (aux != "") {
+                if (!aux.equals("")) {
                   deselectHotspot(aux);
                 }
-                activity.setChosenHotspot(keyword);
-                txt.setEffectColor(Color.parseColor("#e17117"));
+                activity.setChosenHotspot(group);
+                txt.setEffectColor(getResources().getColor(R.color.aptoide_orange));
                 txt.postInvalidate();
                 txt.setTypeface(null, Typeface.BOLD);
 
@@ -213,7 +218,7 @@ public class HighwayRadarTextView extends FrameLayout
     String aux = removeAPTXVFromString(keyword);
     for (int i = 0; i < listOfHotspot.size(); i++) {
       if (listOfHotspot.get(i).getText().toString().equals(aux)) {
-        activity.setChosenHotspot("");
+        activity.deselectHotspot();
         activity.setJoinGroupFlag(false);
         listOfHotspot.get(i).setTypeface(null, Typeface.NORMAL);
         listOfHotspot.get(i).setEffectColor(rippleViewDefaultColor);
@@ -300,7 +305,7 @@ public class HighwayRadarTextView extends FrameLayout
     return hotspotName;
   }
 
-  public void showForLowerVersions(ArrayList<String> vetorKeywords) {
+  public void showForLowerVersions(ArrayList<Group> vetorKeywords) {
     this.removeAllViews();
 
     if (width > 0 && height > 0 && vetorKeywords != null && vetorKeywords.size() > 0) {
@@ -321,7 +326,8 @@ public class HighwayRadarTextView extends FrameLayout
       listOfHotspotLow = new ArrayList<HighwayRadarLowElement>();
 
       for (int i = 0; i < size; i++) {
-        final String keyword = vetorKeywords.get(i);
+        final Group group = vetorKeywords.get(i);
+        final String keyword = group.getSsid();
         int ranColor = fontColor;
         int xy[] = randomXY(random, listX, listY, xItem);
         int txtSize = textSize;
@@ -338,14 +344,14 @@ public class HighwayRadarTextView extends FrameLayout
         txt.setOnClickListener(new OnClickListener() {
           @Override public void onClick(View view) {
 
-            String aux = activity.getChosenHotspot();
+            String aux = activity.getChosenHotspot().getSsid();
             if (aux.equals(keyword)) {
               deselectHotspotLowVersion(keyword);
             } else {
               if (aux != "") {
                 deselectHotspotLowVersion(aux);
               }
-              activity.setChosenHotspot(keyword);
+              activity.setChosenHotspot(group);
 
               activity.joinSingleHotspot();
             }
@@ -381,7 +387,7 @@ public class HighwayRadarTextView extends FrameLayout
   public void deselectHotspotLowVersion(String keyword) {
     for (int i = 0; i < listOfHotspotLow.size(); i++) {
       if (listOfHotspotLow.get(i).getText().equals(keyword)) {
-        activity.setChosenHotspot("");
+        activity.deselectHotspot();
         listOfHotspotLow.get(i).setTypeface(null, Typeface.NORMAL);
       }
     }

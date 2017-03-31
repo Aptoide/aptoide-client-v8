@@ -40,7 +40,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   public LinearLayout createGroupButton;
   public HighwayRadarTextView radarTextView;
   public LinearLayout progressBarLayout;
-  public String chosenHotspot = "";
+  public Group chosenHotspot;
   public LinearLayout groupButtonsLayout;
   private TextView searchGroupsTextview;
   private Toolbar mToolbar;
@@ -136,8 +136,8 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         onPermissionsDenied();
       }
     } else if (requestCode == MOBILE_DATA_REQUEST_CODE) {
-      Group group = new Group(chosenHotspot);
-      presenter.onActivityResult(group);
+      //Group group = new Group(chosenHotspot);
+      presenter.onActivityResult(chosenHotspot);
     } else if (requestCode == LOCATION_REQUEST_CODE) {
       if (checkLocationPermission()) {
         onPermissionsGranted();
@@ -199,14 +199,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 
-  private void recoverNetworkState() {
-    presenter.recoverNetworkState();
-  }
-
-  private void forgetAPTXVNetwork() {
-    presenter.forgetAPTXVNetwork();
-  }
-
   private boolean checkNormalPermissions() {
     if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
         != PackageManager.PERMISSION_GRANTED) {
@@ -226,6 +218,14 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
     intent.setData(Uri.parse("package:" + getPackageName()));
     startActivityForResult(intent, WRITE_SETTINGS_REQUEST_CODE);
+  }
+
+  private void forgetAPTXVNetwork() {
+    presenter.forgetAPTXVNetwork();
+  }
+
+  private void recoverNetworkState() {
+    presenter.recoverNetworkState();
   }
 
   @TargetApi(23) private boolean checkSpecialSettingsPermission() {
@@ -330,6 +330,23 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     d.show();
   }
 
+  @Override public boolean checkPermissions() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      if (!checkNormalPermissions()) {
+        return false;
+      }
+
+      if (!checkSpecialSettingsPermission()) {
+        return false;
+      }
+
+      if (!checkLocationPermission()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   @Override public void showMobileDataToast() {
     Toast.makeText(HighwayActivity.this,
         HighwayActivity.this.getResources().getString(R.string.mDataJoinGroup), Toast.LENGTH_SHORT)
@@ -428,11 +445,11 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     finish();
   }
 
-  @Override public void refreshRadar(ArrayList<String> clients) {
+  @Override public void refreshRadar(ArrayList<Group> clients) {
     radarTextView.show(clients);
   }
 
-  @Override public void refreshRadarLowerVersions(ArrayList<String> clients) {
+  @Override public void refreshRadarLowerVersions(ArrayList<Group> clients) {
     radarTextView.showForLowerVersions(clients);
   }
 
@@ -453,26 +470,56 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
+  private Dialog buildMobileDataDialog() {
+    //        mobileDataDialog=true;
+
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+    builder.setTitle(this.getResources().getString(R.string.mobileDataTitle))
+        .setMessage(this.getResources().getString(R.string.mobileDataMessage))
+        .setPositiveButton(this.getResources().getString(R.string.turnOffButton),
+            new DialogInterface.OnClickListener() {
+              @Override public void onClick(DialogInterface dialog, int which) {
+                startActivityForResult(new Intent(Settings.ACTION_SETTINGS),
+                    MOBILE_DATA_REQUEST_CODE);
+              }
+            })
+        .setNegativeButton(this.getResources().getString(R.string.cancel),
+            new DialogInterface.OnClickListener() {
+              @Override public void onClick(DialogInterface dialog, int which) {
+                System.out.println("Canceled the turn off data.");
+              }
+            });
+
+    return builder.create();
+  }
+
   private void showNougatErrorToast() {
     Toast.makeText(this, this.getResources().getString(R.string.hotspotCreationErrorNougat),
         Toast.LENGTH_SHORT).show();
   }
 
-  @Override public boolean checkPermissions() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      if (!checkNormalPermissions()) {
-        return false;
-      }
+  public void joinSingleHotspot() {
+    hideSearchGroupsTextview(true);
+    //Group g = new Group(chosenHotspot);
+    presenter.clickJoinGroup(chosenHotspot);
+  }
 
-      if (!checkSpecialSettingsPermission()) {
-        return false;
-      }
+  public Group getChosenHotspot() {
+    return chosenHotspot;
+  }
 
-      if (!checkLocationPermission()) {
-        return false;
-      }
-    }
-    return true;
+  public void setChosenHotspot(Group chosenHotspot) {
+    this.chosenHotspot = chosenHotspot;
+  }
+
+  public void deselectHotspot() {
+    this.chosenHotspot = null;
+  }
+
+  @Override protected void onResume() {
+    presenter.onResume();
+    super.onResume();
   }
 
   @Override public void requestPermissions() {
@@ -517,64 +564,21 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
-  @Override public void registerListener(PermissionListener listener) {
-    this.permissionListener = listener;
-  }
-
-  @Override public void removeListener() {
-    this.permissionListener = null;
-  }
-
-  private Dialog buildMobileDataDialog() {
-    //        mobileDataDialog=true;
-
-    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-    builder.setTitle(this.getResources().getString(R.string.mobileDataTitle))
-        .setMessage(this.getResources().getString(R.string.mobileDataMessage))
-        .setPositiveButton(this.getResources().getString(R.string.turnOffButton),
-            new DialogInterface.OnClickListener() {
-              @Override public void onClick(DialogInterface dialog, int which) {
-                startActivityForResult(new Intent(Settings.ACTION_SETTINGS),
-                    MOBILE_DATA_REQUEST_CODE);
-              }
-            })
-        .setNegativeButton(this.getResources().getString(R.string.cancel),
-            new DialogInterface.OnClickListener() {
-              @Override public void onClick(DialogInterface dialog, int which) {
-                System.out.println("Canceled the turn off data.");
-              }
-            });
-
-    return builder.create();
-  }
-
-  public void joinSingleHotspot() {
-    hideSearchGroupsTextview(true);
-    Group g = new Group(chosenHotspot);
-    presenter.clickJoinGroup(g);
-  }
-
-  public String getChosenHotspot() {
-    return chosenHotspot;
-  }
-
-  public void setChosenHotspot(String chosenHotspot) {
-    this.chosenHotspot = chosenHotspot;
-  }
-
-  @Override protected void onResume() {
-    presenter.onResume();
-    super.onResume();
-  }
-
   @Override protected void onDestroy() {
     presenter.onDestroy();
     super.onDestroy();
   }
 
+  @Override public void registerListener(PermissionListener listener) {
+    this.permissionListener = listener;
+  }
+
   public boolean isJoinGroupFlag() {
     return joinGroupFlag;
+  }
+
+  @Override public void removeListener() {
+    this.permissionListener = null;
   }
 
   public void setJoinGroupFlag(boolean joinGroupFlag) {

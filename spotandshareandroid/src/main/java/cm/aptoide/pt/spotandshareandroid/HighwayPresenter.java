@@ -158,7 +158,7 @@ public class HighwayPresenter implements Presenter {
   }
 
   public void clickCreateGroup() {
-    String randomAlphaNum = connectionManager.generateRandomAlphanumericString(5);
+    String randomAlphaNum = Utils.generateRandomAlphanumericString(5);
     view.enableButtons(false);
     groupManager.createGroup(randomAlphaNum, deviceName, new GroupManager.CreateGroupListener() {
       @Override public void onSuccess() {
@@ -188,7 +188,7 @@ public class HighwayPresenter implements Presenter {
         view.showInactivityToast();
       }
     }, new ConnectionManager.ClientsConnectedListener() {
-      @Override public void onNewClientsConnected(ArrayList<String> clients) {
+      @Override public void onNewClientsConnected(ArrayList<Group> clients) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
           view.refreshRadarLowerVersions(clients);
         } else {

@@ -30,9 +30,9 @@ public interface HighwayView {
 
   void openChatHotspot(ArrayList<String> pathsFromOutside, String deviceName);
 
-  void refreshRadar(ArrayList<String> clients);
+  void refreshRadar(ArrayList<Group> clients);
 
-  void refreshRadarLowerVersions(ArrayList<String> clients);
+  void refreshRadarLowerVersions(ArrayList<Group> clients);
 
   void showRecoveringWifiStateToast();
 

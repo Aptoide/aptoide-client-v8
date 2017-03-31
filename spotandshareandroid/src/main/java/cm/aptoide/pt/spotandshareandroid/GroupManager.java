@@ -17,8 +17,8 @@ public class GroupManager {
   private JoinGroupListener joinGrouplistener;
   private CreateGroupListener createGrouplistener;
   private String deviceName;
-  private String randomAlphaNum;
   private JoinHotspotTask joinHotspotTask;
+  private String randomAlphaNum;
   private ActivateHotspotTask activateHotspotTask;
   private AsyncTask<Void, Void, Integer> createTask;
 
@@ -34,7 +34,7 @@ public class GroupManager {
     }
     this.group = group;
     this.joinGrouplistener = listener;
-    if (group == null || TextUtils.isEmpty(group.getName())) {
+    if (group == null || TextUtils.isEmpty(group.getSsid())) {
       joinGrouplistener.onError(ConnectionManager.ERROR_INVALID_GROUP);
       return;
     }
@@ -51,7 +51,7 @@ public class GroupManager {
   }
 
   public void retryToJoinGroup(Group group) {//after mobileDataDialog
-    if (group == null || TextUtils.isEmpty(group.getName())) {
+    if (group == null || TextUtils.isEmpty(group.getSsid())) {
       joinGrouplistener.onError(ConnectionManager.ERROR_INVALID_GROUP);
       return;
     }
@@ -110,7 +110,7 @@ public class GroupManager {
   private class JoinHotspotTask extends AsyncTask<Void, Void, Integer> {
 
     @Override protected Integer doInBackground(Void... params) {
-      return connectionManager.joinHotspot(group.getName(), false);//future -> pass the whole group
+      return connectionManager.joinHotspot(group.getSsid(), false);//future -> pass the whole group
     }
 
     @Override protected void onPreExecute() {
@@ -127,7 +127,7 @@ public class GroupManager {
     protected void onPostExecute(Integer result) {
       if (joinGrouplistener != null) {
         if (result == ConnectionManager.SUCCESSFUL_JOIN) {
-          String hostDeviceName = removeAPTXVFromString(group.getName());
+          String hostDeviceName = removeAPTXVFromString(group.getSsid());
           joinGrouplistener.onSuccess(hostDeviceName);
         } else {
           joinGrouplistener.onError(result);
