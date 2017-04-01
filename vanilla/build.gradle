@@ -12,14 +12,12 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'android-command'
-apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'realm-android'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.getkeepsafe.dexcount'
 
 retrolambda {
   jvmArgs '-noverify'
-  //defaultMethods true
 }
 
 android {
