@@ -591,7 +591,7 @@ public class SharePreviewDialog {
           subscriber.onCompleted();
         });
         if (dontShowMeAgainOption) {
-          alertDialog.setNeutralButton(R.string.dont_show_again, (dialogInterface, i) -> {
+          alertDialog.setNeutralButton(R.string.dont_show_this_again, (dialogInterface, i) -> {
             subscriber.onNext(GenericDialogs.EResponse.CANCEL);
             subscriber.onCompleted();
             ManagerPreferences.setShowPreviewDialog(false);

@@ -348,6 +348,7 @@
   <string name="social_timeline_shared_by">shared by %1$s</string>
   <string name="social_timeline_who_liked">Who liked</string>
   <string name="social_timeline_users_private">%d are private</string>
+  <string name="dont_show_this_again">Don\'t show \n again</string>
 
   <!-- Store Meta widget -->
   <string name="edit_store">Edit</string>
