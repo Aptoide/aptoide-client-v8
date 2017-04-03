@@ -68,7 +68,7 @@
           android:layout_toRightOf="@+id/displayable_social_timeline_recommendation_icon"
           android:ellipsize="end"
           android:lines="1"
-          android:text="Installed and Recommends"
+          android:text="@string/social_timeline_share_dialog_installed_and_recommended"
           style="@style/Widget.Aptoide.Card.Body"
           />
 

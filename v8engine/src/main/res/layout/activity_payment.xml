@@ -20,168 +20,173 @@
       android:orientation="horizontal"
       />
 
-  <LinearLayout
+  <ScrollView
       android:id="@+id/activity_payment_card"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_centerInParent="true"
       android:layout_margin="16dp"
       android:background="@drawable/dialog_bg"
-      android:clickable="true"
-      android:minHeight="200dp"
-      android:orientation="vertical"
-      android:padding="16dp"
       >
-
-    <RelativeLayout
-        android:id="@+id/activity_payment_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        tools:visibility="visible"
-        >
-
-      <ImageView
-          android:id="@+id/activity_payment_product_icon"
-          android:layout_width="80dp"
-          android:layout_height="80dp"
-          tools:ignore="contentDescription"
-          tools:src="@drawable/icon_user"
-          />
-
-      <TextView
-          android:id="@+id/activity_payment_product_name"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="12dp"
-          android:layout_marginLeft="96dp"
-          android:layout_marginStart="96dp"
-          android:layout_marginTop="8dp"
-          tools:text="Cut the Rope"
-          style="@style/TextAppearance.Aptoide.Subhead"
-          />
-
-
-      <TextView
-          android:id="@+id/activity_payment_product_description"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_below="@+id/activity_payment_product_name"
-          android:layout_marginBottom="16dp"
-          android:layout_marginLeft="96dp"
-          android:layout_marginStart="96dp"
-          android:ellipsize="end"
-          android:lines="2"
-          tools:text="Golden coins for you to conquer the world with Cut the Rope the best mobile application you'e ever seen"
-          style="@style/TextAppearance.Aptoide.Caption.Inverse"
-          />
-
-    </RelativeLayout>
-
     <LinearLayout
-        android:id="@+id/activity_payment_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:animateLayoutChanges="true"
+        android:clickable="true"
+        android:minHeight="200dp"
         android:orientation="vertical"
-        tools:visibility="visible"
+        android:padding="16dp"
         >
 
       <RelativeLayout
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
+          android:id="@+id/activity_payment_header"
           android:layout_width="match_parent"
-          android:layout_height="56dp"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          tools:visibility="visible"
           >
 
         <ImageView
-            android:id="@+id/activity_selected_payment_checked_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="16dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/selected_payment_icon"
+            android:id="@+id/activity_payment_product_icon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             tools:ignore="contentDescription"
+            tools:src="@drawable/icon_user"
             />
 
         <TextView
-            android:id="@+id/activity_product_price"
-            android:layout_width="wrap_content"
+            android:id="@+id/activity_payment_product_name"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_toStartOf="@id/activity_selected_payment_checked_image"
-            android:gravity="end"
-            android:lines="1"
-            tools:text="6,50 R$"
-            style="@style/TextAppearance.Aptoide.Title"
+            android:layout_marginBottom="12dp"
+            android:layout_marginLeft="96dp"
+            android:layout_marginStart="96dp"
+            android:layout_marginTop="8dp"
+            tools:text="Cut the Rope"
+            style="@style/TextAppearance.Aptoide.Subhead"
+            />
+
+
+        <TextView
+            android:id="@+id/activity_payment_product_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/activity_payment_product_name"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="96dp"
+            android:layout_marginStart="96dp"
+            android:ellipsize="end"
+            android:lines="2"
+            tools:text="Golden coins for you to conquer the world with Cut the Rope the best mobile application you'e ever seen"
+            style="@style/TextAppearance.Aptoide.Caption.Inverse"
             />
 
       </RelativeLayout>
 
-      <View
-          android:id="@+id/activity_payment_selected_divider"
-          android:layout_width="match_parent"
-          android:layout_height="0.5dp"
-          android:background="@color/activity_payment_dark_gray"
-          />
-
-      <RadioGroup
-          android:id="@+id/activity_payment_list"
+      <LinearLayout
+          android:id="@+id/activity_payment_body"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:layout_marginBottom="16dp"
+          android:animateLayoutChanges="true"
           android:orientation="vertical"
-          />
+          tools:visibility="visible"
+          >
 
-      <View
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            >
+
+          <ImageView
+              android:id="@+id/activity_selected_payment_checked_image"
+              android:layout_width="40dp"
+              android:layout_height="40dp"
+              android:layout_alignParentEnd="true"
+              android:layout_centerVertical="true"
+              android:layout_marginEnd="16dp"
+              android:scaleType="centerInside"
+              android:src="@drawable/selected_payment_icon"
+              tools:ignore="contentDescription"
+              />
+
+          <TextView
+              android:id="@+id/activity_product_price"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_centerVertical="true"
+              android:layout_marginEnd="16dp"
+              android:layout_marginStart="16dp"
+              android:layout_toStartOf="@id/activity_selected_payment_checked_image"
+              android:gravity="end"
+              android:lines="1"
+              tools:text="6,50 R$"
+              style="@style/TextAppearance.Aptoide.Title"
+              />
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/activity_payment_selected_divider"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/activity_payment_dark_gray"
+            />
+
+        <RadioGroup
+            android:id="@+id/activity_payment_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/activity_payment_dark_gray"
+            />
+      </LinearLayout>
+
+      <TextView
+          android:id="@+id/activity_payment_no_payments_text"
           android:layout_width="match_parent"
-          android:layout_height="0.5dp"
-          android:background="@color/activity_payment_dark_gray"
+          android:layout_height="100dp"
+          android:layout_marginBottom="16dp"
+          android:layout_marginTop="16dp"
+          android:gravity="center"
+          android:text="@string/no_payments_available"
+          android:visibility="gone"
           />
+
+      <RelativeLayout
+          android:id="@+id/activity_payment_buttons"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:padding="8dp"
+          tools:visibility="visible"
+          >
+
+        <Button
+            android:id="@+id/activity_payment_cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="@string/cancel"
+            style="@style/Widget.Aptoide.Button.Borderless"
+            />
+
+        <Button
+            android:id="@+id/activity_payment_buy_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="@string/buy"
+            style="@style/Widget.Aptoide.Button.Borderless.Colored"
+            />
+      </RelativeLayout>
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/activity_payment_no_payments_text"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:text="@string/no_payments_available"
-        android:visibility="gone"
-        />
-
-    <RelativeLayout
-        android:id="@+id/activity_payment_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="8dp"
-        tools:visibility="visible"
-        >
-
-      <Button
-          android:id="@+id/activity_payment_cancel_button"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignParentStart="true"
-          android:text="@string/cancel"
-          style="@style/Widget.Aptoide.Button.Borderless"
-          />
-
-      <Button
-          android:id="@+id/activity_payment_buy_button"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignParentEnd="true"
-          android:text="@string/buy"
-          style="@style/Widget.Aptoide.Button.Borderless.Colored"
-          />
-    </RelativeLayout>
-  </LinearLayout>
+  </ScrollView>
 
   <LinearLayout
       android:id="@+id/activity_payment_global_progress_bar"
@@ -205,5 +210,6 @@
         android:theme="@style/AptoideThemeDefault"
         />
   </LinearLayout>
+
 </RelativeLayout>
 
