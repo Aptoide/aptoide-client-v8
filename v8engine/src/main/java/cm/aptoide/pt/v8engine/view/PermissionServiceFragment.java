@@ -9,7 +9,7 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.v8engine.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import rx.functions.Action0;
 
 /**

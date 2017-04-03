@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.addressbook.navigation;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.navigation.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsContract;

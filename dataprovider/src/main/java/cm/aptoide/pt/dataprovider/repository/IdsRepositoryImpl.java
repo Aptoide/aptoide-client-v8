@@ -11,7 +11,7 @@ import android.provider.Settings;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.utils.AptoideUtils;

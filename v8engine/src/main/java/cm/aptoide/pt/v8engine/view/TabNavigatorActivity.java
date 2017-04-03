@@ -1,8 +1,8 @@
 package cm.aptoide.pt.v8engine.view;
 
 import android.os.Bundle;
-import cm.aptoide.pt.navigation.TabNavigator;
-import cm.aptoide.pt.v8engine.activity.BaseActivity;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
+import cm.aptoide.pt.v8engine.view.activity.BaseActivity;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import rx.Observable;
 

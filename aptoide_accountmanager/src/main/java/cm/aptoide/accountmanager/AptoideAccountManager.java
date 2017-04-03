@@ -6,7 +6,7 @@
 package cm.aptoide.accountmanager;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.net.SocketTimeoutException;

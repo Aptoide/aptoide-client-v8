@@ -6,7 +6,7 @@ import android.content.pm.PackageInfo;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Installed;

@@ -6,7 +6,7 @@
 package cm.aptoide.pt.v8engine.interfaces;
 
 import android.os.Bundle;
-import cm.aptoide.pt.v8engine.fragment.BaseLoaderFragment;
+import cm.aptoide.pt.v8engine.view.fragment.BaseLoaderFragment;
 
 /**
  * Created by neuro on 04-05-2016.

@@ -24,7 +24,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
 import cm.aptoide.pt.v8engine.addressbook.navigation.AddressBookNavigationManager;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.fragment.UIComponentFragment;
+import cm.aptoide.pt.v8engine.view.fragment.UIComponentFragment;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;

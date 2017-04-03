@@ -5,7 +5,7 @@ import android.os.Build;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AccountDataPersist;
 import cm.aptoide.accountmanager.AccountFactory;
-import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import java.util.concurrent.Executors;
 import rx.Completable;
 import rx.Single;

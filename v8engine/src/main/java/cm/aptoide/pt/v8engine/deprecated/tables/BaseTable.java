@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.deprecated.tables;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
-import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.Accessor;
 import cm.aptoide.pt.logger.Logger;
 import io.realm.RealmObject;

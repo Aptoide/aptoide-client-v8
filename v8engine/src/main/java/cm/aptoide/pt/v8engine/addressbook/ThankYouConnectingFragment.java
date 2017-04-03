@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.addressbook.navigation.AddressBookNavigationManager;
-import cm.aptoide.pt.v8engine.fragment.UIComponentFragment;
+import cm.aptoide.pt.v8engine.view.fragment.UIComponentFragment;
 import com.jakewharton.rxbinding.view.RxView;
 
 /**

@@ -39,7 +39,7 @@
       android:allowBackup="true"
       >
 
-    <activity android:name=".activity.SearchActivity">
+    <activity android:name=".view.activity.SearchActivity">
       <intent-filter>
         <action android:name="android.intent.action.SEARCH"/>
       </intent-filter>
@@ -48,7 +48,7 @@
           android:resource="@xml/searchable"/>
     </activity>
 
-    <activity android:name=".activity.StoreSearchActivity">
+    <activity android:name=".view.activity.StoreSearchActivity">
       <intent-filter>
         <action android:name="android.intent.action.SEARCH"/>
       </intent-filter>
@@ -58,12 +58,12 @@
     </activity>
 
     <activity
-        android:name=".activity.PaymentActivity"
+        android:name=".view.activity.PaymentActivity"
         android:theme="@style/AppBaseTheme.Payment"/>
 
     <activity android:name=".payment.providers.paypal.PayPalPaymentActivity"/>
-    <activity android:name=".activity.WebAuthorizationActivity"/>
-    <activity android:name=".activity.LoginActivity"/>
+    <activity android:name=".view.activity.WebAuthorizationActivity"/>
+    <activity android:name=".view.activity.LoginActivity"/>
 
     <activity android:name="cm.aptoide.pt.spotandshareandroid.HighwayActivity"/>
 
@@ -73,14 +73,14 @@
         />
 
     <activity
-        android:name=".activity.CreateUserActivity"
+        android:name=".view.activity.CreateUserActivity"
         android:configChanges="orientation|screenSize"
         android:screenOrientation="nosensor"
         android:windowSoftInputMode="stateHidden"
         />
 
     <activity
-        android:name=".activity.CreateStoreActivity"
+        android:name=".view.activity.CreateStoreActivity"
         android:configChanges="orientation|screenSize"
         android:exported="true"
         android:screenOrientation="nosensor"
@@ -88,13 +88,13 @@
         />
 
     <activity
-        android:name=".activity.ProfileStepOneActivity"
+        android:name=".view.activity.ProfileStepOneActivity"
         android:screenOrientation="nosensor"
         android:windowSoftInputMode="stateHidden"
         />
 
     <activity
-        android:name=".activity.ProfileStepTwoActivity"
+        android:name=".view.activity.ProfileStepTwoActivity"
         android:screenOrientation="nosensor"
         android:windowSoftInputMode="stateHidden"
         />
@@ -210,7 +210,7 @@
     </receiver>
 
 
-    <receiver android:name=".link.customtabs.CustomTabNativeReceiver"/>
+    <receiver android:name=".timeline.link.CustomTabNativeReceiver"/>
 
     <receiver
         android:name=".receivers.NetworkStateReceiver"

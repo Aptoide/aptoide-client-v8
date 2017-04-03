@@ -2,7 +2,7 @@ package cm.aptoide.pt.downloadmanager;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;

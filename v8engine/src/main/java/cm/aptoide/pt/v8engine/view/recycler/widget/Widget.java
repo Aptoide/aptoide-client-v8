@@ -10,10 +10,10 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.navigation.ActivityNavigator;
-import cm.aptoide.pt.navigation.FragmentNavigator;
-import cm.aptoide.pt.v8engine.activity.ActivityView;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.activity.ActivityView;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import rx.subscriptions.CompositeSubscription;
 

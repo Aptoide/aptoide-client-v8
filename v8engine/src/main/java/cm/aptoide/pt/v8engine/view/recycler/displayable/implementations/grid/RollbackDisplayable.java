@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 import android.content.Context;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Rollback;
-import cm.aptoide.pt.navigation.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.install.Installer;

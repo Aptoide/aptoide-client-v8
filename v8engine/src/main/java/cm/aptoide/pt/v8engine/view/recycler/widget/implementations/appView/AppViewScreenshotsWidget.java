@@ -10,7 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.adapters.ScreenshotsAdapter;
+import cm.aptoide.pt.v8engine.view.adapters.ScreenshotsAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;

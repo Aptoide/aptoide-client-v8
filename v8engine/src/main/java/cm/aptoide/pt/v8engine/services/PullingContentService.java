@@ -14,7 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
-import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.ws.v3.PushNotificationsRequest;

@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view;
 
-import cm.aptoide.pt.v8engine.viewModel.GoogleAccountViewModel;
+import cm.aptoide.pt.v8engine.view.model.GoogleAccountViewModel;
 import rx.Observable;
 
 /**

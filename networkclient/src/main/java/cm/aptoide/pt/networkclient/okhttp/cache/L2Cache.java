@@ -1,6 +1,6 @@
 package cm.aptoide.pt.networkclient.okhttp.cache;
 
-import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.fasterxml.jackson.core.type.TypeReference;

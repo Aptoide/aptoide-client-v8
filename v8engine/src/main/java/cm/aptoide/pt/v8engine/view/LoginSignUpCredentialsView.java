@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.v8engine.view;
 
-import cm.aptoide.pt.v8engine.viewModel.AptoideAccountViewModel;
-import cm.aptoide.pt.v8engine.viewModel.FacebookAccountViewModel;
+import cm.aptoide.pt.v8engine.view.model.AptoideAccountViewModel;
+import cm.aptoide.pt.v8engine.view.model.FacebookAccountViewModel;
 import rx.Observable;
 
 /**

@@ -17,7 +17,7 @@
       android:background="@color/white"
       >
 
-    <cm.aptoide.pt.v8engine.MyGLSurfaceView
+    <cm.aptoide.pt.v8engine.view.MyGLSurfaceView
         android:id="@+id/visualizer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

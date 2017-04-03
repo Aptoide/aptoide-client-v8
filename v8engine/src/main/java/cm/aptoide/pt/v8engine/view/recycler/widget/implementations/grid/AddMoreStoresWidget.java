@@ -9,7 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.dialog.AddStoreDialog;
+import cm.aptoide.pt.v8engine.view.dialog.AddStoreDialog;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AddMoreStoresDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;

@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget;
 import android.support.annotation.NonNull;
 import android.support.v4.util.LruCache;
 import android.view.View;
-import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.MultiDexHelper;
 import cm.aptoide.pt.v8engine.V8Engine;

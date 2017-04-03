@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.account;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.V8Engine;
 
 import static cm.aptoide.pt.preferences.Application.getContext;

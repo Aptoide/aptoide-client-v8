@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.util;
 
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;

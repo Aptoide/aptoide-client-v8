@@ -4,7 +4,7 @@ import android.app.SearchManager;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.util.Log;
-import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;

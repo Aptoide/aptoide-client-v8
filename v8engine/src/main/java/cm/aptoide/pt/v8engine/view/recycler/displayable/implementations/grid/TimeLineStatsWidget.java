@@ -3,7 +3,7 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 import android.support.annotation.UiThread;
 import android.view.View;
 import android.widget.Button;
-import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;

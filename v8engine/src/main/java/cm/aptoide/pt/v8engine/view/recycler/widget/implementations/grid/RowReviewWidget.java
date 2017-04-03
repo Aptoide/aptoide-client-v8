@@ -7,7 +7,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.navigation.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;

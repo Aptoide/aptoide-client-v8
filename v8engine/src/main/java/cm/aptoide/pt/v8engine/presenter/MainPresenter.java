@@ -6,7 +6,7 @@
 package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
-import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.AutoUpdate;
@@ -39,7 +39,7 @@ public class MainPresenter implements Presenter {
   @Override public void present() {
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
-        .doOnNext(created -> apkFy.run())
+          .doOnNext(created -> apkFy.run())
         .filter(created -> firstCreated)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

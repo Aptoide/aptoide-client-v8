@@ -1,7 +1,7 @@
 package cm.aptoide.pt.networkclient.okhttp;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import java.io.IOException;
 import okhttp3.Interceptor;
 import okhttp3.Request;

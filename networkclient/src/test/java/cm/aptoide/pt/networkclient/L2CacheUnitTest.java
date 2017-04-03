@@ -1,6 +1,6 @@
 package cm.aptoide.pt.networkclient;
 
-import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
 import cm.aptoide.pt.networkclient.okhttp.cache.Sha1KeyAlgorithm;
 import java.io.IOException;

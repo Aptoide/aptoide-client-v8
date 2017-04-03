@@ -6,7 +6,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.util.Translator;
+import cm.aptoide.pt.v8engine.view.Translator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;

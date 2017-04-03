@@ -25,7 +25,7 @@ import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
 import cm.aptoide.pt.v8engine.addressbook.navigation.AddressBookNavigationManager;
 import cm.aptoide.pt.v8engine.addressbook.utils.ContactUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.fragment.UIComponentFragment;
+import cm.aptoide.pt.v8engine.view.fragment.UIComponentFragment;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 

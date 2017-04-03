@@ -6,7 +6,7 @@
 package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
-import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.authorizations.WebAuthorization;

@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.presenter;
 
 import android.content.Context;
 import android.os.Bundle;
-import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.repository.DownloadRepository;

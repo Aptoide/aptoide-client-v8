@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
-import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;

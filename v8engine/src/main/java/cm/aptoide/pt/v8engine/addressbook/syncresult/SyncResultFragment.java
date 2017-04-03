@@ -14,7 +14,7 @@ import cm.aptoide.pt.v8engine.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 import cm.aptoide.pt.v8engine.addressbook.navigation.AddressBookNavigationManager;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.fragment.UIComponentFragment;
+import cm.aptoide.pt.v8engine.view.fragment.UIComponentFragment;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

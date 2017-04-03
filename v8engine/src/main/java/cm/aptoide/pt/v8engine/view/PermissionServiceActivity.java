@@ -25,7 +25,7 @@ import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.activity.ActivityView;
+import cm.aptoide.pt.v8engine.view.activity.ActivityView;
 import com.facebook.FacebookSdk;
 import rx.functions.Action0;
 

@@ -14,7 +14,7 @@ import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.navigation.TabNavigator;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;

@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
+import cm.aptoide.pt.v8engine.view.fragment.implementations.ScheduledDownloadsFragment;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 
 /**

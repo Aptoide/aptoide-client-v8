@@ -4,10 +4,10 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.navigation.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
+import cm.aptoide.pt.v8engine.view.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 

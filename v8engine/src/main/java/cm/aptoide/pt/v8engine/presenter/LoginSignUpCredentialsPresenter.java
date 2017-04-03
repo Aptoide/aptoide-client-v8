@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.presenter;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.account.LoginPreferences;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
