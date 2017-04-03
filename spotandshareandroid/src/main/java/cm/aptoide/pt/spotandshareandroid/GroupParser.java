@@ -1,5 +1,7 @@
 package cm.aptoide.pt.spotandshareandroid;
 
+import java.text.ParseException;
+
 /**
  * Created by filipe on 30-03-2017.
  */
@@ -13,7 +15,7 @@ public class GroupParser {
   public GroupParser() {
   }
 
-  public Group parse(String groupString) {
+  public Group parse(String groupString) throws ParseException {
     //// TODO: 30-03-2017 filipe check validity of hotspot, else tHROW NEW PARSE EXPCETION
 
     if (groupString.contains("_")) {
@@ -36,7 +38,7 @@ public class GroupParser {
     }
   }
 
-  private String getDeviceName(int rule, String groupString) {
+  private String getDeviceName(int rule, String groupString) throws ParseException {
     if (rule == RULE_3) {
       StringBuilder stringBuilder = new StringBuilder();
       for (int i = 12; i < groupString.length(); i++) {
@@ -46,7 +48,12 @@ public class GroupParser {
       }
       return stringBuilder.toString();
     } else {
-      return groupString.split("_")[2];
+      String[] tmp = groupString.split("_");
+      if (tmp.length > 2) {
+        return groupString.split("_")[2];
+      } else {
+        throw new ParseException("trying to access to an invalid position", 2);
+      }
     }
   }
 
