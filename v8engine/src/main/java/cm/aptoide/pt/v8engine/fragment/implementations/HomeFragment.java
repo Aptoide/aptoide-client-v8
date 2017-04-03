@@ -42,7 +42,6 @@ import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.BadgeView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**

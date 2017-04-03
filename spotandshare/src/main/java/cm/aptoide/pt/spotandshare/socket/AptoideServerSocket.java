@@ -63,7 +63,8 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
       serverSocketTimeoutManager = new ServerSocketTimeoutManager(ss, timeout);
       serverSocketTimeoutManager.reserTimeout();
       host = new Host("192.168.43.1", ss.getLocalPort());
-      Print.d(TAG, "start: " + Thread.currentThread().getId()
+      Print.d(TAG, "start: "
+          + Thread.currentThread().getId()
           + ": Starting server in port "
           + port
           + " and ip "
@@ -79,7 +80,8 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
 
         executorService.execute(() -> {
           try {
-            Print.d(TAG, "start: " + Thread.currentThread().getId()
+            Print.d(TAG, "start: "
+                + Thread.currentThread().getId()
                 + ": "
                 + this.getClass().getSimpleName()
                 + ": Adding new client "

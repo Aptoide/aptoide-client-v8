@@ -199,12 +199,6 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
   // Lifecycle interface
   //
 
-  @CallSuper @Override public void onViewCreated() {
-    if (adapter != null) {
-      adapter.onViewCreated();
-    }
-  }
-
   /**
    * This method will not call "onResume" in the adapter elements because, despite
    * de adapter is not null, in the first run it is empty. Further calls to this
@@ -221,6 +215,12 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     super.onPause();
     if (adapter != null) {
       adapter.onPause();
+    }
+  }
+
+  @CallSuper @Override public void onViewCreated() {
+    if (adapter != null) {
+      adapter.onViewCreated();
     }
   }
 

@@ -64,17 +64,17 @@ public class ShowMessage {
     return Observable.create(new Observable.OnSubscribe<Integer>() {
       @Override public void call(Subscriber<? super Integer> subscriber) {
         Snackbar.Callback snackbarCallback = new Snackbar.Callback() {
-          @Override public void onDismissed(Snackbar snackbar, int event) {
-            super.onDismissed(snackbar, event);
-            if (!subscriber.isUnsubscribed()) {
-              subscriber.onNext(DISMISSED);
-            }
-          }
-
           @Override public void onShown(Snackbar snackbar) {
             super.onShown(snackbar);
             if (!subscriber.isUnsubscribed()) {
               subscriber.onNext(VISIBLE);
+            }
+          }
+
+          @Override public void onDismissed(Snackbar snackbar, int event) {
+            super.onDismissed(snackbar, event);
+            if (!subscriber.isUnsubscribed()) {
+              subscriber.onNext(DISMISSED);
             }
           }
         };

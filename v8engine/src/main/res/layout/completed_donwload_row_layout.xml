@@ -15,8 +15,8 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="5dp"
-    style="?attr/backgroundCard"
     tools:background="@color/amber_700"
+    style="?attr/backgroundCard"
     >
 
   <ImageView

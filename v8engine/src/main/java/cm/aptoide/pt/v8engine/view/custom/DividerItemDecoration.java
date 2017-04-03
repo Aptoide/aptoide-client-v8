@@ -8,8 +8,6 @@ import android.view.View;
 
 /**
  * Created by fabio on 22-10-2015.
- *
- *
  */
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
@@ -22,7 +20,6 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
   private final int space;
 
   /**
-   *
    * @param space in pixels for the spacing between items
    */
   public DividerItemDecoration(int space) {
@@ -30,7 +27,6 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
   }
 
   /**
-   *
    * @param space in pixels for the spacing between items
    * @param spacingFlag specifies in which part of the item the spacing is applied
    */

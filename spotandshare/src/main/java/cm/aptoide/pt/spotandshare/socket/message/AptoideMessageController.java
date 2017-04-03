@@ -142,7 +142,8 @@ public abstract class AptoideMessageController implements Sender<Message> {
 
     // TODO: 02-02-2017 neuro no ack waiting lol
     AckMessage ackMessage = null;
-    Print.d(TAG, "sendWithAck: " + Thread.currentThread().getId()
+    Print.d(TAG, "sendWithAck: "
+        + Thread.currentThread().getId()
         + ": Sending message with ack: "
         + message
         + ", "

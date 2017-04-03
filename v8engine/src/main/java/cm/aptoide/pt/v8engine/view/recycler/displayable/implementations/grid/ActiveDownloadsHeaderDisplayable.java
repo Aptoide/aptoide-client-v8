@@ -14,7 +14,8 @@ public class ActiveDownloadsHeaderDisplayable extends Displayable {
   @Getter private String label;
   private InstallManager installManager;
 
-  public ActiveDownloadsHeaderDisplayable() { }
+  public ActiveDownloadsHeaderDisplayable() {
+  }
 
   public ActiveDownloadsHeaderDisplayable(String label, InstallManager installManager) {
     this.label = label;

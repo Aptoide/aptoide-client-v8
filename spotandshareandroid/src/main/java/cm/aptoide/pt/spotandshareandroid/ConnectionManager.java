@@ -327,7 +327,9 @@ public class ConnectionManager {
         methodFound = true;
         WifiConfiguration netConfig = new WifiConfiguration();
         netConfig.SSID = "" + "APTXV" + "_" + randomAlphaNum + "_" + deviceName + "";
-        System.out.println("THE NEW SSID IS NOW : : : :" + "" + "APTXV"
+        System.out.println("THE NEW SSID IS NOW : : : :"
+            + ""
+            + "APTXV"
             + "_"
             + randomAlphaNum
             + "_"

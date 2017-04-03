@@ -140,30 +140,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
             new SecureCoderDecoder.Builder(getContext()).create()));
   }
 
-  @Override public void onDestroyView() {
-    subscriptions.clear();
-    super.onDestroyView();
-  }
-
-  @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-    if (shouldRefreshUpdates(key)) {
-      UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
-      updateAccessor.removeAll();
-      UpdateRepository repository = RepositoryFactory.getUpdateRepository(context);
-      repository.sync(true)
-          .andThen(repository.getAll(false))
-          .first()
-          .subscribe(updates -> Logger.d(TAG, "updates refreshed"), throwable -> {
-            CrashReport.getInstance().log(throwable);
-          });
-    }
-  }
-
-  private boolean shouldRefreshUpdates(String key) {
-    return key.equals(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY) || key.equals(
-        ManagedKeys.HWSPECS_FILTER) || key.equals(ManagedKeys.UPDATES_SYSTEM_APPS_KEY);
-  }
-
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     context = getContext();
@@ -190,6 +166,30 @@ public class SettingsFragment extends PreferenceFragmentCompat
     removePinPreferenceView = findPreference(REMOVE_ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
 
     setupClickHandlers();
+  }
+
+  @Override public void onDestroyView() {
+    subscriptions.clear();
+    super.onDestroyView();
+  }
+
+  @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    if (shouldRefreshUpdates(key)) {
+      UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
+      updateAccessor.removeAll();
+      UpdateRepository repository = RepositoryFactory.getUpdateRepository(context);
+      repository.sync(true)
+          .andThen(repository.getAll(false))
+          .first()
+          .subscribe(updates -> Logger.d(TAG, "updates refreshed"), throwable -> {
+            CrashReport.getInstance().log(throwable);
+          });
+    }
+  }
+
+  private boolean shouldRefreshUpdates(String key) {
+    return key.equals(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY) || key.equals(
+        ManagedKeys.HWSPECS_FILTER) || key.equals(ManagedKeys.UPDATES_SYSTEM_APPS_KEY);
   }
 
   private void setupClickHandlers() {

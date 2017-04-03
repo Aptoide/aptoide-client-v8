@@ -116,8 +116,6 @@ public class HandlersFactoryV1 {
         messageSender.send(ackMessage);
       }
     }
-
-
   }
 
   static class ExitMessageHandler extends MessageHandler<ExitMessage> {
