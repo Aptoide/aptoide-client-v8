@@ -24,8 +24,6 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
   private TextView getApp;
   private CardView cardView;
   private RelativeLayout cardContent;
-  private TextView numberLikes;
-  private TextView numberComments;
 
   public SocialInstallWidget(View itemView) {
     super(itemView);
@@ -46,9 +44,6 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
     cardView = (CardView) itemView.findViewById(R.id.card);
     cardContent = (RelativeLayout) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_card_content);
-    //likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
-    numberLikes = (TextView) itemView.findViewById(R.id.social_number_of_likes);
-    numberComments = (TextView) itemView.findViewById(R.id.social_number_of_comments);
   }
 
   @Override public void bindView(SocialInstallDisplayable displayable) {
@@ -85,8 +80,6 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
 
     ImageLoader.with(context).load(displayable.getAppIcon(), appIcon);
 
-    showFullSocialBar(displayable);
-
     appName.setText(displayable.getAppName());
 
     getApp.setVisibility(View.VISIBLE);
@@ -101,13 +94,6 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
       getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     });
-  }
-
-  private void showFullSocialBar(SocialInstallDisplayable displayable) {
-    numberLikes.setVisibility(View.VISIBLE);
-    numberLikes.setText(String.valueOf(displayable.getNumberOfLikes()));
-    numberComments.setVisibility(View.VISIBLE);
-    numberComments.setText(String.valueOf(displayable.getNumberOfComments()));
   }
 
   @Override String getCardTypeName() {
