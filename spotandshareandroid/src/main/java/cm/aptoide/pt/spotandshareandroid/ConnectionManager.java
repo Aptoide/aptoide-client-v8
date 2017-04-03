@@ -21,6 +21,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -86,17 +87,20 @@ public class ConnectionManager {
       if (connResults != null && connResults.size() != 0) {
         for (int i = 0; i < connResults.size(); i++) {
           String ssid = connResults.get(i).SSID;
-          if (groupValidator.validateGroup(ssid)) {
+          if (groupValidator.filterSSID(ssid)) {
 
-            Group group = groupParser.parse(connResults.get(i).SSID);
-            scanResultsSSID.add(group);
+            try {
+              Group group = groupParser.parse(connResults.get(i).SSID);
+              scanResultsSSID.add(group);
 
-            if (!clients.contains(group)) {
-              clients.add(group);
-              changes = true;
-              System.out.println("Estou no : " + connResults.get(i).toString());
+              if (!clients.contains(group)) {
+                clients.add(group);
+                changes = true;
+                System.out.println("Estou no : " + connResults.get(i).toString());
+              }
+            } catch (ParseException e) {
+              Log.d("ConnectionManager: ", "Tried parsing an invalid group name SSID.");
             }
-
           }
 
         }
@@ -104,6 +108,8 @@ public class ConnectionManager {
           showedNoHotspotMessage = true;
           inactivityListener.onInactivity(true);
         }
+
+        clients = groupValidator.removeGhosts(clients);
 
         for (int j = 0; j < clients.size(); j++) {
           Group tmp = clients.get(j);
