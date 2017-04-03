@@ -9,7 +9,7 @@ import lombok.Getter;
 
 public class HotspotControlCounter {
 
-  private static final int TIMEOUT = 10 * 60 * 1000;
+  private static final int TIMEOUT = 5 * 60 * 1000;
 
   private static final String CLASS_IDENTIFIER =
       "HOTSPOT_" + HotspotControlCounter.class.getSimpleName();
@@ -20,7 +20,7 @@ public class HotspotControlCounter {
   private final SharedPreferences prefs;
 
   private long currentTimestamp;
-  @Getter private int currentControlCounter = -1;
+  @Getter private int currentControlCounter = 47;
 
   public HotspotControlCounter(SharedPreferences prefs) {
     this.prefs = prefs;
@@ -47,17 +47,20 @@ public class HotspotControlCounter {
   }
 
   private String getStringCounter() {
-    return Integer.toString(currentControlCounter);
+    return String.valueOf((char) currentControlCounter);
   }
 
   public String incrementAndGetStringCounter() {
     increment();
-    return Integer.toString(currentControlCounter);
+    return String.valueOf((char) currentControlCounter);
   }
 
   public HotspotControlCounter increment() {
     currentTimestamp = System.currentTimeMillis();
     currentControlCounter++;
+    if (currentControlCounter == 95) {//to avoid '_' character
+      currentControlCounter++;
+    }
     save();
 
     return this;
