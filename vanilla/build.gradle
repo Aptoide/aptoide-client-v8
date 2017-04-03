@@ -25,14 +25,14 @@ retrolambda {
 
 android {
 
-  compileSdkVersion COMPILE_SDK_VERSION
+  compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
   buildToolsVersion BUILD_TOOLS_VERSION
 
   // keep the "applicationId" var in third place for the jenkins build script hack
   defaultConfig {
     applicationId "${APPLICATION_ID}"
-    minSdkVersion 15
-    targetSdkVersion TARGET_SDK_VERSION
+    minSdkVersion project.MINIMUM_SDK_VERSION
+    targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
     testProguardFile 'proguard-rules-test.pro'
     manifestPlaceholders = [toolboxProviderAuthority        : "cm.aptoide.pt.StubProvider",
                             suggestionProviderAuthority     : "cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider",
@@ -42,6 +42,11 @@ android {
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     multiDexEnabled true
+    resValue "string", "authenticator_account_type", APPLICATION_ID
+    versionCode project.PROD_VERSION_CODE.toInteger()
+    versionName "8.2.0.3"
+    resValue "string", "content_authority", APPLICATION_ID + ".StubProvider"
+    buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider\""
   }
 
   lintOptions {
@@ -97,12 +102,9 @@ android {
     }
 
     prod {
-      versionCode project.PROD_VERSION_CODE.toInteger()
-      versionName "8.2.0.2"
-      resValue "string", "authenticator_account_type", APPLICATION_ID
-      resValue "string", "content_authority", APPLICATION_ID + ".StubProvider"
-      buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider\""
     }
+
+    leak {}
   }
 
   buildTypes {
@@ -174,6 +176,7 @@ dependencies {
 
   devCompile project(path: ':v8engine', configuration: 'prodRelease')
   prodCompile project(path: ':v8engine', configuration: 'prodRelease')
+  leakCompile project(path: ':v8engine', configuration: 'leakRelease')
   internalCompile project(path: ':v8engine', configuration: 'internalRelease')
 
   // Testing-only dependencies
@@ -188,8 +191,7 @@ dependencies {
   androidTestCompile("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}") {
     exclude group: "com.android.support", module: "support-annotations"
   }
-  androidTestCompile "com.android.support:support-annotations:${SUPPORT_ANNOTATIONS_LIB_VERSION}"
-  androidTestCompile "com.android.support:support-annotations:${SUPPORT_ANNOTATIONS_LIB_VERSION}"
+  androidTestCompile "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
 
   androidTestCompile "io.reactivex:rxjava:${RXJAVA_VERSION}"
 

@@ -54,6 +54,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
+import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -167,6 +168,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private StoreCredentialsProvider storeCredentialsProvider;
   private BodyInterceptor bodyInterceptor;
   private SocialRepository socialRepository;
+  private AccountNavigator accountNavigator;
 
   public static AppViewFragment newInstance(String md5) {
     Bundle bundle = new Bundle();
@@ -265,6 +267,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public int getContentViewId() {
     return VIEW_ID;
+  }
+
+  @Override public void setupViews() {
+    super.setupViews();
+    accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
   }
 
   @Partners @Override public void bindViews(View view) {
@@ -675,35 +682,31 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   //
 
   private void shareApp(String appName, String packageName, String wUrl) {
+    GenericDialogs.createGenericShareDialog(getContext(), getString(R.string.share))
+        .subscribe(eResponse -> {
+          if (GenericDialogs.EResponse.SHARE_EXTERNAL == eResponse) {
 
-    if (accountManager.isLoggedIn()) {
-
-      GenericDialogs.createGenericShareDialog(getContext(), getString(R.string.share))
-          .subscribe(eResponse -> {
-            if (GenericDialogs.EResponse.SHARE_EXTERNAL == eResponse) {
-
-              shareDefault(appName, packageName, wUrl);
-            } else if (GenericDialogs.EResponse.SHARE_TIMELINE == eResponse) {
-              if (accountManager.isLoggedIn() && Application.getConfiguration()
-                  .isCreateStoreAndSetUserPrivacyAvailable()) {
-                SharePreviewDialog sharePreviewDialog =
-                    new SharePreviewDialog(accountManager, false,
-                        SharePreviewDialog.SharePreviewOpenMode.SHARE);
-                AlertDialog.Builder alertDialog =
-                    sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(),
-                        appName, app.getIcon());
-                SocialRepository socialRepository =
-                    new SocialRepository(accountManager, bodyInterceptor);
-
-                sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
-                    sharePreviewDialog, alertDialog, socialRepository);
-              }
+            shareDefault(appName, packageName, wUrl);
+          } else if (GenericDialogs.EResponse.SHARE_TIMELINE == eResponse) {
+            if (!accountManager.isLoggedIn()) {
+              ShowMessage.asSnack(getActivity(), R.string.you_need_to_be_logged_in, R.string.login,
+                  snackView -> accountNavigator.navigateToAccountView());
+              return;
             }
-          }, err -> err.printStackTrace());
-    } else {
+            if (Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
+              SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(accountManager, false,
+                  SharePreviewDialog.SharePreviewOpenMode.SHARE);
+              AlertDialog.Builder alertDialog =
+                  sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(),
+                      appName, app.getIcon());
+              SocialRepository socialRepository =
+                  new SocialRepository(accountManager, bodyInterceptor);
 
-      shareDefault(appName, packageName, wUrl);
-    }
+              sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
+                  sharePreviewDialog, alertDialog, socialRepository);
+            }
+          }
+        }, err -> err.printStackTrace());
   }
 
   @Partners protected void shareDefault(String appName, String packageName, String wUrl) {

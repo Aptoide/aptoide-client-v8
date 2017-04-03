@@ -1,6 +1,6 @@
 package cm.aptoide.pt.spotandshare.socket.message;
 
-import cm.aptoide.pt.spotandshare.socket.Log;
+import cm.aptoide.pt.spotandshare.socket.Print;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.exception.ServerLeftException;
 import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
@@ -66,7 +66,7 @@ public abstract class AptoideMessageController implements Sender<Message> {
     try {
       while (true) {
         Object o = objectInputStream.readObject();
-        Log.d(TAG, "startListening: "
+        Print.d(TAG, "startListening: "
             + Thread.currentThread().getId()
             + ": Received input object. "
             + o.getClass().getSimpleName());
@@ -95,7 +95,7 @@ public abstract class AptoideMessageController implements Sender<Message> {
       }
     } else {
       if (canHandle(message)) {
-        Log.d(TAG,
+        Print.d(TAG,
             "handle: Handling message " + message + ", " + message.getClass().getSimpleName());
         messageHandlersMap.get(message.getClass()).handleMessage(message, this);
       } else {
@@ -133,16 +133,16 @@ public abstract class AptoideMessageController implements Sender<Message> {
 
   public synchronized boolean sendWithAck(Message message) throws InterruptedException {
 
-    Log.d(TAG, "sendWithAck() called with: message = [" + message + "]");
+    Print.d(TAG, "sendWithAck() called with: message = [" + message + "]");
 
     if (!isConnected()) {
-      Log.d(TAG, "sendWithAck: " + message.getClass().getSimpleName() + " not connected!");
+      Print.d(TAG, "sendWithAck: " + message.getClass().getSimpleName() + " not connected!");
       return false;
     }
 
     // TODO: 02-02-2017 neuro no ack waiting lol
     AckMessage ackMessage = null;
-    Log.d(TAG, "sendWithAck: " + Thread.currentThread().getId()
+    Print.d(TAG, "sendWithAck: " + Thread.currentThread().getId()
         + ": Sending message with ack: "
         + message
         + ", "
@@ -151,24 +151,25 @@ public abstract class AptoideMessageController implements Sender<Message> {
       objectOutputStream.writeObject(message);
       ackMessage = ackMessages.poll(ACK_TIMEOUT, TimeUnit.MILLISECONDS);
     } catch (IOException e) {
-      Log.d(TAG, "sendWithAck: " + Thread.currentThread().getId() + ": Failed to receive ack!");
+      Print.d(TAG, "sendWithAck: " + Thread.currentThread().getId() + ": Failed to receive ack!");
       e.printStackTrace();
     }
 
-    Log.d(TAG, "sendWithAck: " + Thread.currentThread().getId() + ": Received ack: " + ackMessage);
+    Print.d(TAG,
+        "sendWithAck: " + Thread.currentThread().getId() + ": Received ack: " + ackMessage);
 
     return ackMessage != null && ackMessage.isSuccess();
   }
 
   @Override public synchronized void send(Message message) {
-    Log.d(TAG, "send() called with: message = [" + message + "]");
+    Print.d(TAG, "send() called with: message = [" + message + "]");
 
     if (!isConnected()) {
-      Log.d(TAG, "send: " + message.getClass().getSimpleName() + " not connected!");
+      Print.d(TAG, "send: " + message.getClass().getSimpleName() + " not connected!");
       return;
     }
 
-    Log.d(TAG,
+    Print.d(TAG,
         "send: " + Thread.currentThread().getId() + ": Sending message: " + message + ", " + message
             .getClass()
             .getSimpleName());

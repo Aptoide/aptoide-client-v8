@@ -33,31 +33,25 @@ public abstract class AptoideSocket {
   }
 
   public AptoideSocket startAsync() {
-    Log.d(TAG, "startAsync() called");
+    Print.d(TAG, "startAsync() called");
     new Thread(this::innerStart).start();
     return this;
   }
 
-  public abstract AptoideSocket start();
-
   private AptoideSocket innerStart() {
-    Log.d(TAG, "start() called");
+    Print.d(TAG, "start() called");
     return start();
   }
 
-  public void shutdown() {
-    Log.d(TAG, "shutdown() called");
-    onError = null;
-    executorService.shutdown();
-  }
-  
+  public abstract AptoideSocket start();
+
   public void shutdownExecutorService() {
-    Log.d(TAG, "shutdownExecutorService() called");
+    Print.d(TAG, "shutdownExecutorService() called");
     executorService.shutdown();
   }
 
   public void forceShutdownExecutorService() {
-    Log.d(TAG, "forceShutdownExecutorService() called");
+    Print.d(TAG, "forceShutdownExecutorService() called");
     executorService.shutdownNow();
   }
 
@@ -83,7 +77,7 @@ public abstract class AptoideSocket {
   }
 
   public void shutdown(Runnable onDisconnect) {
-    Log.d(TAG, "shutdown() called with: onDisconnect = [" + onDisconnect + "]");
+    Print.d(TAG, "shutdown() called with: onDisconnect = [" + onDisconnect + "]");
     shutdown();
 
     try {
@@ -93,5 +87,11 @@ public abstract class AptoideSocket {
     }
 
     onDisconnect.run();
+  }
+
+  public void shutdown() {
+    Print.d(TAG, "shutdown() called");
+    onError = null;
+    executorService.shutdown();
   }
 }

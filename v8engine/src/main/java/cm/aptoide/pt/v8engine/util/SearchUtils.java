@@ -39,7 +39,7 @@ public class SearchUtils {
     // Get the SearchView and set the searchable configuration
     final SearchManager searchManager =
         (SearchManager) V8Engine.getContext().getSystemService(Context.SEARCH_SERVICE);
-    final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+    final SearchView searchView = (SearchView) searchItem.getActionView();
     ComponentName cn = new ComponentName(V8Engine.getContext(), SearchActivity.class);
     searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
     SearchAppsWebSocket searchAppsWebSocket = new SearchAppsWebSocket();

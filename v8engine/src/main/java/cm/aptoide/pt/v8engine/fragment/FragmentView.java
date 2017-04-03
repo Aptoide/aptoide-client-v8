@@ -14,10 +14,10 @@ import cm.aptoide.pt.v8engine.view.MainActivity;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.FragmentEvent;
-import com.trello.rxlifecycle.components.support.RxFragment;
 import rx.Observable;
 
-public abstract class FragmentView extends RxFragment implements cm.aptoide.pt.v8engine.view.View {
+public abstract class FragmentView extends LeakFragment
+    implements cm.aptoide.pt.v8engine.view.View {
 
   private Presenter presenter;
 
