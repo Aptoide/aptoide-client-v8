@@ -1732,7 +1732,7 @@ public class AptoideUtils {
     //}
 
     public static String getDefaultUserAgent(AptoideClientUUID aptoideClientUUID, UserData userData,
-        String vername, String oemid) {
+        String vername, String oemid, String terminalInfo) {
 
       //SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(context);
       //String currentUserId = getUserId();
@@ -1742,7 +1742,7 @@ public class AptoideUtils {
       String myscr = displayMetrics.widthPixels + "x" + displayMetrics.heightPixels;
 
       StringBuilder sb =
-          new StringBuilder(vername + ";" + SystemU.TERMINAL_INFO + ";" + myscr + ";id:");
+          new StringBuilder(vername + ";" + terminalInfo + ";" + myscr + ";id:");
 
       if (aptoideClientUUID != null) {
         sb.append(aptoideClientUUID.getUniqueIdentifier());

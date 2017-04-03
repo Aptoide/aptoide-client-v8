@@ -5,17 +5,16 @@ import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
 import cm.aptoide.pt.networkclient.okhttp.cache.Sha1KeyAlgorithm;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Vector;
 import okhttp3.MediaType;
 import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -24,16 +23,14 @@ import static org.junit.Assert.fail;
 
 public class L2CacheUnitTest {
 
-  private static L2Cache cache;
-  private static Request request;
-  private static Response response;
+  private L2Cache cache;
+  private Request request;
+  private Response response;
 
-  private static Vector<Request> usedRequests;
+  @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
-  @BeforeClass public static void init() {
-    cache = new L2Cache(new Sha1KeyAlgorithm());
-    usedRequests = new Vector<>(2);
-
+  @Before public void init() throws IOException {
+    cache = new L2Cache(new Sha1KeyAlgorithm(), temporaryFolder.newFile());
     final String requestData = "limit=1";
 
     Request.Builder requestBuilder = new Request.Builder();
@@ -60,23 +57,7 @@ public class L2CacheUnitTest {
     response = responseBuilder.build();
   }
 
-  @AfterClass public static void destroy() {
-    cache.destroy();
-    usedRequests.clear();
-    usedRequests = null;
-    cache = null;
-    request = null;
-    response = null;
-  }
-
-  @Before public void emptyCacheBeforeEachTest() {
-    for (Request req : usedRequests) {
-      cache.remove(req);
-    }
-  }
-
   @Test(timeout = 300) public void putShouldNotBeNull() {
-    usedRequests.add(request);
     cache.put(request, response);
     Response resp1 = cache.get(request);
 
@@ -91,7 +72,6 @@ public class L2CacheUnitTest {
   }
 
   @Test(timeout = 300) public void simpleGet() throws IOException {
-    usedRequests.add(request);
     cache.put(request, response);
     Response cachedResponse = cache.get(request);
 
@@ -114,8 +94,6 @@ public class L2CacheUnitTest {
   @Test(timeout = 300) public void cacheControlInvalidatedResponse() throws InterruptedException {
     Response response2 = response.newBuilder().header("Cache-Control", "max-age=0").build();
 
-    usedRequests.add(request);
-
     cache.put(request, response2);
 
     // let cache entry rotten...
@@ -124,6 +102,7 @@ public class L2CacheUnitTest {
     assertNull("stored response after put() should be null due to cache control", resp2);
   }
 
+  // TODO: 3/4/2017 move this code to a test for cache interceptor
   // the following test it's not working now since it is the interceptor that filters what is
   // cached by request headers
   /*

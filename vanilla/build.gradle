@@ -30,20 +30,23 @@ android {
     applicationId "${APPLICATION_ID}"
     minSdkVersion project.MINIMUM_SDK_VERSION
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
-    testProguardFile 'proguard-rules-test.pro'
     manifestPlaceholders = [toolboxProviderAuthority        : "cm.aptoide.pt.StubProvider",
                             suggestionProviderAuthority     : "cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider",
                             storeSuggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.StoreSearchSuggestionProvider",
                             currentApplicationId            : "cm.aptoide.pt",
                             fabricApiKey                    : project.FABRIC_API_KEY]
 
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     multiDexEnabled true
     resValue "string", "authenticator_account_type", APPLICATION_ID
     versionCode project.PROD_VERSION_CODE.toInteger()
     versionName "8.2.0.3"
     resValue "string", "content_authority", APPLICATION_ID + ".StubProvider"
     buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider\""
+    // test default configs
+    testProguardFile 'proguard-rules-test.pro'
+    //testInstrumentationRunner "cm.aptoide.pt.MultidexAndroidJunitRunner"
+    //testInstrumentationRunner "com.android.test.runner.MultiDexTestRunner"
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 
   lintOptions {
@@ -118,9 +121,9 @@ android {
       buildConfigField "boolean", "CRASH_REPORTS_DISABLED", "true"
       ext.enableCrashlytics = false
       manifestPlaceholders = [LOCALYTICS_APP_KEY: project.LOCALYTICS_DEBUG_KEY]
-      zipAlignEnabled true
-      minifyEnabled true
-      shrinkResources true
+      zipAlignEnabled false
+      minifyEnabled false
+      shrinkResources false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
     }
   }
@@ -197,7 +200,12 @@ dependencies {
   }
   androidTestCompile "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
 
-  androidTestCompile "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  //androidTestCompile "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
+
+  androidTestCompile("com.android.support:multidex:${MULTIDEX_VERSION}") {
+    exclude group: "com.android.support", module: "support-annotations"
+  }
 
   compile("com.android.support:multidex:${MULTIDEX_VERSION}") {
     exclude group: "com.android.support", module: "support-annotations"

@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
 import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
 import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheKeyAlgorithm;
+import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,7 +27,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
  */
 public class OkHttpClientFactory {
 
-  private static final String TAG = OkHttpClientFactory.class.getName();
+  private static final String CACHE_FILE_NAME = "aptoide.wscache";
   private static OkHttpClient httpClientInstance;
   private static L2Cache cache;
 
@@ -50,13 +51,26 @@ public class OkHttpClientFactory {
   }
 
   /**
+   * Deprecated method that uses a default cache file. Use instead the method with the same name
+   * that allows for cache file specification.
+   *
+   * @return an {@link OkHttpClient} instance
+   */
+  @Deprecated
+  public static OkHttpClient getSingletonClient(UserAgentGenerator userAgentGenerator,
+      boolean debug) {
+    return getSingletonClient(userAgentGenerator, debug,
+        new File(AptoideUtils.getContext().getCacheDir(), CACHE_FILE_NAME));
+  }
+
+  /**
    * @return an {@link OkHttpClient} instance
    */
   public static OkHttpClient getSingletonClient(UserAgentGenerator userAgentGenerator,
-      boolean debug) {
+      boolean debug, File cacheFile) {
     if (httpClientInstance == null) {
 
-      cache = new L2Cache(new PostCacheKeyAlgorithm());
+      cache = new L2Cache(new PostCacheKeyAlgorithm(), cacheFile);
 
       List<Interceptor> interceptors = new LinkedList<>();
       interceptors.add(new PostCacheInterceptor(cache));

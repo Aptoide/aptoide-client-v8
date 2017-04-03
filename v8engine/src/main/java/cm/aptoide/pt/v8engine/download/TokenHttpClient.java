@@ -59,7 +59,7 @@ public class TokenHttpClient {
     })
         .addInterceptor(new UserAgentInterceptor(
             () -> AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, userData,
-                AptoideUtils.Core.getDefaultVername(), oemid)))
+                AptoideUtils.Core.getDefaultVername(), oemid, AptoideUtils.SystemU.TERMINAL_INFO)))
 
         .addInterceptor(new Interceptor() {
           @Override public Response intercept(Chain chain) throws IOException {

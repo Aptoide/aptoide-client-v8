@@ -37,6 +37,7 @@ proguard/
 #.idea/codeStyleSettings.xml
 .DS_Store
 captures/
+reports/
 
 signing.properties
 google-services.json

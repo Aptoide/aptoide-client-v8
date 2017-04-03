@@ -2,7 +2,6 @@ package cm.aptoide.pt.networkclient.okhttp.cache;
 
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.utils.AptoideUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
@@ -37,18 +36,19 @@ cache-response-directive =
 public class L2Cache extends StringBaseCache<Request, Response> {
   private static final String TAG = L2Cache.class.getName();
 
-  private static final String CACHE_FILE_NAME = "aptoide.wscache";
   private static final String CACHE_CONTROL_HEADER = "Cache-Control";
 
   private static final int MAX_COUNT = 15;
   private final Pattern pattern = Pattern.compile("\\d+"); // 1 or more digits
+  private final File cacheFile;
   private volatile boolean isPersisting = false;
   private AtomicInteger persistenceCounter = new AtomicInteger(0);
   // can't be final due to de-serialization
   private ConcurrentHashMap<String, ResponseCacheEntry> cache;
 
-  public L2Cache(KeyAlgorithm<Request, String> keyAlgorithm) {
+  public L2Cache(KeyAlgorithm<Request, String> keyAlgorithm, File cacheFile) {
     super(keyAlgorithm);
+    this.cacheFile = cacheFile;
     cache = new ConcurrentHashMap<>(60);
     // 60 is a nice value since the cold boot of the app it does ~30 different requests
 
@@ -67,9 +67,6 @@ public class L2Cache extends StringBaseCache<Request, Response> {
    * loads data from file to memory
    */
   private void load() throws IOException {
-    File cacheFile = new File(AptoideUtils.getContext().getCacheDir(), CACHE_FILE_NAME);
-    //if(!cacheFile.exists() || !cacheFile.canRead()) return;
-
     cache = new ObjectMapper().readValue(cacheFile,
         new TypeReference<ConcurrentHashMap<String, ResponseCacheEntry>>() {
         });
@@ -117,7 +114,6 @@ public class L2Cache extends StringBaseCache<Request, Response> {
    * snapshots current cache to avoid concurrent modifications and persists it
    */
   private void store() throws IOException {
-    File cacheFile = new File(AptoideUtils.getContext().getCacheDir(), CACHE_FILE_NAME);
     new ObjectMapper().writeValue(cacheFile, cache);
     Logger.d(TAG, "Stored cache file");
   }

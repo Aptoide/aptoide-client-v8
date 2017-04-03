@@ -386,7 +386,7 @@ public abstract class V8Engine extends DataProvider {
     return accountManager.accountStatus().doOnNext(account -> {
       final String userAgent = AptoideUtils.NetworkUtils.getDefaultUserAgent(getAptoideClientUUID(),
           () -> account.getEmail(), AptoideUtils.Core.getDefaultVername(),
-          getConfiguration().getPartnerId());
+          getConfiguration().getPartnerId(), AptoideUtils.SystemU.TERMINAL_INFO);
       SecurePreferences.setUserAgent(userAgent);
     }).subscribeOn(Schedulers.newThread()).flatMap(__ -> null);
   }

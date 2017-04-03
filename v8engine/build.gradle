@@ -56,6 +56,7 @@ android {
       buildConfigField "String", "TWITTER_SECRET",
           "\"" + project.TWITTER_SECRET_INTERNAL + "\""
     }
+
     prod {}
 
     leak {}
