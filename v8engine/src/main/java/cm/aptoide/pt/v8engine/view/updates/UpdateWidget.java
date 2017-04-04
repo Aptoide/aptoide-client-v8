@@ -158,7 +158,7 @@ import rx.android.schedulers.AndroidSchedulers;
    */
   private Observable<Progress<Download>> getUpdateProgress(InstallManager installManager,
       String md5) {
-    return installManager.getInstallationsAsList()
+    return installManager.getInstallations()
         .filter(listProgress -> listProgress != null && !listProgress.isEmpty())
         .flatMap(list -> {
           for (Progress<Download> progress : list) {

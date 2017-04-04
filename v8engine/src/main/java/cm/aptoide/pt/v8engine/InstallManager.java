@@ -70,7 +70,7 @@ public class InstallManager {
     return installer.uninstall(context, packageName, versionName);
   }
 
-  public Observable<List<Progress<Download>>> getInstallationsAsList() {
+  public Observable<List<Progress<Download>>> getInstallations() {
     return aptoideDownloadManager.getDownloads()
         .observeOn(Schedulers.io())
         .concatMap(downloadList -> Observable.from(downloadList)
@@ -127,14 +127,8 @@ public class InstallManager {
   }
 
   public Observable<Progress<Download>> getCurrentInstallation() {
-    return getInstallations().filter(progress -> isInstalling(progress));
-  }
-
-  public Observable<Progress<Download>> getInstallations() {
-    return aptoideDownloadManager.getDownloads()
-        .observeOn(Schedulers.io())
-        .flatMapIterable(downloadList -> downloadList)
-        .flatMap(download -> convertToProgress(download));
+    return getInstallations().flatMap(
+        progresses -> Observable.from(progresses).filter(progress -> isInstalling(progress)));
   }
 
   public boolean isInstalling(Progress<Download> progress) {

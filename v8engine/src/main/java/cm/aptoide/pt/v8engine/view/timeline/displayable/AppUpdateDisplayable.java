@@ -9,7 +9,6 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
-import android.text.TextUtils;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
@@ -144,12 +143,6 @@ public class AppUpdateDisplayable extends CardDisplayable {
         installConverter.create(download, DownloadInstallBaseEvent.Action.CLICK,
             DownloadInstallBaseEvent.AppContext.TIMELINE);
     analytics.save(packageName + download.getVersionCode(), installEvent);
-  }
-
-  public Observable<Progress<Download>> updateProgress() {
-    return installManager.getInstallations()
-        .filter(downloadProgress -> (!TextUtils.isEmpty(downloadProgress.getRequest().getMd5())
-            && downloadProgress.getRequest().getMd5().equals(download.getMd5())));
   }
 
   public String getAppName() {
