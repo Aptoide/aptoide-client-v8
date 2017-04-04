@@ -141,7 +141,7 @@ import rx.android.schedulers.AndroidSchedulers;
     downloadManager.initDownloadService(getContext());
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
     installManager = new InstallManager(downloadManager, installer);
-    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     downloadInstallEventConverter = new DownloadEventConverter(bodyInterceptor);
     installConverter = new InstallEventConverter(bodyInterceptor);
     analytics = Analytics.getInstance();

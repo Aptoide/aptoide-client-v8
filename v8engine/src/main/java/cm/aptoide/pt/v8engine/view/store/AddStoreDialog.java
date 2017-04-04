@@ -104,7 +104,7 @@ public class AddStoreDialog extends BaseDialog {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     baseBodyBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     mSubscriptions = new CompositeSubscription();
     if (savedInstanceState != null) {
       storeName = savedInstanceState.getString(BundleArgs.STORE_NAME.name());
@@ -234,7 +234,7 @@ public class AddStoreDialog extends BaseDialog {
     });
 
     searchView.setOnSearchClickListener(
-        v -> storeAutoCompleteWebSocket.connect(storeAutoCompleteWebSocket.STORE_WEBSOCKET_PORT));
+        v -> storeAutoCompleteWebSocket.connect(StoreAutoCompleteWebSocket.STORE_WEBSOCKET_PORT));
   }
 
   private void getStore(String storeName) {

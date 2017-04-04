@@ -35,7 +35,7 @@ public class CommentsReadMoreWidget extends Widget<CommentsReadMoreDisplayable> 
 
   @Override public void bindView(CommentsReadMoreDisplayable displayable) {
     final BodyInterceptor<BaseBody> baseBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     Observable<ListComments> listCommentsObservable =
         ListCommentsRequest.of(displayable.getResourceId(), displayable.getNext(), 100,
             displayable.isReview(), baseBodyInterceptor).observe();

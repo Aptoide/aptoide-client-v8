@@ -237,7 +237,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     aptoideClientUUID = ((V8Engine) getContext().getApplicationContext()).getAptoideClientUUID();
     baseBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
   }
 

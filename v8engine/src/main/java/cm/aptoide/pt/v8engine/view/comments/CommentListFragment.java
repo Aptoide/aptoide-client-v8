@@ -120,7 +120,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
       @Nullable Bundle savedInstanceState) {
     View v = super.onCreateView(inflater, container, savedInstanceState);
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    bodyDecorator = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+    bodyDecorator = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     accountNavigator =
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
     return v;

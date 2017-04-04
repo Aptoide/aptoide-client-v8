@@ -52,7 +52,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
     analytics = Analytics.getInstance();
 
     final BodyInterceptor bodyInterceptor =
-        ((V8Engine) context.getApplicationContext()).getBaseBodyInterceptor();
+        ((V8Engine) context.getApplicationContext()).getBaseBodyInterceptorV7();
     installConverter = new InstallEventConverter(bodyInterceptor);
     downloadConverter = new DownloadEventConverter(bodyInterceptor);
   }
@@ -253,6 +253,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
   }
 
   private enum ItemViewType {
-    Header, ActiveDownloadHeader, ActiveDownload, StandByDownload, CompletedDownload;
+    Header, ActiveDownloadHeader, ActiveDownload, StandByDownload, CompletedDownload
   }
 }

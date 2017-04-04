@@ -240,7 +240,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     permissionManager = new PermissionManager();
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
-    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     socialRepository = new SocialRepository(accountManager, bodyInterceptor);
     productFactory = new ProductFactory();
     appRepository = RepositoryFactory.getAppRepository(getContext());

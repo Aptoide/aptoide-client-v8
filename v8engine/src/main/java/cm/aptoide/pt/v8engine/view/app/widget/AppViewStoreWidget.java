@@ -60,7 +60,7 @@ import rx.functions.Action1;
   @Override public void bindView(AppViewStoreDisplayable displayable) {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     final BodyInterceptor<BaseBody> baseBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
 
     GetApp getApp = displayable.getPojo();
 

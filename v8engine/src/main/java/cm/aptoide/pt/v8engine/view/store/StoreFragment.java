@@ -119,7 +119,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     super.onCreate(savedInstanceState);
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
   }
 
   @Override public void onDestroy() {

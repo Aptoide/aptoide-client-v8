@@ -84,7 +84,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
 
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     final BodyInterceptor<BaseBody> bodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     storeUtilsProxy =
         new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl(),
             AccessorFactory.getAccessorFor(Store.class));

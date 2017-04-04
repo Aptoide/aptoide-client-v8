@@ -57,7 +57,7 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final BodyInterceptor<BaseBody> baseBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     this.mActionsListener =
         new PhoneInputPresenter(this, new ContactsRepositoryImpl(baseBodyInterceptor),
             new AddressBookAnalytics(Analytics.getInstance(),

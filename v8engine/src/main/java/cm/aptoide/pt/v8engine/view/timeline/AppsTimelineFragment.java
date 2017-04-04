@@ -216,7 +216,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
     accountManager = ((V8Engine) applicationContext).getAccountManager();
     final BodyInterceptor<BaseBody> bodyInterceptor =
-        ((V8Engine) applicationContext).getBaseBodyInterceptor();
+        ((V8Engine) applicationContext).getBaseBodyInterceptorV7();
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(applicationContext), bodyInterceptor);
     dateCalculator = new DateCalculator();

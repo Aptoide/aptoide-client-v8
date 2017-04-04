@@ -127,7 +127,7 @@ public final class RepositoryFactory {
   }
 
   private static BodyInterceptor<BaseBody> getBaseBodyInterceptor(Context context) {
-    return ((V8Engine) context.getApplicationContext()).getBaseBodyInterceptor();
+    return ((V8Engine) context.getApplicationContext()).getBaseBodyInterceptorV7();
   }
 
   private static SyncAdapterBackgroundSync getBackgroundSync(Context context) {

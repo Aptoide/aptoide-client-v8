@@ -5,7 +5,7 @@ import cm.aptoide.accountmanager.BasebBodyInterceptorFactory;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
+import cm.aptoide.pt.v8engine.BaseBodyInterceptorV7;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
 import cm.aptoide.pt.v8engine.preferences.SecurePreferences;
@@ -28,7 +28,7 @@ public class BaseBodyInterceptorFactory implements BasebBodyInterceptorFactory {
   }
 
   @Override public BodyInterceptor<BaseBody> create(AptoideAccountManager accountManager) {
-    return new BaseBodyInterceptor(aptoideClientUUID, accountManager,
+    return new BaseBodyInterceptorV7(aptoideClientUUID, accountManager,
         new AdultContent(accountManager, preferences, securePreferences), aptoideMd5sum,
         aptoidePackage);
   }

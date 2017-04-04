@@ -12,7 +12,7 @@ import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import rx.Single;
 import rx.schedulers.Schedulers;
 
-public class BaseBodyInterceptor implements BodyInterceptor<BaseBody> {
+public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
 
   private final AptoideClientUUID aptoideClientUUID;
   private final AptoideAccountManager accountManager;
@@ -20,7 +20,7 @@ public class BaseBodyInterceptor implements BodyInterceptor<BaseBody> {
   private final String aptoideMd5sum;
   private final String aptoidePackage;
 
-  public BaseBodyInterceptor(AptoideClientUUID aptoideClientUUID,
+  public BaseBodyInterceptorV7(AptoideClientUUID aptoideClientUUID,
       AptoideAccountManager accountManager, AdultContent adultContent, String aptoideMd5sum,
       String aptoidePackage) {
     this.aptoideClientUUID = aptoideClientUUID;

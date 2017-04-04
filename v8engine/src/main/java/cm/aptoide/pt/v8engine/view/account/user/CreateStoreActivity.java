@@ -125,7 +125,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
     accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
-    bodyInterceptor = ((V8Engine) getApplicationContext()).getBaseBodyInterceptor();
+    bodyInterceptor = ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV7();
     aptoideClientUUID = ((V8Engine) getApplicationContext()).getAptoideClientUUID();
     requestBodyFactory = new RequestBodyFactory();
     serializer = new ObjectMapper();

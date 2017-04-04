@@ -101,7 +101,7 @@ public abstract class V8Engine extends DataProvider {
   @Getter @Setter private static ShareApps shareApps;
 
   private AptoideAccountManager accountManager;
-  private BodyInterceptor<BaseBody> baseBodyInterceptor;
+  private BodyInterceptor<BaseBody> baseBodyInterceptorV7;
   private Preferences preferences;
   private cm.aptoide.pt.v8engine.preferences.SecurePreferences securePreferences;
   private SecureCoderDecoder secureCodeDecoder;
@@ -421,25 +421,26 @@ public abstract class V8Engine extends DataProvider {
       final StoreCredentialsProviderImpl storeCredentials = new StoreCredentialsProviderImpl();
 
       StoreUtilsProxy proxy =
-          new StoreUtilsProxy(accountManager, getBaseBodyInterceptor(), storeCredentials,
+          new StoreUtilsProxy(accountManager, getBaseBodyInterceptorV7(), storeCredentials,
               AccessorFactory.getAccessorFor(Store.class));
 
       BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
           storeCredentials.get(getConfiguration().getDefaultStore());
 
       return generateAptoideUuid().andThen(proxy.addDefaultStore(
-          GetStoreMetaRequest.of(defaultStoreCredentials, getBaseBodyInterceptor()), accountManager,
+          GetStoreMetaRequest.of(defaultStoreCredentials, getBaseBodyInterceptorV7()),
+          accountManager,
           defaultStoreCredentials).andThen(refreshUpdates()))
           .doOnError(err -> CrashReport.getInstance().log(err));
     });
   }
 
-  public BodyInterceptor<BaseBody> getBaseBodyInterceptor() {
-    if (baseBodyInterceptor == null) {
-      baseBodyInterceptor = new BaseBodyInterceptor(getAptoideClientUUID(), getAccountManager(),
+  public BodyInterceptor<BaseBody> getBaseBodyInterceptorV7() {
+    if (baseBodyInterceptorV7 == null) {
+      baseBodyInterceptorV7 = new BaseBodyInterceptorV7(getAptoideClientUUID(), getAccountManager(),
           getAdultContent(getSecurePreferences()), getAptoideMd5sum(), getAptoidePackage());
     }
-    return baseBodyInterceptor;
+    return baseBodyInterceptorV7;
   }
 
   private String getAptoideMd5sum() {

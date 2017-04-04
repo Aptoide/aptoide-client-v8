@@ -42,7 +42,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     aptoideClientUUID = ((V8Engine) getContext().getApplicationContext()).getAptoideClientUUID();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
         AccessorFactory.getAccessorFor(Store.class));
   }

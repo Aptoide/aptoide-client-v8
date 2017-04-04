@@ -81,7 +81,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
     analytics = new AddressBookAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     final BodyInterceptor<BaseBody> baseBodyBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     mActionsListener =
         new AddressBookPresenter(this, new ContactsRepositoryImpl(baseBodyBodyInterceptor),
             analytics, new AddressBookNavigationManager(getFragmentNavigator(), getTag(),

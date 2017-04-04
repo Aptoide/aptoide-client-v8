@@ -52,7 +52,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
   @Override public void bindView(StoreLatestCommentsDisplayable displayable) {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     baseBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     accountNavigator =
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
     LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
