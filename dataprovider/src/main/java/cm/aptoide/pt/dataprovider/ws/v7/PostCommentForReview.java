@@ -26,14 +26,14 @@ public class PostCommentForReview extends V7<BaseV7Response, PostCommentForRevie
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
 
-  protected PostCommentForReview(Body body, BodyInterceptor bodyInterceptor) {
+  protected PostCommentForReview(Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static PostCommentForReview of(long reviewId, String text,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     final Body body = new Body(reviewId, text);
     return new PostCommentForReview(body, bodyInterceptor);
   }

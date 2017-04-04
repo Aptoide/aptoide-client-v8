@@ -23,27 +23,27 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
 
-  protected SimpleSetStoreRequest(Body body, BodyInterceptor bodyInterceptor) {
+  protected SimpleSetStoreRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static SimpleSetStoreRequest of(String storeName, String storeTheme,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     Body body = new Body(storeName, storeTheme);
     return new SimpleSetStoreRequest(body, bodyInterceptor);
   }
 
   public static SimpleSetStoreRequest of(long storeId, String storeTheme, String storeDescription,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     Body body = new Body(storeId, storeTheme, storeDescription);
     return new SimpleSetStoreRequest(body, bodyInterceptor);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.editStore((Body) body);
+    return interfaces.editStore(body);
   }
 
   @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {

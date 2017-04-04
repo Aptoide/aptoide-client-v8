@@ -12,6 +12,7 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -34,7 +35,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
   private AptoideClientUUID aptoideClientUUID;
   private AptoideAccountManager accountManager;
   private StoreUtilsProxy storeUtilsProxy;
-  private BodyInterceptor bodyInterceptor;
+  private BodyInterceptor<BaseBody> bodyInterceptor;
   private StoreCredentialsProvider storeCredentialsProvider;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {

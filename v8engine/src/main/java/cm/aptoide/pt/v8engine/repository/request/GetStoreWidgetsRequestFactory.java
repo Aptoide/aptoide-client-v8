@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.repository.request;
 
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
@@ -10,10 +11,10 @@ import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 class GetStoreWidgetsRequestFactory {
 
   private final StoreCredentialsProvider storeCredentialsProvider;
-  private final BodyInterceptor bodyInterceptor;
+  private final BodyInterceptor<BaseBody> bodyInterceptor;
 
   public GetStoreWidgetsRequestFactory(StoreCredentialsProvider storeCredentialsProvider,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.bodyInterceptor = bodyInterceptor;
   }

@@ -72,13 +72,13 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
       + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
       + "/api/7/";
   @Getter protected final B body;
-  private final BodyInterceptor<B> bodyInterceptor;
+  private final BodyInterceptor<? super B> bodyInterceptor;
   private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
   private final int MAX_RETRY_COUNT = 3;
   private boolean accessTokenRetry = false;
 
   protected V7(B body, String baseHost, OkHttpClient httpClient, Converter.Factory converterFactory,
-      BodyInterceptor<B> bodyInterceptor) {
+      BodyInterceptor<? super B> bodyInterceptor) {
     super(Interfaces.class, httpClient, converterFactory, baseHost);
     this.body = body;
     this.bodyInterceptor = bodyInterceptor;

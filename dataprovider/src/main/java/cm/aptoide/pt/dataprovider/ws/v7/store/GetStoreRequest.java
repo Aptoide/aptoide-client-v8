@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
@@ -24,7 +25,8 @@ import rx.Observable;
 
   private final String url;
 
-  private GetStoreRequest(String url, GetStoreBody body, BodyInterceptor bodyInterceptor) {
+  private GetStoreRequest(String url, GetStoreBody body,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
@@ -32,7 +34,7 @@ import rx.Observable;
   }
 
   public static GetStoreRequest of(StoreCredentials storeCredentials, StoreContext storeContext,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
 
     final GetStoreBody body = new GetStoreBody(storeCredentials, WidgetsArgs.createDefault());
     body.setContext(storeContext);
@@ -41,7 +43,7 @@ import rx.Observable;
   }
 
   public static GetStoreRequest ofAction(String url, StoreCredentials storeCredentials,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
 
     final GetStoreBody body = new GetStoreBody(storeCredentials, WidgetsArgs.createDefault());
 

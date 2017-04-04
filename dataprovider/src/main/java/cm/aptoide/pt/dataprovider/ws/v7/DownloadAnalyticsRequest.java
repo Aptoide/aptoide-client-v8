@@ -18,7 +18,7 @@ public class DownloadAnalyticsRequest extends V7<BaseV7Response, DownloadInstall
   private String context;
 
   protected DownloadAnalyticsRequest(DownloadInstallAnalyticsBaseBody body, String action,
-      String name, String context, BodyInterceptor bodyInterceptor) {
+      String name, String context, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
@@ -28,7 +28,7 @@ public class DownloadAnalyticsRequest extends V7<BaseV7Response, DownloadInstall
   }
 
   public static DownloadAnalyticsRequest of(DownloadInstallAnalyticsBaseBody body, String action,
-      String name, String context, BodyInterceptor bodyInterceptor) {
+      String name, String context, BodyInterceptor<BaseBody> bodyInterceptor) {
     return new DownloadAnalyticsRequest(body, action, name, context, bodyInterceptor);
   }
 

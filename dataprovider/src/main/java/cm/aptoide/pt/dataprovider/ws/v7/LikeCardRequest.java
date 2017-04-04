@@ -20,7 +20,7 @@ public class LikeCardRequest extends V7<BaseV7Response, BaseBody> {
   private final int rating;
 
   public LikeCardRequest(BaseBody body, String cardId, int rating,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
@@ -29,7 +29,7 @@ public class LikeCardRequest extends V7<BaseV7Response, BaseBody> {
   }
 
   public static LikeCardRequest of(String timelineCardId, String cardType, String ownerHash,
-      int rating, BodyInterceptor bodyInterceptor) {
+      int rating, BodyInterceptor<BaseBody> bodyInterceptor) {
     final BaseBody body = new BaseBody();
     return new LikeCardRequest(body, timelineCardId, rating, bodyInterceptor);
   }

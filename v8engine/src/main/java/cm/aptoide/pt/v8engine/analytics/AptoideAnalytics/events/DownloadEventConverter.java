@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
 
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 
@@ -9,9 +10,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBa
 
 public class DownloadEventConverter extends DownloadInstallEventConverter<DownloadEvent> {
 
-  private final BodyInterceptor bodyInterceptor;
+  private final BodyInterceptor<BaseBody> bodyInterceptor;
 
-  public DownloadEventConverter(BodyInterceptor bodyInterceptor) {
+  public DownloadEventConverter(BodyInterceptor<BaseBody> bodyInterceptor) {
     this.bodyInterceptor = bodyInterceptor;
   }
 

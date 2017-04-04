@@ -678,7 +678,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     }
   }
 
-  @NonNull private StoreBodyInterceptor createStoreInterceptor() {
+  @NonNull private StoreBodyInterceptor<BaseBody> createStoreInterceptor() {
     return new StoreBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager,
         requestBodyFactory, storeTheme, storeDescription, serializer);
   }

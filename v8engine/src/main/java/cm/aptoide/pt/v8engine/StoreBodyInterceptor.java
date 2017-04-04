@@ -14,7 +14,8 @@ import rx.Single;
  * Created by marcelobenites on 13/03/17.
  */
 
-public class StoreBodyInterceptor implements BodyInterceptor<HashMapNotNull<String, RequestBody>> {
+public class StoreBodyInterceptor<BaseBody>
+    implements BodyInterceptor<HashMapNotNull<String, RequestBody>> {
 
   private final String aptoideClientUUID;
   private final AptoideAccountManager accountManager;

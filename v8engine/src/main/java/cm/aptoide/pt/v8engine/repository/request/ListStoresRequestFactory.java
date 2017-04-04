@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.repository.request;
 
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 
@@ -8,9 +9,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
  */
 class ListStoresRequestFactory {
 
-  private BodyInterceptor bodyInterceptor;
+  private BodyInterceptor<BaseBody> bodyInterceptor;
 
-  public ListStoresRequestFactory(BodyInterceptor baseBodyInterceptor) {
+  public ListStoresRequestFactory(BodyInterceptor<BaseBody> baseBodyInterceptor) {
     this.bodyInterceptor = baseBodyInterceptor;
   }
 

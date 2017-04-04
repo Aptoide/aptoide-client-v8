@@ -24,7 +24,7 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
 
   private String url;
 
-  GetUserTimelineRequest(String url, Body body, BodyInterceptor bodyInterceptor) {
+  GetUserTimelineRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
@@ -32,7 +32,7 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
   }
 
   public static GetUserTimelineRequest of(String url, Integer limit, int offset,
-      List<String> packages, BodyInterceptor bodyInterceptor) {
+      List<String> packages, BodyInterceptor<BaseBody> bodyInterceptor) {
 
     GetUserTimelineRequest getAppRequest =
         new GetUserTimelineRequest(url, new Body(limit, offset, packages), bodyInterceptor);

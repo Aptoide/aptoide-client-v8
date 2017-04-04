@@ -33,7 +33,7 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
   private static final int MAX_REVIEWS = 10;
   private static final int MAX_COMMENTS = 10;
 
-  private ListReviewsRequest(Body body, BodyInterceptor bodyInterceptor) {
+  private ListReviewsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST, OkHttpClientFactory.getSingletonClient(new UserAgentGenerator() {
       @Override public String generateUserAgent() {
         return SecurePreferences.getUserAgent();
@@ -42,7 +42,8 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
   }
 
   public static ListReviewsRequest of(String storeName, String packageName,
-      BaseRequestWithStore.StoreCredentials storecredentials, BodyInterceptor bodyInterceptor) {
+      BaseRequestWithStore.StoreCredentials storecredentials,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, storecredentials, bodyInterceptor);
   }
 
@@ -51,7 +52,7 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
    */
   public static ListReviewsRequest of(String storeName, String packageName, int maxReviews,
       int maxComments, BaseRequestWithStore.StoreCredentials storecredentials,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     final Body body = new Body(storeName, packageName, maxReviews, maxComments,
         ManagerPreferences.getAndResetForceServerRefresh(), storecredentials);
     return new ListReviewsRequest(body, bodyInterceptor);
@@ -62,7 +63,7 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
    */
   public static ListReviewsRequest ofTopReviews(String storeName, String packageName,
       int maxReviews, BaseRequestWithStore.StoreCredentials storeCredentials,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     return of(storeName, packageName, maxReviews, 0, storeCredentials, bodyInterceptor);
   }
 

@@ -24,19 +24,20 @@ public class GetMyStoreListRequest extends V7<ListStores, GetMyStoreListRequest.
   private static boolean useEndless;
   @Nullable private String url;
 
-  public GetMyStoreListRequest(String url, EndlessBody body, BodyInterceptor bodyInterceptor) {
+  public GetMyStoreListRequest(String url, EndlessBody body,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
     this.url = url;
   }
 
-  public static GetMyStoreListRequest of(String url, BodyInterceptor bodyInterceptor) {
+  public static GetMyStoreListRequest of(String url, BodyInterceptor<BaseBody> bodyInterceptor) {
     return of(url, false, bodyInterceptor);
   }
 
   public static GetMyStoreListRequest of(String url, boolean useEndless,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     GetMyStoreListRequest.useEndless = useEndless;
 
     return new GetMyStoreListRequest(url, new EndlessBody(WidgetsArgs.createDefault()),

@@ -30,32 +30,32 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
   private String url;
 
   private ListStoresRequest(String url, Body body, String baseHost,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, baseHost,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
     this.url = url;
   }
 
-  private ListStoresRequest(Body body, String baseHost, BodyInterceptor bodyInterceptor) {
+  private ListStoresRequest(Body body, String baseHost, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, baseHost,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   private ListStoresRequest(String url, OkHttpClient httpClient, Converter.Factory converterFactory,
-      Body body, String baseHost, BodyInterceptor bodyInterceptor) {
+      Body body, String baseHost, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, baseHost, httpClient, converterFactory, bodyInterceptor);
     this.url = url;
   }
 
   private ListStoresRequest(OkHttpClient httpClient, Converter.Factory converterFactory, Body body,
-      String baseHost, BodyInterceptor bodyInterceptor) {
+      String baseHost, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, baseHost, httpClient, converterFactory, bodyInterceptor);
   }
 
   public static ListStoresRequest ofTopStores(int offset, int limit,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
 
     final Body baseBody = new Body();
     baseBody.setOffset(offset);
@@ -63,7 +63,7 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
     return new ListStoresRequest(baseBody, BASE_HOST, bodyInterceptor);
   }
 
-  public static ListStoresRequest ofAction(String url, BodyInterceptor bodyInterceptor) {
+  public static ListStoresRequest ofAction(String url, BodyInterceptor<BaseBody> bodyInterceptor) {
 
     url = url.replace("listStores", "");
     if (!url.startsWith("/")) {

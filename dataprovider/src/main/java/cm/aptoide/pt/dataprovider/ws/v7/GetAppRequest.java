@@ -24,14 +24,14 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true) public class GetAppRequest
     extends V7<GetApp, GetAppRequest.Body> {
 
-  private GetAppRequest(String baseHost, Body body, BodyInterceptor bodyInterceptor) {
+  private GetAppRequest(String baseHost, Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, baseHost,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static GetAppRequest of(String packageName, String storeName,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
 
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
@@ -39,14 +39,15 @@ import rx.Observable;
         bodyInterceptor);
   }
 
-  public static GetAppRequest of(String packageName, BodyInterceptor bodyInterceptor, long appId) {
+  public static GetAppRequest of(String packageName, BodyInterceptor<BaseBody> bodyInterceptor,
+      long appId) {
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST, new Body(appId, forceServerRefresh, packageName),
         bodyInterceptor);
   }
 
-  public static GetAppRequest ofMd5(String md5, BodyInterceptor bodyInterceptor) {
+  public static GetAppRequest ofMd5(String md5, BodyInterceptor<BaseBody> bodyInterceptor) {
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST, new Body(forceServerRefresh, md5), bodyInterceptor);
@@ -54,7 +55,7 @@ import rx.Observable;
 
   public static GetAppRequest of(long appId, String storeName,
       BaseRequestWithStore.StoreCredentials storeCredentials, String packageName,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
 
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
@@ -65,7 +66,7 @@ import rx.Observable;
     return new GetAppRequest(BASE_HOST, body, bodyInterceptor);
   }
 
-  public static GetAppRequest ofAction(String url, BodyInterceptor bodyInterceptor) {
+  public static GetAppRequest ofAction(String url, BodyInterceptor<BaseBody> bodyInterceptor) {
     final long appId = getAppIdFromUrl(url);
     return new GetAppRequest(BASE_HOST, new Body(appId), bodyInterceptor);
   }

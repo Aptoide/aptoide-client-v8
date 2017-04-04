@@ -16,14 +16,15 @@ public class ShareCardRequest extends V7<ShareCardResponse, ShareCardRequest.Bod
 
   private final String cardId;
 
-  protected ShareCardRequest(Body body, String cardId, BodyInterceptor bodyInterceptor) {
+  protected ShareCardRequest(Body body, String cardId, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
     this.cardId = cardId;
   }
 
-  public static ShareCardRequest of(TimelineCard timelineCard, BodyInterceptor bodyInterceptor) {
+  public static ShareCardRequest of(TimelineCard timelineCard,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     final ShareCardRequest.Body body = new ShareCardRequest.Body(timelineCard.getCardId());
     return new ShareCardRequest(body, timelineCard.getCardId(), bodyInterceptor);
   }

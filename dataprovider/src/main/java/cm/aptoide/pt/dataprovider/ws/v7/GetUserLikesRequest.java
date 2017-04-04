@@ -13,13 +13,13 @@ import rx.Observable;
  */
 
 public class GetUserLikesRequest extends V7<GetFollowers, GetUserLikesRequest.Body> {
-  protected GetUserLikesRequest(Body body, BodyInterceptor bodyInterceptor) {
+  protected GetUserLikesRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  public static GetUserLikesRequest of(String cardUid, BodyInterceptor bodyInterceptor) {
+  public static GetUserLikesRequest of(String cardUid, BodyInterceptor<BaseBody> bodyInterceptor) {
     return new GetUserLikesRequest(new Body(cardUid), bodyInterceptor);
   }
 

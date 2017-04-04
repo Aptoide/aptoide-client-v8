@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
@@ -17,15 +18,15 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.view.downloads.active.ActiveDownloadDisplayable;
+import cm.aptoide.pt.v8engine.view.downloads.active.ActiveDownloadWidget;
+import cm.aptoide.pt.v8engine.view.downloads.active.ActiveDownloadsHeaderDisplayable;
+import cm.aptoide.pt.v8engine.view.downloads.active.ActiveDownloadsHeaderWidget;
+import cm.aptoide.pt.v8engine.view.downloads.completed.CompletedDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.downloads.completed.CompletedDownloadWidget;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.downloads.active.ActiveDownloadDisplayable;
-import cm.aptoide.pt.v8engine.view.downloads.active.ActiveDownloadsHeaderDisplayable;
-import cm.aptoide.pt.v8engine.view.downloads.completed.CompletedDownloadDisplayable;
-import cm.aptoide.pt.v8engine.view.store.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import cm.aptoide.pt.v8engine.view.downloads.active.ActiveDownloadWidget;
-import cm.aptoide.pt.v8engine.view.downloads.active.ActiveDownloadsHeaderWidget;
+import cm.aptoide.pt.v8engine.view.store.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.store.StoreGridHeaderWidget;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +52,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
 
     analytics = Analytics.getInstance();
 
-    final BodyInterceptor bodyInterceptor =
+    final BodyInterceptor<BaseBody> bodyInterceptor =
         ((V8Engine) context.getApplicationContext()).getBaseBodyInterceptorV7();
     installConverter = new InstallEventConverter(bodyInterceptor);
     downloadConverter = new DownloadEventConverter(bodyInterceptor);

@@ -22,7 +22,8 @@ import rx.Observable;
  */
 public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequest.Body> {
 
-  private ListSearchAppsRequest(Body body, String baseHost, BodyInterceptor bodyInterceptor) {
+  private ListSearchAppsRequest(Body body, String baseHost,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, baseHost,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
@@ -30,7 +31,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
   public static ListSearchAppsRequest of(String query, String storeName,
       HashMapNotNull<String, List<String>> subscribedStoresAuthMap,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
 
     List<String> stores = null;
     if (storeName != null) {
@@ -50,7 +51,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
       List<Long> subscribedStoresIds, HashMapNotNull<String, List<String>> subscribedStoresAuthMap,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
 
     if (addSubscribedStores) {
       return new ListSearchAppsRequest(
@@ -63,7 +64,8 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
   }
 
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
-      boolean trustedOnly, List<Long> subscribedStoresIds, BodyInterceptor bodyInterceptor) {
+      boolean trustedOnly, List<Long> subscribedStoresIds,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
 
     if (addSubscribedStores) {
       return new ListSearchAppsRequest(

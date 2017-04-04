@@ -5,6 +5,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -29,11 +30,11 @@ public class UpdateRepository implements Repository<Update, String> {
   private final AptoideAccountManager accountManager;
   private final UpdateAccessor updateAccessor;
   private final StoreAccessor storeAccessor;
-  private final BodyInterceptor bodyInterceptor;
+  private final BodyInterceptor<BaseBody> bodyInterceptor;
 
   UpdateRepository(UpdateAccessor updateAccessor, StoreAccessor storeAccessor,
       AptoideAccountManager accountManager, AptoideClientUUID idsRepository,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     this.updateAccessor = updateAccessor;
     this.storeAccessor = storeAccessor;
     this.accountManager = accountManager;

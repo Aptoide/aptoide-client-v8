@@ -13,13 +13,15 @@ import rx.Observable;
 
 public class GetFollowingRequest extends V7<GetFollowers, GetFollowersRequest.Body> {
 
-  protected GetFollowingRequest(GetFollowersRequest.Body body, BodyInterceptor bodyInterceptor) {
+  protected GetFollowingRequest(GetFollowersRequest.Body body,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  public static GetFollowingRequest of(BodyInterceptor bodyInterceptor, @Nullable Long userId,
+  public static GetFollowingRequest of(BodyInterceptor<BaseBody> bodyInterceptor,
+      @Nullable Long userId,
       @Nullable Long storeId) {
     GetFollowersRequest.Body body = new GetFollowersRequest.Body();
     body.setUserId(userId);

@@ -20,14 +20,14 @@ public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequ
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
 
-  public SyncAddressBookRequest(Body body, BodyInterceptor bodyInterceptor) {
+  public SyncAddressBookRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static SyncAddressBookRequest of(List<String> numbers, List<String> emails,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     return new SyncAddressBookRequest((new Body(new Contacts(numbers, emails), null, null)),
         bodyInterceptor);
   }
@@ -36,7 +36,7 @@ public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequ
    * This constructor was created in order to send user twitter info
    */
   public static SyncAddressBookRequest of(long id, String token, String secret,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     return new SyncAddressBookRequest(new Body(null, new Twitter(id, token, secret), null),
         bodyInterceptor);
   }
@@ -44,14 +44,15 @@ public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequ
   /**
    * This constructor was created to deal with facebook contacts request
    */
-  public static SyncAddressBookRequest of(long id, String token, BodyInterceptor bodyInterceptor) {
+  public static SyncAddressBookRequest of(long id, String token,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     return new SyncAddressBookRequest(new Body(null, null, new Facebook(id, token)),
         bodyInterceptor);
   }
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.setConnections((Body) body);
+    return interfaces.setConnections(body);
   }
 
   @Data public static class Body extends BaseBody implements Endless {

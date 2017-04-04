@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import cm.aptoide.pt.dataprovider.ws.Api;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithApp;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
@@ -32,14 +33,15 @@ import rx.Observable;
 
   private static final Integer MAX_LIMIT = 10;
 
-  private ListAppVersionsRequest(Body body, BodyInterceptor bodyInterceptor) {
+  private ListAppVersionsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static ListAppVersionsRequest of(String packageName, List<String> storeNames,
-      HashMapNotNull<String, List<String>> storeCredentials, BodyInterceptor bodyInterceptor) {
+      HashMapNotNull<String, List<String>> storeCredentials,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     if (storeNames != null && !storeNames.isEmpty()) {
       Body body = new Body(packageName, storeNames, storeCredentials);
       body.setLimit(MAX_LIMIT);
@@ -50,7 +52,8 @@ import rx.Observable;
   }
 
   public static ListAppVersionsRequest of(String packageName,
-      HashMapNotNull<String, List<String>> storeCredentials, BodyInterceptor bodyInterceptor) {
+      HashMapNotNull<String, List<String>> storeCredentials,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     Body body = new Body(packageName);
     body.setStoresAuthMap(storeCredentials);
     body.setLimit(MAX_LIMIT);

@@ -24,7 +24,7 @@ public class ChangeStoreSubscriptionRequest
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
 
-  protected ChangeStoreSubscriptionRequest(Body body, BodyInterceptor bodyInterceptor) {
+  protected ChangeStoreSubscriptionRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
@@ -32,7 +32,7 @@ public class ChangeStoreSubscriptionRequest
 
   public static ChangeStoreSubscriptionRequest of(String storeName,
       ChangeStoreSubscriptionResponse.StoreSubscriptionState storeSubscription, String storeUser,
-      String sha1PassWord, BodyInterceptor bodyInterceptor) {
+      String sha1PassWord, BodyInterceptor<BaseBody> bodyInterceptor) {
     final Body body = new Body(storeName, storeSubscription, storeUser, sha1PassWord);
     return new ChangeStoreSubscriptionRequest(body, bodyInterceptor);
   }

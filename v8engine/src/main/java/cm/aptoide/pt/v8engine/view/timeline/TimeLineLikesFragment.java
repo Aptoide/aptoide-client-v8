@@ -10,9 +10,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.FollowUserDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.v8engine.view.timeline.follow.TimeLineFollowFragment;
 import java.util.List;
 

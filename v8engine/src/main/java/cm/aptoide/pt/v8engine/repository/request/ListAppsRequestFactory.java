@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.repository.request;
 
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
@@ -10,9 +11,9 @@ import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 class ListAppsRequestFactory {
 
   private final StoreCredentialsProvider storeCredentialsProvider;
-  private final BodyInterceptor bodyInterceptor;
+  private final BodyInterceptor<BaseBody> bodyInterceptor;
 
-  public ListAppsRequestFactory(BodyInterceptor bodyInterceptor,
+  public ListAppsRequestFactory(BodyInterceptor<BaseBody> bodyInterceptor,
       StoreCredentialsProvider storeCredentialsProvider) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.bodyInterceptor = bodyInterceptor;

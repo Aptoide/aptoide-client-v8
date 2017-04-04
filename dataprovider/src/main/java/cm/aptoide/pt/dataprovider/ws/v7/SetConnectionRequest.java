@@ -20,20 +20,21 @@ public class SetConnectionRequest extends V7<BaseV7Response, SetConnectionReques
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
 
-  protected SetConnectionRequest(Body body, BodyInterceptor bodyInterceptor) {
+  protected SetConnectionRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  public static SetConnectionRequest of(String userPhone, BodyInterceptor bodyInterceptor) {
+  public static SetConnectionRequest of(String userPhone,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     final Body body = new Body(userPhone);
     return new SetConnectionRequest(body, bodyInterceptor);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.setConnection((Body) body);
+    return interfaces.setConnection(body);
   }
 
   @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
