@@ -18,12 +18,15 @@ public class HotspotControlCounter {
   private static final String VALUE = CLASS_IDENTIFIER + "_VALUE";
 
   private final SharedPreferences prefs;
+  private final HotspotSSIDCodeMapper hotspotSSIDCodeMapper;
 
   private long currentTimestamp;
-  @Getter private int currentControlCounter = 47;
+  @Getter private int currentControlCounter = 0;
 
-  public HotspotControlCounter(SharedPreferences prefs) {
+  public HotspotControlCounter(SharedPreferences prefs,
+      HotspotSSIDCodeMapper hotspotSSIDCodeMapper) {
     this.prefs = prefs;
+    this.hotspotSSIDCodeMapper = hotspotSSIDCodeMapper;
 
     init();
   }
@@ -47,20 +50,17 @@ public class HotspotControlCounter {
   }
 
   private String getStringCounter() {
-    return String.valueOf((char) currentControlCounter);
+    return String.valueOf(hotspotSSIDCodeMapper.encode(currentControlCounter));
   }
 
   public String incrementAndGetStringCounter() {
     increment();
-    return String.valueOf((char) currentControlCounter);
+    return String.valueOf(hotspotSSIDCodeMapper.encode(currentControlCounter));
   }
 
   public HotspotControlCounter increment() {
     currentTimestamp = System.currentTimeMillis();
     currentControlCounter++;
-    if (currentControlCounter == 95) {//to avoid '_' character
-      currentControlCounter++;
-    }
     save();
 
     return this;
