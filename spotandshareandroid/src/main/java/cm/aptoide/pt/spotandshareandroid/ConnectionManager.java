@@ -51,6 +51,7 @@ public class ConnectionManager {
   private final GroupValidator groupValidator;
   private final HotspotControlCounter hotspotControlCounter;
   private final GroupParser groupParser;
+  private HotspotSSIDCodeMapper hotspotSSIDCodeMapper;
   private WifiManager wifimanager;
   private ArrayList<Group> clients;
   private WifiStateListener listenerActivateButtons;
@@ -236,11 +237,13 @@ public class ConnectionManager {
   };
 
   private ConnectionManager(Context context, SharedPreferences sharedPreferences,
-      WifiManager wifimanager, HotspotControlCounter hotspotControlCounter, GroupParser groupParser,
+      WifiManager wifimanager, HotspotSSIDCodeMapper hotspotSSIDCodeMapper,
+      HotspotControlCounter hotspotControlCounter, GroupParser groupParser,
       GroupValidator groupValidator) {
     this.context = context;
     this.wifimanager = wifimanager;
     prefs = sharedPreferences;
+    this.hotspotSSIDCodeMapper = hotspotSSIDCodeMapper;
     this.hotspotControlCounter = hotspotControlCounter;
     this.groupParser = groupParser;
     this.groupValidator = groupValidator;
@@ -250,9 +253,11 @@ public class ConnectionManager {
     if (instance == null) {
       SharedPreferences defaultSharedPreferences =
           PreferenceManager.getDefaultSharedPreferences(context);
+      HotspotSSIDCodeMapper hotspotSSIDCodeMapper = new HotspotSSIDCodeMapper();
       instance = new ConnectionManager(context, defaultSharedPreferences,
-          (WifiManager) context.getSystemService(Context.WIFI_SERVICE),
-          new HotspotControlCounter(defaultSharedPreferences), new GroupParser(),
+          (WifiManager) context.getSystemService(Context.WIFI_SERVICE), hotspotSSIDCodeMapper,
+          new HotspotControlCounter(defaultSharedPreferences, hotspotSSIDCodeMapper),
+          new GroupParser(),
           new GroupValidator());
     }
     return instance;
