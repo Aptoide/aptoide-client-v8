@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.BaseV3Response;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -16,14 +17,14 @@ import rx.Observable;
  */
 public class InAppBillingConsumeRequest extends V3<BaseV3Response> {
 
-  private InAppBillingConsumeRequest(BaseBody baseBody) {
+  private InAppBillingConsumeRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(baseBody,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static InAppBillingConsumeRequest of(int apiVersion, String packageName,
-      String purchaseToken, String accessToken) {
+      String purchaseToken, String accessToken, BodyInterceptor<BaseBody> bodyInterceptor) {
     BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("package", packageName);
@@ -31,7 +32,7 @@ public class InAppBillingConsumeRequest extends V3<BaseV3Response> {
     args.put("reqtype", "iabconsume");
     args.put("purchasetoken", purchaseToken);
     args.put("access_token", accessToken);
-    return new InAppBillingConsumeRequest(args);
+    return new InAppBillingConsumeRequest(args, bodyInterceptor);
   }
 
   @Override protected Observable<BaseV3Response> loadDataFromNetwork(Interfaces interfaces,

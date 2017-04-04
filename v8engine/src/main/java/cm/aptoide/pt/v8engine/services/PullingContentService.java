@@ -14,10 +14,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.PushNotificationsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
@@ -27,6 +28,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.receivers.PullingContentReceiver;
@@ -55,6 +57,7 @@ public class PullingContentService extends Service {
   private static final String TAG = PullingContentService.class.getSimpleName();
   private CompositeSubscription subscriptions;
   private InstallManager installManager;
+  private BodyInterceptor<BaseBody> baseBodyInterceptorV3;
 
   public static void setAlarm(AlarmManager am, Context context, String action, long time) {
     Intent intent = new Intent(context, PullingContentService.class);
@@ -66,6 +69,7 @@ public class PullingContentService extends Service {
 
   @Override public void onCreate() {
     super.onCreate();
+    baseBodyInterceptorV3 = ((V8Engine) this.getApplicationContext()).getBaseBodyInterceptorV3();
     installManager = new InstallManager(AptoideDownloadManager.getInstance(),
         new InstallerFactory().create(this, InstallerFactory.ROLLBACK));
 
@@ -146,7 +150,7 @@ public class PullingContentService extends Service {
    * @param startId service startid
    */
   private void setPushNotificationsAction(Context context, int startId) {
-    PushNotificationsRequest.of()
+    PushNotificationsRequest.of(baseBodyInterceptorV3)
         .execute(response -> setPushNotification(context, response, startId));
   }
 

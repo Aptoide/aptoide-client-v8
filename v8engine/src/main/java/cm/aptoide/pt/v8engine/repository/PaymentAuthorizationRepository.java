@@ -7,8 +7,10 @@ package cm.aptoide.pt.v8engine.repository;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
+import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.v8engine.payment.Authorization;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
@@ -23,18 +25,21 @@ public class PaymentAuthorizationRepository {
   private final SyncAdapterBackgroundSync backgroundSync;
   private final PaymentAuthorizationFactory authorizationFactory;
   private final AptoideAccountManager accountManager;
+  private final BodyInterceptor<BaseBody> bodyInterceptorV3;
 
   PaymentAuthorizationRepository(PaymentAuthorizationAccessor authorizationAccessor,
       SyncAdapterBackgroundSync backgroundSync, PaymentAuthorizationFactory authorizationFactory,
-      AptoideAccountManager accountManager) {
+      AptoideAccountManager accountManager, BodyInterceptor<BaseBody> bodyInterceptorV3) {
     this.authotizationAccessor = authorizationAccessor;
     this.backgroundSync = backgroundSync;
     this.authorizationFactory = authorizationFactory;
     this.accountManager = accountManager;
+    this.bodyInterceptorV3 = bodyInterceptorV3;
   }
 
   public Completable createPaymentAuthorization(int paymentId) {
-    return CreatePaymentAuthorizationRequest.of(accountManager.getAccessToken(), paymentId)
+    return CreatePaymentAuthorizationRequest.of(accountManager.getAccessToken(), paymentId,
+        bodyInterceptorV3)
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {

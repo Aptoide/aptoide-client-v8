@@ -9,9 +9,11 @@ import android.content.SyncResult;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentConfirmationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.GetPaymentConfirmationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Product;
@@ -37,6 +39,7 @@ public class PaymentConfirmationSync extends RepositorySync {
   private final PaymentConfirmationAccessor confirmationAccessor;
   private final PaymentConfirmationFactory confirmationFactory;
   private final AptoideAccountManager accountManager;
+  private final BodyInterceptor<BaseBody> bodyInterceptorV3;
 
   private String paymentConfirmationId;
   private String paymentId;
@@ -45,7 +48,8 @@ public class PaymentConfirmationSync extends RepositorySync {
       Product product, NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor confirmationAccessor,
       PaymentConfirmationFactory confirmationFactory, String paymentConfirmationId,
-      String paymentId, AptoideAccountManager accountManager) {
+      String paymentId, AptoideAccountManager accountManager,
+      BodyInterceptor<BaseBody> bodyInterceptorV3) {
     this.paymentConfirmationRepository = paymentConfirmationRepository;
     this.product = product;
     this.operatorManager = operatorManager;
@@ -54,18 +58,21 @@ public class PaymentConfirmationSync extends RepositorySync {
     this.paymentConfirmationId = paymentConfirmationId;
     this.paymentId = paymentId;
     this.accountManager = accountManager;
+    this.bodyInterceptorV3 = bodyInterceptorV3;
   }
 
   public PaymentConfirmationSync(PaymentConfirmationRepository paymentConfirmationRepository,
       Product product, NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor confirmationAccessor,
-      PaymentConfirmationFactory confirmationFactory, AptoideAccountManager accountManager) {
+      PaymentConfirmationFactory confirmationFactory, AptoideAccountManager accountManager,
+      BodyInterceptor<BaseBody> bodyInterceptorV3) {
     this.paymentConfirmationRepository = paymentConfirmationRepository;
     this.product = product;
     this.operatorManager = operatorManager;
     this.confirmationAccessor = confirmationAccessor;
     this.confirmationFactory = confirmationFactory;
     this.accountManager = accountManager;
+    this.bodyInterceptorV3 = bodyInterceptorV3;
   }
 
   @Override public void sync(SyncResult syncResult) {
@@ -100,12 +107,11 @@ public class PaymentConfirmationSync extends RepositorySync {
       if (isInAppBilling) {
         return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId, operatorManager,
             ((InAppBillingProduct) product).getDeveloperPayload(), accessToken,
-            paymentConfirmationId).observe().toSingle();
+            paymentConfirmationId, bodyInterceptorV3).observe().toSingle();
       }
       return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId, operatorManager,
-          ((PaidAppProduct) product).getStoreName(), accessToken, paymentConfirmationId)
-          .observe()
-          .toSingle();
+          ((PaidAppProduct) product).getStoreName(), accessToken, paymentConfirmationId,
+          bodyInterceptorV3).observe().toSingle();
     }).flatMapCompletable(response -> {
       if (response != null && response.isOk()) {
         return Completable.complete();
@@ -120,14 +126,13 @@ public class PaymentConfirmationSync extends RepositorySync {
     return Single.just(product instanceof InAppBillingProduct).flatMap(isInAppBilling -> {
       if (isInAppBilling) {
         return GetPaymentConfirmationRequest.of(product.getId(), operatorManager,
-            ((InAppBillingProduct) product).getApiVersion(), accessToken)
+            ((InAppBillingProduct) product).getApiVersion(), accessToken, bodyInterceptorV3)
             .observe()
             .cast(PaymentConfirmationResponse.class)
             .toSingle();
       }
-      return GetPaymentConfirmationRequest.of(product.getId(), operatorManager, accessToken)
-          .observe()
-          .toSingle();
+      return GetPaymentConfirmationRequest.of(product.getId(), operatorManager, accessToken,
+          bodyInterceptorV3).observe().toSingle();
     }).flatMap(response -> {
       if (response != null && response.isOk()) {
         return Single.just(

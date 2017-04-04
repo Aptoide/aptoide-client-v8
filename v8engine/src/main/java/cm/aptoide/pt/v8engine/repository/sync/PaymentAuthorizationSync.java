@@ -9,8 +9,10 @@ import android.content.SyncResult;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
+import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.GetPaymentAuthorizationsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.PaymentAuthorizationsResponse;
 import cm.aptoide.pt.v8engine.payment.Authorization;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
@@ -29,14 +31,17 @@ public class PaymentAuthorizationSync extends RepositorySync {
   private final PaymentAuthorizationAccessor authorizationAccessor;
   private final PaymentAuthorizationFactory authorizationFactory;
   private final AptoideAccountManager accountManager;
+  private final BodyInterceptor<BaseBody> bodyInterceptorV3;
 
   public PaymentAuthorizationSync(List<String> paymentIds,
       PaymentAuthorizationAccessor authorizationAccessor,
-      PaymentAuthorizationFactory authorizationFactory, AptoideAccountManager accountManager) {
+      PaymentAuthorizationFactory authorizationFactory, AptoideAccountManager accountManager,
+      BodyInterceptor<BaseBody> bodyInterceptorV3) {
     this.paymentIds = paymentIds;
     this.authorizationAccessor = authorizationAccessor;
     this.authorizationFactory = authorizationFactory;
     this.accountManager = accountManager;
+    this.bodyInterceptorV3 = bodyInterceptorV3;
   }
 
   @Override public void sync(SyncResult syncResult) {
@@ -56,7 +61,7 @@ public class PaymentAuthorizationSync extends RepositorySync {
 
   private Single<List<PaymentAuthorizationsResponse.PaymentAuthorizationResponse>> getServerAuthorizations(
       String accessToken) {
-    return GetPaymentAuthorizationsRequest.of(accessToken)
+    return GetPaymentAuthorizationsRequest.of(accessToken, bodyInterceptorV3)
         .observe()
         .toSingle()
         .flatMap(response -> {

@@ -19,9 +19,6 @@ import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.v8engine.crashreports.ConsoleLogger;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.realm.Download;
@@ -55,21 +52,24 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AccountEventsAnalytcs;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.analytics.abtesting.ABTestManager;
-import cm.aptoide.pt.v8engine.view.configuration.ActivityProvider;
-import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
-import cm.aptoide.pt.v8engine.view.configuration.implementation.ActivityProviderImpl;
-import cm.aptoide.pt.v8engine.view.configuration.implementation.FragmentProviderImpl;
-import cm.aptoide.pt.v8engine.leak.LeakTool;
+import cm.aptoide.pt.v8engine.crashreports.ConsoleLogger;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
 import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
+import cm.aptoide.pt.v8engine.leak.LeakTool;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.MainActivity;
+import cm.aptoide.pt.v8engine.view.configuration.ActivityProvider;
+import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
+import cm.aptoide.pt.v8engine.view.configuration.implementation.ActivityProviderImpl;
+import cm.aptoide.pt.v8engine.view.configuration.implementation.FragmentProviderImpl;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -102,6 +102,7 @@ public abstract class V8Engine extends DataProvider {
 
   private AptoideAccountManager accountManager;
   private BodyInterceptor<BaseBody> baseBodyInterceptorV7;
+  private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> baseBodyInterceptorV3;
   private Preferences preferences;
   private cm.aptoide.pt.v8engine.preferences.SecurePreferences securePreferences;
   private SecureCoderDecoder secureCodeDecoder;
@@ -241,7 +242,7 @@ public abstract class V8Engine extends DataProvider {
 
       final AccountFactory accountFactory = new AccountFactory(getAptoideClientUUID(),
           new SocialAccountFactory(context, getGoogleSignInClient()),
-          new AccountService(getAptoideClientUUID()));
+          new AccountService(getAptoideClientUUID(), getBaseBodyInterceptorV3()));
 
       int oldVersion = SQLiteDatabaseHelper.DATABASE_VERSION;
       try {
@@ -441,6 +442,13 @@ public abstract class V8Engine extends DataProvider {
           getAdultContent(getSecurePreferences()), getAptoideMd5sum(), getAptoidePackage());
     }
     return baseBodyInterceptorV7;
+  }
+
+  public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBaseBodyInterceptorV3() {
+    if (baseBodyInterceptorV3 == null) {
+      baseBodyInterceptorV3 = new BaseBodyInterceptorV3(getAptoideMd5sum(), getAptoidePackage());
+    }
+    return baseBodyInterceptorV3;
   }
 
   private String getAptoideMd5sum() {
