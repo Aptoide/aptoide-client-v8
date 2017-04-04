@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
-import cm.aptoide.pt.v8engine.view.layouthandler.LoaderLayoutHandler;
+import cm.aptoide.pt.v8engine.view.swipe.LoaderLayoutHandler;
 import lombok.Getter;
 
 /**

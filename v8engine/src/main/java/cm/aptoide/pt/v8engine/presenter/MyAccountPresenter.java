@@ -4,8 +4,6 @@ import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.v8engine.view.MyAccountView;
-import cm.aptoide.pt.v8engine.view.View;
 import rx.Observable;
 
 public class MyAccountPresenter implements Presenter {

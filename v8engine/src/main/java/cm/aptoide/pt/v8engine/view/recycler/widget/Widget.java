@@ -13,7 +13,7 @@ import android.view.View;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.v8engine.view.activity.ActivityView;
+import cm.aptoide.pt.v8engine.view.ActivityView;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import rx.subscriptions.CompositeSubscription;
 

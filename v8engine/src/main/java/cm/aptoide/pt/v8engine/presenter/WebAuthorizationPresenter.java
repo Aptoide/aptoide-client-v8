@@ -10,8 +10,6 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.authorizations.WebAuthorization;
-import cm.aptoide.pt.v8engine.view.View;
-import cm.aptoide.pt.v8engine.view.WebAuthorizationView;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 

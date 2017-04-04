@@ -9,9 +9,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.v8engine.util.schedulers.SchedulerProvider;
-import cm.aptoide.pt.v8engine.presenter.Presenter;
-import cm.aptoide.pt.v8engine.view.RateAndReviewsView;
-import cm.aptoide.pt.v8engine.view.View;
 import rx.Observable;
 import rx.subscriptions.CompositeSubscription;
 

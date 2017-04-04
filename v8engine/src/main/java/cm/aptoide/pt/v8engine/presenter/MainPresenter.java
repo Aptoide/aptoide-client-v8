@@ -13,8 +13,6 @@ import cm.aptoide.pt.v8engine.AutoUpdate;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.services.ContentPuller;
 import cm.aptoide.pt.v8engine.util.ApkFy;
-import cm.aptoide.pt.v8engine.view.MainView;
-import cm.aptoide.pt.v8engine.view.View;
 
 /**
  * Created by marcelobenites on 18/01/17.

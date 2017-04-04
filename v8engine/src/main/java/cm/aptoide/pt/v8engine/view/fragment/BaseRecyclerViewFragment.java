@@ -9,7 +9,7 @@ import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.DisplayableManager;
 import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
-import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
+import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import java.util.ArrayList;
 import java.util.LinkedList;

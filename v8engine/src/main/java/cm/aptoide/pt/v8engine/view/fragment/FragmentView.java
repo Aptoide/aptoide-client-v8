@@ -6,9 +6,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.MenuItem;
+import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.v8engine.view.activity.ActivityView;
+import cm.aptoide.pt.v8engine.view.ActivityView;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.view.MainActivity;
 import com.trello.rxlifecycle.LifecycleTransformer;
@@ -17,7 +18,7 @@ import com.trello.rxlifecycle.android.FragmentEvent;
 import rx.Observable;
 
 public abstract class FragmentView extends LeakFragment
-    implements cm.aptoide.pt.v8engine.view.View {
+    implements View {
 
   private Presenter presenter;
   private FragmentNavigator fragmentNavigator;

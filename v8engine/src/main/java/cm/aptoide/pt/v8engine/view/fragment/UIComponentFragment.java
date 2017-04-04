@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.v8engine.util.ScreenTrackingUtils;
 import cm.aptoide.pt.v8engine.interfaces.UiComponent;
-import cm.aptoide.pt.v8engine.view.PermissionServiceFragment;
+import cm.aptoide.pt.v8engine.view.permission.PermissionServiceFragment;
 
 /**
  * Created by neuro on 14-04-2016.

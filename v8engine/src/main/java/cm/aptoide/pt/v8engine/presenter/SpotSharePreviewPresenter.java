@@ -3,8 +3,6 @@ package cm.aptoide.pt.v8engine.presenter;
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.SpotAndShareAnalytics;
-import cm.aptoide.pt.v8engine.view.SpotSharePreviewView;
-import cm.aptoide.pt.v8engine.view.View;
 import rx.Observable;
 
 /**

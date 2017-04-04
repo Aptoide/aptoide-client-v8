@@ -17,7 +17,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.v8engine.view.fragment.implementations.LoginSignUpFragment;
+import cm.aptoide.pt.v8engine.view.account.LoginSignUpFragment;
 import cm.aptoide.pt.v8engine.view.MainActivity;
 
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;

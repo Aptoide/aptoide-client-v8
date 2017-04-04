@@ -12,7 +12,7 @@ import android.os.RemoteException;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
-import cm.aptoide.pt.v8engine.view.activity.PaymentActivity;
+import cm.aptoide.pt.v8engine.view.payment.PaymentActivity;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
 import cm.aptoide.pt.v8engine.repository.InAppBillingRepository;

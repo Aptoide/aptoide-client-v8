@@ -8,7 +8,6 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;

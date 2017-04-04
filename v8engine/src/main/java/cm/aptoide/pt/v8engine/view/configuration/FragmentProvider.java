@@ -6,10 +6,10 @@ import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
-import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsContract;
-import cm.aptoide.pt.v8engine.view.fragment.implementations.AppViewFragment;
-import cm.aptoide.pt.v8engine.view.fragment.implementations.ScheduledDownloadsFragment;
-import cm.aptoide.pt.v8engine.view.fragment.implementations.StoreFragment;
+import cm.aptoide.pt.v8engine.presenter.InviteFriendsContract;
+import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
+import cm.aptoide.pt.v8engine.view.downloads.scheduled.ScheduledDownloadsFragment;
+import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 import java.util.ArrayList;
 import java.util.List;
 

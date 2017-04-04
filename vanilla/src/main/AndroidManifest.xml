@@ -36,7 +36,7 @@
       >
 
     <activity
-        android:name=".v8engine.view.activity.OpenGLES20Activity"
+        android:name=".v8engine.view.OpenGLES20Activity"
         android:theme="@style/Theme.Transparent">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
