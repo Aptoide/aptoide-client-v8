@@ -25,14 +25,15 @@ public class SetStoreRequest extends V7<BaseV7Response, HashMapNotNull<String, R
   private final MultipartBody.Part multipartBody;
 
   private SetStoreRequest(HashMapNotNull<String, RequestBody> body, MultipartBody.Part file,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor) {
     super(body, BASE_HOST, getLongerTimeoutClient(), WebService.getDefaultConverter(),
         bodyInterceptor);
     multipartBody = file;
   }
 
   public static SetStoreRequest of(String accessToken, String storeName, String storeTheme,
-      String storeAvatarPath, BodyInterceptor bodyInterceptor) {
+      String storeAvatarPath,
+      BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor) {
 
     final RequestBodyFactory requestBodyFactory = new RequestBodyFactory();
     final HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
@@ -46,7 +47,7 @@ public class SetStoreRequest extends V7<BaseV7Response, HashMapNotNull<String, R
 
   public static SetStoreRequest of(String accessToken, String storeName, String storeTheme,
       String storeAvatarPath, String storeDescription, Boolean editStore, long storeId,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor) {
     final RequestBodyFactory requestBodyFactory = new RequestBodyFactory();
     final HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
 
