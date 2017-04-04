@@ -24,7 +24,6 @@ android {
     buildConfigField "String", "SIXPACK_URL", "\"" + project.SIXPACK_URL + "\""
     buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + project.GOOGLE_SENDER_ID + "\""
 
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
     resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID + "\""
     buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
@@ -35,6 +34,9 @@ android {
         "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
     buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY + "\""
     buildConfigField "String", "TWITTER_SECRET", "\"" + project.TWITTER_SECRET + "\""
+
+    multiDexEnabled true
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 
   lintOptions {
@@ -86,6 +88,19 @@ android {
       res.srcDirs = ['src/main/res', 'src/main/res/deprecated']
     }
   }
+
+  packagingOptions {
+    exclude 'META-INF/services/javax.annotation.processing.Processor'
+    exclude 'META-INF/DEPENDENCIES.txt'
+    exclude 'META-INF/DEPENDENCIES'
+    exclude 'META-INF/LICENSE.txt'
+    exclude 'META-INF/LICENSE'
+    exclude 'META-INF/NOTICE.txt'
+    exclude 'META-INF/NOTICE'
+    exclude 'META-INF/MANIFEST.MF'
+    exclude 'META-INF/LGPL2.1'
+  }
+
 }
 
 dependencies {

@@ -134,15 +134,15 @@ android {
   }
 
   packagingOptions {
-    pickFirst 'META-INF/services/javax.annotation.processing.Processor'
-    pickFirst 'META-INF/DEPENDENCIES.txt'
-    pickFirst 'META-INF/DEPENDENCIES'
-    pickFirst 'META-INF/LICENSE.txt'
-    pickFirst 'META-INF/LICENSE'
-    pickFirst 'META-INF/NOTICE.txt'
-    pickFirst 'META-INF/NOTICE'
-    pickFirst 'META-INF/MANIFEST.MF'
-    pickFirst 'META-INF/LGPL2.1'
+    exclude 'META-INF/services/javax.annotation.processing.Processor'
+    exclude 'META-INF/DEPENDENCIES.txt'
+    exclude 'META-INF/DEPENDENCIES'
+    exclude 'META-INF/LICENSE.txt'
+    exclude 'META-INF/LICENSE'
+    exclude 'META-INF/NOTICE.txt'
+    exclude 'META-INF/NOTICE'
+    exclude 'META-INF/MANIFEST.MF'
+    exclude 'META-INF/LGPL2.1'
   }
 
   testOptions {
