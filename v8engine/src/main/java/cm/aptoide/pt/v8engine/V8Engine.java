@@ -196,9 +196,9 @@ public abstract class V8Engine extends DataProvider {
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
-    clearFileCache();
-
     initializeDownloadManager(V8Engine.this.getAccountManager());
+
+    clearFileCache();
 
     //
     // this will trigger the migration if needed
