@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.debugTools;
+package cm.aptoide.pt.v8engine.leak;
 
 import android.app.Application;
 import com.squareup.leakcanary.LeakCanary;

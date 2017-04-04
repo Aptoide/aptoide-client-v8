@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.view.activity;
+package cm.aptoide.pt.v8engine.view.leak;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 

@@ -1,9 +1,9 @@
-package cm.aptoide.pt.v8engine.view.fragment;
+package cm.aptoide.pt.v8engine.view.leak;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.debugTools.LeakTool;
+import cm.aptoide.pt.v8engine.leak.LeakTool;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
 /**

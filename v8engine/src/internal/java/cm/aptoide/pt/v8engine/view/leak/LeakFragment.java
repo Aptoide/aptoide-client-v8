@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.view.fragment;
+package cm.aptoide.pt.v8engine.view.leak;
 
 import com.trello.rxlifecycle.components.support.RxFragment;
 

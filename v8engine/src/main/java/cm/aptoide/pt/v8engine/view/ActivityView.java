@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.view;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.v8engine.view.activity.LeakActivity;
+import cm.aptoide.pt.v8engine.view.leak.LeakActivity;
 import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.R;
