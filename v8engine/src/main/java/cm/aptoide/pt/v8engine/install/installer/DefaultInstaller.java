@@ -28,10 +28,8 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import cm.aptoide.pt.v8engine.install.root.RootShell;
-import eu.chainfire.libsuperuser.Shell;
 import java.io.File;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import rx.Observable;
@@ -75,7 +73,8 @@ public class DefaultInstaller implements Installer {
           if (isInstalled(installation.getPackageName(), installation.getVersionCode())) {
             return Observable.just(null);
           } else {
-            return systemInstall(context, installation.getFile())
+            return systemInstall(context, installation.getFile()).onErrorResumeNext(
+                getRootInstaller(installation.getFile()))
                 .onErrorResumeNext(
                     defaultInstall(context, installation.getFile(), installation.getPackageName()));
           }
@@ -107,6 +106,10 @@ public class DefaultInstaller implements Installer {
       startUninstallIntent(context, packageName, uri);
       return null;
     }).flatMap(uninstallStarted -> waitPackageIntent(context, intentFilter, packageName));
+  }
+
+  private Observable<Void> getRootInstaller(File file) {
+    return Observable.create(new RootCommandOnSubscribe(file));
   }
 
   private void startUninstallIntent(Context context, String packageName, Uri uri)
