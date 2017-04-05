@@ -16,7 +16,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
@@ -33,29 +32,30 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
-import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
-import cm.aptoide.pt.v8engine.timeline.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.PackageRepository;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.repository.TimelineCardFilter;
 import cm.aptoide.pt.v8engine.repository.TimelineRepository;
+import cm.aptoide.pt.v8engine.timeline.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.util.CardToDisplayable;
 import cm.aptoide.pt.v8engine.util.CardToDisplayableConverter;
+import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
+import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.ProgressBarDisplayable;
-import cm.aptoide.pt.v8engine.util.DateCalculator;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.v8engine.view.rx.RxEndlessRecyclerView;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.TimeLineStatsDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.login.TimelineLoginDisplayable;
-import cm.aptoide.pt.v8engine.view.rx.RxEndlessRecyclerView;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -170,9 +170,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
-    if (create || refresh) {
-      refreshSubject.call(refresh);
-    }
+      refreshSubject.call(!create);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -403,9 +401,6 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
       addLoading();
       Analytics.AppsTimeline.endlessScrollLoadMore();
       return true;
-    } else if (isTotal()) {
-      //TODO - When you reach the end of the endless?
-      // Snackbar.make(getView(), "No more cards!", Snackbar.LENGTH_SHORT).show();
     }
     return false;
   }
