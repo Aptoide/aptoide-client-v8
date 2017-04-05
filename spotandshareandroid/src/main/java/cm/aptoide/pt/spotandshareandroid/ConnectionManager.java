@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -45,6 +46,7 @@ public class ConnectionManager {
   public static final int SUCCESS_HOTSPOT_CREATION = 6;
   public static final int FAILED_TO_CREATE_HOTSPOT = 7;
   public static final String UNIQUE_ID = "uniqueID";
+  public static final int RULE_VERSION = 2;
   private static ConnectionManager instance;
   private final Context context;
   private final SharedPreferences prefs;
@@ -254,6 +256,7 @@ public class ConnectionManager {
       SharedPreferences defaultSharedPreferences =
           PreferenceManager.getDefaultSharedPreferences(context);
       HotspotSSIDCodeMapper hotspotSSIDCodeMapper = new HotspotSSIDCodeMapper();
+
       instance = new ConnectionManager(context, defaultSharedPreferences,
           (WifiManager) context.getSystemService(Context.WIFI_SERVICE), hotspotSSIDCodeMapper,
           new HotspotControlCounter(defaultSharedPreferences, hotspotSSIDCodeMapper),
@@ -324,7 +327,7 @@ public class ConnectionManager {
     }
   }
 
-  public int enableHotspot(String randomAlphaNum, String deviceName) {
+  public int enableHotspot(String deviceName) {
     if (wifimanager == null) {
       wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
     }
@@ -351,11 +354,15 @@ public class ConnectionManager {
       if (method.getName().equals("setWifiApEnabled")) {
         methodFound = true;
         WifiConfiguration netConfig = new WifiConfiguration();
-        netConfig.SSID = "" + "APTXV" + hotspotControlCounter.incrementAndGetStringCounter()
+        netConfig.SSID = String.valueOf(hotspotSSIDCodeMapper.encode(RULE_VERSION))
+            + "APTXV"
+            + hotspotControlCounter.incrementAndGetStringCounter()
             + "_"
-            + randomAlphaNum
+            + getRandomAlphanumericString(5)
             + "_"
-            + deviceName + getRandomID() + "";
+            + deviceName
+            + getSpotShareID()
+            + "";
         netConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED);
         netConfig.preSharedKey = "passwordAptoide";
         netConfig.status = WifiConfiguration.Status.ENABLED;
@@ -394,13 +401,29 @@ public class ConnectionManager {
     return ConnectionManager.ERROR_UNKNOWN;
   }
 
-  private String getRandomID() {
+  private String getRandomAlphanumericString(int length) {
+    StringBuilder sb = new StringBuilder();
+    int tmp;
+    for (int i = 0; i < length; i++) {
+      tmp = generateRandomID();
+      sb.append(hotspotSSIDCodeMapper.encode(tmp));
+    }
+    return sb.toString();
+  }
+
+  private String getSpotShareID() {
     String id = prefs.getString(UNIQUE_ID, "default");
     if (id.equals("default")) {
-      id = Utils.generateRandomAlphanumericString(2);
+      int tmp = generateRandomID();
+      id = String.valueOf(hotspotSSIDCodeMapper.encode(tmp));
       prefs.edit().putString(UNIQUE_ID, id).apply();
     }
     return id;
+  }
+
+  private int generateRandomID() {
+    Random r = new Random();
+    return r.nextInt(62);
   }
 
   public int joinHotspot(String chosenHotspot, boolean shouldReconnect) {
@@ -580,20 +603,6 @@ public class ConnectionManager {
     }
   }
 
-  public void recoverNetworkState() {
-    if (wifimanager == null) {
-      wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    }
-    wifimanager.disconnect();
-    Boolean wifiOnStart = prefs.getBoolean("wifiOnStart", false);
-    if (wifiOnStart) {
-      wifimanager.setWifiEnabled(true);
-      System.out.println("Recovering wifi state, it was on before. ");
-    } else {
-      wifimanager.setWifiEnabled(false);
-    }
-  }
-
   //public void reconnectToGroup(final String group) {
   //  executor.execute(new Runnable() {
   //    @Override public void run() {
@@ -617,6 +626,20 @@ public class ConnectionManager {
   //private void removeGhost(String tmp) {
   //
   //}
+
+  public void recoverNetworkState() {
+    if (wifimanager == null) {
+      wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+    }
+    wifimanager.disconnect();
+    Boolean wifiOnStart = prefs.getBoolean("wifiOnStart", false);
+    if (wifiOnStart) {
+      wifimanager.setWifiEnabled(true);
+      System.out.println("Recovering wifi state, it was on before. ");
+    } else {
+      wifimanager.setWifiEnabled(false);
+    }
+  }
 
   public void enableWifi(boolean enable) {
     if (wifimanager == null) {

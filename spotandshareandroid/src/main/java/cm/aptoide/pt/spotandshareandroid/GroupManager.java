@@ -18,7 +18,6 @@ public class GroupManager {
   private CreateGroupListener createGrouplistener;
   private String deviceName;
   private JoinHotspotTask joinHotspotTask;
-  private String randomAlphaNum;
   private ActivateHotspotTask activateHotspotTask;
   private AsyncTask<Void, Void, Integer> createTask;
 
@@ -69,9 +68,8 @@ public class GroupManager {
     joinTask = joinHotspotTask.execute();
   }
 
-  public void createGroup(String randomAlphaNum, String deviceName, CreateGroupListener listener) {
+  public void createGroup(String deviceName, CreateGroupListener listener) {
     this.createGrouplistener = listener;
-    this.randomAlphaNum = randomAlphaNum;
     this.deviceName = deviceName;
     createTask = activateHotspotTask.execute();
   }
@@ -140,7 +138,7 @@ public class GroupManager {
   private class ActivateHotspotTask extends AsyncTask<Void, Void, Integer> {
 
     @Override protected Integer doInBackground(Void... params) {
-      return connectionManager.enableHotspot(randomAlphaNum, deviceName);
+      return connectionManager.enableHotspot(deviceName);
     }
 
     @Override protected void onPreExecute() {

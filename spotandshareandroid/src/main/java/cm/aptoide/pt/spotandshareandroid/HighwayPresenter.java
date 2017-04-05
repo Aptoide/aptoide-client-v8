@@ -158,9 +158,8 @@ public class HighwayPresenter implements Presenter {
   }
 
   public void clickCreateGroup() {
-    String randomAlphaNum = Utils.generateRandomAlphanumericString(5);
     view.enableButtons(false);
-    groupManager.createGroup(randomAlphaNum, deviceName, new GroupManager.CreateGroupListener() {
+    groupManager.createGroup(deviceName, new GroupManager.CreateGroupListener() {
       @Override public void onSuccess() {
         view.hideButtonsProgressBar();
         view.enableButtons(true);
