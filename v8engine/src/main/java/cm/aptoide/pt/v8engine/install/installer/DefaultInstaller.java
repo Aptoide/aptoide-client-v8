@@ -42,19 +42,20 @@ public class DefaultInstaller implements Installer {
 
   public static final String OBB_FOLDER =
       Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/";
-  private static final String TAG = DefaultInstaller.class.getSimpleName();
   public static final String ROOT_INSTALL_COMMAND = "pm install -r ";
+  private static final String TAG = DefaultInstaller.class.getSimpleName();
   @Getter(AccessLevel.PACKAGE) private final PackageManager packageManager;
   private final InstallationProvider installationProvider;
   private FileUtils fileUtils;
   private Analytics analytics;
 
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
-      FileUtils fileUtils, Analytics analytics) {
+      FileUtils fileUtils, Analytics analytics, boolean debug) {
     this.packageManager = packageManager;
     this.installationProvider = installationProvider;
     this.fileUtils = fileUtils;
     this.analytics = analytics;
+    RootShell.debugMode = debug;
   }
 
   @Override public Observable<Boolean> isInstalled(String md5) {
