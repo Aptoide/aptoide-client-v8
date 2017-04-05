@@ -4,15 +4,15 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.MenuItem;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
+import cm.aptoide.pt.v8engine.view.ActivityView;
+import cm.aptoide.pt.v8engine.view.MainActivity;
 import cm.aptoide.pt.v8engine.view.leak.LeakFragment;
 import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.v8engine.view.ActivityView;
-import cm.aptoide.pt.v8engine.presenter.Presenter;
-import cm.aptoide.pt.v8engine.view.MainActivity;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -48,7 +48,7 @@ public abstract class FragmentView extends LeakFragment
     if (presenter != null) {
       presenter.saveState(outState);
     } else {
-      Log.w(this.getClass().getName(), "No presenter was attached.");
+      Logger.w(this.getClass().getName(), "No presenter was attached.");
     }
 
     super.onSaveInstanceState(outState);
