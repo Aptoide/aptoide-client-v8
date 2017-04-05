@@ -146,6 +146,10 @@ public class VideoDisplayable extends CardDisplayable {
     socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);
   }
 
+  @Override public void share(Context context, ShareCardCallback shareCardCallback) {
+    socialRepository.share(getTimelineCard(), context, shareCardCallback);
+  }
+
   @Override public void like(Context context, String cardType, int rating) {
     socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating);
   }

@@ -583,7 +583,7 @@ public class SharePreviewDialog {
         });
       } else {
         alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
-          socialRepository.share(packageName, shareType, sharePreviewDialog.getPrivacyResult());
+          socialRepository.share(packageName, shareType);
           subscriber.onNext(GenericDialogs.EResponse.YES);
           subscriber.onCompleted();
         }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {

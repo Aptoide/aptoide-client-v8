@@ -173,7 +173,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
         });
       } else {
         alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
-          displayable.share(getContext(), sharePreviewDialog.getPrivacyResult(), callback);
+          displayable.share(getContext(), callback);
           subscriber.onNext(GenericDialogs.EResponse.YES);
           subscriber.onCompleted();
         }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {

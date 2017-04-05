@@ -55,6 +55,9 @@ public abstract class CardDisplayable extends Displayable {
   public abstract void share(Context context, boolean privacyResult,
       ShareCardCallback shareCardCallback);
 
+  public abstract void share(Context context,
+      ShareCardCallback shareCardCallback);
+
   public abstract void like(Context context, String cardType, int rating);
 
   public abstract void like(Context context, String cardId, String cardType, int rating);

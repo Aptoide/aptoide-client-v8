@@ -46,6 +46,23 @@ public class SocialRepository {
         }, throwable -> throwable.printStackTrace());
   }
 
+  public void share(TimelineCard timelineCard, Context context,
+      ShareCardCallback shareCardCallback) {
+    ShareCardRequest.of(timelineCard, bodyInterceptor)
+        .observe()
+        .toSingle()
+        .flatMapCompletable(response -> {
+          if (response.isOk()) {
+            shareCardCallback.onCardShared(response.getData().getCardUid());
+            return Completable.complete();
+          }
+          return Completable.error(
+              new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
+        })
+        .subscribe(() -> {
+        }, throwable -> throwable.printStackTrace());
+  }
+
   public void like(String timelineCardId, String cardType, String ownerHash, int rating) {
     LikeCardRequest.of(timelineCardId, cardType, ownerHash, rating, bodyInterceptor)
         .observe()
@@ -62,6 +79,21 @@ public class SocialRepository {
         .flatMapCompletable(response -> {
           if (response.isOk()) {
             return accountManager.updateAccount(getAccountAccess(privacy));
+          }
+          return Completable.error(
+              new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
+        })
+        .subscribe(() -> {
+        }, throwable -> throwable.printStackTrace());
+  }
+
+  public void share(String packageName, String shareType) {
+    ShareInstallCardRequest.of(packageName, shareType, bodyInterceptor)
+        .observe()
+        .toSingle()
+        .flatMapCompletable(response -> {
+          if (response.isOk()) {
+            return Completable.complete();
           }
           return Completable.error(
               new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
