@@ -79,6 +79,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private static final String PACKAGE_LIST_KEY = "PACKAGE_LIST";
   private static final String STORE_CONTEXT = "STORE_CONTEXT";
   private static final String LIST_STATE_KEY = "LIST_STATE";
+  public static final int LATEST_INSTALLED_PACKAGES = 20;
+  public static final int RANDOM_INSTALLED_PACKAGES = 10;
 
   private DownloadFactory downloadFactory;
   private SpannableFactory spannableFactory;
@@ -245,8 +247,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   }
 
   @NonNull private Observable<List<String>> refreshPackages() {
-    return Observable.concat(packageRepository.getLatestInstalledPackages(10),
-        packageRepository.getRandomInstalledPackages(10))
+    return Observable.concat(packageRepository.getLatestInstalledPackages(LATEST_INSTALLED_PACKAGES),
+        packageRepository.getRandomInstalledPackages(RANDOM_INSTALLED_PACKAGES))
         .toList()
         .doOnNext(packages -> setPackages(packages));
   }
