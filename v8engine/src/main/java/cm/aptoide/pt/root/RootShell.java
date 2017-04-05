@@ -22,6 +22,7 @@
 package cm.aptoide.pt.root;
 
 import android.util.Log;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.root.exceptions.RootDeniedException;
 import cm.aptoide.pt.root.execution.Command;
 import cm.aptoide.pt.root.execution.Shell;
@@ -42,6 +43,7 @@ public class RootShell {
 
   public static final String version = "RootShell v1.4";
   public static boolean debugMode = false;
+  private static final String TAG = RootShell.class.getSimpleName();
   /**
    * Setting this to false will disable the handler that is used
    * by default for the 3 callback methods for Command.
@@ -278,7 +280,7 @@ public class RootShell {
    * shell.
    *
    * @throws TimeoutException
-   * @throws com.stericson.RootShell.exceptions.RootDeniedException
+   * @throws RootDeniedException
    * @throws IOException
    */
   public static Shell getCustomShell(String shellPath, int timeout)
@@ -412,7 +414,7 @@ public class RootShell {
 
       return false;
     } catch (Exception e) {
-      e.printStackTrace();
+      Logger.e(TAG, e);
       return false;
     }
   }

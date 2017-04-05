@@ -43,6 +43,7 @@ public class DefaultInstaller implements Installer {
   public static final String OBB_FOLDER =
       Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/";
   private static final String TAG = DefaultInstaller.class.getSimpleName();
+  public static final String ROOT_INSTALL_COMMAND = "pm install -r ";
   @Getter(AccessLevel.PACKAGE) private final PackageManager packageManager;
   private final InstallationProvider installationProvider;
   private FileUtils fileUtils;
@@ -74,7 +75,7 @@ public class DefaultInstaller implements Installer {
             return Observable.just(null);
           } else {
             return systemInstall(context, installation.getFile()).onErrorResumeNext(
-                getRootInstaller(installation.getFile()))
+                rootInstall(installation))
                 .onErrorResumeNext(
                     defaultInstall(context, installation.getFile(), installation.getPackageName()));
           }
@@ -108,8 +109,13 @@ public class DefaultInstaller implements Installer {
     }).flatMap(uninstallStarted -> waitPackageIntent(context, intentFilter, packageName));
   }
 
-  private Observable<Void> getRootInstaller(File file) {
-    return Observable.create(new RootCommandOnSubscribe(file));
+  private Observable<Void> rootInstall(Installation installation) {
+    if (ManagerPreferences.allowRootInstallation()) {
+      return Observable.create(new RootCommandOnSubscribe(installation.getId().hashCode(),
+          ROOT_INSTALL_COMMAND + installation.getFile().getAbsolutePath()));
+    } else {
+      return Observable.error(new InstallationException("User doesn't allow root installation"));
+    }
   }
 
   private void startUninstallIntent(Context context, String packageName, Uri uri)
