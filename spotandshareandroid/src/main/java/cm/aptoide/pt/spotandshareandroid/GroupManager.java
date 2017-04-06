@@ -108,7 +108,7 @@ public class GroupManager {
   private class JoinHotspotTask extends AsyncTask<Void, Void, Integer> {
 
     @Override protected Integer doInBackground(Void... params) {
-      return connectionManager.joinHotspot(group.getSsid(), false);//future -> pass the whole group
+      return connectionManager.joinHotspot(group.getSsid(), true);//future -> pass the whole group
     }
 
     @Override protected void onPreExecute() {

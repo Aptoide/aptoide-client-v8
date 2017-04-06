@@ -167,7 +167,7 @@ public class ConnectionManager {
                     reconnected = true;
                     new Thread(new Runnable() {
                       @Override public void run() {
-                        joinHotspot(chosenHotspot, true);
+                        joinHotspot(chosenHotspot, false);
                       }
                     }).start();
                   } else {
@@ -206,7 +206,7 @@ public class ConnectionManager {
                 reconnected = true;
                 new Thread(new Runnable() {
                   @Override public void run() {
-                    joinHotspot(chosenHotspot, true);
+                    joinHotspot(chosenHotspot, false);
                   }
                 }).start();
               } else {
