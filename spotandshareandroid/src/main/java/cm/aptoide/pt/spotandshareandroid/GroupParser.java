@@ -16,26 +16,25 @@ public class GroupParser {
   }
 
   public Group parse(String groupString) throws ParseException {
-    //// TODO: 30-03-2017 filipe check validity of hotspot, else tHROW NEW PARSE EXPCETION
-
     if (groupString.contains("_")) {
-      if (groupString.charAt(5) == ('_')) {//R1
+      if (groupString.charAt(5) == '_' && groupString.charAt(11) == '_') {
         String deviceName = getDeviceName(RULE_1, groupString);
         return new Group(groupString, deviceName, "", "");//empty string as default values
-      } else {//R2
+      } else if (groupString.charAt(0) == '2') {//R2
         String deviceName = getDeviceName(RULE_2, groupString);
         String deviceID = getDeviceID(deviceName);
         String hotspotCounter = getHotspotCounter(groupString);
 
         return new Group(groupString, deviceName, hotspotCounter, deviceID);
       }
-    } else {//r3
+    } else if (groupString.length() == 32 && groupString.charAt(0) == '3') {//R3
       String deviceName = getDeviceName(RULE_3, groupString);
       String deviceID = getDeviceID(deviceName);
       String hotspotCounter = getHotspotCounter(groupString);
 
       return new Group(groupString, deviceName, hotspotCounter, deviceID);
     }
+    throw new ParseException("Could not parse group, doesn't fit any of the defined rules", 0);
   }
 
   private String getDeviceName(int rule, String groupString) throws ParseException {
@@ -52,7 +51,7 @@ public class GroupParser {
       if (tmp.length > 2) {
         return groupString.split("_")[2];
       } else {
-        throw new ParseException("trying to access to an invalid position", 2);
+        throw new ParseException("Trying to access to an invalid position for the device name", 2);
       }
     }
   }
@@ -61,7 +60,12 @@ public class GroupParser {
     return String.valueOf(deviceName.charAt(deviceName.length() - 1));
   }
 
-  private String getHotspotCounter(String groupString) {
-    return String.valueOf(groupString.charAt(5));
+  private String getHotspotCounter(String groupString) throws ParseException {
+    if (groupString.length() >= 6) {
+      return String.valueOf(groupString.charAt(6));
+    } else {
+      throw new ParseException("Trying to access to an invalid position for the hotspot counter",
+          6);
+    }
   }
 }
