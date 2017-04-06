@@ -6,6 +6,7 @@
 package cm.aptoide.pt.database.accessors;
 
 import android.text.TextUtils;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.database.realm.Update;
@@ -222,6 +223,15 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
           .addField("cpcUrl", String.class)
           .addField("cpdUrl", String.class);
 
+      oldVersion++;
+    }
+
+    if (oldVersion == 8082) {
+      schema.get("Installed")
+          .addField("status", int.class)
+          .transform(obj -> obj.setInt("status", Installed.STATUS_COMPLETED))
+          .addField("type", int.class)
+          .transform(obj -> obj.setInt("type", Installed.TYPE_UNKNOWN));
       oldVersion++;
     }
   }
