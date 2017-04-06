@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.database.accessors;
 
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import io.realm.Sort;
@@ -22,7 +23,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<List<Installed>> getAll() {
-    return database.getAll(Installed.class);
+    return database.getAll(Installed.class).flatMap(installs -> filterCompleted(installs));
   }
 
   public Observable<List<Installed>> getAllSorted() {
@@ -37,7 +38,14 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
             .unsubscribeOn(RealmSchedulers.getScheduler()))
         .flatMap(installed -> database.copyFromRealm(installed))
         .subscribeOn(RealmSchedulers.getScheduler())
-        .observeOn(Schedulers.io());
+        .observeOn(Schedulers.io())
+        .flatMap(installs -> filterCompleted(installs));
+  }
+
+  @NonNull private Observable<List<Installed>> filterCompleted(List<Installed> installs) {
+    return Observable.from(installs)
+        .filter(installed -> installed.getStatus() == Installed.STATUS_COMPLETED)
+        .toList();
   }
 
   public void remove(String packageName) {
@@ -45,7 +53,8 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<Boolean> isInstalled(String packageName) {
-    return get(packageName).map(installed -> installed != null);
+    return get(packageName).map(
+        installed -> installed != null && installed.getStatus() == Installed.STATUS_COMPLETED);
   }
 
   public Observable<Installed> get(String packageName) {
@@ -60,7 +69,8 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
             .asObservable()
             .unsubscribeOn(RealmSchedulers.getScheduler()))
         .flatMap(installeds -> database.copyFromRealm(installeds))
-        .subscribeOn(RealmSchedulers.getScheduler());
+        .subscribeOn(RealmSchedulers.getScheduler())
+        .flatMap(installs -> filterCompleted(installs));
   }
 
   public Observable<List<Installed>> get(String[] apps) {
@@ -71,7 +81,8 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
             .asObservable()
             .unsubscribeOn(RealmSchedulers.getScheduler()))
         .flatMap(installeds -> database.copyFromRealm(installeds))
-        .subscribeOn(RealmSchedulers.getScheduler());
+        .subscribeOn(RealmSchedulers.getScheduler())
+        .flatMap(installs -> filterCompleted(installs));
   }
 
   public void insertAll(List<Installed> installedList) {

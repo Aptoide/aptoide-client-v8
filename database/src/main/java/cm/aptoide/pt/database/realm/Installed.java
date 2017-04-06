@@ -18,6 +18,13 @@ public class Installed extends RealmObject {
   public static final String VERSION_NAME = "versionName";
   public static final String SIGNATURE = "signature";
   public static final String STORE_NAME = "storeName";
+  public static final int STATUS_INSTALLING = 0;
+  public static final int STATUS_FAILED = 1;
+  public static final int STATUS_COMPLETED = 2;
+  public static final int TYPE_DEFAULT = 0;
+  public static final int TYPE_ROOT = 1;
+  public static final int TYPE_SYSTEM = 2;
+  public static final int TYPE_UNKNOWN = -1;
 
   //	@PrimaryKey private int id = -1;
   private String icon;
@@ -28,6 +35,8 @@ public class Installed extends RealmObject {
   private String signature;
   private boolean systemApp;
   private String storeName;
+  private int status;
+  private int type;
 
   public Installed() {
   }
@@ -48,11 +57,25 @@ public class Installed extends RealmObject {
       setSignature(
           AptoideUtils.AlgorithmU.computeSha1WithColon(packageInfo.signatures[0].toByteArray()));
     }
+    setStatus(STATUS_COMPLETED);
+    setType(TYPE_UNKNOWN);
   }
 
-  //	public int getId() {
-  //		return id;
-  //	}
+  public int getStatus() {
+    return status;
+  }
+
+  public void setStatus(int status) {
+    this.status = status;
+  }
+
+  public int getType() {
+    return type;
+  }
+
+  public void setType(int type) {
+    this.type = type;
+  }
 
   public String getIcon() {
     return icon;
@@ -101,18 +124,6 @@ public class Installed extends RealmObject {
   public void setSignature(String signature) {
     this.signature = signature;
   }
-
-  //	public void computeId() {
-  //		@Cleanup Realm realm = Database.get(Application.getContext());
-  //		int n;
-  //		Number max = realm.where(Installed.class).max(Installed.ID);
-  //		if (max != null) {
-  //			n = max.intValue() + 1;
-  //		} else {
-  //			n = 0;
-  //		}
-  //		id = n;
-  //	}
 
   public boolean isSystemApp() {
     return systemApp;
