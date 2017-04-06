@@ -1,4 +1,10 @@
 apply plugin: 'com.android.library'
+apply plugin: 'me.tatarka.retrolambda'
+
+retrolambda {
+  jvmArgs '-noverify'
+  //defaultMethods true
+}
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
@@ -9,6 +15,12 @@ android {
     versionCode 1
     versionName "1.0"
   }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
   buildTypes {
     release {
       minifyEnabled false
@@ -47,4 +59,7 @@ dependencies {
   provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
   // Just for lombok not to complain
   provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
+  compile project(path: ':aptoide_accountmanager', configuration: 'prodRelease')
+
+  compile project(path: ':dataprovider', configuration: 'prodRelease')
 }

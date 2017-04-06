@@ -36,7 +36,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   private static final int PERMISSION_REQUEST_CODE = 6531;
   private static final int WRITE_SETTINGS_REQUEST_CODE = 5;
   private static final int LOCATION_REQUEST_CODE = 789;
-  public String deviceName;
   public LinearLayout createGroupButton;
   public HighwayRadarTextView radarTextView;
   public LinearLayout progressBarLayout;
@@ -50,7 +49,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   private List<String> pathsFromOutsideShare;
   private boolean joinGroupFlag;
   private HighwayPresenter presenter;
-  private ConnectionManager connectionManager;
   private SpotAndShareAnalyticsInterface analytics;
   private GroupManager groupManager;
   private OutsideShareManager outsideShareManager;
@@ -61,27 +59,18 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
     ApplicationSender.reset();
     DataHolder.reset();
-
-    deviceName = Utils.getDeviceName();
-    connectionManager = ConnectionManager.getInstance(this.getApplicationContext());
+    GroupNameProvider groupNameProvider;
+    ConnectionManager connectionManager =
+        ConnectionManager.getInstance(this.getApplicationContext());
     analytics = ShareApps.getAnalytics();
     groupManager = new GroupManager(connectionManager);
 
     setContentView(R.layout.highway_activity);
 
-    mToolbar = (Toolbar) findViewById(R.id.shareAppsToolbar);
-    setUpToolbar();
-    HighwayRadarScan radar = (HighwayRadarScan) findViewById(R.id.radar);
-    radarTextView = (HighwayRadarTextView) findViewById(R.id.hotspotTextView);
-    searchGroupsTextview = (TextView) findViewById(R.id.searching_groups);
-    progressBarLayout = (LinearLayout) findViewById(R.id.circular_progress_bar);
-    groupButtonsLayout = (LinearLayout) findViewById(R.id.groupButtonsLayout);
+    bindViews();
 
-    buttonsProgressBar = (ProgressBar) findViewById(R.id.buttonsProgressBar);
-    createGroupButton = (LinearLayout) findViewById(R.id.createGroup);//receive
-    radarTextView.setActivity(this);
-
-    presenter = new HighwayPresenter(this, deviceName, new DeactivateHotspotTask(connectionManager),
+    presenter =
+        new HighwayPresenter(this, groupNameProvider, new DeactivateHotspotTask(connectionManager),
         connectionManager, analytics, groupManager, this);
     attachPresenter(presenter);
 
@@ -100,6 +89,20 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
           (ArrayList<Uri>) getIntent().getExtras().get("android.intent.extra.STREAM");
       presenter.getMultipleAppFilePathsFromOutside(uriList);
     }
+  }
+
+  private void bindViews() {
+    mToolbar = (Toolbar) findViewById(R.id.shareAppsToolbar);
+    setUpToolbar();
+    HighwayRadarScan radar = (HighwayRadarScan) findViewById(R.id.radar);
+    radarTextView = (HighwayRadarTextView) findViewById(R.id.hotspotTextView);
+    searchGroupsTextview = (TextView) findViewById(R.id.searching_groups);
+    progressBarLayout = (LinearLayout) findViewById(R.id.circular_progress_bar);
+    groupButtonsLayout = (LinearLayout) findViewById(R.id.groupButtonsLayout);
+
+    buttonsProgressBar = (ProgressBar) findViewById(R.id.buttonsProgressBar);
+    createGroupButton = (LinearLayout) findViewById(R.id.createGroup);//receive
+    radarTextView.setActivity(this);
   }
 
   private void setUpToolbar() {
@@ -336,23 +339,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         .show();
   }
 
-  @Override public boolean checkPermissions() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      if (!checkNormalPermissions()) {
-        return false;
-      }
-
-      if (!checkSpecialSettingsPermission()) {
-        return false;
-      }
-
-      if (!checkLocationPermission()) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   @Override public void showJoinGroupResult(int result) {
     switch (result) {
       case ConnectionManager.ERROR_ON_RECONNECT:
@@ -470,6 +456,73 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
+  @Override public boolean checkPermissions() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      if (!checkNormalPermissions()) {
+        return false;
+      }
+
+      if (!checkSpecialSettingsPermission()) {
+        return false;
+      }
+
+      if (!checkLocationPermission()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  @Override public void requestPermissions() {
+    if (!checkPermissions() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      final List<String> missingPermissions = new ArrayList<>();
+
+      if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+          != PackageManager.PERMISSION_GRANTED) {
+
+        missingPermissions.add(Manifest.permission.READ_PHONE_STATE);
+      }
+
+      if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+          != PackageManager.PERMISSION_GRANTED) {
+        missingPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+      }
+
+      if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+          != PackageManager.PERMISSION_GRANTED) {
+
+        missingPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+      }
+
+      if (missingPermissions.size() > 0) {
+
+        String[] permissionsToRequest = new String[missingPermissions.size()];
+        permissionsToRequest = missingPermissions.toArray(permissionsToRequest);
+
+        ActivityCompat.requestPermissions(this, permissionsToRequest, PERMISSION_REQUEST_CODE);
+      } else {
+        // All normal permissions granted
+        if (!checkSpecialSettingsPermission()) {
+          requestSpecialSettingsPermission();
+        } else if (!checkLocationPermission()) {
+          askForLocationPermission();
+        } else {
+          onPermissionsGranted();
+        }
+      }
+    } else {
+      onPermissionsGranted();
+    }
+  }
+
+  @Override public void registerListener(PermissionListener listener) {
+    this.permissionListener = listener;
+  }
+
+  @Override public void removeListener() {
+    this.permissionListener = null;
+  }
+
   private Dialog buildMobileDataDialog() {
     //        mobileDataDialog=true;
 
@@ -531,57 +584,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     return joinGroupFlag;
   }
 
-  @Override public void requestPermissions() {
-    if (!checkPermissions() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      final List<String> missingPermissions = new ArrayList<>();
-
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-          != PackageManager.PERMISSION_GRANTED) {
-
-        missingPermissions.add(Manifest.permission.READ_PHONE_STATE);
-      }
-
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-          != PackageManager.PERMISSION_GRANTED) {
-        missingPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-      }
-
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-          != PackageManager.PERMISSION_GRANTED) {
-
-        missingPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-      }
-
-      if (missingPermissions.size() > 0) {
-
-        String[] permissionsToRequest = new String[missingPermissions.size()];
-        permissionsToRequest = missingPermissions.toArray(permissionsToRequest);
-
-        ActivityCompat.requestPermissions(this, permissionsToRequest, PERMISSION_REQUEST_CODE);
-      } else {
-        // All normal permissions granted
-        if (!checkSpecialSettingsPermission()) {
-          requestSpecialSettingsPermission();
-        } else if (!checkLocationPermission()) {
-          askForLocationPermission();
-        } else {
-          onPermissionsGranted();
-        }
-      }
-    } else {
-      onPermissionsGranted();
-    }
-  }
-
   public void setJoinGroupFlag(boolean joinGroupFlag) {
     this.joinGroupFlag = joinGroupFlag;
-  }
-
-  @Override public void registerListener(PermissionListener listener) {
-    this.permissionListener = listener;
-  }
-
-  @Override public void removeListener() {
-    this.permissionListener = null;
   }
 }
