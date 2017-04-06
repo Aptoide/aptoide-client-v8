@@ -9,6 +9,7 @@ public class Group {
   private final String deviceName;
   private final String hotspotControlCounter;
   private String deviceID;
+  private boolean isGhost;
 
   public Group(String ssid, String deviceName, String hotspotControlCounter, String deviceID) {
 
@@ -40,5 +41,13 @@ public class Group {
 
   public String getSsid() {
     return ssid;
+  }
+
+  public void setGhostFlag(boolean isGhost) {
+    this.isGhost = isGhost;
+  }
+
+  public boolean isGhost() {
+    return isGhost;
   }
 }
