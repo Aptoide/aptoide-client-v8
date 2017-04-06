@@ -453,7 +453,9 @@ public abstract class V8Engine extends DataProvider {
 
   private String getAptoideMd5sum() {
     if (aptoideMd5sum == null) {
-      aptoideMd5sum = caculateMd5Sum();
+      synchronized (this) {
+        aptoideMd5sum = caculateMd5Sum();
+      }
     }
     return aptoideMd5sum;
   }
