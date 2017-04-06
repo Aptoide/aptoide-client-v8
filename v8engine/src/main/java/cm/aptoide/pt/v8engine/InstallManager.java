@@ -102,9 +102,9 @@ public class InstallManager {
             case Download.PENDING:
             case Download.IN_QUEUE:
             case Download.INVALID_STATUS:
+            case Download.COMPLETED:
               progressStatus = Progress.ACTIVE;
               break;
-            case Download.COMPLETED:
             case Download.PAUSED:
               progressStatus = Progress.INACTIVE;
               break;
