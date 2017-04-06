@@ -30,19 +30,19 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.v8engine.view.dialog.BaseDialog;
-import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.view.search.StoreSearchActivity;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
+import cm.aptoide.pt.v8engine.view.dialog.BaseDialog;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.search.StoreSearchActivity;
 import cm.aptoide.pt.v8engine.websocket.StoreAutoCompleteWebSocket;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.subscriptions.CompositeSubscription;
@@ -104,7 +104,7 @@ public class AddStoreDialog extends BaseDialog {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     baseBodyBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     mSubscriptions = new CompositeSubscription();
     if (savedInstanceState != null) {
       storeName = savedInstanceState.getString(BundleArgs.STORE_NAME.name());
@@ -234,7 +234,7 @@ public class AddStoreDialog extends BaseDialog {
     });
 
     searchView.setOnSearchClickListener(
-        v -> storeAutoCompleteWebSocket.connect(storeAutoCompleteWebSocket.STORE_WEBSOCKET_PORT));
+        v -> storeAutoCompleteWebSocket.connect(StoreAutoCompleteWebSocket.STORE_WEBSOCKET_PORT));
   }
 
   private void getStore(String storeName) {

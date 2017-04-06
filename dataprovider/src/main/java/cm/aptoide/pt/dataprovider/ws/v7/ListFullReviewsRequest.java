@@ -34,13 +34,13 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   private static final int MAX_COMMENTS = 10;
   private String url;
 
-  protected ListFullReviewsRequest(Body body, BodyInterceptor bodyInterceptor) {
+  protected ListFullReviewsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  public ListFullReviewsRequest(String url, Body body, BodyInterceptor bodyInterceptor) {
+  public ListFullReviewsRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
@@ -48,7 +48,8 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   }
 
   public static ListFullReviewsRequest of(long storeId, int limit, int offset,
-      BaseRequestWithStore.StoreCredentials storeCredentials, BodyInterceptor bodyInterceptor) {
+      BaseRequestWithStore.StoreCredentials storeCredentials,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
 
     Body body = new Body(storeId, limit, offset, ManagerPreferences.getAndResetForceServerRefresh(),
         storeCredentials);
@@ -56,7 +57,8 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   }
 
   public static ListFullReviewsRequest ofAction(String url, boolean refresh,
-      BaseRequestWithStore.StoreCredentials storeCredentials, BodyInterceptor bodyInterceptor) {
+      BaseRequestWithStore.StoreCredentials storeCredentials,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     return new ListFullReviewsRequest(url.replace("listFullReviews", ""),
         new Body(refresh, storeCredentials), bodyInterceptor);
   }

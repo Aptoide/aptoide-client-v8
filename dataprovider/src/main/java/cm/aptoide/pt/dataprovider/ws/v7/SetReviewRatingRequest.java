@@ -25,21 +25,21 @@ public class SetReviewRatingRequest extends V7<BaseV7Response, SetReviewRatingRe
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
 
-  protected SetReviewRatingRequest(Body body, BodyInterceptor bodyInterceptor) {
+  protected SetReviewRatingRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static SetReviewRatingRequest of(long reviewId, boolean helpful,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     final Body body = new Body(reviewId, helpful ? "up" : "down");
     return new SetReviewRatingRequest(body, bodyInterceptor);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.setReviewVote((Body) body, true);
+    return interfaces.setReviewVote(body, true);
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body

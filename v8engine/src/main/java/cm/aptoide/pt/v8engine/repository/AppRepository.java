@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.repository;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.model.v3.PaidApp;
@@ -26,14 +27,18 @@ public class AppRepository {
 
   private final NetworkOperatorManager operatorManager;
   private final AptoideAccountManager accountManager;
-  private final BodyInterceptor bodyInterceptor;
+  private final BodyInterceptor<BaseBody> bodyInterceptorV7;
+  private final BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3;
   private final StoreCredentialsProvider storeCredentialsProvider;
 
   AppRepository(NetworkOperatorManager operatorManager, AptoideAccountManager accountManager,
-      BodyInterceptor bodyInterceptor, StoreCredentialsProviderImpl storeCredentialsProvider) {
+      BodyInterceptor<BaseBody> bodyInterceptorV7,
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
+      StoreCredentialsProviderImpl storeCredentialsProvider) {
     this.operatorManager = operatorManager;
     this.accountManager = accountManager;
-    this.bodyInterceptor = bodyInterceptor;
+    this.bodyInterceptorV7 = bodyInterceptorV7;
+    this.bodyInterceptorV3 = bodyInterceptorV3;
     this.storeCredentialsProvider = storeCredentialsProvider;
   }
 
@@ -46,7 +51,7 @@ public class AppRepository {
     return GetAppRequest.of(appId,
         V8Engine.getConfiguration().getPartnerId() == null ? null : storeName,
         StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
-        bodyInterceptor).observe(refresh).flatMap(response -> {
+        bodyInterceptorV7).observe(refresh).flatMap(response -> {
       if (response != null && response.isOk()) {
         if (response.getNodes().getMeta().getData().isPaid()) {
           return addPayment(sponsored, response, refresh);
@@ -98,7 +103,7 @@ public class AppRepository {
   public Observable<PaidApp> getPaidApp(long appId, boolean sponsored, String storeName,
       boolean refresh) {
     return GetApkInfoRequest.of(appId, operatorManager, sponsored, storeName,
-        accountManager.getAccessToken()).observe(refresh).flatMap(response -> {
+        accountManager.getAccessToken(), bodyInterceptorV3).observe(refresh).flatMap(response -> {
       if (response != null && response.isOk() && response.isPaid()) {
         return Observable.just(response);
       } else {
@@ -110,7 +115,7 @@ public class AppRepository {
 
   public Observable<GetApp> getApp(String packageName, boolean refresh, boolean sponsored,
       String storeName) {
-    return GetAppRequest.of(packageName, storeName, bodyInterceptor)
+    return GetAppRequest.of(packageName, storeName, bodyInterceptorV7)
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -127,7 +132,7 @@ public class AppRepository {
   }
 
   public Observable<GetApp> getAppFromMd5(String md5, boolean refresh, boolean sponsored) {
-    return GetAppRequest.ofMd5(md5, bodyInterceptor).observe(refresh).flatMap(response -> {
+    return GetAppRequest.ofMd5(md5, bodyInterceptorV7).observe(refresh).flatMap(response -> {
       if (response != null && response.isOk()) {
         if (response.getNodes().getMeta().getData().isPaid()) {
           return addPayment(sponsored, response, refresh);

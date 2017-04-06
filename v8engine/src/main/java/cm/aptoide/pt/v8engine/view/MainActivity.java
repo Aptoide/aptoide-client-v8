@@ -71,7 +71,7 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
 
     AptoideAccountManager accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
     storeUtilsProxy = new StoreUtilsProxy(accountManager,
-        ((V8Engine) getApplicationContext()).getBaseBodyInterceptor(),
+        ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV7(),
         new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class));
     final AutoUpdate autoUpdate =
         new AutoUpdate(this, new InstallerFactory().create(this, InstallerFactory.DEFAULT),

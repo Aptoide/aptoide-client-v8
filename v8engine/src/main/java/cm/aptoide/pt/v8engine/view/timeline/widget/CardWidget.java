@@ -78,7 +78,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
 
   @CallSuper @Override public void bindView(T displayable) {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     accountNavigator =
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
 

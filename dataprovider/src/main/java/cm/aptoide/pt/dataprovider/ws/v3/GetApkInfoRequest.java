@@ -7,6 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.Api;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -18,14 +19,15 @@ import rx.Observable;
  */
 public class GetApkInfoRequest extends V3<PaidApp> {
 
-  protected GetApkInfoRequest(BaseBody baseBody) {
+  protected GetApkInfoRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(baseBody,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static GetApkInfoRequest of(long appId, NetworkOperatorManager operatorManager,
-      boolean fromSponsored, String storeName, String accessToken) {
+      boolean fromSponsored, String storeName, String accessToken,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     BaseBody args = new BaseBody();
     args.put("identif", "id:" + appId);
     args.put("repo", storeName);
@@ -36,7 +38,7 @@ public class GetApkInfoRequest extends V3<PaidApp> {
       args.put("adview", "1");
     }
     addOptions(args, operatorManager);
-    return new GetApkInfoRequest(args);
+    return new GetApkInfoRequest(args, bodyInterceptor);
   }
 
   private static void addOptions(BaseBody args, NetworkOperatorManager operatorManager) {

@@ -8,8 +8,10 @@ package cm.aptoide.pt.v8engine.repository;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentConfirmationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
@@ -23,17 +25,21 @@ import rx.Observable;
 public class InAppPaymentConfirmationRepository extends PaymentConfirmationRepository {
 
   private final AptoideAccountManager accountManager;
+  private final BodyInterceptor<BaseBody> bodyInterceptorV3;
 
   public InAppPaymentConfirmationRepository(NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor paymentDatabase, SyncAdapterBackgroundSync backgroundSync,
-      PaymentConfirmationFactory confirmationFactory, AptoideAccountManager accountManager) {
+      PaymentConfirmationFactory confirmationFactory, AptoideAccountManager accountManager,
+      BodyInterceptor<BaseBody> bodyInterceptorV3) {
     super(operatorManager, paymentDatabase, backgroundSync, confirmationFactory);
     this.accountManager = accountManager;
+    this.bodyInterceptorV3 = bodyInterceptorV3;
   }
 
   @Override public Completable createPaymentConfirmation(int paymentId, Product product) {
     return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId, operatorManager,
-        ((InAppBillingProduct) product).getDeveloperPayload(), accountManager.getAccessToken())
+        ((InAppBillingProduct) product).getDeveloperPayload(), accountManager.getAccessToken(),
+        bodyInterceptorV3)
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {

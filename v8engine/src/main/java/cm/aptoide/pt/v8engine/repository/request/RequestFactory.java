@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.repository.request;
 
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
@@ -26,7 +27,7 @@ public class RequestFactory {
   private final GetStoreRecommendedRequestFactory getStoreRecommendedRequestFactory;
 
   public RequestFactory(StoreCredentialsProvider storeCredentialsProvider,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     listStoresRequestFactory = new ListStoresRequestFactory(bodyInterceptor);
     listAppsRequestFactory = new ListAppsRequestFactory(bodyInterceptor, storeCredentialsProvider);

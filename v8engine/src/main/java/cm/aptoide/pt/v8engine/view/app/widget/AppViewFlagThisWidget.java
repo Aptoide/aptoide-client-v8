@@ -8,9 +8,10 @@ package cm.aptoide.pt.v8engine.view.app.widget;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v2.ErrorResponse;
 import cm.aptoide.pt.dataprovider.ws.v3.AddApkFlagRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -18,6 +19,7 @@ import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewFlagThisDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -51,6 +53,7 @@ import rx.android.schedulers.AndroidSchedulers;
   private TextView virusText;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
+  private BodyInterceptor<BaseBody> baseBodyInterceptorV3;
 
   public AppViewFlagThisWidget(View itemView) {
     super(itemView);
@@ -78,6 +81,8 @@ import rx.android.schedulers.AndroidSchedulers;
 
   @Override public void bindView(AppViewFlagThisDisplayable displayable) {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    baseBodyInterceptorV3 =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV3();
     accountNavigator =
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
     GetApp pojo = displayable.getPojo();
@@ -160,7 +165,7 @@ import rx.android.schedulers.AndroidSchedulers;
       final GetAppMeta.GetAppMetaFile.Flags.Vote.Type type = viewIdTypeMap.get(v.getId());
 
       compositeSubscription.add(AddApkFlagRequest.of(storeName, md5, type.name().toLowerCase(),
-          accountManager.getAccessToken())
+          accountManager.getAccessToken(), baseBodyInterceptorV3)
           .observe(true)
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(response -> {

@@ -3,11 +3,12 @@ package cm.aptoide.pt.v8engine.presenter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.util.schedulers.SchedulerProvider;
 import rx.Observable;
 import rx.subscriptions.CompositeSubscription;
@@ -26,7 +27,7 @@ public class RateAndReviewsPresenter implements Presenter {
   public RateAndReviewsPresenter(@NonNull long appId, @NonNull String storeName,
       @NonNull String packageName, @NonNull RateAndReviewsView view,
       @NonNull SchedulerProvider schedulerProvider, AptoideAccountManager accountManager,
-      String aptoideClientUUID, BodyInterceptor bodyInterceptor) {
+      String aptoideClientUUID, BodyInterceptor<BaseBody> bodyInterceptor) {
     this.view = view;
     this.schedulerProvider = schedulerProvider;
     this.request =

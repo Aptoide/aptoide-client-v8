@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
 
 import android.support.annotation.CallSuper;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.DownloadAnalyticsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
@@ -30,12 +31,12 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInsta
   private DownloadInstallEventConverter downloadInstallEventConverter;
   private DownloadInstallAnalyticsBaseBody.ResultStatus resultStatus;
   private Throwable error;
-  private BodyInterceptor bodyInterceptor;
+  private BodyInterceptor<BaseBody> bodyInterceptor;
 
   public DownloadInstallBaseEvent(Action action, Origin origin, String packageName, String url,
       String obbUrl, String patchObbUrl, AppContext context, int versionCode,
       DownloadInstallEventConverter downloadInstallEventConverter, String eventName,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     this.action = action;
     this.versionCode = versionCode;
     this.origin = origin;

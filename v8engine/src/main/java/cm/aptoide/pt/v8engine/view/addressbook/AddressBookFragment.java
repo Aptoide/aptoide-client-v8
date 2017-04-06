@@ -22,10 +22,10 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.AddressBookAnalytics;
-import cm.aptoide.pt.v8engine.presenter.AddressBookContract;
-import cm.aptoide.pt.v8engine.presenter.AddressBookPresenter;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.presenter.AddressBookContract;
+import cm.aptoide.pt.v8engine.presenter.AddressBookPresenter;
 import cm.aptoide.pt.v8engine.view.fragment.UIComponentFragment;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -81,7 +81,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
     analytics = new AddressBookAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     final BodyInterceptor<BaseBody> baseBodyBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     mActionsListener =
         new AddressBookPresenter(this, new ContactsRepositoryImpl(baseBodyBodyInterceptor),
             analytics, new AddressBookNavigationManager(getFragmentNavigator(), getTag(),

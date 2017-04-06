@@ -11,10 +11,10 @@ import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.timeline.displayable.FollowUserDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.MessageWhiteBgDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.EndlessRecyclerOnScrollListener;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.MessageWhiteBgDisplayable;
+import cm.aptoide.pt.v8engine.view.timeline.displayable.FollowUserDisplayable;
 import java.util.List;
 
 /**
@@ -64,7 +64,7 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     baseBodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
   }
 
   @Override public void loadExtras(Bundle args) {

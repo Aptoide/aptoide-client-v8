@@ -4,6 +4,7 @@ import android.content.Context;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccount;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.LikeCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ShareCardRequest;
@@ -22,9 +23,10 @@ import rx.schedulers.Schedulers;
 public class SocialRepository {
 
   private final AptoideAccountManager accountManager;
-  private final BodyInterceptor bodyInterceptor;
+  private final BodyInterceptor<BaseBody> bodyInterceptor;
 
-  public SocialRepository(AptoideAccountManager accountManager, BodyInterceptor bodyInterceptor) {
+  public SocialRepository(AptoideAccountManager accountManager,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     this.accountManager = accountManager;
     this.bodyInterceptor = bodyInterceptor;
   }

@@ -34,7 +34,7 @@ public class AccountManagerService {
 
   public Completable createAccount(String email, String password) {
     return CreateUserRequest.of(email.toLowerCase(), password,
-        aptoideClientUUID.getUniqueIdentifier())
+        aptoideClientUUID.getUniqueIdentifier(), interceptorFactory.createV3())
         .observe(true)
         .toSingle()
         .flatMapCompletable(response -> {
@@ -54,7 +54,10 @@ public class AccountManagerService {
 
   public Single<OAuth> login(String type, String email, String password, String name) {
     return OAuth2AuthenticationRequest.of(email, password, type, name,
-        aptoideClientUUID.getUniqueIdentifier()).observe().toSingle().flatMap(oAuth -> {
+        aptoideClientUUID.getUniqueIdentifier(), interceptorFactory.createV3())
+        .observe()
+        .toSingle()
+        .flatMap(oAuth -> {
       if (!oAuth.hasErrors()) {
         return Single.just(oAuth);
       } else {
@@ -72,7 +75,7 @@ public class AccountManagerService {
   public Completable updateAccount(String email, String nickname, String password,
       String avatarPath, String accessToken) {
     return CreateUserRequest.of(email, nickname, password, avatarPath,
-        aptoideClientUUID.getUniqueIdentifier(), accessToken)
+        aptoideClientUUID.getUniqueIdentifier(), accessToken, interceptorFactory.createV3())
         .observe(true)
         .toSingle()
         .flatMapCompletable(response -> {
@@ -85,7 +88,7 @@ public class AccountManagerService {
   }
 
   public Completable updateAccount(String accessLevel, AptoideAccountManager accountManager) {
-    return SetUserRequest.of(accessLevel, interceptorFactory.create(accountManager))
+    return SetUserRequest.of(accessLevel, interceptorFactory.createV7(accountManager))
         .observe(true)
         .toSingle()
         .flatMapCompletable(response -> {
@@ -113,11 +116,11 @@ public class AccountManagerService {
       String storePassword, AptoideAccountManager accountManager,
       ChangeStoreSubscriptionResponse.StoreSubscriptionState subscription) {
     return ChangeStoreSubscriptionRequest.of(storeName, subscription, storeUserName, storePassword,
-        interceptorFactory.create(accountManager)).observe().toSingle().toCompletable();
+        interceptorFactory.createV7(accountManager)).observe().toSingle().toCompletable();
   }
 
   private Single<List<Store>> getSubscribedStores(String accessToken) {
-    return GetUserRepoSubscriptionRequest.of(accessToken)
+    return GetUserRepoSubscriptionRequest.of(accessToken, interceptorFactory.createV3())
         .observe()
         .map(getUserRepoSubscription -> getUserRepoSubscription.getSubscription())
         .flatMapIterable(list -> list)
@@ -142,7 +145,10 @@ public class AccountManagerService {
   }
 
   private Single<CheckUserCredentialsJson> getServerAccount(String accessToken) {
-    return CheckUserCredentialsRequest.of(accessToken).observe().toSingle().flatMap(response -> {
+    return CheckUserCredentialsRequest.of(accessToken, interceptorFactory.createV3())
+        .observe()
+        .toSingle()
+        .flatMap(response -> {
       if (response.getStatus().equals("OK")) {
         return Single.just(response);
       }
@@ -162,7 +168,8 @@ public class AccountManagerService {
   }
 
   public Completable updateAccount(boolean adultContentEnabled, String accessToken) {
-    return ChangeUserSettingsRequest.of(adultContentEnabled, accessToken)
+    return ChangeUserSettingsRequest.of(adultContentEnabled, accessToken,
+        interceptorFactory.createV3())
         .observe(true)
         .toSingle()
         .flatMapCompletable(response -> {

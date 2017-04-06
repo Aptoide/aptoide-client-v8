@@ -24,20 +24,20 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
 
-  protected PostReviewRequest(Body body, BodyInterceptor bodyInterceptor) {
+  protected PostReviewRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static PostReviewRequest of(String storeName, String packageName, String title,
-      String textBody, Integer rating, BodyInterceptor bodyInterceptor) {
+      String textBody, Integer rating, BodyInterceptor<BaseBody> bodyInterceptor) {
     final Body body = new Body(storeName, packageName, title, textBody, rating);
     return new PostReviewRequest(body, bodyInterceptor);
   }
 
   public static PostReviewRequest of(String packageName, String title, String textBody,
-      Integer rating, BodyInterceptor bodyInterceptor) {
+      Integer rating, BodyInterceptor<BaseBody> bodyInterceptor) {
     final Body body = new Body(packageName, title, textBody, rating);
     return new PostReviewRequest(body, bodyInterceptor);
   }

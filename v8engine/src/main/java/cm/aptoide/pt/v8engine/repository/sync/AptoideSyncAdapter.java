@@ -15,6 +15,8 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
 import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.repository.PaymentConfirmationFactory;
@@ -43,12 +45,14 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
   private final PaymentConfirmationAccessor confirmationAccessor;
   private final PaymentAuthorizationAccessor authorizationAcessor;
   private final AptoideAccountManager accountManager;
+  private final BodyInterceptor<BaseBody> bodyInterceptorV3;
 
   public AptoideSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs,
       PaymentConfirmationFactory confirmationConverter,
       PaymentAuthorizationFactory authorizationConverter, SyncDataConverter productConverter,
       NetworkOperatorManager operatorManager, PaymentConfirmationAccessor confirmationAccessor,
-      PaymentAuthorizationAccessor authorizationAcessor, AptoideAccountManager accountManager) {
+      PaymentAuthorizationAccessor authorizationAcessor, AptoideAccountManager accountManager,
+      BodyInterceptor<BaseBody> bodyInterceptorV3) {
     super(context, autoInitialize, allowParallelSyncs);
     this.confirmationConverter = confirmationConverter;
     this.authorizationConverter = authorizationConverter;
@@ -57,6 +61,7 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
     this.confirmationAccessor = confirmationAccessor;
     this.authorizationAcessor = authorizationAcessor;
     this.accountManager = accountManager;
+    this.bodyInterceptorV3 = bodyInterceptorV3;
   }
 
   @Override public void onPerformSync(Account account, Bundle extras, String authority,
@@ -73,17 +78,18 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
       if (paymentConfirmationId == null) {
         new PaymentConfirmationSync(
             RepositoryFactory.getPaymentConfirmationRepository(getContext(), product), product,
-            operatorManager, confirmationAccessor, confirmationConverter, accountManager).sync(
+            operatorManager, confirmationAccessor, confirmationConverter, accountManager,
+            bodyInterceptorV3).sync(
             syncResult);
       } else {
         new PaymentConfirmationSync(
             RepositoryFactory.getPaymentConfirmationRepository(getContext(), product), product,
             operatorManager, confirmationAccessor, confirmationConverter, paymentConfirmationId,
-            paymentIds.get(0), accountManager).sync(syncResult);
+            paymentIds.get(0), accountManager, bodyInterceptorV3).sync(syncResult);
       }
     } else if (authorizations) {
       new PaymentAuthorizationSync(paymentIds, authorizationAcessor, authorizationConverter,
-          accountManager).sync(syncResult);
+          accountManager, bodyInterceptorV3).sync(syncResult);
     }
   }
 }

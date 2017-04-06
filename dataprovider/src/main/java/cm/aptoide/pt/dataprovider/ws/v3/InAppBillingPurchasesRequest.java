@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -18,16 +19,17 @@ import rx.Observable;
  */
 public class InAppBillingPurchasesRequest extends V3<InAppBillingPurchasesResponse> {
 
-  private InAppBillingPurchasesRequest(BaseBody baseBody) {
+  private InAppBillingPurchasesRequest(BaseBody baseBody,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     super(baseBody,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static InAppBillingPurchasesRequest of(int apiVersion, String packageName, String type,
-      String accessToken) {
+      String accessToken, BodyInterceptor<BaseBody> bodyInterceptor) {
     BaseBody args = getBaseArgs(apiVersion, packageName, type, accessToken);
-    return new InAppBillingPurchasesRequest(args);
+    return new InAppBillingPurchasesRequest(args, bodyInterceptor);
   }
 
   @NonNull private static BaseBody getBaseArgs(int apiVersion, String packageName, String type,

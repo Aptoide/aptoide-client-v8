@@ -12,7 +12,7 @@ public class InstallEventConverter extends DownloadInstallEventConverter<Install
 
   private BodyInterceptor<BaseBody> bodyInterceptor;
 
-  public InstallEventConverter(BodyInterceptor bodyInterceptor) {
+  public InstallEventConverter(BodyInterceptor<BaseBody> bodyInterceptor) {
     this.bodyInterceptor = bodyInterceptor;
   }
 

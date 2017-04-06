@@ -26,7 +26,7 @@ import rx.Observable;
   private static final int LINES_PER_REQUEST = 6;
   private String url;
 
-  private ListAppsRequest(String url, Body body, BodyInterceptor bodyInterceptor) {
+  private ListAppsRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
@@ -34,7 +34,8 @@ import rx.Observable;
   }
 
   public static ListAppsRequest ofAction(String url,
-      BaseRequestWithStore.StoreCredentials storeCredentials, BodyInterceptor bodyInterceptor) {
+      BaseRequestWithStore.StoreCredentials storeCredentials,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     V7Url listAppsV7Url = new V7Url(url).remove("listApps");
     if (listAppsV7Url.containsLimit()) {
       return new ListAppsRequest(listAppsV7Url.get(), new Body(storeCredentials), bodyInterceptor);

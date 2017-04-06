@@ -72,7 +72,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
   @Override public void bindView(FollowUserDisplayable displayable) {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     final BodyInterceptor<BaseBody> bodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptor();
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
 
     if (!displayable.isLike()) {
       followLayout.setVisibility(View.GONE);

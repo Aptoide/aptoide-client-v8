@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
 
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 
 /**
@@ -12,7 +13,7 @@ public class InstallEvent extends DownloadInstallBaseEvent {
   public InstallEvent(Action action, Origin origin, String packageName, String url, String obbUrl,
       String patchObbUrl, AppContext context, int versionCode,
       DownloadInstallEventConverter downloadInstallEventConverter,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     super(action, origin, packageName, url, obbUrl, patchObbUrl, context, versionCode,
         downloadInstallEventConverter, EVENT_NAME, bodyInterceptor);
   }

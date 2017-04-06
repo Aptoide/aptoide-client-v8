@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.GetUserRepoSubscription;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -13,17 +14,19 @@ import rx.Observable;
 
 public class GetUserRepoSubscriptionRequest extends V3<GetUserRepoSubscription> {
 
-  public GetUserRepoSubscriptionRequest(BaseBody baseBody) {
+  public GetUserRepoSubscriptionRequest(BaseBody baseBody,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     super(baseBody,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  public static GetUserRepoSubscriptionRequest of(String accessToken) {
+  public static GetUserRepoSubscriptionRequest of(String accessToken,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     final BaseBody body = new BaseBody();
     body.put("mode", "json");
     body.put("access_token", accessToken);
-    return new GetUserRepoSubscriptionRequest(body);
+    return new GetUserRepoSubscriptionRequest(body, bodyInterceptor);
   }
 
   @Override

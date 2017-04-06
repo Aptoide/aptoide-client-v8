@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -18,9 +19,6 @@ import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.v8engine.crashreports.ConsoleLogger;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.realm.Download;
@@ -54,21 +52,24 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AccountEventsAnalytcs;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.analytics.abtesting.ABTestManager;
-import cm.aptoide.pt.v8engine.view.configuration.ActivityProvider;
-import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
-import cm.aptoide.pt.v8engine.view.configuration.implementation.ActivityProviderImpl;
-import cm.aptoide.pt.v8engine.view.configuration.implementation.FragmentProviderImpl;
-import cm.aptoide.pt.v8engine.leak.LeakTool;
+import cm.aptoide.pt.v8engine.crashreports.ConsoleLogger;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
 import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
+import cm.aptoide.pt.v8engine.leak.LeakTool;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.MainActivity;
+import cm.aptoide.pt.v8engine.view.configuration.ActivityProvider;
+import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
+import cm.aptoide.pt.v8engine.view.configuration.implementation.ActivityProviderImpl;
+import cm.aptoide.pt.v8engine.view.configuration.implementation.FragmentProviderImpl;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -100,7 +101,8 @@ public abstract class V8Engine extends DataProvider {
   @Getter @Setter private static ShareApps shareApps;
 
   private AptoideAccountManager accountManager;
-  private BodyInterceptor<BaseBody> baseBodyInterceptor;
+  private BodyInterceptor<BaseBody> baseBodyInterceptorV7;
+  private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> baseBodyInterceptorV3;
   private Preferences preferences;
   private cm.aptoide.pt.v8engine.preferences.SecurePreferences securePreferences;
   private SecureCoderDecoder secureCodeDecoder;
@@ -108,6 +110,7 @@ public abstract class V8Engine extends DataProvider {
   private AptoideClientUUID aptoideClientUUID;
   private GoogleApiClient googleSignInClient;
   private LeakTool leakTool;
+  private String aptoideMd5sum;
 
   /**
    * call after this instance onCreate()
@@ -235,11 +238,11 @@ public abstract class V8Engine extends DataProvider {
 
       final BaseBodyInterceptorFactory bodyInterceptorFactory =
           new BaseBodyInterceptorFactory(getAptoideClientUUID(), getPreferences(),
-              getSecurePreferences());
+              getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage());
 
       final AccountFactory accountFactory = new AccountFactory(getAptoideClientUUID(),
           new SocialAccountFactory(context, getGoogleSignInClient()),
-          new AccountService(getAptoideClientUUID()));
+          new AccountService(getAptoideClientUUID(), getBaseBodyInterceptorV3()));
 
       final AndroidAccountDataMigration accountDataMigration =
           new AndroidAccountDataMigration(SecurePreferencesImplementation.getInstance(context),
@@ -407,25 +410,58 @@ public abstract class V8Engine extends DataProvider {
       final StoreCredentialsProviderImpl storeCredentials = new StoreCredentialsProviderImpl();
 
       StoreUtilsProxy proxy =
-          new StoreUtilsProxy(accountManager, getBaseBodyInterceptor(), storeCredentials,
+          new StoreUtilsProxy(accountManager, getBaseBodyInterceptorV7(), storeCredentials,
               AccessorFactory.getAccessorFor(Store.class));
 
       BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
           storeCredentials.get(getConfiguration().getDefaultStore());
 
       return generateAptoideUuid().andThen(proxy.addDefaultStore(
-          GetStoreMetaRequest.of(defaultStoreCredentials, getBaseBodyInterceptor()), accountManager,
+          GetStoreMetaRequest.of(defaultStoreCredentials, getBaseBodyInterceptorV7()),
+          accountManager,
           defaultStoreCredentials).andThen(refreshUpdates()))
           .doOnError(err -> CrashReport.getInstance().log(err));
     });
   }
 
-  public BodyInterceptor<BaseBody> getBaseBodyInterceptor() {
-    if (baseBodyInterceptor == null) {
-      baseBodyInterceptor = new BaseBodyInterceptor(getAptoideClientUUID(), getAccountManager(),
-          getAdultContent(getSecurePreferences()));
+  public BodyInterceptor<BaseBody> getBaseBodyInterceptorV7() {
+    if (baseBodyInterceptorV7 == null) {
+      baseBodyInterceptorV7 = new BaseBodyInterceptorV7(getAptoideClientUUID(), getAccountManager(),
+          getAdultContent(getSecurePreferences()), getAptoideMd5sum(), getAptoidePackage());
     }
-    return baseBodyInterceptor;
+    return baseBodyInterceptorV7;
+  }
+
+  public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBaseBodyInterceptorV3() {
+    if (baseBodyInterceptorV3 == null) {
+      baseBodyInterceptorV3 = new BaseBodyInterceptorV3(getAptoideMd5sum(), getAptoidePackage());
+    }
+    return baseBodyInterceptorV3;
+  }
+
+  private String getAptoideMd5sum() {
+    if (aptoideMd5sum == null) {
+      synchronized (this) {
+        if (aptoideMd5sum == null) {
+          aptoideMd5sum = caculateMd5Sum();
+        }
+      }
+    }
+    return aptoideMd5sum;
+  }
+
+  private String caculateMd5Sum() {
+    try {
+      return AptoideUtils.AlgorithmU.computeMd5(
+          getPackageManager().getPackageInfo(getConfiguration().getAppId(), 0));
+    } catch (PackageManager.NameNotFoundException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  private String getAptoidePackage() {
+    return getConfiguration().getAppId();
   }
 
   public AdultContent getAdultContent(

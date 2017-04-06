@@ -8,6 +8,7 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -21,13 +22,13 @@ import rx.Observable;
  */
 public class PushNotificationsRequest extends V3<GetPushNotificationsResponse> {
 
-  protected PushNotificationsRequest(BaseBody baseBody) {
+  protected PushNotificationsRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(baseBody,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  public static PushNotificationsRequest of() {
+  public static PushNotificationsRequest of(BodyInterceptor<BaseBody> bodyInterceptor) {
     BaseBody args = new BaseBody();
 
     String oemid = DataProvider.getConfiguration().getExtraId();
@@ -46,7 +47,7 @@ public class PushNotificationsRequest extends V3<GetPushNotificationsResponse> {
       args.put("notification_type", "aptoide_vanilla");
     }
     args.put("id", String.valueOf(ManagerPreferences.getLastPushNotificationId()));
-    return new PushNotificationsRequest(args);
+    return new PushNotificationsRequest(args, bodyInterceptor);
   }
 
   @Override

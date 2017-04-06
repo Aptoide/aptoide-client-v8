@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.addressbook.data;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.SetConnectionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SyncAddressBookRequest;
@@ -28,9 +29,9 @@ import rx.schedulers.Schedulers;
 
 public class ContactsRepositoryImpl implements ContactsRepository {
 
-  private final BodyInterceptor bodyInterceptor;
+  private final BodyInterceptor<BaseBody> bodyInterceptor;
 
-  public ContactsRepositoryImpl(BodyInterceptor bodyInterceptor) {
+  public ContactsRepositoryImpl(BodyInterceptor<BaseBody> bodyInterceptor) {
     this.bodyInterceptor = bodyInterceptor;
   }
 

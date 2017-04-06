@@ -19,7 +19,7 @@ public class ShareInstallCardRequest extends V7<BaseV7Response, ShareInstallCard
   private final String type;
 
   protected ShareInstallCardRequest(Body body, String packageName, String type,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
@@ -28,7 +28,7 @@ public class ShareInstallCardRequest extends V7<BaseV7Response, ShareInstallCard
   }
 
   public static ShareInstallCardRequest of(String packageName, String shareType,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     ShareInstallCardRequest.Body body = new ShareInstallCardRequest.Body(packageName);
     return new ShareInstallCardRequest(body, packageName, shareType, bodyInterceptor);
   }

@@ -15,13 +15,14 @@ import rx.Observable;
 
 public class GetMyStoreMetaRequest extends V7<GetStoreMeta, BaseBody> {
 
-  public GetMyStoreMetaRequest(BaseBody body, String baseHost, BodyInterceptor bodyInterceptor) {
+  public GetMyStoreMetaRequest(BaseBody body, String baseHost,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, baseHost,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  public static GetMyStoreMetaRequest of(BodyInterceptor bodyInterceptor) {
+  public static GetMyStoreMetaRequest of(BodyInterceptor<BaseBody> bodyInterceptor) {
     return new GetMyStoreMetaRequest(new BaseBody(), BASE_HOST, bodyInterceptor);
   }
 

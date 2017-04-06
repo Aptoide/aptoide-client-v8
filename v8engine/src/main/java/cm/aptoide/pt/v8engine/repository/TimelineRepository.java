@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.repository;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetTimelineStatsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
@@ -25,10 +26,10 @@ public class TimelineRepository {
 
   private final String action;
   private final TimelineCardFilter filter;
-  private final BodyInterceptor bodyInterceptor;
+  private final BodyInterceptor<BaseBody> bodyInterceptor;
 
   public TimelineRepository(String action, TimelineCardFilter filter,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     this.action = action;
     this.filter = filter;
     this.bodyInterceptor = bodyInterceptor;

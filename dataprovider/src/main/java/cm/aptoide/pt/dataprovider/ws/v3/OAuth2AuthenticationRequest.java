@@ -7,6 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.OAuth;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -23,14 +24,15 @@ import rx.Observable;
 @Data @Accessors(chain = true) @EqualsAndHashCode(callSuper = true)
 public class OAuth2AuthenticationRequest extends V3<OAuth> {
 
-  public OAuth2AuthenticationRequest(BaseBody baseBody) {
+  public OAuth2AuthenticationRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(baseBody,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static OAuth2AuthenticationRequest of(String username, String password, String mode,
-      @Nullable String nameForGoogle, String aptoideClientUUID) {
+      @Nullable String nameForGoogle, String aptoideClientUUID,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
 
     final BaseBody body = new BaseBody();
 
@@ -67,10 +69,11 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
       body.put("oem_id", Application.getConfiguration().getExtraId());
     }
 
-    return new OAuth2AuthenticationRequest(body);
+    return new OAuth2AuthenticationRequest(body, bodyInterceptor);
   }
 
-  public static OAuth2AuthenticationRequest of(String refreshToken, String aptoideClientUUID) {
+  public static OAuth2AuthenticationRequest of(String refreshToken, String aptoideClientUUID,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
 
     final BaseBody body = new BaseBody();
 
@@ -84,7 +87,7 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
     }
     body.put("refresh_token", refreshToken);
 
-    return new OAuth2AuthenticationRequest(body);
+    return new OAuth2AuthenticationRequest(body, bodyInterceptor);
   }
 
   @Override

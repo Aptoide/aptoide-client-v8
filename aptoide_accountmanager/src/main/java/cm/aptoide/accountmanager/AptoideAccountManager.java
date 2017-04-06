@@ -6,8 +6,8 @@
 package cm.aptoide.accountmanager;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.net.SocketTimeoutException;
 import rx.Completable;
@@ -141,7 +141,7 @@ public class AptoideAccountManager {
    */
   @Deprecated public boolean isAccountMature() {
     final Account account = getAccount();
-    return account == null ? false : account.isAdultContentEnabled();
+    return account != null && account.isAdultContentEnabled();
   }
 
   /**
@@ -151,7 +151,7 @@ public class AptoideAccountManager {
    */
   @Deprecated public boolean isAccountAccessConfirmed() {
     final Account account = getAccount();
-    return account == null ? false : account.isAccessConfirmed();
+    return account != null && account.isAccessConfirmed();
   }
 
   /**
@@ -304,7 +304,8 @@ public class AptoideAccountManager {
           }
 
           if (accountService == null) {
-            this.accountService = new AccountService(aptoideClientUUID);
+            this.accountService =
+                new AccountService(aptoideClientUUID, baseBodyInterceptorFactory.createV3());
           }
 
           this.accountFactory =

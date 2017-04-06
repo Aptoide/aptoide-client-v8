@@ -21,19 +21,20 @@ public class PostCommentForStore extends V7<SetComment, PostCommentForStore.Body
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
 
-  private PostCommentForStore(Body body, BodyInterceptor bodyInterceptor) {
+  private PostCommentForStore(Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  public static PostCommentForStore of(long storeId, String text, BodyInterceptor bodyInterceptor) {
+  public static PostCommentForStore of(long storeId, String text,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     Body body = new Body(storeId, text);
     return new PostCommentForStore(body, bodyInterceptor);
   }
 
   public static PostCommentForStore of(long storeId, long previousCommentId, String text,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     Body body = new Body(storeId, text, previousCommentId);
     return new PostCommentForStore(body, bodyInterceptor);
   }

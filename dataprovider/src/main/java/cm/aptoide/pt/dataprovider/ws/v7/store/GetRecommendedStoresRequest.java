@@ -21,14 +21,15 @@ public class GetRecommendedStoresRequest
   private final String url;
 
   public GetRecommendedStoresRequest(String url, EndlessBody body,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
     this.url = url;
   }
 
-  public static GetRecommendedStoresRequest ofAction(String url, BodyInterceptor bodyInterceptor) {
+  public static GetRecommendedStoresRequest ofAction(String url,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     return new GetRecommendedStoresRequest(url, new EndlessBody(), bodyInterceptor);
   }
 

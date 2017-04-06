@@ -21,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -40,6 +39,7 @@ import cm.aptoide.pt.v8engine.StoreBodyInterceptor;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.MainActivity;
 import cm.aptoide.pt.v8engine.view.account.AccountPermissionsBaseActivity;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -115,7 +115,8 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
 
   private int CREATE_STORE_REQUEST_CODE = 0; //1: all (Multipart)  2: user and theme 3:user 4/5:edit
   private AptoideAccountManager accountManager;
-  private BodyInterceptor<BaseBody> bodyInterceptor;
+  private BodyInterceptor<BaseBody> bodyInterceptorV7;
+  private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3;
   private RequestBodyFactory requestBodyFactory;
   private ObjectMapper serializer;
   private AptoideClientUUID aptoideClientUUID;
@@ -125,7 +126,8 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
     accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
-    bodyInterceptor = ((V8Engine) getApplicationContext()).getBaseBodyInterceptor();
+    bodyInterceptorV7 = ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV7();
+    bodyInterceptorV3 = ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV3();
     aptoideClientUUID = ((V8Engine) getApplicationContext()).getAptoideClientUUID();
     requestBodyFactory = new RequestBodyFactory();
     serializer = new ObjectMapper();
@@ -282,7 +284,8 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
               || CREATE_STORE_REQUEST_CODE == 3) {
             progressDialog.show();
             mSubscriptions.add(
-                CheckUserCredentialsRequest.of(storeName, accountManager.getAccessToken())
+                CheckUserCredentialsRequest.of(storeName, accountManager.getAccessToken(),
+                    bodyInterceptorV3)
                     .observe()
                     .subscribe(answer -> {
                       if (answer.hasErrors()) {
@@ -368,7 +371,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
               setStoreData();
               progressDialog.show();
               mSubscriptions.add(
-                  SimpleSetStoreRequest.of(storeId, storeTheme, storeDescription, bodyInterceptor)
+                  SimpleSetStoreRequest.of(storeId, storeTheme, storeDescription, bodyInterceptorV7)
                       .observe()
                       .subscribe(answer -> {
                         accountManager.syncCurrentAccount().subscribe(() -> {
@@ -640,7 +643,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
        * not multipart
        */
       setStoreData();
-      SimpleSetStoreRequest.of(storeName, storeTheme, bodyInterceptor).execute(answer -> {
+      SimpleSetStoreRequest.of(storeName, storeTheme, bodyInterceptorV7).execute(answer -> {
         accountManager.syncCurrentAccount().subscribe(() -> {
           progressDialog.dismiss();
           goToMainActivity();
@@ -675,7 +678,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     }
   }
 
-  @NonNull private StoreBodyInterceptor createStoreInterceptor() {
+  @NonNull private StoreBodyInterceptor<BaseBody> createStoreInterceptor() {
     return new StoreBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager,
         requestBodyFactory, storeTheme, storeDescription, serializer);
   }
