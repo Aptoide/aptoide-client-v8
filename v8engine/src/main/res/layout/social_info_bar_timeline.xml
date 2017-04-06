@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="55dp"
+    android:background="?attr/backgroundCardColor"
+    android:clipChildren="false"
+    >
+
+  <RelativeLayout
+      android:id="@+id/displayable_social_timeline_likes_preview_container"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_marginLeft="16dp"
+      android:layout_marginStart="16dp"
+      android:gravity="center"
+      android:orientation="horizontal"
+      android:padding="4dp"
+      />
+
+  <FrameLayout
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_toEndOf="@id/displayable_social_timeline_likes_preview_container"
+      android:layout_toRightOf="@id/displayable_social_timeline_likes_preview_container"
+      >
+    <TextView
+        android:id="@+id/social_number_of_likes"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:textColor="@color/grey"
+        tools:text="5 likes"
+        />
+    <TextView
+        android:id="@+id/social_one_like"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:text="@string/x_liked_it"
+        android:textColor="@color/grey"
+        tools:text="nzxt liked it"
+        />
+  </FrameLayout>
+
+  <TextView
+      android:id="@+id/social_number_of_comments"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_centerInParent="true"
+      android:layout_marginEnd="16dp"
+      android:layout_marginRight="16dp"
+      android:textColor="@color/grey"
+      tools:text="7 comments"
+      />
+</RelativeLayout>

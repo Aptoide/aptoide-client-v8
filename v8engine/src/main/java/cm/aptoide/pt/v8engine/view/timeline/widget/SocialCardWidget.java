@@ -42,6 +42,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
   private TextView comments;
   private LinearLayout like;
   private LikeButtonView likeButton;
+  private TextView numberLikesOneLike;
   private TextView numberLikes;
   private TextView numberComments;
   private TextView sharedBy;
@@ -63,6 +64,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     like = (LinearLayout) itemView.findViewById(R.id.social_like);
     likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
     numberLikes = (TextView) itemView.findViewById(R.id.social_number_of_likes);
+    numberLikesOneLike = (TextView) itemView.findViewById(R.id.social_one_like);
     numberComments = (TextView) itemView.findViewById(R.id.social_number_of_comments);
     sharedBy = (TextView) itemView.findViewById(R.id.social_shared_by);
     likePreviewContainer = (RelativeLayout) itemView.findViewById(
@@ -145,16 +147,29 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
       Logger.w(TAG, "like button is null in this view");
     }
 
-    if (displayable.getNumberOfLikes() > 0) {
-      numberLikes.setVisibility(View.VISIBLE);
-      numberLikes.setText(String.valueOf(displayable.getNumberOfLikes()));
+    final long numberOfLikes = displayable.getNumberOfLikes();
+    if (numberOfLikes > 0) {
+      if (numberOfLikes > 1) {
+        numberLikes.setVisibility(View.VISIBLE);
+        numberLikes.setText(String.format("%s %s", String.valueOf(numberOfLikes),
+            getContext().getString(R.string.likes).toLowerCase()));
+        numberLikesOneLike.setVisibility(View.INVISIBLE);
+      } else if (displayable.getUserLikes().get(0) != null) {
+        numberLikes.setVisibility(View.INVISIBLE);
+        numberLikesOneLike.setVisibility(View.VISIBLE);
+        numberLikesOneLike.setText(getContext().getString(R.string.x_liked_it,
+            displayable.getUserLikes().get(0).getName()));
+      }
     } else {
       numberLikes.setVisibility(View.INVISIBLE);
+      numberLikesOneLike.setVisibility(View.INVISIBLE);
     }
 
     if (displayable.getNumberOfComments() > 0) {
       numberComments.setVisibility(View.VISIBLE);
-      numberComments.setText(String.valueOf(displayable.getNumberOfComments()));
+      numberComments.setText(
+          String.format("%s %s", String.valueOf(displayable.getNumberOfComments()),
+              getContext().getString(R.string.comments).toLowerCase()));
     } else {
       numberComments.setVisibility(View.INVISIBLE);
     }
