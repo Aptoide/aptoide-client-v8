@@ -105,19 +105,18 @@ public class ConnectionManager {
               Log.d("ConnectionManager: ", "Tried parsing an invalid group name SSID.");
             }
           }
-
         }
         if (noHotspotsFoundCounter >= 2 && clients.size() < 1 && !showedNoHotspotMessage) {
           showedNoHotspotMessage = true;
           inactivityListener.onInactivity(true);
         }
 
-        clients = groupValidator.removeGhosts(clients);
+        clients = groupValidator.flagGhosts(clients);
 
         for (int j = 0; j < clients.size(); j++) {
           Group tmp = clients.get(j);
           System.out.println("this is one of the keyword : " + tmp);
-          if (!scanResultsSSID.contains(tmp)) {
+          if (!tmp.isGhost() && !scanResultsSSID.contains(tmp)) {
             clients.remove(tmp);
             changes = true;
             System.out.println("removed this : " + tmp);
@@ -131,7 +130,8 @@ public class ConnectionManager {
         }
       }
       if (changes) {
-        clientsConnectedListener.onNewClientsConnected(clients);
+        ArrayList<Group> clearedList = groupValidator.removeGhosts(clients);
+        clientsConnectedListener.onNewClientsConnected(clearedList);
       }
       if (noHotspotsFoundCounter <= 2
           && !showedNoHotspotMessage) {//to warn that there are no networks and they should create one.
@@ -260,8 +260,7 @@ public class ConnectionManager {
       instance = new ConnectionManager(context, defaultSharedPreferences,
           (WifiManager) context.getSystemService(Context.WIFI_SERVICE), hotspotSSIDCodeMapper,
           new HotspotControlCounter(defaultSharedPreferences, hotspotSSIDCodeMapper),
-          new GroupParser(),
-          new GroupValidator());
+          new GroupParser(), new GroupValidator());
     }
     return instance;
   }
