@@ -17,5 +17,5 @@ public interface MainView extends View {
 
   void showHome();
 
-  void showDeepLink();
+  boolean showDeepLink();
 }

@@ -95,11 +95,11 @@ public class MainActivity extends TabNavigatorActivity implements MainView, Frag
     getNavigationManager().navigateToWithoutBackSave(home);
   }
 
-  @Override public void showDeepLink() {
-    handleDeepLinks();
+  @Override public boolean showDeepLink() {
+    return handleDeepLinks();
   }
 
-  private void handleDeepLinks() {
+  private boolean handleDeepLinks() {
     final Intent intent = getIntent();
     if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT)) {
 
@@ -134,7 +134,10 @@ public class MainActivity extends TabNavigatorActivity implements MainView, Frag
           intent.getParcelableExtra(DeepLinkIntentReceiver.DeepLinksKeys.URI));
     } else {
       Analytics.ApplicationLaunch.launcher();
+      return false;
     }
+
+    return true;
   }
 
   private void appViewDeepLink(String md5) {

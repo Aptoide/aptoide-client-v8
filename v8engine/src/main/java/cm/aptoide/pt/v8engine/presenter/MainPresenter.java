@@ -49,12 +49,15 @@ public class MainPresenter implements Presenter {
             // only call auto update when the app was not on the background
             autoUpdate.execute();
           }
-          if (SecurePreferences.isWizardAvailable()) {
-            view.changeOrientationToPortrait();
-            view.showWizard();
+          if (view.showDeepLink()) {
             SecurePreferences.setWizardAvailable(false);
+          } else {
+            if (SecurePreferences.isWizardAvailable()) {
+              view.changeOrientationToPortrait();
+              view.showWizard();
+              SecurePreferences.setWizardAvailable(false);
+            }
           }
-          view.showDeepLink();
         }, throwable -> CrashReport.getInstance().log(throwable));
   }
 
