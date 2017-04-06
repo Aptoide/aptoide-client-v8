@@ -62,7 +62,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     ApplicationSender.reset();
     DataHolder.reset();
 
-    deviceName = getIntent().getStringExtra("deviceName");
+    deviceName = Utils.getDeviceName();
     connectionManager = ConnectionManager.getInstance(this.getApplicationContext());
     analytics = ShareApps.getAnalytics();
     groupManager = new GroupManager(connectionManager);
@@ -330,6 +330,12 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     d.show();
   }
 
+  @Override public void showMobileDataToast() {
+    Toast.makeText(HighwayActivity.this,
+        HighwayActivity.this.getResources().getString(R.string.mDataJoinGroup), Toast.LENGTH_SHORT)
+        .show();
+  }
+
   @Override public boolean checkPermissions() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       if (!checkNormalPermissions()) {
@@ -345,12 +351,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
       }
     }
     return true;
-  }
-
-  @Override public void showMobileDataToast() {
-    Toast.makeText(HighwayActivity.this,
-        HighwayActivity.this.getResources().getString(R.string.mDataJoinGroup), Toast.LENGTH_SHORT)
-        .show();
   }
 
   @Override public void showJoinGroupResult(int result) {
@@ -522,6 +522,15 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     super.onResume();
   }
 
+  @Override protected void onDestroy() {
+    presenter.onDestroy();
+    super.onDestroy();
+  }
+
+  public boolean isJoinGroupFlag() {
+    return joinGroupFlag;
+  }
+
   @Override public void requestPermissions() {
     if (!checkPermissions() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       final List<String> missingPermissions = new ArrayList<>();
@@ -564,24 +573,15 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
-  @Override protected void onDestroy() {
-    presenter.onDestroy();
-    super.onDestroy();
+  public void setJoinGroupFlag(boolean joinGroupFlag) {
+    this.joinGroupFlag = joinGroupFlag;
   }
 
   @Override public void registerListener(PermissionListener listener) {
     this.permissionListener = listener;
   }
 
-  public boolean isJoinGroupFlag() {
-    return joinGroupFlag;
-  }
-
   @Override public void removeListener() {
     this.permissionListener = null;
-  }
-
-  public void setJoinGroupFlag(boolean joinGroupFlag) {
-    this.joinGroupFlag = joinGroupFlag;
   }
 }

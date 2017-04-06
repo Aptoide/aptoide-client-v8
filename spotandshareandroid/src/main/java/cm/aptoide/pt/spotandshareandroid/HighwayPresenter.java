@@ -47,7 +47,6 @@ public class HighwayPresenter implements Presenter {
 
   @Override public void onCreate() {
 
-    deviceName = Utils.getDeviceName();
     mobileDataDialog = false;
     outsideShare = false;
     joinGroupFlag = false;
