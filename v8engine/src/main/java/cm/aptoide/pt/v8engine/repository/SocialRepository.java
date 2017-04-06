@@ -36,7 +36,9 @@ public class SocialRepository {
         .toSingle()
         .flatMapCompletable(response -> {
           if (response.isOk()) {
-            shareCardCallback.onCardShared(response.getData().getCardUid());
+            if (shareCardCallback != null) {
+              shareCardCallback.onCardShared(response.getData().getCardUid());
+            }
             return accountManager.updateAccount(getAccountAccess(privacy));
           }
           return Completable.error(
@@ -53,7 +55,9 @@ public class SocialRepository {
         .toSingle()
         .flatMapCompletable(response -> {
           if (response.isOk()) {
-            shareCardCallback.onCardShared(response.getData().getCardUid());
+            if (shareCardCallback != null) {
+              shareCardCallback.onCardShared(response.getData().getCardUid());
+            }
             return Completable.complete();
           }
           return Completable.error(
@@ -102,8 +106,8 @@ public class SocialRepository {
         }, throwable -> throwable.printStackTrace());
   }
 
-  private AptoideAccount.Access getAccountAccess(boolean privacy) {
-    return privacy ? Account.Access.UNLISTED : Account.Access.PUBLIC;
+  private AptoideAccount.Access getAccountAccess(boolean privateAccess) {
+    return privateAccess ? Account.Access.PRIVATE : Account.Access.PUBLIC;
   }
 }
 

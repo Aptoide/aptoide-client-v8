@@ -120,7 +120,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     this.account = account;
   }
 
-  void shareCard(T displayable, ShareCardCallback callback,
+  private void shareCard(T displayable, ShareCardCallback callback,
       SharePreviewDialog.SharePreviewOpenMode openMode) {
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
@@ -141,25 +141,6 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     SharePreviewDialog sharePreviewDialog =
         new SharePreviewDialog(displayable, accountManager, true, openMode);
     AlertDialog.Builder alertDialog = sharePreviewDialog.getPreviewDialogBuilder(getContext());
-
-    //final AlertDialog.Builder alertDialogBuilder =
-    //    sharePreviewDialog.getPreviewDialogBuilder(getContext());
-    //
-    //if (!account.isAccessConfirmed()) {
-    //  alertDialogBuilder.setPositiveButton(R.string.share, (dialogInterface, i) -> {
-    //    displayable.share(getContext(), sharePreviewDialog.getPrivacyResult());
-    //    ShowMessage.asSnack(getContext(), R.string.social_timeline_share_dialog_title);
-    //  }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
-    //    // does nothing
-    //  });
-    //} else {
-    //  alertDialogBuilder.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
-    //    displayable.share(getContext(), sharePreviewDialog.getPrivacyResult());
-    //    ShowMessage.asSnack(getContext(), R.string.social_timeline_share_dialog_title);
-    //  }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
-    //    // does nothing
-    //  });
-    //}
 
     Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
       if (!accountManager.isAccountAccessConfirmed()) {

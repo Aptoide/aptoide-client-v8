@@ -172,7 +172,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
-      refreshSubject.call(!create);
+    refreshSubject.call(!create);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
