@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.presenter;
 
-import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.view.account.GoogleAccountViewModel;
 import rx.Observable;
 

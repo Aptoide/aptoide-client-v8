@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 
 /**
  * Created by neuro on 14-04-2016.

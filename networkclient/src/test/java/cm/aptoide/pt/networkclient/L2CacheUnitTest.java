@@ -1,8 +1,8 @@
 package cm.aptoide.pt.networkclient;
 
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
 import cm.aptoide.pt.networkclient.okhttp.cache.Sha1KeyAlgorithm;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import okhttp3.MediaType;
@@ -23,11 +23,10 @@ import static org.junit.Assert.fail;
 
 public class L2CacheUnitTest {
 
+  @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
   private L2Cache cache;
   private Request request;
   private Response response;
-
-  @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
   @Before public void init() throws IOException {
     cache = new L2Cache(new Sha1KeyAlgorithm(), temporaryFolder.newFile());

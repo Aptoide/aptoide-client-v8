@@ -88,8 +88,8 @@ public final class RepositoryFactory {
     if (product instanceof InAppBillingProduct) {
       return new InAppBillingProductRepository(new InAppBillingRepository(operatorManager,
           AccessorFactory.getAccessorFor(PaymentConfirmation.class), getAccountManager(context),
-          getBaseBodyInterceptorV3(context)),
-          purchaseFactory, paymentFactory, (InAppBillingProduct) product);
+          getBaseBodyInterceptorV3(context)), purchaseFactory, paymentFactory,
+          (InAppBillingProduct) product);
     } else {
       return new PaidAppProductRepository(getAppRepository(context), purchaseFactory,
           paymentFactory, (PaidAppProduct) product);

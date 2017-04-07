@@ -5,8 +5,6 @@
 
 package cm.aptoide.pt.v8engine.presenter;
 
-import cm.aptoide.pt.v8engine.presenter.View;
-
 /**
  * Created by marcelobenites on 18/01/17.
  */

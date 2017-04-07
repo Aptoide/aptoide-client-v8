@@ -285,52 +285,48 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
             progressDialog.show();
             mSubscriptions.add(
                 CheckUserCredentialsRequest.of(storeName, accountManager.getAccessToken(),
-                    bodyInterceptorV3)
-                    .observe()
-                    .subscribe(answer -> {
-                      if (answer.hasErrors()) {
-                        if (answer.getErrors() != null && answer.getErrors().size() > 0) {
-                          progressDialog.dismiss();
-                          if (answer.getErrors().get(0).code.equals("WOP-2")) {
-                            mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
-                                getApplicationContext().getResources()
-                                    .getString(R.string.ws_error_WOP_2))
-                                .subscribe(__ -> {/*does nothing*/}, err -> {
-                                  CrashReport.getInstance().log(err);
-                                }));
-                          } else if (answer.getErrors().get(0).code.equals("WOP-3")) {
-                            ShowMessage.asSnack(this, ErrorsMapper.getWebServiceErrorMessageFromCode(
-                                answer.getErrors().get(0).code));
-                          } else {
-                            ShowMessage.asObservableSnack(this,
-                                ErrorsMapper.getWebServiceErrorMessageFromCode(
-                                    answer.getErrors().get(0).code)).subscribe(visibility -> {
-                              if (visibility == ShowMessage.DISMISSED) {
-                                goToMainActivity();
-                              }
-                            });
-                          }
-                        }
-                      } else if (!(CREATE_STORE_REQUEST_CODE == 3)) {
-                        onCreateSuccess(progressDialog);
-                      } else {
-                        progressDialog.dismiss();
-                        ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created)
-                            .subscribe(visibility -> {
-                              mSubscriptions.add(accountManager.syncCurrentAccount().subscribe(() -> {
-                              }, err -> err.printStackTrace()));
-                              if (visibility == ShowMessage.DISMISSED) {
-                                Analytics.Account.createStore(!TextUtils.isEmpty(storeAvatarPath),
-                                    Analytics.Account.CreateStoreAction.CREATE);
-                                goToMainActivity();
-                              }
-                            });
-                      }
-                    }, throwable -> {
-                      onCreateFail(
-                          ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+                    bodyInterceptorV3).observe().subscribe(answer -> {
+                  if (answer.hasErrors()) {
+                    if (answer.getErrors() != null && answer.getErrors().size() > 0) {
                       progressDialog.dismiss();
-                    }));
+                      if (answer.getErrors().get(0).code.equals("WOP-2")) {
+                        mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
+                            getApplicationContext().getResources().getString(R.string.ws_error_WOP_2))
+                            .subscribe(__ -> {/*does nothing*/}, err -> {
+                              CrashReport.getInstance().log(err);
+                            }));
+                      } else if (answer.getErrors().get(0).code.equals("WOP-3")) {
+                        ShowMessage.asSnack(this, ErrorsMapper.getWebServiceErrorMessageFromCode(
+                            answer.getErrors().get(0).code));
+                      } else {
+                        ShowMessage.asObservableSnack(this,
+                            ErrorsMapper.getWebServiceErrorMessageFromCode(
+                                answer.getErrors().get(0).code)).subscribe(visibility -> {
+                          if (visibility == ShowMessage.DISMISSED) {
+                            goToMainActivity();
+                          }
+                        });
+                      }
+                    }
+                  } else if (!(CREATE_STORE_REQUEST_CODE == 3)) {
+                    onCreateSuccess(progressDialog);
+                  } else {
+                    progressDialog.dismiss();
+                    ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created)
+                        .subscribe(visibility -> {
+                          mSubscriptions.add(accountManager.syncCurrentAccount().subscribe(() -> {
+                          }, err -> err.printStackTrace()));
+                          if (visibility == ShowMessage.DISMISSED) {
+                            Analytics.Account.createStore(!TextUtils.isEmpty(storeAvatarPath),
+                                Analytics.Account.CreateStoreAction.CREATE);
+                            goToMainActivity();
+                          }
+                        });
+                  }
+                }, throwable -> {
+                  onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+                  progressDialog.dismiss();
+                }));
           } else {
             if (CREATE_STORE_REQUEST_CODE == 4) {
               setStoreData();

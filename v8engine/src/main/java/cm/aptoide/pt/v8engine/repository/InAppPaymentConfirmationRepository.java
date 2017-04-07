@@ -39,17 +39,12 @@ public class InAppPaymentConfirmationRepository extends PaymentConfirmationRepos
   @Override public Completable createPaymentConfirmation(int paymentId, Product product) {
     return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId, operatorManager,
         ((InAppBillingProduct) product).getDeveloperPayload(), accountManager.getAccessToken(),
-        bodyInterceptorV3)
-        .observe()
-        .flatMap(response -> {
-          if (response != null && response.isOk()) {
-            return Observable.just(null);
-          }
-          return Observable.error(
-              new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-        })
-        .toCompletable()
-        .andThen(syncPaymentConfirmation(product));
+        bodyInterceptorV3).observe().flatMap(response -> {
+      if (response != null && response.isOk()) {
+        return Observable.just(null);
+      }
+      return Observable.error(new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+    }).toCompletable().andThen(syncPaymentConfirmation(product));
   }
 
   @Override

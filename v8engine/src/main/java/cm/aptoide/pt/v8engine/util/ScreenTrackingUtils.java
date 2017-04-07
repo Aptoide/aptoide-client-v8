@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.util;
 
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import java.util.ArrayList;
 
 /**

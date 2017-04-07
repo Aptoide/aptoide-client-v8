@@ -13,12 +13,12 @@ import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.presenter.DownloadsPresenter;
-import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.presenter.DownloadsView;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.custom.DividerItemDecoration;
+import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import java.util.List;
 
 public class DownloadsFragmentMvp extends FragmentView implements DownloadsView {

@@ -57,18 +57,19 @@ public class AccountManagerService {
         .observe()
         .toSingle()
         .flatMap(oAuth -> {
-      if (!oAuth.hasErrors()) {
-        return Single.just(oAuth);
-      } else {
-        return Single.error(new AccountException(oAuth.getError()));
-      }
-    }).onErrorResumeNext(throwable -> {
-      if (throwable instanceof AptoideWsV3Exception) {
-        return Single.error(
-            new AccountException(((AptoideWsV3Exception) throwable).getBaseResponse().getError()));
-      }
-      return Single.error(throwable);
-    });
+          if (!oAuth.hasErrors()) {
+            return Single.just(oAuth);
+          } else {
+            return Single.error(new AccountException(oAuth.getError()));
+          }
+        })
+        .onErrorResumeNext(throwable -> {
+          if (throwable instanceof AptoideWsV3Exception) {
+            return Single.error(new AccountException(
+                ((AptoideWsV3Exception) throwable).getBaseResponse().getError()));
+          }
+          return Single.error(throwable);
+        });
   }
 
   public Completable updateAccount(String email, String nickname, String password,
@@ -131,8 +132,7 @@ public class AccountManagerService {
 
   private Store mapToStore(cm.aptoide.pt.model.v7.store.Store store) {
     return new Store(store.getStats().getDownloads(), store.getAvatar(), store.getId(),
-        store.getName(), store.getAppearance().getTheme(), null,
-        null);
+        store.getName(), store.getAppearance().getTheme(), null, null);
   }
 
   public Single<Account> getAccount(String accessToken, String refreshToken,
@@ -148,11 +148,11 @@ public class AccountManagerService {
         .observe()
         .toSingle()
         .flatMap(response -> {
-      if (response.getStatus().equals("OK")) {
-        return Single.just(response);
-      }
-      return Single.error(new IllegalStateException("Failed to get user account"));
-    });
+          if (response.getStatus().equals("OK")) {
+            return Single.just(response);
+          }
+          return Single.error(new IllegalStateException("Failed to get user account"));
+        });
   }
 
   private Account mapServerAccountToAccount(CheckUserCredentialsJson serverUser,
@@ -168,15 +168,12 @@ public class AccountManagerService {
 
   public Completable updateAccount(boolean adultContentEnabled, String accessToken) {
     return ChangeUserSettingsRequest.of(adultContentEnabled, accessToken,
-        interceptorFactory.createV3())
-        .observe(true)
-        .toSingle()
-        .flatMapCompletable(response -> {
-          if (response.getStatus().equals("OK")) {
-            return Completable.complete();
-          } else {
-            return Completable.error(new Exception(V3.getErrorMessage(response)));
-          }
-        });
+        interceptorFactory.createV3()).observe(true).toSingle().flatMapCompletable(response -> {
+      if (response.getStatus().equals("OK")) {
+        return Completable.complete();
+      } else {
+        return Completable.error(new Exception(V3.getErrorMessage(response)));
+      }
+    });
   }
 }

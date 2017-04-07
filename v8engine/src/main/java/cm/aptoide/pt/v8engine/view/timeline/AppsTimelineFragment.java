@@ -72,16 +72,14 @@ import rx.android.schedulers.AndroidSchedulers;
 public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwipeFragment<T> {
 
   public static final int SEARCH_LIMIT = 20;
-
+  public static final int LATEST_INSTALLED_PACKAGES = 20;
+  public static final int RANDOM_INSTALLED_PACKAGES = 10;
   private static final String USER_ID_KEY = "USER_ID_KEY";
   private static final String ACTION_KEY = "ACTION";
   private static final String STORE_ID = "STORE_ID";
   private static final String PACKAGE_LIST_KEY = "PACKAGE_LIST";
   private static final String STORE_CONTEXT = "STORE_CONTEXT";
   private static final String LIST_STATE_KEY = "LIST_STATE";
-  public static final int LATEST_INSTALLED_PACKAGES = 20;
-  public static final int RANDOM_INSTALLED_PACKAGES = 10;
-
   private DownloadFactory downloadFactory;
   private SpannableFactory spannableFactory;
   private LinksHandlerFactory linksHandlerFactory;
@@ -247,7 +245,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   }
 
   @NonNull private Observable<List<String>> refreshPackages() {
-    return Observable.concat(packageRepository.getLatestInstalledPackages(LATEST_INSTALLED_PACKAGES),
+    return Observable.concat(
+        packageRepository.getLatestInstalledPackages(LATEST_INSTALLED_PACKAGES),
         packageRepository.getRandomInstalledPackages(RANDOM_INSTALLED_PACKAGES))
         .toList()
         .doOnNext(packages -> setPackages(packages));

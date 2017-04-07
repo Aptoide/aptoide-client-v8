@@ -8,9 +8,9 @@ package cm.aptoide.pt.v8engine.view.fragment;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.ReloadInterface;
+import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.swipe.LoaderLayoutHandler;
 import cm.aptoide.pt.v8engine.view.swipe.SwipeLoaderLayoutHandler;
-import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 
 /**
  * Created by neuro on 05-05-2016.

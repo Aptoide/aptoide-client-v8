@@ -7,7 +7,6 @@ import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.app.GridAppDisplayable;
 import cm.aptoide.pt.v8engine.view.store.GetStoreEndlessFragment;
 import cm.aptoide.pt.v8engine.view.store.featured.AppBrickListDisplayable;
 import java.util.LinkedList;

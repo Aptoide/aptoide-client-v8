@@ -1741,8 +1741,7 @@ public class AptoideUtils {
       DisplayMetrics displayMetrics = new DisplayMetrics();
       String myscr = displayMetrics.widthPixels + "x" + displayMetrics.heightPixels;
 
-      StringBuilder sb =
-          new StringBuilder(vername + ";" + terminalInfo + ";" + myscr + ";id:");
+      StringBuilder sb = new StringBuilder(vername + ";" + terminalInfo + ";" + myscr + ";id:");
 
       if (aptoideClientUUID != null) {
         sb.append(aptoideClientUUID.getUniqueIdentifier());

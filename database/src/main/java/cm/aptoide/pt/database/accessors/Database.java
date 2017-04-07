@@ -1,9 +1,9 @@
 package cm.aptoide.pt.database.accessors;
 
 import android.content.Context;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.database.BuildConfig;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;

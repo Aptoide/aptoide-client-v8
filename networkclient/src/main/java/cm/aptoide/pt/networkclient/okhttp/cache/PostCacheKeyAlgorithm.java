@@ -1,7 +1,7 @@
 package cm.aptoide.pt.networkclient.okhttp.cache;
 
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import java.io.IOException;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;

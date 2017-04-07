@@ -2,11 +2,11 @@ package cm.aptoide.pt.v8engine.view.addressbook;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.v8engine.presenter.AddressBookNavigation;
-import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
+import cm.aptoide.pt.v8engine.presenter.AddressBookNavigation;
 import cm.aptoide.pt.v8engine.presenter.InviteFriendsContract;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import java.util.List;
 
 /**

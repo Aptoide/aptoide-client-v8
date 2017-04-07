@@ -21,8 +21,7 @@ public class GetFollowingRequest extends V7<GetFollowers, GetFollowersRequest.Bo
   }
 
   public static GetFollowingRequest of(BodyInterceptor<BaseBody> bodyInterceptor,
-      @Nullable Long userId,
-      @Nullable Long storeId) {
+      @Nullable Long userId, @Nullable Long storeId) {
     GetFollowersRequest.Body body = new GetFollowersRequest.Body();
     body.setUserId(userId);
     body.setStoreId(storeId);

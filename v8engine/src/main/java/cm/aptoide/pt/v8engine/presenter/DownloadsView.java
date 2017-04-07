@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.presenter;
 
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.v8engine.presenter.View;
 import java.util.List;
 
 public interface DownloadsView extends View {

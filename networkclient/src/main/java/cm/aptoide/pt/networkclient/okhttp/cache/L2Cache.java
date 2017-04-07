@@ -1,7 +1,7 @@
 package cm.aptoide.pt.networkclient.okhttp.cache;
 
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;

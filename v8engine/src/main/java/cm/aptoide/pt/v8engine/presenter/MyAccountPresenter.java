@@ -2,8 +2,8 @@ package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import rx.Observable;
 
 public class MyAccountPresenter implements Presenter {
