@@ -77,7 +77,6 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
     similarApps.setText(context.getString(R.string.related_to).toLowerCase());
     relatedToApp.setText(displayable.getSimilarAppName());
     getApp.setVisibility(View.VISIBLE);
-    //getApp.setText(displayable.getAppText(context));
 
     compositeSubscription.add(RxView.clicks(getApp).subscribe(a -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
