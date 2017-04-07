@@ -65,7 +65,7 @@ public class DefaultInstaller implements Installer {
         .onErrorReturn(throwable -> false);
   }
 
-  @Override public Observable<Void> install(Context context, String md5) {
+  @Override public Observable<InstallationType> install(Context context, String md5) {
     Analytics.RootInstall.installationType(ManagerPreferences.allowRootInstallation(),
         RootShell.isRootAvailable());
     return installationProvider.getInstallation(md5)
@@ -86,11 +86,11 @@ public class DefaultInstaller implements Installer {
         });
   }
 
-  @Override public Observable<Void> update(Context context, String md5) {
+  @Override public Observable<DefaultInstaller.InstallationType> update(Context context, String md5) {
     return install(context, md5);
   }
 
-  @Override public Observable<Void> downgrade(Context context, String md5) {
+  @Override public Observable<DefaultInstaller.InstallationType> downgrade(Context context, String md5) {
     return installationProvider.getInstallation(md5)
         .first()
         .flatMap(installation -> uninstall(context, installation.getPackageName(),
@@ -110,10 +110,11 @@ public class DefaultInstaller implements Installer {
     }).flatMap(uninstallStarted -> waitPackageIntent(context, intentFilter, packageName));
   }
 
-  private Observable<Void> rootInstall(Installation installation) {
+  private Observable<InstallationType> rootInstall(Installation installation) {
     if (ManagerPreferences.allowRootInstallation()) {
       return Observable.create(new RootCommandOnSubscribe(installation.getId().hashCode(),
-          ROOT_INSTALL_COMMAND + installation.getFile().getAbsolutePath()));
+          ROOT_INSTALL_COMMAND + installation.getFile().getAbsolutePath()))
+          .map(installed -> InstallationType.ROOT);
     } else {
       return Observable.error(new InstallationException("User doesn't allow root installation"));
     }
@@ -147,12 +148,13 @@ public class DefaultInstaller implements Installer {
     installation.save();
   }
 
-  private Observable<Void> systemInstall(Context context, File file) {
+  private Observable<InstallationType> systemInstall(Context context, File file) {
     return Observable.create(
-        new SystemInstallOnSubscribe(context, packageManager, Uri.fromFile(file)));
+        new SystemInstallOnSubscribe(context, packageManager, Uri.fromFile(file)))
+        .map(success -> InstallationType.SYSTEM);
   }
 
-  private Observable<Void> defaultInstall(Context context, File file, String packageName) {
+  private Observable<InstallationType> defaultInstall(Context context, File file, String packageName) {
     final IntentFilter intentFilter = new IntentFilter();
     intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
     intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
@@ -160,7 +162,8 @@ public class DefaultInstaller implements Installer {
     return Observable.<Void> fromCallable(() -> {
       startInstallIntent(context, file);
       return null;
-    }).flatMap(installStarted -> waitPackageIntent(context, intentFilter, packageName));
+    }).flatMap(installStarted -> waitPackageIntent(context, intentFilter, packageName))
+        .map(success -> InstallationType.DEFAULT);
   }
 
   private void sendErrorEvent(String packageName, int versionCode, Exception e) {
@@ -213,4 +216,9 @@ public class DefaultInstaller implements Installer {
       return false;
     }
   }
+
+  public enum InstallationType {
+    SYSTEM, ROOT, DEFAULT
+  }
+
 }

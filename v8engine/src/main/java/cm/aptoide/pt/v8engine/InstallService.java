@@ -28,6 +28,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadEvent;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import java.util.HashMap;
 import java.util.Locale;
@@ -197,7 +198,7 @@ public class InstallService extends Service {
     Logger.d(TAG, "Removing schedulled download with appId " + md5);
   }
 
-  private Observable<Void> stopForegroundAndInstall(Context context, Download download,
+  private Observable<DefaultInstaller.InstallationType> stopForegroundAndInstall(Context context, Download download,
       boolean removeNotification) {
     Installer installer = getInstaller(download.getMd5());
     stopForeground(removeNotification);

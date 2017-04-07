@@ -35,14 +35,14 @@ public class RollbackInstaller implements Installer {
     return defaultInstaller.isInstalled(md5);
   }
 
-  @Override public Observable<Void> install(Context context, String md5) {
+  @Override public Observable<DefaultInstaller.InstallationType> install(Context context, String md5) {
     return installationProvider.getInstallation(md5)
         .cast(RollbackInstallation.class)
         .flatMap(installation -> saveRollback(installation, Rollback.Action.INSTALL))
         .flatMap(success -> defaultInstaller.install(context, md5));
   }
 
-  @Override public Observable<Void> update(Context context, String md5) {
+  @Override public Observable<DefaultInstaller.InstallationType> update(Context context, String md5) {
     return installationProvider.getInstallation(md5)
         .cast(RollbackInstallation.class)
         .flatMap(installation -> saveRollback(context, installation.getPackageName(),
@@ -50,7 +50,7 @@ public class RollbackInstaller implements Installer {
         .flatMap(success -> defaultInstaller.update(context, md5));
   }
 
-  @Override public Observable<Void> downgrade(Context context, String md5) {
+  @Override public Observable<DefaultInstaller.InstallationType> downgrade(Context context, String md5) {
     return installationProvider.getInstallation(md5)
         .cast(RollbackInstallation.class)
         .flatMap(installation -> saveRollback(context, installation.getPackageName(),
