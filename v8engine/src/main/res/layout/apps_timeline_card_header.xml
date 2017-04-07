@@ -85,14 +85,12 @@
   </RelativeLayout>
 
   <ImageView
-      android:layout_width="70dp"
-      android:layout_height="70dp"
-      android:layout_alignParentEnd="true"
-      android:layout_alignParentRight="true"
-      android:layout_marginEnd="-3dp"
-      android:layout_marginRight="-3dp"
-      android:layout_marginTop="-2dp"
-      android:src="@drawable/social_icon"
+      android:layout_width="15dp"
+      android:layout_height="15dp"
+      android:layout_alignEnd="@+id/card_custom_view_line_separator"
+      android:layout_alignRight="@+id/card_custom_view_line_separator"
+      android:layout_marginTop="@dimen/appstimeline_card_icon"
+      android:src="@drawable/timeline_share"
       />
 
   <View
