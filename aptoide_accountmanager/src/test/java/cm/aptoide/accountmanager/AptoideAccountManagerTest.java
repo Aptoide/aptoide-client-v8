@@ -54,7 +54,7 @@ public class AptoideAccountManagerTest {
     when(oAuthMock.getAccessToken()).thenReturn("ABCD");
     when(oAuthMock.getRefreshToken()).thenReturn("EFG");
 
-    when(serviceMock.getAccount("ABCD", "EFG", "1234", "APTOIDE")).thenReturn(
+    when(serviceMock.getAccount("ABCD", "EFG", "1234", "APTOIDE", accountManager)).thenReturn(
         Single.just(accountMock));
 
     when(dataPersistMock.saveAccount(accountMock)).thenReturn(Completable.complete());
@@ -89,7 +89,7 @@ public class AptoideAccountManagerTest {
     when(oAuthMock.getAccessToken()).thenReturn("ABCD");
     when(oAuthMock.getRefreshToken()).thenReturn("EFG");
 
-    when(serviceMock.getAccount("ABCD", "EFG", "imagine", "APTOIDE")).thenReturn(
+    when(serviceMock.getAccount("ABCD", "EFG", "imagine", "APTOIDE", accountManager)).thenReturn(
         Single.just(accountMock));
 
     when(dataPersistMock.saveAccount(accountMock)).thenReturn(Completable.complete());
@@ -123,7 +123,7 @@ public class AptoideAccountManagerTest {
     when(oAuthMock.getAccessToken()).thenReturn("ABCD");
     when(oAuthMock.getRefreshToken()).thenReturn("EFG");
 
-    when(serviceMock.getAccount("ABCD", "EFG", "imagine", "APTOIDE")).thenReturn(
+    when(serviceMock.getAccount("ABCD", "EFG", "imagine", "APTOIDE", accountManager)).thenReturn(
         Single.just(accountMock));
 
     when(dataPersistMock.saveAccount(accountMock)).thenReturn(Completable.complete());
