@@ -4,6 +4,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -25,6 +26,7 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
   private TextView getApp;
   private CardView cardView;
   private RelativeLayout cardContent;
+  private RatingBar ratingBar;
 
   public SocialRecommendationWidget(View itemView) {
     super(itemView);
@@ -43,6 +45,7 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
     cardView = (CardView) itemView.findViewById(R.id.card);
     cardContent = (RelativeLayout) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_card_content);
+    ratingBar = (RatingBar) itemView.findViewById(R.id.rating_bar);
   }
 
   @Override public void bindView(SocialRecommendationDisplayable displayable) {
@@ -88,6 +91,8 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
         .load(displayable.getAppIcon(), appIcon);
 
     appName.setText(displayable.getAppName());
+
+    ratingBar.setRating(displayable.getAppRating());
 
     getApp.setVisibility(View.VISIBLE);
     getApp.setText(displayable.getAppText(context));
