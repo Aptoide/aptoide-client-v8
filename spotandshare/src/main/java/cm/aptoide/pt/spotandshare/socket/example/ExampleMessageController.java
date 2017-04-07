@@ -1,13 +1,12 @@
 package cm.aptoide.pt.spotandshare.socket.example;
 
-import java.io.IOException;
-
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientController;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
+import java.io.IOException;
 
 /**
  * Created by neuro on 29-01-2017.
@@ -17,7 +16,7 @@ public class ExampleMessageController extends AptoideMessageClientController {
 
   public ExampleMessageController(AptoideMessageClientSocket aptoideMessageClientSocket) {
     super(aptoideMessageClientSocket, "/tmp/a", bytes -> true, newFileServerLifecycleProvider(),
-        newFileClientLifecycle(), null);
+        null, null);
   }
 
   private static FileLifecycleProvider<AndroidAppInfo> newFileServerLifecycleProvider() {

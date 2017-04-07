@@ -1,17 +1,16 @@
 package cm.aptoide.pt.spotandshare.socket.message.client;
 
-import java.io.IOException;
-import java.net.Socket;
-
 import cm.aptoide.pt.spotandshare.socket.AptoideClientSocket;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.exception.ServerLeftException;
-import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
+import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
+import java.io.IOException;
+import java.net.Socket;
 
 /**
  * Created by neuro on 29-01-2017.
@@ -23,20 +22,20 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
 
   public AptoideMessageClientSocket(String host, int port, String rootDir,
       StorageCapacity storageCapacity, FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider,
-      FileClientLifecycle<AndroidAppInfo> fileClientLifecycle, SocketBinder socketBinder) {
+      SocketBinder socketBinder, OnError<IOException> onError) {
     super(host, port);
     this.aptoideMessageController =
         new AptoideMessageClientController(this, rootDir, storageCapacity, fileLifecycleProvider,
-            fileClientLifecycle, socketBinder);
+            socketBinder, onError);
   }
 
   public AptoideMessageClientSocket(String host, String fallbackHostName, int port, String rootDir,
       StorageCapacity storageCapacity, FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider,
-      FileClientLifecycle<AndroidAppInfo> fileClientLifecycle, SocketBinder socketBinder) {
+      SocketBinder socketBinder, OnError<IOException> onError) {
     super(host, fallbackHostName, port);
     this.aptoideMessageController =
         new AptoideMessageClientController(this, rootDir, storageCapacity, fileLifecycleProvider,
-            fileClientLifecycle, socketBinder);
+            socketBinder, onError);
   }
 
   @Override public void shutdown() {

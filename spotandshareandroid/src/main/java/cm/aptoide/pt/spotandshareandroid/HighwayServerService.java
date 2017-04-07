@@ -12,14 +12,6 @@ import android.os.StatFs;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
@@ -31,6 +23,12 @@ import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
 import cm.aptoide.pt.spotandshare.socket.message.server.AptoideMessageServerSocket;
 import cm.aptoide.pt.utils.AptoideUtils;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HighwayServerService extends Service {
 
@@ -39,8 +37,6 @@ public class HighwayServerService extends Service {
   private final SocketBinder socketBinder = Utils.Socket.newDefaultSocketBinder();
   private NotificationManagerCompat mNotifyManager;
   private FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider;
-  private FileClientLifecycle<AndroidAppInfo> fileClientLifecycle;
-  private FileServerLifecycle<AndroidAppInfo> fileServerLifecycle;
   private List<App> listOfApps;
   private AptoideMessageServerSocket aptoideMessageServerSocket;
   private AptoideMessageClientSocket aptoideMessageClientSocket;
@@ -50,120 +46,115 @@ public class HighwayServerService extends Service {
     if (mNotifyManager == null) {
       mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
     }
-    fileClientLifecycle = new FileClientLifecycle<AndroidAppInfo>() {
 
-      private ProgressFilter progressFilter;
-
-      @Override public void onError(IOException e) {
-        // Não ta facil perceber pk é k isto cai aqui quando só há um cliente, martelo ftw :/
-        if (aptoideMessageServerSocket.getAptoideMessageControllers().size() <= 1) {
-          return;
-        }
-
-        e.printStackTrace();
-
-        Intent i = new Intent();
-        i.setAction("ERRORRECEIVING");
-        sendBroadcast(i);
-      }
-
-      @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
-
-        progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
-
-        createReceiveNotification(androidAppInfo.getAppName());
-
-        Intent i = new Intent();
-        i.putExtra("FinishedReceiving", false);
-        i.putExtra("appName", androidAppInfo.getAppName());
-        i.setAction("RECEIVEAPP");
-        sendBroadcast(i);
-      }
-
-      @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
-
-        finishReceiveNotification(androidAppInfo.getApk().getFilePath(),
-            androidAppInfo.getPackageName(), androidAppInfo);
-
-        Intent i = new Intent();
-        i.putExtra("FinishedReceiving", true);
-        i.putExtra("needReSend", false);
-        i.putExtra("appName", androidAppInfo.getAppName());
-        i.putExtra("packageName", androidAppInfo.getPackageName());
-        i.putExtra("filePath", androidAppInfo.getApk().getFilePath());
-        i.setAction("RECEIVEAPP");
-        sendBroadcast(i);
-      }
-
-      @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
-
-        if (progressFilter.shouldUpdate(progress)) {
-          int actualProgress = Math.round(progress * 100);
-          showReceiveProgress(androidAppInfo.getAppName(), actualProgress, androidAppInfo);
-        }
-      }
-    };
-
-    fileServerLifecycle = new FileServerLifecycle<AndroidAppInfo>() {
-
-      private ProgressFilter progressFilter;
-
-      @Override public void onStartSending(AndroidAppInfo androidAppInfo) {
-
-        progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
-
-        createSendNotification();
-
-        Intent i = new Intent();
-        i.putExtra("isSent", false);
-        i.putExtra("needReSend", false);
-        i.putExtra("appName", androidAppInfo.getAppName());
-        i.putExtra("packageName", androidAppInfo.getPackageName());
-        i.putExtra("positionToReSend", 100000);
-        i.setAction("SENDAPP");
-        sendBroadcast(i);
-      }
-
-      @Override public void onFinishSending(AndroidAppInfo androidAppInfo) {
-        System.out.println("Server : finished sending " + androidAppInfo);
-
-        finishSendNotification(androidAppInfo);
-
-        Intent i = new Intent();
-        i.putExtra("isSent", true);
-        i.putExtra("needReSend", false);
-        i.putExtra("appName", androidAppInfo.getAppName());
-        i.putExtra("packageName", androidAppInfo.getPackageName());
-        i.putExtra("positionToReSend", 100000);
-        i.setAction("SENDAPP");
-        sendBroadcast(i);
-      }
-
-      @Override public void onError(IOException e) {
-        System.out.println("Fell on error Server !! ");
-        e.printStackTrace();
-        Intent i = new Intent();
-        i.setAction("ERRORSENDING");
-        sendBroadcast(i);
-      }
-
-      @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
-        if (progressFilter.shouldUpdate(progress)) {
-          int actualProgress = Math.round(progress * 100);
-          showSendProgress(androidAppInfo.getAppName(), actualProgress, androidAppInfo);
-        }
-      }
-    };
-  
     fileLifecycleProvider = new FileLifecycleProvider<AndroidAppInfo>() {
-      @Override
-      public FileServerLifecycle<AndroidAppInfo> newFileServerLifecycle() {
-        return fileServerLifecycle;
+      @Override public FileServerLifecycle<AndroidAppInfo> newFileServerLifecycle() {
+        return new FileServerLifecycle<AndroidAppInfo>() {
+
+          private ProgressFilter progressFilter;
+
+          @Override public void onStartSending(AndroidAppInfo androidAppInfo) {
+
+            progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
+
+            createSendNotification();
+
+            Intent i = new Intent();
+            i.putExtra("isSent", false);
+            i.putExtra("needReSend", false);
+            i.putExtra("appName", androidAppInfo.getAppName());
+            i.putExtra("packageName", androidAppInfo.getPackageName());
+            i.putExtra("positionToReSend", 100000);
+            i.setAction("SENDAPP");
+            sendBroadcast(i);
+          }
+
+          @Override public void onFinishSending(AndroidAppInfo androidAppInfo) {
+            System.out.println("Server : finished sending " + androidAppInfo);
+
+            finishSendNotification(androidAppInfo);
+
+            Intent i = new Intent();
+            i.putExtra("isSent", true);
+            i.putExtra("needReSend", false);
+            i.putExtra("appName", androidAppInfo.getAppName());
+            i.putExtra("packageName", androidAppInfo.getPackageName());
+            i.putExtra("positionToReSend", 100000);
+            i.setAction("SENDAPP");
+            sendBroadcast(i);
+          }
+
+          @Override public void onError(IOException e) {
+            System.out.println("Fell on error Server !! ");
+            e.printStackTrace();
+            Intent i = new Intent();
+            i.setAction("ERRORSENDING");
+            sendBroadcast(i);
+          }
+
+          @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
+            if (progressFilter.shouldUpdate(progress)) {
+              int actualProgress = Math.round(progress * 100);
+              showSendProgress(androidAppInfo.getAppName(), actualProgress, androidAppInfo);
+            }
+          }
+        };
       }
-    
-      @Override
-      public FileClientLifecycle<AndroidAppInfo> newFileClientLifecycle() {
-        return fileClientLifecycle;
+
+      @Override public FileClientLifecycle<AndroidAppInfo> newFileClientLifecycle() {
+        return new FileClientLifecycle<AndroidAppInfo>() {
+
+          private ProgressFilter progressFilter;
+
+          @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
+
+            progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
+
+            createReceiveNotification(androidAppInfo.getAppName());
+
+            Intent i = new Intent();
+            i.putExtra("FinishedReceiving", false);
+            i.putExtra("appName", androidAppInfo.getAppName());
+            i.setAction("RECEIVEAPP");
+            sendBroadcast(i);
+          }
+
+          @Override public void onError(IOException e) {
+            // Não ta facil perceber pk é k isto cai aqui quando só há um cliente, martelo ftw :/
+            if (aptoideMessageServerSocket.getAptoideMessageControllers().size() <= 1) {
+              return;
+            }
+
+            e.printStackTrace();
+
+            Intent i = new Intent();
+            i.setAction("ERRORRECEIVING");
+            sendBroadcast(i);
+          }
+
+          @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
+
+            finishReceiveNotification(androidAppInfo.getApk().getFilePath(),
+                androidAppInfo.getPackageName(), androidAppInfo);
+
+            Intent i = new Intent();
+            i.putExtra("FinishedReceiving", true);
+            i.putExtra("needReSend", false);
+            i.putExtra("appName", androidAppInfo.getAppName());
+            i.putExtra("packageName", androidAppInfo.getPackageName());
+            i.putExtra("filePath", androidAppInfo.getApk().getFilePath());
+            i.setAction("RECEIVEAPP");
+            sendBroadcast(i);
+          }
+
+          @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
+
+            if (progressFilter.shouldUpdate(progress)) {
+              int actualProgress = Math.round(progress * 100);
+              showReceiveProgress(androidAppInfo.getAppName(), actualProgress, androidAppInfo);
+            }
+          }
+        };
       }
     };
   }
@@ -189,11 +180,10 @@ public class HighwayServerService extends Service {
           }
         };
 
-        // TODO: 22-02-2017 fix this hardcoded ip
-
+        // TODO: 07-04-2017 asdsadefeqf neuro Filipe onError sff lol
         aptoideMessageClientSocket =
             new AptoideMessageClientSocket("192.168.43.1", 55555, externalStoragepath,
-                storageCapacity, fileLifecycleProvider, fileClientLifecycle, socketBinder);
+                storageCapacity, fileLifecycleProvider, socketBinder, null);
         aptoideMessageClientSocket.startAsync();
 
         System.out.println("Connected 342");

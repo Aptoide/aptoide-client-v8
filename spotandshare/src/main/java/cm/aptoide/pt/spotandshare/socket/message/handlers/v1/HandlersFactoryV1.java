@@ -1,13 +1,10 @@
 package cm.aptoide.pt.spotandshare.socket.message.handlers.v1;
 
-import java.io.File;
-
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.file.ShareAppsFileClientSocket;
 import cm.aptoide.pt.spotandshare.socket.file.ShareAppsFileServerSocket;
-import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
@@ -23,6 +20,7 @@ import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionTo
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.SendApk;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ServerLeftMessage;
 import cm.aptoide.pt.spotandshare.socket.message.server.AptoideMessageServerSocket;
+import java.io.File;
 
 /**
  * Created by neuro on 02-02-2017.
@@ -68,17 +66,17 @@ public class HandlersFactoryV1 {
 
   static class ReceiveApkHandler extends MessageHandler<ReceiveApk> {
 
-    final String root;
-    final StorageCapacity storageCapacity;
-    final FileClientLifecycle<AndroidAppInfo> fileClientLifecycle;
+    private final String root;
+    private final StorageCapacity storageCapacity;
+    private final FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider;
     private final SocketBinder socketBinder;
 
     public ReceiveApkHandler(String root, StorageCapacity storageCapacity,
-        FileClientLifecycle<AndroidAppInfo> fileClientLifecycle, SocketBinder socketBinder) {
+        FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider, SocketBinder socketBinder) {
       super(ReceiveApk.class);
       this.root = root;
       this.storageCapacity = storageCapacity;
-      this.fileClientLifecycle = fileClientLifecycle;
+      this.fileLifecycleProvider = fileLifecycleProvider;
       this.socketBinder = socketBinder;
     }
 
@@ -108,9 +106,9 @@ public class HandlersFactoryV1 {
         ShareAppsFileClientSocket shareAppsFileClientSocket =
             new ShareAppsFileClientSocket(receiveApkServerHost.getIp(),
                 receiveApkServerHost.getPort(), androidAppInfo.getFiles());
-        if (fileClientLifecycle != null) {
-          shareAppsFileClientSocket.setFileClientLifecycle(androidAppInfo, fileClientLifecycle);
-        }
+
+        shareAppsFileClientSocket.setFileClientLifecycle(androidAppInfo,
+            fileLifecycleProvider.newFileClientLifecycle());
         shareAppsFileClientSocket.setSocketBinder(socketBinder);
         shareAppsFileClientSocket.startAsync();
       } else {
