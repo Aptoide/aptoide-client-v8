@@ -10,6 +10,12 @@ import android.os.StatFs;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
 import cm.aptoide.pt.spotandshare.socket.exception.ServerLeftException;
@@ -20,10 +26,6 @@ import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSock
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
 import cm.aptoide.pt.utils.AptoideUtils;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by filipegoncalves on 10-02-2017.
@@ -111,8 +113,9 @@ public class HighwayClientService extends Service {
     fileServerLifecycle = new FileServerLifecycle<AndroidAppInfo>() {
 
       private ProgressFilter progressFilter;
-
-      @Override public void onStartSending(AndroidAppInfo o) {
+  
+      @Override
+      public void onStartSending(AndroidAppInfo androidAppInfo) {
         System.out.println(" Started sending ");
 
         progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
@@ -121,25 +124,26 @@ public class HighwayClientService extends Service {
         i.putExtra("isSent", false);
         i.putExtra("needReSend",
             false);//add field with pos to resend and change its value only if it is != 100000 (onstartcommand)
-        i.putExtra("appName", o.getAppName());
-        i.putExtra("packageName", o.getPackageName());
+        i.putExtra("appName", androidAppInfo.getAppName());
+        i.putExtra("packageName", androidAppInfo.getPackageName());
         i.putExtra("positionToReSend", 100000);
         i.setAction("SENDAPP");
         sendBroadcast(i);
 
         createSendNotification();
       }
-
-      @Override public void onFinishSending(AndroidAppInfo o) {
-        System.out.println(" Finished sending " + o);
-
-        finishSendNotification(o);
+  
+      @Override
+      public void onFinishSending(AndroidAppInfo androidAppInfo) {
+        System.out.println(" Finished sending " + androidAppInfo);
+    
+        finishSendNotification(androidAppInfo);
 
         Intent i = new Intent();
         i.putExtra("isSent", true);
         i.putExtra("needReSend", false);
-        i.putExtra("appName", o.getAppName());
-        i.putExtra("packageName", o.getPackageName());
+        i.putExtra("appName", androidAppInfo.getAppName());
+        i.putExtra("packageName", androidAppInfo.getPackageName());
         i.putExtra("positionToReSend", 100000);
         i.setAction("SENDAPP");
         sendBroadcast(i);
