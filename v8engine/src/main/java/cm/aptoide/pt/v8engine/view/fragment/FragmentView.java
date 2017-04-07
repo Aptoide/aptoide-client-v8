@@ -18,8 +18,7 @@ import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import rx.Observable;
 
-public abstract class FragmentView extends LeakFragment
-    implements View {
+public abstract class FragmentView extends LeakFragment implements View {
 
   private Presenter presenter;
   private FragmentNavigator fragmentNavigator;

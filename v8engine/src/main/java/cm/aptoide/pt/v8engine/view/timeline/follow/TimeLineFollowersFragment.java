@@ -85,7 +85,8 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
     return new FollowUserDisplayable(user, false);
   }
 
-  @Override protected EndlessRecyclerOnScrollListener.BooleanAction<GetFollowers> getFirstResponseAction(
+  @Override
+  protected EndlessRecyclerOnScrollListener.BooleanAction<GetFollowers> getFirstResponseAction(
       List<Displayable> dispList) {
     return response -> {
       dispList.add(0, new MessageWhiteBgDisplayable(getHeaderMessage()));

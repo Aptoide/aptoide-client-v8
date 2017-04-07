@@ -100,7 +100,6 @@ android {
     exclude 'META-INF/MANIFEST.MF'
     exclude 'META-INF/LGPL2.1'
   }
-
 }
 
 dependencies {

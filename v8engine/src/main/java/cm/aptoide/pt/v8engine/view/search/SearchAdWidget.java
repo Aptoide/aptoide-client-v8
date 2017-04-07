@@ -15,7 +15,6 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.view.search.SearchAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**

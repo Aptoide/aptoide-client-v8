@@ -28,9 +28,9 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConv
 import cm.aptoide.pt.v8engine.interfaces.ShareCardCallback;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
-import cm.aptoide.pt.v8engine.util.DateCalculator;
 import java.util.Date;
 import lombok.Getter;
 import rx.Observable;

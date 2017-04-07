@@ -39,16 +39,13 @@ public class PaymentAuthorizationRepository {
 
   public Completable createPaymentAuthorization(int paymentId) {
     return CreatePaymentAuthorizationRequest.of(accountManager.getAccessToken(), paymentId,
-        bodyInterceptorV3)
-        .observe()
-        .flatMap(response -> {
-          if (response != null && response.isOk()) {
-            return Observable.just(null);
-          }
-          return Observable.<Void> error(
-              new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-        })
-        .toCompletable();
+        bodyInterceptorV3).observe().flatMap(response -> {
+      if (response != null && response.isOk()) {
+        return Observable.just(null);
+      }
+      return Observable.<Void> error(
+          new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+    }).toCompletable();
   }
 
   public Observable<Authorization> getPaymentAuthorization(int paymentId, String payerId) {

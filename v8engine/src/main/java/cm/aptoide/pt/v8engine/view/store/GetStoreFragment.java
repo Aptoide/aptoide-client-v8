@@ -2,9 +2,9 @@ package cm.aptoide.pt.v8engine.view.store;
 
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStore;
-import cm.aptoide.pt.v8engine.view.store.home.HomeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.store.home.AdultRowDisplayable;
+import cm.aptoide.pt.v8engine.view.store.home.HomeFragment;
 import java.util.List;
 import rx.Observable;
 import rx.schedulers.Schedulers;

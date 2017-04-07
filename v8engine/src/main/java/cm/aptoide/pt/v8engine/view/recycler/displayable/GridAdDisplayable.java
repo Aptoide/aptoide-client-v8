@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import lombok.Getter;
 
 /**

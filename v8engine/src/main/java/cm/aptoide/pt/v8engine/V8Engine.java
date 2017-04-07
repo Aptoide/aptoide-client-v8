@@ -418,8 +418,7 @@ public abstract class V8Engine extends DataProvider {
 
       return generateAptoideUuid().andThen(proxy.addDefaultStore(
           GetStoreMetaRequest.of(defaultStoreCredentials, getBaseBodyInterceptorV7()),
-          accountManager,
-          defaultStoreCredentials).andThen(refreshUpdates()))
+          accountManager, defaultStoreCredentials).andThen(refreshUpdates()))
           .doOnError(err -> CrashReport.getInstance().log(err));
     });
   }

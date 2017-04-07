@@ -13,9 +13,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import cm.aptoide.pt.spotandshareandroid.HighwayActivity;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import cm.aptoide.pt.v8engine.presenter.SpotSharePreviewPresenter;
 import cm.aptoide.pt.v8engine.presenter.SpotSharePreviewView;
+import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
 

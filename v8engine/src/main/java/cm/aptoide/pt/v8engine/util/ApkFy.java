@@ -2,12 +2,12 @@ package cm.aptoide.pt.v8engine.util;
 
 import android.content.Context;
 import android.content.Intent;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
+import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.zip.ZipEntry;

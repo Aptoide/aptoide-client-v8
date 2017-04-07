@@ -13,8 +13,8 @@ import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.permission.DialogPermissions;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewDeveloperDisplayable;
+import cm.aptoide.pt.v8engine.view.permission.DialogPermissions;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 

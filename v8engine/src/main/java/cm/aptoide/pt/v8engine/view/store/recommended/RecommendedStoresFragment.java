@@ -17,7 +17,6 @@ import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.store.GetStoreEndlessFragment;
-import cm.aptoide.pt.v8engine.view.store.recommended.RecommendedStoreDisplayable;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import rx.Observable;

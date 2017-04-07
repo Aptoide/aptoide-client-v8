@@ -34,8 +34,8 @@ public class StoreUtilsProxy {
   private final StoreCredentialsProvider storeCredentialsProvider;
 
   public StoreUtilsProxy(AptoideAccountManager accountManager,
-      BodyInterceptor<BaseBody> bodyInterceptor,
-      StoreCredentialsProvider storeCredentialsProvider, StoreAccessor storeAccessor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, StoreCredentialsProvider storeCredentialsProvider,
+      StoreAccessor storeAccessor) {
     this.accountManager = accountManager;
     this.bodyInterceptor = bodyInterceptor;
     this.storeCredentialsProvider = storeCredentialsProvider;

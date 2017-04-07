@@ -8,7 +8,6 @@ package cm.aptoide.pt.v8engine.presenter;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.v8engine.presenter.Presenter;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import rx.Observable;
 

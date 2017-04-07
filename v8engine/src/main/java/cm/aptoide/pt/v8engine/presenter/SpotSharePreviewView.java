@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.presenter;
 
-import cm.aptoide.pt.v8engine.presenter.View;
 import rx.Observable;
 
 /**

@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.presenter;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
-import cm.aptoide.pt.v8engine.presenter.InviteFriendsContract;
 import java.util.List;
 
 /**

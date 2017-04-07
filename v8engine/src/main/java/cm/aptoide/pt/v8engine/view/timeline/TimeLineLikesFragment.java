@@ -56,7 +56,8 @@ public class TimeLineLikesFragment extends TimeLineFollowFragment {
     return new FollowUserDisplayable(user, true);
   }
 
-  @Override protected EndlessRecyclerOnScrollListener.BooleanAction<GetFollowers> getFirstResponseAction(
+  @Override
+  protected EndlessRecyclerOnScrollListener.BooleanAction<GetFollowers> getFirstResponseAction(
       List<Displayable> dispList) {
     return null;
   }

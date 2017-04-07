@@ -15,10 +15,10 @@ import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
 import cm.aptoide.pt.v8engine.preferences.SecurePreferences;
 import cm.aptoide.pt.v8engine.view.dialog.EditableTextDialog;
-import cm.aptoide.pt.v8engine.view.settings.PinDialog;
+import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
 import cm.aptoide.pt.v8engine.view.rx.RxSwitch;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import cm.aptoide.pt.v8engine.view.settings.PinDialog;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
