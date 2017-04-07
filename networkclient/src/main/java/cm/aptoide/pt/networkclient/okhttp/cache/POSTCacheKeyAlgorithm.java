@@ -9,7 +9,7 @@ import okhttp3.Request;
 import okio.Buffer;
 
 /**
- * Created by sithengineer on 2/11/2016.
+ * Created on 2/11/2016.
  */
 
 public class POSTCacheKeyAlgorithm implements KeyAlgorithm<Request, String> {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/08/2016.
+ * Modified on 02/08/2016.
  */
 
 package cm.aptoide.pt.model.v7;

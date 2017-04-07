@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.database.accessors;
@@ -13,7 +13,7 @@ import rx.Observable;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by sithengineer on 01/09/16.
+ * Created on 01/09/16.
  */
 public class InstalledAccessor extends SimpleAccessor<Installed> {
 

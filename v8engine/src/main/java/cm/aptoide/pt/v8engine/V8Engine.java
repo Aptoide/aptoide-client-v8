@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -571,14 +571,14 @@ public abstract class V8Engine extends SpotAndShareApplication {
     if (aptoideMd5sum == null) {
       synchronized (this) {
         if (aptoideMd5sum == null) {
-          aptoideMd5sum = caculateMd5Sum();
+          aptoideMd5sum = calculateMd5Sum();
         }
       }
     }
     return aptoideMd5sum;
   }
 
-  private String caculateMd5Sum() {
+  private String calculateMd5Sum() {
     try {
       return AptoideUtils.AlgorithmU.computeMd5(
           getPackageManager().getPackageInfo(getAptoidePackage(), 0));
@@ -637,7 +637,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   }
 
   /**
-   * Use {@link #createShortcut()} using a {@link Completable}
+   * Do {@link #createShortcut()} using a {@link Completable}
    */
   @Deprecated @Partners public void createShortCut() {
     createAppShortcut();

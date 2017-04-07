@@ -6,7 +6,7 @@ import java.util.List;
 import rx.Observable;
 
 /**
- * Created by sithengineer on 11/10/2016.
+ * Created on 11/10/2016.
  */
 
 public class StoreRepository {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 09/08/2016.
+ * Modified on 09/08/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -10,7 +10,7 @@ import java.util.Date;
 import lombok.Data;
 
 /**
- * Created by sithengineer on 20/07/16.
+ * Created on 20/07/16.
  */
 @Data public class Review {
 
