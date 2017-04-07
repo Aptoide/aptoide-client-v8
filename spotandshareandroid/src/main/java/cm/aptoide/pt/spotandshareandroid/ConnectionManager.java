@@ -40,8 +40,6 @@ public class ConnectionManager {
   public final static int ERROR_INVALID_GROUP = 1;
   public final static int SUCCESSFUL_JOIN = 2;
   public final static int ERROR_UNKNOWN = 3;
-  public final static int ERROR_MOBILE_DATA_ON_TOAST = 4;
-  public final static int ERROR_MOBILE_DATA_ON_DIALOG = 5;
 
   public static final int SUCCESS_HOTSPOT_CREATION = 6;
   public static final int FAILED_TO_CREATE_HOTSPOT = 7;

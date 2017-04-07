@@ -32,7 +32,6 @@ import java.util.List;
  */
 public class HighwayActivity extends ActivityView implements HighwayView, PermissionManager {
 
-  public static final int MOBILE_DATA_REQUEST_CODE = 0010;
   private static final int PERMISSION_REQUEST_CODE = 6531;
   private static final int WRITE_SETTINGS_REQUEST_CODE = 5;
   private static final int LOCATION_REQUEST_CODE = 789;
@@ -45,13 +44,10 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   private Toolbar mToolbar;
   private ProgressBar buttonsProgressBar;//progress bar for when user click the buttons
 
-  private boolean outsideShare = false;
-  private List<String> pathsFromOutsideShare;
   private boolean joinGroupFlag;
   private HighwayPresenter presenter;
   private SpotAndShareAnalyticsInterface analytics;
   private GroupManager groupManager;
-  private OutsideShareManager outsideShareManager;
   private PermissionListener permissionListener;
 
   protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +55,8 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
     ApplicationSender.reset();
     DataHolder.reset();
-    GroupNameProvider groupNameProvider;
+    GroupNameProvider groupNameProvider =
+        ((SpotAndShareApplication) getApplication()).getGroupNameProvider();
     ConnectionManager connectionManager =
         ConnectionManager.getInstance(this.getApplicationContext());
     analytics = ShareApps.getAnalytics();
@@ -74,21 +71,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         connectionManager, analytics, groupManager, this);
     attachPresenter(presenter);
 
-    if (getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_SEND)) {
-
-      outsideShareManager = new OutsideShareManager();
-      presenter.setOutsideShareManager(outsideShareManager);
-      Uri uri = (Uri) getIntent().getExtras().get("android.intent.extra.STREAM");
-      presenter.getAppFilePathFromOutside(uri);
-    } else if (getIntent().getAction() != null && getIntent().getAction()
-        .equals(Intent.ACTION_SEND_MULTIPLE)) {
-
-      outsideShareManager = new OutsideShareManager();
-      presenter.setOutsideShareManager(outsideShareManager);
-      ArrayList<Uri> uriList =
-          (ArrayList<Uri>) getIntent().getExtras().get("android.intent.extra.STREAM");
-      presenter.getMultipleAppFilePathsFromOutside(uriList);
-    }
   }
 
   private void bindViews() {
@@ -101,7 +83,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     groupButtonsLayout = (LinearLayout) findViewById(R.id.groupButtonsLayout);
 
     buttonsProgressBar = (ProgressBar) findViewById(R.id.buttonsProgressBar);
-    createGroupButton = (LinearLayout) findViewById(R.id.createGroup);//receive
+    createGroupButton = (LinearLayout) findViewById(R.id.createGroup);
     radarTextView.setActivity(this);
   }
 
@@ -138,9 +120,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         analytics.specialSettingsDenied();
         onPermissionsDenied();
       }
-    } else if (requestCode == MOBILE_DATA_REQUEST_CODE) {
-      //Group group = new Group(chosenHotspot);
-      presenter.onActivityResult(chosenHotspot);
     } else if (requestCode == LOCATION_REQUEST_CODE) {
       if (checkLocationPermission()) {
         onPermissionsGranted();
@@ -156,29 +135,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     super.onBackPressed();
   }
 
-  @Override protected void onNewIntent(Intent intent) {
-    super.onNewIntent(intent);
-    setIntent(intent);
-    outsideShare = false;
-
-    if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_SEND)) {
-
-      outsideShareManager = new OutsideShareManager();
-      presenter.setOutsideShareManager(outsideShareManager);
-      Uri uri = (Uri) intent.getExtras().get("android.intent.extra.STREAM");
-      presenter.getAppFilePathFromOutside(uri);
-    } else if (intent.getAction() != null && intent.getAction()
-        .equals(Intent.ACTION_SEND_MULTIPLE)) {
-      outsideShareManager = new OutsideShareManager();
-      presenter.setOutsideShareManager(outsideShareManager);
-      ArrayList<Uri> uriList =
-          (ArrayList<Uri>) intent.getExtras().get("android.intent.extra.STREAM");
-      presenter.getMultipleAppFilePathsFromOutside(uriList);
-    } else if (intent.getAction() != null && intent.getAction().equals("LEAVINGSHAREAPPSCLIENT")) {
-      recoverNetworkState();
-      forgetAPTXVNetwork();
-    }
-  }
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
@@ -328,17 +284,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     });
   }
 
-  @Override public void showMobileDataDialog() {
-    Dialog d = buildMobileDataDialog();
-    d.show();
-  }
-
-  @Override public void showMobileDataToast() {
-    Toast.makeText(HighwayActivity.this,
-        HighwayActivity.this.getResources().getString(R.string.mDataJoinGroup), Toast.LENGTH_SHORT)
-        .show();
-  }
-
   @Override public void showJoinGroupResult(int result) {
     switch (result) {
       case ConnectionManager.ERROR_ON_RECONNECT:
@@ -359,12 +304,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
             Toast.LENGTH_SHORT).show();
         //tag join unsuccess
         presenter.tagAnalyticsUnsuccessJoin();
-        break;
-      case ConnectionManager.ERROR_MOBILE_DATA_ON_DIALOG:
-        showMobileDataDialog();
-        break;
-      case ConnectionManager.ERROR_MOBILE_DATA_ON_TOAST:
-        showMobileDataToast();
         break;
     }
   }
@@ -523,29 +462,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     this.permissionListener = null;
   }
 
-  private Dialog buildMobileDataDialog() {
-    //        mobileDataDialog=true;
-
-    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-    builder.setTitle(this.getResources().getString(R.string.mobileDataTitle))
-        .setMessage(this.getResources().getString(R.string.mobileDataMessage))
-        .setPositiveButton(this.getResources().getString(R.string.turnOffButton),
-            new DialogInterface.OnClickListener() {
-              @Override public void onClick(DialogInterface dialog, int which) {
-                startActivityForResult(new Intent(Settings.ACTION_SETTINGS),
-                    MOBILE_DATA_REQUEST_CODE);
-              }
-            })
-        .setNegativeButton(this.getResources().getString(R.string.cancel),
-            new DialogInterface.OnClickListener() {
-              @Override public void onClick(DialogInterface dialog, int which) {
-                System.out.println("Canceled the turn off data.");
-              }
-            });
-
-    return builder.create();
-  }
 
   private void showNougatErrorToast() {
     Toast.makeText(this, this.getResources().getString(R.string.hotspotCreationErrorNougat),

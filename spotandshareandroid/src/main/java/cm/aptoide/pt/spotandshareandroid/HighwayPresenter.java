@@ -5,7 +5,6 @@ package cm.aptoide.pt.spotandshareandroid;
  */
 
 import android.os.Build;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.spotandshareandroid.analytics.SpotAndShareAnalyticsInterface;
 import java.util.ArrayList;
 import rx.Subscription;
@@ -20,7 +19,6 @@ public class HighwayPresenter implements Presenter {
   private final ConnectionManager connectionManager;
   private final PermissionManager permissionManager;
   private GroupNameProvider groupNameProvider;
-  private AptoideAccountManager aptoideAccountManager;
   private SpotAndShareAnalyticsInterface analytics;
   private GroupManager groupManager;
   private boolean permissionRequested;
@@ -29,7 +27,7 @@ public class HighwayPresenter implements Presenter {
   public HighwayPresenter(HighwayView view, GroupNameProvider groupNameProvider,
       DeactivateHotspotTask deactivateHotspotTask, ConnectionManager connectionManager,
       SpotAndShareAnalyticsInterface analytics, GroupManager groupManager,
-      PermissionManager permissionManager, AptoideAccountManager aptoideAccountManager) {
+      PermissionManager permissionManager) {
     this.view = view;
     this.groupNameProvider = groupNameProvider;
     this.deactivateHotspotTask = deactivateHotspotTask;
@@ -37,7 +35,6 @@ public class HighwayPresenter implements Presenter {
     this.analytics = analytics;
     this.groupManager = groupManager;
     this.permissionManager = permissionManager;
-    this.aptoideAccountManager = aptoideAccountManager;
   }
 
   @Override public void onCreate() {

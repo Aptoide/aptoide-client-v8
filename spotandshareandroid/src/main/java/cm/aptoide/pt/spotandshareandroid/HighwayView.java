@@ -14,10 +14,6 @@ public interface HighwayView {
 
   void setUpListeners();
 
-  void showMobileDataDialog();
-
-  void showMobileDataToast();
-
   void showJoinGroupResult(int result);
 
   void showCreateGroupResult(int result);
