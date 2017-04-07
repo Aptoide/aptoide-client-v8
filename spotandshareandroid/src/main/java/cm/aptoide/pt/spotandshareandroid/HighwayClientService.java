@@ -54,10 +54,11 @@ public class HighwayClientService extends Service {
         return new FileServerLifecycle<AndroidAppInfo>() {
 
           private ProgressFilter progressFilter;
+          private AndroidAppInfo androidAppInfo;
 
           @Override public void onStartSending(AndroidAppInfo androidAppInfo) {
             System.out.println(" Started sending ");
-
+            this.androidAppInfo = androidAppInfo;
             progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
 
             Intent i = new Intent();
@@ -91,8 +92,8 @@ public class HighwayClientService extends Service {
           @Override public void onError(IOException e) {
             e.printStackTrace();
 
-            if (mNotifyManager != null) {
-              mNotifyManager.cancelAll();
+            if (mNotifyManager != null && androidAppInfo != null) {
+              mNotifyManager.cancel(androidAppInfo.getPackageName().hashCode());
             }
 
             Intent i = new Intent();
@@ -114,10 +115,11 @@ public class HighwayClientService extends Service {
         return new FileClientLifecycle<AndroidAppInfo>() {
 
           private ProgressFilter progressFilter;
+          private AndroidAppInfo androidAppInfo;
 
           @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
             System.out.println(" Started receiving ");
-
+            this.androidAppInfo = androidAppInfo;
             progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
 
             //show notification
@@ -127,22 +129,6 @@ public class HighwayClientService extends Service {
             i.putExtra("FinishedReceiving", false);
             i.putExtra("appName", androidAppInfo.getAppName());
             i.setAction("RECEIVEAPP");
-            sendBroadcast(i);
-          }
-
-          @Override public void onError(IOException e) {
-            System.out.println("Fell on error  Client !! ");
-
-            if (mNotifyManager != null) {
-              mNotifyManager.cancelAll();
-            }
-
-            Intent i = new Intent();
-            if (e instanceof ServerLeftException) {
-              i.setAction("SERVER_LEFT");
-            } else {
-              i.setAction("ERRORRECEIVING");
-            }
             sendBroadcast(i);
           }
 
@@ -159,6 +145,22 @@ public class HighwayClientService extends Service {
             i.putExtra("packageName", androidAppInfo.getPackageName());
             i.putExtra("filePath", androidAppInfo.getApk().getFilePath());
             i.setAction("RECEIVEAPP");
+            sendBroadcast(i);
+          }
+
+          @Override public void onError(IOException e) {
+            System.out.println("Fell on error  Client !! ");
+
+            if (mNotifyManager != null && androidAppInfo != null) {
+              mNotifyManager.cancel(androidAppInfo.getPackageName().hashCode());
+            }
+
+            Intent i = new Intent();
+            if (e instanceof ServerLeftException) {
+              i.setAction("SERVER_LEFT");
+            } else {
+              i.setAction("ERRORRECEIVING");
+            }
             sendBroadcast(i);
           }
 

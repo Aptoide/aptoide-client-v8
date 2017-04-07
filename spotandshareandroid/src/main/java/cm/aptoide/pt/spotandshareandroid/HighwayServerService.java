@@ -52,9 +52,11 @@ public class HighwayServerService extends Service {
         return new FileServerLifecycle<AndroidAppInfo>() {
 
           private ProgressFilter progressFilter;
+          private AndroidAppInfo androidAppInfo;
 
           @Override public void onStartSending(AndroidAppInfo androidAppInfo) {
 
+            this.androidAppInfo = androidAppInfo;
             progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
 
             createSendNotification();
@@ -87,6 +89,10 @@ public class HighwayServerService extends Service {
           @Override public void onError(IOException e) {
             System.out.println("Fell on error Server !! ");
             e.printStackTrace();
+
+            if (mNotifyManager != null && androidAppInfo != null) {
+              mNotifyManager.cancel(androidAppInfo.getPackageName().hashCode());
+            }
             Intent i = new Intent();
             i.setAction("ERRORSENDING");
             sendBroadcast(i);
@@ -105,8 +111,10 @@ public class HighwayServerService extends Service {
         return new FileClientLifecycle<AndroidAppInfo>() {
 
           private ProgressFilter progressFilter;
+          private AndroidAppInfo androidAppInfo;
 
           @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
+            this.androidAppInfo = androidAppInfo;
 
             progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
 
@@ -116,19 +124,6 @@ public class HighwayServerService extends Service {
             i.putExtra("FinishedReceiving", false);
             i.putExtra("appName", androidAppInfo.getAppName());
             i.setAction("RECEIVEAPP");
-            sendBroadcast(i);
-          }
-
-          @Override public void onError(IOException e) {
-            // Não ta facil perceber pk é k isto cai aqui quando só há um cliente, martelo ftw :/
-            if (aptoideMessageServerSocket.getAptoideMessageControllers().size() <= 1) {
-              return;
-            }
-
-            e.printStackTrace();
-
-            Intent i = new Intent();
-            i.setAction("ERRORRECEIVING");
             sendBroadcast(i);
           }
 
@@ -144,6 +139,22 @@ public class HighwayServerService extends Service {
             i.putExtra("packageName", androidAppInfo.getPackageName());
             i.putExtra("filePath", androidAppInfo.getApk().getFilePath());
             i.setAction("RECEIVEAPP");
+            sendBroadcast(i);
+          }
+
+          @Override public void onError(IOException e) {
+            // Não ta facil perceber pk é k isto cai aqui quando só há um cliente, martelo ftw :/
+            if (aptoideMessageServerSocket.getAptoideMessageControllers().size() <= 1) {
+              return;
+            }
+
+            e.printStackTrace();
+            if (mNotifyManager != null && androidAppInfo != null) {
+              mNotifyManager.cancel(androidAppInfo.getPackageName().hashCode());
+            }
+
+            Intent i = new Intent();
+            i.setAction("ERRORRECEIVING");
             sendBroadcast(i);
           }
 
