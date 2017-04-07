@@ -21,6 +21,7 @@ import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
+import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -232,7 +233,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       of.execute(listSearchApps -> {
         List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
-        if (list != null && list.size() > 0) {
+        if (list != null && hasMoreResults(listSearchApps)) {
           hasSubscribedResults = true;
           handleFinishLoading(create);
         } else {
@@ -245,7 +246,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
           bodyInterceptor).execute(listSearchApps -> {
         List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
-        if (list != null && list.size() > 0) {
+        if (list != null && hasMoreResults(listSearchApps)) {
           hasSubscribedResults = true;
           handleFinishLoading(create);
         } else {
@@ -259,7 +260,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
           bodyInterceptor).execute(listSearchApps -> {
         List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
-        if (list != null && list.size() > 0) {
+        if (list != null && hasMoreResults(listSearchApps)) {
           hasEverywhereResults = true;
           handleFinishLoading(create);
         } else {
@@ -282,6 +283,13 @@ public class SearchFragment extends BasePagerToolbarFragment {
       //				}
       //			}, e -> finishLoading());
     }
+  }
+
+  private boolean hasMoreResults(ListSearchApps listSearchApps) {
+    Datalist<ListSearchApps.SearchAppsApp> datalist = listSearchApps.getDatalist();
+
+    return datalist.getList().size() > 0
+        || listSearchApps.getTotal() >= listSearchApps.getNextSize();
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {

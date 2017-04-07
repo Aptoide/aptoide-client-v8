@@ -17,7 +17,6 @@ import cm.aptoide.pt.model.v3.BaseV3Response;
 import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
 import cm.aptoide.pt.model.v3.ErrorResponse;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
-import cm.aptoide.pt.model.v3.GetUserRepoSubscription;
 import cm.aptoide.pt.model.v3.InAppBillingAvailableResponse;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
@@ -197,8 +196,5 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
     @POST("changeUserRepoSubscription") @FormUrlEncoded
     Observable<BaseV3Response> changeUserRepoSubscription(@FieldMap BaseBody args);
-
-    @POST("getUserRepoSubscription") @FormUrlEncoded
-    Observable<GetUserRepoSubscription> getUserRepos(@FieldMap BaseBody args);
   }
 }

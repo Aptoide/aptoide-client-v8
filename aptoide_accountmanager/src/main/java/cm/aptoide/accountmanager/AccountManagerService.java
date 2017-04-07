@@ -4,17 +4,16 @@ import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
 import cm.aptoide.pt.dataprovider.ws.v3.ChangeUserSettingsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.CreateUserRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.GetUserRepoSubscriptionRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.OAuth2AuthenticationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.GetMySubscribedStoresRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
 import cm.aptoide.pt.model.v3.OAuth;
-import cm.aptoide.pt.model.v3.Subscription;
 import java.util.List;
 import rx.Completable;
 import rx.Single;
@@ -119,27 +118,27 @@ public class AccountManagerService {
         interceptorFactory.createV7(accountManager)).observe().toSingle().toCompletable();
   }
 
-  private Single<List<Store>> getSubscribedStores(String accessToken) {
-    return GetUserRepoSubscriptionRequest.of(accessToken, interceptorFactory.createV3())
-        .observe()
-        .map(getUserRepoSubscription -> getUserRepoSubscription.getSubscription())
+  private Single<List<Store>> getSubscribedStores(String accessToken,
+      AptoideAccountManager accountManager) {
+    return new GetMySubscribedStoresRequest(accessToken,
+        interceptorFactory.createV7(accountManager)).observe()
+        .map(getUserRepoSubscription -> getUserRepoSubscription.getDatalist().getList())
         .flatMapIterable(list -> list)
         .map(store -> mapToStore(store))
         .toList()
         .toSingle();
   }
 
-  private Store mapToStore(Subscription subscription) {
-    Store store = new Store(Long.parseLong(subscription.getDownloads()),
-        subscription.getAvatarHd() != null ? subscription.getAvatarHd() : subscription.getAvatar(),
-        subscription.getId().longValue(), subscription.getName(), subscription.getTheme(), null,
+  private Store mapToStore(cm.aptoide.pt.model.v7.store.Store store) {
+    return new Store(store.getStats().getDownloads(), store.getAvatar(), store.getId(),
+        store.getName(), store.getAppearance().getTheme(), null,
         null);
-    return store;
   }
 
   public Single<Account> getAccount(String accessToken, String refreshToken,
-      String encryptedPassword, String type) {
-    return Single.zip(getServerAccount(accessToken), getSubscribedStores(accessToken),
+      String encryptedPassword, String type, AptoideAccountManager accountManager) {
+    return Single.zip(getServerAccount(accessToken),
+        getSubscribedStores(accessToken, accountManager),
         (response, stores) -> mapServerAccountToAccount(response, refreshToken, accessToken,
             encryptedPassword, type, stores));
   }

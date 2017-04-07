@@ -110,7 +110,7 @@ public class AptoideAccountManager {
 
   private Completable syncAccount(String accessToken, String refreshToken, String password,
       Account.Type type) {
-    return accountManagerService.getAccount(accessToken, refreshToken, password, type.name())
+    return accountManagerService.getAccount(accessToken, refreshToken, password, type.name(), this)
         .flatMapCompletable(account -> saveAccount(account));
   }
 

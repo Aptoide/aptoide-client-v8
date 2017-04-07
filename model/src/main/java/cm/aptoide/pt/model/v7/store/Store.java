@@ -32,7 +32,7 @@ import lombok.experimental.Accessors;
   @Data public static class Stats {
     private int apps;
     private int subscribers;
-    private int downloads;
+    private long downloads;
   }
 
   @Data public static class Appearance {

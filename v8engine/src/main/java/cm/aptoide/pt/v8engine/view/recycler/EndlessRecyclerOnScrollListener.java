@@ -87,7 +87,8 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     }
     visibleItemCount = recyclerView.getChildCount();
     totalItemCount = mRecyclerViewHelper.getItemCount();
-    firstVisibleItem = mRecyclerViewHelper.findFirstVisibleItemPosition();
+    int firstVisibleItemPosition = mRecyclerViewHelper.findFirstVisibleItemPosition();
+    firstVisibleItem = (firstVisibleItemPosition == -1 ? 0 : firstVisibleItemPosition);
 
     if (shouldLoadMore()) {
       onLoadMore(bypassCache);
@@ -140,6 +141,10 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
             }
 
             loading = false;
+
+            if (shouldLoadMore()) {
+              onLoadMore(bypassCache);
+            }
           }, error -> {
             //remove spinner if webservice respond with error
             if (adapter.getItemCount() > 0) {
