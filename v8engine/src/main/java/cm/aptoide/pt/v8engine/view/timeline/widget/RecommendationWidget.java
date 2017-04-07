@@ -28,7 +28,7 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
   private ImageView image;
   private ImageView appIcon;
   private TextView appName;
-  private TextView similarApps;
+  private TextView relatedToText;
   private Button getApp;
   private CardView cardView;
   private TextView relatedToApp;
@@ -49,7 +49,7 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
         (ImageView) itemView.findViewById(R.id.displayable_social_timeline_recommendation_icon);
     appName =
         (TextView) itemView.findViewById(R.id.displayable_social_timeline_recommendation_name);
-    similarApps = (TextView) itemView.findViewById(
+    relatedToText = (TextView) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_similar_apps);
     relatedToApp =
         (TextView) itemView.findViewById(R.id.social_timeline_recommendation_card_related_to_app);
@@ -74,7 +74,7 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
 
     appName.setText(displayable.getAppName());
 
-    similarApps.setText(context.getString(R.string.related_to).toLowerCase());
+    relatedToText.setText(context.getString(R.string.related_to).toLowerCase());
     relatedToApp.setText(displayable.getSimilarAppName());
     getApp.setVisibility(View.VISIBLE);
 
