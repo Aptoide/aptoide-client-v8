@@ -56,8 +56,7 @@ public class OkHttpClientFactory {
    *
    * @return an {@link OkHttpClient} instance
    */
-  @Deprecated
-  public static OkHttpClient getSingletonClient(UserAgentGenerator userAgentGenerator,
+  @Deprecated public static OkHttpClient getSingletonClient(UserAgentGenerator userAgentGenerator,
       boolean debug) {
     return getSingletonClient(userAgentGenerator, debug,
         new File(AptoideUtils.getContext().getCacheDir(), CACHE_FILE_NAME));
