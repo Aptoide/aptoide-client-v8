@@ -7,14 +7,12 @@ package cm.aptoide.pt.v8engine.view.permission;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.logger.Logger;
@@ -47,8 +45,6 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
   @Nullable private Action0 toRunWhenAccessToFileSystemIsDenied;
   @Nullable private Action0 toRunWhenAccessToAccountsIsGranted;
   @Nullable private Action0 toRunWhenAccessToAccountsIsDenied;
-  @Nullable private Action0 toRunWhenDownloadAccessIsGranted;
-  @Nullable private Action0 toRunWhenDownloadAccessIsDenied;
   @Nullable private Action0 toRunWhenAccessToContactsIsGranted;
   @Nullable private Action0 toRunWhenAccessToContactsIsDenied;
 
@@ -213,8 +209,6 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
         && !ManagerPreferences.getGeneralDownloadsMobile())
         || (AptoideUtils.SystemU.getConnectionType().equals("wifi")
         && !ManagerPreferences.getGeneralDownloadsWifi())) {
-      this.toRunWhenDownloadAccessIsGranted = toRunWhenAccessIsGranted;
-      this.toRunWhenDownloadAccessIsDenied = toRunWhenAccessIsDenied;
       if ((AptoideUtils.SystemU.getConnectionType().equals("wifi")
           || AptoideUtils.SystemU.getConnectionType().equals("mobile"))
           && !ManagerPreferences.getGeneralDownloadsWifi()
@@ -253,15 +247,15 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
     GenericDialogs.createGenericOkCancelMessage(this, "", message).subscribe(subscriber);
   }
 
-  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    Fragment fragment = getFragmentNavigator().peekLast();
-    if (fragment != null) {
-      fragment.onActivityResult(requestCode, resultCode, data);
-    } else {
-      Logger.d("Twitter", "fragment is null");
-    }
-  }
+  //@Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+  //  super.onActivityResult(requestCode, resultCode, data);
+  //  Fragment fragment = getFragmentNavigator().peekLast();
+  //  if (fragment != null) {
+  //    fragment.onActivityResult(requestCode, resultCode, data);
+  //  } else {
+  //    Logger.d(TAG, "fragment is null");
+  //  }
+  //}
 
   @TargetApi(Build.VERSION_CODES.M) @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,

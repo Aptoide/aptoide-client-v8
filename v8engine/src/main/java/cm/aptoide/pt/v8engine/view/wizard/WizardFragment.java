@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.view.wizard;
 
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -154,7 +153,6 @@ public class WizardFragment extends BackButtonFragment {
   private void handleSkipClick() {
     final FragmentActivity activity = getActivity();
     activity.onBackPressed();
-    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
   }
 
   /**

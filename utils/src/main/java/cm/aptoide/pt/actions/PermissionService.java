@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 19/07/2016.
- */
-
 package cm.aptoide.pt.actions;
 
 import android.annotation.TargetApi;
@@ -10,9 +5,6 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import rx.functions.Action0;
 
-/**
- * Created by sithengineer on 16/06/16.
- */
 public interface PermissionService {
 
   @TargetApi(Build.VERSION_CODES.M) void requestAccessToExternalFileSystem(

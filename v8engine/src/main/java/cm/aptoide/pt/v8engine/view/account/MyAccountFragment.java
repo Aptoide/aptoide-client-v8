@@ -24,6 +24,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.MyAccountPresenter;
 import cm.aptoide.pt.v8engine.presenter.MyAccountView;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.store.home.HomeFragment;
 import com.jakewharton.rxbinding.view.RxView;
@@ -67,12 +68,7 @@ public class MyAccountFragment extends FragmentView implements MyAccountView {
   }
 
   @Override public void navigateToHome() {
-    final FragmentNavigator navManager = getFragmentNavigator();
-    Fragment home =
-        HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
-            V8Engine.getConfiguration().getDefaultTheme());
-    navManager.cleanBackStack();
-    navManager.navigateToWithoutBackSave(home);
+    getFragmentNavigator().navigateToHomeCleaningBackStack();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

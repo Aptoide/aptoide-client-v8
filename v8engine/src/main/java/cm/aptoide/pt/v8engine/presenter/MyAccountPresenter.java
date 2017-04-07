@@ -5,6 +5,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 public class MyAccountPresenter implements Presenter {
 
@@ -36,9 +37,14 @@ public class MyAccountPresenter implements Presenter {
   }
 
   private Observable<Void> signOutClick() {
-    return view.signOutClick().flatMap(click -> accountManager.logout().doOnCompleted(() -> {
-      ManagerPreferences.setAddressBookSyncValues(false);
-      view.navigateToHome();
-    }).doOnError(throwable -> crashReport.log(throwable)).<Void> toObservable()).retry();
+    return view.signOutClick()
+        .flatMap(click -> accountManager.logout()
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnCompleted(() -> {
+              ManagerPreferences.setAddressBookSyncValues(false);
+              view.navigateToHome();
+            })
+            .doOnError(throwable -> crashReport.log(throwable)).<Void>toObservable())
+        .retry();
   }
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.repository;
@@ -37,7 +37,7 @@ import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import okhttp3.OkHttpClient;
 
 /**
- * Created by sithengineer on 02/09/16.
+ * Created on 02/09/16.
  */
 public final class RepositoryFactory {
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.app;
@@ -115,7 +115,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 
 /**
- * Created by sithengineer on 04/05/16.
+ * Created on 04/05/16.
  */
 public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     implements Scrollable, AppMenuOptions, Payments {
