@@ -20,6 +20,7 @@ import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
 import cm.aptoide.pt.spotandshare.socket.exception.ServerLeftException;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
+import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
@@ -39,6 +40,7 @@ public class HighwayClientService extends Service {
   private int port;
   private ArrayList<App> listOfApps;
   private NotificationManagerCompat mNotifyManager;
+  private FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider;
   private FileServerLifecycle<AndroidAppInfo> fileServerLifecycle;
   private FileClientLifecycle<AndroidAppInfo> fileClientLifecycle;
   private AptoideMessageClientSocket aptoideMessageClientSocket;
@@ -169,6 +171,19 @@ public class HighwayClientService extends Service {
         }
       }
     };
+  
+    fileLifecycleProvider = new FileLifecycleProvider<AndroidAppInfo>() {
+      @Override
+      public FileServerLifecycle<AndroidAppInfo> newFileServerLifecycle() {
+        return fileServerLifecycle;
+      }
+    
+      @Override
+      public FileClientLifecycle<AndroidAppInfo> newFileClientLifecycle() {
+        return fileClientLifecycle;
+      }
+    };
+  
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
@@ -192,7 +207,7 @@ public class HighwayClientService extends Service {
 
         aptoideMessageClientSocket =
             new AptoideMessageClientSocket(serverIP, "192.168.43.1", port, externalStoragepath,
-                storageCapacity, fileServerLifecycle, fileClientLifecycle, socketBinder);
+                storageCapacity, fileLifecycleProvider, fileClientLifecycle, socketBinder);
         aptoideMessageClientSocket.setSocketBinder(socketBinder);
         aptoideMessageClientSocket.startAsync();
 

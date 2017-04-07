@@ -1,16 +1,17 @@
 package cm.aptoide.pt.spotandshare.socket.message.client;
 
+import java.io.IOException;
+import java.net.Socket;
+
 import cm.aptoide.pt.spotandshare.socket.AptoideClientSocket;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.exception.ServerLeftException;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
-import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
+import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
-import java.io.IOException;
-import java.net.Socket;
 
 /**
  * Created by neuro on 29-01-2017.
@@ -21,20 +22,20 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
   protected final AptoideMessageClientController aptoideMessageController;
 
   public AptoideMessageClientSocket(String host, int port, String rootDir,
-      StorageCapacity storageCapacity, FileServerLifecycle<AndroidAppInfo> serverLifecycle,
+      StorageCapacity storageCapacity, FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider,
       FileClientLifecycle<AndroidAppInfo> fileClientLifecycle, SocketBinder socketBinder) {
     super(host, port);
     this.aptoideMessageController =
-        new AptoideMessageClientController(this, rootDir, storageCapacity, serverLifecycle,
+        new AptoideMessageClientController(this, rootDir, storageCapacity, fileLifecycleProvider,
             fileClientLifecycle, socketBinder);
   }
 
   public AptoideMessageClientSocket(String host, String fallbackHostName, int port, String rootDir,
-      StorageCapacity storageCapacity, FileServerLifecycle<AndroidAppInfo> serverLifecycle,
+      StorageCapacity storageCapacity, FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider,
       FileClientLifecycle<AndroidAppInfo> fileClientLifecycle, SocketBinder socketBinder) {
     super(host, fallbackHostName, port);
     this.aptoideMessageController =
-        new AptoideMessageClientController(this, rootDir, storageCapacity, serverLifecycle,
+        new AptoideMessageClientController(this, rootDir, storageCapacity, fileLifecycleProvider,
             fileClientLifecycle, socketBinder);
   }
 

@@ -1,12 +1,14 @@
 package cm.aptoide.pt.spotandshare.socket.message.handlers.v1;
 
+import java.io.File;
+
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.file.ShareAppsFileClientSocket;
 import cm.aptoide.pt.spotandshare.socket.file.ShareAppsFileServerSocket;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
-import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
+import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
 import cm.aptoide.pt.spotandshare.socket.message.MessageHandler;
@@ -21,7 +23,6 @@ import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionTo
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.SendApk;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ServerLeftMessage;
 import cm.aptoide.pt.spotandshare.socket.message.server.AptoideMessageServerSocket;
-import java.io.File;
 
 /**
  * Created by neuro on 02-02-2017.
@@ -46,11 +47,11 @@ public class HandlersFactoryV1 {
 
   static class SendApkHandler extends MessageHandler<SendApk> {
 
-    final FileServerLifecycle<AndroidAppInfo> fileServerLifecycle;
-
-    public SendApkHandler(FileServerLifecycle<AndroidAppInfo> fileServerLifecycle) {
+    private final FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider;
+  
+    public SendApkHandler(FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider) {
       super(SendApk.class);
-      this.fileServerLifecycle = fileServerLifecycle;
+      this.fileLifecycleProvider = fileLifecycleProvider;
     }
 
     @Override public void handleMessage(SendApk sendApkMessage, Sender<Message> messageSender) {
@@ -59,7 +60,7 @@ public class HandlersFactoryV1 {
               sendApkMessage.getAndroidAppInfo(), 5000);
       shareAppsFileServerSocket.startAsync();
       shareAppsFileServerSocket.setFileServerLifecycle(sendApkMessage.getAndroidAppInfo(),
-          fileServerLifecycle);
+          fileLifecycleProvider.newFileServerLifecycle());
       messageSender.send(new AckMessage(messageSender.getHost()));
       // TODO: 03-02-2017 neuro maybe a good ideia to stop the server somewhat :)
     }

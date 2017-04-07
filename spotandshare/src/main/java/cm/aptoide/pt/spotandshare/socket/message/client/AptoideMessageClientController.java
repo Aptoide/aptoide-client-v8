@@ -2,7 +2,7 @@ package cm.aptoide.pt.spotandshare.socket.message.client;
 
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
-import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
+import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.message.AptoideMessageController;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
@@ -18,9 +18,9 @@ public class AptoideMessageClientController extends AptoideMessageController
 
   public AptoideMessageClientController(AptoideMessageClientSocket aptoideMessageClientSocket,
       String rootDir, StorageCapacity storageCapacity,
-      FileServerLifecycle<AndroidAppInfo> serverLifecycle,
+                                        FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider,
       FileClientLifecycle<AndroidAppInfo> fileClientLifecycle, SocketBinder socketBinder) {
-    super(DefaultClientHandlersListV1.create(rootDir, storageCapacity, serverLifecycle,
+    super(DefaultClientHandlersListV1.create(rootDir, storageCapacity, fileLifecycleProvider,
         fileClientLifecycle, aptoideMessageClientSocket, socketBinder), fileClientLifecycle);
   }
 }
