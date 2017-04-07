@@ -22,11 +22,11 @@
 
   <ImageView
       android:id="@+id/card_user_avatar"
-      android:layout_width="27dp"
-      android:layout_height="27dp"
-      android:layout_marginLeft="27.7dp"
-      android:layout_marginStart="27.7dp"
-      android:layout_marginTop="14dp"
+      android:layout_width="18dp"
+      android:layout_height="18dp"
+      android:layout_marginLeft="35.7dp"
+      android:layout_marginStart="35.7dp"
+      android:layout_marginTop="36dp"
       android:background="@drawable/grey_circular_placeholder"
       tools:ignore="contentDescription"
       />
