@@ -8,8 +8,8 @@ package cm.aptoide.pt.v8engine.view.timeline.widget;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
@@ -29,9 +29,9 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
   private ImageView appIcon;
   private TextView appName;
   private TextView similarApps;
-  private TextView getApp;
+  private Button getApp;
   private CardView cardView;
-  private RelativeLayout cardContent;
+  private TextView relatedToApp;
 
   public RecommendationWidget(View itemView) {
     super(itemView);
@@ -51,11 +51,11 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
         (TextView) itemView.findViewById(R.id.displayable_social_timeline_recommendation_name);
     similarApps = (TextView) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_similar_apps);
-    getApp = (TextView) itemView.findViewById(
+    relatedToApp =
+        (TextView) itemView.findViewById(R.id.social_timeline_recommendation_card_related_to_app);
+    getApp = (Button) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_get_app_button);
     cardView = (CardView) itemView.findViewById(R.id.card);
-    cardContent = (RelativeLayout) itemView.findViewById(
-        R.id.displayable_social_timeline_recommendation_card_content);
   }
 
   @Override public void bindView(RecommendationDisplayable displayable) {
@@ -74,14 +74,13 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
 
     appName.setText(displayable.getAppName());
 
-    similarApps.setText(displayable.getSimilarAppsText(context));
-
+    similarApps.setText(context.getString(R.string.related_to).toLowerCase());
+    relatedToApp.setText(displayable.getSimilarAppName());
     getApp.setVisibility(View.VISIBLE);
-    getApp.setText(displayable.getAppText(context));
+    //getApp.setText(displayable.getAppText(context));
 
-    compositeSubscription.add(RxView.clicks(cardContent)
-        .subscribe(a -> {
-          knockWithSixpackCredentials(displayable.getAbUrl());
+    compositeSubscription.add(RxView.clicks(getApp).subscribe(a -> {
+      knockWithSixpackCredentials(displayable.getAbUrl());
 
           Analytics.AppsTimeline.clickOnCard(RecommendationDisplayable.CARD_TYPE_NAME,
               displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getTitle(),

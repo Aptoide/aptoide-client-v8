@@ -171,6 +171,13 @@ public class RecommendationDisplayable extends CardDisplayable {
     return "";
   }
 
+  public String getSimilarAppName() {
+    if (similarAppsNames.size() != 0) {
+      return similarAppsNames.get(0);
+    }
+    return "";
+  }
+
   @Override
   public void share(Context context, boolean privacyResult, ShareCardCallback shareCardCallback) {
     socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);
