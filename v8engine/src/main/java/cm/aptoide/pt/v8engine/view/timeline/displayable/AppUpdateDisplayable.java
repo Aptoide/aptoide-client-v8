@@ -275,4 +275,10 @@ public class AppUpdateDisplayable extends CardDisplayable {
   private String getUpdateNoSpaceErrorText(Context context) {
     return context.getString(R.string.out_of_space_error);
   }
+
+  public Spannable getStyledTitle(Context context) {
+    return spannableFactory.createStyleSpan(context.getString(
+        R.string.store_has_an_update, storeName),
+        Typeface.BOLD, storeName);
+  }
 }

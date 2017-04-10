@@ -8,9 +8,9 @@ package cm.aptoide.pt.v8engine.view.timeline.widget;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
@@ -30,19 +30,14 @@ import rx.android.schedulers.AndroidSchedulers;
 public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
 
   private TextView appName;
-  private TextView appVersion;
   private ImageView appIcon;
-  private TextView appUpdate;
   private TextView updateButton;
   private TextView errorText;
-  private AppUpdateDisplayable displayable;
   private ImageView storeImage;
   private TextView storeName;
   private TextView updateDate;
   private View store;
   private CardView cardView;
-  private AptoideAccountManager accountManager;
-  private IdsRepository idsRepository;
 
   public AppUpdateWidget(View itemView) {
     super(itemView);
@@ -52,12 +47,9 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
     super.assignViews(itemView);
     appName = (TextView) itemView.findViewById(R.id.displayable_social_timeline_app_update_name);
     appIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_app_update_icon);
-    appVersion =
-        (TextView) itemView.findViewById(R.id.displayable_social_timeline_app_update_version);
-    updateButton =
-        (TextView) itemView.findViewById(R.id.displayable_social_timeline_app_update_button);
+    updateButton = (Button) itemView.findViewById(
+        R.id.displayable_social_timeline_recommendation_get_app_button);
     errorText = (TextView) itemView.findViewById(R.id.displayable_social_timeline_app_update_error);
-    appUpdate = (TextView) itemView.findViewById(R.id.displayable_social_timeline_app_update);
     storeImage =
         (ImageView) itemView.findViewById(R.id.displayable_social_timeline_app_update_card_image);
     storeName =
@@ -70,23 +62,17 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
 
   @Override public void bindView(AppUpdateDisplayable displayable) {
     super.bindView(displayable);
-    this.displayable = displayable;
     final FragmentActivity context = getContext();
-    idsRepository = ((V8Engine) getContext().getApplicationContext()).getIdsRepository();
-    accountManager = ((V8Engine) context.getApplication()).getAccountManager();
+
     appName.setText(displayable.getAppTitle(context));
-    appUpdate.setText(displayable.getHasUpdateText(context));
-    appVersion.setText(displayable.getVersionText(context));
     setCardViewMargin(displayable, cardView);
-    updateButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.timeline_update_app_dark, 0, 0,
-        0);
-    updateButton.setText(displayable.getUpdateAppText(context));
+    updateButton.setText(displayable.getUpdateAppText(context).toString().toUpperCase());
     updateButton.setEnabled(true);
     ImageLoader.with(context)
         .load(displayable.getAppIconUrl(), appIcon);
     ImageLoader.with(context)
         .loadWithShadowCircleTransform(displayable.getStoreIconUrl(), storeImage);
-    storeName.setText(displayable.getStoreName());
+    storeName.setText(displayable.getStyledTitle(getContext()));
     updateDate.setText(displayable.getTimeSinceLastUpdate(context));
     errorText.setVisibility(View.GONE);
 
@@ -148,19 +134,15 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
 
     switch (downloadProgress.getState()) {
       case Progress.DONE:
-        updateButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         updateButton.setText(displayable.getCompletedText(getContext()));
         updateButton.setEnabled(false);
         break;
       case Progress.ACTIVE:
         if (displayable.isInstalling(downloadProgress) && !displayable.isDownloading(
             downloadProgress)) {
-          updateButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.timeline_update_app_dark,
-              0, 0, 0);
           updateButton.setText(displayable.getUpdateAppText(getContext()));
           updateButton.setEnabled(true);
         } else {
-          updateButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
           updateButton.setText(displayable.getUpdatingText(getContext()));
           updateButton.setEnabled(false);
         }
@@ -172,8 +154,6 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
         break;
       case Progress.INACTIVE:
       default:
-        updateButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.timeline_update_app_dark, 0,
-            0, 0);
         updateButton.setText(displayable.getUpdateAppText(getContext()));
         updateButton.setEnabled(true);
         break;
@@ -183,8 +163,6 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
   private Void showDownloadError(AppUpdateDisplayable displayable, String message) {
     errorText.setText(message);
     errorText.setVisibility(View.VISIBLE);
-    updateButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.timeline_update_app_dark, 0, 0,
-        0);
     updateButton.setText(displayable.getUpdateAppText(getContext()));
     updateButton.setEnabled(true);
     return null;
