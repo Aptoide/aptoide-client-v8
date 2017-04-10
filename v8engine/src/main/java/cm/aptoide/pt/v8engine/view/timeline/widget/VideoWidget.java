@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
@@ -31,8 +32,6 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
   private ImageView image;
   private TextView videoTitle;
   private ImageView thumbnail;
-  private View url;
-  private Button getAppButton;
   private ImageView play_button;
   private FrameLayout media_layout;
   private CardView cardView;
@@ -40,6 +39,7 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
   private TextView relatedTo;
   private String appName;
   private String packageName;
+  private RatingBar ratingBar;
 
   public VideoWidget(View itemView) {
     super(itemView);
@@ -53,13 +53,11 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
     play_button = (ImageView) itemView.findViewById(R.id.play_button);
     media_layout = (FrameLayout) itemView.findViewById(R.id.media_layout);
     videoTitle = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_title);
-    thumbnail = (ImageView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_image);
-    url = itemView.findViewById(R.id.partial_social_timeline_thumbnail);
-    getAppButton =
-        (Button) itemView.findViewById(R.id.partial_social_timeline_thumbnail_get_app_button);
+    thumbnail = (ImageView) itemView.findViewById(R.id.featured_graphic);
     cardView = (CardView) itemView.findViewById(R.id.card);
     videoHeader = itemView.findViewById(R.id.displayable_social_timeline_video_header);
-    relatedTo = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
+    relatedTo = (TextView) itemView.findViewById(R.id.app_name);
+    ratingBar = (RatingBar) itemView.findViewById(R.id.ratingbar);
   }
 
   @Override public void bindView(VideoDisplayable displayable) {
@@ -67,15 +65,16 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
     final FragmentActivity context = getContext();
     Typeface typeFace =
         Typeface.createFromAsset(context.getAssets(), "fonts/DroidSerif-Regular.ttf");
+    ratingBar.setVisibility(View.INVISIBLE);
+    relatedTo.setTextSize(11);
     title.setText(displayable.getTitle());
     subtitle.setText(displayable.getTimeSinceLastUpdate(context));
     videoTitle.setTypeface(typeFace);
     videoTitle.setText(displayable.getVideoTitle());
     setCardViewMargin(displayable, cardView);
-    ImageLoader.with(context)
-        .loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
-    ImageLoader.with(context)
-        .load(displayable.getThumbnailUrl(), thumbnail);
+    ImageLoader.with(context).loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
+    ImageLoader.with(context).load(displayable.getThumbnailUrl(), thumbnail);
+    thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
     play_button.setVisibility(View.VISIBLE);
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

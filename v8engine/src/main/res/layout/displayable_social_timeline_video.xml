@@ -90,7 +90,6 @@
         android:id="@+id/partial_social_timeline_thumbnail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="60dp"
         android:clickable="true"
         >
 
@@ -112,14 +111,22 @@
           android:gravity="center"
           style="@style/focusableBackground"
           >
-        <ImageView
+
+        <include
+            layout="@layout/brick_app_item_list"
             android:id="@+id/partial_social_timeline_thumbnail_image"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:scaleType="centerCrop"
-            tools:ignore="contentDescription"
-            tools:src="@drawable/icon_brand_aptoide"
+            android:layout_height="152dp"
             />
+
+        <!--<ImageView-->
+        <!--android:id="@+id/partial_social_timeline_thumbnail_image"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="120dp"-->
+        <!--android:scaleType="centerCrop"-->
+        <!--tools:ignore="contentDescription"-->
+        <!--tools:src="@drawable/icon_brand_aptoide"-->
+        <!--/>-->
 
         <ImageView
             android:id="@+id/play_button"

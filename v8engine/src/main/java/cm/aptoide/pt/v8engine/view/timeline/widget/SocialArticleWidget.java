@@ -28,7 +28,6 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
   private CardView cardView;
   private View articleHeader;
   private TextView relatedTo;
-
   private String appName;
   private RatingBar ratingBar;
 
@@ -101,10 +100,7 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
     articleTitle.setText(displayable.getArticleTitle());
     setCardViewMargin(displayable, cardView);
 
-    //time.setText(displayable.getTimeSinceLastUpdate(getContext()));
-
-    ImageLoader.with(context)
-        .load(displayable.getThumbnailUrl(), thumbnail);
+    ImageLoader.with(context).load(displayable.getThumbnailUrl(), thumbnail);
 
     url.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
