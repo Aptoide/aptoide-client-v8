@@ -119,15 +119,6 @@
             android:layout_height="152dp"
             />
 
-        <!--<ImageView-->
-        <!--android:id="@+id/partial_social_timeline_thumbnail_image"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="120dp"-->
-        <!--android:scaleType="centerCrop"-->
-        <!--tools:ignore="contentDescription"-->
-        <!--tools:src="@drawable/icon_brand_aptoide"-->
-        <!--/>-->
-
         <ImageView
             android:id="@+id/play_button"
             android:layout_width="wrap_content"
@@ -139,11 +130,6 @@
 
       </FrameLayout>
 
-      <!--
-          android:layout_toEndOf="@id/partial_social_timeline_thumbnail_image"
-          android:layout_toRightOf="@id/partial_social_timeline_thumbnail_image"
-          android:layout_alignTop="@id/partial_social_timeline_thumbnail_image"
-      -->
       <TextView
           android:id="@+id/partial_social_timeline_thumbnail_title"
           android:layout_width="match_parent"
@@ -172,38 +158,7 @@
           android:background="@color/timeline_separator"
           android:visibility="gone"
           />
-      <TextView
-          android:id="@+id/partial_social_timeline_thumbnail_related_to"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_below="@+id/media_layout"
-          android:layout_marginBottom="24dp"
-          android:layout_marginLeft="12dp"
-          android:layout_marginRight="15dp"
-          android:layout_marginTop="12dp"
-          android:ellipsize="end"
-          android:maxLines="1"
-          android:textSize="11sp"
-          tools:text="Related to APPz"
-          />
 
-      <Button
-          android:id="@+id/partial_social_timeline_thumbnail_get_app_button"
-          android:layout_width="match_parent"
-          android:layout_height="30dp"
-          android:layout_below="@id/partial_social_timeline_thumbnail_related_to"
-          android:layout_marginBottom="16dp"
-          android:layout_marginEnd="16dp"
-          android:layout_marginLeft="96dp"
-          android:layout_marginRight="16dp"
-          android:layout_marginStart="96dp"
-          android:layout_marginTop="12dp"
-          android:gravity="center_vertical"
-          android:visibility="gone"
-          tools:text="Get app Game of War"
-          tools:visibility="visible"
-          style="@style/Widget.Aptoide.Card.Button"
-          />
     </RelativeLayout>
     <View
         android:layout_width="match_parent"
