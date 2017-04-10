@@ -28,11 +28,11 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadEvent;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import rx.Completable;
 import rx.Observable;
 import rx.subscriptions.CompositeSubscription;
 
@@ -162,9 +162,8 @@ public class InstallService extends Service {
             analytics.sendEvent(report);
           }
         })
-        .flatMap(download -> stopForegroundAndInstall(context, download, true).doOnNext(
-            success -> sendBackgroundInstallFinishedBroadcast(download)))
-        .flatMap(completed -> hasNextDownload());
+        .flatMap(download -> stopForegroundAndInstall(context, download, true).andThen(
+            sendBackgroundInstallFinishedBroadcast(download)).andThen(hasNextDownload()));
   }
 
   private void stopOnDownloadError(int downloadStatus) {
@@ -184,12 +183,14 @@ public class InstallService extends Service {
     stopSelf();
   }
 
-  private void sendBackgroundInstallFinishedBroadcast(Download download) {
-    sendBroadcast(
-        new Intent(ACTION_INSTALL_FINISHED).putExtra(EXTRA_INSTALLATION_MD5, download.getMd5()));
-    if (download.isScheduled()) {
-      removeFromScheduled(download.getMd5());
-    }
+  private Completable sendBackgroundInstallFinishedBroadcast(Download download) {
+    return Completable.fromAction(() -> {
+      sendBroadcast(
+          new Intent(ACTION_INSTALL_FINISHED).putExtra(EXTRA_INSTALLATION_MD5, download.getMd5()));
+      if (download.isScheduled()) {
+        removeFromScheduled(download.getMd5());
+      }
+    });
   }
 
   private void removeFromScheduled(String md5) {
@@ -198,7 +199,7 @@ public class InstallService extends Service {
     Logger.d(TAG, "Removing schedulled download with appId " + md5);
   }
 
-  private Observable<DefaultInstaller.InstallationType> stopForegroundAndInstall(Context context, Download download,
+  private Completable stopForegroundAndInstall(Context context, Download download,
       boolean removeNotification) {
     Installer installer = getInstaller(download.getMd5());
     stopForeground(removeNotification);
@@ -210,7 +211,7 @@ public class InstallService extends Service {
       case Download.ACTION_DOWNGRADE:
         return installer.downgrade(context, download.getMd5());
       default:
-        return Observable.error(
+        return Completable.error(
             new IllegalArgumentException("Invalid download action " + download.getAction()));
     }
   }

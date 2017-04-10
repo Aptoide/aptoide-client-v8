@@ -57,6 +57,6 @@ public class InstallerFactory {
   @NonNull private DownloadInstallationProvider getInstallationProvider(
       AptoideDownloadManager downloadManager) {
     return new DownloadInstallationProvider(downloadManager,
-        AccessorFactory.getAccessorFor(Download.class));
+        AccessorFactory.getAccessorFor(Download.class), RepositoryFactory.getInstalledRepository());
   }
 }

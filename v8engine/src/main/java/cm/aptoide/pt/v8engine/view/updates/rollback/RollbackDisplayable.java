@@ -14,7 +14,7 @@ import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
-import rx.Observable;
+import rx.Completable;
 
 /**
  * Created by sithengineer on 14/06/16.
@@ -55,7 +55,7 @@ public class RollbackDisplayable extends DisplayablePojo<Rollback> {
     navigator.navigateTo(V8Engine.getFragmentProvider().newAppViewFragment(getPojo().getMd5()));
   }
 
-  public Observable<Void> uninstall(Context context, Download appDownload) {
+  public Completable uninstall(Context context, Download appDownload) {
     return installManager.uninstall(context,
         appDownload.getFilesToDownload().get(0).getPackageName(), appDownload.getVersionName());
   }

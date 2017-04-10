@@ -35,15 +35,21 @@ public class Progress<T> {
   private int current;
   private int speed;
   private int state;
+  private int installationType;
 
   public Progress(T request, boolean indeterminate, int max, int initialProgress, int initialSpeed,
-      int state) {
+      int state, int installationType) {
     this.request = request;
     this.indeterminate = indeterminate;
     this.max = max;
     this.current = initialProgress;
     this.speed = initialSpeed;
     this.state = state;
+    this.installationType = installationType;
+  }
+
+  public int getInstallationType() {
+    return installationType;
   }
 
   public T getRequest() {

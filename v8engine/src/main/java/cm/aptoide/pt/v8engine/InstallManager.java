@@ -24,6 +24,7 @@ import cm.aptoide.pt.v8engine.install.root.RootShell;
 import cm.aptoide.pt.v8engine.repository.Repository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -36,7 +37,7 @@ public class InstallManager {
   private final AptoideDownloadManager aptoideDownloadManager;
   private final Installer installer;
   private Repository<Download, String> downloadRepository;
-  private Repository<Installed, String> installedRepository;
+  private InstalledRepository installedRepository;
 
   /**
    * Uses the default {@link Repository} for {@link Download} and {@link Installed}
@@ -66,7 +67,7 @@ public class InstallManager {
     context.startService(intent);
   }
 
-  public Observable<Void> uninstall(Context context, String packageName, String versionName) {
+  public Completable uninstall(Context context, String packageName, String versionName) {
     return installer.uninstall(context, packageName, versionName);
   }
 
@@ -79,17 +80,22 @@ public class InstallManager {
   }
 
   private Observable<Progress<Download>> convertToProgress(Download currentDownload) {
-    return convertToProgressStatus(currentDownload).map(status -> new Progress<>(currentDownload,
-        currentDownload.getOverallDownloadStatus() == Download.COMPLETED,
-        AptoideDownloadManager.PROGRESS_MAX_VALUE, currentDownload.getOverallProgress(),
-        currentDownload.getDownloadSpeed(), status));
+    return installedRepository.get(currentDownload.getPackageName())
+        .first()
+        .flatMap(installed -> convertToProgressStatus(currentDownload, installed).map(status -> {
+          int installationType = installed == null ? Installed.TYPE_UNKNOWN : installed.getType();
+          return new Progress<>(currentDownload,
+              currentDownload.getOverallDownloadStatus() == Download.COMPLETED,
+              AptoideDownloadManager.PROGRESS_MAX_VALUE, currentDownload.getOverallProgress(),
+              currentDownload.getDownloadSpeed(), status, installationType);
+        }));
   }
 
-  private Observable<Integer> convertToProgressStatus(Download download) {
-    return installedRepository.get(download.getPackageName())
-        .first()
-        .map(installed -> installed != null
-            && installed.getVersionCode() == download.getVersionCode())
+  private Observable<Integer> convertToProgressStatus(Download download, Installed installed) {
+    return Observable.just(installed)
+        .map(installation -> installation != null
+            && installation.getVersionCode() == download.getVersionCode()
+            && installation.getStatus() == Installed.STATUS_COMPLETED)
         .map(isInstalled -> {
 
           if (isInstalled) {

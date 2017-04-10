@@ -147,8 +147,10 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   private Observable<WidgetState> getInstallationObservable(String md5,
       InstallManager installManager) {
     return installManager.getAsListInstallation(md5).map(progress -> {
-      if (progress != null && progress.getState() != Progress.DONE && (progress.getState()
-          == Progress.ACTIVE
+      if (progress != null
+          && progress.getState() != Progress.DONE
+          && progress.getInstallationType() != Installed.TYPE_DEFAULT
+          && (progress.getState() == Progress.ACTIVE
           || progress.getRequest().getOverallDownloadStatus() == Download.PAUSED)) {
 
         widgetState.setButtonState(ACTION_INSTALLING);
