@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -84,11 +85,11 @@ public class SharePreviewDialog {
       view = factory.inflate(R.layout.displayable_social_timeline_social_article_preview, null);
       TextView articleTitle =
           (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
-      ImageView thumbnail =
-          (ImageView) view.findViewById(R.id.partial_social_timeline_thumbnail_image);
-      TextView relatedTo =
-          (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
+      ImageView thumbnail = (ImageView) view.findViewById(R.id.featured_graphic);
+      TextView relatedTo = (TextView) view.findViewById(R.id.app_name);
+      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingbar);
 
+      ratingBar.setVisibility(View.INVISIBLE);
       articleTitle.setText(((ArticleDisplayable) displayable).getArticleTitle());
       relatedTo.setVisibility(View.GONE);
       ImageLoader.with(context)

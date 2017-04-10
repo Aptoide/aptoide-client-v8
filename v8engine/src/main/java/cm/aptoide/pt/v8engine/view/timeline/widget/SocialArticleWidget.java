@@ -4,8 +4,8 @@ import android.graphics.Typeface;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
@@ -22,17 +22,15 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
 
   private TextView title;
   private TextView subtitle;
-  //private TextView time;
   private TextView articleTitle;
   private ImageView thumbnail;
   private View url;
-  private Button getAppButton;
   private CardView cardView;
   private View articleHeader;
   private TextView relatedTo;
 
   private String appName;
-  private String packageName;
+  private RatingBar ratingBar;
 
   public SocialArticleWidget(View itemView) {
     super(itemView);
@@ -49,13 +47,12 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
     storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
     userAvatar = (ImageView) itemView.findViewById(R.id.card_user_avatar);
     articleTitle = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_title);
-    thumbnail = (ImageView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_image);
+    thumbnail = (ImageView) itemView.findViewById(R.id.featured_graphic);
     url = itemView.findViewById(R.id.partial_social_timeline_thumbnail);
-    getAppButton =
-        (Button) itemView.findViewById(R.id.partial_social_timeline_thumbnail_get_app_button);
     cardView = (CardView) itemView.findViewById(R.id.card);
     articleHeader = itemView.findViewById(R.id.social_header);
-    relatedTo = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
+    relatedTo = (TextView) itemView.findViewById(R.id.app_name);
+    ratingBar = (RatingBar) itemView.findViewById(R.id.ratingbar);
   }
 
   @Override public void bindView(SocialArticleDisplayable displayable) {
@@ -96,6 +93,8 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
       }
     }
 
+    ratingBar.setVisibility(View.INVISIBLE);
+
     Typeface typeFace =
         Typeface.createFromAsset(context.getAssets(), "fonts/DroidSerif-Regular.ttf");
     articleTitle.setTypeface(typeFace);
@@ -121,10 +120,7 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(installeds -> {
           if (installeds != null && !installeds.isEmpty()) {
-            appName = installeds.get(0)
-                .getName();
-            packageName = installeds.get(0)
-                .getPackageName();
+            appName = installeds.get(0).getName();
           } else {
             setAppNameToFirstLinkedApp(displayable);
           }

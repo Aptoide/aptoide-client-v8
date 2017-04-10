@@ -9,8 +9,8 @@ import android.graphics.Typeface;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
@@ -30,13 +30,13 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
   private TextView articleTitle;
   private ImageView thumbnail;
   private View url;
-  private Button getAppButton;
   private CardView cardView;
   private View articleHeader;
   private TextView relatedTo;
 
   private String appName;
   private String packageName;
+  private RatingBar ratingBar;
 
   public ArticleWidget(View itemView) {
     super(itemView);
@@ -49,29 +49,29 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
     subtitle = (TextView) itemView.findViewById(R.id.card_subtitle);
     image = (ImageView) itemView.findViewById(R.id.card_image);
     articleTitle = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_title);
-    thumbnail = (ImageView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_image);
+    thumbnail = (ImageView) itemView.findViewById(R.id.featured_graphic);
     url = itemView.findViewById(R.id.partial_social_timeline_thumbnail);
-    getAppButton =
-        (Button) itemView.findViewById(R.id.partial_social_timeline_thumbnail_get_app_button);
     cardView = (CardView) itemView.findViewById(R.id.card);
     articleHeader = itemView.findViewById(R.id.displayable_social_timeline_article_header);
-    relatedTo = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
+    relatedTo = (TextView) itemView.findViewById(R.id.app_name);
+    ratingBar = (RatingBar) itemView.findViewById(R.id.ratingbar);
   }
 
   @Override public void bindView(ArticleDisplayable displayable) {
     super.bindView(displayable);
-    title.setText(displayable.getTitle());
     final FragmentActivity context = getContext();
+    ratingBar.setVisibility(View.INVISIBLE);
+    title.setText(displayable.getTitle());
     subtitle.setText(displayable.getTimeSinceLastUpdate(context));
     Typeface typeFace =
         Typeface.createFromAsset(context.getAssets(), "fonts/DroidSerif-Regular.ttf");
     articleTitle.setTypeface(typeFace);
     articleTitle.setText(displayable.getArticleTitle());
+    relatedTo.setTextSize(11);
     setCardViewMargin(displayable, cardView);
-    ImageLoader.with(context)
-        .loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
-    ImageLoader.with(context)
-        .load(displayable.getThumbnailUrl(), thumbnail);
+    ImageLoader.with(context).loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
+    ImageLoader.with(context).load(displayable.getThumbnailUrl(), thumbnail);
+    thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
     url.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
