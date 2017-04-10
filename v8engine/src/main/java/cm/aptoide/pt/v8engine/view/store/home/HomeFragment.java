@@ -34,6 +34,7 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.SpotAndShareAnal
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
+import cm.aptoide.pt.v8engine.spotandshare.SpotSharePreviewActivity;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
@@ -239,7 +240,7 @@ public class HomeFragment extends StoreFragment {
           final FragmentNavigator navigator = getFragmentNavigator();
           if (itemId == R.id.shareapps) {
             SpotAndShareAnalytics.clickShareApps();
-            navigator.navigateTo(V8Engine.getFragmentProvider().newSpotShareFragment(true));
+            getActivityNavigator().navigateTo(SpotSharePreviewActivity.class);
           } else if (itemId == R.id.navigation_item_rollback) {
             navigator.navigateTo(V8Engine.getFragmentProvider().newRollbackFragment());
           } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {

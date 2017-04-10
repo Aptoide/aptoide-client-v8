@@ -92,6 +92,6 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
   }
 
   @Override public void finish() {
-    getFragmentManager().popBackStack();
+    getActivity().finish();
   }
 }

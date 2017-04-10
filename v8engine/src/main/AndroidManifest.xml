@@ -64,6 +64,7 @@
     <activity android:name=".payment.providers.paypal.PayPalPaymentActivity"/>
     <activity android:name=".view.payment.WebAuthorizationActivity"/>
     <activity android:name=".view.account.LoginActivity"/>
+    <activity android:name=".spotandshare.SpotSharePreviewActivity" />
 
     <activity android:name="cm.aptoide.pt.spotandshareandroid.HighwayActivity"/>
 
