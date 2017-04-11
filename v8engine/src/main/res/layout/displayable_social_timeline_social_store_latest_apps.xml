@@ -29,7 +29,6 @@
         tools:visibility="visible"
         />
 
-    <include layout="@layout/social_timeline_social_store_follow"/>
 
     <HorizontalScrollView
         android:layout_width="match_parent"
@@ -49,6 +48,8 @@
           android:padding="4dp"
           ></LinearLayout>
     </HorizontalScrollView>
+
+    <include layout="@layout/social_timeline_social_store_follow"/>
 
     <android.support.v4.widget.Space
         android:layout_width="match_parent"

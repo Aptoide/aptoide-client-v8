@@ -46,18 +46,18 @@
         >
 
       <TextView
-          android:id="@+id/number_of_followers_text"
+          android:id="@+id/social_number_of_followers_text"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:drawableLeft="@drawable/user_shape"
           android:drawablePadding="4dp"
           android:drawableStart="@drawable/user_shape"
-          android:visibility="gone"
+          android:textSize="10sp"
           tools:text="1M"
           />
 
       <TextView
-          android:id="@+id/number_of_apps_text"
+          android:id="@+id/social_number_of_apps_text"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginLeft="10dp"
@@ -65,7 +65,7 @@
           android:drawableLeft="@drawable/number_of_apps"
           android:drawablePadding="4dp"
           android:drawableStart="@drawable/number_of_apps"
-          android:visibility="gone"
+          android:textSize="10sp"
           tools:text="2352"
           />
     </LinearLayout>

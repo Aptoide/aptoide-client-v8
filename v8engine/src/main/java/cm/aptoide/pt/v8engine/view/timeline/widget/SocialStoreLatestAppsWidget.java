@@ -33,7 +33,6 @@ import java.util.HashMap;
 import java.util.Map;
 import okhttp3.OkHttpClient;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 /**
  * Created by jdandrade on 29/11/2016.
@@ -48,7 +47,7 @@ public class SocialStoreLatestAppsWidget
   private TextView sharedStoreName;
   private TextView sharedStoreSubscribersNumber;
   private TextView sharedStoreAppsNumber;
-  private LinearLayout appsContaner;
+  private LinearLayout appsContainer;
   private ImageView sharedStoreAvatar;
   private View store;
   private Map<View, Long> apps;
@@ -58,7 +57,6 @@ public class SocialStoreLatestAppsWidget
   private StoreRepository storeRepository;
   private AptoideAccountManager accountManager;
   private StoreUtilsProxy storeUtilsProxy;
-  //private TextView sharedBy;
 
   public SocialStoreLatestAppsWidget(View itemView) {
     super(itemView);
@@ -77,13 +75,13 @@ public class SocialStoreLatestAppsWidget
     userAvatar = (ImageView) itemView.findViewById(R.id.card_user_avatar);
     sharedStoreName = (TextView) itemView.findViewById(R.id.store_name);
     sharedStoreAvatar = (ImageView) itemView.findViewById(R.id.social_shared_store_avatar);
-    appsContaner = (LinearLayout) itemView.findViewById(
+    appsContainer = (LinearLayout) itemView.findViewById(
         R.id.displayable_social_timeline_store_latest_apps_container);
     cardView = (CardView) itemView.findViewById(R.id.card);
     followStore = (Button) itemView.findViewById(R.id.follow_btn);
-    sharedStoreSubscribersNumber = (TextView) itemView.findViewById(R.id.number_of_followers);
-    sharedStoreAppsNumber = (TextView) itemView.findViewById(R.id.number_of_apps);
-    //sharedBy = (TextView) itemView.findViewById(R.id.social_shared_by);
+    sharedStoreSubscribersNumber =
+        (TextView) itemView.findViewById(R.id.social_number_of_followers_text);
+    sharedStoreAppsNumber = (TextView) itemView.findViewById(R.id.social_number_of_apps_text);
   }
 
   @Override public void bindView(SocialStoreLatestAppsDisplayable displayable) {
@@ -137,23 +135,25 @@ public class SocialStoreLatestAppsWidget
     }
 
     ImageLoader.with(getContext())
-        .loadWithShadowCircleTransform(displayable.getSharedStore()
-            .getAvatar(), sharedStoreAvatar);
-    sharedStoreName.setText(displayable.getSharedStore()
-        .getName());
+        .loadWithShadowCircleTransform(displayable.getSharedStore().getAvatar(), sharedStoreAvatar);
+    sharedStoreName.setText(displayable.getSharedStore().getName());
+    sharedStoreSubscribersNumber.setText(
+        String.valueOf(displayable.getSharedStore().getStats().getSubscribers()));
+    sharedStoreAppsNumber.setText(
+        String.valueOf(displayable.getSharedStore().getStats().getApps()));
 
-    appsContaner.removeAllViews();
+    appsContainer.removeAllViews();
     apps.clear();
     View latestAppView;
     ImageView latestAppIcon;
     TextView latestAppName;
     for (SocialStoreLatestAppsDisplayable.LatestApp latestApp : displayable.getLatestApps()) {
-      latestAppView = inflater.inflate(R.layout.social_timeline_latest_app, appsContaner, false);
+      latestAppView = inflater.inflate(R.layout.social_timeline_latest_app, appsContainer, false);
       latestAppIcon = (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app_icon);
       latestAppName = (TextView) latestAppView.findViewById(R.id.social_timeline_latest_app_name);
       ImageLoader.with(context).load(latestApp.getIconUrl(), latestAppIcon);
       latestAppName.setText(latestApp.getAppName());
-      appsContaner.addView(latestAppView);
+      appsContainer.addView(latestAppView);
       apps.put(latestAppView, latestApp.getAppId());
       appsPackages.put(latestApp.getAppId(), latestApp.getPackageName());
     }
@@ -243,40 +243,10 @@ public class SocialStoreLatestAppsWidget
                       .log(err);
                 }));
           }
-        }, (throwable) -> {
-          throwable.printStackTrace();
-        }));
+        }, (throwable) -> throwable.printStackTrace()));
   }
 
   @Override String getCardTypeName() {
     return SocialStoreLatestAppsDisplayable.CARD_TYPE_NAME;
-  }
-
-  private void handleIsSubscribed(boolean isSubscribed, String storeName, String storeTheme) {
-    if (isSubscribed) {
-      // set store already followed button text and open store action
-      Action1<Void> openStore = __ -> {
-        getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
-            .newStoreFragment(storeName, storeTheme));
-      };
-      followStore.setText(R.string.followed);
-      compositeSubscription.add(RxView.clicks(followStore)
-          .subscribe(openStore));
-    } else {
-
-      // set follow store button text and subscribe store action
-      Action1<Void> subscribeStore = __ -> {
-        storeUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
-          ShowMessage.asSnack(itemView,
-              AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
-        }, err -> {
-          CrashReport.getInstance()
-              .log(err);
-        }, accountManager);
-      };
-      followStore.setText(R.string.follow);
-      compositeSubscription.add(RxView.clicks(followStore)
-          .subscribe(subscribeStore));
-    }
   }
 }
