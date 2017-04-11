@@ -65,6 +65,10 @@ public class RollbackInstaller implements Installer {
         .andThen(defaultInstaller.downgrade(context, md5));
   }
 
+  @Override public Observable<InstallationState> getState(String packageName, int versionCode) {
+    return defaultInstaller.getState(packageName, versionCode);
+  }
+
   @Override public Completable uninstall(Context context, String packageName, String versionName) {
     return saveRollback(context, packageName, Rollback.Action.UNINSTALL, null, versionName).andThen(
         defaultInstaller.uninstall(context, packageName, versionName));

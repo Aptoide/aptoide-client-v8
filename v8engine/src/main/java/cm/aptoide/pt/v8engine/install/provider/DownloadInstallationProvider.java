@@ -44,19 +44,20 @@ public class DownloadInstallationProvider implements InstallationProvider {
   @Override public Observable<RollbackInstallation> getInstallation(String md5) {
     return downloadManager.getDownload(md5).first().flatMap(download -> {
       if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-        return installedRepository.get(download.getPackageName()).map(installed -> {
-          if (installed == null) {
-            installed = convertDownloadToInstalled(download);
-          }
-          return new DownloadInstallationAdapter(download, downloadAccessor, installedRepository,
-              installed);
-        }).doOnNext(downloadInstallationAdapter -> {
-          storeMinimalAdAccessor.get(downloadInstallationAdapter.getPackageName())
-              .doOnNext(handleCpd())
-              .subscribeOn(Schedulers.io())
-              .subscribe(storedMinimalAd -> {
-              }, Throwable::printStackTrace);
-        });
+        return installedRepository.get(download.getPackageName(), download.getVersionCode())
+            .map(installed -> {
+              if (installed == null) {
+                installed = convertDownloadToInstalled(download);
+              }
+              return new DownloadInstallationAdapter(download, downloadAccessor,
+                  installedRepository, installed);
+            }).doOnNext(downloadInstallationAdapter -> {
+              storeMinimalAdAccessor.get(downloadInstallationAdapter.getPackageName())
+                  .doOnNext(handleCpd())
+                  .subscribeOn(Schedulers.io())
+                  .subscribe(storedMinimalAd -> {
+                  }, Throwable::printStackTrace);
+            });
       }
       return Observable.error(new InstallationException("Installation file not available."));
     });
@@ -64,9 +65,10 @@ public class DownloadInstallationProvider implements InstallationProvider {
 
   @NonNull private Installed convertDownloadToInstalled(Download download) {
     Installed installed = new Installed();
+    installed.setPackageAndVersionCode(download.getPackageName() + download.getVersionCode());
     installed.setVersionCode(download.getVersionCode());
     installed.setVersionName(download.getVersionName());
-    installed.setStatus(Installed.STATUS_INVALID);
+    installed.setStatus(Installed.STATUS_UNINSTALLED);
     installed.setType(Installed.TYPE_UNKNOWN);
     installed.setPackageName(download.getPackageName());
     return installed;

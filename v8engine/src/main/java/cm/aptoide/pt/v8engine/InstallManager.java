@@ -13,6 +13,7 @@ import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -36,8 +37,8 @@ public class InstallManager {
 
   private final AptoideDownloadManager aptoideDownloadManager;
   private final Installer installer;
-  private Repository<Download, String> downloadRepository;
-  private InstalledRepository installedRepository;
+  private final DownloadRepository downloadRepository;
+  private final InstalledRepository installedRepository;
 
   /**
    * Uses the default {@link Repository} for {@link Download} and {@link Installed}
@@ -176,6 +177,123 @@ public class InstallManager {
           }
         })
         .flatMap(progress -> installInBackground(context, progress));
+  }
+
+  public Observable<InstallationProgress> getInstallationProgress(String md5, String packageName,
+      int versioncode) {
+    return Observable.merge(getDownloadProgress(md5),
+        getInstallationProgress(packageName, versioncode));
+  }
+
+  private Observable<InstallationProgress> getDownloadProgress(String md5) {
+    return downloadRepository.getAsList(md5)
+        .map(download -> {
+          if (download == null) {
+            return new InstallationProgress(0, InstallationProgress.InstallationStatus.UNINSTALLED,
+                false, 0);
+          } else {
+            return new InstallationProgress(download.getOverallProgress(),
+                mapDownloadState(download.getOverallDownloadStatus()),
+                mapIndeterminate(download.getOverallDownloadStatus()), download.getDownloadSpeed());
+          }
+        });
+  }
+
+  private boolean mapIndeterminate(@Download.DownloadState int overallDownloadStatus) {
+    boolean isIndeterminate;
+    switch (overallDownloadStatus) {
+      case Download.IN_QUEUE:
+        isIndeterminate = true;
+        break;
+      case Download.BLOCK_COMPLETE:
+      case Download.COMPLETED:
+      case Download.CONNECTED:
+      case Download.ERROR:
+      case Download.FILE_MISSING:
+      case Download.INVALID_STATUS:
+      case Download.NOT_DOWNLOADED:
+      case Download.PAUSED:
+      case Download.PENDING:
+      case Download.PROGRESS:
+      case Download.RETRY:
+      case Download.STARTED:
+      case Download.WARN:
+        isIndeterminate = false;
+        break;
+      default:
+        isIndeterminate = false;
+    }
+    Logger.d("damnroot", "mapIndeterminate() returned: " + isIndeterminate);
+    return isIndeterminate;
+  }
+
+  private InstallationProgress.InstallationStatus mapDownloadState(
+      @Download.DownloadState int overallDownloadStatus) {
+    InstallationProgress.InstallationStatus status =
+        InstallationProgress.InstallationStatus.UNINSTALLED;
+    switch (overallDownloadStatus) {
+      case Download.BLOCK_COMPLETE:
+      case Download.COMPLETED:
+      case Download.CONNECTED:
+      case Download.FILE_MISSING:
+      case Download.INVALID_STATUS:
+      case Download.NOT_DOWNLOADED:
+      case Download.PAUSED:
+      case Download.RETRY:
+      case Download.STARTED:
+      case Download.WARN:
+        status = InstallationProgress.InstallationStatus.UNINSTALLED;
+        break;
+      case Download.ERROR:
+        status = InstallationProgress.InstallationStatus.FAILED;
+        break;
+      case Download.PROGRESS:
+      case Download.IN_QUEUE:
+      case Download.PENDING:
+        status = InstallationProgress .InstallationStatus.INSTALLING;
+        break;
+    }
+    return status;
+  }
+
+  private Observable<InstallationProgress> getInstallationProgress(String packageName,
+      int versionCode) {
+    return installer.getState(packageName, versionCode)
+        .map(installationState -> new InstallationProgress(100,
+            mapInstallationState(installationState.getStatus()),
+            mapInstallIndeterminate(installationState.getStatus()), -1));
+  }
+
+  private boolean mapInstallIndeterminate(int status) {
+    boolean isIndeterminate = false;
+    switch (status) {
+      case Installed.STATUS_UNINSTALLED:
+      case Installed.STATUS_COMPLETED:
+        isIndeterminate = false;
+        break;
+      case Installed.STATUS_INSTALLING:
+        isIndeterminate = true;
+        break;
+    }
+    return isIndeterminate;
+  }
+
+  private InstallationProgress.InstallationStatus mapInstallationState(int status) {
+    InstallationProgress.InstallationStatus installationStatus =
+        InstallationProgress.InstallationStatus.UNINSTALLED;
+    switch (status) {
+      case Installed.STATUS_UNINSTALLED:
+        installationStatus = InstallationProgress.InstallationStatus.UNINSTALLED;
+        break;
+      case Installed.STATUS_INSTALLING:
+        installationStatus = InstallationProgress.InstallationStatus.INSTALLING;
+        break;
+      case Installed.STATUS_COMPLETED:
+        installationStatus = InstallationProgress.InstallationStatus.INSTALLED;
+        break;
+    }
+    Logger.d("damnroot", "mapInstallationState() returned: " + installationStatus);
+    return installationStatus;
   }
 
   @NonNull

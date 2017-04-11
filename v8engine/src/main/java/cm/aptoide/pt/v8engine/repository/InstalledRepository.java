@@ -34,6 +34,16 @@ public class InstalledRepository implements Repository<Installed, String> {
     return accessor.getAsList(packageName);
   }
 
+  public Observable<Installed> getAsList(String packageName, int versionCode) {
+    return accessor.getAsList(packageName, versionCode).map(installeds -> {
+      if (installeds.isEmpty()) {
+        return null;
+      } else {
+        return installeds.get(0);
+      }
+    });
+  }
+
   @Override public void save(Installed installed) {
     accessor.insert(installed);
   }
@@ -57,5 +67,9 @@ public class InstalledRepository implements Repository<Installed, String> {
   public boolean contains(String packageName, int vercode) {
     Installed installed = get(packageName).toBlocking().first();
     return installed != null && installed.getVersionCode() == vercode;
+  }
+
+  public Observable<Installed> get(String packageName, int versionCode) {
+    return accessor.get(packageName, versionCode);
   }
 }

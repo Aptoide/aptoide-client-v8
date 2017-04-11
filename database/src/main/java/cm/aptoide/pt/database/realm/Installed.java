@@ -18,7 +18,7 @@ public class Installed extends RealmObject {
   public static final String VERSION_NAME = "versionName";
   public static final String SIGNATURE = "signature";
   public static final String STORE_NAME = "storeName";
-  public static final int STATUS_INVALID = -1;
+  public static final int STATUS_UNINSTALLED = -1;
   public static final int STATUS_INSTALLING = 0;
   public static final int STATUS_COMPLETED = 1;
   public static final int TYPE_DEFAULT = 0;
@@ -27,8 +27,9 @@ public class Installed extends RealmObject {
   public static final int TYPE_UNKNOWN = -1;
 
   //	@PrimaryKey private int id = -1;
+  @PrimaryKey private String packageAndVersionCode;
   private String icon;
-  @PrimaryKey private String packageName;
+  private String packageName;
   private String name;
   private int versionCode;
   private String versionName;
@@ -52,6 +53,7 @@ public class Installed extends RealmObject {
     setVersionCode(packageInfo.versionCode);
     setVersionName(packageInfo.versionName);
     setStoreName(storeName);
+    this.packageAndVersionCode = packageInfo.packageName + packageInfo.versionCode;
     setSystemApp((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
     if (packageInfo.signatures != null && packageInfo.signatures.length > 0) {
       setSignature(
@@ -59,6 +61,10 @@ public class Installed extends RealmObject {
     }
     setStatus(STATUS_COMPLETED);
     setType(TYPE_UNKNOWN);
+  }
+
+  public void setPackageAndVersionCode(String packageAndVersionCode) {
+    this.packageAndVersionCode = packageAndVersionCode;
   }
 
   public int getStatus() {

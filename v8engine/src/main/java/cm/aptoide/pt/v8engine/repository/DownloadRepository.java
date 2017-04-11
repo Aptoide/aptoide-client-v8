@@ -21,6 +21,16 @@ public class DownloadRepository implements Repository<Download, String> {
     return accessor.get(md5);
   }
 
+  public Observable<Download> getAsList(String md5) {
+    return accessor.getAsList(md5).map(downloads -> {
+      if (downloads.isEmpty()) {
+        return null;
+      } else {
+        return downloads.get(0);
+      }
+    });
+  }
+
   public Observable<List<Download>> getAll() {
     return accessor.getAll();
   }

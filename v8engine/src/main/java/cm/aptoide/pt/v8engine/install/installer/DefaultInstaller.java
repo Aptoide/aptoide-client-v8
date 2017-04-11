@@ -29,13 +29,13 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import cm.aptoide.pt.v8engine.install.root.RootShell;
+import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import java.io.File;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import rx.Completable;
 import rx.Observable;
-import rx.Single;
 import rx.schedulers.Schedulers;
 
 /**
@@ -51,13 +51,16 @@ public class DefaultInstaller implements Installer {
   private final InstallationProvider installationProvider;
   private FileUtils fileUtils;
   private Analytics analytics;
+  private InstalledRepository installedRepository;
 
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
-      FileUtils fileUtils, Analytics analytics, boolean debug) {
+      FileUtils fileUtils, Analytics analytics, boolean debug,
+      InstalledRepository installedRepository) {
     this.packageManager = packageManager;
     this.installationProvider = installationProvider;
     this.fileUtils = fileUtils;
     this.analytics = analytics;
+    this.installedRepository = installedRepository;
     RootShell.debugMode = debug;
   }
 
@@ -75,7 +78,7 @@ public class DefaultInstaller implements Installer {
         .first()
         .observeOn(Schedulers.computation())
         .doOnNext(installation -> {
-          installation.setStatus(Installed.STATUS_INVALID);
+          installation.setStatus(Installed.STATUS_INSTALLING);
           installation.setType(Installed.TYPE_UNKNOWN);
           moveInstallationFiles(installation);
         })
@@ -115,23 +118,26 @@ public class DefaultInstaller implements Installer {
         .toCompletable();
   }
 
+  @Override public Observable<InstallationState> getState(String packageName, int versionCode) {
+    return installedRepository.getAsList(packageName, versionCode).flatMap(installed -> {
+      if (installed != null) {
+        return Observable.just(
+            new InstallationState(installed.getPackageName(), installed.getVersionCode(),
+                installed.getStatus(), installed.getType()));
+      } else {
+        return Observable.just(
+            new InstallationState(packageName, versionCode, Installed.STATUS_UNINSTALLED,
+                Installed.TYPE_UNKNOWN));
+      }
+    });
+  }
+
   @NonNull
   private Observable<Installation> startInstallation(Context context, Installation installation) {
     return systemInstall(context, installation).onErrorResumeNext(
         throwable -> rootInstall(installation))
         .onErrorResumeNext(throwable -> defaultInstall(context, installation))
         .doOnNext(installation1 -> installation1.save());
-  }
-
-  private Single<Boolean> isInstalling(String md5) {
-    return installationProvider.getInstallation(md5)
-        .map(installation -> installation.getStatus())
-        .map(status -> status == Installed.STATUS_COMPLETED)
-        .toSingle();
-  }
-
-  Observable<RollbackInstallation> getInstallation(String packageName) {
-    return installationProvider.getInstallation(packageName);
   }
 
   private Observable<Installation> rootInstall(Installation installation) {
@@ -172,7 +178,7 @@ public class DefaultInstaller implements Installer {
         file.setPath(newPath);
       }
     }
-    installation.save();
+    installation.saveFileChanges();
   }
 
   private Observable<Installation> systemInstall(Context context, Installation installation) {
@@ -201,8 +207,7 @@ public class DefaultInstaller implements Installer {
       return null;
     }).flatMap(
         installStarted -> waitPackageIntent(context, intentFilter, installation.getPackageName()))
-        .map(success -> updateInstallation(installation, Installed.TYPE_DEFAULT,
-            Installed.STATUS_COMPLETED))
+        .map(success -> installation)
         .startWith(
             updateInstallation(installation, Installed.TYPE_DEFAULT, Installed.STATUS_INSTALLING));
   }

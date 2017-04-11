@@ -18,4 +18,6 @@ public interface RollbackInstallation extends Installation {
   String getIcon();
 
   List<FileToDownload> getFiles();
+
+  void saveFileChanges();
 }

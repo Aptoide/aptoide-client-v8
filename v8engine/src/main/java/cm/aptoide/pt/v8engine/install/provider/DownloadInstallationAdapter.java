@@ -53,7 +53,6 @@ public class DownloadInstallationAdapter implements RollbackInstallation {
   }
 
   @Override public void save() {
-    downloadAccessor.save(download);
     ongoingInstallProvider.save(installed);
   }
 
@@ -83,5 +82,9 @@ public class DownloadInstallationAdapter implements RollbackInstallation {
 
   @Override public List<FileToDownload> getFiles() {
     return download.getFilesToDownload();
+  }
+
+  @Override public void saveFileChanges() {
+    downloadAccessor.save(download);
   }
 }
