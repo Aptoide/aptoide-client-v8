@@ -11,12 +11,12 @@ import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
+import cm.aptoide.pt.dataprovider.ws.notifications.GetPushNotificationsResponse;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.BaseV3Response;
 import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
 import cm.aptoide.pt.model.v3.ErrorResponse;
-import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
 import cm.aptoide.pt.model.v3.InAppBillingAvailableResponse;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
@@ -70,8 +70,8 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
     this.bodyInterceptor = bodyInterceptor;
   }
 
-  protected V3(String url, BaseBody baseBody, OkHttpClient httpClient, Converter.Factory converterFactory,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
+  protected V3(String url, BaseBody baseBody, OkHttpClient httpClient,
+      Converter.Factory converterFactory, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(Interfaces.class, httpClient, converterFactory, url);
     this.map = baseBody;
     this.bodyInterceptor = bodyInterceptor;

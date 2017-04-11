@@ -1,5 +1,6 @@
-package cm.aptoide.pt.model.v3;
+package cm.aptoide.pt.dataprovider.ws.notifications;
 
+import cm.aptoide.pt.model.v3.BaseV3Response;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -26,7 +27,6 @@ import lombok.EqualsAndHashCode;
   private String lang;
   private String title;
   private String url;
-
 
   //private List<Notification> results;
   //
