@@ -27,7 +27,8 @@ public class GroupValidator {
       String groupDeviceID = groupsList.get(i).getDeviceID();
       String hotspotCounter = groupsList.get(i).getHotspotControlCounter();
 
-      if (!groupDeviceID.equals("")) {//to avoid rule 1 - default groupDeviceID = ""
+      if (!groupDeviceID.equals("") && !groupsList.get(i)
+          .isGhost()) {//to avoid rule 1 - default groupDeviceID = ""
         if (!ghostsClearHashmap.containsKey(groupDeviceID)) {
           ghostsClearHashmap.put(groupDeviceID, groupsList.get(i));
           groupsList.get(i).setGhostFlag(false);
