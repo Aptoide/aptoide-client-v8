@@ -55,6 +55,10 @@ public class ManagerPreferences {
     return Preferences.get().getBoolean(ManagedKeys.GENERAL_DOWNLOADS_MOBILE, true);
   }
 
+  public static void setGeneralDownloadsMobile(boolean state) {
+    Preferences.get().edit().putBoolean(ManagedKeys.GENERAL_DOWNLOADS_MOBILE, state).apply();
+  }
+
   public static boolean getAnimationsEnabledStatus() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
         .getBoolean(ManagedKeys.ANIMATIONS_ENABLED, true);

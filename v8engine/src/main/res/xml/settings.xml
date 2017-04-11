@@ -10,6 +10,7 @@
     android:title="@string/settings_title_bar">
 
   <PreferenceCategory
+      android:key="generalDownloadRules"
       android:title="@string/setting_general_download_rules"
       >
 
