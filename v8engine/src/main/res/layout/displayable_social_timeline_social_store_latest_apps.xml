@@ -46,7 +46,7 @@
           android:layout_height="wrap_content"
           android:orientation="horizontal"
           android:padding="4dp"
-          ></LinearLayout>
+          />
     </HorizontalScrollView>
 
     <include layout="@layout/social_timeline_social_store_follow"/>
