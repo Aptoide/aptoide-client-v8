@@ -4,6 +4,7 @@ import android.os.Bundle;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by marcelobenites on 23/02/17.
@@ -44,7 +45,7 @@ public class SpotSharePreviewPresenter implements Presenter {
   }
 
   private Observable<Void> startSelection() {
-    return view.startSelection().doOnNext(selection -> {
+    return view.startSelection().observeOn(AndroidSchedulers.mainThread()).doOnNext(selection -> {
       SpotAndShareAnalytics.clickShareApps();
       view.navigateToSpotShareView();
       if (showToolbar) {
