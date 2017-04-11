@@ -53,7 +53,7 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
     final FragmentActivity context = getContext();
     if (displayable.getStore() != null) {
       storeName.setVisibility(View.VISIBLE);
-      storeName.setText(displayable.getStyledTitle(context));
+      storeName.setText(displayable.getStyledTitle(context, displayable.getStore().getName()));
       storeAvatar.setVisibility(View.VISIBLE);
       ImageLoader.with(context)
           .loadWithShadowCircleTransform(displayable.getStore()
@@ -75,7 +75,7 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
       userAvatar.setVisibility(View.GONE);
       if (displayable.getUser() != null) {
         storeName.setVisibility(View.VISIBLE);
-        storeName.setText(displayable.getStyledTitle(context));
+        storeName.setText(displayable.getStyledTitle(context, displayable.getUser().getName()));
         storeAvatar.setVisibility(View.VISIBLE);
         ImageLoader.with(context)
             .loadWithShadowCircleTransform(displayable.getUser()

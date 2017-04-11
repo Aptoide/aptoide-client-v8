@@ -91,8 +91,7 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
   }
 
   public String getTitle() {
-    return AptoideUtils.StringU.getFormattedString(titleResource, Application.getConfiguration()
-        .getMarketName());
+    return AptoideUtils.StringU.getFormattedString(titleResource, Application.getConfiguration().getMarketName());
   }
 
   public Spannable getAppText(Context context) {
@@ -126,9 +125,9 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
     return appRating;
   }
 
-  public Spannable getStyledTitle(Context context) {
+  public Spannable getStyledTitle(Context context, String title) {
     return spannableFactory.createStyleSpan(context.getString(
         R.string.displayable_social_timeline_recommendation_atptoide_team_recommends,
-        getStore().getName()), Typeface.BOLD, getStore().getName());
+        title), Typeface.BOLD, title);
   }
 }
