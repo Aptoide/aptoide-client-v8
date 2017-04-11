@@ -36,7 +36,6 @@ import retrofit2.Converter;
 import rx.Completable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.subscriptions.CompositeSubscription;
 
 public class InstalledIntentService extends IntentService {
@@ -146,8 +145,34 @@ public class InstalledIntentService extends IntentService {
     if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
       return packageInfo;
     }
-    installedRepository.save(new Installed(packageInfo));
+    Installed installed = new Installed(packageInfo);
+    insertInstallationRemovingOthers(packageName, installed.getVersionCode()).subscribe(() -> {
+    }, throwable -> CrashReport.getInstance().log(throwable));
     return packageInfo;
+  }
+
+  private Completable insertInstallationRemovingOthers(String packageName, int versionCode) {
+    return installedRepository.getAsList(packageName)
+        .first()
+        .flatMapIterable(installeds -> installeds)
+        .flatMapCompletable(databaseInstalled -> {
+          if (databaseInstalled.getVersionCode() == versionCode) {
+            Logger.d(TAG, "databaseOnPackageAdded: saved: "
+                + databaseInstalled.getPackageName()
+                + " version code"
+                + databaseInstalled.getVersionCode());
+            databaseInstalled.setStatus(Installed.STATUS_COMPLETED);
+            return Completable.fromAction(() -> installedRepository.save(databaseInstalled));
+          } else {
+            Logger.d(TAG, "databaseOnPackageAdded: removed: "
+                + databaseInstalled.getPackageName()
+                + " version code"
+                + databaseInstalled.getVersionCode());
+            return installedRepository.remove(databaseInstalled.getPackageName(),
+                databaseInstalled.getVersionCode());
+          }
+        })
+        .toCompletable();
   }
 
   private void checkAndBroadcastReferrer(String packageName) {
@@ -201,24 +226,21 @@ public class InstalledIntentService extends IntentService {
       return packageInfo;
     }
 
-    Action0 insertApp = () -> installedRepository.save(new Installed(packageInfo));
-
-    if (update != null) {
-      if (packageInfo.versionCode >= update.getVersionCode()) {
-        // remove old update and on complete insert new app.
-        updatesRepository.remove(update)
-            .subscribe(insertApp, throwable -> CrashReport.getInstance().log(throwable));
-      }
-    } else {
-      // sync call to insert
-      insertApp.call();
-    }
+    updatesRepository.remove(update)
+        .andThen(insertInstallationRemovingOthers(packageName, packageInfo.versionCode))
+        .subscribe(() -> {
+        }, throwable -> CrashReport.getInstance().log(throwable));
 
     return packageInfo;
   }
 
   private void databaseOnPackageRemoved(String packageName) {
-    installedRepository.remove(packageName);
+    installedRepository.get(packageName)
+        .first()
+        .flatMapCompletable(
+            installed -> installedRepository.remove(packageName, installed.getVersionCode()))
+        .subscribe(installed -> {
+        }, throwable -> CrashReport.getInstance().log(throwable));
     updatesRepository.remove(packageName);
   }
 

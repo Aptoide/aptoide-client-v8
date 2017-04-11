@@ -243,7 +243,7 @@ public final class Database {
     deleteObject(realm, obj);
   }
 
-  private <E extends RealmObject> void deleteObject(Realm realm, E obj) {
+  <E extends RealmObject> void deleteObject(Realm realm, E obj) {
     realm.beginTransaction();
     try {
       if (obj != null && obj.isValid()) {

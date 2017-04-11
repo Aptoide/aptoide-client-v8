@@ -10,6 +10,7 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import io.realm.Sort;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -48,8 +49,10 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
         .toList();
   }
 
-  public void remove(String packageName) {
-    database.delete(Installed.class, Installed.PACKAGE_NAME, packageName);
+  public Completable remove(String packageName, int versionCode) {
+    return get(packageName, versionCode).first()
+        .doOnNext(installed -> database.deleteObject(Database.get(), installed))
+        .toCompletable();
   }
 
   public Observable<Boolean> isInstalled(String packageName) {

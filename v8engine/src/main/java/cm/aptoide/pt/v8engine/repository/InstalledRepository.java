@@ -4,6 +4,7 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -55,8 +56,8 @@ public class InstalledRepository implements Repository<Installed, String> {
     return accessor.get(packageName);
   }
 
-  public void remove(String packageName) {
-    accessor.remove(packageName);
+  public Completable remove(String packageName, int versionCode) {
+    return accessor.remove(packageName, versionCode);
   }
 
   public boolean contains(String packageName) {
