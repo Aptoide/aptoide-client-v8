@@ -18,6 +18,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.view.BackButtonFragment;
 import cm.aptoide.pt.v8engine.view.account.LoginSignUpFragment;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.support.v4.view.RxViewPager;
@@ -33,7 +34,7 @@ import rx.android.schedulers.AndroidSchedulers;
  * It also manages swapping pages and UI changes (Indicator + skip/next arrow)
  */
 // TODO: 16/2/2017 sithengineer add MVP to this view
-public class WizardFragment extends FragmentView
+public class WizardFragment extends BackButtonFragment
     implements LoginSignUpFragment.BottomSheetStateListener {
 
   private DumbEagerFragmentPagerAdapter viewPagerAdapter;
@@ -167,15 +168,6 @@ public class WizardFragment extends FragmentView
       skipText.setVisibility(View.VISIBLE);
       nextIcon.setVisibility(View.GONE);
     }
-  }
-
-  public boolean onBackPressed() {
-    Fragment f = viewPagerAdapter.getItem(viewPager.getCurrentItem());
-    if (FragmentView.class.isAssignableFrom(f.getClass())) {
-      return ((FragmentView) f).onBackPressed();
-    }
-
-    return super.onBackPressed();
   }
 
   @Override public void expanded() {

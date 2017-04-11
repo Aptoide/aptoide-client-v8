@@ -14,7 +14,8 @@ import android.view.ViewGroup;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpPresenter;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpView;
-import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.view.BackButton;
+import cm.aptoide.pt.v8engine.view.BackButtonFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 
 /**
@@ -23,7 +24,7 @@ import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
  * login functionality. Further code refactoring is needed to migrate external source login into
  * their own fragment and include the fragment inside the necessary login / sign up views.
  */
-public class LoginSignUpFragment extends FragmentView implements LoginSignUpView {
+public class LoginSignUpFragment extends BackButtonFragment implements LoginSignUpView {
 
   private static final String BOTTOM_SHEET_WITH_BOTTOM_BAR = "bottom_sheet_expanded";
   private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
@@ -42,6 +43,7 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
   private String authType;
   private boolean isNewAccount;
   private FragmentNavigator navigator;
+  private ClickHandler backClickHandler;
 
   public static LoginSignUpFragment newInstance(boolean withBottomBar,
       boolean dismissToNavigateToMainView, boolean navigateToHome) {
@@ -76,18 +78,25 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
     isNewAccount = args.getBoolean(IS_NEW_ACCOUNT);
   }
 
-  @Override public boolean onBackPressed() {
-    if (loginFragment != null && loginFragment.onBackPressed()) {
-      bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-      return true;
-    }
-    return super.onBackPressed();
-  }
-
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    backClickHandler = new ClickHandler() {
+      @Override public boolean handle() {
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+          bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+          return true;
+        }
+        return false;
+      }
+    };
+    registerBackClickHandler(backClickHandler);
     bindViews(view);
     attachPresenter(new LoginSignUpPresenter(this), savedInstanceState);
+  }
+
+  @Override public void onDestroyView() {
+    unregisterBackClickHandler(backClickHandler);
+    super.onDestroyView();
   }
 
   private void bindViews(View view) {

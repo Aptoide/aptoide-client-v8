@@ -107,8 +107,4 @@ public abstract class FragmentView extends LeakFragment implements View {
         throw new IllegalStateException("Unrecognized event: " + event.name());
     }
   }
-
-  public boolean onBackPressed() {
-    return false;
-  }
 }

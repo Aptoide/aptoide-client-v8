@@ -29,6 +29,7 @@ import cm.aptoide.pt.v8engine.account.LoginPreferences;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsView;
+import cm.aptoide.pt.v8engine.view.BackButton;
 import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
 import cm.aptoide.pt.v8engine.view.account.user.CreateUserActivity;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
@@ -80,6 +81,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   private ThrowableToStringMapper errorMapper;
   private LoginSignUpCredentialsPresenter presenter;
   private List<String> facebookRequestedPermissions;
+  private BackButton.ClickHandler backClickHandler;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
@@ -104,11 +106,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
             GoogleApiAvailability.getInstance()),
         getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW),
         getArguments().getBoolean(CLEAN_BACK_STACK));
-  }
-
-  @Override public boolean onBackPressed() {
-    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-    return tryCloseLoginBottomSheet() || super.onBackPressed();
   }
 
   @Nullable @Override
@@ -218,10 +215,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void goBack() {
-    // close login / signup bottom sheet
-    onBackPressed();
-    // pop this fragment from stack
-    getActivity().onBackPressed();
+    backClick();
   }
 
   @Override public void dismiss() {
@@ -305,11 +299,24 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
     bindViews(view);
 
+    backClickHandler = new BackButton.ClickHandler() {
+      @Override public boolean handle() {
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        return tryCloseLoginBottomSheet();
+      }
+    };
+    registerBackClickHandler(backClickHandler);
+
     attachPresenter(presenter, savedInstanceState);
   }
 
   @Override protected void showGoogleLoginError() {
     ShowMessage.asToast(getContext(), R.string.google_login_cancelled);
+  }
+
+  @Override public void onDestroyView() {
+    unregisterBackClickHandler(backClickHandler);
+    super.onDestroyView();
   }
 
   private void bindViews(View view) {

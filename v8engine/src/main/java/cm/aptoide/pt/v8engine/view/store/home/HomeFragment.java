@@ -36,6 +36,7 @@ import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.spotandshare.SpotSharePreviewActivity;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
+import cm.aptoide.pt.v8engine.view.BackButton;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.custom.BadgeView;
@@ -70,6 +71,7 @@ public class HomeFragment extends StoreFragment {
   private TextView userEmail;
   private TextView userUsername;
   private ImageView userAvatarImage;
+  private ClickHandler backClickHandler;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -142,6 +144,26 @@ public class HomeFragment extends StoreFragment {
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     return super.onCreateView(inflater, container, savedInstanceState);
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    backClickHandler = new ClickHandler() {
+      @Override public boolean handle() {
+        if (isDrawerOpened()) {
+          closeDrawer();
+          return true;
+        }
+
+        return false;
+      }
+    };
+    registerBackClickHandler(backClickHandler);
+  }
+
+  @Override public void onDestroyView() {
+    unregisterBackClickHandler(backClickHandler);
+    super.onDestroyView();
   }
 
   @Override protected void setupViewPager() {
@@ -361,15 +383,6 @@ public class HomeFragment extends StoreFragment {
     setHasOptionsMenu(true);
 
     Analytics.AppViewViewedFrom.addStepToList("HOME");
-  }
-
-  @Override public boolean onBackPressed() {
-    if (isDrawerOpened()) {
-      closeDrawer();
-      return true;
-    }
-
-    return super.onBackPressed();
   }
 
   private boolean isDrawerOpened() {
