@@ -233,7 +233,6 @@ public class InstallManager {
         InstallationProgress.InstallationStatus.UNINSTALLED;
     switch (overallDownloadStatus) {
       case Download.BLOCK_COMPLETE:
-      case Download.COMPLETED:
       case Download.CONNECTED:
       case Download.FILE_MISSING:
       case Download.INVALID_STATUS:
@@ -247,6 +246,7 @@ public class InstallManager {
       case Download.ERROR:
         status = InstallationProgress.InstallationStatus.FAILED;
         break;
+      case Download.COMPLETED:
       case Download.PROGRESS:
       case Download.IN_QUEUE:
       case Download.PENDING:
