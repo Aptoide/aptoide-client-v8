@@ -109,7 +109,7 @@ public class ConnectionManager {
           inactivityListener.onInactivity(true);
         }
 
-        clients = groupValidator.flagGhosts(clients);
+        groupValidator.flagGhosts(clients);
 
         for (int j = 0; j < clients.size(); j++) {
           Group tmp = clients.get(j);
