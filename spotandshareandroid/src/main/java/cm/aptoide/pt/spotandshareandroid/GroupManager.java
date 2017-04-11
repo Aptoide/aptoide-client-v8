@@ -125,7 +125,7 @@ public class GroupManager {
     protected void onPostExecute(Integer result) {
       if (joinGrouplistener != null) {
         if (result == ConnectionManager.SUCCESSFUL_JOIN) {
-          String hostDeviceName = removeAPTXVFromString(group.getSsid());
+          String hostDeviceName = group.getDeviceName();
           joinGrouplistener.onSuccess(hostDeviceName);
         } else {
           joinGrouplistener.onError(result);

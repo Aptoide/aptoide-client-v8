@@ -45,11 +45,12 @@ public class GroupParser {
           stringBuilder.append(groupString.charAt(i));
         }
       }
-      return stringBuilder.toString();
+      return stringBuilder.substring(0, stringBuilder.length() - 2);
     } else {
       String[] tmp = groupString.split("_");
       if (tmp.length > 2) {
-        return groupString.split("_")[2];
+        String deviceNameWithID = groupString.split("_")[2];
+        return deviceNameWithID.substring(0, deviceNameWithID.length() - 2);
       } else {
         throw new ParseException("Trying to access to an invalid position for the device name", 2);
       }
