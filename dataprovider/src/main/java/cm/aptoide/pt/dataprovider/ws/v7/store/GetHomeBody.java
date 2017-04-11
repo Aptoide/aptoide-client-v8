@@ -9,7 +9,7 @@ import lombok.Setter;
  */
 
 public class GetHomeBody extends GetStoreBody {
-  @Getter @Setter private final Long userId;
+  @Getter @Setter private Long userId;
 
   public GetHomeBody(BaseRequestWithStore.StoreCredentials storeCredentials,
       WidgetsArgs widgetsArgs, Long userId) {

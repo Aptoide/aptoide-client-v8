@@ -1,8 +1,7 @@
 package cm.aptoide.pt.v8engine.repository;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.AptoideEvent;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.FacebookEvent;
@@ -27,9 +26,10 @@ public class TimelineAnalytics {
   private static final String FOLLOW_FRIENDS = "Apps_Timeline_Follow_Friends";
   private final Analytics analytics;
   private final AppEventsLogger facebook;
-  private BodyInterceptor bodyInterceptor;
+  private BodyInterceptor<BaseBody> bodyInterceptor;
 
-  public TimelineAnalytics(Analytics analytics, AppEventsLogger facebook, BodyInterceptor bodyInterceptor) {
+  public TimelineAnalytics(Analytics analytics, AppEventsLogger facebook,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     this.analytics = analytics;
     this.facebook = facebook;
     this.bodyInterceptor = bodyInterceptor;

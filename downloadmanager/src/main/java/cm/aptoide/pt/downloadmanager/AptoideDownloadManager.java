@@ -2,7 +2,6 @@ package cm.aptoide.pt.downloadmanager;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
@@ -14,6 +13,7 @@ import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
@@ -21,6 +21,7 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import okhttp3.OkHttpClient;
+import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -65,6 +66,13 @@ public class AptoideDownloadManager {
     return context;
   }
 
+  public static AptoideDownloadManager getInstance() {
+    if (instance == null) {
+      instance = new AptoideDownloadManager();
+    }
+    return instance;
+  }
+
   public void initDownloadService(Context context) {
     AptoideDownloadManager.context = context;
     createDownloadDirs();
@@ -78,8 +86,10 @@ public class AptoideDownloadManager {
 
   /**
    * @param download info about the download to be made.
+   *
    * @return Observable to be subscribed if download updates needed or null if download is done
    * already
+   *
    * @throws IllegalArgumentException if the appToDownload object is not filled correctly, this
    * exception will be thrown with the cause in the detail
    * message.
@@ -154,13 +164,6 @@ public class AptoideDownloadManager {
       }
     }
     return downloadStatus;
-  }
-
-  public static AptoideDownloadManager getInstance() {
-    if (instance == null) {
-      instance = new AptoideDownloadManager();
-    }
-    return instance;
   }
 
   public Observable<Download> getCurrentDownload() {
@@ -300,15 +303,23 @@ public class AptoideDownloadManager {
         });
   }
 
-  public Void pauseDownload(String md5) {
-    downloadAccessor.get(md5).first().map(download -> {
+  public Completable pauseDownloadSync(String md5) {
+    return internalPause(md5).toCompletable();
+  }
+
+  @NonNull private Observable<Download> internalPause(String md5) {
+    return downloadAccessor.get(md5).first().map(download -> {
       download.setOverallDownloadStatus(Download.PAUSED);
       downloadAccessor.save(download);
       for (int i = download.getFilesToDownload().size() - 1; i >= 0; i--) {
         FileDownloader.getImpl().pause(download.getFilesToDownload().get(i).getDownloadId());
       }
       return download;
-    }).subscribe(download -> {
+    });
+  }
+
+  public Void pauseDownload(String md5) {
+    internalPause(md5).subscribe(download -> {
       Logger.d(TAG, "Download with " + md5 + " paused");
     }, throwable -> {
       if (throwable instanceof DownloadNotFoundException) {

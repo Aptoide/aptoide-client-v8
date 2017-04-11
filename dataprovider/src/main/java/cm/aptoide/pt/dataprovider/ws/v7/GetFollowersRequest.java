@@ -14,20 +14,22 @@ import rx.Observable;
  */
 
 public class GetFollowersRequest extends V7<GetFollowers, GetFollowersRequest.Body> {
-  protected GetFollowersRequest(Body body, BodyInterceptor bodyInterceptor) {
+  protected GetFollowersRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  public static GetFollowersRequest of(BodyInterceptor bodyInterceptor, Long userId, Long storeId) {
+  public static GetFollowersRequest of(BodyInterceptor<BaseBody> bodyInterceptor, Long userId,
+      Long storeId) {
     Body body = new Body();
     body.setUserId(userId);
     body.setStoreId(storeId);
     return new GetFollowersRequest(body, bodyInterceptor);
   }
 
-  public static GetFollowersRequest ofStore(BodyInterceptor bodyInterceptor, Long storeId) {
+  public static GetFollowersRequest ofStore(BodyInterceptor<BaseBody> bodyInterceptor,
+      Long storeId) {
     Body body = new Body();
     body.setStoreId(storeId);
     return new GetFollowersRequest(body, bodyInterceptor);

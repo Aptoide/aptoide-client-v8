@@ -3,8 +3,8 @@ package cm.aptoide.pt.spotandshare.socket.example;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
-import cm.aptoide.pt.spotandshare.socket.message.messages.ExitMessage;
-import cm.aptoide.pt.spotandshare.socket.message.messages.RequestPermissionToSend;
+import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ExitMessage;
+import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
 import cm.aptoide.pt.spotandshare.socket.message.server.AptoideMessageServerSocket;
 import java.io.File;
 import java.io.IOException;
@@ -36,8 +36,8 @@ public class ExampleUsageMultiThread {
   }
 
   private static AptoideMessageClientSocket newAptoideMessageClientSocket() {
-    return new AptoideMessageClientSocket("localhost", MESSAGE_SERVER_PORT,
-        new ExampleMessageController()) {
+    return new AptoideMessageClientSocket("localhost", MESSAGE_SERVER_PORT, null, null, null, null,
+        null) {
 
       @Override protected void onConnected(Socket socket) throws IOException {
 

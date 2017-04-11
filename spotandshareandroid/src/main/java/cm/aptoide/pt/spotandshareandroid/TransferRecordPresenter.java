@@ -70,7 +70,7 @@ public class TransferRecordPresenter implements Presenter {
           view.setInitialApConfig();
         }
         recoverNetworkState();
-        cleanAPTXNetworks();
+        cleanAPTXVNetworks();
         analytics.receiveApkFailed();
         view.dismiss();
       }
@@ -78,7 +78,7 @@ public class TransferRecordPresenter implements Presenter {
       @Override public void onServerLeft() {
         view.showServerLeftMessage();
         recoverNetworkState();
-        cleanAPTXNetworks();
+        cleanAPTXVNetworks();
         view.dismiss();
       }
     });
@@ -87,7 +87,6 @@ public class TransferRecordPresenter implements Presenter {
     applicationSender.setSendListener(new ApplicationSender.SendListener() {
       @Override public void onAppStartingToSend(String appName, String packageName, boolean isSent,
           boolean needReSend, int positionToReSend) {
-        //need more, so that i can go find the apk info /drawable ,etc
         if (positionToReSend == 100000) {
           HighwayTransferRecordItem tmp =
               transferRecordManager.startedSending(appName, packageName, needReSend, isSent);
@@ -96,8 +95,7 @@ public class TransferRecordPresenter implements Presenter {
             view.showNewCard(tmp);
           }
         } else {
-          //          listOfApps.get(positionToReSend).setSent(isSent);
-          //          listOfApps.get(positionToReSend).setNeedReSend(needReSend);
+
           view.updateItemStatus(positionToReSend, isSent, needReSend);
         }
       }
@@ -114,14 +112,12 @@ public class TransferRecordPresenter implements Presenter {
                 listOfApps.get(i).setNeedReSend(needReSend);
                 listOfApps.get(i).setSent(isSent);
                 view.updateItemStatus(i, isSent, needReSend);
-                //                            i=-1;//to do only for the last app sent with this name.
                 if (!view.getTransparencyClearHistory()) {
                   view.setTransparencyClearHistory(false);
                 }
               }
             }
           } else {
-            //deal with final try to re-send
             listOfApps.get(positionToReSend).setNeedReSend(needReSend);
             listOfApps.get(positionToReSend).setSent(isSent);
 
@@ -133,7 +129,6 @@ public class TransferRecordPresenter implements Presenter {
       }
 
       @Override public void onErrorSendingApp() {
-        //handle error
         analytics.sendApkFailed();
         view.showGeneralErrorToast();
       }
@@ -142,10 +137,13 @@ public class TransferRecordPresenter implements Presenter {
     applicationSender.setHostsListener(new ApplicationSender.HostsListener() {
       @Override public void onNoClients() {
         view.setTransparencySend(true);
+        view.setTextViewMessage(false);
       }
 
       @Override public void onAvailableClients() {
+        System.out.println("inside onAvailableClients");
         if (!view.getTransparencySend()) {
+          System.out.println("ordered to change transparency");
           view.setTransparencySend(false);
           view.setTextViewMessage(true);
         }
@@ -168,7 +166,6 @@ public class TransferRecordPresenter implements Presenter {
     if (disconnecter != null) {
       disconnecter.stop();
     }
-    //connectionManager.cleanNetworks();
     if (listOfApps != null) {
       listOfApps.clear();
       view.clearAdapter();
@@ -191,7 +188,7 @@ public class TransferRecordPresenter implements Presenter {
     }
   }
 
-  public void cleanAPTXNetworks() {
+  public void cleanAPTXVNetworks() {
     if (connectionManager != null) {
       connectionManager.cleanNetworks();
     }
@@ -207,7 +204,6 @@ public class TransferRecordPresenter implements Presenter {
         if (filePath.equals("Could not read the original filepath")) {
           view.showInstallErrorDialog(appName);
         } else {
-          System.out.println("I will install the app " + appName);
           view.showDialogToInstall(appName, filePath, packageName);
         }
       }
@@ -215,35 +211,17 @@ public class TransferRecordPresenter implements Presenter {
       @Override public void onDeleteApp(HighwayTransferRecordItem item) {
 
         view.showDialogToDelete(item);
-        //                Dialog deleteDialog = createDialogToDelete(v, position);
-        //                deleteDialog.show();
       }
 
       @Override public void onReSendApp(HighwayTransferRecordItem item,
           int position) {//// TODO: extrair o item para um App e , extrair o send files do chat activity p aplicationSEnder
 
         App app = transferRecordManager.convertTransferRecordItemToApp(item);
-        //                String filePathToReSend = item.getFilePath();
-        //                String appName = item.getAppName();
-        //                String packageName = item.getPackageName();
-        //                Drawable imageIcon= item.getIcon();
-        //                String origin=item.getFromOutside();
-        //                System.out.println("TransferRecordAdapter : here is the filePathToResend :  "+filePathToReSend);
-        //                List<App> list= new ArrayList<App>();
-        //                App tmpItem = new App(imageIcon, appName, packageName, filePathToReSend, origin);
-        //
-        //
-        //                String obbsFilePath=((HighwayTransferRecordActivity) activity).checkIfHasObb(packageName);
-        //                //add obb path
-        //                tmpItem.setObbsFilePath(obbsFilePath);
 
-        //NOT TO DELETE : safe way to detect position to resend?
-        //                int positionToResend=listOfApps.lastIndexOf(item);
         List<App> list = new ArrayList<App>();
         list.add(app);
 
         applicationSender.reSendApp(list, position);
-        //                ((HighwayTransferRecordActivity)activity).sendFiles(list, position) ;
       }
     });
   }
@@ -265,7 +243,7 @@ public class TransferRecordPresenter implements Presenter {
   public void clickedOnSendButton() {
     if (isHotspot) {
       connectedClients = DataHolder.getInstance()
-          .getConnectedClients();//to-do extract to a model with a broadcastreceiver to listen to connect's and disconnect's
+          .getConnectedClients();// TODO: 16-03-2017 filipe extract to a model with broadcast receivers
       if (connectedClients == null || connectedClients.size() < 2) {
         view.showNoConnectedClientsToast();
       } else {
@@ -278,10 +256,7 @@ public class TransferRecordPresenter implements Presenter {
 
   public void clickedOnClearHistoryButton() {
 
-    System.out.println(" Deleting history");
-
     if (listOfApps == null || listOfApps.isEmpty()) {
-      System.out.println("Trying to delete the emtpy list ! ");
       view.showNoRecordsToDeleteToast();
     } else {
       view.showDeleteHistoryDialog();
@@ -317,7 +292,7 @@ public class TransferRecordPresenter implements Presenter {
 
       @Override public void onClientDisconnected() {
         recoverNetworkState();
-        cleanAPTXNetworks();
+        cleanAPTXVNetworks();
         view.dismiss();
       }
     });

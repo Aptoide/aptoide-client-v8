@@ -36,7 +36,8 @@ public class AptoideSyncService extends Service {
             (TelephonyManager) getApplicationContext().getSystemService(TELEPHONY_SERVICE)),
             AccessorFactory.getAccessorFor(PaymentConfirmation.class),
             AccessorFactory.getAccessorFor(PaymentAuthorization.class),
-            ((V8Engine) getApplicationContext()).getAccountManager());
+            ((V8Engine) getApplicationContext()).getAccountManager(),
+            ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV3());
       }
     }
   }

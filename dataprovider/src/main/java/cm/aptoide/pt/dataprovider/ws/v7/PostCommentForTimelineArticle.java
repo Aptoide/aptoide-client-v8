@@ -19,20 +19,20 @@ public class PostCommentForTimelineArticle
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
 
-  private PostCommentForTimelineArticle(Body body, BodyInterceptor bodyInterceptor) {
+  private PostCommentForTimelineArticle(Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static PostCommentForTimelineArticle of(String timelineArticleId, String text,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     Body body = new Body(timelineArticleId, text);
     return new PostCommentForTimelineArticle(body, bodyInterceptor);
   }
 
   public static PostCommentForTimelineArticle of(String timelineArticleId, long previousCommentId,
-      String text, BodyInterceptor bodyInterceptor) {
+      String text, BodyInterceptor<BaseBody> bodyInterceptor) {
     Body body = new Body(timelineArticleId, text, previousCommentId);
     return new PostCommentForTimelineArticle(body, bodyInterceptor);
   }

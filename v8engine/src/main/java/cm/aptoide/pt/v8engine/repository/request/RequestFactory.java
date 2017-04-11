@@ -1,14 +1,14 @@
 package cm.aptoide.pt.v8engine.repository.request;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetRecommendedStoresRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 
 /**
@@ -24,21 +24,20 @@ public class RequestFactory {
   private final GetStoreWidgetsRequestFactory getStoreWidgetsRequestFactory;
   private final StoreCredentialsProvider storeCredentialsProvider;
   private final GetUserRequestFactory getUserRequestFactory;
+  private final GetStoreRecommendedRequestFactory getStoreRecommendedRequestFactory;
 
-  public RequestFactory(AptoideClientUUID aptoideClientUUID, AptoideAccountManager accountManager,
-      StoreCredentialsProvider storeCredentialsProvider, BodyInterceptor bodyInterceptor) {
+  public RequestFactory(StoreCredentialsProvider storeCredentialsProvider,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     this.storeCredentialsProvider = storeCredentialsProvider;
-    listStoresRequestFactory =
-        new ListStoresRequestFactory(aptoideClientUUID, accountManager, bodyInterceptor);
-    listAppsRequestFactory =
-        new ListAppsRequestFactory(bodyInterceptor, storeCredentialsProvider);
-    listFullReviewsRequestFactory =
-        new ListFullReviewsRequestFactory(aptoideClientUUID, accountManager, bodyInterceptor);
-    getStoreRequestFactory =
-        new GetStoreRequestFactory(accountManager, storeCredentialsProvider, bodyInterceptor);
+    listStoresRequestFactory = new ListStoresRequestFactory(bodyInterceptor);
+    listAppsRequestFactory = new ListAppsRequestFactory(bodyInterceptor, storeCredentialsProvider);
+    listFullReviewsRequestFactory = new ListFullReviewsRequestFactory(bodyInterceptor);
+    getStoreRequestFactory = new GetStoreRequestFactory(storeCredentialsProvider, bodyInterceptor);
     getStoreWidgetsRequestFactory =
-        new GetStoreWidgetsRequestFactory(accountManager, storeCredentialsProvider, bodyInterceptor);
+        new GetStoreWidgetsRequestFactory(storeCredentialsProvider, bodyInterceptor);
     getUserRequestFactory = new GetUserRequestFactory(bodyInterceptor);
+
+    getStoreRecommendedRequestFactory = new GetStoreRecommendedRequestFactory(bodyInterceptor);
   }
 
   public ListStoresRequest newListStoresRequest(int offset, int limit) {
@@ -68,5 +67,9 @@ public class RequestFactory {
 
   public GetUserRequest newGetUser(String url) {
     return this.getUserRequestFactory.newGetUser(url);
+  }
+
+  public GetRecommendedStoresRequest newGetRecommendedStores(String url) {
+    return this.getStoreRecommendedRequestFactory.newRecommendedStore(url);
   }
 }

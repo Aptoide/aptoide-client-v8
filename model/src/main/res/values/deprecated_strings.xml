@@ -97,7 +97,7 @@
   <string name="yes">Yes</string>
   <string name="no">No</string>
   <string name="feedback_subject">Subject</string>
-    <string name="feedback_to_write2">Write here to send us your feedback…\n\n
+  <string name="feedback_to_write2">Write here to send us your feedback…\n\n
         Please give us all the details you can get:
         \n\• Steps you have done
         \n\• Errors you are seeing</string>
@@ -204,7 +204,7 @@
   <string name="error_occured_paying">An error occurred. The payment wasn\'t completed.</string>
   <string name="error_occured_retry_later">An error occurred. Aptoide will retry later automatically.</string>
   <string name="account">Account</string>
-    <string name="confirm_carrier_payment">Do you want to purchase \'{title}\' for {value}? You will be charged from
+  <string name="confirm_carrier_payment">Do you want to purchase \'{title}\' for {value}? You will be charged from
         your carrier.
     </string>
   <string name="buy">Buy</string>

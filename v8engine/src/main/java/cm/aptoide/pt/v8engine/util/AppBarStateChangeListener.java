@@ -36,8 +36,6 @@ public abstract class AppBarStateChangeListener implements AppBarLayout.OnOffset
   public abstract void onStateChanged(AppBarLayout appBarLayout, State state);
 
   public enum State {
-    EXPANDED,
-    COLLAPSED,
-    IDLE
+    EXPANDED, COLLAPSED, IDLE
   }
 }

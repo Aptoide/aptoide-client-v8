@@ -17,7 +17,8 @@
       android:id="@+id/shareapps"
       android:icon="?attr/icSpotShare"
       android:orderInCategory="2"
-      android:title="@string/spot_share"/>
+      android:title="@string/spot_share"
+      />
 
   <item
       android:id="@+id/navigation_item_rollback"

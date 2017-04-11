@@ -1,6 +1,5 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.util.CommentType;
@@ -22,14 +21,15 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
 
   private static String url;
 
-  private ListCommentsRequest(Body body, BodyInterceptor bodyInterceptor) {
+  private ListCommentsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
   }
 
   public static ListCommentsRequest ofStoreAction(String url, boolean refresh,
-      @Nullable BaseRequestWithStore.StoreCredentials storeCredentials, BodyInterceptor bodyInterceptor) {
+      @Nullable BaseRequestWithStore.StoreCredentials storeCredentials,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
 
     ListCommentsRequest.url = url;
 
@@ -45,7 +45,7 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
 
   public static ListCommentsRequest of(String url, long resourceId, int limit,
       BaseRequestWithStore.StoreCredentials storeCredentials, boolean isReview,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     ListCommentsRequest.url = url;
     String username = storeCredentials.getUsername();
     String password = storeCredentials.getPasswordSha1();
@@ -64,19 +64,20 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
   }
 
   public static ListCommentsRequest of(long resourceId, int offset, int limit, boolean isReview,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     final Body body = getBody(resourceId, limit, isReview);
     body.setOffset(offset);
     return new ListCommentsRequest(body, bodyInterceptor);
   }
 
-  public static ListCommentsRequest of(long resourceId, int limit, boolean isReview, BodyInterceptor bodyInterceptor) {
+  public static ListCommentsRequest of(long resourceId, int limit, boolean isReview,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     final Body body = getBody(resourceId, limit, isReview);
     return new ListCommentsRequest(body, bodyInterceptor);
   }
 
   public static ListCommentsRequest ofTimeline(String url, boolean refresh,
-      String timelineArticleId, BodyInterceptor bodyInterceptor) {
+      String timelineArticleId, BodyInterceptor<BaseBody> bodyInterceptor) {
 
     ListCommentsRequest.url = url;
 
@@ -91,8 +92,8 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
   }
 
   private static Body getBody(long resourceId, int limit, boolean isReview) {
-    final Body body = new Body(limit, ManagerPreferences.getAndResetForceServerRefresh(), Order
-        .desc);
+    final Body body =
+        new Body(limit, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc);
 
     if (isReview) {
       body.setReviewId(resourceId);

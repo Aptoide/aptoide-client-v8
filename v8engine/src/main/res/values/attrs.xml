@@ -80,8 +80,6 @@
   <attr format="reference" name="icUpdateDrawable"/>
   <attr format="reference" name="icViewMoreComments"/>
   <attr format="reference" name="icWebSiteDrawable"/>
-  <attr format="reference" name="icWizardLeftArrowDrawable"/>
-  <attr format="reference" name="icWizardRightArrowDrawable"/>
   <attr format="reference" name="icAppviewsPencil"/>
   <attr format="color" name="navigationDrawerColor"/>
   <attr format="reference" name="timelineButtonsBackgroundColor"/>

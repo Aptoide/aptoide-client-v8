@@ -10,12 +10,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.RemoteException;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
-import cm.aptoide.pt.v8engine.activity.PaymentActivity;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
 import cm.aptoide.pt.v8engine.repository.InAppBillingRepository;
+import cm.aptoide.pt.v8engine.view.payment.PaymentActivity;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -146,7 +146,8 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
                 .map(response -> productFactory.create(apiVersion, developerPayload, packageName,
                     response))
                 .map(product -> PendingIntent.getActivity(context, 0,
-                    PaymentActivity.getIntent(context, (ParcelableProduct) product), PendingIntent.FLAG_UPDATE_CURRENT))
+                    PaymentActivity.getIntent(context, (ParcelableProduct) product),
+                    PendingIntent.FLAG_UPDATE_CURRENT))
                 .toBlocking()
                 .first();
 

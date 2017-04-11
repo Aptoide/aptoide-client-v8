@@ -26,14 +26,6 @@ public class SecurePreferences extends Preferences {
     return getString(key, String.valueOf(defaultValue)).map(value -> Boolean.valueOf(value));
   }
 
-  @Override public Completable save(String key, int value) {
-    return save(key, String.valueOf(value));
-  }
-
-  @Override public Observable<Integer> getInt(String key, int defaultValue) {
-    return getString(key, String.valueOf(defaultValue)).map(value -> Integer.valueOf(value));
-  }
-
   @Override public Completable save(String key, String value) {
     return super.save(decoder.encrypt(key), decoder.encrypt(value));
   }
@@ -41,6 +33,14 @@ public class SecurePreferences extends Preferences {
   @Override public Observable<String> getString(String key, String defaultValue) {
     return super.getString(decoder.encrypt(key), decoder.encrypt(defaultValue))
         .map(value -> decoder.decrypt(value));
+  }
+
+  @Override public Completable save(String key, int value) {
+    return save(key, String.valueOf(value));
+  }
+
+  @Override public Observable<Integer> getInt(String key, int defaultValue) {
+    return getString(key, String.valueOf(defaultValue)).map(value -> Integer.valueOf(value));
   }
 
   @Override public Completable remove(String key) {

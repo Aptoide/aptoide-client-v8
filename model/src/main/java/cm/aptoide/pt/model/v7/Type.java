@@ -15,22 +15,13 @@ public enum Type {
   _EMPTY(1, true), // FIXME for tests only
 
   // Server
-  APPS_GROUP(3, false),
-  STORES_GROUP(3, false),
-  FOLLOW_STORE(3, false),
-  DISPLAYS(2, true),
-  ADS(3, false),
-  HOME_META(1, true),
-  COMMENTS_GROUP(1, true),
+  APPS_GROUP(3, false), STORES_GROUP(3, false), FOLLOW_STORE(3, false), DISPLAYS(2, true), ADS(3,
+      false), HOME_META(1, true), COMMENTS_GROUP(1, true),
 
   //Reviews Screen
-  REVIEWS_GROUP(1, false),
-  //widget to create the user's store
-  MY_STORE_META(1, true),
-  MY_STORES_SUBSCRIBED(3, false),
-  STORES_RECOMMENDED(3, false),
-  MY_STORE(1, true),
-  APP_META(1, true);
+  REVIEWS_GROUP(1, false), //widget to create the user's store
+  MY_STORE_META(1, true), MY_STORES_SUBSCRIBED(3, false), STORES_RECOMMENDED(3, false), MY_STORE(1,
+      true), APP_META(1, true);
 
   @Getter private int defaultPerLineCount;
   @Getter private boolean fixedPerLineCount;

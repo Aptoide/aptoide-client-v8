@@ -9,10 +9,9 @@ import cm.aptoide.pt.spotandshare.socket.interfaces.ProgressCallback;
 
 public class MultiProgressAccumulator<T> implements ProgressAccumulator {
 
-  private final long totalProgress;
+  protected final T t;
   private final ProgressCallback<T> progressCallback;
-  private final T t;
-
+  private long totalProgress;
   private long addedProgress;
 
   public MultiProgressAccumulator(long totalProgress, ProgressCallback<T> progressCallback, T t) {
@@ -23,6 +22,24 @@ public class MultiProgressAccumulator<T> implements ProgressAccumulator {
 
   @Override public void addProgress(long progress) {
     addedProgress += progress;
-    progressCallback.onProgressChanged(t, 1.0f * addedProgress / totalProgress);
+    onProgressChanged(1.0f * addedProgress / totalProgress);
+  }
+
+  //@Override public void addProgress(long progress) {
+  //  addedProgress += progress;
+  //  System.out.println("Filipe PEdro: " + addedProgress + ", " + totalProgress);
+  //  if (addedProgress != totalProgress) {
+  //    onProgressChanged(1.0f * addedProgress / totalProgress);
+  //  } else {
+  //    onProgressChanged(1);
+  //  }
+  //}
+
+  @Override public void accumulate(long progressToAdd) {
+    totalProgress += progressToAdd;
+  }
+
+  @Override public void onProgressChanged(float progress) {
+    progressCallback.onProgressChanged(t, progress);
   }
 }

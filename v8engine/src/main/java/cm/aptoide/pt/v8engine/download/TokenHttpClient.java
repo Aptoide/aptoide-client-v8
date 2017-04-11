@@ -59,7 +59,7 @@ public class TokenHttpClient {
     })
         .addInterceptor(new UserAgentInterceptor(
             () -> AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, userData,
-                AptoideUtils.Core.getDefaultVername(), oemid)))
+                AptoideUtils.Core.getDefaultVername(), oemid, AptoideUtils.SystemU.TERMINAL_INFO)))
 
         .addInterceptor(new Interceptor() {
           @Override public Response intercept(Chain chain) throws IOException {
@@ -73,7 +73,7 @@ public class TokenHttpClient {
             Request request = chain.request();
             String v = request.header(Constants.VERSION_CODE);
             String packageName = request.header(Constants.PACKAGE);
-            int fileType = Integer.valueOf(request.header(Constants.FILE_TYPE));
+            int fileType = Integer.parseInt(request.header(Constants.FILE_TYPE));
 
             Response response = chain.proceed(request.newBuilder()
                 .removeHeader(Constants.VERSION_CODE)

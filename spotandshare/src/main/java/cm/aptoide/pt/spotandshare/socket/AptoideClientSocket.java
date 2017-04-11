@@ -1,6 +1,8 @@
 package cm.aptoide.pt.spotandshare.socket;
 
+import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import lombok.Setter;
 
@@ -10,10 +12,13 @@ import lombok.Setter;
 
 public abstract class AptoideClientSocket extends AptoideSocket {
 
+  private static final String TAG = AptoideClientSocket.class.getSimpleName();
   private final String hostName;
   private final int port;
   private String fallbackHostName;
   @Setter private int retries;
+  private Socket socket;
+  @Setter private SocketBinder socketBinder;
 
   public AptoideClientSocket(String hostName, String fallbackHostName, int port) {
     this(hostName, port);
@@ -37,23 +42,30 @@ public abstract class AptoideClientSocket extends AptoideSocket {
   }
 
   @Override public AptoideSocket start() {
-
-    Socket socket = null;
+    Print.d(TAG, "start() called with: " + "");
+    socket = null;
 
     String[] hosts = new String[] { hostName, fallbackHostName };
 
     for (String host : hosts) {
-      if (host != null) {
-        retries = 3;
+      if (host != null && (socket == null || !socket.isConnected())) {
+        retries = 5;
 
-        while (socket == null && retries-- > 0) {
+        while ((socket == null || !socket.isConnected()) && retries-- >= 0) {
           try {
-            socket = new Socket(hostName, port);
+            socket = new Socket();
+            if (socketBinder != null) {
+              socketBinder.bind(socket);
+            }
+            socket.connect(new InetSocketAddress(host, port));
+            Print.d(TAG, "start: Socket connected to " + host + ":" + port);
           } catch (IOException e) {
-            e.printStackTrace(System.out);
-            System.out.println("Failed to connect to " + hostName + ":" + port);
-            if (onError != null) {
-              onError.onError(e);
+            Print.d(TAG,
+                "start: Failed to connect to " + hostName + ":" + port + ", retries = " + retries);
+            if (retries == 0) {
+              if (onError != null) {
+                onError.onError(e);
+              }
             }
             try {
               Thread.sleep(1000);
@@ -76,7 +88,6 @@ public abstract class AptoideClientSocket extends AptoideSocket {
     try {
       onConnected(socket);
     } catch (IOException e) {
-      e.printStackTrace(System.out);
       if (onError != null) {
         onError.onError(e);
       }
@@ -88,9 +99,20 @@ public abstract class AptoideClientSocket extends AptoideSocket {
       }
     }
 
-    System.out.println(
-        "ShareApps: Thread " + Thread.currentThread().getId() + " finished receiving files.");
+    Print.d(TAG, "start: ShareApps: Thread "
+        + Thread.currentThread().getId()
+        + " finished "
+        + getClass().getSimpleName());
     return this;
+  }
+
+  @Override public void shutdown() {
+    super.shutdown();
+    try {
+      socket.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   protected abstract void onConnected(Socket socket) throws IOException;

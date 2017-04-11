@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Store;
@@ -12,6 +11,7 @@ import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.deprecated.tables.Downloads;
 import cm.aptoide.pt.v8engine.deprecated.tables.Excluded;
 import cm.aptoide.pt.v8engine.deprecated.tables.Repo;
@@ -20,18 +20,22 @@ import cm.aptoide.pt.v8engine.deprecated.tables.Scheduled;
 
 public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
+  public static final int DATABASE_VERSION = 59;
+  public static final String DATABASE_NAME = "aptoide.db";
+
   private static final String TAG = SQLiteDatabaseHelper.class.getSimpleName();
-  private static final int DATABASE_VERSION = 58; // 56
+
   private Throwable aggregateExceptions;
 
   public SQLiteDatabaseHelper(Context context) {
-    super(context, "aptoide.db", null, DATABASE_VERSION);
+    super(context, DATABASE_NAME, null, DATABASE_VERSION);
   }
 
   @Override public void onCreate(SQLiteDatabase db) {
     Logger.w(TAG, "onCreate() called");
 
     // do nothing here.
+
     ManagerPreferences.setNeedsSqliteDbMigration(false);
   }
 
@@ -47,7 +51,6 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
     ManagerPreferences.setNeedsSqliteDbMigration(false);
     SecurePreferences.setWizardAvailable(true);
-    SecurePreferences.setLogoutUser(true);
   }
 
   @Override public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -58,6 +61,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
         + "], newVersion = ["
         + newVersion
         + "]");
+
     migrate(db);
 
     ManagerPreferences.setNeedsSqliteDbMigration(false);

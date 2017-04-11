@@ -29,8 +29,7 @@ public class TransferRecordManager {
       List<HighwayTransferRecordItem> listOfApps) {
     List<HighwayTransferRecordItem> toRemoveList = new ArrayList<>();
     for (int i = 0; i < listOfApps.size(); i++) {
-      if (listOfApps.get(i).isSent() || listOfApps.get(i)
-          .isReceived()) {//no isSending or need resend
+      if (listOfApps.get(i).isSent() || listOfApps.get(i).isReceived()) {
         listOfApps.get(i).setDeleted(true);
         toRemoveList.add(listOfApps.get(i));
         if (listOfApps.get(i).isReceived()) {

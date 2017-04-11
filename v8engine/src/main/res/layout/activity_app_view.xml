@@ -13,7 +13,7 @@
 
   <fragment
       xmlns:tools="http://schemas.android.com/tools"
-      android:name="cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment"
+      android:name="cm.aptoide.pt.v8engine.view.app.AppViewFragment"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       tools:layout="@layout/fragment_app_view"

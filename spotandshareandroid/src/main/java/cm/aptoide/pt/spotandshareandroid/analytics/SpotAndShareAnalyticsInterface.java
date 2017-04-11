@@ -21,4 +21,8 @@ public interface SpotAndShareAnalyticsInterface {
   void receiveApkSuccess();
 
   void receiveApkFailed();
+
+  void specialSettingsDenied();
+
+  void specialSettingsGranted();
 }

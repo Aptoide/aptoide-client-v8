@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
@@ -25,7 +26,7 @@ import rx.Observable;
 
   private final String url;
 
-  private GetHomeMetaRequest(Body body, String url, BodyInterceptor bodyInterceptor) {
+  private GetHomeMetaRequest(Body body, String url, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
@@ -33,7 +34,7 @@ import rx.Observable;
   }
 
   public static GetHomeMetaRequest ofAction(String url, StoreCredentials storeCredentials,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     return new GetHomeMetaRequest(new Body(storeCredentials),
         new V7Url(url).remove("home/getMeta").get(), bodyInterceptor);
   }

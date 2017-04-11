@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.interfaces;
 
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.v8engine.fragment.BaseRecyclerViewFragment;
+import cm.aptoide.pt.v8engine.view.fragment.BaseRecyclerViewFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import java.util.List;
 

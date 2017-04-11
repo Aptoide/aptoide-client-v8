@@ -13,7 +13,7 @@
       android:useLevel="false">
     <size
         android:height="100dp"
-        android:width="100dp" />
+        android:width="100dp"/>
 
     <gradient
         android:centerColor="@color/aptoide_orange"
@@ -21,7 +21,7 @@
         android:endColor="#ffffff"
         android:startColor="@color/aptoide_orange"
         android:type="sweep"
-        android:useLevel="false" />
+        android:useLevel="false"/>
   </shape>
 
 </rotate>

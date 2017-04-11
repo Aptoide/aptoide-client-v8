@@ -12,7 +12,6 @@ public class GroupManager {
   private final ConnectionManager connectionManager;
   private AsyncTask<Void, Void, Integer> joinTask;
   private boolean interactingWithGroup;
-      //flag to know if he is already joining a group (multiple clicks) or creating a group
   private boolean mobileDataDialog;
   private Group group;
   private JoinGroupListener joinGrouplistener;
@@ -47,7 +46,6 @@ public class GroupManager {
     try {
       joinTask = joinHotspotTask.execute();
     } catch (IllegalStateException e) {
-      //TODO ERROR bc highwayActivity is singletask->doesn't create new groupManager + lazzy patern (reuse task)
       joinTask = new JoinHotspotTask().execute();
     }
   }
@@ -78,7 +76,7 @@ public class GroupManager {
     createTask = activateHotspotTask.execute();
   }
 
-  private String removeAPTXFromString(String keyword) {
+  private String removeAPTXVFromString(String keyword) {
     String[] array = keyword.split("_");
     String deviceName = array[2];
     return deviceName;
@@ -109,11 +107,10 @@ public class GroupManager {
     void onError(int result);
   }
 
-
   private class JoinHotspotTask extends AsyncTask<Void, Void, Integer> {
 
     @Override protected Integer doInBackground(Void... params) {
-      return connectionManager.joinHotspot(group.getName());//future -> pass the whole group
+      return connectionManager.joinHotspot(group.getName(), false);//future -> pass the whole group
     }
 
     @Override protected void onPreExecute() {
@@ -130,7 +127,7 @@ public class GroupManager {
     protected void onPostExecute(Integer result) {
       if (joinGrouplistener != null) {
         if (result == ConnectionManager.SUCCESSFUL_JOIN) {
-          String hostDeviceName = removeAPTXFromString(group.getName());
+          String hostDeviceName = removeAPTXVFromString(group.getName());
           joinGrouplistener.onSuccess(hostDeviceName);
         } else {
           joinGrouplistener.onError(result);

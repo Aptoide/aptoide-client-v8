@@ -1,6 +1,6 @@
 package cm.aptoide.pt.v8engine.repository.request;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
@@ -10,13 +10,11 @@ import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
  */
 class GetStoreRequestFactory {
 
-  private final AptoideAccountManager accountManager;
   private final StoreCredentialsProvider storeCredentialsProvider;
-  private final BodyInterceptor bodyInterceptor;
+  private final BodyInterceptor<BaseBody> bodyInterceptor;
 
-  public GetStoreRequestFactory(AptoideAccountManager accountManager, StoreCredentialsProvider storeCredentialsProvider,
-      BodyInterceptor bodyInterceptor) {
-    this.accountManager = accountManager;
+  public GetStoreRequestFactory(StoreCredentialsProvider storeCredentialsProvider,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.bodyInterceptor = bodyInterceptor;
   }

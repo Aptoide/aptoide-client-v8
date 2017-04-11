@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.preferences;
 
 import android.content.SharedPreferences;
-import android.support.annotation.StringRes;
 import rx.Completable;
 import rx.Observable;
 import rx.Subscriber;
@@ -20,8 +19,8 @@ public class Preferences {
   }
 
   public Observable<Boolean> getBoolean(String key, boolean defaultValue) {
-    return change(key).map(changed -> preferences.getBoolean(key, defaultValue)).startWith
-        (preferences.getBoolean(key, defaultValue));
+    return change(key).map(changed -> preferences.getBoolean(key, defaultValue))
+        .startWith(preferences.getBoolean(key, defaultValue));
   }
 
   public Completable save(String key, String value) {
@@ -29,8 +28,8 @@ public class Preferences {
   }
 
   public Observable<String> getString(String key, String defaultValue) {
-    return change(key).map(changed -> preferences.getString(key, defaultValue)).startWith
-        (preferences.getString(key, defaultValue));
+    return change(key).map(changed -> preferences.getString(key, defaultValue))
+        .startWith(preferences.getString(key, defaultValue));
   }
 
   public Completable save(String key, int value) {
@@ -38,8 +37,8 @@ public class Preferences {
   }
 
   public Observable<Integer> getInt(String key, int defaultValue) {
-    return change(key).map(changed -> preferences.getInt(key, defaultValue)).startWith
-        (preferences.getInt(key, defaultValue));
+    return change(key).map(changed -> preferences.getInt(key, defaultValue))
+        .startWith(preferences.getInt(key, defaultValue));
   }
 
   private Observable<Void> change(String key) {

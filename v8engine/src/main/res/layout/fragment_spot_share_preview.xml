@@ -21,8 +21,10 @@
         android:background="?attr/colorPrimary"
         android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:theme="@style/ThemeOverlay.AppCompat.Dark"
+        app:titleMarginStart="30dp"
         app:titleTextColor="@color/white"
         />
 
@@ -47,7 +49,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingStart="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/fragment_spot_share_preview_start_button"
+        app:layout_constraintBottom_toTopOf="@+id/ll_2"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv"
@@ -76,19 +78,37 @@
           android:textSize="13sp"
           />
     </LinearLayout>
-    <Button
-        android:id="@+id/fragment_spot_share_preview_start_button"
-        android:layout_width="wrap_content"
+
+    <RelativeLayout
+        android:id="@+id/ll_2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="?attr/actionBarSize"
-        android:text="@string/fragment_spot_share_preview_start_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll"
-        style="@style/Widget.Aptoide.Button.Colored"
-        />
+        >
+      <Button
+          android:id="@+id/fragment_spot_share_preview_start_button"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerInParent="true"
+          android:text="@string/fragment_spot_share_preview_start_button"
+          style="@style/Widget.Aptoide.Button.Colored"
+          />
 
+      <ImageView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_marginLeft="10dp"
+          android:layout_marginStart="10dp"
+          android:layout_toEndOf="@id/fragment_spot_share_preview_start_button"
+          android:layout_toRightOf="@id/fragment_spot_share_preview_start_button"
+          android:src="@drawable/beta_icon"
+          />
+
+    </RelativeLayout>
 
   </android.support.constraint.ConstraintLayout>
 

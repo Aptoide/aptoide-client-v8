@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.InAppBillingAvailableResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -16,20 +17,22 @@ import rx.Observable;
  */
 public class InAppBillingAvailableRequest extends V3<InAppBillingAvailableResponse> {
 
-  public InAppBillingAvailableRequest(BaseBody baseBody) {
+  public InAppBillingAvailableRequest(BaseBody baseBody,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     super(baseBody,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  public static InAppBillingAvailableRequest of(int apiVersion, String packageName, String type) {
+  public static InAppBillingAvailableRequest of(int apiVersion, String packageName, String type,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     final BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("apiversion", String.valueOf(apiVersion));
     args.put("reqtype", "iabavailable");
     args.put("package", packageName);
     args.put("purchasetype", type);
-    return new InAppBillingAvailableRequest(args);
+    return new InAppBillingAvailableRequest(args, bodyInterceptor);
   }
 
   @Override

@@ -14,5 +14,4 @@ import lombok.experimental.Accessors;
   private String avatar;
   @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "UTC") private Date added;
   @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "UTC") private Date modified;
-
 }

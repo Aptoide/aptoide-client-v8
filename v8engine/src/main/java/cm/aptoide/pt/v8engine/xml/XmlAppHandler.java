@@ -132,25 +132,7 @@ public class XmlAppHandler extends DefaultHandler {
 
   enum Elements {
 
-    MYAPP,
-    GETAPP,
-    NAME,
-    PNAME,
-    MD5SUM,
-    INTSIZE,
-    NEWSERVER,
-    SERVER,
-    NOTFOUND,
-    GET,
-    OBB,
-    MAIN_PATH,
-    MAIN_MD5SUM,
-    MAIN_FILESIZE,
-    MAIN_FILENAME,
-    PATCH_PATH,
-    PATCH_MD5SUM,
-    PATCH_FILESIZE,
-    PATCH_FILENAME;
+    MYAPP, GETAPP, NAME, PNAME, MD5SUM, INTSIZE, NEWSERVER, SERVER, NOTFOUND, GET, OBB, MAIN_PATH, MAIN_MD5SUM, MAIN_FILESIZE, MAIN_FILENAME, PATCH_PATH, PATCH_MD5SUM, PATCH_FILESIZE, PATCH_FILENAME;
 
     public static Elements lookup(String element) {
       try {

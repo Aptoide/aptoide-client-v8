@@ -4,8 +4,8 @@ import android.app.SearchManager;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.util.Log;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.BuildConfig;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -132,17 +132,6 @@ public abstract class WebSocketManager extends WebSocketListener implements WebS
     return result[0];
   }
 
-  public WebSocket connect(String port) {
-    request =
-        new Request.Builder().url(WEBSOCKETS_SCHEME + WEBSOCKETS_HOST + ":" + getPort()).build();
-    client = new OkHttpClient();
-    webSocket = client.newWebSocket(request, new StoreAutoCompleteWebSocket());
-
-    return webSocket;
-  }
-
-  protected abstract String getPort();
-
   @Override public boolean send(ByteString bytes) {
     return false;
   }
@@ -155,4 +144,15 @@ public abstract class WebSocketManager extends WebSocketListener implements WebS
   @Override public void cancel() {
     webSocket.cancel();
   }
+
+  public WebSocket connect(String port) {
+    request =
+        new Request.Builder().url(WEBSOCKETS_SCHEME + WEBSOCKETS_HOST + ":" + getPort()).build();
+    client = new OkHttpClient();
+    webSocket = client.newWebSocket(request, new StoreAutoCompleteWebSocket());
+
+    return webSocket;
+  }
+
+  protected abstract String getPort();
 }

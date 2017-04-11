@@ -54,6 +54,18 @@ public class HighwayRadarScan extends View {
     init(null, context);
   }
 
+  public HighwayRadarScan(Context context, AttributeSet attributeSet) {
+    super(context, attributeSet);
+
+    init(attributeSet, context);
+  }
+
+  public HighwayRadarScan(Context context, AttributeSet attributeSet, int defStyleAttr) {
+    super(context, attributeSet, defStyleAttr);
+
+    init(attributeSet, context);
+  }
+
   private void init(AttributeSet attributeSet, Context context) {
 
     circleColor = Color.parseColor("#cecece");
@@ -100,18 +112,6 @@ public class HighwayRadarScan extends View {
     return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
   }
 
-  public HighwayRadarScan(Context context, AttributeSet attributeSet) {
-    super(context, attributeSet);
-
-    init(attributeSet, context);
-  }
-
-  public HighwayRadarScan(Context context, AttributeSet attributeSet, int defStyleAttr) {
-    super(context, attributeSet, defStyleAttr);
-
-    init(attributeSet, context);
-  }
-
   @Override
   protected void onSizeChanged(int actualWidth, int actualHeight, int oldWidth, int oldHeight) {
     super.onSizeChanged(actualWidth, actualHeight, oldWidth, oldHeight);
@@ -129,7 +129,6 @@ public class HighwayRadarScan extends View {
     canvas.drawCircle(cX, cY, raio / 3, circle);
     canvas.drawCircle(cX, cY, 3 * raio / 7, circle);
 
-    //    Shader shader = new SweepGradient(cX, cY, Color.parseColor("#00e17117"), Color.parseColor("#ffe17117"));
     Shader shader =
         new SweepGradient(cX, cY, Color.parseColor("#00fafafa"), Color.parseColor("#ffefefef"));
     radar.setShader(shader);

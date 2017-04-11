@@ -71,10 +71,7 @@ public class ApplicationReceiver {
       System.out.println("Will start a server service");
       DataHolder.getInstance().createConnectedClientsList();
     } else {
-      //            String aux = calculateActualIP();
-      //            if (!targetIPAddress.equals(aux)) {
-      //                targetIPAddress = aux;
-      //            }
+
       System.out.println("Will start a client service");
 
       receiveIntent = new Intent(context, HighwayClientService.class);
@@ -101,7 +98,6 @@ public class ApplicationReceiver {
   public void removeListener() {
     if (listener != null) {
       this.listener = null;
-      //unregister receiver
       try {
         context.unregisterReceiver(receive);
       } catch (IllegalArgumentException e) {

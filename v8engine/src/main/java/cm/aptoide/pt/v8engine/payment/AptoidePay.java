@@ -45,16 +45,15 @@ public class AptoidePay {
   }
 
   public Completable initiate(Payment payment) {
-    if (payment.getAuthorization().isAuthorized()
-        || payment.getAuthorization().isInitiated()) {
+    if (payment.getAuthorization().isAuthorized() || payment.getAuthorization().isInitiated()) {
       return Completable.complete();
     }
     return authorizationRepository.createPaymentAuthorization(payment.getId());
   }
 
   public Completable authorize(int paymentId) {
-    return authorizationRepository.saveAuthorization(authorizationFactory.create(paymentId,
-        Authorization.Status.PENDING, payer.getId()));
+    return authorizationRepository.saveAuthorization(
+        authorizationFactory.create(paymentId, Authorization.Status.PENDING, payer.getId()));
   }
 
   public Completable process(Payment payment, Product product) {

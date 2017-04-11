@@ -10,8 +10,10 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.view.ActivityView;
+import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import rx.subscriptions.CompositeSubscription;
 
@@ -20,12 +22,14 @@ import rx.subscriptions.CompositeSubscription;
  */
 public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHolder {
 
-  private final NavigationManagerV4 appNav;
+  private final FragmentNavigator fragmentNavigator;
   protected CompositeSubscription compositeSubscription;
+  private ActivityNavigator activityNavigator;
 
   public Widget(@NonNull View itemView) {
     super(itemView);
-    appNav = NavigationManagerV4.Builder.buildWith(getContext());
+    fragmentNavigator = ((ActivityView) getContext()).getFragmentNavigator();
+    activityNavigator = ((ActivityView) getContext()).getActivityNavigator();
 
     try {
       assignViews(itemView);
@@ -57,10 +61,14 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
   public abstract void bindView(T displayable);
 
   public View getRootView() {
-    return getNavigationManager().peekLast().getView();
+    return getFragmentNavigator().peekLast().getView();
   }
 
-  protected NavigationManagerV4 getNavigationManager() {
-    return appNav;
+  protected FragmentNavigator getFragmentNavigator() {
+    return fragmentNavigator;
+  }
+
+  protected ActivityNavigator getActivityNavigator() {
+    return activityNavigator;
   }
 }

@@ -5,8 +5,5 @@ package cm.aptoide.pt.database;
  */
 
 public enum AppAction {
-  INSTALL,
-  DOWNGRADE,
-  UPDATE,
-  OPEN
+  INSTALL, DOWNGRADE, UPDATE, OPEN
 }

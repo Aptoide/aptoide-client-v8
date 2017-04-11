@@ -122,6 +122,7 @@ public class Analytics {
    *
    * @param flag flags fornecidas
    * @param accepted flags aceitáveis
+   *
    * @return true caso as flags fornecidas constem em accepted.
    */
   private static boolean checkAcceptability(int flag, int accepted) {
@@ -136,6 +137,13 @@ public class Analytics {
     }
   }
 
+  private static void logFacebookEvents(String eventName) {
+    if (BuildConfig.BUILD_TYPE.equals("debug")) {
+      return;
+    }
+    facebookLogger.logEvent(eventName);
+  }
+
   private static void logFabricEvent(String event, Map<String, String> map, int flags) {
     if (checkAcceptability(flags, FABRIC)) {
       CustomEvent customEvent = new CustomEvent(event);
@@ -144,35 +152,6 @@ public class Analytics {
       }
       Answers.getInstance().logCustom(customEvent);
       Logger.d(TAG, "Fabric Event: " + event + ", Map: " + map);
-    }
-  }
-
-  private static void logFacebookEvents(String eventName) {
-    if (BuildConfig.BUILD_TYPE.equals("debug")) {
-      return;
-    }
-    facebookLogger.logEvent(eventName);
-  }
-
-  public void save(@NonNull String key, @NonNull Event event) {
-    saver.save(key, event);
-  }
-
-  public @Nullable Event get(String key, Class<? extends Event> clazz) {
-    return saver.get(key + clazz.getName());
-  }
-
-  public void sendEvent(Event event) {
-    event.send();
-    saver.remove(event);
-  }
-
-  public void sendSpotAndShareEvents(String eventName, Map<String, String> attributes) {
-    logFacebookEvents(eventName, attributes);
-    if (attributes != null) {
-      track(eventName, new HashMap<String, String>(attributes), LOCALYTICS);
-    } else {
-      track(eventName, LOCALYTICS);
     }
   }
 
@@ -205,7 +184,6 @@ public class Analytics {
         FlurryAgent.logEvent(event);
         Logger.d(TAG, "Flurry Event: " + event);
       }
-
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -217,6 +195,37 @@ public class Analytics {
     }
 
     facebookLogger.logEvent(eventName, parameters);
+  }
+
+  public void save(@NonNull String key, @NonNull Event event) {
+    saver.save(key, event);
+  }
+
+  public @Nullable Event get(String key, Class<? extends Event> clazz) {
+    return saver.get(key + clazz.getName());
+  }
+
+  public void sendEvent(Event event) {
+    event.send();
+    saver.remove(event);
+  }
+
+  /**
+   * This method is dealing with spot and share events only and should be refactored in case
+   * one would want to send the same event to fabric AND any other analytics platform
+   */
+  public void sendSpotAndShareEvents(String eventName, Map<String, String> attributes,
+      boolean fabric) {
+    if (fabric) {
+      logFabricEvent(eventName, attributes, FABRIC);
+    } else {
+      logFacebookEvents(eventName, attributes);
+      if (attributes != null) {
+        track(eventName, new HashMap<String, String>(attributes), LOCALYTICS);
+      } else {
+        track(eventName, LOCALYTICS);
+      }
+    }
   }
 
   public static class Lifecycle {
@@ -322,18 +331,24 @@ public class Analytics {
 
       public static void onCreate(android.app.Activity activity) {
 
-        if (!ACTIVATE_LOCALYTICS) return;
+        if (!ACTIVATE_LOCALYTICS) {
+          return;
+        }
         Localytics.registerPush(BuildConfig.GOOGLE_SENDER_ID);
       }
 
       public static void onDestroy(android.app.Activity activity) {
 
-        if (!ACTIVATE_LOCALYTICS) return;
+        if (!ACTIVATE_LOCALYTICS) {
+          return;
+        }
       }
 
       public static void onResume(android.app.Activity activity) {
 
-        if (!ACTIVATE_LOCALYTICS) return;
+        if (!ACTIVATE_LOCALYTICS) {
+          return;
+        }
 
         Localytics.onActivityResume(activity);
 
@@ -353,14 +368,18 @@ public class Analytics {
       }
 
       public static void onPause(android.app.Activity activity) {
-        if (!ACTIVATE_LOCALYTICS && !isFirstSession) return;
+        if (!ACTIVATE_LOCALYTICS && !isFirstSession) {
+          return;
+        }
 
         Localytics.onActivityPaused(activity);
       }
 
       public static void onStart(android.app.Activity activity) {
 
-        if (!ACTIVATE_FLURRY) return;
+        if (!ACTIVATE_FLURRY) {
+          return;
+        }
 
         Logger.d(TAG, "FlurryAgent.onStartSession called");
         FlurryAgent.onStartSession(activity, BuildConfig.FLURRY_KEY);
@@ -368,7 +387,9 @@ public class Analytics {
 
       public static void onStop(android.app.Activity activity) {
 
-        if (!ACTIVATE_FLURRY) return;
+        if (!ACTIVATE_FLURRY) {
+          return;
+        }
 
         Logger.d(TAG, "FlurryAgent.onEndSession called");
         FlurryAgent.onEndSession(activity);
@@ -397,6 +418,7 @@ public class Analytics {
   }
 
   public static class Account {
+
     private static final String LOGIN_SIGN_UP_START_SCREEN = "Account_Login_Signup_Start_Screen";
     private static final String SIGNUP_SCREEN = "Account_Signup_Screen";
     private static final String LOGIN_SCREEN = "Account_Login_Screen";
@@ -523,6 +545,7 @@ public class Analytics {
   }
 
   public static class Stores {
+
     public static final String EVENT_NAME = "Stores";
 
     public static final String STORE_NAME = "Store Name";
@@ -571,6 +594,7 @@ public class Analytics {
   }
 
   public static class Updates {
+
     public static final String EVENT_NAME = "Updates";
 
     public static final String CLICKED_ON_CREATE_REVIEW = "Create Review";
@@ -591,6 +615,7 @@ public class Analytics {
   }
 
   public static class Search {
+
     //event names
     public static final String EVENT_NAME_SEARCH_TERM = "Search Term";
     public static final String EVENT_NAME_NO_SEARCH_RESULTS = "No Search Result";
@@ -608,6 +633,7 @@ public class Analytics {
   }
 
   public static class ApplicationInstall {
+
     public static final String EVENT_NAME = "Application Install";
 
     private static final String TYPE = "Type";
@@ -699,6 +725,7 @@ public class Analytics {
   }
 
   public static class ClickedOnInstallButton {
+
     private static final String EVENT_NAME = "Clicked on install button";
 
     //attributes
@@ -846,6 +873,7 @@ public class Analytics {
   }
 
   public static class Dimensions {
+
     public static final String VERTICAL = V8Engine.getConfiguration().getVerticalDimension();
     public static final String PARTNER = V8Engine.getConfiguration().getPartnerDimension();
     public static final String UNKNOWN = "unknown";
@@ -987,6 +1015,7 @@ public class Analytics {
   }
 
   public static class LTV {
+
     public static void cpi(String packageName) {
       ltv("CPI Click", packageName);
     }
@@ -1035,6 +1064,7 @@ public class Analytics {
   }
 
   public static class LocalyticsSessionControl {
+
     public static void firstSession(SharedPreferences sPref) {
       SharedPreferences.Editor edit = sPref.edit();
       edit.putBoolean(IS_LOCALYTICS_FIRST_SESSION, false);

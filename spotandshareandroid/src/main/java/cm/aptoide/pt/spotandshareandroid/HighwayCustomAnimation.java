@@ -6,8 +6,7 @@ import android.view.animation.Transformation;
 /**
  * Created by filipegoncalves on 24-08-2016.
  */
-public class HighwayCustomAnimation extends
-    Animation {// e linear pq e constante - dai usar dps o linearInterpolation -p  ser constant no time
+public class HighwayCustomAnimation extends Animation {
 
   private myCustomListener customListener = null;
 

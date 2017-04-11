@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.PaymentAuthorizationsResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
@@ -16,16 +17,18 @@ import rx.Observable;
  */
 public class GetPaymentAuthorizationsRequest extends V3<PaymentAuthorizationsResponse> {
 
-  private GetPaymentAuthorizationsRequest(BaseBody baseBody) {
+  private GetPaymentAuthorizationsRequest(BaseBody baseBody,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     super(baseBody,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  public static GetPaymentAuthorizationsRequest of(String accessToken) {
+  public static GetPaymentAuthorizationsRequest of(String accessToken,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     BaseBody args = new BaseBody();
     args.put("access_token", accessToken);
-    return new GetPaymentAuthorizationsRequest(args);
+    return new GetPaymentAuthorizationsRequest(args, bodyInterceptor);
   }
 
   @Override

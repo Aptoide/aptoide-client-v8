@@ -15,7 +15,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.logger.Logger;
@@ -26,6 +25,7 @@ import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import eu.chainfire.libsuperuser.Shell;
@@ -106,7 +106,7 @@ public class DefaultInstaller implements Installer {
     final IntentFilter intentFilter = new IntentFilter();
     intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
     intentFilter.addDataScheme("package");
-    return Observable.<Void>fromCallable(() -> {
+    return Observable.<Void> fromCallable(() -> {
       startUninstallIntent(context, packageName, uri);
       return null;
     }).flatMap(uninstallStarted -> waitPackageIntent(context, intentFilter, packageName));
@@ -208,7 +208,7 @@ public class DefaultInstaller implements Installer {
     intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
     intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
     intentFilter.addDataScheme("package");
-    return Observable.<Void>fromCallable(() -> {
+    return Observable.<Void> fromCallable(() -> {
       startInstallIntent(context, file);
       return null;
     }).flatMap(installStarted -> waitPackageIntent(context, intentFilter, packageName));

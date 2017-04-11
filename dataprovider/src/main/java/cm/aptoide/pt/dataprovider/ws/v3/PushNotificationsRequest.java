@@ -7,6 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
 import cm.aptoide.pt.networkclient.WebService;
@@ -29,10 +30,11 @@ public class PushNotificationsRequest extends V3<GetPushNotificationsResponse> {
   private final Map<String, String> options;
   private final String id;
 
-  protected PushNotificationsRequest(String id, Map<String, String> options) {
-    super(BASE_HOST,
+  protected PushNotificationsRequest(BaseBody baseBody, String id, Map<String, String> options,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
+    super(BASE_HOST, baseBody,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), bodyInterceptor);
     this.options = options;
     this.id = id;
   }
@@ -60,7 +62,7 @@ public class PushNotificationsRequest extends V3<GetPushNotificationsResponse> {
     }
     options.put("aptoide_package", appId);
 
-    return new PushNotificationsRequest(id, options);
+    return new PushNotificationsRequest(null, id, options, null);
   }
 
   @Override

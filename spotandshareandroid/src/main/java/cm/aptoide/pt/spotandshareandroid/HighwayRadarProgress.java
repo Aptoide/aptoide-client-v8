@@ -63,6 +63,21 @@ public class HighwayRadarProgress extends View {
     startRotation(1 * 1000);
   }
 
+  @Override protected void onDetachedFromWindow() {
+    super.onDetachedFromWindow();
+    stopRotation();
+  }
+
+  @Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+    int width = View.MeasureSpec.getSize(widthMeasureSpec);
+    int height = MeasureSpec.getSize(heightMeasureSpec);
+    raio = Math.min(width, height);
+    setMeasuredDimension(width, height);
+    rect.set(17, 17, width - 17, height - 17);
+  }
+
   private void startRotation(long duration) {
     HighwayCustomAnimation animation = new HighwayCustomAnimation();
     animation.setDuration(duration);
@@ -76,22 +91,6 @@ public class HighwayRadarProgress extends View {
       }
     });
     startAnimation(animation);
-  }
-
-  @Override protected void onDetachedFromWindow() {
-    super.onDetachedFromWindow();
-    stopRotation();
-  }
-
-  @Override protected void onMeasure(int widthMeasureSpec,
-      int heightMeasureSpec) {//define quald eve ser o tamanho relativamente ao parent
-    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-    int width = View.MeasureSpec.getSize(widthMeasureSpec);
-    int height = MeasureSpec.getSize(heightMeasureSpec);
-    raio = Math.min(width, height);
-    setMeasuredDimension(width, height);
-    rect.set(17, 17, width - 17, height - 17);//mudar
   }
 
   private void stopRotation() {

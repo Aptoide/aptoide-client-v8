@@ -20,12 +20,11 @@ import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.iab.InAppBillingSerializer;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.Product;
@@ -50,11 +49,13 @@ public final class RepositoryFactory {
   }
 
   public static UpdateRepository getUpdateRepository(Context context) {
-    IdsRepositoryImpl aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), context);
     return new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
-        AccessorFactory.getAccessorFor(Store.class), getAccountManager(context), aptoideClientUUID,
-        new BaseBodyInterceptor(aptoideClientUUID, getAccountManager(context)));
+        AccessorFactory.getAccessorFor(Store.class), getAccountManager(context),
+        getAptoideClientUUID(context), getBaseBodyInterceptorV7(context));
+  }
+
+  private static AptoideClientUUID getAptoideClientUUID(Context context) {
+    return ((V8Engine) context.getApplicationContext()).getAptoideClientUUID();
   }
 
   private static AptoideAccountManager getAccountManager(Context context) {
@@ -86,8 +87,9 @@ public final class RepositoryFactory {
     final NetworkOperatorManager operatorManager = getNetworkOperatorManager(context);
     if (product instanceof InAppBillingProduct) {
       return new InAppBillingProductRepository(new InAppBillingRepository(operatorManager,
-          AccessorFactory.getAccessorFor(PaymentConfirmation.class), getAccountManager(context)),
-          purchaseFactory, paymentFactory, (InAppBillingProduct) product);
+          AccessorFactory.getAccessorFor(PaymentConfirmation.class), getAccountManager(context),
+          getBaseBodyInterceptorV3(context)), purchaseFactory, paymentFactory,
+          (InAppBillingProduct) product);
     } else {
       return new PaidAppProductRepository(getAppRepository(context), purchaseFactory,
           paymentFactory, (PaidAppProduct) product);
@@ -99,11 +101,13 @@ public final class RepositoryFactory {
     if (product instanceof InAppBillingProduct) {
       return new InAppPaymentConfirmationRepository(getNetworkOperatorManager(context),
           AccessorFactory.getAccessorFor(PaymentConfirmation.class), getBackgroundSync(context),
-          new PaymentConfirmationFactory(), getAccountManager(context));
+          new PaymentConfirmationFactory(), getAccountManager(context),
+          getBaseBodyInterceptorV3(context));
     } else if (product instanceof PaidAppProduct) {
       return new PaidAppPaymentConfirmationRepository(getNetworkOperatorManager(context),
           AccessorFactory.getAccessorFor(PaymentConfirmation.class), getBackgroundSync(context),
-          new PaymentConfirmationFactory(), getAccountManager(context));
+          new PaymentConfirmationFactory(), getAccountManager(context),
+          getBaseBodyInterceptorV3(context));
     } else {
       throw new IllegalArgumentException("No compatible repository for product " + product.getId());
     }
@@ -112,7 +116,8 @@ public final class RepositoryFactory {
   public static PaymentAuthorizationRepository getPaymentAuthorizationRepository(Context context) {
     return new PaymentAuthorizationRepository(
         AccessorFactory.getAccessorFor(PaymentAuthorization.class), getBackgroundSync(context),
-        new PaymentAuthorizationFactory(context), getAccountManager(context));
+        new PaymentAuthorizationFactory(context), getAccountManager(context),
+        getBaseBodyInterceptorV3(context));
   }
 
   private static NetworkOperatorManager getNetworkOperatorManager(Context context) {
@@ -121,12 +126,18 @@ public final class RepositoryFactory {
   }
 
   public static AppRepository getAppRepository(Context context) {
-    final AptoideClientUUID aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), context);
     return new AppRepository(getNetworkOperatorManager(context), getAccountManager(context),
-        aptoideClientUUID,
-        new BaseBodyInterceptor(aptoideClientUUID, getAccountManager(context)),
+        getBaseBodyInterceptorV7(context), getBaseBodyInterceptorV3(context),
         new StoreCredentialsProviderImpl());
+  }
+
+  private static BodyInterceptor<BaseBody> getBaseBodyInterceptorV7(Context context) {
+    return ((V8Engine) context.getApplicationContext()).getBaseBodyInterceptorV7();
+  }
+
+  private static BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBaseBodyInterceptorV3(
+      Context context) {
+    return ((V8Engine) context.getApplicationContext()).getBaseBodyInterceptorV3();
   }
 
   private static SyncAdapterBackgroundSync getBackgroundSync(Context context) {
@@ -137,6 +148,7 @@ public final class RepositoryFactory {
 
   public static InAppBillingRepository getInAppBillingRepository(Context context) {
     return new InAppBillingRepository(getNetworkOperatorManager(context),
-        AccessorFactory.getAccessorFor(PaymentConfirmation.class), getAccountManager(context));
+        AccessorFactory.getAccessorFor(PaymentConfirmation.class), getAccountManager(context),
+        getBaseBodyInterceptorV3(context));
   }
 }

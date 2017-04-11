@@ -8,7 +8,6 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -146,6 +145,14 @@ public class Displayables implements LifecycleSchim {
     if (pos >= 0 && pos < displayables.size()) {
       displayables.remove(pos);
     }
+  }
+
+  public void remove(Displayable displayable) {
+    displayables.remove(displayable);
+  }
+
+  public int getPosition(Displayable displayable) {
+    return displayables.indexOf(displayable);
   }
 
   public void clear() {

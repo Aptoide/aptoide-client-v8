@@ -14,11 +14,11 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import java.util.Locale;
 import rx.Subscription;
 import rx.schedulers.Schedulers;
@@ -79,6 +79,15 @@ import rx.subscriptions.CompositeSubscription;
       });
     }
     return START_STICKY;
+  }
+
+  @Override public void onDestroy() {
+    subscriptions.unsubscribe();
+    super.onDestroy();
+  }
+
+  @Nullable @Override public IBinder onBind(Intent intent) {
+    return null;
   }
 
   private void startDownload(String md5) throws DownloadNotFoundException {
@@ -209,14 +218,5 @@ import rx.subscriptions.CompositeSubscription;
           });
       subscriptions.add(stopMechanismSubscription);
     }
-  }
-
-  @Override public void onDestroy() {
-    subscriptions.unsubscribe();
-    super.onDestroy();
-  }
-
-  @Nullable @Override public IBinder onBind(Intent intent) {
-    return null;
   }
 }

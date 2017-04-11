@@ -26,16 +26,13 @@ import lombok.experimental.Accessors;
   @JsonProperty("links") private List<SocialChannel> socialChannels;
 
   public enum SocialChannelType {
-    FACEBOOK,
-    TWITTER,
-    YOUTUBE,
-    TWITCH
+    FACEBOOK, TWITTER, YOUTUBE, TWITCH
   }
 
   @Data public static class Stats {
     private int apps;
     private int subscribers;
-    private int downloads;
+    private long downloads;
   }
 
   @Data public static class Appearance {

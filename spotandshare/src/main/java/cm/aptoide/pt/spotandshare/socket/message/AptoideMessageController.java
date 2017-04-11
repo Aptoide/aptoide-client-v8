@@ -1,10 +1,13 @@
 package cm.aptoide.pt.spotandshare.socket.message;
 
+import cm.aptoide.pt.spotandshare.socket.Print;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
+import cm.aptoide.pt.spotandshare.socket.exception.ServerLeftException;
 import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.Sender;
-import cm.aptoide.pt.spotandshare.socket.message.messages.AckMessage;
-import cm.aptoide.pt.spotandshare.socket.message.messages.ExitMessage;
+import cm.aptoide.pt.spotandshare.socket.message.messages.v1.AckMessage;
+import cm.aptoide.pt.spotandshare.socket.message.messages.v1.ExitMessage;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -21,16 +24,16 @@ import lombok.Getter;
 public abstract class AptoideMessageController implements Sender<Message> {
 
   public static final long ACK_TIMEOUT = 5000;
-
+  private static final String TAG = AptoideMessageController.class.getSimpleName();
   private final HashMap<Class, MessageHandler> messageHandlersMap;
-  private final OnError<IOException> onError;
-
+  private OnError<IOException> onError;
   private ObjectOutputStream objectOutputStream;
   private ObjectInputStream objectInputStream;
   private LinkedBlockingQueue<AckMessage> ackMessages = new LinkedBlockingQueue<>();
   @Getter private Host host;
   @Getter private Host localhost;
   private Socket socket;
+  @Getter private boolean connected;
 
   public AptoideMessageController(List<MessageHandler<? extends Message>> messageHandlers,
       OnError<IOException> onError) {
@@ -55,6 +58,7 @@ public abstract class AptoideMessageController implements Sender<Message> {
     objectInputStream = new ObjectInputStream(socket.getInputStream());
     localhost = Host.fromLocalhost(socket);
     host = Host.from(socket);
+    connected = true;
     startListening(objectInputStream);
   }
 
@@ -62,16 +66,20 @@ public abstract class AptoideMessageController implements Sender<Message> {
     try {
       while (true) {
         Object o = objectInputStream.readObject();
-        System.out.println(
-            Thread.currentThread().getId() + ": Received input object. " + o.getClass()
-                .getSimpleName());
+        Print.d(TAG, "startListening: "
+            + Thread.currentThread().getId()
+            + ": Received input object. "
+            + o.getClass().getSimpleName());
         Message message = (Message) o;
         handle(message);
       }
     } catch (IOException e) {
-      e.printStackTrace();
       if (onError != null) {
-        onError.onError(e);
+        if (isServerLeft(e)) {
+          onError.onError(new ServerLeftException(e));
+        } else {
+          onError.onError(e);
+        }
       }
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
@@ -87,8 +95,8 @@ public abstract class AptoideMessageController implements Sender<Message> {
       }
     } else {
       if (canHandle(message)) {
-        System.out.println(
-            "Handling message " + message + ", " + message.getClass().getSimpleName());
+        Print.d(TAG,
+            "handle: Handling message " + message + ", " + message.getClass().getSimpleName());
         messageHandlersMap.get(message.getClass()).handleMessage(message, this);
       } else {
         throw new IllegalArgumentException(
@@ -97,40 +105,74 @@ public abstract class AptoideMessageController implements Sender<Message> {
     }
   }
 
+  private boolean isServerLeft(IOException e) {
+    return e instanceof EOFException;
+  }
+
   private boolean canHandle(Message message) {
     return messageHandlersMap.containsKey(message.getClass());
   }
 
-  public synchronized boolean sendWithAck(Message message) throws InterruptedException {
-    // TODO: 02-02-2017 neuro no ack waiting lol
-    AckMessage ackMessage = null;
-    System.out.println(Thread.currentThread().getId() + ": Sending message with ack: " + message);
-    try {
-      objectOutputStream.writeObject(message);
-      ackMessage = ackMessages.poll(ACK_TIMEOUT, TimeUnit.MILLISECONDS);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    System.out.println(Thread.currentThread().getId() + ": Received ack: " + ackMessage);
-
-    return ackMessage != null && ackMessage.isSuccess();
-  }
-
   public void exit() {
-    send(new ExitMessage(getLocalhost()));
     try {
+      disable();
+      sendWithAck(new ExitMessage(getLocalhost()));
       if (socket != null && !socket.isClosed()) {
         socket.close();
       }
     } catch (IOException e) {
       e.printStackTrace();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
     }
   }
 
+  public void disable() {
+    onError = null;
+  }
+
+  public synchronized boolean sendWithAck(Message message) throws InterruptedException {
+
+    Print.d(TAG, "sendWithAck() called with: message = [" + message + "]");
+
+    if (!isConnected()) {
+      Print.d(TAG, "sendWithAck: " + message.getClass().getSimpleName() + " not connected!");
+      return false;
+    }
+
+    // TODO: 02-02-2017 neuro no ack waiting lol
+    AckMessage ackMessage = null;
+    Print.d(TAG, "sendWithAck: "
+        + Thread.currentThread().getId()
+        + ": Sending message with ack: "
+        + message
+        + ", "
+        + message.getClass().getSimpleName());
+    try {
+      objectOutputStream.writeObject(message);
+      ackMessage = ackMessages.poll(ACK_TIMEOUT, TimeUnit.MILLISECONDS);
+    } catch (IOException e) {
+      Print.d(TAG, "sendWithAck: " + Thread.currentThread().getId() + ": Failed to receive ack!");
+      e.printStackTrace();
+    }
+
+    Print.d(TAG,
+        "sendWithAck: " + Thread.currentThread().getId() + ": Received ack: " + ackMessage);
+
+    return ackMessage != null && ackMessage.isSuccess();
+  }
+
   @Override public synchronized void send(Message message) {
-    System.out.println(
-        Thread.currentThread().getId() + ": Sending message: " + message + ", " + message.getClass()
+    Print.d(TAG, "send() called with: message = [" + message + "]");
+
+    if (!isConnected()) {
+      Print.d(TAG, "send: " + message.getClass().getSimpleName() + " not connected!");
+      return;
+    }
+
+    Print.d(TAG,
+        "send: " + Thread.currentThread().getId() + ": Sending message: " + message + ", " + message
+            .getClass()
             .getSimpleName());
     try {
       if (objectOutputStream != null) {

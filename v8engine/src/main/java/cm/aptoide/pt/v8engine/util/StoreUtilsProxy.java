@@ -2,9 +2,9 @@ package cm.aptoide.pt.v8engine.util;
 
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
@@ -13,6 +13,7 @@ import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import rx.Completable;
 import rx.Observable;
@@ -29,11 +30,12 @@ public class StoreUtilsProxy {
 
   private final StoreAccessor storeAccessor;
   private final AptoideAccountManager accountManager;
-  private final BodyInterceptor bodyInterceptor;
+  private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final StoreCredentialsProvider storeCredentialsProvider;
 
-  public StoreUtilsProxy(AptoideAccountManager accountManager, BodyInterceptor bodyInterceptor,
-      StoreCredentialsProvider storeCredentialsProvider, StoreAccessor storeAccessor) {
+  public StoreUtilsProxy(AptoideAccountManager accountManager,
+      BodyInterceptor<BaseBody> bodyInterceptor, StoreCredentialsProvider storeCredentialsProvider,
+      StoreAccessor storeAccessor) {
     this.accountManager = accountManager;
     this.bodyInterceptor = bodyInterceptor;
     this.storeCredentialsProvider = storeCredentialsProvider;

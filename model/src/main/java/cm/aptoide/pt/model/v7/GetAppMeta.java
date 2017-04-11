@@ -63,7 +63,6 @@ import lombok.EqualsAndHashCode;
     public void setPaid() {
       status = "OK";
     }
-
   }
 
   @Data public static class Developer {

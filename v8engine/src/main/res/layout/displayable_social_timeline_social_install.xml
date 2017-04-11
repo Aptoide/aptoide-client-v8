@@ -68,7 +68,7 @@
           android:layout_toRightOf="@+id/displayable_social_timeline_recommendation_icon"
           android:ellipsize="end"
           android:lines="1"
-          android:text="Installed and Recommends"
+          android:text="@string/social_timeline_share_dialog_installed_and_recommended"
           style="@style/Widget.Aptoide.Card.Body"
           />
 
@@ -96,6 +96,7 @@
           android:id="@+id/displayable_social_timeline_recommendation_get_app_button"
           android:layout_width="wrap_content"
           android:layout_height="30dp"
+          android:layout_alignLeft="@+id/displayable_social_timeline_recommendation_name"
           android:layout_alignStart="@+id/displayable_social_timeline_recommendation_name"
           android:layout_below="@+id/displayable_social_timeline_recommendation_icon"
           android:layout_marginBottom="5dp"

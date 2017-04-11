@@ -1,9 +1,8 @@
 package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.AnalyticsEventRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.Event;
 import java.util.Map;
 import rx.schedulers.Schedulers;
@@ -18,10 +17,10 @@ public class AptoideEvent implements Event {
   private final String eventName;
   private final String action;
   private final String context;
-  private BodyInterceptor bodyInterceptor;
+  private BodyInterceptor<BaseBody> bodyInterceptor;
 
   public AptoideEvent(Map<String, Object> data, String eventName, String action, String context,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     this.data = data;
     this.eventName = eventName;
     this.action = action;
@@ -30,8 +29,10 @@ public class AptoideEvent implements Event {
   }
 
   @Override public void send() {
-    AnalyticsEventRequest.of(eventName, context,
-        action, data, bodyInterceptor).observe().observeOn(Schedulers.io()).subscribe(baseV7Response -> {
-    }, throwable -> throwable.printStackTrace());
+    AnalyticsEventRequest.of(eventName, context, action, data, bodyInterceptor)
+        .observe()
+        .observeOn(Schedulers.io())
+        .subscribe(baseV7Response -> {
+        }, throwable -> throwable.printStackTrace());
   }
 }

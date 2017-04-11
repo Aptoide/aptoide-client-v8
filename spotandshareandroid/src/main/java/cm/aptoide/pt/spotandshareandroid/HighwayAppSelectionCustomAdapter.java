@@ -1,8 +1,6 @@
 package cm.aptoide.pt.spotandshareandroid;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,26 +16,15 @@ import java.util.List;
 public class HighwayAppSelectionCustomAdapter extends BaseAdapter {
 
   private Context context;
-  private Activity activity;
   private List<AppViewModel> appsList;
-  private HighwayAppSelectionView appSelectionView;
   private ViewHolder viewHolder;
   private View view;
-  private String appName;
-  private String packageName;
-  private String filePath;
-  private Drawable appLogo;
-  private boolean isHotspot;
-  private String obbsFilePath;
-  private List<App> selectedAppsList = new ArrayList<App>();
   private HighwayAppSelectionView.AppSelectionListener listener;
 
   public HighwayAppSelectionCustomAdapter(HighwayAppSelectionView appSelectionView, Context context,
       List<AppViewModel> appsList, boolean isHotspot) {
-    this.appSelectionView = appSelectionView;
     this.context = context;
     this.appsList = appsList;
-    this.isHotspot = isHotspot;
   }
 
   public void setListener(HighwayAppSelectionView.AppSelectionListener listener) {
@@ -106,19 +92,6 @@ public class HighwayAppSelectionCustomAdapter extends BaseAdapter {
     int position;
   }
 
-  //
-  //    public List<App> getListOfSelectedApps() {
-  //        System.out.println("Appselection custom adapter - getting the list of selected apps ! ");
-  //        return selectedAppsList;
-  //    }
-  //
-  //    public void clearListOfSelectedApps() {
-  //        for (int i = 0; i < selectedAppsList.size(); i++) {
-  //            selectedAppsList.get(i).setSelected(false);
-  //        }
-  //        selectedAppsList.clear();
-  //    }
-
   class MyOnClickListener implements View.OnClickListener {
     private final int position;
 
@@ -132,14 +105,4 @@ public class HighwayAppSelectionCustomAdapter extends BaseAdapter {
       }
     }
   }
-
-  //
-  //    public void removeElementFromSelectedAppsList(String filePath) {
-  //
-  //        for (int i = 0; i < selectedAppsList.size(); i++) {
-  //            if (selectedAppsList.get(i).getFilePath().equals(filePath)) {
-  //                selectedAppsList.remove(i);
-  //            }
-  //        }
-  //    }
 }

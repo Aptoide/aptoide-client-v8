@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import cm.aptoide.pt.annotation.Ignore;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
 import java.util.List;
 import lombok.Getter;

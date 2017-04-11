@@ -139,6 +139,7 @@
   <string name="image_requirements_error_min_width">- Minimum width is lower than 600px\n</string>
   <string name="image_requirements_error_max_width">- Maximum width is higher than 10240px\n</string>
   <string name="image_requirements_error_max_file_size">- Maximum size is higher than 5 MB\n</string>
+  <string name="image_requirements_error_open_image">- Error opening the image\n</string>
   <string name="image_requirements_error_popup_title">Image</string>
 
 </resources>

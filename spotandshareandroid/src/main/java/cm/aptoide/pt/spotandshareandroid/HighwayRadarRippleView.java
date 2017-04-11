@@ -47,16 +47,26 @@ public class HighwayRadarRippleView extends TextView {
     initAnimation();
   }
 
+  public HighwayRadarRippleView(Context context, AttributeSet attrs) {
+    super(context, attrs);
+
+    initPaint();
+    initAnimation();
+  }
+
+  public HighwayRadarRippleView(Context context, AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+
+    initPaint();
+    initAnimation();
+  }
+
   private void initPaint() {
     paint = new Paint();
     paint.setAntiAlias(true);
     paint.setStyle(Paint.Style.FILL);
     paint.setColor(effectColor);
   }
-
-  //    public HighwayRadarRippleView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-  //        super(context, attrs, defStyleAttr, defStyleRes);
-  //    }
 
   private void initAnimation() {
     objectAnimator = ObjectAnimator.ofInt(this, "currentProgress", 0, 100);
@@ -65,26 +75,6 @@ public class HighwayRadarRippleView extends TextView {
     objectAnimator.setInterpolator(new LinearInterpolator());
     objectAnimator.setEvaluator(mProgressEvaluator);
     objectAnimator.setDuration(time);
-  }
-
-  public HighwayRadarRippleView(Context context, AttributeSet attrs) {
-    super(context, attrs);
-    //        keyword=this.getText().toString();
-    //        hotspotName=removeTransmissionFromString(keyword);
-    //        this.setText(hotspotName);
-
-    initPaint();
-    initAnimation();
-  }
-
-  public HighwayRadarRippleView(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-    //        keyword=this.getText().toString();
-    //        hotspotName=removeTransmissionFromString(keyword);
-    //        this.setText(hotspotName);
-
-    initPaint();
-    initAnimation();
   }
 
   public void setEffectColor(int color) {
@@ -149,7 +139,6 @@ public class HighwayRadarRippleView extends TextView {
   }
 
   @Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    //super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     int resultWidth = 0;
     int modeWidth = MeasureSpec.getMode(widthMeasureSpec);
     int sizeWidth = MeasureSpec.getSize(widthMeasureSpec);
@@ -186,11 +175,5 @@ public class HighwayRadarRippleView extends TextView {
         + resultHeight);
 
     setMeasuredDimension(resultWidth, resultHeight);
-  }
-
-  private String removeAPTXFromString(String keyword) {
-    String[] array = keyword.split("_");
-    String deviceName = array[2];
-    return deviceName;
   }
 }

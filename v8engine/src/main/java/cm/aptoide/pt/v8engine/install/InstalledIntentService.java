@@ -3,8 +3,9 @@ package cm.aptoide.pt.v8engine.install;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Installed;
@@ -21,12 +22,14 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.RollbackRepository;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
+import rx.Completable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
@@ -63,28 +66,30 @@ public class InstalledIntentService extends IntentService {
   }
 
   @Override protected void onHandleIntent(Intent intent) {
+    if (intent != null) {
+      final String action = intent.getAction();
+      final String packageName = intent.getData().getEncodedSchemeSpecificPart();
 
-    final String action = intent.getAction();
-    final String packageName = intent.getData().getEncodedSchemeSpecificPart();
+      confirmAction(packageName, action);
 
-    confirmAction(packageName, action);
+      if (!TextUtils.equals(action, Intent.ACTION_PACKAGE_REPLACED) && intent.getBooleanExtra(
+          Intent.EXTRA_REPLACING, false)) {
+        // do nothing if its a replacement ongoing. we are only interested in
+        // already replaced apps
+        return;
+      }
 
-    if (!intent.getAction().equals(Intent.ACTION_PACKAGE_REPLACED) && intent.getBooleanExtra(
-        Intent.EXTRA_REPLACING, false)) {
-      return;
-    }
-    Logger.d(TAG, "Action : " + action);
-
-    switch (action) {
-      case Intent.ACTION_PACKAGE_ADDED:
-        onPackageAdded(packageName);
-        break;
-      case Intent.ACTION_PACKAGE_REPLACED:
-        onPackageReplaced(packageName);
-        break;
-      case Intent.ACTION_PACKAGE_REMOVED:
-        onPackageRemoved(packageName);
-        break;
+      switch (action) {
+        case Intent.ACTION_PACKAGE_ADDED:
+          onPackageAdded(packageName);
+          break;
+        case Intent.ACTION_PACKAGE_REPLACED:
+          onPackageReplaced(packageName);
+          break;
+        case Intent.ACTION_PACKAGE_REMOVED:
+          onPackageRemoved(packageName);
+          break;
+      }
     }
   }
 
@@ -141,21 +146,13 @@ public class InstalledIntentService extends IntentService {
     StoreMinimalAdAccessor storeMinimalAdAccessor =
         AccessorFactory.getAccessorFor(StoredMinimalAd.class);
     Subscription unManagedSubscription =
-        storeMinimalAdAccessor.get(packageName).subscribe(storeMinimalAd -> {
+        storeMinimalAdAccessor.get(packageName).flatMapCompletable(storeMinimalAd -> {
           if (storeMinimalAd != null) {
-            ReferrerUtils.broadcastReferrer(packageName, storeMinimalAd.getReferrer());
-            DataproviderUtils.AdNetworksUtils.knockCpi(storeMinimalAd);
-            storeMinimalAdAccessor.remove(storeMinimalAd);
+            return knockCpi(packageName, storeMinimalAdAccessor, storeMinimalAd);
           } else {
-            adsRepository.getAdsFromSecondInstall(packageName)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(
-                    minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES,
-                        true, adsRepository))
-                .onErrorReturn(throwable1 -> null)
-                .subscribe();
+            return extractReferrer(packageName);
           }
-        }, err -> {
+        }).subscribe(__ -> { /* do nothing */ }, err -> {
           CrashReport.getInstance().log(err);
         });
 
@@ -164,20 +161,20 @@ public class InstalledIntentService extends IntentService {
 
   private void sendInstallEvent(String packageName, PackageInfo packageInfo) {
     if (packageInfo != null) {
-      Logger.d(TAG, "sending event with the id = " + packageName + packageInfo.versionCode);
       InstallEvent event =
           (InstallEvent) analytics.get(packageName + packageInfo.versionCode, InstallEvent.class);
       if (event != null) {
         event.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.SUCC);
         analytics.sendEvent(event);
-        Logger.d(TAG, "Event sent");
-      } else {
-        CrashReport.getInstance()
-            .log(new NullPointerException("Event not sent, the event was null"));
+        return;
       }
-    } else {
-      CrashReport.getInstance().log(new NullPointerException("PackageInfo is null"));
+
+      CrashReport.getInstance().log(new NullPointerException("Event is null."));
+      return;
     }
+
+    // information about the package is null so we don't broadcast an event
+    CrashReport.getInstance().log(new NullPointerException("PackageInfo is null."));
   }
 
   private PackageInfo databaseOnPackageReplaced(String packageName) {
@@ -229,5 +226,23 @@ public class InstalledIntentService extends IntentService {
     } else {
       return false;
     }
+  }
+
+  private Completable knockCpi(String packageName, StoreMinimalAdAccessor storeMinimalAdAccessor,
+      StoredMinimalAd storeMinimalAd) {
+    return Completable.fromCallable(() -> {
+      ReferrerUtils.broadcastReferrer(packageName, storeMinimalAd.getReferrer());
+      DataproviderUtils.AdNetworksUtils.knockCpi(storeMinimalAd);
+      storeMinimalAdAccessor.remove(storeMinimalAd);
+      return null;
+    });
+  }
+
+  @NonNull private Completable extractReferrer(String packageName) {
+    return adsRepository.getAdsFromSecondInstall(packageName)
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, true,
+            adsRepository))
+        .toCompletable();
   }
 }

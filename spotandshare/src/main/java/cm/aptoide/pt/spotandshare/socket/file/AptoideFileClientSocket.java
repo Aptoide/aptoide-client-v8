@@ -27,12 +27,14 @@ public class AptoideFileClientSocket<T> extends AptoideClientSocket {
   public AptoideFileClientSocket(String host, int port, List<FileInfo> fileInfos) {
     super(host, port);
     this.fileInfos = fileInfos;
+    // TODO: 24-03-2017 neuro fix this sheet
     onError = fileClientLifecycle;
   }
 
   public AptoideFileClientSocket(int bufferSize, String host, int port, List<FileInfo> fileInfos) {
     super(bufferSize, host, port);
     this.fileInfos = fileInfos;
+    // TODO: 24-03-2017 neuro fix this sheet
     onError = fileClientLifecycle;
   }
 
@@ -43,7 +45,7 @@ public class AptoideFileClientSocket<T> extends AptoideClientSocket {
     }
 
     ProgressAccumulator progressAccumulator =
-        new MultiProgressAccumulator<T>(computeTotalSize(fileInfos), fileClientLifecycle,
+        new MultiProgressAccumulatorClient(computeTotalSize(fileInfos), fileClientLifecycle,
             fileDescriptor);
 
     for (FileInfo fileInfo : fileInfos) {
@@ -52,10 +54,6 @@ public class AptoideFileClientSocket<T> extends AptoideClientSocket {
 
       copy(socket.getInputStream(), out, fileInfo.getSize(), progressAccumulator);
       out.close();
-    }
-
-    if (fileClientLifecycle != null) {
-      fileClientLifecycle.onFinishReceiving(fileDescriptor);
     }
   }
 
@@ -74,5 +72,26 @@ public class AptoideFileClientSocket<T> extends AptoideClientSocket {
     this.fileClientLifecycle = fileClientLifecycle;
 
     return this;
+  }
+
+  public class MultiProgressAccumulatorClient extends MultiProgressAccumulator<T> {
+
+    private final FileClientLifecycle<T> fileClientLifecycle;
+
+    public MultiProgressAccumulatorClient(long totalProgress,
+        FileClientLifecycle<T> fileClientLifecycle, T androidAppInfo) {
+      super(totalProgress, fileClientLifecycle, androidAppInfo);
+      this.fileClientLifecycle = fileClientLifecycle;
+    }
+
+    @Override public void onProgressChanged(float progress) {
+      super.onProgressChanged(progress);
+
+      if (progress == 1) {
+        if (fileClientLifecycle != null) {
+          fileClientLifecycle.onFinishReceiving(t);
+        }
+      }
+    }
   }
 }

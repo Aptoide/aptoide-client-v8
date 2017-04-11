@@ -3,10 +3,10 @@ package cm.aptoide.pt.v8engine.util;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
@@ -16,6 +16,7 @@ import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -51,7 +52,8 @@ public class StoreUtils {
   @Deprecated public static void subscribeStore(String storeName,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager,
-      BodyInterceptor bodyInterceptor, StoreCredentialsProvider storeCredentialsProvider) {
+      BodyInterceptor<BaseBody> bodyInterceptor,
+      StoreCredentialsProvider storeCredentialsProvider) {
     subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName, storeCredentialsProvider),
         bodyInterceptor), successRequestListener, errorRequestListener, accountManager, null, null);
   }
@@ -180,14 +182,17 @@ public class StoreUtils {
 
   public static void unSubscribeStore(String name, AptoideAccountManager accountManager,
       StoreCredentialsProvider storeCredentialsProvider) {
-    accountManager.loginStatus().first().subscribe(isLoggedIn -> {
-      if (isLoggedIn) {
-        accountManager.unsubscribeStore(name, storeCredentialsProvider.get(name).getName(),
-            storeCredentialsProvider.get(name).getPasswordSha1());
-      }
-      StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-      storeAccessor.remove(name);
-    });
+    accountManager.accountStatus()
+        .map(account -> account.isLoggedIn())
+        .first()
+        .subscribe(isLoggedIn -> {
+          if (isLoggedIn) {
+            accountManager.unsubscribeStore(name, storeCredentialsProvider.get(name).getName(),
+                storeCredentialsProvider.get(name).getPasswordSha1());
+          }
+          StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+          storeAccessor.remove(name);
+        });
   }
 
   public static StoreError getErrorType(String code) {
@@ -209,6 +214,6 @@ public class StoreUtils {
   }
 
   public enum StoreError {
-    PRIVATE_STORE_ERROR, PRIVATE_STORE_WRONG_CREDENTIALS, GENERIC_ERROR, STORE_SUSPENDED;
+    PRIVATE_STORE_ERROR, PRIVATE_STORE_WRONG_CREDENTIALS, GENERIC_ERROR, STORE_SUSPENDED
   }
 }

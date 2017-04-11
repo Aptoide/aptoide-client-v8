@@ -24,7 +24,7 @@ public class TimelineCardFilter {
   }
 
   public Observable<TimelineCard> filter(TimelineItem<TimelineCard> item) {
-    return Observable.just(item).filter(timelineItem -> timelineItem != null).<TimelineCard>map(
+    return Observable.just(item).filter(timelineItem -> timelineItem != null).<TimelineCard> map(
         timelineItem -> timelineItem.getData()).filter(duplicateFilter)
         .flatMap(timelineCard -> filterInstalledRecommendation(timelineCard))
         .flatMap(timelineCard -> filterAlreadyDoneUpdates(timelineCard));
@@ -40,7 +40,7 @@ public class TimelineCardFilter {
             if (!installed) {
               return Observable.just(timelineItem);
             }
-            return Observable.<TimelineCard>empty();
+            return Observable.<TimelineCard> empty();
           });
     }
     return Observable.just(timelineItem);

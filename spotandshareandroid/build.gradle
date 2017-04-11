@@ -1,12 +1,11 @@
 apply plugin: 'com.android.library'
 
 android {
-  compileSdkVersion COMPILE_SDK_VERSION
+  compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
   buildToolsVersion BUILD_TOOLS_VERSION
 
   defaultConfig {
-    minSdkVersion 15
-    targetSdkVersion 25
+    minSdkVersion Integer.parseInt(project.MINIMUM_SDK_VERSION)
     versionCode 1
     versionName "1.0"
   }
@@ -14,6 +13,22 @@ android {
     release {
       minifyEnabled false
     }
+  }
+
+  packagingOptions {
+    exclude 'META-INF/services/javax.annotation.processing.Processor'
+    exclude 'META-INF/DEPENDENCIES.txt'
+    exclude 'META-INF/DEPENDENCIES'
+    exclude 'META-INF/LICENSE.txt'
+    exclude 'META-INF/LICENSE'
+    exclude 'META-INF/NOTICE.txt'
+    exclude 'META-INF/NOTICE'
+    exclude 'META-INF/MANIFEST.MF'
+    exclude 'META-INF/LGPL2.1'
+  }
+
+  lintOptions {
+    abortOnError false
   }
 }
 

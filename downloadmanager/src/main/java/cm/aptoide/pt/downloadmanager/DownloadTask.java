@@ -15,6 +15,7 @@ import cm.aptoide.pt.downloadmanager.interfaces.Analytics;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadLargeFileListener;
 import com.liulishuo.filedownloader.FileDownloader;
@@ -62,8 +63,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
         .subscribeOn(Schedulers.io())
         .takeUntil(integer1 -> download.getOverallDownloadStatus() != Download.PROGRESS
             && download.getOverallDownloadStatus() != Download.IN_QUEUE
-            &&
-            download.getOverallDownloadStatus() != Download.PENDING)
+            && download.getOverallDownloadStatus() != Download.PENDING)
         .filter(aLong1 -> download.getOverallDownloadStatus() == Download.PROGRESS
             || download.getOverallDownloadStatus() == Download.COMPLETED)
         .map(aLong -> updateProgress())
@@ -113,7 +113,8 @@ class DownloadTask extends FileDownloadLargeFileListener {
     Observable.fromCallable(() -> {
       downloadAccessor.save(download);
       return null;
-    }).subscribeOn(Schedulers.io()).subscribe();
+    }).subscribeOn(Schedulers.io()).subscribe(__ -> {
+    }, err -> CrashReport.getInstance().log(err));
   }
 
   private void setDownloadStatus(@Download.DownloadState int status, Download download,
@@ -246,6 +247,10 @@ class DownloadTask extends FileDownloadLargeFileListener {
     AptoideDownloadManager.getInstance().currentDownloadFinished();
   }
 
+  @Override protected void warn(BaseDownloadTask task) {
+    setDownloadStatus(Download.WARN, download, task);
+  }
+
   /**
    * this method will pause all downloads listed on {@link Download#filesToDownload} without change
    * download state, the listener is removed in order to keep the download state, this means that
@@ -320,10 +325,6 @@ class DownloadTask extends FileDownloadLargeFileListener {
       }
     }
     saveDownloadInDb(download);
-  }
-
-  @Override protected void warn(BaseDownloadTask task) {
-    setDownloadStatus(Download.WARN, download, task);
   }
 
   private Observable<Boolean> CheckMd5AndMoveFileToRightPlace(Download download) {

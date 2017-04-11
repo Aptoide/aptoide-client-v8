@@ -1,13 +1,8 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 24/08/2016.
- */
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
 
 retrolambda {
   jvmArgs '-noverify'
-  //defaultMethods true
 }
 
 android {
@@ -15,17 +10,33 @@ android {
   // Websockets
   useLibrary 'org.apache.http.legacy'
 
-  compileSdkVersion COMPILE_SDK_VERSION
+  compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
   buildToolsVersion BUILD_TOOLS_VERSION
 
   defaultConfig {
-    minSdkVersion 15
+    minSdkVersion project.MINIMUM_SDK_VERSION
     consumerProguardFiles "proguard-rules-consumer.pro"
 
+    buildConfigField "String", "BACKUP_SIGNATURE", "\"" + project.BACKUP_SIGNATURE + "\""
+    buildConfigField "String", "UPLOADER_SIGNATURE", "\"" + project.UPLOADER_SIGNATURE + "\""
     buildConfigField "String", "SIXPACK_USER", "\"" + project.SIXPACK_USER + "\""
     buildConfigField "String", "SIXPACK_PASSWORD", "\"" + project.SIXPACK_PASSWORD + "\""
     buildConfigField "String", "SIXPACK_URL", "\"" + project.SIXPACK_URL + "\""
     buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + project.GOOGLE_SENDER_ID + "\""
+
+    buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
+    resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID + "\""
+    buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
+    buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
+    buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
+        "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
+    buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST",
+        "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
+    buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY + "\""
+    buildConfigField "String", "TWITTER_SECRET", "\"" + project.TWITTER_SECRET + "\""
+
+    multiDexEnabled true
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 
   lintOptions {
@@ -47,16 +58,10 @@ android {
       buildConfigField "String", "TWITTER_SECRET",
           "\"" + project.TWITTER_SECRET_INTERNAL + "\""
     }
-    prod {
-      buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
-      buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
-      buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
-          "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
-      buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST",
-          "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
-      buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY + "\""
-      buildConfigField "String", "TWITTER_SECRET", "\"" + project.TWITTER_SECRET + "\""
-    }
+
+    prod {}
+
+    leak {}
   }
 
   buildTypes {
@@ -83,6 +88,18 @@ android {
       res.srcDirs = ['src/main/res', 'src/main/res/deprecated']
     }
   }
+
+  packagingOptions {
+    exclude 'META-INF/services/javax.annotation.processing.Processor'
+    exclude 'META-INF/DEPENDENCIES.txt'
+    exclude 'META-INF/DEPENDENCIES'
+    exclude 'META-INF/LICENSE.txt'
+    exclude 'META-INF/LICENSE'
+    exclude 'META-INF/NOTICE.txt'
+    exclude 'META-INF/NOTICE'
+    exclude 'META-INF/MANIFEST.MF'
+    exclude 'META-INF/LGPL2.1'
+  }
 }
 
 dependencies {
@@ -98,6 +115,9 @@ dependencies {
 
   prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
   prodCompile project(path: ':aptoide_accountmanager', configuration: 'prodRelease')
+
+  leakCompile project(path: ':dataprovider', configuration: 'prodRelease')
+  leakCompile project(path: ':aptoide_accountmanager', configuration: 'prodRelease')
 
   compile project(path: ':utils', configuration: 'release')
   compile project(path: ':utilsdesign', configuration: 'release')
@@ -120,6 +140,7 @@ dependencies {
   testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
   testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
   // Force usage of support annotations in the test app, since it is internally used by the runner module.
+  androidTestCompile "junit:junit:${JUNIT_VERSION}"
   androidTestCompile("com.android.support.test:runner:${RUNNER_VERSION}") {
     exclude group: "com.android.support", module: "support-annotations"
   }
@@ -127,18 +148,15 @@ dependencies {
   androidTestCompile("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}") {
     exclude group: "com.android.support", module: "support-annotations"
   }
-  androidTestCompile "com.android.support:support-annotations:${SUPPORT_ANNOTATIONS_LIB_VERSION}"
+  androidTestCompile "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
 
-  compile "com.android.support:support-annotations:${SUPPORT_ANNOTATIONS_LIB_VERSION}"
-  //noinspection GradleDependency
-  compile("com.android.support:support-v4:${SUPPORT_LIB_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
-  }
+  compile "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
 
   //noinspection GradleDependency
   compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
   //noinspection GradleDependency
-  compile "com.android.support:preference-v7:23.4.0"
+  // Cannot update or settings will crash :/
+  compile "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
   //noinspection GradleDependency
   compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
   //noinspection GradleDependency
@@ -147,6 +165,8 @@ dependencies {
   compile "com.android.support:support-v13:${SUPPORT_LIB_VERSION}"
   //noinspection GradleDependency
   compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
+  compile "com.android.support:cardview-v7:${SUPPORT_LIB_VERSION}"
+  compile "com.android.support:customtabs:${SUPPORT_LIB_VERSION}"
   //compile "com.android.support:percent:${SUPPORT_LIB_VERSION}"
 
   provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
@@ -209,4 +229,13 @@ dependencies {
 
   compile project(':spotandshareandroid')
   compile "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
+  //noinspection GradleDependency
+  compile "com.google.android.gms:play-services-basement:${PLAY_SERVICES_VERSION}"
+  //noinspection GradleDependency
+  compile "com.google.android.gms:play-services-auth:${PLAY_SERVICES_VERSION}"
+
+  compile "com.facebook.android:facebook-android-sdk:${FACEBOOK_ANDROID_SDK_VERSION}"
+
+
+  leakCompile "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
 }

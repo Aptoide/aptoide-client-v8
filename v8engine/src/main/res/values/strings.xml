@@ -7,7 +7,6 @@
 
   <!-- NavDrawer List items -->
   <string name="my_account">My Account</string>
-  <string name="spot_share">Spot&amp;Share</string>
   <string name="setting_schdwntitle">Scheduled Downloads</string>
   <string name="settings">Settings</string>
   <string name="facebook">Facebook</string>
@@ -168,11 +167,11 @@
 
   <string name="you_need_to_be_logged_in">You need to be logged in</string>
   <string name="follow">Follow</string>
+
   <!--need translation-->
   <string name="followed">Following</string>
   <string name="unfollow_yes_no">Are you sure you want to unfollow?</string>
   <string name="unfollow">Unfollow</string>
-  <string name="appview_follow_store_button_text">Follow?</string>
   <string name="unfollowing_store_message">Unfollowing %s</string>
   <string name="store_followed">Store %s followed</string>
   <string name="subscribers">Subscribers</string>
@@ -278,6 +277,10 @@
   <string name="summer_apps">Summer Apps</string>
   <string name="play_it">Play-It!</string>
 
+
+  <!--home Fragment-->
+  <string name="featured_stores">Featured Stores</string>
+
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Related to %1$s</string>
   <string name="appstimeline_update_app">app</string>
@@ -323,6 +326,8 @@
 
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">What your followers will see:</string>
+  <string name="social_timeline_you_will_share_comment">Your followers will see your Comment:</string>
+  <string name="social_timeline_you_will_share_like">Your followers will see your Like:</string>
   <string name="social_timeline_share_title">Share card preview</string>
   <string name="social_timeline_share_title_checkbox">Make my user profile private in Apps Timeline. Only show/share my store info.</string>
   <string name="social_timeline_share_title_checkbox_fb">Allow my user\'s profile to be public on Apps Timeline</string>
@@ -343,6 +348,7 @@
   <string name="social_timeline_shared_by">shared by %1$s</string>
   <string name="social_timeline_who_liked">Who liked</string>
   <string name="social_timeline_users_private">%d are private</string>
+  <string name="dont_show_this_again">Don\'t show \n again</string>
 
   <!-- Store Meta widget -->
   <string name="edit_store">Edit</string>
@@ -437,9 +443,9 @@
   <string name="addressbook_3rd_msg">LEARN MORE</string>
   <string name="address_book_twitter_error">Twitter authorization error</string>
   <string name="follow_my_store">Hello, follow my %1$s Store here</string>
-  <string name="store_meta_apps">Apps\n%s</string>
-  <string name="store_meta_following">Following\n%s</string>
-  <string name="store_meta_followers">Followers\n%s</string>
+  <string name="store_meta_apps">Apps</string>
+  <string name="store_meta_following">Following</string>
+  <string name="store_meta_followers">Followers</string>
   <string name="addressbook_about">About Address Book</string>
   <string name="addressbook_we_werent_able_to_connect_you">We weren’t able to connect you</string>
 

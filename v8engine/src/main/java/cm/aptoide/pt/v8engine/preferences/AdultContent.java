@@ -53,11 +53,17 @@ public class AdultContent {
   }
 
   public Observable<Boolean> enabled() {
-    return accountManager.getAccountAsync()
-        .flatMapCompletable(
-            account -> preferences.save(ADULT_CONTENT_PREFERENCES_KEY, account.isAdultContentEnabled()))
-        .onErrorComplete()
-        .andThen(preferences.getBoolean(ADULT_CONTENT_PREFERENCES_KEY, false));
+    return Observable.combineLatest(accountManager.accountStatus(),
+        preferences.getBoolean(ADULT_CONTENT_PREFERENCES_KEY, false),
+        (account, isLocalAdultContentEnabled) -> {
+          if (account.isLoggedIn()) {
+            return account.isAdultContentEnabled();
+          }
+          return isLocalAdultContentEnabled;
+        })
+        .distinctUntilChanged()
+        .flatMap(status -> preferences.save(ADULT_CONTENT_PREFERENCES_KEY, status)
+            .andThen(Observable.just(status)));
   }
 
   public Completable enable(int pin) {

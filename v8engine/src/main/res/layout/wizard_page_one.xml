@@ -17,7 +17,7 @@
       android:layout_width="200dp"
       android:layout_height="50dp"
       android:layout_margin="20dp"
-      android:src="@drawable/logo_aptoide_wizard"
+      android:src="@drawable/logo"
       />
 
   <TextView
@@ -37,8 +37,8 @@
       android:id="@android:id/icon"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="10dp"
-      android:gravity="center"
+      android:layout_gravity="center"
+      android:layout_marginBottom="10dp"
       android:src="@drawable/wizard_one"
       />
 

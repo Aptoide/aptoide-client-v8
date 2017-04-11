@@ -18,7 +18,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.MinimalAd;
@@ -31,6 +30,7 @@ import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -107,8 +107,9 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
           Logger.d("ExtractReferrer", "ClickUrl redirect: " + clickUrl);
 
-          if (clickUrl.startsWith("market://") || clickUrl.startsWith("https://play.google.com") ||
-              clickUrl.startsWith("http://play.google.com")) {
+          if (clickUrl.startsWith("market://")
+              || clickUrl.startsWith("https://play.google.com")
+              || clickUrl.startsWith("http://play.google.com")) {
             Logger.d("ExtractReferrer", "Clickurl landed on market");
             final String referrer = getReferrer(clickUrl);
             if (!TextUtils.isEmpty(referrer)) {
@@ -181,8 +182,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
                       .filter(minimalAd1 -> minimalAd != null)
                       .subscribe(
                           minimalAd1 -> extractReferrer(minimalAd1, retries - 1, broadcastReferrer,
-                              adsRepository),
-                          throwable -> clearExcludedNetworks(packageName));
+                              adsRepository), throwable -> clearExcludedNetworks(packageName));
                 } else {
                   // A lista de excluded networks deve ser limpa a cada "ronda"
                   clearExcludedNetworks(packageName);

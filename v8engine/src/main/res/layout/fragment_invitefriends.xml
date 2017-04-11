@@ -8,7 +8,8 @@
     android:layout_marginLeft="30dp"
     android:layout_marginRight="30dp"
     android:layout_marginStart="30dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
   <ImageView
       android:id="@+id/addressbook_friends_graphic"
@@ -16,7 +17,8 @@
       android:layout_height="wrap_content"
       android:layout_marginBottom="10dp"
       android:layout_marginTop="24.3dp"
-      android:src="@drawable/addressbook_graphic" />
+      android:src="@drawable/addressbook_graphic"
+      />
 
   <TextView
       android:id="@+id/addressbook_friends_message"
@@ -35,7 +37,8 @@
       android:lineSpacingExtra="5dp"
       android:lines="2"
       android:textColor="?android:attr/textColorSecondary"
-      tools:text="@string/we_didn_t_find_any_contacts_that_are_using_aptoide" />
+      tools:text="@string/we_didn_t_find_any_contacts_that_are_using_aptoide"
+      />
 
   <TextView
       android:layout_width="match_parent"
@@ -46,33 +49,35 @@
       android:text="@string/addressbook_invite_friends"
       android:textColor="@color/aptoide_orange"
       android:textSize="15sp"
-      android:textStyle="bold" />
+      android:textStyle="bold"
+      />
 
   <Button
       android:id="@+id/addressbook_share_social"
-      style="?attr/customButton"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_above="@+id/addressbook_allow_find"
       android:background="@drawable/addressbook_button_rectangle_shape"
       android:padding="10dp"
-      android:text="@string/share_options_share_external" />
+      android:text="@string/share_options_share_external"
+      style="?attr/customButton"
+      />
 
 
   <Button
       android:id="@+id/addressbook_allow_find"
-      style="?attr/customButton"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_above="@+id/addressbook_done"
       android:layout_marginTop="5dp"
       android:background="@drawable/addressbook_button_rectangle_shape"
       android:padding="10dp"
-      android:text="@string/addressbook_allow_friends_find" />
+      android:text="@string/addressbook_allow_friends_find"
+      style="?attr/customButton"
+      />
 
   <Button
       android:id="@+id/addressbook_done"
-      style="?attr/customButtonThinLine"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
@@ -80,5 +85,7 @@
       android:layout_marginTop="5dp"
       android:padding="10dp"
       android:text="@string/done"
-      android:textColor="@color/default_color" />
+      android:textColor="@color/default_color"
+      style="?attr/customButtonThinLine"
+      />
 </RelativeLayout>

@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
@@ -23,9 +24,10 @@ import lombok.Setter;
 // TODO: 01-02-2017 neuro messagereceiver nao é! lol
 public abstract class AptoideServerSocket extends AptoideSocket implements ServerActionDispatcher {
 
+  private static final String TAG = AptoideServerSocket.class.getSimpleName();
   private final int port;
   private ServerSocketTimeoutManager serverSocketTimeoutManager;
-  private List<Socket> connectedSockets = new LinkedList<>();
+  private List<Socket> connectedSockets = new CopyOnWriteArrayList<>();
   private ServerSocket ss;
   private boolean serving = false;
   private boolean shutdown = false;
@@ -50,7 +52,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
     executorService.execute(dispatcherLooper);
 
     if (serving) {
-      System.out.println("ShareApps: AptoideFileServerSocket already serving!");
+      Print.d(TAG, "start: ShareApps: AptoideFileServerSocket already serving!");
       return this;
     } else {
       serving = true;
@@ -60,8 +62,9 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
       ss = new ServerSocket(port);
       serverSocketTimeoutManager = new ServerSocketTimeoutManager(ss, timeout);
       serverSocketTimeoutManager.reserTimeout();
-      host = Host.from(ss);
-      System.out.println(Thread.currentThread().getId()
+      host = new Host("192.168.43.1", ss.getLocalPort());
+      Print.d(TAG, "start: "
+          + Thread.currentThread().getId()
           + ": Starting server in port "
           + port
           + " and ip "
@@ -77,7 +80,8 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
 
         executorService.execute(() -> {
           try {
-            System.out.println(Thread.currentThread().getId()
+            Print.d(TAG, "start: "
+                + Thread.currentThread().getId()
                 + ": "
                 + this.getClass().getSimpleName()
                 + ": Adding new client "
@@ -87,7 +91,6 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
             onNewClient(socket);
             //serverSocketTimeoutManager.reserTimeout();
           } catch (IOException e) {
-            e.printStackTrace(System.out);
             if (onError != null) {
               onError.onError(e);
             }
@@ -95,7 +98,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
             try {
               serverSocketTimeoutManager.reserTimeout();
               connectedSockets.remove(socket);
-              System.out.println("ShareApps: Closing " + getClass().getSimpleName() + " socket.");
+              Print.d(TAG, "start: ShareApps: Closing " + getClass().getSimpleName() + " socket.");
               socket.close();
             } catch (IOException e) {
               e.printStackTrace();
@@ -105,7 +108,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
       }
     } catch (IOException e) {
       // Ignore, when socket is closed during accept() it lands here.
-      System.out.println("ShareApps: Server explicitly closed " + this.getClass().getSimpleName());
+      Print.d(TAG, "start: ShareApps: Server explicitly closed " + this.getClass().getSimpleName());
       dispatcherLooper.stop();
       try {
         // Hammered. To unlock queuedServerActions.
@@ -122,6 +125,44 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
       }
     }
     return this;
+  }
+
+  public void shutdown() {
+
+    if (shutdown) {
+      Print.w(TAG, "shutdown: ShareApps: Server already shut down!");
+      return;
+    }
+
+    shutdown = true;
+    onError = null;
+
+    if (ss != null && !ss.isClosed()) {//todo need to solve in the future this nullpointerexception
+      try {
+        ss.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
+      Iterator<Socket> iterator = connectedSockets.iterator();
+      while (iterator.hasNext()) {
+        Socket next = iterator.next();
+        try {
+          next.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+
+      try {
+        queuedServerActions.put(() -> {
+        });
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+
+    shutdownExecutorService();
   }
 
   protected Stoppable newOrderDispatcherLooper() {
@@ -161,45 +202,8 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
 
   protected abstract void onNewClient(Socket socket) throws IOException;
 
-  public void shutdown() {
-
-    if (shutdown) {
-      System.out.println("ShareApps: Server already shut down!");
-      return;
-    }
-
-    shutdown = true;
-
-    if (!ss.isClosed()) {
-      try {
-        ss.close();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-
-      for (Socket socket : connectedSockets) {
-        try {
-          socket.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
-
-      try {
-        queuedServerActions.put(() -> {
-        });
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    } else {
-      System.out.println("ShareApps: AptoideFileServerSocket already shutdown!");
-    }
-
-    shutdownExecutorService();
-  }
-
   @Override public void dispatchServerAction(ServerAction serverAction) {
-    System.out.println(Thread.currentThread().getId() + ": Adding action to serverActions.");
+    Print.d(TAG, "dispatchServerAction() called with: serverAction = [" + serverAction + "]");
     try {
       queuedServerActions.put(serverAction);
     } catch (InterruptedException e) {
@@ -212,11 +216,10 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
     while (iterator.hasNext()) {
       Socket socket = iterator.next();
       if (socket.getInetAddress().getHostAddress().equals(host.getIp())) {
-        iterator.remove();
+        connectedSockets.remove(socket);
         hostsChangedCallbackCallback.hostsChanged(getConnectedHosts());
-        System.out.println("AptoideServerSocket: Host " + host + " removed from the server.");
+        Print.d(TAG, "removeHost: AptoideServerSocket: Host " + host + " removed from the server.");
       }
     }
-
   }
 }

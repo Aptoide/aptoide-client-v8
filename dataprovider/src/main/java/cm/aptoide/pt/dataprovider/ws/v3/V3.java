@@ -12,11 +12,11 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.BaseV3Response;
 import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
 import cm.aptoide.pt.model.v3.ErrorResponse;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
-import cm.aptoide.pt.model.v3.GetUserRepoSubscription;
 import cm.aptoide.pt.model.v3.InAppBillingAvailableResponse;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
@@ -26,11 +26,13 @@ import cm.aptoide.pt.model.v3.PaymentAuthorizationsResponse;
 import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import java.io.IOException;
 import java.util.Map;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import retrofit2.Converter;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.FieldMap;
@@ -58,16 +60,26 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
   protected final BaseBody map;
   private final String INVALID_ACCESS_TOKEN_CODE = "invalid_token";
+  private final BodyInterceptor<BaseBody> bodyInterceptor;
   private boolean accessTokenRetry = false;
 
-  protected V3(String host, OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(Interfaces.class, httpClient, converterFactory, host);
-    this.map = null;
-  }
-
-  protected V3(BaseBody baseBody, OkHttpClient httpClient, Converter.Factory converterFactory) {
+  protected V3(BaseBody baseBody, OkHttpClient httpClient, Converter.Factory converterFactory,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
     super(Interfaces.class, httpClient, converterFactory, BASE_HOST);
     this.map = baseBody;
+    this.bodyInterceptor = bodyInterceptor;
+  }
+
+  protected V3(String url, BaseBody baseBody, OkHttpClient httpClient, Converter.Factory converterFactory,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
+    super(Interfaces.class, httpClient, converterFactory, url);
+    this.map = baseBody;
+    this.bodyInterceptor = bodyInterceptor;
+  }
+
+  protected V3(OkHttpClient okHttpClient, Converter.Factory converterFactory,
+      BodyInterceptor<BaseBody> bodyInterceptor) {
+    this(new BaseBody(), okHttpClient, converterFactory, bodyInterceptor);
   }
 
   @NonNull public static String getErrorMessage(BaseV3Response response) {
@@ -101,33 +113,35 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
   }
 
   @Override public Observable<U> observe(boolean bypassCache) {
-    return super.observe(bypassCache).onErrorResumeNext(throwable -> {
-      if (throwable instanceof HttpException) {
-        try {
+    return bodyInterceptor.intercept(map)
+        .flatMapObservable(body -> super.observe(bypassCache).onErrorResumeNext(throwable -> {
+          if (throwable instanceof HttpException) {
+            try {
 
-          GenericResponseV3 genericResponseV3 =
-              (GenericResponseV3) converterFactory.responseBodyConverter(GenericResponseV3.class,
-                  null, null).convert(((HttpException) throwable).response().errorBody());
+              GenericResponseV3 genericResponseV3 =
+                  (GenericResponseV3) converterFactory.responseBodyConverter(
+                      GenericResponseV3.class, null, null)
+                      .convert(((HttpException) throwable).response().errorBody());
 
-          if (INVALID_ACCESS_TOKEN_CODE.equals(genericResponseV3.getError())) {
+              if (INVALID_ACCESS_TOKEN_CODE.equals(genericResponseV3.getError())) {
 
-            if (!accessTokenRetry) {
-              accessTokenRetry = true;
-              return DataProvider.invalidateAccessToken().flatMapObservable(s -> {
-                this.map.setAccess_token(s);
-                return V3.this.observe(bypassCache).observeOn(AndroidSchedulers.mainThread());
-              });
+                if (!accessTokenRetry) {
+                  accessTokenRetry = true;
+                  return DataProvider.invalidateAccessToken().flatMapObservable(s -> {
+                    this.map.setAccess_token(s);
+                    return V3.this.observe(bypassCache).observeOn(AndroidSchedulers.mainThread());
+                  });
+                }
+              } else {
+                return Observable.error(
+                    new AptoideWsV3Exception(throwable).setBaseResponse(genericResponseV3));
+              }
+            } catch (IOException e) {
+              e.printStackTrace();
             }
-          } else {
-            return Observable.error(
-                new AptoideWsV3Exception(throwable).setBaseResponse(genericResponseV3));
           }
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
-      return Observable.error(throwable);
-    });
+          return Observable.error(throwable);
+        }));
   }
 
   interface Interfaces {
@@ -188,7 +202,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("createUser") @Multipart Observable<BaseV3Response> createUserWithFile(
-        @Part MultipartBody.Part user_avatar, @PartMap() BaseBody args,
+        @Part MultipartBody.Part user_avatar, @PartMap() HashMapNotNull<String, RequestBody> args,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("changeUserSettings") @FormUrlEncoded Observable<BaseV3Response> changeUserSettings(
@@ -197,8 +211,5 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
     @POST("changeUserRepoSubscription") @FormUrlEncoded
     Observable<BaseV3Response> changeUserRepoSubscription(@FieldMap BaseBody args);
-
-    @POST("getUserRepoSubscription") @FormUrlEncoded
-    Observable<GetUserRepoSubscription> getUserRepos(@FieldMap BaseBody args);
   }
 }

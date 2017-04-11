@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?><!--<resources>--><!--<declare-styleable name="radar">--><!--<attr name="pins_radius" format="integer" />--><!--<attr name="center_pin_radius" format="integer" />--><!--<attr name="pins_color" format="string" />--><!--<attr name="center_pin_color" format="string" />--><!--<attr name="background_color" format="string" />--><!--<attr name="max_distance" format="integer" />--><!--this is from the radar.class--><!--<attr name="radar_image" format="reference" />--><!--<attr name="pins_image" format="reference" />--><!--<attr name="center_pin_image" format="reference" />--><!--</declare-styleable>--><!--</resources>-->
 <resources>
   <declare-styleable name="HighwayRadarScan">
-    <attr format="color" name="circleColor" />
-    <attr format="color" name="radarColor" />
-    <attr format="color" name="tailColor" />
-    <attr format="boolean" name="enableAnimation" />
+    <attr format="color" name="circleColor"/>
+    <attr format="color" name="radarColor"/>
+    <attr format="color" name="tailColor"/>
+    <attr format="boolean" name="enableAnimation"/>
   </declare-styleable>
-  <attr format="reference" name="toolbarTheme" />
+  <attr format="reference" name="toolbarTheme"/>
 </resources>

@@ -14,13 +14,13 @@ import rx.Observable;
 
 public class GetTimelineStatsRequest extends V7<TimelineStats, GetTimelineStatsRequest.Body> {
 
-  protected GetTimelineStatsRequest(Body body, BodyInterceptor bodyInterceptor) {
+  protected GetTimelineStatsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
   }
 
-  public static GetTimelineStatsRequest of(BodyInterceptor bodyInterceptor, Long userId) {
+  public static GetTimelineStatsRequest of(BodyInterceptor<BaseBody> bodyInterceptor, Long userId) {
     return new GetTimelineStatsRequest(new Body(userId), bodyInterceptor);
   }
 

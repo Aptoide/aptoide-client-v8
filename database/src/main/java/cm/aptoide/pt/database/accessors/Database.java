@@ -1,17 +1,12 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
- */
-
 package cm.aptoide.pt.database.accessors;
 
 import android.content.Context;
-import android.text.TextUtils;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.BuildConfig;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmMigration;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -21,16 +16,14 @@ import rx.Observable;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by sithengineer on 16/05/16.
+ * Created on 16/05/16.
  *
  * This is the main class responsible to offer {@link Realm} database instances
  */
 public final class Database {
 
-  public static final int SCHEMA_VERSION = 8081; // if you bump this value, also add changes to the
-  //private static final String TAG = Database.class.getName();
+  private static final int SCHEMA_VERSION = 8081; // if you bump this value, also add changes to the
   private static final String DB_NAME = "aptoide.realm.db";
-  private static final String DB_NAME_E = "aptoide_mobile.db";
 
   private static boolean isInitialized = false;
 
@@ -42,10 +35,17 @@ public final class Database {
   protected Database() {
   }
 
-  private static String extract(String str) {
-    return TextUtils.substring(str, str.lastIndexOf('.'), str.length());
-  }
-
+  /**
+   * <p>
+   * Initialize this database. Initialization takes care of schema and data migration using a
+   * {@link RealmMigration} entity.
+   * </p>
+   * <p>
+   * Database encryption should be setup here in the future.
+   * </p>
+   *
+   * @param context Application context
+   */
   public static void initialize(Context context) {
     if (isInitialized) return;
 
@@ -99,33 +99,6 @@ public final class Database {
     isInitialized = true;
   }
 
-  public <E extends RealmObject> Observable<Long> count(RealmQuery<E> query) {
-    return Observable.just(query.count())
-        .flatMap(count -> Observable.just(count).unsubscribeOn(RealmSchedulers.getScheduler()))
-        .defaultIfEmpty(0L);
-  }
-
-  public <E extends RealmObject> Observable<List<E>> findAsSortedList(RealmQuery<E> query,
-      String fieldName) {
-    return Observable.just(query.findAllSorted(fieldName))
-        .filter(realmObject -> realmObject != null)
-        .flatMap(realmObject -> realmObject.<E>asObservable().unsubscribeOn(
-            RealmSchedulers.getScheduler()))
-        .flatMap(realmObject -> copyFromRealm(realmObject))
-        .defaultIfEmpty(null);
-  }
-
-  //
-  // Instance methods
-  //
-
-  <E extends RealmObject> Observable<List<E>> copyFromRealm(RealmResults<E> results) {
-    return Observable.just(results)
-        .filter(data -> data.isLoaded())
-        .map(realmObjects -> Database.getInternal().copyFromRealm(realmObjects))
-        .observeOn(Schedulers.io());
-  }
-
   /**
    * this code is expected to run on only a single thread, so no synchronizing primitives were used
    *
@@ -143,6 +116,45 @@ public final class Database {
     return INSTANCE;
   }
 
+  /**
+   * Returns realm database default instance. Do not use this method it is deprecated and will be
+   * made private in future releases,
+   * use {@link #getRealm()} instead.
+   */
+  @Deprecated protected static Realm get() {
+    if (!isInitialized) {
+      throw new IllegalStateException("You need to call Database.initialize(Context) first");
+    }
+    return Realm.getDefaultInstance();
+  }
+
+  //
+  // Instance methods
+  //
+
+  public <E extends RealmObject> Observable<Long> count(RealmQuery<E> query) {
+    return Observable.just(query.count())
+        .flatMap(count -> Observable.just(count).unsubscribeOn(RealmSchedulers.getScheduler()))
+        .defaultIfEmpty(0L);
+  }
+
+  public <E extends RealmObject> Observable<List<E>> findAsSortedList(RealmQuery<E> query,
+      String fieldName) {
+    return Observable.just(query.findAllSorted(fieldName))
+        .filter(realmObject -> realmObject != null)
+        .flatMap(realmObject -> realmObject.<E> asObservable().unsubscribeOn(
+            RealmSchedulers.getScheduler()))
+        .flatMap(realmObject -> copyFromRealm(realmObject))
+        .defaultIfEmpty(null);
+  }
+
+  <E extends RealmObject> Observable<List<E>> copyFromRealm(RealmResults<E> results) {
+    return Observable.just(results)
+        .filter(data -> data.isLoaded())
+        .map(realmObjects -> Database.getInternal().copyFromRealm(realmObjects))
+        .observeOn(Schedulers.io());
+  }
+
   public Observable<Long> count(Class clazz) {
     return getRealm().flatMap(realm -> Observable.just(realm.where(clazz).count())
         .unsubscribeOn(RealmSchedulers.getScheduler()));
@@ -156,14 +168,14 @@ public final class Database {
 
   public <E extends RealmObject> Observable<List<E>> getAll(Class<E> clazz) {
     return getRealm().flatMap(
-        realm -> realm.where(clazz).findAll().<List<E>>asObservable().unsubscribeOn(
+        realm -> realm.where(clazz).findAll().<List<E>> asObservable().unsubscribeOn(
             RealmSchedulers.getScheduler())).flatMap(results -> copyFromRealm(results));
   }
 
   public <E extends RealmObject> Observable<List<E>> getAllSorted(Class<E> clazz,
       String fieldName) {
     return getRealm().flatMap(
-        realm -> realm.where(clazz).findAllSorted(fieldName).<List<E>>asObservable().unsubscribeOn(
+        realm -> realm.where(clazz).findAllSorted(fieldName).<List<E>> asObservable().unsubscribeOn(
             RealmSchedulers.getScheduler())).flatMap(results -> copyFromRealm(results));
   }
 
@@ -175,7 +187,7 @@ public final class Database {
   <E extends RealmObject> Observable<E> findFirst(RealmQuery<E> query) {
     return Observable.just(query.findFirst())
         .filter(realmObject -> realmObject != null)
-        .flatMap(realmObject -> realmObject.<E>asObservable().unsubscribeOn(
+        .flatMap(realmObject -> realmObject.<E> asObservable().unsubscribeOn(
             RealmSchedulers.getScheduler()))
         .flatMap(realmObject -> copyFromRealm(realmObject))
         .defaultIfEmpty(null);
@@ -207,7 +219,7 @@ public final class Database {
   <E extends RealmObject> Observable<List<E>> findAsList(RealmQuery<E> query) {
     return Observable.just(query.findAll())
         .filter(realmObject -> realmObject != null)
-        .flatMap(realmObject -> realmObject.<E>asObservable().unsubscribeOn(
+        .flatMap(realmObject -> realmObject.<E> asObservable().unsubscribeOn(
             RealmSchedulers.getScheduler()))
         .flatMap(realmObject -> copyFromRealm(realmObject))
         .defaultIfEmpty(null);
@@ -229,18 +241,6 @@ public final class Database {
     @Cleanup Realm realm = get();
     E obj = realm.where(clazz).equalTo(key, value).findFirst();
     deleteObject(realm, obj);
-  }
-
-  /**
-   * Returns realm database default instance. Do not use this method it is deprecated and will be
-   * made private in future releases,
-   * use {@link #getRealm()} instead.
-   */
-  @Deprecated protected static Realm get() {
-    if (!isInitialized) {
-      throw new IllegalStateException("You need to call Database.initialize(Context) first");
-    }
-    return Realm.getDefaultInstance();
   }
 
   private <E extends RealmObject> void deleteObject(Realm realm, E obj) {

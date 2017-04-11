@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
-import cm.aptoide.pt.v8engine.view.LoginSignUpView;
 
 public class LoginSignUpPresenter implements Presenter {
 

@@ -68,33 +68,9 @@ public class HighwayPresenter implements Presenter {
     if (permissionManager.checkPermissions()) {
       deactivateHotspot();
     }
-    //else if(!permissionManager.checkPermissions() ){//already requested the permissions but didn't accept all.
-    //  System.out.println("requesting permissions again, because he didn't accept all. ");
-    //  permissionManager.requestPermissions();
-    //}
-
-  }
-
-  private void deactivateHotspot() {
-    deactivateHotspotTask.setListener(new SimpleListener() {
-      @Override public void onEvent() {
-        view.showConnections();//fillTheRadar
-        view.setUpListeners();
-        connectionManager.start(new ConnectionManager.WifiStateListener() {
-          @Override public void onStateChanged(boolean enabled) {
-            if (enabled) {
-              connectionManager.cleanNetworks();
-              view.enableButtons(true);
-            }
-          }
-        });
-      }
-    });
-    deactivateHotspotTask.execute();
   }
 
   @Override public void onResume() {
-    //    connectionManager.resume();
     if (!permissionManager.checkPermissions() && !permissionRequested) {
       permissionManager.requestPermissions();
       permissionRequested = true;
@@ -102,8 +78,6 @@ public class HighwayPresenter implements Presenter {
   }
 
   @Override public void onPause() {
-    //call groupmanager.pause etc.
-    //nothing to put.
 
   }
 
@@ -119,9 +93,26 @@ public class HighwayPresenter implements Presenter {
   }
 
   @Override public void onStart() {
-    //if(!permissionManager.checkPermissions()){
-    //  permissionManager.requestPermissions();
-    //}
+
+  }
+
+  private void deactivateHotspot() {
+    deactivateHotspotTask.setListener(new SimpleListener() {
+      @Override public void onEvent() {
+        connectionManager.start(new ConnectionManager.WifiStateListener() {
+          @Override public void onStateChanged(boolean enabled) {
+            if (enabled) {
+              connectionManager.cleanNetworks();
+              view.showConnections();
+              view.setUpListeners();
+              view.enableButtons(true);
+            }
+          }
+        });
+        connectionManager.enableWifi(true);
+      }
+    });
+    deactivateHotspotTask.execute();
   }
 
   public void onActivityResult(Group group) {
@@ -150,6 +141,7 @@ public class HighwayPresenter implements Presenter {
             } else {
               view.hideButtonsProgressBar();
               view.enableButtons(true);
+              view.hideSearchGroupsTextview(false);
               view.showJoinGroupResult(ConnectionManager.ERROR_UNKNOWN);
             }
           }
@@ -159,6 +151,7 @@ public class HighwayPresenter implements Presenter {
       @Override public void onError(int result) {
         view.showJoinGroupResult(result);
         view.hideButtonsProgressBar();
+        view.hideSearchGroupsTextview(false);
         view.enableButtons(true);
       }
     });
@@ -184,13 +177,13 @@ public class HighwayPresenter implements Presenter {
         view.showCreateGroupResult(result);
         view.hideButtonsProgressBar();
         view.enableButtons(true);
+        view.hideSearchGroupsTextview(false);
       }
     });
   }
 
   public void scanNetworks() {
-    //view.showEnablingWifiToast();
-    connectionManager.searchForAPTXNetworks(new ConnectionManager.InactivityListener() {
+    connectionManager.searchForAPTXVNetworks(new ConnectionManager.InactivityListener() {
       @Override public void onInactivity(boolean inactive) {
         view.showInactivityToast();
       }
@@ -215,17 +208,11 @@ public class HighwayPresenter implements Presenter {
 
   public void getAppFilePathFromOutside(Uri uri) {
     isOutsideShare = true;
-    //generateLocalyticsSettings();
     outsideShareManager.getApp(uri);
   }
-  //
-  //public void generateLocalyticsSettings() {
-  //  analytics.generateLocalyticsSettings();
-  //}
 
   public void getMultipleAppFilePathsFromOutside(ArrayList<Uri> list) {
     isOutsideShare = true;
-    //generateLocalyticsSettings();
     outsideShareManager.getMultipleApps(list);
   }
 
@@ -238,7 +225,7 @@ public class HighwayPresenter implements Presenter {
     view.showRecoveringWifiStateToast();
   }
 
-  public void forgetAPTXNetwork() {
+  public void forgetAPTXVNetwork() {
     connectionManager.cleanNetworks();
   }
 }

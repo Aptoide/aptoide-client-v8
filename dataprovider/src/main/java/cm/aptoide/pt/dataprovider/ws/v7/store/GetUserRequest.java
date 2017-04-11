@@ -20,14 +20,14 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
   private static final String TAG = GetUserRequest.class.getSimpleName();
   private String url;
 
-  public GetUserRequest(String url, Body body, BodyInterceptor bodyInterceptor) {
+  public GetUserRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
     super(body, BASE_HOST,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter(), bodyInterceptor);
     this.url = url;
   }
 
-  public static GetUserRequest of(String url, BodyInterceptor bodyInterceptor) {
+  public static GetUserRequest of(String url, BodyInterceptor<BaseBody> bodyInterceptor) {
     final GetUserRequest.Body body = new GetUserRequest.Body(WidgetsArgs.createDefault());
     return new GetUserRequest(new V7Url(url).remove("user/get").get(), body, bodyInterceptor);
   }

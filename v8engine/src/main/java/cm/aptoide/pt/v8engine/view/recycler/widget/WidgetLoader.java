@@ -8,10 +8,10 @@ package cm.aptoide.pt.v8engine.view.recycler.widget;
 import android.support.annotation.NonNull;
 import android.support.v4.util.LruCache;
 import android.view.View;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.MultiDexHelper;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import dalvik.system.DexFile;
 import java.util.ArrayList;
@@ -66,8 +66,9 @@ public enum WidgetLoader {
           }
 
           Class<?> widgetClass = dexFile.loadClass(className.getKey(), classLoader);
-          if (widgetClass != null && Widget.class.isAssignableFrom(widgetClass) &&
-              widgetClass.isAnnotationPresent(Displayables.class)) {
+          if (widgetClass != null
+              && Widget.class.isAssignableFrom(widgetClass)
+              && widgetClass.isAnnotationPresent(Displayables.class)) {
             Displayables annotation = widgetClass.getAnnotation(Displayables.class);
             Class<? extends Displayable>[] displayableClasses = annotation.value();
             WidgetMeta wMeta;
@@ -105,6 +106,7 @@ public enum WidgetLoader {
   /**
    * @param view to pass the {@link Widget} constructor
    * @param viewType to find which {@link Widget} to use
+   *
    * @return freshly created {@link Widget} or a previously created one
    */
   @NonNull public Widget newWidget(@NonNull View view, int viewType) {

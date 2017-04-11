@@ -16,11 +16,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v3.PushNotificationsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
@@ -32,6 +33,7 @@ import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.receivers.PullingContentReceiver;
@@ -60,9 +62,19 @@ public class PullingContentService extends Service {
   private static final String TAG = PullingContentService.class.getSimpleName();
   private CompositeSubscription subscriptions;
   private InstallManager installManager;
+  private BodyInterceptor<BaseBody> baseBodyInterceptorV3;
+
+  public static void setAlarm(AlarmManager am, Context context, String action, long time) {
+    Intent intent = new Intent(context, PullingContentService.class);
+    intent.setAction(action);
+    PendingIntent pendingIntent =
+        PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 5000, time, pendingIntent);
+  }
 
   @Override public void onCreate() {
     super.onCreate();
+    baseBodyInterceptorV3 = ((V8Engine) this.getApplicationContext()).getBaseBodyInterceptorV3();
     installManager = new InstallManager(AptoideDownloadManager.getInstance(),
         new InstallerFactory().create(this, InstallerFactory.ROLLBACK));
 
@@ -74,20 +86,6 @@ public class PullingContentService extends Service {
     if (!isAlarmUp(this, UPDATES_ACTION)) {
       setAlarm(alarm, this, UPDATES_ACTION, UPDATES_INTERVAL);
     }
-  }
-
-  private boolean isAlarmUp(Context context, String action) {
-    Intent intent = new Intent(context, PullingContentService.class);
-    intent.setAction(action);
-    return (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) != null);
-  }
-
-  public static void setAlarm(AlarmManager am, Context context, String action, long time) {
-    Intent intent = new Intent(context, PullingContentService.class);
-    intent.setAction(action);
-    PendingIntent pendingIntent =
-        PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 5000, time, pendingIntent);
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
@@ -108,6 +106,21 @@ public class PullingContentService extends Service {
       }
     }
     return START_NOT_STICKY;
+  }
+
+  @Override public void onDestroy() {
+    subscriptions.clear();
+    super.onDestroy();
+  }
+
+  @Nullable @Override public IBinder onBind(Intent intent) {
+    return null;
+  }
+
+  private boolean isAlarmUp(Context context, String action) {
+    Intent intent = new Intent(context, PullingContentService.class);
+    intent.setAction(action);
+    return (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) != null);
   }
 
   /**
@@ -276,14 +289,5 @@ public class PullingContentService extends Service {
     managerNotification.notify(PUSH_NOTIFICATION_ID, notification);
 
     stopSelf(startId);
-  }
-
-  @Override public void onDestroy() {
-    subscriptions.clear();
-    super.onDestroy();
-  }
-
-  @Nullable @Override public IBinder onBind(Intent intent) {
-    return null;
   }
 }

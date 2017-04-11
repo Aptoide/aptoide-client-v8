@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 29/08/2016.
- */
-
 package cm.aptoide.pt.database.realm;
 
 import android.content.pm.ApplicationInfo;
@@ -13,9 +8,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-/**
- * Created by sithengineer on 12/05/16.
- */
 public class Installed extends RealmObject {
 
   //	public static final String ID = "id";

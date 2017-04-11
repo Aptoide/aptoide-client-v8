@@ -1,6 +1,7 @@
 package cm.aptoide.pt.spotandshareandroid;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,11 +15,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.spotandshareandroid.analytics.SpotAndShareAnalyticsInterface;
 import java.util.ArrayList;
@@ -32,12 +35,14 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   public static final int MOBILE_DATA_REQUEST_CODE = 0010;
   private static final int PERMISSION_REQUEST_CODE = 6531;
   private static final int WRITE_SETTINGS_REQUEST_CODE = 5;
+  private static final int LOCATION_REQUEST_CODE = 789;
   public String deviceName;
   public LinearLayout createGroupButton;
   public HighwayRadarTextView radarTextView;
   public LinearLayout progressBarLayout;
   public String chosenHotspot = "";
   public LinearLayout groupButtonsLayout;
+  private TextView searchGroupsTextview;
   private Toolbar mToolbar;
   private ProgressBar buttonsProgressBar;//progress bar for when user click the buttons
 
@@ -54,6 +59,9 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    ApplicationSender.reset();
+    DataHolder.reset();
+
     deviceName = getIntent().getStringExtra("deviceName");
     connectionManager = ConnectionManager.getInstance(this.getApplicationContext());
     analytics = ShareApps.getAnalytics();
@@ -65,30 +73,27 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     setUpToolbar();
     HighwayRadarScan radar = (HighwayRadarScan) findViewById(R.id.radar);
     radarTextView = (HighwayRadarTextView) findViewById(R.id.hotspotTextView);
-
+    searchGroupsTextview = (TextView) findViewById(R.id.searching_groups);
     progressBarLayout = (LinearLayout) findViewById(R.id.circular_progress_bar);
     groupButtonsLayout = (LinearLayout) findViewById(R.id.groupButtonsLayout);
 
     buttonsProgressBar = (ProgressBar) findViewById(R.id.buttonsProgressBar);
     createGroupButton = (LinearLayout) findViewById(R.id.createGroup);//receive
     radarTextView.setActivity(this);
-    //setUpToolbar();
 
     presenter = new HighwayPresenter(this, deviceName, new DeactivateHotspotTask(connectionManager),
         connectionManager, analytics, groupManager, this);
     attachPresenter(presenter);
 
     if (getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_SEND)) {
-      //            pathsFromOutsideShare=new ArrayList<>();
-      //            presenter.generateLocalyticsSettings();
+
       outsideShareManager = new OutsideShareManager();
       presenter.setOutsideShareManager(outsideShareManager);
       Uri uri = (Uri) getIntent().getExtras().get("android.intent.extra.STREAM");
       presenter.getAppFilePathFromOutside(uri);
     } else if (getIntent().getAction() != null && getIntent().getAction()
         .equals(Intent.ACTION_SEND_MULTIPLE)) {
-      //            pathsFromOutsideShare=new ArrayList<>();
-      //            presenter.generateLocalyticsSettings();
+
       outsideShareManager = new OutsideShareManager();
       presenter.setOutsideShareManager(outsideShareManager);
       ArrayList<Uri> uriList =
@@ -109,7 +114,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int i = item.getItemId();
-    //    todo add check for the right button
+
     finish();
 
     return super.onOptionsItemSelected(item);
@@ -118,34 +123,34 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
 
-    if (requestCode == WRITE_SETTINGS_REQUEST_CODE
-        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && permissionListener != null) {
-
-      if (Settings.System.canWrite(this)) {
-        permissionListener.onPermissionGranted();
+    if (requestCode == WRITE_SETTINGS_REQUEST_CODE) {
+      if (checkSpecialSettingsPermission()) {
+        analytics.specialSettingsGranted();
+        if (checkLocationPermission()) {
+          onPermissionsGranted();
+        } else {
+          askForLocationPermission();
+        }
       } else {
-        permissionListener.onPermissionDenied();
+        analytics.specialSettingsDenied();
+        onPermissionsDenied();
       }
     } else if (requestCode == MOBILE_DATA_REQUEST_CODE) {
       Group group = new Group(chosenHotspot);
       presenter.onActivityResult(group);
+    } else if (requestCode == LOCATION_REQUEST_CODE) {
+      if (checkLocationPermission()) {
+        onPermissionsGranted();
+      } else {
+        onPermissionsDenied();
+      }
     }
   }
 
   @Override public void onBackPressed() {
-    //        try{
-    ////            unregisterReceiver(wifireceiver);
-    ////            unregisterReceiver(wfr);
-    //        }catch( IllegalArgumentException e){
-    //            System.out.println("Tried to to unregister a receiver that was already unregistered");
-    //        }
+
     recoverNetworkState();
     super.onBackPressed();
-  }
-
-  private void recoverNetworkState() {
-    //check if wifi was enabled before and re use it.
-    presenter.recoverNetworkState();
   }
 
   @Override protected void onNewIntent(Intent intent) {
@@ -154,108 +159,141 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     outsideShare = false;
 
     if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_SEND)) {
-      //            pathsFromOutsideShare=new ArrayList<>();
-      //            presenter.generateLocalyticsSettings();
-      //            String tmp = intent.getStringExtra(Intent.EXTRA_STREAM);
-      //            outsideShare=true;
+
       outsideShareManager = new OutsideShareManager();
       presenter.setOutsideShareManager(outsideShareManager);
       Uri uri = (Uri) intent.getExtras().get("android.intent.extra.STREAM");
       presenter.getAppFilePathFromOutside(uri);
-      //            String way = uri.getPath();
-      //            pathsFromOutsideShare.add(way);
-      //            System.out.println("way is : : : "+way);
-
     } else if (intent.getAction() != null && intent.getAction()
         .equals(Intent.ACTION_SEND_MULTIPLE)) {
-      //            pathsFromOutsideShare=new ArrayList<>();
-      //            presenter.generateLocalyticsSettings();
-      //            outsideShare=true;
       outsideShareManager = new OutsideShareManager();
       presenter.setOutsideShareManager(outsideShareManager);
       ArrayList<Uri> uriList =
           (ArrayList<Uri>) intent.getExtras().get("android.intent.extra.STREAM");
       presenter.getMultipleAppFilePathsFromOutside(uriList);
-      //            for(int i=0;i<uriList.size();i++){
-      //                String way=uriList.get(i).getPath();
-      //                System.out.println("way is : : : "+way);
-      //                pathsFromOutsideShare.add(way);
-      //            }
     } else if (intent.getAction() != null && intent.getAction().equals("LEAVINGSHAREAPPSCLIENT")) {
       recoverNetworkState();
-      forgetAPTXNetwork();
+      forgetAPTXVNetwork();
     }
-  }
-
-  private void forgetAPTXNetwork() {
-    presenter.forgetAPTXNetwork();
-    //System.out.println("Forget APTX inside the mainactivity- called on the beggining");
-    //if(wm==null){
-    //  wm = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-    //}
-    //List<WifiConfiguration> list = wm.getConfiguredNetworks();
-    //if(list!=null){
-    //  for( WifiConfiguration i : list ) {
-    //    if(i.SSID!=null){
-    //      String[] separated=i.SSID.split("_");
-    //      String tmp=separated[0].trim();
-    //      System.out.println("Trying to remove a APTX network.");
-    //      System.out.println("This one is i : "+ i.SSID);
-    //      System.out.println("SEPARATED 0 is : "+ tmp );
-    //      if(tmp.contains("APTX")){
-    //        System.out.println("Trying to remove a network");
-    //        boolean remove = wm.removeNetwork(i.networkId);
-    //        System.out.println("removed the network : "+remove);
-    //      }
-    //    }
-    //
-    //
-    //  }
-    //}
-
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
     switch (requestCode) {
       case PERMISSION_REQUEST_CODE: {
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          System.out.println("write settings permission granted ! ");
-          if (permissionListener != null) {
-            System.out.println("can not write the settings");
 
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_SETTINGS)
-                != PackageManager.PERMISSION_GRANTED
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && !Settings.System.canWrite(this)) {
-
-              requestSpecialPermission();
-            } else {
-              if (permissionListener != null) {
-                permissionListener.onPermissionGranted();
-              }
-            }
+        if (checkNormalPermissions()) {
+          if (!checkSpecialSettingsPermission()) {
+            requestSpecialSettingsPermission();
+          } else if (!checkLocationPermission()) {
+            askForLocationPermission();
+          } else {
+            onPermissionsGranted();
           }
         } else {
-          //in the future show dialog (?)
-          if (permissionListener != null) {
-            permissionListener.onPermissionDenied();
-          }
-          System.out.println("write settings permission failed to be granted");
+          onPermissionsDenied();
         }
         break;
       }
     }
-
-    super.
-
-        onRequestPermissionsResult(requestCode, permissions, grantResults);
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 
-  private void requestSpecialPermission() {
+  private void recoverNetworkState() {
+    presenter.recoverNetworkState();
+  }
+
+  private void forgetAPTXVNetwork() {
+    presenter.forgetAPTXVNetwork();
+  }
+
+  private boolean checkNormalPermissions() {
+    if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+        != PackageManager.PERMISSION_GRANTED) {
+      return false;
+    }
+
+    if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        != PackageManager.PERMISSION_GRANTED) {
+      return false;
+    }
+
+    return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+        == PackageManager.PERMISSION_GRANTED;
+  }
+
+  private void requestSpecialSettingsPermission() {
     Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
     intent.setData(Uri.parse("package:" + getPackageName()));
     startActivityForResult(intent, WRITE_SETTINGS_REQUEST_CODE);
+  }
+
+  @TargetApi(23) private boolean checkSpecialSettingsPermission() {
+    return Settings.System.canWrite(this);
+  }
+
+  private boolean checkLocationPermission() {
+    int locationMode = 0;
+    String locationProviders;
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      try {
+        locationMode =
+            Settings.Secure.getInt(this.getContentResolver(), Settings.Secure.LOCATION_MODE);
+      } catch (Settings.SettingNotFoundException e) {
+        e.printStackTrace();
+        return false;
+      }
+
+      return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+    } else {
+      locationProviders = Settings.Secure.getString(this.getContentResolver(),
+          Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+      return !TextUtils.isEmpty(locationProviders);
+    }
+  }
+
+  private void onPermissionsGranted() {
+    if (permissionListener != null) {
+      permissionListener.onPermissionGranted();
+    }
+  }
+
+  private void askForLocationPermission() {//old requestLocationPermission
+    Dialog d = buildLocationPermissionDialog();
+    d.show();
+  }
+
+  private void onPermissionsDenied() {
+    if (permissionListener != null) {
+      permissionListener.onPermissionDenied();
+    }
+  }
+
+  private Dialog buildLocationPermissionDialog() {
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+    builder.setTitle(this.getResources().getString(R.string.warning))
+        .setMessage(this.getResources().getString(R.string.locationDialog))
+        .setPositiveButton(this.getResources().getString(R.string.turn_on),
+            new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int id) {
+                requestLocationPermission();
+              }
+            })
+        .setNegativeButton(this.getResources().getString(R.string.cancel),
+            new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                onPermissionsDenied();
+              }
+            });
+    return builder.create();
+  }
+
+  private void requestLocationPermission() {
+    Intent locationIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+    startActivityForResult(locationIntent, LOCATION_REQUEST_CODE);
   }
 
   @Override public void showConnections() {
@@ -273,47 +311,18 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
-  @Override public boolean checkPermissions() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-          != PackageManager.PERMISSION_GRANTED) {
-        return false;
-      }
-
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-          != PackageManager.PERMISSION_GRANTED) {
-        return false;
-      }
-
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-          != PackageManager.PERMISSION_GRANTED) {
-        return false;
-      }
-
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_SETTINGS)
-          != PackageManager.PERMISSION_GRANTED && !Settings.System.canWrite(this)) {//special
-        return false;
-      }
-    }
-    return true;
-  }
-
   @Override public void setUpListeners() {
 
     createGroupButton.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+          hideSearchGroupsTextview(true);
           presenter.clickCreateGroup();
         } else {
           showNougatErrorToast();
         }
       }
     });
-  }
-
-  private void showNougatErrorToast() {
-    Toast.makeText(this, this.getResources().getString(R.string.hotspotCreationErrorNougat),
-        Toast.LENGTH_SHORT).show();
   }
 
   @Override public void showMobileDataDialog() {
@@ -357,30 +366,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
-  private Dialog buildMobileDataDialog() {
-    //        mobileDataDialog=true;
-
-    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-    builder.setTitle(this.getResources().getString(R.string.mobileDataTitle))
-        .setMessage(this.getResources().getString(R.string.mobileDataMessage))
-        .setPositiveButton(this.getResources().getString(R.string.turnOffButton),
-            new DialogInterface.OnClickListener() {
-              @Override public void onClick(DialogInterface dialog, int which) {
-                startActivityForResult(new Intent(Settings.ACTION_SETTINGS),
-                    MOBILE_DATA_REQUEST_CODE);
-              }
-            })
-        .setNegativeButton(this.getResources().getString(R.string.cancel),
-            new DialogInterface.OnClickListener() {
-              @Override public void onClick(DialogInterface dialog, int which) {
-                System.out.println("Canceled the turn off data.");
-              }
-            });
-
-    return builder.create();
-  }
-
   @Override public void showCreateGroupResult(int result) {
     presenter.tagAnalyticsUnsuccessCreate();
     switch (result) {
@@ -411,76 +396,19 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     Log.i("Highway Activity ", "Going to the list of Applications");
     history.putExtra("isAHotspot", false);
     history.putExtra("nickname", deviceName);
-    //        IPAddress=intToIp(wifimanager.getDhcpInfo().serverAddress);
     System.out.println("this is the valor of the IPADDRESS : :::::::::::" + ipAddress);
     System.out.println("I am going to send this IP Address " + ipAddress);
     history.putExtra("targetIP", ipAddress);
     if (pathsFromOutsideShare != null) {
-      //                    history.putExtra("pathFromOutsideShare", pathFromOutsideShare );
       Bundle tmp = new Bundle();
-      tmp.putStringArrayList("pathsFromOutsideShare",
-          pathsFromOutsideShare);//change listOfAppsToInstall to listOfAppsTOSend
+      tmp.putStringArrayList("pathsFromOutsideShare", pathsFromOutsideShare);
       history.putExtra("bundle", tmp);
       history.setAction("ShareFromOutsideRequest");
     }
-    //        try{
-    ////            unregisterReceiver(this);
-    ////            unregisterReceiver(wifireceiver);
-    //        }catch (IllegalArgumentException e){
-    //            System.out.println("There was an error while trying to unregister the wifireceiver and the wifireceiverforconnectingwifi");
-    //        }
+
     startActivity(history);
 
     finish();
-  }
-
-  @Override public void requestPermissions() {
-    if (!checkPermissions() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      boolean specialPermissionNotGranted = false;
-
-      //check if already has the permissions
-      ArrayList<String> permissionsArray = new ArrayList<>();
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-          != PackageManager.PERMISSION_GRANTED) {
-
-        permissionsArray.add(Manifest.permission.READ_PHONE_STATE);
-      }
-
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-          != PackageManager.PERMISSION_GRANTED) {
-        permissionsArray.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-      }
-
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-          != PackageManager.PERMISSION_GRANTED) {
-
-        permissionsArray.add(Manifest.permission.ACCESS_FINE_LOCATION);
-      }
-
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_SETTINGS)
-          != PackageManager.PERMISSION_GRANTED) {//special
-        if (Settings.System.canWrite(this)) {
-          permissionsArray.add(Manifest.permission.WRITE_SETTINGS);
-          System.out.println("can write settings!");
-        } else {
-          specialPermissionNotGranted = true;
-        }
-      }
-
-      if (permissionsArray.size() > 0) {
-
-        String[] missingPermissions = new String[permissionsArray.size()];
-        missingPermissions = permissionsArray.toArray(missingPermissions);
-
-        ActivityCompat.requestPermissions(this, missingPermissions, PERMISSION_REQUEST_CODE);
-      } else if (specialPermissionNotGranted) {
-        requestSpecialPermission();
-      }
-    } else {
-      if (permissionListener != null) {
-        permissionListener.onPermissionGranted();
-      }
-    }
   }
 
   @Override
@@ -488,12 +416,11 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     Intent history =
         new Intent().setClass(HighwayActivity.this, HighwayTransferRecordActivity.class);
     System.out.println("Highway activity : going to start the transferRecordActivity !!!!");
-    history.putExtra("isAHotspot", true);//vou precisar disto no appselection - e agora ?
+    history.putExtra("isAHotspot", true);
     history.putExtra("nickname", deviceName);
     if (pathsFromOutsideShare != null) {
       Bundle tmp = new Bundle();
-      tmp.putStringArrayList("pathsFromOutsideShare",
-          pathsFromOutsideShare);//change listOfAppsToInstall to listOfAppsTOSend
+      tmp.putStringArrayList("pathsFromOutsideShare", pathsFromOutsideShare);
       history.putExtra("bundle", tmp);
       history.setAction("ShareFromOutsideHotspot");
     }
@@ -518,7 +445,112 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     finish();
   }
 
+  @Override public void hideSearchGroupsTextview(boolean hide) {
+    if (hide) {
+      searchGroupsTextview.setVisibility(View.GONE);
+    } else {
+      searchGroupsTextview.setVisibility(View.VISIBLE);
+    }
+  }
+
+  private void showNougatErrorToast() {
+    Toast.makeText(this, this.getResources().getString(R.string.hotspotCreationErrorNougat),
+        Toast.LENGTH_SHORT).show();
+  }
+
+  @Override public boolean checkPermissions() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      if (!checkNormalPermissions()) {
+        return false;
+      }
+
+      if (!checkSpecialSettingsPermission()) {
+        return false;
+      }
+
+      if (!checkLocationPermission()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  @Override public void requestPermissions() {
+    if (!checkPermissions() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      final List<String> missingPermissions = new ArrayList<>();
+
+      if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+          != PackageManager.PERMISSION_GRANTED) {
+
+        missingPermissions.add(Manifest.permission.READ_PHONE_STATE);
+      }
+
+      if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+          != PackageManager.PERMISSION_GRANTED) {
+        missingPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+      }
+
+      if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+          != PackageManager.PERMISSION_GRANTED) {
+
+        missingPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+      }
+
+      if (missingPermissions.size() > 0) {
+
+        String[] permissionsToRequest = new String[missingPermissions.size()];
+        permissionsToRequest = missingPermissions.toArray(permissionsToRequest);
+
+        ActivityCompat.requestPermissions(this, permissionsToRequest, PERMISSION_REQUEST_CODE);
+      } else {
+        // All normal permissions granted
+        if (!checkSpecialSettingsPermission()) {
+          requestSpecialSettingsPermission();
+        } else if (!checkLocationPermission()) {
+          askForLocationPermission();
+        } else {
+          onPermissionsGranted();
+        }
+      }
+    } else {
+      onPermissionsGranted();
+    }
+  }
+
+  @Override public void registerListener(PermissionListener listener) {
+    this.permissionListener = listener;
+  }
+
+  @Override public void removeListener() {
+    this.permissionListener = null;
+  }
+
+  private Dialog buildMobileDataDialog() {
+    //        mobileDataDialog=true;
+
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+    builder.setTitle(this.getResources().getString(R.string.mobileDataTitle))
+        .setMessage(this.getResources().getString(R.string.mobileDataMessage))
+        .setPositiveButton(this.getResources().getString(R.string.turnOffButton),
+            new DialogInterface.OnClickListener() {
+              @Override public void onClick(DialogInterface dialog, int which) {
+                startActivityForResult(new Intent(Settings.ACTION_SETTINGS),
+                    MOBILE_DATA_REQUEST_CODE);
+              }
+            })
+        .setNegativeButton(this.getResources().getString(R.string.cancel),
+            new DialogInterface.OnClickListener() {
+              @Override public void onClick(DialogInterface dialog, int which) {
+                System.out.println("Canceled the turn off data.");
+              }
+            });
+
+    return builder.create();
+  }
+
   public void joinSingleHotspot() {
+    hideSearchGroupsTextview(true);
     Group g = new Group(chosenHotspot);
     presenter.clickJoinGroup(g);
   }
@@ -533,21 +565,11 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   @Override protected void onResume() {
     presenter.onResume();
-    //        registerReceiver(activateButtons,new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
-    //        registerReceiver(wifireceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-    //        registerReceiver(wfr,new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION));
     super.onResume();
   }
 
   @Override protected void onDestroy() {
     presenter.onDestroy();
-    //        try{
-    ////            unregisterReceiver(wifireceiver);
-    ////            unregisterReceiver(wfr);
-    //        }catch( IllegalArgumentException e){
-    //            System.out.println("Tried to to unregister a receiver that was already unregistered");
-    //        }
-
     super.onDestroy();
   }
 
@@ -557,17 +579,5 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   public void setJoinGroupFlag(boolean joinGroupFlag) {
     this.joinGroupFlag = joinGroupFlag;
-  }
-
-  @Override public void registerListener(PermissionListener listener) {
-    this.permissionListener = listener;
-  }
-
-
-
-
-
-  @Override public void removeListener() {
-    this.permissionListener = null;
   }
 }

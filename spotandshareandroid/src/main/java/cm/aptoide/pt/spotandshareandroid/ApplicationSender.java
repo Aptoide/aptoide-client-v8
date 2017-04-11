@@ -31,6 +31,7 @@ public class ApplicationSender {
       new BroadcastReceiver() {//todo extract to a ClientsManager class
         @Override public void onReceive(Context context, Intent intent) {
           if (intent.getAction() != null && intent.getAction().equals("SHOW_SEND_BUTTON")) {
+            System.out.println("Ordering to show send button");
             hostsListener.onAvailableClients();
           } else if (intent.getAction() != null && intent.getAction().equals("HIDE_SEND_BUTTON")) {
             hostsListener.onNoClients();
@@ -46,12 +47,12 @@ public class ApplicationSender {
     this.intentFilter = new IntentFilter();
     intentFilter.addAction("SENDAPP");
     intentFilter.addAction("ERRORSENDING");
-    if (isHotspot) {
-      hostsFilter = new IntentFilter();
-      hostsFilter.addAction("SHOW_SEND_BUTTON");
-      hostsFilter.addAction("HIDE_SEND_BUTTON");
-      context.registerReceiver(hostsReceiver, hostsFilter);
-    }
+    //if (isHotspot) {
+    hostsFilter = new IntentFilter();
+    hostsFilter.addAction("SHOW_SEND_BUTTON");
+    hostsFilter.addAction("HIDE_SEND_BUTTON");
+    context.registerReceiver(hostsReceiver, hostsFilter);
+    //}
   }
 
   public static ApplicationSender getInstance(Context context, boolean isHotspot) {
@@ -59,6 +60,23 @@ public class ApplicationSender {
       instance = new ApplicationSender(context, isHotspot);
     }
     return instance;
+  }
+
+  public static void reset() {
+    if (instance != null) {
+      instance.removeSendListener();
+    }
+    instance = null;
+  }
+
+  public void removeSendListener() {
+    if (sendListener != null) {
+      this.sendListener = null;
+      try {
+        context.unregisterReceiver(send);
+      } catch (IllegalArgumentException e) {
+      }
+    }
   }
 
   public void sendApp(List<App> selectedApps) {
@@ -95,7 +113,6 @@ public class ApplicationSender {
     Intent sendIntent = null;
     if (isHotspot) {
       sendIntent = new Intent(context, HighwayServerService.class);
-      //como sou servidor devo meter o firstSender a ""
     } else {
       sendIntent = new Intent(context, HighwayClientService.class);
       sendIntent.putExtra("targetIP", targetIPAddress);
@@ -140,16 +157,6 @@ public class ApplicationSender {
   public void stop() {
     //removeSendListeners();
     //removeHostsListener();
-  }
-
-  public void removeSendListener() {
-    if (sendListener != null) {
-      this.sendListener = null;
-      try {
-        context.unregisterReceiver(send);
-      } catch (IllegalArgumentException e) {
-      }
-    }
   }
 
   private void removeHostsListener() {

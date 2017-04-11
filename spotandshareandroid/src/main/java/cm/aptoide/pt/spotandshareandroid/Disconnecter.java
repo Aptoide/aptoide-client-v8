@@ -37,19 +37,19 @@ public class Disconnecter {
 
   public void listenToDisconnect(DisconnectListener listener) {
     this.listener = listener;
-    context.registerReceiver(receiver,intentFilter);
+    context.registerReceiver(receiver, intentFilter);
   }
 
-  public void stop(){
+  public void stop() {
     if (listener != null) {
       this.listener = null;
-      //unregister receiver
       try {
         context.unregisterReceiver(receiver);
       } catch (IllegalArgumentException e) {
       }
     }
   }
+
   interface DisconnectListener {
     void onServerDisconnected();
 

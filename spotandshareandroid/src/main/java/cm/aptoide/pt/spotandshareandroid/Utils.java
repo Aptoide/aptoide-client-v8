@@ -11,7 +11,9 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
+import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 
 /**
@@ -70,19 +72,13 @@ public class Utils {
       return capitalize(model);
     }
     String result = capitalize(manufacturer) + " " + model + id;
-    System.out.println("THE DEVICE NAME MODEL MANUFACTURER ID IS :::::::::: " + result);
     if (result.length() > 20) {
-      System.out.println("THe size will be bigger than 32");
       result = "" + model + id;
-      System.out.println("THE DEVICE NAME MODEL MANUFACTURER ID IS :::::::::: " + result);
     }
     if (result.length() > 20) {
-      System.out.println("just the model+id was also bigger than 19");
       result = "" + model;
-      System.out.println("THE DEVICE NAME MODEL MANUFACTURER ID IS :::::::::: " + result);
     }
     if (result.length() > 20) {
-      //save just the 20 carachters from it
       String aux = result.substring(0, 20);
       result = aux;
     }
@@ -242,6 +238,25 @@ public class Utils {
           return All;
         }
       }
+    }
+  }
+
+  public static class Socket {
+
+    public static SocketBinder newDefaultSocketBinder() {
+      return new SocketBinder() {
+        @Override public void bind(java.net.Socket socket) {
+          if (DataHolder.getInstance().network != null) {
+            try {
+              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                DataHolder.getInstance().network.bindSocket(socket);
+              }
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
+          }
+        }
+      };
     }
   }
 }

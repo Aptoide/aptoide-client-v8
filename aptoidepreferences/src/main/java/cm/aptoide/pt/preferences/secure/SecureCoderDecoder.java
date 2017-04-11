@@ -87,7 +87,9 @@ public class SecureCoderDecoder {
    * PBKDF2WithHmacSHA1
    * @param iterations - Number of PBKDF2 hardening rounds to use. Larger values increase
    * computation time (a good thing), defaults to 1000 if not set.
+   *
    * @return Derived Secretkey
+   *
    * @throws NoSuchAlgorithmException
    * @throws InvalidKeySpecException
    * @throws NoSuchProviderException
@@ -128,6 +130,10 @@ public class SecureCoderDecoder {
     return encode(generator.generateKey().getEncoded());
   }
 
+  static byte[] decode(String input) {
+    return Base64.decode(input, Base64.NO_PADDING | Base64.NO_WRAP);
+  }
+
   public String decrypt(String ciphertext) {
     if (ciphertext == null || ciphertext.length() == 0) {
       return ciphertext;
@@ -142,10 +148,6 @@ public class SecureCoderDecoder {
       }
       return null;
     }
-  }
-
-  static byte[] decode(String input) {
-    return Base64.decode(input, Base64.NO_PADDING | Base64.NO_WRAP);
   }
 
   public String encrypt(String cleartext) {

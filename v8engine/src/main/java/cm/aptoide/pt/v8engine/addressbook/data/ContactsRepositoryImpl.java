@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.addressbook.data;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.SetConnectionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SyncAddressBookRequest;
@@ -28,11 +29,9 @@ import rx.schedulers.Schedulers;
 
 public class ContactsRepositoryImpl implements ContactsRepository {
 
-  private final BodyInterceptor bodyInterceptor;
-  private final AptoideClientUUID aptoideClientUUID;
+  private final BodyInterceptor<BaseBody> bodyInterceptor;
 
-  public ContactsRepositoryImpl(BodyInterceptor bodyInterceptor, AptoideClientUUID aptoideClientUUID) {
-    this.aptoideClientUUID = aptoideClientUUID;
+  public ContactsRepositoryImpl(BodyInterceptor<BaseBody> bodyInterceptor) {
     this.bodyInterceptor = bodyInterceptor;
   }
 
@@ -96,24 +95,22 @@ public class ContactsRepositoryImpl implements ContactsRepository {
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext());
     SyncAddressBookRequest.of(facebookModel.getId(), facebookModel.getAccessToken(),
-        bodyInterceptor)
-        .observe()
-        .subscribe(getFriends -> {
-          List<Contact> contactList = new ArrayList<>();
-          for (GetFollowers.TimelineUser user : getFriends.getDatalist().getList()) {
-            Contact contact = new Contact();
-            contact.setStore(user.getStore());
-            Comment.User person = new Comment.User();
-            person.setAvatar(user.getAvatar());
-            person.setName(user.getName());
-            contact.setPerson(person);
-            contactList.add(contact);
-          }
-          callback.onContactsLoaded(contactList, true);
-        }, throwable -> {
-          throwable.printStackTrace();
-          callback.onContactsLoaded(null, false);
-        });
+        bodyInterceptor).observe().subscribe(getFriends -> {
+      List<Contact> contactList = new ArrayList<>();
+      for (GetFollowers.TimelineUser user : getFriends.getDatalist().getList()) {
+        Contact contact = new Contact();
+        contact.setStore(user.getStore());
+        Comment.User person = new Comment.User();
+        person.setAvatar(user.getAvatar());
+        person.setName(user.getName());
+        contact.setPerson(person);
+        contactList.add(contact);
+      }
+      callback.onContactsLoaded(contactList, true);
+    }, throwable -> {
+      throwable.printStackTrace();
+      callback.onContactsLoaded(null, false);
+    });
   }
 
   @Override
