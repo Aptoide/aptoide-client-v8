@@ -146,8 +146,8 @@ public class CardToDisplayableConverter implements CardToDisplayable {
           SpannableFactory spannableFactory, DownloadFactory downloadFactory,
           LinksHandlerFactory linksHandlerFactory) {
 
-        return StoreLatestAppsDisplayable.from((StoreLatestApps) card, dateCalculator,
-            timelineAnalytics, socialRepository);
+        return StoreLatestAppsDisplayable.from((StoreLatestApps) card, spannableFactory,
+            dateCalculator, timelineAnalytics, socialRepository);
       }
     });
 

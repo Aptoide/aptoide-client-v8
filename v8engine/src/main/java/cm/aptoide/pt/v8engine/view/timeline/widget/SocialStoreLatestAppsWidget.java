@@ -146,11 +146,13 @@ public class SocialStoreLatestAppsWidget
     apps.clear();
     View latestAppView;
     ImageView latestAppIcon;
+    TextView latestAppName;
     for (SocialStoreLatestAppsDisplayable.LatestApp latestApp : displayable.getLatestApps()) {
       latestAppView = inflater.inflate(R.layout.social_timeline_latest_app, appsContaner, false);
-      latestAppIcon = (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app);
-      ImageLoader.with(context)
-          .load(latestApp.getIconUrl(), latestAppIcon);
+      latestAppIcon = (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app_icon);
+      latestAppName = (TextView) latestAppView.findViewById(R.id.social_timeline_latest_app_name);
+      ImageLoader.with(context).load(latestApp.getIconUrl(), latestAppIcon);
+      latestAppName.setText(latestApp.getAppName());
       appsContaner.addView(latestAppView);
       apps.put(latestAppView, latestApp.getAppId());
       appsPackages.put(latestApp.getAppId(), latestApp.getPackageName());

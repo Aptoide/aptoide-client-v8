@@ -1,12 +1,15 @@
 package cm.aptoide.pt.v8engine.view.timeline.displayable;
 
 import android.content.Context;
+import android.graphics.Typeface;
+import android.text.Spannable;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.timeline.ShareCardCallback;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,6 +28,7 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
   @Getter private List<LatestApp> latestApps;
   @Getter private String abUrl;
   @Getter private String storeTheme;
+  private SpannableFactory spannableFactory;
   private DateCalculator dateCalculator;
   private Date date;
   private TimelineAnalytics timelineAnalytics;
@@ -34,14 +38,15 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
   }
 
   public StoreLatestAppsDisplayable(StoreLatestApps storeLatestApps, String storeName,
-      String avatarUrl, List<LatestApp> latestApps, String abUrl, DateCalculator dateCalculator,
-      Date date, TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
-      String storeTheme) {
+      String avatarUrl, List<LatestApp> latestApps, String abUrl, SpannableFactory spannableFactory,
+      DateCalculator dateCalculator, Date date, TimelineAnalytics timelineAnalytics,
+      SocialRepository socialRepository, String storeTheme) {
     super(storeLatestApps);
     this.storeName = storeName;
     this.avatarUrl = avatarUrl;
     this.latestApps = latestApps;
     this.abUrl = abUrl;
+    this.spannableFactory = spannableFactory;
     this.dateCalculator = dateCalculator;
     this.date = date;
     this.timelineAnalytics = timelineAnalytics;
@@ -50,11 +55,12 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
   }
 
   public static StoreLatestAppsDisplayable from(StoreLatestApps storeLatestApps,
-      DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics,
-      SocialRepository socialRepository) {
+      SpannableFactory spannableFactory, DateCalculator dateCalculator,
+      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
     final List<LatestApp> latestApps = new ArrayList<>();
     for (App app : storeLatestApps.getApps()) {
-      latestApps.add(new LatestApp(app.getId(), app.getIcon(), app.getPackageName()));
+      latestApps.add(
+          new LatestApp(app.getId(), app.getName(), app.getIcon(), app.getPackageName()));
     }
     String abTestingURL = null;
 
@@ -68,12 +74,10 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
           .getConversion()
           .getUrl();
     }
-    return new StoreLatestAppsDisplayable(storeLatestApps, storeLatestApps.getStore()
-        .getName(), storeLatestApps.getStore()
-        .getAvatar(), latestApps, abTestingURL, dateCalculator, storeLatestApps.getLatestUpdate(),
-        timelineAnalytics, socialRepository, storeLatestApps.getStore()
-        .getAppearance()
-        .getTheme());
+    return new StoreLatestAppsDisplayable(storeLatestApps, storeLatestApps.getStore().getName(),
+        storeLatestApps.getStore().getAvatar(), latestApps, abTestingURL, spannableFactory,
+        dateCalculator, storeLatestApps.getLatestUpdate(), timelineAnalytics, socialRepository,
+        storeLatestApps.getStore().getAppearance().getTheme());
   }
 
   public String getTimeSinceLastUpdate(Context context) {
@@ -111,16 +115,23 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
     socialRepository.like(cardId, cardType, "", rating);
   }
 
+  public Spannable getStyledTitle(Context context) {
+    return spannableFactory.createStyleSpan(
+        context.getString(R.string.store_has_new_apps, storeName), Typeface.BOLD, storeName);
+  }
+
   @EqualsAndHashCode public static class LatestApp {
 
     @Getter private final long appId;
     @Getter private final String iconUrl;
     @Getter private final String packageName;
+    @Getter private final String name;
 
-    public LatestApp(long appId, String iconUrl, String packageName) {
+    public LatestApp(long appId, String appName, String iconUrl, String packageName) {
       this.appId = appId;
       this.iconUrl = iconUrl;
       this.packageName = packageName;
+      this.name = appName;
     }
   }
 }

@@ -25,7 +25,7 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
   private final LayoutInflater inflater;
   private TextView title;
   private TextView subtitle;
-  private LinearLayout appsContaner;
+  private LinearLayout appsContainer;
   private ImageView image;
   private View store;
   private Map<View, Long> apps;
@@ -48,31 +48,32 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
         R.id.displayable_social_timeline_store_latest_apps_card_image);
     subtitle = (TextView) itemView.findViewById(
         R.id.displayable_social_timeline_store_latest_apps_card_subtitle);
-    appsContaner = (LinearLayout) itemView.findViewById(
+    appsContainer = (LinearLayout) itemView.findViewById(
         R.id.displayable_social_timeline_store_latest_apps_container);
     cardView = (CardView) itemView.findViewById(R.id.card);
   }
 
   @Override public void bindView(StoreLatestAppsDisplayable displayable) {
     super.bindView(displayable);
-
-    title.setText(displayable.getStoreName());
     final FragmentActivity context = getContext();
+    title.setText(displayable.getStyledTitle(context));
     subtitle.setText(displayable.getTimeSinceLastUpdate(context));
     setCardViewMargin(displayable, cardView);
     ImageLoader.with(context)
         .loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
 
-    appsContaner.removeAllViews();
+    appsContainer.removeAllViews();
     apps.clear();
     View latestAppView;
     ImageView latestAppIcon;
+    TextView latestAppName;
     for (StoreLatestAppsDisplayable.LatestApp latestApp : displayable.getLatestApps()) {
-      latestAppView = inflater.inflate(R.layout.social_timeline_latest_app, appsContaner, false);
-      latestAppIcon = (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app);
-      ImageLoader.with(context)
-          .load(latestApp.getIconUrl(), latestAppIcon);
-      appsContaner.addView(latestAppView);
+      latestAppView = inflater.inflate(R.layout.social_timeline_latest_app, appsContainer, false);
+      latestAppIcon = (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app_icon);
+      latestAppName = (TextView) latestAppView.findViewById(R.id.social_timeline_latest_app_name);
+      ImageLoader.with(context).load(latestApp.getIconUrl(), latestAppIcon);
+      latestAppName.setText(latestApp.getName());
+      appsContainer.addView(latestAppView);
       apps.put(latestAppView, latestApp.getAppId());
       appsPackages.put(latestApp.getAppId(), latestApp.getPackageName());
     }

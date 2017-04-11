@@ -72,7 +72,8 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
       StoreCredentialsProvider storeCredentialsProvider) {
     final List<SocialStoreLatestAppsDisplayable.LatestApp> latestApps = new ArrayList<>();
     for (App app : socialStoreLatestApps.getApps()) {
-      latestApps.add(new SocialStoreLatestAppsDisplayable.LatestApp(app.getId(), app.getIcon(),
+      latestApps.add(new SocialStoreLatestAppsDisplayable.LatestApp(app.getId(), app.getName(),app
+          .getIcon(),
           app.getPackageName()));
     }
     String abTestingURL = null;
@@ -150,11 +151,13 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
     @Getter private final long appId;
     @Getter private final String iconUrl;
     @Getter private final String packageName;
+    @Getter private final String appName;
 
-    public LatestApp(long appId, String iconUrl, String packageName) {
+    public LatestApp(long appId, String appName,String iconUrl, String packageName) {
       this.appId = appId;
       this.iconUrl = iconUrl;
       this.packageName = packageName;
+      this.appName = appName;
     }
   }
 }
