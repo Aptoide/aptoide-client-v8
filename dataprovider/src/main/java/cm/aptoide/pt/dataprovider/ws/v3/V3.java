@@ -146,7 +146,12 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
   interface Interfaces {
 
-    @GET("notifications/{id}") Observable<GetPushNotificationsResponse> getPushNotificationsAmazon(
+    @GET("{id}/campaigns") Observable<GetPushNotificationsResponse> getPushNotificationsAmazon(
+        @Path("id") String id, @QueryMap Map<String, String> options,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @GET("{id}/direct")
+    Observable<GetPushNotificationsResponse> getPushNotificationsLikeCommentsAmazon(
         @Path("id") String id, @QueryMap Map<String, String> options,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 

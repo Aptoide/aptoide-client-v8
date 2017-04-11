@@ -20,6 +20,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v3.PushNotificationsLikeCommentRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.PushNotificationsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -164,6 +165,11 @@ public class PullingContentService extends Service {
     }
 
     PushNotificationsRequest.of(
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
+        pInfo == null ? "" : pInfo.versionName, BuildConfig.APPLICATION_ID)
+        .execute(response -> setPushNotification(context, response, startId));
+
+    PushNotificationsLikeCommentRequest.of(
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
         pInfo == null ? "" : pInfo.versionName, BuildConfig.APPLICATION_ID)
         .execute(response -> setPushNotification(context, response, startId));
