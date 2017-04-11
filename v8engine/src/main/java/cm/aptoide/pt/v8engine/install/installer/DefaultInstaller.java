@@ -144,8 +144,8 @@ public class DefaultInstaller implements Installer {
     if (ManagerPreferences.allowRootInstallation()) {
       return Observable.create(new RootCommandOnSubscribe(installation.getId().hashCode(),
           ROOT_INSTALL_COMMAND + installation.getFile().getAbsolutePath()))
-          .map(success -> updateInstallation(installation, Installed.TYPE_ROOT,
-              Installed.STATUS_COMPLETED))
+          .subscribeOn(Schedulers.computation())
+          .map(success -> installation)
           .startWith(
               updateInstallation(installation, Installed.TYPE_ROOT, Installed.STATUS_INSTALLING));
     } else {
@@ -184,8 +184,8 @@ public class DefaultInstaller implements Installer {
   private Observable<Installation> systemInstall(Context context, Installation installation) {
     return Observable.create(
         new SystemInstallOnSubscribe(context, packageManager, Uri.fromFile(installation.getFile())))
-        .map(success -> updateInstallation(installation, Installed.TYPE_SYSTEM,
-            Installed.STATUS_COMPLETED))
+        .subscribeOn(Schedulers.computation())
+        .map(success -> installation)
         .startWith(
             updateInstallation(installation, Installed.TYPE_SYSTEM, Installed.STATUS_INSTALLING));
   }
@@ -205,8 +205,9 @@ public class DefaultInstaller implements Installer {
     return Observable.<Void> fromCallable(() -> {
       startInstallIntent(context, installation.getFile());
       return null;
-    }).flatMap(
-        installStarted -> waitPackageIntent(context, intentFilter, installation.getPackageName()))
+    }).subscribeOn(Schedulers.computation())
+        .flatMap(installStarted -> waitPackageIntent(context, intentFilter,
+            installation.getPackageName()))
         .map(success -> installation)
         .startWith(
             updateInstallation(installation, Installed.TYPE_DEFAULT, Installed.STATUS_INSTALLING));

@@ -260,11 +260,11 @@ public class InstallManager {
       int versionCode) {
     return installer.getState(packageName, versionCode)
         .map(installationState -> new InstallationProgress(100,
-            mapInstallationState(installationState.getStatus()),
-            mapInstallIndeterminate(installationState.getStatus()), -1));
+            mapInstallationState(installationState.getStatus(), installationState.getType()),
+            mapInstallIndeterminate(installationState.getStatus(), installationState.getType()), -1));
   }
 
-  private boolean mapInstallIndeterminate(int status) {
+  private boolean mapInstallIndeterminate(int status, int type) {
     boolean isIndeterminate = false;
     switch (status) {
       case Installed.STATUS_UNINSTALLED:
@@ -272,13 +272,17 @@ public class InstallManager {
         isIndeterminate = false;
         break;
       case Installed.STATUS_INSTALLING:
-        isIndeterminate = true;
+        if (type == Installed.TYPE_DEFAULT) {
+          isIndeterminate = false;
+        } else {
+          isIndeterminate = true;
+        }
         break;
     }
     return isIndeterminate;
   }
 
-  private InstallationProgress.InstallationStatus mapInstallationState(int status) {
+  private InstallationProgress.InstallationStatus mapInstallationState(int status, int type) {
     InstallationProgress.InstallationStatus installationStatus =
         InstallationProgress.InstallationStatus.UNINSTALLED;
     switch (status) {
@@ -286,7 +290,11 @@ public class InstallManager {
         installationStatus = InstallationProgress.InstallationStatus.UNINSTALLED;
         break;
       case Installed.STATUS_INSTALLING:
-        installationStatus = InstallationProgress.InstallationStatus.INSTALLING;
+        if (type == Installed.TYPE_DEFAULT) {
+          installationStatus = InstallationProgress.InstallationStatus.INSTALLED;
+        } else {
+          installationStatus = InstallationProgress.InstallationStatus.INSTALLING;
+        }
         break;
       case Installed.STATUS_COMPLETED:
         installationStatus = InstallationProgress.InstallationStatus.INSTALLED;

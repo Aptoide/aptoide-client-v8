@@ -5,13 +5,12 @@ package cm.aptoide.pt.v8engine;
  */
 
 public class InstallationProgress {
-
   private int progress;
   private InstallationStatus state;
   private boolean isIndeterminate;
   private int speed;
-
-  public InstallationProgress(int progress, InstallationStatus state, boolean isIndeterminate, int speed) {
+  public InstallationProgress(int progress, InstallationStatus state, boolean isIndeterminate,
+      int speed) {
     this.progress = progress;
     this.state = state;
     this.isIndeterminate = isIndeterminate;

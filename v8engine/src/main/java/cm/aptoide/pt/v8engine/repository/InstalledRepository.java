@@ -5,6 +5,7 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import java.util.List;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by marcelobenites on 7/27/16.
@@ -35,13 +36,15 @@ public class InstalledRepository implements Repository<Installed, String> {
   }
 
   public Observable<Installed> getAsList(String packageName, int versionCode) {
-    return accessor.getAsList(packageName, versionCode).map(installeds -> {
-      if (installeds.isEmpty()) {
-        return null;
-      } else {
-        return installeds.get(0);
-      }
-    });
+    return accessor.getAsList(packageName, versionCode)
+        .observeOn(Schedulers.io())
+        .map(installeds -> {
+          if (installeds.isEmpty()) {
+            return null;
+          } else {
+            return installeds.get(0);
+          }
+        });
   }
 
   @Override public void save(Installed installed) {
