@@ -57,7 +57,7 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
     while (iterator.hasNext()) {
       AptoideMessageServerController aptoideMessageServerController = iterator.next();
       if (aptoideMessageServerController.getHost().getIp().equals(host.getIp())) {
-        sendToOthers(host, new HostLeftMessage(getHost(), host));
+        sendToOthersWithAck(host, new HostLeftMessage(getHost(), host));
         aptoideMessageServerController.disable();
         iterator.remove();
         System.out.println(
@@ -106,7 +106,8 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
     // TODO: 06-02-2017 neuro may not be a bad idea to replace this null with the actual host :/
     sendWithAck(message.getLocalHost(),
         new SendApk(null, message.getAndroidAppInfo(), getConnectedHosts(), availablePort));
-    sendToOthers(message.getLocalHost(), new ReceiveApk(getHost(), message.getAndroidAppInfo(),
+    sendToOthersWithAck(message.getLocalHost(),
+        new ReceiveApk(getHost(), message.getAndroidAppInfo(),
         new Host(message.getLocalHost().getIp(), availablePort)));
   }
 
