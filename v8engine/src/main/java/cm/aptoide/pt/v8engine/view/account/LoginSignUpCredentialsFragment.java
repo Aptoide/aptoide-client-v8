@@ -169,7 +169,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
       }
 
       @Override public void onError(FacebookException error) {
-        showFacebookLoginError(cm.aptoide.accountmanager.R.string.error_occured);
+        showFacebookLoginError(R.string.error_occured);
       }
     });
   }
@@ -352,8 +352,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     final Context context = getContext();
 
     facebookEmailRequiredDialog = new AlertDialog.Builder(context).setMessage(
-        cm.aptoide.accountmanager.R.string.facebook_email_permission_regected_message)
-        .setPositiveButton(cm.aptoide.accountmanager.R.string.facebook_grant_permission_button,
+        R.string.facebook_email_permission_regected_message)
+        .setPositiveButton(R.string.facebook_grant_permission_button,
             (dialog, which) -> {
               facebookLoginManager.logInWithReadPermissions(this, Arrays.asList("email"));
             })

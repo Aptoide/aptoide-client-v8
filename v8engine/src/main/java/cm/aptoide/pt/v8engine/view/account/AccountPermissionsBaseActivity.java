@@ -227,28 +227,28 @@ public abstract class AccountPermissionsBaseActivity extends AccountBaseActivity
 
   private String getErrorsMessage(List<AptoideUtils.IconSizeU.ImageErrors> imageErrors) {
     StringBuilder message = new StringBuilder();
-    message.append(getString(cm.aptoide.accountmanager.R.string.image_requirements_popup_message));
+    message.append(getString(R.string.image_requirements_popup_message));
     for (AptoideUtils.IconSizeU.ImageErrors imageSizeError : imageErrors) {
       switch (imageSizeError) {
         case MIN_HEIGHT:
           message.append(
-              getString(cm.aptoide.accountmanager.R.string.image_requirements_error_min_height));
+              getString(R.string.image_requirements_error_min_height));
           break;
         case MAX_HEIGHT:
           message.append(
-              getString(cm.aptoide.accountmanager.R.string.image_requirements_error_max_height));
+              getString(R.string.image_requirements_error_max_height));
           break;
         case MIN_WIDTH:
           message.append(
-              getString(cm.aptoide.accountmanager.R.string.image_requirements_error_min_width));
+              getString(R.string.image_requirements_error_min_width));
           break;
         case MAX_WIDTH:
           message.append(
-              getString(cm.aptoide.accountmanager.R.string.image_requirements_error_max_width));
+              getString(R.string.image_requirements_error_max_width));
           break;
         case MAX_IMAGE_SIZE:
           message.append(
-              getString(cm.aptoide.accountmanager.R.string.image_requirements_error_max_file_size));
+              getString(R.string.image_requirements_error_max_file_size));
           break;
         case ERROR_DECODING:
           message.append(getString(R.string.image_requirements_error_open_image));

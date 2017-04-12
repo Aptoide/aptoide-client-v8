@@ -59,7 +59,7 @@ public class ProfileStepOneActivity extends AccountBaseActivity {
   }
 
   @Override public String getActivityTitle() {
-    return getString(cm.aptoide.accountmanager.R.string.create_profile_logged_in_activity_title);
+    return getString(R.string.create_profile_logged_in_activity_title);
   }
 
   @Override public int getLayoutId() {
@@ -114,11 +114,11 @@ public class ProfileStepOneActivity extends AccountBaseActivity {
   }
 
   private void showErrorMessage() {
-    ShowMessage.asSnack(this, cm.aptoide.accountmanager.R.string.unknown_error);
+    ShowMessage.asSnack(this, R.string.unknown_error);
   }
 
   private void showContinueSuccessMessage() {
-    ShowMessage.asSnack(this, cm.aptoide.accountmanager.R.string.successful);
+    ShowMessage.asSnack(this, R.string.successful);
     Analytics.Account.accountProfileAction(1, Analytics.Account.ProfileAction.CONTINUE);
   }
 }

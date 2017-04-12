@@ -5,6 +5,7 @@ import android.support.annotation.StringRes;
 import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AccountValidationException;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
 
@@ -17,7 +18,7 @@ public class AccountErrorMapper implements ThrowableToStringMapper {
   }
 
   @Override public String map(Throwable throwable) {
-    String message = context.getString(cm.aptoide.accountmanager.R.string.unknown_error);
+    String message = context.getString(R.string.unknown_error);
 
     if (throwable instanceof AccountException) {
 
@@ -34,23 +35,23 @@ public class AccountErrorMapper implements ThrowableToStringMapper {
       switch (((AccountValidationException) throwable).getCode()) {
         case AccountValidationException.EMPTY_EMAIL_AND_PASSWORD:
           message =
-              context.getString(cm.aptoide.accountmanager.R.string.no_email_and_pass_error_message);
+              context.getString(R.string.no_email_and_pass_error_message);
           break;
         case AccountValidationException.EMPTY_EMAIL:
-          message = context.getString(cm.aptoide.accountmanager.R.string.no_email_error_message);
+          message = context.getString(R.string.no_email_error_message);
           break;
         case AccountValidationException.EMPTY_NAME:
-          message = context.getString(cm.aptoide.accountmanager.R.string.nothing_inserted_user);
+          message = context.getString(R.string.nothing_inserted_user);
           break;
         case AccountValidationException.EMPTY_PASSWORD:
-          message = context.getString(cm.aptoide.accountmanager.R.string.no_pass_error_message);
+          message = context.getString(R.string.no_pass_error_message);
           break;
         case AccountValidationException.INVALID_PASSWORD:
-          message = context.getString(cm.aptoide.accountmanager.R.string.password_validation_text);
+          message = context.getString(R.string.password_validation_text);
           break;
       }
     } else if (ErrorUtils.isNoNetworkConnection(throwable)) {
-      message = context.getString(cm.aptoide.accountmanager.R.string.connection_error);
+      message = context.getString(R.string.connection_error);
     }
     return message;
   }

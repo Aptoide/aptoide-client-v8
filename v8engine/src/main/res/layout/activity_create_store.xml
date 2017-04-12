@@ -708,7 +708,7 @@
           android:layout_marginRight="23dp"
           android:layout_weight="1"
           android:gravity="center"
-          android:text="@string/create_store_skip"
+          android:text="@string/skip"
           style="?attr/customButtonWhite"
           />
 
