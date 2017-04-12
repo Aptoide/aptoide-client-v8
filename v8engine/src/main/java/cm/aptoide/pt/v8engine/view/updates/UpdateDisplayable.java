@@ -13,6 +13,7 @@ import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.InstallManager;
+import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -55,6 +56,7 @@ public class UpdateDisplayable extends Displayable {
   private Analytics analytics;
   private DownloadEventConverter converter;
   private InstallEventConverter installConverter;
+  private int updateVersionCode;
 
   public UpdateDisplayable() {
   }
@@ -64,8 +66,8 @@ public class UpdateDisplayable extends Displayable {
       String updateVersionName, String mainObbName, String mainObbPath, String mainObbMd5,
       String patchObbName, String patchObbPath, String patchObbMd5, Download download,
       InstallManager installManager, Analytics analytics,
-      DownloadEventConverter downloadInstallEventConverter,
-      InstallEventConverter installConverter) {
+      DownloadEventConverter downloadInstallEventConverter, InstallEventConverter installConverter,
+      int updateVersionCode) {
     this.packageName = packageName;
     this.appId = appId;
     this.label = label;
@@ -86,6 +88,7 @@ public class UpdateDisplayable extends Displayable {
     this.analytics = analytics;
     this.converter = downloadInstallEventConverter;
     this.installConverter = installConverter;
+    this.updateVersionCode = updateVersionCode;
   }
 
   public static UpdateDisplayable newInstance(Update update, InstallManager installManager,
@@ -98,7 +101,8 @@ public class UpdateDisplayable extends Displayable {
         update.getAlternativeApkPath(), update.getUpdateVersionName(), update.getMainObbName(),
         update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbName(),
         update.getPatchObbPath(), update.getPatchObbMd5(), downloadFactory.create(update),
-        installManager, analytics, downloadInstallEventConverter, installConverter);
+        installManager, analytics, downloadInstallEventConverter, installConverter,
+        update.getUpdateVersionCode());
   }
 
   public Observable<Progress<Download>> downloadAndInstall(Context context,
@@ -136,5 +140,18 @@ public class UpdateDisplayable extends Displayable {
 
   @Override public int getViewLayout() {
     return R.layout.update_row;
+  }
+
+  public int getUpdateVersionCode() {
+    return updateVersionCode;
+  }
+
+  public Observable<Boolean> shouldShowProgress() {
+    return installManager.getInstallationProgress(getMd5(), getPackageName(),
+        getUpdateVersionCode())
+        .map(installationProgress -> installationProgress.getState()
+            == InstallationProgress.InstallationStatus.INSTALLING
+            || installationProgress.isIndeterminate());
+
   }
 }

@@ -95,12 +95,14 @@ import rx.android.schedulers.AndroidSchedulers;
     final Observable<Void> handleUpdateButtonClick =
         handleUpdateButtonClick(updateDisplayable, context);
 
+    compositeSubscription.add(updateDisplayable.shouldShowProgress()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(shouldShow -> showProgress(shouldShow),
+            throwable -> CrashReport.getInstance().log(throwable)));
+
     final Observable<Void> showInstalledVersionName =
         showInstalledVersionName(updateDisplayable.getPackageName(),
             AccessorFactory.getAccessorFor(Installed.class));
-
-    final Observable<Void> showProgress =
-        showProgress(updateDisplayable.getInstallManager(), updateDisplayable.getMd5());
 
     final Observable<Void> handleLongClicks =
         handleLongClicks(updateDisplayable.getPackageName(), context);
@@ -108,8 +110,8 @@ import rx.android.schedulers.AndroidSchedulers;
     final Observable<Void> handleUpdateRowClick = handleUpdateRowClick(updateDisplayable);
 
     compositeSubscription.add(
-        Observable.merge(handleUpdateButtonClick, showInstalledVersionName, showProgress,
-            handleLongClicks, handleUpdateRowClick)
+        Observable.merge(handleUpdateButtonClick, showInstalledVersionName, handleLongClicks,
+            handleUpdateRowClick)
             .subscribe(__ -> {/* do nothing */}, err -> CrashReport.getInstance().log(err)));
   }
 
