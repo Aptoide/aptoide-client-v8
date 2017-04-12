@@ -118,6 +118,7 @@ public abstract class AptoideMessageController implements Sender<Message> {
       disable();
       sendWithAck(new ExitMessage(getLocalhost()));
       if (socket != null && !socket.isClosed()) {
+        Print.d(TAG, "Closing socket " + socket);
         socket.close();
       }
     } catch (IOException e) {
@@ -133,7 +134,8 @@ public abstract class AptoideMessageController implements Sender<Message> {
 
   public synchronized boolean sendWithAck(Message message) throws InterruptedException {
 
-    Print.d(TAG, "sendWithAck() called with: message = [" + message + "]");
+    Print.d(TAG, "sendWithAck() called with: message = [" + message + "], " + message.getClass()
+        .getSimpleName());
 
     if (!isConnected()) {
       Print.d(TAG, "sendWithAck: " + message.getClass().getSimpleName() + " not connected!");
@@ -151,8 +153,10 @@ public abstract class AptoideMessageController implements Sender<Message> {
     try {
       objectOutputStream.writeObject(message);
       ackMessage = ackMessages.poll(ACK_TIMEOUT, TimeUnit.MILLISECONDS);
-    } catch (IOException e) {
+    } catch (InterruptedException e) {
       Print.d(TAG, "sendWithAck: " + Thread.currentThread().getId() + ": Failed to receive ack!");
+      e.printStackTrace();
+    } catch (IOException e) {
       e.printStackTrace();
     }
 

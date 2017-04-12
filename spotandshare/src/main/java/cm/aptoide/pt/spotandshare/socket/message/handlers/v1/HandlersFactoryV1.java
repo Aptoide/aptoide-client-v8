@@ -55,7 +55,7 @@ public class HandlersFactoryV1 {
     @Override public void handleMessage(SendApk sendApkMessage, Sender<Message> messageSender) {
       ShareAppsFileServerSocket shareAppsFileServerSocket =
           new ShareAppsFileServerSocket(sendApkMessage.getServerPort(),
-              sendApkMessage.getAndroidAppInfo(), 5000);
+              sendApkMessage.getAndroidAppInfo());
       shareAppsFileServerSocket.startAsync();
       shareAppsFileServerSocket.setFileServerLifecycle(sendApkMessage.getAndroidAppInfo(),
           fileLifecycleProvider.newFileServerLifecycle());

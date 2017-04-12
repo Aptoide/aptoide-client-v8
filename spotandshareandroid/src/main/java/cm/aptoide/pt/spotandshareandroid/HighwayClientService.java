@@ -16,6 +16,7 @@ import cm.aptoide.pt.spotandshare.socket.exception.ServerLeftException;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
+import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
@@ -40,6 +41,10 @@ public class HighwayClientService extends Service {
   private NotificationManagerCompat mNotifyManager;
   private FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider;
   private AptoideMessageClientSocket aptoideMessageClientSocket;
+  private OnError<IOException> onError = e -> {
+    // TODO: 11-04-2017 neuro implementar!
+    System.err.println("OnError lacks implementation!");
+  };
 
   @Override public void onCreate() {
     super.onCreate();
@@ -198,7 +203,7 @@ public class HighwayClientService extends Service {
         // TODO: 07-04-2017 asdsadefeqf neuro Filipe onError sff lol
         aptoideMessageClientSocket =
             new AptoideMessageClientSocket(serverIP, "192.168.43.1", port, externalStoragepath,
-                storageCapacity, fileLifecycleProvider, socketBinder, null);
+                storageCapacity, fileLifecycleProvider, socketBinder, onError, Integer.MAX_VALUE);
         aptoideMessageClientSocket.setSocketBinder(socketBinder);
         aptoideMessageClientSocket.startAsync();
 
@@ -218,12 +223,8 @@ public class HighwayClientService extends Service {
 
           final AndroidAppInfo appInfo = new AndroidAppInfo(appName, packageName, fileInfoList);
 
-          AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
-            @Override public void run() {
-              aptoideMessageClientSocket.send(
-                  new RequestPermissionToSend(aptoideMessageClientSocket.getLocalhost(), appInfo));
-            }
-          });
+          AptoideUtils.ThreadU.runOnIoThread(() -> aptoideMessageClientSocket.send(
+              new RequestPermissionToSend(aptoideMessageClientSocket.getLocalhost(), appInfo)));
         }
       } else if (intent.getAction() != null && intent.getAction().equals("DISCONNECT")) {
         System.out.println("Requested to disconnect !");

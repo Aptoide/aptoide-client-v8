@@ -36,12 +36,13 @@ public class ExampleMultiFiles {
   }
 
   private static void startServer() {
-    aptoideServerSocket = new AptoideFileServerSocket(PORT, FILE_PATHS, 5000);
+    aptoideServerSocket = new AptoideFileServerSocket(PORT, FILE_PATHS, 5000, 3000);
     aptoideServerSocket.startAsync();
   }
 
   private static void startClient() {
-    new AptoideFileClientSocket("localhost", PORT, getFilesToReceive()).startAsync();
+    new AptoideFileClientSocket("localhost", PORT, getFilesToReceive(),
+        Integer.MAX_VALUE).startAsync();
   }
 
   private static List<FileInfo> getFilesToReceive() {

@@ -22,20 +22,22 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
 
   public AptoideMessageClientSocket(String host, int port, String rootDir,
       StorageCapacity storageCapacity, FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider,
-      SocketBinder socketBinder, OnError<IOException> onError) {
-    super(host, port);
+      SocketBinder socketBinder, OnError<IOException> onError, int timeout) {
+    super(host, port, timeout);
     this.aptoideMessageController =
         new AptoideMessageClientController(this, rootDir, storageCapacity, fileLifecycleProvider,
             socketBinder, onError);
+    this.onError = onError;
   }
 
   public AptoideMessageClientSocket(String host, String fallbackHostName, int port, String rootDir,
       StorageCapacity storageCapacity, FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider,
-      SocketBinder socketBinder, OnError<IOException> onError) {
-    super(host, fallbackHostName, port);
+      SocketBinder socketBinder, OnError<IOException> onError, int timeout) {
+    super(host, fallbackHostName, port, timeout);
     this.aptoideMessageController =
         new AptoideMessageClientController(this, rootDir, storageCapacity, fileLifecycleProvider,
             socketBinder, onError);
+    this.onError = onError;
   }
 
   @Override public void shutdown() {

@@ -26,6 +26,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
 
   private static final String TAG = AptoideServerSocket.class.getSimpleName();
   private final int port;
+  private final int timeout;
   private ServerSocketTimeoutManager serverSocketTimeoutManager;
   private List<Socket> connectedSockets = new CopyOnWriteArrayList<>();
   private ServerSocket ss;
@@ -33,17 +34,19 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
   private boolean shutdown = false;
   private LinkedBlockingQueue<ServerAction> queuedServerActions = new LinkedBlockingQueue<>();
   @Getter private Host host;
-  private int timeout;
+  private int serverSocketTimeout;
   @Setter private HostsChangedCallback hostsChangedCallbackCallback;
 
-  public AptoideServerSocket(int port, int timeout) {
+  public AptoideServerSocket(int port, int serverSocketTimeout, int timeout) {
     this.port = port;
+    this.serverSocketTimeout = serverSocketTimeout;
     this.timeout = timeout;
   }
 
-  public AptoideServerSocket(int bufferSize, int port, int timeout) {
+  public AptoideServerSocket(int bufferSize, int port, int serverSocketTimeout, int timeout) {
     super(bufferSize);
     this.port = port;
+    this.serverSocketTimeout = serverSocketTimeout;
     this.timeout = timeout;
   }
 
@@ -60,7 +63,8 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
 
     try {
       ss = new ServerSocket(port);
-      serverSocketTimeoutManager = new ServerSocketTimeoutManager(ss, timeout);
+      ss.setSoTimeout(serverSocketTimeout);
+      serverSocketTimeoutManager = new ServerSocketTimeoutManager(ss, serverSocketTimeout);
       serverSocketTimeoutManager.reserTimeout();
       host = new Host("192.168.43.1", ss.getLocalPort());
       Print.d(TAG, "start: "
@@ -73,6 +77,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
           + this);
       while (true) {
         Socket socket = ss.accept();
+        socket.setSoTimeout(timeout);
         connectedSockets.add(socket);
         if (hostsChangedCallbackCallback != null) {
           hostsChangedCallbackCallback.hostsChanged(getConnectedHosts());
@@ -98,7 +103,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
             try {
               serverSocketTimeoutManager.reserTimeout();
               connectedSockets.remove(socket);
-              Print.d(TAG, "start: ShareApps: Closing " + getClass().getSimpleName() + " socket.");
+              Print.d(TAG, "Closing socket " + socket);
               socket.close();
             } catch (IOException e) {
               e.printStackTrace();
@@ -117,7 +122,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
       } catch (InterruptedException e1) {
         e1.printStackTrace();
       }
-      shutdown();
+
       try {
         executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
       } catch (InterruptedException e1) {
@@ -139,6 +144,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
 
     if (ss != null && !ss.isClosed()) {//todo need to solve in the future this nullpointerexception
       try {
+        Print.d(TAG, "Closing socket " + ss.getClass().getSimpleName());
         ss.close();
       } catch (IOException e) {
         e.printStackTrace();
@@ -148,6 +154,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
       while (iterator.hasNext()) {
         Socket next = iterator.next();
         try {
+          Print.d(TAG, "Closing socket " + next);
           next.close();
         } catch (IOException e) {
           e.printStackTrace();

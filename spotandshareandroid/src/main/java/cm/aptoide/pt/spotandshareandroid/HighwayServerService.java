@@ -17,6 +17,7 @@ import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
+import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
@@ -40,6 +41,9 @@ public class HighwayServerService extends Service {
   private List<App> listOfApps;
   private AptoideMessageServerSocket aptoideMessageServerSocket;
   private AptoideMessageClientSocket aptoideMessageClientSocket;
+  private OnError<IOException> onError = e -> {
+    System.err.println("OnError lacks implementation!");
+  };
 
   @Override public void onCreate() {
     super.onCreate();
@@ -143,15 +147,17 @@ public class HighwayServerService extends Service {
           }
 
           @Override public void onError(IOException e) {
+
+            if (mNotifyManager != null && androidAppInfo != null) {
+              mNotifyManager.cancel(androidAppInfo.getPackageName().hashCode());
+            }
+
             // Não ta facil perceber pk é k isto cai aqui quando só há um cliente, martelo ftw :/
             if (aptoideMessageServerSocket.getAptoideMessageControllers().size() <= 1) {
               return;
             }
 
             e.printStackTrace();
-            if (mNotifyManager != null && androidAppInfo != null) {
-              mNotifyManager.cancel(androidAppInfo.getPackageName().hashCode());
-            }
 
             Intent i = new Intent();
             i.setAction("ERRORRECEIVING");
@@ -177,7 +183,8 @@ public class HighwayServerService extends Service {
         final String externalStoragepath = intent.getStringExtra("ExternalStoragePath");
 
         System.out.println("Going to start serving");
-        aptoideMessageServerSocket = new AptoideMessageServerSocket(55555, Integer.MAX_VALUE);
+        aptoideMessageServerSocket =
+            new AptoideMessageServerSocket(55555, Integer.MAX_VALUE, Integer.MAX_VALUE);
         aptoideMessageServerSocket.setHostsChangedCallbackCallback(
             new HostsCallbackManager(this.getApplicationContext()));
         aptoideMessageServerSocket.startAsync();
@@ -194,7 +201,7 @@ public class HighwayServerService extends Service {
         // TODO: 07-04-2017 asdsadefeqf neuro Filipe onError sff lol
         aptoideMessageClientSocket =
             new AptoideMessageClientSocket("192.168.43.1", 55555, externalStoragepath,
-                storageCapacity, fileLifecycleProvider, socketBinder, null);
+                storageCapacity, fileLifecycleProvider, socketBinder, onError, Integer.MAX_VALUE);
         aptoideMessageClientSocket.startAsync();
 
         System.out.println("Connected 342");
@@ -227,7 +234,7 @@ public class HighwayServerService extends Service {
         }
       } else if (intent.getAction() != null && intent.getAction().equals("SHUTDOWN_SERVER")) {
         if (aptoideMessageServerSocket != null) { // TODO: 16-03-2017 filipe check problem
-          aptoideMessageClientSocket.shutdown();
+          aptoideMessageClientSocket.disable();
           aptoideMessageServerSocket.shutdown(new Runnable() {
             @Override public void run() {
               if (mNotifyManager != null) {

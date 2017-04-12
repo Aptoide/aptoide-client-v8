@@ -15,30 +15,34 @@ public abstract class AptoideClientSocket extends AptoideSocket {
   private static final String TAG = AptoideClientSocket.class.getSimpleName();
   private final String hostName;
   private final int port;
+  private final int timeout;
   private String fallbackHostName;
   @Setter private int retries;
   private Socket socket;
   @Setter private SocketBinder socketBinder;
 
-  public AptoideClientSocket(String hostName, String fallbackHostName, int port) {
-    this(hostName, port);
+  public AptoideClientSocket(String hostName, String fallbackHostName, int port, int timeout) {
+    this(hostName, port, timeout);
     this.fallbackHostName = fallbackHostName;
   }
 
-  public AptoideClientSocket(String hostName, int port) {
+  public AptoideClientSocket(String hostName, int port, int timeout) {
     this.hostName = hostName;
     this.port = port;
+    this.timeout = timeout;
   }
 
-  public AptoideClientSocket(int bufferSize, String hostName, String fallbackHostName, int port) {
-    this(bufferSize, hostName, port);
+  public AptoideClientSocket(int bufferSize, String hostName, String fallbackHostName, int port,
+      int timeout) {
+    this(bufferSize, hostName, port, timeout);
     this.fallbackHostName = fallbackHostName;
   }
 
-  public AptoideClientSocket(int bufferSize, String hostName, int port) {
+  public AptoideClientSocket(int bufferSize, String hostName, int port, int timeout) {
     super(bufferSize);
     this.hostName = hostName;
     this.port = port;
+    this.timeout = timeout;
   }
 
   @Override public AptoideSocket start() {
@@ -54,6 +58,7 @@ public abstract class AptoideClientSocket extends AptoideSocket {
         while ((socket == null || !socket.isConnected()) && retries-- >= 0) {
           try {
             socket = new Socket();
+            socket.setSoTimeout(timeout);
             if (socketBinder != null) {
               socketBinder.bind(socket);
             }
@@ -93,6 +98,7 @@ public abstract class AptoideClientSocket extends AptoideSocket {
       }
     } finally {
       try {
+        Print.d(TAG, "Closing socket " + socket);
         socket.close();
       } catch (IOException e) {
         e.printStackTrace();
@@ -109,6 +115,7 @@ public abstract class AptoideClientSocket extends AptoideSocket {
   @Override public void shutdown() {
     super.shutdown();
     try {
+      Print.d(TAG, "Closing socket " + socket);
       socket.close();
     } catch (IOException e) {
       e.printStackTrace();

@@ -10,6 +10,6 @@ import java.util.List;
 public class ShareAppsFileClientSocket extends AptoideFileClientSocket<AndroidAppInfo> {
 
   public ShareAppsFileClientSocket(String host, int port, List<FileInfo> fileInfos) {
-    super(host, port, fileInfos);
+    super(host, port, fileInfos, ShareAppsFileServerSocket.TIMEOUT);
   }
 }
