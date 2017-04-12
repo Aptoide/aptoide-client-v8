@@ -23,7 +23,7 @@ import lombok.Data;
   private String img;
   private String lang;
   private String title;
-  private String url_target;
+  private String url;
   private String url_track;
 
   //private List<Notification> results;

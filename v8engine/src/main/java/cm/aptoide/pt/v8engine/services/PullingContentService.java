@@ -255,11 +255,15 @@ public class PullingContentService extends Service {
 
       Intent resultIntent = new Intent(Application.getContext(), PullingContentReceiver.class);
       resultIntent.setAction(PullingContentReceiver.NOTIFICATION_PRESSED_ACTION);
-      resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TRACK_URL,
-          pushNotification.getUrl_track());
-      resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TARGET_URL,
-          pushNotification.getUrl_target());
 
+      if (!TextUtils.isEmpty(pushNotification.getUrl_track())) {
+        resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TRACK_URL,
+            pushNotification.getUrl_track());
+      }
+      if (!TextUtils.isEmpty(pushNotification.getUrl())) {
+        resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TARGET_URL,
+            pushNotification.getUrl());
+      }
       PendingIntent resultPendingIntent =
           PendingIntent.getBroadcast(Application.getContext(), 0, resultIntent,
               PendingIntent.FLAG_UPDATE_CURRENT);
