@@ -20,22 +20,21 @@ import rx.Observable;
 /**
  * Created by trinkes on 7/13/16.
  */
-public class PushNotificationsLikeCommentRequest
-    extends Notifications<GetPushNotificationsResponse> {
+public class PullSocialNotificationRequest extends Notifications<GetPullNotificationsResponse> {
 
   protected static String BASE_HOST = "http://pnp.aptoide.com/pnp/v1/notifications/";
 
   private final Map<String, String> options;
   private final String id;
 
-  protected PushNotificationsLikeCommentRequest(String id, Map<String, String> options) {
+  protected PullSocialNotificationRequest(String id, Map<String, String> options) {
     super(OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
         WebService.getDefaultConverter());
     this.options = options;
     this.id = id;
   }
 
-  public static PushNotificationsLikeCommentRequest of(AptoideClientUUID aptoideClientUuid,
+  public static PullSocialNotificationRequest of(AptoideClientUUID aptoideClientUuid,
       String versionName, String appId) {
 
     Random r = new Random();
@@ -59,13 +58,13 @@ public class PushNotificationsLikeCommentRequest
     }
     options.put("aptoide_package", appId);
 
-    return new PushNotificationsLikeCommentRequest(id, options);
+    return new PullSocialNotificationRequest(id, options);
   }
 
   @Override
-  protected Observable<GetPushNotificationsResponse> loadDataFromNetwork(Interfaces interfaces,
+  protected Observable<GetPullNotificationsResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    Observable<GetPushNotificationsResponse> pushNotificationsAmazon =
+    Observable<GetPullNotificationsResponse> pushNotificationsAmazon =
         interfaces.getPushNotificationsLikeCommentsAmazon(id, options, true);
     return pushNotificationsAmazon;
   }

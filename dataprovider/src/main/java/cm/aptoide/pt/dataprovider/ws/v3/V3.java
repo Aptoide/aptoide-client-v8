@@ -11,7 +11,7 @@ import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
-import cm.aptoide.pt.dataprovider.ws.notifications.GetPushNotificationsResponse;
+import cm.aptoide.pt.dataprovider.ws.notifications.GetPullNotificationsResponse;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.BaseV3Response;
@@ -146,17 +146,17 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
   interface Interfaces {
 
-    @GET("{id}/campaigns") Observable<GetPushNotificationsResponse> getPushNotificationsAmazon(
+    @GET("{id}/campaigns") Observable<GetPullNotificationsResponse> getPushNotificationsAmazon(
         @Path("id") String id, @QueryMap Map<String, String> options,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @GET("{id}/direct")
-    Observable<GetPushNotificationsResponse> getPushNotificationsLikeCommentsAmazon(
+    Observable<GetPullNotificationsResponse> getPushNotificationsLikeCommentsAmazon(
         @Path("id") String id, @QueryMap Map<String, String> options,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("getPushNotifications") @FormUrlEncoded
-    Observable<GetPushNotificationsResponse> getPushNotifications(@FieldMap BaseBody arg,
+    Observable<GetPullNotificationsResponse> getPushNotifications(@FieldMap BaseBody arg,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("addApkFlag") @FormUrlEncoded Observable<GenericResponseV2> addApkFlag(

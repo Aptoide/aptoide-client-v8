@@ -1,14 +1,11 @@
 package cm.aptoide.pt.dataprovider.ws.notifications;
 
-import cm.aptoide.pt.model.v3.BaseV3Response;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * Created by trinkes on 7/13/16.
  */
-@Data @EqualsAndHashCode(callSuper = true) public class GetPushNotificationsResponse
-    extends BaseV3Response {
+@Data public class GetPullNotificationsResponse {
 
   //{
   //  "ab_testing_group": "passive_promotion",

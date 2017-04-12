@@ -53,12 +53,12 @@ public abstract class Notifications<U> extends WebService<Notifications.Interfac
 
   interface Interfaces {
 
-    @GET("{id}/campaigns") Observable<GetPushNotificationsResponse> getPushNotificationsAmazon(
+    @GET("{id}/campaigns") Observable<GetPullNotificationsResponse> getPushNotificationsAmazon(
         @Path("id") String id, @QueryMap Map<String, String> options,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @GET("{id}/direct")
-    Observable<GetPushNotificationsResponse> getPushNotificationsLikeCommentsAmazon(
+    Observable<GetPullNotificationsResponse> getPushNotificationsLikeCommentsAmazon(
         @Path("id") String id, @QueryMap Map<String, String> options,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
   }

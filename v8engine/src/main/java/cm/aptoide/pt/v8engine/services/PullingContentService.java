@@ -20,12 +20,12 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.notifications.PushNotificationsLikeCommentRequest;
-import cm.aptoide.pt.dataprovider.ws.notifications.PushNotificationsRequest;
+import cm.aptoide.pt.dataprovider.ws.notifications.PullSocialNotificationRequest;
+import cm.aptoide.pt.dataprovider.ws.notifications.PullCampaignNotificationsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.dataprovider.ws.notifications.GetPushNotificationsResponse;
+import cm.aptoide.pt.dataprovider.ws.notifications.GetPullNotificationsResponse;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -164,12 +164,12 @@ public class PullingContentService extends Service {
       e.printStackTrace();
     }
 
-    PushNotificationsRequest.of(
+    PullCampaignNotificationsRequest.of(
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
         pInfo == null ? "" : pInfo.versionName, BuildConfig.APPLICATION_ID)
         .execute(response -> setPushNotification(context, response, startId));
 
-    PushNotificationsLikeCommentRequest.of(
+    PullSocialNotificationRequest.of(
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
         pInfo == null ? "" : pInfo.versionName, BuildConfig.APPLICATION_ID)
         .execute(response -> setPushNotification(context, response, startId));
@@ -239,9 +239,9 @@ public class PullingContentService extends Service {
     stopSelf(startId);
   }
 
-  private void setPushNotification(Context context, GetPushNotificationsResponse response,
+  private void setPushNotification(Context context, GetPullNotificationsResponse response,
       int startId) {
-    final GetPushNotificationsResponse pushNotification = response;
+    final GetPullNotificationsResponse pushNotification = response;
     Intent resultIntent = new Intent(Application.getContext(), PullingContentReceiver.class);
     resultIntent.setAction(PullingContentReceiver.NOTIFICATION_PRESSED_ACTION);
     resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TRACK_URL,
