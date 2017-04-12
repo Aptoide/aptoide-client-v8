@@ -50,8 +50,12 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Completable remove(String packageName, int versionCode) {
-    return get(packageName, versionCode).first()
-        .doOnNext(installed -> database.deleteObject(Database.get(), installed))
+    return database.getRealm()
+        .doOnNext(realm -> database.deleteObject(realm, realm.where(Installed.class)
+            .equalTo(Installed.PACKAGE_NAME, packageName)
+            .equalTo(Installed.VERSION_CODE, versionCode)
+            .findFirst()))
+        .observeOn(Schedulers.io())
         .toCompletable();
   }
 
@@ -73,6 +77,10 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
         .subscribeOn(RealmSchedulers.getScheduler());
   }
 
+  /**
+   * should use install manager instead
+   */
+  @Deprecated
   public Observable<List<Installed>> getAsList(String packageName, int versionCode) {
     return Observable.fromCallable(() -> Database.getInternal())
         .flatMap(realm -> realm.where(Installed.class)
@@ -116,4 +124,16 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   public void insert(Installed installed) {
     database.insert(installed);
   }
+
+  public Observable<List<Installed>> getAllAsList(String packageName) {
+    return Observable.fromCallable(() -> Database.getInternal())
+        .flatMap(realm -> realm.where(Installed.class)
+            .equalTo(Installed.PACKAGE_NAME, packageName)
+            .findAll()
+            .asObservable()
+            .unsubscribeOn(RealmSchedulers.getScheduler()))
+        .flatMap(installeds -> database.copyFromRealm(installeds))
+        .subscribeOn(RealmSchedulers.getScheduler());
+  }
+
 }

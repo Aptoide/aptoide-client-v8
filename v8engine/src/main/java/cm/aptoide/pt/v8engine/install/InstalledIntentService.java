@@ -16,17 +16,18 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.InstallEvent;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.root.RootShell;
 import cm.aptoide.pt.v8engine.repository.AdsRepository;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.RollbackRepository;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
@@ -44,12 +45,12 @@ public class InstalledIntentService extends IntentService {
 
   private AdsRepository adsRepository;
   private RollbackRepository repository;
-  private InstalledRepository installedRepository;
   private UpdateRepository updatesRepository;
   private CompositeSubscription subscriptions;
   private Analytics analytics;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private InstallManager installManager;
 
   public InstalledIntentService() {
     super("InstalledIntentService");
@@ -65,11 +66,14 @@ public class InstalledIntentService extends IntentService {
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()), accountManager, httpClient, converterFactory);
     repository = RepositoryFactory.getRollbackRepository();
-    installedRepository = RepositoryFactory.getInstalledRepository();
     updatesRepository = RepositoryFactory.getUpdateRepository(this);
 
     subscriptions = new CompositeSubscription();
     analytics = Analytics.getInstance();
+    final AptoideDownloadManager downloadManager =
+        ((V8Engine) getApplicationContext()).getDownloadManager();
+    Installer installer = new InstallerFactory().create(this, InstallerFactory.ROLLBACK);
+    installManager = new InstallManager(downloadManager, installer);
   }
 
   @Override protected void onHandleIntent(Intent intent) {
@@ -146,33 +150,9 @@ public class InstalledIntentService extends IntentService {
       return packageInfo;
     }
     Installed installed = new Installed(packageInfo);
-    insertInstallationRemovingOthers(packageName, installed.getVersionCode()).subscribe(() -> {
+    installManager.onAppInstalled(installed).subscribe(() -> {
     }, throwable -> CrashReport.getInstance().log(throwable));
     return packageInfo;
-  }
-
-  private Completable insertInstallationRemovingOthers(String packageName, int versionCode) {
-    return installedRepository.getAsList(packageName)
-        .first()
-        .flatMapIterable(installeds -> installeds)
-        .flatMapCompletable(databaseInstalled -> {
-          if (databaseInstalled.getVersionCode() == versionCode) {
-            Logger.d(TAG, "databaseOnPackageAdded: saved: "
-                + databaseInstalled.getPackageName()
-                + " version code"
-                + databaseInstalled.getVersionCode());
-            databaseInstalled.setStatus(Installed.STATUS_COMPLETED);
-            return Completable.fromAction(() -> installedRepository.save(databaseInstalled));
-          } else {
-            Logger.d(TAG, "databaseOnPackageAdded: removed: "
-                + databaseInstalled.getPackageName()
-                + " version code"
-                + databaseInstalled.getVersionCode());
-            return installedRepository.remove(databaseInstalled.getPackageName(),
-                databaseInstalled.getVersionCode());
-          }
-        })
-        .toCompletable();
   }
 
   private void checkAndBroadcastReferrer(String packageName) {
@@ -226,22 +206,18 @@ public class InstalledIntentService extends IntentService {
       return packageInfo;
     }
 
-    updatesRepository.remove(update)
-        .andThen(insertInstallationRemovingOthers(packageName, packageInfo.versionCode))
-        .subscribe(() -> {
-        }, throwable -> CrashReport.getInstance().log(throwable));
-
+    installManager.onUpdateConfirmed(new Installed(packageInfo))
+        .andThen(updatesRepository.remove(update))
+        .subscribe(() -> Logger.d(TAG, "databaseOnPackageReplaced: " + packageName),
+            throwable -> CrashReport.getInstance().log(throwable));
     return packageInfo;
   }
 
   private void databaseOnPackageRemoved(String packageName) {
-    installedRepository.get(packageName)
-        .first()
-        .flatMapCompletable(
-            installed -> installedRepository.remove(packageName, installed.getVersionCode()))
-        .subscribe(installed -> {
-        }, throwable -> CrashReport.getInstance().log(throwable));
-    updatesRepository.remove(packageName);
+    installManager.onAppRemoved(packageName)
+        .andThen(Completable.fromAction(() -> updatesRepository.remove(packageName)))
+        .subscribe(() -> Logger.d(TAG, "databaseOnPackageRemoved: " + packageName),
+            throwable -> CrashReport.getInstance().log(throwable));
   }
 
   /**

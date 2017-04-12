@@ -600,7 +600,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private Completable discoverAndSaveInstalledApps() {
     return Observable.fromCallable(() -> {
       // remove the current installed apps
-      AccessorFactory.getAccessorFor(Installed.class).removeAll();
+      //AccessorFactory.getAccessorFor(Installed.class).removeAll();
 
       // get the installed apps
       List<PackageInfo> installedApps = AptoideUtils.SystemU.getAllInstalledApps();

@@ -186,17 +186,16 @@ public class InstallManager {
   }
 
   private Observable<InstallationProgress> getDownloadProgress(String md5) {
-    return downloadRepository.getAsList(md5)
-        .map(download -> {
-          if (download == null) {
-            return new InstallationProgress(0, InstallationProgress.InstallationStatus.UNINSTALLED,
-                false, 0);
-          } else {
-            return new InstallationProgress(download.getOverallProgress(),
-                mapDownloadState(download.getOverallDownloadStatus()),
-                mapIndeterminate(download.getOverallDownloadStatus()), download.getDownloadSpeed());
-          }
-        });
+    return downloadRepository.getAsList(md5).map(download -> {
+      if (download == null) {
+        return new InstallationProgress(0, InstallationProgress.InstallationStatus.UNINSTALLED,
+            false, 0);
+      } else {
+        return new InstallationProgress(download.getOverallProgress(),
+            mapDownloadState(download.getOverallDownloadStatus()),
+            mapIndeterminate(download.getOverallDownloadStatus()), download.getDownloadSpeed());
+      }
+    });
   }
 
   private boolean mapIndeterminate(@Download.DownloadState int overallDownloadStatus) {
@@ -223,7 +222,6 @@ public class InstallManager {
       default:
         isIndeterminate = false;
     }
-    Logger.d("damnroot", "mapIndeterminate() returned: " + isIndeterminate);
     return isIndeterminate;
   }
 
@@ -250,7 +248,7 @@ public class InstallManager {
       case Download.PROGRESS:
       case Download.IN_QUEUE:
       case Download.PENDING:
-        status = InstallationProgress .InstallationStatus.INSTALLING;
+        status = InstallationProgress.InstallationStatus.INSTALLING;
         break;
     }
     return status;
@@ -261,7 +259,8 @@ public class InstallManager {
     return installer.getState(packageName, versionCode)
         .map(installationState -> new InstallationProgress(100,
             mapInstallationState(installationState.getStatus(), installationState.getType()),
-            mapInstallIndeterminate(installationState.getStatus(), installationState.getType()), -1));
+            mapInstallIndeterminate(installationState.getStatus(), installationState.getType()),
+            -1));
   }
 
   private boolean mapInstallIndeterminate(int status, int type) {
@@ -300,7 +299,6 @@ public class InstallManager {
         installationStatus = InstallationProgress.InstallationStatus.INSTALLED;
         break;
     }
-    Logger.d("damnroot", "mapInstallationState() returned: " + installationStatus);
     return installationStatus;
   }
 
@@ -387,5 +385,44 @@ public class InstallManager {
         .toList()
         .map(progresses -> true)
         .onErrorReturn(throwable -> false);
+  }
+
+  public Completable onAppInstalled(Installed installed) {
+    return installedRepository.getAsList(installed.getPackageName())
+        .first()
+        .flatMapIterable(installeds -> {
+          //in case of installation made outside of aptoide
+          if (installeds.isEmpty()) {
+            installeds.add(installed);
+          }
+          return installeds;
+        })
+        .flatMapCompletable(databaseInstalled -> {
+          if (databaseInstalled.getVersionCode() == installed.getVersionCode()) {
+            installed.setType(databaseInstalled.getType());
+            installed.setStatus(Installed.STATUS_COMPLETED);
+            return Completable.fromAction(() -> installedRepository.save(installed));
+          } else {
+            return installedRepository.remove(databaseInstalled.getPackageName(),
+                databaseInstalled.getVersionCode());
+          }
+        })
+        .toCompletable();
+  }
+
+  public Completable onAppRemoved(String packageName) {
+    return installedRepository.getAsList(packageName)
+        .first()
+        .flatMapIterable(installeds -> {
+          Logger.d("damnroot", "onAppRemoved: " + installeds.size());
+          return installeds;
+        })
+        .flatMapCompletable(
+            installed -> installedRepository.remove(packageName, installed.getVersionCode()))
+        .toCompletable();
+  }
+
+  public Completable onUpdateConfirmed(Installed installed) {
+    return onAppInstalled(installed);
   }
 }

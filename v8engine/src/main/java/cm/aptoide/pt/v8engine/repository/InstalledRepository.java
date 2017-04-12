@@ -33,7 +33,7 @@ public class InstalledRepository implements Repository<Installed, String> {
   }
 
   public Observable<List<Installed>> getAsList(String packageName) {
-    return accessor.getAsList(packageName);
+    return accessor.getAllAsList(packageName);
   }
 
   public Observable<Installed> getAsList(String packageName, int versionCode) {
