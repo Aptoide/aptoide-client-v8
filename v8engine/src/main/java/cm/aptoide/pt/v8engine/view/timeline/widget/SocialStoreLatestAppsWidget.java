@@ -57,6 +57,7 @@ public class SocialStoreLatestAppsWidget
   private StoreRepository storeRepository;
   private AptoideAccountManager accountManager;
   private StoreUtilsProxy storeUtilsProxy;
+  private TextView sharedStoreNameBodyTitle;
 
   public SocialStoreLatestAppsWidget(View itemView) {
     super(itemView);
@@ -73,6 +74,7 @@ public class SocialStoreLatestAppsWidget
     userName = (TextView) itemView.findViewById(R.id.card_subtitle);
     storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
     userAvatar = (ImageView) itemView.findViewById(R.id.card_user_avatar);
+    sharedStoreNameBodyTitle = (TextView) itemView.findViewById(R.id.social_shared_store_name);
     sharedStoreName = (TextView) itemView.findViewById(R.id.store_name);
     sharedStoreAvatar = (ImageView) itemView.findViewById(R.id.social_shared_store_avatar);
     appsContainer = (LinearLayout) itemView.findViewById(
@@ -102,8 +104,7 @@ public class SocialStoreLatestAppsWidget
     final FragmentActivity context = getContext();
     if (displayable.getStore() != null) {
       storeName.setVisibility(View.VISIBLE);
-      storeName.setText(displayable.getStore()
-          .getName());
+      storeName.setText(displayable.getStyledTitle(context, displayable.getStoreName()));
       storeAvatar.setVisibility(View.VISIBLE);
       ImageLoader.with(context)
           .loadWithShadowCircleTransform(displayable.getStore()
@@ -125,14 +126,15 @@ public class SocialStoreLatestAppsWidget
       userAvatar.setVisibility(View.GONE);
       if (displayable.getUser() != null) {
         storeName.setVisibility(View.VISIBLE);
-        storeName.setText(displayable.getUser()
-            .getName());
+        storeName.setText(displayable.getStyledTitle(context, displayable.getUser().getName()));
         storeAvatar.setVisibility(View.VISIBLE);
         ImageLoader.with(context)
             .loadWithShadowCircleTransform(displayable.getUser()
                 .getAvatar(), storeAvatar);
       }
     }
+
+    sharedStoreNameBodyTitle.setText(displayable.getSharedStore().getName());
 
     ImageLoader.with(getContext())
         .loadWithShadowCircleTransform(displayable.getSharedStore().getAvatar(), sharedStoreAvatar);

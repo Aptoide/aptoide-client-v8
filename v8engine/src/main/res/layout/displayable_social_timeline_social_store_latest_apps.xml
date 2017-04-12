@@ -29,6 +29,17 @@
         tools:visibility="visible"
         />
 
+    <TextView
+        android:id="@+id/social_shared_store_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="23.7dp"
+        android:layout_marginStart="23.7dp"
+        android:layout_marginTop="7dp"
+        android:textStyle="bold"
+        tools:text="Marcelo storenz"
+        />
+
 
     <HorizontalScrollView
         android:layout_width="match_parent"

@@ -1,6 +1,8 @@
 package cm.aptoide.pt.v8engine.view.timeline.displayable;
 
 import android.content.Context;
+import android.graphics.Typeface;
+import android.text.Spannable;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
@@ -72,9 +74,9 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
       StoreCredentialsProvider storeCredentialsProvider) {
     final List<SocialStoreLatestAppsDisplayable.LatestApp> latestApps = new ArrayList<>();
     for (App app : socialStoreLatestApps.getApps()) {
-      latestApps.add(new SocialStoreLatestAppsDisplayable.LatestApp(app.getId(), app.getName(),app
-          .getIcon(),
-          app.getPackageName()));
+      latestApps.add(
+          new SocialStoreLatestAppsDisplayable.LatestApp(app.getId(), app.getName(), app.getIcon(),
+              app.getPackageName()));
     }
     String abTestingURL = null;
 
@@ -104,6 +106,12 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
         .getLikes(), socialStoreLatestApps.getStats()
         .getComments(), dateCalculator, timelineAnalytics, socialRepository, spannableFactory,
         storeCredentialsProvider);
+  }
+
+  public Spannable getStyledTitle(Context context, String title) {
+    return spannableFactory.createStyleSpan(context.getString(
+        R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, title),
+        Typeface.BOLD, title);
   }
 
   @Override public int getViewLayout() {
@@ -153,7 +161,7 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
     @Getter private final String packageName;
     @Getter private final String appName;
 
-    public LatestApp(long appId, String appName,String iconUrl, String packageName) {
+    public LatestApp(long appId, String appName, String iconUrl, String packageName) {
       this.appId = appId;
       this.iconUrl = iconUrl;
       this.packageName = packageName;
