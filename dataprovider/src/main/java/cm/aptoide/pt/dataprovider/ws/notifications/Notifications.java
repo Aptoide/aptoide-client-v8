@@ -10,6 +10,7 @@ import cm.aptoide.pt.model.v3.BaseV3Response;
 import cm.aptoide.pt.model.v3.ErrorResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
+import java.util.List;
 import java.util.Map;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -53,12 +54,12 @@ public abstract class Notifications<U> extends WebService<Notifications.Interfac
 
   interface Interfaces {
 
-    @GET("{id}/campaigns") Observable<GetPullNotificationsResponse> getPushNotificationsAmazon(
+    @GET("{id}/campaigns")
+    Observable<List<GetPullNotificationsResponse>> getPullCompaignNotifications(
         @Path("id") String id, @QueryMap Map<String, String> options,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @GET("{id}/direct")
-    Observable<GetPullNotificationsResponse> getPushNotificationsLikeCommentsAmazon(
+    @GET("{id}/direct") Observable<List<GetPullNotificationsResponse>> getPullSocialNotifications(
         @Path("id") String id, @QueryMap Map<String, String> options,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
   }

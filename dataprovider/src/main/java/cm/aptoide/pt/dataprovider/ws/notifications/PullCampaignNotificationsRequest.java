@@ -13,6 +13,7 @@ import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import rx.Observable;
@@ -20,7 +21,8 @@ import rx.Observable;
 /**
  * Created by trinkes on 7/13/16.
  */
-public class PullCampaignNotificationsRequest extends Notifications<GetPullNotificationsResponse> {
+public class PullCampaignNotificationsRequest
+    extends Notifications<List<GetPullNotificationsResponse>> {
 
   protected static String BASE_HOST = "http://pnp.aptoide.com/pnp/v1/notifications/";
 
@@ -62,11 +64,10 @@ public class PullCampaignNotificationsRequest extends Notifications<GetPullNotif
     return new PullCampaignNotificationsRequest(id, options);
   }
 
-  @Override
-  protected Observable<GetPullNotificationsResponse> loadDataFromNetwork(Interfaces interfaces,
-      boolean bypassCache) {
-    Observable<GetPullNotificationsResponse> pushNotificationsAmazon =
-        interfaces.getPushNotificationsAmazon(id, options, true);
+  @Override protected Observable<List<GetPullNotificationsResponse>> loadDataFromNetwork(
+      Interfaces interfaces, boolean bypassCache) {
+    Observable<List<GetPullNotificationsResponse>> pushNotificationsAmazon =
+        interfaces.getPullCompaignNotifications(id, options, true);
     return pushNotificationsAmazon;
   }
 }
