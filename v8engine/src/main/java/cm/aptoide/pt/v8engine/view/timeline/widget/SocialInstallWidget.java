@@ -4,6 +4,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -24,6 +25,7 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
   private TextView getApp;
   private CardView cardView;
   private RelativeLayout cardContent;
+  private RatingBar ratingBar;
 
   public SocialInstallWidget(View itemView) {
     super(itemView);
@@ -44,6 +46,7 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
     cardView = (CardView) itemView.findViewById(R.id.card);
     cardContent = (RelativeLayout) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_card_content);
+    ratingBar = (RatingBar) itemView.findViewById(R.id.rating_bar);
   }
 
   @Override public void bindView(SocialInstallDisplayable displayable) {
@@ -51,8 +54,7 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
     final FragmentActivity context = getContext();
     if (displayable.getStore() != null) {
       storeName.setVisibility(View.VISIBLE);
-      storeName.setText(displayable.getStore()
-          .getName());
+      storeName.setText(displayable.getStyledTitle(context, displayable.getStore().getName()));
       storeAvatar.setVisibility(View.VISIBLE);
       ImageLoader.with(context)
           .loadWithShadowCircleTransform(displayable.getStore()
@@ -74,8 +76,7 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
       userAvatar.setVisibility(View.GONE);
       if (displayable.getUser() != null) {
         storeName.setVisibility(View.VISIBLE);
-        storeName.setText(displayable.getUser()
-            .getName());
+        storeName.setText(displayable.getStyledTitle(context, displayable.getUser().getName()));
         storeAvatar.setVisibility(View.VISIBLE);
         ImageLoader.with(context)
             .loadWithShadowCircleTransform(displayable.getUser()
@@ -88,6 +89,8 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
         .load(displayable.getAppIcon(), appIcon);
 
     appName.setText(displayable.getAppName());
+
+    ratingBar.setRating(displayable.getRating());
 
     getApp.setVisibility(View.VISIBLE);
     getApp.setText(displayable.getAppText(context));

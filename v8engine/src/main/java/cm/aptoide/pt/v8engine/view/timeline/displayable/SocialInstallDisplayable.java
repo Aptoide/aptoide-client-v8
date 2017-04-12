@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.view.timeline.displayable;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import cm.aptoide.pt.model.v7.Comment;
@@ -32,6 +33,7 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
   @Getter private String appName;
   @Getter private String appIcon;
   @Getter private String abUrl;
+  @Getter private float rating;
 
   private TimelineAnalytics timelineAnalytics;
   private SpannableFactory spannableFactory;
@@ -57,6 +59,7 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
     this.appName = appName;
     this.appIcon = appIcon;
     this.abUrl = abTestingURL;
+    this.rating = socialInstall.getApp().getStats().getRating().getAvg();
     this.timelineAnalytics = timelineAnalytics;
     this.spannableFactory = spannableFactory;
     this.socialRepository = socialRepository;
@@ -65,11 +68,6 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
   public static Displayable from(SocialInstall socialInstall, TimelineAnalytics timelineAnalytics,
       SpannableFactory spannableFactory, SocialRepository socialRepository,
       DateCalculator dateCalculator) {
-
-    //for (App similarApp : socialInstall.getSimilarApps()) {
-    //  similarAppsNames.add(similarApp.getName());
-    //  similarPackageNames.add(similarApp.getPackageName());
-    //}
 
     String abTestingURL = null;
 
@@ -102,45 +100,11 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
         .getMarketName());
   }
 
-  //public String getSimilarAppPackageName() {
-  //  if (similarPackageNames.size() != 0) {
-  //    return similarPackageNames.get(0);
-  //  }
-  //  return "";
-  //}
-
-  //public Spannable getSimilarAppsText(Context context) {
-  //  StringBuilder similarAppsText = new StringBuilder(
-  //      context.getString(R.string.displayable_social_timeline_recommendation_similar_to,
-  //          similarAppsNames.get(0)));
-  //  for (int i = 1; i < similarAppsNames.size() - 1; i++) {
-  //    similarAppsText.append(", ");
-  //    similarAppsText.append(similarAppsNames.get(i));
-  //  }
-  //  if (similarAppsNames.size() > 1) {
-  //    similarAppsText.append(" ");
-  //    similarAppsText.append(
-  //        context.getString(R.string.displayable_social_timeline_recommendation_similar_and));
-  //    similarAppsText.append(" ");
-  //    similarAppsText.append(similarAppsNames.get(similarAppsNames.size() - 1));
-  //  }
-  //  return spannableFactory.createStyleSpan(similarAppsText.toString(), Typeface.BOLD,
-  //      similarAppsNames.toArray(new String[similarAppsNames.size()]));
-  //}
-
   public Spannable getAppText(Context context) {
     return spannableFactory.createColorSpan(
         context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
         ContextCompat.getColor(context, R.color.appstimeline_grey), "");
   }
-
-  //public String getTimeSinceLastUpdate(Context context) {
-  //  return dateCalculator.getTimeSinceDate(context, date);
-  //}
-
-  //public String getTimeSinceRecommendation(Context context) {
-  //  return dateCalculator.getTimeSinceDate(context, timestamp);
-  //}
 
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_social_install;
@@ -149,6 +113,11 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
   public void sendOpenAppEvent() {
     timelineAnalytics.sendOpenAppEvent(CARD_TYPE_NAME, TimelineAnalytics.SOURCE_APTOIDE,
         getPackageName());
+  }
+
+  public Spannable getStyledTitle(Context context, String title) {
+    return spannableFactory.createStyleSpan(
+        context.getString(R.string.x_installed_and_recommended, title), Typeface.BOLD, title);
   }
 
   @Override
