@@ -43,8 +43,10 @@ public class PullingContentReceiver extends BroadcastReceiver {
       DataproviderUtils.knock(trackUrl);
     }
     String targetUrl = intent.getStringExtra(PUSH_NOTIFICATION_TARGET_URL);
-    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(targetUrl));
-    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    context.startActivity(i);
+    if (!TextUtils.isEmpty(targetUrl)) {
+      Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(targetUrl));
+      i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      context.startActivity(i);
+    }
   }
 }
