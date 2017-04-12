@@ -41,6 +41,7 @@ public class PushNotificationsRequest extends V3<GetPushNotificationsResponse> {
       args.put("notification_type", "aptoide_vanilla");
     }
     args.put("id", String.valueOf(ManagerPreferences.getLastPushNotificationId()));
+    args.put("aptvercode", Integer.toString(AptoideUtils.Core.getVerCode()));
     return new PushNotificationsRequest(args);
   }
 
