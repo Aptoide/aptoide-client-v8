@@ -82,7 +82,7 @@ public abstract class AptoideClientSocket extends AptoideSocket {
       }
     }
 
-    if (socket == null) {
+    if (socket == null || !socket.isConnected()) {
       if (onError != null) {
         onError.onError(new IOException(
             getClass().getSimpleName() + " Couldn't connect to " + hosts + ":" + port));

@@ -43,6 +43,17 @@ public class HighwayServerService extends Service {
   private AptoideMessageClientSocket aptoideMessageClientSocket;
   private OnError<IOException> onError = e -> {
     System.err.println("OnError lacks implementation!");
+
+    if (mNotifyManager != null) {
+      mNotifyManager.cancelAll();
+    }
+
+    setInitialApConfig();//to not interfere with recovering wifi state
+
+    Intent i = new Intent();
+    i.setAction("SERVER_DISCONNECT");
+    sendBroadcast(i);
+
   };
 
   @Override public void onCreate() {

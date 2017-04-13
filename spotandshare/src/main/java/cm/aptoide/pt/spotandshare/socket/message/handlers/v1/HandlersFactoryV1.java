@@ -56,9 +56,9 @@ public class HandlersFactoryV1 {
       ShareAppsFileServerSocket shareAppsFileServerSocket =
           new ShareAppsFileServerSocket(sendApkMessage.getServerPort(),
               sendApkMessage.getAndroidAppInfo());
-      shareAppsFileServerSocket.startAsync();
       shareAppsFileServerSocket.setFileServerLifecycle(sendApkMessage.getAndroidAppInfo(),
           fileLifecycleProvider.newFileServerLifecycle());
+      shareAppsFileServerSocket.startAsync();
       messageSender.send(new AckMessage(messageSender.getHost()));
       // TODO: 03-02-2017 neuro maybe a good ideia to stop the server somewhat :)
     }

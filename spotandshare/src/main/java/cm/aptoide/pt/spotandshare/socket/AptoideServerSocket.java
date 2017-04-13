@@ -9,6 +9,7 @@ import cm.aptoide.pt.spotandshare.socket.util.ServerSocketTimeoutManager;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -113,6 +114,9 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
       }
     } catch (IOException e) {
       // Ignore, when socket is closed during accept() it lands here.
+      if (e instanceof SocketTimeoutException) {
+        e.printStackTrace();
+      }
       Print.d(TAG, "start: ShareApps: Server explicitly closed " + this.getClass().getSimpleName());
       dispatcherLooper.stop();
       try {

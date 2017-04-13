@@ -41,9 +41,16 @@ public class HighwayClientService extends Service {
   private NotificationManagerCompat mNotifyManager;
   private FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider;
   private AptoideMessageClientSocket aptoideMessageClientSocket;
+  private boolean serverLeftOnError;
   private OnError<IOException> onError = e -> {
-    // TODO: 11-04-2017 neuro implementar!
-    System.err.println("OnError lacks implementation!");
+    serverLeftOnError = true;
+    Intent i = new Intent();
+    i.setAction("SERVER_LEFT");
+    sendBroadcast(i);
+
+    if (mNotifyManager != null) {
+      mNotifyManager.cancelAll();
+    }
   };
 
   @Override public void onCreate() {
@@ -97,13 +104,15 @@ public class HighwayClientService extends Service {
           @Override public void onError(IOException e) {
             e.printStackTrace();
 
-            if (mNotifyManager != null && androidAppInfo != null) {
-              mNotifyManager.cancel(androidAppInfo.getPackageName().hashCode());
-            }
+            if (!serverLeftOnError) {
+              if (mNotifyManager != null && androidAppInfo != null) {
+                mNotifyManager.cancel(androidAppInfo.getPackageName().hashCode());
+              }
 
-            Intent i = new Intent();
-            i.setAction("ERRORSENDING");
-            sendBroadcast(i);
+              Intent i = new Intent();
+              i.setAction("ERRORSENDING");
+              sendBroadcast(i);
+            }
           }
 
           @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
@@ -156,17 +165,19 @@ public class HighwayClientService extends Service {
           @Override public void onError(IOException e) {
             System.out.println("Fell on error  Client !! ");
 
-            if (mNotifyManager != null && androidAppInfo != null) {
-              mNotifyManager.cancel(androidAppInfo.getPackageName().hashCode());
-            }
+            if (!serverLeftOnError) {
+              if (mNotifyManager != null && androidAppInfo != null) {
+                mNotifyManager.cancel(androidAppInfo.getPackageName().hashCode());
+              }
 
-            Intent i = new Intent();
-            if (e instanceof ServerLeftException) {
-              i.setAction("SERVER_LEFT");
-            } else {
-              i.setAction("ERRORRECEIVING");
+              Intent i = new Intent();
+              if (e instanceof ServerLeftException) {
+                i.setAction("SERVER_LEFT");
+              } else {
+                i.setAction("ERRORRECEIVING");
+              }
+              sendBroadcast(i);
             }
-            sendBroadcast(i);
           }
 
           @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
@@ -178,7 +189,6 @@ public class HighwayClientService extends Service {
         };
       }
     };
-  
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
