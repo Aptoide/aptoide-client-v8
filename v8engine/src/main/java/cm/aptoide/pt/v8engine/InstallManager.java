@@ -181,19 +181,21 @@ public class InstallManager {
 
   public Observable<InstallationProgress> getInstallationProgress(String md5, String packageName,
       int versioncode) {
-    return Observable.merge(getDownloadProgress(md5),
-        getInstallationProgress(packageName, versioncode));
+    return Observable.merge(getDownloadProgress(md5, packageName, versioncode),
+        getInstallerProgress(md5, packageName, versioncode));
   }
 
-  private Observable<InstallationProgress> getDownloadProgress(String md5) {
+  private Observable<InstallationProgress> getDownloadProgress(String md5, String packageName,
+      int versioncode) {
     return downloadRepository.getAsList(md5).map(download -> {
       if (download == null) {
         return new InstallationProgress(0, InstallationProgress.InstallationStatus.UNINSTALLED,
-            false, 0);
+            false, 0, md5, packageName, versioncode);
       } else {
         return new InstallationProgress(download.getOverallProgress(),
             mapDownloadState(download.getOverallDownloadStatus()),
-            mapIndeterminate(download.getOverallDownloadStatus()), download.getDownloadSpeed());
+            mapIndeterminate(download.getOverallDownloadStatus()), download.getDownloadSpeed(), md5,
+            packageName, versioncode);
       }
     });
   }
@@ -235,11 +237,13 @@ public class InstallManager {
       case Download.FILE_MISSING:
       case Download.INVALID_STATUS:
       case Download.NOT_DOWNLOADED:
-      case Download.PAUSED:
       case Download.RETRY:
       case Download.STARTED:
       case Download.WARN:
         status = InstallationProgress.InstallationStatus.UNINSTALLED;
+        break;
+      case Download.PAUSED:
+        status = InstallationProgress.InstallationStatus.PAUSED;
         break;
       case Download.ERROR:
         status = InstallationProgress.InstallationStatus.FAILED;
@@ -254,13 +258,13 @@ public class InstallManager {
     return status;
   }
 
-  private Observable<InstallationProgress> getInstallationProgress(String packageName,
+  private Observable<InstallationProgress> getInstallerProgress(String md5, String packageName,
       int versionCode) {
     return installer.getState(packageName, versionCode)
         .map(installationState -> new InstallationProgress(100,
             mapInstallationState(installationState.getStatus(), installationState.getType()),
-            mapInstallIndeterminate(installationState.getStatus(), installationState.getType()),
-            -1));
+            mapInstallIndeterminate(installationState.getStatus(), installationState.getType()), -1,
+            md5, packageName, versionCode));
   }
 
   private boolean mapInstallIndeterminate(int status, int type) {
@@ -290,7 +294,7 @@ public class InstallManager {
         break;
       case Installed.STATUS_INSTALLING:
         if (type == Installed.TYPE_DEFAULT) {
-          installationStatus = InstallationProgress.InstallationStatus.INSTALLED;
+          installationStatus = InstallationProgress.InstallationStatus.UNINSTALLED;
         } else {
           installationStatus = InstallationProgress.InstallationStatus.INSTALLING;
         }
