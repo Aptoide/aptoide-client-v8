@@ -5,8 +5,9 @@
   -->
 <resources>
 
-  <array name="theme_names">
-    <item>@string/dark</item>
-    <item>@string/light</item>
-  </array>
+  <string-array name="theme_names">
+    <item>Dark</item>
+    <item>Light</item>
+  </string-array>
+
 </resources>

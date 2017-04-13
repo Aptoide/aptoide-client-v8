@@ -13,8 +13,6 @@
   <string name="twitter">Twitter</string>
   <string name="backup_apps">Backup Apps</string>
 
-  <string name="dark">Dark</string>
-  <string name="light">Light</string>
 
   <string name="updates_filter_summary">Checking this, you won’t be notified of beta versions.</string>
   <string name="updates_filter_setting_title">Just show me stable app version updates</string>
