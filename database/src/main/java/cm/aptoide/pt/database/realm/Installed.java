@@ -18,9 +18,9 @@ public class Installed extends RealmObject {
   public static final String VERSION_NAME = "versionName";
   public static final String SIGNATURE = "signature";
   public static final String STORE_NAME = "storeName";
-  public static final int STATUS_UNINSTALLED = -1;
-  public static final int STATUS_INSTALLING = 0;
-  public static final int STATUS_COMPLETED = 1;
+  public static final int STATUS_UNINSTALLED = 1;
+  public static final int STATUS_INSTALLING = 2;
+  public static final int STATUS_COMPLETED = 3;
   public static final int TYPE_DEFAULT = 0;
   public static final int TYPE_ROOT = 1;
   public static final int TYPE_SYSTEM = 2;

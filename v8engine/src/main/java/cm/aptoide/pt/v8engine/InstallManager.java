@@ -13,7 +13,6 @@ import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -27,6 +26,7 @@ import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 import rx.schedulers.Schedulers;
 
 /**
@@ -417,16 +417,48 @@ public class InstallManager {
   public Completable onAppRemoved(String packageName) {
     return installedRepository.getAsList(packageName)
         .first()
-        .flatMapIterable(installeds -> {
-          Logger.d("damnroot", "onAppRemoved: " + installeds.size());
-          return installeds;
-        })
+        .flatMapIterable(installeds -> installeds)
         .flatMapCompletable(
             installed -> installedRepository.remove(packageName, installed.getVersionCode()))
         .toCompletable();
   }
 
+  public Single<InstallationType> getInstallationType(String packageName, int versionCode) {
+    return installedRepository.get(packageName).first().map(installed -> {
+      if (installed == null) {
+        return InstallationType.INSTALL;
+      } else if (installed.getVersionCode() > versionCode) {
+        return InstallationType.DOWNGRADE;
+      } else {
+        return InstallationType.UPDATE;
+      }
+    }).toSingle();
+  }
+
   public Completable onUpdateConfirmed(Installed installed) {
     return onAppInstalled(installed);
+  }
+
+  public Single<Error> getError(String md5) {
+    return aptoideDownloadManager.getDownload(md5).first().map(download -> {
+      Error error = Error.GENERIC_ERROR;
+      switch (download.getDownloadError()) {
+        case Download.GENERIC_ERROR:
+          error = Error.GENERIC_ERROR;
+          break;
+        case Download.NOT_ENOUGH_SPACE_ERROR:
+          error = Error.NOT_ENOUGH_SPACE_ERROR;
+          break;
+      }
+      return error;
+    }).toSingle();
+  }
+
+  public enum InstallationType {
+    INSTALL, UPDATE, DOWNGRADE
+  }
+
+  public enum Error {
+    GENERIC_ERROR, NOT_ENOUGH_SPACE_ERROR
   }
 }

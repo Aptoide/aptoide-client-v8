@@ -83,6 +83,7 @@ import cm.aptoide.pt.v8engine.repository.AppRepository;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
+import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
@@ -179,8 +180,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private AccountNavigator accountNavigator;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private DownloadFactory downloadFactory;
+
   private StoreMinimalAdAccessor storeMinimalAdAccessor;
-  
+
   public static AppViewFragment newInstance(String md5) {
     Bundle bundle = new Bundle();
     bundle.putString(BundleKeys.MD5.name(), md5);
@@ -263,6 +266,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installedRepository = RepositoryFactory.getInstalledRepository();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     storeMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
+    downloadFactory = new DownloadFactory();
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
@@ -440,7 +444,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private void storeMinimalAdd(MinimalAd minimalAd) {
     storeMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, null));
   }
-  
+
   @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
     List<String> keywords = getApp1.getNodes().getMeta().getData().getMedia().getKeywords();
     String packageName = getApp1.getNodes().getMeta().getData().getPackageName();
@@ -569,7 +573,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     final boolean shouldInstall = openType == OpenType.OPEN_AND_INSTALL;
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
-            installedRepository);
+            installedRepository, downloadFactory);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp));
     displayables.add(new AppViewRateAndCommentsDisplayable(getApp, storeCredentialsProvider));

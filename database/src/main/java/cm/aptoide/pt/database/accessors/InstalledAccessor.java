@@ -65,7 +65,13 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<Installed> get(String packageName) {
-    return database.get(Installed.class, Installed.PACKAGE_NAME, packageName);
+    return getAsList(packageName).first().map(installeds -> {
+      if (installeds.isEmpty()) {
+        return null;
+      } else {
+        return installeds.get(0);
+      }
+    });
   }
 
   public Observable<Installed> get(String packageName, int versionCode) {
