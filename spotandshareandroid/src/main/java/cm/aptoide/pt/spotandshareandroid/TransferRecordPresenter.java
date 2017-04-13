@@ -232,26 +232,8 @@ public class TransferRecordPresenter implements Presenter {
 
   }
 
-  public void setListOfConnectedClients(List<Host> connectedClients) {
-    this.connectedClients = connectedClients;
-  }
-
-  public void clearConnectedClientsList() {
-    this.connectedClients.clear();
-  }
-
   public void clickedOnSendButton() {
-    if (isHotspot) {
-      connectedClients = DataHolder.getInstance()
-          .getConnectedClients();// TODO: 16-03-2017 filipe extract to a model with broadcast receivers
-      if (connectedClients == null || connectedClients.size() < 2) {
-        view.showNoConnectedClientsToast();
-      } else {
-        view.openAppSelectionView();
-      }
-    } else {
-      view.openAppSelectionView();
-    }
+    view.openAppSelectionView();
   }
 
   public void clickedOnClearHistoryButton() {

@@ -20,7 +20,6 @@ public class HostsCallbackManager implements HostsChangedCallback {
 
   @Override public void hostsChanged(List<Host> hostList) {
     System.out.println("hostsChanged() called with: " + "hostList = [" + hostList + "]");
-    DataHolder.getInstance().setConnectedClients(hostList);
     Intent i = new Intent();
     if (hostList.size() >= 2) {
       System.out.println("sending broadcast of show_send_button");
