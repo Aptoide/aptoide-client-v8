@@ -69,7 +69,6 @@ public class ApplicationReceiver {
     if (isHotspot) {
       receiveIntent = new Intent(context, HighwayServerService.class);
       System.out.println("Will start a server service");
-      DataHolder.getInstance().createConnectedClientsList();
     } else {
 
       System.out.println("Will start a client service");
