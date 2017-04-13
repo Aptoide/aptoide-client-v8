@@ -1,9 +1,7 @@
 <resources>
 
-  <string name="one_account_allowed">Only one account allowed</string>
   <string name="or">or</string>
   <string name="username">Email</string>
-  <string name="link_device_webinstall">Link account with Webinstall</string>
   <string name="register">Sign Up</string>
   <string name="successful">Successful</string>
   <string name="login_successful">Successful login</string>
@@ -31,23 +29,6 @@
   <!-- WIZARD -->
   <string name="please_wait_upload">Please wait, if you are uploading, it may take a while…</string>
   <string name="wizard_title_01">Welcome to Aptoide</string>
-  <string name="wizard_description_01">Create a free account and register to start building your own personalized App Store.\n\n Browse by theme stores and discover new and exciting applications.</string>
-  <string name="wizard_title_02">Increased Security</string>
-  <string name="wizard_description_02">Search for trusted badges and securely download apps.\n\n Incompatible issues? Search for previous versions of applications.</string>
-  <string name="wizard_title_03">New members of our family</string>
-  <string name="wizard_subtitle_03_1">Aptoide Lite</string>
-  <string name="wizard_description_03_1">for old devices and slow internet connection</string>
-  <string name="wizard_subtitle_03_2">Aptoide TV</string>
-  <string name="wizard_description_03_2">optimised App Store for Set top boxes and smart TV\'s</string>
-  <string name="wizard_reviews_title">Reviews</string>
-  <string name="wizard_reviews">You can now create your app\'s reviews with Aptoide!</string>
-  <string name="wizard_new_and_improved">Improved performance!</string>
-  <string name="wizard_new_and_improved_bullet_1">Save battery life</string>
-  <string name="wizard_new_and_improved_bullet_2">Reduce CPU and bandwidth usage</string>
-  <string name="wizard_new_and_improved_bullet_3">Load fewer resources</string>
-  <string name="wizard_new_and_improved_bullet_4">Clean User Interface</string>
-  <string name="wizard_new_homepage">New homepage layout</string>
-  <string name="wizard_new_top">New Top tab</string>
 
   <!-- WIZARD PAGE 1 -->
   <string name="wizard_title_viewpager_one">Now with a Timeline!</string>
@@ -84,10 +65,7 @@
   <string name="no_photo_inserted">Please choose a photo to create your profile</string>
 
   <!--User interests fragment -->
-  <string name="user_interests_title">Your Interests</string>
   <string name="user_interests_header"><b>Show us your interests</b> and help us to find the best apps for you</string>
-  <string name="user_interests_adult_gambling">Adult &amp; Gambling</string>
-  <string name="user_interests_photography_video">Photography &amp; Video</string>
   <string name="next">Next</string>
 
   <!--Create Store fragment-->

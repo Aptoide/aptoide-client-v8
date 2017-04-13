@@ -771,12 +771,6 @@
   <string name="review_good">Good</string>
   <string name="review_bad">Bad</string>
   <string name="review_finish">Finish</string>
-  <string name="review_final_score">Score</string>
-  <string name="make_review_title">Make Review</string>
-  <string name="size">Size</string>
-  <string name="set_sliders">Set the sliders</string>
-  <string name="write_one_pro">Write at least one pro</string>
-  <string name="write_one_con">Write at least one con</string>
   <string name="write_your_final_verdict">Write Your final Verdict</string>
   <string name="review_success">Review submited with success!</string>
   <string name="store_privacy">Store privacy</string>
@@ -810,39 +804,17 @@
   <string name="new_updates">There are %s new updates available!</string>
   <string name="one_new_update">There is %s new update available!</string>
   <string name="updates_tab_adapter_uninstalled">Uninstalled</string>
-  <string name="updatesTabAdapterUninstall">Uninstall</string>
-  <string name="flag_good">Good</string>
-  <string name="flag_license">Needs License</string>
-  <string name="flag_fake">Fake</string>
-  <string name="flag_freeze">Freeze</string>
-  <string name="flag_virus">Virus</string>
-  <string name="flag_this_app">Flag this app</string>
-  <string name="flag_added">Flag added</string>
   <string name="skip">Skip</string>
-  <string name="subscribe_apps_official_store">Subscribe \'apps\' Aptoide Official App Store</string>
 
   <string name="share">Share</string>
   <string name="share_on_timeline">Share on timeline</string>
 
   <!-- Search Widget-->
-  <string name="search_for_apps">Search for apps…</string>
-  <string name="empty_search">Empty search, write an application name</string>
   <string name="manually_reviewed">Good App Guaranteed: this application passed the security tests for virus, malware and other malicious attacks and doesn’t contain any threats</string>
-
-  <string name="no_apps_found">No apps found with current filter</string>
   <string name="no_search_results_message">There are no results for your search. \nPlease, try other keywords.</string>
 
   <!-- AppView developer area-->
-  <string name="developer">Developer</string>
-  <string name="website">Website: %s</string>
-  <!--<string name="email">Email: %s</string>-->
-  <string name="privacy_policy">Privacy Policy: %s</string>
   <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>
-  <string name="na">N/A</string>
-  <string name="website_copied">Website copied to clipboard</string>
-  <string name="email_copied">E-mail copied to clipboard</string>
-  <string name="privacy_copied">Privacy link copied to clipboard</string>
-  <string name="unsubscribing_store_message">Unsubscribing %s</string>
 
   <!-- Search Fragment -->
   <string name="all_stores">All Stores</string>
