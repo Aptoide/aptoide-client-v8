@@ -728,26 +728,15 @@ public class Analytics {
 
     public static void website(String uri) {
       Logger.d(TAG, "website: " + uri);
-      Map<String, String> facebookMap = new HashMap<>();
-      facebookMap.put(SOURCE, WEBSITE);
+      HashMap<String, String> map = new HashMap<>();
+      map.put(SOURCE, WEBSITE);
 
       if (uri != null) {
-        facebookMap.put(URI, uri.substring(0, uri.indexOf(":")));
+        map.put(URI, uri.substring(0, uri.indexOf(":")));
       }
 
-      logFacebookEvents(FACEBOOK_APP_LAUNCH, facebookMap);
-      try {
-        HashMap<String, String> map = new HashMap<>();
-        map.put(SOURCE, WEBSITE);
-
-        if (uri != null) {
-          map.put(URI, uri.substring(0, uri.indexOf(":")));
-        }
-
-        track(EVENT_NAME, map, ALL);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
+      track(EVENT_NAME, map, ALL);
+      logFacebookEvents(FACEBOOK_APP_LAUNCH, map);
     }
 
     public static void newUpdatesNotification() {
