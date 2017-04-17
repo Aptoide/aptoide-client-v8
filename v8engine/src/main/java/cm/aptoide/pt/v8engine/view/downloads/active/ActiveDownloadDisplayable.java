@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.view.downloads.active;
 
 import android.content.Context;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
@@ -55,9 +54,9 @@ public class ActiveDownloadDisplayable extends Displayable {
     installManager.stopInstallation(context, installation.getMd5());
   }
 
-  public Observable<Download> getDownloadObservable() {
-    return installManager.getInstallation(installation.getMd5())
-        .map(downloadProgress -> downloadProgress.getRequest());
+  public Observable<InstallationProgress> getInstallationObservable() {
+    return installManager.getInstallationProgress(installation.getMd5(),
+        installation.getPackageName(), installation.getVersionCode());
   }
 
   public void setOnPauseAction(Action0 onPauseAction) {

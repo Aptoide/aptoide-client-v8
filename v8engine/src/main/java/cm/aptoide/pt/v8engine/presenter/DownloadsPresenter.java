@@ -87,8 +87,8 @@ public class DownloadsPresenter implements Presenter {
 
   private boolean isStandingBy(InstallationProgress progress) {
     return progress.getState() == InstallationProgress.InstallationStatus.FAILED
-        || progress.getState() == InstallationProgress.InstallationStatus.PAUSED
-        || progress.isIndeterminate();
+        || progress.getState()
+        == InstallationProgress.InstallationStatus.PAUSED;
   }
 
   public void pauseInstall(Context context, DownloadsView.DownloadViewModel download) {

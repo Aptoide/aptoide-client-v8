@@ -81,8 +81,10 @@ public class InstallManager {
             .toList());
   }
 
+  // TODO: 17/04/2017 trinkes don't leave both streams open(installs and downloads)
   public Observable<List<InstallationProgress>> getInstallations() {
     return aptoideDownloadManager.getDownloads()
+        .flatMap(downloadList -> installedRepository.getAll().map(installeds -> downloadList))
         .observeOn(Schedulers.io())
         .concatMap(downloadList -> Observable.from(downloadList)
             .flatMap(
@@ -162,16 +164,6 @@ public class InstallManager {
     return aptoideDownloadManager.getDownload(md5).flatMap(download -> convertToProgress(download));
   }
 
-  public Observable<Progress<Download>> getAsListInstallation(String md5) {
-    return aptoideDownloadManager.getAsListDownload(md5).flatMap(downloads -> {
-      if (downloads.isEmpty()) {
-        return Observable.just(null);
-      } else {
-        return convertToProgress(downloads.get(0));
-      }
-    });
-  }
-
   @Deprecated public boolean isPending(Progress<Download> progress) {
     return progress.getRequest().getOverallDownloadStatus() == Download.PENDING
         || progress.getRequest().getOverallDownloadStatus() == Download.IN_QUEUE;
@@ -190,10 +182,21 @@ public class InstallManager {
         .flatMap(progress -> installInBackground(context, progress));
   }
 
+  // TODO: 17/04/2017 trinkes this has to be refactored
   public Observable<InstallationProgress> getInstallationProgress(String md5, String packageName,
       int versioncode) {
-    return Observable.merge(getDownloadProgress(md5, packageName, versioncode),
-        getInstallerProgress(md5, packageName, versioncode));
+    return getDownloadProgress(md5, packageName, versioncode).flatMap(installationProgress -> {
+      if (installationProgress.getState() == InstallationProgress.InstallationStatus.INSTALLED
+          || installationProgress.getState()
+          == InstallationProgress.InstallationStatus.UNINSTALLED) {
+        return getInstallerProgress(md5, packageName, versioncode, installationProgress);
+      } else {
+        return Observable.just(installationProgress);
+      }
+    });
+
+    //return Observable.merge(getDownloadProgress(md5, packageName, versioncode),
+    //    getInstallerProgress(md5, packageName, versioncode));
   }
 
   private Observable<InstallationProgress> getDownloadProgress(String md5, String packageName,
@@ -259,24 +262,26 @@ public class InstallManager {
       case Download.ERROR:
         status = InstallationProgress.InstallationStatus.FAILED;
         break;
-      case Download.COMPLETED:
       case Download.PROGRESS:
       case Download.IN_QUEUE:
       case Download.PENDING:
         status = InstallationProgress.InstallationStatus.INSTALLING;
         break;
+      // TODO: 17/04/2017 trinkes check if should have this satate
+      case Download.COMPLETED:
+        status = InstallationProgress.InstallationStatus.INSTALLED;
     }
     return status;
   }
 
   private Observable<InstallationProgress> getInstallerProgress(String md5, String packageName,
-      int versionCode) {
+      int versionCode, InstallationProgress installationProgress) {
     return installer.getState(packageName, versionCode)
         .map(installationState -> new InstallationProgress(100,
             mapInstallationState(installationState.getStatus(), installationState.getType()),
             mapInstallIndeterminate(installationState.getStatus(), installationState.getType()), -1,
-            md5, packageName, versionCode, installationState.getName(),
-            installationState.getIcon()));
+            md5, packageName, versionCode, installationProgress.getAppName(),
+            installationProgress.getIcon()));
   }
 
   private boolean mapInstallIndeterminate(int status, int type) {
