@@ -61,7 +61,7 @@
         android:layout_marginTop="5dp"
         android:ellipsize="end"
         android:maxLines="3"
-        android:shadowColor="@color/yellow"
+        android:shadowColor="@color/amber"
         android:textColor="#969696"
         android:textSize="9sp"
         />

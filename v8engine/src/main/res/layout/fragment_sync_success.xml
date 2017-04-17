@@ -12,7 +12,7 @@
       android:layout_marginBottom="5dp"
       android:layout_marginTop="30dp"
       android:text="@string/addressbook_success"
-      android:textColor="@color/greenapple"
+      android:textColor="@color/lime"
       android:textSize="25sp"
       android:textStyle="bold"
       />
