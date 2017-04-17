@@ -123,7 +123,7 @@ public class DefaultInstaller implements Installer {
       if (installed != null) {
         return Observable.just(
             new InstallationState(installed.getPackageName(), installed.getVersionCode(),
-                installed.getStatus(), installed.getType()));
+                installed.getStatus(), installed.getType(),installed.getName(),installed.getIcon()));
       } else {
         return Observable.just(
             new InstallationState(packageName, versionCode, Installed.STATUS_UNINSTALLED,

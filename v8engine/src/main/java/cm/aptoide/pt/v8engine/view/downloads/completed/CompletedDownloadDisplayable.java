@@ -6,6 +6,7 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
+import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -28,7 +29,7 @@ public class CompletedDownloadDisplayable extends Displayable {
   private final Analytics analytics;
   private final InstallEventConverter installConverter;
 
-  private final Download download;
+  private final InstallationProgress installation;
 
   private Action0 onPauseAction;
   private Action0 onResumeAction;
@@ -38,13 +39,13 @@ public class CompletedDownloadDisplayable extends Displayable {
     this.converter = null;
     this.analytics = null;
     this.installConverter = null;
-    this.download = null;
+    this.installation = null;
   }
 
-  public CompletedDownloadDisplayable(Download download, InstallManager installManager,
-      DownloadEventConverter converter, Analytics analytics,
+  public CompletedDownloadDisplayable(InstallationProgress installation,
+      InstallManager installManager, DownloadEventConverter converter, Analytics analytics,
       InstallEventConverter installConverter) {
-    this.download = download;
+    this.installation = installation;
     this.installManager = installManager;
     this.converter = converter;
     this.analytics = analytics;
@@ -74,33 +75,39 @@ public class CompletedDownloadDisplayable extends Displayable {
   }
 
   public void removeDownload(Context context) {
-    installManager.removeInstallationFile(download.getMd5(), context);
+    installManager.removeInstallationFile(installation.getMd5(), context);
   }
 
   public Observable<Integer> downloadStatus() {
-    return installManager.getInstallation(download.getMd5())
+    return installManager.getInstallation(installation.getMd5())
         .map(installationProgress -> installationProgress.getRequest().getOverallDownloadStatus())
         .onErrorReturn(throwable -> Download.NOT_DOWNLOADED);
   }
 
-  public Observable<Progress<Download>> installOrOpenDownload(Context context,
+  public Observable<InstallationProgress> installOrOpenDownload(Context context,
       PermissionService permissionRequest) {
-    return installManager.getInstallation(download.getMd5()).flatMap(installed -> {
+    return installManager.getInstallation(installation.getMd5()).flatMap(installed -> {
       if (installed.getState() == Progress.DONE) {
-        AptoideUtils.SystemU.openApp(download.getFilesToDownload().get(0).getPackageName());
+        AptoideUtils.SystemU.openApp(installation.getPackageName());
         return Observable.empty();
       }
       return resumeDownload(context, permissionRequest);
     });
   }
 
-  public Observable<Progress<Download>> resumeDownload(Context context,
+  public Observable<InstallationProgress> resumeDownload(Context context,
       PermissionService permissionRequest) {
     PermissionManager permissionManager = new PermissionManager();
-    return permissionManager.requestExternalStoragePermission(permissionRequest)
-        .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
-        .flatMap(success -> installManager.install(context, download)
-            .doOnSubscribe(() -> setupEvents(download)));
+    return installManager.getDownload(installation.getMd5())
+        .toObservable()
+        .flatMap(download -> permissionManager.requestExternalStoragePermission(permissionRequest)
+            .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
+            .flatMap(success -> installManager.install(context, download)
+                .first()
+                .flatMap(downloadProgress -> installManager.getInstallationProgress(
+                    installation.getMd5(), installation.getPackageName(),
+                    installation.getVersionCode()))
+                .doOnSubscribe(() -> setupEvents(download))));
   }
 
   private void setupEvents(Download download) {
@@ -114,8 +121,8 @@ public class CompletedDownloadDisplayable extends Displayable {
     analytics.save(download.getPackageName() + download.getVersionCode(), installEvent);
   }
 
-  public Download getDownload() {
-    return download;
+  public InstallationProgress getInstallation() {
+    return installation;
   }
 
   public void setOnPauseAction(Action0 onPauseAction) {
@@ -124,5 +131,37 @@ public class CompletedDownloadDisplayable extends Displayable {
 
   public void setOnResumeAction(Action0 onResumeAction) {
     this.onResumeAction = onResumeAction;
+  }
+
+  /**
+   * @return an observable with a string resource id
+   */
+  public Observable<Integer> getStatusName() {
+    switch (installation.getState()) {
+      case INSTALLING:
+        return Observable.just(cm.aptoide.pt.database.R.string.download_progress);
+      case PAUSED:
+        return Observable.just(cm.aptoide.pt.database.R.string.download_paused);
+      case INSTALLED:
+        return Observable.just(cm.aptoide.pt.database.R.string.download_completed);
+      case UNINSTALLED:
+        return Observable.empty();
+      case FAILED:
+        return installManager.getError(installation.getMd5())
+            .toObservable()
+            .first()
+            .flatMap(error -> {
+              switch (error) {
+                case GENERIC_ERROR:
+                  return Observable.just(cm.aptoide.pt.database.R.string.simple_error_occured);
+                case NOT_ENOUGH_SPACE_ERROR:
+                  return Observable.just(cm.aptoide.pt.database.R.string.out_of_space_error);
+                default:
+                  return Observable.error(new RuntimeException("Unknown error"));
+              }
+            });
+      default:
+        return Observable.error(new RuntimeException("Unknown status"));
+    }
   }
 }

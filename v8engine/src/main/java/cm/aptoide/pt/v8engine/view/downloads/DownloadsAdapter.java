@@ -4,10 +4,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
+import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
@@ -31,9 +34,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
   private final Analytics analytics;
   private final InstallEventConverter installConverter;
   private final DownloadEventConverter downloadConverter;
-  private final List<Download> activeDownloads;
-  private final List<Download> standByDownloads;
-  private final List<Download> completedDownloads;
+  private final List<InstallationProgress> activeDownloads;
+  private final List<InstallationProgress> standByDownloads;
+  private final List<InstallationProgress> completedDownloads;
 
   public DownloadsAdapter(InstallEventConverter installConverter,
       DownloadEventConverter downloadConverter, InstallManager installManager, Analytics analytics) {
@@ -46,19 +49,19 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
     this.downloadConverter = downloadConverter;
   }
 
-  public void setActiveDownloads(List<Download> downloads) {
+  public void setActiveDownloads(List<InstallationProgress> downloads) {
     this.activeDownloads.clear();
     this.activeDownloads.addAll(downloads);
     this.notifyDataSetChanged();
   }
 
-  public void setStandByDownloads(List<Download> downloads) {
+  public void setStandByDownloads(List<InstallationProgress> downloads) {
     this.standByDownloads.clear();
     this.standByDownloads.addAll(downloads);
     this.notifyDataSetChanged();
   }
 
-  public void setCompletedDownloads(List<Download> downloads) {
+  public void setCompletedDownloads(List<InstallationProgress> downloads) {
     this.completedDownloads.clear();
     this.completedDownloads.addAll(downloads);
     this.notifyDataSetChanged();
@@ -219,19 +222,19 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
             installManager));
   }
 
-  private void bindActiveDownload(Widget holder, Download download) {
-    holder.internalBindView(new ActiveDownloadDisplayable(download, installManager));
+  private void bindActiveDownload(Widget holder, InstallationProgress installation) {
+    holder.internalBindView(new ActiveDownloadDisplayable(installation, installManager));
   }
 
-  private void bindStandByDownload(Widget holder, Download download) {
+  private void bindStandByDownload(Widget holder, InstallationProgress installation) {
     holder.internalBindView(
-        new CompletedDownloadDisplayable(download, installManager, downloadConverter, analytics,
+        new CompletedDownloadDisplayable(installation, installManager, downloadConverter, analytics,
             installConverter));
   }
 
-  private void bindCompletedDownload(Widget holder, Download download) {
+  private void bindCompletedDownload(Widget holder, InstallationProgress installation) {
     holder.internalBindView(
-        new CompletedDownloadDisplayable(download, installManager, downloadConverter, analytics,
+        new CompletedDownloadDisplayable(installation, installManager, downloadConverter, analytics,
             installConverter));
   }
 

@@ -214,7 +214,6 @@ public class FragmentProviderImpl implements FragmentProvider {
   }
 
   @Override public Fragment newDownloadsFragment() {
-    //return DownloadsFragment.newInstance();
     return DownloadsFragmentMvp.newInstance();
   }
 

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -51,10 +52,10 @@ import rx.schedulers.Schedulers;
 
   @Override public void bindView(CompletedDownloadDisplayable displayable) {
     final FragmentActivity context = getContext();
-    Download download = displayable.getDownload();
-    appName.setText(download.getAppName());
-    if (!TextUtils.isEmpty(download.getIcon())) {
-      ImageLoader.with(context).load(download.getIcon(), appIcon);
+    InstallationProgress installation = displayable.getInstallation();
+    appName.setText(installation.getAppName());
+    if (!TextUtils.isEmpty(installation.getIcon())) {
+      ImageLoader.with(context).load(installation.getIcon(), appIcon);
     }
 
     //save original colors
@@ -62,7 +63,7 @@ import rx.schedulers.Schedulers;
       defaultTextViewColor = status.getTextColors();
     }
 
-    updateStatus(download);
+    updateStatus(installation, displayable);
 
     compositeSubscription.add(RxView.clicks(itemView)
         .flatMap(click -> displayable.downloadStatus()
@@ -99,9 +100,10 @@ import rx.schedulers.Schedulers;
         }, throwable -> CrashReport.getInstance().log(throwable)));
   }
 
-  private void updateStatus(Download download) {
+  private void updateStatus(InstallationProgress installation,
+      CompletedDownloadDisplayable displayable) {
     final FragmentActivity context = getContext();
-    if (download.getOverallDownloadStatus() == Download.ERROR) {
+    if (installation.getState() == InstallationProgress.InstallationStatus.FAILED) {
       int statusTextColor;
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         statusTextColor = context.getColor(R.color.red_700);
@@ -112,6 +114,9 @@ import rx.schedulers.Schedulers;
     } else {
       status.setTextColor(defaultTextViewColor);
     }
-    status.setText(download.getStatusName(context));
+    compositeSubscription.add(displayable.getStatusName()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(statusName -> status.setText(statusName),
+            throwable -> CrashReport.getInstance().log(throwable)));
   }
 }

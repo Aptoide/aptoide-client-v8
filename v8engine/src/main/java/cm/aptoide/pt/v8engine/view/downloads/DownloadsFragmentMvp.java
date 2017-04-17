@@ -8,12 +8,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
+import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -22,7 +24,6 @@ import cm.aptoide.pt.v8engine.download.InstallEventConverter;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.presenter.DownloadsPresenter;
 import cm.aptoide.pt.v8engine.presenter.DownloadsView;
-import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import java.util.List;
@@ -75,24 +76,25 @@ public class DownloadsFragmentMvp extends FragmentView implements DownloadsView 
     downloadsRecyclerView.setAdapter(adapter);
     noDownloadsView = view.findViewById(R.id.no_apps_downloaded);
 
-    attachPresenter(
-        new DownloadsPresenter(this, RepositoryFactory.getDownloadRepository(), installManager),
-        savedInstanceState);
+    InstallManager installManager =
+        new InstallManager(((V8Engine) getContext().getApplicationContext()).getDownloadManager(),
+            new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK));
+    attachPresenter(new DownloadsPresenter(this, installManager), savedInstanceState);
 
     return view;
   }
 
-  @UiThread @Override public void showActiveDownloads(List<Download> downloads) {
+  @UiThread @Override public void showActiveDownloads(List<InstallationProgress> downloads) {
     setEmptyDownloadVisible(false);
     adapter.setActiveDownloads(downloads);
   }
 
-  @UiThread @Override public void showStandByDownloads(List<Download> downloads) {
+  @UiThread @Override public void showStandByDownloads(List<InstallationProgress> downloads) {
     setEmptyDownloadVisible(false);
     adapter.setStandByDownloads(downloads);
   }
 
-  @UiThread @Override public void showCompletedDownloads(List<Download> downloads) {
+  @UiThread @Override public void showCompletedDownloads(List<InstallationProgress> downloads) {
     setEmptyDownloadVisible(false);
     adapter.setCompletedDownloads(downloads);
   }

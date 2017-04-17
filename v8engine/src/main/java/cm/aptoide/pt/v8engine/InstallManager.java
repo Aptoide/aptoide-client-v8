@@ -15,12 +15,13 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
 import cm.aptoide.pt.v8engine.install.root.RootShell;
+import cm.aptoide.pt.v8engine.repository.DownloadRepository;
+import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.Repository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import java.util.List;
@@ -72,11 +73,21 @@ public class InstallManager {
     return installer.uninstall(context, packageName, versionName);
   }
 
-  public Observable<List<Progress<Download>>> getInstallations() {
+  @Deprecated public Observable<List<Progress<Download>>> getInstallationsDeprecated() {
     return aptoideDownloadManager.getDownloads()
         .observeOn(Schedulers.io())
         .concatMap(downloadList -> Observable.from(downloadList)
             .flatMap(download -> convertToProgress(download))
+            .toList());
+  }
+
+  public Observable<List<InstallationProgress>> getInstallations() {
+    return aptoideDownloadManager.getDownloads()
+        .observeOn(Schedulers.io())
+        .concatMap(downloadList -> Observable.from(downloadList)
+            .flatMap(
+                download -> getInstallationProgress(download.getMd5(), download.getPackageName(),
+                    download.getVersionCode()).first())
             .toList());
   }
 
@@ -133,21 +144,21 @@ public class InstallManager {
         });
   }
 
-  public Observable<Progress<Download>> getCurrentInstallation() {
-    return getInstallations().flatMap(
+  @Deprecated public Observable<Progress<Download>> getCurrentInstallation() {
+    return getInstallationsDeprecated().flatMap(
         progresses -> Observable.from(progresses).filter(progress -> isInstalling(progress)));
   }
 
-  public boolean isInstalling(Progress<Download> progress) {
+  @Deprecated public boolean isInstalling(Progress<Download> progress) {
     return isDownloading(progress) || (progress.getState() != Progress.DONE
         && progress.getRequest().getOverallDownloadStatus() == Download.COMPLETED);
   }
 
-  public boolean isDownloading(Progress<Download> progress) {
+  @Deprecated public boolean isDownloading(Progress<Download> progress) {
     return progress.getRequest().getOverallDownloadStatus() == Download.PROGRESS;
   }
 
-  public Observable<Progress<Download>> getInstallation(String md5) {
+  @Deprecated public Observable<Progress<Download>> getInstallation(String md5) {
     return aptoideDownloadManager.getDownload(md5).flatMap(download -> convertToProgress(download));
   }
 
@@ -161,7 +172,7 @@ public class InstallManager {
     });
   }
 
-  public boolean isPending(Progress<Download> progress) {
+  @Deprecated public boolean isPending(Progress<Download> progress) {
     return progress.getRequest().getOverallDownloadStatus() == Download.PENDING
         || progress.getRequest().getOverallDownloadStatus() == Download.IN_QUEUE;
   }
@@ -195,7 +206,7 @@ public class InstallManager {
         return new InstallationProgress(download.getOverallProgress(),
             mapDownloadState(download.getOverallDownloadStatus()),
             mapIndeterminate(download.getOverallDownloadStatus()), download.getDownloadSpeed(), md5,
-            packageName, versioncode);
+            packageName, versioncode, download.getAppName(), download.getIcon());
       }
     });
   }
@@ -264,7 +275,8 @@ public class InstallManager {
         .map(installationState -> new InstallationProgress(100,
             mapInstallationState(installationState.getStatus(), installationState.getType()),
             mapInstallIndeterminate(installationState.getStatus(), installationState.getType()), -1,
-            md5, packageName, versionCode));
+            md5, packageName, versionCode, installationState.getName(),
+            installationState.getIcon()));
   }
 
   private boolean mapInstallIndeterminate(int status, int type) {
@@ -365,8 +377,10 @@ public class InstallManager {
   }
 
   public boolean showWarning() {
-    //AN-1533 - temporary solution was to remove root installation, so this popup doesn't make sense
-    return false;
+    boolean wasRootDialogShowed = SecurePreferences.isRootDialogShowed();
+    boolean isRooted = RootShell.isRootAvailable();
+    boolean canGiveRoot = ManagerPreferences.allowRootInstallation();
+    return isRooted && !wasRootDialogShowed && !canGiveRoot;
   }
 
   public void rootInstallAllowed(boolean allowRoot) {
@@ -454,6 +468,15 @@ public class InstallManager {
       }
       return error;
     }).toSingle();
+  }
+
+  /**
+   * this method should only be used when a download exists already(ex: resuming)
+   *
+   * @return the download object to be resumed
+   */
+  public Single<Download> getDownload(String md5) {
+    return downloadRepository.get(md5).first().toSingle();
   }
 
   public enum InstallationType {
