@@ -3,14 +3,9 @@ package cm.aptoide.pt.spotandshareandroid;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,7 +16,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.spotandshareandroid.analytics.SpotAndShareAnalyticsInterface;
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -32,37 +26,17 @@ public class HighwayTransferRecordActivity extends ActivityView
 
   private static final int SELECT_APPS_REQUEST_CODE = 53110;
   private static List<HighwayTransferRecordItem> listOfItems = new ArrayList<>();
-  private String receivedFilePath;
-  private PackageManager packageManager;
   private boolean isHotspot;
   private String targetIPAddress;
   private String nickname;
-  //    private int porto = 1234;
   private int porto = 55555;
   private LinearLayout send;
   private LinearLayout clearHistory;
   private TextView welcomeText;
-  private String joinMode;
-  //como chegou a activity - para nao ter problemas ao recriar. - NEEDS OPTIMIZATION
   private HighwayTransferRecordCustomAdapter adapter;
-  private boolean received;
-  //p cada recebido lança o transferRecord, logo precisara deste bool, que sera actualizado para cada
   private TextView textView;
   private ListView receivedAppListView;
-  private String nameOfTheApp;
-  private String packageName;
-  private String tmpFilePath;
-  private boolean needReSend;
-  private boolean isSent;
   private WifiManager wifimanager;
-  private int positionToReSend;
-  private ArrayList<HighwayTransferRecordItem> toRemoveList;
-  private ArrayList<String> connectedClients;
-
-  private List<String> pathsFromOutsideShare;
-  private List<App> itemsFromOutside;
-  //used a list so that in the future we can send more than one item.
-  private boolean outsideShare;
   private TransferRecordPresenter presenter;
   private TransferRecordManager transferRecordManager;
   private ApplicationsManager applicationsManager;
@@ -74,7 +48,6 @@ public class HighwayTransferRecordActivity extends ActivityView
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.highway_transfer_record_activity);
-    System.out.println("Inside the transferRecord Activity");
 
     welcomeText = (TextView) findViewById(R.id.Transf_rec_firstRow);
     receivedAppListView = (ListView) findViewById(R.id.transferRecordListView);
@@ -86,25 +59,6 @@ public class HighwayTransferRecordActivity extends ActivityView
     analytics = ShareApps.getAnalytics();
 
     setUpToolbar();
-
-    if (getIntent().getAction() != null && getIntent().getAction()
-        .equals("ShareFromOutsideRequest")) {
-      outsideShare = true;
-      Bundle b = getIntent().getBundleExtra("bundle");
-      pathsFromOutsideShare = b.getStringArrayList("pathsFromOutsideShare");
-    } else if (getIntent().getAction() != null && getIntent().getAction()
-        .equals("ShareFromOutsideHotspot")) {
-      outsideShare = true;
-      Bundle b = getIntent().getBundleExtra("bundle");
-      pathsFromOutsideShare = b.getStringArrayList("pathsFromOutsideShare");
-      itemsFromOutside = new ArrayList<App>();
-      readApkArchive(pathsFromOutsideShare);
-      if (itemsFromOutside.size() > 0) {
-        sendFilesFromOutside(itemsFromOutside);
-      } else {
-        System.out.println("No supported apps to be sent.");
-      }
-    }
 
     isHotspot = getIntent().getBooleanExtra("isAHotspot", false);
     targetIPAddress = getIntent().getStringExtra("targetIP");
@@ -121,31 +75,6 @@ public class HighwayTransferRecordActivity extends ActivityView
     setTransparencyClearHistory(true);
 
     receivedAppListView.setVisibility(View.GONE);
-
-    //        Intent receiveIntent = null;
-    //        if (isHotspot) {
-    //            receiveIntent = new Intent(getApplicationContext(), HighwayServerComm.class);
-    ////            receiveIntent = new Intent(this.getApplicationContext(), HighwayServerService.class);
-    //            DataHolder.getInstance().createConnectedClientsList();
-    //        } else {
-    //            String aux = calculateActualIP();
-    //            if (!targetIPAddress.equals(aux)) {
-    //                targetIPAddress = aux;
-    //                System.out.println("Checked the ip Address again and now it was different. It is now : " + aux);
-    //            }
-    //            receiveIntent = new Intent(this, HighwayClientService.class);
-    //            receiveIntent.putExtra("targetIP", targetIPAddress);
-    //
-    //        }
-    //
-    //        receiveIntent.putExtra("nickname", nickname);
-    //        receiveIntent.putExtra("port", porto);
-    //        receiveIntent.putExtra("isHotspot", isHotspot);
-    //        receiveIntent.putExtra("isOutsideShare", outsideShare);
-    //        receiveIntent.setAction("RECEIVE");
-    //        startService(receiveIntent);
-
-    //        setButtonListeners();
 
     applicationsManager = new ApplicationsManager(this);
 
@@ -173,81 +102,6 @@ public class HighwayTransferRecordActivity extends ActivityView
     }
   }
 
-  public void readApkArchive(List<String> list) {
-    if (packageManager == null) {
-      packageManager = getPackageManager();
-    }
-    for (int j = 0; j < list.size(); j++) {
-      System.out.println("Inside the reaapkarchive list size is : " + list.size());
-      String path = list.get(j);
-      System.out.println("The path is : " + path);
-      PackageInfo packageInfo = packageManager.getPackageArchiveInfo(path, 0);
-      if (packageInfo != null) {
-        packageInfo.applicationInfo.sourceDir = path;
-        packageInfo.applicationInfo.publicSourceDir = path;
-        Drawable icon = packageInfo.applicationInfo.loadIcon(packageManager);
-        String appName = (String) packageInfo.applicationInfo.loadLabel(packageManager);
-        String packageName = packageInfo.applicationInfo.packageName;
-        App tmp = new App(icon, appName, packageName, path,
-            "outside");// received e o bool metido no intent.
-        //check if has obbs
-        String obbsFilePath = checkIfHasObb(packageName);
-        //add obb path
-        tmp.setObbsFilePath(obbsFilePath);
-        itemsFromOutside.add(tmp);
-      } else {
-        String[] pathArray = path.split("/");
-        String fileName = pathArray[pathArray.length - 1];
-        Toast.makeText(this, getResources().getString(R.string.unsupportedApp, fileName),
-            Toast.LENGTH_SHORT).show();
-      }
-    }
-  }
-
-  public void sendFilesFromOutside(List<App> list) {
-    System.out.println(
-        "I am here inside the sendFilesFromOutside the size of the list is : " + list.size());
-    Intent sendIntent = null;
-    if (isHotspot) {
-      System.out.println("Send a file from outside - hotspot");
-      sendIntent = new Intent(this, HighwayServerService.class);
-    } else {
-      System.out.println("Send a file from outside - not a hotspot");
-      sendIntent = new Intent(this, HighwayClientService.class);
-      sendIntent.putExtra("targetIP", targetIPAddress);
-    }
-    sendIntent.putExtra("port", porto);
-    sendIntent.putExtra("isHotspot", isHotspot);
-
-    Bundle tmp = new Bundle();
-    tmp.putParcelableArrayList("listOfAppsToInstall", new ArrayList<Parcelable>(list));
-    sendIntent.putExtra("bundle", tmp);
-    sendIntent.setAction("SEND");
-    startService(sendIntent);
-  }
-
-  public String checkIfHasObb(String appName) {
-    boolean hasObb = false;
-    String obbsFilePath = "noObbs";
-    String obbPath = Environment.getExternalStoragePublicDirectory("/") + "/Android/Obb/";
-    File obbFolder = new File(obbPath);
-    File[] list = obbFolder.listFiles();
-    if (list != null) {
-      System.out.println("list lenght is : " + list.length);
-      if (list.length > 0) {
-        System.out.println("appName is : " + appName);
-        for (int i = 0; i < list.length; i++) {
-          System.out.println("List get name is : " + list[i].getName());
-          if (list[i].getName().equals(appName)) {
-            hasObb = true;
-            obbsFilePath = list[i].getAbsolutePath();
-          }
-        }
-      }
-    }
-    return obbsFilePath;
-  }
-
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int i = item.getItemId();
     //    todo add check for the right button
@@ -264,59 +118,11 @@ public class HighwayTransferRecordActivity extends ActivityView
   @Override protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
 
-    outsideShare = false;
-
-    System.out.println("I am here in the new intent");
-
     setIntent(intent);
     isHotspot = getIntent().getBooleanExtra("isHotspot", false);
 
-    if (intent.getAction() != null && intent.getAction().equals("ShareFromOutsideHotspot")) {
-      textView.setVisibility(View.GONE);
-      receivedAppListView.setVisibility(View.VISIBLE);
-      outsideShare = true;
-      Bundle b = getIntent().getBundleExtra("bundle");
-      pathsFromOutsideShare = b.getStringArrayList("pathsFromOutsideShare");
-      itemsFromOutside = new ArrayList<App>();
-      readApkArchive(pathsFromOutsideShare);
-      if (itemsFromOutside.size() > 0) {
-        sendFilesFromOutside(itemsFromOutside);
-      } else {
-        System.out.println("No supported apps to be sent.");
-      }
-    } else if (intent.getAction() != null && intent.getAction().equals("ReSendFromOutside")) {
-      textView.setVisibility(View.GONE);
-      receivedAppListView.setVisibility(View.VISIBLE);
-      receivedFilePath = intent.getStringExtra("resSendFilePath");
-      nameOfTheApp = getIntent().getStringExtra("nameOfTheApp");
-      resendOutside(nameOfTheApp, receivedFilePath);
-    } else if (intent.getAction() != null && intent.getAction().equals("SendFromOutside")) {
-
-      textView.setVisibility(View.GONE);
-      receivedAppListView.setVisibility(View.VISIBLE);
-
-      nameOfTheApp = getIntent().getStringExtra("nameOfTheApp");
-      receivedFilePath = getIntent().getStringExtra("sendFilePath");
-      sendOutside(nameOfTheApp, receivedFilePath);
-    } else if (getIntent().getAction() != null && getIntent().getAction()
-        .equals("ShareFromOutsideConfirmed")) {
-
-      itemsFromOutside = new ArrayList<App>();
-      isHotspot = getIntent().getBooleanExtra("isAHotspot", false);
-      readApkArchive(pathsFromOutsideShare);
-      if (itemsFromOutside.size() > 0) {
-        sendFilesFromOutside(itemsFromOutside);
-      } else {
-        System.out.println("No supported apps to be sent.");
-      }
-    } else if (getIntent().getAction() != null && getIntent().getAction().equals("Addedapps")) {
-      //do nothing
-      System.out.println("Added another app to the list of selected apps to send");
-    } else {
-      textView.setVisibility(View.GONE);// todo reestructure, this part of repeated code.
-      receivedAppListView.setVisibility(View.VISIBLE);
-      outsideShare = false;
-    }
+    textView.setVisibility(View.GONE);
+    receivedAppListView.setVisibility(View.VISIBLE);
 
     if (adapter == null) {
       adapter = new HighwayTransferRecordCustomAdapter(this, listOfItems);
@@ -387,58 +193,6 @@ public class HighwayTransferRecordActivity extends ActivityView
     startService(disconnect);
   }
 
-  public void resendOutside(String name,
-      String filePath) {//file to deal with the re-send from outside
-
-    PackageInfo packageInfo = packageManager.getPackageArchiveInfo(receivedFilePath, 0);
-    if (packageInfo != null) {
-      packageInfo.applicationInfo.sourceDir = receivedFilePath;
-      packageInfo.applicationInfo.publicSourceDir = receivedFilePath;
-      Drawable icon = packageInfo.applicationInfo.loadIcon(packageManager);
-      String appName = (String) packageInfo.applicationInfo.loadLabel(packageManager);
-      String packageName = packageInfo.applicationInfo.packageName;
-      String versionName = packageInfo.versionName;
-
-      HighwayTransferRecordItem tmp =
-          new HighwayTransferRecordItem(icon, appName, packageName, receivedFilePath, false,
-              versionName);// received e o bool metido no intent.
-
-      tmp.setNeedReSend(true);
-      tmp.setSent(false);
-      tmp.setFromOutside("outside");
-
-      if (!listOfItems.contains(tmp)) {
-        listOfItems.add(tmp);
-        System.out.println("List of apps the size is : " + listOfItems.size());
-      }
-    }
-  }
-
-  private void sendOutside(String name, String filePath) {
-    PackageInfo packageInfo = packageManager.getPackageArchiveInfo(filePath, 0);
-    if (packageInfo != null) {
-      packageInfo.applicationInfo.sourceDir = filePath;
-      packageInfo.applicationInfo.publicSourceDir = filePath;
-      Drawable icon = packageInfo.applicationInfo.loadIcon(packageManager);
-      String appName = (String) packageInfo.applicationInfo.loadLabel(packageManager);
-      String packageName = packageInfo.applicationInfo.packageName;
-      String versionName = packageInfo.versionName;
-
-      HighwayTransferRecordItem tmp =
-          new HighwayTransferRecordItem(icon, appName, packageName, receivedFilePath, false,
-              versionName);// received e o bool metido no intent.
-
-      tmp.setNeedReSend(false);
-      tmp.setSent(false);
-      tmp.setFromOutside("outside");
-
-      if (!listOfItems.contains(tmp)) {
-        listOfItems.add(tmp);
-        System.out.println("List of apps the size is : " + listOfItems.size());
-      }
-    }
-  }
-
   @Override protected void onDestroy() {
     presenter.onDestroy();
     super.onDestroy();
@@ -462,11 +216,6 @@ public class HighwayTransferRecordActivity extends ActivityView
     });
   }
 
-  @Override
-  public void handleReceivedApp(boolean received, boolean needReSend, String tmpFilePath) {
-    presenter.receivedAnApp(received, needReSend, tmpFilePath);
-  }
-
   @Override public void showNewCard(HighwayTransferRecordItem item) {
     if (receivedAppListView.getVisibility() != View.VISIBLE
         && textView.getVisibility() == View.VISIBLE) {
@@ -487,12 +236,6 @@ public class HighwayTransferRecordActivity extends ActivityView
       adapter.updateItem(positionToReSend, isSent, needReSend);
       adapter.notifyDataSetChanged();
     }
-  }
-
-  @Override public void showNoConnectedClientsToast() {
-    Toast.makeText(HighwayTransferRecordActivity.this,
-        HighwayTransferRecordActivity.this.getResources()
-            .getString(R.string.reSendError_no_friends_in_group), Toast.LENGTH_SHORT).show();
   }
 
   @Override public void openAppSelectionView() {
