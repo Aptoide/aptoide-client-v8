@@ -144,7 +144,6 @@ public class HighwayPresenter implements Presenter {
 
   public void clickCreateGroup() {
     view.enableButtons(false);
-    //null is due to the outsidesharemanager.
     subscription = groupNameProvider.getName().subscribe(deviceName -> {
       groupManager.createGroup(deviceName, new GroupManager.CreateGroupListener() {
         @Override public void onSuccess() {
@@ -195,5 +194,23 @@ public class HighwayPresenter implements Presenter {
 
   public void forgetAPTXVNetwork() {
     connectionManager.cleanNetworks();
+  }
+
+  public void joinShareFromAppView(String appFilepath, int timeoutToShare) {
+    subscription = groupNameProvider.getName().subscribe(deviceName -> {
+      groupManager.createGroup(deviceName, new GroupManager.CreateGroupListener() {
+        @Override public void onSuccess() {
+          analytics.createGroupSuccess();
+          view.openChatFromAppViewShare(deviceName, appFilepath, timeoutToShare);
+        }
+
+        @Override public void onError(int result) {
+          view.showCreateGroupResult(result);
+          view.hideButtonsProgressBar();
+          view.enableButtons(true);
+          view.hideSearchGroupsTextview(false);
+        }
+      });
+    });
   }
 }

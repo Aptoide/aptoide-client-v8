@@ -68,9 +68,16 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
     presenter =
         new HighwayPresenter(this, groupNameProvider, new DeactivateHotspotTask(connectionManager),
-        connectionManager, analytics, groupManager, this);
+            connectionManager, analytics, groupManager, this);
     attachPresenter(presenter);
 
+    Intent intent = getIntent();
+    if (intent.getAction() != null && intent.getAction().equals("APPVIEW_SHARE")) {
+      enableButtons(false);
+      String appFilepath = intent.getStringExtra("APPVIEW_SHARE_FILEPATH");
+      int timeoutToShare = intent.getIntExtra("APPVIEW_SHARE_TIMEOUT", 0);
+      presenter.joinShareFromAppView(appFilepath, timeoutToShare);
+    }
   }
 
   private void bindViews() {
@@ -134,7 +141,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     recoverNetworkState();
     super.onBackPressed();
   }
-
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
@@ -395,6 +401,18 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
+  @Override
+  public void openChatFromAppViewShare(String deviceName, String appFilepath, int timeoutToShare) {
+    Intent intent =
+        new Intent().setClass(HighwayActivity.this, HighwayTransferRecordActivity.class);
+    intent.putExtra("isAHotspot", true);
+    intent.putExtra("nickname", deviceName);
+    intent.putExtra("filepath", appFilepath);
+    intent.putExtra("timeout", timeoutToShare);
+    startActivity(intent);
+    finish();
+  }
+
   @Override public boolean checkPermissions() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       if (!checkNormalPermissions()) {
@@ -461,7 +479,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   @Override public void removeListener() {
     this.permissionListener = null;
   }
-
 
   private void showNougatErrorToast() {
     Toast.makeText(this, this.getResources().getString(R.string.hotspotCreationErrorNougat),
