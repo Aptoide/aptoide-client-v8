@@ -113,14 +113,16 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     installMenuItem = menu.findItem(R.id.menu_install);
 
     InstalledAccessor accessor = AccessorFactory.getAccessorFor(Installed.class);
-    accessor.get(packageName).subscribe(installed -> {
-      if (installed != null) {
-        // app installed... update text
-        installMenuItem.setTitle(R.string.open);
-      }
-    }, err -> {
-      CrashReport.getInstance().log(err);
-    });
+    accessor.get(packageName)
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(installed -> {
+          if (installed != null) {
+            // app installed... update text
+            installMenuItem.setTitle(R.string.open);
+          }
+        }, err -> {
+          CrashReport.getInstance().log(err);
+        });
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

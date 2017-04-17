@@ -61,6 +61,7 @@ import rx.functions.Action1;
           case facebook:
             InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
             compositeSubscription.add(installedAccessor.get(HomeFragment.FACEBOOK_PACKAGE_NAME)
+                .first()
                 .subscribe(installedFacebook -> {
                   sendActionEvent(AptoideUtils.SocialLinksU.getFacebookPageURL(
                       installedFacebook == null ? 0 : installedFacebook.getVersionCode(),

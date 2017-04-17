@@ -80,7 +80,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     return installManager.getInstallationProgress(md5, packageName, versionCode);
   }
 
-  public Single<InstallManager.InstallationType> getInstallationType() {
+  public Observable<InstallManager.InstallationType> getInstallationType() {
     return installManager.getInstallationType(packageName, versionCode);
   }
 

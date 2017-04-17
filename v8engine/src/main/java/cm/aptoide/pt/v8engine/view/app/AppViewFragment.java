@@ -37,7 +37,6 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.database.AppAction;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -463,7 +462,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     }
 
     // useful data for the syncAuthorization updates menu option
-    installAction().observeOn(AndroidSchedulers.mainThread())
+    installAction(packageName, app.getFile().getVercode()).observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(appAction -> {
           AppViewFragment.this.appAction = appAction;
@@ -531,25 +530,26 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     appName = app.getName();
   }
 
-  public Observable<AppAction> installAction() {
-    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    return installedAccessor.getAsList(packageName).map(installedList -> {
-      if (installedList != null && installedList.size() > 0) {
-        Installed installed = installedList.get(0);
-        if (app.getFile().getVercode() == installed.getVersionCode()) {
-          //current installed version
-          return AppAction.OPEN;
-        } else if (app.getFile().getVercode() > installed.getVersionCode()) {
-          //update
-          return AppAction.UPDATE;
-        } else {
-          //downgrade
-          return AppAction.DOWNGRADE;
-        }
-      } else {
-        //app not installed
-        return AppAction.INSTALL;
+  public Observable<AppAction> installAction(String packageName, int versionCode) {
+    return installManager.getInstallationType(packageName, versionCode).map(installationType -> {
+      AppAction action;
+      switch (installationType) {
+        case INSTALLED:
+          action = AppAction.OPEN;
+          break;
+        case INSTALL:
+          action = AppAction.INSTALL;
+          break;
+        case UPDATE:
+          action = AppAction.UPDATE;
+          break;
+        case DOWNGRADE:
+          action = AppAction.DOWNGRADE;
+          break;
+        default:
+          action = AppAction.INSTALL;
       }
+      return action;
     });
   }
 

@@ -65,7 +65,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<Installed> get(String packageName) {
-    return getAsList(packageName).first().map(installeds -> {
+    return getAsList(packageName).map(installeds -> {
       if (installeds.isEmpty()) {
         return null;
       } else {

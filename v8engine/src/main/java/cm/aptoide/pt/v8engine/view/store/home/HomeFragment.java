@@ -308,6 +308,7 @@ public class HomeFragment extends StoreFragment {
   private void openFacebook() {
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
     installedAccessor.get(FACEBOOK_PACKAGE_NAME)
+        .first()
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(installedFacebook -> {
@@ -330,6 +331,7 @@ public class HomeFragment extends StoreFragment {
   private void openBackupApps() {
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
     installedAccessor.get(BACKUP_APPS_PACKAGE_NAME)
+        .first()
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(installed -> {
@@ -358,6 +360,7 @@ public class HomeFragment extends StoreFragment {
       Uri uriToOpenApp) {
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
     installedAccessor.get(packageName)
+        .first()
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(installedFacebook -> {

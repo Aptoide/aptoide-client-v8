@@ -246,6 +246,7 @@ import rx.android.schedulers.AndroidSchedulers;
   private Completable updateUninstalledUi(AppViewInstallDisplayable displayable, GetApp getApp,
       boolean isSetup) {
     return displayable.getInstallationType()
+        .first()
         .observeOn(AndroidSchedulers.mainThread())
         .map(installationType -> {
           GetAppMeta.App app = getApp.getNodes().getMeta().getData();
@@ -253,23 +254,19 @@ import rx.android.schedulers.AndroidSchedulers;
           switch (installationType) {
             case INSTALL:
               setupInstallOrBuyButton(displayable, getApp);
-              //((AppMenuOptions) getFragmentNavigator().peekLast()).setUnInstallMenuOptionVisible(
-              //    null);
-              setupDownloadControls(app, isSetup, installationType);
               break;
             case UPDATE:
               //update
               isUpdate = true;
               setupActionButton(R.string.update,
                   installOrUpgradeListener(app, getApp.getNodes().getVersions(), displayable));
-              setupDownloadControls(app, isSetup, installationType);
               break;
             case DOWNGRADE:
               //downgrade
               setupActionButton(R.string.downgrade, downgradeListener(app));
-              setupDownloadControls(app, isSetup, installationType);
               break;
           }
+          setupDownloadControls(app, isSetup, installationType);
           return installationType;
         })
         .toCompletable();
@@ -289,6 +286,7 @@ import rx.android.schedulers.AndroidSchedulers;
       AppViewInstallDisplayable displayable, GetApp app, boolean isSetup) {
 
     return displayable.getInstallationType()
+        .first()
         .observeOn(AndroidSchedulers.mainThread())
         .map(installationType -> {
           showProgress(installationProgress.getProgress(), installationProgress.isIndeterminate());
@@ -303,6 +301,7 @@ import rx.android.schedulers.AndroidSchedulers;
   @NonNull private Completable updateInstallingUi(InstallationProgress installationProgress,
       GetAppMeta.App app, boolean isSetup, AppViewInstallDisplayable displayable) {
     return displayable.getInstallationType()
+        .first()
         .observeOn(AndroidSchedulers.mainThread())
         .map(installationType -> {
           showProgress(installationProgress.getProgress(), installationProgress.isIndeterminate());
@@ -561,6 +560,9 @@ import rx.android.schedulers.AndroidSchedulers;
     if (isSetup) {
       int actionInstall;
       switch (installationType) {
+        case INSTALLED:
+          //in case of app is uninstalled inside the appview, the setup won't run again. The unique
+          // possible action will be install
         case INSTALL:
           actionInstall = Download.ACTION_INSTALL;
           break;

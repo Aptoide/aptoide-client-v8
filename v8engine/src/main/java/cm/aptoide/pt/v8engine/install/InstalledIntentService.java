@@ -192,7 +192,7 @@ public class InstalledIntentService extends IntentService {
   }
 
   private PackageInfo databaseOnPackageReplaced(String packageName) {
-    final Update update = updatesRepository.get(packageName).doOnError(throwable -> {
+    final Update update = updatesRepository.get(packageName).first().doOnError(throwable -> {
       CrashReport.getInstance().log(throwable);
     }).onErrorReturn(throwable -> null).toBlocking().first();
 

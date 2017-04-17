@@ -423,16 +423,18 @@ public class InstallManager {
         .toCompletable();
   }
 
-  public Single<InstallationType> getInstallationType(String packageName, int versionCode) {
-    return installedRepository.get(packageName).first().map(installed -> {
+  public Observable<InstallationType> getInstallationType(String packageName, int versionCode) {
+    return installedRepository.get(packageName).map(installed -> {
       if (installed == null) {
         return InstallationType.INSTALL;
+      } else if (installed.getVersionCode() == versionCode) {
+        return InstallationType.INSTALLED;
       } else if (installed.getVersionCode() > versionCode) {
         return InstallationType.DOWNGRADE;
       } else {
         return InstallationType.UPDATE;
       }
-    }).toSingle();
+    });
   }
 
   public Completable onUpdateConfirmed(Installed installed) {
@@ -455,7 +457,7 @@ public class InstallManager {
   }
 
   public enum InstallationType {
-    INSTALL, UPDATE, DOWNGRADE
+    INSTALLED, INSTALL, UPDATE, DOWNGRADE
   }
 
   public enum Error {

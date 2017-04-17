@@ -251,7 +251,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 
   public void startFromPackageName(String packageName) {
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    installedAccessor.get(packageName).subscribe(installed -> {
+    installedAccessor.get(packageName).first().subscribe(installed -> {
       if (installed != null) {
         startFromAppView(packageName);
       } else {
