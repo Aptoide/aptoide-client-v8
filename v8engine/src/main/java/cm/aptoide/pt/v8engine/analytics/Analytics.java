@@ -15,7 +15,6 @@ import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.spotandshare.socket.Log;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AnalyticsDataSaver;
@@ -73,8 +72,7 @@ public class Analytics {
   static @Getter Analytics instance = new Analytics(new AnalyticsDataSaver());
   static GraphRequest.Callback callback = new GraphRequest.Callback() {
     @Override public void onCompleted(GraphResponse response) {
-      //TODO: deal with oncompleted event
-      Log.d("teste", response.toString());
+      Logger.d("Facebook Analytics: ", response.toString());
     }
   };
   private static boolean ACTIVATE_LOCALYTICS = true;
