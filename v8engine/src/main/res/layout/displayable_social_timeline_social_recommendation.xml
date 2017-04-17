@@ -60,18 +60,18 @@
           android:id="@+id/displayable_social_timeline_recommendation_similar_apps"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:layout_alignTop="@+id/displayable_social_timeline_recommendation_icon"
           android:layout_marginEnd="15.1dp"
           android:layout_marginLeft="13.3dp"
           android:layout_marginRight="15.1dp"
           android:layout_marginStart="13.3dp"
-          android:layout_alignTop="@+id/displayable_social_timeline_recommendation_icon"
           android:layout_toEndOf="@+id/displayable_social_timeline_recommendation_icon"
           android:layout_toRightOf="@+id/displayable_social_timeline_recommendation_icon"
           android:background="@android:color/transparent"
           android:clickable="false"
           android:ellipsize="end"
-          android:maxLines="2"
           android:lines="2"
+          android:maxLines="2"
           android:paddingTop="3dp"
           tools:text="Marcelo's Mentor App"
           style="@style/Widget.Aptoide.Card.Title.Large.Black"
@@ -81,13 +81,13 @@
           android:id="@+id/rating_bar"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_toEndOf="@+id/displayable_social_timeline_recommendation_icon"
-          android:layout_toRightOf="@+id/displayable_social_timeline_recommendation_icon"
           android:layout_below="@id/displayable_social_timeline_recommendation_similar_apps"
           android:layout_marginEnd="15.1dp"
           android:layout_marginLeft="13.3dp"
           android:layout_marginRight="15.1dp"
           android:layout_marginStart="13.3dp"
+          android:layout_toEndOf="@+id/displayable_social_timeline_recommendation_icon"
+          android:layout_toRightOf="@+id/displayable_social_timeline_recommendation_icon"
           android:numStars="5"
           android:progressDrawable="@drawable/rating_bar_small"
           android:stepSize="1.0"
@@ -115,32 +115,7 @@
 
     </RelativeLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.7dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginStart="12dp"
-        android:background="@color/timeline_separator"
-        android:visibility="visible"
-        />
-
     <include layout="@layout/social_info_bar_timeline"/>
-
-    <View
-        android:id="@+id/partial_social_timeline_thumbnail_divider3"
-        android:layout_width="match_parent"
-        android:layout_height="0.7dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginStart="12dp"
-        android:background="@color/timeline_separator"
-        android:visibility="visible"
-        />
 
     <include layout="@layout/social_bar_timeline"/>
 
