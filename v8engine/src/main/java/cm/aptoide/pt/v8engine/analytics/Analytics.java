@@ -999,6 +999,10 @@ public class Analytics {
       setDimension(5, UNKNOWN);
       setDimension(6, UNKNOWN);
       setDimension(7, UNKNOWN);
+      setUserProperties(UTM_SOURCE, UNKNOWN);
+      setUserProperties(UTM_MEDIUM, UNKNOWN);
+      setUserProperties(UTM_CAMPAIGN, UNKNOWN);
+      setUserProperties(UTM_CONTENT, UNKNOWN);
     }
 
     public static void setSamplingTypeDimension(String samplingType) {
