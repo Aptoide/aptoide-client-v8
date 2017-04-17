@@ -5,9 +5,9 @@ import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
@@ -25,8 +25,6 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
   private TextView subtitle;
   private TextView videoTitle;
   private ImageView thumbnail;
-  private View url;
-  private Button getAppButton;
   private ImageView play_button;
   private FrameLayout mediaLayout;
   private CardView cardView;
@@ -34,7 +32,7 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
   private TextView relatedTo;
   private String appName;
   private String packageName;
-  //private TextView sharedBy;
+  private RatingBar ratingBar;
 
   public SocialVideoWidget(View itemView) {
     super(itemView);
@@ -49,14 +47,11 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
     play_button = (ImageView) itemView.findViewById(R.id.play_button);
     mediaLayout = (FrameLayout) itemView.findViewById(R.id.media_layout);
     videoTitle = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_title);
-    thumbnail = (ImageView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_image);
-    url = itemView.findViewById(R.id.partial_social_timeline_thumbnail);
-    getAppButton =
-        (Button) itemView.findViewById(R.id.partial_social_timeline_thumbnail_get_app_button);
+    thumbnail = (ImageView) itemView.findViewById(R.id.featured_graphic);
     cardView = (CardView) itemView.findViewById(R.id.card);
     videoHeader = itemView.findViewById(R.id.social_header);
-    relatedTo = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
-    //sharedBy = (TextView) itemView.findViewById(R.id.social_shared_by);
+    relatedTo = (TextView) itemView.findViewById(R.id.app_name);
+    ratingBar = (RatingBar) itemView.findViewById(R.id.ratingbar);
   }
 
   @Override public void bindView(SocialVideoDisplayable displayable) {
@@ -64,8 +59,6 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
     final FragmentActivity context = getContext();
     Typeface typeFace =
         Typeface.createFromAsset(context.getAssets(), "fonts/DroidSerif-Regular.ttf");
-    //title.setText(displayable.getTitle());
-    //subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
     if (displayable.getStore() != null) {
       title.setVisibility(View.VISIBLE);
       title.setText(displayable.getStore()
@@ -99,11 +92,13 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
                 .getAvatar(), storeAvatar);
       }
     }
+
+    ratingBar.setVisibility(View.INVISIBLE);
     videoTitle.setTypeface(typeFace);
     videoTitle.setText(displayable.getVideoTitle());
     setCardViewMargin(displayable, cardView);
-    ImageLoader.with(context)
-        .load(displayable.getThumbnailUrl(), thumbnail);
+    ImageLoader.with(context).load(displayable.getThumbnailUrl(), thumbnail);
+    thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
     play_button.setVisibility(View.VISIBLE);
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -137,11 +132,13 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
             setAppNameToFirstLinkedApp(displayable);
           }
           if (appName != null) {
+            relatedTo.setTextSize(11);
             relatedTo.setText(displayable.getAppRelatedText(context, appName));
           }
         }, throwable -> {
           setAppNameToFirstLinkedApp(displayable);
           if (appName != null) {
+            relatedTo.setTextSize(11);
             relatedTo.setText(displayable.getAppRelatedText(context, appName));
           }
           throwable.printStackTrace();

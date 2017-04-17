@@ -100,8 +100,10 @@ public class SharePreviewDialog {
           (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
       ImageView thumbnail =
           (ImageView) view.findViewById(R.id.partial_social_timeline_thumbnail_image);
-      TextView relatedTo =
-          (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
+      TextView relatedTo = (TextView) view.findViewById(R.id.app_name);
+      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingbar);
+
+      ratingBar.setVisibility(View.INVISIBLE);
       articleTitle.setText(((VideoDisplayable) displayable).getVideoTitle());
 
       relatedTo.setVisibility(View.GONE);
@@ -239,8 +241,9 @@ public class SharePreviewDialog {
           (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
       ImageView thumbnail =
           (ImageView) view.findViewById(R.id.partial_social_timeline_thumbnail_image);
-      TextView relatedTo =
-          (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
+      TextView relatedTo = (TextView) view.findViewById(R.id.app_name);
+      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingbar);
+      ratingBar.setVisibility(View.INVISIBLE);
       articleTitle.setText(((SocialArticleDisplayable) displayable).getArticleTitle());
       relatedTo.setVisibility(View.GONE);
 
@@ -252,8 +255,9 @@ public class SharePreviewDialog {
           (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
       ImageView thumbnail =
           (ImageView) view.findViewById(R.id.partial_social_timeline_thumbnail_image);
-      TextView relatedTo =
-          (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
+      TextView relatedTo = (TextView) view.findViewById(R.id.app_name);
+      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingbar);
+      ratingBar.setVisibility(View.INVISIBLE);
       articleTitle.setText(((SocialVideoDisplayable) displayable).getVideoTitle());
 
       relatedTo.setVisibility(View.GONE);

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/partial_social_timeline_thumbnail"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    tools:showIn="@layout/displayable_social_timeline_social_video"
+    >
+
+  <FrameLayout
+      android:id="@+id/media_layout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/partial_social_timeline_thumbnail_title"
+      android:layout_marginBottom="12dp"
+      android:layout_marginEnd="12dp"
+      android:layout_marginLeft="12dp"
+      android:layout_marginRight="15dp"
+      android:layout_marginStart="12dp"
+      android:clickable="true"
+      android:gravity="center"
+      style="@style/focusableBackground"
+      >
+
+    <include
+        layout="@layout/brick_app_item_list"
+        android:id="@+id/partial_social_timeline_thumbnail_image"
+        android:layout_width="match_parent"
+        android:layout_height="152dp"
+        />
+
+    <ImageView
+        android:id="@+id/play_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/btn_movie_play_normal"
+        android:visibility="visible"
+        />
+
+  </FrameLayout>
+
+  <TextView
+      android:id="@+id/partial_social_timeline_thumbnail_title"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="12dp"
+      android:layout_marginEnd="12dp"
+      android:layout_marginLeft="12dp"
+      android:layout_marginRight="15dp"
+      android:layout_marginStart="12dp"
+      android:layout_marginTop="12dp"
+      android:ellipsize="end"
+      android:maxLines="3"
+      android:typeface="serif"
+      tools:text="Best backup apps: save all your Android's innards"
+      style="@style/Widget.Aptoide.Card.Thumbnail"
+      />
+
+  <View
+      android:id="@+id/partial_social_timeline_thumbnail_divider"
+      android:layout_width="match_parent"
+      android:layout_height="0.7dp"
+      android:layout_below="@id/media_layout"
+      android:layout_marginEnd="12dp"
+      android:layout_marginLeft="12dp"
+      android:layout_marginRight="12dp"
+      android:layout_marginStart="12dp"
+      android:background="@color/timeline_separator"
+      android:visibility="gone"
+      />
+
+</RelativeLayout>
+
+    

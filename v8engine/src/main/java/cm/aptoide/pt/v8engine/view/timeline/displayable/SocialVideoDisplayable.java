@@ -125,7 +125,6 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
         return installedAccessor.get(packageNames)
             .observeOn(Schedulers.computation());
       }
-      //appId = video.getApps().get(0).getId();
     }
     return Observable.just(null);
   }
@@ -147,9 +146,9 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
   }
 
   public Spannable getAppRelatedText(Context context, String appName) {
-    return spannableFactory.createColorSpan(
+    return spannableFactory.createStyleSpan(
         context.getString(R.string.displayable_social_timeline_article_related_to, appName),
-        ContextCompat.getColor(context, R.color.appstimeline_grey), appName);
+        Typeface.BOLD, appName);
   }
 
   @Override public int getViewLayout() {
