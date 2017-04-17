@@ -66,7 +66,7 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
         Typeface.createFromAsset(context.getAssets(), "fonts/DroidSerif-Regular.ttf");
     ratingBar.setVisibility(View.INVISIBLE);
     relatedTo.setTextSize(11);
-    title.setText(displayable.getTitle());
+    title.setText(displayable.getStyledTitle(context, displayable.getTitle()));
     subtitle.setText(displayable.getTimeSinceLastUpdate(context));
     videoTitle.setTypeface(typeFace);
     videoTitle.setText(displayable.getVideoTitle());

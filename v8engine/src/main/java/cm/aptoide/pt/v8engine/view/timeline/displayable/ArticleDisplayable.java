@@ -141,6 +141,11 @@ public class ArticleDisplayable extends CardDisplayable {
         Typeface.BOLD, appName);
   }
 
+  public Spannable getStyleText(Context context, String sourceName) {
+    return spannableFactory.createStyleSpan(context.getString(R.string.x_posted, sourceName),
+        Typeface.BOLD, sourceName);
+  }
+
   public void sendOpenArticleEvent(String packageName) {
     timelineAnalytics.sendOpenArticleEvent(ArticleDisplayable.CARD_TYPE_NAME, getTitle(),
         getLink().getUrl(), packageName);

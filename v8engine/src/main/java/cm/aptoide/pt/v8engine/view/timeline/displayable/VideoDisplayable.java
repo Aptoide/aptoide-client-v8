@@ -133,6 +133,11 @@ public class VideoDisplayable extends CardDisplayable {
         Typeface.BOLD, appName);
   }
 
+  public Spannable getStyledTitle(Context context, String title) {
+    return spannableFactory.createStyleSpan(context.getString(R.string.x_posted, title),
+        Typeface.BOLD, title);
+  }
+
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_video;
   }

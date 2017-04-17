@@ -61,7 +61,7 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
     super.bindView(displayable);
     final FragmentActivity context = getContext();
     ratingBar.setVisibility(View.INVISIBLE);
-    title.setText(displayable.getTitle());
+    title.setText(displayable.getStyleText(context, displayable.getTitle()));
     subtitle.setText(displayable.getTimeSinceLastUpdate(context));
     Typeface typeFace =
         Typeface.createFromAsset(context.getAssets(), "fonts/DroidSerif-Regular.ttf");
