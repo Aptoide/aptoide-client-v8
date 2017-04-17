@@ -154,7 +154,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
         numberLikes.setText(String.format("%s %s", String.valueOf(numberOfLikes),
             getContext().getString(R.string.likes).toLowerCase()));
         numberLikesOneLike.setVisibility(View.INVISIBLE);
-      } else if (displayable.getUserLikes().get(0) != null) {
+      } else if (displayable.getUserLikes() != null && displayable.getUserLikes().size() != 0) {
         numberLikes.setVisibility(View.INVISIBLE);
         numberLikesOneLike.setVisibility(View.VISIBLE);
         numberLikesOneLike.setText(getContext().getString(R.string.x_liked_it,
