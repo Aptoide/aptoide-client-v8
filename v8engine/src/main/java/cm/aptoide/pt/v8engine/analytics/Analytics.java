@@ -22,6 +22,8 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.Event;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.localytics.android.Localytics;
@@ -35,6 +37,9 @@ import java.util.Map;
 import java.util.Random;
 import java.util.zip.ZipFile;
 import lombok.Getter;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static cm.aptoide.pt.v8engine.analytics.Analytics.Lifecycle.Application.facebookLogger;
 
@@ -65,6 +70,11 @@ public class Analytics {
   };
   private static final AptoideClientUUID aptoideClientUuid;
   static @Getter Analytics instance = new Analytics(new AnalyticsDataSaver());
+  static GraphRequest.Callback callback = new GraphRequest.Callback() {
+    @Override public void onCompleted(GraphResponse response) {
+      Logger.d("Facebook Analytics: ", response.toString());
+    }
+  };
   private static boolean ACTIVATE_LOCALYTICS = true;
   private static boolean isFirstSession;
 
@@ -168,6 +178,12 @@ public class Analytics {
     logFacebookEvents(eventName, parameters);
   }
 
+  private static void logFacebookEvents(String eventName, String key, String value) {
+    Bundle bundle = new Bundle();
+    bundle.putString(key, value);
+    facebookLogger.logEvent(eventName, bundle);
+  }
+
   private static void track(String event, int flags) {
 
     try {
@@ -240,6 +256,11 @@ public class Analytics {
         FacebookSdk.sdkInitialize(application);
         AppEventsLogger.activateApp(application);
         facebookLogger = AppEventsLogger.newLogger(application);
+        Observable.fromCallable(() -> {
+          AppEventsLogger.setUserID(aptoideClientUuid.getUniqueIdentifier());
+          return null;
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(o -> {
+        }, Throwable::printStackTrace);
         SharedPreferences sPref =
             PreferenceManager.getDefaultSharedPreferences(application.getBaseContext());
         ACTIVATE_LOCALYTICS =
@@ -346,6 +367,18 @@ public class Analytics {
 
       public static void onResume(android.app.Activity activity) {
 
+        final AptoideAccountManager accountManager =
+            ((V8Engine) activity.getApplicationContext()).getAccountManager();
+        //This needs to be cleaned when localytics is killed
+        Bundle bundle = new Bundle();
+        if (!accountManager.isLoggedIn()) {
+          bundle.putString("Logged In", "Not Logged In");
+          AppEventsLogger.updateUserProperties(bundle, callback);
+        } else {
+          bundle.putString("Logged In", "Logged In");
+          AppEventsLogger.updateUserProperties(bundle, callback);
+        }
+
         if (!ACTIVATE_LOCALYTICS) {
           return;
         }
@@ -353,8 +386,6 @@ public class Analytics {
         Localytics.onActivityResume(activity);
 
         if (isFirstSession) {
-          final AptoideAccountManager accountManager =
-              ((V8Engine) activity.getApplicationContext()).getAccountManager();
           if (!accountManager.isLoggedIn()) {
             Localytics.setCustomDimension(0, "Not Logged In");
           } else {
@@ -635,6 +666,8 @@ public class Analytics {
   public static class ApplicationInstall {
 
     public static final String EVENT_NAME = "Application Install";
+    public static final String FACEBOOK_EVENT_NAME = "App Install";
+    //this will be the one remaining after localytics is killed
 
     private static final String TYPE = "Type";
     private static final String PACKAGE_NAME = "Package Name";
@@ -664,6 +697,7 @@ public class Analytics {
         parameters.putString(PACKAGE_NAME, packageName);
         parameters.putString(TRUSTED_BADGE, trustedBadge);
         parameters.putString(TYPE, type);
+        logFacebookEvents(FACEBOOK_EVENT_NAME, parameters);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -677,6 +711,7 @@ public class Analytics {
   public static class ApplicationLaunch {
 
     public static final String EVENT_NAME = "Application Launch";
+    public static final String FACEBOOK_APP_LAUNCH = "App Launches";
     public static final String SOURCE = "Source";
     public static final String LAUNCHER = "Launcher";
     public static final String WEBSITE = "Website";
@@ -688,39 +723,40 @@ public class Analytics {
 
     public static void launcher() {
       track(EVENT_NAME, SOURCE, LAUNCHER, LOCALYTICS);
+      logFacebookEvents(FACEBOOK_APP_LAUNCH, SOURCE, LAUNCHER);
     }
 
     public static void website(String uri) {
       Logger.d(TAG, "website: " + uri);
+      HashMap<String, String> map = new HashMap<>();
+      map.put(SOURCE, WEBSITE);
 
-      try {
-        HashMap<String, String> map = new HashMap<>();
-        map.put(SOURCE, WEBSITE);
-
-        if (uri != null) {
-          map.put(URI, uri.substring(0, uri.indexOf(":")));
-        }
-
-        track(EVENT_NAME, map, ALL);
-      } catch (Exception e) {
-        e.printStackTrace();
+      if (uri != null) {
+        map.put(URI, uri.substring(0, uri.indexOf(":")));
       }
+
+      track(EVENT_NAME, map, ALL);
+      logFacebookEvents(FACEBOOK_APP_LAUNCH, map);
     }
 
     public static void newUpdatesNotification() {
       track(EVENT_NAME, SOURCE, NEW_UPDATES_NOTIFICATION, ALL);
+      logFacebookEvents(EVENT_NAME, SOURCE, NEW_UPDATES_NOTIFICATION);
     }
 
     public static void downloadingUpdates() {
       track(EVENT_NAME, SOURCE, DOWNLOADING_UPDATES, ALL);
+      logFacebookEvents(EVENT_NAME, SOURCE, DOWNLOADING_UPDATES);
     }
 
     public static void timelineNotification() {
       track(EVENT_NAME, SOURCE, TIMELINE_NOTIFICATION, ALL);
+      logFacebookEvents(EVENT_NAME, SOURCE, TIMELINE_NOTIFICATION);
     }
 
     public static void newRepo() {
       track(EVENT_NAME, SOURCE, NEW_REPO, ALL);
+      logFacebookEvents(EVENT_NAME, SOURCE, NEW_REPO);
     }
   }
 
@@ -880,6 +916,14 @@ public class Analytics {
     public static final String APKFY = "Apkfy";
     public static final String WEBSITE = "Website";
     public static final String INSTALLER = "Installer";
+    public static final String GMS = "GMS";
+    public static final String HAS_HGMS = "Has GMS";
+    public static final String NO_GMS = "No GMS";
+    public static final String UTM_SOURCE = "UTM Source";
+    public static final String UTM_MEDIUM = "UTM Medium";
+    public static final String UTM_CONTENT = "UTM Content";
+    public static final String UTM_CAMPAIGN = "UTM Campaign";
+    public static final String ENTRY_POINT = "Entry Point";
 
     public static void setPartnerDimension(String partner) {
       setDimension(1, partner);
@@ -895,6 +939,16 @@ public class Analytics {
       Localytics.setCustomDimension(i, s);
     }
 
+    /**
+     * Responsible for setting facebook analytics user properties
+     * These were known as custom dimensions in localytics
+     */
+    private static void setUserProperties(String key, String value) {
+      Bundle parameters = new Bundle();
+      parameters.putString(key, value);
+      AppEventsLogger.updateUserProperties(parameters, callback);
+    }
+
     public static void setVerticalDimension(String verticalName) {
       setDimension(2, verticalName);
     }
@@ -902,25 +956,31 @@ public class Analytics {
     public static void setGmsPresent(boolean b) {
       if (b) {
         setDimension(3, "GMS Present");
+        setUserProperties(GMS, HAS_HGMS);
       } else {
         setDimension(3, "GMS Not Present");
+        setUserProperties(GMS, NO_GMS);
       }
     }
 
     public static void setUTMSource(String utmSource) {
       setDimension(4, utmSource);
+      setUserProperties(UTM_SOURCE, utmSource);
     }
 
     public static void setUTMMedium(String utmMedium) {
       setDimension(5, utmMedium);
+      setUserProperties(UTM_MEDIUM, utmMedium);
     }
 
     public static void setUTMCampaign(String utmCampaign) {
       setDimension(6, utmCampaign);
+      setUserProperties(UTM_CAMPAIGN, utmCampaign);
     }
 
     public static void setUTMContent(String utmContent) {
       setDimension(7, utmContent);
+      setUserProperties(UTM_CONTENT, utmContent);
     }
 
     public static void setUTMDimensionsToUnknown() {
@@ -928,6 +988,10 @@ public class Analytics {
       setDimension(5, UNKNOWN);
       setDimension(6, UNKNOWN);
       setDimension(7, UNKNOWN);
+      setUserProperties(UTM_SOURCE, UNKNOWN);
+      setUserProperties(UTM_MEDIUM, UNKNOWN);
+      setUserProperties(UTM_CAMPAIGN, UNKNOWN);
+      setUserProperties(UTM_CONTENT, UNKNOWN);
     }
 
     public static void setSamplingTypeDimension(String samplingType) {
@@ -936,6 +1000,7 @@ public class Analytics {
 
     public static void setEntryPointDimension(String entryPoint) {
       setDimension(9, entryPoint);
+      setUserProperties(ENTRY_POINT, entryPoint);
     }
   }
 
