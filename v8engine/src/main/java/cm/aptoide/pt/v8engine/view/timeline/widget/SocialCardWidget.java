@@ -51,6 +51,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
   private int marginOfTheNextLikePreview;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
+  private LinearLayout socialInfoBar;
 
   SocialCardWidget(View itemView) {
     super(itemView);
@@ -71,6 +72,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
         R.id.displayable_social_timeline_likes_preview_container);
     storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
     userAvatar = (ImageView) itemView.findViewById(R.id.card_user_avatar);
+    socialInfoBar = (LinearLayout) itemView.findViewById(R.id.social_info_bar);
   }
 
   @Override @CallSuper public void bindView(T displayable) {
@@ -145,6 +147,13 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
       like.setVisibility(View.VISIBLE);
     } else {
       Logger.w(TAG, "like button is null in this view");
+    }
+
+    if ((displayable.getUserLikes() != null && displayable.getUserLikes().size() != 0)
+        || displayable.getNumberOfComments() > 0) {
+      socialInfoBar.setVisibility(View.VISIBLE);
+    } else {
+      socialInfoBar.setVisibility(View.GONE);
     }
 
     final long numberOfLikes = displayable.getNumberOfLikes();
