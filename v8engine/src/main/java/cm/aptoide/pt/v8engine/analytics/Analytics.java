@@ -711,7 +711,7 @@ public class Analytics {
   public static class ApplicationLaunch {
 
     public static final String EVENT_NAME = "Application Launch";
-    public static final String FACEBOOK_APP_LAUNCH = "App Launches";
+    public static final String FACEBOOK_APP_LAUNCH = "Aptoide Launch";
     public static final String SOURCE = "Source";
     public static final String LAUNCHER = "Launcher";
     public static final String WEBSITE = "Website";
