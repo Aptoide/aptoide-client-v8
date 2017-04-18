@@ -32,7 +32,8 @@ public class HostsCallbackManager implements HostsChangedCallback {
       i.setAction("AUTO_SHARE_SEND");
       i.putExtra("autoShareFilePath", autoShareFilepath);
       context.sendBroadcast(i);
-    } else if (hostList.size() >= 2) {//// FIXME: 17-04-2017 fix the = 2 situation after a autoshare
+      autoShareFilepath = null;
+    } else if (hostList.size() >= 2) {
       System.out.println("sending broadcast of show_send_button");
       i.setAction("SHOW_SEND_BUTTON");
       context.sendBroadcast(i);

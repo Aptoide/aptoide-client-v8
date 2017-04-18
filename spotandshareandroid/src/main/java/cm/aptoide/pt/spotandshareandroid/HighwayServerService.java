@@ -55,8 +55,6 @@ public class HighwayServerService extends Service {
     sendBroadcast(i);
 
   };
-  private String autoShareFilePath;
-
   @Override public void onCreate() {
     super.onCreate();
     if (mNotifyManager == null) {
@@ -197,7 +195,7 @@ public class HighwayServerService extends Service {
         System.out.println("Going to start serving");
         HostsCallbackManager hostsCallbackManager;
         if (intent.getExtras().containsKey("autoShareFilePath")) {
-          autoShareFilePath = intent.getStringExtra("autoShareFilePath");
+          String autoShareFilePath = intent.getStringExtra("autoShareFilePath");
           hostsCallbackManager =
               new HostsCallbackManager(this.getApplicationContext(), autoShareFilePath);
         } else {
@@ -253,7 +251,7 @@ public class HighwayServerService extends Service {
           });
         }
       } else if (intent.getAction() != null && intent.getAction().equals("SHUTDOWN_SERVER")) {
-        if (aptoideMessageServerSocket != null) { // TODO: 16-03-2017 filipe check problem
+        if (aptoideMessageServerSocket != null) {
           aptoideMessageClientSocket.disable();
           aptoideMessageServerSocket.shutdown(new Runnable() {
             @Override public void run() {

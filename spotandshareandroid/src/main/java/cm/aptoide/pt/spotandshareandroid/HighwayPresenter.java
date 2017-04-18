@@ -86,6 +86,7 @@ public class HighwayPresenter implements Presenter {
     connectionManager.stop();
     groupManager.stop();
     permissionManager.removeListener();
+    autoShareFilepath = null;
   }
 
   @Override public void onStop() {
