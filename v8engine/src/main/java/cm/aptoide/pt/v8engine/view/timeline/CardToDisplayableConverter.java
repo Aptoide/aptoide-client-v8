@@ -6,7 +6,6 @@ import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.Feature;
 import cm.aptoide.pt.model.v7.timeline.Recommendation;
-import cm.aptoide.pt.model.v7.timeline.Similar;
 import cm.aptoide.pt.model.v7.timeline.SocialArticle;
 import cm.aptoide.pt.model.v7.timeline.SocialInstall;
 import cm.aptoide.pt.model.v7.timeline.SocialRecommendation;
@@ -30,7 +29,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.AppUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.RecommendationDisplayable;
-import cm.aptoide.pt.v8engine.view.timeline.displayable.SimilarDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.SocialArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.SocialInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.SocialRecommendationDisplayable;
@@ -95,19 +93,6 @@ public class CardToDisplayableConverter implements CardToDisplayable {
 
         return SocialInstallDisplayable.from((SocialInstall) card, timelineAnalytics,
             spannableFactory, socialRepository, dateCalculator);
-      }
-    });
-
-    //
-    // Similar
-    //
-    converters.put(Similar.class, new CardToDisplayable() {
-      @Override public Displayable convert(TimelineCard card, DateCalculator dateCalculator,
-          SpannableFactory spannableFactory, DownloadFactory downloadFactory,
-          LinksHandlerFactory linksHandlerFactory) {
-
-        return SimilarDisplayable.from((Similar) card, dateCalculator, spannableFactory,
-            timelineAnalytics, socialRepository);
       }
     });
 

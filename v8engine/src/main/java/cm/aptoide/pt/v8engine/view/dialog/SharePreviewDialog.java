@@ -29,7 +29,6 @@ import cm.aptoide.pt.v8engine.view.timeline.LikeButtonView;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.AppUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.RecommendationDisplayable;
-import cm.aptoide.pt.v8engine.view.timeline.displayable.SimilarDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.SocialArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.SocialCardDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.SocialInstallDisplayable;
@@ -177,28 +176,6 @@ public class SharePreviewDialog {
       ImageLoader.with(context)
           .load(((AppUpdateDisplayable) displayable).getAppIconUrl(), appIcon);
       appName.setText(((AppUpdateDisplayable) displayable).getAppName());
-      appSubTitle.setText(AptoideUtils.StringU.getFormattedString(
-          R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, ""));
-
-      SpannableFactory spannableFactory = new SpannableFactory();
-
-      getApp.setText(spannableFactory.createColorSpan(
-          context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
-          ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
-    } else if (displayable instanceof SimilarDisplayable) {
-      view =
-          factory.inflate(R.layout.displayable_social_timeline_social_recommendation_preview, null);
-      ImageView appIcon =
-          (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
-      TextView appName = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_recommendation_similar_apps);
-      TextView appSubTitle =
-          (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
-      TextView getApp = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_recommendation_get_app_button);
-      ImageLoader.with(context)
-          .load(((SimilarDisplayable) displayable).getAppIcon(), appIcon);
-      appName.setText(((SimilarDisplayable) displayable).getAppName());
       appSubTitle.setText(AptoideUtils.StringU.getFormattedString(
           R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, ""));
 
