@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.view.timeline.widget;
 
-import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
@@ -57,8 +56,6 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
   @Override public void bindView(SocialVideoDisplayable displayable) {
     super.bindView(displayable);
     final FragmentActivity context = getContext();
-    Typeface typeFace =
-        Typeface.createFromAsset(context.getAssets(), "fonts/DroidSerif-Regular.ttf");
     if (displayable.getStore() != null) {
       title.setVisibility(View.VISIBLE);
       title.setText(displayable.getStyledTitle(context, displayable.getStore().getName()));
@@ -92,7 +89,6 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
     }
 
     ratingBar.setVisibility(View.INVISIBLE);
-    videoTitle.setTypeface(typeFace);
     videoTitle.setText(displayable.getVideoTitle());
     setCardViewMargin(displayable, cardView);
     ImageLoader.with(context).load(displayable.getThumbnailUrl(), thumbnail);

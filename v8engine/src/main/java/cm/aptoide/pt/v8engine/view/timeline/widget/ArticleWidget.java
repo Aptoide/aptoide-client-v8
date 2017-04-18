@@ -63,9 +63,6 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
     ratingBar.setVisibility(View.INVISIBLE);
     title.setText(displayable.getStyleText(context, displayable.getTitle()));
     subtitle.setText(displayable.getTimeSinceLastUpdate(context));
-    Typeface typeFace =
-        Typeface.createFromAsset(context.getAssets(), "fonts/DroidSerif-Regular.ttf");
-    articleTitle.setTypeface(typeFace);
     articleTitle.setText(displayable.getArticleTitle());
     relatedTo.setTextSize(11);
     setCardViewMargin(displayable, cardView);

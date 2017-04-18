@@ -62,13 +62,10 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
   @Override public void bindView(VideoDisplayable displayable) {
     super.bindView(displayable);
     final FragmentActivity context = getContext();
-    Typeface typeFace =
-        Typeface.createFromAsset(context.getAssets(), "fonts/DroidSerif-Regular.ttf");
     ratingBar.setVisibility(View.INVISIBLE);
     relatedTo.setTextSize(11);
     title.setText(displayable.getStyledTitle(context, displayable.getTitle()));
     subtitle.setText(displayable.getTimeSinceLastUpdate(context));
-    videoTitle.setTypeface(typeFace);
     videoTitle.setText(displayable.getVideoTitle());
     setCardViewMargin(displayable, cardView);
     ImageLoader.with(context).loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
