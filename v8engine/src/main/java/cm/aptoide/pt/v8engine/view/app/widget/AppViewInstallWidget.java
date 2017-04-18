@@ -77,20 +77,14 @@ import rx.android.schedulers.AndroidSchedulers;
   private RelativeLayout downloadProgressLayout;
   private RelativeLayout installAndLatestVersionLayout;
 
-  //
-  // downloading views
-  //
   private CheckBox shareInTimeline;
   private ProgressBar downloadProgress;
   private TextView textProgress;
   private ImageView actionResume;
   private ImageView actionPause;
   private ImageView actionCancel;
-
-  // get app, upgrade and downgrade button
   private Button actionButton;
 
-  // app info
   private TextView versionName;
   private View latestAvailableLayout;
   private View latestAvailableTrustedSeal;
@@ -99,7 +93,6 @@ import rx.android.schedulers.AndroidSchedulers;
   private MinimalAd minimalAd;
 
   private App trustedVersion;
-  //private DownloadServiceHelper downloadServiceHelper;
   private PermissionService permissionRequest;
   private InstallManager installManager;
   private boolean isUpdate;
@@ -108,9 +101,7 @@ import rx.android.schedulers.AndroidSchedulers;
   private InstallEventConverter installConverter;
   private AptoideAccountManager accountManager;
   private BodyInterceptor<BaseBody> bodyInterceptor;
-
-  //private Subscription subscribe;
-  //private long appID;
+  private AppViewInstallDisplayable displayable;
 
   public AppViewInstallWidget(View itemView) {
     super(itemView);
@@ -135,7 +126,8 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   @Override public void bindView(AppViewInstallDisplayable displayable) {
-    displayable.setInstallButton(actionButton);
+    this.displayable = displayable;
+    this.displayable.setInstallButton(actionButton);
 
     final AptoideDownloadManager downloadManager = AptoideDownloadManager.getInstance();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
@@ -147,8 +139,8 @@ import rx.android.schedulers.AndroidSchedulers;
     installConverter = new InstallEventConverter(bodyInterceptor);
     analytics = Analytics.getInstance();
 
-    minimalAd = displayable.getMinimalAd();
-    GetApp getApp = displayable.getPojo();
+    minimalAd = this.displayable.getMinimalAd();
+    GetApp getApp = this.displayable.getPojo();
     GetAppMeta.App currentApp = getApp.getNodes().getMeta().getData();
     versionName.setText(currentApp.getFile().getVername());
     otherVersions.setOnClickListener(v -> {
@@ -160,8 +152,8 @@ import rx.android.schedulers.AndroidSchedulers;
 
     final boolean[] isSetupView = { true };
     compositeSubscription.add(
-        displayable.getState().observeOn(AndroidSchedulers.mainThread()).subscribe(widgetState -> {
-          updateUi(displayable, getApp, currentApp, widgetState, !isSetupView[0]);
+        this.displayable.getState().observeOn(AndroidSchedulers.mainThread()).subscribe(widgetState -> {
+          updateUi(getApp, currentApp, widgetState, !isSetupView[0]);
           isSetupView[0] = false;
         }, (throwable) -> {
           Logger.v(TAG, throwable.getMessage());
@@ -181,8 +173,13 @@ import rx.android.schedulers.AndroidSchedulers;
     permissionRequest = ((PermissionService) getContext());
   }
 
-  private void updateUi(AppViewInstallDisplayable displayable, GetApp getApp,
-      GetAppMeta.App currentApp, AppViewInstallDisplayable.WidgetState widgetState,
+  @Override public void unbindView() {
+    super.unbindView();
+    displayable.setInstallButton(null);
+    displayable = null;
+  }
+
+  private void updateUi(GetApp getApp, GetAppMeta.App currentApp, AppViewInstallDisplayable.WidgetState widgetState,
       boolean shouldShowError) {
     Logger.d(TAG, "updateUi() called with: " + shouldShowError + "]");
     if (widgetState.getProgress() != null) {
@@ -199,24 +196,20 @@ import rx.android.schedulers.AndroidSchedulers;
           break;
         }
       case AppViewInstallDisplayable.ACTION_INSTALL:
-        //App not installed
         setDownloadBarInvisible();
         setupInstallOrBuyButton(displayable, getApp);
         ((AppMenuOptions) getFragmentNavigator().peekLast()).setUnInstallMenuOptionVisible(null);
         break;
       case AppViewInstallDisplayable.ACTION_DOWNGRADE:
-        //downgrade
         setDownloadBarInvisible();
         setupActionButton(R.string.downgrade, downgradeListener(currentApp));
         break;
       case AppViewInstallDisplayable.ACTION_OPEN:
-        //current installed version
         setDownloadBarInvisible();
         setupActionButton(R.string.open,
             v -> AptoideUtils.SystemU.openApp(currentApp.getPackageName()));
         break;
       case AppViewInstallDisplayable.ACTION_UPDATE:
-        //update
         isUpdate = true;
         setDownloadBarInvisible();
         setupActionButton(R.string.update,
