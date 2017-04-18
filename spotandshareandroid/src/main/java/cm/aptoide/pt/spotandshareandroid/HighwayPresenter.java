@@ -23,6 +23,7 @@ public class HighwayPresenter implements Presenter {
   private GroupManager groupManager;
   private boolean permissionRequested;
   private Subscription subscription;
+  private String autoShareFilepath;
 
   public HighwayPresenter(HighwayView view, GroupNameProvider groupNameProvider,
       DeactivateHotspotTask deactivateHotspotTask, ConnectionManager connectionManager,
@@ -35,6 +36,15 @@ public class HighwayPresenter implements Presenter {
     this.analytics = analytics;
     this.groupManager = groupManager;
     this.permissionManager = permissionManager;
+  }
+
+  public HighwayPresenter(HighwayView view, GroupNameProvider groupNameProvider,
+      DeactivateHotspotTask deactivateHotspotTask, ConnectionManager connectionManager,
+      SpotAndShareAnalyticsInterface analytics, GroupManager groupManager,
+      PermissionManager permissionManager, String autoShareFilepath) {
+    this(view, groupNameProvider, deactivateHotspotTask, connectionManager, analytics, groupManager,
+        permissionManager);
+    this.autoShareFilepath = autoShareFilepath;
   }
 
   @Override public void onCreate() {
@@ -92,10 +102,15 @@ public class HighwayPresenter implements Presenter {
         connectionManager.start(new ConnectionManager.WifiStateListener() {
           @Override public void onStateChanged(boolean enabled) {
             if (enabled) {
-              connectionManager.cleanNetworks();
-              view.showConnections();
-              view.setUpListeners();
-              view.enableButtons(true);
+
+              if (autoShareFilepath != null) {
+                joinShareFromAppView(autoShareFilepath);
+              } else {
+                connectionManager.cleanNetworks();
+                view.showConnections();
+                view.setUpListeners();
+                view.enableButtons(true);
+              }
             }
           }
         });
@@ -196,12 +211,12 @@ public class HighwayPresenter implements Presenter {
     connectionManager.cleanNetworks();
   }
 
-  public void joinShareFromAppView(String appFilepath, int timeoutToShare) {
+  public void joinShareFromAppView(String appFilepath) {
     subscription = groupNameProvider.getName().subscribe(deviceName -> {
       groupManager.createGroup(deviceName, new GroupManager.CreateGroupListener() {
         @Override public void onSuccess() {
           analytics.createGroupSuccess();
-          view.openChatFromAppViewShare(deviceName, appFilepath, timeoutToShare);
+          view.openChatFromAppViewShare(deviceName, appFilepath);
         }
 
         @Override public void onError(int result) {
