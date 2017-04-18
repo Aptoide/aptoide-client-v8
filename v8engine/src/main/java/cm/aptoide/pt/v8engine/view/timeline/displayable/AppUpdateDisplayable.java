@@ -18,7 +18,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.InstallationProgress;
-import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadEvent;
@@ -203,14 +202,6 @@ public class AppUpdateDisplayable extends CardDisplayable {
 
   public Observable<Void> requestPermission(Context context) {
     return permissionManager.requestExternalStoragePermission(((PermissionService) context));
-  }
-
-  public boolean isInstalling(Progress<Download> downloadProgress) {
-    return installManager.isInstalling(downloadProgress);
-  }
-
-  public boolean isDownloading(Progress<Download> downloadProgress) {
-    return installManager.isDownloading(downloadProgress);
   }
 
   public void sendOpenAppEvent() {
