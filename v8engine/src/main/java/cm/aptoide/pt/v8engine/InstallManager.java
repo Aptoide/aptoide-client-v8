@@ -82,10 +82,9 @@ public class InstallManager {
             .toList());
   }
 
-  // TODO: 17/04/2017 trinkes don't leave both streams open(installs and downloads)
   public Observable<List<InstallationProgress>> getInstallations() {
-    return aptoideDownloadManager.getDownloads()
-        .flatMap(downloadList -> installedRepository.getAll().map(installeds -> downloadList))
+    return Observable.combineLatest(aptoideDownloadManager.getDownloads(),
+        installedRepository.getAll(), (downloads, installeds) -> downloads)
         .observeOn(Schedulers.io())
         .concatMap(downloadList -> Observable.from(downloadList)
             .flatMap(
