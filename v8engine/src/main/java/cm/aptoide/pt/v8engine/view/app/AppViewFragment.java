@@ -8,6 +8,8 @@ package cm.aptoide.pt.v8engine.view.app;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -56,6 +58,7 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.spotandshareandroid.HighwayActivity;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
@@ -645,7 +648,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     int i = item.getItemId();
 
     if (i == R.id.menu_share) {
-      shareApp(appName, packageName, wUrl);
+      shareApp(appName, packageName, getApp.getNodes().getMeta().getData().getFile().getVercode(),
+          wUrl);
       return true;
     } else if (i == R.id.menu_schedule) {
 
@@ -680,8 +684,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   // Scrollable interface
   //
 
-  private void shareApp(String appName, String packageName, String wUrl) {
-    GenericDialogs.createGenericShareDialog(getContext(), getString(R.string.share))
+  private void shareApp(String appName, String packageName, int vercode, String wUrl) {
+    GenericDialogs.createGenericShareDialog(getContext(), getString(R.string.share),
+        installedRepository.contains(packageName, vercode))
         .subscribe(eResponse -> {
           if (GenericDialogs.EResponse.SHARE_EXTERNAL == eResponse) {
 
@@ -704,8 +709,24 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
               sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
                   sharePreviewDialog, alertDialog, socialRepository);
             }
+          } else if (GenericDialogs.EResponse.SHARE_SPOT_AND_SHARE == eResponse) {
+            try {
+              String filepath = getFilepath(packageName);
+              Intent intent = new Intent(this.getActivity(), HighwayActivity.class);
+              intent.setAction("APPVIEW_SHARE");
+              intent.putExtra("APPVIEW_SHARE_FILEPATH", filepath);
+              startActivity(intent);
+            } catch (PackageManager.NameNotFoundException e) {
+              //// TODO: 18-04-2017  show a toast ?  
+            }
           }
         }, err -> err.printStackTrace());
+  }
+
+  private String getFilepath(String packageName) throws PackageManager.NameNotFoundException {
+    PackageManager packageManager = getContext().getPackageManager();
+    PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 0);
+    return packageInfo.applicationInfo.sourceDir;
   }
 
   @Partners protected void shareDefault(String appName, String packageName, String wUrl) {
