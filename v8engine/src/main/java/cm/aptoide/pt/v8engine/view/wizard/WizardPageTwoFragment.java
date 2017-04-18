@@ -28,7 +28,7 @@ public class WizardPageTwoFragment extends BackButtonFragment {
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.wizard_page_one, null);
+    final View view = inflater.inflate(R.layout.wizard_page_one, container, false);
     setText(view);
     return view;
   }

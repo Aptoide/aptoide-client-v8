@@ -8,7 +8,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.ActivityView;
 import cm.aptoide.pt.v8engine.view.BackButtonActivity;
 
-public class LoginActivity extends BackButtonActivity {
+public class LoginActivity extends LoginBottomSheetActivity {
 
   public static final String ACCOUNT_TYPE = "account_type";
   public static final String AUTH_TYPE = "auth_type";

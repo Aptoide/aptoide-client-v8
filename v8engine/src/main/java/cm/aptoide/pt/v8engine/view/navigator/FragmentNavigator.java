@@ -57,6 +57,10 @@ public class FragmentNavigator {
     return tag;
   }
 
+  public void popBackStack() {
+    fragmentManager.popBackStack();
+  }
+
   public void cleanBackStack() {
     for (int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i) {
       fragmentManager.popBackStack();

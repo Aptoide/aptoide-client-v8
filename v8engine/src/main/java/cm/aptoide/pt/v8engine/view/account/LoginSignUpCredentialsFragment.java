@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -82,6 +83,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   private LoginSignUpCredentialsPresenter presenter;
   private List<String> facebookRequestedPermissions;
   private BackButton.ClickHandler backClickHandler;
+  private FragmentNavigator fragmentNavigator;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
@@ -99,6 +101,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     super.onCreate(savedInstanceState);
     errorMapper = new AccountErrorMapper(getContext());
     facebookRequestedPermissions = Arrays.asList("email", "user_friends");
+    fragmentNavigator = getFragmentNavigator();
     presenter = new LoginSignUpCredentialsPresenter(this,
         ((V8Engine) getContext().getApplicationContext()).getAccountManager(),
         facebookRequestedPermissions,
@@ -206,16 +209,15 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void navigateToMainView() {
-    final FragmentNavigator navManager = getFragmentNavigator();
     Fragment home =
         HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
             V8Engine.getConfiguration().getDefaultTheme());
-    navManager.cleanBackStack();
-    navManager.navigateTo(home);
+    fragmentNavigator.cleanBackStack();
+    fragmentNavigator.navigateTo(home);
   }
 
   @Override public void goBack() {
-    backClick();
+    fragmentNavigator.popBackStack();
   }
 
   @Override public void dismiss() {
@@ -333,8 +335,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     hideShowAptoidePasswordButton = (Button) view.findViewById(R.id.btn_show_hide_pass);
 
     facebookLoginButton = view.findViewById(R.id.fb_login_button);
-    //facebookLoginButton.setFragment(this);
-    //facebookLoginButton.setReadPermissions(facebookRequestedPermissions);
     RxView.clicks(facebookLoginButton)
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(

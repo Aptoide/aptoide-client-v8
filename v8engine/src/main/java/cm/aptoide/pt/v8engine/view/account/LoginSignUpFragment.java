@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.account;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -14,7 +15,6 @@ import android.view.ViewGroup;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpPresenter;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpView;
-import cm.aptoide.pt.v8engine.view.BackButton;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 
@@ -33,8 +33,6 @@ public class LoginSignUpFragment extends BackButtonFragment implements LoginSign
   private static final String AUTH_TYPE = "auth_type";
   private static final String IS_NEW_ACCOUNT = "is_new_account";
 
-  private BottomSheetStateListener bottomSheetStateListener;
-  private LoginSignUpCredentialsFragment loginFragment;
   private BottomSheetBehavior<View> bottomSheetBehavior;
   private boolean withBottomBar;
   private boolean dismissToNavigateToMainView;
@@ -44,6 +42,7 @@ public class LoginSignUpFragment extends BackButtonFragment implements LoginSign
   private boolean isNewAccount;
   private FragmentNavigator navigator;
   private ClickHandler backClickHandler;
+  private LoginBottomSheet loginBottomSheet;
 
   public static LoginSignUpFragment newInstance(boolean withBottomBar,
       boolean dismissToNavigateToMainView, boolean navigateToHome) {
@@ -64,6 +63,16 @@ public class LoginSignUpFragment extends BackButtonFragment implements LoginSign
     LoginSignUpFragment fragment = new LoginSignUpFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override public void onAttach(Context context) {
+    super.onAttach(context);
+    if (context instanceof LoginBottomSheet) {
+      loginBottomSheet = (LoginBottomSheet) context;
+    } else {
+      throw new IllegalStateException(
+          "Context should implement " + LoginBottomSheet.class.getSimpleName());
+    }
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,6 +104,8 @@ public class LoginSignUpFragment extends BackButtonFragment implements LoginSign
   }
 
   @Override public void onDestroyView() {
+    bottomSheetBehavior.setBottomSheetCallback(null);
+    bottomSheetBehavior = null;
     unregisterBackClickHandler(backClickHandler);
     super.onDestroyView();
   }
@@ -117,16 +128,12 @@ public class LoginSignUpFragment extends BackButtonFragment implements LoginSign
       @Override public void onStateChanged(@NonNull View bottomSheet, int newState) {
         switch (newState) {
           case BottomSheetBehavior.STATE_COLLAPSED:
-            if (bottomSheetStateListener != null) {
-              bottomSheetStateListener.hidden();
-              mainContent.setPadding(0, 0, 0, originalBottomPadding);
-            }
+            loginBottomSheet.collapse();
+            mainContent.setPadding(0, 0, 0, originalBottomPadding);
             break;
           case BottomSheetBehavior.STATE_EXPANDED:
-            if (bottomSheetStateListener != null) {
-              bottomSheetStateListener.expanded();
-              mainContent.setPadding(0, 0, 0, 0);
-            }
+            loginBottomSheet.expand();
+            mainContent.setPadding(0, 0, 0, 0);
             break;
         }
       }
@@ -153,26 +160,13 @@ public class LoginSignUpFragment extends BackButtonFragment implements LoginSign
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(getLayoutId(), container, false);
-    loginFragment =
-        LoginSignUpCredentialsFragment.newInstance(dismissToNavigateToMainView, navigateToHome);
-    navigator.navigateTo(loginFragment);
+    final View view = inflater.inflate(getLayoutId(), container, false);
+    navigator.navigateToWithoutBackSave(
+        LoginSignUpCredentialsFragment.newInstance(dismissToNavigateToMainView, navigateToHome));
     return view;
   }
 
   @LayoutRes public int getLayoutId() {
     return R.layout.fragment_login_sign_up;
-  }
-
-  public LoginSignUpFragment registerBottomSheetStateListener(
-      BottomSheetStateListener bottomSheetStateListener) {
-    this.bottomSheetStateListener = bottomSheetStateListener;
-    return this;
-  }
-
-  public interface BottomSheetStateListener {
-    void expanded();
-
-    void hidden();
   }
 }
