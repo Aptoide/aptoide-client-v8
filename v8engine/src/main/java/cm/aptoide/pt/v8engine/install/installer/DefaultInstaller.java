@@ -119,15 +119,13 @@ public class DefaultInstaller implements Installer {
   }
 
   @Override public Observable<InstallationState> getState(String packageName, int versionCode) {
-    return installedRepository.getAsList(packageName, versionCode).flatMap(installed -> {
+    return installedRepository.getAsList(packageName, versionCode).map(installed -> {
       if (installed != null) {
-        return Observable.just(
-            new InstallationState(installed.getPackageName(), installed.getVersionCode(),
-                installed.getStatus(), installed.getType(),installed.getName(),installed.getIcon()));
+        return new InstallationState(installed.getPackageName(), installed.getVersionCode(),
+            installed.getStatus(), installed.getType(), installed.getName(), installed.getIcon());
       } else {
-        return Observable.just(
-            new InstallationState(packageName, versionCode, Installed.STATUS_UNINSTALLED,
-                Installed.TYPE_UNKNOWN));
+        return new InstallationState(packageName, versionCode, Installed.STATUS_UNINSTALLED,
+            Installed.TYPE_UNKNOWN);
       }
     });
   }

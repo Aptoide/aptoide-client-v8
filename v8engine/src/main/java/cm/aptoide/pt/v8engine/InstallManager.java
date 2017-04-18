@@ -18,6 +18,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
+import cm.aptoide.pt.v8engine.install.installer.InstallationState;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
 import cm.aptoide.pt.v8engine.install.root.RootShell;
 import cm.aptoide.pt.v8engine.repository.DownloadRepository;
@@ -164,11 +165,6 @@ public class InstallManager {
     return aptoideDownloadManager.getDownload(md5).flatMap(download -> convertToProgress(download));
   }
 
-  @Deprecated public boolean isPending(Progress<Download> progress) {
-    return progress.getRequest().getOverallDownloadStatus() == Download.PENDING
-        || progress.getRequest().getOverallDownloadStatus() == Download.IN_QUEUE;
-  }
-
   public Observable<Progress<Download>> install(Context context, Download download) {
     return getInstallation(download.getMd5()).first()
         .map(progress -> updateDownloadAction(download, progress))
@@ -182,106 +178,134 @@ public class InstallManager {
         .flatMap(progress -> installInBackground(context, progress));
   }
 
-  // TODO: 17/04/2017 trinkes this has to be refactored
   public Observable<InstallationProgress> getInstallationProgress(String md5, String packageName,
       int versioncode) {
-    return getDownloadProgress(md5, packageName, versioncode).flatMap(installationProgress -> {
-      if (installationProgress.getState() == InstallationProgress.InstallationStatus.INSTALLED
-          || installationProgress.getState()
-          == InstallationProgress.InstallationStatus.UNINSTALLED) {
-        return getInstallerProgress(md5, packageName, versioncode, installationProgress);
-      } else {
-        return Observable.just(installationProgress);
-      }
-    });
-
-    //return Observable.merge(getDownloadProgress(md5, packageName, versioncode),
-    //    getInstallerProgress(md5, packageName, versioncode));
+    return Observable.combineLatest(aptoideDownloadManager.getAsListDownload(md5),
+        installer.getState(packageName, versioncode),
+        (download, installationState) -> createInstallationProgress(download, installationState,
+            md5, packageName, versioncode));
   }
 
-  private Observable<InstallationProgress> getDownloadProgress(String md5, String packageName,
-      int versioncode) {
-    return downloadRepository.getAsList(md5).map(download -> {
-      if (download == null) {
-        return new InstallationProgress(0, InstallationProgress.InstallationStatus.UNINSTALLED,
-            false, 0, md5, packageName, versioncode);
-      } else {
-        return new InstallationProgress(download.getOverallProgress(),
-            mapDownloadState(download.getOverallDownloadStatus()),
-            mapIndeterminate(download.getOverallDownloadStatus()), download.getDownloadSpeed(), md5,
-            packageName, versioncode, download.getAppName(), download.getIcon());
-      }
-    });
+  private InstallationProgress createInstallationProgress(Download download,
+      InstallationState installationState, String md5, String packageName, int versioncode) {
+    return new InstallationProgress(mapInstallationProgress(download),
+        mapInstallationStatus(download, installationState),
+        mapIndeterminateState(download, installationState), getSpeed(download), md5, packageName,
+        versioncode, getAppName(download, installationState),
+        getAppIcon(download, installationState));
   }
 
-  private boolean mapIndeterminate(@Download.DownloadState int overallDownloadStatus) {
-    boolean isIndeterminate;
-    switch (overallDownloadStatus) {
-      case Download.IN_QUEUE:
-        isIndeterminate = true;
-        break;
-      case Download.BLOCK_COMPLETE:
-      case Download.COMPLETED:
-      case Download.CONNECTED:
-      case Download.ERROR:
-      case Download.FILE_MISSING:
-      case Download.INVALID_STATUS:
-      case Download.NOT_DOWNLOADED:
-      case Download.PAUSED:
-      case Download.PENDING:
-      case Download.PROGRESS:
-      case Download.RETRY:
-      case Download.STARTED:
-      case Download.WARN:
-        isIndeterminate = false;
-        break;
-      default:
-        isIndeterminate = false;
+  private String getAppIcon(Download download, InstallationState installationState) {
+    if (download != null) {
+      return download.getIcon();
+    } else {
+      return installationState.getIcon();
+    }
+  }
+
+  private String getAppName(Download download, InstallationState installationState) {
+    if (download != null) {
+      return download.getAppName();
+    } else {
+      return installationState.getName();
+    }
+  }
+
+  private int getSpeed(Download download) {
+    if (download != null) {
+      return download.getDownloadSpeed();
+    } else {
+      return 0;
+    }
+  }
+
+  private boolean mapIndeterminateState(Download download, InstallationState installationState) {
+    return mapIndeterminate(download) || mapInstallIndeterminate(installationState.getStatus(),
+        installationState.getType());
+  }
+
+  private InstallationProgress.InstallationStatus mapInstallationStatus(Download download,
+      InstallationState installationState) {
+
+    if (installationState.getStatus() == Installed.STATUS_COMPLETED) {
+      return InstallationProgress.InstallationStatus.INSTALLED;
+    }
+
+    if (installationState.getStatus() == Installed.STATUS_INSTALLING
+        && installationState.getType() != Installed.TYPE_DEFAULT) {
+      return InstallationProgress.InstallationStatus.INSTALLING;
+    }
+
+    return mapDownloadState(download);
+  }
+
+  private int mapInstallationProgress(Download download) {
+    int progress = 0;
+    if (download != null) {
+      progress = download.getOverallProgress();
+    }
+    return progress;
+  }
+
+  private boolean mapIndeterminate(Download download) {
+    boolean isIndeterminate = false;
+    if (download != null) {
+      switch (download.getOverallDownloadStatus()) {
+        case Download.IN_QUEUE:
+          isIndeterminate = true;
+          break;
+        case Download.BLOCK_COMPLETE:
+        case Download.COMPLETED:
+        case Download.CONNECTED:
+        case Download.ERROR:
+        case Download.FILE_MISSING:
+        case Download.INVALID_STATUS:
+        case Download.NOT_DOWNLOADED:
+        case Download.PAUSED:
+        case Download.PENDING:
+        case Download.PROGRESS:
+        case Download.RETRY:
+        case Download.STARTED:
+        case Download.WARN:
+          isIndeterminate = false;
+          break;
+        default:
+          isIndeterminate = false;
+      }
     }
     return isIndeterminate;
   }
 
-  private InstallationProgress.InstallationStatus mapDownloadState(
-      @Download.DownloadState int overallDownloadStatus) {
+  private InstallationProgress.InstallationStatus mapDownloadState(Download download) {
     InstallationProgress.InstallationStatus status =
         InstallationProgress.InstallationStatus.UNINSTALLED;
-    switch (overallDownloadStatus) {
-      case Download.BLOCK_COMPLETE:
-      case Download.CONNECTED:
-      case Download.FILE_MISSING:
-      case Download.INVALID_STATUS:
-      case Download.NOT_DOWNLOADED:
-      case Download.RETRY:
-      case Download.STARTED:
-      case Download.WARN:
-        status = InstallationProgress.InstallationStatus.UNINSTALLED;
-        break;
-      case Download.PAUSED:
-        status = InstallationProgress.InstallationStatus.PAUSED;
-        break;
-      case Download.ERROR:
-        status = InstallationProgress.InstallationStatus.FAILED;
-        break;
-      case Download.PROGRESS:
-      case Download.IN_QUEUE:
-      case Download.PENDING:
-        status = InstallationProgress.InstallationStatus.INSTALLING;
-        break;
-      // TODO: 17/04/2017 trinkes check if should have this satate
-      case Download.COMPLETED:
-        status = InstallationProgress.InstallationStatus.INSTALLED;
+    if (download != null) {
+      switch (download.getOverallDownloadStatus()) {
+        case Download.FILE_MISSING:
+        case Download.INVALID_STATUS:
+        case Download.NOT_DOWNLOADED:
+        case Download.COMPLETED:
+          status = InstallationProgress.InstallationStatus.UNINSTALLED;
+          break;
+        case Download.PAUSED:
+          status = InstallationProgress.InstallationStatus.PAUSED;
+          break;
+        case Download.ERROR:
+          status = InstallationProgress.InstallationStatus.FAILED;
+          break;
+        case Download.RETRY:
+        case Download.STARTED:
+        case Download.WARN:
+        case Download.CONNECTED:
+        case Download.BLOCK_COMPLETE:
+        case Download.PROGRESS:
+        case Download.IN_QUEUE:
+        case Download.PENDING:
+          status = InstallationProgress.InstallationStatus.INSTALLING;
+          break;
+      }
     }
     return status;
-  }
-
-  private Observable<InstallationProgress> getInstallerProgress(String md5, String packageName,
-      int versionCode, InstallationProgress installationProgress) {
-    return installer.getState(packageName, versionCode)
-        .map(installationState -> new InstallationProgress(100,
-            mapInstallationState(installationState.getStatus(), installationState.getType()),
-            mapInstallIndeterminate(installationState.getStatus(), installationState.getType()), -1,
-            md5, packageName, versionCode, installationProgress.getAppName(),
-            installationProgress.getIcon()));
   }
 
   private boolean mapInstallIndeterminate(int status, int type) {
@@ -300,27 +324,6 @@ public class InstallManager {
         break;
     }
     return isIndeterminate;
-  }
-
-  private InstallationProgress.InstallationStatus mapInstallationState(int status, int type) {
-    InstallationProgress.InstallationStatus installationStatus =
-        InstallationProgress.InstallationStatus.UNINSTALLED;
-    switch (status) {
-      case Installed.STATUS_UNINSTALLED:
-        installationStatus = InstallationProgress.InstallationStatus.UNINSTALLED;
-        break;
-      case Installed.STATUS_INSTALLING:
-        if (type == Installed.TYPE_DEFAULT) {
-          installationStatus = InstallationProgress.InstallationStatus.UNINSTALLED;
-        } else {
-          installationStatus = InstallationProgress.InstallationStatus.INSTALLING;
-        }
-        break;
-      case Installed.STATUS_COMPLETED:
-        installationStatus = InstallationProgress.InstallationStatus.INSTALLED;
-        break;
-    }
-    return installationStatus;
   }
 
   @NonNull
