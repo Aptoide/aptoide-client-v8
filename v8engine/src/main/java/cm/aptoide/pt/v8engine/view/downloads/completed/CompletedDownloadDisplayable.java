@@ -7,7 +7,6 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.InstallationProgress;
-import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadEvent;
@@ -86,13 +85,18 @@ public class CompletedDownloadDisplayable extends Displayable {
 
   public Observable<InstallationProgress> installOrOpenDownload(Context context,
       PermissionService permissionRequest) {
-    return installManager.getInstallation(installation.getMd5()).flatMap(installed -> {
-      if (installed.getState() == Progress.DONE) {
-        AptoideUtils.SystemU.openApp(installation.getPackageName());
-        return Observable.empty();
-      }
-      return resumeDownload(context, permissionRequest);
-    });
+    return installManager.getInstallationProgress(installation.getMd5(),
+        installation.getPackageName(), installation.getVersionCode())
+        .first()
+        .flatMap(installationProgress -> {
+          if (installationProgress.getState()
+              == InstallationProgress.InstallationStatus.INSTALLED) {
+            AptoideUtils.SystemU.openApp(installation.getPackageName());
+            return Observable.empty();
+          } else {
+            return resumeDownload(context, permissionRequest);
+          }
+        });
   }
 
   public Observable<InstallationProgress> resumeDownload(Context context,

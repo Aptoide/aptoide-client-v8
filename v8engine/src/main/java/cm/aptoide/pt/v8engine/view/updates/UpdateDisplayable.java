@@ -14,7 +14,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.InstallationProgress;
-import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadEvent;
@@ -25,6 +24,7 @@ import cm.aptoide.pt.v8engine.download.InstallEventConverter;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.Getter;
+import rx.Completable;
 import rx.Observable;
 
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
@@ -105,7 +105,7 @@ public class UpdateDisplayable extends Displayable {
         update.getUpdateVersionCode());
   }
 
-  public Observable<Progress<Download>> downloadAndInstall(Context context,
+  public Completable downloadAndInstall(Context context,
       PermissionService permissionRequest) {
     Analytics.Updates.update();
     PermissionManager permissionManager = new PermissionManager();
@@ -121,7 +121,7 @@ public class UpdateDisplayable extends Displayable {
         })
         .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
         .flatMap(success -> installManager.install(context, download)
-            .doOnSubscribe(() -> setupEvents(download)));
+            .doOnSubscribe(() -> setupEvents(download))).toCompletable();
   }
 
   private void setupEvents(Download download) {

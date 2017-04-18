@@ -21,13 +21,10 @@ import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
@@ -37,7 +34,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
-import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -117,7 +113,8 @@ import rx.android.schedulers.AndroidSchedulers;
 
   private Observable<Void> handleUpdateButtonClick(UpdateDisplayable displayable, Context context) {
     return RxView.clicks(updateButtonLayout)
-        .flatMap(click -> displayable.downloadAndInstall(context, (PermissionService) context))
+        .flatMapCompletable(
+            click -> displayable.downloadAndInstall(context, (PermissionService) context))
         .retry()
         .map(__ -> null);
   }
@@ -132,14 +129,6 @@ import rx.android.schedulers.AndroidSchedulers;
         .map(__ -> null);
   }
 
-  @NonNull private Observable<Void> showProgress(InstallManager installManager, String md5) {
-    return getUpdateProgress(installManager, md5).map(
-        downloadProgress -> isDownloadingOrInstalling(downloadProgress))
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(shouldShow -> showProgress(shouldShow))
-        .map(__ -> null);
-  }
-
   private Observable<Void> handleLongClicks(String packageName, FragmentActivity context) {
     return RxView.longClicks(updateRowLayout)
         .flatMap(__ -> getLongClickListener(packageName, context));
@@ -151,33 +140,6 @@ import rx.android.schedulers.AndroidSchedulers;
           .newAppViewFragment(updateDisplayable.getAppId(), updateDisplayable.getPackageName());
       getFragmentNavigator().navigateTo(fragment);
     });
-  }
-
-  /**
-   * *  <dt><b>Scheduler:</b></dt>
-   * <dd>{@code getUpdates} operates by default on the {@code io} {@link Scheduler}..</dd>
-   * </dl>
-   */
-  private Observable<Progress<Download>> getUpdateProgress(InstallManager installManager,
-      String md5) {
-    return installManager.getInstallationsDeprecated()
-        .filter(listProgress -> listProgress != null && !listProgress.isEmpty())
-        .flatMap(list -> {
-          for (Progress<Download> progress : list) {
-            if (progress.getRequest() != null && progress.getRequest()
-                .getMd5()
-                .equalsIgnoreCase(md5)) {
-              return Observable.just(progress);
-            }
-          }
-          return Observable.empty();
-        });
-  }
-
-  private boolean isDownloadingOrInstalling(Progress<Download> progress) {
-    return progress.getRequest().getOverallDownloadStatus() == Download.PROGRESS
-        || progress.getRequest().getOverallDownloadStatus() == Download.PENDING
-        || progress.getRequest().getOverallDownloadStatus() == Download.IN_QUEUE;
   }
 
   @NonNull
