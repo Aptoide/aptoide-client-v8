@@ -35,6 +35,9 @@ public class ApplicationSender {
             hostsListener.onAvailableClients();
           } else if (intent.getAction() != null && intent.getAction().equals("HIDE_SEND_BUTTON")) {
             hostsListener.onNoClients();
+          } else if ("AUTO_SHARE_SEND".equals(intent.getAction())) {
+            String autoShareFilepath = intent.getStringExtra("autoShareFilePath");
+            hostsListener.onAutoShare(autoShareFilepath);
           }
         }
       };
@@ -51,6 +54,7 @@ public class ApplicationSender {
     hostsFilter = new IntentFilter();
     hostsFilter.addAction("SHOW_SEND_BUTTON");
     hostsFilter.addAction("HIDE_SEND_BUTTON");
+    hostsFilter.addAction("AUTO_SHARE_SEND");
     context.registerReceiver(hostsReceiver, hostsFilter);
     //}
   }
@@ -85,7 +89,6 @@ public class ApplicationSender {
     if (send == null) {
       send = new BroadcastReceiver() {
         @Override public void onReceive(Context context, Intent intent) {
-          //dps aqui intent.getAction...
           if (intent.getAction() != null && intent.getAction().equals("SENDAPP")) {
             boolean isSent = intent.getBooleanExtra("isSent", false);
             boolean needReSend = intent.getBooleanExtra("needReSend", false);
@@ -185,5 +188,7 @@ public class ApplicationSender {
     void onNoClients();
 
     void onAvailableClients();
+
+    void onAutoShare(String filepath);
   }
 }

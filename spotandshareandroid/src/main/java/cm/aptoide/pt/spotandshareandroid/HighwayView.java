@@ -36,7 +36,7 @@ public interface HighwayView {
 
   void hideSearchGroupsTextview(boolean hide);
 
-  void openChatFromAppViewShare(String deviceName, String appFilepath, int timeoutToShare);
+  void openChatFromAppViewShare(String deviceName, String appFilepath);
 
   //    void setCreateGroupListener(View.OnClickListener listener );
   //

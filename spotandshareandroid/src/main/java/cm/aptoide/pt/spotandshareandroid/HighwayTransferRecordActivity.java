@@ -78,9 +78,18 @@ public class HighwayTransferRecordActivity extends ActivityView
 
     applicationsManager = new ApplicationsManager(this);
 
-    applicationReceiver =
-        new ApplicationReceiver(getApplicationContext(), isHotspot, porto, targetIPAddress,
-            nickname);
+    if ("APPVIEW_SHARE".equals(getIntent().getAction())) {
+      String filepath = getIntent().getStringExtra("autoShareFilePath");
+      applicationReceiver =
+          new ApplicationReceiver(getApplicationContext(), isHotspot, porto, targetIPAddress,
+              nickname, filepath);
+    } else {
+      applicationReceiver =
+          new ApplicationReceiver(getApplicationContext(), isHotspot, porto, targetIPAddress,
+              nickname);
+    }
+
+
     applicationSender = ApplicationSender.getInstance(getApplicationContext(), isHotspot);
     transferRecordManager = new TransferRecordManager(applicationsManager);
 
