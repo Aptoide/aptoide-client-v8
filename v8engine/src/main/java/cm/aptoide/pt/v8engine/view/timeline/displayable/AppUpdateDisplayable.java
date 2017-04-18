@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.timeline.displayable;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -16,6 +17,7 @@ import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.InstallManager;
+import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -33,6 +35,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.Date;
 import lombok.Getter;
 import rx.Observable;
+import rx.Single;
 
 /**
  * Created by marcelobenites on 6/17/16.
@@ -116,7 +119,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
         appUpdate.getStore().getAppearance().getTheme());
   }
 
-  public Observable<Progress<Download>> update(Context context) {
+  public Observable<InstallationProgress> update(Context context) {
     if (installManager.showWarning()) {
       GenericDialogs.createGenericYesNoCancelMessage(context, null,
           AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
@@ -131,7 +134,11 @@ public class AppUpdateDisplayable extends CardDisplayable {
             }
           });
     }
-    return installManager.install(context, download).doOnSubscribe(() -> setupEvents());
+    return installManager.install(context, download)
+        .first()
+        .flatMap(installation -> installManager.getInstallationProgress(download.getMd5(),
+            download.getPackageName(), download.getVersionCode()))
+        .doOnSubscribe(() -> setupEvents());
   }
 
   private void setupEvents() {
@@ -238,24 +245,24 @@ public class AppUpdateDisplayable extends CardDisplayable {
     socialRepository.like(cardId, cardType, "", rating);
   }
 
-  public String getErrorMessage(Context context, int error) {
-    String toReturn = null;
-    switch (error) {
-      case Download.GENERIC_ERROR:
-        toReturn = getUpdateErrorText(context);
-        break;
-      case Download.NOT_ENOUGH_SPACE_ERROR:
-        toReturn = getUpdateNoSpaceErrorText(context);
-        break;
-    }
-    return toReturn;
+  public Single<Integer> getErrorMessage(InstallationProgress installationProgress) {
+    return installManager.getError(installationProgress.getMd5()).flatMap(error -> {
+      switch (error) {
+        case GENERIC_ERROR:
+          return Single.just(getUpdateErrorText());
+        case NOT_ENOUGH_SPACE_ERROR:
+          return Single.just(getUpdateNoSpaceErrorText());
+        default:
+          return Single.error(new RuntimeException("Unknown error"));
+      }
+    });
   }
 
-  public String getUpdateErrorText(Context context) {
-    return context.getString(R.string.displayable_social_timeline_app_update_error);
+  public @StringRes int getUpdateErrorText() {
+    return R.string.displayable_social_timeline_app_update_error;
   }
 
-  private String getUpdateNoSpaceErrorText(Context context) {
-    return context.getString(R.string.out_of_space_error);
+  private @StringRes int getUpdateNoSpaceErrorText() {
+    return R.string.out_of_space_error;
   }
 }
