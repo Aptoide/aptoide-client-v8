@@ -59,6 +59,8 @@ public class HomeFragment extends StoreFragment {
   public static final String TWITTER_PACKAGE_NAME = "com.twitter.android";
   public static final String APTOIDE_TWITTER_URL = "http://www.twitter.com/aptoide";
 
+  //private static final int SPOT_SHARE_PERMISSION_REQUEST_CODE = 6531;
+
   private DrawerLayout drawerLayout;
   private NavigationView navigationView;
   private BadgeView updatesBadge;

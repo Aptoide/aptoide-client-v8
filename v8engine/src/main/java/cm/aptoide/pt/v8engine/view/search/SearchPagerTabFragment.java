@@ -21,7 +21,6 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.abtesting.ABTest;
 import cm.aptoide.pt.v8engine.analytics.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.analytics.abtesting.SearchTabOptions;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerFragmentWithDecorator;
@@ -32,7 +31,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import rx.Observable;
-import rx.functions.Action0;
 
 /**
  * Created by neuro on 01-06-2016.
@@ -67,15 +65,8 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
         from.forEach(searchAppsApp -> {
           mapPackages.put(searchAppsApp.getPackageName(), null);
-          Action0 callback = () -> {
-            if (isConvert(searchAbTest, addSubscribedStores)) {
-              searchAbTest.convert().subscribe(success -> {
-              }, throwable -> {
-                CrashReport.getInstance().log(throwable);
-              });
-            }
-          };
-          displayables.add(new SearchDisplayable(searchAppsApp, callback));
+          displayables.add(new SearchDisplayable(searchAppsApp, searchAbTest, addSubscribedStores,
+              hasMultipleFragments));
         });
 
         addDisplayables(displayables);
@@ -106,6 +97,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    searchAbTest = ABTestManager.getInstance().get(ABTestManager.SEARCH_TAB_TEST);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     final AptoideAccountManager accountManager =
         ((V8Engine) getContext().getApplicationContext()).getAccountManager();
@@ -130,35 +122,34 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
-    if (create) {
-      searchAbTest = ABTestManager.getInstance().get(ABTestManager.SEARCH_TAB_TEST);
-      adsRepository.getAdsFromSearch(query)
-          .onErrorReturn(throwable -> null)
-          .filter(minimalAd -> minimalAd != null)
-          .compose(bindUntilEvent(LifecycleEvent.DESTROY))
-          .subscribe(minimalAd -> {
-            refreshed = true;
-            addDisplayable(0, new SearchAdDisplayable(minimalAd), false);
-          });
+    adsRepository.getAdsFromSearch(query)
+        .onErrorReturn(throwable -> null)
+        .filter(minimalAd -> minimalAd != null)
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+        .subscribe(minimalAd -> {
+          refreshed = true;
+          addDisplayable(0, new SearchAdDisplayable(minimalAd), false);
+        });
 
-      getRecyclerView().clearOnScrollListeners();
-      ListSearchAppsRequest of;
-      if (storeName != null) {
-        of = ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-            bodyInterceptor);
-      } else {
-        of = ListSearchAppsRequest.of(query, addSubscribedStores,
-            StoreUtils.getSubscribedStoresIds(), StoreUtils.getSubscribedStoresAuthMap(),
-            bodyInterceptor);
-      }
-      endlessRecyclerOnScrollListener =
-          new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,
-              listSearchAppsSuccessRequestListener, err -> err.printStackTrace(), refresh);
-      getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
-      endlessRecyclerOnScrollListener.onLoadMore(refresh);
+    getRecyclerView().clearOnScrollListeners();
+    ListSearchAppsRequest of;
+    if (storeName != null) {
+      of = ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
+          bodyInterceptor);
     } else {
-      getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
+      of = ListSearchAppsRequest.of(query, addSubscribedStores, StoreUtils.getSubscribedStoresIds(),
+          StoreUtils.getSubscribedStoresAuthMap(), bodyInterceptor);
     }
+    endlessRecyclerOnScrollListener =
+        new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,
+            listSearchAppsSuccessRequestListener, err -> err.printStackTrace(), refresh);
+    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
+    endlessRecyclerOnScrollListener.onLoadMore(refresh);
+  }
+
+  @Override public void onDestroyView() {
+    endlessRecyclerOnScrollListener = null;
+    super.onDestroyView();
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {

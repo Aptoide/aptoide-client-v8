@@ -132,6 +132,19 @@ public class SearchFragment extends BasePagerToolbarFragment {
     }
   }
 
+  @Override public void onDestroyView() {
+    noSearchLayoutSearchButton.setOnClickListener(null);
+    noSearchLayoutSearchButton = null;
+    noSearchLayoutSearchQuery = null;
+    noSearchLayout = null;
+    buttonsLayout = null;
+    everywhereButton.setOnClickListener(null);
+    everywhereButton = null;
+    subscribedButton.setOnClickListener(null);
+    subscribedButton = null;
+    super.onDestroyView();
+  }
+
   @Override protected PagerAdapter createPagerAdapter() {
     if (storeName != null) {
       return new SearchPagerAdapter(getChildFragmentManager(), query, storeName);
@@ -268,20 +281,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
           handleFinishLoading(create);
         }
       }, e -> finishLoading());
-
-      // could this be a solution ?? despite the boolean flags
-      //			Observable.concat(ListSearchAppsRequest.of(query, true).observe(),ListSearchAppsRequest.of(query, false).observe()).subscribe
-      // (listSearchApps -> {
-      //				List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
-      //
-      //				if (list != null && list.size() > 0) {
-      //					hasEverywhereResults = true;
-      //					handleFinishLoading();
-      //				} else {
-      //					hasEverywhereResults = false;
-      //					handleFinishLoading();
-      //				}
-      //			}, e -> finishLoading());
     }
   }
 
