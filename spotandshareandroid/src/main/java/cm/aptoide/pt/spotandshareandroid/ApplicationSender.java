@@ -69,6 +69,7 @@ public class ApplicationSender {
   public static void reset() {
     if (instance != null) {
       instance.removeSendListener();
+      instance.removeHostsListener();
     }
     instance = null;
   }
