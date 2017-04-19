@@ -232,7 +232,7 @@ import rx.android.schedulers.AndroidSchedulers;
       InstallationProgress installationProgress, GetApp getApp) {
     final Completable completable;
     if (isSetup) {
-      completable = Completable.complete();
+      completable = updateUninstalledUi(displayable, getApp, isSetup);
     } else {
       completable = updatePausedUi(installationProgress, displayable, getApp, isSetup).andThen(
           displayable.getError()
