@@ -42,8 +42,8 @@
         android:layout_height="wrap_content"
         android:isIndicator="false"
         android:numStars="5"
-        android:progressTint="@color/yellow"
-        android:secondaryProgressTint="@color/yellow"
+        android:progressTint="@color/amber"
+        android:secondaryProgressTint="@color/amber"
         android:stepSize="1"
         style="@style/RatingBarLargeSelectable"
         />
