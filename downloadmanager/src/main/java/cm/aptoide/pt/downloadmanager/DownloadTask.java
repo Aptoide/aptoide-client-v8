@@ -34,11 +34,11 @@ import rx.schedulers.Schedulers;
  */
 class DownloadTask extends FileDownloadLargeFileListener {
 
+  public static final int RETRY_TIMES = 3;
   private static final int INTERVAL = 1000;    //interval between progress updates
   private static final int APTOIDE_DOWNLOAD_TASK_TAG_KEY = 888;
   private static final int FILE_NOTFOUND_HTTP_ERROR = 404;
   private static final String TAG = DownloadTask.class.getSimpleName();
-  public static final int RETRY_TIMES = 3;
   private final Download download;
   private final String md5;
   private final DownloadAccessor downloadAccessor;
