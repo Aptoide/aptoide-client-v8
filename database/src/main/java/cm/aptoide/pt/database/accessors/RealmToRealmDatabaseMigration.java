@@ -228,6 +228,11 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
 
     if (oldVersion == 8082) {
       schema.get("Installed")
+          .removePrimaryKey()
+          .addField("packageAndVersionCode", String.class)
+          .transform(obj -> obj.setString("packageAndVersionCode",
+              obj.getString("packageName") + obj.getInt("versionCode")))
+          .addPrimaryKey("packageAndVersionCode")
           .addField("status", int.class)
           .transform(obj -> obj.setInt("status", Installed.STATUS_COMPLETED))
           .addField("type", int.class)
