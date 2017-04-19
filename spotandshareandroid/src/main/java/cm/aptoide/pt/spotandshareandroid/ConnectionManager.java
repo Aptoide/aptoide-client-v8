@@ -65,8 +65,9 @@ public class ConnectionManager {
       if (wifimanager == null) {
         wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
       }
-      if (listenerActivateButtons != null) {
+      if (wifimanager.getWifiState() == 3 && listenerActivateButtons != null) {
         listenerActivateButtons.onStateChanged(wifimanager.isWifiEnabled());
+        context.unregisterReceiver(this);
       }
     }
   };

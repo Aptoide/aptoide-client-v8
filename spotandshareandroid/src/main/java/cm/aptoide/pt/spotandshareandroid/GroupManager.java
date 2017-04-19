@@ -71,21 +71,34 @@ public class GroupManager {
   public void createGroup(String deviceName, CreateGroupListener listener) {
     this.createGrouplistener = listener;
     this.deviceName = deviceName;
+    //try{
     createTask = activateHotspotTask.execute();
+    //}catch (IllegalStateException e) {
+    //  createTask = new ActivateHotspotTask().execute();
+    //}
   }
 
-  private String removeAPTXVFromString(String keyword) {
-    String[] array = keyword.split("_");
-    String deviceName = array[2];
-    return deviceName;
-  }
-
-  public void cancel() {
-    joinTask.cancel(false);
-    activateHotspotTask.cancel(false);
+  public void cancelTasks() {
+    if (joinTask != null) {
+      joinTask.cancel(false);
+      joinTask = null;
+    }
+    if (joinHotspotTask != null) {
+      joinHotspotTask.cancel(true);
+      joinHotspotTask = null;
+    }
+    if (createTask != null) {
+      createTask.cancel(false);
+      createTask = null;
+    }
+    if (activateHotspotTask != null) {
+      activateHotspotTask.cancel(true);
+      activateHotspotTask = null;
+    }
   }
 
   public void stop() {
+    cancelTasks();
     this.createGrouplistener = null;
     this.joinGrouplistener = null;
     this.connectionManager.stop();
