@@ -648,8 +648,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     int i = item.getItemId();
 
     if (i == R.id.menu_share) {
-      shareApp(appName, packageName, getApp.getNodes().getMeta().getData().getFile().getVercode(),
-          wUrl);
+      if (getApp != null) {
+        shareApp(appName, packageName, getApp.getNodes().getMeta().getData().getFile().getVercode(),
+            wUrl);
+      }
       return true;
     } else if (i == R.id.menu_schedule) {
 
@@ -686,47 +688,48 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   private void shareApp(String appName, String packageName, int vercode, String wUrl) {
     GenericDialogs.createGenericShareDialog(getContext(), getString(R.string.share),
-        installedRepository.contains(packageName, vercode))
-        .subscribe(eResponse -> {
-          if (GenericDialogs.EResponse.SHARE_EXTERNAL == eResponse) {
+        installedRepository.contains(packageName, vercode)).subscribe(eResponse -> {
+      if (GenericDialogs.EResponse.SHARE_EXTERNAL == eResponse) {
 
-            shareDefault(appName, packageName, wUrl);
-          } else if (GenericDialogs.EResponse.SHARE_TIMELINE == eResponse) {
-            if (!accountManager.isLoggedIn()) {
-              ShowMessage.asSnack(getActivity(), R.string.you_need_to_be_logged_in, R.string.login,
-                  snackView -> accountNavigator.navigateToAccountView());
-              return;
-            }
-            if (Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
-              SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(accountManager, false,
-                  SharePreviewDialog.SharePreviewOpenMode.SHARE);
-              AlertDialog.Builder alertDialog =
-                  sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(),
-                      appName, app.getIcon());
-              SocialRepository socialRepository =
-                  new SocialRepository(accountManager, bodyInterceptor);
+        shareDefault(appName, packageName, wUrl);
+      } else if (GenericDialogs.EResponse.SHARE_TIMELINE == eResponse) {
+        if (!accountManager.isLoggedIn()) {
+          ShowMessage.asSnack(getActivity(), R.string.you_need_to_be_logged_in, R.string.login,
+              snackView -> accountNavigator.navigateToAccountView());
+          return;
+        }
+        if (Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
+          SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(accountManager, false,
+              SharePreviewDialog.SharePreviewOpenMode.SHARE);
+          AlertDialog.Builder alertDialog =
+              sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(), appName,
+                  app.getIcon());
+          SocialRepository socialRepository = new SocialRepository(accountManager, bodyInterceptor);
 
-              sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
-                  sharePreviewDialog, alertDialog, socialRepository);
-            }
-          } else if (GenericDialogs.EResponse.SHARE_SPOT_AND_SHARE == eResponse) {
-            try {
-              String filepath = getFilepath(packageName);
-              Intent intent = new Intent(this.getActivity(), HighwayActivity.class);
-              intent.setAction("APPVIEW_SHARE");
-              intent.putExtra("APPVIEW_SHARE_FILEPATH", filepath);
-              startActivity(intent);
-            } catch (PackageManager.NameNotFoundException e) {
-              //// TODO: 18-04-2017  show a toast ?  
-            }
-          }
-        }, err -> err.printStackTrace());
+          sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
+              sharePreviewDialog, alertDialog, socialRepository);
+        }
+      } else if (GenericDialogs.EResponse.SHARE_SPOT_AND_SHARE == eResponse) {
+
+        String filepath = getFilepath(packageName);
+        Intent intent = new Intent(this.getActivity(), HighwayActivity.class);
+        intent.setAction("APPVIEW_SHARE");
+        intent.putExtra("APPVIEW_SHARE_FILEPATH", filepath);
+        startActivity(intent);
+      }
+    }, err -> err.printStackTrace());
   }
 
-  private String getFilepath(String packageName) throws PackageManager.NameNotFoundException {
+  private String getFilepath(String packageName) {
     PackageManager packageManager = getContext().getPackageManager();
-    PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 0);
-    return packageInfo.applicationInfo.sourceDir;
+    PackageInfo packageInfo = null;
+    try {
+      packageInfo = packageManager.getPackageInfo(packageName, 0);
+      return packageInfo.applicationInfo.sourceDir;
+    } catch (PackageManager.NameNotFoundException e) {
+      e.printStackTrace();
+      throw new IllegalArgumentException("Required packageName not installed! " + packageName);
+    }
   }
 
   @Partners protected void shareDefault(String appName, String packageName, String wUrl) {

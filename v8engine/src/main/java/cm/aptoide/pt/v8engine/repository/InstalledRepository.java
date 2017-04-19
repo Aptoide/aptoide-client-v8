@@ -55,6 +55,7 @@ public class InstalledRepository implements Repository<Installed, String> {
   }
 
   public boolean contains(String packageName, int vercode) {
-    return get(packageName).toBlocking().first().getVersionCode() == vercode;
+    Installed installed = get(packageName).toBlocking().first();
+    return installed != null && installed.getVersionCode() == vercode;
   }
 }
