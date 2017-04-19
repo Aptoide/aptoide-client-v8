@@ -22,4 +22,12 @@ public class AptoideAnalytics {
     data.put(key, value);
     return data;
   }
+
+  protected Bundle createComplexBundleData(Map<String, Object> keyValuePair) {
+    Bundle bundle = new Bundle();
+    for (Map.Entry<String, Object> entry : keyValuePair.entrySet()) {
+      bundle.putString(entry.getKey(), (String) entry.getValue());
+    }
+    return bundle;
+  }
 }
