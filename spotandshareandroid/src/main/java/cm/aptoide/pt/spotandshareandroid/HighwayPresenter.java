@@ -106,6 +106,7 @@ public class HighwayPresenter implements Presenter {
 
               if (autoShareFilepath != null) {
                 joinShareFromAppView(autoShareFilepath);
+                autoShareFilepath = null;
               } else {
                 connectionManager.cleanNetworks();
                 view.showConnections();
