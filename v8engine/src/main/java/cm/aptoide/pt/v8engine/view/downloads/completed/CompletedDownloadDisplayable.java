@@ -74,7 +74,8 @@ public class CompletedDownloadDisplayable extends Displayable {
   }
 
   public void removeDownload(Context context) {
-    installManager.removeInstallationFile(installation.getMd5(), context);
+    installManager.removeInstallationFile(installation.getMd5(), context,
+        installation.getPackageName(), installation.getVersionCode());
   }
 
   public Observable<Integer> downloadStatus() {

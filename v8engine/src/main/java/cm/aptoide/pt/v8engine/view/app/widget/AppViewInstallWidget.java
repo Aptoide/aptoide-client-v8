@@ -578,7 +578,8 @@ import rx.android.schedulers.AndroidSchedulers;
       String md5 = app.getMd5();
       Download download = downloadFactory.create(app, actionInstall);
       actionCancel.setOnClickListener(view -> {
-        installManager.removeInstallationFile(md5, getContext());
+        installManager.removeInstallationFile(md5, getContext(), download.getPackageName(),
+            download.getVersionCode());
       });
 
       actionPause.setOnClickListener(view -> {

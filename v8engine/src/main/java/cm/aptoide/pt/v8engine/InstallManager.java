@@ -16,6 +16,7 @@ import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.installer.InstallationState;
@@ -58,9 +59,13 @@ public class InstallManager {
     context.startService(intent);
   }
 
-  public void removeInstallationFile(String md5, Context context) {
+  public void removeInstallationFile(String md5, Context context, String packageName,
+      int versionCode) {
     stopInstallation(context, md5);
-    aptoideDownloadManager.removeDownload(md5);
+    installedRepository.remove(packageName, versionCode)
+        .andThen(Completable.fromAction(() -> aptoideDownloadManager.removeDownload(md5)))
+        .subscribe(() -> {
+        }, throwable -> CrashReport.getInstance().log(throwable));
   }
 
   public void stopInstallation(Context context, String md5) {
