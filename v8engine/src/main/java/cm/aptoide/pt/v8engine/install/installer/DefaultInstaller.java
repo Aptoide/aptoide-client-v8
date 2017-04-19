@@ -75,10 +75,12 @@ public class DefaultInstaller implements Installer {
           if (isInstalled(installation.getPackageName(), installation.getVersionCode())) {
             return Observable.just(null);
           } else {
-            return systemInstall(context, installation.getFile()).onErrorResumeNext(
-                Observable.fromCallable(
-                    () -> rootInstall(installation.getFile(), installation.getPackageName(),
-                        installation.getVersionCode())))
+            return systemInstall(context, installation.getFile())
+                // AN-1533 - temporary solution was to remove root installation
+                //.onErrorResumeNext(
+                //Observable.fromCallable(
+                //    () -> rootInstall(installation.getFile(), installation.getPackageName(),
+                //        installation.getVersionCode())))
                 .onErrorResumeNext(
                     defaultInstall(context, installation.getFile(), installation.getPackageName()));
           }
