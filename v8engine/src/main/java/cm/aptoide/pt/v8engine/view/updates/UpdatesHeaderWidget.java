@@ -16,9 +16,11 @@ import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.UpdatesEventsAnalytics;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.facebook.appevents.AppEventsLogger;
 import java.util.ArrayList;
 import rx.schedulers.Schedulers;
 
@@ -31,9 +33,12 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
   private TextView title;
   private Button more;
   private TabNavigator tabNavigator;
+  private UpdatesEventsAnalytics updatesEventsAnalytics;
 
   public UpdatesHeaderWidget(View itemView) {
     super(itemView);
+    updatesEventsAnalytics = new UpdatesEventsAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
   }
 
   @Override protected void assignViews(View itemView) {
@@ -54,6 +59,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
     more.setVisibility(View.VISIBLE);
 
     more.setOnClickListener((view) -> {
+      updatesEventsAnalytics.updates("Update All");
       ((PermissionService) getContext()).requestAccessToExternalFileSystem(() -> {
         UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
         compositeSubscription.add(
