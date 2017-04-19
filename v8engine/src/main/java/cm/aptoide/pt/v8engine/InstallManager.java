@@ -247,7 +247,9 @@ public class InstallManager {
     boolean wasRootDialogShowed = SecurePreferences.isRootDialogShowed();
     boolean isRooted = AptoideUtils.SystemU.isRooted();
     boolean canGiveRoot = ManagerPreferences.allowRootInstallation();
-    return isRooted && !wasRootDialogShowed && !canGiveRoot;
+    //AN-1533 - temporary solution was to remove root installation, so this popup doesn't make sense
+    //return isRooted && !wasRootDialogShowed && !canGiveRoot;
+    return false;
   }
 
   public void rootInstallAllowed(boolean allowRoot) {

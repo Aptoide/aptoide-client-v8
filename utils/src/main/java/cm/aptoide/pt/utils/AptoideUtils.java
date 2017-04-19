@@ -46,6 +46,7 @@ import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.permissions.ApkPermission;
+import cm.aptoide.pt.root.RootShell;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -785,35 +786,12 @@ public class AptoideUtils {
       return null;
     }
 
-    public static void askForRoot() {
-      Process suProcess;
-
-      try {
-        suProcess = Runtime.getRuntime().exec("su");
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
+    public static boolean askForRoot() {
+      return RootShell.isAccessGiven();
     }
 
     public static boolean isRooted() {
-      return findBinary("su");
-    }
-
-    private static boolean findBinary(String binaryName) {
-      boolean found = false;
-
-      String[] places = {
-          "/sbin/", "/system/bin/", "/system/xbin/", "/data/local/xbin/", "/data/local/bin/",
-          "/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/"
-      };
-      for (String where : places) {
-        if (new File(where + binaryName).exists()) {
-          found = true;
-          break;
-        }
-      }
-
-      return found;
+      return RootShell.isRootAvailable();
     }
 
     public static List<PackageInfo> getUserInstalledApps() {
