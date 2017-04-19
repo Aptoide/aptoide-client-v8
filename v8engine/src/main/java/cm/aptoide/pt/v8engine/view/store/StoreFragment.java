@@ -182,6 +182,10 @@ public class StoreFragment extends BasePagerToolbarFragment {
     if (storeTheme != null && !storeContext.equals(StoreContext.meta)) {
       ThemeUtils.setAptoideTheme(getActivity());
     }
+    if (pagerSlidingTabStrip != null) {
+      pagerSlidingTabStrip.setOnTabReselectedListener(null);
+      pagerSlidingTabStrip = null;
+    }
     super.onDestroyView();
   }
 

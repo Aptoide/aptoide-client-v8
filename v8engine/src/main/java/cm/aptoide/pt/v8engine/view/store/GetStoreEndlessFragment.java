@@ -21,7 +21,10 @@ public abstract class GetStoreEndlessFragment<T extends BaseV7EndlessResponse>
   protected EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
 
   @Override public void onDestroyView() {
-    endlessRecyclerOnScrollListener.stopLoading();
+    if (endlessRecyclerOnScrollListener != null) {
+      endlessRecyclerOnScrollListener.stopLoading();
+      endlessRecyclerOnScrollListener = null;
+    }
     super.onDestroyView();
   }
 

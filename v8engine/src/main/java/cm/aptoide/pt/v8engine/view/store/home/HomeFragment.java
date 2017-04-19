@@ -59,8 +59,6 @@ public class HomeFragment extends StoreFragment {
   public static final String TWITTER_PACKAGE_NAME = "com.twitter.android";
   public static final String APTOIDE_TWITTER_URL = "http://www.twitter.com/aptoide";
 
-  //private static final int SPOT_SHARE_PERMISSION_REQUEST_CODE = 6531;
-
   private DrawerLayout drawerLayout;
   private NavigationView navigationView;
   private BadgeView updatesBadge;
@@ -162,6 +160,17 @@ public class HomeFragment extends StoreFragment {
   }
 
   @Override public void onDestroyView() {
+    userEmail = null;
+    userAvatarImage = null;
+    userUsername = null;
+    updatesBadge = null;
+    navigationView.setNavigationItemSelectedListener(null);
+    navigationView = null;
+    drawerLayout = null;
+    final Toolbar toolbar = getToolbar();
+    if (toolbar != null) {
+      toolbar.setNavigationOnClickListener(null);
+    }
     unregisterBackClickHandler(backClickHandler);
     super.onDestroyView();
   }
