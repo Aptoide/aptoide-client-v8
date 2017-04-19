@@ -38,6 +38,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
   private static final int APTOIDE_DOWNLOAD_TASK_TAG_KEY = 888;
   private static final int FILE_NOTFOUND_HTTP_ERROR = 404;
   private static final String TAG = DownloadTask.class.getSimpleName();
+  public static final int RETRY_TIMES = 3;
   private final Download download;
   private final String md5;
   private final DownloadAccessor downloadAccessor;
@@ -289,8 +290,9 @@ class DownloadTask extends FileDownloadLargeFileListener {
         if (TextUtils.isEmpty(fileToDownload.getLink())) {
           throw new IllegalArgumentException("A link to download must be provided");
         }
-        BaseDownloadTask baseDownloadTask =
-            FileDownloader.getImpl().create(fileToDownload.getLink());
+        BaseDownloadTask baseDownloadTask = FileDownloader.getImpl()
+            .create(fileToDownload.getLink())
+            .setAutoRetryTimes(RETRY_TIMES);
         /*
          * Aptoide - events 2 : download
          * Get X-Mirror and add to the event
