@@ -19,7 +19,6 @@ import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.PushNotificationsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
 import cm.aptoide.pt.preferences.Application;
@@ -70,8 +69,8 @@ public class PullingContentService extends Service {
   @Override public void onCreate() {
     super.onCreate();
     baseBodyInterceptorV3 = ((V8Engine) this.getApplicationContext()).getBaseBodyInterceptorV3();
-    installManager = new InstallManager(AptoideDownloadManager.getInstance(),
-        new InstallerFactory().create(this, InstallerFactory.ROLLBACK));
+    installManager =
+        ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
 
     subscriptions = new CompositeSubscription();
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);

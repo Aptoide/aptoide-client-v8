@@ -13,12 +13,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Scheduled;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.install.Installer;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -36,6 +35,7 @@ import rx.android.schedulers.AndroidSchedulers;
   private TextView appVersion;
   private CheckBox isSelected;
   private ProgressBar progressBarIsInstalling;
+  private InstallManager installManager;
 
   public ScheduledDownloadWidget(View itemView) {
     super(itemView);
@@ -50,6 +50,8 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   @Override public void bindView(ScheduledDownloadDisplayable displayable) {
+    installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
+        InstallerFactory.ROLLBACK);
     Scheduled scheduled = displayable.getPojo();
     final FragmentActivity context = getContext();
     ImageLoader.with(context).load(scheduled.getIcon(), appIcon);
@@ -67,11 +69,6 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   private void isDownloading(ScheduledDownloadDisplayable displayable) {
-    AptoideDownloadManager aptoideDownloadManager = AptoideDownloadManager.getInstance();
-    aptoideDownloadManager.initDownloadService(getContext());
-    Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
-    InstallManager installManager = new InstallManager(aptoideDownloadManager, installer);
-
     Observable<Progress<Download>> installation =
         installManager.getInstallation(displayable.getPojo().getMd5());
 

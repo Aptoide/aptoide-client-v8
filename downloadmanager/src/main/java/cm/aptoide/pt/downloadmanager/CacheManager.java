@@ -1,4 +1,4 @@
-package cm.aptoide.pt.downloadmanager.interfaces;
+package cm.aptoide.pt.downloadmanager;
 
 import rx.Observable;
 

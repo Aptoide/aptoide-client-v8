@@ -28,7 +28,6 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -52,7 +51,6 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadInstallB
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
@@ -129,11 +127,9 @@ import rx.android.schedulers.AndroidSchedulers;
     this.displayable = displayable;
     this.displayable.setInstallButton(actionButton);
 
-    final AptoideDownloadManager downloadManager = AptoideDownloadManager.getInstance();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    downloadManager.initDownloadService(getContext());
-    Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
-    installManager = new InstallManager(downloadManager, installer);
+    installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
+        InstallerFactory.ROLLBACK);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     downloadInstallEventConverter = new DownloadEventConverter(bodyInterceptor);
     installConverter = new InstallEventConverter(bodyInterceptor);
@@ -151,8 +147,9 @@ import rx.android.schedulers.AndroidSchedulers;
     });
 
     final boolean[] isSetupView = { true };
-    compositeSubscription.add(
-        this.displayable.getState().observeOn(AndroidSchedulers.mainThread()).subscribe(widgetState -> {
+    compositeSubscription.add(this.displayable.getState()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(widgetState -> {
           updateUi(getApp, currentApp, widgetState, !isSetupView[0]);
           isSetupView[0] = false;
         }, (throwable) -> {
@@ -179,8 +176,8 @@ import rx.android.schedulers.AndroidSchedulers;
     displayable = null;
   }
 
-  private void updateUi(GetApp getApp, GetAppMeta.App currentApp, AppViewInstallDisplayable.WidgetState widgetState,
-      boolean shouldShowError) {
+  private void updateUi(GetApp getApp, GetAppMeta.App currentApp,
+      AppViewInstallDisplayable.WidgetState widgetState, boolean shouldShowError) {
     Logger.d(TAG, "updateUi() called with: " + shouldShowError + "]");
     if (widgetState.getProgress() != null) {
       downloadStatusUpdate(widgetState.getProgress(), currentApp, shouldShowError);

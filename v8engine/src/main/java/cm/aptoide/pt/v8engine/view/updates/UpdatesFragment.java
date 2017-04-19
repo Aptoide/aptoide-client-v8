@@ -8,7 +8,6 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -67,20 +66,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
   @Override public void setupViews() {
     super.setupViews();
-
-    installManager = new InstallManager(AptoideDownloadManager.getInstance(),
-        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK));
-    analytics = Analytics.getInstance();
-    final BodyInterceptor<BaseBody> bodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    downloadInstallEventConverter = new DownloadEventConverter(bodyInterceptor);
-    installConverter = new InstallEventConverter(bodyInterceptor);
-
     updatesDisplayablesList = new LinkedList<>();
     installedDisplayablesList = new LinkedList<>();
-
-    installedRepository = RepositoryFactory.getInstalledRepository();
-    updateRepository = RepositoryFactory.getUpdateRepository(getContext());
   }
 
   /**
@@ -112,6 +99,19 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     if (updateReloadSubscription != null && !updateReloadSubscription.isUnsubscribed()) {
       updateReloadSubscription.unsubscribe();
     }
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    final BodyInterceptor<BaseBody> bodyInterceptor =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
+        InstallerFactory.ROLLBACK);
+    analytics = Analytics.getInstance();
+    downloadInstallEventConverter = new DownloadEventConverter(bodyInterceptor);
+    installConverter = new InstallEventConverter(bodyInterceptor);
+    installedRepository = RepositoryFactory.getInstalledRepository();
+    updateRepository = RepositoryFactory.getUpdateRepository(getContext());
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

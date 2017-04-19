@@ -15,6 +15,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.util.SparseArray;
 import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -62,6 +63,7 @@ import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
 import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.leak.LeakTool;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
@@ -75,11 +77,14 @@ import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.view.configuration.implementation.ActivityProviderImpl;
 import cm.aptoide.pt.v8engine.view.configuration.implementation.FragmentProviderImpl;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
+import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
+import com.liulishuo.filedownloader.FileDownloader;
+import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
 import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
@@ -115,6 +120,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private GoogleApiClient googleSignInClient;
   private LeakTool leakTool;
   private String aptoideMd5sum;
+  private AptoideDownloadManager downloadManager;
+  private SparseArray<InstallManager> installManagers;
 
   /**
    * call after this instance onCreate()
@@ -203,8 +210,6 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
-    initializeDownloadManager(V8Engine.this.getAccountManager());
-
     clearFileCache();
 
     //
@@ -235,6 +240,46 @@ public abstract class V8Engine extends SpotAndShareApplication {
   public GroupNameProvider getGroupNameProvider() {
     return new AccountGroupNameProvider(getAccountManager(), Build.MANUFACTURER, Build.MODEL,
         Build.ID);
+  }
+
+  public AptoideDownloadManager getDownloadManager() {
+    if (downloadManager == null) {
+
+      final String apkPath = getConfiguration().getCachePath() + "apks/";
+      final String obbPath = getConfiguration().getCachePath() + "obb/";
+
+      FileUtils.createDir(apkPath);
+      FileUtils.createDir(obbPath);
+      FileDownloader.init(this, new DownloadMgrInitialParams.InitCustomMaker().connectionCreator(
+          new OkHttp3Connection.Creator(new TokenHttpClient(getAptoideClientUUID(), new UserData() {
+            @Override public String getEmail() {
+              return getAccountManager().getAccountEmail();
+            }
+          }, getConfiguration().getPartnerId(), getAccountManager()).customMake())));
+
+      downloadManager =
+          new AptoideDownloadManager(AccessorFactory.getAccessorFor(Download.class),
+              CacheHelper.build(), new FileUtils(action -> Analytics.File.moveFile(action)),
+              new DownloadAnalytics(Analytics.getInstance()), getConfiguration().getCachePath(),
+              FileDownloader.getImpl(), apkPath, obbPath);
+    }
+    return downloadManager;
+  }
+
+  public InstallManager getInstallManager(int installerType) {
+
+    if (installManagers == null) {
+      installManagers = new SparseArray<>();
+    }
+
+    InstallManager installManager = installManagers.get(installerType);
+    if (installManager == null) {
+      installManager = new InstallManager(getDownloadManager(),
+          new InstallerFactory().create(this, installerType));
+      installManagers.put(installerType, installManager);
+    }
+
+    return installManager;
   }
 
   public AptoideAccountManager getAccountManager() {
@@ -318,7 +363,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   }
 
   private void clearFileCache() {
-    FileManager.build()
+    FileManager.build(getDownloadManager())
         .purgeCache()
         .first()
         .toSingle()
@@ -329,19 +374,6 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
   private void initializeFlurry(Context context, String flurryKey) {
     new FlurryAgent.Builder().withLogEnabled(false).build(context, flurryKey);
-  }
-
-  private void initializeDownloadManager(AptoideAccountManager accountManager) {
-    AptoideDownloadManager.getInstance()
-        .init(this, new DownloadNotificationActionsActionsInterface(),
-            new DownloadManagerSettingsI(), AccessorFactory.getAccessorFor(Download.class),
-            CacheHelper.build(), new FileUtils(action -> Analytics.File.moveFile(action)),
-            new TokenHttpClient(getAptoideClientUUID(), new UserData() {
-              @Override public String getEmail() {
-                return accountManager.getAccountEmail();
-              }
-            }, getConfiguration().getPartnerId(), accountManager).customMake(),
-            new DownloadAnalytics(Analytics.getInstance()));
   }
 
   private void sendAppStartToAnalytics(SharedPreferences sPref) {

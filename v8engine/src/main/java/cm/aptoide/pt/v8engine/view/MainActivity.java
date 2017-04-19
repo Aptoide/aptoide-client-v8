@@ -21,7 +21,6 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
@@ -29,6 +28,7 @@ import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.AutoUpdate;
+import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -47,7 +47,6 @@ import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.downloads.scheduled.ScheduledDownloadsFragment;
-import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigatorActivity;
 import cm.aptoide.pt.v8engine.view.store.StoreTabFragmentChooser;
@@ -76,15 +75,19 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.frame_layout);
 
-    fragmentNavigator = getFragmentNavigator();
-    AptoideAccountManager accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
+    final AptoideAccountManager accountManager = ((V8Engine) getApplicationContext())
+        .getAccountManager();
+    final InstallManager installManager =
+        ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.DEFAULT);
+    final AutoUpdate autoUpdate =
+        new AutoUpdate(this, new DownloadFactory(), new PermissionManager(), installManager);
+
     storeRepository = RepositoryFactory.getStoreRepository();
+    fragmentNavigator = getFragmentNavigator();
     storeUtilsProxy = new StoreUtilsProxy(accountManager,
         ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV7(),
         new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class));
-    final AutoUpdate autoUpdate =
-        new AutoUpdate(this, new InstallerFactory().create(this, InstallerFactory.DEFAULT),
-            new DownloadFactory(), AptoideDownloadManager.getInstance(), new PermissionManager());
+
     attachPresenter(
         new MainPresenter(this, new ApkFy(this, getIntent()), autoUpdate, new ContentPuller(this)),
         savedInstanceState);

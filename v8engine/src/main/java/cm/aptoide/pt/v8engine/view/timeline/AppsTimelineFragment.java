@@ -22,7 +22,6 @@ import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -33,7 +32,6 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.repository.PackageRepository;
@@ -225,12 +223,11 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     spinnerProgressDisplayable = new ProgressBarDisplayable().setFullRow();
 
     final PermissionManager permissionManager = new PermissionManager();
-    final Installer installer =
-        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
     final SocialRepository socialRepository = new SocialRepository(accountManager, bodyInterceptor);
     final StoreCredentialsProvider storeCredentialsProvider = new StoreCredentialsProviderImpl();
     final InstallManager installManager =
-        new InstallManager(AptoideDownloadManager.getInstance(), installer);
+        ((V8Engine) getContext().getApplicationContext()).getInstallManager(
+            InstallerFactory.ROLLBACK);
 
     timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
         new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),

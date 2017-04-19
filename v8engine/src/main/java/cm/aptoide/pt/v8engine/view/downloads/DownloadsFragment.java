@@ -7,7 +7,6 @@ import android.view.View;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -189,8 +188,8 @@ import rx.schedulers.Schedulers;
     standingByDisplayables = new ArrayList<>();
     completedDisplayables = new ArrayList<>();
 
-    installManager = new InstallManager(AptoideDownloadManager.getInstance(),
-        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK));
+    installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
+        InstallerFactory.ROLLBACK);
     analytics = Analytics.getInstance();
     final BodyInterceptor<BaseBody> baseBodyBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();

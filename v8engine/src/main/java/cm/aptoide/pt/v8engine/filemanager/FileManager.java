@@ -25,13 +25,12 @@ public class FileManager {
     this.downloadManager = downloadManager;
   }
 
-  public static FileManager build() {
+  public static FileManager build(AptoideDownloadManager downloadManager) {
     String[] folders = {
         Application.getContext().getCacheDir().getPath(),
         Application.getConfiguration().getCachePath()
     };
-    return new FileManager(CacheHelper.build(), new FileUtils(), folders,
-        AptoideDownloadManager.getInstance());
+    return new FileManager(CacheHelper.build(), new FileUtils(), folders, downloadManager);
   }
 
   /**

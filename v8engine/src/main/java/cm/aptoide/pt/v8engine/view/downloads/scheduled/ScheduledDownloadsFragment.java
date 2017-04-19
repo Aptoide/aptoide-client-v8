@@ -17,7 +17,6 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -32,7 +31,6 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadInstallB
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.ScheduledDownloadRepository;
@@ -79,8 +77,8 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
-    installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
+    installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
+        InstallerFactory.ROLLBACK);
     downloadConverter = new DownloadEventConverter(bodyInterceptor);
     installConverter = new InstallEventConverter(bodyInterceptor);
     analytics = Analytics.getInstance();
@@ -146,10 +144,6 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     PermissionManager permissionManager = new PermissionManager();
     PermissionService permissionRequest = ((PermissionService) context);
     DownloadFactory downloadFactory = new DownloadFactory();
-    InstallerFactory installerFactory = new InstallerFactory();
-
-    InstallManager installManager = new InstallManager(AptoideDownloadManager.getInstance(),
-        installerFactory.create(context, InstallerFactory.ROLLBACK));
 
     permissionManager.requestExternalStoragePermission(permissionRequest)
         .flatMap(sucess -> scheduledDownloadRepository.setInstalling(installing))

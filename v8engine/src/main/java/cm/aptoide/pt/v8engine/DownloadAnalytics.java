@@ -9,7 +9,7 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEvent;
  * Created by trinkes on 04/01/2017.
  */
 
-public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.interfaces.Analytics {
+public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytics {
   private Analytics analytics;
 
   public DownloadAnalytics(Analytics analytics) {
