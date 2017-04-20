@@ -10,9 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
@@ -29,6 +26,8 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.comments.ListFullReviewsSuccessRequestListener;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.ThemeUtils;
@@ -74,6 +73,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private StoreCredentialsProvider storeCredentialsProvider;
   private AptoideAccountManager accountManager;
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
+  private InstalledRepository installedRepository;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
 
@@ -112,8 +112,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     inflater.inflate(R.menu.menu_install, menu);
     installMenuItem = menu.findItem(R.id.menu_install);
 
-    InstalledAccessor accessor = AccessorFactory.getAccessorFor(Installed.class);
-    accessor.getInstalled(packageName)
+    installedRepository.getInstalled(packageName)
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(installed -> {
           if (installed != null) {
@@ -247,6 +246,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
+    installedRepository = RepositoryFactory.getInstalledRepository();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
   }

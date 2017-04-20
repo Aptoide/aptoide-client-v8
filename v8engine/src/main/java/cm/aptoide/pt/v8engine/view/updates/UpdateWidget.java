@@ -19,15 +19,13 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -98,7 +96,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
     final Observable<Void> showInstalledVersionName =
         showInstalledVersionName(updateDisplayable.getPackageName(),
-            AccessorFactory.getAccessorFor(Installed.class));
+            updateDisplayable.getInstalledRepository());
 
     final Observable<Void> handleLongClicks =
         handleLongClicks(updateDisplayable.getPackageName(), context);
@@ -120,8 +118,8 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   private Observable<Void> showInstalledVersionName(String packageName,
-      InstalledAccessor accessor) {
-    return accessor.getInstalled(packageName)
+      InstalledRepository installedRepository) {
+    return installedRepository.getInstalled(packageName)
         .first()
         .filter(installed -> installed != null && !TextUtils.isEmpty(installed.getVersionName()))
         .observeOn(AndroidSchedulers.mainThread())

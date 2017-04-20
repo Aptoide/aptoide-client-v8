@@ -64,8 +64,8 @@ public class InstalledRepository implements Repository<Installed, String> {
     return accessor.remove(packageName, versionCode);
   }
 
-  public boolean isInstalled(String packageName) {
-    return accessor.isInstalled(packageName).toBlocking().first();
+  public Observable<Boolean> isInstalled(String packageName) {
+    return accessor.isInstalled(packageName);
   }
 
   public Observable<List<Installed>> getAllInstalledSorted() {
@@ -79,5 +79,9 @@ public class InstalledRepository implements Repository<Installed, String> {
 
   public Observable<Installed> get(String packageName, int versionCode) {
     return accessor.get(packageName, versionCode);
+  }
+
+  public Observable<List<Installed>> getInstalled(String[] packageNames) {
+    return accessor.getInstalled(packageNames);
   }
 }

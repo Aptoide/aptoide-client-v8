@@ -21,6 +21,7 @@ import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.download.DownloadInstallBaseEvent;
 import cm.aptoide.pt.v8engine.download.InstallEvent;
 import cm.aptoide.pt.v8engine.download.InstallEventConverter;
+import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.Getter;
@@ -57,6 +58,7 @@ public class UpdateDisplayable extends Displayable {
   private DownloadEventConverter converter;
   private InstallEventConverter installConverter;
   private int updateVersionCode;
+  private InstalledRepository installedRepository;
 
   public UpdateDisplayable() {
   }
@@ -67,7 +69,7 @@ public class UpdateDisplayable extends Displayable {
       String patchObbName, String patchObbPath, String patchObbMd5, Download download,
       InstallManager installManager, Analytics analytics,
       DownloadEventConverter downloadInstallEventConverter, InstallEventConverter installConverter,
-      int updateVersionCode) {
+      int updateVersionCode, InstalledRepository installedRepository) {
     this.packageName = packageName;
     this.appId = appId;
     this.label = label;
@@ -89,12 +91,13 @@ public class UpdateDisplayable extends Displayable {
     this.converter = downloadInstallEventConverter;
     this.installConverter = installConverter;
     this.updateVersionCode = updateVersionCode;
+    this.installedRepository = installedRepository;
   }
 
   public static UpdateDisplayable newInstance(Update update, InstallManager installManager,
       DownloadFactory downloadFactory, Analytics analytics,
-      DownloadEventConverter downloadInstallEventConverter,
-      InstallEventConverter installConverter) {
+      DownloadEventConverter downloadInstallEventConverter, InstallEventConverter installConverter,
+      InstalledRepository installedRepository) {
 
     return new UpdateDisplayable(update.getPackageName(), update.getAppId(), update.getLabel(),
         update.getIcon(), update.getVersionCode(), update.getMd5(), update.getApkPath(),
@@ -102,7 +105,7 @@ public class UpdateDisplayable extends Displayable {
         update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbName(),
         update.getPatchObbPath(), update.getPatchObbMd5(), downloadFactory.create(update),
         installManager, analytics, downloadInstallEventConverter, installConverter,
-        update.getUpdateVersionCode());
+        update.getUpdateVersionCode(), installedRepository);
   }
 
   public Completable downloadAndInstall(Context context,
@@ -153,5 +156,9 @@ public class UpdateDisplayable extends Displayable {
             == InstallationProgress.InstallationStatus.INSTALLING
             || installationProgress.isIndeterminate());
 
+  }
+
+  public InstalledRepository getInstalledRepository() {
+    return installedRepository;
   }
 }

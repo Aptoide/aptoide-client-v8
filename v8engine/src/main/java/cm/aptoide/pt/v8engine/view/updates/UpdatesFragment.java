@@ -163,7 +163,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
       for (Update update : updateList) {
         updatesDisplayablesList.add(
             UpdateDisplayable.newInstance(update, installManager, new DownloadFactory(), analytics,
-                downloadInstallEventConverter, installConverter));
+                downloadInstallEventConverter, installConverter, installedRepository ));
       }
     }
     addDisplayables(updatesDisplayablesList, false);

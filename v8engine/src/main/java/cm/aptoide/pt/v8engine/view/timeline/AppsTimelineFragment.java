@@ -16,8 +16,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
@@ -35,7 +33,9 @@ import cm.aptoide.pt.v8engine.download.InstallEventConverter;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.PackageRepository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.repository.TimelineCardFilter;
@@ -227,6 +227,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     linksHandlerFactory = new LinksHandlerFactory();
     packageRepository = new PackageRepository(getContext().getPackageManager());
     spinnerProgressDisplayable = new ProgressBarDisplayable().setFullRow();
+    InstalledRepository installedRepository = RepositoryFactory.getInstalledRepository();
 
     final PermissionManager permissionManager = new PermissionManager();
     final SocialRepository socialRepository =
@@ -238,7 +239,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
     timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
         new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
-            AccessorFactory.getAccessorFor(Installed.class)), bodyInterceptor, httpClient,
+            installedRepository), bodyInterceptor, httpClient,
         converterFactory);
 
     cardToDisplayable =
@@ -246,7 +247,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
             permissionManager, storeCredentialsProvider,
             new InstallEventConverter(bodyInterceptor, httpClient, converterFactory),
             Analytics.getInstance(),
-            new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory));
+            new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory),
+            installedRepository);
 
     refreshSubject = BehaviorRelay.create();
   }

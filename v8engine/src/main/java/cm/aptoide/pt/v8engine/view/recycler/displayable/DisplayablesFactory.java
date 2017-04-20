@@ -28,6 +28,7 @@ import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
@@ -61,7 +62,8 @@ public class DisplayablesFactory {
 
   public static Observable<Displayable> parse(GetStoreWidgets.WSWidget widget, String storeTheme,
       StoreRepository storeRepository, StoreContext storeContext, Context context,
-      AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy) {
+      AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy,
+      InstalledRepository installedRepository) {
 
     LinkedList<Displayable> displayables = new LinkedList<>();
 
@@ -79,7 +81,7 @@ public class DisplayablesFactory {
           return Observable.just(getStores(widget, storeTheme, storeContext));
 
         case DISPLAYS:
-          return Observable.just(getDisplays(widget, storeTheme, storeContext));
+          return Observable.just(getDisplays(widget, storeTheme, storeContext, installedRepository));
 
         case ADS:
           List<Displayable> adsList = getAds(widget);
@@ -245,7 +247,7 @@ public class DisplayablesFactory {
   }
 
   private static Displayable getDisplays(GetStoreWidgets.WSWidget wsWidget, String storeTheme,
-      StoreContext storeContext) {
+      StoreContext storeContext, InstalledRepository installedRepository) {
     GetStoreDisplays getStoreDisplays = (GetStoreDisplays) wsWidget.getViewObject();
     if (getStoreDisplays == null) {
       return new EmptyDisplayable();
@@ -255,7 +257,8 @@ public class DisplayablesFactory {
 
     for (GetStoreDisplays.EventImage eventImage : getStoreDisplaysList) {
       DisplayablePojo<GetStoreDisplays.EventImage> displayablePojo =
-          new GridDisplayDisplayable(eventImage, storeTheme, wsWidget.getTag(), storeContext);
+          new GridDisplayDisplayable(eventImage, storeTheme, wsWidget.getTag(), storeContext,
+              installedRepository);
 
       Event.Name name = displayablePojo.getPojo().getEvent().getName();
       if (Event.Name.facebook.equals(name)

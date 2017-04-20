@@ -10,9 +10,6 @@ import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
@@ -59,8 +56,8 @@ import rx.functions.Action1;
       } else {
         switch (name) {
           case facebook:
-            InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-            compositeSubscription.add(installedAccessor.getInstalled(HomeFragment.FACEBOOK_PACKAGE_NAME)
+            compositeSubscription.add(displayable.getInstalledRepository().getInstalled(HomeFragment
+                .FACEBOOK_PACKAGE_NAME)
                 .first()
                 .subscribe(installedFacebook -> {
                   sendActionEvent(AptoideUtils.SocialLinksU.getFacebookPageURL(

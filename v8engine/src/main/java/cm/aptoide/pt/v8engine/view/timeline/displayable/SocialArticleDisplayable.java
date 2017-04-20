@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.listapp.App;
@@ -13,6 +11,7 @@ import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.SocialArticle;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.ShareCardCallback;
+import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.link.Link;
@@ -50,6 +49,7 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
   private SpannableFactory spannableFactory;
   private TimelineAnalytics timelineAnalytics;
   private SocialRepository socialRepository;
+  private InstalledRepository installedRepository;
 
   public SocialArticleDisplayable() {
   }
@@ -59,7 +59,7 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
       String abUrl, Store store, Comment.User user, long numberOfLikes, long numberOfComments,
       List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, TimelineAnalytics timelineAnalytics,
-      SocialRepository socialRepository) {
+      SocialRepository socialRepository, InstalledRepository installedRepository) {
     super(socialArticle, numberOfLikes, numberOfComments, store, user,
         socialArticle.getUserSharer(), socialArticle.getMy().isLiked(), socialArticle.getLikes(),
         date, spannableFactory, dateCalculator, abUrl);
@@ -78,12 +78,13 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
     this.spannableFactory = spannableFactory;
     this.timelineAnalytics = timelineAnalytics;
     this.socialRepository = socialRepository;
+    this.installedRepository = installedRepository;
   }
 
   public static SocialArticleDisplayable from(SocialArticle socialArticle,
       DateCalculator dateCalculator, SpannableFactory spannableFactory,
       LinksHandlerFactory linksHandlerFactory, TimelineAnalytics timelineAnalytics,
-      SocialRepository socialRepository) {
+      SocialRepository socialRepository, InstalledRepository installedRepository) {
     long appId = 0;
     //if (article.getApps() != null && article.getApps().size() > 0) {
     //  appName = article.getApps().get(0).getName();
@@ -106,12 +107,11 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
         abTestingURL, socialArticle.getStore(), socialArticle.getUser(),
         socialArticle.getStats().getLikes(), socialArticle.getStats().getComments(),
         socialArticle.getApps(), socialArticle.getDate(), dateCalculator, spannableFactory,
-        timelineAnalytics, socialRepository);
+        timelineAnalytics, socialRepository, installedRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
     if (relatedToAppsList != null && relatedToAppsList.size() > 0) {
-      InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
       List<String> packageNamesList = new ArrayList<>();
 
       for (int i = 0; i < relatedToAppsList.size(); i++) {
@@ -120,9 +120,7 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
 
       final String[] packageNames = packageNamesList.toArray(new String[packageNamesList.size()]);
 
-      if (installedAccessor != null) {
-        return installedAccessor.getInstalled(packageNames).observeOn(Schedulers.computation());
-      }
+      return installedRepository.getInstalled(packageNames).observeOn(Schedulers.computation());
       //appId = video.getApps().get(0).getId();
     }
     return Observable.just(null);

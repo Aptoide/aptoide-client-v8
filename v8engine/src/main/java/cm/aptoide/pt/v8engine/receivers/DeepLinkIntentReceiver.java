@@ -16,9 +16,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
@@ -28,6 +25,8 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.xml.XmlAppHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedInputStream;
@@ -72,9 +71,11 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
   private String TMP_MYAPP_FILE;
   private Class startClass = V8Engine.getActivityProvider().getMainActivityFragmentClass();
   private AsyncTask<String, Void, Void> asyncTask;
+  private InstalledRepository installedRepository;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    installedRepository = RepositoryFactory.getInstalledRepository();
 
     TMP_MYAPP_FILE = getCacheDir() + "/myapp.myapp";
     String uri = getIntent().getDataString();
@@ -250,8 +251,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
   }
 
   public void startFromPackageName(String packageName) {
-    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    installedAccessor.getInstalled(packageName).first().subscribe(installed -> {
+    installedRepository.getInstalled(packageName).first().subscribe(installed -> {
       if (installed != null) {
         startFromAppView(packageName);
       } else {
