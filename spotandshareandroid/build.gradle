@@ -67,4 +67,6 @@ dependencies {
 
   provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
   provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
+
+  testCompile 'junit:junit:4.12'
 }
