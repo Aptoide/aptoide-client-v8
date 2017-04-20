@@ -19,6 +19,7 @@ import android.text.TextUtils;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -29,6 +30,8 @@ import cm.aptoide.pt.v8engine.download.DownloadEvent;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
+import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -66,6 +69,7 @@ public class InstallService extends Service {
   private InstallManager installManager;
   private Map<String, Integer> installerTypeMap;
   private Analytics analytics;
+  private InstalledRepository installedRepository;
 
   @Override public void onCreate() {
     super.onCreate();
@@ -79,6 +83,7 @@ public class InstallService extends Service {
     setupNotification();
     installerTypeMap = new HashMap();
     analytics = Analytics.getInstance();
+    installedRepository = RepositoryFactory.getInstalledRepository();
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
@@ -140,6 +145,7 @@ public class InstallService extends Service {
   private Observable<Boolean> downloadAndInstall(Context context, String md5) {
     return downloadManager.getDownload(md5)
         .first()
+        .doOnNext(download -> initInstallationProgress(download))
         .flatMap(download -> downloadManager.startDownload(download))
         .doOnNext(download -> {
           stopOnDownloadError(download.getOverallDownloadStatus());
@@ -164,6 +170,11 @@ public class InstallService extends Service {
         })
         .flatMap(download -> stopForegroundAndInstall(context, download, true).andThen(
             sendBackgroundInstallFinishedBroadcast(download)).andThen(hasNextDownload()));
+  }
+
+  private void initInstallationProgress(Download download) {
+    Installed installed = convertDownloadToInstalled(download);
+    installedRepository.save(installed);
   }
 
   private void stopOnDownloadError(int downloadStatus) {
@@ -328,5 +339,16 @@ public class InstallService extends Service {
         V8Engine.getActivityProvider().getMainActivityFragmentClass());
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
     return intent;
+  }
+
+  @NonNull private Installed convertDownloadToInstalled(Download download) {
+    Installed installed = new Installed();
+    installed.setPackageAndVersionCode(download.getPackageName() + download.getVersionCode());
+    installed.setVersionCode(download.getVersionCode());
+    installed.setVersionName(download.getVersionName());
+    installed.setStatus(Installed.STATUS_WAITING);
+    installed.setType(Installed.TYPE_UNKNOWN);
+    installed.setPackageName(download.getPackageName());
+    return installed;
   }
 }

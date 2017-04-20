@@ -225,7 +225,7 @@ public class InstallManager {
 
   private boolean mapIndeterminateState(Download download, InstallationState installationState) {
     return mapIndeterminate(download) || mapInstallIndeterminate(installationState.getStatus(),
-        installationState.getType());
+        installationState.getType(), download);
   }
 
   private InstallationProgress.InstallationStatus mapInstallationStatus(Download download,
@@ -237,6 +237,11 @@ public class InstallManager {
 
     if (installationState.getStatus() == Installed.STATUS_INSTALLING
         && installationState.getType() != Installed.TYPE_DEFAULT) {
+      return InstallationProgress.InstallationStatus.INSTALLING;
+    }
+
+    if (installationState.getStatus() == Installed.STATUS_WAITING
+        && download.getOverallDownloadStatus() == Download.COMPLETED) {
       return InstallationProgress.InstallationStatus.INSTALLING;
     }
 
@@ -312,7 +317,7 @@ public class InstallManager {
     return status;
   }
 
-  private boolean mapInstallIndeterminate(int status, int type) {
+  private boolean mapInstallIndeterminate(int status, int type, Download download) {
     boolean isIndeterminate = false;
     switch (status) {
       case Installed.STATUS_UNINSTALLED:
@@ -326,6 +331,9 @@ public class InstallManager {
           isIndeterminate = true;
         }
         break;
+      case Installed.STATUS_WAITING:
+        isIndeterminate =
+            download != null && download.getOverallDownloadStatus() == Download.COMPLETED;
     }
     return isIndeterminate;
   }
