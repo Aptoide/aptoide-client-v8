@@ -242,6 +242,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
     activeDownloads.clear();
     standByDownloads.clear();
     completedDownloads.clear();
+    notifyDataSetChanged();
   }
 
   private enum ItemViewType {
