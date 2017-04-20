@@ -113,7 +113,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     installMenuItem = menu.findItem(R.id.menu_install);
 
     InstalledAccessor accessor = AccessorFactory.getAccessorFor(Installed.class);
-    accessor.get(packageName)
+    accessor.getInstalled(packageName)
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(installed -> {
           if (installed != null) {

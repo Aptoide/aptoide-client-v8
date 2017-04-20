@@ -104,7 +104,7 @@ public class VideoDisplayable extends CardDisplayable {
       final String[] packageNames = packageNamesList.toArray(new String[packageNamesList.size()]);
 
       if (installedAccessor != null) {
-        return installedAccessor.get(packageNames).observeOn(Schedulers.computation());
+        return installedAccessor.getInstalled(packageNames).observeOn(Schedulers.computation());
       }
       //appId = video.getApps().get(0).getId();
     }

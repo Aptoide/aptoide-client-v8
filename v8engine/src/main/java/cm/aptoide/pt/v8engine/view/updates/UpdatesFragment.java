@@ -196,7 +196,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
    * @return {@link Observable} to a {@link List} of {@link Installed} apps
    */
   private Observable<List<Installed>> fetchInstalled() {
-    return installedRepository.getAllSorted()
+    return installedRepository.getAllInstalledSorted()
         .first()
         .flatMapIterable(list -> list)
         .filter(item -> !item.isSystemApp())

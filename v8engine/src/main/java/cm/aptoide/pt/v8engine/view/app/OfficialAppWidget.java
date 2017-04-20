@@ -142,7 +142,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
 
   private boolean isAppInstalled(GetApp app) {
     InstalledRepository installedRepo = RepositoryFactory.getInstalledRepository();
-    return installedRepo.contains(app.getNodes().getMeta().getData().getPackageName());
+    return installedRepo.isInstalled(app.getNodes().getMeta().getData().getPackageName());
   }
 
   private void hideOfficialAppMessage() {

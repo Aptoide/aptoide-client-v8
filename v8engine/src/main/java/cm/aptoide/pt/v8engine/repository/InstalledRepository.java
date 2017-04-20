@@ -28,8 +28,8 @@ public class InstalledRepository implements Repository<Installed, String> {
    *
    * @return an observable with a list of installed apps
    */
-  public Observable<List<Installed>> getAll() {
-    return accessor.getAll();
+  public Observable<List<Installed>> getAllInstalled() {
+    return accessor.getAllInstalled();
   }
 
   public Observable<List<Installed>> getAsList(String packageName) {
@@ -52,20 +52,24 @@ public class InstalledRepository implements Repository<Installed, String> {
     accessor.insert(installed);
   }
 
-  @Override public Observable<Installed> get(String packageName) {
-    return accessor.get(packageName);
+  @Override public Observable<Installed> get(String packageNameAndVersionCode) {
+    return accessor.get(packageNameAndVersionCode);
+  }
+
+  public Observable<Installed> getInstalled(String packageName) {
+    return accessor.getInstalled(packageName);
   }
 
   public Completable remove(String packageName, int versionCode) {
     return accessor.remove(packageName, versionCode);
   }
 
-  public boolean contains(String packageName) {
+  public boolean isInstalled(String packageName) {
     return accessor.isInstalled(packageName).toBlocking().first();
   }
 
-  public Observable<List<Installed>> getAllSorted() {
-    return accessor.getAllSorted();
+  public Observable<List<Installed>> getAllInstalledSorted() {
+    return accessor.getAllInstalledSorted();
   }
 
   public boolean contains(String packageName, int vercode) {

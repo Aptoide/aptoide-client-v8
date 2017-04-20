@@ -23,15 +23,15 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
     super(db, Installed.class);
   }
 
-  public Observable<List<Installed>> getAll() {
+  public Observable<List<Installed>> getAllInstalled() {
     return database.getAll(Installed.class).flatMap(installs -> filterCompleted(installs));
   }
 
-  public Observable<List<Installed>> getAllSorted() {
-    return getAllSorted(Sort.ASCENDING);
+  public Observable<List<Installed>> getAllInstalledSorted() {
+    return getAllInstalledSorted(Sort.ASCENDING);
   }
 
-  public Observable<List<Installed>> getAllSorted(Sort sort) {
+  public Observable<List<Installed>> getAllInstalledSorted(Sort sort) {
     return Observable.fromCallable(() -> Database.getInternal())
         .flatMap(realm -> realm.where(Installed.class)
             .findAllSorted(Installed.NAME, sort)
@@ -60,12 +60,12 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<Boolean> isInstalled(String packageName) {
-    return get(packageName).map(
+    return getInstalled(packageName).map(
         installed -> installed != null && installed.getStatus() == Installed.STATUS_COMPLETED);
   }
 
-  public Observable<Installed> get(String packageName) {
-    return getAsList(packageName).map(installeds -> {
+  public Observable<Installed> getInstalled(String packageName) {
+    return getInstalledAsList(packageName).map(installeds -> {
       if (installeds.isEmpty()) {
         return null;
       } else {
@@ -83,10 +83,6 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
         .subscribeOn(RealmSchedulers.getScheduler());
   }
 
-  /**
-   * should use install manager instead
-   */
-  @Deprecated
   public Observable<List<Installed>> getAsList(String packageName, int versionCode) {
     return Observable.fromCallable(() -> Database.getInternal())
         .flatMap(realm -> realm.where(Installed.class)
@@ -99,7 +95,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
         .subscribeOn(RealmSchedulers.getScheduler());
   }
 
-  public Observable<List<Installed>> getAsList(String packageName) {
+  public Observable<List<Installed>> getInstalledAsList(String packageName) {
     return Observable.fromCallable(() -> Database.getInternal())
         .flatMap(realm -> realm.where(Installed.class)
             .equalTo(Installed.PACKAGE_NAME, packageName)
@@ -111,7 +107,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
         .flatMap(installs -> filterCompleted(installs));
   }
 
-  public Observable<List<Installed>> get(String[] apps) {
+  public Observable<List<Installed>> getInstalled(String[] apps) {
     return Observable.fromCallable(() -> Database.getInternal())
         .flatMap(realm -> realm.where(Installed.class)
             .in(Installed.PACKAGE_NAME, apps)
@@ -140,6 +136,10 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
             .unsubscribeOn(RealmSchedulers.getScheduler()))
         .flatMap(installeds -> database.copyFromRealm(installeds))
         .subscribeOn(RealmSchedulers.getScheduler());
+  }
+
+  public Observable<Installed> get(String packageNameAndVersionCode) {
+    return database.get(Installed.class, "packageAndVersionCode", packageNameAndVersionCode);
   }
 
 }

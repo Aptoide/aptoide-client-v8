@@ -121,7 +121,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
   private Observable<Void> showInstalledVersionName(String packageName,
       InstalledAccessor accessor) {
-    return accessor.get(packageName)
+    return accessor.getInstalled(packageName)
         .first()
         .filter(installed -> installed != null && !TextUtils.isEmpty(installed.getVersionName()))
         .observeOn(AndroidSchedulers.mainThread())

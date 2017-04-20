@@ -89,7 +89,7 @@ public class InstallManager {
 
   public Observable<List<InstallationProgress>> getInstallations() {
     return Observable.combineLatest(aptoideDownloadManager.getDownloads(),
-        installedRepository.getAll(), (downloads, installeds) -> downloads)
+        installedRepository.getAllInstalled(), (downloads, installeds) -> downloads)
         .observeOn(Schedulers.io())
         .concatMap(downloadList -> Observable.from(downloadList)
             .flatMap(
@@ -99,7 +99,7 @@ public class InstallManager {
   }
 
   private Observable<Progress<Download>> convertToProgress(Download currentDownload) {
-    return installedRepository.get(currentDownload.getPackageName())
+    return installedRepository.getInstalled(currentDownload.getPackageName())
         .first()
         .flatMap(installed -> convertToProgressStatus(currentDownload, installed).map(status -> {
           int installationType = installed == null ? Installed.TYPE_UNKNOWN : installed.getType();
@@ -458,7 +458,7 @@ public class InstallManager {
   }
 
   public Observable<InstallationType> getInstallationType(String packageName, int versionCode) {
-    return installedRepository.get(packageName).map(installed -> {
+    return installedRepository.getInstalled(packageName).map(installed -> {
       if (installed == null) {
         return InstallationType.INSTALL;
       } else if (installed.getVersionCode() == versionCode) {
@@ -491,9 +491,10 @@ public class InstallManager {
   }
 
   /**
+   * The caller is responsible to make sure that the download exists already
    * this method should only be used when a download exists already(ex: resuming)
    *
-   * @return the download object to be resumed
+   * @return the download object to be resumed or null if doesn't exists
    */
   public Single<Download> getDownload(String md5) {
     return downloadRepository.get(md5).first().toSingle();

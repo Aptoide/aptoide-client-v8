@@ -48,7 +48,7 @@ public class TimelineCardFilter {
 
   private Observable<? extends TimelineCard> filterAlreadyDoneUpdates(TimelineCard timelineCard) {
     if (timelineCard instanceof AppUpdate) {
-      return installedAccessor.get(((AppUpdate) timelineCard).getPackageName())
+      return installedAccessor.getInstalled(((AppUpdate) timelineCard).getPackageName())
           .firstOrDefault(null)
           .flatMap(installed -> {
             if (installed != null

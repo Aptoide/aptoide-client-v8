@@ -164,7 +164,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
       InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
       //attach screenshots and logs
       //				Analytics.SendFeedback.sendFeedback();
-      unManagedSubscription = installedAccessor.get(getContext().getPackageName())
+      unManagedSubscription = installedAccessor.getInstalled(getContext().getPackageName())
           .first()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(installed1 -> {

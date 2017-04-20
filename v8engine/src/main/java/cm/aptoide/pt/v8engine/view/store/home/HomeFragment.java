@@ -307,7 +307,7 @@ public class HomeFragment extends StoreFragment {
 
   private void openFacebook() {
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    installedAccessor.get(FACEBOOK_PACKAGE_NAME)
+    installedAccessor.getInstalled(FACEBOOK_PACKAGE_NAME)
         .first()
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .observeOn(AndroidSchedulers.mainThread())
@@ -330,7 +330,7 @@ public class HomeFragment extends StoreFragment {
 
   private void openBackupApps() {
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    installedAccessor.get(BACKUP_APPS_PACKAGE_NAME)
+    installedAccessor.getInstalled(BACKUP_APPS_PACKAGE_NAME)
         .first()
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
@@ -359,7 +359,7 @@ public class HomeFragment extends StoreFragment {
   private void openSocialLink(String packageName, String socialUrl, String pageTitle,
       Uri uriToOpenApp) {
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    installedAccessor.get(packageName)
+    installedAccessor.getInstalled(packageName)
         .first()
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
