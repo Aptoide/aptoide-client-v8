@@ -48,8 +48,7 @@
           android:layout_height="wrap_content"
           android:layout_marginTop="6dp"
           android:text="@string/like"
-          android:textAllCaps="true"
-          android:textSize="@dimen/text_size_extra_small"
+          style="@style/Aptoide.TextView.Regular.XXS.GreyFog.AllCaps"
           />
 
     </LinearLayout>
@@ -80,13 +79,12 @@
         android:gravity="center"
         android:orientation="vertical"
         android:text="@string/comment"
-        android:textAllCaps="true"
-        android:textSize="@dimen/text_size_extra_small"
         android:visibility="invisible"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1"
         tools:visibility="visible"
+        style="@style/Aptoide.TextView.Regular.XXS.GreyFog.AllCaps"
         />
   </LinearLayout>
 
@@ -113,10 +111,9 @@
         android:gravity="center"
         android:orientation="vertical"
         android:text="@string/share"
-        android:textAllCaps="true"
-        android:textSize="@dimen/text_size_extra_small"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1"
+        style="@style/Aptoide.TextView.Regular.XXS.GreyFog.AllCaps"
         />
   </LinearLayout>
 </android.support.constraint.ConstraintLayout>

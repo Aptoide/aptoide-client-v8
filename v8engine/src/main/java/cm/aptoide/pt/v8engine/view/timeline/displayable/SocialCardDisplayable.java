@@ -63,6 +63,12 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
         ContextCompat.getColor(context, R.color.black), userSharer);
   }
 
+  public Spannable getBlackHighlightedLike(Context context, String string) {
+    return spannableFactory.createColorSpan(context.getString(
+        R.string.x_liked_it, string),
+        ContextCompat.getColor(context, R.color.black87alpha), string);
+  }
+
   public void likesPreviewClick(FragmentNavigator navigator) {
     navigator.navigateTo(V8Engine.getFragmentProvider()
         .newTimeLineLikesFragment(this.getTimelineCard()

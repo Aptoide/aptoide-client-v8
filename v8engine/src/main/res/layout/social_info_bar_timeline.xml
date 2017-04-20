@@ -49,8 +49,8 @@
           android:layout_width="wrap_content"
           android:layout_height="match_parent"
           android:gravity="center_vertical"
-          android:textColor="@color/grey"
           tools:text="5 likes"
+          style="@style/Aptoide.TextView.Regular.XS.GreyFog"
           />
       <TextView
           android:id="@+id/social_one_like"
@@ -58,8 +58,8 @@
           android:layout_height="match_parent"
           android:gravity="center_vertical"
           android:text="@string/x_liked_it"
-          android:textColor="@color/grey"
           tools:text="nzxt liked it"
+          style="@style/Aptoide.TextView.Regular.XS.GreyFog"
           />
     </FrameLayout>
 
@@ -72,8 +72,8 @@
         android:layout_centerInParent="true"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:textColor="@color/grey"
         tools:text="7 comments"
+        style="@style/Aptoide.TextView.Regular.XS.GreyFog"
         />
   </RelativeLayout>
 

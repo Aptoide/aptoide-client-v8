@@ -166,7 +166,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
       } else if (displayable.getUserLikes() != null && displayable.getUserLikes().size() != 0) {
         numberLikes.setVisibility(View.INVISIBLE);
         numberLikesOneLike.setVisibility(View.VISIBLE);
-        numberLikesOneLike.setText(getContext().getString(R.string.x_liked_it,
+        numberLikesOneLike.setText(displayable.getBlackHighlightedLike(getContext(),
             displayable.getUserLikes().get(0).getName()));
       }
     } else {

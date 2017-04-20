@@ -74,7 +74,7 @@
           android:maxLines="2"
           android:paddingTop="3dp"
           tools:text="Marcelo's Mentor App"
-          style="@style/Widget.Aptoide.Card.Title.Large.Black"
+          style="@style/Aptoide.TextView.Medium.L.Black"
           />
 
       <android.support.v7.widget.AppCompatRatingBar
@@ -99,7 +99,7 @@
           android:id="@+id/displayable_social_timeline_recommendation_get_app_button"
           android:layout_width="116dp"
           android:layout_height="24dp"
-          android:layout_alignBottom="@id/displayable_social_timeline_recommendation_icon"
+          android:layout_below="@id/rating_bar"
           android:layout_gravity="center"
           android:layout_marginEnd="15.1dp"
           android:layout_marginLeft="13.3dp"
@@ -109,7 +109,7 @@
           android:layout_toEndOf="@id/displayable_social_timeline_recommendation_icon"
           android:text="@string/review_get_app"
           android:textAllCaps="true"
-          android:textSize="12sp"
+          android:textSize="10sp"
           style="?attr/customButtomDarkGrayThinLine"
           />
 
