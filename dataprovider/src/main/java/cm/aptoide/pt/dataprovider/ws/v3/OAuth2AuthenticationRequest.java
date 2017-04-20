@@ -9,13 +9,12 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.OAuth;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -24,15 +23,15 @@ import rx.Observable;
 @Data @Accessors(chain = true) @EqualsAndHashCode(callSuper = true)
 public class OAuth2AuthenticationRequest extends V3<OAuth> {
 
-  public OAuth2AuthenticationRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor) {
-    super(baseBody,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter(), bodyInterceptor);
+  public OAuth2AuthenticationRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(baseBody, httpClient, converterFactory, bodyInterceptor);
   }
 
   public static OAuth2AuthenticationRequest of(String username, String password, String mode,
       @Nullable String nameForGoogle, String aptoideClientUUID,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
 
     final BaseBody body = new BaseBody();
 
@@ -69,11 +68,12 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
       body.put("oem_id", Application.getConfiguration().getExtraId());
     }
 
-    return new OAuth2AuthenticationRequest(body, bodyInterceptor);
+    return new OAuth2AuthenticationRequest(body, bodyInterceptor, httpClient, converterFactory);
   }
 
   public static OAuth2AuthenticationRequest of(String refreshToken, String aptoideClientUUID,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
 
     final BaseBody body = new BaseBody();
 
@@ -87,7 +87,7 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
     }
     body.put("refresh_token", refreshToken);
 
-    return new OAuth2AuthenticationRequest(body, bodyInterceptor);
+    return new OAuth2AuthenticationRequest(body, bodyInterceptor, httpClient, converterFactory);
   }
 
   @Override

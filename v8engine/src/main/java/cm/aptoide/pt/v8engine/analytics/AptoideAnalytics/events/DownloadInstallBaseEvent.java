@@ -10,6 +10,8 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.Event;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 
 /**
  * Created by trinkes on 02/01/2017.
@@ -32,11 +34,14 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInsta
   private DownloadInstallAnalyticsBaseBody.ResultStatus resultStatus;
   private Throwable error;
   private BodyInterceptor<BaseBody> bodyInterceptor;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
 
   public DownloadInstallBaseEvent(Action action, Origin origin, String packageName, String url,
       String obbUrl, String patchObbUrl, AppContext context, int versionCode,
       DownloadInstallEventConverter downloadInstallEventConverter, String eventName,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     this.action = action;
     this.versionCode = versionCode;
     this.origin = origin;
@@ -50,12 +55,14 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInsta
     this.context = context;
     this.downloadInstallEventConverter = downloadInstallEventConverter;
     this.bodyInterceptor = bodyInterceptor;
+    this.httpClient = httpClient;
+    this.converterFactory = converterFactory;
   }
 
   @Override public void send() {
     if (isReadyToSend()) {
       DownloadAnalyticsRequest.of(downloadInstallEventConverter.convert(this, resultStatus, error),
-          action.name(), name, context.name(), bodyInterceptor)
+          action.name(), name, context.name(), bodyInterceptor, httpClient, converterFactory)
           .observe()
           .subscribe(baseV7Response -> Logger.d(this, "onResume: " + baseV7Response),
               throwable -> throwable.printStackTrace());

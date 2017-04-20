@@ -15,6 +15,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.BuildConfig;
@@ -37,6 +38,7 @@ import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -77,6 +79,9 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   }
 
   @CallSuper @Override public void bindView(T displayable) {
+    final OkHttpClient httpClient =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    final Converter.Factory converterFactory = WebService.getDefaultConverter();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     accountNavigator =
@@ -103,10 +108,10 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
           CommentDialogFragment.newInstanceTimelineArticleComment(
               displayable.getTimelineCard().getCardId());
       commentDialogFragment.setCommentBeforeSubmissionCallbackContract(
-          (inputText) -> shareCard(displayable,
-              cardId -> PostCommentForTimelineArticle.of(cardId, inputText, bodyInterceptor)
-                  .observe()
-                  .subscribe(), SharePreviewDialog.SharePreviewOpenMode.COMMENT));
+          (inputText) -> shareCard(displayable, cardId -> {
+            PostCommentForTimelineArticle.of(cardId, inputText, bodyInterceptor, httpClient,
+                converterFactory).observe().subscribe();
+          }, SharePreviewDialog.SharePreviewOpenMode.COMMENT));
       commentDialogFragment.show(fm, "fragment_comment_dialog");
     }, throwable -> CrashReport.getInstance().log(throwable)));
 

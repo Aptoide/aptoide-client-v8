@@ -1,11 +1,10 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.model.v7.TimelineStats;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -14,14 +13,15 @@ import rx.Observable;
 
 public class GetTimelineStatsRequest extends V7<TimelineStats, GetTimelineStatsRequest.Body> {
 
-  protected GetTimelineStatsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
-    super(body, BASE_HOST,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter(), bodyInterceptor);
+  protected GetTimelineStatsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
   }
 
-  public static GetTimelineStatsRequest of(BodyInterceptor<BaseBody> bodyInterceptor, Long userId) {
-    return new GetTimelineStatsRequest(new Body(userId), bodyInterceptor);
+  public static GetTimelineStatsRequest of(BodyInterceptor<BaseBody> bodyInterceptor, Long userId,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    return new GetTimelineStatsRequest(new Body(userId), bodyInterceptor, httpClient,
+        converterFactory);
   }
 
   @Override protected Observable<TimelineStats> loadDataFromNetwork(Interfaces interfaces,

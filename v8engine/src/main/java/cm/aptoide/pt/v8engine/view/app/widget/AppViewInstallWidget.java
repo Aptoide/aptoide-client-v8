@@ -34,6 +34,7 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -62,6 +63,8 @@ import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.install.InstallWarningDialog;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -100,6 +103,7 @@ import rx.android.schedulers.AndroidSchedulers;
   private AptoideAccountManager accountManager;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private AppViewInstallDisplayable displayable;
+  private SocialRepository socialRepository;
 
   public AppViewInstallWidget(View itemView) {
     super(itemView);
@@ -127,12 +131,18 @@ import rx.android.schedulers.AndroidSchedulers;
     this.displayable = displayable;
     this.displayable.setInstallButton(actionButton);
 
+    final OkHttpClient httpClient =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    final Converter.Factory converterFactory = WebService.getDefaultConverter();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    downloadInstallEventConverter = new DownloadEventConverter(bodyInterceptor);
-    installConverter = new InstallEventConverter(bodyInterceptor);
+    socialRepository =
+        new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient);
+    downloadInstallEventConverter =
+        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory);
+    installConverter = new InstallEventConverter(bodyInterceptor, httpClient, converterFactory);
     analytics = Analytics.getInstance();
 
     minimalAd = this.displayable.getMinimalAd();
@@ -381,9 +391,6 @@ import rx.android.schedulers.AndroidSchedulers;
                       SharePreviewDialog.SharePreviewOpenMode.SHARE);
               AlertDialog.Builder alertDialog =
                   sharePreviewDialog.getPreviewDialogBuilder(getContext());
-
-              SocialRepository socialRepository =
-                  new SocialRepository(accountManager, bodyInterceptor);
 
               sharePreviewDialog.showShareCardPreviewDialog(
                   displayable.getPojo().getNodes().getMeta().getData().getPackageName(), "install",

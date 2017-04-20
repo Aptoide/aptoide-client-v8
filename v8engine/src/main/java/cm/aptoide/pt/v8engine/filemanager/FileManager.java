@@ -1,9 +1,10 @@
 package cm.aptoide.pt.v8engine.filemanager;
 
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.FileUtils;
+import cm.aptoide.pt.v8engine.V8Engine;
 import rx.Observable;
 
 /**
@@ -13,24 +14,27 @@ import rx.Observable;
 public class FileManager {
 
   private final CacheHelper cacheHelper;
-  private FileUtils fileUtils;
-  private String[] cacheFolders;
-  private AptoideDownloadManager downloadManager;
+  private final FileUtils fileUtils;
+  private final String[] cacheFolders;
+  private final AptoideDownloadManager downloadManager;
+  private final L2Cache httpClientCache;
 
   public FileManager(CacheHelper cacheHelper, FileUtils fileUtils, String[] cacheFolders,
-      AptoideDownloadManager downloadManager) {
+      AptoideDownloadManager downloadManager, L2Cache httpClientCache) {
     this.cacheHelper = cacheHelper;
     this.fileUtils = fileUtils;
     this.cacheFolders = cacheFolders;
     this.downloadManager = downloadManager;
+    this.httpClientCache = httpClientCache;
   }
 
-  public static FileManager build(AptoideDownloadManager downloadManager) {
+  public static FileManager build(AptoideDownloadManager downloadManager, L2Cache httpClientCache) {
     String[] folders = {
         Application.getContext().getCacheDir().getPath(),
         Application.getConfiguration().getCachePath()
     };
-    return new FileManager(CacheHelper.build(), new FileUtils(), folders, downloadManager);
+    return new FileManager(CacheHelper.build(), new FileUtils(), folders, downloadManager,
+        httpClientCache);
   }
 
   /**
@@ -49,7 +53,7 @@ public class FileManager {
         return Observable.just(deletedSize);
       }
     }).doOnNext(aVoid -> {
-      OkHttpClientFactory.cleanInMemoryCache();
+      httpClientCache.clean();
     });
   }
 }

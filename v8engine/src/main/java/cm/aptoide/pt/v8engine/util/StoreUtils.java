@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -52,10 +54,10 @@ public class StoreUtils {
   @Deprecated public static void subscribeStore(String storeName,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager,
-      BodyInterceptor<BaseBody> bodyInterceptor,
-      StoreCredentialsProvider storeCredentialsProvider) {
+      BodyInterceptor<BaseBody> bodyInterceptor, StoreCredentialsProvider storeCredentialsProvider,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
     subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName, storeCredentialsProvider),
-        bodyInterceptor), successRequestListener, errorRequestListener, accountManager, null, null);
+        bodyInterceptor, httpClient, converterFactory), successRequestListener, errorRequestListener, accountManager, null, null);
   }
 
   /**

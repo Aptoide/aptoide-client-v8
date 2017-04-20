@@ -3,10 +3,9 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.AnalyticsBaseBody;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.util.Map;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -20,21 +19,22 @@ public class AnalyticsEventRequest extends V7<BaseV7Response, AnalyticsEventRequ
   private final String context;
 
   private AnalyticsEventRequest(Body body, String action, String name, String context,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
-    super(body, BASE_HOST,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter(), bodyInterceptor);
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
     this.action = action;
     this.name = name;
     this.context = context;
   }
 
   public static AnalyticsEventRequest of(String eventName, String context, String action,
-      Map<String, Object> data, BodyInterceptor<BaseBody> bodyInterceptor) {
+      Map<String, Object> data, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     final AnalyticsEventRequest.Body body =
         new AnalyticsEventRequest.Body(DataProvider.getConfiguration().getAppId(), data);
 
-    return new AnalyticsEventRequest(body, action, eventName, context, bodyInterceptor);
+    return new AnalyticsEventRequest(body, action, eventName, context, bodyInterceptor, httpClient,
+        converterFactory);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

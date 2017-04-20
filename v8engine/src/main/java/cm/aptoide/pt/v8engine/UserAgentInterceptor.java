@@ -1,6 +1,7 @@
-package cm.aptoide.pt.networkclient.okhttp;
+package cm.aptoide.pt.v8engine;
 
 import android.text.TextUtils;
+import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import java.io.IOException;
 import okhttp3.Interceptor;

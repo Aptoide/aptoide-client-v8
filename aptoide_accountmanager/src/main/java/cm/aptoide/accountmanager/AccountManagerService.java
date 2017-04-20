@@ -15,6 +15,8 @@ import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
 import cm.aptoide.pt.model.v3.OAuth;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Completable;
 import rx.Single;
 
@@ -23,17 +25,24 @@ public class AccountManagerService {
   private final AptoideClientUUID aptoideClientUUID;
   private final BasebBodyInterceptorFactory interceptorFactory;
   private final AccountFactory accountFactory;
+  private final OkHttpClient httpClient;
+  private final OkHttpClient longTimeoutHttpClient;
+  private final Converter.Factory converterFactory;
 
   public AccountManagerService(AptoideClientUUID aptoideClientUUID,
-      BasebBodyInterceptorFactory interceptorFactory, AccountFactory accountFactory) {
+      BasebBodyInterceptorFactory interceptorFactory, AccountFactory accountFactory,
+      OkHttpClient httpClient, OkHttpClient longTimeoutHttpClient, Converter.Factory converterFactory) {
     this.aptoideClientUUID = aptoideClientUUID;
     this.interceptorFactory = interceptorFactory;
     this.accountFactory = accountFactory;
+    this.httpClient = httpClient;
+    this.longTimeoutHttpClient = longTimeoutHttpClient;
+    this.converterFactory = converterFactory;
   }
 
   public Completable createAccount(String email, String password) {
     return CreateUserRequest.of(email.toLowerCase(), password,
-        aptoideClientUUID.getUniqueIdentifier(), interceptorFactory.createV3())
+        aptoideClientUUID.getUniqueIdentifier(), interceptorFactory.createV3(), httpClient)
         .observe(true)
         .toSingle()
         .flatMapCompletable(response -> {
@@ -53,51 +62,44 @@ public class AccountManagerService {
 
   public Single<OAuth> login(String type, String email, String password, String name) {
     return OAuth2AuthenticationRequest.of(email, password, type, name,
-        aptoideClientUUID.getUniqueIdentifier(), interceptorFactory.createV3())
-        .observe()
-        .toSingle()
-        .flatMap(oAuth -> {
-          if (!oAuth.hasErrors()) {
-            return Single.just(oAuth);
-          } else {
-            return Single.error(new AccountException(oAuth.getError()));
-          }
-        })
-        .onErrorResumeNext(throwable -> {
-          if (throwable instanceof AptoideWsV3Exception) {
-            return Single.error(new AccountException(
-                ((AptoideWsV3Exception) throwable).getBaseResponse().getError()));
-          }
-          return Single.error(throwable);
-        });
+        aptoideClientUUID.getUniqueIdentifier(), interceptorFactory.createV3(), httpClient,
+        converterFactory).observe().toSingle().flatMap(oAuth -> {
+      if (!oAuth.hasErrors()) {
+        return Single.just(oAuth);
+      } else {
+        return Single.error(new AccountException(oAuth.getError()));
+      }
+    }).onErrorResumeNext(throwable -> {
+      if (throwable instanceof AptoideWsV3Exception) {
+        return Single.error(
+            new AccountException(((AptoideWsV3Exception) throwable).getBaseResponse().getError()));
+      }
+      return Single.error(throwable);
+    });
   }
 
   public Completable updateAccount(String email, String nickname, String password,
       String avatarPath, String accessToken) {
     return CreateUserRequest.of(email, nickname, password, avatarPath,
-        aptoideClientUUID.getUniqueIdentifier(), accessToken, interceptorFactory.createV3())
-        .observe(true)
-        .toSingle()
-        .flatMapCompletable(response -> {
-          if (!response.hasErrors()) {
-            return Completable.complete();
-          } else {
-            return Completable.error(new AccountException(response.getErrors()));
-          }
-        });
+        aptoideClientUUID.getUniqueIdentifier(), accessToken, interceptorFactory.createV3(),
+        httpClient, longTimeoutHttpClient).observe(true).toSingle().flatMapCompletable(response -> {
+      if (!response.hasErrors()) {
+        return Completable.complete();
+      } else {
+        return Completable.error(new AccountException(response.getErrors()));
+      }
+    });
   }
 
   public Completable updateAccount(String accessLevel, AptoideAccountManager accountManager) {
-    return SetUserRequest.of(accessLevel, interceptorFactory.createV7(accountManager))
-        .observe(true)
-        .toSingle()
-        .flatMapCompletable(response -> {
-          if (response.isOk()) {
-            return Completable.complete();
-          } else {
-            return Completable.error(new Exception(V7.getErrorMessage(response)));
-          }
-        });
+    return SetUserRequest.of(accessLevel, interceptorFactory.createV7(accountManager), httpClient,
+        converterFactory).observe(true).toSingle().flatMapCompletable(response -> {
+      if (response.isOk()) {
+        return Completable.complete();
+      } else {
+        return Completable.error(new Exception(V7.getErrorMessage(response)));
+      }
+    });
   }
 
   public Completable unsubscribeStore(String storeName, String storeUserName, String storePassword,
@@ -116,13 +118,17 @@ public class AccountManagerService {
       String storePassword, AptoideAccountManager accountManager,
       ChangeStoreSubscriptionResponse.StoreSubscriptionState subscription) {
     return ChangeStoreSubscriptionRequest.of(storeName, subscription, storeUserName, storePassword,
-        interceptorFactory.createV7(accountManager)).observe().toSingle().toCompletable();
+        interceptorFactory.createV7(accountManager), httpClient, converterFactory)
+        .observe()
+        .toSingle()
+        .toCompletable();
   }
 
   private Single<List<Store>> getSubscribedStores(String accessToken,
       AptoideAccountManager accountManager) {
     return new GetMySubscribedStoresRequest(accessToken,
-        interceptorFactory.createV7(accountManager)).observe()
+        interceptorFactory.createV7(accountManager), httpClient,
+        converterFactory).observe()
         .map(getUserRepoSubscription -> getUserRepoSubscription.getDatalist().getList())
         .flatMapIterable(list -> list)
         .map(store -> mapToStore(store))
@@ -144,15 +150,13 @@ public class AccountManagerService {
   }
 
   private Single<CheckUserCredentialsJson> getServerAccount(String accessToken) {
-    return CheckUserCredentialsRequest.of(accessToken, interceptorFactory.createV3())
-        .observe()
-        .toSingle()
-        .flatMap(response -> {
-          if (response.getStatus().equals("OK")) {
-            return Single.just(response);
-          }
-          return Single.error(new IllegalStateException("Failed to get user account"));
-        });
+    return CheckUserCredentialsRequest.of(accessToken, interceptorFactory.createV3(), httpClient,
+        converterFactory).observe().toSingle().flatMap(response -> {
+      if (response.getStatus().equals("OK")) {
+        return Single.just(response);
+      }
+      return Single.error(new IllegalStateException("Failed to get user account"));
+    });
   }
 
   private Account mapServerAccountToAccount(CheckUserCredentialsJson serverUser,
@@ -168,12 +172,15 @@ public class AccountManagerService {
 
   public Completable updateAccount(boolean adultContentEnabled, String accessToken) {
     return ChangeUserSettingsRequest.of(adultContentEnabled, accessToken,
-        interceptorFactory.createV3()).observe(true).toSingle().flatMapCompletable(response -> {
-      if (response.getStatus().equals("OK")) {
-        return Completable.complete();
-      } else {
-        return Completable.error(new Exception(V3.getErrorMessage(response)));
-      }
-    });
+        interceptorFactory.createV3(), httpClient, converterFactory)
+        .observe(true)
+        .toSingle()
+        .flatMapCompletable(response -> {
+          if (response.getStatus().equals("OK")) {
+            return Completable.complete();
+          } else {
+            return Completable.error(new Exception(V3.getErrorMessage(response)));
+          }
+        });
   }
 }

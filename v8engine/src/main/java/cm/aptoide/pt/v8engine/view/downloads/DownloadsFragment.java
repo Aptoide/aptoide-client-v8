@@ -9,6 +9,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
@@ -30,6 +31,8 @@ import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -193,7 +196,12 @@ import rx.schedulers.Schedulers;
     analytics = Analytics.getInstance();
     final BodyInterceptor<BaseBody> baseBodyBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    installConverter = new InstallEventConverter(baseBodyBodyInterceptor);
-    downloadConverter = new DownloadEventConverter(baseBodyBodyInterceptor);
+    final OkHttpClient httpClient =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    final Converter.Factory converterFactory = WebService.getDefaultConverter();
+    installConverter =
+        new InstallEventConverter(baseBodyBodyInterceptor, httpClient, converterFactory);
+    downloadConverter =
+        new DownloadEventConverter(baseBodyBodyInterceptor, httpClient, converterFactory);
   }
 }

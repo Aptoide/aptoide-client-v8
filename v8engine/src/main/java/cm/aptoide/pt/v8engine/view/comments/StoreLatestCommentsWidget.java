@@ -10,6 +10,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.model.v7.Comment;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -27,6 +28,8 @@ import cm.aptoide.pt.v8engine.view.store.StoreLatestCommentsDisplayable;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -40,6 +43,8 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
 
   public StoreLatestCommentsWidget(View itemView) {
     super(itemView);
@@ -55,6 +60,9 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     accountNavigator =
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
+    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
+
     LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     recyclerView.setLayoutManager(layoutManager);
@@ -76,15 +84,17 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
 
   private Void reloadComments() {
     ManagerPreferences.setForceServerRefreshFlag(true);
-    compositeSubscription.add(ListCommentsRequest.of(storeId, 0, 3, false, baseBodyInterceptor)
-        .observe()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(listComments -> {
-          setAdapter(listComments.getDatalist().getList());
-        }, err -> {
-          CrashReport.getInstance().log(err);
-        }));
+    compositeSubscription.add(
+        ListCommentsRequest.of(storeId, 0, 3, false, baseBodyInterceptor, httpClient,
+            converterFactory)
+            .observe()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(listComments -> {
+              setAdapter(listComments.getDatalist().getList());
+            }, err -> {
+              CrashReport.getInstance().log(err);
+            }));
     return null;
   }
 

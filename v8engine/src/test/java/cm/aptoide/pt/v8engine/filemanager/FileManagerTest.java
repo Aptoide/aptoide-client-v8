@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.filemanager;
 
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
 import cm.aptoide.pt.utils.FileUtils;
 import java.io.IOException;
 import org.junit.Before;
@@ -36,7 +37,8 @@ public class FileManagerTest {
   }
 
   @Test public void cleanCacheAndInvalidateDatabase() {
-    FileManager fileManager = new FileManager(cacheHelper, fileUtils, folders, downloadManager);
+    FileManager fileManager =
+        new FileManager(cacheHelper, fileUtils, folders, downloadManager, mock(L2Cache.class));
 
     TestSubscriber<Long> subscriber = TestSubscriber.create();
     fileManager.purgeCache().subscribe(subscriber);
@@ -57,7 +59,8 @@ public class FileManagerTest {
   @Test public void deleteCacheSizeGreaterZero() throws IOException {
     FileUtils fileUtils = mock(FileUtils.class);
     when(fileUtils.deleteFolder(folders[0])).thenReturn(Observable.just(10L));
-    FileManager fileManager = new FileManager(cacheHelper, fileUtils, folders, downloadManager);
+    FileManager fileManager =
+        new FileManager(cacheHelper, fileUtils, folders, downloadManager, mock(L2Cache.class));
 
     TestSubscriber<Long> subscriber = TestSubscriber.create();
     fileManager.deleteCache().subscribe(subscriber);
@@ -68,7 +71,8 @@ public class FileManagerTest {
   @Test public void deleteCacheSizeEqualsZero() throws IOException {
     FileUtils fileUtils = mock(FileUtils.class);
     when(fileUtils.deleteFolder(folders[0])).thenReturn(Observable.just(0L));
-    FileManager fileManager = new FileManager(cacheHelper, fileUtils, folders, downloadManager);
+    FileManager fileManager =
+        new FileManager(cacheHelper, fileUtils, folders, downloadManager, mock(L2Cache.class));
 
     TestSubscriber<Long> subscriber = TestSubscriber.create();
     fileManager.deleteCache().subscribe(subscriber);

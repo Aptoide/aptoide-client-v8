@@ -27,6 +27,7 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.SetComment;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -50,6 +51,8 @@ import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.functions.Action1;
 
@@ -88,6 +91,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private AccountNavigator accountNavigator;
   private BodyInterceptor<BaseBody> bodyDecorator;
   private StoreCredentialsProvider storeCredentialsProvider;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
 
   public static Fragment newInstance(CommentType commentType, String timelineArticleId) {
     Bundle args = new Bundle();
@@ -112,6 +117,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     //this object is used in loadExtras and loadExtras is called in the super
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
+    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
     super.onCreate(savedInstanceState);
   }
 
@@ -216,7 +223,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   void caseListSocialTimelineComments(boolean refresh) {
     ListCommentsRequest listCommentsRequest =
-        ListCommentsRequest.ofTimeline(url, refresh, elementIdAsString, bodyDecorator);
+        ListCommentsRequest.ofTimeline(url, refresh, elementIdAsString, bodyDecorator, httpClient,
+            converterFactory);
 
     Action1<ListComments> listCommentsAction = (listComments -> {
       if (listComments != null
@@ -250,7 +258,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
       boolean refresh) {
 
     ListCommentsRequest listCommentsRequest =
-        ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, bodyDecorator);
+        ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, bodyDecorator, httpClient,
+            converterFactory);
 
     if (storeCredentials == null || storeCredentials.getId() == null) {
       IllegalStateException illegalStateException =

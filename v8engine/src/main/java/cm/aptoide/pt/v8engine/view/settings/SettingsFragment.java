@@ -99,7 +99,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
     super.onCreate(savedInstanceState);
     trackAnalytics = true;
     fileManager =
-        FileManager.build(((V8Engine) getContext().getApplicationContext()).getDownloadManager());
+        FileManager.build(((V8Engine) getContext().getApplicationContext()).getDownloadManager(),
+            ((V8Engine) getContext().getApplicationContext()).getHttpClientCache());
     subscriptions = new CompositeSubscription();
     permissionManager = new PermissionManager();
     adultContentConfirmationDialog =

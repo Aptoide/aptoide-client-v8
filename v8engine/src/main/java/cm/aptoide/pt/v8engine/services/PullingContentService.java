@@ -21,6 +21,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.PushNotificationsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -37,6 +38,8 @@ import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import com.bumptech.glide.request.target.NotificationTarget;
 import java.util.ArrayList;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -57,6 +60,8 @@ public class PullingContentService extends Service {
   private CompositeSubscription subscriptions;
   private InstallManager installManager;
   private BodyInterceptor<BaseBody> baseBodyInterceptorV3;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
 
   public static void setAlarm(AlarmManager am, Context context, String action, long time) {
     Intent intent = new Intent(context, PullingContentService.class);
@@ -71,6 +76,8 @@ public class PullingContentService extends Service {
     baseBodyInterceptorV3 = ((V8Engine) this.getApplicationContext()).getBaseBodyInterceptorV3();
     installManager =
         ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
+    httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
 
     subscriptions = new CompositeSubscription();
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -149,7 +156,7 @@ public class PullingContentService extends Service {
    * @param startId service startid
    */
   private void setPushNotificationsAction(Context context, int startId) {
-    PushNotificationsRequest.of(baseBodyInterceptorV3)
+    PushNotificationsRequest.of(baseBodyInterceptorV3, httpClient, converterFactory)
         .execute(response -> setPushNotification(context, response, startId));
   }
 

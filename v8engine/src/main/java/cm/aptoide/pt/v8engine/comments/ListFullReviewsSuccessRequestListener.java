@@ -16,6 +16,8 @@ import cm.aptoide.pt.v8engine.view.reviews.RateAndReviewsFragment;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.LinkedList;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -24,14 +26,19 @@ public class ListFullReviewsSuccessRequestListener implements SuccessRequestList
 
   private final RateAndReviewsFragment fragment;
   private StoreCredentialsProvider storeCredentialsProvider;
-  private BodyInterceptor<BaseBody> bodyBodyInterceptor;
+  private final Converter.Factory converterFactory;
+  private final BodyInterceptor<BaseBody> bodyBodyInterceptor;
+  private final OkHttpClient httpClient;
 
   public ListFullReviewsSuccessRequestListener(RateAndReviewsFragment fragment,
       StoreCredentialsProvider storeCredentialsProvider,
-      BodyInterceptor<BaseBody> baseBodyInterceptor) {
+      BodyInterceptor<BaseBody> baseBodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     this.fragment = fragment;
+    this.httpClient = httpClient;
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.bodyBodyInterceptor = baseBodyInterceptor;
+    this.converterFactory = converterFactory;
   }
 
   @Override public void call(ListReviews listFullReviews) {
@@ -43,7 +50,7 @@ public class ListFullReviewsSuccessRequestListener implements SuccessRequestList
         .flatMap(review -> ListCommentsRequest.of( // fetch the list of comments for each review
             review.getComments().getView(), review.getId(), 3,
             StoreUtils.getStoreCredentials(fragment.getStoreName(), storeCredentialsProvider), true,
-            bodyBodyInterceptor).observe().subscribeOn(Schedulers.io()) // parallel I/O split point
+            bodyBodyInterceptor, httpClient, converterFactory).observe().subscribeOn(Schedulers.io()) // parallel I/O split point
             .map(listComments -> {
               review.setCommentList(listComments);
               return review;

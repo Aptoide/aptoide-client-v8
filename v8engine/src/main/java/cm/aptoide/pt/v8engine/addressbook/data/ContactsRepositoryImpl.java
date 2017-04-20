@@ -20,6 +20,8 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -30,9 +32,14 @@ import rx.schedulers.Schedulers;
 public class ContactsRepositoryImpl implements ContactsRepository {
 
   private final BodyInterceptor<BaseBody> bodyInterceptor;
+  private final OkHttpClient httpClient;
+  private final Converter.Factory converterFactory;
 
-  public ContactsRepositoryImpl(BodyInterceptor<BaseBody> bodyInterceptor) {
+  public ContactsRepositoryImpl(BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     this.bodyInterceptor = bodyInterceptor;
+    this.httpClient = httpClient;
+    this.converterFactory = converterFactory;
   }
 
   @Override public void getContacts(@NonNull LoadContactsCallback callback1) {
@@ -44,7 +51,7 @@ public class ContactsRepositoryImpl implements ContactsRepository {
       List<String> numbers = contacts.getMobileNumbers();
       List<String> emails = contacts.getEmails();
 
-      SyncAddressBookRequest.of(numbers, emails, bodyInterceptor)
+      SyncAddressBookRequest.of(numbers, emails, bodyInterceptor, httpClient, converterFactory)
           .observe()
           .subscribe(getFollowers -> {
             List<Contact> contactList = new ArrayList<>();
@@ -71,22 +78,24 @@ public class ContactsRepositoryImpl implements ContactsRepository {
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext());
     SyncAddressBookRequest.of(twitterModel.getId(), twitterModel.getToken(),
-        twitterModel.getSecret(), bodyInterceptor).observe().subscribe(getFollowers -> {
-      List<Contact> contactList = new ArrayList<>();
-      for (GetFollowers.TimelineUser user : getFollowers.getDatalist().getList()) {
-        Contact contact = new Contact();
-        contact.setStore(user.getStore());
-        Comment.User person = new Comment.User();
-        person.setAvatar(user.getAvatar());
-        person.setName(user.getName());
-        contact.setPerson(person);
-        contactList.add(contact);
-      }
-      callback.onContactsLoaded(contactList, true);
-    }, (throwable) -> {
-      throwable.printStackTrace();
-      callback.onContactsLoaded(null, false);
-    });
+        twitterModel.getSecret(), bodyInterceptor, httpClient, converterFactory)
+        .observe()
+        .subscribe(getFollowers -> {
+          List<Contact> contactList = new ArrayList<>();
+          for (GetFollowers.TimelineUser user : getFollowers.getDatalist().getList()) {
+            Contact contact = new Contact();
+            contact.setStore(user.getStore());
+            Comment.User person = new Comment.User();
+            person.setAvatar(user.getAvatar());
+            person.setName(user.getName());
+            contact.setPerson(person);
+            contactList.add(contact);
+          }
+          callback.onContactsLoaded(contactList, true);
+        }, (throwable) -> {
+          throwable.printStackTrace();
+          callback.onContactsLoaded(null, false);
+        });
   }
 
   @Override public void getFacebookContacts(@NonNull FacebookModel facebookModel,
@@ -95,7 +104,7 @@ public class ContactsRepositoryImpl implements ContactsRepository {
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext());
     SyncAddressBookRequest.of(facebookModel.getId(), facebookModel.getAccessToken(),
-        bodyInterceptor).observe().subscribe(getFriends -> {
+        bodyInterceptor, httpClient, converterFactory).observe().subscribe(getFriends -> {
       List<Contact> contactList = new ArrayList<>();
       for (GetFollowers.TimelineUser user : getFriends.getDatalist().getList()) {
         Contact contact = new Contact();
@@ -133,15 +142,17 @@ public class ContactsRepositoryImpl implements ContactsRepository {
       AptoideClientUUID aptoideClientUUID =
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
               DataProvider.getContext());
-      SetConnectionRequest.of(hashedPhoneNumber, bodyInterceptor).observe().subscribe(response -> {
-        if (response.isOk()) {
-          callback.onPhoneNumberSubmission(true);
-        } else {
-          callback.onPhoneNumberSubmission(false);
-        }
-      }, throwable -> {
-        callback.onPhoneNumberSubmission(false);
-      });
+      SetConnectionRequest.of(hashedPhoneNumber, bodyInterceptor, httpClient, converterFactory)
+          .observe()
+          .subscribe(response -> {
+            if (response.isOk()) {
+              callback.onPhoneNumberSubmission(true);
+            } else {
+              callback.onPhoneNumberSubmission(false);
+            }
+          }, throwable -> {
+            callback.onPhoneNumberSubmission(false);
+          });
     } else {
       callback.onPhoneNumberSubmission(false);
     }

@@ -11,8 +11,15 @@ import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.utils.AptoideUtils;
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -31,15 +38,20 @@ public class UpdateRepository implements Repository<Update, String> {
   private final UpdateAccessor updateAccessor;
   private final StoreAccessor storeAccessor;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
+  private final OkHttpClient httpClient;
+  private final Converter.Factory converterFactory;
 
   UpdateRepository(UpdateAccessor updateAccessor, StoreAccessor storeAccessor,
       AptoideAccountManager accountManager, AptoideClientUUID idsRepository,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     this.updateAccessor = updateAccessor;
     this.storeAccessor = storeAccessor;
     this.accountManager = accountManager;
     this.aptoideClientUUID = idsRepository;
     this.bodyInterceptor = bodyInterceptor;
+    this.httpClient = httpClient;
+    this.converterFactory = converterFactory;
   }
 
   public @NonNull Completable sync(boolean bypassCache) {
@@ -61,7 +73,7 @@ public class UpdateRepository implements Repository<Update, String> {
   private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
     Logger.d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
     return ListAppsUpdatesRequest.of(storeIds, aptoideClientUUID.getUniqueIdentifier(),
-        bodyInterceptor).observe(bypassCache).map(result -> {
+        bodyInterceptor, httpClient, converterFactory).observe(bypassCache).map(result -> {
       if (result != null && result.isOk()) {
         return result.getList();
       }

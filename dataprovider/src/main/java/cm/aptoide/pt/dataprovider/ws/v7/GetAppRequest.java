@@ -7,15 +7,14 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.util.Log;
 import cm.aptoide.pt.model.v7.GetApp;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -24,38 +23,41 @@ import rx.Observable;
 @EqualsAndHashCode(callSuper = true) public class GetAppRequest
     extends V7<GetApp, GetAppRequest.Body> {
 
-  private GetAppRequest(String baseHost, Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
-    super(body, baseHost,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter(), bodyInterceptor);
+  private GetAppRequest(String baseHost, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(body, baseHost, httpClient, converterFactory, bodyInterceptor);
   }
 
   public static GetAppRequest of(String packageName, String storeName,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
 
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST, new Body(packageName, storeName, forceServerRefresh),
-        bodyInterceptor);
+        bodyInterceptor, httpClient, converterFactory);
   }
 
   public static GetAppRequest of(String packageName, BodyInterceptor<BaseBody> bodyInterceptor,
-      long appId) {
+      long appId, OkHttpClient httpClient, Converter.Factory converterFactory) {
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST, new Body(appId, forceServerRefresh, packageName),
-        bodyInterceptor);
+        bodyInterceptor, httpClient, converterFactory);
   }
 
-  public static GetAppRequest ofMd5(String md5, BodyInterceptor<BaseBody> bodyInterceptor) {
+  public static GetAppRequest ofMd5(String md5, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
-    return new GetAppRequest(BASE_HOST, new Body(forceServerRefresh, md5), bodyInterceptor);
+    return new GetAppRequest(BASE_HOST, new Body(forceServerRefresh, md5), bodyInterceptor,
+        httpClient, converterFactory);
   }
 
   public static GetAppRequest of(long appId, String storeName,
       BaseRequestWithStore.StoreCredentials storeCredentials, String packageName,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
 
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
@@ -63,12 +65,14 @@ import rx.Observable;
     body.setStoreUser(storeCredentials.getUsername());
     body.setStorePassSha1(storeCredentials.getPasswordSha1());
 
-    return new GetAppRequest(BASE_HOST, body, bodyInterceptor);
+    return new GetAppRequest(BASE_HOST, body, bodyInterceptor, httpClient, converterFactory);
   }
 
-  public static GetAppRequest ofAction(String url, BodyInterceptor<BaseBody> bodyInterceptor) {
+  public static GetAppRequest ofAction(String url, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
     final long appId = getAppIdFromUrl(url);
-    return new GetAppRequest(BASE_HOST, new Body(appId), bodyInterceptor);
+    return new GetAppRequest(BASE_HOST, new Body(appId), bodyInterceptor, httpClient,
+        converterFactory);
   }
 
   private static long getAppIdFromUrl(String url) {

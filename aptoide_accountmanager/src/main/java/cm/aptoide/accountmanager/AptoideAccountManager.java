@@ -10,6 +10,8 @@ import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.net.SocketTimeoutException;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -222,6 +224,9 @@ public class AptoideAccountManager {
     private BasebBodyInterceptorFactory baseBodyInterceptorFactory;
     private ExternalAccountFactory externalAccountFactory;
     private AccountService accountService;
+    private OkHttpClient httpClient;
+    private Converter.Factory converterFactory;
+    private OkHttpClient longTimeoutHttpClient;
 
     public Builder setCredentialsValidator(CredentialsValidator credentialsValidator) {
       this.credentialsValidator = credentialsValidator;
@@ -274,6 +279,21 @@ public class AptoideAccountManager {
       return this;
     }
 
+    public Builder setHttpClient(OkHttpClient httpClient) {
+      this.httpClient = httpClient;
+      return this;
+    }
+
+    public Builder setLongTimeoutHttpClient(OkHttpClient longTimeoutHttpClient) {
+      this.longTimeoutHttpClient = longTimeoutHttpClient;
+      return this;
+    }
+
+    public Builder setConverterFactory(Converter.Factory converterFactory) {
+      this.converterFactory = converterFactory;
+      return this;
+    }
+
     public AptoideAccountManager build() {
 
       if (accountAnalytics == null) {
@@ -296,6 +316,23 @@ public class AptoideAccountManager {
               + "AccountManagerService is not provided.");
         }
 
+        if (httpClient == null) {
+          throw new IllegalArgumentException(
+              "OkHttpClient is mandatory if " + "AccountManagerService is not provided.");
+        }
+
+        if (longTimeoutHttpClient == null) {
+          throw new IllegalArgumentException("OkHttpClient with a long timeout is mandatory if "
+              + "AccountManagerService is not "
+              + "provided"
+              + ".");
+        }
+
+        if (converterFactory == null) {
+          throw new IllegalArgumentException(
+              "Converter.Factory is mandatory if " + "AccountManagerService is not provided.");
+        }
+
         if (accountFactory == null) {
 
           if (externalAccountFactory == null) {
@@ -305,7 +342,8 @@ public class AptoideAccountManager {
 
           if (accountService == null) {
             this.accountService =
-                new AccountService(aptoideClientUUID, baseBodyInterceptorFactory.createV3());
+                new AccountService(aptoideClientUUID, baseBodyInterceptorFactory.createV3(),
+                    httpClient, converterFactory);
           }
 
           this.accountFactory =
@@ -313,8 +351,8 @@ public class AptoideAccountManager {
         }
 
         accountManagerService =
-            new AccountManagerService(aptoideClientUUID, baseBodyInterceptorFactory,
-                accountFactory);
+            new AccountManagerService(aptoideClientUUID, baseBodyInterceptorFactory, accountFactory,
+                httpClient, longTimeoutHttpClient, converterFactory);
       }
 
       if (credentialsValidator == null) {

@@ -15,6 +15,7 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -27,6 +28,7 @@ import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.FollowUserDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
+import okhttp3.OkHttpClient;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
@@ -73,6 +75,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     final BodyInterceptor<BaseBody> bodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    final OkHttpClient httpClient =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
 
     if (!displayable.isLike()) {
       followLayout.setVisibility(View.GONE);
@@ -93,7 +97,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
 
       final StoreUtilsProxy storeUtilsProxy =
           new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl(),
-              AccessorFactory.getAccessorFor(Store.class));
+              AccessorFactory.getAccessorFor(Store.class), httpClient,
+              WebService.getDefaultConverter());
 
       Action1<Void> openStore = __ -> {
         getFragmentNavigator().navigateTo(

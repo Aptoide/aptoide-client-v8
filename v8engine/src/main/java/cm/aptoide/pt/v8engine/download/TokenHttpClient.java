@@ -7,20 +7,17 @@ package cm.aptoide.pt.v8engine.download;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.UserData;
-import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.downloadmanager.Constants;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
-import cm.aptoide.pt.networkclient.okhttp.UserAgentInterceptor;
+import cm.aptoide.pt.v8engine.UserAgentInterceptor;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEvent;
 import java.io.IOException;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -31,35 +28,24 @@ public class TokenHttpClient {
   private static final String TAG = "TokenHttpClient";
 
   private final AptoideClientUUID aptoideClientUUID;
-  private final UserData userData;
   private final String oemid;
   private final AptoideAccountManager accountManager;
 
-  public TokenHttpClient(AptoideClientUUID aptoideClientUUID, UserData userData, String oemid,
+  public TokenHttpClient(AptoideClientUUID aptoideClientUUID, String oemid,
       AptoideAccountManager accountManager) {
     this.aptoideClientUUID = aptoideClientUUID;
-    this.userData = userData;
     this.oemid = oemid;
     this.accountManager = accountManager;
   }
 
   public OkHttpClient.Builder customMake() {
-    return new OkHttpClient.Builder().addInterceptor(chain -> {
-      Request request = chain.request();
-
-      // Paid apps URLs are actually web services. We need to add token information in order
-      // to validate user is allowed to download the app.
-      if (request.url().host().contains(BuildConfig.APTOIDE_WEB_SERVICES_HOST)) {
-        request = request.newBuilder()
-            .post(RequestBody.create(MediaType.parse("application/json"),
-                "{\"access_token\" : \"" + accountManager.getAccessToken() + "\"}"))
-            .build();
-      }
-      return chain.proceed(request);
-    })
+    return new OkHttpClient.Builder().addInterceptor(new PaidAppsDownloadInterceptor(accountManager))
         .addInterceptor(new UserAgentInterceptor(
-            () -> AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, userData,
-                AptoideUtils.Core.getDefaultVername(), oemid, AptoideUtils.SystemU.TERMINAL_INFO)))
+            () -> AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, new UserData() {
+              @Override public String getEmail() {
+                return accountManager.getAccountEmail();
+              }
+            }, AptoideUtils.Core.getDefaultVername(), oemid, AptoideUtils.SystemU.TERMINAL_INFO)))
 
         .addInterceptor(new Interceptor() {
           @Override public Response intercept(Chain chain) throws IOException {

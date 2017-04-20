@@ -11,11 +11,18 @@ import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.payment.Authorization;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
 
@@ -26,20 +33,25 @@ public class PaymentAuthorizationRepository {
   private final PaymentAuthorizationFactory authorizationFactory;
   private final AptoideAccountManager accountManager;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
+  private final OkHttpClient httpClient;
+  private final Converter.Factory converterFactory;
 
   PaymentAuthorizationRepository(PaymentAuthorizationAccessor authorizationAccessor,
       SyncAdapterBackgroundSync backgroundSync, PaymentAuthorizationFactory authorizationFactory,
-      AptoideAccountManager accountManager, BodyInterceptor<BaseBody> bodyInterceptorV3) {
+      AptoideAccountManager accountManager, BodyInterceptor<BaseBody> bodyInterceptorV3,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
     this.authotizationAccessor = authorizationAccessor;
     this.backgroundSync = backgroundSync;
     this.authorizationFactory = authorizationFactory;
     this.accountManager = accountManager;
     this.bodyInterceptorV3 = bodyInterceptorV3;
+    this.httpClient = httpClient;
+    this.converterFactory = converterFactory;
   }
 
   public Completable createPaymentAuthorization(int paymentId) {
     return CreatePaymentAuthorizationRequest.of(accountManager.getAccessToken(), paymentId,
-        bodyInterceptorV3).observe().flatMap(response -> {
+        bodyInterceptorV3, httpClient, converterFactory).observe().flatMap(response -> {
       if (response != null && response.isOk()) {
         return Observable.just(null);
       }

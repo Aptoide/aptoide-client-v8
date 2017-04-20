@@ -24,6 +24,8 @@ import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentExce
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.Collections;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -35,32 +37,36 @@ public class InAppBillingRepository {
   private final PaymentConfirmationAccessor confirmationAccessor;
   private final AptoideAccountManager accountManager;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
 
   public InAppBillingRepository(NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor confirmationAccessor, AptoideAccountManager accountManager,
-      BodyInterceptor<BaseBody> bodyInterceptorV3) {
+      BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     this.operatorManager = operatorManager;
     this.confirmationAccessor = confirmationAccessor;
     this.accountManager = accountManager;
     this.bodyInterceptorV3 = bodyInterceptorV3;
+    this.httpClient = httpClient;
+    this.converterFactory = converterFactory;
   }
 
   public Observable<Void> getInAppBilling(int apiVersion, String packageName, String type) {
-    return InAppBillingAvailableRequest.of(apiVersion, packageName, type, bodyInterceptorV3)
-        .observe()
-        .flatMap(response -> {
-          if (response != null && response.isOk()) {
-            if (response.getInAppBillingAvailable().isAvailable()) {
-              return Observable.just(null);
-            } else {
-              return Observable.error(
-                  new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
-            }
-          } else {
-            return Observable.error(
-                new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-          }
-        });
+    return InAppBillingAvailableRequest.of(apiVersion, packageName, type, bodyInterceptorV3,
+        httpClient, converterFactory).observe().flatMap(response -> {
+      if (response != null && response.isOk()) {
+        if (response.getInAppBillingAvailable().isAvailable()) {
+          return Observable.just(null);
+        } else {
+          return Observable.error(
+              new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
+        }
+      } else {
+        return Observable.error(
+            new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+      }
+    });
   }
 
   public Observable<List<SKU>> getSKUs(int apiVersion, String packageName, List<String> skuList,
@@ -76,47 +82,56 @@ public class InAppBillingRepository {
   private Observable<InAppBillingSkuDetailsResponse> getSKUListDetails(int apiVersion,
       String packageName, List<String> skuList, String type) {
     return InAppBillingSkuDetailsRequest.of(apiVersion, packageName, skuList, operatorManager, type,
-        accountManager.getAccessToken(), bodyInterceptorV3).observe().flatMap(response -> {
-      if (response != null && response.isOk()) {
-        return Observable.just(response);
-      } else {
-        final List<InAppBillingSkuDetailsResponse.PurchaseDataObject> detailList =
-            response.getPublisherResponse().getDetailList();
-        if (detailList.isEmpty()) {
-          return Observable.error(
-              new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
-        }
-        return Observable.error(
-            new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-      }
-    });
+        accountManager.getAccessToken(), bodyInterceptorV3, httpClient, converterFactory)
+        .observe()
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            return Observable.just(response);
+          } else {
+            final List<InAppBillingSkuDetailsResponse.PurchaseDataObject> detailList =
+                response.getPublisherResponse().getDetailList();
+            if (detailList.isEmpty()) {
+              return Observable.error(
+                  new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
+            }
+            return Observable.error(
+                new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+          }
+        });
   }
 
   public Observable<InAppBillingPurchasesResponse.PurchaseInformation> getInAppPurchaseInformation(
       int apiVersion, String packageName, String type) {
     return InAppBillingPurchasesRequest.of(apiVersion, packageName, type,
-        accountManager.getAccessToken(), bodyInterceptorV3).observe().flatMap(response -> {
-      if (response != null && response.isOk()) {
-        return Observable.just(response.getPurchaseInformation());
-      }
-      return Observable.error(new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-    });
+        accountManager.getAccessToken(), bodyInterceptorV3, httpClient, converterFactory)
+        .observe()
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            return Observable.just(response.getPurchaseInformation());
+          }
+          return Observable.error(
+              new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+        });
   }
 
   public Observable<Void> deleteInAppPurchase(int apiVersion, String packageName,
       String purchaseToken) {
     return InAppBillingConsumeRequest.of(apiVersion, packageName, purchaseToken,
-        accountManager.getAccessToken(), bodyInterceptorV3).observe().flatMap(response -> {
-      if (response != null && response.isOk()) {
-        // TODO sync all payment confirmations instead. For now there is no web service for that.
-        confirmationAccessor.removeAll();
-        return Observable.just(null);
-      }
-      if (isDeletionItemNotFound(response.getErrors())) {
-        return Observable.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
-      }
-      return Observable.error(new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-    });
+        accountManager.getAccessToken(), bodyInterceptorV3, httpClient, converterFactory)
+        .observe()
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            // TODO sync all payment confirmations instead. For now there is no web service for that.
+            confirmationAccessor.removeAll();
+            return Observable.just(null);
+          }
+          if (isDeletionItemNotFound(response.getErrors())) {
+            return Observable.error(
+                new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
+          }
+          return Observable.error(
+              new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+        });
   }
 
   @NonNull private boolean isDeletionItemNotFound(List<ErrorResponse> errors) {

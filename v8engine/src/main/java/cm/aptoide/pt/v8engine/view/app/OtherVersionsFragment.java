@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.view.app;
 
-import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +23,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.R;
@@ -36,6 +36,8 @@ import cm.aptoide.pt.v8engine.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import java.util.ArrayList;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 
 public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
@@ -49,6 +51,8 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
   private String appPackge;
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
 
   /**
    * @param appName
@@ -72,6 +76,8 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     super.onCreate(savedInstanceState);
     baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -128,9 +134,9 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
         };
 
     endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(),
-        ListAppVersionsRequest.of(appPackge, storeNames,
-            StoreUtils.getSubscribedStoresAuthMap(), baseBodyInterceptor),
-        otherVersionsSuccessRequestListener, err -> err.printStackTrace());
+        ListAppVersionsRequest.of(appPackge, storeNames, StoreUtils.getSubscribedStoresAuthMap(),
+            baseBodyInterceptor, httpClient, converterFactory), otherVersionsSuccessRequestListener,
+        err -> err.printStackTrace());
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);

@@ -46,8 +46,8 @@ public class AptoideDownloadManager {
   private FileDownloader fileDownloader;
 
   public AptoideDownloadManager(DownloadAccessor downloadAccessor, CacheManager cacheHelper,
-      FileUtils fileUtils, Analytics analytics, String downloadsStoragePath,
-      FileDownloader fileDownloader, String apkPath, String obbPath) {
+      FileUtils fileUtils, Analytics analytics, FileDownloader fileDownloader, String downloadsStoragePath,
+      String apkPath, String obbPath) {
     this.fileDownloader = fileDownloader;
     this.analytics = analytics;
     this.cacheHelper = cacheHelper;

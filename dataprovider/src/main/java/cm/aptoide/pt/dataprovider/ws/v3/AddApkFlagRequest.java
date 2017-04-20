@@ -8,8 +8,8 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -17,14 +17,13 @@ import rx.Observable;
  */
 public class AddApkFlagRequest extends V3<GenericResponseV2> {
 
-  protected AddApkFlagRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor) {
-    super(baseBody,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter(), bodyInterceptor);
+  protected AddApkFlagRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(baseBody, httpClient, converterFactory, bodyInterceptor);
   }
 
   public static AddApkFlagRequest of(String storeName, String appMd5sum, String flag,
-      String accessToken, BodyInterceptor<BaseBody> bodyInterceptor) {
+      String accessToken, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient) {
     BaseBody args = new BaseBody();
 
     args.put("repo", storeName);
@@ -33,7 +32,8 @@ public class AddApkFlagRequest extends V3<GenericResponseV2> {
     args.put("mode", "json");
     args.put("access_token", accessToken);
 
-    return new AddApkFlagRequest(args, bodyInterceptor);
+    return new AddApkFlagRequest(args, bodyInterceptor, httpClient,
+        WebService.getDefaultConverter());
   }
 
   @Override protected Observable<GenericResponseV2> loadDataFromNetwork(Interfaces interfaces,

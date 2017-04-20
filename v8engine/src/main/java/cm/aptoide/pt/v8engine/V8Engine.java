@@ -19,7 +19,6 @@ import android.util.SparseArray;
 import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -36,6 +35,10 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
+import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
+import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheKeyAlgorithm;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
@@ -85,10 +88,14 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.Setter;
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -101,6 +108,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
  */
 public abstract class V8Engine extends SpotAndShareApplication {
 
+  public static final String CACHE_FILE_NAME = "aptoide.wscache";
   private static final String TAG = V8Engine.class.getName();
 
   @Getter private static FragmentProvider fragmentProvider;
@@ -122,6 +130,9 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private String aptoideMd5sum;
   private AptoideDownloadManager downloadManager;
   private SparseArray<InstallManager> installManagers;
+  private OkHttpClient defaultClient;
+  private OkHttpClient longTimeoutClient;
+  private L2Cache httpClientCache;
 
   /**
    * call after this instance onCreate()
@@ -242,6 +253,46 @@ public abstract class V8Engine extends SpotAndShareApplication {
         Build.ID);
   }
 
+  public OkHttpClient getLongTimeoutClient() {
+    if (longTimeoutClient == null) {
+      final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+      clientBuilder.addInterceptor(
+          new UserAgentInterceptor(() -> SecurePreferences.getUserAgent()));
+      clientBuilder.connectTimeout(2, TimeUnit.MINUTES);
+      clientBuilder.readTimeout(2, TimeUnit.MINUTES);
+      clientBuilder.writeTimeout(2, TimeUnit.MINUTES);
+      longTimeoutClient = clientBuilder.build();
+    }
+    return longTimeoutClient;
+  }
+
+  public OkHttpClient getDefaultClient() {
+    if (defaultClient == null) {
+      final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+      clientBuilder.readTimeout(45, TimeUnit.SECONDS);
+      clientBuilder.writeTimeout(45, TimeUnit.SECONDS);
+
+      final File cacheDirectory = new File("/");
+      final int cacheMaxSize = 10 * 1024 * 1024;
+      clientBuilder.cache(new Cache(cacheDirectory, cacheMaxSize)); // 10 MiB
+
+      clientBuilder.addInterceptor(new PostCacheInterceptor(getHttpClientCache()));
+      clientBuilder.addInterceptor(
+          new UserAgentInterceptor(() -> SecurePreferences.getUserAgent()));
+
+      defaultClient = clientBuilder.build();
+    }
+    return defaultClient;
+  }
+
+  public L2Cache getHttpClientCache() {
+    if (httpClientCache == null) {
+      httpClientCache = new L2Cache(new PostCacheKeyAlgorithm(),
+          new File(AptoideUtils.getContext().getCacheDir(), CACHE_FILE_NAME));
+    }
+    return httpClientCache;
+  }
+
   public AptoideDownloadManager getDownloadManager() {
     if (downloadManager == null) {
 
@@ -250,18 +301,17 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
       FileUtils.createDir(apkPath);
       FileUtils.createDir(obbPath);
+      TokenHttpClient tokenHttpClient =
+          new TokenHttpClient(getAptoideClientUUID(), getConfiguration().getPartnerId(),
+              getAccountManager());
+      final OkHttpClient.Builder okHttBuilder = tokenHttpClient.customMake();
       FileDownloader.init(this, new DownloadMgrInitialParams.InitCustomMaker().connectionCreator(
-          new OkHttp3Connection.Creator(new TokenHttpClient(getAptoideClientUUID(), new UserData() {
-            @Override public String getEmail() {
-              return getAccountManager().getAccountEmail();
-            }
-          }, getConfiguration().getPartnerId(), getAccountManager()).customMake())));
+          new OkHttp3Connection.Creator(okHttBuilder)));
 
-      downloadManager =
-          new AptoideDownloadManager(AccessorFactory.getAccessorFor(Download.class),
-              CacheHelper.build(), new FileUtils(action -> Analytics.File.moveFile(action)),
-              new DownloadAnalytics(Analytics.getInstance()), getConfiguration().getCachePath(),
-              FileDownloader.getImpl(), apkPath, obbPath);
+      downloadManager = new AptoideDownloadManager(AccessorFactory.getAccessorFor(Download.class),
+          CacheHelper.build(), new FileUtils(action -> Analytics.File.moveFile(action)),
+          new DownloadAnalytics(Analytics.getInstance()), FileDownloader.getImpl(),
+          getConfiguration().getCachePath(), apkPath, obbPath);
     }
     return downloadManager;
   }
@@ -296,7 +346,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
       final AccountFactory accountFactory = new AccountFactory(getAptoideClientUUID(),
           new SocialAccountFactory(context, getGoogleSignInClient()),
-          new AccountService(getAptoideClientUUID(), getBaseBodyInterceptorV3()));
+          new AccountService(getAptoideClientUUID(), getBaseBodyInterceptorV3(), getDefaultClient(),
+              WebService.getDefaultConverter()));
 
       final AndroidAccountDataMigration accountDataMigration =
           new AndroidAccountDataMigration(SecurePreferencesImplementation.getInstance(context),
@@ -315,6 +366,9 @@ public abstract class V8Engine extends SpotAndShareApplication {
               .setAptoideClientUUID(getAptoideClientUUID())
               .setBaseBodyInterceptorFactory(bodyInterceptorFactory)
               .setAccountFactory(accountFactory)
+              .setConverterFactory(WebService.getDefaultConverter())
+              .setHttpClient(getDefaultClient())
+              .setLongTimeoutHttpClient(getLongTimeoutClient())
               .build();
     }
     return accountManager;
@@ -363,7 +417,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   }
 
   private void clearFileCache() {
-    FileManager.build(getDownloadManager())
+    FileManager.build(getDownloadManager(), getHttpClientCache())
         .purgeCache()
         .first()
         .toSingle()
@@ -452,14 +506,16 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
       StoreUtilsProxy proxy =
           new StoreUtilsProxy(accountManager, getBaseBodyInterceptorV7(), storeCredentials,
-              AccessorFactory.getAccessorFor(Store.class));
+              AccessorFactory.getAccessorFor(Store.class), getDefaultClient(),
+              WebService.getDefaultConverter());
 
       BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
           storeCredentials.get(getConfiguration().getDefaultStore());
 
       return generateAptoideUuid().andThen(proxy.addDefaultStore(
-          GetStoreMetaRequest.of(defaultStoreCredentials, getBaseBodyInterceptorV7()),
-          accountManager, defaultStoreCredentials).andThen(refreshUpdates()))
+          GetStoreMetaRequest.of(defaultStoreCredentials, getBaseBodyInterceptorV7(),
+              getDefaultClient(), WebService.getDefaultConverter()), accountManager,
+          defaultStoreCredentials).andThen(refreshUpdates()))
           .doOnError(err -> CrashReport.getInstance().log(err));
     });
   }

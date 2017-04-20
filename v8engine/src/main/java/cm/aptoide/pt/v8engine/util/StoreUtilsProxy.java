@@ -15,6 +15,8 @@ import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
 
@@ -32,20 +34,24 @@ public class StoreUtilsProxy {
   private final AptoideAccountManager accountManager;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final StoreCredentialsProvider storeCredentialsProvider;
+  private final OkHttpClient httpClient;
+  private final Converter.Factory converterFactory;
 
   public StoreUtilsProxy(AptoideAccountManager accountManager,
       BodyInterceptor<BaseBody> bodyInterceptor, StoreCredentialsProvider storeCredentialsProvider,
-      StoreAccessor storeAccessor) {
+      StoreAccessor storeAccessor, OkHttpClient httpClient, Converter.Factory converterFactory) {
     this.accountManager = accountManager;
     this.bodyInterceptor = bodyInterceptor;
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.storeAccessor = storeAccessor;
+    this.httpClient = httpClient;
+    this.converterFactory = converterFactory;
   }
 
   public void subscribeStore(String storeName) {
     subscribeStore(
         GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider),
-            bodyInterceptor), null, null, storeName, accountManager);
+            bodyInterceptor, httpClient, converterFactory), null, null, storeName, accountManager);
   }
 
   public Observable<GetStoreMeta> subscribeStoreObservable(String storeName) {
@@ -80,8 +86,8 @@ public class StoreUtilsProxy {
 
     subscribeStore(
         GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider),
-            bodyInterceptor), successRequestListener, errorRequestListener, storeName,
-        accountManager);
+            bodyInterceptor, httpClient, converterFactory), successRequestListener,
+        errorRequestListener, storeName, accountManager);
   }
 
   public void unSubscribeStore(String storeName,

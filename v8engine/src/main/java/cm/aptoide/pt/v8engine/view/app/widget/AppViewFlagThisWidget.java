@@ -27,6 +27,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Map;
+import okhttp3.OkHttpClient;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -54,6 +55,7 @@ import rx.android.schedulers.AndroidSchedulers;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
   private BodyInterceptor<BaseBody> baseBodyInterceptorV3;
+  private OkHttpClient httpClient;
 
   public AppViewFlagThisWidget(View itemView) {
     super(itemView);
@@ -80,6 +82,7 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   @Override public void bindView(AppViewFlagThisDisplayable displayable) {
+    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     baseBodyInterceptorV3 =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV3();
@@ -159,13 +162,12 @@ import rx.android.schedulers.AndroidSchedulers;
         return;
       }
 
-      //ShowMessage.asSnack(v, R.string.casting_vote);
       setButtonPressed(v);
 
       final GetAppMeta.GetAppMetaFile.Flags.Vote.Type type = viewIdTypeMap.get(v.getId());
 
       compositeSubscription.add(AddApkFlagRequest.of(storeName, md5, type.name().toLowerCase(),
-          accountManager.getAccessToken(), baseBodyInterceptorV3)
+          accountManager.getAccessToken(), baseBodyInterceptorV3, httpClient)
           .observe(true)
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(response -> {

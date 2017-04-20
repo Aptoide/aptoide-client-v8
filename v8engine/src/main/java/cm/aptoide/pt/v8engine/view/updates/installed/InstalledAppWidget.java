@@ -19,6 +19,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -32,6 +33,8 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Locale;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 
 /**
  * Created by neuro on 17-05-2016.
@@ -54,6 +57,8 @@ import java.util.Locale;
   private String packageName;
   private AccountNavigator accountNavigator;
   private BodyInterceptor<BaseBody> bodyInterceptor;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
 
   public InstalledAppWidget(View itemView) {
     super(itemView);
@@ -71,13 +76,17 @@ import java.util.Locale;
     Installed pojo = displayable.getPojo();
 
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
+
     this.bodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
 
     final AccountNavigator accountNavigator =
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
     this.accountNavigator = accountNavigator;
-    dialogUtils = new DialogUtils(accountManager, accountNavigator, bodyInterceptor);
+    dialogUtils = new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
+        converterFactory);
     appName = pojo.getName();
     packageName = pojo.getPackageName();
 
@@ -141,19 +150,19 @@ import java.util.Locale;
       dialog.dismiss();
 
       dialog.dismiss();
-      PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor)
-          .execute(response -> {
-            if (response.isOk()) {
-              Logger.d(TAG, "review added");
-              ShowMessage.asSnack(labelTextView, R.string.review_success);
-              ManagerPreferences.setForceServerRefreshFlag(true);
-            } else {
-              ShowMessage.asSnack(labelTextView, R.string.error_occured);
-            }
-          }, e -> {
-            CrashReport.getInstance().log(e);
-            ShowMessage.asSnack(labelTextView, R.string.error_occured);
-          });
+      PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor,
+          httpClient, converterFactory).execute(response -> {
+        if (response.isOk()) {
+          Logger.d(TAG, "review added");
+          ShowMessage.asSnack(labelTextView, R.string.review_success);
+          ManagerPreferences.setForceServerRefreshFlag(true);
+        } else {
+          ShowMessage.asSnack(labelTextView, R.string.error_occured);
+        }
+      }, e -> {
+        CrashReport.getInstance().log(e);
+        ShowMessage.asSnack(labelTextView, R.string.error_occured);
+      });
     });
 
     // create and show rating dialog

@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
@@ -23,6 +26,8 @@ import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 
 public class DownloadsFragmentMvp extends FragmentView implements DownloadsView {
 
@@ -39,10 +44,15 @@ public class DownloadsFragmentMvp extends FragmentView implements DownloadsView 
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    installConverter = new InstallEventConverter(
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7());
-    downloadConverter = new DownloadEventConverter(
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7());
+    final OkHttpClient httpClient =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    final BodyInterceptor<BaseBody> baseBodyInterceptorV7 =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    final Converter.Factory converterFactory = WebService.getDefaultConverter();
+    installConverter =
+        new InstallEventConverter(baseBodyInterceptorV7, httpClient, converterFactory);
+    downloadConverter =
+        new DownloadEventConverter(baseBodyInterceptorV7, httpClient, converterFactory);
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     analytics = Analytics.getInstance();

@@ -25,6 +25,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.AutoUpdate;
@@ -55,6 +56,8 @@ import cm.aptoide.pt.v8engine.view.wizard.WizardFragment;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -75,18 +78,21 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.frame_layout);
 
-    final AptoideAccountManager accountManager = ((V8Engine) getApplicationContext())
-        .getAccountManager();
+    final AptoideAccountManager accountManager =
+        ((V8Engine) getApplicationContext()).getAccountManager();
     final InstallManager installManager =
         ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.DEFAULT);
     final AutoUpdate autoUpdate =
         new AutoUpdate(this, new DownloadFactory(), new PermissionManager(), installManager);
+    final OkHttpClient httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
+    final Converter.Factory converterFactory = WebService.getDefaultConverter();
 
     storeRepository = RepositoryFactory.getStoreRepository();
     fragmentNavigator = getFragmentNavigator();
     storeUtilsProxy = new StoreUtilsProxy(accountManager,
         ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV7(),
-        new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class));
+        new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class), httpClient,
+        converterFactory);
 
     attachPresenter(
         new MainPresenter(this, new ApkFy(this, getIntent()), autoUpdate, new ContentPuller(this)),
