@@ -12,7 +12,7 @@ import okio.Buffer;
  * Created by sithengineer on 2/11/2016.
  */
 
-public class PostCacheKeyAlgorithm implements KeyAlgorithm<Request, String> {
+public class POSTCacheKeyAlgorithm implements KeyAlgorithm<Request, String> {
 
   @Override public String getKeyFrom(Request request) {
     final Request clonedRequest = request.newBuilder().build();

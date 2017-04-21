@@ -6,12 +6,9 @@
 package cm.aptoide.accountmanager;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.net.SocketTimeoutException;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -37,10 +34,8 @@ public class AptoideAccountManager {
   }
 
   public Observable<Account> accountStatus() {
-    return Observable.merge(accountRelay, dataPersist.getAccount().onErrorReturn(throwable -> {
-      //CrashReport.getInstance().log(throwable);
-      return createLocalAccount();
-    }).toObservable());
+    return Observable.merge(accountRelay,
+        dataPersist.getAccount().onErrorReturn(throwable -> createLocalAccount()).toObservable());
   }
 
   private Single<Account> singleAccountStatus() {
@@ -218,15 +213,6 @@ public class AptoideAccountManager {
     private PublishRelay<Account> accountRelay;
     private AccountAnalytics accountAnalytics;
     private AccountDataPersist accountDataPersist;
-    private AccountFactory accountFactory;
-
-    private AptoideClientUUID aptoideClientUUID;
-    private BasebBodyInterceptorFactory baseBodyInterceptorFactory;
-    private ExternalAccountFactory externalAccountFactory;
-    private AccountService accountService;
-    private OkHttpClient httpClient;
-    private Converter.Factory converterFactory;
-    private OkHttpClient longTimeoutHttpClient;
 
     public Builder setCredentialsValidator(CredentialsValidator credentialsValidator) {
       this.credentialsValidator = credentialsValidator;
@@ -253,47 +239,6 @@ public class AptoideAccountManager {
       return this;
     }
 
-    public Builder setAptoideClientUUID(AptoideClientUUID aptoideClientUUID) {
-      this.aptoideClientUUID = aptoideClientUUID;
-      return this;
-    }
-
-    public Builder setBaseBodyInterceptorFactory(
-        BasebBodyInterceptorFactory baseBodyInterceptorFactory) {
-      this.baseBodyInterceptorFactory = baseBodyInterceptorFactory;
-      return this;
-    }
-
-    public Builder setExternalAccountFactory(ExternalAccountFactory externalAccountFactory) {
-      this.externalAccountFactory = externalAccountFactory;
-      return this;
-    }
-
-    public Builder setAccountService(AccountService accountService) {
-      this.accountService = accountService;
-      return this;
-    }
-
-    public Builder setAccountFactory(AccountFactory accountFactory) {
-      this.accountFactory = accountFactory;
-      return this;
-    }
-
-    public Builder setHttpClient(OkHttpClient httpClient) {
-      this.httpClient = httpClient;
-      return this;
-    }
-
-    public Builder setLongTimeoutHttpClient(OkHttpClient longTimeoutHttpClient) {
-      this.longTimeoutHttpClient = longTimeoutHttpClient;
-      return this;
-    }
-
-    public Builder setConverterFactory(Converter.Factory converterFactory) {
-      this.converterFactory = converterFactory;
-      return this;
-    }
-
     public AptoideAccountManager build() {
 
       if (accountAnalytics == null) {
@@ -305,54 +250,7 @@ public class AptoideAccountManager {
       }
 
       if (accountManagerService == null) {
-
-        if (aptoideClientUUID == null) {
-          throw new IllegalArgumentException(
-              "AptoideClientUUID is mandatory if AccountManagerService is not provided.");
-        }
-
-        if (baseBodyInterceptorFactory == null) {
-          throw new IllegalArgumentException("BasebBodyInterceptorFactory is mandatory if "
-              + "AccountManagerService is not provided.");
-        }
-
-        if (httpClient == null) {
-          throw new IllegalArgumentException(
-              "OkHttpClient is mandatory if " + "AccountManagerService is not provided.");
-        }
-
-        if (longTimeoutHttpClient == null) {
-          throw new IllegalArgumentException("OkHttpClient with a long timeout is mandatory if "
-              + "AccountManagerService is not "
-              + "provided"
-              + ".");
-        }
-
-        if (converterFactory == null) {
-          throw new IllegalArgumentException(
-              "Converter.Factory is mandatory if " + "AccountManagerService is not provided.");
-        }
-
-        if (accountFactory == null) {
-
-          if (externalAccountFactory == null) {
-            throw new IllegalArgumentException(
-                "ExternalAccountFactory is mandatory if AccountFactory is not provided.");
-          }
-
-          if (accountService == null) {
-            this.accountService =
-                new AccountService(aptoideClientUUID, baseBodyInterceptorFactory.createV3(),
-                    httpClient, converterFactory);
-          }
-
-          this.accountFactory =
-              new AccountFactory(aptoideClientUUID, externalAccountFactory, accountService);
-        }
-
-        accountManagerService =
-            new AccountManagerService(aptoideClientUUID, baseBodyInterceptorFactory, accountFactory,
-                httpClient, longTimeoutHttpClient, converterFactory);
+        throw new IllegalArgumentException("AccountManagerService is mandatory.");
       }
 
       if (credentialsValidator == null) {

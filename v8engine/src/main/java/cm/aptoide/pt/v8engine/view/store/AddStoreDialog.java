@@ -107,8 +107,8 @@ public class AddStoreDialog extends BaseDialog {
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     converterFactory = WebService.getDefaultConverter();
-    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     baseBodyBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
@@ -276,31 +276,31 @@ public class AddStoreDialog extends BaseDialog {
     final IdsRepositoryImpl clientUuid =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     new StoreUtilsProxy(accountManager, baseBodyBodyInterceptor, storeCredentialsProvider,
-        AccessorFactory.getAccessorFor(Store.class), httpClient, WebService.getDefaultConverter()).subscribeStore(getHomeMetaRequest,
-        getStoreMeta1 -> {
-          ShowMessage.asSnack(getView(),
-              AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
+        AccessorFactory.getAccessorFor(Store.class), httpClient,
+        WebService.getDefaultConverter()).subscribeStore(getHomeMetaRequest, getStoreMeta1 -> {
+      ShowMessage.asSnack(getView(),
+          AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
 
-          dismissLoadingDialog();
-          dismiss();
-        }, e -> {
-          dismissLoadingDialog();
-          if (e instanceof AptoideWsV7Exception) {
-            BaseV7Response baseResponse = ((AptoideWsV7Exception) e).getBaseResponse();
-            BaseV7Response.Error error = baseResponse.getError();
-            switch (StoreUtils.getErrorType(error.getCode())) {
-              case PRIVATE_STORE_ERROR:
-                DialogFragment dialogFragment = PrivateStoreDialog.newInstance(AddStoreDialog
-                    .this, PRIVATE_STORE_REQUEST_CODE, storeName, false);
-                dialogFragment.show(getFragmentManager(), PrivateStoreDialog.class.getName());
-                break;
-              default:
-                ShowMessage.asSnack(this, error.getDescription());
-            }
-          } else {
-            ShowMessage.asSnack(this, R.string.error_occured);
-          }
-        }, storeName, accountManager);
+      dismissLoadingDialog();
+      dismiss();
+    }, e -> {
+      dismissLoadingDialog();
+      if (e instanceof AptoideWsV7Exception) {
+        BaseV7Response baseResponse = ((AptoideWsV7Exception) e).getBaseResponse();
+        BaseV7Response.Error error = baseResponse.getError();
+        switch (StoreUtils.getErrorType(error.getCode())) {
+          case PRIVATE_STORE_ERROR:
+            DialogFragment dialogFragment = PrivateStoreDialog.newInstance(AddStoreDialog
+                .this, PRIVATE_STORE_REQUEST_CODE, storeName, false);
+            dialogFragment.show(getFragmentManager(), PrivateStoreDialog.class.getName());
+            break;
+          default:
+            ShowMessage.asSnack(this, error.getDescription());
+        }
+      } else {
+        ShowMessage.asSnack(this, R.string.error_occured);
+      }
+    }, storeName, accountManager);
   }
 
   void dismissLoadingDialog() {

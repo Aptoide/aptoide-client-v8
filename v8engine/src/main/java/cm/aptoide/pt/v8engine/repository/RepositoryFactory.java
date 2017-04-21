@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.repository;
 
-import android.accounts.AccountManager;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.telephony.TelephonyManager;
@@ -153,9 +152,9 @@ public final class RepositoryFactory {
   }
 
   private static SyncAdapterBackgroundSync getBackgroundSync(Context context) {
-    return new SyncAdapterBackgroundSync(Application.getConfiguration(),
-        (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE),
-        new SyncDataConverter());
+    return new SyncAdapterBackgroundSync(new SyncDataConverter(),
+        ((V8Engine) context.getApplicationContext()).getAndroidAccountProvider(),
+        Application.getConfiguration().getContentAuthority());
   }
 
   public static InAppBillingRepository getInAppBillingRepository(Context context) {

@@ -36,11 +36,11 @@ import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.StoreBodyInterceptor;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.StoreBodyInterceptor;
 import cm.aptoide.pt.v8engine.view.MainActivity;
 import cm.aptoide.pt.v8engine.view.account.AccountPermissionsBaseActivity;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -131,10 +131,11 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     getData();
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
-    httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
-    longTimeoutHttpClient = ((V8Engine) getApplicationContext()).getLongTimeoutClient();
-    converterFactory = WebService.getDefaultConverter();
     accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
+    httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
+    longTimeoutHttpClient =
+        ((V8Engine) getApplicationContext()).getLongTimeoutClient();
+    converterFactory = WebService.getDefaultConverter();
     bodyInterceptorV7 = ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV7();
     bodyInterceptorV3 = ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV3();
     aptoideClientUUID = ((V8Engine) getApplicationContext()).getAptoideClientUUID();

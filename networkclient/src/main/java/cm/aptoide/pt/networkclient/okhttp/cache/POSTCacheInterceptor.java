@@ -1,22 +1,20 @@
 package cm.aptoide.pt.networkclient.okhttp.cache;
 
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.networkclient.WebService;
 import java.io.IOException;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class PostCacheInterceptor implements Interceptor {
+public class POSTCacheInterceptor implements Interceptor {
 
-  public static final String BYPASS_HEADER_KEY = "X-Bypass-Cache";
-  public static final String BYPASS_HEADER_VALUE = "true";
-
-  private final String TAG = PostCacheInterceptor.class.getSimpleName();
+  private final String TAG = POSTCacheInterceptor.class.getSimpleName();
 
   private final Cache<Request, Response> cache;
 
-  public PostCacheInterceptor(Cache<Request, Response> cache) {
+  public POSTCacheInterceptor(Cache<Request, Response> cache) {
     this.cache = cache;
   }
 
@@ -31,8 +29,8 @@ public class PostCacheInterceptor implements Interceptor {
     // we shouldn't cache the response if the client explicitly asked us not to
     Headers headers = request.headers();
     if (headers.size() > 0) {
-      for (String bypassCacheHeaderValue : headers.values(BYPASS_HEADER_KEY)) {
-        if (bypassCacheHeaderValue.equalsIgnoreCase(BYPASS_HEADER_VALUE)) {
+      for (String bypassCacheHeaderValue : headers.values(WebService.BYPASS_HEADER_KEY)) {
+        if (bypassCacheHeaderValue.equalsIgnoreCase(WebService.BYPASS_HEADER_VALUE)) {
           return chain.proceed(request);
         }
       }

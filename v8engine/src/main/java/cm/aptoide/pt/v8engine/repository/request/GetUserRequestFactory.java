@@ -3,11 +3,6 @@ package cm.aptoide.pt.v8engine.repository.request;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetUserRequest;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.utils.AptoideUtils;
-import java.io.File;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 

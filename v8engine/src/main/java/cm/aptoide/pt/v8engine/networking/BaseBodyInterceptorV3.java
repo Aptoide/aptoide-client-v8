@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine;
+package cm.aptoide.pt.v8engine.networking;
 
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
