@@ -47,18 +47,16 @@
   <TextView
       android:id="@+id/partial_social_timeline_thumbnail_title"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
       android:layout_marginBottom="12dp"
       android:layout_marginEnd="12dp"
       android:layout_marginLeft="12dp"
       android:layout_marginRight="15dp"
       android:layout_marginStart="12dp"
       android:layout_marginTop="12dp"
-      android:ellipsize="end"
       android:maxLines="3"
       android:typeface="serif"
       tools:text="Best backup apps: save all your Android's innards"
-      style="@style/Widget.Aptoide.Card.Thumbnail"
+      style="@style/Aptoide.TextView.Regular.M.Grey"
       />
 
   <View
