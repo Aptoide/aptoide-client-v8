@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -36,6 +37,8 @@ import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.presenter.MainPresenter;
 import cm.aptoide.pt.v8engine.presenter.MainView;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.services.ContentPuller;
 import cm.aptoide.pt.v8engine.util.ApkFy;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -52,6 +55,7 @@ import cm.aptoide.pt.v8engine.view.wizard.WizardFragment;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -64,12 +68,14 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
 
   private static final String TAG = MainActivity.class.getSimpleName();
   private StoreUtilsProxy storeUtilsProxy;
+  private StoreRepository storeRepository;
 
   @Partners @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.frame_layout);
 
     AptoideAccountManager accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
+    storeRepository = RepositoryFactory.getStoreRepository();
     storeUtilsProxy = new StoreUtilsProxy(accountManager,
         ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV7(),
         new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class));
@@ -178,10 +184,17 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
                   ShowMessage.asLongSnack(this,
                       AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
                 }
-              }))
+              })
+              .map(isSubscribed -> storeName))
           .toList()
-          .subscribe(storeName -> {
-            navigate(STORES);
+          .flatMap(stores -> {
+            if (stores.size() == 1) {
+              return openStore(stores.get(0)).toObservable().map(success -> stores);
+            } else {
+              return navigateToStores().toObservable().map(success -> stores);
+            }
+          })
+          .subscribe(stores -> {
             Logger.d(TAG, "newrepoDeepLink: all stores added");
           }, throwable -> {
             Logger.e(TAG, "newrepoDeepLink: " + throwable);
@@ -189,6 +202,15 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
           });
       getIntent().removeExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO);
     }
+  }
+
+  @NonNull private Completable navigateToStores() {
+    return Completable.fromAction(() -> navigate(STORES));
+  }
+
+  @NonNull private Completable openStore(String stores) {
+    return Completable.fromAction(() -> getFragmentNavigator().navigateTo(
+        V8Engine.getFragmentProvider().newStoreFragment(stores, "DEFAULT")));
   }
 
   private void downloadNotificationDeepLink(Intent intent) {
