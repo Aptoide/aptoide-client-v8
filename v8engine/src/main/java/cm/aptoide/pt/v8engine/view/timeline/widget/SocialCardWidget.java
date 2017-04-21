@@ -52,6 +52,11 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
   private LinearLayout socialInfoBar;
+  private LinearLayout socialCommentBar;
+  private ImageView latestCommentMainAvatar;
+  //private ImageView latestCommentSecondaryAvatar;
+  private TextView socialCommentBody;
+  private TextView socialCommentUsername;
 
   SocialCardWidget(View itemView) {
     super(itemView);
@@ -72,7 +77,13 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
         R.id.displayable_social_timeline_likes_preview_container);
     storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
     userAvatar = (ImageView) itemView.findViewById(R.id.card_user_avatar);
+    latestCommentMainAvatar = (ImageView) itemView.findViewById(R.id.card_last_comment_main_icon);
+    //latestCommentSecondaryAvatar =
+    //    (ImageView) itemView.findViewById(R.id.card_last_comment_secondary_icon);
     socialInfoBar = (LinearLayout) itemView.findViewById(R.id.social_info_bar);
+    socialCommentBar = (LinearLayout) itemView.findViewById(R.id.social_latest_comment_bar);
+    socialCommentUsername = (TextView) itemView.findViewById(R.id.social_latest_comment_user_name);
+    socialCommentBody = (TextView) itemView.findViewById(R.id.social_latest_comment_body);
   }
 
   @Override @CallSuper public void bindView(T displayable) {
@@ -179,8 +190,15 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
       numberComments.setText(
           String.format("%s %s", String.valueOf(displayable.getNumberOfComments()),
               getContext().getString(R.string.comments).toLowerCase()));
+      socialCommentBar.setVisibility(View.VISIBLE);
+      ImageLoader.with(getContext())
+          .loadWithShadowCircleTransform(displayable.getLatestComment().getAvatar(),
+              latestCommentMainAvatar);
+      socialCommentUsername.setText(displayable.getLatestComment().getName());
+      socialCommentBody.setText(displayable.getLatestComment().getBody());
     } else {
       numberComments.setVisibility(View.INVISIBLE);
+      socialCommentBar.setVisibility(View.GONE);
     }
 
     shareButton.setVisibility(View.VISIBLE);

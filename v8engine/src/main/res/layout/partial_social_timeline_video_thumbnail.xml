@@ -71,7 +71,7 @@
       android:layout_marginRight="12dp"
       android:layout_marginStart="12dp"
       android:background="@color/timeline_separator"
-      android:visibility="gone"
+      android:visibility="visible"
       />
 
 </RelativeLayout>

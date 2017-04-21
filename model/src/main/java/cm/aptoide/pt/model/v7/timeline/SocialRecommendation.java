@@ -29,10 +29,12 @@ import lombok.Getter;
   @JsonCreator public SocialRecommendation(@JsonProperty("uid") String cardId,
       @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab,
       @JsonProperty("user_sharer") Comment.User userSharer, @JsonProperty("my") My my,
-      @JsonProperty("likes") List<UserTimeline> likes, @JsonProperty("user") Comment.User user,
+      @JsonProperty("likes") List<UserTimeline> likes,
+      @JsonProperty("comments") List<CardComment> comments, @JsonProperty("user") Comment.User
+      user,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("stats") SocialCardStats stats, @JsonProperty("store") Store store) {
-    super(likes, my);
+    super(likes, comments, my);
     this.ab = ab;
     this.date = date;
     this.cardId = cardId;

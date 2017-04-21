@@ -8,22 +8,9 @@
     android:orientation="vertical"
     >
 
-  <View
-      android:id="@+id/partial_social_timeline_thumbnail_divider2"
-      android:layout_width="match_parent"
-      android:layout_height="0.7dp"
-      android:layout_marginBottom="5dp"
-      android:layout_marginEnd="12dp"
-      android:layout_marginLeft="12dp"
-      android:layout_marginRight="15dp"
-      android:layout_marginStart="12dp"
-      android:background="@color/timeline_separator"
-      android:visibility="visible"
-      />
-
   <RelativeLayout
       android:layout_width="match_parent"
-      android:layout_height="55dp"
+      android:layout_height="45dp"
       android:clipChildren="false"
       >
 
@@ -81,7 +68,6 @@
       android:id="@+id/partial_social_timeline_thumbnail_divider3"
       android:layout_width="match_parent"
       android:layout_height="0.7dp"
-      android:layout_marginBottom="5dp"
       android:layout_marginEnd="12dp"
       android:layout_marginLeft="12dp"
       android:layout_marginRight="15dp"

@@ -5,6 +5,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.model.v7.timeline.SocialCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.v8engine.R;
@@ -27,6 +28,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
   @Getter private DateCalculator dateCalculator;
   @Getter private Date date;
   @Getter private List<UserTimeline> userLikes;
+  @Getter private SocialCard.CardComment latestComment;
   @Getter private boolean liked;
   @Getter private String abUrl;
 
@@ -37,8 +39,8 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
 
   SocialCardDisplayable(TimelineCard timelineCard, long numberOfLikes, long numberOfComments,
       Store store, Comment.User user, Comment.User userSharer, boolean liked,
-      List<UserTimeline> userLikes, Date date, SpannableFactory spannableFactory,
-      DateCalculator dateCalculator, String abUrl) {
+      List<UserTimeline> userLikes, List<SocialCard.CardComment> comments, Date date,
+      SpannableFactory spannableFactory, DateCalculator dateCalculator, String abUrl) {
     super(timelineCard);
     this.date = date;
     this.liked = liked;
@@ -51,6 +53,9 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
     this.spannableFactory = spannableFactory;
     this.store = store;
     this.abUrl = abUrl;
+    if (comments.size() > 0) {
+      this.latestComment = comments.get(0);
+    }
   }
 
   public String getTimeSinceLastUpdate(Context context) {
@@ -64,8 +69,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
   }
 
   public Spannable getBlackHighlightedLike(Context context, String string) {
-    return spannableFactory.createColorSpan(context.getString(
-        R.string.x_liked_it, string),
+    return spannableFactory.createColorSpan(context.getString(R.string.x_liked_it, string),
         ContextCompat.getColor(context, R.color.black87alpha), string);
   }
 

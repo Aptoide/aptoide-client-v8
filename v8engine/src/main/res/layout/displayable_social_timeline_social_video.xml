@@ -28,9 +28,12 @@
         tools:text="shared by Jonenz"
         tools:visibility="visible"
         />
+
     <include layout="@layout/partial_social_timeline_video_thumbnail"/>
 
     <include layout="@layout/social_info_bar_timeline"/>
+
+    <include layout="@layout/social_last_comment_bar"/>
 
     <include layout="@layout/social_bar_timeline"/>
 
