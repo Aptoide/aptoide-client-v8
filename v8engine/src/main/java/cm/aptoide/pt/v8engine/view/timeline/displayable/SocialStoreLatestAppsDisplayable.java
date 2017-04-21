@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.view.timeline.displayable;
 
 import android.content.Context;
-import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.listapp.App;
@@ -51,8 +51,8 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
     super(socialStoreLatestApps, likes, comments, socialStoreLatestApps.getOwnerStore(),
         socialStoreLatestApps.getUser(), socialStoreLatestApps.getUserSharer(),
         socialStoreLatestApps.getMy().isLiked(), socialStoreLatestApps.getLikes(),
-        socialStoreLatestApps.getComments(),
-        socialStoreLatestApps.getDate(), spannableFactory, dateCalculator, abTestingUrl);
+        socialStoreLatestApps.getComments(), socialStoreLatestApps.getDate(), spannableFactory,
+        dateCalculator, abTestingUrl);
     this.storeName = storeName;
     //socialStoreLatestApps.getSharedStore().getId();
     this.avatarUrl = avatarUrl;
@@ -109,9 +109,9 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
   }
 
   public Spannable getStyledTitle(Context context, String title) {
-    return spannableFactory.createStyleSpan(context.getString(
+    return spannableFactory.createColorSpan(context.getString(
         R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, title),
-        Typeface.BOLD, title);
+        ContextCompat.getColor(context, R.color.black87alpha), title);
   }
 
   @Override public int getViewLayout() {
