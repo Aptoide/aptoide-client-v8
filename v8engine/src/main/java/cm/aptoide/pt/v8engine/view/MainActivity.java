@@ -176,27 +176,31 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
           .flatMap(storeName -> StoreUtils.isSubscribedStore(storeName)
               .first()
               .observeOn(AndroidSchedulers.mainThread())
-              .doOnNext(isFollowed -> {
+              .flatMap(isFollowed -> {
                 if (isFollowed) {
-                  ShowMessage.asLongSnack(this, getString(R.string.store_already_added));
+                  return Observable.fromCallable(() -> {
+                    ShowMessage.asLongSnack(this, getString(R.string.store_already_added));
+                    return null;
+                  });
                 } else {
-                  storeUtilsProxy.subscribeStore(storeName);
-                  ShowMessage.asLongSnack(this,
-                      AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
+                  return storeUtilsProxy.subscribeStoreObservable(storeName)
+                      .doOnNext(getStoreMeta -> ShowMessage.asLongSnack(this,
+                          AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+                              storeName)));
                 }
               })
               .map(isSubscribed -> storeName))
           .toList()
           .flatMap(stores -> {
             if (stores.size() == 1) {
-              return openStore(stores.get(0)).toObservable().map(success -> stores);
+              return storeRepository.getByName(stores.get(0))
+                  .flatMapCompletable(store -> openStore(store))
+                  .map(success -> stores);
             } else {
               return navigateToStores().toObservable().map(success -> stores);
             }
           })
-          .subscribe(stores -> {
-            Logger.d(TAG, "newrepoDeepLink: all stores added");
-          }, throwable -> {
+          .subscribe(stores -> Logger.d(TAG, "newrepoDeepLink: all stores added"), throwable -> {
             Logger.e(TAG, "newrepoDeepLink: " + throwable);
             CrashReport.getInstance().log(throwable);
           });
@@ -208,9 +212,9 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
     return Completable.fromAction(() -> navigate(STORES));
   }
 
-  @NonNull private Completable openStore(String stores) {
+  @NonNull private Completable openStore(Store store) {
     return Completable.fromAction(() -> getFragmentNavigator().navigateTo(
-        V8Engine.getFragmentProvider().newStoreFragment(stores, "DEFAULT")));
+        V8Engine.getFragmentProvider().newStoreFragment(store.getStoreName(), store.getTheme())));
   }
 
   private void downloadNotificationDeepLink(Intent intent) {

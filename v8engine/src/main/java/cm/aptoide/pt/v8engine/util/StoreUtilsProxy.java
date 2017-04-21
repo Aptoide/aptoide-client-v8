@@ -48,6 +48,13 @@ public class StoreUtilsProxy {
             bodyInterceptor), null, null, storeName, accountManager);
   }
 
+  public Observable<GetStoreMeta> subscribeStoreObservable(String storeName) {
+    Analytics.Stores.subscribe(storeName);
+    return StoreUtils.subscribeStore(
+        GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider),
+            bodyInterceptor), accountManager, null, null);
+  }
+
   public void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener, String storeName,

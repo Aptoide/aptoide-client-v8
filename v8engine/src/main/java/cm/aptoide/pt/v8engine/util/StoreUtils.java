@@ -62,35 +62,49 @@ public class StoreUtils {
    * If you want to do event tracking (Analytics) use (v8engine)StoreUtilsProxy.subscribeStore
    * instead, else, use this.
    */
+  @Deprecated public static Observable<GetStoreMeta> subscribeStore(
+      GetStoreMetaRequest getStoreMetaRequest, AptoideAccountManager accountManager,
+      String storeUserName, String storePassword) {
+    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+
+    return getStoreMetaRequest.observe()
+        .flatMap(getStoreMeta -> {
+          if (BaseV7Response.Info.Status.OK.equals(getStoreMeta.getInfo().getStatus())) {
+            // TODO: 18-05-2016 neuro private ainda na ta
+            if (accountManager.isLoggedIn()) {
+              return accountManager.subscribeStore(getStoreMeta.getData().getName(), storeUserName,
+                  storePassword).andThen(Observable.just(getStoreMeta));
+            } else {
+              return Observable.just(getStoreMeta);
+            }
+          } else {
+            return Observable.error(new Exception("Something went wrong while getting store meta"));
+          }
+        })
+        .doOnNext(
+            getStoreMeta -> saveStore(getStoreMeta.getData(), getStoreMetaRequest, storeAccessor));
+  }
+
+  /**
+   * If you want to do event tracking (Analytics) use (v8engine)StoreUtilsProxy.subscribeStore
+   * instead, else, use this.
+   */
   @Deprecated public static void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager,
       String storeUserName, String storePassword) {
-    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
 
-    getStoreMetaRequest.observe().flatMap(getStoreMeta -> {
-      if (BaseV7Response.Info.Status.OK.equals(getStoreMeta.getInfo().getStatus())) {
-        // TODO: 18-05-2016 neuro private ainda na ta
-        if (accountManager.isLoggedIn()) {
-          return accountManager.subscribeStore(getStoreMeta.getData().getName(), storeUserName,
-              storePassword).andThen(Observable.just(getStoreMeta));
-        } else {
-          return Observable.just(getStoreMeta);
-        }
-      } else {
-        return Observable.error(new Exception("Something went wrong while getting store meta"));
-      }
-    }).subscribe(getStoreMeta -> {
-      saveStore(getStoreMeta.getData(), getStoreMetaRequest, storeAccessor);
-      if (successRequestListener != null) {
-        successRequestListener.call(getStoreMeta);
-      }
-    }, (e) -> {
-      if (errorRequestListener != null) {
-        errorRequestListener.onError(e);
-      }
-      CrashReport.getInstance().log(e);
-    });
+    subscribeStore(getStoreMetaRequest, accountManager, storeUserName, storePassword).subscribe(
+        getStoreMeta -> {
+          if (successRequestListener != null) {
+            successRequestListener.call(getStoreMeta);
+          }
+        }, (e) -> {
+          if (errorRequestListener != null) {
+            errorRequestListener.onError(e);
+          }
+          CrashReport.getInstance().log(e);
+        });
   }
 
   /**
