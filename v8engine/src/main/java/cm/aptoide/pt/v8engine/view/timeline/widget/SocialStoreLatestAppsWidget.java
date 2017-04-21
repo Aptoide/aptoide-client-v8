@@ -15,6 +15,7 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -30,6 +31,7 @@ import cm.aptoide.pt.v8engine.view.timeline.displayable.SocialStoreLatestAppsDis
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.HashMap;
 import java.util.Map;
+import okhttp3.OkHttpClient;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
@@ -89,9 +91,12 @@ public class SocialStoreLatestAppsWidget
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     final BodyInterceptor<BaseBody> baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    final OkHttpClient httpClient =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     storeUtilsProxy =
         new StoreUtilsProxy(accountManager, baseBodyInterceptor, new StoreCredentialsProviderImpl(),
-            AccessorFactory.getAccessorFor(Store.class));
+            AccessorFactory.getAccessorFor(Store.class), httpClient,
+            WebService.getDefaultConverter());
     storeName.setText(displayable.getStoreName());
     userName.setText(displayable.getUser().getName());
     setCardViewMargin(displayable, cardView);

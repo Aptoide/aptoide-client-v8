@@ -1,4 +1,4 @@
-package cm.aptoide.pt.downloadmanager.interfaces;
+package cm.aptoide.pt.downloadmanager;
 
 import cm.aptoide.pt.database.realm.Download;
 

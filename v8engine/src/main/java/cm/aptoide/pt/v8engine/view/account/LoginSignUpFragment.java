@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.account;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -14,7 +15,7 @@ import android.view.ViewGroup;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpPresenter;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpView;
-import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.view.BackButtonFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 
 /**
@@ -23,7 +24,7 @@ import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
  * login functionality. Further code refactoring is needed to migrate external source login into
  * their own fragment and include the fragment inside the necessary login / sign up views.
  */
-public class LoginSignUpFragment extends FragmentView implements LoginSignUpView {
+public class LoginSignUpFragment extends BackButtonFragment implements LoginSignUpView {
 
   private static final String BOTTOM_SHEET_WITH_BOTTOM_BAR = "bottom_sheet_expanded";
   private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
@@ -32,8 +33,6 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
   private static final String AUTH_TYPE = "auth_type";
   private static final String IS_NEW_ACCOUNT = "is_new_account";
 
-  private BottomSheetStateListener bottomSheetStateListener;
-  private LoginSignUpCredentialsFragment loginFragment;
   private BottomSheetBehavior<View> bottomSheetBehavior;
   private boolean withBottomBar;
   private boolean dismissToNavigateToMainView;
@@ -42,6 +41,8 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
   private String authType;
   private boolean isNewAccount;
   private FragmentNavigator navigator;
+  private ClickHandler backClickHandler;
+  private LoginBottomSheet loginBottomSheet;
 
   public static LoginSignUpFragment newInstance(boolean withBottomBar,
       boolean dismissToNavigateToMainView, boolean navigateToHome) {
@@ -64,6 +65,16 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
     return fragment;
   }
 
+  @Override public void onAttach(Context context) {
+    super.onAttach(context);
+    if (context instanceof LoginBottomSheet) {
+      loginBottomSheet = (LoginBottomSheet) context;
+    } else {
+      throw new IllegalStateException(
+          "Context should implement " + LoginBottomSheet.class.getSimpleName());
+    }
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     navigator = getFragmentChildNavigator(R.id.login_signup_layout);
@@ -76,18 +87,27 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
     isNewAccount = args.getBoolean(IS_NEW_ACCOUNT);
   }
 
-  @Override public boolean onBackPressed() {
-    if (loginFragment != null && loginFragment.onBackPressed()) {
-      bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-      return true;
-    }
-    return super.onBackPressed();
-  }
-
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    backClickHandler = new ClickHandler() {
+      @Override public boolean handle() {
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+          bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+          return true;
+        }
+        return false;
+      }
+    };
+    registerBackClickHandler(backClickHandler);
     bindViews(view);
     attachPresenter(new LoginSignUpPresenter(this), savedInstanceState);
+  }
+
+  @Override public void onDestroyView() {
+    bottomSheetBehavior.setBottomSheetCallback(null);
+    bottomSheetBehavior = null;
+    unregisterBackClickHandler(backClickHandler);
+    super.onDestroyView();
   }
 
   private void bindViews(View view) {
@@ -108,16 +128,12 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
       @Override public void onStateChanged(@NonNull View bottomSheet, int newState) {
         switch (newState) {
           case BottomSheetBehavior.STATE_COLLAPSED:
-            if (bottomSheetStateListener != null) {
-              bottomSheetStateListener.hidden();
-              mainContent.setPadding(0, 0, 0, originalBottomPadding);
-            }
+            loginBottomSheet.collapse();
+            mainContent.setPadding(0, 0, 0, originalBottomPadding);
             break;
           case BottomSheetBehavior.STATE_EXPANDED:
-            if (bottomSheetStateListener != null) {
-              bottomSheetStateListener.expanded();
-              mainContent.setPadding(0, 0, 0, 0);
-            }
+            loginBottomSheet.expand();
+            mainContent.setPadding(0, 0, 0, 0);
             break;
         }
       }
@@ -144,26 +160,13 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(getLayoutId(), container, false);
-    loginFragment =
-        LoginSignUpCredentialsFragment.newInstance(dismissToNavigateToMainView, navigateToHome);
-    navigator.navigateTo(loginFragment);
+    final View view = inflater.inflate(getLayoutId(), container, false);
+    navigator.navigateToWithoutBackSave(
+        LoginSignUpCredentialsFragment.newInstance(dismissToNavigateToMainView, navigateToHome));
     return view;
   }
 
   @LayoutRes public int getLayoutId() {
     return R.layout.fragment_login_sign_up;
-  }
-
-  public LoginSignUpFragment registerBottomSheetStateListener(
-      BottomSheetStateListener bottomSheetStateListener) {
-    this.bottomSheetStateListener = bottomSheetStateListener;
-    return this;
-  }
-
-  public interface BottomSheetStateListener {
-    void expanded();
-
-    void hidden();
   }
 }

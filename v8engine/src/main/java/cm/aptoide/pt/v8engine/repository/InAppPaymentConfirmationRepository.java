@@ -16,6 +16,8 @@ import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
 
@@ -26,20 +28,27 @@ public class InAppPaymentConfirmationRepository extends PaymentConfirmationRepos
 
   private final AptoideAccountManager accountManager;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
+  private final OkHttpClient httpClient;
+  private final Converter.Factory converterFactory;
 
   public InAppPaymentConfirmationRepository(NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor paymentDatabase, SyncAdapterBackgroundSync backgroundSync,
       PaymentConfirmationFactory confirmationFactory, AptoideAccountManager accountManager,
-      BodyInterceptor<BaseBody> bodyInterceptorV3) {
+      BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     super(operatorManager, paymentDatabase, backgroundSync, confirmationFactory);
     this.accountManager = accountManager;
     this.bodyInterceptorV3 = bodyInterceptorV3;
+    this.httpClient = httpClient;
+    this.converterFactory = converterFactory;
   }
 
   @Override public Completable createPaymentConfirmation(int paymentId, Product product) {
+
     return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId, operatorManager,
         ((InAppBillingProduct) product).getDeveloperPayload(), accountManager.getAccessToken(),
-        bodyInterceptorV3).observe().flatMap(response -> {
+        bodyInterceptorV3, httpClient, converterFactory).observe().flatMap
+        (response -> {
       if (response != null && response.isOk()) {
         return Observable.just(null);
       }

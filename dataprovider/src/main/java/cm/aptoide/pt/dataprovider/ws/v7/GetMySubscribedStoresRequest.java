@@ -1,11 +1,10 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.model.v7.GetMySubscribedStoresResponse;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -15,11 +14,9 @@ import rx.Observable;
 public class GetMySubscribedStoresRequest
     extends V7<GetMySubscribedStoresResponse, GetMySubscribedStoresRequest.Body> {
 
-  public GetMySubscribedStoresRequest(String accessToken,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
-    super(new Body(accessToken), BASE_HOST,
-        OkHttpClientFactory.getSingletonClient(SecurePreferences::getUserAgent, false),
-        WebService.getDefaultConverter(), bodyInterceptor);
+  public GetMySubscribedStoresRequest(String accessToken, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(new Body(accessToken), BASE_HOST, httpClient, converterFactory, bodyInterceptor);
   }
 
   @Override

@@ -69,10 +69,11 @@ public class InstallService extends Service {
   @Override public void onCreate() {
     super.onCreate();
     Logger.d(TAG, "Install service is starting");
-    downloadManager = AptoideDownloadManager.getInstance();
-    downloadManager.initDownloadService(this);
+    downloadManager = ((V8Engine) getApplicationContext()).getDownloadManager();
+    defaultInstaller = new InstallerFactory().create(this, InstallerFactory.DEFAULT);
     rollbackInstaller = new InstallerFactory().create(this, InstallerFactory.ROLLBACK);
-    installManager = new InstallManager(downloadManager, rollbackInstaller);
+    installManager = ((V8Engine) getApplicationContext()).getInstallManager(
+        InstallerFactory.ROLLBACK);
     subscriptions = new CompositeSubscription();
     setupNotification();
     installerTypeMap = new HashMap();
@@ -218,9 +219,6 @@ public class InstallService extends Service {
     Installer installer;
     switch (installerType) {
       case INSTALLER_TYPE_DEFAULT:
-        if (defaultInstaller == null) {
-          defaultInstaller = new InstallerFactory().create(this, InstallerFactory.DEFAULT);
-        }
         installer = defaultInstaller;
         break;
       case INSTALLER_TYPE_ROLLBACK:

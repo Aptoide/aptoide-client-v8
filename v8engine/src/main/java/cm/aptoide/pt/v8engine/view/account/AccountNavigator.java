@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.account;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.v8engine.account.MyAccountFragment;
 import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 

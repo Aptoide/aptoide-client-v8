@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine;
+package cm.aptoide.pt.v8engine.networking;
 
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;

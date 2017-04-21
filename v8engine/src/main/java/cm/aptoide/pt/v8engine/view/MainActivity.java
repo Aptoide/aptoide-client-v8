@@ -21,14 +21,15 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.AutoUpdate;
+import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -47,7 +48,7 @@ import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.downloads.scheduled.ScheduledDownloadsFragment;
-import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigatorActivity;
 import cm.aptoide.pt.v8engine.view.store.StoreTabFragmentChooser;
 import cm.aptoide.pt.v8engine.view.store.home.HomeFragment;
@@ -55,6 +56,8 @@ import cm.aptoide.pt.v8engine.view.wizard.WizardFragment;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -69,19 +72,28 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
   private static final String TAG = MainActivity.class.getSimpleName();
   private StoreUtilsProxy storeUtilsProxy;
   private StoreRepository storeRepository;
+  private FragmentNavigator fragmentNavigator;
 
   @Partners @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.frame_layout);
 
-    AptoideAccountManager accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
+    final AptoideAccountManager accountManager =
+        ((V8Engine) getApplicationContext()).getAccountManager();
+    final InstallManager installManager =
+        ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.DEFAULT);
+    final AutoUpdate autoUpdate =
+        new AutoUpdate(this, new DownloadFactory(), new PermissionManager(), installManager);
+    final OkHttpClient httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
+    final Converter.Factory converterFactory = WebService.getDefaultConverter();
+
     storeRepository = RepositoryFactory.getStoreRepository();
+    fragmentNavigator = getFragmentNavigator();
     storeUtilsProxy = new StoreUtilsProxy(accountManager,
         ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV7(),
-        new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class));
-    final AutoUpdate autoUpdate =
-        new AutoUpdate(this, new InstallerFactory().create(this, InstallerFactory.DEFAULT),
-            new DownloadFactory(), AptoideDownloadManager.getInstance(), new PermissionManager());
+        new StoreCredentialsProviderImpl(), AccessorFactory.getAccessorFor(Store.class), httpClient,
+        converterFactory);
+
     attachPresenter(
         new MainPresenter(this, new ApkFy(this, getIntent()), autoUpdate, new ContentPuller(this)),
         savedInstanceState);
@@ -92,14 +104,14 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
   }
 
   @Override public void showWizard() {
-    getFragmentNavigator().navigateTo(new WizardFragment());
+    fragmentNavigator.navigateTo(new WizardFragment());
   }
 
   @Override public void showHome() {
     Fragment home =
         HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
             V8Engine.getConfiguration().getDefaultTheme());
-    getFragmentNavigator().navigateToWithoutBackSave(home);
+    fragmentNavigator.navigateToWithoutBackSave(home);
   }
 
   @Override public boolean showDeepLink() {
@@ -148,25 +160,25 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
   }
 
   private void appViewDeepLink(String md5) {
-    getFragmentNavigator().navigateTo(AppViewFragment.newInstance(md5));
+    fragmentNavigator.navigateTo(AppViewFragment.newInstance(md5));
   }
 
   private void appViewDeepLink(long appId, String packageName, boolean showPopup) {
     AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
         : AppViewFragment.OpenType.OPEN_ONLY;
-    getFragmentNavigator().navigateTo(
+    fragmentNavigator.navigateTo(
         V8Engine.getFragmentProvider().newAppViewFragment(appId, packageName, openType));
   }
 
   private void appViewDeepLink(String packageName, String storeName, boolean showPopup) {
     AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
         : AppViewFragment.OpenType.OPEN_ONLY;
-    getFragmentNavigator().navigateTo(
+    fragmentNavigator.navigateTo(
         V8Engine.getFragmentProvider().newAppViewFragment(packageName, storeName, openType));
   }
 
   private void searchDeepLink(String query) {
-    getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider().newSearchFragment(query));
+    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider().newSearchFragment(query));
   }
 
   private void newrepoDeepLink(ArrayList<String> repos) {
@@ -247,7 +259,7 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
         GetStoreWidgets.WSWidget.Data data = new GetStoreWidgets.WSWidget.Data();
         data.setLayout(Layout.valueOf(queryLayout));
         event.setData(data);
-        getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+        fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
             .newStoreTabGridRecyclerFragment(event,
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME),
@@ -262,7 +274,7 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
     if (uri != null) {
       String openMode = uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.OPEN_MODE);
       if (!TextUtils.isEmpty(openMode)) {
-        getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+        fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
             .newScheduledDownloadsFragment(ScheduledDownloadsFragment.OpenMode.valueOf(openMode)));
       }
     }
@@ -275,22 +287,5 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
         && !TextUtils.isEmpty(queryName)
         && !TextUtils.isEmpty(queryAction)
         && StoreTabFragmentChooser.validateAcceptedName(Event.Name.valueOf(queryName));
-  }
-
-  @Override public void onBackPressed() {
-    final Fragment f = getFragmentNavigator().peekLast();
-    if (f != null && FragmentView.class.isAssignableFrom(f.getClass())) {
-      // similar code in FragmentActivity#onBackPressed()
-      boolean handledBackPressed = ((FragmentView) f).onBackPressed();
-      if (handledBackPressed) {
-        return;
-      }
-    }
-    try {
-      super.onBackPressed();
-    } catch (Exception e) {
-      // Aptoide crashes here on apkfy :/
-      e.printStackTrace();
-    }
   }
 }

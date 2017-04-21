@@ -18,6 +18,8 @@ import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -30,16 +32,21 @@ public class AppRepository {
   private final BodyInterceptor<BaseBody> bodyInterceptorV7;
   private final BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3;
   private final StoreCredentialsProvider storeCredentialsProvider;
+  private final OkHttpClient httpClient;
+  private final Converter.Factory converterFactory;
 
   AppRepository(NetworkOperatorManager operatorManager, AptoideAccountManager accountManager,
       BodyInterceptor<BaseBody> bodyInterceptorV7,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
-      StoreCredentialsProviderImpl storeCredentialsProvider) {
+      StoreCredentialsProviderImpl storeCredentialsProvider, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     this.operatorManager = operatorManager;
     this.accountManager = accountManager;
     this.bodyInterceptorV7 = bodyInterceptorV7;
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.storeCredentialsProvider = storeCredentialsProvider;
+    this.httpClient = httpClient;
+    this.converterFactory = converterFactory;
   }
 
   public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored, String storeName,
@@ -51,7 +58,7 @@ public class AppRepository {
     return GetAppRequest.of(appId,
         V8Engine.getConfiguration().getPartnerId() == null ? null : storeName,
         StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
-        bodyInterceptorV7).observe(refresh).flatMap(response -> {
+        bodyInterceptorV7, httpClient, converterFactory).observe(refresh).flatMap(response -> {
       if (response != null && response.isOk()) {
         if (response.getNodes().getMeta().getData().isPaid()) {
           return addPayment(sponsored, response, refresh);
@@ -103,19 +110,21 @@ public class AppRepository {
   public Observable<PaidApp> getPaidApp(long appId, boolean sponsored, String storeName,
       boolean refresh) {
     return GetApkInfoRequest.of(appId, operatorManager, sponsored, storeName,
-        accountManager.getAccessToken(), bodyInterceptorV3).observe(refresh).flatMap(response -> {
-      if (response != null && response.isOk() && response.isPaid()) {
-        return Observable.just(response);
-      } else {
-        return Observable.error(new RepositoryItemNotFoundException(
-            "No paid app found for app id " + appId + " in store " + storeName));
-      }
-    });
+        accountManager.getAccessToken(), bodyInterceptorV3, httpClient, converterFactory)
+        .observe(refresh)
+        .flatMap(response -> {
+          if (response != null && response.isOk() && response.isPaid()) {
+            return Observable.just(response);
+          } else {
+            return Observable.error(new RepositoryItemNotFoundException(
+                "No paid app found for app id " + appId + " in store " + storeName));
+          }
+        });
   }
 
   public Observable<GetApp> getApp(String packageName, boolean refresh, boolean sponsored,
       String storeName) {
-    return GetAppRequest.of(packageName, storeName, bodyInterceptorV7)
+    return GetAppRequest.of(packageName, storeName, bodyInterceptorV7, httpClient, converterFactory)
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -132,17 +141,19 @@ public class AppRepository {
   }
 
   public Observable<GetApp> getAppFromMd5(String md5, boolean refresh, boolean sponsored) {
-    return GetAppRequest.ofMd5(md5, bodyInterceptorV7).observe(refresh).flatMap(response -> {
-      if (response != null && response.isOk()) {
-        if (response.getNodes().getMeta().getData().isPaid()) {
-          return addPayment(sponsored, response, refresh);
-        } else {
-          return Observable.just(response);
-        }
-      } else {
-        return Observable.error(
-            new RepositoryItemNotFoundException("No app found for app md5" + md5));
-      }
-    });
+    return GetAppRequest.ofMd5(md5, bodyInterceptorV7, httpClient, converterFactory)
+        .observe(refresh)
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            if (response.getNodes().getMeta().getData().isPaid()) {
+              return addPayment(sponsored, response, refresh);
+            } else {
+              return Observable.just(response);
+            }
+          } else {
+            return Observable.error(
+                new RepositoryItemNotFoundException("No app found for app md5" + md5));
+          }
+        });
   }
 }

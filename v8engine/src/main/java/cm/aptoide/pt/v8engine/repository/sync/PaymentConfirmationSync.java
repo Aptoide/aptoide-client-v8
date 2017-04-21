@@ -24,6 +24,8 @@ import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.io.IOException;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Completable;
 import rx.Single;
 
@@ -40,7 +42,8 @@ public class PaymentConfirmationSync extends RepositorySync {
   private final PaymentConfirmationFactory confirmationFactory;
   private final AptoideAccountManager accountManager;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
-
+  private final Converter.Factory converterFactory;
+  private final OkHttpClient httpClient;
   private String paymentConfirmationId;
   private String paymentId;
 
@@ -49,7 +52,8 @@ public class PaymentConfirmationSync extends RepositorySync {
       PaymentConfirmationAccessor confirmationAccessor,
       PaymentConfirmationFactory confirmationFactory, String paymentConfirmationId,
       String paymentId, AptoideAccountManager accountManager,
-      BodyInterceptor<BaseBody> bodyInterceptorV3) {
+      BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
+      OkHttpClient httpClient) {
     this.paymentConfirmationRepository = paymentConfirmationRepository;
     this.product = product;
     this.operatorManager = operatorManager;
@@ -59,13 +63,16 @@ public class PaymentConfirmationSync extends RepositorySync {
     this.paymentId = paymentId;
     this.accountManager = accountManager;
     this.bodyInterceptorV3 = bodyInterceptorV3;
+    this.converterFactory = converterFactory;
+    this.httpClient = httpClient;
   }
 
   public PaymentConfirmationSync(PaymentConfirmationRepository paymentConfirmationRepository,
       Product product, NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor confirmationAccessor,
       PaymentConfirmationFactory confirmationFactory, AptoideAccountManager accountManager,
-      BodyInterceptor<BaseBody> bodyInterceptorV3) {
+      BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
+      OkHttpClient httpClient) {
     this.paymentConfirmationRepository = paymentConfirmationRepository;
     this.product = product;
     this.operatorManager = operatorManager;
@@ -73,6 +80,8 @@ public class PaymentConfirmationSync extends RepositorySync {
     this.confirmationFactory = confirmationFactory;
     this.accountManager = accountManager;
     this.bodyInterceptorV3 = bodyInterceptorV3;
+    this.converterFactory = converterFactory;
+    this.httpClient = httpClient;
   }
 
   @Override public void sync(SyncResult syncResult) {
@@ -107,11 +116,13 @@ public class PaymentConfirmationSync extends RepositorySync {
       if (isInAppBilling) {
         return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId, operatorManager,
             ((InAppBillingProduct) product).getDeveloperPayload(), accessToken,
-            paymentConfirmationId, bodyInterceptorV3).observe().toSingle();
+            paymentConfirmationId, bodyInterceptorV3, httpClient, converterFactory)
+            .observe()
+            .toSingle();
       }
       return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId, operatorManager,
           ((PaidAppProduct) product).getStoreName(), accessToken, paymentConfirmationId,
-          bodyInterceptorV3).observe().toSingle();
+          bodyInterceptorV3, httpClient, converterFactory).observe().toSingle();
     }).flatMapCompletable(response -> {
       if (response != null && response.isOk()) {
         return Completable.complete();
@@ -126,13 +137,14 @@ public class PaymentConfirmationSync extends RepositorySync {
     return Single.just(product instanceof InAppBillingProduct).flatMap(isInAppBilling -> {
       if (isInAppBilling) {
         return GetPaymentConfirmationRequest.of(product.getId(), operatorManager,
-            ((InAppBillingProduct) product).getApiVersion(), accessToken, bodyInterceptorV3)
+            ((InAppBillingProduct) product).getApiVersion(), accessToken, bodyInterceptorV3,
+            httpClient, converterFactory)
             .observe()
             .cast(PaymentConfirmationResponse.class)
             .toSingle();
       }
       return GetPaymentConfirmationRequest.of(product.getId(), operatorManager, accessToken,
-          bodyInterceptorV3).observe().toSingle();
+          bodyInterceptorV3, httpClient, converterFactory).observe().toSingle();
     }).flatMap(response -> {
       if (response != null && response.isOk()) {
         return Single.just(

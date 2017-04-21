@@ -5,11 +5,10 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.store.GetStore;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -20,16 +19,17 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
   private static final String TAG = GetUserRequest.class.getSimpleName();
   private String url;
 
-  public GetUserRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
-    super(body, BASE_HOST,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter(), bodyInterceptor);
+  public GetUserRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
     this.url = url;
   }
 
-  public static GetUserRequest of(String url, BodyInterceptor<BaseBody> bodyInterceptor) {
+  public static GetUserRequest of(String url, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
     final GetUserRequest.Body body = new GetUserRequest.Body(WidgetsArgs.createDefault());
-    return new GetUserRequest(new V7Url(url).remove("user/get").get(), body, bodyInterceptor);
+    return new GetUserRequest(new V7Url(url).remove("user/get").get(), body, bodyInterceptor,
+        httpClient, converterFactory);
   }
 
   @Override

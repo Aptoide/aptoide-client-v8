@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 09/02/2017.
  */
 
-package cm.aptoide.pt.v8engine.account;
+package cm.aptoide.pt.v8engine.view.account;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

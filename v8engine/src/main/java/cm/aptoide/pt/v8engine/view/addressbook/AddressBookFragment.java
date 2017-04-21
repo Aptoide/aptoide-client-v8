@@ -16,6 +16,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.FacebookModel;
 import cm.aptoide.pt.model.v7.TwitterModel;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -42,6 +43,8 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import java.util.Arrays;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -82,11 +85,14 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     final BodyInterceptor<BaseBody> baseBodyBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    mActionsListener =
-        new AddressBookPresenter(this, new ContactsRepositoryImpl(baseBodyBodyInterceptor),
-            analytics, new AddressBookNavigationManager(getFragmentNavigator(), getTag(),
-            getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
-            Application.getConfiguration().getMarketName())));
+    final OkHttpClient httpClient =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    final Converter.Factory converterFactory = WebService.getDefaultConverter();
+    mActionsListener = new AddressBookPresenter(this,
+        new ContactsRepositoryImpl(baseBodyBodyInterceptor, httpClient, converterFactory),
+        analytics, new AddressBookNavigationManager(getFragmentNavigator(), getTag(),
+        getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
+        Application.getConfiguration().getMarketName())));
     callbackManager = CallbackManager.Factory.create();
     registerFacebookCallback();
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());

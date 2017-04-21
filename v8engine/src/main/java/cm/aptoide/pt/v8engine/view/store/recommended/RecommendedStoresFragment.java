@@ -11,6 +11,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.store.ListStores;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
@@ -19,6 +20,7 @@ import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.store.GetStoreEndlessFragment;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
+import okhttp3.OkHttpClient;
 import rx.Observable;
 import rx.functions.Action1;
 
@@ -40,8 +42,10 @@ public class RecommendedStoresFragment extends GetStoreEndlessFragment<ListStore
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     BodyInterceptor<BaseBody> bodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    final OkHttpClient httpClient =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
-        AccessorFactory.getAccessorFor(Store.class));
+        AccessorFactory.getAccessorFor(Store.class), httpClient, WebService.getDefaultConverter());
   }
 
   @Override protected V7<ListStores, ? extends Endless> buildRequest(boolean refresh, String url) {

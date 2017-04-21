@@ -3,11 +3,8 @@ package cm.aptoide.pt.v8engine.view.wizard;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,12 +15,13 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.view.account.LoginSignUpFragment;
-import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.view.BackButtonFragment;
+import cm.aptoide.pt.v8engine.view.account.LoginBottomSheet;
 import com.jakewharton.rxbinding.support.v4.view.RxViewPager;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
+import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -33,76 +31,86 @@ import rx.android.schedulers.AndroidSchedulers;
  * It also manages swapping pages and UI changes (Indicator + skip/next arrow)
  */
 // TODO: 16/2/2017 sithengineer add MVP to this view
-public class WizardFragment extends FragmentView
-    implements LoginSignUpFragment.BottomSheetStateListener {
+public class WizardFragment extends BackButtonFragment {
 
-  private DumbEagerFragmentPagerAdapter viewPagerAdapter;
+  private WizardPagerAdapter viewPagerAdapter;
   private ViewPager viewPager;
   private RadioGroup radioGroup;
   private View skipText;
   private View nextIcon;
-
-  private ArrayList<RadioButton> wizardButtons;
+  private List<RadioButton> wizardButtons;
   private View skipOrNextLayout;
+
   private AptoideAccountManager accountManager;
+  private LoginBottomSheet loginBottomSheet;
+
+  @Override public void onAttach(Context context) {
+    super.onAttach(context);
+    if (context instanceof LoginBottomSheet) {
+      loginBottomSheet = (LoginBottomSheet) context;
+    } else {
+      throw new IllegalStateException(
+          "Context should implement " + LoginBottomSheet.class.getSimpleName());
+    }
+  }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.fragment_wizard, container, false);
+  }
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
     accountManager = ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
-
-    View view = inflater.inflate(getLayoutId(), container, false);
-    bind(view);
-
-    final FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
-    final Context context = getContext();
-    accountManager.accountStatus()
-        .first()
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(account -> {
-          createViewsAndButtons(account.isLoggedIn(), supportFragmentManager, context);
-        }, err -> {
-          CrashReport.getInstance().log(err);
-          createViewsAndButtons(false, supportFragmentManager, context);
-        });
-
-    return view;
   }
 
-  @LayoutRes public int getLayoutId() {
-    return R.layout.fragment_wizard;
-  }
-
-  private void bind(View view) {
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
     viewPager = (ViewPager) view.findViewById(R.id.view_pager);
     skipOrNextLayout = view.findViewById(R.id.skip_next_layout);
     radioGroup = (RadioGroup) view.findViewById(R.id.view_pager_radio_group);
     skipText = view.findViewById(R.id.skip_text);
     nextIcon = view.findViewById(R.id.next_icon);
+    createViewsAndButtons(getContext());
+
+    loginBottomSheet.state()
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(state -> {
+          if (LoginBottomSheet.State.EXPANDED.equals(state)) {
+            skipOrNextLayout.setVisibility(View.GONE);
+          } else if (LoginBottomSheet.State.COLLAPSED.equals(state)) {
+            skipOrNextLayout.setVisibility(View.VISIBLE);
+          }
+        });
   }
 
-  private void createViewsAndButtons(boolean userIsLoggedIn, FragmentManager fragmentManager,
-      Context context) {
-    ArrayList<Fragment> fragmentList = new ArrayList<>();
-    fragmentList.add(WizardPageOneFragment.newInstance());
-    fragmentList.add(WizardPageTwoFragment.newInstance());
+  @Override public void onDestroyView() {
+    skipOrNextLayout = null;
+    wizardButtons = null;
+    radioGroup = null;
+    skipText = null;
+    nextIcon = null;
+    viewPager.setAdapter(null);
+    viewPager = null;
+    super.onDestroyView();
+  }
 
-    if (!userIsLoggedIn) {
-      // only add last fragment if user is not logged in already
-      fragmentList.add(LoginSignUpFragment.newInstance(true, false, true)
-          .registerBottomSheetStateListener(WizardFragment.this));
-    }
+  private void createViewsAndButtons(Context context) {
+    accountManager.accountStatus()
+        .first()
+        .toSingle()
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW).forSingle())
+        .subscribe(account -> {
+          viewPagerAdapter = new WizardPagerAdapter(getChildFragmentManager(), account);
+          viewPager.setAdapter(viewPagerAdapter);
+          viewPager.setCurrentItem(0);
 
-    viewPagerAdapter = new DumbEagerFragmentPagerAdapter(fragmentManager);
-    viewPagerAdapter.attachFragments(fragmentList);
-
-    viewPager.setAdapter(viewPagerAdapter);
-    viewPager.setCurrentItem(0);
-
-    createRadioButtons(context);
-    setupHandlers();
+          createRadioButtons(context);
+          setupHandlers();
+        });
   }
 
   private void createRadioButtons(Context context) {
@@ -167,22 +175,5 @@ public class WizardFragment extends FragmentView
       skipText.setVisibility(View.VISIBLE);
       nextIcon.setVisibility(View.GONE);
     }
-  }
-
-  public boolean onBackPressed() {
-    Fragment f = viewPagerAdapter.getItem(viewPager.getCurrentItem());
-    if (FragmentView.class.isAssignableFrom(f.getClass())) {
-      return ((FragmentView) f).onBackPressed();
-    }
-
-    return super.onBackPressed();
-  }
-
-  @Override public void expanded() {
-    skipOrNextLayout.setVisibility(View.GONE);
-  }
-
-  @Override public void hidden() {
-    skipOrNextLayout.setVisibility(View.VISIBLE);
   }
 }

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine;
+package cm.aptoide.pt.v8engine.download;
 
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
@@ -9,7 +9,7 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEvent;
  * Created by trinkes on 04/01/2017.
  */
 
-public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.interfaces.Analytics {
+public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytics {
   private Analytics analytics;
 
   public DownloadAnalytics(Analytics analytics) {

@@ -22,6 +22,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -48,6 +49,8 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
 import lombok.Getter;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -71,6 +74,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private StoreCredentialsProvider storeCredentialsProvider;
   private AptoideAccountManager accountManager;
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
 
   public static RateAndReviewsFragment newInstance(long appId, String appName, String storeName,
       String packageName, String storeTheme) {
@@ -181,11 +186,11 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     super.onViewCreated();
     dialogUtils = new DialogUtils(accountManager,
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
-        baseBodyInterceptor);
+        baseBodyInterceptor, httpClient, converterFactory);
   }
 
   private void fetchRating(boolean refresh) {
-    GetAppRequest.of(packageName, baseBodyInterceptor, appId)
+    GetAppRequest.of(packageName, baseBodyInterceptor, appId, httpClient, converterFactory)
         .observe(refresh)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
@@ -205,13 +210,14 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private void fetchReviews() {
     ListReviewsRequest reviewsRequest =
         ListReviewsRequest.of(storeName, packageName, storeCredentialsProvider.get(storeName),
-            baseBodyInterceptor);
+            baseBodyInterceptor, httpClient, converterFactory);
 
     getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
             new ListFullReviewsSuccessRequestListener(this, new StoreCredentialsProviderImpl(),
-                baseBodyInterceptor), (throwable) -> throwable.printStackTrace());
+                baseBodyInterceptor, httpClient, converterFactory),
+            (throwable) -> throwable.printStackTrace());
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }
@@ -239,6 +245,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
+    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
   }
 
   @NonNull @Override

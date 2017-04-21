@@ -35,6 +35,7 @@ import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.model.v7.store.HomeUser;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -50,6 +51,8 @@ import cm.aptoide.pt.v8engine.view.timeline.AppsTimelineFragment;
 import com.astuetz.PagerSlidingTabStrip;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -74,6 +77,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private List<GetStoreTabs.Tab> tabs;
   private Long storeId;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -120,6 +125,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
   }
 
   @Override public void onDestroy() {
@@ -181,6 +188,10 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void onDestroyView() {
     if (storeTheme != null && !storeContext.equals(StoreContext.meta)) {
       ThemeUtils.setAptoideTheme(getActivity());
+    }
+    if (pagerSlidingTabStrip != null) {
+      pagerSlidingTabStrip.setOnTabReselectedListener(null);
+      pagerSlidingTabStrip = null;
     }
     super.onDestroyView();
   }
@@ -268,19 +279,21 @@ public class StoreFragment extends BasePagerToolbarFragment {
       case GetHome:
         return GetHomeRequest.of(
             StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), userId,
-            storeContext, bodyInterceptor).observe(refresh).map(getHome -> {
-          Store store = getHome.getNodes().getMeta().getData().getStore();
-          String storeName = store != null ? store.getName() : null;
-          Long storeId = store != null ? store.getId() : null;
-          setupVariables(getHome.getNodes().getTabs().getList(), storeId, storeName);
-          HomeUser user = getHome.getNodes().getMeta().getData().getUser();
-          return TextUtils.isEmpty(storeName) ? user.getName() : storeName;
-        });
+            storeContext, bodyInterceptor, httpClient, converterFactory)
+            .observe(refresh)
+            .map(getHome -> {
+              Store store = getHome.getNodes().getMeta().getData().getStore();
+              String storeName = store != null ? store.getName() : null;
+              Long storeId = store != null ? store.getId() : null;
+              setupVariables(getHome.getNodes().getTabs().getList(), storeId, storeName);
+              HomeUser user = getHome.getNodes().getMeta().getData().getUser();
+              return TextUtils.isEmpty(storeName) ? user.getName() : storeName;
+            });
       case GetStore:
       default:
         return GetStoreRequest.of(
             StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), storeContext,
-            bodyInterceptor).observe(refresh).map(getStore -> {
+            bodyInterceptor, httpClient, converterFactory).observe(refresh).map(getStore -> {
           setupVariables(getStore.getNodes().getTabs().getList(),
               getStore.getNodes().getMeta().getData().getId(),
               getStore.getNodes().getMeta().getData().getName());

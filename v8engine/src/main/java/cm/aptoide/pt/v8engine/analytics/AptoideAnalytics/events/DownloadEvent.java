@@ -9,6 +9,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 
 /**
  * Created by trinkes on 02/01/2017.
@@ -30,9 +32,10 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadEvent
   public DownloadEvent(Action action, Origin origin, String packageName, String url, String obbUrl,
       String patchObbUrl, AppContext context, int versionCode,
       DownloadEventConverter downloadInstallEventConverter,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     super(action, origin, packageName, url, obbUrl, patchObbUrl, context, versionCode,
-        downloadInstallEventConverter, EVENT_NAME, bodyInterceptor);
+        downloadInstallEventConverter, EVENT_NAME, bodyInterceptor, httpClient, converterFactory);
     downloadHadProgress = false;
   }
 

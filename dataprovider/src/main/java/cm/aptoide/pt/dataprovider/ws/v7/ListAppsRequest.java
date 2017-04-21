@@ -7,14 +7,13 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.Type;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -26,23 +25,24 @@ import rx.Observable;
   private static final int LINES_PER_REQUEST = 6;
   private String url;
 
-  private ListAppsRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
-    super(body, BASE_HOST,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter(), bodyInterceptor);
+  private ListAppsRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
     this.url = url;
   }
 
   public static ListAppsRequest ofAction(String url,
       BaseRequestWithStore.StoreCredentials storeCredentials,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     V7Url listAppsV7Url = new V7Url(url).remove("listApps");
     if (listAppsV7Url.containsLimit()) {
-      return new ListAppsRequest(listAppsV7Url.get(), new Body(storeCredentials), bodyInterceptor);
+      return new ListAppsRequest(listAppsV7Url.get(), new Body(storeCredentials), bodyInterceptor,
+          httpClient, converterFactory);
     } else {
       return new ListAppsRequest(listAppsV7Url.get(),
           new Body(storeCredentials, Type.APPS_GROUP.getPerLineCount() * LINES_PER_REQUEST),
-          bodyInterceptor);
+          bodyInterceptor, httpClient, converterFactory);
     }
   }
 

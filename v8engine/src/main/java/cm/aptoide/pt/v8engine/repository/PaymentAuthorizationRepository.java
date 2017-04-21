@@ -16,6 +16,8 @@ import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentExce
 import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
 import java.util.Collections;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
 
@@ -26,20 +28,25 @@ public class PaymentAuthorizationRepository {
   private final PaymentAuthorizationFactory authorizationFactory;
   private final AptoideAccountManager accountManager;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
+  private final OkHttpClient httpClient;
+  private final Converter.Factory converterFactory;
 
   PaymentAuthorizationRepository(PaymentAuthorizationAccessor authorizationAccessor,
       SyncAdapterBackgroundSync backgroundSync, PaymentAuthorizationFactory authorizationFactory,
-      AptoideAccountManager accountManager, BodyInterceptor<BaseBody> bodyInterceptorV3) {
+      AptoideAccountManager accountManager, BodyInterceptor<BaseBody> bodyInterceptorV3,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
     this.authotizationAccessor = authorizationAccessor;
     this.backgroundSync = backgroundSync;
     this.authorizationFactory = authorizationFactory;
     this.accountManager = accountManager;
     this.bodyInterceptorV3 = bodyInterceptorV3;
+    this.httpClient = httpClient;
+    this.converterFactory = converterFactory;
   }
 
   public Completable createPaymentAuthorization(int paymentId) {
     return CreatePaymentAuthorizationRequest.of(accountManager.getAccessToken(), paymentId,
-        bodyInterceptorV3).observe().flatMap(response -> {
+        bodyInterceptorV3, httpClient, converterFactory).observe().flatMap(response -> {
       if (response != null && response.isOk()) {
         return Observable.just(null);
       }

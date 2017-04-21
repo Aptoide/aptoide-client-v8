@@ -20,8 +20,6 @@ import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
-import cm.aptoide.pt.v8engine.repository.DownloadRepository;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.Repository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import java.util.List;
@@ -43,16 +41,10 @@ public class InstallManager {
    * Uses the default {@link Repository} for {@link Download} and {@link Installed}
    */
   public InstallManager(AptoideDownloadManager aptoideDownloadManager, Installer installer) {
-    this(aptoideDownloadManager, installer, RepositoryFactory.getDownloadRepository(),
-        RepositoryFactory.getInstalledRepository());
-  }
-
-  public InstallManager(AptoideDownloadManager aptoideDownloadManager, Installer installer,
-      DownloadRepository downloadRepository, InstalledRepository installedRepository) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
-    this.downloadRepository = downloadRepository;
-    this.installedRepository = installedRepository;
+    this.downloadRepository = RepositoryFactory.getDownloadRepository();
+    this.installedRepository = RepositoryFactory.getInstalledRepository();
   }
 
   public void stopAllInstallations(Context context) {

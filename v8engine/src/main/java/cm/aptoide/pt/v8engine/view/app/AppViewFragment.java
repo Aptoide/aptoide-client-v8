@@ -49,13 +49,13 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.iab.BillingBinder;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.spotandshareandroid.HighwayActivity;
@@ -68,7 +68,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
@@ -108,6 +107,8 @@ import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.Getter;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -174,6 +175,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private SocialRepository socialRepository;
   private AccountNavigator accountNavigator;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
 
   public static AppViewFragment newInstance(String md5) {
     Bundle bundle = new Bundle();
@@ -242,15 +245,18 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     accountNavigator =
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
     permissionManager = new PermissionManager();
-    Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
-    installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
+    installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
+        InstallerFactory.ROLLBACK);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    socialRepository = new SocialRepository(accountManager, bodyInterceptor);
+    socialRepository = new SocialRepository(accountManager, bodyInterceptor, converterFactory,
+        httpClient);
     productFactory = new ProductFactory();
     appRepository = RepositoryFactory.getAppRepository(getContext());
+    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
     adsRepository =
         new AdsRepository(((V8Engine) getContext().getApplicationContext()).getAptoideClientUUID(),
-            accountManager);
+            accountManager, httpClient, converterFactory);
     installedRepository = RepositoryFactory.getInstalledRepository();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
   }
@@ -284,7 +290,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-
+    header = null;
     if (storeTheme != null) {
       ThemeUtils.setStatusBarThemeColor(getActivity(),
           StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
@@ -499,8 +505,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     DataproviderUtils.AdNetworksUtils.knockCpc(minimalAd);
     Analytics.LTV.cpi(minimalAd.getPackageName());
     AptoideUtils.ThreadU.runOnUiThread(
-        () -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, false,
-            adsRepository));
+        () -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, false, adsRepository,
+            httpClient, converterFactory));
   }
 
   private void updateLocalVars(GetAppMeta.App app) {
@@ -704,7 +710,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           AlertDialog.Builder alertDialog =
               sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(), appName,
                   app.getIcon());
-          SocialRepository socialRepository = new SocialRepository(accountManager, bodyInterceptor);
+          SocialRepository socialRepository = new SocialRepository(accountManager, bodyInterceptor, converterFactory,
+              httpClient);
 
           sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
               sharePreviewDialog, alertDialog, socialRepository);

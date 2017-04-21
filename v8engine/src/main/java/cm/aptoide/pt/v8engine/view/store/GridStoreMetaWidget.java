@@ -22,6 +22,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.model.v7.store.HomeUser;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -37,6 +38,7 @@ import java.util.List;
 import java.util.Locale;
 import lombok.Getter;
 import lombok.Setter;
+import okhttp3.OkHttpClient;
 import rx.functions.Action1;
 
 /**
@@ -85,9 +87,12 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     final BodyInterceptor<BaseBody> bodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    final OkHttpClient httpClient =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     storeUtilsProxy =
         new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl(),
-            AccessorFactory.getAccessorFor(Store.class));
+            AccessorFactory.getAccessorFor(Store.class), httpClient,
+            WebService.getDefaultConverter());
     final GetHomeMeta getHomeMeta = displayable.getPojo();
     final cm.aptoide.pt.model.v7.store.Store store = getHomeMeta.getData().getStore();
     HomeUser user = getHomeMeta.getData().getUser();

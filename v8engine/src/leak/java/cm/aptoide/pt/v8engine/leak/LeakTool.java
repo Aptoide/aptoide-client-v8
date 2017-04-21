@@ -28,7 +28,7 @@ public class LeakTool {
     return refWatcher;
   }
 
-  public void watch(Object fragment) {
-    getRefWatcher().watch(fragment);
+  public void watch(Object object) {
+    getRefWatcher().watch(object);
   }
 }

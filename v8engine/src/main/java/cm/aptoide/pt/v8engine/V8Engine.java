@@ -15,10 +15,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
+import android.util.SparseArray;
+import cm.aptoide.accountmanager.AccountDataPersist;
 import cm.aptoide.accountmanager.AccountFactory;
+import cm.aptoide.accountmanager.AccountManagerService;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -35,6 +38,10 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
+import cm.aptoide.pt.networkclient.okhttp.cache.POSTCacheInterceptor;
+import cm.aptoide.pt.networkclient.okhttp.cache.POSTCacheKeyAlgorithm;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
@@ -47,7 +54,8 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.account.AndroidAccountDataMigration;
-import cm.aptoide.pt.v8engine.account.AndroidAccountDataPersist;
+import cm.aptoide.pt.v8engine.account.AndroidAccountManagerDataPersist;
+import cm.aptoide.pt.v8engine.account.AndroidAccountProvider;
 import cm.aptoide.pt.v8engine.account.BaseBodyInterceptorFactory;
 import cm.aptoide.pt.v8engine.account.DatabaseStoreDataPersist;
 import cm.aptoide.pt.v8engine.account.SocialAccountFactory;
@@ -59,10 +67,16 @@ import cm.aptoide.pt.v8engine.crashreports.ConsoleLogger;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
-import cm.aptoide.pt.v8engine.download.TokenHttpClient;
+import cm.aptoide.pt.v8engine.download.DownloadAnalytics;
+import cm.aptoide.pt.v8engine.download.DownloadMirrorEventInterceptor;
+import cm.aptoide.pt.v8engine.download.PaidAppsDownloadInterceptor;
 import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.leak.LeakTool;
+import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
+import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
+import cm.aptoide.pt.v8engine.networking.UserAgentInterceptor;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -75,15 +89,23 @@ import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.view.configuration.implementation.ActivityProviderImpl;
 import cm.aptoide.pt.v8engine.view.configuration.implementation.FragmentProviderImpl;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
+import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
+import com.liulishuo.filedownloader.FileDownloader;
+import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.Setter;
+import okhttp3.Cache;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -96,6 +118,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
  */
 public abstract class V8Engine extends SpotAndShareApplication {
 
+  private static final String CACHE_FILE_NAME = "aptoide.wscache";
   private static final String TAG = V8Engine.class.getName();
 
   @Getter private static FragmentProvider fragmentProvider;
@@ -115,6 +138,14 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private GoogleApiClient googleSignInClient;
   private LeakTool leakTool;
   private String aptoideMd5sum;
+  private AptoideDownloadManager downloadManager;
+  private SparseArray<InstallManager> installManagers;
+  private OkHttpClient defaultClient;
+  private OkHttpClient longTimeoutClient;
+  private L2Cache httpClientCache;
+  private UserAgentInterceptor userAgentInterceptor;
+  private AccountFactory accountFactory;
+  private AndroidAccountProvider androidAccountProvider;
 
   /**
    * call after this instance onCreate()
@@ -190,9 +221,6 @@ public abstract class V8Engine extends SpotAndShareApplication {
         .andThen(discoverAndSaveInstalledApps())
         .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance().log(error));
 
-    regenerateUserAgent(getAccountManager()).subscribe(__ -> { /* do nothing */},
-        error -> CrashReport.getInstance().log(error));
-
     //
     // app synchronous initialization
     //
@@ -202,8 +230,6 @@ public abstract class V8Engine extends SpotAndShareApplication {
     sendAppStartToAnalytics(sharedPreferences);
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
-
-    initializeDownloadManager(V8Engine.this.getAccountManager());
 
     clearFileCache();
 
@@ -237,42 +263,142 @@ public abstract class V8Engine extends SpotAndShareApplication {
         Build.ID);
   }
 
+  public OkHttpClient getLongTimeoutClient() {
+    if (longTimeoutClient == null) {
+      final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+      clientBuilder.addInterceptor(getUserAgentInterceptor());
+      clientBuilder.connectTimeout(2, TimeUnit.MINUTES);
+      clientBuilder.readTimeout(2, TimeUnit.MINUTES);
+      clientBuilder.writeTimeout(2, TimeUnit.MINUTES);
+      longTimeoutClient = clientBuilder.build();
+    }
+    return longTimeoutClient;
+  }
+
+  public OkHttpClient getDefaultClient() {
+    if (defaultClient == null) {
+      final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+      clientBuilder.readTimeout(45, TimeUnit.SECONDS);
+      clientBuilder.writeTimeout(45, TimeUnit.SECONDS);
+
+      final File cacheDirectory = new File("/");
+      final int cacheMaxSize = 10 * 1024 * 1024;
+      clientBuilder.cache(new Cache(cacheDirectory, cacheMaxSize)); // 10 MiB
+
+      clientBuilder.addInterceptor(new POSTCacheInterceptor(getHttpClientCache()));
+      clientBuilder.addInterceptor(getUserAgentInterceptor());
+
+      defaultClient = clientBuilder.build();
+    }
+    return defaultClient;
+  }
+
+  public Interceptor getUserAgentInterceptor() {
+    if (userAgentInterceptor == null) {
+      userAgentInterceptor =
+          new UserAgentInterceptor(getAndroidAccountProvider(), aptoideClientUUID,
+              getConfiguration().getPartnerId(), new DisplayMetrics(),
+              AptoideUtils.SystemU.TERMINAL_INFO, AptoideUtils.Core.getDefaultVername());
+    }
+    return userAgentInterceptor;
+  }
+
+  public L2Cache getHttpClientCache() {
+    if (httpClientCache == null) {
+      httpClientCache =
+          new L2Cache(new POSTCacheKeyAlgorithm(), new File(getCacheDir(), CACHE_FILE_NAME));
+    }
+    return httpClientCache;
+  }
+
+  public AptoideDownloadManager getDownloadManager() {
+    if (downloadManager == null) {
+
+      final String apkPath = getConfiguration().getCachePath() + "apks/";
+      final String obbPath = getConfiguration().getCachePath() + "obb/";
+      final OkHttpClient.Builder httpClientBuilder =
+          new OkHttpClient.Builder().addInterceptor(getUserAgentInterceptor())
+              .addInterceptor(new PaidAppsDownloadInterceptor(getAccountManager()))
+              .addInterceptor(new DownloadMirrorEventInterceptor(Analytics.getInstance()));
+
+      FileUtils.createDir(apkPath);
+      FileUtils.createDir(obbPath);
+
+      FileDownloader.init(this, new DownloadMgrInitialParams.InitCustomMaker().connectionCreator(
+          new OkHttp3Connection.Creator(httpClientBuilder)));
+
+      downloadManager = new AptoideDownloadManager(AccessorFactory.getAccessorFor(Download.class),
+          CacheHelper.build(), new FileUtils(action -> Analytics.File.moveFile(action)),
+          new DownloadAnalytics(Analytics.getInstance()), FileDownloader.getImpl(),
+          getConfiguration().getCachePath(), apkPath, obbPath);
+    }
+    return downloadManager;
+  }
+
+  public InstallManager getInstallManager(int installerType) {
+
+    if (installManagers == null) {
+      installManagers = new SparseArray<>();
+    }
+
+    InstallManager installManager = installManagers.get(installerType);
+    if (installManager == null) {
+      installManager = new InstallManager(getDownloadManager(),
+          new InstallerFactory().create(this, installerType));
+      installManagers.put(installerType, installManager);
+    }
+
+    return installManager;
+  }
+
   public AptoideAccountManager getAccountManager() {
     if (accountManager == null) {
 
-      Context context = this;
-      final DatabaseStoreDataPersist dataPersist =
-          new DatabaseStoreDataPersist(AccessorFactory.getAccessorFor(Store.class),
-              new DatabaseStoreDataPersist.DatabaseStoreMapper());
-
-      final BaseBodyInterceptorFactory bodyInterceptorFactory =
-          new BaseBodyInterceptorFactory(getAptoideClientUUID(), getPreferences(),
-              getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage());
-
-      final AccountFactory accountFactory = new AccountFactory(getAptoideClientUUID(),
-          new SocialAccountFactory(context, getGoogleSignInClient()),
-          new AccountService(getAptoideClientUUID(), getBaseBodyInterceptorV3()));
+      final AccountManagerService accountManagerService =
+          new AccountManagerService(getAptoideClientUUID(),
+              new BaseBodyInterceptorFactory(getAptoideClientUUID(), getPreferences(),
+                  getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage()),
+              getAccountFactory(), getDefaultClient(), getLongTimeoutClient(),
+              WebService.getDefaultConverter());
 
       final AndroidAccountDataMigration accountDataMigration =
-          new AndroidAccountDataMigration(SecurePreferencesImplementation.getInstance(context),
-              PreferenceManager.getDefaultSharedPreferences(context), AccountManager.get(context),
-              new SecureCoderDecoder.Builder(context).create(),
-              SQLiteDatabaseHelper.DATABASE_VERSION,
-              getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME).getPath());
+          new AndroidAccountDataMigration(SecurePreferencesImplementation.getInstance(this),
+              PreferenceManager.getDefaultSharedPreferences(this), AccountManager.get(this),
+              new SecureCoderDecoder.Builder(this).create(), SQLiteDatabaseHelper.DATABASE_VERSION,
+              getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME).getPath(),
+              getConfiguration().getAccountType());
 
-      final AndroidAccountDataPersist androidAccountDataPersist =
-          new AndroidAccountDataPersist(getConfiguration().getAccountType(),
-              AccountManager.get(context), dataPersist, accountFactory, accountDataMigration);
+      final AccountDataPersist accountDataPersist =
+          new AndroidAccountManagerDataPersist(AccountManager.get(this),
+              new DatabaseStoreDataPersist(AccessorFactory.getAccessorFor(Store.class),
+                  new DatabaseStoreDataPersist.DatabaseStoreMapper()), getAccountFactory(),
+              accountDataMigration, getAndroidAccountProvider(), Schedulers.io());
 
       accountManager =
           new AptoideAccountManager.Builder().setAccountAnalytics(new AccountEventsAnalytcs())
-              .setAccountDataPersist(androidAccountDataPersist)
-              .setAptoideClientUUID(getAptoideClientUUID())
-              .setBaseBodyInterceptorFactory(bodyInterceptorFactory)
-              .setAccountFactory(accountFactory)
+              .setAccountDataPersist(accountDataPersist)
+              .setAccountManagerService(accountManagerService)
               .build();
     }
     return accountManager;
+  }
+
+  public AccountFactory getAccountFactory() {
+    if (accountFactory == null) {
+      accountFactory = new AccountFactory(getAptoideClientUUID(),
+          new SocialAccountFactory(this, getGoogleSignInClient()),
+          new AccountService(getAptoideClientUUID(), getBaseBodyInterceptorV3(), getDefaultClient(),
+              WebService.getDefaultConverter()));
+    }
+    return accountFactory;
+  }
+
+  public AndroidAccountProvider getAndroidAccountProvider() {
+    if (androidAccountProvider == null) {
+      androidAccountProvider = new AndroidAccountProvider(AccountManager.get(this),
+          getConfiguration().getAccountType(), Schedulers.io());
+    }
+    return androidAccountProvider;
   }
 
   public AptoideClientUUID getAptoideClientUUID() {
@@ -318,7 +444,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   }
 
   private void clearFileCache() {
-    FileManager.build()
+    FileManager.build(getDownloadManager(), getHttpClientCache())
         .purgeCache()
         .first()
         .toSingle()
@@ -329,19 +455,6 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
   private void initializeFlurry(Context context, String flurryKey) {
     new FlurryAgent.Builder().withLogEnabled(false).build(context, flurryKey);
-  }
-
-  private void initializeDownloadManager(AptoideAccountManager accountManager) {
-    AptoideDownloadManager.getInstance()
-        .init(this, new DownloadNotificationActionsActionsInterface(),
-            new DownloadManagerSettingsI(), AccessorFactory.getAccessorFor(Download.class),
-            CacheHelper.build(), new FileUtils(action -> Analytics.File.moveFile(action)),
-            new TokenHttpClient(getAptoideClientUUID(), new UserData() {
-              @Override public String getEmail() {
-                return accountManager.getAccountEmail();
-              }
-            }, getConfiguration().getPartnerId(), accountManager).customMake(),
-            new DownloadAnalytics(Analytics.getInstance()));
   }
 
   private void sendAppStartToAnalytics(SharedPreferences sPref) {
@@ -382,15 +495,6 @@ public abstract class V8Engine extends SpotAndShareApplication {
         .subscribeOn(Schedulers.newThread());
   }
 
-  private Observable<Void> regenerateUserAgent(final AptoideAccountManager accountManager) {
-    return accountManager.accountStatus().doOnNext(account -> {
-      final String userAgent = AptoideUtils.NetworkUtils.getDefaultUserAgent(getAptoideClientUUID(),
-          () -> account.getEmail(), AptoideUtils.Core.getDefaultVername(),
-          getConfiguration().getPartnerId(), AptoideUtils.SystemU.TERMINAL_INFO);
-      SecurePreferences.setUserAgent(userAgent);
-    }).subscribeOn(Schedulers.newThread()).flatMap(__ -> null);
-  }
-
   private Completable initAbTestManager() {
     return Completable.defer(() -> ABTestManager.getInstance()
         .initialize(getAptoideClientUUID().getUniqueIdentifier())
@@ -419,15 +523,17 @@ public abstract class V8Engine extends SpotAndShareApplication {
       final StoreCredentialsProviderImpl storeCredentials = new StoreCredentialsProviderImpl();
 
       StoreUtilsProxy proxy =
-          new StoreUtilsProxy(accountManager, getBaseBodyInterceptorV7(), storeCredentials,
-              AccessorFactory.getAccessorFor(Store.class));
+          new StoreUtilsProxy(getAccountManager(), getBaseBodyInterceptorV7(), storeCredentials,
+              AccessorFactory.getAccessorFor(Store.class), getDefaultClient(),
+              WebService.getDefaultConverter());
 
       BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
           storeCredentials.get(getConfiguration().getDefaultStore());
 
       return generateAptoideUuid().andThen(proxy.addDefaultStore(
-          GetStoreMetaRequest.of(defaultStoreCredentials, getBaseBodyInterceptorV7()),
-          accountManager, defaultStoreCredentials).andThen(refreshUpdates()))
+          GetStoreMetaRequest.of(defaultStoreCredentials, getBaseBodyInterceptorV7(),
+              getDefaultClient(), WebService.getDefaultConverter()), getAccountManager(),
+          defaultStoreCredentials).andThen(refreshUpdates()))
           .doOnError(err -> CrashReport.getInstance().log(err));
     });
   }

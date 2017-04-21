@@ -27,6 +27,8 @@ import cm.aptoide.pt.v8engine.interfaces.CommentBeforeSubmissionCallback;
 import cm.aptoide.pt.v8engine.interfaces.CommentDialogCallbackContract;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -52,6 +54,8 @@ public class CommentDialogFragment
   private CommentDialogCallbackContract commentDialogCallbackContract;
   private CommentBeforeSubmissionCallback commentBeforeSubmissionCallback;
   private BodyInterceptor<BaseBody> baseBodyBodyInterceptor;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
 
   public static CommentDialogFragment newInstanceStoreCommentReply(long storeId,
       long previousCommentId, String storeName) {
@@ -123,6 +127,8 @@ public class CommentDialogFragment
     super.onCreate(savedInstanceState);
     baseBodyBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    converterFactory = converterFactory;
     onEmptyTextError = AptoideUtils.StringU.getResString(R.string.error_MARG_107);
   }
 
@@ -245,26 +251,27 @@ public class CommentDialogFragment
     switch (commentType) {
       case REVIEW:
         // new comment on a review
-        return PostCommentForReview.of(idAsLong, inputText, baseBodyBodyInterceptor).observe();
+        return PostCommentForReview.of(idAsLong, inputText, baseBodyBodyInterceptor, httpClient,
+            converterFactory).observe();
 
       case STORE:
         // check if this is a new comment on a store or a reply to a previous one
         if (previousCommentId == null) {
-          return PostCommentForStore.of(idAsLong, inputText, baseBodyBodyInterceptor).observe();
+          return PostCommentForStore.of(idAsLong, inputText, baseBodyBodyInterceptor, httpClient,
+              converterFactory).observe();
         }
 
         return PostCommentForStore.of(idAsLong, previousCommentId, inputText,
-            baseBodyBodyInterceptor).observe();
+            baseBodyBodyInterceptor, httpClient, converterFactory).observe();
 
       case TIMELINE:
         // check if this is a new comment on a article or a reply to a previous one
         if (previousCommentId == null) {
-          return PostCommentForTimelineArticle.of(idAsString, inputText, baseBodyBodyInterceptor)
-              .observe();
+          return PostCommentForTimelineArticle.of(idAsString, inputText, baseBodyBodyInterceptor,
+              httpClient, converterFactory).observe();
         }
-
         return PostCommentForTimelineArticle.of(idAsString, previousCommentId, inputText,
-            baseBodyBodyInterceptor).observe();
+            baseBodyBodyInterceptor, httpClient, converterFactory).observe();
     }
     // default case
     Logger.e(this.getTag(), "Unable to create reply due to missing comment type");

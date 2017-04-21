@@ -26,6 +26,8 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.ActivityView;
+import cm.aptoide.pt.v8engine.view.BackButtonActivity;
+import cm.aptoide.pt.v8engine.view.account.LoginBottomSheetActivity;
 import com.facebook.FacebookSdk;
 import rx.functions.Action0;
 
@@ -33,7 +35,7 @@ import rx.functions.Action0;
  * Created by marcelobenites on 18/01/17.
  */
 
-public abstract class PermissionServiceActivity extends ActivityView implements PermissionService {
+public abstract class PermissionServiceActivity extends LoginBottomSheetActivity implements PermissionService {
 
   private static final String TAG = PermissionServiceActivity.class.getName();
   private static final int ACCESS_TO_EXTERNAL_FS_REQUEST_ID = 61;

@@ -56,6 +56,12 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
         savedInstanceState);
   }
 
+  @Override public void onDestroyView() {
+    startButton = null;
+    toolbar = null;
+    super.onDestroyView();
+  }
+
   private Toolbar setupToolbar(String title) {
     setHasOptionsMenu(true);
 

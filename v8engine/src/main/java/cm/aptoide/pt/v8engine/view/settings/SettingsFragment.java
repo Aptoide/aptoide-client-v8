@@ -98,7 +98,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     trackAnalytics = true;
-    fileManager = FileManager.build();
+    fileManager =
+        FileManager.build(((V8Engine) getContext().getApplicationContext()).getDownloadManager(),
+            ((V8Engine) getContext().getApplicationContext()).getHttpClientCache());
     subscriptions = new CompositeSubscription();
     permissionManager = new PermissionManager();
     adultContentConfirmationDialog =
