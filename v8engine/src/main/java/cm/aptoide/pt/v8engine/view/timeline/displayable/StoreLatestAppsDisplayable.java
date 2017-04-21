@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.view.timeline.displayable;
 
 import android.content.Context;
-import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
@@ -116,8 +116,9 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
   }
 
   public Spannable getStyledTitle(Context context) {
-    return spannableFactory.createStyleSpan(
-        context.getString(R.string.store_has_new_apps, storeName), Typeface.BOLD, storeName);
+    return spannableFactory.createColorSpan(
+        context.getString(R.string.store_has_new_apps, storeName),
+        ContextCompat.getColor(context, R.color.black87alpha), storeName);
   }
 
   @EqualsAndHashCode public static class LatestApp {

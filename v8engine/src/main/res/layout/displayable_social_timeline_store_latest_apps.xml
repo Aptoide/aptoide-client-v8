@@ -43,7 +43,7 @@
           android:ellipsize="end"
           android:lines="1"
           tools:text="Hamata6 Store"
-          style="@style/Widget.Aptoide.Card.Title"
+          style="@style/Aptoide.TextView.Regular.S.Grey"
           />
 
       <TextView
@@ -58,7 +58,7 @@
           android:ellipsize="end"
           android:lines="1"
           tools:text="Há duas horas"
-          style="@style/Widget.Aptoide.Card.Subtitle"
+          style="@style/Aptoide.TextView.Regular.XS.Grey"
           />
 
       <ImageView

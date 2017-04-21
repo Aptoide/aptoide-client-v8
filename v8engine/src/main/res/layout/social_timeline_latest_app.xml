@@ -18,11 +18,10 @@
   <TextView
       android:id="@+id/social_timeline_latest_app_name"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:gravity="center"
-      android:textSize="12sp"
       android:layout_marginTop="4dp"
+      android:gravity="center"
       tools:text="Gummy Drop"
+      style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
       />
 
 </LinearLayout>
