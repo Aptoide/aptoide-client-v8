@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.view.timeline.displayable;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
@@ -142,8 +143,8 @@ public class ArticleDisplayable extends CardDisplayable {
   }
 
   public Spannable getStyleText(Context context, String sourceName) {
-    return spannableFactory.createStyleSpan(context.getString(R.string.x_posted, sourceName),
-        Typeface.BOLD, sourceName);
+    return spannableFactory.createColorSpan(context.getString(R.string.x_posted, sourceName),
+        ContextCompat.getColor(context, R.color.black87alpha), sourceName);
   }
 
   public void sendOpenArticleEvent(String packageName) {

@@ -23,8 +23,8 @@
       android:layout_marginRight="15dp"
       android:layout_marginTop="12dp"
       android:maxLines="3"
-      android:textAppearance="@style/Aptoide.TextView.Regular.M.Grey"
       tools:text="Best backup apps: save all your Android's innards fkgfkj fkjgfjfgkfj fgkjgfj"
+      style="@style/Aptoide.TextView.Regular.M.Grey"
       />
 
   <include
