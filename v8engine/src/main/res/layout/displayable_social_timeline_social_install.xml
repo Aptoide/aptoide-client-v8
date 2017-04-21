@@ -108,7 +108,7 @@
           android:layout_toEndOf="@id/displayable_social_timeline_recommendation_icon"
           android:text="@string/review_get_app"
           android:textAllCaps="true"
-          android:textSize="12sp"
+          android:textSize="10sp"
           style="?attr/customButtomDarkGrayThinLine"
           />
 

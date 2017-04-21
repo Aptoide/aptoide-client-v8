@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.view.timeline.displayable;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import cm.aptoide.pt.model.v7.Comment;
@@ -115,8 +114,9 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
   }
 
   public Spannable getStyledTitle(Context context, String title) {
-    return spannableFactory.createStyleSpan(
-        context.getString(R.string.x_installed_and_recommended, title), Typeface.BOLD, title);
+    return spannableFactory.createColorSpan(
+        context.getString(R.string.x_installed_and_recommended, title),
+        ContextCompat.getColor(context, R.color.black87alpha), title);
   }
 
   @Override
