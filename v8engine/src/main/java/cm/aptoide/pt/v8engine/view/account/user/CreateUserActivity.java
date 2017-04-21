@@ -102,12 +102,13 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
 
   private void setupListeners() {
     subscriptions.add(RxView.clicks(userAvatar).subscribe(click -> chooseAvatarSource()));
-    subscriptions.add(RxView.clicks(createUserButton)
-        .doOnNext(click -> hideKeyboardAndShowProgressDialog())
+    subscriptions.add(RxView.clicks(createUserButton).doOnNext(click -> {
+      hideKeyboardAndShowProgressDialog();
+      Analytics.Account.createdUserProfile(!TextUtils.isEmpty(avatarPath));
+    })
         .flatMap(click -> accountManager.updateAccount(nameEditText.getText().toString().trim(),
             avatarPath)
             .toObservable()
-            .doOnNext(__ -> Analytics.Account.createdUserProfile(!TextUtils.isEmpty(avatarPath)))
             .timeout(90, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError(throwable -> showError(throwable))
