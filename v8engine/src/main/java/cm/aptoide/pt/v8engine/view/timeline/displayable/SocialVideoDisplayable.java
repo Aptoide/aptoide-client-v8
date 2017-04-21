@@ -153,8 +153,8 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
   }
 
   public Spannable getStyledTitle(Context context, String title) {
-    return spannableFactory.createStyleSpan(context.getString(R.string.x_shared, title),
-        Typeface.BOLD, title);
+    return spannableFactory.createColorSpan(context.getString(R.string.x_shared, title),
+        ContextCompat.getColor(context, R.color.black87alpha), title);
   }
 
   @Override public int getViewLayout() {
