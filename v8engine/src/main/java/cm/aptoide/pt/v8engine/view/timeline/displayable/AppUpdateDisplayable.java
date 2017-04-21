@@ -277,8 +277,8 @@ public class AppUpdateDisplayable extends CardDisplayable {
   }
 
   public Spannable getStyledTitle(Context context) {
-    return spannableFactory.createStyleSpan(context.getString(
+    return spannableFactory.createColorSpan(context.getString(
         R.string.store_has_an_update, storeName),
-        Typeface.BOLD, storeName);
+        ContextCompat.getColor(context, R.color.black87alpha) , storeName);
   }
 }

@@ -42,7 +42,7 @@
           android:ellipsize="end"
           android:lines="1"
           tools:text="Hamata6 Store"
-          style="@style/Widget.Aptoide.Card.Title"
+          style="@style/Aptoide.TextView.Regular.S.Grey"
           />
 
       <TextView
@@ -57,7 +57,7 @@
           android:ellipsize="end"
           android:lines="1"
           tools:text="Há duas horas"
-          style="@style/Widget.Aptoide.Card.Subtitle"
+          style="@style/Aptoide.TextView.Regular.XS.Grey"
           />
 
       <ImageView
@@ -107,8 +107,6 @@
 
       <TextView
           android:id="@+id/displayable_social_timeline_app_update_name"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
           android:layout_alignTop="@+id/displayable_social_timeline_app_update_icon"
           android:layout_marginEnd="15.1dp"
           android:layout_marginLeft="13.3dp"
@@ -116,12 +114,10 @@
           android:layout_marginStart="13.3dp"
           android:layout_toEndOf="@id/displayable_social_timeline_app_update_icon"
           android:layout_toRightOf="@+id/displayable_social_timeline_app_update_icon"
-          android:ellipsize="end"
-          android:lines="2"
+          android:maxLines="2"
           android:text="@string/displayable_social_timeline_app_update_name"
-          android:textColor="@color/black"
           tools:text="App Snapchat"
-          style="@style/Widget.Aptoide.Card.Title.Large"
+          style="@style/Aptoide.TextView.Medium.L.Black"
           />
 
 
@@ -138,26 +134,25 @@
           android:layout_marginTop="5dp"
           android:layout_toEndOf="@id/displayable_social_timeline_app_update_icon"
           android:textAllCaps="true"
-          android:textSize="12sp"
+          android:textSize="10sp"
+          tools:text="update app"
           style="?attr/customButtomDarkGrayThinLine"
           />
 
       <TextView
           android:id="@+id/displayable_social_timeline_app_update_error"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
+          android:layout_above="@id/displayable_social_timeline_recommendation_get_app_button"
           android:layout_marginEnd="15.1dp"
           android:layout_marginLeft="13.3dp"
           android:layout_marginRight="15.1dp"
           android:layout_marginStart="13.3dp"
-          android:layout_above="@id/displayable_social_timeline_recommendation_get_app_button"
           android:layout_toEndOf="@id/displayable_social_timeline_app_update_icon"
           android:layout_toRightOf="@id/displayable_social_timeline_app_update_icon"
           android:text="@string/displayable_social_timeline_app_update_error"
-          android:textColor="@color/red_700"
           android:visibility="gone"
           tools:text="Update Error"
           tools:visibility="visible"
+          style="@style/Aptoide.TextView.Regular.S.Red700"
           />
 
     </RelativeLayout>
