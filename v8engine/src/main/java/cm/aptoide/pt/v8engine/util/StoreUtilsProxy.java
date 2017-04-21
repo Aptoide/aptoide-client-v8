@@ -58,7 +58,7 @@ public class StoreUtilsProxy {
     Analytics.Stores.subscribe(storeName);
     return StoreUtils.subscribeStore(
         GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider),
-            bodyInterceptor), accountManager, null, null);
+            bodyInterceptor, httpClient, converterFactory), accountManager, null, null);
   }
 
   public void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
