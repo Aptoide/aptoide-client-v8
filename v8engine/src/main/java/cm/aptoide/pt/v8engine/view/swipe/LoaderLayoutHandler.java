@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.v8engine.view.swipe;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.CallSuper;
 import android.support.annotation.UiThread;
 import android.view.View;
@@ -14,6 +16,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
+import cm.aptoide.pt.v8engine.spotandshare.SpotSharePreviewActivity;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
@@ -34,6 +37,7 @@ public class LoaderLayoutHandler {
   private View noNetworkConnectionView;
   private View retryErrorView;
   private View retryNoNetworkView;
+  private View spotAndShareButton;
 
   public LoaderLayoutHandler(LoadInterface loadInterface, int viewToShowAfterLoadingId) {
     this.viewsToShowAfterLoadingId.add(viewToShowAfterLoadingId);
@@ -58,6 +62,7 @@ public class LoaderLayoutHandler {
     noNetworkConnectionView = view.findViewById(R.id.no_network_connection);
     retryErrorView = genericErrorView.findViewById(R.id.retry);
     retryNoNetworkView = noNetworkConnectionView.findViewById(R.id.retry);
+    spotAndShareButton = noNetworkConnectionView.findViewById(R.id.spot_and_share_button);
   }
 
   private void hideViewsToShowAfterLoading() {
@@ -83,6 +88,9 @@ public class LoaderLayoutHandler {
         restoreState();
         loadInterface.load(true, false, null);
       });
+      spotAndShareButton.setOnClickListener(v -> {
+        openSpotAndShare(noNetworkConnectionView.getContext());
+      });
     } else {
       noNetworkConnectionView.setVisibility(View.GONE);
       genericErrorView.setVisibility(View.VISIBLE);
@@ -91,6 +99,13 @@ public class LoaderLayoutHandler {
         loadInterface.load(true, false, null);
       });
     }
+  }
+
+  private void openSpotAndShare(Context context) {
+    //generate intent to move to Spot&Share
+    Intent intent = new Intent(context, SpotSharePreviewActivity.class);
+    context.startActivity(intent);
+    //startActivity(new Intent(this , SpotSharePreviewActivity.class));
   }
 
   protected void restoreState() {
