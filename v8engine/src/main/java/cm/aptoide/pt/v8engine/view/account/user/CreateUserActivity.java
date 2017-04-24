@@ -5,47 +5,14 @@
 
 package cm.aptoide.pt.v8engine.view.account.user;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.FileUtils;
-import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
-import cm.aptoide.pt.v8engine.view.account.AccountErrorMapper;
-import cm.aptoide.pt.v8engine.view.account.AccountPermissionsBaseActivity;
-import com.jakewharton.rxbinding.support.design.widget.RxSnackbar;
-import com.jakewharton.rxbinding.view.RxView;
-import java.net.SocketTimeoutException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
+import android.app.Activity;
 
 /**
  * Created by pedroribeiro on 24/11/16.
  */
 
-public class CreateUserActivity extends AccountPermissionsBaseActivity {
+public class CreateUserActivity extends Activity {
+  /*
 
   private static int CREATE_USER_REQUEST_CODE = 0; //1:Username and Avatar 2: Username
   private ThrowableToStringMapper errorMapper;
@@ -196,4 +163,5 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
         break;
     }
   }
+  */
 }

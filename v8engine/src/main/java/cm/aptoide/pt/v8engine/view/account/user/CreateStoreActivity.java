@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.account.user;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -42,7 +43,6 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.StoreBodyInterceptor;
 import cm.aptoide.pt.v8engine.view.MainActivity;
-import cm.aptoide.pt.v8engine.view.account.AccountPermissionsBaseActivity;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jakewharton.rxbinding.view.RxView;
@@ -58,7 +58,8 @@ import rx.subscriptions.CompositeSubscription;
  * Created by pedroribeiro on 29/11/16.
  */
 
-public class CreateStoreActivity extends AccountPermissionsBaseActivity {
+public class CreateStoreActivity extends Activity {
+  /*
 
   ProgressDialog progressDialog;
   private Toolbar mToolbar;
@@ -179,7 +180,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
   @Override public void showIconPropertiesError(String errors) {
     mSubscriptions.add(GenericDialogs.createGenericOkMessage(this,
         getString(R.string.image_requirements_error_popup_title), errors)
-        .subscribe(__ -> {/* does nothing */}, err -> {
+        .subscribe(__ -> {}, err -> {
           CrashReport.getInstance().log(err);
         }));
   }
@@ -242,10 +243,6 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     mGreyTick = (ImageView) findViewById(R.id.create_store_theme_check_grey);
   }
 
-  /**
-   * Changes views according to context (edit or create) and shows current values for the store
-   * that's being edited
-   */
   private void editViews() {
     if (!from.equals("store")) {
       mHeader.setText(
@@ -302,7 +299,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
                       if (answer.getErrors().get(0).code.equals("WOP-2")) {
                         mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
                             getApplicationContext().getResources().getString(R.string.ws_error_WOP_2))
-                            .subscribe(__ -> {/*does nothing*/}, err -> {
+                            .subscribe(__ -> {}, err -> {
                               CrashReport.getInstance().log(err);
                             }));
                       } else if (answer.getErrors().get(0).code.equals("WOP-3")) {
@@ -369,9 +366,6 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
                     }
                   }));
             } else if (CREATE_STORE_REQUEST_CODE == 5) {
-              /*
-               * not multipart
-               */
               setStoreData();
               progressDialog.show();
               mSubscriptions.add(
@@ -481,9 +475,6 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     }));
   }
 
-  /**
-   * This method resets previously ticked theme tick
-   */
   private void handleThemeTick(String storeTheme, String visibility) {
     int visible = View.GONE;
     if (visibility.equals("visible")) {
@@ -543,10 +534,6 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     }
   }
 
-  /**
-   * This method validates the data inserted (or not) when the create store button was pressed and
-   * return a code for the corresponding request.
-   */
   private int validateData() {
     if (from.equals("store")) {
       if (getRepoDescription().length() != 0 || getRepoTheme().length() > 0) {
@@ -582,9 +569,6 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
   private void onCreateSuccess(ProgressDialog progressDialog) {
     ShowMessage.asSnack(this, R.string.create_store_store_created);
     if (CREATE_STORE_REQUEST_CODE == 1) {
-      /*
-       * Multipart
-       */
       setStoreData();
       mSubscriptions.add(SetStoreRequest.of(accountManager.getAccessToken(), storeName, storeTheme,
           storeAvatarPath, createStoreInterceptor(), longTimeoutHttpClient, converterFactory)
@@ -640,9 +624,6 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
             }, throwable1 -> throwable1.printStackTrace());
           }));
     } else if (CREATE_STORE_REQUEST_CODE == 2 || CREATE_STORE_REQUEST_CODE == 3) {
-      /*
-       * not multipart
-       */
       setStoreData();
       SimpleSetStoreRequest.of(storeName, storeTheme, bodyInterceptorV7, httpClient,
           converterFactory).execute(answer -> {
@@ -663,9 +644,6 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     ShowMessage.asSnack(content, reason);
   }
 
-  /**
-   * This method sets stores data for the request
-   */
   private void setStoreData() {
     if (storeName.length() == 0) {
       storeName = null;
@@ -734,4 +712,5 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
         }
     }
   }
+  */
 }
