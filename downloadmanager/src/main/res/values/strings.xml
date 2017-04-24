@@ -23,7 +23,5 @@
   <string name="remaining_time">remaining</string>
   <string name="data_usage_constraint">Download is not allowed in Settings &gt; General Download Rules</string>
   <string name="download_pending">Waiting</string>
-  <string name="could_not_connect_internet">Could not connect to the internet</string>
-  <string name="share_via_spot_and_share">When offline you can still share \n apps with friends via Spot&amp;Share</string>
-  <string name="go_to_spot_and_share">Go to Spot&amp;Share</string>
+
 </resources>

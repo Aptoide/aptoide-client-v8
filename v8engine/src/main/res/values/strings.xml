@@ -534,6 +534,8 @@
   <string name="error503_v2">Could not connect to internet</string>
   <string name="having_some_trouble">Having some trouble. Can you retry later?</string>
   <string name="having_some_trouble_v2">When offline you can still share apps with friends via Spot&amp;Share</string>
+  <string name="could_not_connect_internet">Could not connect to the internet</string>
+  <string name="go_to_spot_and_share">Go to Spot&amp;Share</string>
 
   <!-- Vote -->
   <string name="reply">Reply</string>
