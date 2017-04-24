@@ -17,6 +17,7 @@ public class StoredMinimalAd extends RealmObject implements StoredMinimalAdInter
   @PrimaryKey @Required private String packageName;
   private String referrer;
   private String cpiUrl;
+  private String cpdUrl;
   private long timestamp;
 
   private long adId;
@@ -25,10 +26,11 @@ public class StoredMinimalAd extends RealmObject implements StoredMinimalAdInter
   }
 
   // apagar
-  public StoredMinimalAd(String packageName, String referrer, String cpiUrl, long adId) {
+  public StoredMinimalAd(String packageName, String referrer, String cpiUrl, String cpdUrl, long adId) {
     this.packageName = packageName;
     this.referrer = referrer;
     this.cpiUrl = cpiUrl;
+    this.cpdUrl = cpdUrl;
     this.adId = adId;
     this.timestamp = System.currentTimeMillis();
   }
@@ -52,7 +54,12 @@ public class StoredMinimalAd extends RealmObject implements StoredMinimalAdInter
   @Override public String getCpiUrl() {
     return cpiUrl;
   }
-
+  
+  @Override
+  public String getCpdUrl() {
+    return cpdUrl;
+  }
+  
   public void setCpiUrl(String cpiUrl) {
     this.cpiUrl = cpiUrl;
   }

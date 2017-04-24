@@ -6,4 +6,6 @@ package cm.aptoide.pt.model;
 public interface StoredMinimalAdInterface {
 
   String getCpiUrl();
+  
+  String getCpdUrl();
 }
