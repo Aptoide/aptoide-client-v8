@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.swipe;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.CallSuper;
 import android.support.annotation.UiThread;
 import android.view.View;
@@ -17,6 +16,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
 import cm.aptoide.pt.v8engine.spotandshare.SpotSharePreviewActivity;
+import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
@@ -38,17 +38,22 @@ public class LoaderLayoutHandler {
   private View retryErrorView;
   private View retryNoNetworkView;
   private View spotAndShareButton;
+  private ActivityNavigator activityNavigator;
 
-  public LoaderLayoutHandler(LoadInterface loadInterface, int viewToShowAfterLoadingId) {
+  public LoaderLayoutHandler(LoadInterface loadInterface, ActivityNavigator activityNavigator,
+      int viewToShowAfterLoadingId) {
+    this.activityNavigator = activityNavigator;
     this.viewsToShowAfterLoadingId.add(viewToShowAfterLoadingId);
     this.loadInterface = loadInterface;
   }
 
-  public LoaderLayoutHandler(LoadInterface loadInterface, int... viewsToShowAfterLoadingId) {
+  public LoaderLayoutHandler(LoadInterface loadInterface, ActivityNavigator activityNavigator,
+      int... viewsToShowAfterLoadingId) {
     for (int viewToShowAfterLoadingId : viewsToShowAfterLoadingId) {
       this.viewsToShowAfterLoadingId.add(viewToShowAfterLoadingId);
     }
     this.loadInterface = loadInterface;
+    this.activityNavigator = activityNavigator;
   }
 
   @SuppressWarnings("unchecked") public void bindViews(View view) {
@@ -102,10 +107,7 @@ public class LoaderLayoutHandler {
   }
 
   private void openSpotAndShare(Context context) {
-    //generate intent to move to Spot&Share
-    Intent intent = new Intent(context, SpotSharePreviewActivity.class);
-    context.startActivity(intent);
-    //startActivity(new Intent(this , SpotSharePreviewActivity.class));
+    activityNavigator.navigateTo(SpotSharePreviewActivity.class);
   }
 
   protected void restoreState() {

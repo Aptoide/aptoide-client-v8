@@ -22,9 +22,11 @@ public abstract class GridRecyclerSwipeFragment<T extends BaseAdapter>
 
   @NonNull @Override protected LoaderLayoutHandler createLoaderLayoutHandler() {
     if (getViewsToShowAfterLoadingId().length > 0) {
-      return new SwipeLoaderLayoutHandler(getViewsToShowAfterLoadingId(), this);
+      return new SwipeLoaderLayoutHandler(getViewsToShowAfterLoadingId(), getActivityNavigator(),
+          this);
     }
-    return new SwipeLoaderLayoutHandler(getViewToShowAfterLoadingId(), this);
+    return new SwipeLoaderLayoutHandler(getViewToShowAfterLoadingId(), getActivityNavigator(),
+        this);
   }
 
   @Override public void reload() {
