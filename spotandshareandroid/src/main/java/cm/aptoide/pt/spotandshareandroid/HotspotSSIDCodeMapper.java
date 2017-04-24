@@ -13,7 +13,7 @@ public class HotspotSSIDCodeMapper {
 
   public int decode(char c) {
     int charValue = (int) c;
-    if (!assetDomain(charValue)) {
+    if (!assertDomain(charValue)) {
       throw new IllegalArgumentException("value is outside of the domain !");
     }
     int value = charValue - '0';
@@ -27,7 +27,7 @@ public class HotspotSSIDCodeMapper {
     return value;
   }
 
-  private boolean assetDomain(int value) {
+  private boolean assertDomain(int value) {
     if (value >= 0 && value <= 61) {
       return true;
     }
@@ -41,7 +41,7 @@ public class HotspotSSIDCodeMapper {
 
   public char encode(int value) {
 
-    if (!assetDomain(value)) {
+    if (!assertDomain(value)) {
       throw new IllegalArgumentException("value is outside domain !");
     }
 
