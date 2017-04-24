@@ -8,15 +8,17 @@ package cm.aptoide.pt.dataprovider.util;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+
+import java.io.IOException;
+import java.util.Date;
+
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.model.MinimalAdInterface;
-import cm.aptoide.pt.model.StoredMinimalAdInterface;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import java.io.IOException;
-import java.util.Date;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -82,8 +84,8 @@ public class DataproviderUtils {
       // TODO: 28-07-2016 Baikova clicked on download button.
       knock(minimalAd.getCpdUrl());
     }
-
-    public static void knockCpi(StoredMinimalAdInterface minimalAd) {
+  
+    public static void knockCpi(MinimalAdInterface minimalAd) {
       // TODO: 28-07-2016 Baikova ad installed.
       knock(minimalAd.getCpiUrl());
     }

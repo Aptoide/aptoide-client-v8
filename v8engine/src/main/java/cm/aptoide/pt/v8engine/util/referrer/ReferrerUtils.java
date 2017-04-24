@@ -130,7 +130,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
                 StoreMinimalAdAccessor storeMinimalAdAccessor =
                     AccessorFactory.getAccessorFor(StoredMinimalAd.class);
-                storeMinimalAdAccessor.insert(new StoredMinimalAd(packageName, referrer, minimalAd.getCpiUrl(), minimalAd.getCpdUrl(), minimalAd.getAdId()));
+                storeMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, referrer));
               }
 
               future.cancel(false);
