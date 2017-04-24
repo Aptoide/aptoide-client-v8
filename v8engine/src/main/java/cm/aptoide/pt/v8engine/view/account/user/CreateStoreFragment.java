@@ -46,12 +46,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
+import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
-// FIXME
+// TODO
 // refactor (remove) more code
 //     - avoid using a base class for permissions
 //     - move some code to PermissionServiceFragment and the remainder for this class or other entity
@@ -69,7 +70,7 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
   private static final String STORE_AVATAR = "storeAvatar";
   private static final String STORE_THEME = "storeTheme";
   private static final String STORE_DESCRIPTION = "storeDescription";
-  private ProgressDialog progressDialog;
+  private ProgressDialog waitDialog;
 
   // fixme are these two vars necessary?
   private View storeAvatarLayout;
@@ -100,7 +101,7 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
   }
 
   public static CreateStoreFragment newInstance() {
-    return newInstance(-1, "", "", "", STORE_FROM_DEFAULT_VALUE);
+    return newInstance(-1, "", "", "", "");
   }
 
   public static CreateStoreFragment newInstance(long storeId, String storeTheme,
@@ -129,6 +130,9 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
 
     serializer = new ObjectMapper();
     serializer.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+    waitDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity(),
+        getApplicationContext().getString(R.string.please_wait_upload));
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -138,12 +142,7 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
 
   @Override public void onDestroy() {
     super.onDestroy();
-
-    if (progressDialog != null) {
-      if (progressDialog.isShowing()) {
-        progressDialog.dismiss();
-      }
-    }
+    dismissWaitDialog();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -157,19 +156,30 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
 
     storeModel = new StoreModel(storeId, storeFrom, storeRemoteUrl, storeTheme, storeDescription);
     storeThemeSelector = new StoreThemeSelector(storeModel);
+
+    if (TextUtils.isEmpty(storeTheme)) {
+      storeModel.setStoreThemeName(StoreThemeSelector.Theme.Default.getThemeName());
+    }
   }
 
   @Override public void loadImage(Uri imagePath) {
-    ImageLoader.with(getActivity()).loadWithCircleTransform(imagePath, storeAvatar, false);
+    if (imagePath != null && !TextUtils.isEmpty(imagePath.toString())) {
+      ImageLoader.with(getActivity()).loadWithCircleTransform(imagePath, storeAvatar, false);
+    }
   }
 
   @Override public void showIconPropertiesError(String errors) {
     GenericDialogs.createGenericOkMessage(getActivity(),
         getString(R.string.image_requirements_error_popup_title), errors)
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
-        .subscribe(__ -> {/* does nothing */}, err -> {
-          CrashReport.getInstance().log(err);
-        });
+        .subscribe(__ -> {
+        }, err -> CrashReport.getInstance().log(err));
+  }
+
+  private void loadImage(String imagePath) {
+    if (imagePath != null && !TextUtils.isEmpty(imagePath)) {
+      ImageLoader.with(getActivity()).loadWithCircleTransform(imagePath, storeAvatar, false);
+    }
   }
 
   @Override public void setupViews() {
@@ -203,7 +213,7 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
   }
 
   private String getActivityTitle() {
-    if (!STORE_FROM_DEFAULT_VALUE.equals(STORE_FROM_DEFAULT_VALUE)) {
+    if (!STORE_FROM_DEFAULT_VALUE.equalsIgnoreCase(storeModel.getStoreFrom())) {
       return getString(R.string.create_store_title);
     } else {
       return getString(R.string.edit_store_title);
@@ -219,7 +229,7 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
    * that's being edited
    */
   private void setupViewsDefaultValues(View view) {
-    if (!storeModel.getStoreFrom().equals(STORE_FROM_DEFAULT_VALUE)) {
+    if (!STORE_FROM_DEFAULT_VALUE.equalsIgnoreCase(storeModel.getStoreFrom())) {
       String appName = getString(R.string.app_name);
       storeHeader.setText(
           AptoideUtils.StringU.getFormattedString(R.string.create_store_header, appName));
@@ -233,8 +243,7 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
       storeDescription.setVisibility(View.VISIBLE);
       storeDescription.setText(storeModel.getStoreDescription());
       if (storeModel.getStoreRemoteUrl() != null) {
-        ImageLoader.with(getActivity())
-            .loadUsingCircleTransform(storeModel.getStoreRemoteUrl(), storeAvatar);
+        loadImage(storeModel.getStoreRemoteUrl());
       }
       storeThemeSelector.toggleTick(view, storeModel.getStoreThemeName(), true);
       createStoreBtn.setText(R.string.save_edit_store);
@@ -242,54 +251,91 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
     }
   }
 
+  private Completable sendSkipAnalytics() {
+    return Completable.fromAction(
+        () -> Analytics.Account.createStore(!TextUtils.isEmpty(storeModel.getStoreAvatarPath()),
+            Analytics.Account.CreateStoreAction.SKIP));
+  }
+
   private void setupListeners() {
 
-    RxView.clicks(storeAvatarLayout).subscribe(__ -> chooseAvatarSource());
+    RxView.clicks(storeAvatarLayout)
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+        .retry()
+        .subscribe(__ -> chooseAvatarSource(), err -> CrashReport.getInstance().log(err));
 
     RxView.clicks(skipBtn)
-        .flatMapCompletable(__ -> accountManager.syncCurrentAccount())
-        .doOnCompleted(
-            () -> Analytics.Account.createStore(!TextUtils.isEmpty(storeModel.getStoreAvatarPath()),
-                Analytics.Account.CreateStoreAction.SKIP))
-        .subscribe(__ -> navigateToHome());
+        .flatMap(__ -> sendSkipAnalytics().doOnCompleted(()-> navigateToHome()).toObservable())
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> CrashReport.getInstance().log(err));
 
     RxView.clicks(createStoreBtn)
-        .doOnNext(__ -> AptoideUtils.SystemU.hideKeyboard(getActivity()))
-        .doOnNext(__ -> progressDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity(),
-            getApplicationContext().getString(R.string.please_wait_upload)))
-        .flatMap(__ -> {
-          final String storeName = this.storeName.getText().toString().trim().toLowerCase();
-          final String storeDescription = this.storeDescription.getText().toString().trim();
-          return Observable.just(new StoreModel(storeModel, storeName, storeDescription));
-        })
-        .flatMap(storeModel -> {
-          final CreateStoreType createStoreType = validateData(storeModel);
-          switch (createStoreType) {
-            default:
-            case None:
-              return showErrorMessage(R.string.nothing_inserted_store);
+      .debounce(300, TimeUnit.MILLISECONDS)
+      .flatMap(
+        aVoid ->
+            Observable.fromCallable(() -> {
+              AptoideUtils.SystemU.hideKeyboard(getActivity());
+              return null;
+            })
+            .doOnNext(__ -> showWaitDialog())
+            .flatMap(__ -> {
+              final String storeName = this.storeName.getText().toString().trim().toLowerCase();
+              final String storeDescription = this.storeDescription.getText().toString().trim();
+              return Observable.just(new StoreModel(storeModel, storeName, storeDescription));
+            })
+            .flatMap(storeModel -> {
+              final CreateStoreType createStoreType = validateData(storeModel);
+              switch (createStoreType) {
+                default:
+                case None:
+                  return showErrorMessage(R.string.nothing_inserted_store);
 
-            case All:
-            case UserAndTheme:
-            case Theme:
-              return createStoreType1(storeModel, createStoreType);
+                case All:
+                case UserAndTheme:
+                case Theme:
+                  return createStoreType1(storeModel, createStoreType);
 
-            case Edit:
-              return createStoreType2(storeModel);
+                case Edit:
+                  return createStoreType2(storeModel);
 
-            case Edit2:
-              return createStoreType3(storeModel);
-          }
-        })
-        .subscribe(storeModel -> {/**/}, err -> CrashReport.getInstance().log(err));
+                case Edit2:
+                  return createStoreType3(storeModel);
+              }
+            })
+      )
+      .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+      .retry()
+      .subscribe(
+          __ -> { },
+          err -> CrashReport.getInstance().log(err)
+      );
   }
 
   @NonNull private Observable<Integer> showErrorMessage(@StringRes int stringRes) {
-    return ShowMessage.asObservableSnack(createStoreBtn, stringRes);
+    return Observable.fromCallable(() -> {
+      dismissWaitDialog();
+      return null;
+    }).flatMap(__ -> ShowMessage.asObservableSnack(createStoreBtn, stringRes));
+  }
+
+  private void dismissWaitDialog() {
+    if (waitDialog != null && waitDialog.isShowing()) {
+      waitDialog.dismiss();
+    }
+  }
+
+  private void showWaitDialog() {
+    if (waitDialog != null && !waitDialog.isShowing()) {
+      waitDialog.show();
+    }
   }
 
   @NonNull private Observable<Integer> showErrorMessage(Throwable err) {
-    return ShowMessage.asObservableSnack(createStoreBtn, err.getMessage());
+    return Observable.fromCallable(() -> {
+      dismissWaitDialog();
+      return null;
+    }).flatMap(__ -> ShowMessage.asObservableSnack(createStoreBtn, err.getMessage()));
   }
 
   /**
@@ -299,21 +345,19 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
 
     return Observable.fromCallable(() -> {
       storeModel.prepareToSendRequest();
-      progressDialog.show();
+      showWaitDialog();
       return null;
     })
         .flatMap(
             __ -> SimpleSetStoreRequest.of(storeModel.getStoreId(), storeModel.getStoreThemeName(),
                 storeModel.getStoreDescription(), bodyInterceptorV7, httpClient, converterFactory)
                 .observe())
-        .flatMap(__ -> accountManager.syncCurrentAccount().toObservable())
+        .flatMap(
+            __ -> syncAccountAndNavigateHome())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnCompleted(() -> {
-          progressDialog.dismiss();
-          navigateToHome();
-        })
         .onErrorResumeNext(err -> {
-          progressDialog.dismiss();
+          dismissWaitDialog();
+          CrashReport.getInstance().log(err);
           return showErrorMessage(
               ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage())).map(__ -> null);
         })
@@ -324,7 +368,7 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
 
     return Observable.fromCallable(() -> {
       storeModel.prepareToSendRequest();
-      progressDialog.show();
+      showWaitDialog();
       return null;
     })
         .flatMap(
@@ -332,15 +376,17 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
                 storeModel.getStoreThemeName(), storeModel.getStoreAvatarPath(),
                 storeModel.getStoreDescription(), true, storeModel.getStoreId(),
                 createStoreInterceptor(storeModel), httpClient, converterFactory).observe())
-        .flatMap(__ -> accountManager.syncCurrentAccount().toObservable())
+        .flatMap(
+            __ -> syncAccountAndNavigateHome())
         .observeOn(AndroidSchedulers.mainThread())
+        .doOnCompleted(() -> navigateToHome())
         .onErrorResumeNext(err -> {
           if (((AptoideWsV7Exception) err).getBaseResponse()
               .getErrors()
               .get(0)
               .getCode()
               .equals(ERROR_API_1)) {
-            progressDialog.dismiss();
+            dismissWaitDialog();
             return showErrorMessage(R.string.ws_error_API_1).filter(
                 vis -> vis == ShowMessage.DISMISSED)
                 .doOnCompleted(() -> navigateToHome())
@@ -348,7 +394,7 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
           }
 
           // if it is not a known error...
-          progressDialog.dismiss();
+          dismissWaitDialog();
           return showErrorMessage(
               ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage())).map(__ -> null);
         })
@@ -357,20 +403,19 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
 
   private Observable<Void> createStoreType1(@NonNull final StoreModel storeModel,
       @NonNull final CreateStoreType createStoreType) {
-    progressDialog.show();
+    showWaitDialog();
 
     return CheckUserCredentialsRequest.of(storeModel.getStoreName(), bodyInterceptorV3, httpClient,
         converterFactory).observe().observeOn(AndroidSchedulers.mainThread()).map(answer -> {
       if (answer.hasErrors()) {
         if (answer.getErrors() != null && answer.getErrors().size() > 0) {
-          progressDialog.dismiss();
+          dismissWaitDialog();
           if (answer.getErrors().get(0).code.equals(ERROR_CODE_2)) {
 
             GenericDialogs.createGenericContinueMessage(getActivity(), "",
                 getApplicationContext().getResources().getString(R.string.ws_error_WOP_2))
-                .subscribe(__ -> {/*does nothing*/}, err -> {
-                  CrashReport.getInstance().log(err);
-                });
+                .subscribe(__ -> {
+                }, err -> CrashReport.getInstance().log(err));
           } else if (answer.getErrors().get(0).code.equals(ERROR_CODE_3)) {
             ShowMessage.asSnack(this,
                 ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
@@ -385,26 +430,26 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
           }
         }
       } else if (!(createStoreType == CreateStoreType.Theme)) {
-        onCreateSuccess(progressDialog, storeModel, createStoreType);
+        onCreateSuccess(storeModel, createStoreType);
       } else {
-        progressDialog.dismiss();
+        dismissWaitDialog();
         ShowMessage.asLongObservableSnack(getActivity(), R.string.create_store_store_created)
-            .subscribe(visibility -> {
-              accountManager.syncCurrentAccount().subscribe(() -> {
-              }, err -> err.printStackTrace());
-              if (visibility == ShowMessage.DISMISSED) {
-                Analytics.Account.createStore(!TextUtils.isEmpty(storeModel.getStoreAvatarPath()),
-                    Analytics.Account.CreateStoreAction.CREATE);
-                navigateToHome();
-              }
-            });
+            .flatMap(__ -> syncAccountAndNavigateHome())
+            .subscribe(__ -> {
+            }, err -> CrashReport.getInstance().log(err));
       }
 
       return null;
     }).onErrorResumeNext(err -> {
-      progressDialog.dismiss();
+      dismissWaitDialog();
       return showErrorMessage(err);
     }).map(__ -> null);
+  }
+
+  private Completable sendCreateAnalytics() {
+    return Completable.fromAction(
+        () -> Analytics.Account.createStore(!TextUtils.isEmpty(storeModel.getStoreAvatarPath()),
+            Analytics.Account.CreateStoreAction.CREATE));
   }
 
   /**
@@ -436,10 +481,11 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
   }
 
   private void navigateToHome() {
+    dismissWaitDialog();
     getFragmentNavigator().navigateToHomeCleaningBackStack();
   }
 
-  private void onCreateSuccess(ProgressDialog progressDialog, @NonNull final StoreModel storeModel,
+  private void onCreateSuccess(@NonNull final StoreModel storeModel,
       @NonNull final CreateStoreType createStoreType) {
     ShowMessage.asSnack(this, R.string.create_store_store_created);
     if (createStoreType == CreateStoreType.All) {
@@ -452,14 +498,11 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
           createStoreInterceptor(storeModel), httpClient, converterFactory)
           .observe()
           .timeout(90, TimeUnit.SECONDS)
-          .flatMapCompletable(__ -> accountManager.syncCurrentAccount())
-          .doOnCompleted(() -> {
-            progressDialog.dismiss();
-            navigateToHome();
-          })
-          .subscribe(__ -> { /* does nothing */}, err -> {
+          .flatMap(__ -> syncAccountAndNavigateHome())
+          .subscribe(__ -> {
+          }, err -> {
+            dismissWaitDialog();
             if (err instanceof SocketTimeoutException) {
-              progressDialog.dismiss();
               ShowMessage.asLongObservableSnack(getActivity(), R.string.store_upload_photo_failed)
                   .subscribe(visibility -> {
                     if (visibility == ShowMessage.DISMISSED) {
@@ -467,7 +510,6 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
                     }
                   });
             } else if (err instanceof TimeoutException) {
-              progressDialog.dismiss();
               ShowMessage.asLongObservableSnack(getActivity(), R.string.store_upload_photo_failed)
                   .subscribe(visibility -> {
                     if (visibility == ShowMessage.DISMISSED) {
@@ -479,7 +521,6 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
                 .get(0)
                 .getCode()
                 .equals(ERROR_API_1)) {
-              progressDialog.dismiss();
               ShowMessage.asLongObservableSnack(getActivity(), R.string.ws_error_API_1)
                   .subscribe(visibility -> {
                     if (visibility == ShowMessage.DISMISSED) {
@@ -487,7 +528,6 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
                     }
                   });
             } else {
-              progressDialog.dismiss();
               ShowMessage.asLongObservableSnack(getActivity(),
                   ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage()))
                   .subscribe(visibility -> {
@@ -507,20 +547,21 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
       SimpleSetStoreRequest.of(storeModel.getStoreName(), storeModel.getStoreThemeName(),
           bodyInterceptorV7, httpClient, converterFactory)
           .observe()
-          .flatMapCompletable(__ -> accountManager.syncCurrentAccount())
-          .onErrorResumeNext(accountManager.syncCurrentAccount().toObservable())
+          .flatMap(__ -> syncAccountAndNavigateHome())
           .subscribe(__ -> {
-            progressDialog.dismiss();
-            navigateToHome();
           }, err -> {
-            onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage()));
+            waitDialog.dismiss();
+            @StringRes int reason =
+                ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage());
+            ShowMessage.asSnack(createStoreBtn, reason);
             CrashReport.getInstance().log(err);
           });
     }
   }
 
-  private void onCreateFail(@StringRes int reason) {
-    ShowMessage.asSnack(createStoreBtn, reason);
+  @NonNull private Observable<Object> syncAccountAndNavigateHome() {
+    return Completable.fromAction(() -> dismissWaitDialog()).andThen(accountManager.syncCurrentAccount())
+        .andThen(sendCreateAnalytics()).doOnCompleted(() -> navigateToHome()).toObservable();
   }
 
   @NonNull private StoreBodyInterceptor createStoreInterceptor(StoreModel storeModel) {
@@ -710,7 +751,8 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
             })
             .doOnNext(__ -> addTickTo(t.getTick(rootView)))
             .doOnNext(__ -> storeModel.setStoreThemeName(t.getThemeName()))
-            .subscribe(__ -> {/* do nothing*/}, err -> CrashReport.getInstance().log(err));
+            .subscribe(__ -> {
+            }, err -> CrashReport.getInstance().log(err));
       }
     }
 

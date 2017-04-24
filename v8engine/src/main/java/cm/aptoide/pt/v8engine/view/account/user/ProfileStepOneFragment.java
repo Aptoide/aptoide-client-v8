@@ -16,11 +16,11 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.fragment.BaseToolbarFragment;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Completable;
 
-// FIXME
-// refactor (remove) more code
+// TODO
 // chain Rx in method calls
 // apply MVP
 // save / restore data in input fields
@@ -30,8 +30,9 @@ public class ProfileStepOneFragment extends BaseToolbarFragment {
 
   private Button continueBtn;
   private Button moreInfoBtn;
-  private ProgressDialog pleaseWaitDialog;
+  private ProgressDialog waitDialog;
   private boolean externalLogin;
+  private FragmentNavigator fragmentNavigator;
 
   public static ProfileStepOneFragment newInstance() {
     return new ProfileStepOneFragment();
@@ -39,11 +40,18 @@ public class ProfileStepOneFragment extends BaseToolbarFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
     final Context applicationContext = getActivity().getApplicationContext();
+    fragmentNavigator = getFragmentNavigator();
     accountManager = ((V8Engine) applicationContext).getAccountManager();
-    pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity(),
+    waitDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity(),
         applicationContext.getString(R.string.please_wait));
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    if (waitDialog != null && waitDialog.isShowing()) {
+      waitDialog.dismiss();
+    }
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -58,7 +66,7 @@ public class ProfileStepOneFragment extends BaseToolbarFragment {
   @Override public void setupViews() {
     super.setupViews();
     RxView.clicks(continueBtn)
-        .doOnNext(__ -> pleaseWaitDialog.show())
+        .doOnNext(__ -> waitDialog.show())
         .flatMap(__ -> accountManager.updateAccount(Account.Access.PUBLIC)
             .andThen(showContinueSuccessMessage())
             .doOnCompleted(() -> {
@@ -71,9 +79,9 @@ public class ProfileStepOneFragment extends BaseToolbarFragment {
             .toObservable())
         .retry()
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
-        .subscribe(__ -> {/**/}, err -> {
+        .subscribe(__ -> {
+        }, err -> {
           CrashReport.getInstance().log(err);
-          pleaseWaitDialog.dismiss();
           showErrorMessage();
         });
 
@@ -97,30 +105,32 @@ public class ProfileStepOneFragment extends BaseToolbarFragment {
   }
 
   private void navigateToProfileStepTwoView() {
-    final ProfileStepTwoFragment fragment = ProfileStepTwoFragment.newInstance();
-    getFragmentNavigator().navigateTo(fragment);
+    waitDialog.dismiss();
+    fragmentNavigator.navigateTo(ProfileStepTwoFragment.newInstance());
   }
 
   public void navigateToHome() {
-    getFragmentNavigator().navigateToHomeCleaningBackStack();
+    waitDialog.dismiss();
+    fragmentNavigator.navigateToHomeCleaningBackStack();
   }
 
   private void navigateToCreateStore() {
-    CreateStoreFragment fragment = CreateStoreFragment.newInstance();
-    getFragmentNavigator().navigateTo(fragment);
+    waitDialog.dismiss();
+    fragmentNavigator.navigateTo(CreateStoreFragment.newInstance());
   }
 
   private void showErrorMessage() {
+    waitDialog.dismiss();
     ShowMessage.asSnack(this, R.string.unknown_error);
   }
 
   private Completable showContinueSuccessMessage() {
-    return Completable.fromCallable(() -> {
-      pleaseWaitDialog.dismiss();
-      return Completable.complete();
-    }).andThen(ShowMessage.asObservableSnack(this, R.string.successful)).doOnCompleted(() -> {
-      Analytics.Account.accountProfileAction(1, Analytics.Account.ProfileAction.CONTINUE);
-    }).toCompletable();
+    return Completable.fromAction(() -> waitDialog.dismiss())
+        .andThen(ShowMessage.asObservableSnack(this, R.string.successful))
+        .doOnCompleted(() -> {
+          Analytics.Account.accountProfileAction(1, Analytics.Account.ProfileAction.CONTINUE);
+        })
+        .toCompletable();
   }
 }
 

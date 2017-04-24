@@ -37,8 +37,10 @@ import java.util.Locale;
  * Created by pedroribeiro on 02/12/16.
  */
 
-// FIXME: 6/4/2017 pass all this to "PermissionServiceFragment" and respective implementations
-abstract class AccountPermissionsBaseFragment extends BaseToolbarFragment {
+// FIXME: 6/4/2017
+// pass all the permission request actions to "PermissionServiceFragment"
+// migrate the profile picture rules to another entity or use a shrinking strategy to the supplied picture
+@Deprecated abstract class AccountPermissionsBaseFragment extends BaseToolbarFragment {
 
   public static final int GALLERY_CODE = 1046;
   public static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -240,24 +242,19 @@ abstract class AccountPermissionsBaseFragment extends BaseToolbarFragment {
     for (AptoideUtils.IconSizeU.ImageErrors imageSizeError : imageErrors) {
       switch (imageSizeError) {
         case MIN_HEIGHT:
-          message.append(
-              getString(R.string.image_requirements_error_min_height));
+          message.append(getString(R.string.image_requirements_error_min_height));
           break;
         case MAX_HEIGHT:
-          message.append(
-              getString(R.string.image_requirements_error_max_height));
+          message.append(getString(R.string.image_requirements_error_max_height));
           break;
         case MIN_WIDTH:
-          message.append(
-              getString(R.string.image_requirements_error_min_width));
+          message.append(getString(R.string.image_requirements_error_min_width));
           break;
         case MAX_WIDTH:
-          message.append(
-              getString(R.string.image_requirements_error_max_width));
+          message.append(getString(R.string.image_requirements_error_max_width));
           break;
         case MAX_IMAGE_SIZE:
-          message.append(
-              getString(R.string.image_requirements_error_max_file_size));
+          message.append(getString(R.string.image_requirements_error_max_file_size));
           break;
         case ERROR_DECODING:
           message.append(getString(R.string.image_requirements_error_open_image));

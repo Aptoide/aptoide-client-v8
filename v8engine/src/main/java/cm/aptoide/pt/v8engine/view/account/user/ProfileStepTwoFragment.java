@@ -16,11 +16,11 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.fragment.BaseToolbarFragment;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Completable;
 
-// FIXME
-// refactor (remove) more code
+// TODO
 // chain Rx in method calls
 // apply MVP
 // save / restore data in input fields
@@ -28,9 +28,10 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment {
 
   private Button continueBtn;
   private Button privateProfileBtn;
-  private ProgressDialog pleaseWaitDialog;
+  private ProgressDialog waitDialog;
   private AptoideAccountManager accountManager;
   private boolean externalLogin;
+  private FragmentNavigator fragmentNavigator;
 
   public static ProfileStepTwoFragment newInstance() {
     return new ProfileStepTwoFragment();
@@ -39,9 +40,17 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final Context applicationContext = getActivity().getApplicationContext();
+    fragmentNavigator = getFragmentNavigator();
     accountManager = ((V8Engine) applicationContext).getAccountManager();
-    pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity(),
+    waitDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity(),
         applicationContext.getString(R.string.please_wait));
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    if (waitDialog != null && waitDialog.isShowing()) {
+      waitDialog.dismiss();
+    }
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -57,21 +66,21 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment {
     super.setupViews();
 
     RxView.clicks(continueBtn)
-        .doOnNext(click -> pleaseWaitDialog.show())
+        .doOnNext(click -> waitDialog.show())
         .flatMap(click -> accountManager.updateAccount(Account.Access.PUBLIC)
             .andThen(showContinueSuccessMessage(Analytics.Account.ProfileAction.CONTINUE))
             .onErrorResumeNext(err -> {
               CrashReport.getInstance().log(err);
               return showErrorMessage();
             })
-            .doOnCompleted(() -> navigateToCreateStoreViewOrDismiss())
+            .doOnCompleted(() -> navigateToCreateStoreOrHome())
             .toObservable())
         .retry()
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe();
 
     RxView.clicks(privateProfileBtn)
-        .doOnNext(click -> pleaseWaitDialog.show())
+        .doOnNext(click -> waitDialog.show())
         .flatMap(click -> accountManager.updateAccount(Account.Access.UNLISTED)
             .doOnCompleted(
                 () -> showContinueSuccessMessage(Analytics.Account.ProfileAction.PRIVATE_PROFILE))
@@ -79,7 +88,7 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment {
               CrashReport.getInstance().log(err);
               return showErrorMessage();
             })
-            .doOnCompleted(() -> navigateToCreateStoreViewOrDismiss())
+            .doOnCompleted(() -> navigateToCreateStoreOrHome())
             .toObservable())
         .retry()
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
@@ -98,37 +107,28 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment {
   }
 
   private Completable showErrorMessage() {
-    return ShowMessage.asObservableSnack(this, R.string.unknown_error)
-        .filter(vis -> vis == ShowMessage.DISMISSED)
-        .toCompletable();
+    return Completable.fromAction(() -> waitDialog.dismiss())
+        .andThen(ShowMessage.asObservableSnack(this, R.string.unknown_error).toCompletable());
   }
 
   private Completable showContinueSuccessMessage(Analytics.Account.ProfileAction action) {
-    return ShowMessage.asObservableSnack(this, R.string.successful)
-        .filter(vis -> vis == ShowMessage.DISMISSED)
-        .toCompletable()
-        .andThen(sendAnalytics(action));
+    return Completable.fromAction(() -> waitDialog.dismiss())
+        .andThen(ShowMessage.asObservableSnack(this, R.string.successful)
+            .filter(vis -> vis == ShowMessage.DISMISSED)
+            .toCompletable()
+            .andThen(sendAnalytics(action)));
   }
 
   private Completable sendAnalytics(Analytics.Account.ProfileAction action) {
     return Completable.fromAction(() -> Analytics.Account.accountProfileAction(2, action));
   }
 
-  private void navigateToCreateStoreViewOrDismiss() {
+  private void navigateToCreateStoreOrHome() {
+    waitDialog.dismiss();
     if (externalLogin) {
-      navigateToHome();
+      fragmentNavigator.navigateToHomeCleaningBackStack();
       return;
     }
-
-    navigateToCreateStore();
-  }
-
-  private void navigateToCreateStore() {
-    getFragmentNavigator().navigateTo(CreateStoreFragment.newInstance());
-  }
-
-  public void navigateToHome() {
-    pleaseWaitDialog.dismiss();
-    getFragmentNavigator().navigateToHomeCleaningBackStack();
+    fragmentNavigator.navigateTo(CreateStoreFragment.newInstance());
   }
 }

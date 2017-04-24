@@ -48,8 +48,8 @@
             android:background="@color/create_user_dark_orange"
             android:gravity="center_vertical"
             android:padding="@dimen/padding_medium_default"
-            android:textColor="@color/white"
             android:text="@string/create_user_header"
+            android:textColor="@color/white"
             />
 
 
@@ -121,12 +121,12 @@
 
           <EditText
               android:id="@+id/create_user_username_inserted"
-              android:hint="@string/create_user_username"
-              android:maxLength="@integer/max_username_char_length"
               android:layout_width="match_parent"
               android:layout_height="43dp"
               android:layout_marginTop="@dimen/padding_very_small"
               android:background="@drawable/rounded_corners_white"
+              android:hint="@string/create_user_username"
+              android:maxLength="@integer/max_username_char_length"
               android:paddingBottom="@dimen/padding_very_small"
               android:paddingEnd="@dimen/padding_smaller"
               android:paddingLeft="@dimen/padding_smaller"
@@ -156,11 +156,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_medium_small"
         android:layout_marginEnd="@dimen/padding_medium_default"
         android:layout_marginLeft="@dimen/padding_medium_default"
         android:layout_marginRight="@dimen/padding_medium_default"
         android:layout_marginStart="@dimen/padding_medium_default"
-        android:layout_marginTop="@dimen/padding_medium"
+        android:layout_marginTop="@dimen/padding_large"
         android:orientation="horizontal"
         android:weightSum="2"
         >

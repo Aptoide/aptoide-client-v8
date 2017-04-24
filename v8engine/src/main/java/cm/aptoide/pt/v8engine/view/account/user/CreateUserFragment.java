@@ -38,7 +38,7 @@ import rx.Completable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 
-// FIXME
+// TODO
 // refactor (remove) more code
 //     - avoid using a base class for permissions
 //     - move some code to PermissionServiceFragment and the remainder for this class or other entity
@@ -57,8 +57,8 @@ public class CreateUserFragment extends AccountPermissionsBaseFragment {
   private Button createUserButton;
   private ImageView avatarImage;
   private AptoideAccountManager accountManager;
-  private ProgressDialog progressAvatarUploadDialog;
-  private ProgressDialog progressDialog;
+  private ProgressDialog uploadWaitDialog;
+  private ProgressDialog waitDialog;
 
   public CreateUserFragment() {
     super(true, false);
@@ -78,11 +78,23 @@ public class CreateUserFragment extends AccountPermissionsBaseFragment {
     final Context applicationContext = context.getApplicationContext();
     accountManager = ((V8Engine) applicationContext).getAccountManager();
 
-    progressAvatarUploadDialog = GenericDialogs.createGenericPleaseWaitDialog(context,
+    uploadWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(context,
         applicationContext.getString(R.string.please_wait_upload));
 
-    progressDialog = GenericDialogs.createGenericPleaseWaitDialog(context,
+    waitDialog = GenericDialogs.createGenericPleaseWaitDialog(context,
         applicationContext.getString(R.string.please_wait));
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+
+    if (waitDialog != null && waitDialog.isShowing()) {
+      waitDialog.dismiss();
+    }
+
+    if (uploadWaitDialog != null && uploadWaitDialog.isShowing()) {
+      uploadWaitDialog.dismiss();
+    }
   }
 
   @Override public int getContentViewId() {
@@ -128,7 +140,8 @@ public class CreateUserFragment extends AccountPermissionsBaseFragment {
                 .toObservable())
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .retry()
-        .subscribe(__ -> { /* does nothing */ }, err -> CrashReport.getInstance().log(err));
+        .subscribe(__ -> {
+        }, err -> CrashReport.getInstance().log(err));
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -152,11 +165,11 @@ public class CreateUserFragment extends AccountPermissionsBaseFragment {
     AptoideUtils.SystemU.hideKeyboard(getActivity());
 
     if (isAvatarSelected()) {
-      progressAvatarUploadDialog.show();
+      uploadWaitDialog.show();
       return;
     }
 
-    progressDialog.show();
+    waitDialog.show();
   }
 
   private Completable showError(Throwable throwable) {
@@ -175,9 +188,9 @@ public class CreateUserFragment extends AccountPermissionsBaseFragment {
 
   private void dismissProgressDialog() {
     if (isAvatarSelected()) {
-      progressAvatarUploadDialog.dismiss();
+      uploadWaitDialog.dismiss();
     } else {
-      progressDialog.dismiss();
+      waitDialog.dismiss();
     }
   }
 
