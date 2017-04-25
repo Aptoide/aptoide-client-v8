@@ -93,12 +93,13 @@
       android:layout_marginBottom="@dimen/padding_medium_small"
       android:layout_marginTop="@dimen/padding_large"
       android:orientation="horizontal"
+      android:gravity="center|bottom"
       >
 
     <Button
         android:id="@+id/logged_in_private_button"
         android:layout_width="0dp"
-        android:layout_height="@dimen/button_default_height"
+        android:layout_height="48dp"
         android:layout_marginEnd="@dimen/padding_very_small"
         android:layout_marginLeft="@dimen/padding_small"
         android:layout_marginRight="@dimen/padding_very_small"

@@ -271,7 +271,6 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
         }, err -> CrashReport.getInstance().log(err));
 
     RxView.clicks(createStoreBtn)
-      .debounce(300, TimeUnit.MILLISECONDS)
       .flatMap(
         aVoid ->
             Observable.fromCallable(() -> {

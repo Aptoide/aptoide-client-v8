@@ -80,7 +80,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/padding_medium_small"
         android:layout_marginTop="@dimen/padding_large"
-        android:gravity="center"
+        android:gravity="center|bottom"
         android:orientation="horizontal"
         android:paddingEnd="@dimen/padding_small"
         android:paddingLeft="@dimen/padding_small"
