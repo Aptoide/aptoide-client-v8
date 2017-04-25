@@ -8,6 +8,8 @@ public interface MinimalAdInterface {
   String getCpcUrl();
 
   String getCpdUrl();
+
+  String setCpdUrl(String cpdUrl);
   
   String getCpiUrl();
 }

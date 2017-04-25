@@ -41,11 +41,13 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
@@ -177,7 +179,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private AccountNavigator accountNavigator;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
-
+  private StoreMinimalAdAccessor storeMinimalAdAccessor;
+  
   public static AppViewFragment newInstance(String md5) {
     Bundle bundle = new Bundle();
     bundle.putString(BundleKeys.MD5.name(), md5);
@@ -259,6 +262,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             accountManager, httpClient, converterFactory);
     installedRepository = RepositoryFactory.getInstalledRepository();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
+    storeMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
@@ -433,6 +437,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     }
   }
 
+  private void storeMinimalAdd(MinimalAd minimalAd) {
+    storeMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, null));
+  }
+  
   @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
     List<String> keywords = getApp1.getNodes().getMeta().getData().getMedia().getKeywords();
     String packageName = getApp1.getNodes().getMeta().getData().getPackageName();
@@ -502,6 +510,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   private void handleAdsLogic(MinimalAd minimalAd) {
+    storeMinimalAdd(minimalAd);
     DataproviderUtils.AdNetworksUtils.knockCpc(minimalAd);
     Analytics.LTV.cpi(minimalAd.getPackageName());
     AptoideUtils.ThreadU.runOnUiThread(
