@@ -28,6 +28,7 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
+import cm.aptoide.pt.v8engine.install.root.RootShell;
 import eu.chainfire.libsuperuser.Shell;
 import java.io.File;
 import java.util.List;
@@ -67,7 +68,7 @@ public class DefaultInstaller implements Installer {
 
   @Override public Observable<Void> install(Context context, String md5) {
     Analytics.RootInstall.installationType(ManagerPreferences.allowRootInstallation(),
-        AptoideUtils.SystemU.isRooted());
+        RootShell.isRootAvailable());
     return installationProvider.getInstallation(md5)
         .observeOn(Schedulers.computation())
         .doOnNext(installation -> moveInstallationFiles(installation))
@@ -149,7 +150,7 @@ public class DefaultInstaller implements Installer {
 
   private Void rootInstall(File file, String packageName, int versionCode)
       throws InstallationException {
-    if (!AptoideUtils.SystemU.isRooted()) {
+    if (!RootShell.isRootAvailable()) {
       throw new InstallationException("No root permissions");
     } else if (!ManagerPreferences.allowRootInstallation()) {
       throw new InstallationException("User doesn't allow root installation");

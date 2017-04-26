@@ -20,6 +20,7 @@ import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
+import cm.aptoide.pt.v8engine.install.root.RootShell;
 import cm.aptoide.pt.v8engine.repository.Repository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import java.util.List;
@@ -237,7 +238,7 @@ public class InstallManager {
 
   public boolean showWarning() {
     boolean wasRootDialogShowed = SecurePreferences.isRootDialogShowed();
-    boolean isRooted = AptoideUtils.SystemU.isRooted();
+    boolean isRooted = RootShell.isRootAvailable();
     boolean canGiveRoot = ManagerPreferences.allowRootInstallation();
     //AN-1533 - temporary solution was to remove root installation, so this popup doesn't make sense
     //return isRooted && !wasRootDialogShowed && !canGiveRoot;
@@ -247,7 +248,7 @@ public class InstallManager {
   public void rootInstallAllowed(boolean allowRoot) {
     SecurePreferences.setRootDialogShowed(true);
     ManagerPreferences.setAllowRootInstallation(allowRoot);
-    AptoideUtils.SystemU.askForRoot();
+    RootShell.isAccessGiven();
   }
 
   /**

@@ -5,6 +5,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.install.root.RootShell;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -42,7 +43,7 @@ public class InstallEventConverter extends DownloadInstallEventConverter<Install
         new InstallEvent(action, origin, packageName, url, obbUrl, patchObbUrl, context,
             versionCode, this, bodyInterceptor, httpClient, converterFactory);
     installEvent.setAptoideSettings(ManagerPreferences.allowRootInstallation());
-    installEvent.setPhoneRooted(AptoideUtils.SystemU.isRooted());
+    installEvent.setPhoneRooted(RootShell.isRootAvailable());
     return installEvent;
   }
 }

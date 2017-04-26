@@ -42,11 +42,8 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import cm.aptoide.pt.actions.UserData;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.permissions.ApkPermission;
-import cm.aptoide.pt.root.RootShell;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -784,14 +781,6 @@ public class AptoideUtils {
         e.printStackTrace();
       }
       return null;
-    }
-
-    public static boolean askForRoot() {
-      return RootShell.isAccessGiven();
-    }
-
-    public static boolean isRooted() {
-      return RootShell.isRootAvailable();
     }
 
     public static List<PackageInfo> getUserInstalledApps() {
