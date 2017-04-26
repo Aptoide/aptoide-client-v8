@@ -151,9 +151,10 @@ public class InstallManager {
         });
   }
 
-  @Deprecated public Observable<Progress<Download>> getCurrentInstallation() {
-    return getInstallationsDeprecated().flatMap(
-        progresses -> Observable.from(progresses).filter(progress -> isInstalling(progress)));
+  public Observable<InstallationProgress> getCurrentInstallation() {
+    return getInstallations().flatMap(progresses -> Observable.from(progresses)
+        .filter(
+            progress -> progress.getState() == InstallationProgress.InstallationStatus.INSTALLING));
   }
 
   @Deprecated public boolean isInstalling(Progress<Download> progress) {

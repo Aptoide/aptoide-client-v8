@@ -243,11 +243,11 @@ public class InstallService extends Service {
   }
 
   private void setupNotification() {
-    subscriptions.add(installManager.getCurrentInstallation().subscribe(progress -> {
-      if (!progress.isIndeterminate()) {
+    subscriptions.add(installManager.getCurrentInstallation().subscribe(installation -> {
+      if (!installation.isIndeterminate()) {
 
-        int requestCode = progress.getRequest().getFilesToDownload().get(0).getDownloadId();
-        String md5 = progress.getRequest().getMd5();
+        String md5 = installation.getMd5();
+        int requestCode = md5.hashCode();
 
         NotificationCompat.Action downloadManagerAction =
             getDownloadManagerAction(requestCode, md5);
@@ -257,11 +257,11 @@ public class InstallService extends Service {
 
         if (notification == null) {
           notification =
-              buildNotification(progress, pauseAction, downloadManagerAction, appViewPendingIntent);
+              buildNotification(installation, pauseAction, downloadManagerAction, appViewPendingIntent);
         } else {
           long oldWhen = notification.when;
           notification =
-              buildNotification(progress, pauseAction, downloadManagerAction, appViewPendingIntent);
+              buildNotification(installation, pauseAction, downloadManagerAction, appViewPendingIntent);
           notification.when = oldWhen;
         }
 
@@ -285,7 +285,7 @@ public class InstallService extends Service {
         ACTION_OPEN_DOWNLOAD_MANAGER, md5);
   }
 
-  private Notification buildNotification(Progress<Download> progress,
+  private Notification buildNotification(InstallationProgress installation,
       NotificationCompat.Action pauseAction, NotificationCompat.Action openDownloadManager,
       PendingIntent contentIntent) {
     NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
@@ -293,12 +293,12 @@ public class InstallService extends Service {
         .setContentTitle(String.format(Locale.ENGLISH,
             getResources().getString(cm.aptoide.pt.downloadmanager.R.string.aptoide_downloading),
             Application.getConfiguration().getMarketName()))
-        .setContentText(new StringBuilder().append(progress.getRequest().getAppName())
+        .setContentText(new StringBuilder().append(installation.getAppName())
             .append(" - ")
-            .append(progress.getRequest().getStatusName(this)))
+            .append(getString(cm.aptoide.pt.database.R.string.download_progress)))
         .setContentIntent(contentIntent)
-        .setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE,
-            progress.getRequest().getOverallProgress(), progress.isIndeterminate())
+        .setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE, installation.getProgress(),
+            installation.isIndeterminate())
         .addAction(pauseAction)
         .addAction(openDownloadManager);
     return builder.build();
