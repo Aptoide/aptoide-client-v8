@@ -25,7 +25,6 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.logger.Logger;
@@ -127,6 +126,12 @@ import rx.android.schedulers.AndroidSchedulers;
     notLatestAvailableText = itemView.findViewById(R.id.not_latest_available_text);
   }
 
+  @Override public void unbindView() {
+    super.unbindView();
+    displayable.setInstallButton(null);
+    displayable = null;
+  }
+
   @Override public void bindView(AppViewInstallDisplayable displayable) {
     this.displayable = displayable;
     this.displayable.setInstallButton(actionButton);
@@ -178,12 +183,6 @@ import rx.android.schedulers.AndroidSchedulers;
     }
 
     permissionRequest = ((PermissionService) getContext());
-  }
-
-  @Override public void unbindView() {
-    super.unbindView();
-    displayable.setInstallButton(null);
-    displayable = null;
   }
 
   private void updateUi(GetApp getApp, GetAppMeta.App currentApp,
@@ -461,11 +460,6 @@ import rx.android.schedulers.AndroidSchedulers;
 
       case Download.COMPLETED: {
         Analytics.DownloadComplete.downloadComplete(app);
-        if (!isUpdate) {
-          if (minimalAd != null && minimalAd.getCpdUrl() != null) {
-            DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
-          }
-        }
         break;
       }
     }
