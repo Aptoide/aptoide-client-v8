@@ -27,15 +27,18 @@ public class SpotAndShareAnalytics implements SpotAndShareAnalyticsInterface {
   private static String EVENT_NAME_SPOT_SHARE = "Share_Apps_Click_On_Share_Apps";
   private static String EVENT_NAME_SPOT_SHARE_PERMISSIONS = "Spot_Share_Write_Permissions_Problem";
 
-  public SpotAndShareAnalytics() {
+  private final Analytics analytics;
+
+  public SpotAndShareAnalytics(Analytics analytics) {
+    this.analytics = analytics;
   }
 
-  public static void clickShareApps() {
+  public void clickShareApps() {
     trackEvent(EVENT_NAME_SPOT_SHARE, null, false);
   }
 
-  public static void trackEvent(String eventName, Map<String, String> attributes, boolean fabric) {
-    Analytics.getInstance().sendSpotAndShareEvents(eventName, attributes, fabric);
+  private void trackEvent(String eventName, Map<String, String> attributes, boolean fabric) {
+    analytics.sendSpotAndShareEvents(eventName, attributes, fabric);
   }
 
   /**
@@ -47,7 +50,7 @@ public class SpotAndShareAnalytics implements SpotAndShareAnalyticsInterface {
    * If the event is a Receive App, this action can be either "Successful received", "Unsuccessful
    * received"
    */
-  public static void transferClick(String eventName, String action, boolean fabric) {
+  private void transferClick(String eventName, String action, boolean fabric) {
     //TODO this is called in the wrong place
     Map<String, String> attributes = new HashMap<>();
     attributes.put("action", action);
@@ -60,7 +63,7 @@ public class SpotAndShareAnalytics implements SpotAndShareAnalyticsInterface {
    * @param eventName Should be either "Join Group" or "Create Group"
    * @param result In both cases should be Success or Unsuccessful
    */
-  public static void groupClick(String eventName, String result, boolean fabric) {
+  private void groupClick(String eventName, String result, boolean fabric) {
     Map<String, String> attributes = new HashMap<>();
     attributes.put("results", result);
     trackEvent(eventName, attributes, fabric);

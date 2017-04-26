@@ -14,8 +14,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import cm.aptoide.pt.spotandshareandroid.HighwayActivity;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.presenter.SpotSharePreviewPresenter;
 import cm.aptoide.pt.v8engine.presenter.SpotSharePreviewView;
+import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
@@ -29,6 +31,7 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
   private Button startButton;
   private Toolbar toolbar;
   private boolean showToolbar;
+  private SpotAndShareAnalytics spotAndShareAnalytics;
 
   public static Fragment newInstance(boolean showToolbar) {
     Bundle args = new Bundle();
@@ -46,6 +49,7 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     showToolbar = getArguments().getBoolean(SHOW_TOOLBAR_KEY);
+    spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -58,7 +62,8 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
     startButton = (Button) view.findViewById(R.id.fragment_spot_share_preview_start_button);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     attachPresenter(
-        new SpotSharePreviewPresenter(this, showToolbar, getString(R.string.spot_share)),
+        new SpotSharePreviewPresenter(this, showToolbar, getString(R.string.spot_share),
+            spotAndShareAnalytics),
         savedInstanceState);
   }
 

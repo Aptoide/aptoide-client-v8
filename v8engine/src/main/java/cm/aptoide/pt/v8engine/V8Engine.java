@@ -191,7 +191,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
     fragmentProvider = createFragmentProvider();
     activityProvider = createActivityProvider();
     displayableWidgetMapping = createDisplayableWidgetMapping();
-    shareApps = new ShareApps(new SpotAndShareAnalytics());
+    shareApps = new ShareApps(new SpotAndShareAnalytics(Analytics.getInstance()));
 
     //
     // do not erase this code. it is useful to figure out when someone forgot to attach an error handler when subscribing and the app

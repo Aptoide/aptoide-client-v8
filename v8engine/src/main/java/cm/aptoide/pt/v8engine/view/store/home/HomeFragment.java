@@ -71,6 +71,7 @@ public class HomeFragment extends StoreFragment {
   private TextView userUsername;
   private ImageView userAvatarImage;
   private ClickHandler backClickHandler;
+  private SpotAndShareAnalytics spotAndShareAnalytics;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -137,6 +138,11 @@ public class HomeFragment extends StoreFragment {
     ImageLoader.with(getContext())
         .loadWithCircleTransformAndPlaceHolder(account.getAvatar(), userAvatarImage,
             R.drawable.user_account_white);
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
   }
 
   @Nullable @Override
@@ -271,7 +277,7 @@ public class HomeFragment extends StoreFragment {
         } else {
           final FragmentNavigator navigator = getFragmentNavigator();
           if (itemId == R.id.shareapps) {
-            SpotAndShareAnalytics.clickShareApps();
+            spotAndShareAnalytics.clickShareApps();
             getActivityNavigator().navigateTo(SpotSharePreviewActivity.class);
           } else if (itemId == R.id.navigation_item_rollback) {
             navigator.navigateTo(V8Engine.getFragmentProvider().newRollbackFragment());

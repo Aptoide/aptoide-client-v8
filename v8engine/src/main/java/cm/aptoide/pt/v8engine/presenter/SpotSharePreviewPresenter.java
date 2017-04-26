@@ -14,12 +14,14 @@ public class SpotSharePreviewPresenter implements Presenter {
   private final SpotSharePreviewView view;
   private final boolean showToolbar;
   private final String toolbarTitle;
+  private final SpotAndShareAnalytics analytics;
 
   public SpotSharePreviewPresenter(SpotSharePreviewView view, boolean showToolbar,
-      String toolbarTitle) {
+      String toolbarTitle, SpotAndShareAnalytics analytics) {
     this.view = view;
     this.showToolbar = showToolbar;
     this.toolbarTitle = toolbarTitle;
+    this.analytics = analytics;
   }
 
   @Override public void present() {
@@ -46,7 +48,7 @@ public class SpotSharePreviewPresenter implements Presenter {
 
   private Observable<Void> startSelection() {
     return view.startSelection().observeOn(AndroidSchedulers.mainThread()).doOnNext(selection -> {
-      SpotAndShareAnalytics.clickShareApps();
+      analytics.clickShareApps();
       view.navigateToSpotShareView();
       if (showToolbar) {
         view.finish();
