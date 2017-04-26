@@ -78,10 +78,11 @@ public class CompletedDownloadDisplayable extends Displayable {
         installation.getPackageName(), installation.getVersionCode());
   }
 
-  public Observable<Integer> downloadStatus() {
-    return installManager.getInstallation(installation.getMd5())
-        .map(installationProgress -> installationProgress.getRequest().getOverallDownloadStatus())
-        .onErrorReturn(throwable -> Download.NOT_DOWNLOADED);
+  public Observable<InstallationProgress.InstallationStatus> downloadStatus() {
+    return installManager.getInstallationProgress(installation.getMd5(),
+        installation.getPackageName(), installation.getVersionCode())
+        .map(installationProgress -> installationProgress.getState())
+        .onErrorReturn(throwable -> InstallationProgress.InstallationStatus.UNINSTALLED);
   }
 
   public Observable<InstallationProgress> installOrOpenDownload(Context context,

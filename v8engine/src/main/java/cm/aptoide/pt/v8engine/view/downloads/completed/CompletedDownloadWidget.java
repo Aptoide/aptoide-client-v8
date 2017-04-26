@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
@@ -67,7 +66,9 @@ import rx.schedulers.Schedulers;
 
     compositeSubscription.add(RxView.clicks(itemView)
         .flatMap(click -> displayable.downloadStatus()
-            .filter(status -> status == Download.COMPLETED)
+            .first()
+            .filter(status -> status == InstallationProgress.InstallationStatus.UNINSTALLED
+                || status == InstallationProgress.InstallationStatus.INSTALLED)
             .flatMap(
                 status -> displayable.installOrOpenDownload(context, (PermissionService) context)))
         .retry()
@@ -76,7 +77,9 @@ import rx.schedulers.Schedulers;
 
     compositeSubscription.add(RxView.clicks(resumeDownloadButton)
         .flatMap(click -> displayable.downloadStatus()
-            .filter(status -> status == Download.PAUSED || status == Download.ERROR)
+            .first()
+            .filter(status -> status == InstallationProgress.InstallationStatus.PAUSED
+                || status == InstallationProgress.InstallationStatus.FAILED)
             .flatMap(status -> displayable.resumeDownload(context, (PermissionService) context)))
         .retry()
         .subscribe(success -> {
@@ -88,11 +91,13 @@ import rx.schedulers.Schedulers;
         }));
 
     compositeSubscription.add(displayable.downloadStatus()
+        .first()
         .observeOn(Schedulers.computation())
         .sample(1, TimeUnit.SECONDS)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(downloadStatus -> {
-          if (downloadStatus == Download.PAUSED || downloadStatus == Download.ERROR) {
+          if (downloadStatus == InstallationProgress.InstallationStatus.PAUSED
+              || downloadStatus == InstallationProgress.InstallationStatus.FAILED) {
             resumeDownloadButton.setVisibility(View.VISIBLE);
           } else {
             resumeDownloadButton.setVisibility(View.GONE);
