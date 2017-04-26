@@ -9,14 +9,11 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.view.ContextThemeWrapper;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.BaseActivity;
 import java.io.IOException;
@@ -40,8 +37,8 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
   private PermissionManager permissionManager;
   private InstallManager installManager;
 
-  public AutoUpdate(BaseActivity activity, DownloadFactory downloadFactory, PermissionManager permissionManager,
-      InstallManager installManager) {
+  public AutoUpdate(BaseActivity activity, DownloadFactory downloadFactory,
+      PermissionManager permissionManager, InstallManager installManager) {
     this.activity = activity;
     this.permissionManager = permissionManager;
     this.downloadFactory = downloadFactory;
@@ -138,10 +135,16 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
                   permissionGranted -> permissionManager.requestExternalStoragePermission(activity))
               .flatMap(success -> installManager.install(activity,
                   downloadFactory.create(autoUpdateInfo)))
-              .filter(progress -> !isDownloading(progress))
               .first()
+              .flatMap(
+                  downloadProgress -> installManager.getInstallationProgress(autoUpdateInfo.md5,
+                      autoUpdateInfo.packageName, autoUpdateInfo.vercode))
+              .skipWhile(installationProgress -> installationProgress.getState()
+                  != InstallationProgress.InstallationStatus.INSTALLING)
+              .first(progress -> progress.getState()
+                  != InstallationProgress.InstallationStatus.INSTALLING)
               .subscribe(progress -> {
-                if (progress.getState() == Progress.ERROR) {
+                if (progress.getState() == InstallationProgress.InstallationStatus.FAILED) {
                   ShowMessage.asSnack(activity, R.string.error_SYS_1);
                 }
                 dismissDialog();
@@ -160,13 +163,6 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
     if (activity.is_resumed()) {
       updateSelfDialog.show();
     }
-  }
-
-  private boolean isDownloading(Progress<Download> progress) {
-    return progress.getRequest().getOverallDownloadStatus() == Download.PROGRESS
-        || progress.getRequest().getOverallDownloadStatus() == Download.PENDING
-        || progress.getRequest().getOverallDownloadStatus() == Download.INVALID_STATUS
-        || progress.getRequest().getOverallDownloadStatus() == Download.IN_QUEUE;
   }
 
   private void dismissDialog() {
