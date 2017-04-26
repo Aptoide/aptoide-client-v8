@@ -90,70 +90,13 @@ public class InstallManager {
             .toList());
   }
 
-  private Observable<Progress<Download>> convertToProgress(Download currentDownload) {
-    return installedRepository.getInstalled(currentDownload.getPackageName())
-        .first()
-        .flatMap(installed -> convertToProgressStatus(currentDownload, installed).map(status -> {
-          int installationType = installed == null ? Installed.TYPE_UNKNOWN : installed.getType();
-          return new Progress<>(currentDownload,
-              currentDownload.getOverallDownloadStatus() == Download.COMPLETED,
-              AptoideDownloadManager.PROGRESS_MAX_VALUE, currentDownload.getOverallProgress(),
-              currentDownload.getDownloadSpeed(), status, installationType);
-        }));
-  }
-
-  private Observable<Integer> convertToProgressStatus(Download download, Installed installed) {
-    return Observable.just(installed)
-        .map(installation -> installation != null
-            && installation.getVersionCode() == download.getVersionCode()
-            && installation.getStatus() == Installed.STATUS_COMPLETED)
-        .map(isInstalled -> {
-
-          if (isInstalled) {
-            return Progress.DONE;
-          }
-
-          final int progressStatus;
-          switch (download.getOverallDownloadStatus()) {
-            case Download.PROGRESS:
-            case Download.PENDING:
-            case Download.IN_QUEUE:
-            case Download.INVALID_STATUS:
-            case Download.COMPLETED:
-              progressStatus = Progress.ACTIVE;
-              break;
-            case Download.PAUSED:
-              progressStatus = Progress.INACTIVE;
-              break;
-            case Download.WARN:
-            case Download.BLOCK_COMPLETE:
-            case Download.CONNECTED:
-            case Download.RETRY:
-            case Download.STARTED:
-            case Download.NOT_DOWNLOADED:
-            case Download.ERROR:
-            case Download.FILE_MISSING:
-              progressStatus = Progress.ERROR;
-              break;
-            default:
-              progressStatus = Progress.INACTIVE;
-              break;
-          }
-          return progressStatus;
-        });
-  }
-
   public Observable<InstallationProgress> getCurrentInstallation() {
     return getInstallations().flatMap(progresses -> Observable.from(progresses)
         .filter(
             progress -> progress.getState() == InstallationProgress.InstallationStatus.INSTALLING));
   }
 
-  @Deprecated public Observable<Progress<Download>> getInstallation(String md5) {
-    return aptoideDownloadManager.getDownload(md5).flatMap(download -> convertToProgress(download));
-  }
-
-  public Observable<Progress<Download>> install(Context context, Download download) {
+  public Observable<InstallationProgress> install(Context context, Download download) {
     return aptoideDownloadManager.getDownload(download.getMd5())
         .first()
         .map(storedDownload -> updateDownloadAction(download, storedDownload))
@@ -166,8 +109,7 @@ public class InstallManager {
         })
         .flatMap(download1 -> getInstallationProgress(download.getMd5(), download.getPackageName(),
             download.getVersionCode()))
-        .flatMap(progress -> installInBackground(context, progress))
-        .flatMap(installationProgress -> getInstallation(download.getMd5()));
+        .flatMap(progress -> installInBackground(context, progress));
   }
 
   public Observable<InstallationProgress> getInstallationProgress(String md5, String packageName,
@@ -395,15 +337,13 @@ public class InstallManager {
     }
   }
 
-  /**
-   * @return true if all downloads started with success, false otherwise
-   */
   public Observable<Boolean> startInstalls(List<Download> downloads, Context context) {
     return Observable.from(downloads)
         .map(download -> install(context, download))
         .toList()
         .flatMap(observables -> Observable.merge(observables))
-        .filter(downloading -> downloading.getState() == Progress.DONE)
+        .first(downloading -> downloading.getState()
+            == InstallationProgress.InstallationStatus.INSTALLING)
         .toList()
         .map(progresses -> true)
         .onErrorReturn(throwable -> false);
