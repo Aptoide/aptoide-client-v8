@@ -100,12 +100,12 @@ public class SharePreviewDialog {
       view = factory.inflate(R.layout.displayable_social_timeline_social_video_preview, null);
       TextView articleTitle =
           (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
-      ImageView thumbnail =
-          (ImageView) view.findViewById(R.id.partial_social_timeline_thumbnail_image);
+      ImageView thumbnail = (ImageView) view.findViewById(R.id.featured_graphic);
       TextView relatedTo = (TextView) view.findViewById(R.id.app_name);
       RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingbar);
 
       ratingBar.setVisibility(View.INVISIBLE);
+      articleTitle.setMaxLines(1);
       articleTitle.setText(((VideoDisplayable) displayable).getVideoTitle());
 
       relatedTo.setVisibility(View.GONE);
