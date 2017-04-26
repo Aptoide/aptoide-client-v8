@@ -248,7 +248,9 @@ public class InstallManager {
   public void rootInstallAllowed(boolean allowRoot) {
     SecurePreferences.setRootDialogShowed(true);
     ManagerPreferences.setAllowRootInstallation(allowRoot);
-    RootShell.isAccessGiven();
+    if (allowRoot) {
+      RootShell.isAccessGiven();
+    }
   }
 
   /**
