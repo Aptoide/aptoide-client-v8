@@ -79,6 +79,8 @@ public class SharePreviewDialog {
     LinearLayout like;
     LikeButtonView likeButtonView;
     TextView comments;
+    LinearLayout socialInfoBar;
+    LinearLayout socialCommentBar;
 
     if (displayable instanceof ArticleDisplayable) {
       view = factory.inflate(R.layout.displayable_social_timeline_social_article_preview, null);
@@ -89,6 +91,7 @@ public class SharePreviewDialog {
       RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingbar);
 
       ratingBar.setVisibility(View.INVISIBLE);
+      articleTitle.setMaxLines(1);
       articleTitle.setText(((ArticleDisplayable) displayable).getArticleTitle());
       relatedTo.setVisibility(View.GONE);
       ImageLoader.with(context)
@@ -327,6 +330,8 @@ public class SharePreviewDialog {
       likeButtonView = (LikeButtonView) view.findViewById(R.id.social_like_button);
       comments = (TextView) view.findViewById(R.id.social_comment);
       TextView numberOfComments = (TextView) view.findViewById(R.id.social_number_of_comments);
+      socialInfoBar = (LinearLayout) view.findViewById(R.id.social_info_bar);
+      socialCommentBar = (LinearLayout) view.findViewById(R.id.social_latest_comment_bar);
 
       cardView.setRadius(8);
       cardView.setCardElevation(10);
@@ -347,6 +352,8 @@ public class SharePreviewDialog {
         alertadd.setTitle(R.string.social_timeline_you_will_share);
       }
       comments.setVisibility(View.VISIBLE);
+      socialInfoBar.setVisibility(View.GONE);
+      socialCommentBar.setVisibility(View.GONE);
 
       alertadd.setView(view)
           .setCancelable(false);
@@ -373,8 +380,8 @@ public class SharePreviewDialog {
 
   private void setCardHeader(Context context, TextView storeName, TextView userName,
       ImageView storeAvatar, ImageView userAvatar) {
-    if (accountManager.getAccount()
-        .getStoreName() != null) {
+    if (accountManager.getAccount().getStoreName() != null) {
+      storeName.setTextColor(ContextCompat.getColor(context, R.color.black87alpha));
       if (Account.Access.PUBLIC.equals(accountManager.getAccountAccess())) {
         storeAvatar.setVisibility(View.VISIBLE);
         userAvatar.setVisibility(View.VISIBLE);
