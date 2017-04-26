@@ -48,7 +48,6 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
     showToolbar = getArguments().getBoolean(SHOW_TOOLBAR_KEY);
   }
 
-  //// TODO: 24-04-2017 filipe
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     finish();
     return super.onOptionsItemSelected(item);
