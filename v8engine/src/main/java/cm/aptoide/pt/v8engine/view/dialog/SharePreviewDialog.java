@@ -156,16 +156,14 @@ public class SharePreviewDialog {
           (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
       TextView appName = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_similar_apps);
-      TextView appSubTitle =
-          (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
       TextView getApp = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_get_app_button);
+      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
+
       ImageLoader.with(context)
           .load(((RecommendationDisplayable) displayable).getAppIcon(), appIcon);
       appName.setText(((RecommendationDisplayable) displayable).getAppName());
-      appSubTitle.setText(AptoideUtils.StringU.getFormattedString(
-          R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, ""));
-
+      ratingBar.setRating(((RecommendationDisplayable) displayable).getAppRating());
       SpannableFactory spannableFactory = new SpannableFactory();
 
       getApp.setText(spannableFactory.createColorSpan(
