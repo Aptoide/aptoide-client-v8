@@ -12,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -115,14 +116,18 @@ public class SharePreviewDialog {
       view = factory.inflate(R.layout.displayable_social_timeline_social_store_latest_apps_preview,
           null);
 
+      TextView sharedStoreTitleName = (TextView) view.findViewById(R.id.social_shared_store_name);
       TextView sharedStoreName = (TextView) view.findViewById(R.id.store_name);
       ImageView sharedStoreAvatar = (ImageView) view.findViewById(R.id.social_shared_store_avatar);
       LinearLayout latestAppsContainer = (LinearLayout) view.findViewById(
           R.id.displayable_social_timeline_store_latest_apps_container);
+      RelativeLayout followStoreBar = (RelativeLayout) view.findViewById(R.id.follow_store_bar);
 
       Map<View, Long> apps = new HashMap<>();
       Map<Long, String> appsPackages = new HashMap<>();
 
+      followStoreBar.setVisibility(View.GONE);
+      sharedStoreTitleName.setText(((StoreLatestAppsDisplayable) displayable).getStoreName());
       sharedStoreName.setText(((StoreLatestAppsDisplayable) displayable).getStoreName());
       ImageLoader.with(context)
           .loadWithShadowCircleTransform(((StoreLatestAppsDisplayable) displayable).getAvatarUrl(),
@@ -138,6 +143,7 @@ public class SharePreviewDialog {
             (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app_icon);
         latestAppName = (TextView) latestAppView.findViewById(R.id.social_timeline_latest_app_name);
         ImageLoader.with(context).load(latestApp.getIconUrl(), latestAppIcon);
+        latestAppName.setMaxLines(1);
         latestAppName.setText(latestApp.getName());
         latestAppsContainer.addView(latestAppView);
         apps.put(latestAppView, latestApp.getAppId());
