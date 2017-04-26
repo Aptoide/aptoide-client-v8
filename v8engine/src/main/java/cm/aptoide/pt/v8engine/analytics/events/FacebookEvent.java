@@ -1,7 +1,7 @@
-package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
+package cm.aptoide.pt.v8engine.analytics.events;
 
 import android.os.Bundle;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.Event;
+import cm.aptoide.pt.v8engine.analytics.Event;
 import com.facebook.appevents.AppEventsLogger;
 
 /**

@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.download;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEvent;
 
 /**
  * Created by trinkes on 04/01/2017.

@@ -7,8 +7,8 @@ package cm.aptoide.pt.v8engine.view.search;
 
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.analytics.abtesting.ABTest;
-import cm.aptoide.pt.v8engine.analytics.abtesting.SearchTabOptions;
+import cm.aptoide.pt.v8engine.abtesting.ABTest;
+import cm.aptoide.pt.v8engine.abtesting.SearchTabOptions;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import lombok.Getter;

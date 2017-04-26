@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.download;
 
 import cm.aptoide.pt.downloadmanager.Constants;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEvent;
 import java.io.IOException;
 import okhttp3.Headers;
 import okhttp3.Interceptor;

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.analytics.abtesting;
+package cm.aptoide.pt.v8engine.abtesting;
 
 /**
  * Created by trinkes on 11/22/16.

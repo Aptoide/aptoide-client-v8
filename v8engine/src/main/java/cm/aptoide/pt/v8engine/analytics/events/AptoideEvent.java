@@ -1,9 +1,9 @@
-package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
+package cm.aptoide.pt.v8engine.analytics.events;
 
 import cm.aptoide.pt.dataprovider.ws.v7.AnalyticsEventRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.Event;
+import cm.aptoide.pt.v8engine.analytics.Event;
 import java.util.Map;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;

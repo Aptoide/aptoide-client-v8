@@ -1,6 +1,6 @@
-package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
+package cm.aptoide.pt.v8engine.analytics.events;
 
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.Event;
+import cm.aptoide.pt.v8engine.analytics.Event;
 import com.localytics.android.Localytics;
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
+package cm.aptoide.pt.v8engine.spotandshare;
 
 import cm.aptoide.pt.spotandshareandroid.analytics.SpotAndShareAnalyticsInterface;
 import cm.aptoide.pt.v8engine.analytics.Analytics;

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
+package cm.aptoide.pt.v8engine.download;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;

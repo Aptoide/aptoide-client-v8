@@ -3,7 +3,7 @@
  * Modified by marcelo.benites@aptoide.com on 06/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.analytics.abtesting;
+package cm.aptoide.pt.v8engine.abtesting;
 
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.BuildConfig;

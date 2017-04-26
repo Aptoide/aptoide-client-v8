@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics;
+package cm.aptoide.pt.v8engine.analytics;
 
 import android.support.annotation.NonNull;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
+package cm.aptoide.pt.v8engine.download;
 
 import android.support.annotation.CallSuper;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -6,7 +6,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.DownloadAnalyticsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.Event;
+import cm.aptoide.pt.v8engine.analytics.Event;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.analytics.abtesting;
+package cm.aptoide.pt.v8engine.abtesting;
 
 import cm.aptoide.pt.logger.Logger;
 import com.seatgeek.sixpack.ConvertedExperiment;

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics;
+package cm.aptoide.pt.v8engine.analytics;
 
 /**
  * Created by trinkes on 30/12/2016.

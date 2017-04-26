@@ -3,7 +3,7 @@
  * Modified by marcelo.benites@aptoide.com on 06/05/2016.
  */
 
-package cm.aptoide.pt.v8engine.analytics.abtesting;
+package cm.aptoide.pt.v8engine.abtesting;
 
 /**
  * Created by marcelobenites on 5/6/16.
