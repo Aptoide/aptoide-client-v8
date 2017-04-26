@@ -79,14 +79,6 @@ public class InstallManager {
     return installer.uninstall(context, packageName, versionName);
   }
 
-  @Deprecated public Observable<List<Progress<Download>>> getInstallationsDeprecated() {
-    return aptoideDownloadManager.getDownloads()
-        .observeOn(Schedulers.io())
-        .concatMap(downloadList -> Observable.from(downloadList)
-            .flatMap(download -> convertToProgress(download))
-            .toList());
-  }
-
   public Observable<List<InstallationProgress>> getInstallations() {
     return Observable.combineLatest(aptoideDownloadManager.getDownloads(),
         installedRepository.getAllInstalled(), (downloads, installeds) -> downloads)
@@ -157,30 +149,25 @@ public class InstallManager {
             progress -> progress.getState() == InstallationProgress.InstallationStatus.INSTALLING));
   }
 
-  @Deprecated public boolean isInstalling(Progress<Download> progress) {
-    return isDownloading(progress) || (progress.getState() != Progress.DONE
-        && progress.getRequest().getOverallDownloadStatus() == Download.COMPLETED);
-  }
-
-  @Deprecated public boolean isDownloading(Progress<Download> progress) {
-    return progress.getRequest().getOverallDownloadStatus() == Download.PROGRESS;
-  }
-
   @Deprecated public Observable<Progress<Download>> getInstallation(String md5) {
     return aptoideDownloadManager.getDownload(md5).flatMap(download -> convertToProgress(download));
   }
 
   public Observable<Progress<Download>> install(Context context, Download download) {
-    return getInstallation(download.getMd5()).first()
-        .map(progress -> updateDownloadAction(download, progress))
+    return aptoideDownloadManager.getDownload(download.getMd5())
+        .first()
+        .map(storedDownload -> updateDownloadAction(download, storedDownload))
         .retryWhen(errors -> createDownloadAndRetry(errors, download))
         .doOnNext(downloadProgress -> {
-          if (downloadProgress.getRequest().getOverallDownloadStatus() == Download.ERROR) {
-            downloadProgress.getRequest().setOverallDownloadStatus(Download.INVALID_STATUS);
-            downloadRepository.save(downloadProgress.getRequest());
+          if (downloadProgress.getOverallDownloadStatus() == Download.ERROR) {
+            downloadProgress.setOverallDownloadStatus(Download.INVALID_STATUS);
+            downloadRepository.save(downloadProgress);
           }
         })
-        .flatMap(progress -> installInBackground(context, progress));
+        .flatMap(download1 -> getInstallationProgress(download.getMd5(), download.getPackageName(),
+            download.getVersionCode()))
+        .flatMap(progress -> installInBackground(context, progress))
+        .flatMap(installationProgress -> getInstallation(download.getMd5()));
   }
 
   public Observable<InstallationProgress> getInstallationProgress(String md5, String packageName,
@@ -339,13 +326,12 @@ public class InstallManager {
     return isIndeterminate;
   }
 
-  @NonNull
-  private Progress<Download> updateDownloadAction(Download download, Progress<Download> progress) {
-    if (progress.getRequest().getAction() != download.getAction()) {
-      progress.getRequest().setAction(download.getAction());
-      downloadRepository.save(progress.getRequest());
+  @NonNull private Download updateDownloadAction(Download download, Download storedDownload) {
+    if (storedDownload.getAction() != download.getAction()) {
+      storedDownload.setAction(download.getAction());
+      downloadRepository.save(storedDownload);
     }
-    return progress;
+    return storedDownload;
   }
 
   private Observable<Throwable> createDownloadAndRetry(Observable<? extends Throwable> errors,
@@ -360,20 +346,17 @@ public class InstallManager {
     });
   }
 
-  private Observable<Progress<Download>> installInBackground(Context context,
-      Progress<Download> progress) {
-    return getInstallation(progress.getRequest().getMd5()).mergeWith(
-        startBackgroundInstallationAndWait(context, progress));
+  private Observable<InstallationProgress> installInBackground(Context context,
+      InstallationProgress progress) {
+    return getInstallationProgress(progress.getMd5(), progress.getPackageName(),
+        progress.getVersionCode()).mergeWith(startBackgroundInstallationAndWait(context, progress));
   }
 
   @NonNull
-  private Observable<Progress<Download>> startBackgroundInstallationAndWait(Context context,
-      Progress<Download> progress) {
-    return waitBackgroundInstallationResult(context, progress.getRequest().getMd5()).doOnSubscribe(
-        () -> startBackgroundInstallation(context, progress.getRequest().getMd5())).map(success -> {
-      progress.setState(Progress.DONE);
-      return progress;
-    });
+  private Observable<InstallationProgress> startBackgroundInstallationAndWait(Context context,
+      InstallationProgress progress) {
+    return waitBackgroundInstallationResult(context, progress.getMd5()).doOnSubscribe(
+        () -> startBackgroundInstallation(context, progress.getMd5())).map(aVoid -> progress);
   }
 
   private Observable<Void> waitBackgroundInstallationResult(Context context, String md5) {
