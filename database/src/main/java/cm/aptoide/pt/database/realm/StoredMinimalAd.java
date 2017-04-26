@@ -73,9 +73,9 @@ public class StoredMinimalAd extends RealmObject implements MinimalAdInterface {
   public String getCpdUrl() {
     return cpdUrl;
   }
-  
-  @Override public String setCpdUrl(String cpdUrl) {
-    return this.cpdUrl = cpdUrl;
+
+  @Override public void setCpdUrl(String cpdUrl) {
+    this.cpdUrl = cpdUrl;
   }
 
   @Override
