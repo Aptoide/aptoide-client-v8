@@ -319,7 +319,10 @@ public abstract class V8Engine extends SpotAndShareApplication {
       final OkHttpClient.Builder httpClientBuilder =
           new OkHttpClient.Builder().addInterceptor(getUserAgentInterceptor())
               .addInterceptor(new PaidAppsDownloadInterceptor(getAccountManager()))
-              .addInterceptor(new DownloadMirrorEventInterceptor(Analytics.getInstance()));
+              .addInterceptor(new DownloadMirrorEventInterceptor(Analytics.getInstance()))
+              .connectTimeout(20, TimeUnit.SECONDS)
+              .writeTimeout(20, TimeUnit.SECONDS)
+              .readTimeout(20, TimeUnit.SECONDS);
 
       FileUtils.createDir(apkPath);
       FileUtils.createDir(obbPath);
@@ -395,8 +398,9 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
   public AndroidAccountProvider getAndroidAccountProvider() {
     if (androidAccountProvider == null) {
-      androidAccountProvider = new AndroidAccountProvider(AccountManager.get(this),
-          getConfiguration().getAccountType(), Schedulers.io());
+      androidAccountProvider =
+          new AndroidAccountProvider(AccountManager.get(this), getConfiguration().getAccountType(),
+              Schedulers.io());
     }
     return androidAccountProvider;
   }
