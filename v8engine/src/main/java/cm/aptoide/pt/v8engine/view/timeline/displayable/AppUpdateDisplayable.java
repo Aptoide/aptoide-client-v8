@@ -62,6 +62,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
   private DownloadEventConverter downloadConverter;
   private InstallEventConverter installConverter;
   private Analytics analytics;
+  @Getter private float appRating;
 
   public AppUpdateDisplayable() {
   }
@@ -94,6 +95,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
     this.installConverter = installConverter;
     this.analytics = analytics;
     this.storeTheme = storeTheme;
+    this.appRating = appUpdate.getStats().getRating().getAvg();
   }
 
   public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory,
@@ -277,8 +279,8 @@ public class AppUpdateDisplayable extends CardDisplayable {
   }
 
   public Spannable getStyledTitle(Context context) {
-    return spannableFactory.createColorSpan(context.getString(
-        R.string.store_has_an_update, storeName),
-        ContextCompat.getColor(context, R.color.black87alpha) , storeName);
+    return spannableFactory.createColorSpan(
+        context.getString(R.string.store_has_an_update, storeName),
+        ContextCompat.getColor(context, R.color.black87alpha), storeName);
   }
 }
