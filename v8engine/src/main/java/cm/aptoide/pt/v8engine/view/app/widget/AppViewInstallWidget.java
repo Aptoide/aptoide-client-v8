@@ -397,6 +397,7 @@ import rx.android.schedulers.AndroidSchedulers;
                   compositeSubscription.add(
                       new PermissionManager().requestDownloadAccess(permissionRequest)
                           .flatMap(success -> installManager.install(getContext(), appDownload)
+                              .toObservable()
                               .doOnSubscribe(() -> setupEvents(appDownload)))
                           .observeOn(AndroidSchedulers.mainThread())
                           .subscribe(progress -> {
@@ -474,7 +475,7 @@ import rx.android.schedulers.AndroidSchedulers;
             Download download =
                 new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
                     downloadAction);
-            return installManager.install(getContext(), download)
+            return installManager.install(getContext(), download).toObservable()
                 .doOnSubscribe(() -> setupEvents(download));
           })
           .first()
@@ -592,6 +593,7 @@ import rx.android.schedulers.AndroidSchedulers;
             .flatMap(permissionGranted -> permissionManager.requestExternalStoragePermission(
                 (PermissionService) getContext()))
             .flatMap(success -> installManager.install(getContext(), download)
+                .toObservable()
                 .doOnSubscribe(() -> setupEvents(download)))
             .first()
             .subscribe(downloadProgress -> Logger.d(TAG, "Installing"),

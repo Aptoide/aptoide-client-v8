@@ -134,7 +134,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
               .flatMap(
                   permissionGranted -> permissionManager.requestExternalStoragePermission(activity))
               .flatMap(success -> installManager.install(activity,
-                  downloadFactory.create(autoUpdateInfo)))
+                  downloadFactory.create(autoUpdateInfo)).toObservable())
               .first()
               .flatMap(
                   downloadProgress -> installManager.getInstallationProgress(autoUpdateInfo.md5,

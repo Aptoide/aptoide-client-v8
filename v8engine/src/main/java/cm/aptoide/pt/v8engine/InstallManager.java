@@ -96,7 +96,7 @@ public class InstallManager {
             progress -> progress.getState() == InstallationProgress.InstallationStatus.INSTALLING));
   }
 
-  public Observable<InstallationProgress> install(Context context, Download download) {
+  public Completable install(Context context, Download download) {
     return aptoideDownloadManager.getDownload(download.getMd5())
         .first()
         .map(storedDownload -> updateDownloadAction(download, storedDownload))
@@ -109,7 +109,7 @@ public class InstallManager {
         })
         .flatMap(download1 -> getInstallationProgress(download.getMd5(), download.getPackageName(),
             download.getVersionCode()))
-        .flatMap(progress -> installInBackground(context, progress));
+        .flatMap(progress -> installInBackground(context, progress)).first().toCompletable();
   }
 
   public Observable<InstallationProgress> getInstallationProgress(String md5, String packageName,
@@ -339,11 +339,9 @@ public class InstallManager {
 
   public Observable<Boolean> startInstalls(List<Download> downloads, Context context) {
     return Observable.from(downloads)
-        .map(download -> install(context, download))
+        .map(download -> install(context, download).toObservable())
         .toList()
         .flatMap(observables -> Observable.merge(observables))
-        .first(downloading -> downloading.getState()
-            == InstallationProgress.InstallationStatus.INSTALLING)
         .toList()
         .map(progresses -> true)
         .onErrorReturn(throwable -> false);

@@ -156,7 +156,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
         .flatMapIterable(scheduleds -> scheduleds)
         .map(scheduled -> downloadFactory.create(scheduled))
         .flatMap(downloadItem -> installManager.install(context, downloadItem)
-            .first()
+            .toObservable()
             .flatMap(
                 downloadProgress -> installManager.getInstallationProgress(downloadItem.getMd5(),
                     downloadItem.getPackageName(), downloadItem.getVersionCode()))

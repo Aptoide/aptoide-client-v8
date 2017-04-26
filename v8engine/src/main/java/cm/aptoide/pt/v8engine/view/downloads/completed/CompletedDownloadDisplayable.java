@@ -109,7 +109,7 @@ public class CompletedDownloadDisplayable extends Displayable {
         .flatMap(download -> permissionManager.requestExternalStoragePermission(permissionRequest)
             .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
             .flatMap(success -> installManager.install(context, download)
-                .first()
+                .toObservable()
                 .flatMap(downloadProgress -> installManager.getInstallationProgress(
                     installation.getMd5(), installation.getPackageName(),
                     installation.getVersionCode()))
