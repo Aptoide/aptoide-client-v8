@@ -24,6 +24,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.InstallEvent;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.install.root.RootShell;
 import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -171,6 +172,7 @@ public class InstalledIntentService extends IntentService {
       InstallEvent event =
           (InstallEvent) analytics.get(packageName + packageInfo.versionCode, InstallEvent.class);
       if (event != null) {
+        event.setPhoneRooted(RootShell.isRootAvailable());
         event.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.SUCC);
         analytics.sendEvent(event);
         return;

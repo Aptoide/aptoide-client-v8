@@ -42,7 +42,6 @@ public class InstallEventConverter extends DownloadInstallEventConverter<Install
         new InstallEvent(action, origin, packageName, url, obbUrl, patchObbUrl, context,
             versionCode, this, bodyInterceptor, httpClient, converterFactory);
     installEvent.setAptoideSettings(ManagerPreferences.allowRootInstallation());
-    installEvent.setPhoneRooted(RootShell.isRootAvailable());
     return installEvent;
   }
 }

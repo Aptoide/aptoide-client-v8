@@ -237,11 +237,7 @@ public class InstallManager {
   }
 
   public boolean showWarning() {
-    boolean wasRootDialogShowed = SecurePreferences.isRootDialogShowed();
-    boolean isRooted = RootShell.isRootAvailable();
-    boolean canGiveRoot = ManagerPreferences.allowRootInstallation();
     //AN-1533 - temporary solution was to remove root installation, so this popup doesn't make sense
-    //return isRooted && !wasRootDialogShowed && !canGiveRoot;
     return false;
   }
 

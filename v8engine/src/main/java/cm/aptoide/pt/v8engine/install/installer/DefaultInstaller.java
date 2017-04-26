@@ -76,11 +76,6 @@ public class DefaultInstaller implements Installer {
             return Observable.just(null);
           } else {
             return systemInstall(context, installation.getFile())
-                // AN-1533 - temporary solution was to remove root installation
-                //.onErrorResumeNext(
-                //Observable.fromCallable(
-                //    () -> rootInstall(installation.getFile(), installation.getPackageName(),
-                //        installation.getVersionCode())))
                 .onErrorResumeNext(
                     defaultInstall(context, installation.getFile(), installation.getPackageName()));
           }
@@ -145,64 +140,6 @@ public class DefaultInstaller implements Installer {
   private Observable<Void> systemInstall(Context context, File file) {
     return Observable.create(
         new SystemInstallOnSubscribe(context, packageManager, Uri.fromFile(file)));
-  }
-
-  private Void rootInstall(File file, String packageName, int versionCode)
-      throws InstallationException {
-    if (!RootShell.isRootAvailable()) {
-      throw new InstallationException("No root permissions");
-    } else if (!ManagerPreferences.allowRootInstallation()) {
-      throw new InstallationException("User doesn't allow root installation");
-    }
-
-    try {
-      //if (Shell.SU.available()) {
-
-      Shell.Builder shellBuilder = new Shell.Builder();
-      Shell.Interactive interactiveShell = shellBuilder.useSU().setWatchdogTimeout(10) // seconds
-          .addCommand("pm install -r " + file.getAbsolutePath(), 0,
-              (commandCode, exitCode, output) -> {
-                CrashReport.getInstance().log(new Exception("install -r exitCode: " + exitCode));
-                Observable.fromCallable(() -> exitCode)
-                    .observeOn(Schedulers.computation())
-                    .delay(20, TimeUnit.SECONDS)
-                    .subscribe(exitCodeToSend -> {
-                      boolean installed = isInstalled(packageName, versionCode);
-                      if (!installed) {
-                        sendErrorEvent(packageName, versionCode,
-                            new Exception("Root install not succeeded. Exit code = " + exitCode));
-                      }
-                      Analytics.RootInstall.rootInstallCompleted(exitCodeToSend, installed);
-                    });
-                if (exitCode == 0) {
-                  Logger.v(TAG, "app successfully installed using root");
-                } else {
-                  Logger.e(TAG, "Error using su to install package " + packageName);
-                  for (String s : output) {
-                    Logger.e(TAG, "su command result: " + s);
-                  }
-                }
-              }).open();
-
-      interactiveShell.waitForIdle();
-
-      //if (!isInstalled(packageName, versionCode)) {
-      //  throw new RuntimeException("Could not verify installation.");
-      //}
-
-      // app sucessfully installed using root
-      return null;
-      //} else {
-      //  throw new RuntimeException("Device not rooted.");
-      //}
-    } catch (Exception e) {
-      CrashReport.getInstance().log(e);
-      sendErrorEvent(packageName, versionCode, e);
-      throw new InstallationException("Installation with root failed for "
-          + packageName
-          + ". Error message: "
-          + e.getMessage());
-    }
   }
 
   private Observable<Void> defaultInstall(Context context, File file, String packageName) {
