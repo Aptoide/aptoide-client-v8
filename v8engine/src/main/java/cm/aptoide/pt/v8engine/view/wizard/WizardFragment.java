@@ -33,6 +33,7 @@ import rx.android.schedulers.AndroidSchedulers;
 // TODO: 16/2/2017 sithengineer add MVP to this view
 public class WizardFragment extends BackButtonFragment {
 
+  private CrashReport crashReport;
   private WizardPagerAdapter viewPagerAdapter;
   private ViewPager viewPager;
   private RadioGroup radioGroup;
@@ -63,6 +64,7 @@ public class WizardFragment extends BackButtonFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     accountManager = ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
+    crashReport = CrashReport.getInstance();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -83,7 +85,7 @@ public class WizardFragment extends BackButtonFragment {
           } else if (LoginBottomSheet.State.COLLAPSED.equals(state)) {
             skipOrNextLayout.setVisibility(View.VISIBLE);
           }
-        });
+        }, err -> crashReport.log(err));
   }
 
   @Override public void onDestroyView() {
@@ -110,7 +112,7 @@ public class WizardFragment extends BackButtonFragment {
 
           createRadioButtons(context);
           setupHandlers();
-        });
+        }, err -> crashReport.log(err));
   }
 
   private void createRadioButtons(Context context) {
@@ -132,16 +134,15 @@ public class WizardFragment extends BackButtonFragment {
   private void setupHandlers() {
     RxView.clicks(nextIcon)
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(__ -> handleNextPageClick(), err -> CrashReport.getInstance().log(err));
+        .subscribe(__ -> handleNextPageClick(), err -> crashReport.log(err));
 
     RxView.clicks(skipText)
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(__ -> handleSkipClick(), err -> CrashReport.getInstance().log(err));
+        .subscribe(__ -> handleSkipClick(), err -> crashReport.log(err));
 
     RxViewPager.pageSelections(viewPager)
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(selectedPage -> handleSelectedPage(selectedPage),
-            err -> CrashReport.getInstance().log(err));
+        .subscribe(selectedPage -> handleSelectedPage(selectedPage), err -> crashReport.log(err));
   }
 
   private void handleNextPageClick() {
