@@ -26,6 +26,7 @@ import cm.aptoide.pt.v8engine.repository.DownloadRepository;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.Repository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import java.util.Collections;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -87,7 +88,31 @@ public class InstallManager {
             .flatMap(
                 download -> getInstallationProgress(download.getMd5(), download.getPackageName(),
                     download.getVersionCode()).first())
-            .toList());
+            .toList())
+        .map(installationProgresses -> sortList(installationProgresses));
+  }
+
+  private List<InstallationProgress> sortList(List<InstallationProgress> installationProgresses) {
+    Collections.sort(installationProgresses, (installationProgress, t1) -> {
+      int toReturn;
+      if (installationProgress.getState() == InstallationProgress.InstallationStatus.INSTALLING
+          && !installationProgress.isIndeterminate()) {
+        toReturn = 1;
+      } else if (t1.getState() == InstallationProgress.InstallationStatus.INSTALLING
+          && !t1.isIndeterminate()) {
+        toReturn = -1;
+      } else {
+        int diff = installationProgress.getState().ordinal() - t1.getState().ordinal();
+        if (diff == 0) {
+          toReturn = installationProgress.getPackageName().compareTo(t1.getPackageName());
+        } else {
+          toReturn = diff;
+        }
+      }
+      return toReturn;
+    });
+    Collections.reverse(installationProgresses);
+    return installationProgresses;
   }
 
   public Observable<InstallationProgress> getCurrentInstallation() {
@@ -109,7 +134,9 @@ public class InstallManager {
         })
         .flatMap(download1 -> getInstallationProgress(download.getMd5(), download.getPackageName(),
             download.getVersionCode()))
-        .flatMap(progress -> installInBackground(context, progress)).first().toCompletable();
+        .flatMap(progress -> installInBackground(context, progress))
+        .first()
+        .toCompletable();
   }
 
   public Observable<InstallationProgress> getInstallationProgress(String md5, String packageName,
@@ -171,6 +198,7 @@ public class InstallManager {
     }
 
     if (installationState.getStatus() == Installed.STATUS_WAITING
+        && download != null
         && download.getOverallDownloadStatus() == Download.COMPLETED) {
       return InstallationProgress.InstallationStatus.INSTALLING;
     }

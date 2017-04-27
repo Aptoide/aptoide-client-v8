@@ -49,8 +49,6 @@ import rx.schedulers.Schedulers;
 
     compositeSubscription.add(displayable.getInstallationObservable()
         .observeOn(Schedulers.computation())
-        .distinctUntilChanged()
-        .map(download -> download)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(installation -> updateUi(installation),
             throwable -> CrashReport.getInstance().log(throwable)));

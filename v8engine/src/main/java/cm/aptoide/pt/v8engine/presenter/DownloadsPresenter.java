@@ -6,7 +6,6 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -28,15 +27,15 @@ public class DownloadsPresenter implements Presenter {
         .first()
         .observeOn(Schedulers.computation())
         .flatMap(created -> installManager.getInstallations()
-            .sample(100, TimeUnit.MILLISECONDS)
+            .distinctUntilChanged()
             .observeOn(AndroidSchedulers.mainThread())
-            .flatMap(downloads -> {
-              if (downloads == null || downloads.isEmpty()) {
+            .flatMap(installations -> {
+              if (installations == null || installations.isEmpty()) {
                 view.showEmptyDownloadList();
                 return Observable.empty();
               }
-              return Observable.merge(setActive(downloads), setStandBy(downloads),
-                  setCompleted(downloads));
+              return Observable.merge(setActive(installations), setStandBy(installations),
+                  setCompleted(installations));
             }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -87,8 +86,7 @@ public class DownloadsPresenter implements Presenter {
 
   private boolean isStandingBy(InstallationProgress progress) {
     return progress.getState() == InstallationProgress.InstallationStatus.FAILED
-        || progress.getState()
-        == InstallationProgress.InstallationStatus.PAUSED;
+        || progress.getState() == InstallationProgress.InstallationStatus.PAUSED;
   }
 
   public void pauseInstall(Context context, DownloadsView.DownloadViewModel download) {

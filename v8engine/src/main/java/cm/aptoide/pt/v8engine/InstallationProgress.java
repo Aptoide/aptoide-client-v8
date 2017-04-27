@@ -89,4 +89,24 @@ public class InstallationProgress {
   public enum InstallationStatus {
     INSTALLING, PAUSED, INSTALLED, UNINSTALLED, FAILED
   }
+
+  @Override public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    final InstallationProgress that = (InstallationProgress) o;
+
+    if (versionCode != that.versionCode) return false;
+    if (state != that.state) return false;
+    if (!md5.equals(that.md5)) return false;
+    return packageName.equals(that.packageName);
+  }
+
+  @Override public int hashCode() {
+    int result = state.hashCode();
+    result = 31 * result + md5.hashCode();
+    result = 31 * result + packageName.hashCode();
+    result = 31 * result + versionCode;
+    return result;
+  }
 }
