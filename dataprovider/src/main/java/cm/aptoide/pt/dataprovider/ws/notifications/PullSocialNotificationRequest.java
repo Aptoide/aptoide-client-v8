@@ -59,6 +59,8 @@ public class PullSocialNotificationRequest
       options.put("oem_id", oemid);
     }
     options.put("aptoide_package", appId);
+    //TODO should depend of build variant
+    options.put("debug", "true");
 
     return new PullSocialNotificationRequest(id, options);
   }
