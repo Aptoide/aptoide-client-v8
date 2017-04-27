@@ -120,7 +120,7 @@ public class SharePreviewDialog {
       TextView sharedStoreName = (TextView) view.findViewById(R.id.store_name);
       ImageView sharedStoreAvatar = (ImageView) view.findViewById(R.id.social_shared_store_avatar);
       LinearLayout latestAppsContainer = (LinearLayout) view.findViewById(
-          R.id.displayable_social_timeline_store_latest_apps_container);
+          R.id.displayable_social_timeline_popular_app_users_container);
       RelativeLayout followStoreBar = (RelativeLayout) view.findViewById(R.id.follow_store_bar);
 
       Map<View, Long> apps = new HashMap<>();
@@ -275,7 +275,7 @@ public class SharePreviewDialog {
       TextView sharedStoreTitleName = (TextView) view.findViewById(R.id.social_shared_store_name);
 
       LinearLayout latestAppsContainer = (LinearLayout) view.findViewById(
-          R.id.displayable_social_timeline_store_latest_apps_container);
+          R.id.displayable_social_timeline_popular_app_users_container);
 
       Map<View, Long> apps = new HashMap<>();
       Map<Long, String> appsPackages = new HashMap<>();

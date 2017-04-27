@@ -5,6 +5,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.Feature;
+import cm.aptoide.pt.model.v7.timeline.PopularApp;
 import cm.aptoide.pt.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.model.v7.timeline.SocialArticle;
 import cm.aptoide.pt.model.v7.timeline.SocialInstall;
@@ -28,6 +29,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.AppUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.ArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.timeline.displayable.PopularAppDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.RecommendationDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.SocialArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.SocialInstallDisplayable;
@@ -212,6 +214,13 @@ public class CardToDisplayableConverter implements CardToDisplayable {
             linksHandlerFactory, timelineAnalytics, socialRepository);
       }
     });
+
+    //
+    // Popular App
+    //
+    converters.put(PopularApp.class,
+        (card, dateCalculator, spannableFactory, downloadFactory, linksHandlerFactory) -> PopularAppDisplayable
+            .from((PopularApp) card, dateCalculator));
   }
 
   @UiThread @Override public Displayable convert(TimelineCard card, DateCalculator dateCalculator,

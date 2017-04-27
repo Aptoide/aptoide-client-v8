@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by Marcelo Benites on 08/07/2016.
+  -->
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/Widget.Aptoide.Card"
+    >
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+      <TextView
+          android:id="@+id/displayable_social_timeline_popular_app_card_header_title"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="12dp"
+          android:layout_marginStart="12dp"
+          android:layout_marginTop="12dp"
+          android:lines="1"
+          tools:text="Popular app among friends"
+          style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
+          />
+
+      <TextView
+          android:id="@+id/displayable_social_timeline_popular_app_card_timestamp"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/displayable_social_timeline_popular_app_card_header_title"
+          android:layout_marginLeft="12dp"
+          android:layout_marginStart="12dp"
+          android:lines="1"
+          tools:text="Há duas horas"
+          style="@style/Aptoide.TextView.Regular.XS.Grey"
+          />
+
+      <LinearLayout
+          android:id="@+id/displayable_social_timeline_popular_app_users_container"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/displayable_social_timeline_popular_app_card_timestamp"
+          android:layout_marginLeft="12dp"
+          android:layout_marginStart="12dp"
+          android:orientation="horizontal"
+          android:padding="4dp"
+          />
+
+      <ImageView
+          android:layout_width="15dp"
+          android:layout_height="15dp"
+          android:layout_alignEnd="@+id/card_custom_view_line_separator"
+          android:layout_alignRight="@+id/card_custom_view_line_separator"
+          android:layout_marginTop="@dimen/appstimeline_card_icon"
+          android:src="@drawable/appstimeline_recommendation_compass_icon"
+          />
+
+      <View
+          android:id="@+id/card_custom_view_line_separator"
+          android:layout_width="match_parent"
+          android:layout_height="0.7dp"
+          android:layout_alignParentBottom="true"
+          android:layout_marginEnd="12dp"
+          android:layout_marginLeft="12dp"
+          android:layout_marginRight="12dp"
+          android:layout_marginStart="12dp"
+          android:background="@color/timeline_separator"
+          />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/displayable_social_timeline_popular_app_card_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+      <ImageView
+          android:id="@+id/displayable_social_timeline_popular_app_icon"
+          android:layout_width="100dp"
+          android:layout_height="100dp"
+          android:layout_marginBottom="12dp"
+          android:layout_marginLeft="12dp"
+          android:layout_marginStart="12dp"
+          android:layout_marginTop="9.3dp"
+          android:paddingTop="3dp"
+          android:scaleType="fitCenter"
+          tools:ignore="contentDescription"
+          tools:src="@mipmap/ic_launcher"
+          />
+
+
+      <TextView
+          android:id="@+id/displayable_social_timeline_popular_app_body_title"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_alignTop="@+id/displayable_social_timeline_popular_app_icon"
+          android:layout_marginEnd="15.1dp"
+          android:layout_marginLeft="13.3dp"
+          android:layout_marginRight="15.1dp"
+          android:layout_marginStart="13.3dp"
+          android:layout_toEndOf="@+id/displayable_social_timeline_popular_app_icon"
+          android:layout_toRightOf="@+id/displayable_social_timeline_popular_app_icon"
+          android:background="@android:color/transparent"
+          android:clickable="false"
+          android:ellipsize="end"
+          android:lines="2"
+          android:maxLines="2"
+          android:paddingTop="3dp"
+          tools:text="Tio Bobi"
+          style="@style/Aptoide.TextView.Medium.L.Black"
+          />
+
+      <android.support.v7.widget.AppCompatRatingBar
+          android:id="@+id/rating_bar"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/displayable_social_timeline_popular_app_body_title"
+          android:layout_marginEnd="15.1dp"
+          android:layout_marginLeft="13.3dp"
+          android:layout_marginRight="15.1dp"
+          android:layout_marginStart="13.3dp"
+          android:layout_toEndOf="@+id/displayable_social_timeline_popular_app_icon"
+          android:layout_toRightOf="@+id/displayable_social_timeline_popular_app_icon"
+          android:numStars="5"
+          android:progressDrawable="@drawable/rating_bar_small"
+          android:stepSize="1.0"
+          tools:rating="5.0"
+          style="@style/Widget.AppCompat.RatingBar.Small"
+          />
+
+      <Button
+          android:id="@+id/displayable_social_timeline_popular_app_get_app_button"
+          android:layout_width="116dp"
+          android:layout_height="24dp"
+          android:layout_below="@id/rating_bar"
+          android:layout_gravity="center"
+          android:layout_marginEnd="15.1dp"
+          android:layout_marginLeft="13.3dp"
+          android:layout_marginRight="15.1dp"
+          android:layout_marginStart="13.3dp"
+          android:layout_marginTop="5dp"
+          android:layout_toEndOf="@id/displayable_social_timeline_popular_app_icon"
+          android:text="@string/review_get_app"
+          android:textAllCaps="true"
+          android:textSize="10sp"
+          style="?attr/customButtomDarkGrayThinLine"
+          />
+    </RelativeLayout>
+    <View
+        android:id="@+id/partial_social_timeline_thumbnail_divider2"
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="14dp"
+        android:background="@color/timeline_separator"
+        android:visibility="visible"
+        />
+    <include layout="@layout/social_bar_timeline"/>
+  </LinearLayout>
+</android.support.v7.widget.CardView>
+
