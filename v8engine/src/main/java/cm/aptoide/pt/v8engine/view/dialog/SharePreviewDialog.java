@@ -29,6 +29,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.timeline.LikeButtonView;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.AppUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.ArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.timeline.displayable.PopularAppDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.RecommendationDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.SocialArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.SocialCardDisplayable;
@@ -221,8 +222,7 @@ public class SharePreviewDialog {
       view = factory.inflate(R.layout.displayable_social_timeline_social_article_preview, null);
       TextView articleTitle =
           (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
-      ImageView thumbnail =
-          (ImageView) view.findViewById(R.id.featured_graphic);
+      ImageView thumbnail = (ImageView) view.findViewById(R.id.featured_graphic);
       TextView relatedTo = (TextView) view.findViewById(R.id.app_name);
       RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingbar);
       ratingBar.setVisibility(View.INVISIBLE);
@@ -236,8 +236,7 @@ public class SharePreviewDialog {
       view = factory.inflate(R.layout.displayable_social_timeline_social_video_preview, null);
       TextView articleTitle =
           (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
-      ImageView thumbnail =
-          (ImageView) view.findViewById(R.id.featured_graphic);
+      ImageView thumbnail = (ImageView) view.findViewById(R.id.featured_graphic);
       TextView relatedTo = (TextView) view.findViewById(R.id.app_name);
       RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingbar);
       ratingBar.setVisibility(View.INVISIBLE);
@@ -280,8 +279,8 @@ public class SharePreviewDialog {
       Map<View, Long> apps = new HashMap<>();
       Map<Long, String> appsPackages = new HashMap<>();
 
-      sharedStoreTitleName.setText(((SocialStoreLatestAppsDisplayable) displayable)
-          .getSharedStore().getName());
+      sharedStoreTitleName.setText(
+          ((SocialStoreLatestAppsDisplayable) displayable).getSharedStore().getName());
       sharedStoreName.setText(
           ((SocialStoreLatestAppsDisplayable) displayable).getSharedStore().getName());
       ImageLoader.with(context)
@@ -319,6 +318,29 @@ public class SharePreviewDialog {
       getApp.setText(spannableFactory.createColorSpan(
           context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
           ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
+    } else if (displayable instanceof PopularAppDisplayable) {
+      view =
+          factory.inflate(R.layout.displayable_social_timeline_social_recommendation_preview, null);
+      ImageView appIcon =
+          (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
+      TextView appName = (TextView) view.findViewById(
+          R.id.displayable_social_timeline_recommendation_similar_apps);
+      TextView getApp = (TextView) view.findViewById(
+          R.id.displayable_social_timeline_recommendation_get_app_button);
+      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
+
+      ImageLoader.with(context).load(((PopularAppDisplayable) displayable).getAppIcon(), appIcon);
+      appName.setText(((PopularAppDisplayable) displayable).getAppName());
+      ratingBar.setRating(((PopularAppDisplayable) displayable).getAppAverageRating());
+
+      SpannableFactory spannableFactory = new SpannableFactory();
+
+      getApp.setText(spannableFactory.createColorSpan(
+          context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
+          ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
+    } else {
+      throw new IllegalStateException(
+          "The Displayable " + displayable + " is not being handled " + "in SharePreviewDialog");
     }
 
     if (view != null) {

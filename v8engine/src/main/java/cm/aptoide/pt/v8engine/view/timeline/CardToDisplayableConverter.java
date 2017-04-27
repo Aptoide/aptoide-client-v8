@@ -220,7 +220,7 @@ public class CardToDisplayableConverter implements CardToDisplayable {
     //
     converters.put(PopularApp.class,
         (card, dateCalculator, spannableFactory, downloadFactory, linksHandlerFactory) -> PopularAppDisplayable
-            .from((PopularApp) card, dateCalculator));
+            .from((PopularApp) card, dateCalculator, socialRepository, timelineAnalytics));
   }
 
   @UiThread @Override public Displayable convert(TimelineCard card, DateCalculator dateCalculator,

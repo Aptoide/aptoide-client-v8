@@ -5,6 +5,8 @@ import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.timeline.PopularApp;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.ShareCardCallback;
+import cm.aptoide.pt.v8engine.repository.SocialRepository;
+import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import java.util.Date;
@@ -29,10 +31,15 @@ public class PopularAppDisplayable extends CardDisplayable {
   private String packageName;
   private String storeName;
 
+  private SocialRepository socialRepository;
+  private TimelineAnalytics timelineAnalytics;
+
   public PopularAppDisplayable() {
   }
 
-  public PopularAppDisplayable(PopularApp card, DateCalculator dateCalculator) {
+  public PopularAppDisplayable(PopularApp card, DateCalculator dateCalculator,
+      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
+    super(card);
     this.date = card.getDate();
     this.friends = card.getUsers();
     this.numberOfFriends = card.getUsers().size();
@@ -43,6 +50,8 @@ public class PopularAppDisplayable extends CardDisplayable {
     this.packageName = card.getPopularApplication().getPackageName();
     this.storeName = card.getPopularApplication().getStore().getName();
     this.appId = card.getPopularApplication().getId();
+    this.timelineAnalytics = timelineAnalytics;
+    this.socialRepository = socialRepository;
 
     if (card.getAb() != null
         && card.getAb().getConversion() != null
@@ -51,8 +60,9 @@ public class PopularAppDisplayable extends CardDisplayable {
     }
   }
 
-  public static Displayable from(PopularApp card, DateCalculator dateCalculator) {
-    return new PopularAppDisplayable(card, dateCalculator);
+  public static Displayable from(PopularApp card, DateCalculator dateCalculator,
+      SocialRepository socialRepository, TimelineAnalytics timelineAnalytics) {
+    return new PopularAppDisplayable(card, dateCalculator, timelineAnalytics, socialRepository);
   }
 
   @Override public int getViewLayout() {
@@ -61,19 +71,19 @@ public class PopularAppDisplayable extends CardDisplayable {
 
   @Override
   public void share(Context context, boolean privacyResult, ShareCardCallback shareCardCallback) {
-
+    socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);
   }
 
   @Override public void share(Context context, ShareCardCallback shareCardCallback) {
-
+    socialRepository.share(getTimelineCard(), context, shareCardCallback);
   }
 
   @Override public void like(Context context, String cardType, int rating) {
-
+    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating);
   }
 
   @Override public void like(Context context, String cardId, String cardType, int rating) {
-
+    socialRepository.like(cardId, cardType, "", rating);
   }
 
   public String getCardTitleText(Context context) {
