@@ -207,7 +207,7 @@ public class Analytics {
     if (BuildConfig.BUILD_TYPE.equals("debug")) {
       return;
     }
-
+    Logger.w(TAG, "Facebook Event: " + eventName + " : " + parameters.toString());
     facebookLogger.logEvent(eventName, parameters);
   }
 
