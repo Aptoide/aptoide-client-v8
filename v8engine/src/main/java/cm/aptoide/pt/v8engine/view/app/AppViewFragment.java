@@ -83,6 +83,7 @@ import cm.aptoide.pt.v8engine.repository.AppRepository;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
+import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
@@ -180,7 +181,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private StoreMinimalAdAccessor storeMinimalAdAccessor;
-  
+  private SpotAndShareAnalytics spotAndShareAnalytics;
+
   public static AppViewFragment newInstance(String md5) {
     Bundle bundle = new Bundle();
     bundle.putString(BundleKeys.MD5.name(), md5);
@@ -263,6 +265,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installedRepository = RepositoryFactory.getInstalledRepository();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     storeMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
+    spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
@@ -727,13 +730,25 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         }
       } else if (GenericDialogs.EResponse.SHARE_SPOT_AND_SHARE == eResponse) {
 
+        spotAndShareAnalytics.clickShareApps(
+            SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW);
+
         String filepath = getFilepath(packageName);
+        String appNameToShare = filterAppName(appName);
         Intent intent = new Intent(this.getActivity(), HighwayActivity.class);
         intent.setAction("APPVIEW_SHARE");
         intent.putExtra("APPVIEW_SHARE_FILEPATH", filepath);
+        intent.putExtra("APPVIEW_SHARE_APPNAME", appNameToShare);
         startActivity(intent);
       }
     }, err -> err.printStackTrace());
+  }
+
+  private String filterAppName(String appName) {
+    if (!TextUtils.isEmpty(appName) && appName.length() > 17) {
+      appName = appName.substring(0, 17);
+    }
+    return appName;
   }
 
   private String getFilepath(String packageName) {
