@@ -1168,4 +1168,12 @@ public class Analytics {
       track(USER_REGISTERED, LOCALYTICS);
     }
   }
+
+  public static class SMSUserRegisterEvents {
+
+    public static final String SMS_USER_REGISTERED_EVENT = "SMS User Registered";
+    public static void smsRegister() {
+      track(SMS_USER_REGISTERED_EVENT, FLURRY);
+    }
+  }
 }
