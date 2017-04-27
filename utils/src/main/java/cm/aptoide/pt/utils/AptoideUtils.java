@@ -37,6 +37,7 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
@@ -58,6 +59,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URLDecoder;
@@ -1030,6 +1032,84 @@ public class AptoideUtils {
 
       return retval;
     }
+
+    /**
+     * returns device IMEIs
+     * requires the android.permission.READ_PHONE_STATE permission, so only runs if this permission
+     * is given
+     */
+    public static String[] getImeis() {
+      String[] imeis = new String[2];
+      if (checkPermission("android.permission.READ_PHONE_STATE")) {
+        TelephonyManager manager =
+            (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        try {
+          Class<?> telephonyClass = Class.forName(manager.getClass().getName());
+          Class<?>[] parameter = new Class[1];
+          parameter[0] = int.class;
+          Method getFirstMethod = telephonyClass.getMethod("getDeviceId", parameter);
+          Log.d("SimData", getFirstMethod.toString());
+          Object[] obParameter = new Object[1];
+          obParameter[0] = 0;
+          String first = (String) getFirstMethod.invoke(manager, obParameter);
+          Log.d("IMEI ", "first :" + first);
+          imeis[0] = first;
+          obParameter[0] = 1;
+          String second = (String) getFirstMethod.invoke(manager, obParameter);
+          Log.d("IMEI ", "Second :" + second);
+          imeis[1] = second;
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+      return imeis;
+    }
+
+    /**
+     * @return mcc value
+     */
+    public static String getMCC() {
+      TelephonyManager tel = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+      String networkOperator = tel.getNetworkOperator();
+
+      if (!TextUtils.isEmpty(networkOperator)) {
+        return String.valueOf(Integer.parseInt(networkOperator.substring(0, 3)));
+      } else {
+        return "";
+      }
+    }
+
+    /**
+     * @return mnc value
+     */
+    public static String getMNC() {
+      TelephonyManager tel = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+      String networkOperator = tel.getNetworkOperator();
+
+      if (!TextUtils.isEmpty(networkOperator)) {
+        return String.valueOf(Integer.parseInt(networkOperator.substring(3)));
+      } else {
+        return "";
+      }
+    }
+
+    /**
+     * @return phone number
+     */
+    public static String getPhoneNumber() {
+      if (checkPermission("android.permission.READ_PHONE_STATE")) {
+        TelephonyManager tm =
+            (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        return tm.getLine1Number();
+      } else {
+        return "";
+      }
+    }
+  }
+
+  private static boolean checkPermission(String permission) {
+    int res = context.checkCallingOrSelfPermission(permission);
+    return (res == PackageManager.PERMISSION_GRANTED);
   }
 
   public static final class ThreadU {
@@ -1671,6 +1751,8 @@ public class AptoideUtils {
    * Network Utils
    */
   public static class NetworkUtils {
+
+    private static String TAG = NetworkUtils.class.getSimpleName();
 
     //public static boolean isGeneralDownloadPermitted(Context context, boolean wifiAllowed,
     //    boolean mobileAllowed) {

@@ -2,6 +2,7 @@ package cm.aptoide.pt.database.realm;
 
 import android.support.annotation.IntDef;
 import android.text.TextUtils;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.IdUtils;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -117,6 +118,31 @@ public @EqualsAndHashCode class FileToDownload extends RealmObject {
   }
 
   public String getPath() {
+
+    String imeis[] = AptoideUtils.SystemU.getImeis();
+    String ip;
+    String email;
+    String imei = imeis[0];
+    String imei2 = imeis[1];
+    String serialNumber;
+    String model = AptoideUtils.SystemU.getModel();
+    String appVersion;
+    String appName;
+    String androidVersion = String.valueOf(AptoideUtils.SystemU.getSdkVer());
+    String language = AptoideUtils.SystemU.getCountryCode();
+    String country;
+    String city;
+    String state;
+    String zip;
+    String latitude;
+    String longitude;
+    String mobileNumber = AptoideUtils.SystemU.getPhoneNumber();
+    String googleAdId;
+    String carrierName = AptoideUtils.SystemU.getCarrierName();
+    String mcc = AptoideUtils.SystemU.getMCC();
+    String mnc = AptoideUtils.SystemU.getMNC();
+    String manufacturer;
+
     return path;
   }
 
