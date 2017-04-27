@@ -25,8 +25,6 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
   private TextView articleTitle;
   private ImageView thumbnail;
   private View url;
-  //private Button getAppButton;
-  private CardView cardView;
 
   public FeatureWidget(View itemView) {
     super(itemView);
@@ -39,9 +37,6 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
     articleTitle = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_title);
     thumbnail = (ImageView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_image);
     url = itemView.findViewById(R.id.partial_social_timeline_thumbnail);
-    //getAppButton =
-    //    (Button) itemView.findViewById(R.id.partial_social_timeline_thumbnail_get_app_button);
-    cardView = (CardView) itemView.findViewById(R.id.card);
   }
 
   @Override public void bindView(FeatureDisplayable displayable) {
@@ -49,27 +44,13 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
     title.setText(displayable.getTitle(context));
     subtitle.setText(displayable.getTimeSinceLastUpdate(context));
     articleTitle.setText(displayable.getTitleResource());
-    setCardviewMargin(displayable);
-    ImageLoader.with(context)
-        .loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
-    ImageLoader.with(context)
-        .load(displayable.getThumbnailUrl(), thumbnail);
+    ImageLoader.with(context).loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
+    ImageLoader.with(context).load(displayable.getThumbnailUrl(), thumbnail);
 
     compositeSubscription.add(RxView.clicks(url)
         .subscribe(v -> context.startActivity(
             new Intent(Intent.ACTION_VIEW, Uri.parse(displayable.getUrl()))),
             throwable -> CrashReport.getInstance()
                 .log(throwable)));
-  }
-
-  private void setCardviewMargin(FeatureDisplayable displayable) {
-    CardView.LayoutParams layoutParams =
-        new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
-            CardView.LayoutParams.WRAP_CONTENT);
-    layoutParams.setMargins(displayable.getMarginWidth(getContext(), getContext().getResources()
-        .getConfiguration().orientation), 0, displayable.getMarginWidth(getContext(),
-        getContext().getResources()
-            .getConfiguration().orientation), 30);
-    cardView.setLayoutParams(layoutParams);
   }
 }

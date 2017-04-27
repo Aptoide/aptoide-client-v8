@@ -238,10 +238,10 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     CardView.LayoutParams layoutParams =
         new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
             CardView.LayoutParams.WRAP_CONTENT);
-    layoutParams.setMargins(displayable.getMarginWidth(getContext(), getContext().getResources()
-        .getConfiguration().orientation), 0, displayable.getMarginWidth(getContext(),
-        getContext().getResources()
-            .getConfiguration().orientation), 30);
+    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
+        getContext().getResources().getConfiguration().orientation), 0,
+        displayable.getMarginWidth(getContext(),
+            getContext().getResources().getConfiguration().orientation), 15);
     cardView.setLayoutParams(layoutParams);
   }
 }

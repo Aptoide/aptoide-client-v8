@@ -280,7 +280,8 @@ public class SharePreviewDialog {
       Map<View, Long> apps = new HashMap<>();
       Map<Long, String> appsPackages = new HashMap<>();
 
-      sharedStoreTitleName.setText(((SocialStoreLatestAppsDisplayable) displayable).getStoreName());
+      sharedStoreTitleName.setText(((SocialStoreLatestAppsDisplayable) displayable)
+          .getSharedStore().getName());
       sharedStoreName.setText(
           ((SocialStoreLatestAppsDisplayable) displayable).getSharedStore().getName());
       ImageLoader.with(context)
