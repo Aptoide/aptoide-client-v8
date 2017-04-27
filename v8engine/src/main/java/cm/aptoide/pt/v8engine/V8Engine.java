@@ -60,9 +60,9 @@ import cm.aptoide.pt.v8engine.account.BaseBodyInterceptorFactory;
 import cm.aptoide.pt.v8engine.account.DatabaseStoreDataPersist;
 import cm.aptoide.pt.v8engine.account.SocialAccountFactory;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AccountEventsAnalytcs;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.SpotAndShareAnalytics;
-import cm.aptoide.pt.v8engine.analytics.abtesting.ABTestManager;
+import cm.aptoide.pt.v8engine.account.AccountEventsAnalytcs;
+import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
+import cm.aptoide.pt.v8engine.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.crashreports.ConsoleLogger;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.crashreports.CrashlyticsCrashLogger;
@@ -191,7 +191,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
     fragmentProvider = createFragmentProvider();
     activityProvider = createActivityProvider();
     displayableWidgetMapping = createDisplayableWidgetMapping();
-    shareApps = new ShareApps(new SpotAndShareAnalytics());
+    shareApps = new ShareApps(new SpotAndShareAnalytics(Analytics.getInstance()));
 
     //
     // do not erase this code. it is useful to figure out when someone forgot to attach an error handler when subscribing and the app

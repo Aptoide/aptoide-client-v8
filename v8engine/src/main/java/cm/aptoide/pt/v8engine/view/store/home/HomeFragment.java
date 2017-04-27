@@ -30,13 +30,12 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.SpotAndShareAnalytics;
+import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.spotandshare.SpotSharePreviewActivity;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
-import cm.aptoide.pt.v8engine.view.BackButton;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.custom.BadgeView;
@@ -72,6 +71,7 @@ public class HomeFragment extends StoreFragment {
   private TextView userUsername;
   private ImageView userAvatarImage;
   private ClickHandler backClickHandler;
+  private SpotAndShareAnalytics spotAndShareAnalytics;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -138,6 +138,11 @@ public class HomeFragment extends StoreFragment {
     ImageLoader.with(getContext())
         .loadWithCircleTransformAndPlaceHolder(account.getAvatar(), userAvatarImage,
             R.drawable.user_account_white);
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
   }
 
   @Nullable @Override
@@ -272,7 +277,7 @@ public class HomeFragment extends StoreFragment {
         } else {
           final FragmentNavigator navigator = getFragmentNavigator();
           if (itemId == R.id.shareapps) {
-            SpotAndShareAnalytics.clickShareApps();
+            spotAndShareAnalytics.clickShareApps();
             getActivityNavigator().navigateTo(SpotSharePreviewActivity.class);
           } else if (itemId == R.id.navigation_item_rollback) {
             navigator.navigateTo(V8Engine.getFragmentProvider().newRollbackFragment());
