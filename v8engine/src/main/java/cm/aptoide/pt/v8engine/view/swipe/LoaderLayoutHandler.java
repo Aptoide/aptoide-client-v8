@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.swipe;
 
-import android.content.Context;
 import android.support.annotation.CallSuper;
 import android.support.annotation.UiThread;
 import android.view.View;
@@ -94,7 +93,7 @@ public class LoaderLayoutHandler {
         loadInterface.load(true, false, null);
       });
       spotAndShareButton.setOnClickListener(v -> {
-        openSpotAndShare(noNetworkConnectionView.getContext());
+        openSpotAndSharePreview();
       });
     } else {
       noNetworkConnectionView.setVisibility(View.GONE);
@@ -106,7 +105,7 @@ public class LoaderLayoutHandler {
     }
   }
 
-  private void openSpotAndShare(Context context) {
+  private void openSpotAndSharePreview() {
     activityNavigator.navigateTo(SpotSharePreviewActivity.class);
   }
 
