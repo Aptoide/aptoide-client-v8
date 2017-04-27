@@ -10,7 +10,7 @@ import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
 import cm.aptoide.pt.v8engine.preferences.SecurePreferences;
-import cm.aptoide.pt.v8engine.repository.IdsRepository;
+import cm.aptoide.pt.v8engine.networking.IdsRepository;
 
 public class BaseBodyInterceptorFactory implements BasebBodyInterceptorFactory {
 

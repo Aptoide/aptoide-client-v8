@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.networking;
 import android.accounts.Account;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import cm.aptoide.pt.v8engine.repository.IdsRepository;
 import cm.aptoide.pt.v8engine.account.AndroidAccountProvider;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import java.io.IOException;

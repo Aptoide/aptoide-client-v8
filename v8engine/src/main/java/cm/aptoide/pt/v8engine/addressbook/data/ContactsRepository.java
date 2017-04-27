@@ -6,7 +6,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.SetConnectionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SyncAddressBookRequest;
-import cm.aptoide.pt.v8engine.repository.IdsRepository;
+import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.FacebookModel;
 import cm.aptoide.pt.model.v7.GetFollowers;

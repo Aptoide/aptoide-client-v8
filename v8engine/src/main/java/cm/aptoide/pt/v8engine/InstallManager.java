@@ -15,13 +15,13 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
 import cm.aptoide.pt.v8engine.install.root.RootShell;
-import cm.aptoide.pt.v8engine.repository.Repository;
+import cm.aptoide.pt.v8engine.repository.DownloadRepository;
+import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import java.util.List;
 import rx.Observable;
@@ -35,8 +35,8 @@ public class InstallManager {
 
   private final AptoideDownloadManager aptoideDownloadManager;
   private final Installer installer;
-  private Repository<Download, String> downloadRepository;
-  private Repository<Installed, String> installedRepository;
+  private DownloadRepository downloadRepository;
+  private InstalledRepository installedRepository;
 
   /**
    * Uses the default {@link Repository} for {@link Download} and {@link Installed}

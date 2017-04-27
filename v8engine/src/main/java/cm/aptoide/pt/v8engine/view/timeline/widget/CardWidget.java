@@ -22,7 +22,7 @@ import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.interfaces.ShareCardCallback;
+import cm.aptoide.pt.v8engine.view.timeline.ShareCardCallback;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.account.user.CreateStoreActivity;
 import cm.aptoide.pt.v8engine.view.comments.CommentDialogFragment;

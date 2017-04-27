@@ -21,7 +21,7 @@ import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.repository.RollbackRepository;
+import cm.aptoide.pt.v8engine.install.rollback.RollbackRepository;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import lombok.AccessLevel;

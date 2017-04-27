@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.networking;
 
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.v8engine.repository.IdsRepository;
 import rx.Single;
 import rx.schedulers.Schedulers;
 

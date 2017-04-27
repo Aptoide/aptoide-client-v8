@@ -25,14 +25,30 @@ import cm.aptoide.pt.iab.InAppBillingSerializer;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.app.AppRepository;
+import cm.aptoide.pt.v8engine.download.ScheduledDownloadRepository;
+import cm.aptoide.pt.v8engine.install.rollback.RollbackRepository;
+import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.PurchaseFactory;
 import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
-import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
-import cm.aptoide.pt.v8engine.repository.sync.SyncDataConverter;
-import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.v8engine.payment.repository.InAppBillingProductRepository;
+import cm.aptoide.pt.v8engine.payment.repository.InAppBillingRepository;
+import cm.aptoide.pt.v8engine.payment.repository.InAppPaymentConfirmationRepository;
+import cm.aptoide.pt.v8engine.payment.repository.PaidAppPaymentConfirmationRepository;
+import cm.aptoide.pt.v8engine.payment.repository.PaidAppProductRepository;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationRepository;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationFactory;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentRepository;
+import cm.aptoide.pt.v8engine.payment.repository.ProductRepository;
+import cm.aptoide.pt.v8engine.payment.repository.sync.SyncAdapterBackgroundSync;
+import cm.aptoide.pt.v8engine.payment.repository.sync.SyncDataConverter;
+import cm.aptoide.pt.v8engine.updates.UpdateRepository;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import okhttp3.OkHttpClient;
 
 /**
@@ -67,16 +83,19 @@ public final class RepositoryFactory {
     return ((V8Engine) context.getApplicationContext()).getAccountManager();
   }
 
-  public static InstalledRepository getInstalledRepository() {
-    return new InstalledRepository(AccessorFactory.getAccessorFor(Installed.class));
+  public static cm.aptoide.pt.v8engine.repository.InstalledRepository getInstalledRepository() {
+    return new cm.aptoide.pt.v8engine.repository.InstalledRepository(
+        AccessorFactory.getAccessorFor(Installed.class));
   }
 
-  public static StoreRepository getStoreRepository() {
-    return new StoreRepository(AccessorFactory.getAccessorFor(Store.class));
+  public static cm.aptoide.pt.v8engine.repository.StoreRepository getStoreRepository() {
+    return new cm.aptoide.pt.v8engine.repository.StoreRepository(
+        AccessorFactory.getAccessorFor(Store.class));
   }
 
-  public static DownloadRepository getDownloadRepository() {
-    return new DownloadRepository(AccessorFactory.getAccessorFor(Download.class));
+  public static cm.aptoide.pt.v8engine.repository.DownloadRepository getDownloadRepository() {
+    return new cm.aptoide.pt.v8engine.repository.DownloadRepository(
+        AccessorFactory.getAccessorFor(Download.class));
   }
 
   public static PaymentRepository getPaymentRepository(FragmentActivity activity, Product product) {

@@ -150,7 +150,7 @@
     </service>
 
     <service
-        android:name=".v8engine.repository.sync.AptoideSyncService"
+        android:name=".v8engine.payment.repository.sync.AptoideSyncService"
         android:exported="true">
       <intent-filter>
         <action android:name="android.content.SyncAdapter"/>

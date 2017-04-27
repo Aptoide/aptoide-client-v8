@@ -101,7 +101,7 @@
         />
 
     <activity
-        android:name=".receivers.DeepLinkIntentReceiver"
+        android:name=".DeepLinkIntentReceiver"
         android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.VIEW"/>
@@ -201,9 +201,9 @@
       </intent-filter>
     </receiver>
 
-    <service android:name=".services.PullingContentService"/>
+    <service android:name=".pull.PullingContentService"/>
 
-    <receiver android:name=".receivers.PullingContentReceiver">
+    <receiver android:name=".pull.PullingContentReceiver">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED"/>
         <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
@@ -214,7 +214,7 @@
     <receiver android:name=".timeline.link.CustomTabNativeReceiver"/>
 
     <receiver
-        android:name=".receivers.NetworkStateReceiver"
+        android:name=".download.ScheduleDownloadsNetworkReceiver"
         android:enabled="true"
         android:exported="false">
       <intent-filter>
