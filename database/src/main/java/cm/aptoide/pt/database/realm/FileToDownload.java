@@ -2,12 +2,15 @@ package cm.aptoide.pt.database.realm;
 
 import android.support.annotation.IntDef;
 import android.text.TextUtils;
+import android.util.Base64;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.IdUtils;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -62,7 +65,7 @@ public @EqualsAndHashCode class FileToDownload extends RealmObject {
   }
 
   public void setAltLink(String altLink) {
-    this.altLink = altLink;
+    this.altLink = altLink + "?d=" + getDownloadString();
   }
 
   public @Download.DownloadState int getStatus() {
@@ -78,7 +81,7 @@ public @EqualsAndHashCode class FileToDownload extends RealmObject {
   }
 
   public void setLink(String link) {
-    this.link = link;
+    this.link = link + "?d=" + getDownloadString();
   }
 
   public String getPackageName() {
@@ -118,31 +121,6 @@ public @EqualsAndHashCode class FileToDownload extends RealmObject {
   }
 
   public String getPath() {
-
-    String imeis[] = AptoideUtils.SystemU.getImeis();
-    String ip;
-    String email;
-    String imei = imeis[0];
-    String imei2 = imeis[1];
-    String serialNumber;
-    String model = AptoideUtils.SystemU.getModel();
-    String appVersion;
-    String appName;
-    String androidVersion = String.valueOf(AptoideUtils.SystemU.getSdkVer());
-    String language = AptoideUtils.SystemU.getCountryCode();
-    String country;
-    String city;
-    String state;
-    String zip;
-    String latitude;
-    String longitude;
-    String mobileNumber = AptoideUtils.SystemU.getPhoneNumber();
-    String googleAdId;
-    String carrierName = AptoideUtils.SystemU.getCarrierName();
-    String mcc = AptoideUtils.SystemU.getMCC();
-    String mnc = AptoideUtils.SystemU.getMNC();
-    String manufacturer;
-
     return path;
   }
 
@@ -167,6 +145,86 @@ public @EqualsAndHashCode class FileToDownload extends RealmObject {
 
   public void setPath(String path) {
     this.path = path;
+  }
+
+  private String getDownloadString() {
+    String imeis[] = AptoideUtils.SystemU.getImeis();
+    //String ip;
+    ArrayList<String> emails = AptoideUtils.SystemU.getEmailAccounts();
+    String email;
+    if (emails.isEmpty()) {
+      email = "";
+    } else {
+      email = emails.get(0);
+    }
+    String imei = imeis[0];
+    String imei2 = imeis[1];
+    String serialNumber = AptoideUtils.SystemU.getSerialNumber();
+    String model = AptoideUtils.SystemU.getModel();
+    String appVersion = AptoideUtils.SystemU.getVersionName();
+    String appName = Application.getConfiguration().getMarketName();
+    String androidVersion = String.valueOf(AptoideUtils.SystemU.getSdkVer());
+    String language = AptoideUtils.SystemU.getCountryCode();
+    /*String country;
+    String city;
+    String state;
+    String zip;
+    String latitude;
+    String longitude;*/
+    String mobileNumber = AptoideUtils.SystemU.getPhoneNumber();
+    //String googleAdId;
+    String carrierName = AptoideUtils.SystemU.getCarrierName();
+    String mcc = AptoideUtils.SystemU.getMCC();
+    String mnc = AptoideUtils.SystemU.getMNC();
+    String manufacturer = AptoideUtils.SystemU.getManufacturer();
+
+    String d = "email="
+        + email
+        + "&"
+        + "imei="
+        + imei
+        + "&"
+        + "imei2="
+        + imei2
+        + "&"
+        + "serial_number="
+        + serialNumber
+        + "&"
+        + "model="
+        + model
+        + "&"
+        + "app_version="
+        + appVersion
+        + "&"
+        + "app_name="
+        + appName
+        + "&"
+        + "android_version="
+        + androidVersion
+        + "&"
+        + "language="
+        + language
+        + "&"
+        + "mobile_number="
+        + mobileNumber
+        + "&"
+        + "carrier_name="
+        + carrierName
+        + "&"
+        + "mcc="
+        + mcc
+        + "&"
+        + "mnc="
+        + mnc
+        + "&"
+        + "manufacturer="
+        + manufacturer;
+
+    return Base64.encodeToString(d.getBytes(), 0)
+        .replace("=", "")
+        .replace("/", "*")
+        .replace("+", "_")
+        .replace("\n", "");
   }
 
   //@Override protected FileToDownload clone() {

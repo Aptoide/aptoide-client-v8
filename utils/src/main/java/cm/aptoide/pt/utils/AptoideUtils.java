@@ -5,6 +5,9 @@
 
 package cm.aptoide.pt.utils;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -1034,12 +1037,14 @@ public class AptoideUtils {
     }
 
     /**
-     * returns device IMEIs
+     * @return device IMEIs
      * requires the android.permission.READ_PHONE_STATE permission, so only runs if this permission
      * is given
      */
     public static String[] getImeis() {
       String[] imeis = new String[2];
+      imeis[0] = "";
+      imeis[1] = "";
       if (checkPermission("android.permission.READ_PHONE_STATE")) {
         TelephonyManager manager =
             (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
@@ -1095,8 +1100,10 @@ public class AptoideUtils {
 
     /**
      * @return phone number
+     * requires the android.permission.READ_PHONE_STATE permission, so only runs if this permission
+     * is given
      */
-    public static String getPhoneNumber() {
+    @SuppressLint("HardwareIds") public static String getPhoneNumber() {
       if (checkPermission("android.permission.READ_PHONE_STATE")) {
         TelephonyManager tm =
             (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
@@ -1104,6 +1111,54 @@ public class AptoideUtils {
       } else {
         return "";
       }
+    }
+
+    /**
+     * requires the android.permission.GET_ACCOUNTS permission, so only runs if this permission is
+     * given
+     *
+     * @return list of user emails
+     */
+    public static ArrayList<String> getEmailAccounts() {
+      ArrayList<String> emails = new ArrayList<>();
+      if (checkPermission("android.permission.GET_ACCOUNTS")) {
+        Account[] accounts = AccountManager.get(context).getAccounts();
+        for (Account account : accounts) {
+          String acname = account.name;
+          if (account.name.contains("@") && !emails.contains(acname)) {
+            emails.add(acname);
+          }
+        }
+      }
+      return emails;
+    }
+
+    /**
+     * @return app version name
+     */
+    public static String getVersionName() {
+      String versionName = "";
+      try {
+        PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+        versionName = pInfo.versionName;
+      } catch (PackageManager.NameNotFoundException e) {
+        e.printStackTrace();
+      }
+      return versionName;
+    }
+
+    /**
+     * @return device serial number
+     */
+    @SuppressLint("HardwareIds") public static String getSerialNumber() {
+      return Build.SERIAL;
+    }
+
+    /**
+     * @return device manufacturer
+     */
+    public static String getManufacturer() {
+      return Build.MANUFACTURER;
     }
   }
 
