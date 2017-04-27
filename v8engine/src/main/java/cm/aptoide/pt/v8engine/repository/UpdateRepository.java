@@ -8,7 +8,6 @@ import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.listapp.App;
 import java.util.Collections;
@@ -28,7 +27,7 @@ public class UpdateRepository implements Repository<Update, String> {
 
   private static final String TAG = UpdateRepository.class.getName();
 
-  private final AptoideClientUUID aptoideClientUUID;
+  private final IdsRepository idsRepository;
   private final AptoideAccountManager accountManager;
   private final UpdateAccessor updateAccessor;
   private final StoreAccessor storeAccessor;
@@ -37,13 +36,13 @@ public class UpdateRepository implements Repository<Update, String> {
   private final Converter.Factory converterFactory;
 
   UpdateRepository(UpdateAccessor updateAccessor, StoreAccessor storeAccessor,
-      AptoideAccountManager accountManager, AptoideClientUUID idsRepository,
+      AptoideAccountManager accountManager, IdsRepository idsRepository,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
     this.updateAccessor = updateAccessor;
     this.storeAccessor = storeAccessor;
     this.accountManager = accountManager;
-    this.aptoideClientUUID = idsRepository;
+    this.idsRepository = idsRepository;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
@@ -67,7 +66,7 @@ public class UpdateRepository implements Repository<Update, String> {
 
   private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
     Logger.d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
-    return ListAppsUpdatesRequest.of(storeIds, aptoideClientUUID.getUniqueIdentifier(),
+    return ListAppsUpdatesRequest.of(storeIds, idsRepository.getUniqueIdentifier(),
         bodyInterceptor, httpClient, converterFactory).observe(bypassCache).map(result -> {
       if (result != null && result.isOk()) {
         return result.getList();

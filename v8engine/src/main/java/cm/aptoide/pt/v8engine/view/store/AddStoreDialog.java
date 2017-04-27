@@ -24,7 +24,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
@@ -38,6 +38,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.repository.IdsRepository;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
@@ -273,8 +274,6 @@ public class AddStoreDialog extends BaseDialog {
   }
 
   private void executeRequest(GetStoreMetaRequest getHomeMetaRequest) {
-    final IdsRepositoryImpl clientUuid =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     new StoreUtilsProxy(accountManager, baseBodyBodyInterceptor, storeCredentialsProvider,
         AccessorFactory.getAccessorFor(Store.class), httpClient,
         WebService.getDefaultConverter()).subscribeStore(getHomeMetaRequest, getStoreMeta1 -> {

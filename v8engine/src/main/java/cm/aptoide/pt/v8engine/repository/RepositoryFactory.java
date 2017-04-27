@@ -22,7 +22,6 @@ import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.iab.InAppBillingSerializer;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -52,12 +51,12 @@ public final class RepositoryFactory {
   public static UpdateRepository getUpdateRepository(Context context) {
     return new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
         AccessorFactory.getAccessorFor(Store.class), getAccountManager(context),
-        getAptoideClientUUID(context), getBaseBodyInterceptorV7(context), getHttpClient(context),
+        getIdsRepository(context), getBaseBodyInterceptorV7(context), getHttpClient(context),
         WebService.getDefaultConverter());
   }
 
-  private static AptoideClientUUID getAptoideClientUUID(Context context) {
-    return ((V8Engine) context.getApplicationContext()).getAptoideClientUUID();
+  private static IdsRepository getIdsRepository(Context context) {
+    return ((V8Engine) context.getApplicationContext()).getIdsRepository();
   }
 
   private static OkHttpClient getHttpClient(Context context) {

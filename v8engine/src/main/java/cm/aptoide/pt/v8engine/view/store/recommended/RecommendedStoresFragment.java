@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
@@ -37,8 +37,6 @@ public class RecommendedStoresFragment extends GetStoreEndlessFragment<ListStore
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
-    IdsRepositoryImpl aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     BodyInterceptor<BaseBody> bodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();

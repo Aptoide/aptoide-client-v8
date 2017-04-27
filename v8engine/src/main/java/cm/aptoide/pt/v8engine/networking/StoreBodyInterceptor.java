@@ -17,17 +17,17 @@ import rx.Single;
 public class StoreBodyInterceptor<BaseBody>
     implements BodyInterceptor<HashMapNotNull<String, RequestBody>> {
 
-  private final String aptoideClientUUID;
+  private final String clientUniqueId;
   private final AptoideAccountManager accountManager;
   private final RequestBodyFactory requestBodyFactory;
   private final String storeTheme;
   private final String storeDescription;
   private final ObjectMapper serializer;
 
-  public StoreBodyInterceptor(String aptoideClientUUID, AptoideAccountManager accountManager,
+  public StoreBodyInterceptor(String clientUniqueId, AptoideAccountManager accountManager,
       RequestBodyFactory requestBodyFactory, String storeTheme, String storeDescription,
       ObjectMapper serializer) {
-    this.aptoideClientUUID = aptoideClientUUID;
+    this.clientUniqueId = clientUniqueId;
     this.accountManager = accountManager;
     this.requestBodyFactory = requestBodyFactory;
     this.storeTheme = storeTheme;

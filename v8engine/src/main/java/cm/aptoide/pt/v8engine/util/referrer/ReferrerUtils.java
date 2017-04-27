@@ -18,27 +18,25 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.repository.AdsRepository;
+import cm.aptoide.pt.v8engine.repository.IdsRepository;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
@@ -92,9 +90,11 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
           RelativeLayout.LayoutParams.MATCH_PARENT));
 
       AptoideUtils.ThreadU.runOnIoThread(() -> {
-        internalClickUrl[0] = DataproviderUtils.AdNetworksUtils.parseMacros(clickUrl,
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()));
+        final IdsRepository idsRepository =
+            ((V8Engine) context.getApplicationContext()).getIdsRepository();
+        internalClickUrl[0] =
+            DataproviderUtils.AdNetworksUtils.parseMacros(clickUrl, idsRepository.getAndroidId(),
+                idsRepository.getUniqueIdentifier(), idsRepository.getAdvertisingId());
         clickUrlFuture.set(internalClickUrl[0]);
         Logger.d("ExtractReferrer", "Parsed clickUrl: " + internalClickUrl[0]);
       });

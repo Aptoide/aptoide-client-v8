@@ -258,7 +258,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     adsRepository =
-        new AdsRepository(((V8Engine) getContext().getApplicationContext()).getAptoideClientUUID(),
+        new AdsRepository(((V8Engine) getContext().getApplicationContext()).getIdsRepository(),
             accountManager, httpClient, converterFactory);
     installedRepository = RepositoryFactory.getInstalledRepository();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();

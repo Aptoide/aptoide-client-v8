@@ -5,13 +5,14 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
+
+import cm.aptoide.pt.v8engine.repository.IdsRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -20,8 +21,6 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.localytics.android.Localytics;
@@ -34,7 +33,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.zip.ZipFile;
-import lombok.Getter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -66,24 +64,28 @@ public class Analytics {
       "apps-group-top-games", "apps-group-top-stores", "apps-group-featured-stores",
       "apps-group-editors-choice"
   };
-  private static final AptoideClientUUID aptoideClientUuid;
-  static @Getter Analytics instance = new Analytics(new AnalyticsDataSaver());
-  static GraphRequest.Callback callback = new GraphRequest.Callback() {
-    @Override public void onCompleted(GraphResponse response) {
-      Logger.d("Facebook Analytics: ", response.toString());
-    }
-  };
+
+  static {
+    idsRepository = ((V8Engine) DataProvider.getContext().getApplicationContext())
+        .getIdsRepository();
+  }
+
+  private static final IdsRepository idsRepository;
+  private static Analytics instance;
+
   private static boolean ACTIVATE_LOCALYTICS = true;
   private static boolean isFirstSession;
 
-  static {
-    aptoideClientUuid = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
+  private final AnalyticsDataSaver saver;
+
+  public static Analytics getInstance() {
+    if (instance == null) {
+      instance = new Analytics(new AnalyticsDataSaver());
+    }
+    return instance;
   }
 
-  private AnalyticsDataSaver saver;
-
-  public Analytics(AnalyticsDataSaver saver) {
+  private Analytics(AnalyticsDataSaver saver) {
     this.saver = saver;
   }
 
@@ -255,7 +257,7 @@ public class Analytics {
         AppEventsLogger.activateApp(application);
         facebookLogger = AppEventsLogger.newLogger(application);
         Observable.fromCallable(() -> {
-          AppEventsLogger.setUserID(aptoideClientUuid.getUniqueIdentifier());
+          AppEventsLogger.setUserID(idsRepository.getUniqueIdentifier());
           return null;
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(o -> {
         }, Throwable::printStackTrace);
@@ -371,10 +373,12 @@ public class Analytics {
         Bundle bundle = new Bundle();
         if (!accountManager.isLoggedIn()) {
           bundle.putString("Logged In", "Not Logged In");
-          AppEventsLogger.updateUserProperties(bundle, callback);
+          AppEventsLogger.updateUserProperties(bundle,
+              response -> Logger.d("Facebook Analytics: ", response.toString()));
         } else {
           bundle.putString("Logged In", "Logged In");
-          AppEventsLogger.updateUserProperties(bundle, callback);
+          AppEventsLogger.updateUserProperties(bundle,
+              response -> Logger.d("Facebook Analytics: ", response.toString()));
         }
 
         if (!ACTIVATE_LOCALYTICS) {
@@ -391,7 +395,7 @@ public class Analytics {
           }
         }
 
-        String cpuid = aptoideClientUuid.getUniqueIdentifier();
+        String cpuid = idsRepository.getUniqueIdentifier();
         Localytics.setCustomerId(cpuid);
         Localytics.handleTestMode(activity.getIntent());
       }
@@ -944,7 +948,8 @@ public class Analytics {
     private static void setUserProperties(String key, String value) {
       Bundle parameters = new Bundle();
       parameters.putString(key, value);
-      AppEventsLogger.updateUserProperties(parameters, callback);
+      AppEventsLogger.updateUserProperties(parameters,
+          response -> Logger.d("Facebook Analytics: ", response.toString()));
     }
 
     public static void setVerticalDimension(String verticalName) {

@@ -15,6 +15,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.SparseArray;
 import cm.aptoide.accountmanager.AccountDataPersist;
@@ -30,13 +31,11 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
@@ -53,6 +52,8 @@ import cm.aptoide.pt.spotandshareandroid.SpotAndShareApplication;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
+import cm.aptoide.pt.v8engine.abtesting.ABTestManager;
+import cm.aptoide.pt.v8engine.account.AccountEventsAnalytcs;
 import cm.aptoide.pt.v8engine.account.AndroidAccountDataMigration;
 import cm.aptoide.pt.v8engine.account.AndroidAccountManagerDataPersist;
 import cm.aptoide.pt.v8engine.account.AndroidAccountProvider;
@@ -60,9 +61,6 @@ import cm.aptoide.pt.v8engine.account.BaseBodyInterceptorFactory;
 import cm.aptoide.pt.v8engine.account.DatabaseStoreDataPersist;
 import cm.aptoide.pt.v8engine.account.SocialAccountFactory;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.account.AccountEventsAnalytcs;
-import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
-import cm.aptoide.pt.v8engine.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.crashreports.ConsoleLogger;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.crashreports.CrashlyticsCrashLogger;
@@ -79,8 +77,10 @@ import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
 import cm.aptoide.pt.v8engine.networking.UserAgentInterceptor;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
+import cm.aptoide.pt.v8engine.repository.IdsRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.AccountGroupNameProvider;
+import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.MainActivity;
@@ -134,7 +134,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private cm.aptoide.pt.v8engine.preferences.SecurePreferences securePreferences;
   private SecureCoderDecoder secureCodeDecoder;
   private AdultContent adultContent;
-  private AptoideClientUUID aptoideClientUUID;
+  private IdsRepository idsRepository;
   private GoogleApiClient googleSignInClient;
   private LeakTool leakTool;
   private String aptoideMd5sum;
@@ -296,7 +296,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   public Interceptor getUserAgentInterceptor() {
     if (userAgentInterceptor == null) {
       userAgentInterceptor =
-          new UserAgentInterceptor(getAndroidAccountProvider(), aptoideClientUUID,
+          new UserAgentInterceptor(getAndroidAccountProvider(), getIdsRepository(),
               getConfiguration().getPartnerId(), new DisplayMetrics(),
               AptoideUtils.SystemU.TERMINAL_INFO, AptoideUtils.Core.getDefaultVername());
     }
@@ -357,12 +357,10 @@ public abstract class V8Engine extends SpotAndShareApplication {
   public AptoideAccountManager getAccountManager() {
     if (accountManager == null) {
 
-      final AccountManagerService accountManagerService =
-          new AccountManagerService(getAptoideClientUUID(),
-              new BaseBodyInterceptorFactory(getAptoideClientUUID(), getPreferences(),
-                  getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage()),
-              getAccountFactory(), getDefaultClient(), getLongTimeoutClient(),
-              WebService.getDefaultConverter());
+      final AccountManagerService accountManagerService = new AccountManagerService(
+          new BaseBodyInterceptorFactory(getIdsRepository(), getPreferences(),
+              getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage()), getAccountFactory(),
+          getDefaultClient(), getLongTimeoutClient(), WebService.getDefaultConverter());
 
       final AndroidAccountDataMigration accountDataMigration =
           new AndroidAccountDataMigration(SecurePreferencesImplementation.getInstance(this),
@@ -388,9 +386,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
   public AccountFactory getAccountFactory() {
     if (accountFactory == null) {
-      accountFactory = new AccountFactory(getAptoideClientUUID(),
-          new SocialAccountFactory(this, getGoogleSignInClient()),
-          new AccountService(getAptoideClientUUID(), getBaseBodyInterceptorV3(), getDefaultClient(),
+      accountFactory = new AccountFactory(new SocialAccountFactory(this, getGoogleSignInClient()),
+          new AccountService(getBaseBodyInterceptorV3(), getDefaultClient(),
               WebService.getDefaultConverter()));
     }
     return accountFactory;
@@ -405,12 +402,12 @@ public abstract class V8Engine extends SpotAndShareApplication {
     return androidAccountProvider;
   }
 
-  public AptoideClientUUID getAptoideClientUUID() {
-    if (aptoideClientUUID == null) {
-      aptoideClientUUID =
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
+  public IdsRepository getIdsRepository() {
+    if (idsRepository == null) {
+      idsRepository = new IdsRepository(SecurePreferencesImplementation.getInstance(), this,
+          Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
     }
-    return aptoideClientUUID;
+    return idsRepository;
   }
 
   public Preferences getPreferences() {
@@ -495,13 +492,13 @@ public abstract class V8Engine extends SpotAndShareApplication {
   }
 
   private Completable generateAptoideUuid() {
-    return Completable.fromAction(() -> getAptoideClientUUID().getUniqueIdentifier())
+    return Completable.fromAction(() -> getIdsRepository().getUniqueIdentifier())
         .subscribeOn(Schedulers.newThread());
   }
 
   private Completable initAbTestManager() {
     return Completable.defer(() -> ABTestManager.getInstance()
-        .initialize(getAptoideClientUUID().getUniqueIdentifier())
+        .initialize(getIdsRepository().getUniqueIdentifier())
         .toCompletable());
   }
 
@@ -544,7 +541,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
   public BodyInterceptor<BaseBody> getBaseBodyInterceptorV7() {
     if (baseBodyInterceptorV7 == null) {
-      baseBodyInterceptorV7 = new BaseBodyInterceptorV7(getAptoideClientUUID(), getAccountManager(),
+      baseBodyInterceptorV7 = new BaseBodyInterceptorV7(getIdsRepository(), getAccountManager(),
           getAdultContent(getSecurePreferences()), getAptoideMd5sum(), getAptoidePackage());
     }
     return baseBodyInterceptorV7;
@@ -552,7 +549,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
   public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBaseBodyInterceptorV3() {
     if (baseBodyInterceptorV3 == null) {
-      baseBodyInterceptorV3 = new BaseBodyInterceptorV3(getAptoideMd5sum(), getAptoidePackage());
+      baseBodyInterceptorV3 =
+          new BaseBodyInterceptorV3(getAptoideMd5sum(), getAptoidePackage(), getIdsRepository());
     }
     return baseBodyInterceptorV3;
   }

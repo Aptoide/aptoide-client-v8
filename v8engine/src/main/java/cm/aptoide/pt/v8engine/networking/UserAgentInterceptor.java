@@ -3,7 +3,7 @@ package cm.aptoide.pt.v8engine.networking;
 import android.accounts.Account;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
+import cm.aptoide.pt.v8engine.repository.IdsRepository;
 import cm.aptoide.pt.v8engine.account.AndroidAccountProvider;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import java.io.IOException;
@@ -14,17 +14,17 @@ import okhttp3.Response;
 public class UserAgentInterceptor implements Interceptor {
 
   private final AndroidAccountProvider androidAccountProvider;
-  private final AptoideClientUUID aptoideClientUUID;
+  private final IdsRepository idsRepository;
   private final String oemid;
   private final DisplayMetrics displayMetrics;
   private final String terminalInfo;
   private final String versionName;
 
   public UserAgentInterceptor(AndroidAccountProvider androidAccountProvider,
-      AptoideClientUUID aptoideClientUUID, String oemid, DisplayMetrics displayMetrics,
+      IdsRepository idsRepository, String oemid, DisplayMetrics displayMetrics,
       String terminalInfo, String versionName) {
     this.androidAccountProvider = androidAccountProvider;
-    this.aptoideClientUUID = aptoideClientUUID;
+    this.idsRepository = idsRepository;
     this.oemid = oemid;
     this.displayMetrics = displayMetrics;
     this.terminalInfo = terminalInfo;
@@ -65,7 +65,7 @@ public class UserAgentInterceptor implements Interceptor {
     final StringBuilder sb =
         new StringBuilder(versionName + ";" + terminalInfo + ";" + myscr + ";id:");
 
-    String uniqueIdentifier = aptoideClientUUID.getUniqueIdentifier();
+    String uniqueIdentifier = idsRepository.getUniqueIdentifier();
     if (uniqueIdentifier != null) {
       sb.append(uniqueIdentifier);
     }

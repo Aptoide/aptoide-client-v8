@@ -10,7 +10,6 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.GooglePlayServicesAvailabilityChecker;
@@ -26,16 +25,16 @@ import rx.Observable;
  */
 public class AdsRepository {
 
-  private final AptoideClientUUID aptoideClientUUID;
+  private final IdsRepository idsRepository;
   private final AptoideAccountManager accountManager;
   private final GooglePlayServicesAvailabilityChecker googlePlayServicesAvailabilityChecker;
   private final PartnerIdProvider partnerIdProvider;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
 
-  public AdsRepository(AptoideClientUUID aptoideClientUUID, AptoideAccountManager accountManager,
+  public AdsRepository(IdsRepository idsRepository, AptoideAccountManager accountManager,
       OkHttpClient httpClient, Converter.Factory converterFactory) {
-    this.aptoideClientUUID = aptoideClientUUID;
+    this.idsRepository = idsRepository;
     this.accountManager = accountManager;
     this.googlePlayServicesAvailabilityChecker =
         (context) -> DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context);
@@ -58,7 +57,7 @@ public class AdsRepository {
 
   public Observable<MinimalAd> getAdsFromAppView(String packageName, String storeName) {
     return mapToMinimalAd(GetAdsRequest.ofAppviewOrganic(packageName, storeName,
-        aptoideClientUUID.getUniqueIdentifier(),
+        idsRepository.getUniqueIdentifier(),
         googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
         partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
         converterFactory).observe());
@@ -77,7 +76,7 @@ public class AdsRepository {
   }
 
   public Observable<List<MinimalAd>> getAdsFromHomepageMore(boolean refresh) {
-    return mapToMinimalAds(GetAdsRequest.ofHomepageMore(aptoideClientUUID.getUniqueIdentifier(),
+    return mapToMinimalAds(GetAdsRequest.ofHomepageMore(idsRepository.getUniqueIdentifier(),
         googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
         partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
         converterFactory).observe(refresh));
@@ -102,14 +101,14 @@ public class AdsRepository {
   public Observable<List<MinimalAd>> getAdsFromAppviewSuggested(String packageName,
       List<String> keywords) {
     return mapToMinimalAds(
-        GetAdsRequest.ofAppviewSuggested(keywords, aptoideClientUUID.getUniqueIdentifier(),
+        GetAdsRequest.ofAppviewSuggested(keywords, idsRepository.getUniqueIdentifier(),
             googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()), packageName,
             partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
             converterFactory).observe());
   }
 
   public Observable<MinimalAd> getAdsFromSearch(String query) {
-    return mapToMinimalAd(GetAdsRequest.ofSearch(query, aptoideClientUUID.getUniqueIdentifier(),
+    return mapToMinimalAd(GetAdsRequest.ofSearch(query, idsRepository.getUniqueIdentifier(),
         googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
         partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
         converterFactory).observe());
@@ -120,7 +119,7 @@ public class AdsRepository {
         .first()
         .toSingle()
         .flatMapObservable(account -> mapToMinimalAd(
-            GetAdsRequest.ofSecondInstall(packageName, aptoideClientUUID.getUniqueIdentifier(),
+            GetAdsRequest.ofSecondInstall(packageName, idsRepository.getUniqueIdentifier(),
                 googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
                 partnerIdProvider.getPartnerId(), account.isAdultContentEnabled(), httpClient,
                 converterFactory).observe()));
@@ -128,7 +127,7 @@ public class AdsRepository {
 
   public Observable<MinimalAd> getAdsFromSecondTry(String packageName) {
     return mapToMinimalAd(
-        GetAdsRequest.ofSecondTry(packageName, aptoideClientUUID.getUniqueIdentifier(),
+        GetAdsRequest.ofSecondTry(packageName, idsRepository.getUniqueIdentifier(),
             googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
             partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
             converterFactory).observe());
