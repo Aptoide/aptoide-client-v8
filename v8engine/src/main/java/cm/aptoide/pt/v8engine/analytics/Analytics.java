@@ -130,7 +130,6 @@ public class Analytics {
    *
    * @param flag flags fornecidas
    * @param accepted flags aceitáveis
-   *
    * @return true caso as flags fornecidas constem em accepted.
    */
   private static boolean checkAcceptability(int flag, int accepted) {
@@ -152,63 +151,10 @@ public class Analytics {
     facebookLogger.logEvent(eventName);
   }
 
-  private static void logFabricEvent(String event, Map<String, String> map, int flags) {
-    if (checkAcceptability(flags, FABRIC)) {
-      CustomEvent customEvent = new CustomEvent(event);
-      for (Map.Entry<String, String> entry : map.entrySet()) {
-        customEvent.putCustomAttribute(entry.getKey(), entry.getValue());
-      }
-      Answers.getInstance().logCustom(customEvent);
-      Logger.d(TAG, "Fabric Event: " + event + ", Map: " + map);
-    }
-  }
-
-  private static void logFacebookEvents(String eventName, Map<String, String> map) {
-    if (BuildConfig.BUILD_TYPE.equals("debug") && map == null) {
-      return;
-    }
-    Bundle parameters = new Bundle();
-    if (map != null) {
-      for (String s : map.keySet()) {
-        parameters.putString(s, map.get(s));
-      }
-    }
-    logFacebookEvents(eventName, parameters);
-  }
-
   private static void logFacebookEvents(String eventName, String key, String value) {
     Bundle bundle = new Bundle();
     bundle.putString(key, value);
     facebookLogger.logEvent(eventName, bundle);
-  }
-
-  private static void track(String event, int flags) {
-
-    try {
-      if (!ACTIVATE_LOCALYTICS && !ACTIVATE_FLURRY) {
-        return;
-      }
-
-      if (checkAcceptability(flags, LOCALYTICS)) {
-        Localytics.tagEvent(event);
-        Logger.d(TAG, "Localytics Event: " + event);
-      }
-
-      if (checkAcceptability(flags, FLURRY)) {
-        FlurryAgent.logEvent(event);
-        Logger.d(TAG, "Flurry Event: " + event);
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  private static void logFacebookEvents(String eventName, Bundle parameters) {
-    if (BuildConfig.BUILD_TYPE.equals("debug")) {
-      return;
-    }
-
-    facebookLogger.logEvent(eventName, parameters);
   }
 
   public void save(@NonNull String key, @NonNull Event event) {
@@ -240,6 +186,59 @@ public class Analytics {
         track(eventName, LOCALYTICS);
       }
     }
+  }
+
+  private static void logFabricEvent(String event, Map<String, String> map, int flags) {
+    if (checkAcceptability(flags, FABRIC)) {
+      CustomEvent customEvent = new CustomEvent(event);
+      for (Map.Entry<String, String> entry : map.entrySet()) {
+        customEvent.putCustomAttribute(entry.getKey(), entry.getValue());
+      }
+      Answers.getInstance().logCustom(customEvent);
+      Logger.d(TAG, "Fabric Event: " + event + ", Map: " + map);
+    }
+  }
+
+  private static void logFacebookEvents(String eventName, Map<String, String> map) {
+    if (BuildConfig.BUILD_TYPE.equals("debug") && map == null) {
+      return;
+    }
+    Bundle parameters = new Bundle();
+    if (map != null) {
+      for (String s : map.keySet()) {
+        parameters.putString(s, map.get(s));
+      }
+    }
+    logFacebookEvents(eventName, parameters);
+  }
+
+  private static void track(String event, int flags) {
+
+    try {
+      if (!ACTIVATE_LOCALYTICS && !ACTIVATE_FLURRY) {
+        return;
+      }
+
+      if (checkAcceptability(flags, LOCALYTICS)) {
+        Localytics.tagEvent(event);
+        Logger.d(TAG, "Localytics Event: " + event);
+      }
+
+      if (checkAcceptability(flags, FLURRY)) {
+        FlurryAgent.logEvent(event);
+        Logger.d(TAG, "Flurry Event: " + event);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  private static void logFacebookEvents(String eventName, Bundle parameters) {
+    if (BuildConfig.BUILD_TYPE.equals("debug")) {
+      return;
+    }
+
+    facebookLogger.logEvent(eventName, parameters);
   }
 
   public static class Lifecycle {
@@ -455,11 +454,13 @@ public class Analytics {
     private static final String PROFILE_SETTINGS = "Account_Profile_Settings_Screen";
     private static final String CREATE_YOUR_STORE = "Account_Create_Your_Store_Screen";
     private static final String HAS_PICTURE = "has_picture";
+    private static final String SCREEN = "Sreen";
 
-    public static void clickIn(StartupClick clickEvent) {
+    public static void clickIn(StartupClick clickEvent, StartupClickOrigin startupClickOrigin) {
       track(LOGIN_SIGN_UP_START_SCREEN, ACTION, clickEvent.getClickEvent(), ALL);
       Map<String, String> map = new HashMap<>();
       map.put(ACTION, clickEvent.getClickEvent());
+      map.put(SCREEN, startupClickOrigin.getClickOrigin());
       logFacebookEvents(LOGIN_SIGN_UP_START_SCREEN, map);
     }
 
@@ -510,6 +511,20 @@ public class Analytics {
 
       public String getClickEvent() {
         return clickEvent;
+      }
+    }
+
+    public enum StartupClickOrigin {
+      MAIN("Main"), JOIN_UP("Join Aptoide Slide Up"), LOGIN_UP("Login Slide Up");
+
+      private String clickOrigin;
+
+      StartupClickOrigin(String clickOrigin) {
+        this.clickOrigin = clickOrigin;
+      }
+
+      public String getClickOrigin() {
+        return clickOrigin;
       }
     }
 
@@ -937,16 +952,6 @@ public class Analytics {
       Localytics.setCustomDimension(i, s);
     }
 
-    /**
-     * Responsible for setting facebook analytics user properties
-     * These were known as custom dimensions in localytics
-     */
-    private static void setUserProperties(String key, String value) {
-      Bundle parameters = new Bundle();
-      parameters.putString(key, value);
-      AppEventsLogger.updateUserProperties(parameters, callback);
-    }
-
     public static void setVerticalDimension(String verticalName) {
       setDimension(2, verticalName);
     }
@@ -959,6 +964,16 @@ public class Analytics {
         setDimension(3, "GMS Not Present");
         setUserProperties(GMS, NO_GMS);
       }
+    }
+
+    /**
+     * Responsible for setting facebook analytics user properties
+     * These were known as custom dimensions in localytics
+     */
+    private static void setUserProperties(String key, String value) {
+      Bundle parameters = new Bundle();
+      parameters.putString(key, value);
+      AppEventsLogger.updateUserProperties(parameters, callback);
     }
 
     public static void setUTMSource(String utmSource) {

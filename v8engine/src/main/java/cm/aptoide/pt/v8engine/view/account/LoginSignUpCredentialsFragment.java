@@ -14,7 +14,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -230,19 +229,22 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override public Observable<FacebookAccountViewModel> facebookLoginClick() {
     return facebookLoginSubject.doOnNext(
-        __ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_FACEBOOK));
+        __ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_FACEBOOK,
+            getStartupClickOrigin()));
   }
 
   @Override public Observable<AptoideAccountViewModel> aptoideLoginClick() {
     return RxView.clicks(buttonLogin)
-        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.LOGIN))
+        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.LOGIN,
+            getStartupClickOrigin()))
         .map(click -> new AptoideAccountViewModel(aptoideEmailEditText.getText().toString(),
             aptoidePasswordEditText.getText().toString()));
   }
 
   @Override public Observable<AptoideAccountViewModel> aptoideSignUpClick() {
     return RxView.clicks(buttonSignUp)
-        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.JOIN_APTOIDE))
+        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.JOIN_APTOIDE,
+            getStartupClickOrigin()))
         .map(click -> new AptoideAccountViewModel(aptoideEmailEditText.getText().toString(),
             aptoidePasswordEditText.getText().toString()));
   }
@@ -258,6 +260,20 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     getFragmentNavigator().cleanBackStack();
   }
 
+  private Analytics.Account.StartupClickOrigin getStartupClickOrigin() {
+    if (loginArea.getVisibility() == View.VISIBLE) {
+      return Analytics.Account.StartupClickOrigin.LOGIN_UP;
+    } else if (signUpArea.getVisibility() == View.VISIBLE) {
+      return Analytics.Account.StartupClickOrigin.JOIN_UP;
+    } else {
+      return Analytics.Account.StartupClickOrigin.MAIN;
+    }
+  }
+
+  private void showFacebookLoginError(@StringRes int errorRes) {
+    ShowMessage.asToast(getContext(), errorRes);
+  }
+
   private void setAptoideSignUpLoginAreaVisible() {
     credentialsEditTextsArea.setVisibility(View.VISIBLE);
     loginSignupSelectionArea.setVisibility(View.GONE);
@@ -266,25 +282,9 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     }
   }
 
-  private boolean tryCloseLoginBottomSheet() {
-    if (credentialsEditTextsArea.getVisibility() == View.VISIBLE) {
-      credentialsEditTextsArea.setVisibility(View.GONE);
-      loginSignupSelectionArea.setVisibility(View.VISIBLE);
-      loginArea.setVisibility(View.GONE);
-      signUpArea.setVisibility(View.GONE);
-      separator.setVisibility(View.VISIBLE);
-      termsAndConditions.setVisibility(View.VISIBLE);
-      return true;
-    }
-    return false;
-  }
-
-  private void showFacebookLoginError(@StringRes int errorRes) {
-    ShowMessage.asToast(getContext(), errorRes);
-  }
-
   @Override public void googleLoginClicked() {
-    Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_GOOGLE);
+    Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_GOOGLE,
+        getStartupClickOrigin());
   }
 
   @Override protected Button getGoogleButton() {
@@ -314,11 +314,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override protected void showGoogleLoginError() {
     ShowMessage.asToast(getContext(), R.string.google_login_cancelled);
-  }
-
-  @Override public void onDestroyView() {
-    unregisterBackClickHandler(backClickHandler);
-    super.onDestroyView();
   }
 
   private void bindViews(View view) {
@@ -373,7 +368,25 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         BottomSheetBehavior.from(view.getRootView().findViewById(R.id.login_signup_layout));
   }
 
+  private boolean tryCloseLoginBottomSheet() {
+    if (credentialsEditTextsArea.getVisibility() == View.VISIBLE) {
+      credentialsEditTextsArea.setVisibility(View.GONE);
+      loginSignupSelectionArea.setVisibility(View.VISIBLE);
+      loginArea.setVisibility(View.GONE);
+      signUpArea.setVisibility(View.GONE);
+      separator.setVisibility(View.VISIBLE);
+      termsAndConditions.setVisibility(View.VISIBLE);
+      return true;
+    }
+    return false;
+  }
+
   public String getCompanyName() {
     return ((V8Engine) getActivity().getApplication()).createConfiguration().getMarketName();
+  }
+
+  @Override public void onDestroyView() {
+    unregisterBackClickHandler(backClickHandler);
+    super.onDestroyView();
   }
 }
