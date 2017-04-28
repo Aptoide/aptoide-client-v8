@@ -454,7 +454,7 @@ public class Analytics {
     private static final String PROFILE_SETTINGS = "Account_Profile_Settings_Screen";
     private static final String CREATE_YOUR_STORE = "Account_Create_Your_Store_Screen";
     private static final String HAS_PICTURE = "has_picture";
-    private static final String SCREEN = "Sreen";
+    private static final String SCREEN = "Screen";
 
     public static void clickIn(StartupClick clickEvent, StartupClickOrigin startupClickOrigin) {
       track(LOGIN_SIGN_UP_START_SCREEN, ACTION, clickEvent.getClickEvent(), ALL);
