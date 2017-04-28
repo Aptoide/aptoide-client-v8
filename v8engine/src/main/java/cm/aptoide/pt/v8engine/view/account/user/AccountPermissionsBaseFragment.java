@@ -3,58 +3,70 @@
  * Modified by Marcelo Benites on 09/02/2017.
  */
 
-package cm.aptoide.pt.v8engine.view.account;
+package cm.aptoide.pt.v8engine.view.account.user;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.view.fragment.BaseToolbarFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-import rx.subscriptions.CompositeSubscription;
+import java.util.Locale;
 
 /**
  * Created by pedroribeiro on 02/12/16.
  */
 
-public abstract class AccountPermissionsBaseActivity extends AccountBaseActivity {
+// FIXME: 6/4/2017
+// pass all the permission request actions to "PermissionServiceFragment"
+// migrate the profile picture rules to another entity or use a shrinking strategy to the supplied picture
+@Deprecated abstract class AccountPermissionsBaseFragment extends BaseToolbarFragment {
 
   public static final int GALLERY_CODE = 1046;
   public static final int REQUEST_IMAGE_CAPTURE = 1;
   protected static final int CREATE_STORE_REQUEST_CODE = 1;
+  protected static final int USER_PROFILE_CODE = 125;
   protected static final int STORAGE_REQUEST_CODE = 123;
   protected static final int CAMERA_REQUEST_CODE = 124;
-  protected static final int USER_PROFILE_CODE = 125;
-  static final String STORAGE_PERMISSION_GIVEN = "storage_permission_given";
-  static final String CAMERA_PERMISSION_GIVEN = "camera_permission_given";
-  static final String STORAGE_PERMISSION_REQUESTED = "storage_permission_requested";
-  static final String CAMERA_PERMISSION_REQUESTED = "camera_permission_requested";
+  protected static final String FILE_NAME = "file_name";
+  private static final String TAG = AccountPermissionsBaseFragment.class.getName();
+  private static final String STORAGE_PERMISSION_GIVEN = "storage_permission_given";
+  private static final String CAMERA_PERMISSION_GIVEN = "camera_permission_given";
+  private static final String STORAGE_PERMISSION_REQUESTED = "storage_permission_requested";
+  private static final String CAMERA_PERMISSION_REQUESTED = "camera_permission_requested";
   private static final String TYPE_STORAGE = "storage";
   private static final String TYPE_CAMERA = "camera";
-  protected static String photoAvatar = "aptoide_user_avatar.png";
-  public boolean result;
-  private String TAG = "STORAGE";
-  private File avatar;
-  private CompositeSubscription mSubscriptions;
+  String photoFileName;
+  private boolean userHasGivenPermission;
+  private boolean createUserProfile;
+  private boolean createStore;
 
-  public static String checkAndAskPermission(final AppCompatActivity activity, String type) {
+  AccountPermissionsBaseFragment(boolean createUserProfile, boolean createStore) {
+    this.createUserProfile = createUserProfile;
+    this.createStore = createStore;
+  }
 
+  public static String checkAndAskPermission(final Activity activity, String type) {
     if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
       if (type.equals(TYPE_STORAGE)) {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -102,105 +114,103 @@ public abstract class AccountPermissionsBaseActivity extends AccountBaseActivity
     return "";
   }
 
-  @Override public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    mSubscriptions = new CompositeSubscription();
-  }
-
-  @Override public String getActivityTitle() {
-    return null;
-  }
-
-  @Override public int getLayoutId() {
-    return 0;
-  }
-
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    mSubscriptions.clear();
-  }
-
   public void chooseAvatarSource() {
-    final Dialog dialog = new Dialog(this);
+    final Dialog dialog = new Dialog(getActivity());
     dialog.setContentView(R.layout.dialog_choose_avatar_layout);
-    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_camera)).subscribe(click -> {
-      callPermissionAndAction(TYPE_CAMERA);
-      dialog.dismiss();
-    }));
-    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_gallery)).subscribe(click -> {
-      callPermissionAndAction(TYPE_STORAGE);
-      dialog.dismiss();
-    }));
-    mSubscriptions.add(
-        RxView.clicks(dialog.findViewById(R.id.cancel)).subscribe(click -> dialog.dismiss()));
+
+    RxView.clicks(dialog.findViewById(R.id.button_camera))
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+        .subscribe(click -> {
+          callPermissionAndAction(TYPE_CAMERA);
+          dialog.dismiss();
+        });
+
+    RxView.clicks(dialog.findViewById(R.id.button_gallery))
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+        .subscribe(click -> {
+          callPermissionAndAction(TYPE_STORAGE);
+          dialog.dismiss();
+        });
+
+    RxView.clicks(dialog.findViewById(R.id.cancel))
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+        .subscribe(click -> dialog.dismiss());
+
     dialog.show();
   }
 
   public void callPermissionAndAction(String type) {
-    String result =
-        AccountPermissionsBaseActivity.checkAndAskPermission(AccountPermissionsBaseActivity.this,
-            type);
+    String result = AccountPermissionsBaseFragment.checkAndAskPermission(getActivity(), type);
     switch (result) {
-      case AccountPermissionsBaseActivity.CAMERA_PERMISSION_GIVEN:
-        changePermissionValue(true);
-        dispatchTakePictureIntent(getApplicationContext());
+      case AccountPermissionsBaseFragment.CAMERA_PERMISSION_GIVEN:
+        setUserHasGivenPermission(true);
+        dispatchTakePictureIntent(getActivity().getApplicationContext());
         break;
-      case AccountPermissionsBaseActivity.STORAGE_PERMISSION_GIVEN:
-        changePermissionValue(true);
-        callGallery();
+      case AccountPermissionsBaseFragment.STORAGE_PERMISSION_GIVEN:
+        setUserHasGivenPermission(true);
+        dispatchOpenGalleryIntent();
         break;
     }
   }
 
-  public void changePermissionValue(boolean b) {
-    result = b;
+  public void setUserHasGivenPermission(boolean b) {
+    userHasGivenPermission = b;
   }
 
   public void dispatchTakePictureIntent(Context context) {
-    if (result) {
-      setFileName();
+    if (userHasGivenPermission) {
+      photoFileName = getPhotoFileName();
       Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-      if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+      if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
           Uri uriForFile = FileProvider.getUriForFile(context,
               Application.getConfiguration().getAppId() + ".provider",
-              new File(getPhotoFileUri(photoAvatar).getPath()));
+              new File(getFileUriFromFileName(photoFileName).getPath()));
           takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriForFile);
         } else {
-          takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(photoAvatar));
+          takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+              getFileUriFromFileName(photoFileName));
         }
+        takePictureIntent.putExtra(FILE_NAME, photoFileName);
         startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
       }
     }
   }
 
-  public void callGallery() {
-    if (result) {
+  public void dispatchOpenGalleryIntent() {
+    if (userHasGivenPermission) {
       Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-      if (intent.resolveActivity(getPackageManager()) != null) {
+      if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
         startActivityForResult(intent, GALLERY_CODE);
       }
     }
   }
 
-  private void setFileName() {
-    String activityTitle = getActivityTitle();
-    if (activityTitle != null) {
-      if (TextUtils.equals(activityTitle, "Create User Profile")) {
-        photoAvatar = "aptoide_user_avatar.jpg";
-      } else if (TextUtils.equals(activityTitle, "Create Your Store")) {
-        photoAvatar = "aptoide_store_avatar.jpg";
-      }
+  private String getPhotoFileName() {
+
+    final String timestamp = getTimestampString();
+    if (createUserProfile) {
+      return String.format("aptoide_user_avatar_%s.jpg", timestamp);
     }
+
+    if (createStore) {
+      return String.format("aptoide_store_avatar_%s.jpg", timestamp);
+    }
+
+    // return default picture name
+    return String.format("aptoide_photo_%s.jpg", timestamp);
   }
 
-  public Uri getPhotoFileUri(String fileName) {
+  private String getTimestampString() {
+    return new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+  }
+
+  Uri getFileUriFromFileName(String fileName) {
     File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),
         ".aptoide/user_avatar");
     if (!storageDir.exists() && !storageDir.mkdirs()) {
-      Logger.d(TAG, "Failed to create directory");
+      CrashReport.getInstance().log(new IOException("Failed to create directory"));
     }
-    avatar = storageDir;
     return Uri.fromFile(new File(storageDir.getPath() + File.separator + fileName));
   }
 
@@ -214,6 +224,7 @@ public abstract class AccountPermissionsBaseActivity extends AccountBaseActivity
               getResources().getInteger(R.integer.max_avatar_width),
               getResources().getInteger(R.integer.max_avatar_Size));
       if (imageErrors.isEmpty()) {
+        Logger.v(TAG, String.format("loading image with url '%s'", avatarUrl.toString()));
         loadImage(avatarUrl);
       } else {
         showIconPropertiesError(getErrorsMessage(imageErrors));
@@ -231,24 +242,19 @@ public abstract class AccountPermissionsBaseActivity extends AccountBaseActivity
     for (AptoideUtils.IconSizeU.ImageErrors imageSizeError : imageErrors) {
       switch (imageSizeError) {
         case MIN_HEIGHT:
-          message.append(
-              getString(R.string.image_requirements_error_min_height));
+          message.append(getString(R.string.image_requirements_error_min_height));
           break;
         case MAX_HEIGHT:
-          message.append(
-              getString(R.string.image_requirements_error_max_height));
+          message.append(getString(R.string.image_requirements_error_max_height));
           break;
         case MIN_WIDTH:
-          message.append(
-              getString(R.string.image_requirements_error_min_width));
+          message.append(getString(R.string.image_requirements_error_min_width));
           break;
         case MAX_WIDTH:
-          message.append(
-              getString(R.string.image_requirements_error_max_width));
+          message.append(getString(R.string.image_requirements_error_max_width));
           break;
         case MAX_IMAGE_SIZE:
-          message.append(
-              getString(R.string.image_requirements_error_max_file_size));
+          message.append(getString(R.string.image_requirements_error_max_file_size));
           break;
         case ERROR_DECODING:
           message.append(getString(R.string.image_requirements_error_open_image));

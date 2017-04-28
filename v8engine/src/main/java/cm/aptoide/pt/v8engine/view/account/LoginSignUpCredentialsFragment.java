@@ -3,18 +3,15 @@ package cm.aptoide.pt.v8engine.view.account;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -32,7 +29,7 @@ import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.v8engine.view.BackButton;
 import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
-import cm.aptoide.pt.v8engine.view.account.user.CreateUserActivity;
+import cm.aptoide.pt.v8engine.view.account.user.CreateUserFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.store.home.HomeFragment;
 import com.facebook.CallbackManager;
@@ -252,10 +249,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void navigateToCreateProfile() {
-    Intent i = new Intent(getContext(), CreateUserActivity.class);
-    FragmentActivity parent = getActivity();
-    parent.startActivity(i);
     getFragmentNavigator().cleanBackStack();
+    getFragmentNavigator().navigateTo(CreateUserFragment.newInstance());
   }
 
   private void setAptoideSignUpLoginAreaVisible() {
@@ -303,7 +298,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
     backClickHandler = new BackButton.ClickHandler() {
       @Override public boolean handle() {
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         return tryCloseLoginBottomSheet();
       }
     };
@@ -360,10 +354,9 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
     facebookEmailRequiredDialog = new AlertDialog.Builder(context).setMessage(
         R.string.facebook_email_permission_regected_message)
-        .setPositiveButton(R.string.facebook_grant_permission_button,
-            (dialog, which) -> {
-              facebookLoginManager.logInWithReadPermissions(this, Arrays.asList("email"));
-            })
+        .setPositiveButton(R.string.facebook_grant_permission_button, (dialog, which) -> {
+          facebookLoginManager.logInWithReadPermissions(this, Arrays.asList("email"));
+        })
         .setNegativeButton(android.R.string.cancel, null)
         .create();
 

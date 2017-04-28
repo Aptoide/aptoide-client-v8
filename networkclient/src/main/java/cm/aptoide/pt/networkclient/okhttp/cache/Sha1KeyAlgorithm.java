@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 09/06/2016.
+ * Modified on 09/06/2016.
  */
 
 package cm.aptoide.pt.networkclient.okhttp.cache;
@@ -12,7 +12,7 @@ import okhttp3.Request;
 import okio.Buffer;
 
 /**
- * Created by sithengineer on 28/04/16.
+ * Created on 28/04/16.
  * <br><br>
  * Creates a unique SHA-1 key for each request using one of this methods, ordered
  * by preference:

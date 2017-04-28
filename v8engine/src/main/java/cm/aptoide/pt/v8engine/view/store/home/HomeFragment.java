@@ -84,6 +84,14 @@ public class HomeFragment extends StoreFragment {
     return fragment;
   }
 
+  /**
+   * @return {@link HomeFragment} instance with default store, store context and theme
+   */
+  public static HomeFragment newInstance() {
+    return newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
+        V8Engine.getConfiguration().getDefaultTheme());
+  }
+
   @Override public void onAttach(Activity activity) {
     super.onAttach(activity);
 

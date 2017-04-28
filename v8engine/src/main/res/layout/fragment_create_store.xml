@@ -2,13 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     >
 
-  <LinearLayout
+  <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:orientation="vertical"
       >
 
 
@@ -28,181 +26,150 @@
     </android.support.design.widget.AppBarLayout>
 
     <TextView
-        android:id="@+id/create_store_header_textview"
+        android:id="@+id/create_store_header"
         android:layout_width="match_parent"
-        android:layout_height="73.3dp"
-        android:background="#c16114"
-        android:gravity="center"
-        android:paddingEnd="23dp"
-        android:paddingLeft="24dp"
-        android:paddingRight="23dp"
-        android:paddingStart="24dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appbar"
+        android:background="@color/create_user_dark_orange"
+        android:gravity="center_vertical"
+        android:padding="@dimen/padding_medium_default"
         android:text="@string/create_store_header"
         android:textColor="@color/white"
         />
 
     <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/create_store_header"
         >
 
       <LinearLayout
-          android:layout_width="wrap_content"
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:orientation="vertical"
           >
 
-
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/create_store_image_action"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginEnd="@dimen/padding_small"
+            android:layout_marginLeft="@dimen/padding_small"
+            android:layout_marginRight="@dimen/padding_small"
+            android:layout_marginStart="@dimen/padding_small"
+            android:layout_marginTop="@dimen/padding_medium"
             >
 
-          <RelativeLayout
-              android:id="@+id/create_store_image_action"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              >
+          <ImageView
+              android:id="@+id/create_store_image"
+              android:layout_width="@dimen/profile_picture_large_size"
+              android:layout_height="@dimen/profile_picture_large_size"
+              android:src="@drawable/create_store_avatar"
+              />
 
-            <ImageView
-                android:id="@+id/create_store_image"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="20dp"
-                android:src="@drawable/create_store_avatar"
-                />
+          <ImageView
+              android:layout_width="@dimen/select_picture_camera_icon_size"
+              android:layout_height="@dimen/select_picture_camera_icon_size"
+              android:layout_alignBottom="@+id/create_store_image"
+              android:layout_alignEnd="@+id/create_store_image"
+              android:layout_alignRight="@+id/create_store_image"
+              android:background="@drawable/create_user_camera_background_shape"
+              android:padding="@dimen/padding_very_small"
+              android:src="@drawable/create_user_camera"
+              />
 
-            <ImageView
-                android:layout_width="33.3dp"
-                android:layout_height="33.3dp"
-                android:layout_alignBottom="@+id/create_store_image"
-                android:layout_alignEnd="@+id/create_store_image"
-                android:layout_alignRight="@+id/create_store_image"
-                android:background="@drawable/create_user_camera_background_shape"
-                android:paddingBottom="8dp"
-                android:paddingEnd="8dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingStart="8dp"
-                android:paddingTop="8dp"
-                android:src="@drawable/create_user_camera"
-                />
+          <TextView
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_centerVertical="true"
+              android:layout_marginLeft="@dimen/padding_medium_default"
+              android:layout_marginStart="@dimen/padding_medium_default"
+              android:layout_toEndOf="@id/create_store_image"
+              android:layout_toRightOf="@id/create_store_image"
+              android:gravity="center_vertical"
+              android:maxLines="2"
+              android:text="@string/create_store_choose_image"
+              android:textAlignment="center"
+              android:textColor="@color/create_store_title_color"
+              android:textStyle="bold"
+              />
 
-          </RelativeLayout>
-
-          <LinearLayout
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              >
-
-            <TextView
-                android:id="@+id/create_store_take_picture_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="55dp"
-                android:layout_marginLeft="57dp"
-                android:layout_marginRight="55dp"
-                android:layout_marginStart="57dp"
-                android:layout_marginTop="49dp"
-                android:gravity="center_vertical"
-                android:maxLines="2"
-                android:text="@string/create_store_choose_image"
-                android:textAlignment="center"
-                android:textColor="@color/create_store_title_color"
-                android:textStyle="normal|bold"
-                />
-
-            <TextView
-                android:id="@+id/create_store_random_photo"
-                android:layout_width="98dp"
-                android:layout_height="12dp"
-                android:layout_marginEnd="62dp"
-                android:layout_marginLeft="56dp"
-                android:layout_marginRight="62dp"
-                android:layout_marginStart="56dp"
-                android:layout_marginTop="21dp"
-                android:text="@string/create_user_random_photo"
-                android:textColor="#a9a9a9"
-                android:textSize="10.3sp"
-                android:visibility="gone"
-                />
-
-          </LinearLayout>
-
-        </LinearLayout>
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/create_store_header_textview"
             >
 
           <LinearLayout
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_marginLeft="16dp"
-              android:layout_marginStart="16dp"
-              android:layout_marginTop="29.3dp"
+              android:layout_marginEnd="@dimen/padding_small"
+              android:layout_marginLeft="@dimen/padding_small"
+              android:layout_marginRight="@dimen/padding_small"
+              android:layout_marginStart="@dimen/padding_small"
+              android:layout_marginTop="@dimen/padding_medium"
               android:orientation="vertical"
               >
 
             <TextView
                 android:id="@+id/create_store_choose_name_title"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/create_store_name"
                 android:textColor="@color/create_store_title_color"
-                android:textSize="14dp"
+                android:textSize="@dimen/text_size_medium"
                 />
 
             <EditText
                 android:id="@+id/create_store_name"
                 android:layout_width="match_parent"
                 android:layout_height="43dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="15dp"
-                android:background="@color/create_store_edit_text_background"
+                android:layout_marginTop="@dimen/padding_very_small"
+                android:background="@drawable/rounded_corners_white"
                 android:hint="@string/create_store_name_inserted"
-                android:maxLength="63"
-                android:padding="8dp"
-                android:paddingLeft="12dp"
-                android:paddingStart="12dp"
-                android:textSize="12sp"
+                android:paddingBottom="@dimen/padding_very_small"
+                android:paddingEnd="@dimen/padding_smaller"
+                android:paddingLeft="@dimen/padding_smaller"
+                android:paddingRight="@dimen/padding_smaller"
+                android:paddingStart="@dimen/padding_smaller"
+                android:paddingTop="@dimen/padding_very_small"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"
+                android:textSize="@dimen/text_size_medium_small"
                 />
 
             <EditText
                 android:id="@+id/edit_store_description"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="15dp"
-                android:background="@color/create_store_edit_text_background"
-                android:gravity="top|left"
+                android:layout_marginTop="@dimen/padding_very_small"
+                android:background="@drawable/rounded_corners_white"
+                android:gravity="top|start"
                 android:hint="@string/create_store_description_title"
                 android:inputType="textMultiLine"
-                android:lines="3"
                 android:maxLength="140"
-                android:padding="8dp"
-                android:paddingLeft="12dp"
-                android:paddingStart="12dp"
-                android:textSize="12sp"
+                android:maxLines="3"
+                android:paddingBottom="@dimen/padding_very_small"
+                android:paddingEnd="@dimen/padding_smaller"
+                android:paddingLeft="@dimen/padding_smaller"
+                android:paddingRight="@dimen/padding_smaller"
+                android:paddingStart="@dimen/padding_smaller"
+                android:paddingTop="@dimen/padding_very_small"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"
+                android:textSize="@dimen/text_size_medium_small"
                 android:visibility="gone"
                 />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="@dimen/padding_medium_default"
                 android:text="@string/create_store_theme"
                 android:textColor="@color/create_store_title_color"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_medium"
                 />
 
             <View
@@ -213,21 +180,22 @@
                 >
             </View>
 
+            <!-- replace for dynamic code -->
             <HorizontalScrollView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="none"
                 >
 
               <LinearLayout
-                  android:layout_width="match_parent"
+                  android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:layout_marginBottom="8dp"
-                  android:layout_marginTop="8dp"
+                  android:layout_marginBottom="@dimen/padding_very_small"
+                  android:layout_marginTop="@dimen/padding_very_small"
                   android:orientation="horizontal"
                   >
 
-
+                <!-- individual item -->
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -692,20 +660,26 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="66dp"
-        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/scroll_view"
+        android:layout_marginBottom="@dimen/padding_medium_small"
+        android:layout_marginEnd="@dimen/padding_small"
+        android:layout_marginLeft="@dimen/padding_small"
+        android:layout_marginRight="@dimen/padding_small"
+        android:layout_marginStart="@dimen/padding_small"
+        android:layout_marginTop="@dimen/padding_medium"
+        android:gravity="bottom"
         android:orientation="horizontal"
-        android:paddingEnd="16dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingStart="16dp"
+        android:weightSum="2"
         >
 
       <Button
           android:id="@+id/create_store_skip"
           android:layout_width="0dp"
           android:layout_height="46dp"
-          android:layout_marginRight="23dp"
+          android:layout_marginEnd="@dimen/padding_smaller"
+          android:layout_marginRight="@dimen/padding_smaller"
           android:layout_weight="1"
           android:gravity="center"
           android:text="@string/skip"
@@ -716,13 +690,16 @@
           android:id="@+id/create_store_action"
           android:layout_width="0dp"
           android:layout_height="46dp"
+          android:layout_marginLeft="@dimen/padding_smaller"
+          android:layout_marginStart="@dimen/padding_smaller"
           android:layout_weight="1"
+          android:gravity="center"
           android:text="@string/create_store_create"
           style="?attr/customButton"
           />
 
     </LinearLayout>
 
-  </LinearLayout>
+  </RelativeLayout>
 
 </RelativeLayout>

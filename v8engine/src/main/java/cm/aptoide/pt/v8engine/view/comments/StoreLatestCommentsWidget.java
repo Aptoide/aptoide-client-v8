@@ -64,7 +64,6 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
     converterFactory = WebService.getDefaultConverter();
 
     LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
-    layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     recyclerView.setLayoutManager(layoutManager);
     recyclerView.addItemDecoration(new HorizontalDividerItemDecoration(getContext()));
 

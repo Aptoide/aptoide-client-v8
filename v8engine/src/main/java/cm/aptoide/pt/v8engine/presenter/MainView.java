@@ -11,8 +11,6 @@ package cm.aptoide.pt.v8engine.presenter;
 
 public interface MainView extends View {
 
-  void changeOrientationToPortrait();
-
   void showWizard();
 
   void showHome();

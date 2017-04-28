@@ -124,12 +124,12 @@ public class ImageLoader {
     return null;
   }
 
-  public Target<GlideDrawable> loadWithCircleTransform(Uri url, ImageView imageView,
+  public Target<GlideDrawable> loadWithCircleTransform(String url, ImageView imageView,
       boolean cache) {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context)
-          .load(url.toString())
+          .load(url)
           .transform(new CircleTransform(context))
           .skipMemoryCache(!cache)
           .diskCacheStrategy(cache ? DiskCacheStrategy.RESULT : DiskCacheStrategy.NONE)
@@ -138,6 +138,11 @@ public class ImageLoader {
       Log.e(TAG, "::loadWithCircleTransform() Context is null");
     }
     return null;
+  }
+
+  public Target<GlideDrawable> loadWithCircleTransform(Uri url, ImageView imageView,
+      boolean cache) {
+    return loadWithCircleTransform(url.toString(), imageView, cache);
   }
 
   public Target<GlideDrawable> loadWithShadowCircleTransform(String url, ImageView imageView) {
