@@ -7,7 +7,6 @@ package cm.aptoide.pt.dataprovider.ws.notifications;
 
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.HashMap;
 import java.util.List;
@@ -35,15 +34,14 @@ public class PullSocialNotificationRequest
     this.id = id;
   }
 
-  public static PullSocialNotificationRequest of(AptoideClientUUID aptoideClientUuid,
+  public static PullSocialNotificationRequest of(String uniqueIdentifier,
       String versionName, String appId, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
 
     Random r = new Random();
     int i1 = r.nextInt(100);
 
-    //String id = aptoideClientUuid.getUniqueIdentifier() + "_" + i1;
-    String id = aptoideClientUuid.getUniqueIdentifier();
+    //uniqueIdentifier = uniqueIdentifier + "_" + i1;
 
     Map<String, String> options = new HashMap<String, String>();
 
@@ -62,7 +60,8 @@ public class PullSocialNotificationRequest
     //TODO should depend of build variant
     options.put("debug", "true");
 
-    return new PullSocialNotificationRequest(id, options, httpClient, converterFactory);
+    return new PullSocialNotificationRequest(uniqueIdentifier, options, httpClient,
+        converterFactory);
   }
 
   @Override protected Observable<List<GetPullNotificationsResponse>> loadDataFromNetwork(

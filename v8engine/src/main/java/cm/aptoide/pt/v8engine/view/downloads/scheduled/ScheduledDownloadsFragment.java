@@ -34,8 +34,8 @@ import cm.aptoide.pt.v8engine.download.InstallEvent;
 import cm.aptoide.pt.v8engine.download.InstallEventConverter;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.repository.ScheduledDownloadRepository;
-import cm.aptoide.pt.v8engine.util.DownloadFactory;
+import cm.aptoide.pt.v8engine.download.ScheduledDownloadRepository;
+import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -45,7 +45,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
 
-import static cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver.SCHEDULE_DOWNLOADS;
+import static cm.aptoide.pt.v8engine.DeepLinkIntentReceiver.SCHEDULE_DOWNLOADS;
 
 public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter> {
 

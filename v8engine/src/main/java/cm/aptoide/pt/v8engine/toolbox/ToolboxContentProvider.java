@@ -31,7 +31,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.services.PullingContentService;
+import cm.aptoide.pt.v8engine.pull.PullingContentService;
 import java.util.Locale;
 import java.util.Map;
 
