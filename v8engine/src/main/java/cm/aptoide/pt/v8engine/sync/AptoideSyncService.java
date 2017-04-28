@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 22/11/2016.
  */
 
-package cm.aptoide.pt.v8engine.payment.repository.sync;
+package cm.aptoide.pt.v8engine.sync;
 
 import android.app.Service;
 import android.content.Intent;
@@ -18,6 +18,7 @@ import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationFactory;
+import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncDataConverter;
 
 /**
  * Created by marcelobenites on 18/11/16.
@@ -33,7 +34,7 @@ public class AptoideSyncService extends Service {
       if (syncAdapter == null) {
         syncAdapter = new AptoideSyncAdapter(getApplicationContext(), true, false,
             new PaymentConfirmationFactory(), new PaymentAuthorizationFactory(this),
-            new SyncDataConverter(), new NetworkOperatorManager(
+            new PaymentSyncDataConverter(), new NetworkOperatorManager(
             (TelephonyManager) getApplicationContext().getSystemService(TELEPHONY_SERVICE)),
             AccessorFactory.getAccessorFor(PaymentConfirmation.class),
             AccessorFactory.getAccessorFor(PaymentAuthorization.class),

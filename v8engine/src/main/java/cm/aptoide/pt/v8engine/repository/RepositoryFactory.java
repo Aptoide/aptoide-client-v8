@@ -45,8 +45,8 @@ import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentRepository;
 import cm.aptoide.pt.v8engine.payment.repository.ProductRepository;
-import cm.aptoide.pt.v8engine.payment.repository.sync.SyncAdapterBackgroundSync;
-import cm.aptoide.pt.v8engine.payment.repository.sync.SyncDataConverter;
+import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncScheduler;
+import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncDataConverter;
 import cm.aptoide.pt.v8engine.updates.UpdateRepository;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import okhttp3.OkHttpClient;
@@ -169,8 +169,8 @@ public final class RepositoryFactory {
     return ((V8Engine) context.getApplicationContext()).getBaseBodyInterceptorV3();
   }
 
-  private static SyncAdapterBackgroundSync getBackgroundSync(Context context) {
-    return new SyncAdapterBackgroundSync(new SyncDataConverter(),
+  private static PaymentSyncScheduler getBackgroundSync(Context context) {
+    return new PaymentSyncScheduler(new PaymentSyncDataConverter(),
         ((V8Engine) context.getApplicationContext()).getAndroidAccountProvider(),
         Application.getConfiguration().getContentAuthority());
   }

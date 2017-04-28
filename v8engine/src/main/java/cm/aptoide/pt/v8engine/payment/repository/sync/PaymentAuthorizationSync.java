@@ -17,6 +17,7 @@ import cm.aptoide.pt.model.v3.PaymentAuthorizationsResponse;
 import cm.aptoide.pt.v8engine.payment.Authorization;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
+import cm.aptoide.pt.v8engine.sync.RepositorySync;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

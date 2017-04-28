@@ -12,8 +12,8 @@ import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.v8engine.payment.Authorization;
+import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncScheduler;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
-import cm.aptoide.pt.v8engine.payment.repository.sync.SyncAdapterBackgroundSync;
 import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -24,7 +24,7 @@ import rx.Observable;
 public class PaymentAuthorizationRepository {
 
   private final PaymentAuthorizationAccessor authotizationAccessor;
-  private final SyncAdapterBackgroundSync backgroundSync;
+  private final PaymentSyncScheduler backgroundSync;
   private final PaymentAuthorizationFactory authorizationFactory;
   private final AptoideAccountManager accountManager;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
@@ -32,7 +32,7 @@ public class PaymentAuthorizationRepository {
   private final Converter.Factory converterFactory;
 
   public PaymentAuthorizationRepository(PaymentAuthorizationAccessor authorizationAccessor,
-      SyncAdapterBackgroundSync backgroundSync, PaymentAuthorizationFactory authorizationFactory,
+      PaymentSyncScheduler backgroundSync, PaymentAuthorizationFactory authorizationFactory,
       AptoideAccountManager accountManager, BodyInterceptor<BaseBody> bodyInterceptorV3,
       OkHttpClient httpClient, Converter.Factory converterFactory) {
     this.authotizationAccessor = authorizationAccessor;

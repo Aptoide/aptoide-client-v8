@@ -14,8 +14,8 @@ import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
+import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncScheduler;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
-import cm.aptoide.pt.v8engine.payment.repository.sync.SyncAdapterBackgroundSync;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
@@ -32,7 +32,7 @@ public class InAppPaymentConfirmationRepository extends PaymentConfirmationRepos
   private final Converter.Factory converterFactory;
 
   public InAppPaymentConfirmationRepository(NetworkOperatorManager operatorManager,
-      PaymentConfirmationAccessor paymentDatabase, SyncAdapterBackgroundSync backgroundSync,
+      PaymentConfirmationAccessor paymentDatabase, PaymentSyncScheduler backgroundSync,
       PaymentConfirmationFactory confirmationFactory, AptoideAccountManager accountManager,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory) {

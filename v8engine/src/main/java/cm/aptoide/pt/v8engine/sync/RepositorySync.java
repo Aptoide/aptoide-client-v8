@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 22/11/2016.
  */
 
-package cm.aptoide.pt.v8engine.payment.repository.sync;
+package cm.aptoide.pt.v8engine.sync;
 
 import android.content.SyncResult;
 

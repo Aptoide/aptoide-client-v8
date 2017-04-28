@@ -9,7 +9,7 @@ import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Product;
-import cm.aptoide.pt.v8engine.payment.repository.sync.SyncAdapterBackgroundSync;
+import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncScheduler;
 import rx.Completable;
 import rx.Observable;
 
@@ -21,10 +21,10 @@ public abstract class PaymentConfirmationRepository {
   protected final NetworkOperatorManager operatorManager;
   protected final PaymentConfirmationFactory confirmationFactory;
   private final PaymentConfirmationAccessor confirmationAccessor;
-  private final SyncAdapterBackgroundSync backgroundSync;
+  private final PaymentSyncScheduler backgroundSync;
 
   public PaymentConfirmationRepository(NetworkOperatorManager operatorManager,
-      PaymentConfirmationAccessor confirmationAccessor, SyncAdapterBackgroundSync backgroundSync,
+      PaymentConfirmationAccessor confirmationAccessor, PaymentSyncScheduler backgroundSync,
       PaymentConfirmationFactory confirmationFactory) {
     this.operatorManager = operatorManager;
     this.confirmationAccessor = confirmationAccessor;

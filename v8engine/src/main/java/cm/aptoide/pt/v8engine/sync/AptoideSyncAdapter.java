@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 22/11/2016.
  */
 
-package cm.aptoide.pt.v8engine.payment.repository.sync;
+package cm.aptoide.pt.v8engine.sync;
 
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
@@ -17,9 +17,12 @@ import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentAuthorizationSync;
+import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentConfirmationSync;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationFactory;
+import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncDataConverter;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -40,7 +43,7 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
   public static final String EXTRA_PAYMENT_CONFIRMATIONS =
       "cm.aptoide.pt.v8engine.repository.sync.EXTRA_PAYMENT_CONFIRMATIONS";
 
-  private final SyncDataConverter productConverter;
+  private final PaymentSyncDataConverter productConverter;
   private final NetworkOperatorManager operatorManager;
   private final PaymentConfirmationFactory confirmationConverter;
   private final PaymentAuthorizationFactory authorizationConverter;
@@ -53,7 +56,7 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
 
   public AptoideSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs,
       PaymentConfirmationFactory confirmationConverter,
-      PaymentAuthorizationFactory authorizationConverter, SyncDataConverter productConverter,
+      PaymentAuthorizationFactory authorizationConverter, PaymentSyncDataConverter productConverter,
       NetworkOperatorManager operatorManager, PaymentConfirmationAccessor confirmationAccessor,
       PaymentAuthorizationAccessor authorizationAcessor, AptoideAccountManager accountManager,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,

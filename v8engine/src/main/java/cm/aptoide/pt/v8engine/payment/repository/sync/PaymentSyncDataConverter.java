@@ -19,7 +19,7 @@ import java.util.List;
  * Created by marcelobenites on 19/12/16.
  */
 
-public class SyncDataConverter {
+public class PaymentSyncDataConverter {
 
   private static final String ID = "cm.aptoide.pt.v8engine.repository.sync.PRODUCT_ID";
   private static final String ICON = "cm.aptoide.pt.v8engine.repository.sync.PRODUCT_ICON";

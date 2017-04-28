@@ -23,6 +23,7 @@ import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
+import cm.aptoide.pt.v8engine.sync.RepositorySync;
 import java.io.IOException;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;

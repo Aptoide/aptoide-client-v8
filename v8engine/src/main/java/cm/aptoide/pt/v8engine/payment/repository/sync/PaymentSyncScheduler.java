@@ -11,6 +11,7 @@ import android.content.SyncStatusObserver;
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.account.AndroidAccountProvider;
 import cm.aptoide.pt.v8engine.payment.Product;
+import cm.aptoide.pt.v8engine.sync.AptoideSyncAdapter;
 import java.util.Collections;
 import java.util.List;
 import rx.Completable;
@@ -22,13 +23,13 @@ import rx.subscriptions.Subscriptions;
  * Created by marcelobenites on 22/11/16.
  */
 
-public class SyncAdapterBackgroundSync {
+public class PaymentSyncScheduler {
 
   private final AndroidAccountProvider androidAccountProvider;
-  private final SyncDataConverter syncDataConverter;
+  private final PaymentSyncDataConverter syncDataConverter;
   private String authority;
 
-  public SyncAdapterBackgroundSync(SyncDataConverter converter,
+  public PaymentSyncScheduler(PaymentSyncDataConverter converter,
       AndroidAccountProvider androidAccountProvider, String authority) {
     this.androidAccountProvider = androidAccountProvider;
     this.syncDataConverter = converter;
