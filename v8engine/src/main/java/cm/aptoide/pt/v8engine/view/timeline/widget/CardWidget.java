@@ -21,6 +21,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.interfaces.ShareCardCallback;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
@@ -129,7 +130,8 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
       SharePreviewDialog.SharePreviewOpenMode openMode) {
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
-          snackView -> accountNavigator.navigateToAccountView());
+          snackView -> accountNavigator.navigateToAccountView(
+              Analytics.Account.AccountOrigins.SHARE_CARD));
       return;
     }
 
@@ -181,15 +183,11 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     });
   }
 
-  private Account getAccount() {
-    return account;
-  }
-
   private boolean likeCard(T displayable, String cardId, int rating) {
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            accountNavigator.navigateToAccountView();
+            accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.LIKE_CARD);
           });
       return false;
     }
@@ -198,6 +196,10 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   }
 
   abstract String getCardTypeName();
+
+  private Account getAccount() {
+    return account;
+  }
 
   protected void knockWithSixpackCredentials(String url) {
     if (url == null) {

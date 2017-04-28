@@ -30,10 +30,10 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
+import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.spotandshare.SpotSharePreviewActivity;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
@@ -151,21 +151,6 @@ public class HomeFragment extends StoreFragment {
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    backClickHandler = new ClickHandler() {
-      @Override public boolean handle() {
-        if (isDrawerOpened()) {
-          closeDrawer();
-          return true;
-        }
-
-        return false;
-      }
-    };
-    registerBackClickHandler(backClickHandler);
-  }
-
   @Override public void onDestroyView() {
     userEmail = null;
     userAvatarImage = null;
@@ -237,26 +222,6 @@ public class HomeFragment extends StoreFragment {
     toolbar.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
   }
 
-  public void refreshUpdatesBadge(int num) {
-    // No updates present
-    if (updatesBadge == null) {
-      return;
-    }
-
-    updatesBadge.setTextSize(11);
-
-    if (num > 0) {
-      updatesBadge.setText(NumberFormat.getIntegerInstance().format(num));
-      if (!updatesBadge.isShown()) {
-        updatesBadge.show(true);
-      }
-    } else {
-      if (updatesBadge.isShown()) {
-        updatesBadge.hide(true);
-      }
-    }
-  }
-
   private void setupNavigationView() {
     if (navigationView != null) {
 
@@ -273,7 +238,7 @@ public class HomeFragment extends StoreFragment {
 
         int itemId = menuItem.getItemId();
         if (itemId == R.id.navigation_item_my_account) {
-          accountNavigator.navigateToAccountView();
+          accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.MY_ACCOUNT);
         } else {
           final FragmentNavigator navigator = getFragmentNavigator();
           if (itemId == R.id.shareapps) {
@@ -373,6 +338,26 @@ public class HomeFragment extends StoreFragment {
         });
   }
 
+  public void refreshUpdatesBadge(int num) {
+    // No updates present
+    if (updatesBadge == null) {
+      return;
+    }
+
+    updatesBadge.setTextSize(11);
+
+    if (num > 0) {
+      updatesBadge.setText(NumberFormat.getIntegerInstance().format(num));
+      if (!updatesBadge.isShown()) {
+        updatesBadge.show(true);
+      }
+    } else {
+      if (updatesBadge.isShown()) {
+        updatesBadge.hide(true);
+      }
+    }
+  }
+
   private Event.Name getEventName(int tab) {
     switch (tab) {
       case TabNavigator.DOWNLOADS:
@@ -388,6 +373,29 @@ public class HomeFragment extends StoreFragment {
     }
   }
 
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    backClickHandler = new ClickHandler() {
+      @Override public boolean handle() {
+        if (isDrawerOpened()) {
+          closeDrawer();
+          return true;
+        }
+
+        return false;
+      }
+    };
+    registerBackClickHandler(backClickHandler);
+  }
+
+  private boolean isDrawerOpened() {
+    return drawerLayout.isDrawerOpen(Gravity.LEFT);
+  }
+
+  private void closeDrawer() {
+    drawerLayout.closeDrawers();
+  }
+
   @Override public void bindViews(View view) {
     super.bindViews(view);
 
@@ -399,13 +407,5 @@ public class HomeFragment extends StoreFragment {
     setHasOptionsMenu(true);
 
     Analytics.AppViewViewedFrom.addStepToList("HOME");
-  }
-
-  private boolean isDrawerOpened() {
-    return drawerLayout.isDrawerOpen(Gravity.LEFT);
-  }
-
-  private void closeDrawer() {
-    drawerLayout.closeDrawers();
   }
 }

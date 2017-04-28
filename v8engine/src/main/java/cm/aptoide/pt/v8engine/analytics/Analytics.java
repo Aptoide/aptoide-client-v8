@@ -455,6 +455,8 @@ public class Analytics {
     private static final String CREATE_YOUR_STORE = "Account_Create_Your_Store_Screen";
     private static final String HAS_PICTURE = "has_picture";
     private static final String SCREEN = "Screen";
+    private static final String ENTRY = "Account_Entry";
+    private static final String SOURCE = "Source";
 
     public static void clickIn(StartupClick clickEvent, StartupClickOrigin startupClickOrigin) {
       track(LOGIN_SIGN_UP_START_SCREEN, ACTION, clickEvent.getClickEvent(), ALL);
@@ -497,6 +499,10 @@ public class Analytics {
       map.put(HAS_PICTURE, hasPicture ? "True" : "False");
       track(CREATE_YOUR_STORE, map, ALL);
       logFacebookEvents(CREATE_YOUR_STORE, map);
+    }
+
+    public static void enterAccountScreen(AccountOrigins sourceValue) {
+      logFacebookEvents(ENTRY, SOURCE, sourceValue.getOrigin());
     }
 
     public enum StartupClick {
@@ -568,6 +574,26 @@ public class Analytics {
 
       public String getAction() {
         return action;
+      }
+    }
+
+    public enum AccountOrigins {
+      WIZARD("Wizard"), MY_ACCOUNT("My Account"), TIMELINE("Timeline"), STORE(
+          "Store"), APP_VIEW_FLAG("App View Flag"), APP_VIEW_SHARE(
+          "App View Share on Timeline"), SHARE_CARD("Share Card"), LIKE_CARD(
+          "Like Card"), COMMENT_LIST("Comment List"), RATE_DIALOG("Rate Dialog"), REPLY_REVIEW(
+          "Reply Review"), REVIEW_FEEDBACK("Review Feedback"), SOCIAL_LIKE(
+          "Like Social Card"), STORE_COMMENT("Store Comment"), LATEST_COMMENTS_STORE(
+          "Comment on Latest Store Comments");
+
+      private final String origin;
+
+      AccountOrigins(String origin) {
+        this.origin = origin;
+      }
+
+      public String getOrigin() {
+        return origin;
       }
     }
   }

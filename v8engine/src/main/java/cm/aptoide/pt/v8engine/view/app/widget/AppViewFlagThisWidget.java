@@ -19,6 +19,7 @@ import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewFlagThisDisplayable;
@@ -157,7 +158,7 @@ import rx.android.schedulers.AndroidSchedulers;
     return v -> {
       if (!accountManager.isLoggedIn()) {
         ShowMessage.asSnack(v, R.string.you_need_to_be_logged_in, R.string.login, snackView -> {
-          accountNavigator.navigateToAccountView();
+          accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.APP_VIEW_FLAG);
         });
         return;
       }
