@@ -22,8 +22,6 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.notifications.GetPullNotificationsResponse;
 import cm.aptoide.pt.dataprovider.ws.notifications.PullCampaignNotificationsRequest;
 import cm.aptoide.pt.dataprovider.ws.notifications.PullSocialNotificationRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.Application;
@@ -62,10 +60,8 @@ public class PullingContentService extends Service {
   public static final long PUSH_NOTIFICATION_INTERVAL = AlarmManager.INTERVAL_DAY;
   public static final int PUSH_NOTIFICATION_ID = 86456;
   public static final int UPDATE_NOTIFICATION_ID = 123;
-  private static final String TAG = PullingContentService.class.getSimpleName();
   private CompositeSubscription subscriptions;
   private InstallManager installManager;
-  private BodyInterceptor<BaseBody> baseBodyInterceptorV3;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
 
@@ -79,7 +75,16 @@ public class PullingContentService extends Service {
 
   @Override public void onCreate() {
     super.onCreate();
-    baseBodyInterceptorV3 = ((V8Engine) this.getApplicationContext()).getBaseBodyInterceptorV3();
+
+    long pushNotificationInterval;
+
+    if (ManagerPreferences.isDebug()
+        && ManagerPreferences.getPushNotificationPullingInterval() > 0) {
+      pushNotificationInterval = ManagerPreferences.getPushNotificationPullingInterval();
+    } else {
+      pushNotificationInterval = PUSH_NOTIFICATION_INTERVAL;
+    }
+
     installManager =
         ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
     httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
@@ -88,7 +93,7 @@ public class PullingContentService extends Service {
     subscriptions = new CompositeSubscription();
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
     if (!isAlarmUp(this, PUSH_NOTIFICATIONS_ACTION)) {
-      setAlarm(alarm, this, PUSH_NOTIFICATIONS_ACTION, PUSH_NOTIFICATION_INTERVAL);
+      setAlarm(alarm, this, PUSH_NOTIFICATIONS_ACTION, pushNotificationInterval);
     }
     if (!isAlarmUp(this, UPDATES_ACTION)) {
       setAlarm(alarm, this, UPDATES_ACTION, UPDATES_INTERVAL);

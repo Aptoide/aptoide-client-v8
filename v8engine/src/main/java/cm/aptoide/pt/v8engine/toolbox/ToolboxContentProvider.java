@@ -202,6 +202,11 @@ public class ToolboxContentProvider extends ContentProvider {
                   Logger.setDBG((Boolean) entry.getValue());
                   changed++;
                 }
+              } else if (value instanceof Long) {
+                if (entry.getKey().equals(ManagedKeys.PUSH_NOTIFICATION_PULL_INTERVAL)) {
+                  ManagerPreferences.setPushNotificationPullingInterval(((Long) value));
+                  changed++;
+                }
               }
               if (changed > 0 && !TextUtils.isEmpty(entry.getValue().toString())) {
                 AptoideUtils.ThreadU.runOnUiThread(() -> Toast.makeText(context,
