@@ -748,6 +748,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     if (!TextUtils.isEmpty(appName) && appName.length() > 17) {
       appName = appName.substring(0, 17);
     }
+    if (!TextUtils.isEmpty(appName) && appName.contains("_")) {
+      appName = appName.replace("_", " ");
+    }
     return appName;
   }
 
