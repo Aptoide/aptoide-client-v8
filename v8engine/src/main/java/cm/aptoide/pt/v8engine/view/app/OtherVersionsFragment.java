@@ -1,12 +1,12 @@
 package cm.aptoide.pt.v8engine.view.app;
 
-import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.view.Menu;
@@ -23,6 +23,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.R;
@@ -35,20 +36,23 @@ import cm.aptoide.pt.v8engine.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import java.util.ArrayList;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 
 public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   private static final String TAG = OtherVersionsFragment.class.getSimpleName();
 
-  // vars
+  private CollapsingToolbarLayout collapsingToolbarLayout;
+  private ViewHeader header;
+
   private String appName;
   private String appImgUrl;
   private String appPackge;
-  private CollapsingToolbarLayout collapsingToolbarLayout;
-  // views
-  private ViewHeader header;
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
-  //private TextView emptyData;
+  private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
 
   /**
    * @param appName
@@ -72,6 +76,8 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     super.onCreate(savedInstanceState);
     baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -85,16 +91,21 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     return R.layout.fragment_other_versions;
   }
 
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    final Context context = getContext();
-    header = new ViewHeader(context, view);
-    collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
-    //emptyData = (TextView) view.findViewById(R.id.empty_data);
-    setHasOptionsMenu(true);
+  @Override public void onDestroyView() {
+    final RecyclerView recyclerView = getRecyclerView();
+    if (recyclerView != null && endlessRecyclerOnScrollListener != null) {
+      recyclerView.removeOnScrollListener(endlessRecyclerOnScrollListener);
+    }
+    endlessRecyclerOnScrollListener = null;
+    header = null;
+    collapsingToolbarLayout = null;
+    super.onDestroyView();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    header = new ViewHeader(view);
+    collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
+    setHasOptionsMenu(true);
     super.onViewCreated(view, savedInstanceState);
   }
 
@@ -122,11 +133,10 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
           addDisplayables(displayables);
         };
 
-    EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
-        new EndlessRecyclerOnScrollListener(this.getAdapter(),
-            ListAppVersionsRequest.of(appPackge, storeNames,
-                StoreUtils.getSubscribedStoresAuthMap(), baseBodyInterceptor),
-            otherVersionsSuccessRequestListener, err -> err.printStackTrace());
+    endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(),
+        ListAppVersionsRequest.of(appPackge, storeNames, StoreUtils.getSubscribedStoresAuthMap(),
+            baseBodyInterceptor, httpClient, converterFactory), otherVersionsSuccessRequestListener,
+        err -> err.printStackTrace());
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
@@ -172,9 +182,8 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
     private final boolean animationsEnabled;
 
-    private final Context context;
-
     // views
+    private final View view;
     private final TextView otherVersionsTitle;
     private final AppBarLayout appBarLayout;
     private final ImageView appIcon;
@@ -183,10 +192,10 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     private final SpannableString composedTitle2;
 
     // ctor
-    ViewHeader(@NonNull Context context, @NonNull View view) {
-      this.context = context;
+    ViewHeader(@NonNull View view) {
       composedTitle1 = new SpannableString(
           view.getResources().getString(R.string.other_versions_partial_title_1));
+      this.view = view;
       composedTitle1.setSpan(new StyleSpan(Typeface.ITALIC), 0, composedTitle1.length(), 0);
 
       composedTitle2 = new SpannableString(
@@ -230,7 +239,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     }
 
     private void setImage(String imgUrl) {
-      ImageLoader.with(context).load(imgUrl, appIcon);
+      ImageLoader.with(view.getContext()).load(imgUrl, appIcon);
     }
   }
 

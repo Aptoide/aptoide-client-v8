@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.repository;
 
-import android.accounts.AccountManager;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.telephony.TelephonyManager;
@@ -24,6 +23,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.iab.InAppBillingSerializer;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
@@ -34,6 +34,7 @@ import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
 import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
 import cm.aptoide.pt.v8engine.repository.sync.SyncDataConverter;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
+import okhttp3.OkHttpClient;
 
 /**
  * Created by sithengineer on 02/09/16.
@@ -51,11 +52,16 @@ public final class RepositoryFactory {
   public static UpdateRepository getUpdateRepository(Context context) {
     return new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
         AccessorFactory.getAccessorFor(Store.class), getAccountManager(context),
-        getAptoideClientUUID(context), getBaseBodyInterceptorV7(context));
+        getAptoideClientUUID(context), getBaseBodyInterceptorV7(context), getHttpClient(context),
+        WebService.getDefaultConverter());
   }
 
   private static AptoideClientUUID getAptoideClientUUID(Context context) {
     return ((V8Engine) context.getApplicationContext()).getAptoideClientUUID();
+  }
+
+  private static OkHttpClient getHttpClient(Context context) {
+    return ((V8Engine) context.getApplicationContext()).getDefaultClient();
   }
 
   private static AptoideAccountManager getAccountManager(Context context) {
@@ -88,7 +94,8 @@ public final class RepositoryFactory {
     if (product instanceof InAppBillingProduct) {
       return new InAppBillingProductRepository(new InAppBillingRepository(operatorManager,
           AccessorFactory.getAccessorFor(PaymentConfirmation.class), getAccountManager(context),
-          getBaseBodyInterceptorV3(context)), purchaseFactory, paymentFactory,
+          getBaseBodyInterceptorV3(context), getHttpClient(context),
+          WebService.getDefaultConverter()), purchaseFactory, paymentFactory,
           (InAppBillingProduct) product);
     } else {
       return new PaidAppProductRepository(getAppRepository(context), purchaseFactory,
@@ -102,12 +109,14 @@ public final class RepositoryFactory {
       return new InAppPaymentConfirmationRepository(getNetworkOperatorManager(context),
           AccessorFactory.getAccessorFor(PaymentConfirmation.class), getBackgroundSync(context),
           new PaymentConfirmationFactory(), getAccountManager(context),
-          getBaseBodyInterceptorV3(context));
+          getBaseBodyInterceptorV3(context), getHttpClient(context),
+          WebService.getDefaultConverter());
     } else if (product instanceof PaidAppProduct) {
       return new PaidAppPaymentConfirmationRepository(getNetworkOperatorManager(context),
           AccessorFactory.getAccessorFor(PaymentConfirmation.class), getBackgroundSync(context),
           new PaymentConfirmationFactory(), getAccountManager(context),
-          getBaseBodyInterceptorV3(context));
+          getBaseBodyInterceptorV3(context), WebService.getDefaultConverter(),
+          getHttpClient(context));
     } else {
       throw new IllegalArgumentException("No compatible repository for product " + product.getId());
     }
@@ -117,7 +126,8 @@ public final class RepositoryFactory {
     return new PaymentAuthorizationRepository(
         AccessorFactory.getAccessorFor(PaymentAuthorization.class), getBackgroundSync(context),
         new PaymentAuthorizationFactory(context), getAccountManager(context),
-        getBaseBodyInterceptorV3(context));
+        getBaseBodyInterceptorV3(context), getHttpClient(context),
+        WebService.getDefaultConverter());
   }
 
   private static NetworkOperatorManager getNetworkOperatorManager(Context context) {
@@ -128,7 +138,8 @@ public final class RepositoryFactory {
   public static AppRepository getAppRepository(Context context) {
     return new AppRepository(getNetworkOperatorManager(context), getAccountManager(context),
         getBaseBodyInterceptorV7(context), getBaseBodyInterceptorV3(context),
-        new StoreCredentialsProviderImpl());
+        new StoreCredentialsProviderImpl(), getHttpClient(context),
+        WebService.getDefaultConverter());
   }
 
   private static BodyInterceptor<BaseBody> getBaseBodyInterceptorV7(Context context) {
@@ -141,14 +152,15 @@ public final class RepositoryFactory {
   }
 
   private static SyncAdapterBackgroundSync getBackgroundSync(Context context) {
-    return new SyncAdapterBackgroundSync(Application.getConfiguration(),
-        (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE),
-        new SyncDataConverter());
+    return new SyncAdapterBackgroundSync(new SyncDataConverter(),
+        ((V8Engine) context.getApplicationContext()).getAndroidAccountProvider(),
+        Application.getConfiguration().getContentAuthority());
   }
 
   public static InAppBillingRepository getInAppBillingRepository(Context context) {
     return new InAppBillingRepository(getNetworkOperatorManager(context),
         AccessorFactory.getAccessorFor(PaymentConfirmation.class), getAccountManager(context),
-        getBaseBodyInterceptorV3(context));
+        getBaseBodyInterceptorV3(context), getHttpClient(context),
+        WebService.getDefaultConverter());
   }
 }

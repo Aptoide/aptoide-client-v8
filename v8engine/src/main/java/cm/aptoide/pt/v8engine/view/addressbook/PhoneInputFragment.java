@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -29,6 +30,8 @@ import cm.aptoide.pt.v8engine.presenter.PhoneInputPresenter;
 import cm.aptoide.pt.v8engine.view.fragment.UIComponentFragment;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 
 /**
  * Created by jdandrade on 14/02/2017.
@@ -58,13 +61,16 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
     super.onCreate(savedInstanceState);
     final BodyInterceptor<BaseBody> baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    this.mActionsListener =
-        new PhoneInputPresenter(this, new ContactsRepositoryImpl(baseBodyInterceptor),
-            new AddressBookAnalytics(Analytics.getInstance(),
-                AppEventsLogger.newLogger(getContext().getApplicationContext())),
-            new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
-                getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
-                Application.getConfiguration().getMarketName())));
+    final OkHttpClient httpClient =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    final Converter.Factory converterFactory = WebService.getDefaultConverter();
+    this.mActionsListener = new PhoneInputPresenter(this,
+        new ContactsRepositoryImpl(baseBodyInterceptor, httpClient, converterFactory),
+        new AddressBookAnalytics(Analytics.getInstance(),
+            AppEventsLogger.newLogger(getContext().getApplicationContext())),
+        new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
+            getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
+            Application.getConfiguration().getMarketName())));
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
     contactUtils = new ContactUtils();
   }

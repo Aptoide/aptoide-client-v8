@@ -8,14 +8,13 @@ package cm.aptoide.pt.dataprovider.ws.notifications;
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -29,15 +28,16 @@ public class PullSocialNotificationRequest
   private final Map<String, String> options;
   private final String id;
 
-  protected PullSocialNotificationRequest(String id, Map<String, String> options) {
-    super(OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+  protected PullSocialNotificationRequest(String id, Map<String, String> options,
+      OkHttpClient okHttpClient, Converter.Factory converterFactory) {
+    super(okHttpClient, converterFactory);
     this.options = options;
     this.id = id;
   }
 
   public static PullSocialNotificationRequest of(AptoideClientUUID aptoideClientUuid,
-      String versionName, String appId) {
+      String versionName, String appId, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
 
     Random r = new Random();
     int i1 = r.nextInt(100);
@@ -62,7 +62,7 @@ public class PullSocialNotificationRequest
     //TODO should depend of build variant
     options.put("debug", "true");
 
-    return new PullSocialNotificationRequest(id, options);
+    return new PullSocialNotificationRequest(id, options, httpClient, converterFactory);
   }
 
   @Override protected Observable<List<GetPullNotificationsResponse>> loadDataFromNetwork(

@@ -49,9 +49,7 @@ public class TransferRecordPresenter implements Presenter {
       }
 
       @Override public void onReceivedApp(String appName, String filePath, boolean needReSend) {
-        //                String receivedApkFilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + tmpFilePath;
-        HighwayTransferRecordItem item =
-            transferRecordManager.readApkArchive(appName, filePath, needReSend);
+        HighwayTransferRecordItem item = transferRecordManager.readApkArchive(appName, filePath);
         if (!listOfApps.contains(item)) {
           listOfApps.add(item);
         }
@@ -148,6 +146,17 @@ public class TransferRecordPresenter implements Presenter {
           view.setTextViewMessage(true);
         }
       }
+
+      @Override public void onAutoShare(String filepath) {
+        App app = transferRecordManager.readApkArchive(filepath);
+        List<App> appList = new ArrayList<App>();
+        appList.add(app);
+        applicationSender.sendApp(appList);
+        if (!view.getTransparencySend()) {
+          view.setTransparencySend(false);
+          view.setTextViewMessage(true);
+        }
+      }
     });
   }
 
@@ -232,26 +241,8 @@ public class TransferRecordPresenter implements Presenter {
 
   }
 
-  public void setListOfConnectedClients(List<Host> connectedClients) {
-    this.connectedClients = connectedClients;
-  }
-
-  public void clearConnectedClientsList() {
-    this.connectedClients.clear();
-  }
-
   public void clickedOnSendButton() {
-    if (isHotspot) {
-      connectedClients = DataHolder.getInstance()
-          .getConnectedClients();// TODO: 16-03-2017 filipe extract to a model with broadcast receivers
-      if (connectedClients == null || connectedClients.size() < 2) {
-        view.showNoConnectedClientsToast();
-      } else {
-        view.openAppSelectionView();
-      }
-    } else {
-      view.openAppSelectionView();
-    }
+    view.openAppSelectionView();
   }
 
   public void clickedOnClearHistoryButton() {

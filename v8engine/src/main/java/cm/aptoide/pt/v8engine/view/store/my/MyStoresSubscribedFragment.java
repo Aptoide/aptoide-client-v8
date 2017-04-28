@@ -14,6 +14,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
@@ -29,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.functions.Action1;
 
 /**
@@ -40,16 +43,21 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
   private AptoideAccountManager accountManager;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private StoreCredentialsProvider storeCredentialsProvider;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
   }
 
   @Override protected V7<ListStores, ? extends Endless> buildRequest(boolean refresh, String url) {
-    GetMyStoreListRequest request = GetMyStoreListRequest.of(url, true, bodyInterceptor);
+    GetMyStoreListRequest request =
+        GetMyStoreListRequest.of(url, true, bodyInterceptor, httpClient, converterFactory);
 
     return request;
   }
@@ -84,7 +92,8 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
           storesDisplayables.add(
               new RecommendedStoreDisplayable(list.get(i), storeRepository, accountManager,
                   new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
-                      AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class)),
+                      AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class),
+                      httpClient, WebService.getDefaultConverter()),
                   storeCredentialsProvider));
         } else {
           storesDisplayables.add(new GridStoreDisplayable(list.get(i)));

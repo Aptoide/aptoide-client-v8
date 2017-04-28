@@ -11,10 +11,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithAlphaBetaKey;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
@@ -25,6 +22,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -39,17 +38,17 @@ import rx.schedulers.Schedulers;
   private static final int SPLIT_SIZE = 100;
 
   private ListAppsUpdatesRequest(Body body, String baseHost,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
-    super(body, baseHost,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter(), bodyInterceptor);
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
+    super(body, baseHost, httpClient, converterFactory, bodyInterceptor);
   }
 
   public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String aptoideClientUUID,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     return new ListAppsUpdatesRequest(
         new Body(getInstalledApks(), subscribedStoresIds, aptoideClientUUID), BASE_HOST,
-        bodyInterceptor);
+        bodyInterceptor, httpClient, converterFactory);
   }
 
   private static List<ApksData> getInstalledApks() {

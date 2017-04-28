@@ -1,12 +1,11 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.model.v7.GetFollowers;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -14,25 +13,24 @@ import rx.Observable;
  */
 
 public class GetFollowersRequest extends V7<GetFollowers, GetFollowersRequest.Body> {
-  protected GetFollowersRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
-    super(body, BASE_HOST,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter(), bodyInterceptor);
+  protected GetFollowersRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
   }
 
   public static GetFollowersRequest of(BodyInterceptor<BaseBody> bodyInterceptor, Long userId,
-      Long storeId) {
+      Long storeId, OkHttpClient httpClient, Converter.Factory converterFactory) {
     Body body = new Body();
     body.setUserId(userId);
     body.setStoreId(storeId);
-    return new GetFollowersRequest(body, bodyInterceptor);
+    return new GetFollowersRequest(body, bodyInterceptor, httpClient, converterFactory);
   }
 
-  public static GetFollowersRequest ofStore(BodyInterceptor<BaseBody> bodyInterceptor,
-      Long storeId) {
+  public static GetFollowersRequest ofStore(BodyInterceptor<BaseBody> bodyInterceptor, Long storeId,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
     Body body = new Body();
     body.setStoreId(storeId);
-    return new GetFollowersRequest(body, bodyInterceptor);
+    return new GetFollowersRequest(body, bodyInterceptor, httpClient, converterFactory);
   }
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,

@@ -29,7 +29,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
@@ -99,7 +98,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     trackAnalytics = true;
-    fileManager = FileManager.build();
+    fileManager =
+        FileManager.build(((V8Engine) getContext().getApplicationContext()).getDownloadManager(),
+            ((V8Engine) getContext().getApplicationContext()).getHttpClientCache());
     subscriptions = new CompositeSubscription();
     permissionManager = new PermissionManager();
     adultContentConfirmationDialog =
@@ -446,33 +447,34 @@ public class SettingsFragment extends PreferenceFragmentCompat
       }
     });
 
-    CheckBoxPreference autoUpdatePreference =
-        (CheckBoxPreference) findPreference(SettingsConstants.AUTO_UPDATE_ENABLE);
-    findPreference(SettingsConstants.ALLOW_ROOT_INSTALLATION).setOnPreferenceChangeListener(
-        (preference, o) -> {
-          final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) preference;
-          if (checkBoxPreference.isChecked()) {
-            ManagerPreferences.setAutoUpdateEnable(false);
-            autoUpdatePreference.setChecked(false);
-          }
-          return true;
-        });
-
-    PermissionService permissionRequest = (PermissionService) getContext();
-    autoUpdatePreference.setDependency(SettingsConstants.ALLOW_ROOT_INSTALLATION);
-    autoUpdatePreference.setOnPreferenceClickListener(preference -> {
-      final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) preference;
-      if (checkBoxPreference.isChecked()) {
-        checkBoxPreference.setChecked(false);
-        subscriptions.add(permissionManager.requestExternalStoragePermission(permissionRequest)
-            .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
-            .subscribe(success -> {
-              checkBoxPreference.setChecked(true);
-              ManagerPreferences.setAutoUpdateEnable(true);
-            }, throwable -> CrashReport.getInstance().log(throwable)));
-      }
-      return true;
-    });
+    // AN-1533 - temporary solution was to remove root installation
+    //CheckBoxPreference autoUpdatePreference =
+    //    (CheckBoxPreference) findPreference(SettingsConstants.AUTO_UPDATE_ENABLE);
+    //findPreference(SettingsConstants.ALLOW_ROOT_INSTALLATION).setOnPreferenceChangeListener(
+    //    (preference, o) -> {
+    //      final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) preference;
+    //      if (checkBoxPreference.isChecked()) {
+    //        ManagerPreferences.setAutoUpdateEnable(false);
+    //        autoUpdatePreference.setChecked(false);
+    //      }
+    //      return true;
+    //    });
+    //
+    //PermissionService permissionRequest = (PermissionService) getContext();
+    //autoUpdatePreference.setDependency(SettingsConstants.ALLOW_ROOT_INSTALLATION);
+    //autoUpdatePreference.setOnPreferenceClickListener(preference -> {
+    //  final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) preference;
+    //  if (checkBoxPreference.isChecked()) {
+    //    checkBoxPreference.setChecked(false);
+    //    subscriptions.add(permissionManager.requestExternalStoragePermission(permissionRequest)
+    //        .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
+    //        .subscribe(success -> {
+    //          checkBoxPreference.setChecked(true);
+    //          ManagerPreferences.setAutoUpdateEnable(true);
+    //        }, throwable -> CrashReport.getInstance().log(throwable)));
+    //  }
+    //  return true;
+    //});
   }
 
   private void rollbackCheck(CheckBoxPreference preference) {

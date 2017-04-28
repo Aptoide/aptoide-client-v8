@@ -5,9 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.ActivityView;
 
-public class LoginActivity extends ActivityView {
+public class LoginActivity extends LoginBottomSheetActivity {
 
   public static final String ACCOUNT_TYPE = "account_type";
   public static final String AUTH_TYPE = "auth_type";

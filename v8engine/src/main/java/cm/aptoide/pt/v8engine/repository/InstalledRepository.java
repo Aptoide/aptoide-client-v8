@@ -53,4 +53,9 @@ public class InstalledRepository implements Repository<Installed, String> {
   public Observable<List<Installed>> getAllSorted() {
     return accessor.getAllSorted();
   }
+
+  public boolean contains(String packageName, int vercode) {
+    Installed installed = get(packageName).toBlocking().first();
+    return installed != null && installed.getVersionCode() == vercode;
+  }
 }

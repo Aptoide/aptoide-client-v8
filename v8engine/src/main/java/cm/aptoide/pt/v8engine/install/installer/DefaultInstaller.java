@@ -19,19 +19,17 @@ import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.download.InstallEvent;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
-import eu.chainfire.libsuperuser.Shell;
+import cm.aptoide.pt.v8engine.install.root.RootShell;
 import java.io.File;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import rx.Observable;
@@ -67,7 +65,7 @@ public class DefaultInstaller implements Installer {
 
   @Override public Observable<Void> install(Context context, String md5) {
     Analytics.RootInstall.installationType(ManagerPreferences.allowRootInstallation(),
-        AptoideUtils.SystemU.isRooted());
+        RootShell.isRootAvailable());
     return installationProvider.getInstallation(md5)
         .observeOn(Schedulers.computation())
         .doOnNext(installation -> moveInstallationFiles(installation))
@@ -75,10 +73,7 @@ public class DefaultInstaller implements Installer {
           if (isInstalled(installation.getPackageName(), installation.getVersionCode())) {
             return Observable.just(null);
           } else {
-            return systemInstall(context, installation.getFile()).onErrorResumeNext(
-                Observable.fromCallable(
-                    () -> rootInstall(installation.getFile(), installation.getPackageName(),
-                        installation.getVersionCode())))
+            return systemInstall(context, installation.getFile())
                 .onErrorResumeNext(
                     defaultInstall(context, installation.getFile(), installation.getPackageName()));
           }
@@ -143,64 +138,6 @@ public class DefaultInstaller implements Installer {
   private Observable<Void> systemInstall(Context context, File file) {
     return Observable.create(
         new SystemInstallOnSubscribe(context, packageManager, Uri.fromFile(file)));
-  }
-
-  private Void rootInstall(File file, String packageName, int versionCode)
-      throws InstallationException {
-    if (!AptoideUtils.SystemU.isRooted()) {
-      throw new InstallationException("No root permissions");
-    } else if (!ManagerPreferences.allowRootInstallation()) {
-      throw new InstallationException("User doesn't allow root installation");
-    }
-
-    try {
-      //if (Shell.SU.available()) {
-
-      Shell.Builder shellBuilder = new Shell.Builder();
-      Shell.Interactive interactiveShell = shellBuilder.useSU().setWatchdogTimeout(10) // seconds
-          .addCommand("pm install -r " + file.getAbsolutePath(), 0,
-              (commandCode, exitCode, output) -> {
-                CrashReport.getInstance().log(new Exception("install -r exitCode: " + exitCode));
-                Observable.fromCallable(() -> exitCode)
-                    .observeOn(Schedulers.computation())
-                    .delay(20, TimeUnit.SECONDS)
-                    .subscribe(exitCodeToSend -> {
-                      boolean installed = isInstalled(packageName, versionCode);
-                      if (!installed) {
-                        sendErrorEvent(packageName, versionCode,
-                            new Exception("Root install not succeeded. Exit code = " + exitCode));
-                      }
-                      Analytics.RootInstall.rootInstallCompleted(exitCodeToSend, installed);
-                    });
-                if (exitCode == 0) {
-                  Logger.v(TAG, "app successfully installed using root");
-                } else {
-                  Logger.e(TAG, "Error using su to install package " + packageName);
-                  for (String s : output) {
-                    Logger.e(TAG, "su command result: " + s);
-                  }
-                }
-              }).open();
-
-      interactiveShell.waitForIdle();
-
-      //if (!isInstalled(packageName, versionCode)) {
-      //  throw new RuntimeException("Could not verify installation.");
-      //}
-
-      // app sucessfully installed using root
-      return null;
-      //} else {
-      //  throw new RuntimeException("Device not rooted.");
-      //}
-    } catch (Exception e) {
-      CrashReport.getInstance().log(e);
-      sendErrorEvent(packageName, versionCode, e);
-      throw new InstallationException("Installation with root failed for "
-          + packageName
-          + ". Error message: "
-          + e.getMessage());
-    }
   }
 
   private Observable<Void> defaultInstall(Context context, File file, String packageName) {

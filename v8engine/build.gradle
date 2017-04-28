@@ -112,12 +112,16 @@ dependencies {
 
   internalCompile project(path: ':dataprovider', configuration: 'internalRelease')
   internalCompile project(path: ':aptoide_accountmanager', configuration: 'internalRelease')
+  internalCompile project(path: ':spotandshareandroid', configuration: 'internalRelease')
 
   prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
   prodCompile project(path: ':aptoide_accountmanager', configuration: 'prodRelease')
+  prodCompile project(path: ':spotandshareandroid', configuration: 'prodRelease')
 
   leakCompile project(path: ':dataprovider', configuration: 'prodRelease')
   leakCompile project(path: ':aptoide_accountmanager', configuration: 'prodRelease')
+  leakCompile project(path: ':spotandshareandroid', configuration: 'prodRelease')
+
 
   compile project(path: ':utils', configuration: 'release')
   compile project(path: ':utilsdesign', configuration: 'release')
@@ -227,7 +231,6 @@ dependencies {
   //compile 'org.parceler:parceler-api:1.1.6'
   //annotationProcessor 'org.parceler:parceler:1.1.6'
 
-  compile project(':spotandshareandroid')
   compile "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
   //noinspection GradleDependency
   compile "com.google.android.gms:play-services-basement:${PLAY_SERVICES_VERSION}"

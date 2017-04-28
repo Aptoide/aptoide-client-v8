@@ -24,6 +24,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.Review;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -38,6 +39,8 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
 import java.util.Locale;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 @Displayables({ RateAndReviewCommentDisplayable.class }) public class RateAndReviewCommentWidget
@@ -67,6 +70,8 @@ import rx.Observable;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
   private BodyInterceptor<BaseBody> bodyInterceptor;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
 
   public RateAndReviewCommentWidget(View itemView) {
     super(itemView);
@@ -93,6 +98,9 @@ import rx.Observable;
   @Override public void bindView(RateAndReviewCommentDisplayable displayable) {
     final Review review = displayable.getPojo().getReview();
     final String appName = displayable.getPojo().getAppName();
+
+    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
 
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
@@ -183,53 +191,55 @@ import rx.Observable;
   }
 
   private void loadCommentsForThisReview(long reviewId, int limit, CommentAdder commentAdder) {
-    ListCommentsRequest.of(reviewId, limit, true, bodyInterceptor).execute(listComments -> {
-      if (listComments.isOk()) {
-        List<Comment> comments = listComments.getDatalist().getList();
-        commentAdder.addComment(comments);
-      } else {
-        Logger.e(TAG, "error loading comments");
-        ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
-      }
-    }, err -> {
-      Logger.e(TAG, err);
-      ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
-    }, true);
+    ListCommentsRequest.of(reviewId, limit, true, bodyInterceptor, httpClient, converterFactory)
+        .execute(listComments -> {
+          if (listComments.isOk()) {
+            List<Comment> comments = listComments.getDatalist().getList();
+            commentAdder.addComment(comments);
+          } else {
+            Logger.e(TAG, "error loading comments");
+            ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
+          }
+        }, err -> {
+          Logger.e(TAG, err);
+          ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
+        }, true);
   }
 
   private void setReviewRating(long reviewId, boolean positive) {
     setHelpButtonsClickable(false);
 
     if (accountManager.isLoggedIn()) {
-      SetReviewRatingRequest.of(reviewId, positive, bodyInterceptor).execute(response -> {
-        if (response == null) {
-          Logger.e(TAG, "empty response");
-          return;
-        }
+      SetReviewRatingRequest.of(reviewId, positive, bodyInterceptor, httpClient, converterFactory)
+          .execute(response -> {
+            if (response == null) {
+              Logger.e(TAG, "empty response");
+              return;
+            }
 
-        if (response.getError() != null) {
-          Logger.e(TAG, response.getError().getDescription());
-          return;
-        }
+            if (response.getError() != null) {
+              Logger.e(TAG, response.getError().getDescription());
+              return;
+            }
 
-        List<BaseV7Response.Error> errorList = response.getErrors();
-        if (errorList != null && !errorList.isEmpty()) {
-          for (final BaseV7Response.Error error : errorList) {
-            Logger.e(TAG, error.getDescription());
-          }
-          return;
-        }
+            List<BaseV7Response.Error> errorList = response.getErrors();
+            if (errorList != null && !errorList.isEmpty()) {
+              for (final BaseV7Response.Error error : errorList) {
+                Logger.e(TAG, error.getDescription());
+              }
+              return;
+            }
 
-        // success
-        Logger.d(TAG, String.format("review %d was marked as %s", reviewId,
-            positive ? "positive" : "negative"));
-        setHelpButtonsClickable(true);
-        ShowMessage.asSnack(flagHelfull, R.string.thank_you_for_your_opinion);
-      }, err -> {
-        ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
-        Logger.e(TAG, err);
-        setHelpButtonsClickable(true);
-      }, true);
+            // success
+            Logger.d(TAG, String.format("review %d was marked as %s", reviewId,
+                positive ? "positive" : "negative"));
+            setHelpButtonsClickable(true);
+            ShowMessage.asSnack(flagHelfull, R.string.thank_you_for_your_opinion);
+          }, err -> {
+            ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
+            Logger.e(TAG, err);
+            setHelpButtonsClickable(true);
+          }, true);
     } else {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {

@@ -24,8 +24,8 @@ import cm.aptoide.pt.dataprovider.ws.notifications.PullCampaignNotificationsRequ
 import cm.aptoide.pt.dataprovider.ws.notifications.PullSocialNotificationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -44,6 +44,8 @@ import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import com.bumptech.glide.request.target.NotificationTarget;
 import java.util.ArrayList;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -64,6 +66,8 @@ public class PullingContentService extends Service {
   private CompositeSubscription subscriptions;
   private InstallManager installManager;
   private BodyInterceptor<BaseBody> baseBodyInterceptorV3;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
 
   public static void setAlarm(AlarmManager am, Context context, String action, long time) {
     Intent intent = new Intent(context, PullingContentService.class);
@@ -76,8 +80,10 @@ public class PullingContentService extends Service {
   @Override public void onCreate() {
     super.onCreate();
     baseBodyInterceptorV3 = ((V8Engine) this.getApplicationContext()).getBaseBodyInterceptorV3();
-    installManager = new InstallManager(AptoideDownloadManager.getInstance(),
-        new InstallerFactory().create(this, InstallerFactory.ROLLBACK));
+    installManager =
+        ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
+    httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
 
     subscriptions = new CompositeSubscription();
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -166,8 +172,8 @@ public class PullingContentService extends Service {
 
     PullCampaignNotificationsRequest.of(
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
-        pInfo == null ? "" : pInfo.versionName, BuildConfig.APPLICATION_ID)
-        .execute(response -> setPushNotification(context, response, startId));
+        pInfo == null ? "" : pInfo.versionName, BuildConfig.APPLICATION_ID, httpClient,
+        converterFactory).execute(response -> setPushNotification(context, response, startId));
 
     subscriptions.add(Observable.just(pInfo)
         .flatMap(packageInfo -> (((V8Engine) getApplication()).getAccountManager()).accountStatus()
@@ -176,7 +182,8 @@ public class PullingContentService extends Service {
             .map(account -> packageInfo))
         .subscribe(packageInfo -> PullSocialNotificationRequest.of(
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
-            packageInfo == null ? "" : packageInfo.versionName, BuildConfig.APPLICATION_ID)
+            packageInfo == null ? "" : packageInfo.versionName, BuildConfig.APPLICATION_ID,
+            httpClient, converterFactory)
             .execute(response -> setPushNotification(context, response, startId))));
   }
 

@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import rx.Completable;
 
@@ -31,22 +30,25 @@ public class AndroidAccountDataMigration {
   private final AccountManager accountManager;
   private final SecureCoderDecoder secureCoderDecoder;
   private final int currentVersion;
-  private String databasePath;
+  private final String accountType;
+  private final String databasePath;
 
   private int oldVersion;
 
   public AndroidAccountDataMigration(SharedPreferences secureSharedPreferences,
       SharedPreferences defaultSharedPreferences, AccountManager accountManager,
-      SecureCoderDecoder secureCoderDecoder, int currentVersion, String databasePath) {
+      SecureCoderDecoder secureCoderDecoder, int currentVersion, String databasePath,
+      String accountType) {
     this.secureSharedPreferences = secureSharedPreferences;
     this.defaultSharedPreferences = defaultSharedPreferences;
     this.accountManager = accountManager;
     this.secureCoderDecoder = secureCoderDecoder;
     this.currentVersion = currentVersion;
     this.databasePath = databasePath;
+    this.accountType = accountType;
   }
 
-  Completable migrate() {
+  public Completable migrate() {
     return Completable.defer(() -> {
       //
       // this code avoids the lock in case we already migrated the account
@@ -88,8 +90,7 @@ public class AndroidAccountDataMigration {
 
       Log.i(TAG, "migrating from v7");
 
-      final android.accounts.Account[] accounts =
-          accountManager.getAccountsByType(V8Engine.getConfiguration().getAccountType());
+      final android.accounts.Account[] accounts = accountManager.getAccountsByType(accountType);
       final Account oldAccount = accounts[0];
 
       String sharedPrefsData;
@@ -136,8 +137,7 @@ public class AndroidAccountDataMigration {
       // migration from an older v8.x to this v8
       //
 
-      final Account[] accounts =
-          accountManager.getAccountsByType(V8Engine.getConfiguration().getAccountType());
+      final Account[] accounts = accountManager.getAccountsByType(accountType);
 
       if (!accountHasKeysForMigration(MIGRATION_KEYS, secureSharedPreferences)
           || accounts.length == 0) {
@@ -158,25 +158,6 @@ public class AndroidAccountDataMigration {
         // previously we store the password encrypted but we stopped doing it at DB version 55
         plainTextPassword = encryptedPassword;
       }
-
-      /*
-
-      androidAccountManager.setUserData(androidAccount, USER_ID, account.getId());
-      androidAccountManager.setUserData(androidAccount, USER_NICK_NAME, account.getNickname());
-      androidAccountManager.setUserData(androidAccount, USER_AVATAR, account.getAvatar());
-      androidAccountManager.setUserData(androidAccount, REFRESH_TOKEN, account.getRefreshToken());
-      androidAccountManager.setUserData(androidAccount, ACCESS_TOKEN, account.getToken());
-      androidAccountManager.setUserData(androidAccount, LOGIN_MODE, account.getType().name());
-      androidAccountManager.setUserData(androidAccount, USER_REPO, account.getStore());
-      androidAccountManager.setUserData(androidAccount, REPO_AVATAR, account.getStoreAvatar());
-      androidAccountManager.setUserData(androidAccount, ACCESS, account.getAccess().name());
-
-      androidAccountManager.setUserData(androidAccount, MATURE_SWITCH,
-          String.valueOf(account.isAdultContentEnabled()));
-      androidAccountManager.setUserData(androidAccount, ACCESS_CONFIRMED,
-          String.valueOf(account.isAccessConfirmed()));
-
-      */
 
       String sharedPrefsData;
       for (String key : MIGRATION_KEYS) {

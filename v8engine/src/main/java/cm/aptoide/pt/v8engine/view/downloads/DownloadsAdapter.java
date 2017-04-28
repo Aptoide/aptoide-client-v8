@@ -1,23 +1,17 @@
 package cm.aptoide.pt.v8engine.view.downloads;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
-import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.download.InstallEventConverter;
 import cm.aptoide.pt.v8engine.view.downloads.active.ActiveDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.downloads.active.ActiveDownloadWidget;
 import cm.aptoide.pt.v8engine.view.downloads.active.ActiveDownloadsHeaderDisplayable;
@@ -41,21 +35,16 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
   private final List<Download> standByDownloads;
   private final List<Download> completedDownloads;
 
-  public DownloadsAdapter(Context context) {
-    activeDownloads = new ArrayList<>();
-    standByDownloads = new ArrayList<>();
-    completedDownloads = new ArrayList<>();
-
-    // other dependencies
-    installManager = new InstallManager(AptoideDownloadManager.getInstance(),
-        new InstallerFactory().create(context, InstallerFactory.ROLLBACK));
-
-    analytics = Analytics.getInstance();
-
-    final BodyInterceptor<BaseBody> bodyInterceptor =
-        ((V8Engine) context.getApplicationContext()).getBaseBodyInterceptorV7();
-    installConverter = new InstallEventConverter(bodyInterceptor);
-    downloadConverter = new DownloadEventConverter(bodyInterceptor);
+  public DownloadsAdapter(InstallEventConverter installConverter,
+      DownloadEventConverter downloadConverter, InstallManager installManager,
+      Analytics analytics) {
+    this.activeDownloads = new ArrayList<>();
+    this.standByDownloads = new ArrayList<>();
+    this.completedDownloads = new ArrayList<>();
+    this.installManager = installManager;
+    this.analytics = analytics;
+    this.installConverter = installConverter;
+    this.downloadConverter = downloadConverter;
   }
 
   public void setActiveDownloads(List<Download> downloads) {

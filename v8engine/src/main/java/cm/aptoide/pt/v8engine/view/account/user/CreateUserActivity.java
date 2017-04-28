@@ -75,13 +75,13 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
     avatarImage = (ImageView) findViewById(R.id.create_user_image);
     content = findViewById(android.R.id.content);
     progressAvatarUploadDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
-        getApplicationContext().getString(cm.aptoide.accountmanager.R.string.please_wait_upload));
+        getApplicationContext().getString(R.string.please_wait_upload));
     progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
-        getApplicationContext().getString(cm.aptoide.accountmanager.R.string.please_wait));
+        getApplicationContext().getString(R.string.please_wait));
     setSupportActionBar(toolbar);
     getSupportActionBar().setHomeButtonEnabled(true);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    getSupportActionBar().setTitle(cm.aptoide.accountmanager.R.string.create_user_title);
+    getSupportActionBar().setTitle(R.string.create_user_title);
     setupListeners();
   }
 
@@ -96,18 +96,19 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
 
   @Override public void showIconPropertiesError(String errors) {
     subscriptions.add(GenericDialogs.createGenericOkMessage(this,
-        getString(cm.aptoide.accountmanager.R.string.image_requirements_error_popup_title), errors)
+        getString(R.string.image_requirements_error_popup_title), errors)
         .subscribe());
   }
 
   private void setupListeners() {
     subscriptions.add(RxView.clicks(userAvatar).subscribe(click -> chooseAvatarSource()));
-    subscriptions.add(RxView.clicks(createUserButton)
-        .doOnNext(click -> hideKeyboardAndShowProgressDialog())
+    subscriptions.add(RxView.clicks(createUserButton).doOnNext(click -> {
+      hideKeyboardAndShowProgressDialog();
+      Analytics.Account.createdUserProfile(!TextUtils.isEmpty(avatarPath));
+    })
         .flatMap(click -> accountManager.updateAccount(nameEditText.getText().toString().trim(),
             avatarPath)
             .toObservable()
-            .doOnNext(__ -> Analytics.Account.createdUserProfile(!TextUtils.isEmpty(avatarPath)))
             .timeout(90, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError(throwable -> showError(throwable))
@@ -147,11 +148,11 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
   }
 
   private void showSuccessMessageAndNavigateToLoggedInView() {
-    ShowMessage.asSnack(content, cm.aptoide.accountmanager.R.string.user_created);
+    ShowMessage.asSnack(content, R.string.user_created);
     if (Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
       startActivity(new Intent(this, ProfileStepOneActivity.class));
     } else {
-      Toast.makeText(this, cm.aptoide.accountmanager.R.string.create_profile_pub_pri_suc_login,
+      Toast.makeText(this, R.string.create_profile_pub_pri_suc_login,
           Toast.LENGTH_LONG).show();
     }
     finish();

@@ -15,13 +15,11 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
-import cm.aptoide.pt.v8engine.repository.DownloadRepository;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.install.root.RootShell;
 import cm.aptoide.pt.v8engine.repository.Repository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import java.util.List;
@@ -43,16 +41,10 @@ public class InstallManager {
    * Uses the default {@link Repository} for {@link Download} and {@link Installed}
    */
   public InstallManager(AptoideDownloadManager aptoideDownloadManager, Installer installer) {
-    this(aptoideDownloadManager, installer, RepositoryFactory.getDownloadRepository(),
-        RepositoryFactory.getInstalledRepository());
-  }
-
-  public InstallManager(AptoideDownloadManager aptoideDownloadManager, Installer installer,
-      DownloadRepository downloadRepository, InstalledRepository installedRepository) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
-    this.downloadRepository = downloadRepository;
-    this.installedRepository = installedRepository;
+    this.downloadRepository = RepositoryFactory.getDownloadRepository();
+    this.installedRepository = RepositoryFactory.getInstalledRepository();
   }
 
   public void stopAllInstallations(Context context) {
@@ -244,16 +236,16 @@ public class InstallManager {
   }
 
   public boolean showWarning() {
-    boolean wasRootDialogShowed = SecurePreferences.isRootDialogShowed();
-    boolean isRooted = AptoideUtils.SystemU.isRooted();
-    boolean canGiveRoot = ManagerPreferences.allowRootInstallation();
-    return isRooted && !wasRootDialogShowed && !canGiveRoot;
+    //AN-1533 - temporary solution was to remove root installation, so this popup doesn't make sense
+    return false;
   }
 
   public void rootInstallAllowed(boolean allowRoot) {
     SecurePreferences.setRootDialogShowed(true);
     ManagerPreferences.setAllowRootInstallation(allowRoot);
-    AptoideUtils.SystemU.askForRoot();
+    if (allowRoot) {
+      RootShell.isAccessGiven();
+    }
   }
 
   /**

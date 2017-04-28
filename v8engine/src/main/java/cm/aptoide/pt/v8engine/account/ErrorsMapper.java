@@ -6,8 +6,8 @@
 package cm.aptoide.pt.v8engine.account;
 
 import android.support.annotation.StringRes;
-import cm.aptoide.accountmanager.R;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.v8engine.R;
 
 /**
  * Created by j-pac on 19-05-2014.

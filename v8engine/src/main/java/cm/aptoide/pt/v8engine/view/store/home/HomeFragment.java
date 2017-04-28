@@ -30,10 +30,11 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
+import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
+import cm.aptoide.pt.v8engine.spotandshare.SpotSharePreviewActivity;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
@@ -69,6 +70,8 @@ public class HomeFragment extends StoreFragment {
   private TextView userEmail;
   private TextView userUsername;
   private ImageView userAvatarImage;
+  private ClickHandler backClickHandler;
+  private SpotAndShareAnalytics spotAndShareAnalytics;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -137,10 +140,46 @@ public class HomeFragment extends StoreFragment {
             R.drawable.user_account_white);
   }
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     return super.onCreateView(inflater, container, savedInstanceState);
+  }
+
+  @Override public void onDestroyView() {
+    userEmail = null;
+    userAvatarImage = null;
+    userUsername = null;
+    updatesBadge = null;
+    navigationView.setNavigationItemSelectedListener(null);
+    navigationView = null;
+    drawerLayout = null;
+    final Toolbar toolbar = getToolbar();
+    if (toolbar != null) {
+      toolbar.setNavigationOnClickListener(null);
+    }
+    unregisterBackClickHandler(backClickHandler);
+    super.onDestroyView();
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    backClickHandler = new ClickHandler() {
+      @Override public boolean handle() {
+        if (isDrawerOpened()) {
+          closeDrawer();
+          return true;
+        }
+
+        return false;
+      }
+    };
+    registerBackClickHandler(backClickHandler);
   }
 
   @Override protected void setupViewPager() {
@@ -238,8 +277,8 @@ public class HomeFragment extends StoreFragment {
         } else {
           final FragmentNavigator navigator = getFragmentNavigator();
           if (itemId == R.id.shareapps) {
-            SpotAndShareAnalytics.clickShareApps();
-            navigator.navigateTo(V8Engine.getFragmentProvider().newSpotShareFragment(true));
+            spotAndShareAnalytics.clickShareApps();
+            getActivityNavigator().navigateTo(SpotSharePreviewActivity.class);
           } else if (itemId == R.id.navigation_item_rollback) {
             navigator.navigateTo(V8Engine.getFragmentProvider().newRollbackFragment());
           } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
@@ -360,15 +399,6 @@ public class HomeFragment extends StoreFragment {
     setHasOptionsMenu(true);
 
     Analytics.AppViewViewedFrom.addStepToList("HOME");
-  }
-
-  @Override public boolean onBackPressed() {
-    if (isDrawerOpened()) {
-      closeDrawer();
-      return true;
-    }
-
-    return super.onBackPressed();
   }
 
   private boolean isDrawerOpened() {

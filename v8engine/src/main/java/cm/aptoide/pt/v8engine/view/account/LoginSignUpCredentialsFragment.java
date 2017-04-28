@@ -29,6 +29,7 @@ import cm.aptoide.pt.v8engine.account.LoginPreferences;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsView;
+import cm.aptoide.pt.v8engine.view.BackButton;
 import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
 import cm.aptoide.pt.v8engine.view.account.user.CreateUserActivity;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
@@ -80,6 +81,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   private ThrowableToStringMapper errorMapper;
   private LoginSignUpCredentialsPresenter presenter;
   private List<String> facebookRequestedPermissions;
+  private BackButton.ClickHandler backClickHandler;
+  private FragmentNavigator fragmentNavigator;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
@@ -97,6 +100,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     super.onCreate(savedInstanceState);
     errorMapper = new AccountErrorMapper(getContext());
     facebookRequestedPermissions = Arrays.asList("email", "user_friends");
+    fragmentNavigator = getFragmentNavigator();
     presenter = new LoginSignUpCredentialsPresenter(this,
         ((V8Engine) getContext().getApplicationContext()).getAccountManager(),
         facebookRequestedPermissions,
@@ -104,11 +108,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
             GoogleApiAvailability.getInstance()),
         getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW),
         getArguments().getBoolean(CLEAN_BACK_STACK));
-  }
-
-  @Override public boolean onBackPressed() {
-    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-    return tryCloseLoginBottomSheet() || super.onBackPressed();
   }
 
   @Nullable @Override
@@ -169,7 +168,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
       }
 
       @Override public void onError(FacebookException error) {
-        showFacebookLoginError(cm.aptoide.accountmanager.R.string.error_occured);
+        showFacebookLoginError(R.string.error_occured);
       }
     });
   }
@@ -209,19 +208,15 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void navigateToMainView() {
-    final FragmentNavigator navManager = getFragmentNavigator();
     Fragment home =
         HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
             V8Engine.getConfiguration().getDefaultTheme());
-    navManager.cleanBackStack();
-    navManager.navigateTo(home);
+    fragmentNavigator.cleanBackStack();
+    fragmentNavigator.navigateTo(home);
   }
 
   @Override public void goBack() {
-    // close login / signup bottom sheet
-    onBackPressed();
-    // pop this fragment from stack
-    getActivity().onBackPressed();
+    fragmentNavigator.popBackStack();
   }
 
   @Override public void dismiss() {
@@ -305,11 +300,24 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
     bindViews(view);
 
+    backClickHandler = new BackButton.ClickHandler() {
+      @Override public boolean handle() {
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        return tryCloseLoginBottomSheet();
+      }
+    };
+    registerBackClickHandler(backClickHandler);
+
     attachPresenter(presenter, savedInstanceState);
   }
 
   @Override protected void showGoogleLoginError() {
     ShowMessage.asToast(getContext(), R.string.google_login_cancelled);
+  }
+
+  @Override public void onDestroyView() {
+    unregisterBackClickHandler(backClickHandler);
+    super.onDestroyView();
   }
 
   private void bindViews(View view) {
@@ -326,8 +334,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     hideShowAptoidePasswordButton = (Button) view.findViewById(R.id.btn_show_hide_pass);
 
     facebookLoginButton = view.findViewById(R.id.fb_login_button);
-    //facebookLoginButton.setFragment(this);
-    //facebookLoginButton.setReadPermissions(facebookRequestedPermissions);
     RxView.clicks(facebookLoginButton)
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(
@@ -352,8 +358,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     final Context context = getContext();
 
     facebookEmailRequiredDialog = new AlertDialog.Builder(context).setMessage(
-        cm.aptoide.accountmanager.R.string.facebook_email_permission_regected_message)
-        .setPositiveButton(cm.aptoide.accountmanager.R.string.facebook_grant_permission_button,
+        R.string.facebook_email_permission_regected_message)
+        .setPositiveButton(R.string.facebook_grant_permission_button,
             (dialog, which) -> {
               facebookLoginManager.logInWithReadPermissions(this, Arrays.asList("email"));
             })

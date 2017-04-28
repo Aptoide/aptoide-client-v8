@@ -7,11 +7,10 @@ package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
 import android.os.Build;
 import cm.aptoide.pt.dataprovider.ws.Api;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -24,9 +23,9 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
   private String tracker;
   private String success;
 
-  private RegisterAdRefererRequest(long adId, long appId, String clickUrl, boolean success) {
-    super(OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+  private RegisterAdRefererRequest(long adId, long appId, String clickUrl, boolean success,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(httpClient, converterFactory);
     this.adId = adId;
     this.appId = appId;
     this.success = (success ? "1" : "0");
@@ -34,9 +33,10 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
     extractAndSetTracker(clickUrl);
   }
 
-  public static RegisterAdRefererRequest of(long adId, long appId, String clickUrl,
-      boolean success) {
-    return new RegisterAdRefererRequest(adId, appId, clickUrl, success);
+  public static RegisterAdRefererRequest of(long adId, long appId, String clickUrl, boolean success,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    return new RegisterAdRefererRequest(adId, appId, clickUrl, success, httpClient,
+        converterFactory);
   }
 
   private void extractAndSetTracker(String clickUrl) {

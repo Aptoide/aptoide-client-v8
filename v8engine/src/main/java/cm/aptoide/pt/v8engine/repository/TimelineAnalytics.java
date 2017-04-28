@@ -3,12 +3,14 @@ package cm.aptoide.pt.v8engine.repository;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.AptoideEvent;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.FacebookEvent;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.LocalyticsEvent;
+import cm.aptoide.pt.v8engine.analytics.events.AptoideEvent;
+import cm.aptoide.pt.v8engine.analytics.events.FacebookEvent;
+import cm.aptoide.pt.v8engine.analytics.events.LocalyticsEvent;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
 import java.util.Map;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 
 /**
  * Created by jdandrade on 27/10/2016.
@@ -26,13 +28,18 @@ public class TimelineAnalytics {
   private static final String FOLLOW_FRIENDS = "Apps_Timeline_Follow_Friends";
   private final Analytics analytics;
   private final AppEventsLogger facebook;
-  private BodyInterceptor<BaseBody> bodyInterceptor;
+  private final BodyInterceptor<BaseBody> bodyInterceptor;
+  private final OkHttpClient httpClient;
+  private final Converter.Factory converterFactory;
 
   public TimelineAnalytics(Analytics analytics, AppEventsLogger facebook,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     this.analytics = analytics;
     this.facebook = facebook;
     this.bodyInterceptor = bodyInterceptor;
+    this.httpClient = httpClient;
+    this.converterFactory = converterFactory;
   }
 
   public void sendFollowFriendsEvent() {
@@ -97,7 +104,8 @@ public class TimelineAnalytics {
   }
 
   private AptoideEvent createEvent(String event, Map<String, Object> data) {
-    return new AptoideEvent(data, event, "CLICK", "TIMELINE", bodyInterceptor);
+    return new AptoideEvent(data, event, "CLICK", "TIMELINE", bodyInterceptor, httpClient,
+        converterFactory);
   }
 
   private Map<String, Object> createAppData(String cardType, String source, String packageName) {

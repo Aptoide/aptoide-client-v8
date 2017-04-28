@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.model.MinimalAdInterface;
-import cm.aptoide.pt.model.StoredMinimalAdInterface;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -83,7 +82,7 @@ public class DataproviderUtils {
       knock(minimalAd.getCpdUrl());
     }
 
-    public static void knockCpi(StoredMinimalAdInterface minimalAd) {
+    public static void knockCpi(MinimalAdInterface minimalAd) {
       // TODO: 28-07-2016 Baikova ad installed.
       knock(minimalAd.getCpiUrl());
     }

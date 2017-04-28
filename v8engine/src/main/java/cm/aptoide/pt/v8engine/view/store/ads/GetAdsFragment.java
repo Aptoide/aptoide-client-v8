@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.AdsRepository;
@@ -15,6 +16,8 @@ import cm.aptoide.pt.v8engine.view.store.StoreTabGridRecyclerFragment;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -29,9 +32,12 @@ public class GetAdsFragment extends StoreTabGridRecyclerFragment {
     super.onCreate(savedInstanceState);
     final AptoideAccountManager accountManager =
         ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    final OkHttpClient httpClient =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    final Converter.Factory converterFactory = WebService.getDefaultConverter();
     adsRepository = new AdsRepository(
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
-        accountManager);
+        accountManager, httpClient, converterFactory);
   }
 
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {

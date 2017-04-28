@@ -63,7 +63,6 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   @Getter private MinimalAd minimalAd;
 
   private RollbackRepository rollbackRepository;
-  //private Installer installManager;
 
   private InstallManager installManager;
   private String md5;

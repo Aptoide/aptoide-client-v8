@@ -14,10 +14,6 @@ public interface HighwayView {
 
   void setUpListeners();
 
-  void showMobileDataDialog();
-
-  void showMobileDataToast();
-
   void showJoinGroupResult(int result);
 
   void showCreateGroupResult(int result);
@@ -30,15 +26,17 @@ public interface HighwayView {
 
   void openChatHotspot(ArrayList<String> pathsFromOutside, String deviceName);
 
-  void refreshRadar(ArrayList<String> clients);
+  void refreshRadar(ArrayList<Group> clients);
 
-  void refreshRadarLowerVersions(ArrayList<String> clients);
+  void refreshRadarLowerVersions(ArrayList<Group> clients);
 
   void showRecoveringWifiStateToast();
 
   void dismiss();
 
   void hideSearchGroupsTextview(boolean hide);
+
+  void openChatFromAppViewShare(String deviceName, String appFilepath);
 
   //    void setCreateGroupListener(View.OnClickListener listener );
   //

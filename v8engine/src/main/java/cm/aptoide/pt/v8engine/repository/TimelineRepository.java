@@ -17,6 +17,8 @@ import cm.aptoide.pt.model.v7.timeline.TimelineItem;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -27,17 +29,23 @@ public class TimelineRepository {
   private final String action;
   private final TimelineCardFilter filter;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
+  private final OkHttpClient httpClient;
+  private final Converter.Factory converterFactory;
 
   public TimelineRepository(String action, TimelineCardFilter filter,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     this.action = action;
     this.filter = filter;
     this.bodyInterceptor = bodyInterceptor;
+    this.httpClient = httpClient;
+    this.converterFactory = converterFactory;
   }
 
   public Observable<Datalist<TimelineCard>> getTimelineCards(Integer limit, int offset,
       List<String> packageNames, boolean refresh) {
-    return GetUserTimelineRequest.of(action, limit, offset, packageNames, bodyInterceptor)
+    return GetUserTimelineRequest.of(action, limit, offset, packageNames, bodyInterceptor,
+        httpClient, converterFactory)
         .observe(refresh)
         .flatMap(response -> {
           if (response.isOk()) {
@@ -80,6 +88,7 @@ public class TimelineRepository {
   }
 
   public Observable<TimelineStats> getTimelineStats(boolean byPassCache, Long userId) {
-    return GetTimelineStatsRequest.of(bodyInterceptor, userId).observe(byPassCache);
+    return GetTimelineStatsRequest.of(bodyInterceptor, userId, httpClient, converterFactory)
+        .observe(byPassCache);
   }
 }

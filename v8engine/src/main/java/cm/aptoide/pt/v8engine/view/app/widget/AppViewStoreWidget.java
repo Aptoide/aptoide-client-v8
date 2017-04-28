@@ -15,6 +15,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -30,6 +31,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Locale;
+import okhttp3.OkHttpClient;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
@@ -58,6 +60,9 @@ import rx.functions.Action1;
   }
 
   @Override public void bindView(AppViewStoreDisplayable displayable) {
+
+    final OkHttpClient httpClient =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     final BodyInterceptor<BaseBody> baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
@@ -94,7 +99,8 @@ import rx.functions.Action1;
 
     final StoreUtilsProxy storeUtilsProxy =
         new StoreUtilsProxy(accountManager, baseBodyInterceptor, new StoreCredentialsProviderImpl(),
-            AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class));
+            AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class), httpClient,
+            WebService.getDefaultConverter());
 
     Action1<Void> openStore = __ -> {
       getFragmentNavigator().navigateTo(

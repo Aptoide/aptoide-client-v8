@@ -6,12 +6,10 @@
 package cm.aptoide.pt.v8engine.repository.sync;
 
 import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.SyncStatusObserver;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
+import cm.aptoide.pt.v8engine.account.AndroidAccountProvider;
 import cm.aptoide.pt.v8engine.payment.Product;
 import java.util.Collections;
 import java.util.List;
@@ -26,15 +24,15 @@ import rx.subscriptions.Subscriptions;
 
 public class SyncAdapterBackgroundSync {
 
-  private final AptoidePreferencesConfiguration configuration;
-  private final AccountManager accountManager;
+  private final AndroidAccountProvider androidAccountProvider;
   private final SyncDataConverter syncDataConverter;
+  private String authority;
 
-  public SyncAdapterBackgroundSync(AptoidePreferencesConfiguration configuration,
-      AccountManager accountManager, SyncDataConverter converter) {
-    this.configuration = configuration;
-    this.accountManager = accountManager;
+  public SyncAdapterBackgroundSync(SyncDataConverter converter,
+      AndroidAccountProvider androidAccountProvider, String authority) {
+    this.androidAccountProvider = androidAccountProvider;
     this.syncDataConverter = converter;
+    this.authority = authority;
   }
 
   public Completable syncAuthorizations(List<String> paymentIds) {
@@ -45,21 +43,13 @@ public class SyncAdapterBackgroundSync {
   }
 
   private Completable sync(Bundle bundle) {
-    bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-    bundle.putBoolean(ContentResolver.SYNC_EXTRAS_IGNORE_BACKOFF, true);
+    return androidAccountProvider.getAndroidAccount().flatMapCompletable(account -> {
+      bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+      bundle.putBoolean(ContentResolver.SYNC_EXTRAS_IGNORE_BACKOFF, true);
 
-    final Account account = getAccount();
-    String authority = configuration.getContentAuthority();
-    ContentResolver.setSyncAutomatically(account, authority, true);
-    return sync(account, authority, bundle);
-  }
-
-  @NonNull private Account getAccount() {
-    Account[] accounts = accountManager.getAccountsByType(configuration.getAccountType());
-    if (accounts != null && accounts.length > 0) {
-      return accounts[0];
-    }
-    throw new IllegalStateException("User not logged in. Can't sync.");
+      ContentResolver.setSyncAutomatically(account, authority, true);
+      return sync(account, authority, bundle);
+    });
   }
 
   private Completable sync(Account account, String authority, Bundle bundle) {

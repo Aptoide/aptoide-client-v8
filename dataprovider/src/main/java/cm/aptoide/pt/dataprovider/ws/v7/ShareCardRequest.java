@@ -1,11 +1,10 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -16,17 +15,18 @@ public class ShareCardRequest extends V7<ShareCardResponse, ShareCardRequest.Bod
 
   private final String cardId;
 
-  protected ShareCardRequest(Body body, String cardId, BodyInterceptor<BaseBody> bodyInterceptor) {
-    super(body, BASE_HOST,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter(), bodyInterceptor);
+  protected ShareCardRequest(Body body, String cardId, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
     this.cardId = cardId;
   }
 
   public static ShareCardRequest of(TimelineCard timelineCard,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     final ShareCardRequest.Body body = new ShareCardRequest.Body(timelineCard.getCardId());
-    return new ShareCardRequest(body, timelineCard.getCardId(), bodyInterceptor);
+    return new ShareCardRequest(body, timelineCard.getCardId(), bodyInterceptor, httpClient,
+        converterFactory);
   }
 
   @Override protected Observable<ShareCardResponse> loadDataFromNetwork(V7.Interfaces interfaces,

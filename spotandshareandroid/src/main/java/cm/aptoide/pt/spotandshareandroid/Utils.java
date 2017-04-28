@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.provider.Settings;
-import android.text.TextUtils;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
@@ -15,6 +14,7 @@ import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Random;
 
 /**
  * Created by jandrade on 21-08-2015.
@@ -64,47 +64,15 @@ public class Utils {
         .replace("\n", "");
   }
 
-  public static String getDeviceName() {
-    String manufacturer = Build.MANUFACTURER;
-    String model = Build.MODEL;
-    String id = Build.ID;
-    if (model.startsWith(manufacturer)) {
-      return capitalize(model);
+  public static String generateRandomAlphanumericString(int lengthWanted) {
+    char[] array = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+    StringBuilder sb = new StringBuilder();
+    Random r = new Random();
+    for (int i = 0; i < lengthWanted; i++) {
+      char c = array[r.nextInt(array.length)];
+      sb.append(c);
     }
-    String result = capitalize(manufacturer) + " " + model + id;
-    if (result.length() > 20) {
-      result = "" + model + id;
-    }
-    if (result.length() > 20) {
-      result = "" + model;
-    }
-    if (result.length() > 20) {
-      String aux = result.substring(0, 20);
-      result = aux;
-    }
-    return result;
-  }
-
-  private static String capitalize(String str) {
-    if (TextUtils.isEmpty(str)) {
-      return str;
-    }
-    char[] arr = str.toCharArray();
-    boolean capitalizeNext = true;
-    StringBuilder phrase = new StringBuilder();
-    for (char c : arr) {
-      if (capitalizeNext && Character.isLetter(c)) {
-
-        phrase.append(Character.toUpperCase(c));
-        capitalizeNext = false;
-        continue;
-      } else if (Character.isWhitespace(c)) {
-        capitalizeNext = true;
-      }
-      phrase.append(c);
-    }
-
-    return phrase.toString();
+    return sb.toString();
   }
 
   public static long getFolderSize(File dir) {

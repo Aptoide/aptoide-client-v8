@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.view.wizard;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,13 +10,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.view.BackButton;
+import cm.aptoide.pt.v8engine.view.BackButtonFragment;
 
 /**
  * Created by jdandrade on 18-07-2016.
  * This Fragment is responsible for setting up and inflating the Second page in the Wizard.
  */
-public class WizardPageTwoFragment extends FragmentView {
+public class WizardPageTwoFragment extends BackButtonFragment {
+
+  private BackButton.ClickHandler clickHandler;
 
   public static Fragment newInstance() {
     return new WizardPageTwoFragment();
@@ -23,7 +27,7 @@ public class WizardPageTwoFragment extends FragmentView {
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.wizard_page_one, null);
+    final View view = inflater.inflate(R.layout.wizard_page_one, container, false);
     setText(view);
     return view;
   }
@@ -35,8 +39,19 @@ public class WizardPageTwoFragment extends FragmentView {
     ((ImageView) view.findViewById(android.R.id.icon)).setImageResource(R.drawable.wizard_two);
   }
 
-  @Override public boolean onBackPressed() {
-    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-    return super.onBackPressed();
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    clickHandler = new BackButton.ClickHandler() {
+      @Override public boolean handle() {
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        return false;
+      }
+    };
+    registerBackClickHandler(clickHandler);
+  }
+
+  @Override public void onDestroyView() {
+    unregisterBackClickHandler(clickHandler);
+    super.onDestroyView();
   }
 }

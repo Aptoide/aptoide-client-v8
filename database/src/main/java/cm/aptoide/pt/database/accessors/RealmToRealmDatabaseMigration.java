@@ -216,5 +216,13 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
 
       oldVersion++;
     }
+
+    if (oldVersion == 8081) {
+      schema.get("StoreMinimalAd")
+          .addField("cpcUrl", String.class)
+          .addField("cpdUrl", String.class);
+
+      oldVersion++;
+    }
   }
 }

@@ -20,6 +20,8 @@ import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundExcepti
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Single;
 
 /**
@@ -32,16 +34,21 @@ public class PaymentAuthorizationSync extends RepositorySync {
   private final PaymentAuthorizationFactory authorizationFactory;
   private final AptoideAccountManager accountManager;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
+  private final OkHttpClient httpClient;
+  private final Converter.Factory converterFactory;
 
   public PaymentAuthorizationSync(List<String> paymentIds,
       PaymentAuthorizationAccessor authorizationAccessor,
       PaymentAuthorizationFactory authorizationFactory, AptoideAccountManager accountManager,
-      BodyInterceptor<BaseBody> bodyInterceptorV3) {
+      BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     this.paymentIds = paymentIds;
     this.authorizationAccessor = authorizationAccessor;
     this.authorizationFactory = authorizationFactory;
     this.accountManager = accountManager;
     this.bodyInterceptorV3 = bodyInterceptorV3;
+    this.httpClient = httpClient;
+    this.converterFactory = converterFactory;
   }
 
   @Override public void sync(SyncResult syncResult) {
@@ -61,7 +68,8 @@ public class PaymentAuthorizationSync extends RepositorySync {
 
   private Single<List<PaymentAuthorizationsResponse.PaymentAuthorizationResponse>> getServerAuthorizations(
       String accessToken) {
-    return GetPaymentAuthorizationsRequest.of(accessToken, bodyInterceptorV3)
+    return GetPaymentAuthorizationsRequest.of(accessToken, bodyInterceptorV3, httpClient,
+        converterFactory)
         .observe()
         .toSingle()
         .flatMap(response -> {

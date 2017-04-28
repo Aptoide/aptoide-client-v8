@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -52,10 +54,38 @@ public class StoreUtils {
   @Deprecated public static void subscribeStore(String storeName,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager,
-      BodyInterceptor<BaseBody> bodyInterceptor,
-      StoreCredentialsProvider storeCredentialsProvider) {
+      BodyInterceptor<BaseBody> bodyInterceptor, StoreCredentialsProvider storeCredentialsProvider,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
     subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName, storeCredentialsProvider),
-        bodyInterceptor), successRequestListener, errorRequestListener, accountManager, null, null);
+        bodyInterceptor, httpClient, converterFactory), successRequestListener,
+        errorRequestListener, accountManager, null, null);
+  }
+
+  /**
+   * If you want to do event tracking (Analytics) use (v8engine)StoreUtilsProxy.subscribeStore
+   * instead, else, use this.
+   */
+  @Deprecated public static Observable<GetStoreMeta> subscribeStore(
+      GetStoreMetaRequest getStoreMetaRequest, AptoideAccountManager accountManager,
+      String storeUserName, String storePassword) {
+    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+
+    return getStoreMetaRequest.observe()
+        .flatMap(getStoreMeta -> {
+          if (BaseV7Response.Info.Status.OK.equals(getStoreMeta.getInfo().getStatus())) {
+            // TODO: 18-05-2016 neuro private ainda na ta
+            if (accountManager.isLoggedIn()) {
+              return accountManager.subscribeStore(getStoreMeta.getData().getName(), storeUserName,
+                  storePassword).andThen(Observable.just(getStoreMeta));
+            } else {
+              return Observable.just(getStoreMeta);
+            }
+          } else {
+            return Observable.error(new Exception("Something went wrong while getting store meta"));
+          }
+        })
+        .doOnNext(
+            getStoreMeta -> saveStore(getStoreMeta.getData(), getStoreMetaRequest, storeAccessor));
   }
 
   /**
@@ -66,31 +96,18 @@ public class StoreUtils {
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager,
       String storeUserName, String storePassword) {
-    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
 
-    getStoreMetaRequest.observe().flatMap(getStoreMeta -> {
-      if (BaseV7Response.Info.Status.OK.equals(getStoreMeta.getInfo().getStatus())) {
-        // TODO: 18-05-2016 neuro private ainda na ta
-        if (accountManager.isLoggedIn()) {
-          return accountManager.subscribeStore(getStoreMeta.getData().getName(), storeUserName,
-              storePassword).andThen(Observable.just(getStoreMeta));
-        } else {
-          return Observable.just(getStoreMeta);
-        }
-      } else {
-        return Observable.error(new Exception("Something went wrong while getting store meta"));
-      }
-    }).subscribe(getStoreMeta -> {
-      saveStore(getStoreMeta.getData(), getStoreMetaRequest, storeAccessor);
-      if (successRequestListener != null) {
-        successRequestListener.call(getStoreMeta);
-      }
-    }, (e) -> {
-      if (errorRequestListener != null) {
-        errorRequestListener.onError(e);
-      }
-      CrashReport.getInstance().log(e);
-    });
+    subscribeStore(getStoreMetaRequest, accountManager, storeUserName, storePassword).subscribe(
+        getStoreMeta -> {
+          if (successRequestListener != null) {
+            successRequestListener.call(getStoreMeta);
+          }
+        }, (e) -> {
+          if (errorRequestListener != null) {
+            errorRequestListener.onError(e);
+          }
+          CrashReport.getInstance().log(e);
+        });
   }
 
   /**

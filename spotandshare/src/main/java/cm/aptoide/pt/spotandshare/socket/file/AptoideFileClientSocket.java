@@ -24,15 +24,16 @@ public class AptoideFileClientSocket<T> extends AptoideClientSocket {
   private T fileDescriptor;
   private FileClientLifecycle<T> fileClientLifecycle;
 
-  public AptoideFileClientSocket(String host, int port, List<FileInfo> fileInfos) {
-    super(host, port);
+  public AptoideFileClientSocket(String host, int port, List<FileInfo> fileInfos, int timeout) {
+    super(host, port, timeout);
     this.fileInfos = fileInfos;
     // TODO: 24-03-2017 neuro fix this sheet
     onError = fileClientLifecycle;
   }
 
-  public AptoideFileClientSocket(int bufferSize, String host, int port, List<FileInfo> fileInfos) {
-    super(bufferSize, host, port);
+  public AptoideFileClientSocket(int bufferSize, String host, int port, List<FileInfo> fileInfos,
+      int timeout) {
+    super(bufferSize, host, port, timeout);
     this.fileInfos = fileInfos;
     // TODO: 24-03-2017 neuro fix this sheet
     onError = fileClientLifecycle;
@@ -70,6 +71,7 @@ public class AptoideFileClientSocket<T> extends AptoideClientSocket {
 
     this.fileDescriptor = fileDescriptor;
     this.fileClientLifecycle = fileClientLifecycle;
+    this.onError = fileClientLifecycle;
 
     return this;
   }

@@ -27,7 +27,7 @@ public class CreateUserErrorMapper implements ThrowableToStringMapper {
     String message = accountErrorMapper.map(throwable);
 
     if (throwable instanceof SocketTimeoutException || throwable instanceof TimeoutException) {
-      message = context.getString(cm.aptoide.accountmanager.R.string.user_upload_photo_failed);
+      message = context.getString(R.string.user_upload_photo_failed);
     } else if (throwable instanceof AccountValidationException) {
       switch (((AccountValidationException) throwable).getCode()) {
         case AccountValidationException.EMPTY_NAME:

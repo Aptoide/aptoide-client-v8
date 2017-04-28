@@ -10,6 +10,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.util.schedulers.SchedulerProvider;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.subscriptions.CompositeSubscription;
 
@@ -27,13 +29,15 @@ public class RateAndReviewsPresenter implements Presenter {
   public RateAndReviewsPresenter(@NonNull long appId, @NonNull String storeName,
       @NonNull String packageName, @NonNull RateAndReviewsView view,
       @NonNull SchedulerProvider schedulerProvider, AptoideAccountManager accountManager,
-      String aptoideClientUUID, BodyInterceptor<BaseBody> bodyInterceptor) {
+      String aptoideClientUUID, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     this.view = view;
     this.schedulerProvider = schedulerProvider;
     this.request =
         ListReviewsRequest.of(storeName, packageName, new BaseRequestWithStore.StoreCredentials(),
-            bodyInterceptor);
-    this.ratingRequest = GetAppRequest.of(packageName, bodyInterceptor, appId);
+            bodyInterceptor, httpClient, converterFactory);
+    this.ratingRequest =
+        GetAppRequest.of(packageName, bodyInterceptor, appId, httpClient, converterFactory);
     this.subscriptions = new CompositeSubscription();
   }
 

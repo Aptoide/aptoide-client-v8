@@ -1,6 +1,7 @@
 package cm.aptoide.pt.spotandshare.socket.message.server;
 
 import cm.aptoide.pt.spotandshare.socket.AptoideServerSocket;
+import cm.aptoide.pt.spotandshare.socket.Print;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.HostLeftMessage;
@@ -23,26 +24,40 @@ import lombok.Getter;
  */
 public class AptoideMessageServerSocket extends AptoideServerSocket {
 
+  private static final String TAG = AptoideMessageServerSocket.class.getSimpleName();
+
   @Getter private final ConcurrentLinkedQueue<AptoideMessageServerController>
       aptoideMessageControllers = new ConcurrentLinkedQueue<>();
   private AptoideMessageServerController aptoideMessageServerController;
 
-  public AptoideMessageServerSocket(int port, int timeout) {
-    super(port, timeout);
+  public AptoideMessageServerSocket(int port, int serverSocketTimeout, int timeout) {
+    super(port, serverSocketTimeout, timeout);
   }
 
   @Override public void shutdown() {
+
+    shutdown = true;
     onError = null;
+
     for (AptoideMessageServerController aptoideMessageClientController : getAptoideMessageControllers()) {
       aptoideMessageClientController.disable();
     }
-    sendToOthers(null, new ServerLeftMessage(getHost()));
-    aptoideMessageServerController.disable();
+    sendToOthersWithAck(null, new ServerLeftMessage(getHost()));
+
+    if (aptoideMessageServerController != null) {
+      aptoideMessageServerController.disable();
+    }
 
     super.shutdown();
   }
 
   @Override protected void onNewClient(Socket socket) throws IOException {
+
+    if (shutdown) {
+      Print.d(TAG, "Server already shutdown!");
+      return;
+    }
+
     aptoideMessageServerController =
         new AptoideMessageServerController(this, Host.fromLocalhost(socket), Host.from(socket),
             onError);
@@ -67,8 +82,11 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
   }
 
   public void sendToOthers(Host host, Message message) {
+    innerSendToOthers(host, message, Executors.newCachedThreadPool());
+  }
+
+  private void innerSendToOthers(Host host, Message message, ExecutorService localExecutorService) {
     dispatchServerAction(() -> {
-      ExecutorService localExecutorService = Executors.newCachedThreadPool();
       for (AptoideMessageServerController aptoideMessageClientController : getAptoideMessageControllers()) {
         if (!aptoideMessageClientController.getHost().equals(host)) {
           localExecutorService.execute(() -> {
@@ -81,16 +99,21 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
         }
       }
 
-      // TODO: 01-02-2017 neuro Fix timeout
-      try {
-        localExecutorService.shutdown();
-        localExecutorService.awaitTermination(5, TimeUnit.SECONDS);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-        System.out.println(
-            "AptoideMessageServerSocket: Executor service took too long to complete requests.");
-      }
+      localExecutorService.shutdown();
     });
+  }
+
+  public void sendToOthersWithAck(Host host, Message message) {
+    ExecutorService localExecutorService = Executors.newCachedThreadPool();
+    innerSendToOthers(host, message, localExecutorService);
+    try {
+      // TODO: 01-02-2017 neuro Fix timeout
+      localExecutorService.awaitTermination(5, TimeUnit.SECONDS);
+    } catch (InterruptedException e) {
+      System.out.println(
+          "AptoideMessageServerSocket: Executor service took too long to complete requests.");
+      e.printStackTrace();
+    }
   }
 
   public void requestPermissionToSendApk(RequestPermissionToSend message) {

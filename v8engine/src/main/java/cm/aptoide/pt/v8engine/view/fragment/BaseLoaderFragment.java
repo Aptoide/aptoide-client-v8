@@ -40,10 +40,11 @@ public abstract class BaseLoaderFragment extends UIComponentFragment implements 
   }
 
   @NonNull protected LoaderLayoutHandler createLoaderLayoutHandler() {
+
     if (getViewsToShowAfterLoadingId().length > 0) {
-      return new LoaderLayoutHandler(this, getViewsToShowAfterLoadingId());
+      return new LoaderLayoutHandler(this, getActivityNavigator(), getViewsToShowAfterLoadingId());
     }
-    return new LoaderLayoutHandler(this, getViewToShowAfterLoadingId());
+    return new LoaderLayoutHandler(this, getActivityNavigator(), getViewToShowAfterLoadingId());
   }
 
   /**

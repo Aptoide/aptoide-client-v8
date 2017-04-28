@@ -8,6 +8,8 @@ package cm.aptoide.pt.v8engine.view.app;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -39,23 +41,26 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.iab.BillingBinder;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.spotandshareandroid.HighwayActivity;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
@@ -65,7 +70,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
@@ -105,6 +109,8 @@ import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.Getter;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -171,6 +177,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private SocialRepository socialRepository;
   private AccountNavigator accountNavigator;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
+  private StoreMinimalAdAccessor storeMinimalAdAccessor;
 
   public static AppViewFragment newInstance(String md5) {
     Bundle bundle = new Bundle();
@@ -239,17 +248,21 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     accountNavigator =
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
     permissionManager = new PermissionManager();
-    Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
-    installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
+    installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
+        InstallerFactory.ROLLBACK);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    socialRepository = new SocialRepository(accountManager, bodyInterceptor);
+    socialRepository =
+        new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient);
     productFactory = new ProductFactory();
     appRepository = RepositoryFactory.getAppRepository(getContext());
+    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
     adsRepository =
         new AdsRepository(((V8Engine) getContext().getApplicationContext()).getAptoideClientUUID(),
-            accountManager);
+            accountManager, httpClient, converterFactory);
     installedRepository = RepositoryFactory.getInstalledRepository();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
+    storeMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
@@ -281,7 +294,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-
+    header = null;
     if (storeTheme != null) {
       ThemeUtils.setStatusBarThemeColor(getActivity(),
           StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
@@ -424,6 +437,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     }
   }
 
+  private void storeMinimalAdd(MinimalAd minimalAd) {
+    storeMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, null));
+  }
+
   @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
     List<String> keywords = getApp1.getNodes().getMeta().getData().getMedia().getKeywords();
     String packageName = getApp1.getNodes().getMeta().getData().getPackageName();
@@ -493,11 +510,12 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   private void handleAdsLogic(MinimalAd minimalAd) {
+    storeMinimalAdd(minimalAd);
     DataproviderUtils.AdNetworksUtils.knockCpc(minimalAd);
     Analytics.LTV.cpi(minimalAd.getPackageName());
     AptoideUtils.ThreadU.runOnUiThread(
-        () -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, false,
-            adsRepository));
+        () -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, false, adsRepository,
+            httpClient, converterFactory));
   }
 
   private void updateLocalVars(GetAppMeta.App app) {
@@ -645,7 +663,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     int i = item.getItemId();
 
     if (i == R.id.menu_share) {
-      shareApp(appName, packageName, wUrl);
+      if (getApp != null) {
+        shareApp(appName, packageName, getApp.getNodes().getMeta().getData().getFile().getVercode(),
+            wUrl);
+      }
       return true;
     } else if (i == R.id.menu_schedule) {
 
@@ -680,32 +701,51 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   // Scrollable interface
   //
 
-  private void shareApp(String appName, String packageName, String wUrl) {
-    GenericDialogs.createGenericShareDialog(getContext(), getString(R.string.share))
-        .subscribe(eResponse -> {
-          if (GenericDialogs.EResponse.SHARE_EXTERNAL == eResponse) {
+  private void shareApp(String appName, String packageName, int vercode, String wUrl) {
+    GenericDialogs.createGenericShareDialog(getContext(), getString(R.string.share),
+        installedRepository.contains(packageName, vercode)).subscribe(eResponse -> {
+      if (GenericDialogs.EResponse.SHARE_EXTERNAL == eResponse) {
 
-            shareDefault(appName, packageName, wUrl);
-          } else if (GenericDialogs.EResponse.SHARE_TIMELINE == eResponse) {
-            if (!accountManager.isLoggedIn()) {
-              ShowMessage.asSnack(getActivity(), R.string.you_need_to_be_logged_in, R.string.login,
-                  snackView -> accountNavigator.navigateToAccountView());
-              return;
-            }
-            if (Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
-              SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(accountManager, false,
-                  SharePreviewDialog.SharePreviewOpenMode.SHARE);
-              AlertDialog.Builder alertDialog =
-                  sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(),
-                      appName, app.getIcon());
-              SocialRepository socialRepository =
-                  new SocialRepository(accountManager, bodyInterceptor);
+        shareDefault(appName, packageName, wUrl);
+      } else if (GenericDialogs.EResponse.SHARE_TIMELINE == eResponse) {
+        if (!accountManager.isLoggedIn()) {
+          ShowMessage.asSnack(getActivity(), R.string.you_need_to_be_logged_in, R.string.login,
+              snackView -> accountNavigator.navigateToAccountView());
+          return;
+        }
+        if (Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
+          SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(accountManager, false,
+              SharePreviewDialog.SharePreviewOpenMode.SHARE);
+          AlertDialog.Builder alertDialog =
+              sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(), appName,
+                  app.getIcon());
+          SocialRepository socialRepository =
+              new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient);
 
-              sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
-                  sharePreviewDialog, alertDialog, socialRepository);
-            }
-          }
-        }, err -> err.printStackTrace());
+          sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
+              sharePreviewDialog, alertDialog, socialRepository);
+        }
+      } else if (GenericDialogs.EResponse.SHARE_SPOT_AND_SHARE == eResponse) {
+
+        String filepath = getFilepath(packageName);
+        Intent intent = new Intent(this.getActivity(), HighwayActivity.class);
+        intent.setAction("APPVIEW_SHARE");
+        intent.putExtra("APPVIEW_SHARE_FILEPATH", filepath);
+        startActivity(intent);
+      }
+    }, err -> err.printStackTrace());
+  }
+
+  private String getFilepath(String packageName) {
+    PackageManager packageManager = getContext().getPackageManager();
+    PackageInfo packageInfo = null;
+    try {
+      packageInfo = packageManager.getPackageInfo(packageName, 0);
+      return packageInfo.applicationInfo.sourceDir;
+    } catch (PackageManager.NameNotFoundException e) {
+      e.printStackTrace();
+      throw new IllegalArgumentException("Required packageName not installed! " + packageName);
+    }
   }
 
   @Partners protected void shareDefault(String appName, String packageName, String wUrl) {

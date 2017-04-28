@@ -35,6 +35,9 @@ import rx.schedulers.Schedulers;
  */
 public abstract class WebService<T, U> {
 
+  public static final String BYPASS_HEADER_KEY = "X-Bypass-Cache";
+  public static final String BYPASS_HEADER_VALUE = "true";
+
   private static Converter.Factory defaultConverterFactory;
 
   protected final Converter.Factory converterFactory;
@@ -53,7 +56,7 @@ public abstract class WebService<T, U> {
     this.baseHost = baseHost;
   }
 
-  protected static Converter.Factory getDefaultConverter() {
+  public static Converter.Factory getDefaultConverter() {
     if (defaultConverterFactory == null) {
       ObjectMapper objectMapper = new ObjectMapper();
       objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

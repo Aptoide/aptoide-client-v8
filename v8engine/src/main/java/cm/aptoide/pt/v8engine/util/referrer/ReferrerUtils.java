@@ -37,6 +37,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -47,7 +49,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
   private static final String TAG = ReferrerUtils.class.getSimpleName();
 
   public static void extractReferrer(MinimalAd minimalAd, final int retries,
-      boolean broadcastReferrer, AdsRepository adsRepository) {
+      boolean broadcastReferrer, AdsRepository adsRepository, final OkHttpClient httpClient,
+      final Converter.Factory converterFactory) {
     String packageName = minimalAd.getPackageName();
     long networkId = minimalAd.getNetworkId();
     String clickUrl = minimalAd.getClickUrl();
@@ -125,13 +128,11 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
                 StoreMinimalAdAccessor storeMinimalAdAccessor =
                     AccessorFactory.getAccessorFor(StoredMinimalAd.class);
-                storeMinimalAdAccessor.insert(
-                    new StoredMinimalAd(packageName, referrer, minimalAd.getCpiUrl(),
-                        minimalAd.getAdId()));
+                storeMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, referrer));
               }
 
               future.cancel(false);
-              postponeReferrerExtraction(minimalAd, 0, true);
+              postponeReferrerExtraction(minimalAd, 0, true, httpClient, converterFactory);
             }
           }
 
@@ -144,29 +145,33 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
           Logger.d("ExtractReferrer", "Openened clickUrl: " + url);
 
           if (future == null) {
-            future = postponeReferrerExtraction(minimalAd, TIME_OUT, retries);
+            future = postponeReferrerExtraction(minimalAd, TIME_OUT, retries, httpClient,
+                converterFactory);
           }
         }
 
         private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta,
-            int retries) {
-          return postponeReferrerExtraction(minimalAd, delta, false, retries);
+            int retries, OkHttpClient httpClient, Converter.Factory converterFactory) {
+          return postponeReferrerExtraction(minimalAd, delta, false, retries, httpClient,
+              converterFactory);
         }
 
         private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta,
-            boolean success) {
-          return postponeReferrerExtraction(minimalAd, delta, success, 0);
+            boolean success, OkHttpClient httpClient, Converter.Factory converterFactory) {
+          return postponeReferrerExtraction(minimalAd, delta, success, 0, httpClient,
+              converterFactory);
         }
 
         private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta,
-            final boolean success, final int retries) {
+            final boolean success, final int retries, OkHttpClient httpClient,
+            Converter.Factory converterFactory) {
           Logger.d("ExtractReferrer", "Referrer postponed " + delta + " seconds.");
 
           Callable<Void> callable = () -> {
             Logger.d("ExtractReferrer", "Sending RegisterAdRefererRequest with value " + success);
 
             RegisterAdRefererRequest.of(minimalAd.getAdId(), minimalAd.getAppId(),
-                minimalAd.getClickUrl(), success).execute();
+                minimalAd.getClickUrl(), success, httpClient, converterFactory).execute();
 
             Logger.d("ExtractReferrer", "Retries left: " + retries);
 
@@ -182,7 +187,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
                       .filter(minimalAd1 -> minimalAd != null)
                       .subscribe(
                           minimalAd1 -> extractReferrer(minimalAd1, retries - 1, broadcastReferrer,
-                              adsRepository), throwable -> clearExcludedNetworks(packageName));
+                              adsRepository, httpClient, converterFactory),
+                          throwable -> clearExcludedNetworks(packageName));
                 } else {
                   // A lista de excluded networks deve ser limpa a cada "ronda"
                   clearExcludedNetworks(packageName);

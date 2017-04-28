@@ -7,12 +7,14 @@ import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
  */
 public class ShareAppsFileServerSocket extends AptoideFileServerSocket<AndroidAppInfo> {
 
-  public ShareAppsFileServerSocket(int port, AndroidAppInfo androidAppInfo, int timeout) {
-    super(port, androidAppInfo.getFiles(), timeout);
+  static final int SERVER_SOCKET_TIMEOUT = 5000;
+  static final int TIMEOUT = 5000;
+
+  public ShareAppsFileServerSocket(int port, AndroidAppInfo androidAppInfo) {
+    super(port, androidAppInfo.getFiles(), SERVER_SOCKET_TIMEOUT, TIMEOUT);
   }
 
-  public ShareAppsFileServerSocket(int bufferSize, int port, AndroidAppInfo androidAppInfo,
-      int timeout) {
-    super(bufferSize, port, androidAppInfo.getFiles(), timeout);
+  public ShareAppsFileServerSocket(int bufferSize, int port, AndroidAppInfo androidAppInfo) {
+    super(bufferSize, port, androidAppInfo.getFiles(), SERVER_SOCKET_TIMEOUT, TIMEOUT);
   }
 }
