@@ -87,30 +87,23 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
         .subscribe(click -> likeButton.performClick(), throwable -> CrashReport.getInstance()
             .log(throwable)));
 
-    compositeSubscription.add(RxView.clicks(likeButton)
-        .subscribe(click -> {
-          shareCard(displayable, (String cardId) -> likeCard(displayable, cardId, 1),
-              SharePreviewDialog.SharePreviewOpenMode.LIKE);
-          likeButton.setHeartState(false);
-        }, throwable -> CrashReport.getInstance()
-            .log(throwable)));
+    compositeSubscription.add(RxView.clicks(likeButton).subscribe(click -> {
+      shareCardWithoutPreview(displayable, (String cardId) -> likeCard(displayable, cardId, 1),
+          SharePreviewDialog.SharePreviewOpenMode.LIKE);
+    }, throwable -> CrashReport.getInstance().log(throwable)));
 
-    compositeSubscription.add(RxView.clicks(comment)
-        .subscribe(click -> {
-          FragmentManager fm = getContext().getSupportFragmentManager();
-          CommentDialogFragment commentDialogFragment =
-              CommentDialogFragment.newInstanceTimelineArticleComment(displayable.getTimelineCard()
-                  .getCardId());
-          commentDialogFragment.setCommentBeforeSubmissionCallbackContract(
-              (inputText) -> shareCard(displayable, cardId -> {
-                PostCommentForTimelineArticle.of(cardId, inputText, bodyInterceptor, httpClient,
-                    converterFactory)
-                    .observe()
-                    .subscribe();
-              }, SharePreviewDialog.SharePreviewOpenMode.COMMENT));
-          commentDialogFragment.show(fm, "fragment_comment_dialog");
-        }, throwable -> CrashReport.getInstance()
-            .log(throwable)));
+    compositeSubscription.add(RxView.clicks(comment).subscribe(click -> {
+      FragmentManager fm = getContext().getSupportFragmentManager();
+      CommentDialogFragment commentDialogFragment =
+          CommentDialogFragment.newInstanceTimelineArticleComment(
+              displayable.getTimelineCard().getCardId());
+      commentDialogFragment.setCommentBeforeSubmissionCallbackContract(
+          (inputText) -> shareCardWithoutPreview(displayable, cardId -> {
+            PostCommentForTimelineArticle.of(cardId, inputText, bodyInterceptor, httpClient,
+                converterFactory).observe().subscribe();
+          }, SharePreviewDialog.SharePreviewOpenMode.COMMENT));
+      commentDialogFragment.show(fm, "fragment_comment_dialog");
+    }, throwable -> CrashReport.getInstance().log(throwable)));
 
     compositeSubscription.add(RxView.clicks(shareButton)
         .subscribe(
@@ -121,6 +114,26 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
 
   private void updateAccount(Account account) {
     this.account = account;
+  }
+
+  private void shareCardWithoutPreview(T displayable, ShareCardCallback callback,
+      SharePreviewDialog.SharePreviewOpenMode openMode) {
+    if (!accountManager.isLoggedIn()) {
+      ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
+          snackView -> accountNavigator.navigateToAccountView());
+      return;
+    }
+
+    if (TextUtils.isEmpty(account.getStoreName()) && !Account.Access.PUBLIC.equals(
+        account.getAccess())) {
+      ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
+          R.string.create_store_create, snackView -> {
+            Intent intent = new Intent(getContext(), CreateStoreActivity.class);
+            getContext().startActivity(intent);
+          });
+      return;
+    }
+    displayable.share(getContext(), callback);
   }
 
   private void shareCard(T displayable, ShareCardCallback callback,
