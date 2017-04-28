@@ -304,6 +304,12 @@ public class FragmentProviderImpl implements FragmentProvider {
     return CommentListFragment.newInstanceUrl(commentType, url);
   }
 
+  @Override
+  public Fragment newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType commentType,
+      String elementId) {
+    return CommentListFragment.newInstanceWithCommentDialogOpen(commentType, elementId);
+  }
+
   @Override public Fragment newAddressBookFragment() {
     return AddressBookFragment.newInstance();
   }

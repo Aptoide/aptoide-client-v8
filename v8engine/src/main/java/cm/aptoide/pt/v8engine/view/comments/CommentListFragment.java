@@ -69,6 +69,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private static final String ELEMENT_ID_AS_STRING = "element_id_as_string";
   private static final String ELEMENT_ID_AS_LONG = "element_id_as_long";
   private static final String URL_VAL = "url_val";
+  private static final String SHOW_INPUT_DIALOG_FIRST_RUN = "show_input_dialog_first_run";
   // control setComment retry
   protected long lastTotal;
   //
@@ -94,11 +95,13 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private StoreCredentialsProvider storeCredentialsProvider;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private boolean showCommentInputDialogOnFirstRun;
 
   public static Fragment newInstance(CommentType commentType, String timelineArticleId) {
     Bundle args = new Bundle();
     args.putString(ELEMENT_ID_AS_STRING, timelineArticleId);
     args.putString(COMMENT_TYPE, commentType.name());
+    args.putBoolean(SHOW_INPUT_DIALOG_FIRST_RUN, false);
 
     CommentListFragment fragment = new CommentListFragment();
     fragment.setArguments(args);
@@ -109,7 +112,19 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     Bundle args = new Bundle();
     args.putString(URL_VAL, url);
     args.putString(COMMENT_TYPE, commentType.name());
+    args.putBoolean(SHOW_INPUT_DIALOG_FIRST_RUN, false);
 
+    CommentListFragment fragment = new CommentListFragment();
+    fragment.setArguments(args);
+    return fragment;
+  }
+
+  public static Fragment newInstanceWithCommentDialogOpen(CommentType commentType,
+      String elementId) {
+    Bundle args = new Bundle();
+    args.putString(ELEMENT_ID_AS_STRING, elementId);
+    args.putString(COMMENT_TYPE, commentType.name());
+    args.putBoolean(SHOW_INPUT_DIALOG_FIRST_RUN, true);
     CommentListFragment fragment = new CommentListFragment();
     fragment.setArguments(args);
     return fragment;
@@ -170,6 +185,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     elementIdAsLong = args.getLong(ELEMENT_ID_AS_LONG);
     url = args.getString(URL_VAL);
     commentType = CommentType.valueOf(args.getString(COMMENT_TYPE));
+    showCommentInputDialogOnFirstRun = args.getBoolean(SHOW_INPUT_DIALOG_FIRST_RUN);
 
     // extracting store data from the URL...
     if (commentType == CommentType.STORE) {
@@ -204,6 +220,9 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
       }
       floatingActionButton.setImageDrawable(drawable);
       floatingActionButton.setVisibility(View.VISIBLE);
+    }
+    if (showCommentInputDialogOnFirstRun) {
+      createNewCommentFragment(elementIdAsString).subscribe();
     }
   }
 

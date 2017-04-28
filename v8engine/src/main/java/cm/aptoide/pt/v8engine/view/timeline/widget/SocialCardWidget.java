@@ -39,7 +39,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
   private final LayoutInflater inflater;
   protected ImageView userAvatar;
   protected ImageView storeAvatar;
-  private TextView comments;
+  private TextView comment;
   private LinearLayout like;
   private LikeButtonView likeButton;
   private TextView numberLikesOneLike;
@@ -66,7 +66,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
   @Override @CallSuper protected void assignViews(View itemView) {
     super.assignViews(itemView);
     time = (TextView) itemView.findViewById(R.id.card_date);
-    comments = (TextView) itemView.findViewById(R.id.social_comment);
+    comment = (TextView) itemView.findViewById(R.id.social_comment);
     like = (LinearLayout) itemView.findViewById(R.id.social_like);
     likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
     numberLikes = (TextView) itemView.findViewById(R.id.social_number_of_likes);
@@ -108,12 +108,16 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
       sharedBy.setVisibility(View.GONE);
     }
 
-    if (comments != null) {
-      compositeSubscription.add(RxView.clicks(comments)
+    if (comment != null) {
+      compositeSubscription.add(RxView.clicks(numberComments)
           .flatMap(aVoid -> showComments(displayable))
           .subscribe(aVoid -> knockWithSixpackCredentials(displayable.getAbUrl()), showError()));
 
-      comments.setVisibility(View.VISIBLE);
+      compositeSubscription.add(RxView.clicks(comment)
+          .flatMap(aVoid -> showCommentsWithInputReady(displayable))
+          .subscribe(aVoid -> knockWithSixpackCredentials(displayable.getAbUrl()), showError()));
+
+      comment.setVisibility(View.VISIBLE);
     } else {
       Logger.w(TAG, "comment button is null in this view");
     }
@@ -232,6 +236,16 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
           .getCardId();
       Fragment fragment = V8Engine.getFragmentProvider()
           .newCommentGridRecyclerFragment(CommentType.TIMELINE, elementId);
+      getFragmentNavigator().navigateTo(fragment);
+      return null;
+    });
+  }
+
+  private Observable<Void> showCommentsWithInputReady(T displayable) {
+    return Observable.fromCallable(() -> {
+      final String elementId = displayable.getTimelineCard().getCardId();
+      Fragment fragment = V8Engine.getFragmentProvider()
+          .newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType.TIMELINE, elementId);
       getFragmentNavigator().navigateTo(fragment);
       return null;
     });
