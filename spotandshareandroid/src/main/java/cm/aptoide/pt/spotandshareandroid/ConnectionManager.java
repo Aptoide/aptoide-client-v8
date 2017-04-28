@@ -107,7 +107,9 @@ public class ConnectionManager {
         }
         if (noHotspotsFoundCounter >= 2 && clients.size() < 1 && !showedNoHotspotMessage) {
           showedNoHotspotMessage = true;
-          inactivityListener.onInactivity(true);
+          if (inactivityListener != null) {
+            inactivityListener.onInactivity(true);
+          }
         }
 
         groupValidator.flagGhosts(clients);
@@ -125,7 +127,9 @@ public class ConnectionManager {
         System.out.println("tHERE ARE NO APTXV NETWORKS");
         if (noHotspotsFoundCounter >= 2 && !showedNoHotspotMessage) {
           showedNoHotspotMessage = true;
-          inactivityListener.onInactivity(true);
+          if (inactivityListener != null) {
+            inactivityListener.onInactivity(true);
+          }
         }
       }
       if (changes) {
@@ -288,7 +292,6 @@ public class ConnectionManager {
     context.registerReceiver(scanAPTXVNetworks,
         new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
     Log.w("BROADCASTRECEIVER", "registered scan receiver search APTX");
-
 
     scheduleScan();
   }
@@ -582,7 +585,6 @@ public class ConnectionManager {
     context.registerReceiver(scanAPTXVNetworks,
         new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
     Log.w("BROADCASTRECEIVER", "registered scan receiver RESUME");
-
   }
 
   public void stop() {
