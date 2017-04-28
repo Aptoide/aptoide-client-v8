@@ -74,6 +74,8 @@ import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
@@ -103,6 +105,7 @@ import cm.aptoide.pt.v8engine.view.payment.PaymentActivity;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.store.StoreFragment;
+import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.LinkedList;
 import java.util.List;
@@ -180,6 +183,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private StoreMinimalAdAccessor storeMinimalAdAccessor;
+  private PaymentAnalytics paymentAnalytics;
+  private SpotAndShareAnalytics spotAndShareAnalytics;
+
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -189,7 +195,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     fragment.setArguments(bundle);
     return fragment;
   }
-  private SpotAndShareAnalytics spotAndShareAnalytics;
 
   public static AppViewFragment newInstance(String md5) {
     Bundle bundle = new Bundle();
@@ -274,6 +279,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     storeMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
+    paymentAnalytics = new PaymentAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger
+        (getContext().getApplicationContext()), Application.getConfiguration().getAppId());
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
@@ -397,8 +404,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   public void buyApp(GetAppMeta.App app) {
+    final ParcelableProduct product = (ParcelableProduct) productFactory.create(app);
+    paymentAnalytics.sendPaidAppBuyButtonPressedEvent(product);
     startActivityForResult(
-        PaymentActivity.getIntent(getActivity(), (ParcelableProduct) productFactory.create(app)),
+        PaymentActivity.getIntent(getActivity(), product),
         PAY_APP_REQUEST_CODE);
   }
 

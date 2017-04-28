@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 29/11/2016.
  */
 
-package cm.aptoide.pt.v8engine.payment.repository;
+package cm.aptoide.pt.v8engine.payment;
 
 import cm.aptoide.pt.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.v8engine.payment.Product;
