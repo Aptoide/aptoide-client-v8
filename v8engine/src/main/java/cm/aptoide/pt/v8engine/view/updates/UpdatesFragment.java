@@ -17,15 +17,15 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
-import cm.aptoide.pt.v8engine.download.InstallEventConverter;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.download.DownloadFactory;
+import cm.aptoide.pt.v8engine.download.InstallEventConverter;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.updates.UpdateRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
-import cm.aptoide.pt.v8engine.download.DownloadFactory;
+import cm.aptoide.pt.v8engine.updates.UpdateRepository;
 import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.store.StoreGridHeaderDisplayable;
@@ -104,23 +104,6 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     }
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    final BodyInterceptor<BaseBody> bodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    final OkHttpClient httpClient =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
-    final Converter.Factory converterFactory = WebService.getDefaultConverter();
-    installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
-        InstallerFactory.ROLLBACK);
-    analytics = Analytics.getInstance();
-    downloadInstallEventConverter =
-        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory);
-    installConverter = new InstallEventConverter(bodyInterceptor, httpClient, converterFactory);
-    installedRepository = RepositoryFactory.getInstalledRepository();
-    updateRepository = RepositoryFactory.getUpdateRepository(getContext());
-  }
-
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
@@ -150,6 +133,23 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     //super.load(create, refresh, savedInstanceState);
     // overridden to avoid calling super, since it removes the displayables automatically
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    final BodyInterceptor<BaseBody> bodyInterceptor =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    final OkHttpClient httpClient =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    final Converter.Factory converterFactory = WebService.getDefaultConverter();
+    installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
+        InstallerFactory.ROLLBACK);
+    analytics = Analytics.getInstance();
+    downloadInstallEventConverter =
+        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory);
+    installConverter = new InstallEventConverter(bodyInterceptor, httpClient, converterFactory);
+    installedRepository = RepositoryFactory.getInstalledRepository();
+    updateRepository = RepositoryFactory.getUpdateRepository(getContext());
   }
 
   private void setUpdates(List<Update> updateList) {

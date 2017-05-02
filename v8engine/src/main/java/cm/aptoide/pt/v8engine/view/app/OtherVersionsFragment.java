@@ -28,8 +28,8 @@ import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
+import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
 import cm.aptoide.pt.v8engine.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.EndlessRecyclerOnScrollListener;
@@ -91,13 +91,6 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     return R.layout.fragment_other_versions;
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    header = new ViewHeader(view);
-    collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
-    setHasOptionsMenu(true);
-    super.onViewCreated(view, savedInstanceState);
-  }
-
   @Override public void onDestroyView() {
     final RecyclerView recyclerView = getRecyclerView();
     if (recyclerView != null && endlessRecyclerOnScrollListener != null) {
@@ -107,6 +100,13 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     header = null;
     collapsingToolbarLayout = null;
     super.onDestroyView();
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    header = new ViewHeader(view);
+    collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
+    setHasOptionsMenu(true);
+    super.onViewCreated(view, savedInstanceState);
   }
 
   @Partners @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {

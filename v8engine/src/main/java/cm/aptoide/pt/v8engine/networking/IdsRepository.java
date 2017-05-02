@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;

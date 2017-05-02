@@ -10,12 +10,11 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
-
-import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.FacebookSdk;
@@ -62,29 +61,27 @@ public class Analytics {
       "apps-group-top-games", "apps-group-top-stores", "apps-group-featured-stores",
       "apps-group-editors-choice"
   };
-
-  static {
-    idsRepository = ((V8Engine) DataProvider.getContext().getApplicationContext())
-        .getIdsRepository();
-  }
-
   private static final IdsRepository idsRepository;
   private static Analytics instance;
-
   private static boolean ACTIVATE_LOCALYTICS = true;
   private static boolean isFirstSession;
 
+  static {
+    idsRepository =
+        ((V8Engine) DataProvider.getContext().getApplicationContext()).getIdsRepository();
+  }
+
   private final AnalyticsDataSaver saver;
+
+  private Analytics(AnalyticsDataSaver saver) {
+    this.saver = saver;
+  }
 
   public static Analytics getInstance() {
     if (instance == null) {
       instance = new Analytics(new AnalyticsDataSaver());
     }
     return instance;
-  }
-
-  private Analytics(AnalyticsDataSaver saver) {
-    this.saver = saver;
   }
 
   private static void track(String event, String key, String attr, int flags) {
