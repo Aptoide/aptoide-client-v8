@@ -19,6 +19,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncDataConverter;
+import cm.aptoide.pt.v8engine.pull.ScheduleNotificationSync;
 
 /**
  * Created by marcelobenites on 18/11/16.
@@ -41,7 +42,7 @@ public class AptoideSyncService extends Service {
             ((V8Engine) getApplicationContext()).getAccountManager(),
             ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV3(),
             ((V8Engine) getApplicationContext()).getDefaultClient(),
-            WebService.getDefaultConverter());
+            WebService.getDefaultConverter(), new ScheduleNotificationSync());
       }
     }
   }

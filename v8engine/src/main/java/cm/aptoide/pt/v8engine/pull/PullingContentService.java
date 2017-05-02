@@ -63,6 +63,7 @@ public class PullingContentService extends Service {
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private IdsRepository idsRepository;
+  private NotificationSyncScheduler notificationSyncScheduler;
 
   public static void setAlarm(AlarmManager am, Context context, String action, long time) {
     Intent intent = new Intent(context, PullingContentService.class);
@@ -90,6 +91,9 @@ public class PullingContentService extends Service {
     converterFactory = WebService.getDefaultConverter();
     idsRepository = ((V8Engine) getApplicationContext()).getIdsRepository();
     subscriptions = new CompositeSubscription();
+    notificationSyncScheduler = new NotificationSyncScheduler(
+        ((V8Engine) getApplicationContext()).getAndroidAccountProvider(),
+        Application.getConfiguration().getContentAuthority());
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
     if (!isAlarmUp(this, PUSH_NOTIFICATIONS_ACTION)) {
       setAlarm(alarm, this, PUSH_NOTIFICATIONS_ACTION, pushNotificationInterval);
@@ -188,6 +192,9 @@ public class PullingContentService extends Service {
             packageInfo == null ? "" : packageInfo.versionName, BuildConfig.APPLICATION_ID,
             httpClient, converterFactory)
             .execute(response -> setPushNotification(context, response, startId))));
+
+    subscriptions.add(notificationSyncScheduler.startSync().subscribe(() -> {
+    }, throwable -> CrashReport.getInstance().log(throwable)));
   }
 
   /**
