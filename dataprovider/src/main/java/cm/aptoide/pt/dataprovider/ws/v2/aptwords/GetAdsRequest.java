@@ -32,7 +32,7 @@ import rx.Observable;
     extends Aptwords<GetAdsResponse> {
 
   @Getter @Setter private static String forcedCountry = null;
-  private final String aptoideClientUUID;
+  private final String clientUniqueId;
   private final boolean googlePlayServicesAvailable;
   private final String oemid;
   private String excludedPackage;
@@ -45,51 +45,51 @@ import rx.Observable;
   private String excludedNetworks;
   private boolean mature;
 
-  private GetAdsRequest(String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid,
+  private GetAdsRequest(String clientUniqueId, boolean googlePlayServicesAvailable, String oemid,
       boolean mature, Converter.Factory converterFactory, OkHttpClient httpClient) {
     super(httpClient, converterFactory);
-    this.aptoideClientUUID = aptoideClientUUID;
+    this.clientUniqueId = clientUniqueId;
     this.googlePlayServicesAvailable = googlePlayServicesAvailable;
     this.oemid = oemid;
     this.mature = mature;
   }
 
-  public static GetAdsRequest ofHomepage(String aptoideClientUUID,
+  public static GetAdsRequest ofHomepage(String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, boolean mature, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
     // TODO: 09-06-2016 neuro limit based on max colums
-    return of(Location.homepage, Type.ADS.getPerLineCount(), aptoideClientUUID,
+    return of(Location.homepage, Type.ADS.getPerLineCount(), clientUniqueId,
         googlePlayServicesAvailable, oemid, mature, httpClient, converterFactory);
   }
 
-  private static GetAdsRequest of(Location location, Integer limit, String aptoideClientUUID,
+  private static GetAdsRequest of(Location location, Integer limit, String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, boolean mature, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
-    return of(location, "__NULL__", limit, aptoideClientUUID, googlePlayServicesAvailable, oemid,
+    return of(location, "__NULL__", limit, clientUniqueId, googlePlayServicesAvailable, oemid,
         mature, httpClient, converterFactory);
   }
 
   public static GetAdsRequest of(Location location, String keyword, Integer limit,
-      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, boolean mature,
+      String clientUniqueId, boolean googlePlayServicesAvailable, String oemid, boolean mature,
       OkHttpClient httpClient, Converter.Factory converterFactory) {
-    return new GetAdsRequest(aptoideClientUUID, googlePlayServicesAvailable, oemid, mature,
+    return new GetAdsRequest(clientUniqueId, googlePlayServicesAvailable, oemid, mature,
         converterFactory, httpClient).setLocation(location).setKeyword(keyword).setLimit(limit);
   }
 
-  public static GetAdsRequest ofHomepageMore(String aptoideClientUUID,
+  public static GetAdsRequest ofHomepageMore(String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, boolean mature, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
     // TODO: 09-06-2016 neuro limit based on max colums
-    return of(Location.homepage, 50, aptoideClientUUID, googlePlayServicesAvailable, oemid, mature,
+    return of(Location.homepage, 50, clientUniqueId, googlePlayServicesAvailable, oemid, mature,
         httpClient, converterFactory);
   }
 
   public static GetAdsRequest ofAppviewOrganic(String packageName, String storeName,
-      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, boolean mature,
+      String clientUniqueId, boolean googlePlayServicesAvailable, String oemid, boolean mature,
       OkHttpClient httpClient, Converter.Factory converterFactory) {
 
     GetAdsRequest getAdsRequest =
-        ofPackageName(Location.appview, packageName, aptoideClientUUID, googlePlayServicesAvailable,
+        ofPackageName(Location.appview, packageName, clientUniqueId, googlePlayServicesAvailable,
             oemid, mature, httpClient, converterFactory);
 
     getAdsRequest.setRepo(storeName);
@@ -98,10 +98,10 @@ import rx.Observable;
   }
 
   private static GetAdsRequest ofPackageName(Location location, String packageName,
-      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, boolean mature,
+      String clientUniqueId, boolean googlePlayServicesAvailable, String oemid, boolean mature,
       OkHttpClient httpClient, Converter.Factory converterFactory) {
     GetAdsRequest getAdsRequest =
-        of(location, 1, aptoideClientUUID, googlePlayServicesAvailable, oemid, mature, httpClient,
+        of(location, 1, clientUniqueId, googlePlayServicesAvailable, oemid, mature, httpClient,
             converterFactory).setPackageName(packageName);
 
     // Add excluded networks
@@ -113,12 +113,12 @@ import rx.Observable;
     return getAdsRequest;
   }
 
-  public static GetAdsRequest ofAppviewSuggested(List<String> keywords, String aptoideClientUUID,
+  public static GetAdsRequest ofAppviewSuggested(List<String> keywords, String clientUniqueId,
       boolean googlePlayServicesAvailable, String excludedPackage, String oemid, boolean mature,
       OkHttpClient httpClient, Converter.Factory converterFactory) {
 
     GetAdsRequest getAdsRequest =
-        of(Location.middleappview, 3, aptoideClientUUID, googlePlayServicesAvailable, oemid, mature,
+        of(Location.middleappview, 3, clientUniqueId, googlePlayServicesAvailable, oemid, mature,
             httpClient, converterFactory);
 
     getAdsRequest.setExcludedPackage(excludedPackage)
@@ -127,31 +127,31 @@ import rx.Observable;
     return getAdsRequest;
   }
 
-  public static GetAdsRequest ofSearch(String query, String aptoideClientUUID,
+  public static GetAdsRequest ofSearch(String query, String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, boolean mature, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
-    return of(Location.search, query, 1, aptoideClientUUID, googlePlayServicesAvailable, oemid,
+    return of(Location.search, query, 1, clientUniqueId, googlePlayServicesAvailable, oemid,
         mature, httpClient, converterFactory);
   }
 
-  public static GetAdsRequest ofSecondInstall(String packageName, String aptoideClientUUID,
+  public static GetAdsRequest ofSecondInstall(String packageName, String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, boolean mature, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
-    return ofPackageName(Location.secondinstall, packageName, aptoideClientUUID,
+    return ofPackageName(Location.secondinstall, packageName, clientUniqueId,
         googlePlayServicesAvailable, oemid, mature, httpClient, converterFactory);
   }
 
-  public static GetAdsRequest ofSecondTry(String packageName, String aptoideClientUUID,
+  public static GetAdsRequest ofSecondTry(String packageName, String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, boolean mature, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
-    return ofPackageName(Location.secondtry, packageName, aptoideClientUUID,
+    return ofPackageName(Location.secondtry, packageName, clientUniqueId,
         googlePlayServicesAvailable, oemid, mature, httpClient, converterFactory);
   }
 
-  @Partners public static GetAdsRequest ofFirstInstall(String aptoideClientUUID,
+  @Partners public static GetAdsRequest ofFirstInstall(String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, int numberOfAds, boolean mature,
       OkHttpClient httpClient, Converter.Factory converterFactory) {
-    return of(Location.firstinstall, numberOfAds, aptoideClientUUID, googlePlayServicesAvailable,
+    return of(Location.firstinstall, numberOfAds, clientUniqueId, googlePlayServicesAvailable,
         oemid, mature, httpClient, converterFactory);
   }
 
@@ -162,7 +162,7 @@ import rx.Observable;
 
     parameters.put("q", Api.Q);
     parameters.put("lang", Api.LANG);
-    parameters.put("cpuid", aptoideClientUUID);
+    parameters.put("cpuid", clientUniqueId);
     parameters.put("aptvercode", Integer.toString(AptoideUtils.Core.getVerCode()));
     parameters.put("location", location.toString());
     parameters.put("type", "1-3");

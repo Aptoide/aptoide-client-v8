@@ -25,7 +25,7 @@ import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
 import cm.aptoide.pt.v8engine.presenter.WebAuthorizationPresenter;
 import cm.aptoide.pt.v8engine.presenter.WebAuthorizationView;
-import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.ActivityView;
 import com.jakewharton.rxrelay.PublishRelay;

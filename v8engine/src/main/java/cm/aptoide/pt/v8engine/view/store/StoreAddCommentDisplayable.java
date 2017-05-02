@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.view.store;
 
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 
 public class StoreAddCommentDisplayable extends Displayable {

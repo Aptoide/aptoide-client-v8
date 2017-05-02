@@ -8,7 +8,7 @@ package cm.aptoide.pt;
 import android.os.Environment;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
 
 /**
  * Created by neuro on 10-05-2016.

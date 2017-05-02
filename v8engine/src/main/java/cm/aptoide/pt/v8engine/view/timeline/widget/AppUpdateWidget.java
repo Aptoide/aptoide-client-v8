@@ -12,15 +12,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.AppUpdateDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
@@ -44,7 +42,7 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
   private View store;
   private CardView cardView;
   private AptoideAccountManager accountManager;
-  private AptoideClientUUID aptoideClientUUID;
+  private IdsRepository idsRepository;
 
   public AppUpdateWidget(View itemView) {
     super(itemView);
@@ -74,10 +72,8 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
     super.bindView(displayable);
     this.displayable = displayable;
     final FragmentActivity context = getContext();
-
+    idsRepository = ((V8Engine) getContext().getApplicationContext()).getIdsRepository();
     accountManager = ((V8Engine) context.getApplication()).getAccountManager();
-    aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     appName.setText(displayable.getAppTitle(context));
     appUpdate.setText(displayable.getHasUpdateText(context));
     appVersion.setText(displayable.getVersionText(context));

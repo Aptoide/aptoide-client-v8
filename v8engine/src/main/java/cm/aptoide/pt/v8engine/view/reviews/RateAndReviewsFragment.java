@@ -17,7 +17,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
+import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -28,9 +28,9 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.comments.ListFullReviewsSuccessRequestListener;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
-import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
@@ -58,7 +58,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     implements ItemCommentAdderView<Review, CommentsAdapter> {
 
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
-  private AptoideClientUUID aptoideClientUUID;
+  private IdsRepository idsRepository;
   private DialogUtils dialogUtils;
 
   private long appId;
@@ -241,7 +241,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    aptoideClientUUID = ((V8Engine) getContext().getApplicationContext()).getAptoideClientUUID();
+    idsRepository = ((V8Engine) getContext().getApplicationContext()).getIdsRepository();
     baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();

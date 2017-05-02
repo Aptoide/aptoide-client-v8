@@ -12,10 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+
+import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -33,7 +31,7 @@ public class ProfileStepOneActivity extends AccountBaseActivity {
 
   private static final String TAG = ProfileStepOneActivity.class.getSimpleName();
 
-  private AptoideClientUUID aptoideClientUUID;
+  private IdsRepository idsRepository;
   private AptoideAccountManager accountManager;
 
   private Toolbar mToolbar;
@@ -46,8 +44,7 @@ public class ProfileStepOneActivity extends AccountBaseActivity {
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
+    idsRepository = ((V8Engine) getApplicationContext()).getIdsRepository();
     accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
     mSubscriptions = new CompositeSubscription();
     pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
