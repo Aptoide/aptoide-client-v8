@@ -14,8 +14,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
 import okhttp3.OkHttpClient;
@@ -153,6 +153,23 @@ public class AppRepository {
           } else {
             return Observable.error(
                 new RepositoryItemNotFoundException("No app found for app md5" + md5));
+          }
+        });
+  }
+
+  public Observable<GetApp> getAppFromUname(String uname, boolean refresh, boolean sponsored) {
+    return GetAppRequest.ofUname(uname, bodyInterceptorV7, httpClient, converterFactory)
+        .observe(refresh)
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            if (response.getNodes().getMeta().getData().isPaid()) {
+              return addPayment(sponsored, response, refresh);
+            } else {
+              return Observable.just(response);
+            }
+          } else {
+            return Observable.error(
+                new RepositoryItemNotFoundException("No app found for app uname" + uname));
           }
         });
   }

@@ -68,21 +68,21 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.ads.AdsRepository;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
+import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
-import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
-import cm.aptoide.pt.v8engine.ads.AdsRepository;
-import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.timeline.SocialRepository;
-import cm.aptoide.pt.v8engine.util.SearchUtils;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.timeline.SocialRepository;
+import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.v8engine.view.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
@@ -129,6 +129,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   private final String key_appId = "appId";
   private final String key_packageName = "packageName";
+  private final String key_uname = "uname";
   private final String key_md5sum = "md5sum";
   //private static final String TAG = AppViewFragment.class.getName();
   //
@@ -161,6 +162,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private double taxRate;
   private AppViewInstallDisplayable installDisplayable;
   private String md5;
+  private String uname;
   private PermissionManager permissionManager;
   private Menu menu;
   @Partners @Getter private String appName;
@@ -177,7 +179,16 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private StoreMinimalAdAccessor storeMinimalAdAccessor;
-  
+
+  public static AppViewFragment newInstanceUname(String uname) {
+    Bundle bundle = new Bundle();
+    bundle.putString(BundleKeys.UNAME.name(), uname);
+
+    AppViewFragment fragment = new AppViewFragment();
+    fragment.setArguments(bundle);
+    return fragment;
+  }
+
   public static AppViewFragment newInstance(String md5) {
     Bundle bundle = new Bundle();
     bundle.putString(BundleKeys.MD5.name(), md5);
@@ -248,8 +259,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    socialRepository = new SocialRepository(accountManager, bodyInterceptor, converterFactory,
-        httpClient);
+    socialRepository =
+        new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient);
     productFactory = new ProductFactory();
     appRepository = RepositoryFactory.getAppRepository(getContext());
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
@@ -267,6 +278,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     appId = args.getLong(BundleKeys.APP_ID.name(), -1);
     packageName = args.getString(BundleKeys.PACKAGE_NAME.name(), null);
     md5 = args.getString(BundleKeys.MD5.name(), null);
+    uname = args.getString(BundleKeys.UNAME.name(), null);
     openType = (OpenType) args.getSerializable(BundleKeys.SHOULD_INSTALL.name());
     if (openType == null) {
       openType = OpenType.OPEN_ONLY;
@@ -335,6 +347,21 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             CrashReport.getInstance().log(key_appId, String.valueOf(appId));
             CrashReport.getInstance().log(key_packageName, String.valueOf(packageName));
             CrashReport.getInstance().log(key_md5sum, md5);
+          });
+    } else if (!TextUtils.isEmpty(uname)) {
+      subscription = appRepository.getAppFromUname(uname, refresh, sponsored)
+          .map(getApp -> this.getApp = getApp)
+          .flatMap(getApp -> manageOrganicAds(getApp))
+          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+          .observeOn(AndroidSchedulers.mainThread())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+          .subscribe(getApp -> {
+            setupAppView(getApp);
+          }, throwable -> {
+            finishLoading(throwable);
+            CrashReport.getInstance().log(key_appId, String.valueOf(appId));
+            CrashReport.getInstance().log(key_packageName, String.valueOf(packageName));
+            CrashReport.getInstance().log(key_uname, uname);
           });
     } else {
       Logger.d(TAG, "loading app info using app package name");
@@ -437,7 +464,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private void storeMinimalAdd(MinimalAd minimalAd) {
     storeMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, null));
   }
-  
+
   @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
     List<String> keywords = getApp1.getNodes().getMeta().getData().getMedia().getKeywords();
     String packageName = getApp1.getNodes().getMeta().getData().getPackageName();
@@ -716,8 +743,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           AlertDialog.Builder alertDialog =
               sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(), appName,
                   app.getIcon());
-          SocialRepository socialRepository = new SocialRepository(accountManager, bodyInterceptor, converterFactory,
-              httpClient);
+          SocialRepository socialRepository =
+              new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient);
 
           sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
               sharePreviewDialog, alertDialog, socialRepository);
@@ -795,7 +822,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   @Partners protected enum BundleKeys {
-    APP_ID, STORE_NAME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5
+    APP_ID, STORE_NAME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME,
   }
 
   public enum OpenType {
