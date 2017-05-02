@@ -184,7 +184,6 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
   private void newrepoDeepLink(ArrayList<String> repos) {
     if (repos != null) {
       Observable.from(repos)
-          .map(storeUrl -> StoreUtils.split(storeUrl))
           .flatMap(storeName -> StoreUtils.isSubscribedStore(storeName)
               .first()
               .observeOn(AndroidSchedulers.mainThread())
