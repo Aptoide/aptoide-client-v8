@@ -14,6 +14,7 @@ import android.widget.RadioGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
 import cm.aptoide.pt.v8engine.view.account.LoginBottomSheet;
@@ -149,6 +150,9 @@ public class WizardFragment extends BackButtonFragment {
     // safety check. should not be needed
     if (viewPager.getCurrentItem() < viewPagerAdapter.getCount() - 1) {
       viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+      if (viewPager.getCurrentItem() + 1 == 3) { //3 = LoginSignupCredentialsFragment
+        Analytics.Account.enterAccountScreen(Analytics.Account.AccountOrigins.WIZARD);
+      }
     }
   }
 
