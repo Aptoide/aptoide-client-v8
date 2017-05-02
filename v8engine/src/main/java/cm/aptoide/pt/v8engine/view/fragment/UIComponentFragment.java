@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import cm.aptoide.pt.v8engine.interfaces.UiComponent;
 import cm.aptoide.pt.v8engine.util.ScreenTrackingUtils;
 import cm.aptoide.pt.v8engine.view.permission.PermissionServiceFragment;
 

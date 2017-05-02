@@ -43,11 +43,11 @@ import rx.schedulers.Schedulers;
     super(body, baseHost, httpClient, converterFactory, bodyInterceptor);
   }
 
-  public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String aptoideClientUUID,
+  public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String clientUniqueId,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
     return new ListAppsUpdatesRequest(
-        new Body(getInstalledApks(), subscribedStoresIds, aptoideClientUUID), BASE_HOST,
+        new Body(getInstalledApks(), subscribedStoresIds, clientUniqueId), BASE_HOST,
         bodyInterceptor, httpClient, converterFactory);
   }
 

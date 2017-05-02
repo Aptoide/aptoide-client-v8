@@ -18,13 +18,14 @@ import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
 import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.interfaces.CommentBeforeSubmissionCallback;
-import cm.aptoide.pt.v8engine.interfaces.CommentDialogCallbackContract;
+import cm.aptoide.pt.v8engine.comments.CommentBeforeSubmissionCallback;
+import cm.aptoide.pt.v8engine.comments.CommentDialogCallbackContract;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import okhttp3.OkHttpClient;
@@ -128,7 +129,7 @@ public class CommentDialogFragment
     baseBodyBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
-    converterFactory = converterFactory;
+    converterFactory = WebService.getDefaultConverter();
     onEmptyTextError = AptoideUtils.StringU.getResString(R.string.error_MARG_107);
   }
 
