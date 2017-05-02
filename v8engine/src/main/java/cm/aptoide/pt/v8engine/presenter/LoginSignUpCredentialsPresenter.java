@@ -154,11 +154,13 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
           .observeOn(AndroidSchedulers.mainThread())
           .doOnCompleted(() -> {
             Logger.d(TAG, "aptoide sign up successful");
-            Analytics.Account.signInSuccessAptoide();
+            Analytics.Account.signInSuccessAptoide(Analytics.Account.AptoideSignUpResult.SUCCESS);
             view.navigateToCreateProfile();
           })
-          .doOnTerminate(() -> view.hideLoading())
-          .doOnError(throwable -> view.showError(throwable))
+          .doOnTerminate(() -> view.hideLoading()).doOnError(throwable -> {
+            Analytics.Account.signInSuccessAptoide(Analytics.Account.AptoideSignUpResult.FAILED);
+            view.showError(throwable);
+          })
           .toObservable();
     }).retry();
   }

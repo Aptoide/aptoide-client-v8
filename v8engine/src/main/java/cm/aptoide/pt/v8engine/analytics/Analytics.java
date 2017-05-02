@@ -457,6 +457,7 @@ public class Analytics {
     private static final String SCREEN = "Screen";
     private static final String ENTRY = "Account_Entry";
     private static final String SOURCE = "Source";
+    private static final String STATUS = "Status";
 
     public static void clickIn(StartupClick clickEvent, StartupClickOrigin startupClickOrigin) {
       track(LOGIN_SIGN_UP_START_SCREEN, ACTION, clickEvent.getClickEvent(), ALL);
@@ -466,9 +467,9 @@ public class Analytics {
       logFacebookEvents(LOGIN_SIGN_UP_START_SCREEN, map);
     }
 
-    public static void signInSuccessAptoide() {
+    public static void signInSuccessAptoide(AptoideSignUpResult result) {
       track(SIGNUP_SCREEN, ALL);
-      logFacebookEvents(SIGNUP_SCREEN);
+      logFacebookEvents(SIGNUP_SCREEN, STATUS, result.getResult());
     }
 
     public static void loginSuccess(LoginMethod loginMethod) {
@@ -594,6 +595,20 @@ public class Analytics {
 
       public String getOrigin() {
         return origin;
+      }
+    }
+
+    public enum AptoideSignUpResult {
+      SUCCESS("Success"), FAILED("Failed");
+
+      private final String result;
+
+      AptoideSignUpResult(String result) {
+        this.result = result;
+      }
+
+      public String getResult() {
+        return result;
       }
     }
   }
