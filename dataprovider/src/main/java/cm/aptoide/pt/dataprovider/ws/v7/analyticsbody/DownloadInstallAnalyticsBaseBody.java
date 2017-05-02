@@ -32,6 +32,14 @@ public class DownloadInstallAnalyticsBaseBody
     String network;
     String teleco;
     Result result;
+    String imei;
+    String imei2;
+    String serialNumber;
+    String appName;
+    String phoneNumber;
+    String mcc;
+    String mnc;
+    String manufacturer;
   }
 
   @lombok.Data public static class App {

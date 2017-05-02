@@ -6,6 +6,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.RealmList;
 import java.util.LinkedList;
@@ -45,6 +46,16 @@ abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent>
 
     data.setNetwork(AptoideUtils.SystemU.getConnectionType().toUpperCase());
     data.setTeleco(AptoideUtils.SystemU.getCarrierName());
+
+    String imeis[] = AptoideUtils.SystemU.getImeis();
+    data.setImei(imeis[0]);
+    data.setImei2(imeis[1]);
+    data.setSerialNumber(AptoideUtils.SystemU.getSerialNumber());
+    data.setAppName(Application.getConfiguration().getMarketName());
+    data.setPhoneNumber(AptoideUtils.SystemU.getPhoneNumber());
+    data.setMcc(AptoideUtils.SystemU.getMCC());
+    data.setMnc(AptoideUtils.SystemU.getMNC());
+    data.setManufacturer(AptoideUtils.SystemU.getManufacturer());
 
     DownloadInstallAnalyticsBaseBody.Result result = new DownloadInstallAnalyticsBaseBody.Result();
     result.setStatus(status);
