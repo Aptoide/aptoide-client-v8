@@ -45,10 +45,10 @@ import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentRepository;
 import cm.aptoide.pt.v8engine.payment.repository.ProductRepository;
-import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncScheduler;
 import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncDataConverter;
-import cm.aptoide.pt.v8engine.updates.UpdateRepository;
+import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncScheduler;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.v8engine.updates.UpdateRepository;
 import okhttp3.OkHttpClient;
 
 /**

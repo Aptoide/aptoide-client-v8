@@ -12,7 +12,6 @@ import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.PurchaseFactory;
 import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
-import cm.aptoide.pt.v8engine.payment.repository.ProductRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
 import rx.Single;

@@ -124,6 +124,11 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     return R.layout.recycler_fragment;
   }
 
+  @Override public void onDestroyView() {
+    endlessRecyclerOnScrollListener = null;
+    super.onDestroyView();
+  }
+
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
     adsRepository.getAdsFromSearch(query)
@@ -149,11 +154,6 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
             listSearchAppsSuccessRequestListener, err -> err.printStackTrace(), refresh);
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
-  }
-
-  @Override public void onDestroyView() {
-    endlessRecyclerOnScrollListener = null;
-    super.onDestroyView();
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {

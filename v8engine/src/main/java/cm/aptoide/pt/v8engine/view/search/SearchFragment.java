@@ -26,13 +26,13 @@ import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.abtesting.ABTest;
 import cm.aptoide.pt.v8engine.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.abtesting.SearchTabOptions;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
+import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.fragment.BasePagerToolbarFragment;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -118,6 +118,19 @@ public class SearchFragment extends BasePagerToolbarFragment {
     setHasOptionsMenu(true);
   }
 
+  @Override public void onDestroyView() {
+    noSearchLayoutSearchButton.setOnClickListener(null);
+    noSearchLayoutSearchButton = null;
+    noSearchLayoutSearchQuery = null;
+    noSearchLayout = null;
+    buttonsLayout = null;
+    everywhereButton.setOnClickListener(null);
+    everywhereButton = null;
+    subscribedButton.setOnClickListener(null);
+    subscribedButton = null;
+    super.onDestroyView();
+  }
+
   @Override protected void setupViewPager() {
     viewPager.setPagingEnabled(false);
 
@@ -137,19 +150,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
         }
       });
     }
-  }
-
-  @Override public void onDestroyView() {
-    noSearchLayoutSearchButton.setOnClickListener(null);
-    noSearchLayoutSearchButton = null;
-    noSearchLayoutSearchQuery = null;
-    noSearchLayout = null;
-    buttonsLayout = null;
-    everywhereButton.setOnClickListener(null);
-    everywhereButton = null;
-    subscribedButton.setOnClickListener(null);
-    subscribedButton = null;
-    super.onDestroyView();
   }
 
   @Override protected PagerAdapter createPagerAdapter() {

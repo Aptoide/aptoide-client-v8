@@ -24,7 +24,7 @@ import rx.schedulers.Schedulers;
  * Created by trinkes on 9/23/16.
  */
 
-public class UpdateRepository  {
+public class UpdateRepository {
 
   private static final String TAG = UpdateRepository.class.getName();
 
