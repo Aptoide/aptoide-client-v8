@@ -135,8 +135,10 @@ public class PaymentPresenter implements Presenter {
     return view.buySelection()
         .doOnNext(selected -> view.showLoading())
         .flatMap(selected -> paymentSelector.selectedPayment(getCurrentPayments())
-            .flatMapCompletable(
-                selectedPayment -> processOrNavigateToAuthorization(selectedPayment))
+            .flatMapCompletable(selectedPayment -> {
+              paymentAnalytics.sendPaymentBuyButtonPressedEvent(product, selectedPayment);
+              return processOrNavigateToAuthorization(selectedPayment);
+            })
             .toObservable());
   }
 
