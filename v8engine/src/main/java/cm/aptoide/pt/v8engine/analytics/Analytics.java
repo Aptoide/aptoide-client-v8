@@ -458,6 +458,7 @@ public class Analytics {
     private static final String ENTRY = "Account_Entry";
     private static final String SOURCE = "Source";
     private static final String STATUS = "Status";
+    private static final String STATUS_DETAIL = "Status Detail";
 
     public static void clickIn(StartupClick clickEvent, StartupClickOrigin startupClickOrigin) {
       track(LOGIN_SIGN_UP_START_SCREEN, ACTION, clickEvent.getClickEvent(), ALL);
@@ -467,15 +468,18 @@ public class Analytics {
       logFacebookEvents(LOGIN_SIGN_UP_START_SCREEN, map);
     }
 
-    public static void signInSuccessAptoide(AptoideSignUpResult result) {
+    public static void signInSuccessAptoide(SignUpLoginStatus result) {
       track(SIGNUP_SCREEN, ALL);
-      logFacebookEvents(SIGNUP_SCREEN, STATUS, result.getResult());
+      logFacebookEvents(SIGNUP_SCREEN, STATUS, result.getStatus());
     }
 
-    public static void loginSuccess(LoginMethod loginMethod) {
+    public static void loginStatus(LoginMethod loginMethod, SignUpLoginStatus status,
+        LoginStatusDetail statusDetail) {
       track(LOGIN_SCREEN, METHOD, loginMethod.getMethod(), ALL);
       Map<String, String> map = new HashMap<>();
       map.put(METHOD, loginMethod.getMethod());
+      map.put(STATUS, status.getStatus());
+      map.put(STATUS_DETAIL, statusDetail.getLoginStatusDetail());
       logFacebookEvents(LOGIN_SCREEN, map);
     }
 
@@ -598,17 +602,32 @@ public class Analytics {
       }
     }
 
-    public enum AptoideSignUpResult {
+    public enum SignUpLoginStatus {
       SUCCESS("Success"), FAILED("Failed");
 
-      private final String result;
+      private final String status;
 
-      AptoideSignUpResult(String result) {
-        this.result = result;
+      SignUpLoginStatus(String result) {
+        this.status = result;
       }
 
-      public String getResult() {
-        return result;
+      public String getStatus() {
+        return status;
+      }
+    }
+
+    public enum LoginStatusDetail {
+      PERMISSIONS_DENIED("Permissions Denied"), SDK_ERROR("SDK Error"), CANCEL(
+          "User canceled"), GENERAL_ERROR("General Error"), SUCCESS("Success");
+
+      private final String loginStatusDetail;
+
+      LoginStatusDetail(String statusDetail) {
+        this.loginStatusDetail = statusDetail;
+      }
+
+      public String getLoginStatusDetail() {
+        return loginStatusDetail;
       }
     }
   }
