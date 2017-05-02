@@ -224,7 +224,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
           } catch (ActivityNotFoundException ex) {
             ShowMessage.asSnack(getView(), R.string.feedback_no_email);
           }
-        });
+        }, throwable -> CrashReport.getInstance().log(throwable));
   }
 
   public boolean isContentValid() {
