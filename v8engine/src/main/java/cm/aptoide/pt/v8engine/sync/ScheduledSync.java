@@ -10,7 +10,7 @@ import android.content.SyncResult;
 /**
  * Created by marcelobenites on 22/11/16.
  */
-public abstract class RepositorySync {
+public abstract class ScheduledSync {
 
   public abstract void sync(SyncResult syncResult);
 
