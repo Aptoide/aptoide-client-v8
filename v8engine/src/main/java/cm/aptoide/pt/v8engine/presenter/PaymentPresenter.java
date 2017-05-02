@@ -10,6 +10,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Payment;
+import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.Purchase;
@@ -40,10 +41,11 @@ public class PaymentPresenter implements Presenter {
 
   private boolean processingLogin;
   private List<Payment> payments;
+  private PaymentAnalytics paymentAnalytics;
 
   public PaymentPresenter(PaymentView view, AptoidePay aptoidePay, Product product,
       AptoideAccountManager accountManager, PaymentSelector paymentSelector,
-      AccountNavigator accountNavigator) {
+      AccountNavigator accountNavigator, PaymentAnalytics paymentAnalytics) {
     this.view = view;
     this.aptoidePay = aptoidePay;
     this.product = product;
@@ -51,6 +53,7 @@ public class PaymentPresenter implements Presenter {
     this.paymentSelector = paymentSelector;
     this.accountNavigator = accountNavigator;
     this.payments = new ArrayList<>();
+    this.paymentAnalytics = paymentAnalytics;
   }
 
   @Override public void present() {
@@ -117,7 +120,15 @@ public class PaymentPresenter implements Presenter {
   }
 
   private Observable<Void> cancellationSelection() {
-    return view.cancellationSelection().doOnNext(cancellation -> view.dismiss());
+    return view.cancellationSelection()
+        .flatMap(cancelled -> sendCancellationAnalytics().doOnCompleted(() -> view.dismiss())
+            .toObservable());
+  }
+
+  private Completable sendCancellationAnalytics() {
+    return paymentSelector.selectedPayment(payments)
+        .flatMapCompletable(payment -> Completable.fromAction(
+            () -> paymentAnalytics.sendPaymentCancelButtonPressedEvent(product, payment)));
   }
 
   private Observable<Void> buySelection() {

@@ -25,4 +25,14 @@ public class PaymentAnalytics {
     bundle.putString("package_name_seller", aptoidePackageName);
     analytics.sendEvent(new FacebookEvent(facebook, "Clicked_On_Buy_Button", bundle));
   }
+
+  public void sendPaymentCancelButtonPressedEvent(Product product, Payment payment) {
+    final Bundle bundle = new Bundle();
+    bundle.putString("action", "Cancel");
+    bundle.putString("payment_method", payment.getName());
+    bundle.putDouble("purchase_value", product.getPrice().getAmount());
+    bundle.putString("purchase_currency", product.getPrice().getCurrency());
+    bundle.putString("package_name_seller", aptoidePackageName);
+    analytics.sendEvent(new FacebookEvent(facebook, "Payment_Pop_Up", bundle));
+  }
 }

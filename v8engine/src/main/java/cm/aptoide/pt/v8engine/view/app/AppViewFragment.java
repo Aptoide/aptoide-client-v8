@@ -279,8 +279,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     storeMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
-    paymentAnalytics = new PaymentAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger
-        (getContext().getApplicationContext()), Application.getConfiguration().getAppId());
+    paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
