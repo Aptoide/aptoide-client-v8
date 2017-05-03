@@ -49,7 +49,6 @@ import cm.aptoide.pt.v8engine.util.ApkFy;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.downloads.scheduled.ScheduledDownloadsFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import cm.aptoide.pt.v8engine.view.navigator.SimpleTabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigatorActivity;
@@ -191,7 +190,8 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
           .map(storeUrl -> StoreUtils.split(storeUrl))
           .flatMap(storeName -> StoreUtils.isSubscribedStore(storeName)
               .first()
-              .observeOn(AndroidSchedulers.mainThread()).flatMap(isFollowed -> {
+              .observeOn(AndroidSchedulers.mainThread())
+              .flatMap(isFollowed -> {
                 if (isFollowed) {
                   return Observable.fromCallable(() -> {
                     ShowMessage.asLongSnack(this, getString(R.string.store_already_added));
@@ -203,16 +203,19 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
                           AptoideUtils.StringU.getFormattedString(R.string.store_followed,
                               storeName)));
                 }
-              }).map(isSubscribed -> storeName))
-          .toList().flatMap(stores -> {
-        if (stores.size() == 1) {
-          return storeRepository.getByName(stores.get(0))
-              .flatMapCompletable(store -> openStore(store))
-              .map(success -> stores);
-        } else {
-          return navigateToStores().toObservable().map(success -> stores);
-        }
-      }).subscribe(stores -> Logger.d(TAG, "newrepoDeepLink: all stores added"), throwable -> {
+              })
+              .map(isSubscribed -> storeName))
+          .toList()
+          .flatMap(stores -> {
+            if (stores.size() == 1) {
+              return storeRepository.getByName(stores.get(0))
+                  .flatMapCompletable(store -> openStore(store))
+                  .map(success -> stores);
+            } else {
+              return navigateToStores().toObservable().map(success -> stores);
+            }
+          })
+          .subscribe(stores -> Logger.d(TAG, "newrepoDeepLink: all stores added"), throwable -> {
             Logger.e(TAG, "newrepoDeepLink: " + throwable);
             CrashReport.getInstance().log(throwable);
           });

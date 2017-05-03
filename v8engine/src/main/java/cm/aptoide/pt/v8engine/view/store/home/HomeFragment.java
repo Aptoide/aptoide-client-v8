@@ -168,21 +168,6 @@ public class HomeFragment extends StoreFragment {
     super.onDestroyView();
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    backClickHandler = new ClickHandler() {
-      @Override public boolean handle() {
-        if (isDrawerOpened()) {
-          closeDrawer();
-          return true;
-        }
-
-        return false;
-      }
-    };
-    registerBackClickHandler(backClickHandler);
-  }
-
   @Override protected void setupViewPager() {
     super.setupViewPager();
 
@@ -206,8 +191,8 @@ public class HomeFragment extends StoreFragment {
 
     tabNavigator.navigation()
         .doOnNext(tabNavigation -> viewPager.setCurrentItem(
-            ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(getEventName
-                (tabNavigation.getTab()))))
+            ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(
+                getEventName(tabNavigation.getTab()))))
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(__ -> {
         }, err -> CrashReport.getInstance().log(err));
@@ -237,6 +222,21 @@ public class HomeFragment extends StoreFragment {
     toolbar.setTitle("");
     toolbar.setNavigationIcon(R.drawable.ic_drawer);
     toolbar.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    backClickHandler = new ClickHandler() {
+      @Override public boolean handle() {
+        if (isDrawerOpened()) {
+          closeDrawer();
+          return true;
+        }
+
+        return false;
+      }
+    };
+    registerBackClickHandler(backClickHandler);
   }
 
   private void setupNavigationView() {
@@ -387,21 +387,6 @@ public class HomeFragment extends StoreFragment {
       default:
         throw new IllegalArgumentException("Invalid tab.");
     }
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    backClickHandler = new ClickHandler() {
-      @Override public boolean handle() {
-        if (isDrawerOpened()) {
-          closeDrawer();
-          return true;
-        }
-
-        return false;
-      }
-    };
-    registerBackClickHandler(backClickHandler);
   }
 
   private boolean isDrawerOpened() {
