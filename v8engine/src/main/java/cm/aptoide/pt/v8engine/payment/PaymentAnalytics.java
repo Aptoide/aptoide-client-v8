@@ -20,23 +20,29 @@ public class PaymentAnalytics {
   }
 
   public void sendPaidAppBuyButtonPressedEvent(Product product) {
-    analytics.sendEvent(new FacebookEvent(facebook, "Clicked_On_Buy_Button",
-        getProductBundle(product)));
+    analytics.sendEvent(
+        new FacebookEvent(facebook, "Clicked_On_Buy_Button", getProductBundle(product)));
   }
 
   public void sendPaymentCancelButtonPressedEvent(Product product, Payment payment) {
-    analytics.sendEvent(getPaymentEvent(product, payment, "Cancel"));
+    analytics.sendEvent(getPaymentEvent("Payment_Pop_Up", "Cancel", payment, product));
   }
 
   public void sendPaymentBuyButtonPressedEvent(Product product, Payment payment) {
-    analytics.sendEvent(getPaymentEvent(product, payment, "Buy"));
+    analytics.sendEvent(getPaymentEvent("Payment_Pop_Up", "Buy", payment, product));
   }
 
-  private Event getPaymentEvent(Product product, Payment payment, String action) {
+  public void sendBackToStoreButtonPressedEvent(Product product) {
+    final Bundle bundle = getProductBundle(product);
+    bundle.putString("action", "Voltar para loja button");
+    analytics.sendEvent(new FacebookEvent(facebook, "Payment_Authorization_Confirmation", bundle));
+  }
+
+  private Event getPaymentEvent(String eventName, String action, Payment payment, Product product) {
     final Bundle bundle = getProductBundle(product);
     bundle.putString("action", action);
     bundle.putString("payment_method", payment.getName());
-    return new FacebookEvent(facebook, "Payment_Pop_Up", bundle);
+    return new FacebookEvent(facebook, eventName, bundle);
   }
 
   private Bundle getProductBundle(Product product) {

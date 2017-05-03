@@ -205,7 +205,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
   }
 
   @Override public void navigateToAuthorizationView(int paymentId, Product product) {
-    startActivity(WebAuthorizationActivity.getIntent(this, paymentId, (ParcelableProduct) product));
+    startActivity(PaymentAuthorizationActivity.getIntent(this, paymentId, (ParcelableProduct) product));
   }
 
   @Override public void showPaymentsNotFoundMessage() {
