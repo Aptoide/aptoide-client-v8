@@ -7,8 +7,8 @@ import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
-import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.view.comments.ConcreteItemCommentAdder;
 import cm.aptoide.pt.v8engine.view.comments.RateAndReviewCommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -25,10 +25,10 @@ import rx.schedulers.Schedulers;
 public class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<ListReviews> {
 
   private final RateAndReviewsFragment fragment;
-  private StoreCredentialsProvider storeCredentialsProvider;
   private final Converter.Factory converterFactory;
   private final BodyInterceptor<BaseBody> bodyBodyInterceptor;
   private final OkHttpClient httpClient;
+  private StoreCredentialsProvider storeCredentialsProvider;
 
   public ListFullReviewsSuccessRequestListener(RateAndReviewsFragment fragment,
       StoreCredentialsProvider storeCredentialsProvider,

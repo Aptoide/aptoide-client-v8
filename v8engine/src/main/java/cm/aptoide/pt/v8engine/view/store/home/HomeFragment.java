@@ -30,11 +30,11 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.repository.UpdateRepository;
+import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.spotandshare.SpotSharePreviewActivity;
+import cm.aptoide.pt.v8engine.updates.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
@@ -151,21 +151,6 @@ public class HomeFragment extends StoreFragment {
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    backClickHandler = new ClickHandler() {
-      @Override public boolean handle() {
-        if (isDrawerOpened()) {
-          closeDrawer();
-          return true;
-        }
-
-        return false;
-      }
-    };
-    registerBackClickHandler(backClickHandler);
-  }
-
   @Override public void onDestroyView() {
     userEmail = null;
     userAvatarImage = null;
@@ -237,6 +222,21 @@ public class HomeFragment extends StoreFragment {
     toolbar.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
   }
 
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    backClickHandler = new ClickHandler() {
+      @Override public boolean handle() {
+        if (isDrawerOpened()) {
+          closeDrawer();
+          return true;
+        }
+
+        return false;
+      }
+    };
+    registerBackClickHandler(backClickHandler);
+  }
+
   public void refreshUpdatesBadge(int num) {
     // No updates present
     if (updatesBadge == null) {
@@ -277,7 +277,6 @@ public class HomeFragment extends StoreFragment {
         } else {
           final FragmentNavigator navigator = getFragmentNavigator();
           if (itemId == R.id.shareapps) {
-            spotAndShareAnalytics.clickShareApps();
             getActivityNavigator().navigateTo(SpotSharePreviewActivity.class);
           } else if (itemId == R.id.navigation_item_rollback) {
             navigator.navigateTo(V8Engine.getFragmentProvider().newRollbackFragment());

@@ -49,7 +49,7 @@ import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
 import cm.aptoide.pt.v8engine.preferences.SecurePreferences;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.repository.UpdateRepository;
+import cm.aptoide.pt.v8engine.updates.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.SettingsConstants;
 import cm.aptoide.pt.v8engine.view.dialog.EditableTextDialog;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;

@@ -28,7 +28,6 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadEvent;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;

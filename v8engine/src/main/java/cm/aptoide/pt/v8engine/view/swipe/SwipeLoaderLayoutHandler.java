@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.view.swipe;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.interfaces.ReloadInterface;
+import cm.aptoide.pt.v8engine.view.ReloadInterface;
 import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
 

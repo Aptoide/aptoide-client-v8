@@ -29,7 +29,7 @@ public class RateAndReviewsPresenter implements Presenter {
   public RateAndReviewsPresenter(@NonNull long appId, @NonNull String storeName,
       @NonNull String packageName, @NonNull RateAndReviewsView view,
       @NonNull SchedulerProvider schedulerProvider, AptoideAccountManager accountManager,
-      String aptoideClientUUID, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      String clientUniqueId, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
     this.view = view;
     this.schedulerProvider = schedulerProvider;

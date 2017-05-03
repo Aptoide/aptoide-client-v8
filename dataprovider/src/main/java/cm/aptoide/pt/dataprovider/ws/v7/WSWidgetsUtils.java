@@ -34,7 +34,7 @@ public class WSWidgetsUtils {
 
   public static Observable<GetStoreWidgets.WSWidget> loadWidgetNode(
       GetStoreWidgets.WSWidget wsWidget, BaseRequestWithStore.StoreCredentials storeCredentials,
-      boolean refresh, String accessToken, String aptoideClientUuid,
+      boolean refresh, String accessToken, String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, boolean mature,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
@@ -74,7 +74,7 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case ADS:
-          return GetAdsRequest.ofHomepage(aptoideClientUuid, googlePlayServicesAvailable, oemid,
+          return GetAdsRequest.ofHomepage(clientUniqueId, googlePlayServicesAvailable, oemid,
               mature, httpClient, converterFactory)
               .observe(refresh)
               .observeOn(Schedulers.io())

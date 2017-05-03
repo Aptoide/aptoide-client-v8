@@ -29,7 +29,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
@@ -40,6 +39,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.StoreBodyInterceptor;
 import cm.aptoide.pt.v8engine.view.MainActivity;
 import cm.aptoide.pt.v8engine.view.account.AccountPermissionsBaseActivity;
@@ -122,7 +122,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
   private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3;
   private RequestBodyFactory requestBodyFactory;
   private ObjectMapper serializer;
-  private AptoideClientUUID aptoideClientUUID;
+  private IdsRepository idsRepository;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private OkHttpClient longTimeoutHttpClient;
@@ -138,7 +138,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     converterFactory = WebService.getDefaultConverter();
     bodyInterceptorV7 = ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV7();
     bodyInterceptorV3 = ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV3();
-    aptoideClientUUID = ((V8Engine) getApplicationContext()).getAptoideClientUUID();
+    idsRepository = ((V8Engine) getApplicationContext()).getIdsRepository();
     requestBodyFactory = new RequestBodyFactory();
     serializer = new ObjectMapper();
     serializer.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -681,7 +681,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
   }
 
   @NonNull private StoreBodyInterceptor<BaseBody> createStoreInterceptor() {
-    return new StoreBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager,
+    return new StoreBodyInterceptor(idsRepository.getUniqueIdentifier(), accountManager,
         requestBodyFactory, storeTheme, storeDescription, serializer);
   }
 
