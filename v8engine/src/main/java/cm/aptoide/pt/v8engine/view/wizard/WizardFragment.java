@@ -95,6 +95,7 @@ public class WizardFragment extends BackButtonFragment {
 
       @Override public void onPageSelected(int position) {
         if (position == 2) {
+          //Inside the wizards third page
           Analytics.Account.enterAccountScreen(Analytics.Account.AccountOrigins.WIZARD);
         }
       }
@@ -117,7 +118,9 @@ public class WizardFragment extends BackButtonFragment {
 
   @Override public void onDestroy() {
     super.onDestroy();
-    viewPager.removeOnPageChangeListener(null);
+    if (viewPager != null) {
+      viewPager.removeOnPageChangeListener(null);
+    }
   }
 
   private void createViewsAndButtons(Context context) {

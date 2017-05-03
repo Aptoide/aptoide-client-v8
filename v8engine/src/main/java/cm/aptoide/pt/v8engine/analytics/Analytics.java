@@ -586,7 +586,7 @@ public class Analytics {
       WIZARD("Wizard"), MY_ACCOUNT("My Account"), TIMELINE("Timeline"), STORE(
           "Store"), APP_VIEW_FLAG("App View Flag"), APP_VIEW_SHARE(
           "App View Share on Timeline"), SHARE_CARD("Share Card"), LIKE_CARD(
-          "Like Card"), COMMENT_LIST("Comment List"), RATE_DIALOG("Rate Dialog"), REPLY_REVIEW(
+          "Like Card"), COMMENT_LIST("Comment List"), RATE_DIALOG("Reviews FAB"), REPLY_REVIEW(
           "Reply Review"), REVIEW_FEEDBACK("Review Feedback"), SOCIAL_LIKE(
           "Like Social Card"), STORE_COMMENT("Store Comment"), LATEST_COMMENTS_STORE(
           "Comment on Latest Store Comments");
