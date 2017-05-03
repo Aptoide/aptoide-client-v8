@@ -8,8 +8,8 @@ package cm.aptoide.pt.v8engine.install.installer;
 import android.content.Context;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.v8engine.install.Installer;
-import cm.aptoide.pt.v8engine.install.provider.RollbackFactory;
-import cm.aptoide.pt.v8engine.repository.RollbackRepository;
+import cm.aptoide.pt.v8engine.install.rollback.RollbackFactory;
+import cm.aptoide.pt.v8engine.install.rollback.RollbackRepository;
 import rx.Observable;
 
 /**

@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.search;
 
-import cm.aptoide.pt.v8engine.websocket.StoreAutoCompleteWebSocket;
-import cm.aptoide.pt.v8engine.websocket.WebSocketManager;
+import cm.aptoide.pt.v8engine.search.websocket.StoreAutoCompleteWebSocket;
+import cm.aptoide.pt.v8engine.search.websocket.WebSocketManager;
 
 /**
  * Created by pedroribeiro on 30/01/17.

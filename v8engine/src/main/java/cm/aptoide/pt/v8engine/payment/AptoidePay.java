@@ -5,11 +5,11 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
-import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationRepository;
-import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
-import cm.aptoide.pt.v8engine.repository.PaymentRepository;
-import cm.aptoide.pt.v8engine.repository.ProductRepository;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationRepository;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentRepository;
+import cm.aptoide.pt.v8engine.payment.repository.ProductRepository;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;

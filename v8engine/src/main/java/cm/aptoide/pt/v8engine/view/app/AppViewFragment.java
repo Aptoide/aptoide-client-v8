@@ -68,7 +68,10 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.ads.AdsRepository;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
+import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
@@ -82,7 +85,11 @@ import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.repository.SocialRepository;
+import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
@@ -180,7 +187,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private StoreMinimalAdAccessor storeMinimalAdAccessor;
-  
+  private SpotAndShareAnalytics spotAndShareAnalytics;
+
   public static AppViewFragment newInstance(String md5) {
     Bundle bundle = new Bundle();
     bundle.putString(BundleKeys.MD5.name(), md5);
@@ -258,11 +266,12 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     adsRepository =
-        new AdsRepository(((V8Engine) getContext().getApplicationContext()).getAptoideClientUUID(),
+        new AdsRepository(((V8Engine) getContext().getApplicationContext()).getIdsRepository(),
             accountManager, httpClient, converterFactory);
     installedRepository = RepositoryFactory.getInstalledRepository();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     storeMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
+    spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
@@ -728,24 +737,28 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         }
       } else if (GenericDialogs.EResponse.SHARE_SPOT_AND_SHARE == eResponse) {
 
+        spotAndShareAnalytics.clickShareApps(
+            SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW);
+
         String filepath = getFilepath(packageName);
+        String appNameToShare = filterAppName(appName);
         Intent intent = new Intent(this.getActivity(), HighwayActivity.class);
         intent.setAction("APPVIEW_SHARE");
         intent.putExtra("APPVIEW_SHARE_FILEPATH", filepath);
+        intent.putExtra("APPVIEW_SHARE_APPNAME", appNameToShare);
         startActivity(intent);
       }
     }, err -> err.printStackTrace());
   }
 
-  @Partners protected void shareDefault(String appName, String packageName, String wUrl) {
-    if (wUrl != null) {
-      Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-      sharingIntent.setType("text/plain");
-      sharingIntent.putExtra(Intent.EXTRA_SUBJECT,
-          getString(R.string.install) + " \"" + appName + "\"");
-      sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
-      startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
+  private String filterAppName(String appName) {
+    if (!TextUtils.isEmpty(appName) && appName.length() > 17) {
+      appName = appName.substring(0, 17);
     }
+    if (!TextUtils.isEmpty(appName) && appName.contains("_")) {
+      appName = appName.replace("_", " ");
+    }
+    return appName;
   }
 
   private String getFilepath(String packageName) {
@@ -757,6 +770,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     } catch (PackageManager.NameNotFoundException e) {
       e.printStackTrace();
       throw new IllegalArgumentException("Required packageName not installed! " + packageName);
+    }
+  }
+
+  @Partners protected void shareDefault(String appName, String packageName, String wUrl) {
+    if (wUrl != null) {
+      Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+      sharingIntent.setType("text/plain");
+      sharingIntent.putExtra(Intent.EXTRA_SUBJECT,
+          getString(R.string.install) + " \"" + appName + "\"");
+      sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
+      startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
     }
   }
 

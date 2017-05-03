@@ -32,7 +32,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.repository.UpdateRepository;
+import cm.aptoide.pt.v8engine.updates.UpdateRepository;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;

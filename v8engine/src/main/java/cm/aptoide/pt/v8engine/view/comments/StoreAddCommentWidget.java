@@ -16,7 +16,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.store.StoreAddCommentDisplayable;

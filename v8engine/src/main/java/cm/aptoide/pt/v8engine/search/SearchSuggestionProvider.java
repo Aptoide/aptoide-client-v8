@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.v8engine.search;
 
-import cm.aptoide.pt.v8engine.websocket.SearchAppsWebSocket;
-import cm.aptoide.pt.v8engine.websocket.WebSocketManager;
+import cm.aptoide.pt.v8engine.search.websocket.SearchAppsWebSocket;
+import cm.aptoide.pt.v8engine.search.websocket.WebSocketManager;
 
 /**
  * Refactored by pedroribeiro in 17/01/2017

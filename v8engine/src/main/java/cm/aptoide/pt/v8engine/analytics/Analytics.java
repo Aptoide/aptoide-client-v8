@@ -17,6 +17,7 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.FacebookSdk;
@@ -66,25 +67,27 @@ public class Analytics {
       "apps-group-top-games", "apps-group-top-stores", "apps-group-featured-stores",
       "apps-group-editors-choice"
   };
-  private static final AptoideClientUUID aptoideClientUuid;
-  static @Getter Analytics instance = new Analytics(new AnalyticsDataSaver());
-  static GraphRequest.Callback callback = new GraphRequest.Callback() {
-    @Override public void onCompleted(GraphResponse response) {
-      Logger.d("Facebook Analytics: ", response.toString());
-    }
-  };
+  private static final IdsRepository idsRepository;
+  private static Analytics instance;
   private static boolean ACTIVATE_LOCALYTICS = true;
   private static boolean isFirstSession;
 
   static {
-    aptoideClientUuid = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
+    idsRepository =
+        ((V8Engine) DataProvider.getContext().getApplicationContext()).getIdsRepository();
   }
 
-  private AnalyticsDataSaver saver;
+  private final AnalyticsDataSaver saver;
 
-  public Analytics(AnalyticsDataSaver saver) {
+  private Analytics(AnalyticsDataSaver saver) {
     this.saver = saver;
+  }
+
+  public static Analytics getInstance() {
+    if (instance == null) {
+      instance = new Analytics(new AnalyticsDataSaver());
+    }
+    return instance;
   }
 
   private static void track(String event, String key, String attr, int flags) {
@@ -130,6 +133,7 @@ public class Analytics {
    *
    * @param flag flags fornecidas
    * @param accepted flags aceitáveis
+   *
    * @return true caso as flags fornecidas constem em accepted.
    */
   private static boolean checkAcceptability(int flag, int accepted) {
@@ -237,7 +241,7 @@ public class Analytics {
     if (BuildConfig.BUILD_TYPE.equals("debug")) {
       return;
     }
-
+    Logger.w(TAG, "Facebook Event: " + eventName + " : " + parameters.toString());
     facebookLogger.logEvent(eventName, parameters);
   }
 
@@ -254,7 +258,7 @@ public class Analytics {
         AppEventsLogger.activateApp(application);
         facebookLogger = AppEventsLogger.newLogger(application);
         Observable.fromCallable(() -> {
-          AppEventsLogger.setUserID(aptoideClientUuid.getUniqueIdentifier());
+          AppEventsLogger.setUserID(idsRepository.getUniqueIdentifier());
           return null;
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(o -> {
         }, Throwable::printStackTrace);
@@ -370,10 +374,12 @@ public class Analytics {
         Bundle bundle = new Bundle();
         if (!accountManager.isLoggedIn()) {
           bundle.putString("Logged In", "Not Logged In");
-          AppEventsLogger.updateUserProperties(bundle, callback);
+          AppEventsLogger.updateUserProperties(bundle,
+              response -> Logger.d("Facebook Analytics: ", response.toString()));
         } else {
           bundle.putString("Logged In", "Logged In");
-          AppEventsLogger.updateUserProperties(bundle, callback);
+          AppEventsLogger.updateUserProperties(bundle,
+              response -> Logger.d("Facebook Analytics: ", response.toString()));
         }
 
         if (!ACTIVATE_LOCALYTICS) {
@@ -390,7 +396,7 @@ public class Analytics {
           }
         }
 
-        String cpuid = aptoideClientUuid.getUniqueIdentifier();
+        String cpuid = idsRepository.getUniqueIdentifier();
         Localytics.setCustomerId(cpuid);
         Localytics.handleTestMode(activity.getIntent());
       }
@@ -1012,6 +1018,17 @@ public class Analytics {
       Localytics.setCustomDimension(i, s);
     }
 
+    /**
+     * Responsible for setting facebook analytics user properties
+     * These were known as custom dimensions in localytics
+     */
+    private static void setUserProperties(String key, String value) {
+      Bundle parameters = new Bundle();
+      parameters.putString(key, value);
+      AppEventsLogger.updateUserProperties(parameters,
+          response -> Logger.d("Facebook Analytics: ", response.toString()));
+    }
+
     public static void setVerticalDimension(String verticalName) {
       setDimension(2, verticalName);
     }
@@ -1024,16 +1041,6 @@ public class Analytics {
         setDimension(3, "GMS Not Present");
         setUserProperties(GMS, NO_GMS);
       }
-    }
-
-    /**
-     * Responsible for setting facebook analytics user properties
-     * These were known as custom dimensions in localytics
-     */
-    private static void setUserProperties(String key, String value) {
-      Bundle parameters = new Bundle();
-      parameters.putString(key, value);
-      AppEventsLogger.updateUserProperties(parameters, callback);
     }
 
     public static void setUTMSource(String utmSource) {

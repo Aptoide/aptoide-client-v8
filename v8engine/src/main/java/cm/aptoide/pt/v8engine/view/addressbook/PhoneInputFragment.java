@@ -1,9 +1,11 @@
 package cm.aptoide.pt.v8engine.view.addressbook;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -22,7 +24,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.AddressBookAnalytics;
-import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
+import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepository;
 import cm.aptoide.pt.v8engine.addressbook.utils.ContactUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.presenter.PhoneInputContract;
@@ -65,14 +67,17 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     this.mActionsListener = new PhoneInputPresenter(this,
-        new ContactsRepositoryImpl(baseBodyInterceptor, httpClient, converterFactory),
+        new ContactsRepository(baseBodyInterceptor, httpClient, converterFactory,
+            ((V8Engine) getContext().getApplicationContext()).getIdsRepository(), new ContactUtils(
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE))),
         new AddressBookAnalytics(Analytics.getInstance(),
             AppEventsLogger.newLogger(getContext().getApplicationContext())),
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
             Application.getConfiguration().getMarketName())));
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
-    contactUtils = new ContactUtils();
+    contactUtils = new ContactUtils(
+        (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -85,7 +90,7 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
     mSharePhoneV.setText(getString(R.string.addressbook_share_phone,
         Application.getConfiguration().getMarketName()));
 
-    String countryCodeE164 = contactUtils.getCountryCodeForRegion(getContext());
+    String countryCodeE164 = contactUtils.getCountryCodeForRegion();
     if (!countryCodeE164.isEmpty()) {
       mCountryNumber.setHint(countryCodeE164);
     }
