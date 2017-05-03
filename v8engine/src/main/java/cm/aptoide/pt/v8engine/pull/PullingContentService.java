@@ -93,7 +93,8 @@ public class PullingContentService extends Service {
     subscriptions = new CompositeSubscription();
     notificationSyncScheduler = new NotificationSyncScheduler(
         ((V8Engine) getApplicationContext()).getAndroidAccountProvider(),
-        Application.getConfiguration().getContentAuthority());
+        Application.getConfiguration().getContentAuthority(), ((V8Engine) getApplicationContext()).
+        getConfiguration().getAccountType());
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
     if (!isAlarmUp(this, PUSH_NOTIFICATIONS_ACTION)) {
       setAlarm(alarm, this, PUSH_NOTIFICATIONS_ACTION, pushNotificationInterval);
@@ -193,7 +194,7 @@ public class PullingContentService extends Service {
             httpClient, converterFactory)
             .execute(response -> setPushNotification(context, response, startId))));
 
-    subscriptions.add(notificationSyncScheduler.startSync().subscribe(() -> {
+    subscriptions.add(notificationSyncScheduler.sync().subscribe(() -> {
     }, throwable -> CrashReport.getInstance().log(throwable)));
   }
 

@@ -11,19 +11,20 @@ import rx.Completable;
  * Created by trinkes on 02/05/2017.
  */
 
-public class NotificationSyncScheduler {
+class NotificationSyncScheduler {
   private AndroidAccountProvider androidAccountProvider;
   private String authority;
+  private String accountType;
 
-  public NotificationSyncScheduler(AndroidAccountProvider androidAccountProvider,
-      String authority) {
+  NotificationSyncScheduler(AndroidAccountProvider androidAccountProvider, String authority,
+      String accountType) {
     this.androidAccountProvider = androidAccountProvider;
     this.authority = authority;
+    this.accountType = accountType;
   }
 
-  public Completable startSync() {
-    return androidAccountProvider.getAndroidAccount()
-        .onErrorReturn(throwable -> null)
+  public Completable sync() {
+    return androidAccountProvider.getAndroidAccount().onErrorReturn(throwable -> getDummyAccount())
         .flatMapCompletable(account -> sync(account, authority, createBundle()));
   }
 
@@ -40,5 +41,9 @@ public class NotificationSyncScheduler {
       ContentResolver.setSyncAutomatically(account, authority, true);
       ContentResolver.requestSync(account, authority, bundle);
     });
+  }
+
+  private Account getDummyAccount() {
+    return new Account("DummyAccount", accountType);
   }
 }
