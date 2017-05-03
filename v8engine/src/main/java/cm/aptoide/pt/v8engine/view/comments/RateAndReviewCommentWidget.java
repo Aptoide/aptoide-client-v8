@@ -30,6 +30,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.comments.CommentAdder;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
@@ -142,7 +143,7 @@ import rx.Observable;
       } else {
         return ShowMessage.asObservableSnack(ratingBar, R.string.you_need_to_be_logged_in,
             R.string.login, snackView -> {
-              accountNavigator.navigateToAccountView();
+              accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.REPLY_REVIEW);
             });
       }
     }).subscribe(a -> { /* do nothing */ }, err -> {
@@ -243,7 +244,8 @@ import rx.Observable;
     } else {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            accountNavigator.navigateToAccountView();
+            accountNavigator.navigateToAccountView(
+                Analytics.Account.AccountOrigins.REVIEW_FEEDBACK);
           });
       setHelpButtonsClickable(true);
     }

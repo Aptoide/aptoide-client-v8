@@ -737,7 +737,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       } else if (GenericDialogs.EResponse.SHARE_TIMELINE == eResponse) {
         if (!accountManager.isLoggedIn()) {
           ShowMessage.asSnack(getActivity(), R.string.you_need_to_be_logged_in, R.string.login,
-              snackView -> accountNavigator.navigateToAccountView());
+              snackView -> accountNavigator.navigateToAccountView(
+                  Analytics.Account.AccountOrigins.APP_VIEW_SHARE));
           return;
         }
         if (Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
@@ -768,14 +769,15 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     }, err -> err.printStackTrace());
   }
 
-  private String filterAppName(String appName) {
-    if (!TextUtils.isEmpty(appName) && appName.length() > 17) {
-      appName = appName.substring(0, 17);
+  @Partners protected void shareDefault(String appName, String packageName, String wUrl) {
+    if (wUrl != null) {
+      Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+      sharingIntent.setType("text/plain");
+      sharingIntent.putExtra(Intent.EXTRA_SUBJECT,
+          getString(R.string.install) + " \"" + appName + "\"");
+      sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
+      startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
     }
-    if (!TextUtils.isEmpty(appName) && appName.contains("_")) {
-      appName = appName.replace("_", " ");
-    }
-    return appName;
   }
 
   private String getFilepath(String packageName) {
@@ -790,15 +792,14 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     }
   }
 
-  @Partners protected void shareDefault(String appName, String packageName, String wUrl) {
-    if (wUrl != null) {
-      Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-      sharingIntent.setType("text/plain");
-      sharingIntent.putExtra(Intent.EXTRA_SUBJECT,
-          getString(R.string.install) + " \"" + appName + "\"");
-      sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
-      startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
+  private String filterAppName(String appName) {
+    if (!TextUtils.isEmpty(appName) && appName.length() > 17) {
+      appName = appName.substring(0, 17);
     }
+    if (!TextUtils.isEmpty(appName) && appName.contains("_")) {
+      appName = appName.replace("_", " ");
+    }
+    return appName;
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
