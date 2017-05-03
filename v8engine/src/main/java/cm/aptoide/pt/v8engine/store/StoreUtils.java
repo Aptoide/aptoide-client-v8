@@ -17,6 +17,7 @@ import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,7 +57,8 @@ public class StoreUtils {
       BodyInterceptor<BaseBody> bodyInterceptor, StoreCredentialsProvider storeCredentialsProvider,
       OkHttpClient httpClient, Converter.Factory converterFactory) {
     subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName, storeCredentialsProvider),
-        bodyInterceptor, httpClient, converterFactory), successRequestListener, errorRequestListener, accountManager, null, null);
+        bodyInterceptor, httpClient, converterFactory), successRequestListener,
+        errorRequestListener, accountManager, null, null);
   }
 
   /**
@@ -142,6 +144,18 @@ public class StoreUtils {
   public static Observable<Boolean> isSubscribedStore(String storeName) {
     StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
     return storeAccessor.get(storeName).map(store -> store != null);
+  }
+
+  public static ArrayList<String> split(List<String> repoUrl) {
+
+    ArrayList<String> res = new ArrayList<String>();
+
+    if (repoUrl != null) {
+      for (String s : repoUrl) {
+        res.add(split(s));
+      }
+    }
+    return res;
   }
 
   public static String split(String repoUrl) {

@@ -154,6 +154,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     ShowMessage.asToast(getContext(), errorMapper.map(throwable));
   }
 
+
   @Override public void showFacebookLogin() {
     FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
     facebookLoginButton.setVisibility(View.VISIBLE);
@@ -165,9 +166,14 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
       @Override public void onCancel() {
         showFacebookLoginError(R.string.facebook_login_cancelled);
+        Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
+            Analytics.Account.SignUpLoginStatus.FAILED, Analytics.Account.LoginStatusDetail.CANCEL);
       }
 
       @Override public void onError(FacebookException error) {
+        Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
+            Analytics.Account.SignUpLoginStatus.FAILED,
+            Analytics.Account.LoginStatusDetail.SDK_ERROR);
         showFacebookLoginError(R.string.error_occured);
       }
     });

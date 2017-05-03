@@ -156,4 +156,21 @@ public class AppRepository {
           }
         });
   }
+
+  public Observable<GetApp> getAppFromUname(String uname, boolean refresh, boolean sponsored) {
+    return GetAppRequest.ofUname(uname, bodyInterceptorV7, httpClient, converterFactory)
+        .observe(refresh)
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            if (response.getNodes().getMeta().getData().isPaid()) {
+              return addPayment(sponsored, response, refresh);
+            } else {
+              return Observable.just(response);
+            }
+          } else {
+            return Observable.error(
+                new RepositoryItemNotFoundException("No app found for app uname" + uname));
+          }
+        });
+  }
 }

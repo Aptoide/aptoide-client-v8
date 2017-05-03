@@ -130,6 +130,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   private final String key_appId = "appId";
   private final String key_packageName = "packageName";
+  private final String key_uname = "uname";
   private final String key_md5sum = "md5sum";
   //private static final String TAG = AppViewFragment.class.getName();
   //
@@ -162,6 +163,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private double taxRate;
   private AppViewInstallDisplayable installDisplayable;
   private String md5;
+  private String uname;
   private PermissionManager permissionManager;
   private Menu menu;
   @Partners @Getter private String appName;
@@ -178,6 +180,15 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private StoreMinimalAdAccessor storeMinimalAdAccessor;
+
+  public static AppViewFragment newInstanceUname(String uname) {
+    Bundle bundle = new Bundle();
+    bundle.putString(BundleKeys.UNAME.name(), uname);
+
+    AppViewFragment fragment = new AppViewFragment();
+    fragment.setArguments(bundle);
+    return fragment;
+  }
   private SpotAndShareAnalytics spotAndShareAnalytics;
 
   public static AppViewFragment newInstance(String md5) {
@@ -250,8 +261,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    socialRepository = new SocialRepository(accountManager, bodyInterceptor, converterFactory,
-        httpClient);
+    socialRepository =
+        new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient);
     productFactory = new ProductFactory();
     appRepository = RepositoryFactory.getAppRepository(getContext());
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
@@ -270,6 +281,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     appId = args.getLong(BundleKeys.APP_ID.name(), -1);
     packageName = args.getString(BundleKeys.PACKAGE_NAME.name(), null);
     md5 = args.getString(BundleKeys.MD5.name(), null);
+    uname = args.getString(BundleKeys.UNAME.name(), null);
     openType = (OpenType) args.getSerializable(BundleKeys.SHOULD_INSTALL.name());
     if (openType == null) {
       openType = OpenType.OPEN_ONLY;
@@ -335,9 +347,21 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             setupAppView(getApp);
           }, throwable -> {
             finishLoading(throwable);
+          });
+    } else if (!TextUtils.isEmpty(uname)) {
+      subscription = appRepository.getAppFromUname(uname, refresh, sponsored)
+          .map(getApp -> this.getApp = getApp)
+          .flatMap(getApp -> manageOrganicAds(getApp))
+          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+          .observeOn(AndroidSchedulers.mainThread())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+          .subscribe(getApp -> {
+            setupAppView(getApp);
+          }, throwable -> {
+            finishLoading(throwable);
             CrashReport.getInstance().log(key_appId, String.valueOf(appId));
             CrashReport.getInstance().log(key_packageName, String.valueOf(packageName));
-            CrashReport.getInstance().log(key_md5sum, md5);
+            CrashReport.getInstance().log(key_uname, uname);
           });
     } else {
       Logger.d(TAG, "loading app info using app package name");
@@ -350,9 +374,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             setupAppView(getApp);
           }, throwable -> {
             finishLoading(throwable);
-            CrashReport.getInstance().log(key_appId, String.valueOf(appId));
-            CrashReport.getInstance().log(key_packageName, String.valueOf(packageName));
-            CrashReport.getInstance().log(key_md5sum, md5);
           });
     }
   }
@@ -440,7 +461,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private void storeMinimalAdd(MinimalAd minimalAd) {
     storeMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, null));
   }
-  
+
   @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
     List<String> keywords = getApp1.getNodes().getMeta().getData().getMedia().getKeywords();
     String packageName = getApp1.getNodes().getMeta().getData().getPackageName();
@@ -710,7 +731,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       } else if (GenericDialogs.EResponse.SHARE_TIMELINE == eResponse) {
         if (!accountManager.isLoggedIn()) {
           ShowMessage.asSnack(getActivity(), R.string.you_need_to_be_logged_in, R.string.login,
-              snackView -> accountNavigator.navigateToAccountView());
+              snackView -> accountNavigator.navigateToAccountView(
+                  Analytics.Account.AccountOrigins.APP_VIEW_SHARE));
           return;
         }
         if (Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
@@ -719,8 +741,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           AlertDialog.Builder alertDialog =
               sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(), appName,
                   app.getIcon());
-          SocialRepository socialRepository = new SocialRepository(accountManager, bodyInterceptor, converterFactory,
-              httpClient);
+          SocialRepository socialRepository =
+              new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient);
 
           sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
               sharePreviewDialog, alertDialog, socialRepository);
@@ -741,14 +763,15 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     }, err -> err.printStackTrace());
   }
 
-  private String filterAppName(String appName) {
-    if (!TextUtils.isEmpty(appName) && appName.length() > 17) {
-      appName = appName.substring(0, 17);
+  @Partners protected void shareDefault(String appName, String packageName, String wUrl) {
+    if (wUrl != null) {
+      Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+      sharingIntent.setType("text/plain");
+      sharingIntent.putExtra(Intent.EXTRA_SUBJECT,
+          getString(R.string.install) + " \"" + appName + "\"");
+      sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
+      startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
     }
-    if (!TextUtils.isEmpty(appName) && appName.contains("_")) {
-      appName = appName.replace("_", " ");
-    }
-    return appName;
   }
 
   private String getFilepath(String packageName) {
@@ -763,15 +786,14 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     }
   }
 
-  @Partners protected void shareDefault(String appName, String packageName, String wUrl) {
-    if (wUrl != null) {
-      Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-      sharingIntent.setType("text/plain");
-      sharingIntent.putExtra(Intent.EXTRA_SUBJECT,
-          getString(R.string.install) + " \"" + appName + "\"");
-      sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
-      startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
+  private String filterAppName(String appName) {
+    if (!TextUtils.isEmpty(appName) && appName.length() > 17) {
+      appName = appName.substring(0, 17);
     }
+    if (!TextUtils.isEmpty(appName) && appName.contains("_")) {
+      appName = appName.replace("_", " ");
+    }
+    return appName;
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -813,7 +835,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   @Partners protected enum BundleKeys {
-    APP_ID, STORE_NAME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5
+    APP_ID, STORE_NAME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME,
   }
 
   public enum OpenType {
