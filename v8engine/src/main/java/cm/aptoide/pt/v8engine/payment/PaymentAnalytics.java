@@ -4,6 +4,7 @@ import android.os.Bundle;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.Event;
 import cm.aptoide.pt.v8engine.analytics.events.FacebookEvent;
+import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
 import com.facebook.appevents.AppEventsLogger;
 
 public class PaymentAnalytics {
@@ -48,10 +49,9 @@ public class PaymentAnalytics {
     analytics.sendEvent(new FacebookEvent(facebook, "Payment_Authorization_Confirmation", bundle));
   }
 
-  public void sendPurchaseNetworkRetryEvent() {
-    final Bundle bundle = new Bundle();
-    bundle.putString("package_name_seller", aptoidePackageName);
-    analytics.sendEvent(new FacebookEvent(facebook, "Payment_Purchase_Retry", bundle));
+  public void sendPurchaseNetworkRetryEvent(Product product) {
+    analytics.sendEvent(
+        new FacebookEvent(facebook, "Payment_Purchase_Retry", getProductBundle(product)));
   }
 
   public void sendPurchaseCompleteEvent(PaymentConfirmation paymentConfirmation, Product product) {
@@ -90,7 +90,11 @@ public class PaymentAnalytics {
     final Bundle bundle = new Bundle();
     bundle.putDouble("purchase_value", product.getPrice().getAmount());
     bundle.putString("purchase_currency", product.getPrice().getCurrency());
-    bundle.putString("package_name_seller", aptoidePackageName);
+    if (product instanceof InAppBillingProduct) {
+      bundle.putString("package_name_seller", ((InAppBillingProduct) product).getPackageName());
+    } else {
+      bundle.putString("package_name_seller", aptoidePackageName);
+    }
     return bundle;
   }
 }

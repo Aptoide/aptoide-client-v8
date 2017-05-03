@@ -174,7 +174,7 @@ public class PaymentConfirmationSync extends RepositorySync {
   private void saveAndRescheduleOnNetworkError(SyncResult syncResult, Throwable throwable,
       String payerId) {
     if (throwable instanceof IOException) {
-      analytics.sendPurchaseNetworkRetryEvent();
+      analytics.sendPurchaseNetworkRetryEvent(product);
       rescheduleSync(syncResult);
     } else {
       confirmationAccessor.save(confirmationFactory.convertToDatabasePaymentConfirmation(
