@@ -218,11 +218,11 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
     }
 
     if (oldVersion == 8081) {
-      if (schema.contains("StoreMinimalAd")) {
-        schema.remove("StoreMinimalAd");
+      if (schema.contains("StoredMinimalAd")) {
+        schema.remove("StoredMinimalAd");
       }
 
-      schema.create("StoreMinimalAd")
+      schema.create("StoredMinimalAd")
           .addField("packageName", String.class, FieldAttribute.PRIMARY_KEY,
               FieldAttribute.REQUIRED)
           .addField("referrer", String.class)
