@@ -17,14 +17,14 @@ import lombok.Data;
   //    "url": "some_deep_url_for_aptoide_client"
   //}
 
-  private String ab_testing_group;
+  private String abTestingGroup;
   private String body;
-  private String campaign_id;
+  private int campaignId;
   private String img;
   private String lang;
   private String title;
   private String url;
-  private String url_track;
+  private String urlTrack;
 
   //private List<Notification> results;
   //

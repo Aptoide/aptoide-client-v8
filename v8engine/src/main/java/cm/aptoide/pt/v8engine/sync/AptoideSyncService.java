@@ -13,6 +13,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.telephony.TelephonyManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
@@ -59,7 +60,8 @@ public class AptoideSyncService extends Service {
             ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV3(), httpClient,
             converterFactory,
             new ScheduleNotificationSync(idsRepository, this, httpClient, converterFactory,
-                versionName, BuildConfig.APPLICATION_ID));
+                versionName, BuildConfig.APPLICATION_ID,
+                AccessorFactory.getAccessorFor(Notification.class)));
       }
     }
   }

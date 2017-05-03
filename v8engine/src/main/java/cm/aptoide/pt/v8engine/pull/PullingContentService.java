@@ -274,9 +274,9 @@ public class PullingContentService extends Service {
       Intent resultIntent = new Intent(Application.getContext(), PullingContentReceiver.class);
       resultIntent.setAction(PullingContentReceiver.NOTIFICATION_PRESSED_ACTION);
 
-      if (!TextUtils.isEmpty(pushNotification.getUrl_track())) {
+      if (!TextUtils.isEmpty(pushNotification.getUrlTrack())) {
         resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TRACK_URL,
-            pushNotification.getUrl_track());
+            pushNotification.getUrlTrack());
       }
       if (!TextUtils.isEmpty(pushNotification.getUrl())) {
         resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TARGET_URL,
@@ -318,14 +318,7 @@ public class PullingContentService extends Service {
         ImageLoader.with(context).loadImageToNotification(notificationTarget, imageUrl);
       }
 
-      if (response != null) {
-        try {
-          ManagerPreferences.setLastPushNotificationId(
-              Integer.parseInt(pushNotification.getCampaign_id()));
-        } catch (Exception e) {
-
-        }
-      }
+      ManagerPreferences.setLastPushNotificationId(pushNotification.getCampaignId());
       managerNotification.notify(PUSH_NOTIFICATION_ID, notification);
     }
 
