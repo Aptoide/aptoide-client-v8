@@ -10,19 +10,13 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
-import android.text.TextUtils;
-import android.widget.RemoteViews;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dataprovider.ws.notifications.GetPullNotificationsResponse;
-import cm.aptoide.pt.dataprovider.ws.notifications.PullCampaignNotificationsRequest;
-import cm.aptoide.pt.dataprovider.ws.notifications.PullSocialNotificationRequest;
-import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -38,7 +32,6 @@ import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.updates.UpdateRepository;
-import com.bumptech.glide.request.target.NotificationTarget;
 import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -57,16 +50,13 @@ public class PullingContentService extends Service {
   public static final String BOOT_COMPLETED_ACTION = "BOOT_COMPLETED_ACTION";
   public static final long UPDATES_INTERVAL = AlarmManager.INTERVAL_HALF_DAY;
   public static final long PUSH_NOTIFICATION_INTERVAL = AlarmManager.INTERVAL_DAY;
-  public static final int PUSH_NOTIFICATION_ID = 86456;
   public static final int UPDATE_NOTIFICATION_ID = 123;
   private CompositeSubscription subscriptions;
   private InstallManager installManager;
-  private OkHttpClient httpClient;
-  private Converter.Factory converterFactory;
-  private IdsRepository idsRepository;
   private ScheduleNotificationSync notificationSync;
+  private NotificationShower notificationShower;
 
-  public static void setAlarm(AlarmManager am, Context context, String action, long time) {
+  public void setAlarm(AlarmManager am, Context context, String action, long time) {
     Intent intent = new Intent(context, PullingContentService.class);
     intent.setAction(action);
     PendingIntent pendingIntent =
@@ -96,14 +86,17 @@ public class PullingContentService extends Service {
 
     installManager =
         ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
-    httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
-    converterFactory = WebService.getDefaultConverter();
-    idsRepository = ((V8Engine) getApplicationContext()).getIdsRepository();
+    final OkHttpClient httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
+    final Converter.Factory converterFactory = WebService.getDefaultConverter();
+    final IdsRepository idsRepository = ((V8Engine) getApplicationContext()).getIdsRepository();
     subscriptions = new CompositeSubscription();
+    NotificationAccessor notificationAccessor =
+        AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Notification.class);
+    notificationShower = new NotificationShower(notificationAccessor);
     notificationSync =
         new ScheduleNotificationSync(idsRepository, this, httpClient, converterFactory, versionName,
-            BuildConfig.APPLICATION_ID,
-            AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Notification.class));
+            BuildConfig.APPLICATION_ID, notificationAccessor, notificationShower);
+
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
     if (!isAlarmUp(this, PUSH_NOTIFICATIONS_ACTION)) {
       setAlarm(alarm, this, PUSH_NOTIFICATIONS_ACTION, pushNotificationInterval);
@@ -122,11 +115,11 @@ public class PullingContentService extends Service {
           setUpdatesAction(startId);
           break;
         case PUSH_NOTIFICATIONS_ACTION:
-          setPushNotificationsAction(this, startId);
+          setPushNotificationsAction(startId);
           break;
         case BOOT_COMPLETED_ACTION:
           setUpdatesAction(startId);
-          setPushNotificationsAction(this, startId);
+          setPushNotificationsAction(startId);
           break;
       }
     }
@@ -177,34 +170,14 @@ public class PullingContentService extends Service {
   /**
    * setup on push notifications action received
    *
-   * @param startId service startid
+   * @param startId service startId
    */
-  private void setPushNotificationsAction(Context context, int startId) {
-
-    PackageInfo pInfo = null;
-    try {
-      pInfo = context.getPackageManager().getPackageInfo(getPackageName(), 0);
-    } catch (PackageManager.NameNotFoundException e) {
-      e.printStackTrace();
-    }
-
-    PullCampaignNotificationsRequest.of(idsRepository.getUniqueIdentifier(),
-        pInfo == null ? "" : pInfo.versionName, BuildConfig.APPLICATION_ID, httpClient,
-        converterFactory).execute(response -> setPushNotification(context, response, startId));
-
-    subscriptions.add(Observable.just(pInfo)
-        .flatMap(packageInfo -> (((V8Engine) getApplication()).getAccountManager()).accountStatus()
-            .first()
-            .filter(account -> account.isLoggedIn())
-            .map(account -> packageInfo))
-        .subscribe(
-            packageInfo -> PullSocialNotificationRequest.of(idsRepository.getUniqueIdentifier(),
-            packageInfo == null ? "" : packageInfo.versionName, BuildConfig.APPLICATION_ID,
-            httpClient, converterFactory)
-            .execute(response -> setPushNotification(context, response, startId))));
-
-    subscriptions.add(notificationSync.sync().subscribe(() -> {
-    }, throwable -> CrashReport.getInstance().log(throwable)));
+  private void setPushNotificationsAction(int startId) {
+    subscriptions.add(notificationSync.sync(PullingContentService.this)
+        .subscribe(() -> stopSelf(startId), throwable -> {
+          stopSelf(startId);
+          CrashReport.getInstance().log(throwable);
+        }));
   }
 
   /**
@@ -268,69 +241,6 @@ public class PullingContentService extends Service {
       managerNotification.notify(UPDATE_NOTIFICATION_ID, notification);
       ManagerPreferences.setLastUpdates(numberUpdates);
     }
-    stopSelf(startId);
-  }
-
-  private void setPushNotification(Context context, List<GetPullNotificationsResponse> response,
-      int startId) {
-
-    if (response == null) {
-      return;
-    }
-
-    for (GetPullNotificationsResponse pushNotification : response) {
-
-      Intent resultIntent = new Intent(Application.getContext(), PullingContentReceiver.class);
-      resultIntent.setAction(PullingContentReceiver.NOTIFICATION_PRESSED_ACTION);
-
-      if (!TextUtils.isEmpty(pushNotification.getUrlTrack())) {
-        resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TRACK_URL,
-            pushNotification.getUrlTrack());
-      }
-      if (!TextUtils.isEmpty(pushNotification.getUrl())) {
-        resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TARGET_URL,
-            pushNotification.getUrl());
-      }
-      PendingIntent resultPendingIntent =
-          PendingIntent.getBroadcast(Application.getContext(), 0, resultIntent,
-              PendingIntent.FLAG_UPDATE_CURRENT);
-      Notification notification =
-          new NotificationCompat.Builder(Application.getContext()).setContentIntent(
-              resultPendingIntent)
-              .setOngoing(false)
-              .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-              .setLargeIcon(BitmapFactory.decodeResource(Application.getContext().getResources(),
-                  Application.getConfiguration().getIcon()))
-              .setContentTitle(pushNotification.getTitle())
-              .setContentText(pushNotification.getBody())
-              .build();
-
-      notification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
-      final NotificationManager managerNotification = (NotificationManager) Application.getContext()
-          .getSystemService(Context.NOTIFICATION_SERVICE);
-
-      if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 24 && !TextUtils.isEmpty(
-          pushNotification.getImg())) {
-
-        String imageUrl = pushNotification.getImg();
-        RemoteViews expandedView = new RemoteViews(Application.getContext().getPackageName(),
-            R.layout.pushnotificationlayout);
-        expandedView.setImageViewBitmap(R.id.icon,
-            BitmapFactory.decodeResource(Application.getContext().getResources(),
-                Application.getConfiguration().getIcon()));
-        expandedView.setTextViewText(R.id.text1, pushNotification.getTitle());
-        expandedView.setTextViewText(R.id.description, pushNotification.getBody());
-        notification.bigContentView = expandedView;
-        NotificationTarget notificationTarget =
-            new NotificationTarget(Application.getContext(), expandedView,
-                R.id.PushNotificationImageView, notification, PUSH_NOTIFICATION_ID);
-        ImageLoader.with(context).loadImageToNotification(notificationTarget, imageUrl);
-      }
-
-      ManagerPreferences.setLastPushNotificationId(pushNotification.getCampaignId());
-      managerNotification.notify(PUSH_NOTIFICATION_ID, notification);
-    }
-
     stopSelf(startId);
   }
 }

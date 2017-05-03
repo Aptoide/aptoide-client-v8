@@ -29,10 +29,12 @@ public class ScheduleNotificationSync {
   private String versionName;
   private String applicationId;
   private NotificationAccessor notificationAccessor;
+  private NotificationShower notificationShower;
 
   public ScheduleNotificationSync(IdsRepository idsRepository, Context context,
       OkHttpClient httpClient, Converter.Factory converterFactory, String versionName,
-      String applicationId, NotificationAccessor notificationAccessor) {
+      String applicationId, NotificationAccessor notificationAccessor,
+      NotificationShower notificationShower) {
     this.idsRepository = idsRepository;
     this.context = context;
     this.httpClient = httpClient;
@@ -40,11 +42,16 @@ public class ScheduleNotificationSync {
     this.versionName = versionName;
     this.applicationId = applicationId;
     this.notificationAccessor = notificationAccessor;
+    this.notificationShower = notificationShower;
   }
 
-  public Completable sync() {
+  public Completable sync(Context context) {
     return Single.merge(getCampaignNotifications(), getSocialNotifications())
         .doOnNext(notifications -> saveData(notifications))
+        .map(notifications -> notifications.get(0))
+        .onErrorReturn(throwable -> Notification.createEmptyNotification())
+        .flatMapCompletable(
+            notification -> notificationShower.showNotification(context, notification))
         .toCompletable();
   }
 

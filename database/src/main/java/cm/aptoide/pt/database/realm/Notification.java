@@ -11,6 +11,7 @@ import lombok.ToString;
  */
 
 @ToString(of = { "title" }) public class Notification extends RealmObject {
+  public static final int NOT_EXISTS = -1;
   public static final int CAMPAIGN = 0;
   public static final int DIRECT = 1;
 
@@ -28,24 +29,30 @@ import lombok.ToString;
   }
 
   public Notification(String body, String img, String title, String url) {
+    this(body, img, title, url, DIRECT);
+  }
+
+  private Notification(String body, String img, String title, String url, int notificationType) {
     this.body = body;
     this.img = img;
     this.title = title;
     this.url = url;
-    this.notificationType = DIRECT;
+    this.notificationType = notificationType;
   }
 
   public Notification(String abTestingGroup, String body, int campaignId, String img, String lang,
       String title, String url, String urlTrack) {
+    this(body, img, title, url, CAMPAIGN);
     this.abTestingGroup = abTestingGroup;
-    this.body = body;
     this.campaignId = campaignId;
-    this.img = img;
     this.lang = lang;
-    this.title = title;
-    this.url = url;
     this.urlTrack = urlTrack;
-    this.notificationType = CAMPAIGN;
+  }
+
+  public static Notification createEmptyNotification() {
+    Notification notification = new Notification();
+    notification.notificationType = NOT_EXISTS;
+    return notification;
   }
 
   public @NotificationType int getNotificationType() {
@@ -84,7 +91,7 @@ import lombok.ToString;
     return urlTrack;
   }
 
-  @Retention(RetentionPolicy.SOURCE) @IntDef({ CAMPAIGN, DIRECT })
+  @Retention(RetentionPolicy.SOURCE) @IntDef({ CAMPAIGN, DIRECT, NOT_EXISTS })
   public @interface NotificationType {
   }
 }
