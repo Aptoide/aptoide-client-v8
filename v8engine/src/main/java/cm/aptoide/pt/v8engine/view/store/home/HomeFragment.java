@@ -40,6 +40,7 @@ import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.custom.BadgeView;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 import cm.aptoide.pt.v8engine.view.store.StorePagerAdapter;
@@ -204,8 +205,9 @@ public class HomeFragment extends StoreFragment {
         });
 
     tabNavigator.navigation()
-        .doOnNext(tab -> viewPager.setCurrentItem(
-            ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(getEventName(tab))))
+        .doOnNext(tabNavigation -> viewPager.setCurrentItem(
+            ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(getEventName
+                (tabNavigation.getTab()))))
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(__ -> {
         }, err -> CrashReport.getInstance().log(err));
@@ -374,13 +376,13 @@ public class HomeFragment extends StoreFragment {
 
   private Event.Name getEventName(int tab) {
     switch (tab) {
-      case TabNavigator.DOWNLOADS:
+      case TabNavigation.DOWNLOADS:
         return Event.Name.myDownloads;
-      case TabNavigator.STORES:
+      case TabNavigation.STORES:
         return Event.Name.myStores;
-      case TabNavigator.TIMELINE:
+      case TabNavigation.TIMELINE:
         return Event.Name.getUserTimeline;
-      case TabNavigator.UPDATES:
+      case TabNavigation.UPDATES:
         return Event.Name.myUpdates;
       default:
         throw new IllegalArgumentException("Invalid tab.");

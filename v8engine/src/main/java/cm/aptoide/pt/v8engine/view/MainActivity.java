@@ -49,9 +49,13 @@ import cm.aptoide.pt.v8engine.util.ApkFy;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.downloads.scheduled.ScheduledDownloadsFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.view.navigator.SimpleTabNavigation;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigatorActivity;
 import cm.aptoide.pt.v8engine.view.store.StoreTabFragmentChooser;
 import cm.aptoide.pt.v8engine.view.store.home.HomeFragment;
+import cm.aptoide.pt.v8engine.view.timeline.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.v8engine.view.wizard.WizardFragment;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -217,7 +221,7 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
   }
 
   @NonNull private Completable navigateToStores() {
-    return Completable.fromAction(() -> navigate(STORES));
+    return Completable.fromAction(() -> navigate(new SimpleTabNavigation(TabNavigation.STORES)));
   }
 
   @NonNull private Completable openStore(Store store) {
@@ -227,17 +231,18 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
 
   private void downloadNotificationDeepLink(Intent intent) {
     Analytics.ApplicationLaunch.downloadingUpdates();
-    navigate(DOWNLOADS);
+    navigate(new SimpleTabNavigation(TabNavigation.DOWNLOADS));
   }
 
   private void fromTimelineDeepLink(Intent intent) {
     Analytics.ApplicationLaunch.timelineNotification();
-    navigate(TIMELINE);
+    String cardId = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.CARD_ID);
+    navigate(new AppsTimelineTabNavigation(cardId));
   }
 
   private void newUpdatesDeepLink(Intent intent) {
     Analytics.ApplicationLaunch.newUpdatesNotification();
-    navigate(UPDATES);
+    navigate(new SimpleTabNavigation(TabNavigation.UPDATES));
   }
 
   private void genericDeepLink(Uri uri) {
