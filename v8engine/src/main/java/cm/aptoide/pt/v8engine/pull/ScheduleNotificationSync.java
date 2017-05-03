@@ -14,7 +14,7 @@ import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
-import rx.Observable;
+import rx.Single;
 
 /**
  * Created by trinkes on 02/05/2017.
@@ -43,12 +43,12 @@ public class ScheduleNotificationSync {
   }
 
   public Completable sync() {
-    return Observable.merge(getCampaignNotifications(), getSocialNotifications())
+    return Single.merge(getCampaignNotifications(), getSocialNotifications())
         .doOnNext(notifications -> saveData(notifications))
         .toCompletable();
   }
 
-  private Observable<LinkedList<Notification>> getSocialNotifications() {
+  private Single<LinkedList<Notification>> getSocialNotifications() {
     return (((V8Engine) context.getApplicationContext()).getAccountManager()).accountStatus()
         .first()
         .filter(account -> account.isLoggedIn())
@@ -56,14 +56,16 @@ public class ScheduleNotificationSync {
             packageInfo -> PullSocialNotificationRequest.of(idsRepository.getUniqueIdentifier(),
                 versionName, applicationId, httpClient, converterFactory)
                 .observe()
-                .map(response -> convertSocialNotifications(response)));
+                .map(response -> convertSocialNotifications(response))).first().toSingle();
   }
 
-  @NonNull private Observable<LinkedList<Notification>> getCampaignNotifications() {
+  @NonNull private Single<LinkedList<Notification>> getCampaignNotifications() {
     return PullCampaignNotificationsRequest.of(idsRepository.getUniqueIdentifier(), versionName,
         applicationId, httpClient, converterFactory)
         .observe()
-        .map(response -> convertCampaignNotifications(response));
+        .map(response -> convertCampaignNotifications(response))
+        .first()
+        .toSingle();
   }
 
   private LinkedList<Notification> convertSocialNotifications(
