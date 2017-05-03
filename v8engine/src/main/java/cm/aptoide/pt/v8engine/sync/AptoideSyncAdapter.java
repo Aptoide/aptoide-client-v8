@@ -17,6 +17,7 @@ import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationFactory;
@@ -53,6 +54,7 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
+  private final PaymentAnalytics paymentAnalytics;
 
   public AptoideSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs,
       PaymentConfirmationFactory confirmationConverter,
@@ -60,7 +62,7 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
       NetworkOperatorManager operatorManager, PaymentConfirmationAccessor confirmationAccessor,
       PaymentAuthorizationAccessor authorizationAcessor, AptoideAccountManager accountManager,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, PaymentAnalytics paymentAnalytics) {
     super(context, autoInitialize, allowParallelSyncs);
     this.confirmationConverter = confirmationConverter;
     this.authorizationConverter = authorizationConverter;
@@ -72,6 +74,7 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.converterFactory = converterFactory;
     this.httpClient = httpClient;
+    this.paymentAnalytics = paymentAnalytics;
   }
 
   @Override public void onPerformSync(Account account, Bundle extras, String authority,
@@ -89,17 +92,17 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
         new PaymentConfirmationSync(
             RepositoryFactory.getPaymentConfirmationRepository(getContext(), product), product,
             operatorManager, confirmationAccessor, confirmationConverter, accountManager,
-            bodyInterceptorV3, converterFactory, httpClient).sync(syncResult);
+            bodyInterceptorV3, converterFactory, httpClient, paymentAnalytics).sync(syncResult);
       } else {
         new PaymentConfirmationSync(
             RepositoryFactory.getPaymentConfirmationRepository(getContext(), product), product,
             operatorManager, confirmationAccessor, confirmationConverter, paymentConfirmationId,
             paymentIds.get(0), accountManager, bodyInterceptorV3, converterFactory,
-            httpClient).sync(syncResult);
+            httpClient, paymentAnalytics).sync(syncResult);
       }
     } else if (authorizations) {
       new PaymentAuthorizationSync(paymentIds, authorizationAcessor, authorizationConverter,
-          accountManager, bodyInterceptorV3, httpClient, converterFactory).sync(syncResult);
+          accountManager, bodyInterceptorV3, httpClient, converterFactory, paymentAnalytics).sync(syncResult);
     }
   }
 }

@@ -11,6 +11,7 @@ import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.Product;
+import cm.aptoide.pt.v8engine.payment.ProductRepository;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
 import java.util.Collections;
 import java.util.Comparator;
