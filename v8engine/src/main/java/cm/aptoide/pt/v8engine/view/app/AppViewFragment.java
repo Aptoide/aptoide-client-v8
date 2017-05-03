@@ -41,7 +41,7 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
-import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
+import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
@@ -75,7 +75,6 @@ import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
-import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
@@ -105,7 +104,6 @@ import cm.aptoide.pt.v8engine.view.payment.PaymentActivity;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.store.StoreFragment;
-import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.LinkedList;
 import java.util.List;
@@ -182,7 +180,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private AccountNavigator accountNavigator;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
-  private StoreMinimalAdAccessor storeMinimalAdAccessor;
+  private StoredMinimalAdAccessor storedMinimalAdAccessor;
   private PaymentAnalytics paymentAnalytics;
   private SpotAndShareAnalytics spotAndShareAnalytics;
 
@@ -277,7 +275,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             accountManager, httpClient, converterFactory);
     installedRepository = RepositoryFactory.getInstalledRepository();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
-    storeMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
+    storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
     paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
   }
@@ -467,7 +465,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   private void storeMinimalAdd(MinimalAd minimalAd) {
-    storeMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, null));
+    storedMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, null));
   }
 
   @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
