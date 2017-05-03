@@ -121,7 +121,7 @@
             android:paddingLeft="14dp"
             android:paddingRight="14dp"
             android:paddingTop="4dp"
-            android:text="@string/go_to_spot_and_share"
+            android:text="@string/Share_apps_now"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
             android:textSize="14sp"
