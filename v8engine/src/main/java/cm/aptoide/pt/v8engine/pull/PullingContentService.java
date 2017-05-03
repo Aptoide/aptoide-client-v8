@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.ws.notifications.GetPullNotificationsResponse;
@@ -63,7 +64,7 @@ public class PullingContentService extends Service {
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private IdsRepository idsRepository;
-  private NotificationSyncScheduler notificationSyncScheduler;
+  private ScheduleNotificationSync notificationSync;
 
   public static void setAlarm(AlarmManager am, Context context, String action, long time) {
     Intent intent = new Intent(context, PullingContentService.class);
@@ -85,16 +86,24 @@ public class PullingContentService extends Service {
       pushNotificationInterval = PUSH_NOTIFICATION_INTERVAL;
     }
 
+    PackageInfo pInfo = null;
+    try {
+      pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+    } catch (PackageManager.NameNotFoundException e) {
+      e.printStackTrace();
+    }
+    String versionName = pInfo == null ? "" : pInfo.versionName;
+
     installManager =
         ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
     httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     idsRepository = ((V8Engine) getApplicationContext()).getIdsRepository();
     subscriptions = new CompositeSubscription();
-    notificationSyncScheduler = new NotificationSyncScheduler(
-        ((V8Engine) getApplicationContext()).getAndroidAccountProvider(),
-        Application.getConfiguration().getContentAuthority(), ((V8Engine) getApplicationContext()).
-        getConfiguration().getAccountType());
+    notificationSync =
+        new ScheduleNotificationSync(idsRepository, this, httpClient, converterFactory, versionName,
+            BuildConfig.APPLICATION_ID,
+            AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Notification.class));
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
     if (!isAlarmUp(this, PUSH_NOTIFICATIONS_ACTION)) {
       setAlarm(alarm, this, PUSH_NOTIFICATIONS_ACTION, pushNotificationInterval);
@@ -194,7 +203,7 @@ public class PullingContentService extends Service {
             httpClient, converterFactory)
             .execute(response -> setPushNotification(context, response, startId))));
 
-    subscriptions.add(notificationSyncScheduler.sync().subscribe(() -> {
+    subscriptions.add(notificationSync.sync().subscribe(() -> {
     }, throwable -> CrashReport.getInstance().log(throwable)));
   }
 

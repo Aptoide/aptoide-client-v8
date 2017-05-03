@@ -23,7 +23,6 @@ import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentAuthorizationSync;
 import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentConfirmationSync;
 import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncDataConverter;
-import cm.aptoide.pt.v8engine.pull.ScheduleNotificationSync;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -43,8 +42,6 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
       "cm.aptoide.pt.v8engine.repository.sync.EXTRA_PAYMENT_AUTHORIZATIONS";
   public static final String EXTRA_PAYMENT_CONFIRMATIONS =
       "cm.aptoide.pt.v8engine.repository.sync.EXTRA_PAYMENT_CONFIRMATIONS";
-  public static final String EXTRA_CAMPAIGN_NOTIFICATION =
-      "cm.aptoide.pt.v8engine.repository.sync.EXTRA_CAMPAIGN_NOTIFICATION";
 
   private final PaymentSyncDataConverter productConverter;
   private final NetworkOperatorManager operatorManager;
@@ -55,7 +52,6 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
   private final AptoideAccountManager accountManager;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final OkHttpClient httpClient;
-  private final ScheduleNotificationSync scheduleNotificationSync;
   private final Converter.Factory converterFactory;
 
   public AptoideSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs,
@@ -64,7 +60,7 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
       NetworkOperatorManager operatorManager, PaymentConfirmationAccessor confirmationAccessor,
       PaymentAuthorizationAccessor authorizationAcessor, AptoideAccountManager accountManager,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
-      Converter.Factory converterFactory, ScheduleNotificationSync scheduleNotificationSync) {
+      Converter.Factory converterFactory) {
     super(context, autoInitialize, allowParallelSyncs);
     this.confirmationConverter = confirmationConverter;
     this.authorizationConverter = authorizationConverter;
@@ -76,14 +72,12 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.converterFactory = converterFactory;
     this.httpClient = httpClient;
-    this.scheduleNotificationSync = scheduleNotificationSync;
   }
 
   @Override public void onPerformSync(Account account, Bundle extras, String authority,
       ContentProviderClient provider, SyncResult syncResult) {
     final boolean authorizations = extras.getBoolean(EXTRA_PAYMENT_AUTHORIZATIONS);
     final boolean confirmations = extras.getBoolean(EXTRA_PAYMENT_CONFIRMATIONS);
-    final boolean campaignNotification = extras.getBoolean(EXTRA_CAMPAIGN_NOTIFICATION);
 
     final List<String> paymentIds = productConverter.toList(extras.getString(EXTRA_PAYMENT_IDS));
 
@@ -106,8 +100,6 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
     } else if (authorizations) {
       new PaymentAuthorizationSync(paymentIds, authorizationAcessor, authorizationConverter,
           accountManager, bodyInterceptorV3, httpClient, converterFactory).sync(syncResult);
-    } else if (campaignNotification) {
-      scheduleNotificationSync.sync(syncResult);
     }
   }
 }

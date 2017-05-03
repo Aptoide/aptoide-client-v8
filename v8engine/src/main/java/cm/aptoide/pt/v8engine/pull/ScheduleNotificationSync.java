@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.pull;
 
 import android.content.Context;
-import android.content.SyncResult;
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.dataprovider.ws.notifications.GetPullNotificationsResponse;
@@ -9,20 +9,19 @@ import cm.aptoide.pt.dataprovider.ws.notifications.PullCampaignNotificationsRequ
 import cm.aptoide.pt.dataprovider.ws.notifications.PullSocialNotificationRequest;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
-import cm.aptoide.pt.v8engine.sync.ScheduledSync;
 import java.util.LinkedList;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
-import rx.subscriptions.CompositeSubscription;
+import rx.Completable;
+import rx.Observable;
 
 /**
  * Created by trinkes on 02/05/2017.
  */
 
-public class ScheduleNotificationSync extends ScheduledSync {
+public class ScheduleNotificationSync {
   private static final String TAG = ScheduleNotificationSync.class.getSimpleName();
-  private final CompositeSubscription subscriptions;
   private IdsRepository idsRepository;
   private Context context;
   private OkHttpClient httpClient;
@@ -41,43 +40,52 @@ public class ScheduleNotificationSync extends ScheduledSync {
     this.versionName = versionName;
     this.applicationId = applicationId;
     this.notificationAccessor = notificationAccessor;
-    subscriptions = new CompositeSubscription();
   }
 
-  @Override public void sync(SyncResult syncResult) {
+  public Completable sync() {
+    return Observable.merge(getCampaignNotifications(), getSocialNotifications())
+        .doOnNext(notifications -> saveData(notifications))
+        .toCompletable();
+  }
 
-    PullCampaignNotificationsRequest.of(idsRepository.getUniqueIdentifier(), versionName,
+  private Observable<LinkedList<Notification>> getSocialNotifications() {
+    return (((V8Engine) context.getApplicationContext()).getAccountManager()).accountStatus()
+        .first()
+        .filter(account -> account.isLoggedIn())
+        .flatMap(
+            packageInfo -> PullSocialNotificationRequest.of(idsRepository.getUniqueIdentifier(),
+                versionName, applicationId, httpClient, converterFactory)
+                .observe()
+                .map(response -> convertSocialNotifications(response)));
+  }
+
+  @NonNull private Observable<LinkedList<Notification>> getCampaignNotifications() {
+    return PullCampaignNotificationsRequest.of(idsRepository.getUniqueIdentifier(), versionName,
         applicationId, httpClient, converterFactory)
-        .execute(response -> saveCampaignNotifications(response));
-
-    subscriptions.add(
-        (((V8Engine) context.getApplicationContext()).getAccountManager()).accountStatus()
-            .first()
-            .filter(account -> account.isLoggedIn())
-            .subscribe(
-                packageInfo -> PullSocialNotificationRequest.of(idsRepository.getUniqueIdentifier(),
-                    versionName, applicationId, httpClient, converterFactory)
-                    .execute(response -> saveSocialNotifications(response))));
+        .observe()
+        .map(response -> convertCampaignNotifications(response));
   }
 
-  private void saveSocialNotifications(List<GetPullNotificationsResponse> response) {
+  private LinkedList<Notification> convertSocialNotifications(
+      List<GetPullNotificationsResponse> response) {
     LinkedList<Notification> notifications = new LinkedList<>();
     for (final GetPullNotificationsResponse notification : response) {
       notifications.add(
           new Notification(notification.getBody(), notification.getImg(), notification.getTitle(),
               notification.getUrl()));
     }
-    saveData(notifications);
+    return notifications;
   }
 
-  private void saveCampaignNotifications(List<GetPullNotificationsResponse> response) {
+  private LinkedList<Notification> convertCampaignNotifications(
+      List<GetPullNotificationsResponse> response) {
     LinkedList<Notification> notifications = new LinkedList<>();
     for (final GetPullNotificationsResponse notification : response) {
       notifications.add(new Notification(notification.getAbTestingGroup(), notification.getBody(),
           notification.getCampaignId(), notification.getImg(), notification.getLang(),
           notification.getTitle(), notification.getUrl(), notification.getUrlTrack()));
     }
-    saveData(notifications);
+    return notifications;
   }
 
   private void saveData(List<Notification> response) {
