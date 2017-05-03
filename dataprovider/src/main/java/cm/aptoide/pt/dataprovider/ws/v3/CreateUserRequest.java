@@ -41,7 +41,8 @@ public class CreateUserRequest extends V3<BaseV3Response> {
     multipartRequestBody = body;
   }
 
-  public static CreateUserRequest of(String email, String password, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient) {
+  public static CreateUserRequest of(String email, String password,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient) {
     final BaseBody body = new BaseBody();
     final String passhash = AptoideUtils.AlgorithmU.computeSha1(password);
     addBaseParameters(email, body, passhash);

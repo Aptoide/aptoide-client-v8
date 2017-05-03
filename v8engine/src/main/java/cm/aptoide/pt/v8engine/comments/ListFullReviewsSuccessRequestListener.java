@@ -25,10 +25,10 @@ import rx.schedulers.Schedulers;
 public class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<ListReviews> {
 
   private final RateAndReviewsFragment fragment;
-  private StoreCredentialsProvider storeCredentialsProvider;
   private final Converter.Factory converterFactory;
   private final BodyInterceptor<BaseBody> bodyBodyInterceptor;
   private final OkHttpClient httpClient;
+  private StoreCredentialsProvider storeCredentialsProvider;
 
   public ListFullReviewsSuccessRequestListener(RateAndReviewsFragment fragment,
       StoreCredentialsProvider storeCredentialsProvider,

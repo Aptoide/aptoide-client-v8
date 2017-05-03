@@ -78,6 +78,7 @@ import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
@@ -188,6 +189,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     fragment.setArguments(bundle);
     return fragment;
   }
+  private SpotAndShareAnalytics spotAndShareAnalytics;
 
   public static AppViewFragment newInstance(String md5) {
     Bundle bundle = new Bundle();
@@ -271,6 +273,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installedRepository = RepositoryFactory.getInstalledRepository();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     storeMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
+    spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
@@ -751,13 +754,28 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         }
       } else if (GenericDialogs.EResponse.SHARE_SPOT_AND_SHARE == eResponse) {
 
+        spotAndShareAnalytics.clickShareApps(
+            SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW);
+
         String filepath = getFilepath(packageName);
+        String appNameToShare = filterAppName(appName);
         Intent intent = new Intent(this.getActivity(), HighwayActivity.class);
         intent.setAction("APPVIEW_SHARE");
         intent.putExtra("APPVIEW_SHARE_FILEPATH", filepath);
+        intent.putExtra("APPVIEW_SHARE_APPNAME", appNameToShare);
         startActivity(intent);
       }
     }, err -> err.printStackTrace());
+  }
+
+  private String filterAppName(String appName) {
+    if (!TextUtils.isEmpty(appName) && appName.length() > 17) {
+      appName = appName.substring(0, 17);
+    }
+    if (!TextUtils.isEmpty(appName) && appName.contains("_")) {
+      appName = appName.replace("_", " ");
+    }
+    return appName;
   }
 
   private String getFilepath(String packageName) {

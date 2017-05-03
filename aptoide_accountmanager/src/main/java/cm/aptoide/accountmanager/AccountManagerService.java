@@ -11,7 +11,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.GetMySubscribedStoresRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
-
 import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
 import cm.aptoide.pt.model.v3.OAuth;
 import java.util.List;
@@ -28,7 +27,8 @@ public class AccountManagerService {
   private final OkHttpClient longTimeoutHttpClient;
   private final Converter.Factory converterFactory;
 
-  public AccountManagerService(BasebBodyInterceptorFactory interceptorFactory, AccountFactory accountFactory,
+  public AccountManagerService(BasebBodyInterceptorFactory interceptorFactory,
+      AccountFactory accountFactory,
       OkHttpClient httpClient, OkHttpClient longTimeoutHttpClient, Converter.Factory converterFactory) {
     this.interceptorFactory = interceptorFactory;
     this.accountFactory = accountFactory;
@@ -38,7 +38,8 @@ public class AccountManagerService {
   }
 
   public Completable createAccount(String email, String password) {
-    return CreateUserRequest.of(email.toLowerCase(), password, interceptorFactory.createV3(), httpClient)
+    return CreateUserRequest.of(email.toLowerCase(), password, interceptorFactory.createV3(),
+        httpClient)
         .observe(true)
         .toSingle()
         .flatMapCompletable(response -> {
@@ -57,7 +58,8 @@ public class AccountManagerService {
   }
 
   public Single<OAuth> login(String type, String email, String password, String name) {
-    return OAuth2AuthenticationRequest.of(email, password, type, name, interceptorFactory.createV3(), httpClient,
+    return OAuth2AuthenticationRequest.of(email, password, type, name,
+        interceptorFactory.createV3(), httpClient,
         converterFactory).observe().toSingle().flatMap(oAuth -> {
       if (!oAuth.hasErrors()) {
         return Single.just(oAuth);
@@ -75,7 +77,8 @@ public class AccountManagerService {
 
   public Completable updateAccount(String email, String nickname, String password,
       String avatarPath, String accessToken) {
-    return CreateUserRequest.of(email, nickname, password, avatarPath, accessToken, interceptorFactory.createV3(),
+    return CreateUserRequest.of(email, nickname, password, avatarPath, accessToken,
+        interceptorFactory.createV3(),
         httpClient, longTimeoutHttpClient).observe(true).toSingle().flatMapCompletable(response -> {
       if (!response.hasErrors()) {
         return Completable.complete();
