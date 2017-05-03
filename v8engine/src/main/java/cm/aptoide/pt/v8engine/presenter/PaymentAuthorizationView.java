@@ -21,6 +21,8 @@ public interface PaymentAuthorizationView extends View {
 
   Observable<Void> backToStoreSelection();
 
+  Observable<Void> backButtonSelection();
+
   Observable<Void> urlLoad();
 
   void dismiss();

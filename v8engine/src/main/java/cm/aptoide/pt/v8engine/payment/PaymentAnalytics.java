@@ -32,14 +32,20 @@ public class PaymentAnalytics {
     analytics.sendEvent(getPaymentEvent("Payment_Pop_Up", "Buy", payment, product));
   }
 
+  public void sendPaymentTapOutsideEvent(Product product, Payment payment) {
+    analytics.sendEvent(getPaymentEvent("Payment_Pop_Up", "Tap Outside", payment, product));
+  }
+
   public void sendBackToStoreButtonPressedEvent(Product product) {
     final Bundle bundle = getProductBundle(product);
     bundle.putString("action", "Voltar para loja button");
     analytics.sendEvent(new FacebookEvent(facebook, "Payment_Authorization_Confirmation", bundle));
   }
 
-  public void sendPaymentTapOutsideEvent(Product product, Payment payment) {
-    analytics.sendEvent(getPaymentEvent("Payment_Pop_Up", "Tap Outside", payment, product));
+  public void sendPaymentAuthorizationBackButtonPressedEvent(Product product) {
+    final Bundle bundle = getProductBundle(product);
+    bundle.putString("action", "Android back button");
+    analytics.sendEvent(new FacebookEvent(facebook, "Payment_Authorization_Confirmation", bundle));
   }
 
   private Event getPaymentEvent(String eventName, String action, Payment payment, Product product) {
@@ -56,4 +62,6 @@ public class PaymentAnalytics {
     bundle.putString("package_name_seller", aptoidePackageName);
     return bundle;
   }
+
+
 }

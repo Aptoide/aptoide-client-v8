@@ -28,14 +28,16 @@ import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.presenter.PaymentAuthorizationPresenter;
 import cm.aptoide.pt.v8engine.presenter.PaymentAuthorizationView;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.view.ActivityView;
+import cm.aptoide.pt.v8engine.view.BackButton;
+import cm.aptoide.pt.v8engine.view.BackButtonActivity;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 
 /**
  * Created by marcelobenites on 11/11/16.
  */
-public class PaymentAuthorizationActivity extends ActivityView implements PaymentAuthorizationView {
+public class PaymentAuthorizationActivity extends BackButtonActivity
+    implements PaymentAuthorizationView {
 
   private static final String EXTRA_PAYMENT_ID =
       "cm.aptoide.pt.v8engine.payment.providers.boacompra.intent.extra.PAYMENT_ID";
@@ -48,6 +50,8 @@ public class PaymentAuthorizationActivity extends ActivityView implements Paymen
   private AlertDialog unknownErrorDialog;
   private PublishRelay<Void> mainUrlSubject;
   private PublishRelay<Void> redirectUrlSubject;
+  private PublishRelay<Void> backButtonSelectionSubject;
+  private ClickHandler clickHandler;
 
   public static Intent getIntent(Context context, int paymentId, ParcelableProduct product) {
     final Intent intent = new Intent(context, PaymentAuthorizationActivity.class);
@@ -83,6 +87,13 @@ public class PaymentAuthorizationActivity extends ActivityView implements Paymen
           .create();
       mainUrlSubject = PublishRelay.create();
       redirectUrlSubject = PublishRelay.create();
+      backButtonSelectionSubject = PublishRelay.create();
+      clickHandler = () -> {
+        backButtonSelectionSubject.call(null);
+        return false;
+      };
+      registerBackClickHandler(clickHandler);
+
       final PaymentAnalytics paymentAnalytics =
           ((V8Engine) getApplicationContext()).getPaymentAnalytics();
       attachPresenter(
@@ -99,6 +110,7 @@ public class PaymentAuthorizationActivity extends ActivityView implements Paymen
     webView.setWebViewClient(null);
     webView.destroy();
     unknownErrorDialog.dismiss();
+    unregisterBackClickHandler(clickHandler);
   }
 
   @Override public void showLoading() {
@@ -131,6 +143,10 @@ public class PaymentAuthorizationActivity extends ActivityView implements Paymen
 
   @Override public Observable<Void> backToStoreSelection() {
     return redirectUrlSubject;
+  }
+
+  @Override public Observable<Void> backButtonSelection() {
+    return backButtonSelectionSubject;
   }
 
   @Override public Observable<Void> urlLoad() {

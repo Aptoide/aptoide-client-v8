@@ -42,6 +42,16 @@ public class PaymentAuthorizationPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.backButtonSelection())
+        .doOnNext(backPressed -> analytics.sendPaymentAuthorizationBackButtonPressedEvent(product))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          CrashReport.getInstance().log(err);
+        });
+
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.urlLoad())
         .doOnNext(loaded -> view.hideLoading())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
