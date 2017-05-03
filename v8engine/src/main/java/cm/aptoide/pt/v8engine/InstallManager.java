@@ -182,8 +182,11 @@ public class InstallManager {
   private Progress<Download> updateDownloadAction(Download download, Progress<Download> progress) {
     if (progress.getRequest().getAction() != download.getAction()) {
       progress.getRequest().setAction(download.getAction());
-      downloadRepository.save(progress.getRequest());
     }
+
+    // Update files to download to avoid reusing an invalid download file
+    progress.getRequest().setFilesToDownload(download.getFilesToDownload());
+    downloadRepository.save(progress.getRequest());
     return progress;
   }
 
