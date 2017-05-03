@@ -50,6 +50,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   private GroupManager groupManager;
   private PermissionListener permissionListener;
   private String autoShareFilepath;
+  private String autoShareAppName;
 
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -69,10 +70,11 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     Intent intent = getIntent();
     if (intent.getAction() != null && intent.getAction().equals("APPVIEW_SHARE")) {
       enableButtons(false);
+      autoShareAppName = intent.getStringExtra("APPVIEW_SHARE_APPNAME");
       autoShareFilepath = intent.getStringExtra("APPVIEW_SHARE_FILEPATH");
       presenter = new HighwayPresenter(this, groupNameProvider,
           new DeactivateHotspotTask(connectionManager), connectionManager, analytics, groupManager,
-          this, autoShareFilepath);
+          this, autoShareAppName, autoShareFilepath);
     } else {
       presenter = new HighwayPresenter(this, groupNameProvider,
           new DeactivateHotspotTask(connectionManager), connectionManager, analytics, groupManager,

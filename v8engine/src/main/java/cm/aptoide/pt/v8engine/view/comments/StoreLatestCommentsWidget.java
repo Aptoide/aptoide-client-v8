@@ -15,6 +15,7 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.comments.CommentNode;
 import cm.aptoide.pt.v8engine.comments.ComplexComment;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
@@ -150,7 +151,8 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
     private Observable<Void> showSignInMessage(@NonNull final View view) {
       return ShowMessage.asObservableSnack(view, R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            accountNavigator.navigateToAccountView();
+            accountNavigator.navigateToAccountView(
+                Analytics.Account.AccountOrigins.LATEST_COMMENTS_STORE);
           }).flatMap(a -> Observable.empty());
     }
   }

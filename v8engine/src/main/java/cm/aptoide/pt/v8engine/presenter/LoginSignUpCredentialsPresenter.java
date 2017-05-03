@@ -97,11 +97,16 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
             .observeOn(AndroidSchedulers.mainThread())
             .doOnCompleted(() -> {
               Logger.d(TAG, "google login successful");
-              Analytics.Account.loginSuccess(Analytics.Account.LoginMethod.GOOGLE);
+              Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
+                  Analytics.Account.SignUpLoginStatus.SUCCESS,
+                  Analytics.Account.LoginStatusDetail.SUCCESS);
               navigateToMainView();
+            }).doOnTerminate(() -> view.hideLoading()).doOnError(throwable -> {
+              view.showError(throwable);
+              Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
+                  Analytics.Account.SignUpLoginStatus.FAILED,
+                  Analytics.Account.LoginStatusDetail.SDK_ERROR);
             })
-            .doOnTerminate(() -> view.hideLoading())
-            .doOnError(throwable -> view.showError(throwable))
             .toObservable()).retry();
   }
 
@@ -111,6 +116,9 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
           if (declinedRequiredPermissions(credentials.getDeniedPermissions())) {
             view.hideLoading();
             view.showPermissionsRequiredMessage();
+            Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
+                Analytics.Account.SignUpLoginStatus.FAILED,
+                Analytics.Account.LoginStatusDetail.PERMISSIONS_DENIED);
             return Observable.empty();
           }
 
@@ -120,7 +128,9 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
                   .observeOn(AndroidSchedulers.mainThread())
                   .doOnCompleted(() -> {
                     Logger.d(TAG, "facebook login successful");
-                    Analytics.Account.loginSuccess(Analytics.Account.LoginMethod.FACEBOOK);
+                    Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
+                        Analytics.Account.SignUpLoginStatus.SUCCESS,
+                        Analytics.Account.LoginStatusDetail.SUCCESS);
                     navigateToMainView();
                   })
                   .doOnTerminate(() -> view.hideLoading())
@@ -137,11 +147,16 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
           .observeOn(AndroidSchedulers.mainThread())
           .doOnCompleted(() -> {
             Logger.d(TAG, "aptoide login successful");
-            Analytics.Account.loginSuccess(Analytics.Account.LoginMethod.APTOIDE);
+            Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
+                Analytics.Account.SignUpLoginStatus.SUCCESS,
+                Analytics.Account.LoginStatusDetail.SUCCESS);
             navigateToMainView();
+          }).doOnTerminate(() -> view.hideLoading()).doOnError(throwable -> {
+            view.showError(throwable);
+            Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
+                Analytics.Account.SignUpLoginStatus.FAILED,
+                Analytics.Account.LoginStatusDetail.GENERAL_ERROR);
           })
-          .doOnTerminate(() -> view.hideLoading())
-          .doOnError(throwable -> view.showError(throwable))
           .toObservable();
     }).retry();
   }
@@ -154,11 +169,12 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
           .observeOn(AndroidSchedulers.mainThread())
           .doOnCompleted(() -> {
             Logger.d(TAG, "aptoide sign up successful");
-            Analytics.Account.signInSuccessAptoide();
+            Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.SUCCESS);
             view.navigateToCreateProfile();
+          }).doOnTerminate(() -> view.hideLoading()).doOnError(throwable -> {
+            Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.FAILED);
+            view.showError(throwable);
           })
-          .doOnTerminate(() -> view.hideLoading())
-          .doOnError(throwable -> view.showError(throwable))
           .toObservable();
     }).retry();
   }

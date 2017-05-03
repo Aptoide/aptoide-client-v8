@@ -9,12 +9,12 @@ import cm.aptoide.pt.model.v7.timeline.SocialInstall;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.timeline.ShareCardCallback;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.v8engine.view.timeline.ShareCardCallback;
 import java.util.Date;
 import lombok.Getter;
 

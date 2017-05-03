@@ -68,21 +68,22 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.ads.AdsRepository;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
+import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
-import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
-import cm.aptoide.pt.v8engine.ads.AdsRepository;
-import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.timeline.SocialRepository;
-import cm.aptoide.pt.v8engine.util.SearchUtils;
+import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.timeline.SocialRepository;
+import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.v8engine.view.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
@@ -177,6 +178,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private StoreMinimalAdAccessor storeMinimalAdAccessor;
+  private SpotAndShareAnalytics spotAndShareAnalytics;
 
   public static AppViewFragment newInstance(String md5) {
     Bundle bundle = new Bundle();
@@ -260,6 +262,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installedRepository = RepositoryFactory.getInstalledRepository();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     storeMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
+    spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
@@ -432,10 +435,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       handleAdsLogic(minimalAd);
       return Observable.just(getApp);
     }
-  }
-
-  private void storeMinimalAdd(MinimalAd minimalAd) {
-    storeMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, null));
   }
 
   @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
@@ -645,6 +644,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     wUrl = app.getNodes().getMeta().getData().getUrls().getW();
   }
 
+  private void storeMinimalAdd(MinimalAd minimalAd) {
+    storeMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, null));
+  }
+
   private boolean isMediaAvailable(GetAppMeta.Media media) {
     if (media != null) {
       List<GetAppMeta.Media.Screenshot> screenshots = media.getScreenshots();
@@ -707,7 +710,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       } else if (GenericDialogs.EResponse.SHARE_TIMELINE == eResponse) {
         if (!accountManager.isLoggedIn()) {
           ShowMessage.asSnack(getActivity(), R.string.you_need_to_be_logged_in, R.string.login,
-              snackView -> accountNavigator.navigateToAccountView());
+              snackView -> accountNavigator.navigateToAccountView(
+                  Analytics.Account.AccountOrigins.APP_VIEW_SHARE));
           return;
         }
         if (Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
@@ -724,13 +728,29 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         }
       } else if (GenericDialogs.EResponse.SHARE_SPOT_AND_SHARE == eResponse) {
 
+        spotAndShareAnalytics.clickShareApps(
+            SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW);
+
         String filepath = getFilepath(packageName);
+        String appNameToShare = filterAppName(appName);
         Intent intent = new Intent(this.getActivity(), HighwayActivity.class);
         intent.setAction("APPVIEW_SHARE");
         intent.putExtra("APPVIEW_SHARE_FILEPATH", filepath);
+        intent.putExtra("APPVIEW_SHARE_APPNAME", appNameToShare);
         startActivity(intent);
       }
     }, err -> err.printStackTrace());
+  }
+
+  @Partners protected void shareDefault(String appName, String packageName, String wUrl) {
+    if (wUrl != null) {
+      Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+      sharingIntent.setType("text/plain");
+      sharingIntent.putExtra(Intent.EXTRA_SUBJECT,
+          getString(R.string.install) + " \"" + appName + "\"");
+      sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
+      startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
+    }
   }
 
   private String getFilepath(String packageName) {
@@ -745,15 +765,14 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     }
   }
 
-  @Partners protected void shareDefault(String appName, String packageName, String wUrl) {
-    if (wUrl != null) {
-      Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-      sharingIntent.setType("text/plain");
-      sharingIntent.putExtra(Intent.EXTRA_SUBJECT,
-          getString(R.string.install) + " \"" + appName + "\"");
-      sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
-      startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
+  private String filterAppName(String appName) {
+    if (!TextUtils.isEmpty(appName) && appName.length() > 17) {
+      appName = appName.substring(0, 17);
     }
+    if (!TextUtils.isEmpty(appName) && appName.contains("_")) {
+      appName = appName.replace("_", " ");
+    }
+    return appName;
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {

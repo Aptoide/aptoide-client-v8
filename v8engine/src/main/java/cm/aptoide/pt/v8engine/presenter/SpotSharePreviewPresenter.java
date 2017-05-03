@@ -48,9 +48,11 @@ public class SpotSharePreviewPresenter implements Presenter {
 
   private Observable<Void> startSelection() {
     return view.startSelection().observeOn(AndroidSchedulers.mainThread()).doOnNext(selection -> {
-      analytics.clickShareApps();
       view.navigateToSpotShareView();
-      if (showToolbar) {
+      if (!showToolbar) {
+        analytics.clickShareApps(SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_TAB);
+      } else {
+        analytics.clickShareApps(SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_DRAWER);
         view.finish();
       }
     });

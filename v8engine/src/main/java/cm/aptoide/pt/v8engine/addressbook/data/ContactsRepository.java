@@ -1,12 +1,10 @@
 package cm.aptoide.pt.v8engine.addressbook.data;
 
 import android.support.annotation.NonNull;
-
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.SetConnectionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SyncAddressBookRequest;
-import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.FacebookModel;
 import cm.aptoide.pt.model.v7.GetFollowers;
@@ -14,6 +12,7 @@ import cm.aptoide.pt.model.v7.TwitterModel;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.utils.ContactUtils;
 import cm.aptoide.pt.v8engine.addressbook.utils.StringEncryption;
+import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;

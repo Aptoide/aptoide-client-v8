@@ -29,7 +29,8 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
   }
 
   public static OAuth2AuthenticationRequest of(String username, String password, String mode,
-      @Nullable String nameForGoogle, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      @Nullable String nameForGoogle, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient,
       Converter.Factory converterFactory) {
 
     final BaseBody body = new BaseBody();
@@ -69,7 +70,8 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
     return new OAuth2AuthenticationRequest(body, bodyInterceptor, httpClient, converterFactory);
   }
 
-  public static OAuth2AuthenticationRequest of(String refreshToken, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+  public static OAuth2AuthenticationRequest of(String refreshToken,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
 
     final BaseBody body = new BaseBody();
