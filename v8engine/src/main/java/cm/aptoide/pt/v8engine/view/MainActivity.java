@@ -49,9 +49,12 @@ import cm.aptoide.pt.v8engine.util.ApkFy;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.downloads.scheduled.ScheduledDownloadsFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.navigator.SimpleTabNavigation;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigatorActivity;
 import cm.aptoide.pt.v8engine.view.store.StoreTabFragmentChooser;
 import cm.aptoide.pt.v8engine.view.store.home.HomeFragment;
+import cm.aptoide.pt.v8engine.view.timeline.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.v8engine.view.wizard.WizardFragment;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -142,7 +145,7 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
     } else if (intent.hasExtra(
         DeepLinkIntentReceiver.DeepLinksTargets.FROM_DOWNLOAD_NOTIFICATION)) {
       downloadNotificationDeepLink(intent);
-    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.FROM_TIMELINE)) {
+    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.TIMELINE_DEEPLINK)) {
       fromTimelineDeepLink(intent);
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES)) {
       newUpdatesDeepLink(intent);
@@ -187,7 +190,8 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
           .map(storeUrl -> StoreUtils.split(storeUrl))
           .flatMap(storeName -> StoreUtils.isSubscribedStore(storeName)
               .first()
-              .observeOn(AndroidSchedulers.mainThread()).flatMap(isFollowed -> {
+              .observeOn(AndroidSchedulers.mainThread())
+              .flatMap(isFollowed -> {
                 if (isFollowed) {
                   return Observable.fromCallable(() -> {
                     ShowMessage.asLongSnack(this, getString(R.string.store_already_added));
@@ -199,16 +203,19 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
                           AptoideUtils.StringU.getFormattedString(R.string.store_followed,
                               storeName)));
                 }
-              }).map(isSubscribed -> storeName))
-          .toList().flatMap(stores -> {
-        if (stores.size() == 1) {
-          return storeRepository.getByName(stores.get(0))
-              .flatMapCompletable(store -> openStore(store))
-              .map(success -> stores);
-        } else {
-          return navigateToStores().toObservable().map(success -> stores);
-        }
-      }).subscribe(stores -> Logger.d(TAG, "newrepoDeepLink: all stores added"), throwable -> {
+              })
+              .map(isSubscribed -> storeName))
+          .toList()
+          .flatMap(stores -> {
+            if (stores.size() == 1) {
+              return storeRepository.getByName(stores.get(0))
+                  .flatMapCompletable(store -> openStore(store))
+                  .map(success -> stores);
+            } else {
+              return navigateToStores().toObservable().map(success -> stores);
+            }
+          })
+          .subscribe(stores -> Logger.d(TAG, "newrepoDeepLink: all stores added"), throwable -> {
             Logger.e(TAG, "newrepoDeepLink: " + throwable);
             CrashReport.getInstance().log(throwable);
           });
@@ -217,7 +224,7 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
   }
 
   @NonNull private Completable navigateToStores() {
-    return Completable.fromAction(() -> navigate(STORES));
+    return Completable.fromAction(() -> navigate(new SimpleTabNavigation(TabNavigation.STORES)));
   }
 
   @NonNull private Completable openStore(Store store) {
@@ -227,17 +234,18 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
 
   private void downloadNotificationDeepLink(Intent intent) {
     Analytics.ApplicationLaunch.downloadingUpdates();
-    navigate(DOWNLOADS);
+    navigate(new SimpleTabNavigation(TabNavigation.DOWNLOADS));
   }
 
   private void fromTimelineDeepLink(Intent intent) {
     Analytics.ApplicationLaunch.timelineNotification();
-    navigate(TIMELINE);
+    String cardId = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.CARD_ID);
+    navigate(new AppsTimelineTabNavigation(cardId));
   }
 
   private void newUpdatesDeepLink(Intent intent) {
     Analytics.ApplicationLaunch.newUpdatesNotification();
-    navigate(UPDATES);
+    navigate(new SimpleTabNavigation(TabNavigation.UPDATES));
   }
 
   private void genericDeepLink(Uri uri) {
