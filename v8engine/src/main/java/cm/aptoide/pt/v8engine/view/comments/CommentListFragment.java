@@ -32,14 +32,15 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.comments.CommentDialogCallbackContract;
 import cm.aptoide.pt.v8engine.comments.CommentNode;
 import cm.aptoide.pt.v8engine.comments.ComplexComment;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.comments.CommentDialogCallbackContract;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
-import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
+import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.custom.HorizontalDividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerSwipeFragment;
@@ -357,7 +358,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private Observable<Void> showSignInMessage() {
     return ShowMessage.asObservableSnack(this.getActivity(), R.string.you_need_to_be_logged_in,
         R.string.login, snackView -> {
-          accountNavigator.navigateToAccountView();
+          accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.COMMENT_LIST);
         }).flatMap(a -> Observable.empty());
   }
 

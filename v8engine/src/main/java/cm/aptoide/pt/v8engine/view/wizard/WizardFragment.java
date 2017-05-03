@@ -14,6 +14,7 @@ import android.widget.RadioGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
 import cm.aptoide.pt.v8engine.view.account.LoginBottomSheet;
@@ -86,6 +87,22 @@ public class WizardFragment extends BackButtonFragment {
             skipOrNextLayout.setVisibility(View.VISIBLE);
           }
         }, err -> crashReport.log(err));
+
+    viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+      @Override
+      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+      }
+
+      @Override public void onPageSelected(int position) {
+        if (position == 2) {
+          //Inside the wizards third page
+          Analytics.Account.enterAccountScreen(Analytics.Account.AccountOrigins.WIZARD);
+        }
+      }
+
+      @Override public void onPageScrollStateChanged(int state) {
+      }
+    });
   }
 
   @Override public void onDestroyView() {
@@ -97,6 +114,13 @@ public class WizardFragment extends BackButtonFragment {
     viewPager.setAdapter(null);
     viewPager = null;
     super.onDestroyView();
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    if (viewPager != null) {
+      viewPager.removeOnPageChangeListener(null);
+    }
   }
 
   private void createViewsAndButtons(Context context) {

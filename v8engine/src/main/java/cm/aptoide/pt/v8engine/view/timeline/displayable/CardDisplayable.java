@@ -5,8 +5,8 @@ import android.content.res.Configuration;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.timeline.ShareCardCallback;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.timeline.ShareCardCallback;
 
 /**
  * Created by jdandrade on 29/11/2016.

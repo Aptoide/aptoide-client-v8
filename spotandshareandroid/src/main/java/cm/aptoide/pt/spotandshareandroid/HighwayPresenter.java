@@ -23,6 +23,7 @@ public class HighwayPresenter implements Presenter {
   private GroupManager groupManager;
   private boolean permissionRequested;
   private Subscription subscription;
+  private String autoShareAppName;
   private String autoShareFilepath;
 
   public HighwayPresenter(HighwayView view, GroupNameProvider groupNameProvider,
@@ -41,9 +42,10 @@ public class HighwayPresenter implements Presenter {
   public HighwayPresenter(HighwayView view, GroupNameProvider groupNameProvider,
       DeactivateHotspotTask deactivateHotspotTask, ConnectionManager connectionManager,
       SpotAndShareAnalyticsInterface analytics, GroupManager groupManager,
-      PermissionManager permissionManager, String autoShareFilepath) {
+      PermissionManager permissionManager, String autoShareAppName, String autoShareFilepath) {
     this(view, groupNameProvider, deactivateHotspotTask, connectionManager, analytics, groupManager,
         permissionManager);
+    this.autoShareAppName = autoShareAppName;
     this.autoShareFilepath = autoShareFilepath;
   }
 
@@ -105,7 +107,8 @@ public class HighwayPresenter implements Presenter {
             if (enabled) {
 
               if (autoShareFilepath != null) {
-                joinShareFromAppView(autoShareFilepath);
+                joinShareFromAppView(autoShareAppName, autoShareFilepath);
+                autoShareAppName = null;
                 autoShareFilepath = null;
               } else {
                 connectionManager.cleanNetworks();
@@ -213,12 +216,12 @@ public class HighwayPresenter implements Presenter {
     connectionManager.cleanNetworks();
   }
 
-  public void joinShareFromAppView(String appFilepath) {
-    subscription = groupNameProvider.getName().subscribe(deviceName -> {
-      groupManager.createGroup(deviceName, new GroupManager.CreateGroupListener() {
+  public void joinShareFromAppView(String appName, String appFilepath) {
+    //subscription = groupNameProvider.getName().subscribe(deviceName -> {
+    groupManager.createGroup(appName, new GroupManager.CreateGroupListener() {
         @Override public void onSuccess() {
           analytics.createGroupSuccess();
-          view.openChatFromAppViewShare(deviceName, appFilepath);
+          view.openChatFromAppViewShare(appName, appFilepath);
         }
 
         @Override public void onError(int result) {
@@ -228,6 +231,6 @@ public class HighwayPresenter implements Presenter {
           view.hideSearchGroupsTextview(false);
         }
       });
-    });
+    //});
   }
 }

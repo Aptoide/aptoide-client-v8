@@ -29,6 +29,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import java.util.Locale;
@@ -67,7 +68,7 @@ public class DialogUtils {
       if (!accountManager.isLoggedIn()) {
         ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
             snackView -> {
-              accountNavigator.navigateToAccountView();
+              accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.RATE_DIALOG);
             });
         subscriber.onNext(GenericDialogs.EResponse.CANCEL);
         subscriber.onCompleted();
@@ -164,7 +165,7 @@ public class DialogUtils {
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            accountNavigator.navigateToAccountView();
+            accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.RATE_DIALOG);
           });
 
       return;

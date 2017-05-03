@@ -237,26 +237,6 @@ public class HomeFragment extends StoreFragment {
     toolbar.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
   }
 
-  public void refreshUpdatesBadge(int num) {
-    // No updates present
-    if (updatesBadge == null) {
-      return;
-    }
-
-    updatesBadge.setTextSize(11);
-
-    if (num > 0) {
-      updatesBadge.setText(NumberFormat.getIntegerInstance().format(num));
-      if (!updatesBadge.isShown()) {
-        updatesBadge.show(true);
-      }
-    } else {
-      if (updatesBadge.isShown()) {
-        updatesBadge.hide(true);
-      }
-    }
-  }
-
   private void setupNavigationView() {
     if (navigationView != null) {
 
@@ -273,11 +253,10 @@ public class HomeFragment extends StoreFragment {
 
         int itemId = menuItem.getItemId();
         if (itemId == R.id.navigation_item_my_account) {
-          accountNavigator.navigateToAccountView();
+          accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.MY_ACCOUNT);
         } else {
           final FragmentNavigator navigator = getFragmentNavigator();
           if (itemId == R.id.shareapps) {
-            spotAndShareAnalytics.clickShareApps();
             getActivityNavigator().navigateTo(SpotSharePreviewActivity.class);
           } else if (itemId == R.id.navigation_item_rollback) {
             navigator.navigateTo(V8Engine.getFragmentProvider().newRollbackFragment());
@@ -373,6 +352,26 @@ public class HomeFragment extends StoreFragment {
         });
   }
 
+  public void refreshUpdatesBadge(int num) {
+    // No updates present
+    if (updatesBadge == null) {
+      return;
+    }
+
+    updatesBadge.setTextSize(11);
+
+    if (num > 0) {
+      updatesBadge.setText(NumberFormat.getIntegerInstance().format(num));
+      if (!updatesBadge.isShown()) {
+        updatesBadge.show(true);
+      }
+    } else {
+      if (updatesBadge.isShown()) {
+        updatesBadge.hide(true);
+      }
+    }
+  }
+
   private Event.Name getEventName(int tab) {
     switch (tab) {
       case TabNavigator.DOWNLOADS:
@@ -388,6 +387,29 @@ public class HomeFragment extends StoreFragment {
     }
   }
 
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    backClickHandler = new ClickHandler() {
+      @Override public boolean handle() {
+        if (isDrawerOpened()) {
+          closeDrawer();
+          return true;
+        }
+
+        return false;
+      }
+    };
+    registerBackClickHandler(backClickHandler);
+  }
+
+  private boolean isDrawerOpened() {
+    return drawerLayout.isDrawerOpen(Gravity.LEFT);
+  }
+
+  private void closeDrawer() {
+    drawerLayout.closeDrawers();
+  }
+
   @Override public void bindViews(View view) {
     super.bindViews(view);
 
@@ -399,13 +421,5 @@ public class HomeFragment extends StoreFragment {
     setHasOptionsMenu(true);
 
     Analytics.AppViewViewedFrom.addStepToList("HOME");
-  }
-
-  private boolean isDrawerOpened() {
-    return drawerLayout.isDrawerOpen(Gravity.LEFT);
-  }
-
-  private void closeDrawer() {
-    drawerLayout.closeDrawers();
   }
 }

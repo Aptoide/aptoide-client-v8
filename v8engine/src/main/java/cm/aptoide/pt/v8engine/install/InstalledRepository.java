@@ -2,14 +2,13 @@ package cm.aptoide.pt.v8engine.repository;
 
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import java.util.List;
 import rx.Observable;
 
 /**
  * Created by marcelobenites on 7/27/16.
  */
-public class InstalledRepository  {
+public class InstalledRepository {
 
   private final InstalledAccessor accessor;
 
