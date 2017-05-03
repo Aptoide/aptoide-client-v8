@@ -74,15 +74,8 @@ import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
-import cm.aptoide.pt.v8engine.interfaces.Payments;
-import cm.aptoide.pt.v8engine.interfaces.Scrollable;
-import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
-import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
-import cm.aptoide.pt.v8engine.repository.AdsRepository;
-import cm.aptoide.pt.v8engine.repository.AppRepository;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
@@ -91,8 +84,6 @@ import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
-import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.v8engine.view.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
@@ -259,8 +250,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    socialRepository = new SocialRepository(accountManager, bodyInterceptor, converterFactory,
-        httpClient);
+    socialRepository =
+        new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient);
     productFactory = new ProductFactory();
     appRepository = RepositoryFactory.getAppRepository(getContext());
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
@@ -729,8 +720,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           AlertDialog.Builder alertDialog =
               sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(), appName,
                   app.getIcon());
-          SocialRepository socialRepository = new SocialRepository(accountManager, bodyInterceptor, converterFactory,
-              httpClient);
+          SocialRepository socialRepository =
+              new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient);
 
           sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
               sharePreviewDialog, alertDialog, socialRepository);
@@ -751,14 +742,15 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     }, err -> err.printStackTrace());
   }
 
-  private String filterAppName(String appName) {
-    if (!TextUtils.isEmpty(appName) && appName.length() > 17) {
-      appName = appName.substring(0, 17);
+  @Partners protected void shareDefault(String appName, String packageName, String wUrl) {
+    if (wUrl != null) {
+      Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+      sharingIntent.setType("text/plain");
+      sharingIntent.putExtra(Intent.EXTRA_SUBJECT,
+          getString(R.string.install) + " \"" + appName + "\"");
+      sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
+      startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
     }
-    if (!TextUtils.isEmpty(appName) && appName.contains("_")) {
-      appName = appName.replace("_", " ");
-    }
-    return appName;
   }
 
   private String getFilepath(String packageName) {
@@ -773,15 +765,14 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     }
   }
 
-  @Partners protected void shareDefault(String appName, String packageName, String wUrl) {
-    if (wUrl != null) {
-      Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-      sharingIntent.setType("text/plain");
-      sharingIntent.putExtra(Intent.EXTRA_SUBJECT,
-          getString(R.string.install) + " \"" + appName + "\"");
-      sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
-      startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
+  private String filterAppName(String appName) {
+    if (!TextUtils.isEmpty(appName) && appName.length() > 17) {
+      appName = appName.substring(0, 17);
     }
+    if (!TextUtils.isEmpty(appName) && appName.contains("_")) {
+      appName = appName.replace("_", " ");
+    }
+    return appName;
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {

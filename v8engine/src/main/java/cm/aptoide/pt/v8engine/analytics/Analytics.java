@@ -10,19 +10,14 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.localytics.android.Localytics;
@@ -35,7 +30,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.zip.ZipFile;
-import lombok.Getter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -133,7 +127,6 @@ public class Analytics {
    *
    * @param flag flags fornecidas
    * @param accepted flags aceitáveis
-   *
    * @return true caso as flags fornecidas constem em accepted.
    */
   private static boolean checkAcceptability(int flag, int accepted) {
@@ -1018,17 +1011,6 @@ public class Analytics {
       Localytics.setCustomDimension(i, s);
     }
 
-    /**
-     * Responsible for setting facebook analytics user properties
-     * These were known as custom dimensions in localytics
-     */
-    private static void setUserProperties(String key, String value) {
-      Bundle parameters = new Bundle();
-      parameters.putString(key, value);
-      AppEventsLogger.updateUserProperties(parameters,
-          response -> Logger.d("Facebook Analytics: ", response.toString()));
-    }
-
     public static void setVerticalDimension(String verticalName) {
       setDimension(2, verticalName);
     }
@@ -1041,6 +1023,17 @@ public class Analytics {
         setDimension(3, "GMS Not Present");
         setUserProperties(GMS, NO_GMS);
       }
+    }
+
+    /**
+     * Responsible for setting facebook analytics user properties
+     * These were known as custom dimensions in localytics
+     */
+    private static void setUserProperties(String key, String value) {
+      Bundle parameters = new Bundle();
+      parameters.putString(key, value);
+      AppEventsLogger.updateUserProperties(parameters,
+          response -> Logger.d("Facebook Analytics: ", response.toString()));
     }
 
     public static void setUTMSource(String utmSource) {
