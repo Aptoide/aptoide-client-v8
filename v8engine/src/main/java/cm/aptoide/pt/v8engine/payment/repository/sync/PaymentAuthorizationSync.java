@@ -15,6 +15,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.PaymentAuthorizationsResponse;
 import cm.aptoide.pt.v8engine.payment.Authorization;
+import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.v8engine.sync.RepositorySync;
@@ -37,12 +38,13 @@ public class PaymentAuthorizationSync extends RepositorySync {
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
+  private final PaymentAnalytics paymentAnalytics;
 
   public PaymentAuthorizationSync(List<String> paymentIds,
       PaymentAuthorizationAccessor authorizationAccessor,
       PaymentAuthorizationFactory authorizationFactory, AptoideAccountManager accountManager,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, PaymentAnalytics paymentAnalytics) {
     this.paymentIds = paymentIds;
     this.authorizationAccessor = authorizationAccessor;
     this.authorizationFactory = authorizationFactory;
@@ -51,6 +53,7 @@ public class PaymentAuthorizationSync extends RepositorySync {
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
 
+    this.paymentAnalytics = paymentAnalytics;
   }
 
   @Override public void sync(SyncResult syncResult) {
@@ -97,6 +100,8 @@ public class PaymentAuthorizationSync extends RepositorySync {
       if (paymentAuthorization.isPending() || paymentAuthorization.isInitiated()) {
         rescheduleSync(syncResult);
       }
+
+      paymentAnalytics.sendAuthorizationCompleteEvent(paymentAuthorization);
       paymentIdsCopy.remove(String.valueOf(response.getPaymentId()));
     }
 
@@ -112,6 +117,7 @@ public class PaymentAuthorizationSync extends RepositorySync {
   private void saveAndRescheduleOnNetworkError(SyncResult syncResult, Throwable throwable,
       List<String> paymentIds, String payerId) {
     if (throwable instanceof IOException) {
+      paymentAnalytics.sendPaymentAuthorizationNetworkRetryEvent();
       rescheduleSync(syncResult);
     } else {
       final List<PaymentAuthorization> authorizations = new ArrayList<>();

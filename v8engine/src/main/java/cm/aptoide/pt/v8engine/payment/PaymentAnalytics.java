@@ -40,13 +40,7 @@ public class PaymentAnalytics {
   public void sendBackToStoreButtonPressedEvent(Product product) {
     final Bundle bundle = getProductBundle(product);
     bundle.putString("action", "Voltar para loja button");
-    analytics.sendEvent(new FacebookEvent(facebook, "Payment_Authorization_Confirmation", bundle));
-  }
-
-  public void sendPaymentAuthorizationBackButtonPressedEvent(Product product) {
-    final Bundle bundle = getProductBundle(product);
-    bundle.putString("action", "Android back button");
-    analytics.sendEvent(new FacebookEvent(facebook, "Payment_Authorization_Confirmation", bundle));
+    analytics.sendEvent(new FacebookEvent(facebook, "Payment_Authorization_Page", bundle));
   }
 
   public void sendPurchaseNetworkRetryEvent(Product product) {
@@ -64,6 +58,37 @@ public class PaymentAnalytics {
     final Bundle bundle = getProductBundle(product);
     bundle.putString("status", getPurchaseStatus(paymentConfirmation));
     analytics.sendEvent(new FacebookEvent(facebook, "Payment_Purchase_Complete", bundle));
+  }
+
+  public void sendPaymentAuthorizationBackButtonPressedEvent(Product product) {
+    final Bundle bundle = getProductBundle(product);
+    bundle.putString("action", "Android back button");
+    analytics.sendEvent(new FacebookEvent(facebook, "Payment_Authorization_Page", bundle));
+  }
+
+  public void sendPaymentAuthorizationNetworkRetryEvent() {
+    analytics.sendEvent(new FacebookEvent(facebook, "Payment_Authorization_Retry"));
+  }
+
+  public void sendAuthorizationCompleteEvent(Authorization paymentAuthorization) {
+    if (paymentAuthorization.isFailed() || paymentAuthorization.isAuthorized()) {
+      final Bundle bundle = new Bundle();
+      bundle.putString("status", getAuthorizationStatus(paymentAuthorization));
+      analytics.sendEvent(new FacebookEvent(facebook, "Payment_Authorization_Complete", bundle));
+    }
+  }
+
+  private String getAuthorizationStatus(Authorization paymentAuthorization) {
+
+    if (paymentAuthorization.isAuthorized()) {
+      return "success";
+    }
+
+    if (paymentAuthorization.isFailed()) {
+      return "failed";
+    }
+
+    throw new IllegalArgumentException("Can NOT determine payment authorization analytics status.");
   }
 
   private String getPurchaseStatus(PaymentConfirmation paymentConfirmation) {

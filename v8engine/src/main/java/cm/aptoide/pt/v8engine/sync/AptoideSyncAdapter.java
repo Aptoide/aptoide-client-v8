@@ -102,7 +102,7 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
       }
     } else if (authorizations) {
       new PaymentAuthorizationSync(paymentIds, authorizationAcessor, authorizationConverter,
-          accountManager, bodyInterceptorV3, httpClient, converterFactory).sync(syncResult);
+          accountManager, bodyInterceptorV3, httpClient, converterFactory, paymentAnalytics).sync(syncResult);
     }
   }
 }
