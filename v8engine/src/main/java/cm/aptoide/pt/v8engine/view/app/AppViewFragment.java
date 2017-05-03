@@ -347,9 +347,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             setupAppView(getApp);
           }, throwable -> {
             finishLoading(throwable);
-            CrashReport.getInstance().log(key_appId, String.valueOf(appId));
-            CrashReport.getInstance().log(key_packageName, String.valueOf(packageName));
-            CrashReport.getInstance().log(key_md5sum, md5);
           });
     } else if (!TextUtils.isEmpty(uname)) {
       subscription = appRepository.getAppFromUname(uname, refresh, sponsored)
@@ -377,9 +374,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             setupAppView(getApp);
           }, throwable -> {
             finishLoading(throwable);
-            CrashReport.getInstance().log(key_appId, String.valueOf(appId));
-            CrashReport.getInstance().log(key_packageName, String.valueOf(packageName));
-            CrashReport.getInstance().log(key_md5sum, md5);
           });
     }
   }
