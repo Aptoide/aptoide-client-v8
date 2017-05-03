@@ -38,6 +38,10 @@ public class PaymentAnalytics {
     analytics.sendEvent(new FacebookEvent(facebook, "Payment_Authorization_Confirmation", bundle));
   }
 
+  public void sendPaymentTapOutsideEvent(Product product, Payment payment) {
+    analytics.sendEvent(getPaymentEvent("Payment_Pop_Up", "Tap Outside", payment, product));
+  }
+
   private Event getPaymentEvent(String eventName, String action, Payment payment, Product product) {
     final Bundle bundle = getProductBundle(product);
     bundle.putString("action", action);

@@ -136,7 +136,13 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
   }
 
   @Override public Observable<Void> cancellationSelection() {
-    return Observable.merge(RxView.clicks(cancelButton), RxView.clicks(overlay))
+    return RxView.clicks(cancelButton)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .unsubscribeOn(AndroidSchedulers.mainThread());
+  }
+
+  @Override public Observable<Void> tapOutsideSelection() {
+    return RxView.clicks(overlay)
         .subscribeOn(AndroidSchedulers.mainThread())
         .unsubscribeOn(AndroidSchedulers.mainThread());
   }
@@ -205,7 +211,8 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
   }
 
   @Override public void navigateToAuthorizationView(int paymentId, Product product) {
-    startActivity(PaymentAuthorizationActivity.getIntent(this, paymentId, (ParcelableProduct) product));
+    startActivity(
+        PaymentAuthorizationActivity.getIntent(this, paymentId, (ParcelableProduct) product));
   }
 
   @Override public void showPaymentsNotFoundMessage() {
