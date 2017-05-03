@@ -219,18 +219,22 @@ public class HighwayPresenter implements Presenter {
   public void joinShareFromAppView(String appName, String appFilepath) {
     //subscription = groupNameProvider.getName().subscribe(deviceName -> {
     groupManager.createGroup(appName, new GroupManager.CreateGroupListener() {
-        @Override public void onSuccess() {
-          analytics.createGroupSuccess();
-          view.openChatFromAppViewShare(appName, appFilepath);
-        }
+      @Override public void onSuccess() {
+        analytics.createGroupSuccess();
+        view.openChatFromAppViewShare(appName, appFilepath);
+      }
 
-        @Override public void onError(int result) {
-          view.showCreateGroupResult(result);
-          view.hideButtonsProgressBar();
-          view.enableButtons(true);
-          view.hideSearchGroupsTextview(false);
-        }
-      });
+      @Override public void onError(int result) {
+        view.showCreateGroupResult(result);
+        view.hideButtonsProgressBar();
+        view.enableButtons(true);
+        view.hideSearchGroupsTextview(false);
+      }
+    });
     //});
+  }
+
+  public void clickedOnGroup(Group group, Group chosenHotspot) {
+
   }
 }

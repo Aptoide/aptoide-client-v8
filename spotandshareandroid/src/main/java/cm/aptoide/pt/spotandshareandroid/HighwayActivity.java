@@ -67,6 +67,8 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     setContentView(R.layout.highway_activity);
 
     bindViews();
+    setupViews();
+
     Intent intent = getIntent();
     if (intent.getAction() != null && intent.getAction().equals("APPVIEW_SHARE")) {
       enableButtons(false);
@@ -82,8 +84,14 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
 
     attachPresenter(presenter);
+  }
 
-
+  private void setupViews() {
+    radarTextView.setOnHotspotClickListener(new HighwayRadarTextView.HotspotClickListener() {
+      @Override public void onGroupClicked(Group group) {
+        presenter.clickedOnGroup(group, chosenHotspot);
+      }
+    });
   }
 
   private void bindViews() {

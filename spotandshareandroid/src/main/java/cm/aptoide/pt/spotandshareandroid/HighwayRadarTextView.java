@@ -35,7 +35,7 @@ public class HighwayRadarTextView extends FrameLayout
   private int fontColor = Color.parseColor("#000000");
   private int rippleViewDefaultColor = Color.parseColor("#aeaeae");
   private int shadowColor = getResources().getColor(R.color.aptoide_orange);
-  private OnRippleViewClickListener onRippleOutViewClickListener;
+  private HotspotClickListener hotspotListener;
   private List<HighwayRadarRippleView> listOfHotspot;
   private List<HighwayRadarLowElement> listOfHotspotLow;
 
@@ -84,8 +84,8 @@ public class HighwayRadarTextView extends FrameLayout
     this.mode = mode;
   }
 
-  public void setOnRippleViewClickListener(OnRippleViewClickListener listener) {
-    onRippleOutViewClickListener = listener;
+  public void setOnHotspotClickListener(HotspotClickListener listener) {
+    hotspotListener = listener;
   }
 
   public void addKeyWord(String keyword) {
@@ -450,8 +450,8 @@ public class HighwayRadarTextView extends FrameLayout
     }
   }
 
-  public interface OnRippleViewClickListener {
-    void onRippleViewClicked(View view);
+  public interface HotspotClickListener {
+    void onGroupClicked(Group group);
   }
 }
 
