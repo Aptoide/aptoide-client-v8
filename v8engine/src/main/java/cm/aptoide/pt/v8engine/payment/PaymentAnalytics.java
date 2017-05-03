@@ -48,6 +48,37 @@ public class PaymentAnalytics {
     analytics.sendEvent(new FacebookEvent(facebook, "Payment_Authorization_Confirmation", bundle));
   }
 
+  public void sendPurchaseNetworkRetryEvent() {
+    final Bundle bundle = new Bundle();
+    bundle.putString("package_name_seller", aptoidePackageName);
+    analytics.sendEvent(new FacebookEvent(facebook, "Payment_Purchase_Retry", bundle));
+  }
+
+  public void sendPurchaseCompleteEvent(PaymentConfirmation paymentConfirmation, Product product) {
+
+    // We only send analytics about failed or completed payment confirmations
+    if (paymentConfirmation.isPending() || paymentConfirmation.isNew()) {
+      return;
+    }
+
+    final Bundle bundle = getProductBundle(product);
+    bundle.putString("status", getPurchaseStatus(paymentConfirmation));
+    analytics.sendEvent(new FacebookEvent(facebook, "Payment_Purchase_Complete", bundle));
+  }
+
+  private String getPurchaseStatus(PaymentConfirmation paymentConfirmation) {
+
+    if (paymentConfirmation.isFailed()) {
+      return "failed";
+    }
+
+    if (paymentConfirmation.isCompleted()) {
+      return "success";
+    }
+
+    throw new IllegalArgumentException("Can NOT determine payment confirmation analytics status.");
+  }
+
   private Event getPaymentEvent(String eventName, String action, Payment payment, Product product) {
     final Bundle bundle = getProductBundle(product);
     bundle.putString("action", action);
@@ -62,6 +93,4 @@ public class PaymentAnalytics {
     bundle.putString("package_name_seller", aptoidePackageName);
     return bundle;
   }
-
-
 }
