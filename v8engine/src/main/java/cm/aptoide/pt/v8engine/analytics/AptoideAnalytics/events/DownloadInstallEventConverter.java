@@ -49,8 +49,10 @@ abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent>
     //EQUIPMENTS
     List<String> imeis = AptoideUtils.SystemU.getImeis();
     List<DownloadInstallAnalyticsBaseBody.Id> ids = new LinkedList<>();
-    for (String imei : imeis) {
-      ids.add(new DownloadInstallAnalyticsBaseBody.Id(imei));
+    if (imeis != null) {
+      for (String imei : imeis) {
+        ids.add(new DownloadInstallAnalyticsBaseBody.Id(imei));
+      }
     }
     data.setEquipment(
         new DownloadInstallAnalyticsBaseBody.Equipment(ids, AptoideUtils.SystemU.getSerialNumber(),
@@ -62,8 +64,9 @@ abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent>
     //TELECOS
     List<DownloadInstallAnalyticsBaseBody.Teleco> telecos = new LinkedList<>();
     List<SubscriptionInfo> subscriptionInfos = AptoideUtils.SystemU.getCarrierNames();
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1
-        && !subscriptionInfos.isEmpty()) {
+    if (subscriptionInfos != null
+        && !subscriptionInfos.isEmpty()
+        && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
       for (SubscriptionInfo subscriptionInfo : subscriptionInfos) {
         telecos.add(new DownloadInstallAnalyticsBaseBody.Teleco(
             subscriptionInfo.getCarrierName().toString(), subscriptionInfo.getNumber(),
