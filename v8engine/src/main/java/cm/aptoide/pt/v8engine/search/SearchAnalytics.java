@@ -15,6 +15,9 @@ public class SearchAnalytics extends AptoideAnalytics {
 
   private static final String QUERY = "search_term";
   private static final String SOURCE = "search_source";
+  private static final String SEARCH = "Search";
+  private static final String NO_RESULTS = "Search_No_Results";
+  private static final String APP_CLICK = "Search_Results_App_View_Click";
   private Analytics analytics;
   private AppEventsLogger facebook;
 
@@ -27,12 +30,11 @@ public class SearchAnalytics extends AptoideAnalytics {
     Map<String, Object> map = new HashMap<>();
     map.put(QUERY, query);
     map.put(SOURCE, searchSource);
-    analytics.sendEvent(new FacebookEvent(facebook, "Search", createComplexBundleData(map)));
+    analytics.sendEvent(new FacebookEvent(facebook, SEARCH, createComplexBundleData(map)));
   }
 
   public void searchNoResults(String query) {
-    analytics.sendEvent(
-        new FacebookEvent(facebook, "Search_No_Results", createBundleData(SOURCE, query)));
+    analytics.sendEvent(new FacebookEvent(facebook, NO_RESULTS, createBundleData(SOURCE, query)));
   }
 
   public void searchAppClick(String resultList, String query, String packageName) {
@@ -40,7 +42,6 @@ public class SearchAnalytics extends AptoideAnalytics {
     map.put("result_list", resultList);
     map.put(QUERY, query);
     map.put("package_name", packageName);
-    analytics.sendEvent(
-        new FacebookEvent(facebook, "Search_Results_App_View_Click", createComplexBundleData(map)));
+    analytics.sendEvent(new FacebookEvent(facebook, APP_CLICK, createComplexBundleData(map)));
   }
 }
