@@ -218,9 +218,19 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
     }
 
     if (oldVersion == 8081) {
-      schema.get("StoreMinimalAd")
+      if (schema.contains("StoredMinimalAd")) {
+        schema.remove("StoredMinimalAd");
+      }
+
+      schema.create("StoredMinimalAd")
+          .addField("packageName", String.class, FieldAttribute.PRIMARY_KEY,
+              FieldAttribute.REQUIRED)
+          .addField("referrer", String.class)
           .addField("cpcUrl", String.class)
-          .addField("cpdUrl", String.class);
+          .addField("cpdUrl", String.class)
+          .addField("cpiUrl", String.class)
+          .addField("timestamp", Long.class)
+          .addField("adId", Long.class);
 
       oldVersion++;
     }

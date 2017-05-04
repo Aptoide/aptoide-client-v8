@@ -136,6 +136,8 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
             intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.STORENAME_KEY),
             intent.getBooleanExtra(DeepLinkIntentReceiver.DeepLinksKeys.SHOW_AUTO_INSTALL_POPUP,
                 true));
+      } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.UNAME)) {
+        appViewDeepLinkUname(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.UNAME));
       }
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.SEARCH_FRAGMENT)) {
       searchDeepLink(intent.getStringExtra(SearchManager.QUERY));
@@ -160,6 +162,10 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
     }
 
     return true;
+  }
+
+  private void appViewDeepLinkUname(String uname) {
+    fragmentNavigator.navigateTo(AppViewFragment.newInstanceUname(uname));
   }
 
   private void appViewDeepLink(String md5) {
@@ -187,7 +193,6 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
   private void newrepoDeepLink(ArrayList<String> repos) {
     if (repos != null) {
       Observable.from(repos)
-          .map(storeUrl -> StoreUtils.split(storeUrl))
           .flatMap(storeName -> StoreUtils.isSubscribedStore(storeName)
               .first()
               .observeOn(AndroidSchedulers.mainThread())

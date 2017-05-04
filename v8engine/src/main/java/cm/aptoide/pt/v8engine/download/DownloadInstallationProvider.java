@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.download;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
-import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
+import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
@@ -28,13 +28,13 @@ public class DownloadInstallationProvider implements InstallationProvider {
 
   private final AptoideDownloadManager downloadManager;
   private final DownloadAccessor downloadAccessor;
-  private StoreMinimalAdAccessor storeMinimalAdAccessor;
+  private StoredMinimalAdAccessor storedMinimalAdAccessor;
 
   public DownloadInstallationProvider(AptoideDownloadManager downloadManager,
       DownloadAccessor downloadAccessor) {
     this.downloadManager = downloadManager;
     this.downloadAccessor = downloadAccessor;
-    this.storeMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
+    this.storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
   }
 
   @Override public Observable<RollbackInstallation> getInstallation(String md5) {
@@ -42,7 +42,7 @@ public class DownloadInstallationProvider implements InstallationProvider {
       if (download.getOverallDownloadStatus() == Download.COMPLETED) {
         return Observable.just(new DownloadInstallationAdapter(download, downloadAccessor))
             .doOnNext(downloadInstallationAdapter -> {
-              storeMinimalAdAccessor.get(download.getPackageName())
+              storedMinimalAdAccessor.get(download.getPackageName())
                   .doOnNext(handleCpd())
                   .subscribeOn(Schedulers.io())
                   .subscribe(storedMinimalAd -> {
@@ -58,7 +58,7 @@ public class DownloadInstallationProvider implements InstallationProvider {
       if (storedMinimalAd != null && storedMinimalAd.getCpdUrl() != null) {
         DataproviderUtils.AdNetworksUtils.knockCpd(storedMinimalAd);
         storedMinimalAd.setCpdUrl(null);
-        storeMinimalAdAccessor.insert(storedMinimalAd);
+        storedMinimalAdAccessor.insert(storedMinimalAd);
       }
     };
   }

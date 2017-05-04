@@ -37,7 +37,7 @@ public final class AccessorFactory {
     } else if (clazz.equals(Store.class)) {
       return (A) new StoreAccessor(new Database());
     } else if (clazz.equals(StoredMinimalAd.class)) {
-      return (A) new StoreMinimalAdAccessor(new Database());
+      return (A) new StoredMinimalAdAccessor(new Database());
     } else if (clazz.equals(PaymentAuthorization.class)) {
       return (A) new PaymentAuthorizationAccessor(new Database());
     } else if (clazz.equals(Notification.class)) {

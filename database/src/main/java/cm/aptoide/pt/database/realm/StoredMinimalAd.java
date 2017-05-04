@@ -19,9 +19,9 @@ public class StoredMinimalAd extends RealmObject implements MinimalAdInterface {
   private String cpcUrl;
   private String cpdUrl;
   private String cpiUrl;
-  private long timestamp;
+  private Long timestamp;
 
-  private long adId;
+  private Long adId;
 
   public StoredMinimalAd() {
   }

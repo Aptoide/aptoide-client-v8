@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -52,6 +53,13 @@ import rx.Observable;
 
     return new GetAppRequest(BASE_HOST, new Body(forceServerRefresh, md5), bodyInterceptor,
         httpClient, converterFactory);
+  }
+
+  public static GetAppRequest ofUname(String uname, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+
+    return new GetAppRequest(BASE_HOST, new Body(uname), bodyInterceptor, httpClient,
+        converterFactory);
   }
 
   public static GetAppRequest of(long appId, String storeName,
@@ -100,6 +108,7 @@ import rx.Observable;
     @Getter private Long appId;
     @Getter private String packageName;
     @Getter private boolean refresh;
+    @Setter @JsonProperty("package_uname") private String uname;
     @Getter @JsonProperty("apk_md5sum") private String md5;
     @Getter @JsonProperty("store_name") private String storeName;
     @Getter private Node nodes;
@@ -131,6 +140,10 @@ import rx.Observable;
     public Body(Boolean refresh, String md5) {
       this.md5 = md5;
       this.refresh = refresh;
+    }
+
+    public Body(String uname) {
+      this.uname = uname;
     }
 
     public Body(long appId) {

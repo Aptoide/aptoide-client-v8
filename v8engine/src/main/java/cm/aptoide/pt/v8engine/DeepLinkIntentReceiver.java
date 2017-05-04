@@ -26,6 +26,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.store.StoreUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -51,6 +52,7 @@ import org.xml.sax.XMLReader;
  * Created by neuro on 10-08-2016.
  */
 public class DeepLinkIntentReceiver extends AppCompatActivity {
+
   public static final String AUTHORITY = "cm.aptoide.pt";
   public static final int DEEPLINK_ID = 1;
   public static final int SCHEDULE_DOWNLOADS_ID = 2;
@@ -78,17 +80,90 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     Analytics.ApplicationLaunch.website(uri);
 
     Logger.v(TAG, "uri: " + uri);
+
+    Uri u = null;
+    try {
+      u = Uri.parse(uri);
+    } catch (Exception e) {
+    }
+    //Loogin for url from the new site
+    if (u != null && u.getHost() != null) {
+
+      if (u.getHost().contains("webservices.aptoide.com")) {
+
+        /** refactored to remove org.apache libs */
+        Map<String, String> params = null;
+
+        try {
+          params = AptoideUtils.StringU.splitQuery(URI.create(uri));
+        } catch (UnsupportedEncodingException e) {
+          CrashReport.getInstance().log(e);
+        }
+
+        if (params != null) {
+          String uid = null;
+          for (Map.Entry<String, String> entry : params.entrySet()) {
+            if (entry.getKey().equals("uid")) {
+              uid = entry.getValue();
+            }
+          }
+
+          if (uid != null) {
+            try {
+              long id = Long.parseLong(uid);
+              startFromAppView(id, null, true);
+            } catch (NumberFormatException e) {
+              CrashReport.getInstance().log(e);
+              CrashReport.getInstance().log(e);
+              ShowMessage.asToast(getApplicationContext(), R.string.simple_error_occured + uid);
+            }
+          }
+        }
+
+        finish();
+      } else if (u.getHost().contains("imgs.aptoide.com")) {
+
+        String[] strings = uri.split("-");
+        long id = Long.parseLong(strings[strings.length - 1].split("\\.myapp")[0]);
+
+        startFromAppView(id, null, false);
+      } else if (u.getHost().contains("aptoide.com")) {
+        /**
+         * This could be a store or a app from the new web site
+         */
+        if (u.getPath() != null && u.getPath().contains("store")) {
+
+          /**
+           * store
+           */
+          Logger.v(TAG, "store: " + u.getLastPathSegment());
+          ArrayList<String> list = new ArrayList<String>();
+          list.add(u.getLastPathSegment());
+          startWithRepo(list);
+        } else {
+          String[] appName = u.getHost().split("\\.");
+          if (appName != null && appName.length == 4) {
+
+            /**
+             * App view
+             */
+            Logger.v(TAG, "app: " + appName[0]);
+            startAppView(appName[0]);
+          }
+        }
+      }
+    }
     if (uri.startsWith("aptoiderepo")) {
 
       ArrayList<String> repo = new ArrayList<>();
       repo.add(uri.substring(14));
-      startWithRepo(repo);
+      startWithRepo(StoreUtils.split(repo));
     } else if (uri.startsWith("aptoidexml")) {
 
       String repo = uri.substring(13);
       parseXmlString(repo);
       Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
-      i.putExtra(DeepLinksTargets.NEW_REPO, repo);
+      i.putExtra(DeepLinksTargets.NEW_REPO, StoreUtils.split(repo));
       startActivity(i);
     } else if (uri.startsWith("aptoidesearch://")) {
       startFromPackageName(uri.split("aptoidesearch://")[1]);
@@ -154,43 +229,6 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
           finish();
         }
       }
-    } else if (uri.contains("imgs.aptoide.com")) {
-
-      String[] strings = uri.split("-");
-      long id = Long.parseLong(strings[strings.length - 1].split("\\.myapp")[0]);
-
-      startFromAppView(id, null, false);
-    } else if (uri.startsWith("http://webservices.aptoide.com")) {
-      /** refactored to remove org.apache libs */
-      Map<String, String> params = null;
-
-      try {
-        params = AptoideUtils.StringU.splitQuery(URI.create(uri));
-      } catch (UnsupportedEncodingException e) {
-        CrashReport.getInstance().log(e);
-      }
-
-      if (params != null) {
-        String uid = null;
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-          if (entry.getKey().equals("uid")) {
-            uid = entry.getValue();
-          }
-        }
-
-        if (uid != null) {
-          try {
-            long id = Long.parseLong(uid);
-            startFromAppView(id, null, true);
-          } catch (NumberFormatException e) {
-            CrashReport.getInstance().log(e);
-            CrashReport.getInstance().log(e);
-            ShowMessage.asToast(getApplicationContext(), R.string.simple_error_occured + uid);
-          }
-        }
-      }
-
-      finish();
     } else if (uri.startsWith("file://")) {
 
       downloadMyApp();
@@ -282,6 +320,16 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     //
     //        setResult(UNKONWN_FLAG, i);
     finish();
+  }
+
+  public void startAppView(String uname) {
+    Intent i = new Intent(this, startClass);
+
+    i.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
+    i.putExtra(DeepLinksKeys.UNAME, uname);
+
+    //TODO this is not in MainActivity
+    startActivity(i);
   }
 
   public void startFromAppView(long id, String packageName, boolean showPopup) {
@@ -433,7 +481,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 
   private void proceed() {
     if (server != null) {
-      startWithRepo(server);
+      startWithRepo(StoreUtils.split(server));
     } else {
       ShowMessage.asToast(this, getString(R.string.error_occured));
       finish();
@@ -458,6 +506,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     public static final String APP_MD5_KEY = "md5";
     public static final String APP_ID_KEY = "appId";
     public static final String PACKAGE_NAME_KEY = "packageName";
+    public static final String UNAME = "uname";
     public static final String STORENAME_KEY = "storeName";
     public static final String SHOW_AUTO_INSTALL_POPUP = "show_auto_install_popup";
     public static final String URI = "uri";

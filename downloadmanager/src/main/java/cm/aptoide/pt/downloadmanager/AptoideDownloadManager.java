@@ -239,15 +239,8 @@ public class AptoideDownloadManager {
     Observable.fromCallable(() -> pauseDownload(md5))
         .flatMap(paused -> downloadAccessor.get(md5))
         .first(download -> download.getOverallDownloadStatus() == Download.PAUSED)
-        .doOnNext(download -> {
-          for (int i = 0; i < download.getFilesToDownload().size(); i++) {
-            final FileToDownload fileToDownload = download.getFilesToDownload().get(i);
-            fileDownloader
-                .clear(fileToDownload.getDownloadId(), fileToDownload.getFilePath());
-          }
-        })
         .subscribe(download -> {
-          deleteDownloadFiles(download);
+          deleteDownloadlFiles(download);
           deleteDownloadFromDb(download.getMd5());
         }, throwable -> {
           if (throwable instanceof NullPointerException) {
@@ -256,6 +249,14 @@ public class AptoideDownloadManager {
             throwable.printStackTrace();
           }
         });
+  }
+
+  public void deleteDownloadlFiles(Download download) {
+    for (FileToDownload fileToDownload : download.getFilesToDownload()) {
+      fileDownloader.clear(fileToDownload.getDownloadId(), fileToDownload.getFilePath());
+      FileUtils.removeFile(fileToDownload.getFilePath());
+      FileUtils.removeFile(downloadsStoragePath + fileToDownload.getFileName() + ".temp");
+    }
   }
 
   public Completable pauseDownloadSync(String md5) {
@@ -284,16 +285,6 @@ public class AptoideDownloadManager {
       }
     });
     return null;
-  }
-
-  private void deleteDownloadFiles(Download download) {
-    for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-      if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-        FileUtils.removeFile(fileToDownload.getFilePath());
-      } else {
-        FileUtils.removeFile(downloadsStoragePath + fileToDownload.getFileName() + ".temp");
-      }
-    }
   }
 
   private void deleteDownloadFromDb(String md5) {

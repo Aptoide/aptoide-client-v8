@@ -15,6 +15,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.GetPaymentConfirmationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
+import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
@@ -45,6 +46,7 @@ public class PaymentConfirmationSync extends ScheduledSync {
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final Converter.Factory converterFactory;
   private final OkHttpClient httpClient;
+  private final PaymentAnalytics analytics;
   private String paymentConfirmationId;
   private String paymentId;
 
@@ -54,7 +56,7 @@ public class PaymentConfirmationSync extends ScheduledSync {
       PaymentConfirmationFactory confirmationFactory, String paymentConfirmationId,
       String paymentId, AptoideAccountManager accountManager,
       BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
-      OkHttpClient httpClient) {
+      OkHttpClient httpClient, PaymentAnalytics analytics) {
     this.paymentConfirmationRepository = paymentConfirmationRepository;
     this.product = product;
     this.operatorManager = operatorManager;
@@ -66,6 +68,7 @@ public class PaymentConfirmationSync extends ScheduledSync {
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.converterFactory = converterFactory;
     this.httpClient = httpClient;
+    this.analytics = analytics;
   }
 
   public PaymentConfirmationSync(PaymentConfirmationRepository paymentConfirmationRepository,
@@ -73,7 +76,7 @@ public class PaymentConfirmationSync extends ScheduledSync {
       PaymentConfirmationAccessor confirmationAccessor,
       PaymentConfirmationFactory confirmationFactory, AptoideAccountManager accountManager,
       BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
-      OkHttpClient httpClient) {
+      OkHttpClient httpClient, PaymentAnalytics analytics) {
     this.paymentConfirmationRepository = paymentConfirmationRepository;
     this.product = product;
     this.operatorManager = operatorManager;
@@ -83,6 +86,7 @@ public class PaymentConfirmationSync extends ScheduledSync {
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.converterFactory = converterFactory;
     this.httpClient = httpClient;
+    this.analytics = analytics;
   }
 
   @Override public void sync(SyncResult syncResult) {
@@ -163,11 +167,14 @@ public class PaymentConfirmationSync extends ScheduledSync {
     if (paymentConfirmation.isPending()) {
       rescheduleSync(syncResult);
     }
+
+    analytics.sendPurchaseCompleteEvent(paymentConfirmation, product);
   }
 
   private void saveAndRescheduleOnNetworkError(SyncResult syncResult, Throwable throwable,
       String payerId) {
     if (throwable instanceof IOException) {
+      analytics.sendPurchaseNetworkRetryEvent(product);
       rescheduleSync(syncResult);
     } else {
       confirmationAccessor.save(confirmationFactory.convertToDatabasePaymentConfirmation(

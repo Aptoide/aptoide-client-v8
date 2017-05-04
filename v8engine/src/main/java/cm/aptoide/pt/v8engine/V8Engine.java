@@ -76,6 +76,7 @@ import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.UserAgentInterceptor;
+import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -90,6 +91,7 @@ import cm.aptoide.pt.v8engine.view.configuration.implementation.ActivityProvider
 import cm.aptoide.pt.v8engine.view.configuration.implementation.FragmentProviderImpl;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
+import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.Scopes;
@@ -146,6 +148,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private UserAgentInterceptor userAgentInterceptor;
   private AccountFactory accountFactory;
   private AndroidAccountProvider androidAccountProvider;
+  private PaymentAnalytics paymentAnalytics;
 
   /**
    * call after this instance onCreate()
@@ -444,6 +447,15 @@ public abstract class V8Engine extends SpotAndShareApplication {
     return secureCodeDecoder;
   }
 
+  public PaymentAnalytics getPaymentAnalytics() {
+    if (paymentAnalytics == null) {
+      paymentAnalytics =
+          new PaymentAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(this),
+              getAptoidePackage());
+    }
+    return paymentAnalytics;
+  }
+
   private void clearFileCache() {
     FileManager.build(getDownloadManager(), getHttpClientCache())
         .purgeCache()
@@ -569,7 +581,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private String caculateMd5Sum() {
     try {
       return AptoideUtils.AlgorithmU.computeMd5(
-          getPackageManager().getPackageInfo(getConfiguration().getAppId(), 0));
+          getPackageManager().getPackageInfo(getAptoidePackage(), 0));
     } catch (PackageManager.NameNotFoundException e) {
       e.printStackTrace();
     }

@@ -22,19 +22,21 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Payer;
+import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
-import cm.aptoide.pt.v8engine.presenter.WebAuthorizationPresenter;
-import cm.aptoide.pt.v8engine.presenter.WebAuthorizationView;
+import cm.aptoide.pt.v8engine.presenter.PaymentAuthorizationPresenter;
+import cm.aptoide.pt.v8engine.presenter.PaymentAuthorizationView;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.view.ActivityView;
+import cm.aptoide.pt.v8engine.view.BackButtonActivity;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 
 /**
  * Created by marcelobenites on 11/11/16.
  */
-public class WebAuthorizationActivity extends ActivityView implements WebAuthorizationView {
+public class PaymentAuthorizationActivity extends BackButtonActivity
+    implements PaymentAuthorizationView {
 
   private static final String EXTRA_PAYMENT_ID =
       "cm.aptoide.pt.v8engine.payment.providers.boacompra.intent.extra.PAYMENT_ID";
@@ -47,9 +49,11 @@ public class WebAuthorizationActivity extends ActivityView implements WebAuthori
   private AlertDialog unknownErrorDialog;
   private PublishRelay<Void> mainUrlSubject;
   private PublishRelay<Void> redirectUrlSubject;
+  private PublishRelay<Void> backButtonSelectionSubject;
+  private ClickHandler clickHandler;
 
   public static Intent getIntent(Context context, int paymentId, ParcelableProduct product) {
-    final Intent intent = new Intent(context, WebAuthorizationActivity.class);
+    final Intent intent = new Intent(context, PaymentAuthorizationActivity.class);
     intent.putExtra(EXTRA_PAYMENT_ID, paymentId);
     intent.putExtra(EXTRA_PRODUCT, product);
     return intent;
@@ -82,7 +86,17 @@ public class WebAuthorizationActivity extends ActivityView implements WebAuthori
           .create();
       mainUrlSubject = PublishRelay.create();
       redirectUrlSubject = PublishRelay.create();
-      attachPresenter(new WebAuthorizationPresenter(this, aptoidePay, product, paymentId),
+      backButtonSelectionSubject = PublishRelay.create();
+      clickHandler = () -> {
+        backButtonSelectionSubject.call(null);
+        return false;
+      };
+      registerBackClickHandler(clickHandler);
+
+      final PaymentAnalytics paymentAnalytics =
+          ((V8Engine) getApplicationContext()).getPaymentAnalytics();
+      attachPresenter(
+          new PaymentAuthorizationPresenter(this, aptoidePay, product, paymentId, paymentAnalytics),
           savedInstanceState);
     } else {
       throw new IllegalStateException("Web payment urls must be provided");
@@ -95,6 +109,7 @@ public class WebAuthorizationActivity extends ActivityView implements WebAuthori
     webView.setWebViewClient(null);
     webView.destroy();
     unknownErrorDialog.dismiss();
+    unregisterBackClickHandler(clickHandler);
   }
 
   @Override public void showLoading() {
@@ -125,8 +140,12 @@ public class WebAuthorizationActivity extends ActivityView implements WebAuthori
     webView.loadUrl(mainUrl);
   }
 
-  @Override public Observable<Void> redirect() {
+  @Override public Observable<Void> backToStoreSelection() {
     return redirectUrlSubject;
+  }
+
+  @Override public Observable<Void> backButtonSelection() {
+    return backButtonSelectionSubject;
   }
 
   @Override public Observable<Void> urlLoad() {

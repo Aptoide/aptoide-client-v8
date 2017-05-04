@@ -41,7 +41,7 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
-import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
+import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
@@ -74,6 +74,7 @@ import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
@@ -130,6 +131,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   private final String key_appId = "appId";
   private final String key_packageName = "packageName";
+  private final String key_uname = "uname";
   private final String key_md5sum = "md5sum";
   //private static final String TAG = AppViewFragment.class.getName();
   //
@@ -162,6 +164,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private double taxRate;
   private AppViewInstallDisplayable installDisplayable;
   private String md5;
+  private String uname;
   private PermissionManager permissionManager;
   private Menu menu;
   @Partners @Getter private String appName;
@@ -177,8 +180,18 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private AccountNavigator accountNavigator;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
-  private StoreMinimalAdAccessor storeMinimalAdAccessor;
+  private StoredMinimalAdAccessor storedMinimalAdAccessor;
+  private PaymentAnalytics paymentAnalytics;
   private SpotAndShareAnalytics spotAndShareAnalytics;
+
+  public static AppViewFragment newInstanceUname(String uname) {
+    Bundle bundle = new Bundle();
+    bundle.putString(BundleKeys.UNAME.name(), uname);
+
+    AppViewFragment fragment = new AppViewFragment();
+    fragment.setArguments(bundle);
+    return fragment;
+  }
 
   public static AppViewFragment newInstance(String md5) {
     Bundle bundle = new Bundle();
@@ -261,8 +274,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             accountManager, httpClient, converterFactory);
     installedRepository = RepositoryFactory.getInstalledRepository();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
-    storeMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
+    storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
+    paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
@@ -270,6 +284,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     appId = args.getLong(BundleKeys.APP_ID.name(), -1);
     packageName = args.getString(BundleKeys.PACKAGE_NAME.name(), null);
     md5 = args.getString(BundleKeys.MD5.name(), null);
+    uname = args.getString(BundleKeys.UNAME.name(), null);
     openType = (OpenType) args.getSerializable(BundleKeys.SHOULD_INSTALL.name());
     if (openType == null) {
       openType = OpenType.OPEN_ONLY;
@@ -335,9 +350,21 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             setupAppView(getApp);
           }, throwable -> {
             finishLoading(throwable);
+          });
+    } else if (!TextUtils.isEmpty(uname)) {
+      subscription = appRepository.getAppFromUname(uname, refresh, sponsored)
+          .map(getApp -> this.getApp = getApp)
+          .flatMap(getApp -> manageOrganicAds(getApp))
+          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+          .observeOn(AndroidSchedulers.mainThread())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+          .subscribe(getApp -> {
+            setupAppView(getApp);
+          }, throwable -> {
+            finishLoading(throwable);
             CrashReport.getInstance().log(key_appId, String.valueOf(appId));
             CrashReport.getInstance().log(key_packageName, String.valueOf(packageName));
-            CrashReport.getInstance().log(key_md5sum, md5);
+            CrashReport.getInstance().log(key_uname, uname);
           });
     } else {
       Logger.d(TAG, "loading app info using app package name");
@@ -350,9 +377,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             setupAppView(getApp);
           }, throwable -> {
             finishLoading(throwable);
-            CrashReport.getInstance().log(key_appId, String.valueOf(appId));
-            CrashReport.getInstance().log(key_packageName, String.valueOf(packageName));
-            CrashReport.getInstance().log(key_md5sum, md5);
           });
     }
   }
@@ -376,8 +400,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   public void buyApp(GetAppMeta.App app) {
-    startActivityForResult(
-        PaymentActivity.getIntent(getActivity(), (ParcelableProduct) productFactory.create(app)),
+    final ParcelableProduct product = (ParcelableProduct) productFactory.create(app);
+    paymentAnalytics.sendPaidAppBuyButtonPressedEvent(product);
+    startActivityForResult(PaymentActivity.getIntent(getActivity(), product),
         PAY_APP_REQUEST_CODE);
   }
 
@@ -435,6 +460,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       handleAdsLogic(minimalAd);
       return Observable.just(getApp);
     }
+  }
+
+  private void storeMinimalAdd(MinimalAd minimalAd) {
+    storedMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, null));
   }
 
   @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
@@ -644,10 +673,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     wUrl = app.getNodes().getMeta().getData().getUrls().getW();
   }
 
-  private void storeMinimalAdd(MinimalAd minimalAd) {
-    storeMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, null));
-  }
-
   private boolean isMediaAvailable(GetAppMeta.Media media) {
     if (media != null) {
       List<GetAppMeta.Media.Screenshot> screenshots = media.getScreenshots();
@@ -814,7 +839,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   @Partners protected enum BundleKeys {
-    APP_ID, STORE_NAME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5
+    APP_ID, STORE_NAME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME,
   }
 
   public enum OpenType {

@@ -19,8 +19,6 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncDataConverter;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 
 /**
  * Created by marcelobenites on 18/11/16.
@@ -32,9 +30,6 @@ public class AptoideSyncService extends Service {
 
   @Override public void onCreate() {
     super.onCreate();
-    OkHttpClient httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
-    Converter.Factory converterFactory = WebService.getDefaultConverter();
-
     synchronized (lock) {
       if (syncAdapter == null) {
         syncAdapter = new AptoideSyncAdapter(getApplicationContext(), true, false,
@@ -44,8 +39,10 @@ public class AptoideSyncService extends Service {
             AccessorFactory.getAccessorFor(PaymentConfirmation.class),
             AccessorFactory.getAccessorFor(PaymentAuthorization.class),
             ((V8Engine) getApplicationContext()).getAccountManager(),
-            ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV3(), httpClient,
-            converterFactory);
+            ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV3(),
+            ((V8Engine) getApplicationContext()).getDefaultClient(),
+            WebService.getDefaultConverter(),
+            ((V8Engine) getApplicationContext()).getPaymentAnalytics());
       }
     }
   }

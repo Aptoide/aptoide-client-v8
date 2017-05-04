@@ -11,7 +11,7 @@ import rx.Observable;
  * Created by marcelobenites on 15/02/17.
  */
 
-public interface WebAuthorizationView extends View {
+public interface PaymentAuthorizationView extends View {
 
   void showLoading();
 
@@ -19,7 +19,9 @@ public interface WebAuthorizationView extends View {
 
   void showUrl(String url, String redirectUrl);
 
-  Observable<Void> redirect();
+  Observable<Void> backToStoreSelection();
+
+  Observable<Void> backButtonSelection();
 
   Observable<Void> urlLoad();
 
