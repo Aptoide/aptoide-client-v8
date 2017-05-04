@@ -31,9 +31,11 @@ import cm.aptoide.pt.v8engine.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.abtesting.SearchTabOptions;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.search.SearchAnalytics;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.fragment.BasePagerToolbarFragment;
+import com.facebook.appevents.AppEventsLogger;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -63,6 +65,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private SearchAnalytics searchAnalytics;
 
   public static SearchFragment newInstance(String query) {
     return newInstance(query, false);
@@ -95,6 +98,8 @@ public class SearchFragment extends BasePagerToolbarFragment {
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
+    searchAnalytics = new SearchAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -138,6 +143,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       super.setupViewPager();
     } else {
       Analytics.Search.noSearchResults(query);
+      searchAnalytics.searchNoResults(query);
 
       noSearchLayout.setVisibility(View.VISIBLE);
       buttonsLayout.setVisibility(View.INVISIBLE);
@@ -244,6 +250,8 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   @Partners protected void executeSearchRequests(String storeName, boolean create) {
     Analytics.Search.searchTerm(query);
+    //TODO (pedro): Don't have search source (which tab)
+    searchAnalytics.search(query, null);
 
     if (storeName != null) {
       shouldFinishLoading = true;
