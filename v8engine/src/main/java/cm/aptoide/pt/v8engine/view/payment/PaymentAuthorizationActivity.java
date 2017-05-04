@@ -20,6 +20,7 @@ import android.webkit.WebViewClient;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.payment.AccountPayer;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
@@ -74,7 +75,7 @@ public class PaymentAuthorizationActivity extends BackButtonActivity
           RepositoryFactory.getPaymentAuthorizationRepository(this),
           new PaymentAuthorizationFactory(this),
           RepositoryFactory.getPaymentRepository(this, product),
-          RepositoryFactory.getProductRepository(this, product), new Payer(accountManager));
+          RepositoryFactory.getProductRepository(this, product), new AccountPayer(accountManager));
 
       webView = (WebView) findViewById(R.id.activity_boa_compra_authorization_web_view);
       webView.getSettings().setJavaScriptEnabled(true);

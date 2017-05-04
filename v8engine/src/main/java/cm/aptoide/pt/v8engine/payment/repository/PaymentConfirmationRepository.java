@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.payment.repository;
 
 import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncScheduler;
@@ -20,16 +21,18 @@ public abstract class PaymentConfirmationRepository {
 
   protected final NetworkOperatorManager operatorManager;
   protected final PaymentConfirmationFactory confirmationFactory;
+  private final Payer payer;
   private final PaymentConfirmationAccessor confirmationAccessor;
   private final PaymentSyncScheduler backgroundSync;
 
   public PaymentConfirmationRepository(NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor confirmationAccessor, PaymentSyncScheduler backgroundSync,
-      PaymentConfirmationFactory confirmationFactory) {
+      PaymentConfirmationFactory confirmationFactory, Payer payer) {
     this.operatorManager = operatorManager;
     this.confirmationAccessor = confirmationAccessor;
     this.backgroundSync = backgroundSync;
     this.confirmationFactory = confirmationFactory;
+    this.payer = payer;
   }
 
   public abstract Completable createPaymentConfirmation(int paymentId, Product product);
@@ -37,12 +40,13 @@ public abstract class PaymentConfirmationRepository {
   public abstract Completable createPaymentConfirmation(int paymentId, String paymentConfirmationId,
       Product product);
 
-  public Observable<PaymentConfirmation> getPaymentConfirmation(Product product, String payerId) {
-    return syncPaymentConfirmation(product).andThen(
-        confirmationAccessor.getPaymentConfirmations(product.getId(), payerId)
-            .flatMap(paymentConfirmations -> Observable.from(paymentConfirmations)
-                .map(paymentConfirmation -> confirmationFactory.convertToPaymentConfirmation(
-                    paymentConfirmation))));
+  public Observable<PaymentConfirmation> getPaymentConfirmation(Product product) {
+    return payer.getId()
+        .flatMapObservable(payerId -> syncPaymentConfirmation(product).andThen(
+            confirmationAccessor.getPaymentConfirmations(product.getId(), payerId)
+                .flatMap(paymentConfirmations -> Observable.from(paymentConfirmations)
+                    .map(paymentConfirmation -> confirmationFactory.convertToPaymentConfirmation(
+                        paymentConfirmation)))));
   }
 
   protected Completable syncPaymentConfirmation(Product product) {

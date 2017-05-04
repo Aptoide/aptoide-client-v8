@@ -12,6 +12,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentConfirmationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
 import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncScheduler;
@@ -36,8 +37,8 @@ public class PaidAppPaymentConfirmationRepository extends PaymentConfirmationRep
       PaymentConfirmationAccessor paymentDatabase, PaymentSyncScheduler backgroundSync,
       PaymentConfirmationFactory confirmationFactory, AptoideAccountManager accountManager,
       BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
-      OkHttpClient httClient) {
-    super(operatorManager, paymentDatabase, backgroundSync, confirmationFactory);
+      OkHttpClient httClient, Payer payer) {
+    super(operatorManager, paymentDatabase, backgroundSync, confirmationFactory, payer);
     this.accountManager = accountManager;
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.converterFactory = converterFactory;

@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.payment.repository;
 
 import cm.aptoide.pt.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.v8engine.payment.Authorization;
+import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
@@ -30,29 +31,31 @@ public class PaymentRepository {
   private final PaymentAuthorizationRepository authorizationRepository;
   private final PaymentAuthorizationFactory authorizationFactory;
   private final PaymentFactory paymentFactory;
+  private final Payer payer;
 
   public PaymentRepository(ProductRepository productRepository,
       PaymentConfirmationRepository confirmationRepository,
       PaymentAuthorizationRepository authorizationRepository,
-      PaymentAuthorizationFactory authorizationFactory, PaymentFactory paymentFactory) {
+      PaymentAuthorizationFactory authorizationFactory, PaymentFactory paymentFactory,
+      Payer payer) {
     this.productRepository = productRepository;
     this.confirmationRepository = confirmationRepository;
     this.authorizationRepository = authorizationRepository;
     this.authorizationFactory = authorizationFactory;
     this.paymentFactory = paymentFactory;
+    this.payer = payer;
   }
 
-  public Observable<List<Payment>> getPayments(String payerId) {
+  public Observable<List<Payment>> getPayments() {
     return productRepository.getPayments()
         .map(payments -> sortedPayments(payments))
-        .flatMapObservable(
-            payments -> Observable.combineLatest(getAuthorizations(payments, payerId),
-                Observable.just(payments), (authorizations, paymentList) -> {
-                  if (payments.isEmpty() || authorizations.isEmpty()) {
-                    return Observable.<List<Payment>> empty();
-                  }
-                  return getPaymentsWithAuthorizations(payments, authorizations, payerId);
-                }))
+        .flatMapObservable(payments -> Observable.combineLatest(getAuthorizations(payments),
+            Observable.just(payments), (authorizations, paymentList) -> {
+              if (payments.isEmpty() || authorizations.isEmpty()) {
+                return Observable.<List<Payment>> empty();
+              }
+              return getPaymentsWithAuthorizations(payments, authorizations);
+            }))
         .flatMap(result -> result);
   }
 
@@ -66,32 +69,35 @@ public class PaymentRepository {
   }
 
   private Observable<List<Payment>> getPaymentsWithAuthorizations(
-      List<PaymentServiceResponse> payments, List<Authorization> authorizations, String payerId) {
-    return Observable.zip(Observable.from(payments), Observable.from(authorizations),
-        (payment, authorization) -> {
-          if (!payment.isAuthorizationRequired()) {
-            authorization =
-                authorizationFactory.create(payment.getId(), Authorization.Status.NONE, payerId);
-          }
-          return paymentFactory.create(payment, authorization, confirmationRepository);
-        }).toList();
+      List<PaymentServiceResponse> payments, List<Authorization> authorizations) {
+    return payer.getId()
+        .flatMapObservable(
+            payerId -> Observable.zip(Observable.from(payments), Observable.from(authorizations),
+                (payment, authorization) -> {
+                  if (!payment.isAuthorizationRequired()) {
+                    authorization =
+                        authorizationFactory.create(payment.getId(), Authorization.Status.NONE,
+                            payerId);
+                  }
+                  return paymentFactory.create(payment, authorization, confirmationRepository);
+                }))
+        .toList();
   }
 
-  public Observable<Payment> getPayment(int paymentId, String payerId) {
-    return getPayments(payerId).flatMap(payments -> Observable.from(payments)
+  public Observable<Payment> getPayment(int paymentId) {
+    return getPayments().flatMap(payments -> Observable.from(payments)
         .filter(payment -> payment.getId() == paymentId)
         .switchIfEmpty(Observable.error(
             new PaymentFailureException("Payment " + paymentId + "not available"))));
   }
 
-  private Observable<List<Authorization>> getAuthorizations(List<PaymentServiceResponse> payments,
-      String payerId) {
+  private Observable<List<Authorization>> getAuthorizations(List<PaymentServiceResponse> payments) {
     return getPaymentIds(payments).flatMapObservable(
-        paymentIds -> authorizationRepository.getPaymentAuthorizations(paymentIds, payerId));
+        paymentIds -> authorizationRepository.getPaymentAuthorizations(paymentIds));
   }
 
-  public Observable<PaymentConfirmation> getConfirmation(Product product, String payerId) {
-    return confirmationRepository.getPaymentConfirmation(product, payerId);
+  public Observable<PaymentConfirmation> getConfirmation(Product product) {
+    return confirmationRepository.getPaymentConfirmation(product);
   }
 
   private Single<List<Integer>> getPaymentIds(List<PaymentServiceResponse> payments) {

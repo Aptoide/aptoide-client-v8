@@ -6,19 +6,10 @@
 package cm.aptoide.pt.v8engine.payment;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import rx.Single;
 
-/**
- * Created by marcelobenites on 06/01/17.
- */
-public class Payer {
+public interface Payer {
 
-  private final AptoideAccountManager accountManager;
+  public Single<String> getId();
 
-  public Payer(AptoideAccountManager accountManager) {
-    this.accountManager = accountManager;
-  }
-
-  public String getId() {
-    return accountManager.getAccountEmail();
-  }
 }

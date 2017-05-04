@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.repository;
 
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
 import android.telephony.TelephonyManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -29,6 +28,8 @@ import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.download.ScheduledDownloadRepository;
 import cm.aptoide.pt.v8engine.install.rollback.RollbackRepository;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
+import cm.aptoide.pt.v8engine.payment.AccountPayer;
+import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.ProductRepository;
@@ -98,11 +99,15 @@ public final class RepositoryFactory {
         AccessorFactory.getAccessorFor(Download.class));
   }
 
-  public static PaymentRepository getPaymentRepository(FragmentActivity activity, Product product) {
-    return new PaymentRepository(getProductRepository(activity, product),
-        getPaymentConfirmationRepository(activity, product),
-        getPaymentAuthorizationRepository(activity), new PaymentAuthorizationFactory(activity),
-        new PaymentFactory(activity));
+  public static PaymentRepository getPaymentRepository(Context context, Product product) {
+    return new PaymentRepository(getProductRepository(context, product),
+        getPaymentConfirmationRepository(context, product),
+        getPaymentAuthorizationRepository(context), new PaymentAuthorizationFactory(context),
+        new PaymentFactory(context), getPayer(context));
+  }
+
+  private static Payer getPayer(Context context) {
+    return new AccountPayer(getAccountManager(context));
   }
 
   public static ProductRepository getProductRepository(Context context, Product product) {
@@ -128,13 +133,13 @@ public final class RepositoryFactory {
           AccessorFactory.getAccessorFor(PaymentConfirmation.class), getBackgroundSync(context),
           new PaymentConfirmationFactory(), getAccountManager(context),
           getBaseBodyInterceptorV3(context), getHttpClient(context),
-          WebService.getDefaultConverter());
+          WebService.getDefaultConverter(), getPayer(context));
     } else if (product instanceof PaidAppProduct) {
       return new PaidAppPaymentConfirmationRepository(getNetworkOperatorManager(context),
           AccessorFactory.getAccessorFor(PaymentConfirmation.class), getBackgroundSync(context),
           new PaymentConfirmationFactory(), getAccountManager(context),
           getBaseBodyInterceptorV3(context), WebService.getDefaultConverter(),
-          getHttpClient(context));
+          getHttpClient(context), getPayer(context));
     } else {
       throw new IllegalArgumentException("No compatible repository for product " + product.getId());
     }
@@ -145,7 +150,7 @@ public final class RepositoryFactory {
         AccessorFactory.getAccessorFor(PaymentAuthorization.class), getBackgroundSync(context),
         new PaymentAuthorizationFactory(context), getAccountManager(context),
         getBaseBodyInterceptorV3(context), getHttpClient(context),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), getPayer(context));
   }
 
   private static NetworkOperatorManager getNetworkOperatorManager(Context context) {

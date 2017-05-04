@@ -26,6 +26,7 @@ import cm.aptoide.pt.iab.ErrorCodeFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.payment.AccountPayer;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
@@ -114,7 +115,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     final ParcelableProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
     final AptoideAccountManager accountManager =
         ((V8Engine) getApplicationContext()).getAccountManager();
-    final Payer payer = new Payer(accountManager);
+    final Payer payer = new AccountPayer(accountManager);
     final PaymentAnalytics paymentAnalytics =
         ((V8Engine) getApplicationContext()).getPaymentAnalytics();
     attachPresenter(new PaymentPresenter(this,

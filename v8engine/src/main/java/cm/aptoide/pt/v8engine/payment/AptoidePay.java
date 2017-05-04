@@ -36,11 +36,11 @@ public class AptoidePay {
   }
 
   public Observable<List<Payment>> payments() {
-    return paymentRepository.getPayments(payer.getId());
+    return paymentRepository.getPayments();
   }
 
   public Observable<Payment> payment(int paymentId) {
-    return paymentRepository.getPayment(paymentId, payer.getId());
+    return paymentRepository.getPayment(paymentId);
   }
 
   public Completable initiate(Payment payment) {
@@ -51,8 +51,9 @@ public class AptoidePay {
   }
 
   public Completable authorize(int paymentId) {
-    return authorizationRepository.saveAuthorization(
-        authorizationFactory.create(paymentId, Authorization.Status.PENDING, payer.getId()));
+    return payer.getId()
+        .flatMapCompletable(payerId -> authorizationRepository.saveAuthorization(
+            authorizationFactory.create(paymentId, Authorization.Status.PENDING, payerId)));
   }
 
   public Completable process(Payment payment, Product product) {
@@ -60,7 +61,7 @@ public class AptoidePay {
   }
 
   public Observable<PaymentConfirmation> confirmation(Product product) {
-    return paymentRepository.getConfirmation(product, payer.getId());
+    return paymentRepository.getConfirmation(product);
   }
 
   public Single<Purchase> purchase(Product product) {

@@ -12,12 +12,9 @@ import cm.aptoide.pt.v8engine.payment.providers.paypal.PayPalPayment;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 
-/**
- * Created by marcelobenites on 8/10/16.
- */
 public class PaymentFactory {
 
-  public static final String PAYPAL = "paypal";
+  public static final String PAYPAL = "paypal_future";
   public static final String BOACOMPRA = "boacompra";
   public static final String BOACOMPRAGOLD = "boacompragold";
   public static final String DUMMY = "dummy";
