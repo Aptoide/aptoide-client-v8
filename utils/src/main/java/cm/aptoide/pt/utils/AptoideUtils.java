@@ -34,13 +34,14 @@ import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.telephony.SubscriptionInfo;
+import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Base64;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
@@ -62,7 +63,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URLDecoder;
@@ -875,6 +875,25 @@ public class AptoideUtils {
       return manager.getNetworkOperatorName();
     }
 
+    public static List<SubscriptionInfo> getCarrierNames() {
+      List<SubscriptionInfo> activeSubscriptionInfoList = new ArrayList<>();
+      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1
+          && checkPermission("android.permission.READ_PHONE_STATE")) {
+        return SubscriptionManager.from(context).getActiveSubscriptionInfoList();
+      } else {
+        return activeSubscriptionInfoList;
+      }
+    }
+
+    public static int numberOfSims() {
+      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1
+          && checkPermission("android.permission.READ_PHONE_STATE")) {
+        return SubscriptionManager.from(context).getActiveSubscriptionInfoCountMax();
+      } else {
+        return 0;
+      }
+    }
+
     public static File readLogs(String mPath, String fileName) {
 
       Process process = null;
@@ -1041,30 +1060,19 @@ public class AptoideUtils {
      * requires the android.permission.READ_PHONE_STATE permission, so only runs if this permission
      * is given
      */
-    public static String[] getImeis() {
-      String[] imeis = new String[2];
-      imeis[0] = "";
-      imeis[1] = "";
+    @SuppressLint("HardwareIds") public static List<String> getImeis() {
+      List<String> imeis = new ArrayList<>();
       if (checkPermission("android.permission.READ_PHONE_STATE")) {
-        TelephonyManager manager =
+        TelephonyManager tel =
             (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        try {
-          Class<?> telephonyClass = Class.forName(manager.getClass().getName());
-          Class<?>[] parameter = new Class[1];
-          parameter[0] = int.class;
-          Method getFirstMethod = telephonyClass.getMethod("getDeviceId", parameter);
-          Log.d("SimData", getFirstMethod.toString());
-          Object[] obParameter = new Object[1];
-          obParameter[0] = 0;
-          String first = (String) getFirstMethod.invoke(manager, obParameter);
-          Log.d("IMEI ", "first :" + first);
-          imeis[0] = first;
-          obParameter[0] = 1;
-          String second = (String) getFirstMethod.invoke(manager, obParameter);
-          Log.d("IMEI ", "Second :" + second);
-          imeis[1] = second;
-        } catch (Exception e) {
-          e.printStackTrace();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+          int numberOfSims = numberOfSims();
+
+          for (int i = 1; i <= numberOfSims; i++) {
+            imeis.add(tel.getDeviceId(i));
+          }
+        } else {
+          imeis.add(tel.getDeviceId());
         }
       }
       return imeis;

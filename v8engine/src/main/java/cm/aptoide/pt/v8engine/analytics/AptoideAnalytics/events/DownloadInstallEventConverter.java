@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
 
 import android.support.annotation.Nullable;
+import android.telephony.SubscriptionInfo;
 import android.text.TextUtils;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
@@ -10,6 +11,7 @@ import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.RealmList;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by trinkes on 02/01/2017.
@@ -44,18 +46,38 @@ abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent>
       data.setObb(obbs);
     }
 
-    data.setNetwork(AptoideUtils.SystemU.getConnectionType().toUpperCase());
-    data.setTeleco(AptoideUtils.SystemU.getCarrierName());
+    //EQUIPMENTS
+    List<String> imeis = AptoideUtils.SystemU.getImeis();
+    List<DownloadInstallAnalyticsBaseBody.Id> ids = new LinkedList<>();
+    for (String imei : imeis) {
+      ids.add(new DownloadInstallAnalyticsBaseBody.Id(imei));
+    }
+    data.setEquipment(
+        new DownloadInstallAnalyticsBaseBody.Equipment(ids, AptoideUtils.SystemU.getSerialNumber(),
+            AptoideUtils.SystemU.getManufacturer()));
 
-    String imeis[] = AptoideUtils.SystemU.getImeis();
-    data.setImei(imeis[0]);
-    data.setImei2(imeis[1]);
-    data.setSerialNumber(AptoideUtils.SystemU.getSerialNumber());
-    data.setAppName(Application.getConfiguration().getMarketName());
-    data.setPhoneNumber(AptoideUtils.SystemU.getPhoneNumber());
-    data.setMcc(AptoideUtils.SystemU.getMCC());
-    data.setMnc(AptoideUtils.SystemU.getMNC());
-    data.setManufacturer(AptoideUtils.SystemU.getManufacturer());
+    //MARKETNAME
+    data.setMarket_name(Application.getConfiguration().getMarketName());
+
+    //TELECOS
+    List<DownloadInstallAnalyticsBaseBody.Teleco> telecos = new LinkedList<>();
+    List<SubscriptionInfo> subscriptionInfos = AptoideUtils.SystemU.getCarrierNames();
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1
+        && !subscriptionInfos.isEmpty()) {
+      for (SubscriptionInfo subscriptionInfo : subscriptionInfos) {
+        telecos.add(new DownloadInstallAnalyticsBaseBody.Teleco(
+            subscriptionInfo.getCarrierName().toString(), subscriptionInfo.getNumber(),
+            (String.valueOf(subscriptionInfo.getMcc())),
+            (String.valueOf(subscriptionInfo.getMnc()))));
+      }
+    } else {
+      telecos.add(new DownloadInstallAnalyticsBaseBody.Teleco(AptoideUtils.SystemU.getCarrierName(),
+          AptoideUtils.SystemU.getPhoneNumber(), AptoideUtils.SystemU.getMCC(),
+          AptoideUtils.SystemU.getMNC()));
+    }
+    data.setTeleco(telecos);
+
+    data.setNetwork(AptoideUtils.SystemU.getConnectionType().toUpperCase());
 
     DownloadInstallAnalyticsBaseBody.Result result = new DownloadInstallAnalyticsBaseBody.Result();
     result.setStatus(status);

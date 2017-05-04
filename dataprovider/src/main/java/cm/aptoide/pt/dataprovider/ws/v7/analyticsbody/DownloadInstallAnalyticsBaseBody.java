@@ -2,6 +2,7 @@ package cm.aptoide.pt.dataprovider.ws.v7.analyticsbody;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import lombok.AllArgsConstructor;
 
 /**
  * Created by trinkes on 30/12/2016.
@@ -30,7 +31,7 @@ public class DownloadInstallAnalyticsBaseBody
     App app;
     List<Obb> obb;
     String network;
-    String teleco;
+    //String teleco;
     Result result;
     String imei;
     String imei2;
@@ -40,6 +41,10 @@ public class DownloadInstallAnalyticsBaseBody
     String mcc;
     String mnc;
     String manufacturer;
+
+    Equipment equipment;
+    String market_name;
+    List<Teleco> teleco;
   }
 
   @lombok.Data public static class App {
@@ -62,5 +67,22 @@ public class DownloadInstallAnalyticsBaseBody
   @lombok.Data public static class ResultError {
     String message;
     String type;
+  }
+
+  @AllArgsConstructor @lombok.Data public static class Equipment {
+    List<Id> id;
+    String serial;
+    String manufacturer;
+  }
+
+  @AllArgsConstructor @lombok.Data public static class Id {
+    String value;
+  }
+
+  @AllArgsConstructor @lombok.Data public static class Teleco {
+    String name;
+    String number;
+    String mcc;
+    String mnc;
   }
 }
