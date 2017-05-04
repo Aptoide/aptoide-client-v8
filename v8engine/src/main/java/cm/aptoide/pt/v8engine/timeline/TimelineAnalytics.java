@@ -26,6 +26,9 @@ public class TimelineAnalytics {
   private static final String OPEN_APP = "OPEN_APP";
   private static final String UPDATE_APP = "UPDATE_APP";
   private static final String FOLLOW_FRIENDS = "Apps_Timeline_Follow_Friends";
+  private static final String TIMELINE_TAB_CLICK = "Apps_Timeline_Open";
+  private static final String CARD_ACTION = "Apps_Timeline_Card_Action";
+  private static final String SOCIAL_CARD_PREVIEW = "Apps_Timeline_Social_Card_Preview";
   private final Analytics analytics;
   private final AppEventsLogger facebook;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
@@ -43,6 +46,10 @@ public class TimelineAnalytics {
 
   }
 
+  public void sendTimelineTabClick() {
+    analytics.sendEvent(new FacebookEvent(facebook, TIMELINE_TAB_CLICK));
+  }
+
   public void sendFollowFriendsEvent() {
     analytics.sendEvent(new FacebookEvent(facebook, FOLLOW_FRIENDS));
     analytics.sendEvent(new LocalyticsEvent(FOLLOW_FRIENDS));
@@ -52,10 +59,38 @@ public class TimelineAnalytics {
     analytics.sendEvent(createEvent(OPEN_APP, createAppData(cardType, source, packageName)));
   }
 
+  private AptoideEvent createEvent(String event, Map<String, Object> data) {
+    return new AptoideEvent(data, event, "CLICK", "TIMELINE", bodyInterceptor, httpClient,
+        converterFactory);
+  }
+
+  private Map<String, Object> createAppData(String cardType, String source, String packageName) {
+    final Map<String, String> specific = new HashMap<>();
+    specific.put("app", packageName);
+    return createTimelineCardData(cardType, source, specific);
+  }
+
+  private Map<String, Object> createTimelineCardData(String cardType, String source,
+      Map<String, String> specific) {
+    final Map<String, Object> result = new HashMap<>();
+    result.put("card_type", cardType);
+    result.put("source", source);
+    result.put("specific", specific);
+    return result;
+  }
+
   public void sendStoreOpenAppEvent(String cardType, String source, String packageName,
       String store) {
     analytics.sendEvent(
         createEvent(OPEN_APP, createStoreAppData(cardType, source, packageName, store)));
+  }
+
+  private Map<String, Object> createStoreAppData(String cardType, String source, String packageName,
+      String store) {
+    final Map<String, String> specific = new HashMap<>();
+    specific.put("app", packageName);
+    specific.put("store", store);
+    return createTimelineCardData(cardType, source, specific);
   }
 
   public void sendSimilarOpenAppEvent(String cardType, String source, String packageName,
@@ -64,10 +99,26 @@ public class TimelineAnalytics {
         createSimilarAppData(cardType, source, packageName, similarPackageName)));
   }
 
+  private Map<String, Object> createSimilarAppData(String cardType, String source,
+      String packageName, String similarPackageName) {
+    final Map<String, String> specific = new HashMap<>();
+    specific.put("app", packageName);
+    specific.put("similar_to", similarPackageName);
+    return createTimelineCardData(cardType, source, specific);
+  }
+
   public void sendRecommendedOpenAppEvent(String cardType, String source, String basedOnPackageName,
       String packageName) {
     analytics.sendEvent(createEvent(OPEN_APP,
         createBasedOnAppData(cardType, source, packageName, basedOnPackageName)));
+  }
+
+  private Map<String, Object> createBasedOnAppData(String cardType, String source,
+      String packageName, String basedOnPackageName) {
+    final Map<String, String> specific = new HashMap<>();
+    specific.put("app", packageName);
+    specific.put("based_on", basedOnPackageName);
+    return createTimelineCardData(cardType, source, specific);
   }
 
   public void sendUpdateAppEvent(String cardType, String source, String packageName) {
@@ -84,9 +135,23 @@ public class TimelineAnalytics {
     analytics.sendEvent(createEvent(OPEN_STORE, createStoreData(cardType, source, store)));
   }
 
+  private Map<String, Object> createStoreData(String cardType, String source, String store) {
+    final Map<String, String> specific = new HashMap<>();
+    specific.put("store", store);
+    return createTimelineCardData(cardType, source, specific);
+  }
+
   public void sendOpenArticleEvent(String cardType, String source, String url, String packageName) {
     analytics.sendEvent(
         createEvent(OPEN_ARTICLE, createArticleData(cardType, source, url, packageName)));
+  }
+
+  private Map<String, Object> createArticleData(String cardType, String source, String url,
+      String packageName) {
+    final Map<String, String> specific = new HashMap<>();
+    specific.put("url", url);
+    specific.put("app", packageName);
+    return createTimelineCardData(cardType, source, specific);
   }
 
   public void sendOpenBlogEvent(String cardType, String source, String url, String packageName) {
@@ -99,44 +164,6 @@ public class TimelineAnalytics {
         createEvent(OPEN_VIDEO, createVideoAppData(cardType, source, url, packageName)));
   }
 
-  public void sendOpenChannelEvent(String cardType, String source, String url, String packageName) {
-    analytics.sendEvent(
-        createEvent(OPEN_CHANNEL, createVideoAppData(cardType, source, url, packageName)));
-  }
-
-  private AptoideEvent createEvent(String event, Map<String, Object> data) {
-    return new AptoideEvent(data, event, "CLICK", "TIMELINE", bodyInterceptor, httpClient,
-        converterFactory);
-  }
-
-  private Map<String, Object> createAppData(String cardType, String source, String packageName) {
-    final Map<String, String> specific = new HashMap<>();
-    specific.put("app", packageName);
-    return createTimelineCardData(cardType, source, specific);
-  }
-
-  private Map<String, Object> createStoreAppData(String cardType, String source, String packageName,
-      String store) {
-    final Map<String, String> specific = new HashMap<>();
-    specific.put("app", packageName);
-    specific.put("store", store);
-    return createTimelineCardData(cardType, source, specific);
-  }
-
-  private Map<String, Object> createStoreData(String cardType, String source, String store) {
-    final Map<String, String> specific = new HashMap<>();
-    specific.put("store", store);
-    return createTimelineCardData(cardType, source, specific);
-  }
-
-  private Map<String, Object> createSimilarAppData(String cardType, String source,
-      String packageName, String similarPackageName) {
-    final Map<String, String> specific = new HashMap<>();
-    specific.put("app", packageName);
-    specific.put("similar_to", similarPackageName);
-    return createTimelineCardData(cardType, source, specific);
-  }
-
   private Map<String, Object> createVideoAppData(String cardType, String source, String url,
       String packageName) {
     final Map<String, String> specific = new HashMap<>();
@@ -145,28 +172,8 @@ public class TimelineAnalytics {
     return createTimelineCardData(cardType, source, specific);
   }
 
-  private Map<String, Object> createBasedOnAppData(String cardType, String source,
-      String packageName, String basedOnPackageName) {
-    final Map<String, String> specific = new HashMap<>();
-    specific.put("app", packageName);
-    specific.put("based_on", basedOnPackageName);
-    return createTimelineCardData(cardType, source, specific);
-  }
-
-  private Map<String, Object> createTimelineCardData(String cardType, String source,
-      Map<String, String> specific) {
-    final Map<String, Object> result = new HashMap<>();
-    result.put("card_type", cardType);
-    result.put("source", source);
-    result.put("specific", specific);
-    return result;
-  }
-
-  private Map<String, Object> createArticleData(String cardType, String source, String url,
-      String packageName) {
-    final Map<String, String> specific = new HashMap<>();
-    specific.put("url", url);
-    specific.put("app", packageName);
-    return createTimelineCardData(cardType, source, specific);
+  public void sendOpenChannelEvent(String cardType, String source, String url, String packageName) {
+    analytics.sendEvent(
+        createEvent(OPEN_CHANNEL, createVideoAppData(cardType, source, url, packageName)));
   }
 }
