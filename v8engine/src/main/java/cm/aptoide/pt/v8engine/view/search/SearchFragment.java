@@ -295,7 +295,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     Datalist<ListSearchApps.SearchAppsApp> datalist = listSearchApps.getDatalist();
 
     return datalist.getList().size() > 0
-        || listSearchApps.getTotal() >= listSearchApps.getNextSize();
+        || listSearchApps.getTotal() > listSearchApps.getNextSize();
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
