@@ -4,11 +4,11 @@ import android.content.Context;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.timeline.PopularApp;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.interfaces.ShareCardCallback;
-import cm.aptoide.pt.v8engine.repository.SocialRepository;
-import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.SocialRepository;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.timeline.ShareCardCallback;
 import java.util.Date;
 import java.util.List;
 
