@@ -56,7 +56,7 @@ import cm.aptoide.pt.v8engine.download.InstallEventConverter;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.view.app.AppMenuOptions;
-import cm.aptoide.pt.v8engine.view.app.Payments;
+import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.install.InstallWarningDialog;
@@ -271,8 +271,8 @@ import rx.android.schedulers.AndroidSchedulers;
 
   private void buyApp(GetAppMeta.App app) {
     Fragment fragment = getFragmentNavigator().peekLast();
-    if (fragment != null && Payments.class.isAssignableFrom(fragment.getClass())) {
-      ((Payments) fragment).buyApp(app);
+    if (fragment != null && AppViewFragment.class.isAssignableFrom(fragment.getClass())) {
+      ((AppViewFragment) fragment).buyApp(app);
     }
   }
 

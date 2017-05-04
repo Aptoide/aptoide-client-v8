@@ -119,7 +119,7 @@ import rx.functions.Action0;
  * Created by sithengineer on 04/05/16.
  */
 public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
-    implements Scrollable, AppMenuOptions, Payments {
+    implements Scrollable, AppMenuOptions {
 
   public static final int VIEW_ID = R.layout.fragment_app_view;
   //
