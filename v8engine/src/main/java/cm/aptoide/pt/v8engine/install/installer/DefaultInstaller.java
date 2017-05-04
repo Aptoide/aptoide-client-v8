@@ -78,7 +78,7 @@ public class DefaultInstaller implements Installer {
             return systemInstall(context, installation.getFile()).onErrorResumeNext(
                 Observable.fromCallable(
                     () -> rootInstall(installation.getFile(), installation.getPackageName(),
-                        installation.getVersionCode())))
+                        installation.getVersionCode(), context)))
                 .onErrorResumeNext(
                     defaultInstall(context, installation.getFile(), installation.getPackageName()));
           }
@@ -145,9 +145,10 @@ public class DefaultInstaller implements Installer {
         new SystemInstallOnSubscribe(context, packageManager, Uri.fromFile(file)));
   }
 
-  private Void rootInstall(File file, String packageName, int versionCode)
+  private Void rootInstall(File file, String packageName, int versionCode, Context context)
       throws InstallationException {
     if (!AptoideUtils.SystemU.isRooted()) {
+      defaultInstall(context, file, packageName);
       throw new InstallationException("No root permissions");
     } else if (!ManagerPreferences.allowRootInstallation()) {
       throw new InstallationException("User doesn't allow root installation");
