@@ -8,9 +8,8 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -19,20 +18,19 @@ import rx.Observable;
 
 public class GetPaymentConfirmationRequest extends V3<PaymentConfirmationResponse> {
 
-  public GetPaymentConfirmationRequest(BaseBody baseBody,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
-    super(baseBody,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter(), bodyInterceptor);
+  public GetPaymentConfirmationRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(baseBody, httpClient, converterFactory, bodyInterceptor);
   }
 
   public static GetPaymentConfirmationRequest of(int productId,
       NetworkOperatorManager operatorManager, int apiVersion, String accessToken,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     final BaseBody args = getBaseBody(productId, operatorManager, accessToken);
     args.put("reqtype", "iabpurchasestatus");
     args.put("apiversion", String.valueOf(apiVersion));
-    return new GetPaymentConfirmationRequest(args, bodyInterceptor);
+    return new GetPaymentConfirmationRequest(args, bodyInterceptor, httpClient, converterFactory);
   }
 
   private static BaseBody getBaseBody(int productId, NetworkOperatorManager operatorManager,
@@ -49,10 +47,11 @@ public class GetPaymentConfirmationRequest extends V3<PaymentConfirmationRespons
 
   public static GetPaymentConfirmationRequest of(int productId,
       NetworkOperatorManager operatorManager, String accessToken,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     final BaseBody args = getBaseBody(productId, operatorManager, accessToken);
     args.put("reqtype", "apkpurchasestatus");
-    return new GetPaymentConfirmationRequest(args, bodyInterceptor);
+    return new GetPaymentConfirmationRequest(args, bodyInterceptor, httpClient, converterFactory);
   }
 
   @Override

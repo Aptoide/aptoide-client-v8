@@ -7,28 +7,29 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
+import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.ads.AdsRepository;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.repository.AdsRepository;
+import cm.aptoide.pt.v8engine.download.InstallEvent;
+import cm.aptoide.pt.v8engine.install.rollback.RollbackRepository;
+import cm.aptoide.pt.v8engine.install.root.RootShell;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.repository.RollbackRepository;
-import cm.aptoide.pt.v8engine.repository.UpdateRepository;
+import cm.aptoide.pt.v8engine.updates.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Completable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -45,6 +46,8 @@ public class InstalledIntentService extends IntentService {
   private UpdateRepository updatesRepository;
   private CompositeSubscription subscriptions;
   private Analytics analytics;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
 
   public InstalledIntentService() {
     super("InstalledIntentService");
@@ -54,9 +57,11 @@ public class InstalledIntentService extends IntentService {
     super.onCreate();
     final AptoideAccountManager accountManager =
         ((V8Engine) getApplicationContext()).getAccountManager();
-    adsRepository = new AdsRepository(
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()), accountManager);
+    httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
+    adsRepository =
+        new AdsRepository(((V8Engine) getApplicationContext()).getIdsRepository(), accountManager,
+            httpClient, converterFactory);
     repository = RepositoryFactory.getRollbackRepository();
     installedRepository = RepositoryFactory.getInstalledRepository();
     updatesRepository = RepositoryFactory.getUpdateRepository(this);
@@ -143,12 +148,12 @@ public class InstalledIntentService extends IntentService {
   }
 
   private void checkAndBroadcastReferrer(String packageName) {
-    StoreMinimalAdAccessor storeMinimalAdAccessor =
+    StoredMinimalAdAccessor storedMinimalAdAccessor =
         AccessorFactory.getAccessorFor(StoredMinimalAd.class);
     Subscription unManagedSubscription =
-        storeMinimalAdAccessor.get(packageName).flatMapCompletable(storeMinimalAd -> {
+        storedMinimalAdAccessor.get(packageName).flatMapCompletable(storeMinimalAd -> {
           if (storeMinimalAd != null) {
-            return knockCpi(packageName, storeMinimalAdAccessor, storeMinimalAd);
+            return knockCpi(packageName, storedMinimalAdAccessor, storeMinimalAd);
           } else {
             return extractReferrer(packageName);
           }
@@ -164,6 +169,7 @@ public class InstalledIntentService extends IntentService {
       InstallEvent event =
           (InstallEvent) analytics.get(packageName + packageInfo.versionCode, InstallEvent.class);
       if (event != null) {
+        event.setPhoneRooted(RootShell.isRootAvailable());
         event.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.SUCC);
         analytics.sendEvent(event);
         return;
@@ -228,12 +234,12 @@ public class InstalledIntentService extends IntentService {
     }
   }
 
-  private Completable knockCpi(String packageName, StoreMinimalAdAccessor storeMinimalAdAccessor,
+  private Completable knockCpi(String packageName, StoredMinimalAdAccessor storedMinimalAdAccessor,
       StoredMinimalAd storeMinimalAd) {
     return Completable.fromCallable(() -> {
       ReferrerUtils.broadcastReferrer(packageName, storeMinimalAd.getReferrer());
       DataproviderUtils.AdNetworksUtils.knockCpi(storeMinimalAd);
-      storeMinimalAdAccessor.remove(storeMinimalAd);
+      storedMinimalAdAccessor.remove(storeMinimalAd);
       return null;
     });
   }
@@ -242,7 +248,7 @@ public class InstalledIntentService extends IntentService {
     return adsRepository.getAdsFromSecondInstall(packageName)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, true,
-            adsRepository))
+            adsRepository, httpClient, converterFactory))
         .toCompletable();
   }
 }

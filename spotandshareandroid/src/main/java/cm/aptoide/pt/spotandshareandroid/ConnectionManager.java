@@ -65,8 +65,9 @@ public class ConnectionManager {
       if (wifimanager == null) {
         wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
       }
-      if (listenerActivateButtons != null) {
+      if (wifimanager.getWifiState() == 3 && listenerActivateButtons != null) {
         listenerActivateButtons.onStateChanged(wifimanager.isWifiEnabled());
+        context.unregisterReceiver(this);
       }
     }
   };
@@ -106,7 +107,9 @@ public class ConnectionManager {
         }
         if (noHotspotsFoundCounter >= 2 && clients.size() < 1 && !showedNoHotspotMessage) {
           showedNoHotspotMessage = true;
-          inactivityListener.onInactivity(true);
+          if (inactivityListener != null) {
+            inactivityListener.onInactivity(true);
+          }
         }
 
         groupValidator.flagGhosts(clients);
@@ -124,7 +127,9 @@ public class ConnectionManager {
         System.out.println("tHERE ARE NO APTXV NETWORKS");
         if (noHotspotsFoundCounter >= 2 && !showedNoHotspotMessage) {
           showedNoHotspotMessage = true;
-          inactivityListener.onInactivity(true);
+          if (inactivityListener != null) {
+            inactivityListener.onInactivity(true);
+          }
         }
       }
       if (changes) {
@@ -212,6 +217,7 @@ public class ConnectionManager {
                 try {
                   context.unregisterReceiver(this);
                   context.unregisterReceiver(scanAPTXVNetworks);
+                  Log.w("BROADCASTRECEIVER", "Unregistered scan receiver INSIDE CONECTING WIFI #1");
                 } catch (IllegalArgumentException e) {
                   System.out.println(
                       "There was an error while trying to unregister the wifireceiver and the wifireceiverforconnectingwifi");
@@ -228,6 +234,7 @@ public class ConnectionManager {
         try {
           context.unregisterReceiver(this);
           context.unregisterReceiver(scanAPTXVNetworks);
+          Log.w("BROADCASTRECEIVER", "Unregistered scan receiver INSIDE CONNECTING WIFI #2");
         } catch (IllegalArgumentException e) {
           System.out.println(
               "There was an error while trying to unregister the wifireceiver and the wifireceiverforconnectingwifi");
@@ -284,6 +291,7 @@ public class ConnectionManager {
 
     context.registerReceiver(scanAPTXVNetworks,
         new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+    Log.w("BROADCASTRECEIVER", "registered scan receiver search APTX");
 
     scheduleScan();
   }
@@ -576,6 +584,7 @@ public class ConnectionManager {
         new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION));
     context.registerReceiver(scanAPTXVNetworks,
         new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+    Log.w("BROADCASTRECEIVER", "registered scan receiver RESUME");
   }
 
   public void stop() {
@@ -583,20 +592,29 @@ public class ConnectionManager {
     if (clients != null) {
       clients.clear();
     }
+    try {
+      context.unregisterReceiver(activateButtonsReceiver);
+    } catch (IllegalArgumentException e) {
+    }
+
+    try {
+      context.unregisterReceiver(scanAPTXVNetworks);
+      Log.w("BROADCASTRECEIVER", "Unregistered scan receiver ON STOP");
+    } catch (IllegalArgumentException e) {
+    }
+
+    try {
+      context.unregisterReceiver(connectingWifi);
+    } catch (IllegalArgumentException e) {
+    }
+
     this.listenerJoinWifi = null;
     this.listenerActivateButtons = null;
     this.clientsConnectedListener = null;
     this.inactivityListener = null;
-    try {
-      context.unregisterReceiver(activateButtonsReceiver);
-      context.unregisterReceiver(scanAPTXVNetworks);
-      context.unregisterReceiver(connectingWifi);
-    } catch (IllegalArgumentException e) {
-    }
     if (scanner != null) {
       scanner.cancel();
       scanner.purge();
-      scanner = null;
     }
   }
 

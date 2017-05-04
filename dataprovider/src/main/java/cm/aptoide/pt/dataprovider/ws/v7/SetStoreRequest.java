@@ -1,18 +1,14 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.io.File;
-import java.util.concurrent.TimeUnit;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
+import retrofit2.Converter;
 import rx.Observable;
 
 public class SetStoreRequest extends V7<BaseV7Response, HashMapNotNull<String, RequestBody>> {
@@ -25,15 +21,15 @@ public class SetStoreRequest extends V7<BaseV7Response, HashMapNotNull<String, R
   private final MultipartBody.Part multipartBody;
 
   private SetStoreRequest(HashMapNotNull<String, RequestBody> body, MultipartBody.Part file,
-      BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor) {
-    super(body, BASE_HOST, getLongerTimeoutClient(), WebService.getDefaultConverter(),
-        bodyInterceptor);
+      BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
     multipartBody = file;
   }
 
   public static SetStoreRequest of(String accessToken, String storeName, String storeTheme,
-      String storeAvatarPath,
-      BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor) {
+      String storeAvatarPath, BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
 
     final RequestBodyFactory requestBodyFactory = new RequestBodyFactory();
     final HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
@@ -42,12 +38,13 @@ public class SetStoreRequest extends V7<BaseV7Response, HashMapNotNull<String, R
 
     return new SetStoreRequest(body,
         requestBodyFactory.createBodyPartFromFile("store_avatar", new File(storeAvatarPath)),
-        bodyInterceptor);
+        bodyInterceptor, httpClient, converterFactory);
   }
 
   public static SetStoreRequest of(String accessToken, String storeName, String storeTheme,
       String storeAvatarPath, String storeDescription, Boolean editStore, long storeId,
-      BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor) {
+      BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     final RequestBodyFactory requestBodyFactory = new RequestBodyFactory();
     final HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
 
@@ -55,16 +52,7 @@ public class SetStoreRequest extends V7<BaseV7Response, HashMapNotNull<String, R
 
     return new SetStoreRequest(body,
         requestBodyFactory.createBodyPartFromFile("store_avatar", new File(storeAvatarPath)),
-        bodyInterceptor);
-  }
-
-  @NonNull private static OkHttpClient getLongerTimeoutClient() {
-    return OkHttpClientFactory.newClient(() -> SecurePreferences.getUserAgent())
-        .newBuilder()
-        .connectTimeout(2, TimeUnit.MINUTES)
-        .readTimeout(2, TimeUnit.MINUTES)
-        .writeTimeout(2, TimeUnit.MINUTES)
-        .build();
+        bodyInterceptor, httpClient, converterFactory);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

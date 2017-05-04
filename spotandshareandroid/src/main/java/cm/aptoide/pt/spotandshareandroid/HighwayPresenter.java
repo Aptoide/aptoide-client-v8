@@ -23,6 +23,8 @@ public class HighwayPresenter implements Presenter {
   private GroupManager groupManager;
   private boolean permissionRequested;
   private Subscription subscription;
+  private String autoShareAppName;
+  private String autoShareFilepath;
 
   public HighwayPresenter(HighwayView view, GroupNameProvider groupNameProvider,
       DeactivateHotspotTask deactivateHotspotTask, ConnectionManager connectionManager,
@@ -35,6 +37,16 @@ public class HighwayPresenter implements Presenter {
     this.analytics = analytics;
     this.groupManager = groupManager;
     this.permissionManager = permissionManager;
+  }
+
+  public HighwayPresenter(HighwayView view, GroupNameProvider groupNameProvider,
+      DeactivateHotspotTask deactivateHotspotTask, ConnectionManager connectionManager,
+      SpotAndShareAnalyticsInterface analytics, GroupManager groupManager,
+      PermissionManager permissionManager, String autoShareAppName, String autoShareFilepath) {
+    this(view, groupNameProvider, deactivateHotspotTask, connectionManager, analytics, groupManager,
+        permissionManager);
+    this.autoShareAppName = autoShareAppName;
+    this.autoShareFilepath = autoShareFilepath;
   }
 
   @Override public void onCreate() {
@@ -76,6 +88,7 @@ public class HighwayPresenter implements Presenter {
     connectionManager.stop();
     groupManager.stop();
     permissionManager.removeListener();
+    autoShareFilepath = null;
   }
 
   @Override public void onStop() {
@@ -92,10 +105,17 @@ public class HighwayPresenter implements Presenter {
         connectionManager.start(new ConnectionManager.WifiStateListener() {
           @Override public void onStateChanged(boolean enabled) {
             if (enabled) {
-              connectionManager.cleanNetworks();
-              view.showConnections();
-              view.setUpListeners();
-              view.enableButtons(true);
+
+              if (autoShareFilepath != null) {
+                joinShareFromAppView(autoShareAppName, autoShareFilepath);
+                autoShareAppName = null;
+                autoShareFilepath = null;
+              } else {
+                connectionManager.cleanNetworks();
+                view.showConnections();
+                view.setUpListeners();
+                view.enableButtons(true);
+              }
             }
           }
         });
@@ -144,7 +164,6 @@ public class HighwayPresenter implements Presenter {
 
   public void clickCreateGroup() {
     view.enableButtons(false);
-    //null is due to the outsidesharemanager.
     subscription = groupNameProvider.getName().subscribe(deviceName -> {
       groupManager.createGroup(deviceName, new GroupManager.CreateGroupListener() {
         @Override public void onSuccess() {
@@ -195,5 +214,23 @@ public class HighwayPresenter implements Presenter {
 
   public void forgetAPTXVNetwork() {
     connectionManager.cleanNetworks();
+  }
+
+  public void joinShareFromAppView(String appName, String appFilepath) {
+    //subscription = groupNameProvider.getName().subscribe(deviceName -> {
+    groupManager.createGroup(appName, new GroupManager.CreateGroupListener() {
+        @Override public void onSuccess() {
+          analytics.createGroupSuccess();
+          view.openChatFromAppViewShare(appName, appFilepath);
+        }
+
+        @Override public void onError(int result) {
+          view.showCreateGroupResult(result);
+          view.hideButtonsProgressBar();
+          view.enableButtons(true);
+          view.hideSearchGroupsTextview(false);
+        }
+      });
+    //});
   }
 }

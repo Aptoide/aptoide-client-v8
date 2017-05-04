@@ -12,15 +12,12 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.view.account.AccountBaseActivity;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.subscriptions.CompositeSubscription;
@@ -33,9 +30,7 @@ public class ProfileStepTwoActivity extends AccountBaseActivity {
 
   private static final String TAG = ProfileStepTwoActivity.class.getSimpleName();
 
-  private final AptoideClientUUID aptoideClientUUID =
-      new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-          DataProvider.getContext());
+  private IdsRepository idsRepository;
 
   private Button mContinueButton;
   private Button mPrivateProfile;
@@ -51,6 +46,7 @@ public class ProfileStepTwoActivity extends AccountBaseActivity {
     accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
     pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
         getApplicationContext().getString(cm.aptoide.accountmanager.R.string.please_wait));
+    idsRepository = ((V8Engine) getApplicationContext()).getIdsRepository();
     mSubscriptions = new CompositeSubscription();
     externalLogin = getIntent().getBooleanExtra(AptoideAccountManager.IS_FACEBOOK_OR_GOOGLE, false);
     bindViews();

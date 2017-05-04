@@ -7,7 +7,7 @@ package cm.aptoide.pt.v8engine.view.fragment;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.interfaces.ReloadInterface;
+import cm.aptoide.pt.v8engine.view.ReloadInterface;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.swipe.LoaderLayoutHandler;
 import cm.aptoide.pt.v8engine.view.swipe.SwipeLoaderLayoutHandler;
@@ -22,9 +22,11 @@ public abstract class GridRecyclerSwipeFragment<T extends BaseAdapter>
 
   @NonNull @Override protected LoaderLayoutHandler createLoaderLayoutHandler() {
     if (getViewsToShowAfterLoadingId().length > 0) {
-      return new SwipeLoaderLayoutHandler(getViewsToShowAfterLoadingId(), this);
+      return new SwipeLoaderLayoutHandler(getViewsToShowAfterLoadingId(), getActivityNavigator(),
+          this);
     }
-    return new SwipeLoaderLayoutHandler(getViewToShowAfterLoadingId(), this);
+    return new SwipeLoaderLayoutHandler(getViewToShowAfterLoadingId(), getActivityNavigator(),
+        this);
   }
 
   @Override public void reload() {

@@ -55,7 +55,6 @@ public class HighwayServerService extends Service {
     sendBroadcast(i);
 
   };
-
   @Override public void onCreate() {
     super.onCreate();
     if (mNotifyManager == null) {
@@ -194,10 +193,18 @@ public class HighwayServerService extends Service {
         final String externalStoragepath = intent.getStringExtra("ExternalStoragePath");
 
         System.out.println("Going to start serving");
+        HostsCallbackManager hostsCallbackManager;
+        if (intent.getExtras().containsKey("autoShareFilePath")) {
+          String autoShareFilePath = intent.getStringExtra("autoShareFilePath");
+          hostsCallbackManager =
+              new HostsCallbackManager(this.getApplicationContext(), autoShareFilePath);
+        } else {
+          hostsCallbackManager = new HostsCallbackManager(this.getApplicationContext());
+        }
+
         aptoideMessageServerSocket =
             new AptoideMessageServerSocket(55555, Integer.MAX_VALUE, Integer.MAX_VALUE);
-        aptoideMessageServerSocket.setHostsChangedCallbackCallback(
-            new HostsCallbackManager(this.getApplicationContext()));
+        aptoideMessageServerSocket.setHostsChangedCallbackCallback(hostsCallbackManager);
         aptoideMessageServerSocket.startAsync();
 
         StorageCapacity storageCapacity = new StorageCapacity() {
@@ -244,7 +251,7 @@ public class HighwayServerService extends Service {
           });
         }
       } else if (intent.getAction() != null && intent.getAction().equals("SHUTDOWN_SERVER")) {
-        if (aptoideMessageServerSocket != null) { // TODO: 16-03-2017 filipe check problem
+        if (aptoideMessageServerSocket != null) {
           aptoideMessageClientSocket.disable();
           aptoideMessageServerSocket.shutdown(new Runnable() {
             @Override public void run() {

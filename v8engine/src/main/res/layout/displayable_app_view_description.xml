@@ -40,7 +40,7 @@
       android:id="@+id/read_more_button"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:background="@drawable/button_border_silver"
+      android:background="@drawable/button_border_grey"
       android:fontFamily="@string/font_family_medium"
       android:padding="12dp"
       android:text="@string/read_more"

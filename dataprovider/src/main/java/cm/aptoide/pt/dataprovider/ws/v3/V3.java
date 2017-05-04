@@ -25,7 +25,6 @@ import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v3.PaymentAuthorizationsResponse;
 import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
 import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import java.io.IOException;
@@ -137,14 +136,14 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
     @POST("getPushNotifications") @FormUrlEncoded
     Observable<GetPushNotificationsResponse> getPushNotifications(@FieldMap BaseBody arg,
-        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("addApkFlag") @FormUrlEncoded Observable<GenericResponseV2> addApkFlag(
         @FieldMap BaseBody arg,
-        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("getApkInfo") @FormUrlEncoded Observable<PaidApp> getApkInfo(@FieldMap BaseBody args,
-        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("processInAppBilling") @FormUrlEncoded
     Observable<InAppBillingAvailableResponse> getInAppBillingAvailable(@FieldMap BaseBody args);
@@ -172,27 +171,27 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
     @POST("oauth2Authentication") @FormUrlEncoded Observable<OAuth> oauth2Authentication(
         @FieldMap BaseBody args,
-        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("getUserInfo") @FormUrlEncoded Observable<CheckUserCredentialsJson> getUserInfo(
         @FieldMap BaseBody args,
-        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("checkUserCredentials") @FormUrlEncoded
     Observable<CheckUserCredentialsJson> checkUserCredentials(@FieldMap BaseBody args,
-        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("createUser") @FormUrlEncoded Observable<BaseV3Response> createUser(
         @FieldMap BaseBody args,
-        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("createUser") @Multipart Observable<BaseV3Response> createUserWithFile(
         @Part MultipartBody.Part user_avatar, @PartMap() HashMapNotNull<String, RequestBody> args,
-        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("changeUserSettings") @FormUrlEncoded Observable<BaseV3Response> changeUserSettings(
         @FieldMap BaseBody args,
-        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("changeUserRepoSubscription") @FormUrlEncoded
     Observable<BaseV3Response> changeUserRepoSubscription(@FieldMap BaseBody args);

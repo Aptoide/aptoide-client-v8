@@ -8,8 +8,9 @@ package cm.aptoide.pt.v8engine.view.swipe;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.interfaces.ReloadInterface;
+import cm.aptoide.pt.v8engine.view.ReloadInterface;
 import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
 
 /**
  * Handler for Swipe Loader Layouts. Needs five identified views in the corresponding layout:<br>
@@ -20,13 +21,14 @@ public class SwipeLoaderLayoutHandler extends LoaderLayoutHandler {
 
   private SwipeRefreshLayout swipeContainer;
 
-  public SwipeLoaderLayoutHandler(int baseViewId, ReloadInterface reloadInterface) {
-    super(reloadInterface, baseViewId);
+  public SwipeLoaderLayoutHandler(int baseViewId, ActivityNavigator activityNavigator,
+      ReloadInterface reloadInterface) {
+    super(reloadInterface, activityNavigator, baseViewId);
   }
 
   public SwipeLoaderLayoutHandler(int[] viewsToShowAfterLoadingId,
-      GridRecyclerSwipeFragment reloadInterface) {
-    super(reloadInterface, viewsToShowAfterLoadingId);
+      ActivityNavigator activityNavigator, GridRecyclerSwipeFragment reloadInterface) {
+    super(reloadInterface, activityNavigator, viewsToShowAfterLoadingId);
   }
 
   @Override public void bindViews(View view) {

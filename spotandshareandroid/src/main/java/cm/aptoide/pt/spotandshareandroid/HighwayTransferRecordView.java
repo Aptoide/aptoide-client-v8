@@ -12,14 +12,11 @@ public interface HighwayTransferRecordView {
 
   void setUpClearHistoryListener();
 
-  void handleReceivedApp(boolean received, boolean needReSend, String tmpFilePath);
 
   void showNewCard(HighwayTransferRecordItem item);
 
   void updateItemStatus(int positionToUpdate, boolean isSent,
       boolean needReSend);//could change to the packageName
-
-  void showNoConnectedClientsToast();
 
   void openAppSelectionView();
 

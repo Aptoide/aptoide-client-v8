@@ -29,6 +29,7 @@ import cm.aptoide.pt.v8engine.account.LoginPreferences;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsView;
+import cm.aptoide.pt.v8engine.view.BackButton;
 import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
 import cm.aptoide.pt.v8engine.view.account.user.CreateUserActivity;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
@@ -80,6 +81,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   private ThrowableToStringMapper errorMapper;
   private LoginSignUpCredentialsPresenter presenter;
   private List<String> facebookRequestedPermissions;
+  private BackButton.ClickHandler backClickHandler;
+  private FragmentNavigator fragmentNavigator;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
@@ -97,6 +100,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     super.onCreate(savedInstanceState);
     errorMapper = new AccountErrorMapper(getContext());
     facebookRequestedPermissions = Arrays.asList("email", "user_friends");
+    fragmentNavigator = getFragmentNavigator();
     presenter = new LoginSignUpCredentialsPresenter(this,
         ((V8Engine) getContext().getApplicationContext()).getAccountManager(),
         facebookRequestedPermissions,
@@ -104,11 +108,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
             GoogleApiAvailability.getInstance()),
         getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW),
         getArguments().getBoolean(CLEAN_BACK_STACK));
-  }
-
-  @Override public boolean onBackPressed() {
-    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-    return tryCloseLoginBottomSheet() || super.onBackPressed();
   }
 
   @Nullable @Override
@@ -155,6 +154,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     ShowMessage.asToast(getContext(), errorMapper.map(throwable));
   }
 
+
   @Override public void showFacebookLogin() {
     FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
     facebookLoginButton.setVisibility(View.VISIBLE);
@@ -166,9 +166,14 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
       @Override public void onCancel() {
         showFacebookLoginError(R.string.facebook_login_cancelled);
+        Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
+            Analytics.Account.SignUpLoginStatus.FAILED, Analytics.Account.LoginStatusDetail.CANCEL);
       }
 
       @Override public void onError(FacebookException error) {
+        Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
+            Analytics.Account.SignUpLoginStatus.FAILED,
+            Analytics.Account.LoginStatusDetail.SDK_ERROR);
         showFacebookLoginError(R.string.error_occured);
       }
     });
@@ -209,19 +214,15 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void navigateToMainView() {
-    final FragmentNavigator navManager = getFragmentNavigator();
     Fragment home =
         HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
             V8Engine.getConfiguration().getDefaultTheme());
-    navManager.cleanBackStack();
-    navManager.navigateTo(home);
+    fragmentNavigator.cleanBackStack();
+    fragmentNavigator.navigateTo(home);
   }
 
   @Override public void goBack() {
-    // close login / signup bottom sheet
-    onBackPressed();
-    // pop this fragment from stack
-    getActivity().onBackPressed();
+    fragmentNavigator.popBackStack();
   }
 
   @Override public void dismiss() {
@@ -234,19 +235,22 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override public Observable<FacebookAccountViewModel> facebookLoginClick() {
     return facebookLoginSubject.doOnNext(
-        __ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_FACEBOOK));
+        __ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_FACEBOOK,
+            getStartupClickOrigin()));
   }
 
   @Override public Observable<AptoideAccountViewModel> aptoideLoginClick() {
     return RxView.clicks(buttonLogin)
-        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.LOGIN))
+        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.LOGIN,
+            getStartupClickOrigin()))
         .map(click -> new AptoideAccountViewModel(aptoideEmailEditText.getText().toString(),
             aptoidePasswordEditText.getText().toString()));
   }
 
   @Override public Observable<AptoideAccountViewModel> aptoideSignUpClick() {
     return RxView.clicks(buttonSignUp)
-        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.JOIN_APTOIDE))
+        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.JOIN_APTOIDE,
+            getStartupClickOrigin()))
         .map(click -> new AptoideAccountViewModel(aptoideEmailEditText.getText().toString(),
             aptoidePasswordEditText.getText().toString()));
   }
@@ -262,6 +266,20 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     getFragmentNavigator().cleanBackStack();
   }
 
+  private Analytics.Account.StartupClickOrigin getStartupClickOrigin() {
+    if (loginArea.getVisibility() == View.VISIBLE) {
+      return Analytics.Account.StartupClickOrigin.LOGIN_UP;
+    } else if (signUpArea.getVisibility() == View.VISIBLE) {
+      return Analytics.Account.StartupClickOrigin.JOIN_UP;
+    } else {
+      return Analytics.Account.StartupClickOrigin.MAIN;
+    }
+  }
+
+  private void showFacebookLoginError(@StringRes int errorRes) {
+    ShowMessage.asToast(getContext(), errorRes);
+  }
+
   private void setAptoideSignUpLoginAreaVisible() {
     credentialsEditTextsArea.setVisibility(View.VISIBLE);
     loginSignupSelectionArea.setVisibility(View.GONE);
@@ -270,25 +288,9 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     }
   }
 
-  private boolean tryCloseLoginBottomSheet() {
-    if (credentialsEditTextsArea.getVisibility() == View.VISIBLE) {
-      credentialsEditTextsArea.setVisibility(View.GONE);
-      loginSignupSelectionArea.setVisibility(View.VISIBLE);
-      loginArea.setVisibility(View.GONE);
-      signUpArea.setVisibility(View.GONE);
-      separator.setVisibility(View.VISIBLE);
-      termsAndConditions.setVisibility(View.VISIBLE);
-      return true;
-    }
-    return false;
-  }
-
-  private void showFacebookLoginError(@StringRes int errorRes) {
-    ShowMessage.asToast(getContext(), errorRes);
-  }
-
   @Override public void googleLoginClicked() {
-    Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_GOOGLE);
+    Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_GOOGLE,
+        getStartupClickOrigin());
   }
 
   @Override protected Button getGoogleButton() {
@@ -304,6 +306,14 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     super.onViewCreated(view, savedInstanceState);
 
     bindViews(view);
+
+    backClickHandler = new BackButton.ClickHandler() {
+      @Override public boolean handle() {
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        return tryCloseLoginBottomSheet();
+      }
+    };
+    registerBackClickHandler(backClickHandler);
 
     attachPresenter(presenter, savedInstanceState);
   }
@@ -326,8 +336,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     hideShowAptoidePasswordButton = (Button) view.findViewById(R.id.btn_show_hide_pass);
 
     facebookLoginButton = view.findViewById(R.id.fb_login_button);
-    //facebookLoginButton.setFragment(this);
-    //facebookLoginButton.setReadPermissions(facebookRequestedPermissions);
     RxView.clicks(facebookLoginButton)
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(
@@ -366,7 +374,25 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         BottomSheetBehavior.from(view.getRootView().findViewById(R.id.login_signup_layout));
   }
 
+  private boolean tryCloseLoginBottomSheet() {
+    if (credentialsEditTextsArea.getVisibility() == View.VISIBLE) {
+      credentialsEditTextsArea.setVisibility(View.GONE);
+      loginSignupSelectionArea.setVisibility(View.VISIBLE);
+      loginArea.setVisibility(View.GONE);
+      signUpArea.setVisibility(View.GONE);
+      separator.setVisibility(View.VISIBLE);
+      termsAndConditions.setVisibility(View.VISIBLE);
+      return true;
+    }
+    return false;
+  }
+
   public String getCompanyName() {
     return ((V8Engine) getActivity().getApplication()).createConfiguration().getMarketName();
+  }
+
+  @Override public void onDestroyView() {
+    unregisterBackClickHandler(backClickHandler);
+    super.onDestroyView();
   }
 }

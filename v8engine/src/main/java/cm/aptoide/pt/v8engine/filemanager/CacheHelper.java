@@ -6,12 +6,12 @@
 package cm.aptoide.pt.v8engine.filemanager;
 
 import android.text.format.DateUtils;
-import cm.aptoide.pt.downloadmanager.interfaces.CacheManager;
+import cm.aptoide.pt.downloadmanager.CacheManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
-import cm.aptoide.pt.v8engine.DownloadManagerSettingsI;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,7 +41,6 @@ public class CacheHelper implements CacheManager {
   }
 
   public static CacheHelper build() {
-    final DownloadManagerSettingsI settingsInterface = new DownloadManagerSettingsI();
     List<CacheHelper.FolderToManage> folders = new LinkedList<>();
 
     String cachePath = Application.getConfiguration().getCachePath();
@@ -51,7 +50,7 @@ public class CacheHelper implements CacheManager {
     folders.add(new CacheHelper.FolderToManage(
         new File(Application.getContext().getCacheDir() + "image_manager_disk_cache/"),
         MONTH_CACHE_TIME));
-    return new CacheHelper(settingsInterface.getMaxCacheSize(), folders, new FileUtils());
+    return new CacheHelper(ManagerPreferences.getCacheLimit(), folders, new FileUtils());
   }
 
   public Observable<Long> cleanCache() {

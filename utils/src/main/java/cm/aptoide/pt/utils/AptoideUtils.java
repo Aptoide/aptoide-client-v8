@@ -42,8 +42,6 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import cm.aptoide.pt.actions.UserData;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.permissions.ApkPermission;
 import java.io.BufferedReader;
@@ -783,37 +781,6 @@ public class AptoideUtils {
         e.printStackTrace();
       }
       return null;
-    }
-
-    public static void askForRoot() {
-      Process suProcess;
-
-      try {
-        suProcess = Runtime.getRuntime().exec("su");
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-
-    public static boolean isRooted() {
-      return findBinary("su");
-    }
-
-    private static boolean findBinary(String binaryName) {
-      boolean found = false;
-
-      String[] places = {
-          "/sbin/", "/system/bin/", "/system/xbin/", "/data/local/xbin/", "/data/local/bin/",
-          "/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/"
-      };
-      for (String where : places) {
-        if (new File(where + binaryName).exists()) {
-          found = true;
-          break;
-        }
-      }
-
-      return found;
     }
 
     public static List<PackageInfo> getUserInstalledApps() {
@@ -1692,71 +1659,5 @@ public class AptoideUtils {
   public static final class LocaleU {
 
     public static final Locale DEFAULT = Locale.getDefault();
-  }
-
-  /**
-   * Network Utils
-   */
-  public static class NetworkUtils {
-
-    //public static boolean isGeneralDownloadPermitted(Context context, boolean wifiAllowed,
-    //    boolean mobileAllowed) {
-    //  final boolean wifiAvailable = isAvailable(context, TYPE_WIFI);
-    //  final boolean mobileAvailable = isAvailable(context, TYPE_MOBILE);
-    //  return !(wifiAvailable && !wifiAllowed) && !(mobileAvailable && !mobileAllowed);
-    //}
-
-    //public static boolean isAvailable(Context context, int networkType) {
-    //  final ConnectivityManager manager =
-    //      (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-    //  return Build.VERSION.SDK_INT < 21 ? isAvailableSdk1(manager, networkType)
-    //      : isAvailableSdk21(manager, networkType);
-    //}
-
-    //private static boolean isAvailableSdk1(final ConnectivityManager manager,
-    //    final int networkType) {
-    //  final NetworkInfo info = manager.getActiveNetworkInfo();
-    //  return info != null && info.getType() == networkType;
-    //}
-
-    //@TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    //private static boolean isAvailableSdk21(final ConnectivityManager manager,
-    //    final int networkType) {
-    //  for (final Network network : manager.getAllNetworks()) {
-    //    final NetworkInfo info = manager.getNetworkInfo(network);
-    //    if (info != null && info.isConnected() && info.getType() == networkType) {
-    //      return true;
-    //    }
-    //  }
-    //  return false;
-    //}
-
-    public static String getDefaultUserAgent(AptoideClientUUID aptoideClientUUID, UserData userData,
-        String vername, String oemid, String terminalInfo) {
-
-      //SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(context);
-      //String currentUserId = getUserId();
-      //String myscr = sPref.getInt(EnumPreferences.SCREEN_WIDTH.name(), 0) + "x" + sPref.getInt(EnumPreferences.SCREEN_HEIGHT.name(), 0);
-
-      DisplayMetrics displayMetrics = new DisplayMetrics();
-      String myscr = displayMetrics.widthPixels + "x" + displayMetrics.heightPixels;
-
-      StringBuilder sb = new StringBuilder(vername + ";" + terminalInfo + ";" + myscr + ";id:");
-
-      if (aptoideClientUUID != null) {
-        sb.append(aptoideClientUUID.getUniqueIdentifier());
-      }
-      sb.append(";");
-
-      String userEmail = userData.getEmail();
-      if (!TextUtils.isEmpty(userEmail)) {
-        sb.append(userEmail);
-      }
-      sb.append(";");
-      if (!TextUtils.isEmpty(oemid)) {
-        sb.append(oemid);
-      }
-      return sb.toString();
-    }
   }
 }

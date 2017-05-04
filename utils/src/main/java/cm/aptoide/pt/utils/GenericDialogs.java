@@ -204,10 +204,12 @@ public class GenericDialogs {
     return progressDialog;
   }
 
-  public static Observable<EResponse> createGenericShareDialog(Context context, String share) {
+  public static Observable<EResponse> createGenericShareDialog(Context context, String share,
+      boolean isInstalled) {
     return Observable.create((Subscriber<? super EResponse> subscriber) -> {
       final AlertDialog alertDialog = new AlertDialog.Builder(context).setTitle(share)
-          .setItems(R.array.share_options_array, (dialogInterface, i) -> {
+          .setItems(isInstalled ? R.array.share_options_array_with_spot_and_share
+              : R.array.share_options_array, (dialogInterface, i) -> {
             switch (i) {
               case 0:
                 subscriber.onNext(EResponse.SHARE_EXTERNAL);
@@ -219,6 +221,8 @@ public class GenericDialogs {
                 break;
               case 2:
                 // TODO: 01/02/2017 SHARE APP
+                subscriber.onNext(EResponse.SHARE_SPOT_AND_SHARE);
+                subscriber.onCompleted();
                 break;
               default:
                 break;
@@ -254,6 +258,8 @@ public class GenericDialogs {
 
     SHARE_EXTERNAL,
 
-    SHARE_TIMELINE
+    SHARE_TIMELINE,
+
+    SHARE_SPOT_AND_SHARE
   }
 }

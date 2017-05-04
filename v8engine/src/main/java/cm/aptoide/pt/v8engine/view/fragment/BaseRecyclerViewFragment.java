@@ -7,8 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.interfaces.DisplayableManager;
-import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
+import cm.aptoide.pt.v8engine.view.LifecycleSchim;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import java.util.ArrayList;
@@ -57,6 +56,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
       adapter.onDestroyView();
     }
 
+    layoutManager = null;
     recyclerView.clearOnScrollListeners();
     recyclerView.setAdapter(null);
     recyclerView = null;

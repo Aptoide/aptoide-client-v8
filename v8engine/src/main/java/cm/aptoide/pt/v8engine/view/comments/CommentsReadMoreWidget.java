@@ -11,10 +11,13 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.model.v7.ListComments;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -35,9 +38,12 @@ public class CommentsReadMoreWidget extends Widget<CommentsReadMoreDisplayable> 
   @Override public void bindView(CommentsReadMoreDisplayable displayable) {
     final BodyInterceptor<BaseBody> baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    final OkHttpClient httpClient =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    final Converter.Factory converterFactory = WebService.getDefaultConverter();
     Observable<ListComments> listCommentsObservable =
         ListCommentsRequest.of(displayable.getResourceId(), displayable.getNext(), 100,
-            displayable.isReview(), baseBodyInterceptor).observe();
+            displayable.isReview(), baseBodyInterceptor, httpClient, converterFactory).observe();
 
     compositeSubscription.add(RxView.clicks(readMoreButton)
         .flatMap(__ -> listCommentsObservable)

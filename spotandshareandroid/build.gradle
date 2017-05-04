@@ -16,6 +16,11 @@ android {
     versionName "1.0"
   }
 
+  productFlavors {
+    internal {}
+    prod {}
+  }
+
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
@@ -26,6 +31,8 @@ android {
       minifyEnabled false
     }
   }
+
+  publishNonDefault true
 
   packagingOptions {
     exclude 'META-INF/services/javax.annotation.processing.Processor'
@@ -45,21 +52,21 @@ android {
 }
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-  androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-    exclude group: 'com.android.support', module: 'support-annotations'
-  })
-  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-  testCompile 'junit:junit:4.12'
+
+  prodCompile project(path: ':aptoide_accountmanager', configuration: 'prodRelease')
+  internalCompile project(path: ':aptoide_accountmanager', configuration: 'internalRelease')
+
+  prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
+  internalCompile project(path: ':dataprovider', configuration: 'internalRelease')
 
   compile project(path: ':spotandshare')
   compile project(path: ':utils')
 
+  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
   compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
-  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
-  // Just for lombok not to complain
-  provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
-  compile project(path: ':aptoide_accountmanager', configuration: 'prodRelease')
 
-  compile project(path: ':dataprovider', configuration: 'prodRelease')
+  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+  provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
+
+  testCompile 'junit:junit:4.12'
 }

@@ -11,7 +11,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.AutoUpdate;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.services.ContentPuller;
+import cm.aptoide.pt.v8engine.pull.ContentPuller;
 import cm.aptoide.pt.v8engine.util.ApkFy;
 
 /**

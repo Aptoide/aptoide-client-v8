@@ -8,7 +8,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
 
 /**
  * Created by pedroribeiro on 23/06/16.

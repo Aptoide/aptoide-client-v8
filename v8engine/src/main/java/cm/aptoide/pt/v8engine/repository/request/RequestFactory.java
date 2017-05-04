@@ -9,7 +9,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
-import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 
 /**
  * Created by neuro on 26-12-2016.
@@ -27,17 +29,27 @@ public class RequestFactory {
   private final GetStoreRecommendedRequestFactory getStoreRecommendedRequestFactory;
 
   public RequestFactory(StoreCredentialsProvider storeCredentialsProvider,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     this.storeCredentialsProvider = storeCredentialsProvider;
-    listStoresRequestFactory = new ListStoresRequestFactory(bodyInterceptor);
-    listAppsRequestFactory = new ListAppsRequestFactory(bodyInterceptor, storeCredentialsProvider);
-    listFullReviewsRequestFactory = new ListFullReviewsRequestFactory(bodyInterceptor);
-    getStoreRequestFactory = new GetStoreRequestFactory(storeCredentialsProvider, bodyInterceptor);
+    listStoresRequestFactory =
+        new ListStoresRequestFactory(bodyInterceptor, httpClient, converterFactory);
+    listAppsRequestFactory =
+        new ListAppsRequestFactory(bodyInterceptor, storeCredentialsProvider, httpClient,
+            converterFactory);
+    listFullReviewsRequestFactory =
+        new ListFullReviewsRequestFactory(bodyInterceptor, httpClient, converterFactory);
+    getStoreRequestFactory =
+        new GetStoreRequestFactory(storeCredentialsProvider, bodyInterceptor, httpClient,
+            converterFactory);
     getStoreWidgetsRequestFactory =
-        new GetStoreWidgetsRequestFactory(storeCredentialsProvider, bodyInterceptor);
-    getUserRequestFactory = new GetUserRequestFactory(bodyInterceptor);
+        new GetStoreWidgetsRequestFactory(storeCredentialsProvider, bodyInterceptor, httpClient,
+            converterFactory);
+    getUserRequestFactory =
+        new GetUserRequestFactory(bodyInterceptor, httpClient, converterFactory);
 
-    getStoreRecommendedRequestFactory = new GetStoreRecommendedRequestFactory(bodyInterceptor);
+    getStoreRecommendedRequestFactory =
+        new GetStoreRecommendedRequestFactory(bodyInterceptor, httpClient, converterFactory);
   }
 
   public ListStoresRequest newListStoresRequest(int offset, int limit) {

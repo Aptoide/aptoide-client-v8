@@ -9,10 +9,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.download.InstallEventConverter;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.presenter.DownloadsPresenter;
 import cm.aptoide.pt.v8engine.presenter.DownloadsView;
@@ -20,14 +26,36 @@ import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 
 public class DownloadsFragmentMvp extends FragmentView implements DownloadsView {
 
   private DownloadsAdapter adapter;
   private View noDownloadsView;
+  private InstallEventConverter installConverter;
+  private DownloadEventConverter downloadConverter;
+  private InstallManager installManager;
+  private Analytics analytics;
 
   public static DownloadsFragmentMvp newInstance() {
     return new DownloadsFragmentMvp();
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    final OkHttpClient httpClient =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    final BodyInterceptor<BaseBody> baseBodyInterceptorV7 =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    final Converter.Factory converterFactory = WebService.getDefaultConverter();
+    installConverter =
+        new InstallEventConverter(baseBodyInterceptorV7, httpClient, converterFactory);
+    downloadConverter =
+        new DownloadEventConverter(baseBodyInterceptorV7, httpClient, converterFactory);
+    installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
+        InstallerFactory.ROLLBACK);
+    analytics = Analytics.getInstance();
   }
 
   @Nullable @Override
@@ -43,13 +71,10 @@ public class DownloadsFragmentMvp extends FragmentView implements DownloadsView 
         new DividerItemDecoration(pixelDimen, DividerItemDecoration.ALL);
     downloadsRecyclerView.addItemDecoration(decor);
 
-    adapter = new DownloadsAdapter(getContext());
+    adapter = new DownloadsAdapter(installConverter, downloadConverter, installManager, analytics);
     downloadsRecyclerView.setAdapter(adapter);
-
     noDownloadsView = view.findViewById(R.id.no_apps_downloaded);
 
-    InstallManager installManager = new InstallManager(AptoideDownloadManager.getInstance(),
-        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK));
     attachPresenter(
         new DownloadsPresenter(this, RepositoryFactory.getDownloadRepository(), installManager),
         savedInstanceState);

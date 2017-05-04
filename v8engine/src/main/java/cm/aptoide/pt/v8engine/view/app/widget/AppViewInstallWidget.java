@@ -25,16 +25,15 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -46,24 +45,25 @@ import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEvent;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadInstallBaseEvent;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
+import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.install.Installer;
+import cm.aptoide.pt.v8engine.download.DownloadEvent;
+import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.download.DownloadFactory;
+import cm.aptoide.pt.v8engine.download.DownloadInstallBaseEvent;
+import cm.aptoide.pt.v8engine.download.InstallEvent;
+import cm.aptoide.pt.v8engine.download.InstallEventConverter;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
-import cm.aptoide.pt.v8engine.interfaces.Payments;
-import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
-import cm.aptoide.pt.v8engine.repository.SocialRepository;
-import cm.aptoide.pt.v8engine.util.DownloadFactory;
+import cm.aptoide.pt.v8engine.timeline.SocialRepository;
+import cm.aptoide.pt.v8engine.view.app.AppMenuOptions;
+import cm.aptoide.pt.v8engine.view.app.Payments;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.install.InstallWarningDialog;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -77,20 +77,14 @@ import rx.android.schedulers.AndroidSchedulers;
   private RelativeLayout downloadProgressLayout;
   private RelativeLayout installAndLatestVersionLayout;
 
-  //
-  // downloading views
-  //
   private CheckBox shareInTimeline;
   private ProgressBar downloadProgress;
   private TextView textProgress;
   private ImageView actionResume;
   private ImageView actionPause;
   private ImageView actionCancel;
-
-  // get app, upgrade and downgrade button
   private Button actionButton;
 
-  // app info
   private TextView versionName;
   private View latestAvailableLayout;
   private View latestAvailableTrustedSeal;
@@ -99,7 +93,6 @@ import rx.android.schedulers.AndroidSchedulers;
   private MinimalAd minimalAd;
 
   private App trustedVersion;
-  //private DownloadServiceHelper downloadServiceHelper;
   private PermissionService permissionRequest;
   private InstallManager installManager;
   private boolean isUpdate;
@@ -108,9 +101,8 @@ import rx.android.schedulers.AndroidSchedulers;
   private InstallEventConverter installConverter;
   private AptoideAccountManager accountManager;
   private BodyInterceptor<BaseBody> bodyInterceptor;
-
-  //private Subscription subscribe;
-  //private long appID;
+  private AppViewInstallDisplayable displayable;
+  private SocialRepository socialRepository;
 
   public AppViewInstallWidget(View itemView) {
     super(itemView);
@@ -134,21 +126,32 @@ import rx.android.schedulers.AndroidSchedulers;
     notLatestAvailableText = itemView.findViewById(R.id.not_latest_available_text);
   }
 
-  @Override public void bindView(AppViewInstallDisplayable displayable) {
-    displayable.setInstallButton(actionButton);
+  @Override public void unbindView() {
+    super.unbindView();
+    displayable.setInstallButton(null);
+    displayable = null;
+  }
 
-    final AptoideDownloadManager downloadManager = AptoideDownloadManager.getInstance();
+  @Override public void bindView(AppViewInstallDisplayable displayable) {
+    this.displayable = displayable;
+    this.displayable.setInstallButton(actionButton);
+
+    final OkHttpClient httpClient =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    final Converter.Factory converterFactory = WebService.getDefaultConverter();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    downloadManager.initDownloadService(getContext());
-    Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
-    installManager = new InstallManager(downloadManager, installer);
+    installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
+        InstallerFactory.ROLLBACK);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    downloadInstallEventConverter = new DownloadEventConverter(bodyInterceptor);
-    installConverter = new InstallEventConverter(bodyInterceptor);
+    socialRepository =
+        new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient);
+    downloadInstallEventConverter =
+        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory);
+    installConverter = new InstallEventConverter(bodyInterceptor, httpClient, converterFactory);
     analytics = Analytics.getInstance();
 
-    minimalAd = displayable.getMinimalAd();
-    GetApp getApp = displayable.getPojo();
+    minimalAd = this.displayable.getMinimalAd();
+    GetApp getApp = this.displayable.getPojo();
     GetAppMeta.App currentApp = getApp.getNodes().getMeta().getData();
     versionName.setText(currentApp.getFile().getVername());
     otherVersions.setOnClickListener(v -> {
@@ -159,9 +162,10 @@ import rx.android.schedulers.AndroidSchedulers;
     });
 
     final boolean[] isSetupView = { true };
-    compositeSubscription.add(
-        displayable.getState().observeOn(AndroidSchedulers.mainThread()).subscribe(widgetState -> {
-          updateUi(displayable, getApp, currentApp, widgetState, !isSetupView[0]);
+    compositeSubscription.add(this.displayable.getState()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(widgetState -> {
+          updateUi(getApp, currentApp, widgetState, !isSetupView[0]);
           isSetupView[0] = false;
         }, (throwable) -> {
           Logger.v(TAG, throwable.getMessage());
@@ -181,9 +185,8 @@ import rx.android.schedulers.AndroidSchedulers;
     permissionRequest = ((PermissionService) getContext());
   }
 
-  private void updateUi(AppViewInstallDisplayable displayable, GetApp getApp,
-      GetAppMeta.App currentApp, AppViewInstallDisplayable.WidgetState widgetState,
-      boolean shouldShowError) {
+  private void updateUi(GetApp getApp, GetAppMeta.App currentApp,
+      AppViewInstallDisplayable.WidgetState widgetState, boolean shouldShowError) {
     Logger.d(TAG, "updateUi() called with: " + shouldShowError + "]");
     if (widgetState.getProgress() != null) {
       downloadStatusUpdate(widgetState.getProgress(), currentApp, shouldShowError);
@@ -199,24 +202,20 @@ import rx.android.schedulers.AndroidSchedulers;
           break;
         }
       case AppViewInstallDisplayable.ACTION_INSTALL:
-        //App not installed
         setDownloadBarInvisible();
         setupInstallOrBuyButton(displayable, getApp);
         ((AppMenuOptions) getFragmentNavigator().peekLast()).setUnInstallMenuOptionVisible(null);
         break;
       case AppViewInstallDisplayable.ACTION_DOWNGRADE:
-        //downgrade
         setDownloadBarInvisible();
         setupActionButton(R.string.downgrade, downgradeListener(currentApp));
         break;
       case AppViewInstallDisplayable.ACTION_OPEN:
-        //current installed version
         setDownloadBarInvisible();
         setupActionButton(R.string.open,
             v -> AptoideUtils.SystemU.openApp(currentApp.getPackageName()));
         break;
       case AppViewInstallDisplayable.ACTION_UPDATE:
-        //update
         isUpdate = true;
         setDownloadBarInvisible();
         setupActionButton(R.string.update,
@@ -392,9 +391,6 @@ import rx.android.schedulers.AndroidSchedulers;
               AlertDialog.Builder alertDialog =
                   sharePreviewDialog.getPreviewDialogBuilder(getContext());
 
-              SocialRepository socialRepository =
-                  new SocialRepository(accountManager, bodyInterceptor);
-
               sharePreviewDialog.showShareCardPreviewDialog(
                   displayable.getPojo().getNodes().getMeta().getData().getPackageName(), "install",
                   context, sharePreviewDialog, alertDialog, socialRepository);
@@ -464,11 +460,6 @@ import rx.android.schedulers.AndroidSchedulers;
 
       case Download.COMPLETED: {
         Analytics.DownloadComplete.downloadComplete(app);
-        if (!isUpdate) {
-          if (minimalAd != null && minimalAd.getCpdUrl() != null) {
-            DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
-          }
-        }
         break;
       }
     }

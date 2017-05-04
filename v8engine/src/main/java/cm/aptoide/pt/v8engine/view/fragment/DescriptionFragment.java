@@ -17,16 +17,19 @@ import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
-import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
-import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.view.ThemeUtils;
 import lombok.Getter;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 
 public class DescriptionFragment extends BaseLoaderToolbarFragment {
 
@@ -49,6 +52,8 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   private String appName;
   private BodyInterceptor<BaseBody> baseBodyBodyInterceptor;
   private StoreCredentialsProvider storeCredentialsProvider;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
 
   public static DescriptionFragment newInstance(String appName, String description,
       String storeTheme) {
@@ -78,6 +83,8 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     baseBodyBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -129,7 +136,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     } else if (hasAppId) {
       GetAppRequest.of(appId, V8Engine.getConfiguration().getPartnerId() == null ? null : storeName,
           StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
-          baseBodyBodyInterceptor).execute(getApp -> {
+          baseBodyBodyInterceptor, httpClient, converterFactory).execute(getApp -> {
         setupAppDescription(getApp);
         setupTitle(getApp);
         finishLoading();

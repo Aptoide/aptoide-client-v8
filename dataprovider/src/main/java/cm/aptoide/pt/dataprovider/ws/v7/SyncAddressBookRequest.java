@@ -2,11 +2,10 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.model.v7.GetFollowers;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.util.List;
 import lombok.Data;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -20,34 +19,36 @@ public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequ
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
 
-  public SyncAddressBookRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor) {
-    super(body, BASE_HOST,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter(), bodyInterceptor);
+  public SyncAddressBookRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
   }
 
   public static SyncAddressBookRequest of(List<String> numbers, List<String> emails,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     return new SyncAddressBookRequest((new Body(new Contacts(numbers, emails), null, null)),
-        bodyInterceptor);
+        bodyInterceptor, httpClient, converterFactory);
   }
 
   /**
    * This constructor was created in order to send user twitter info
    */
   public static SyncAddressBookRequest of(long id, String token, String secret,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     return new SyncAddressBookRequest(new Body(null, new Twitter(id, token, secret), null),
-        bodyInterceptor);
+        bodyInterceptor, httpClient, converterFactory);
   }
 
   /**
    * This constructor was created to deal with facebook contacts request
    */
   public static SyncAddressBookRequest of(long id, String token,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     return new SyncAddressBookRequest(new Body(null, null, new Facebook(id, token)),
-        bodyInterceptor);
+        bodyInterceptor, httpClient, converterFactory);
   }
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,

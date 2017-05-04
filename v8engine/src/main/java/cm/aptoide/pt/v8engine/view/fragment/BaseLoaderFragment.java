@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
+import cm.aptoide.pt.v8engine.view.LoadInterface;
 import cm.aptoide.pt.v8engine.view.swipe.LoaderLayoutHandler;
 import lombok.Getter;
 
@@ -40,10 +40,11 @@ public abstract class BaseLoaderFragment extends UIComponentFragment implements 
   }
 
   @NonNull protected LoaderLayoutHandler createLoaderLayoutHandler() {
+
     if (getViewsToShowAfterLoadingId().length > 0) {
-      return new LoaderLayoutHandler(this, getViewsToShowAfterLoadingId());
+      return new LoaderLayoutHandler(this, getActivityNavigator(), getViewsToShowAfterLoadingId());
     }
-    return new LoaderLayoutHandler(this, getViewToShowAfterLoadingId());
+    return new LoaderLayoutHandler(this, getActivityNavigator(), getViewToShowAfterLoadingId());
   }
 
   /**

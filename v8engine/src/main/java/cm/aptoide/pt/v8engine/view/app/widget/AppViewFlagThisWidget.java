@@ -19,6 +19,7 @@ import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewFlagThisDisplayable;
@@ -27,6 +28,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Map;
+import okhttp3.OkHttpClient;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -54,6 +56,7 @@ import rx.android.schedulers.AndroidSchedulers;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
   private BodyInterceptor<BaseBody> baseBodyInterceptorV3;
+  private OkHttpClient httpClient;
 
   public AppViewFlagThisWidget(View itemView) {
     super(itemView);
@@ -80,6 +83,7 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   @Override public void bindView(AppViewFlagThisDisplayable displayable) {
+    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     baseBodyInterceptorV3 =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV3();
@@ -154,18 +158,17 @@ import rx.android.schedulers.AndroidSchedulers;
     return v -> {
       if (!accountManager.isLoggedIn()) {
         ShowMessage.asSnack(v, R.string.you_need_to_be_logged_in, R.string.login, snackView -> {
-          accountNavigator.navigateToAccountView();
+          accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.APP_VIEW_FLAG);
         });
         return;
       }
 
-      //ShowMessage.asSnack(v, R.string.casting_vote);
       setButtonPressed(v);
 
       final GetAppMeta.GetAppMetaFile.Flags.Vote.Type type = viewIdTypeMap.get(v.getId());
 
       compositeSubscription.add(AddApkFlagRequest.of(storeName, md5, type.name().toLowerCase(),
-          accountManager.getAccessToken(), baseBodyInterceptorV3)
+          accountManager.getAccessToken(), baseBodyInterceptorV3, httpClient)
           .observe(true)
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(response -> {

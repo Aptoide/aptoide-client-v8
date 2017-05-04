@@ -12,6 +12,7 @@ import cm.aptoide.pt.model.MinimalAdInterface;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import io.realm.RealmObject;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by neuro on 20-06-2016.
@@ -33,7 +34,7 @@ public class MinimalAd extends RealmObject implements Parcelable, MinimalAdInter
   @Getter private Long networkId;
   @Getter private String clickUrl;
   @Getter private String cpcUrl;
-  @Getter private String cpdUrl;
+  @Getter @Setter private String cpdUrl;
   @Getter private Long appId;
   @Getter private Long adId;
   @Getter private String cpiUrl;

@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.view.permission.PermissionServiceFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -20,7 +21,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 /**
  * Created by marcelobenites on 08/02/17.
  */
-public abstract class GooglePlayServicesFragment extends FragmentView
+public abstract class GooglePlayServicesFragment extends PermissionServiceFragment
     implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
   private static final int RESOLVE_CONNECTION_ERROR_REQUEST_CODE = 1;

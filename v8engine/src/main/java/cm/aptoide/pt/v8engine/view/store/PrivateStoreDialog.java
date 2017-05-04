@@ -26,14 +26,17 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.util.StoreUtils;
-import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.v8engine.store.StoreUtils;
+import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.dialog.BaseDialog;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 
 /**
  * Created with IntelliJ IDEA. User: rmateus Date: 29-11-2013 Time: 15:56 To change this template
@@ -51,6 +54,8 @@ public class PrivateStoreDialog extends BaseDialog {
   private boolean isInsideStore;
   private StoreUtilsProxy storeUtilsProxy;
   private BodyInterceptor<BaseBody> bodyInterceptor;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
 
   public static PrivateStoreDialog newInstance(Fragment returnFragment, int requestCode,
       String storeName, boolean isInsideStore) {
@@ -73,10 +78,13 @@ public class PrivateStoreDialog extends BaseDialog {
   @Override public void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     storeUtilsProxy =
         new StoreUtilsProxy(accountManager, bodyInterceptor, new StoreCredentialsProviderImpl(),
-            AccessorFactory.getAccessorFor(Store.class));
+            AccessorFactory.getAccessorFor(Store.class), httpClient,
+            WebService.getDefaultConverter());
     final Bundle args = getArguments();
     if (args != null) {
       storeName = args.getString(BundleArgs.STORE_NAME.name());
@@ -153,7 +161,7 @@ public class PrivateStoreDialog extends BaseDialog {
   private GetStoreMetaRequest buildRequest() {
     return GetStoreMetaRequest.of(
         new BaseRequestWithStore.StoreCredentials(storeName, storeUser, storePassSha1),
-        bodyInterceptor);
+        bodyInterceptor, httpClient, converterFactory);
   }
 
   private void dismissLoadingDialog() {

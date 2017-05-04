@@ -1,6 +1,7 @@
 package cm.aptoide.pt.spotandshare.socket.message.server;
 
 import cm.aptoide.pt.spotandshare.socket.AptoideServerSocket;
+import cm.aptoide.pt.spotandshare.socket.Print;
 import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.HostLeftMessage;
@@ -23,6 +24,8 @@ import lombok.Getter;
  */
 public class AptoideMessageServerSocket extends AptoideServerSocket {
 
+  private static final String TAG = AptoideMessageServerSocket.class.getSimpleName();
+
   @Getter private final ConcurrentLinkedQueue<AptoideMessageServerController>
       aptoideMessageControllers = new ConcurrentLinkedQueue<>();
   private AptoideMessageServerController aptoideMessageServerController;
@@ -32,17 +35,29 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
   }
 
   @Override public void shutdown() {
+
+    shutdown = true;
     onError = null;
+
     for (AptoideMessageServerController aptoideMessageClientController : getAptoideMessageControllers()) {
       aptoideMessageClientController.disable();
     }
     sendToOthersWithAck(null, new ServerLeftMessage(getHost()));
-    aptoideMessageServerController.disable();
+
+    if (aptoideMessageServerController != null) {
+      aptoideMessageServerController.disable();
+    }
 
     super.shutdown();
   }
 
   @Override protected void onNewClient(Socket socket) throws IOException {
+
+    if (shutdown) {
+      Print.d(TAG, "Server already shutdown!");
+      return;
+    }
+
     aptoideMessageServerController =
         new AptoideMessageServerController(this, Host.fromLocalhost(socket), Host.from(socket),
             onError);

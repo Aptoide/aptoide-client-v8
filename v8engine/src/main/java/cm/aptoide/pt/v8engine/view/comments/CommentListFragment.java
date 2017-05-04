@@ -27,18 +27,20 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.SetComment;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.comments.CommentDialogCallbackContract;
 import cm.aptoide.pt.v8engine.comments.CommentNode;
 import cm.aptoide.pt.v8engine.comments.ComplexComment;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.interfaces.CommentDialogCallbackContract;
-import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
-import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.custom.HorizontalDividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerSwipeFragment;
@@ -50,6 +52,8 @@ import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.functions.Action1;
 
@@ -88,6 +92,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private AccountNavigator accountNavigator;
   private BodyInterceptor<BaseBody> bodyDecorator;
   private StoreCredentialsProvider storeCredentialsProvider;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
 
   public static Fragment newInstance(CommentType commentType, String timelineArticleId) {
     Bundle args = new Bundle();
@@ -112,6 +118,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     //this object is used in loadExtras and loadExtras is called in the super
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
+    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
     super.onCreate(savedInstanceState);
   }
 
@@ -216,7 +224,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   void caseListSocialTimelineComments(boolean refresh) {
     ListCommentsRequest listCommentsRequest =
-        ListCommentsRequest.ofTimeline(url, refresh, elementIdAsString, bodyDecorator);
+        ListCommentsRequest.ofTimeline(url, refresh, elementIdAsString, bodyDecorator, httpClient,
+            converterFactory);
 
     Action1<ListComments> listCommentsAction = (listComments -> {
       if (listComments != null
@@ -250,7 +259,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
       boolean refresh) {
 
     ListCommentsRequest listCommentsRequest =
-        ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, bodyDecorator);
+        ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, bodyDecorator, httpClient,
+            converterFactory);
 
     if (storeCredentials == null || storeCredentials.getId() == null) {
       IllegalStateException illegalStateException =
@@ -348,7 +358,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private Observable<Void> showSignInMessage() {
     return ShowMessage.asObservableSnack(this.getActivity(), R.string.you_need_to_be_logged_in,
         R.string.login, snackView -> {
-          accountNavigator.navigateToAccountView();
+          accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.COMMENT_LIST);
         }).flatMap(a -> Observable.empty());
   }
 

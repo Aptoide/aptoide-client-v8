@@ -6,6 +6,7 @@ import android.widget.Button;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.account.user.CreateStoreActivity;
 import cm.aptoide.pt.v8engine.view.account.user.CreateStoreDisplayable;
@@ -46,7 +47,7 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
         getContext().startActivity(intent);
       } else {
         button.setText(R.string.login);
-        accountNavigator.navigateToAccountView();
+        accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.STORE);
       }
     });
   }

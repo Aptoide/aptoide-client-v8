@@ -19,9 +19,9 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.install.rollback.RollbackRepository;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.repository.RollbackRepository;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import lombok.AccessLevel;
@@ -63,7 +63,6 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   @Getter private MinimalAd minimalAd;
 
   private RollbackRepository rollbackRepository;
-  //private Installer installManager;
 
   private InstallManager installManager;
   private String md5;

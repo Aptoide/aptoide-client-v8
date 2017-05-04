@@ -29,9 +29,12 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import java.util.Locale;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Action0;
@@ -43,13 +46,18 @@ public class DialogUtils {
   private final Locale LOCALE = Locale.getDefault();
   private final AptoideAccountManager accountManager;
   private final AccountNavigator accountNavigator;
-  private BodyInterceptor<BaseBody> bodyInterceptor;
+  private final BodyInterceptor<BaseBody> bodyInterceptor;
+  private final OkHttpClient httpClient;
+  private final Converter.Factory converterFactory;
 
   public DialogUtils(AptoideAccountManager accountManager, AccountNavigator accountNavigator,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.bodyInterceptor = bodyInterceptor;
+    this.httpClient = httpClient;
+    this.converterFactory = converterFactory;
   }
 
   public Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
@@ -60,7 +68,7 @@ public class DialogUtils {
       if (!accountManager.isLoggedIn()) {
         ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
             snackView -> {
-              accountNavigator.navigateToAccountView();
+              accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.RATE_DIALOG);
             });
         subscriber.onNext(GenericDialogs.EResponse.CANCEL);
         subscriber.onCompleted();
@@ -137,10 +145,11 @@ public class DialogUtils {
         // WS call
         if (storeName != null) {
           PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-              bodyInterceptor).execute(successRequestListener, errorRequestListener);
-        } else {
-          PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor)
+              bodyInterceptor, httpClient, converterFactory)
               .execute(successRequestListener, errorRequestListener);
+        } else {
+          PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor,
+              httpClient, converterFactory).execute(successRequestListener, errorRequestListener);
         }
       });
 
@@ -156,7 +165,7 @@ public class DialogUtils {
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            accountNavigator.navigateToAccountView();
+            accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.RATE_DIALOG);
           });
 
       return;
@@ -216,10 +225,11 @@ public class DialogUtils {
 
       if (storeName != null) {
         PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-            bodyInterceptor).execute(successRequestListener, errorRequestListener);
-      } else {
-        PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor)
+            bodyInterceptor, httpClient, converterFactory)
             .execute(successRequestListener, errorRequestListener);
+      } else {
+        PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor,
+            httpClient, converterFactory).execute(successRequestListener, errorRequestListener);
       }
     });
 

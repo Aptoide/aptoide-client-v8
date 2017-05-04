@@ -15,19 +15,21 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.interfaces.ShareCardCallback;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.account.user.CreateStoreActivity;
 import cm.aptoide.pt.v8engine.view.comments.CommentDialogFragment;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.timeline.LikeButtonView;
+import cm.aptoide.pt.v8engine.view.timeline.ShareCardCallback;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.CardDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import java.io.IOException;
@@ -37,6 +39,7 @@ import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -77,6 +80,9 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   }
 
   @CallSuper @Override public void bindView(T displayable) {
+    final OkHttpClient httpClient =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    final Converter.Factory converterFactory = WebService.getDefaultConverter();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     accountNavigator =
@@ -103,10 +109,10 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
           CommentDialogFragment.newInstanceTimelineArticleComment(
               displayable.getTimelineCard().getCardId());
       commentDialogFragment.setCommentBeforeSubmissionCallbackContract(
-          (inputText) -> shareCard(displayable,
-              cardId -> PostCommentForTimelineArticle.of(cardId, inputText, bodyInterceptor)
-                  .observe()
-                  .subscribe(), SharePreviewDialog.SharePreviewOpenMode.COMMENT));
+          (inputText) -> shareCard(displayable, cardId -> {
+            PostCommentForTimelineArticle.of(cardId, inputText, bodyInterceptor, httpClient,
+                converterFactory).observe().subscribe();
+          }, SharePreviewDialog.SharePreviewOpenMode.COMMENT));
       commentDialogFragment.show(fm, "fragment_comment_dialog");
     }, throwable -> CrashReport.getInstance().log(throwable)));
 
@@ -124,7 +130,8 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
       SharePreviewDialog.SharePreviewOpenMode openMode) {
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
-          snackView -> accountNavigator.navigateToAccountView());
+          snackView -> accountNavigator.navigateToAccountView(
+              Analytics.Account.AccountOrigins.SHARE_CARD));
       return;
     }
 
@@ -176,15 +183,11 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     });
   }
 
-  private Account getAccount() {
-    return account;
-  }
-
   private boolean likeCard(T displayable, String cardId, int rating) {
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            accountNavigator.navigateToAccountView();
+            accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.LIKE_CARD);
           });
       return false;
     }
@@ -193,6 +196,10 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   }
 
   abstract String getCardTypeName();
+
+  private Account getAccount() {
+    return account;
+  }
 
   protected void knockWithSixpackCredentials(String url) {
     if (url == null) {

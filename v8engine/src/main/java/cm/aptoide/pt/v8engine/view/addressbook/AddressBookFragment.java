@@ -1,10 +1,12 @@
 package cm.aptoide.pt.v8engine.view.addressbook;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,13 +18,15 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.FacebookModel;
 import cm.aptoide.pt.model.v7.TwitterModel;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.AddressBookAnalytics;
-import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
+import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepository;
+import cm.aptoide.pt.v8engine.addressbook.utils.ContactUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.presenter.AddressBookContract;
 import cm.aptoide.pt.v8engine.presenter.AddressBookPresenter;
@@ -42,6 +46,8 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import java.util.Arrays;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -82,11 +88,16 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
     final BodyInterceptor<BaseBody> baseBodyBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    mActionsListener =
-        new AddressBookPresenter(this, new ContactsRepositoryImpl(baseBodyBodyInterceptor),
-            analytics, new AddressBookNavigationManager(getFragmentNavigator(), getTag(),
-            getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
-            Application.getConfiguration().getMarketName())));
+    final OkHttpClient httpClient =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    final Converter.Factory converterFactory = WebService.getDefaultConverter();
+    mActionsListener = new AddressBookPresenter(this,
+        new ContactsRepository(baseBodyBodyInterceptor, httpClient, converterFactory,
+            ((V8Engine) getContext().getApplicationContext()).getIdsRepository(), new ContactUtils(
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE))),
+        analytics, new AddressBookNavigationManager(getFragmentNavigator(), getTag(),
+        getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
+        Application.getConfiguration().getMarketName())));
     callbackManager = CallbackManager.Factory.create();
     registerFacebookCallback();
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());

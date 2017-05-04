@@ -49,6 +49,8 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   private SpotAndShareAnalyticsInterface analytics;
   private GroupManager groupManager;
   private PermissionListener permissionListener;
+  private String autoShareFilepath;
+  private String autoShareAppName;
 
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -65,11 +67,22 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     setContentView(R.layout.highway_activity);
 
     bindViews();
+    Intent intent = getIntent();
+    if (intent.getAction() != null && intent.getAction().equals("APPVIEW_SHARE")) {
+      enableButtons(false);
+      autoShareAppName = intent.getStringExtra("APPVIEW_SHARE_APPNAME");
+      autoShareFilepath = intent.getStringExtra("APPVIEW_SHARE_FILEPATH");
+      presenter = new HighwayPresenter(this, groupNameProvider,
+          new DeactivateHotspotTask(connectionManager), connectionManager, analytics, groupManager,
+          this, autoShareAppName, autoShareFilepath);
+    } else {
+      presenter = new HighwayPresenter(this, groupNameProvider,
+          new DeactivateHotspotTask(connectionManager), connectionManager, analytics, groupManager,
+          this);
+    }
 
-    presenter =
-        new HighwayPresenter(this, groupNameProvider, new DeactivateHotspotTask(connectionManager),
-        connectionManager, analytics, groupManager, this);
     attachPresenter(presenter);
+
 
   }
 
@@ -134,7 +147,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     recoverNetworkState();
     super.onBackPressed();
   }
-
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
@@ -395,6 +407,17 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
+  @Override public void openChatFromAppViewShare(String deviceName, String appFilepath) {
+    Intent intent =
+        new Intent().setClass(HighwayActivity.this, HighwayTransferRecordActivity.class);
+    intent.putExtra("isAHotspot", true);
+    intent.putExtra("nickname", deviceName);
+    intent.putExtra("autoShareFilePath", appFilepath);
+    intent.setAction("APPVIEW_SHARE");
+    startActivity(intent);
+    finish();
+  }
+
   @Override public boolean checkPermissions() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       if (!checkNormalPermissions()) {
@@ -461,7 +484,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   @Override public void removeListener() {
     this.permissionListener = null;
   }
-
 
   private void showNougatErrorToast() {
     Toast.makeText(this, this.getResources().getString(R.string.hotspotCreationErrorNougat),

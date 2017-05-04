@@ -13,15 +13,27 @@ import java.util.List;
 public class HostsCallbackManager implements HostsChangedCallback {
 
   private final Context context;
+  private String autoShareFilepath;
 
   public HostsCallbackManager(Context context) {
     this.context = context;
   }
 
+  public HostsCallbackManager(Context context, String autoShareFilepath) {
+    this(context);
+    this.autoShareFilepath = autoShareFilepath;
+  }
+
   @Override public void hostsChanged(List<Host> hostList) {
     System.out.println("hostsChanged() called with: " + "hostList = [" + hostList + "]");
     Intent i = new Intent();
-    if (hostList.size() >= 2) {
+
+    if (hostList.size() == 2 && autoShareFilepath != null) {
+      i.setAction("AUTO_SHARE_SEND");
+      i.putExtra("autoShareFilePath", autoShareFilepath);
+      context.sendBroadcast(i);
+      autoShareFilepath = null;
+    } else if (hostList.size() >= 2) {
       System.out.println("sending broadcast of show_send_button");
       i.setAction("SHOW_SEND_BUTTON");
       context.sendBroadcast(i);

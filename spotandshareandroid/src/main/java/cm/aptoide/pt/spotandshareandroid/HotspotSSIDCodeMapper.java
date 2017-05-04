@@ -12,26 +12,38 @@ public class HotspotSSIDCodeMapper {
   }
 
   public int decode(char c) {
-    int charValue = (int) c;
-    if (!assetDomain(charValue)) {
+    if (!assertDomain(c)) {
       throw new IllegalArgumentException("value is outside of the domain !");
     }
-    int value = charValue - '0';
-    if (charValue > '9') {
+    int value = c - '0';
+    if (c > '9') {
       value -= ('A' - ('9' + 1));
     }
-
-    if (charValue > 'Z') {
+  
+    if (c > 'Z') {
       value -= ('a' - ('Z' + 1));
     }
     return value;
   }
-
-  private boolean assetDomain(int value) {
-    if (value >= 0 && value <= 61) {
+  
+  private boolean assertDomain(char value) {
+    if (value >= 0 && value <= 9) {
       return true;
     }
-    return false;
+    
+    if (value >= 'A' && value <= 'Z') {
+      return true;
+    }
+    
+    if (value >= 'a' && value <= 'z') {
+      return true;
+    }
+    
+    return true;
+  }
+  
+  private boolean assertDomain(int value) {
+    return value >= 0 && value <= 61;
   }
 
   public char generateRandomChar() {
@@ -41,7 +53,7 @@ public class HotspotSSIDCodeMapper {
 
   public char encode(int value) {
 
-    if (!assetDomain(value)) {
+    if (!assertDomain(value)) {
       throw new IllegalArgumentException("value is outside domain !");
     }
 

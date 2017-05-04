@@ -11,11 +11,12 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.utils.FileUtils;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.download.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
-import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
-import cm.aptoide.pt.v8engine.install.provider.RollbackFactory;
+import cm.aptoide.pt.v8engine.install.rollback.RollbackFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 
 /**
@@ -39,18 +40,20 @@ public class InstallerFactory {
   }
 
   @NonNull private DefaultInstaller getDefaultInstaller(Context context) {
-    return new DefaultInstaller(context.getPackageManager(), getInstallationProvider(),
+    return new DefaultInstaller(context.getPackageManager(),
+        getInstallationProvider(((V8Engine) context.getApplicationContext()).getDownloadManager()),
         new FileUtils(), Analytics.getInstance());
   }
 
   @NonNull private RollbackInstaller getRollbackInstaller(Context context) {
     return new RollbackInstaller(getDefaultInstaller(context),
         RepositoryFactory.getRollbackRepository(), new RollbackFactory(),
-        getInstallationProvider());
+        getInstallationProvider(((V8Engine) context.getApplicationContext()).getDownloadManager()));
   }
 
-  @NonNull private DownloadInstallationProvider getInstallationProvider() {
-    return new DownloadInstallationProvider(AptoideDownloadManager.getInstance(),
+  @NonNull private DownloadInstallationProvider getInstallationProvider(
+      AptoideDownloadManager downloadManager) {
+    return new DownloadInstallationProvider(downloadManager,
         AccessorFactory.getAccessorFor(Download.class));
   }
 }

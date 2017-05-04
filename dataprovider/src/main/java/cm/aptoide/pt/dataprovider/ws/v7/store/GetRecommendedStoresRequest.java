@@ -5,10 +5,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.store.ListStores;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.EqualsAndHashCode;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -21,16 +20,17 @@ public class GetRecommendedStoresRequest
   private final String url;
 
   public GetRecommendedStoresRequest(String url, EndlessBody body,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
-    super(body, BASE_HOST,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter(), bodyInterceptor);
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
     this.url = url;
   }
 
   public static GetRecommendedStoresRequest ofAction(String url,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
-    return new GetRecommendedStoresRequest(url, new EndlessBody(), bodyInterceptor);
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
+    return new GetRecommendedStoresRequest(url, new EndlessBody(), bodyInterceptor, httpClient,
+        converterFactory);
   }
 
   @Override

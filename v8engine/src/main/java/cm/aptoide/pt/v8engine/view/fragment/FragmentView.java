@@ -62,7 +62,7 @@ public abstract class FragmentView extends LeakFragment implements View {
    */
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == android.R.id.home) {
-      getActivity().onBackPressed();
+      fragmentNavigator.popBackStack();
       return true;
     }
     return super.onOptionsItemSelected(item);
@@ -106,9 +106,5 @@ public abstract class FragmentView extends LeakFragment implements View {
       default:
         throw new IllegalStateException("Unrecognized event: " + event.name());
     }
-  }
-
-  public boolean onBackPressed() {
-    return false;
   }
 }

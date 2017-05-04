@@ -20,6 +20,8 @@ import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.store.GetHomeMeta;
 import java.util.LinkedList;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -32,9 +34,10 @@ public class WSWidgetsUtils {
 
   public static Observable<GetStoreWidgets.WSWidget> loadWidgetNode(
       GetStoreWidgets.WSWidget wsWidget, BaseRequestWithStore.StoreCredentials storeCredentials,
-      boolean refresh, String accessToken, String aptoideClientUuid,
+      boolean refresh, String accessToken, String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, boolean mature,
-      BodyInterceptor<BaseBody> bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
 
     if (isKnownType(wsWidget.getType())) {
 
@@ -45,7 +48,8 @@ public class WSWidgetsUtils {
       }
       switch (wsWidget.getType()) {
         case APPS_GROUP:
-          return ListAppsRequest.ofAction(url, storeCredentials, bodyInterceptor)
+          return ListAppsRequest.ofAction(url, storeCredentials, bodyInterceptor, httpClient,
+              converterFactory)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -53,7 +57,7 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case STORES_GROUP:
-          return ListStoresRequest.ofAction(url, bodyInterceptor)
+          return ListStoresRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -61,7 +65,8 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case DISPLAYS:
-          return GetStoreDisplaysRequest.ofAction(url, storeCredentials, bodyInterceptor)
+          return GetStoreDisplaysRequest.ofAction(url, storeCredentials, bodyInterceptor,
+              httpClient, converterFactory)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -69,8 +74,8 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case ADS:
-          return GetAdsRequest.ofHomepage(aptoideClientUuid, googlePlayServicesAvailable, oemid,
-              mature)
+          return GetAdsRequest.ofHomepage(clientUniqueId, googlePlayServicesAvailable, oemid,
+              mature, httpClient, converterFactory)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -78,7 +83,8 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case HOME_META:
-          return GetHomeMetaRequest.ofAction(url, storeCredentials, bodyInterceptor)
+          return GetHomeMetaRequest.ofAction(url, storeCredentials, bodyInterceptor, httpClient,
+              converterFactory)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -86,7 +92,8 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case COMMENTS_GROUP:
-          return ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, bodyInterceptor)
+          return ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, bodyInterceptor,
+              httpClient, converterFactory)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(listComments -> wsWidget.setViewObject(
@@ -96,7 +103,8 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case REVIEWS_GROUP:
-          return ListFullReviewsRequest.ofAction(url, refresh, storeCredentials, bodyInterceptor)
+          return ListFullReviewsRequest.ofAction(url, refresh, storeCredentials, bodyInterceptor,
+              httpClient, converterFactory)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -105,7 +113,7 @@ public class WSWidgetsUtils {
 
         case MY_STORES_SUBSCRIBED:
         case STORES_RECOMMENDED:
-          return GetMyStoreListRequest.of(url, bodyInterceptor)
+          return GetMyStoreListRequest.of(url, bodyInterceptor, httpClient, converterFactory)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -121,7 +129,7 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case MY_STORE_META:
-          return GetMyStoreMetaRequest.of(bodyInterceptor)
+          return GetMyStoreMetaRequest.of(bodyInterceptor, httpClient, converterFactory)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .map(getStoreMeta -> {
@@ -144,7 +152,7 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case APP_META:
-          return GetAppRequest.ofAction(url, bodyInterceptor)
+          return GetAppRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))

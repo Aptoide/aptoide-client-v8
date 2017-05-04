@@ -62,7 +62,7 @@
         android:theme="@style/AppBaseTheme.Payment"/>
 
     <activity android:name=".payment.providers.paypal.PayPalPaymentActivity"/>
-    <activity android:name=".view.payment.WebAuthorizationActivity"/>
+    <activity android:name=".view.payment.PaymentAuthorizationActivity"/>
     <activity android:name=".view.account.LoginActivity"/>
     <activity android:name=".spotandshare.SpotSharePreviewActivity" />
 
@@ -101,7 +101,7 @@
         />
 
     <activity
-        android:name=".receivers.DeepLinkIntentReceiver"
+        android:name=".DeepLinkIntentReceiver"
         android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.VIEW"/>
@@ -189,6 +189,34 @@
             android:pathPattern="*//.myapp"
             android:scheme="http"/>
       </intent-filter>
+
+
+
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+
+        <data
+            android:pathPrefix="/store/"
+            android:host="*.aptoide.com"
+            android:scheme="http"/>
+      </intent-filter>
+
+
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+
+        <data
+            android:pathPrefix="/store/"
+            android:host="*.aptoide.com"
+            android:scheme="https"/>
+      </intent-filter>
+
     </activity>
 
     <receiver android:name=".install.InstalledBroadcastReceiver">
@@ -201,9 +229,9 @@
       </intent-filter>
     </receiver>
 
-    <service android:name=".services.PullingContentService"/>
+    <service android:name=".pull.PullingContentService" />
 
-    <receiver android:name=".receivers.PullingContentReceiver">
+    <receiver android:name=".pull.PullingContentReceiver">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED"/>
         <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
@@ -214,7 +242,7 @@
     <receiver android:name=".timeline.link.CustomTabNativeReceiver"/>
 
     <receiver
-        android:name=".receivers.NetworkStateReceiver"
+        android:name=".download.ScheduleDownloadsNetworkReceiver"
         android:enabled="true"
         android:exported="false">
       <intent-filter>

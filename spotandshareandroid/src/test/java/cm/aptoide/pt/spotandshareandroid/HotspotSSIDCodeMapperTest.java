@@ -1,6 +1,7 @@
 package cm.aptoide.pt.spotandshareandroid;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -11,11 +12,8 @@ public class HotspotSSIDCodeMapperTest {
 
   private HotspotSSIDCodeMapper hotspotSSIDCodeMapper;
 
-  @Test public void teste() {
+  @Before public void before() {
     hotspotSSIDCodeMapper = new HotspotSSIDCodeMapper();
-
-    testEncodeAllCharacters();
-    testEncodeLimits();
   }
 
   @Test public void testEncodeAllCharacters() {

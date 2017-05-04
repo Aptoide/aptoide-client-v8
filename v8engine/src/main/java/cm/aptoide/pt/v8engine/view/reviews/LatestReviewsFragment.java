@@ -11,16 +11,19 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.ListFullReviews;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
-import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import java.util.LinkedList;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.functions.Action1;
 
 public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
@@ -33,6 +36,8 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
   private List<Displayable> displayables;
   private StoreCredentialsProvider storeCredentialsProvider;
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
 
   public static LatestReviewsFragment newInstance(long storeId) {
     LatestReviewsFragment fragment = new LatestReviewsFragment();
@@ -47,6 +52,8 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -83,7 +90,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
       ListFullReviewsRequest listFullReviewsRequest =
           ListFullReviewsRequest.of(storeId, REVIEWS_LIMIT, 0,
               StoreUtils.getStoreCredentials(storeId, storeCredentialsProvider),
-              baseBodyInterceptor);
+              baseBodyInterceptor, httpClient, converterFactory);
       Action1<ListFullReviews> listFullReviewsAction = listTopFullReviews -> {
         List<FullReview> reviews = listTopFullReviews.getDatalist().getList();
         displayables = new LinkedList<>();
