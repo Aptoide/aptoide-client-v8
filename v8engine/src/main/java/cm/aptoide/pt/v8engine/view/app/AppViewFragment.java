@@ -41,7 +41,7 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
-import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
+import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
@@ -74,6 +74,7 @@ import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
@@ -179,7 +180,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private AccountNavigator accountNavigator;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
-  private StoreMinimalAdAccessor storeMinimalAdAccessor;
+  private StoredMinimalAdAccessor storedMinimalAdAccessor;
+  private PaymentAnalytics paymentAnalytics;
+  private SpotAndShareAnalytics spotAndShareAnalytics;
+
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -189,7 +193,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     fragment.setArguments(bundle);
     return fragment;
   }
-  private SpotAndShareAnalytics spotAndShareAnalytics;
 
   public static AppViewFragment newInstance(String md5) {
     Bundle bundle = new Bundle();
@@ -272,8 +275,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             accountManager, httpClient, converterFactory);
     installedRepository = RepositoryFactory.getInstalledRepository();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
-    storeMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
+    storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
+    paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
@@ -397,8 +401,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   public void buyApp(GetAppMeta.App app) {
+    final ParcelableProduct product = (ParcelableProduct) productFactory.create(app);
+    paymentAnalytics.sendPaidAppBuyButtonPressedEvent(product);
     startActivityForResult(
-        PaymentActivity.getIntent(getActivity(), (ParcelableProduct) productFactory.create(app)),
+        PaymentActivity.getIntent(getActivity(), product),
         PAY_APP_REQUEST_CODE);
   }
 
@@ -459,7 +465,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   private void storeMinimalAdd(MinimalAd minimalAd) {
-    storeMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, null));
+    storedMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, null));
   }
 
   @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {

@@ -19,7 +19,7 @@ import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
+import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -128,9 +128,9 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
                 //    new StoredMinimalAd(packageName, referrer, minimalAd.getCpiUrl(),
                 //        minimalAd.getAdId()), realm);
 
-                StoreMinimalAdAccessor storeMinimalAdAccessor =
+                StoredMinimalAdAccessor storedMinimalAdAccessor =
                     AccessorFactory.getAccessorFor(StoredMinimalAd.class);
-                storeMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, referrer));
+                storedMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, referrer));
               }
 
               future.cancel(false);

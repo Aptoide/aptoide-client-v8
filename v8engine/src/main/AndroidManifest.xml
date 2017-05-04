@@ -62,7 +62,7 @@
         android:theme="@style/AppBaseTheme.Payment"/>
 
     <activity android:name=".payment.providers.paypal.PayPalPaymentActivity"/>
-    <activity android:name=".view.payment.WebAuthorizationActivity"/>
+    <activity android:name=".view.payment.PaymentAuthorizationActivity"/>
     <activity android:name=".view.account.LoginActivity"/>
     <activity android:name=".spotandshare.SpotSharePreviewActivity" />
 
@@ -199,6 +199,7 @@
         <category android:name="android.intent.category.BROWSABLE"/>
 
         <data
+            android:pathPrefix="/store/"
             android:host="*.aptoide.com"
             android:scheme="http"/>
       </intent-filter>
@@ -211,6 +212,7 @@
         <category android:name="android.intent.category.BROWSABLE"/>
 
         <data
+            android:pathPrefix="/store/"
             android:host="*.aptoide.com"
             android:scheme="https"/>
       </intent-filter>

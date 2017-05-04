@@ -201,12 +201,13 @@ class DownloadTask extends FileDownloadLargeFileListener {
               return Observable.just(null);
             }
           }
-          return CheckMd5AndMoveFileToRightPlace(download).doOnNext(fileMoved -> {
+          return checkMd5AndMoveFileToRightPlace(download).doOnNext(fileMoved -> {
             if (fileMoved) {
               Logger.d(TAG, "Download md5 match");
               file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
             } else {
               Logger.e(TAG, "Download md5 is not correct");
+              downloadManager.deleteDownloadlFiles(download);
               download.setDownloadError(Download.GENERIC_ERROR);
               setDownloadStatus(Download.ERROR, download, task);
             }
@@ -334,7 +335,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
     saveDownloadInDb(download);
   }
 
-  private Observable<Boolean> CheckMd5AndMoveFileToRightPlace(Download download) {
+  private Observable<Boolean> checkMd5AndMoveFileToRightPlace(Download download) {
     return Observable.fromCallable(() -> {
       for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
         fileToDownload.setFileName(fileToDownload.getFileName().replace(".temp", ""));

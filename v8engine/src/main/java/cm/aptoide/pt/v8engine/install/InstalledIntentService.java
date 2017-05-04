@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
+import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
@@ -148,12 +148,12 @@ public class InstalledIntentService extends IntentService {
   }
 
   private void checkAndBroadcastReferrer(String packageName) {
-    StoreMinimalAdAccessor storeMinimalAdAccessor =
+    StoredMinimalAdAccessor storedMinimalAdAccessor =
         AccessorFactory.getAccessorFor(StoredMinimalAd.class);
     Subscription unManagedSubscription =
-        storeMinimalAdAccessor.get(packageName).flatMapCompletable(storeMinimalAd -> {
+        storedMinimalAdAccessor.get(packageName).flatMapCompletable(storeMinimalAd -> {
           if (storeMinimalAd != null) {
-            return knockCpi(packageName, storeMinimalAdAccessor, storeMinimalAd);
+            return knockCpi(packageName, storedMinimalAdAccessor, storeMinimalAd);
           } else {
             return extractReferrer(packageName);
           }
@@ -234,12 +234,12 @@ public class InstalledIntentService extends IntentService {
     }
   }
 
-  private Completable knockCpi(String packageName, StoreMinimalAdAccessor storeMinimalAdAccessor,
+  private Completable knockCpi(String packageName, StoredMinimalAdAccessor storedMinimalAdAccessor,
       StoredMinimalAd storeMinimalAd) {
     return Completable.fromCallable(() -> {
       ReferrerUtils.broadcastReferrer(packageName, storeMinimalAd.getReferrer());
       DataproviderUtils.AdNetworksUtils.knockCpi(storeMinimalAd);
-      storeMinimalAdAccessor.remove(storeMinimalAd);
+      storedMinimalAdAccessor.remove(storeMinimalAd);
       return null;
     });
   }
