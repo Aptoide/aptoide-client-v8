@@ -469,6 +469,7 @@ public class ConnectionManager {
             }
 
             if (shouldReconnect) {
+              this.chosenHotspot = chosenHotspot;//to save in case of needing to reconnect
               boolean recon = wifimanager.reconnect();
               System.out.println("O boolean do reconnect ta a : " + recon);
               try {
