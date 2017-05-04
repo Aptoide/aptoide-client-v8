@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
+import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -92,7 +93,8 @@ public class PullingContentService extends Service {
     subscriptions = new CompositeSubscription();
     NotificationAccessor notificationAccessor =
         AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Notification.class);
-    notificationShower = new NotificationShower(notificationAccessor);
+    notificationShower = new NotificationShower(notificationAccessor,
+        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
     notificationSync =
         new ScheduleNotificationSync(idsRepository, this, httpClient, converterFactory, versionName,
             BuildConfig.APPLICATION_ID, notificationAccessor, notificationShower);
@@ -173,11 +175,12 @@ public class PullingContentService extends Service {
    * @param startId service startId
    */
   private void setPushNotificationsAction(int startId) {
-    subscriptions.add(notificationSync.sync(PullingContentService.this)
-        .subscribe(() -> stopSelf(startId), throwable -> {
-          stopSelf(startId);
-          CrashReport.getInstance().log(throwable);
-        }));
+    subscriptions.add(
+        Completable.merge(notificationSync.syncCampaign(this), notificationSync.syncSocial(this))
+            .subscribe(() -> stopSelf(startId), throwable -> {
+              stopSelf(startId);
+              CrashReport.getInstance().log(throwable);
+            }));
   }
 
   /**

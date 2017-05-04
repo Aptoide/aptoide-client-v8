@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.pull;
 
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 
 /**
  * Created by trinkes on 7/13/16.
@@ -44,6 +46,11 @@ public class PullingContentReceiver extends BroadcastReceiver {
     String targetUrl = intent.getStringExtra(PUSH_NOTIFICATION_TARGET_URL);
     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(targetUrl));
     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    context.startActivity(i);
+    try {
+      context.startActivity(i);
+    } catch (ActivityNotFoundException e) {
+      CrashReport.getInstance()
+          .log(TAG, "No application can handle this request. Please install a webbrowser");
+    }
   }
 }

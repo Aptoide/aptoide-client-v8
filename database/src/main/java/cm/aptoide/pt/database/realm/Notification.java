@@ -23,7 +23,9 @@ import lombok.ToString;
   private String title;
   private String url;
   private String urlTrack;
-  private @NotificationType int notificationType;
+  private @NotificationType int type;
+  private long timeStamp;
+  private boolean showed;
 
   public Notification() {
   }
@@ -32,12 +34,13 @@ import lombok.ToString;
     this(body, img, title, url, DIRECT);
   }
 
-  private Notification(String body, String img, String title, String url, int notificationType) {
+  private Notification(String body, String img, String title, String url, int type) {
     this.body = body;
     this.img = img;
     this.title = title;
     this.url = url;
-    this.notificationType = notificationType;
+    this.type = type;
+    this.timeStamp = System.currentTimeMillis();
   }
 
   public Notification(String abTestingGroup, String body, int campaignId, String img, String lang,
@@ -51,12 +54,20 @@ import lombok.ToString;
 
   public static Notification createEmptyNotification() {
     Notification notification = new Notification();
-    notification.notificationType = NOT_EXISTS;
+    notification.type = NOT_EXISTS;
     return notification;
   }
 
-  public @NotificationType int getNotificationType() {
-    return notificationType;
+  public boolean isShowed() {
+    return showed;
+  }
+
+  public void setShowed(boolean showed) {
+    this.showed = showed;
+  }
+
+  public @NotificationType int getType() {
+    return type;
   }
 
   public String getAbTestingGroup() {
@@ -89,6 +100,10 @@ import lombok.ToString;
 
   public String getUrlTrack() {
     return urlTrack;
+  }
+
+  public long getTimeStamp() {
+    return timeStamp;
   }
 
   @Retention(RetentionPolicy.SOURCE) @IntDef({ CAMPAIGN, DIRECT, NOT_EXISTS })

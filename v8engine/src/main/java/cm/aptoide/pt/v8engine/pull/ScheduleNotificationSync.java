@@ -14,6 +14,7 @@ import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
+import rx.Observable;
 import rx.Single;
 
 /**
@@ -45,13 +46,23 @@ public class ScheduleNotificationSync {
     this.notificationShower = notificationShower;
   }
 
-  public Completable sync(Context context) {
-    return Single.merge(getCampaignNotifications(), getSocialNotifications())
+  public Completable syncSocial(Context context) {
+    return getSocialNotifications().toObservable()
         .doOnNext(notifications -> saveData(notifications))
-        .map(notifications -> notifications.get(0))
-        .onErrorReturn(throwable -> Notification.createEmptyNotification())
-        .flatMapCompletable(
-            notification -> notificationShower.showNotification(context, notification))
+        .flatMap(notifications -> Observable.from(notifications)
+            .flatMapCompletable(
+                notification -> notificationShower.showNotification(context, notification,
+                    notification.getType())))
+        .toCompletable();
+  }
+
+  public Completable syncCampaign(Context context) {
+    return getCampaignNotifications().toObservable()
+        .doOnNext(notifications -> saveData(notifications))
+        .flatMap(notifications -> Observable.from(notifications)
+            .flatMapCompletable(
+                notification -> notificationShower.showNotification(context, notification,
+                    notification.getType())))
         .toCompletable();
   }
 
