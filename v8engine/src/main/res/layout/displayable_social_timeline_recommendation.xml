@@ -158,23 +158,20 @@
           tools:text="Aptoide games"
           style="@style/Aptoide.TextView.Regular.XS.Grey"
           />
-
       <Button
           android:id="@+id/displayable_social_timeline_recommendation_get_app_button"
-          android:layout_width="116dp"
-          android:layout_height="24dp"
+          android:layout_width="130dp"
+          android:layout_height="33dp"
           android:layout_below="@id/social_timeline_recommendation_card_related_to_app"
-          android:layout_gravity="center"
           android:layout_marginEnd="15.1dp"
-          android:layout_marginLeft="13.3dp"
+          android:layout_marginLeft="8.3dp"
           android:layout_marginRight="15.1dp"
-          android:layout_marginStart="13.3dp"
-          android:layout_marginTop="10dp"
+          android:layout_marginStart="8.3dp"
           android:layout_toEndOf="@id/displayable_social_timeline_recommendation_icon"
           android:text="@string/review_get_app"
           android:textAllCaps="true"
           android:textSize="10sp"
-          style="?attr/customButtomDarkGrayThinLine"
+          style="@style/Aptoide.Button.Ghost.ThinBlackAlpha"
           />
 
     </RelativeLayout>

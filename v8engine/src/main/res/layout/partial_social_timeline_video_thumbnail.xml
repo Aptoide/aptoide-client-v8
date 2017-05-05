@@ -56,7 +56,7 @@
       android:maxLines="3"
       android:typeface="serif"
       tools:text="Best backup apps: save all your Android's innards"
-      style="@style/Aptoide.TextView.Regular.M.Grey"
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />
 
   <View

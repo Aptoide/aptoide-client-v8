@@ -196,8 +196,9 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   }
 
   private boolean likeCard(T displayable, String cardId, int rating) {
-    if(!hasSocialPermissions(Analytics.Account.AccountOrigins.LIKE_CARD))
-    displayable.like(getContext(), cardId, getCardTypeName().toUpperCase(), rating);
+    if (!hasSocialPermissions(Analytics.Account.AccountOrigins.LIKE_CARD)) {
+      displayable.like(getContext(), cardId, getCardTypeName().toUpperCase(), rating);
+    }
     return true;
   }
 
