@@ -88,7 +88,7 @@ public class ScheduleNotificationSync {
     for (final GetPullNotificationsResponse notification : response) {
       notifications.add(
           new Notification(notification.getBody(), notification.getImg(), notification.getTitle(),
-              notification.getUrl()));
+              notification.getUrl(), notification.getType()));
     }
     return notifications;
   }

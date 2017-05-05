@@ -20,6 +20,7 @@ import lombok.Data;
   private String abTestingGroup;
   private String body;
   private int campaignId;
+  private int type;
   private String img;
   private String lang;
   private String title;

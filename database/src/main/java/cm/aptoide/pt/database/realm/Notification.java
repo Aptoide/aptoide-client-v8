@@ -12,8 +12,9 @@ import lombok.ToString;
 
 @ToString(of = { "title" }) public class Notification extends RealmObject {
   public static final int CAMPAIGN = 0;
-  public static final int LIKES_COMMENTS = 1;
-  public static final int POPULAR = 2;
+  public static final int COMMENT = 1;
+  public static final int LIKE = 2;
+  public static final int POPULAR = 3;
 
   private String abTestingGroup;
   private String body;
@@ -30,11 +31,7 @@ import lombok.ToString;
   public Notification() {
   }
 
-  public Notification(String body, String img, String title, String url) {
-    this(body, img, title, url, LIKES_COMMENTS);
-  }
-
-  private Notification(String body, String img, String title, String url, int type) {
+  public Notification(String body, String img, String title, String url, int type) {
     this.body = body;
     this.img = img;
     this.title = title;
@@ -100,7 +97,7 @@ import lombok.ToString;
     return timeStamp;
   }
 
-  @Retention(RetentionPolicy.SOURCE) @IntDef({ CAMPAIGN, LIKES_COMMENTS, POPULAR})
+  @Retention(RetentionPolicy.SOURCE) @IntDef({ CAMPAIGN, COMMENT, LIKE, POPULAR })
   public @interface NotificationType {
   }
 }
