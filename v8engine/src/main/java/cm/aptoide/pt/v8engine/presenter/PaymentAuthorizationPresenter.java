@@ -6,11 +6,13 @@
 package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
+import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.authorizations.WebAuthorization;
+import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -45,71 +47,64 @@ public class PaymentAuthorizationPresenter implements Presenter {
         .flatMap(created -> view.backButtonSelection())
         .doOnNext(backPressed -> analytics.sendPaymentAuthorizationBackButtonPressedEvent(product))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> {
-          CrashReport.getInstance().log(err);
-        });
+        .subscribe();
 
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.urlLoad())
         .doOnNext(loaded -> view.hideLoading())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> {
-          CrashReport.getInstance().log(err);
-        });
+        .subscribe();
 
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.backToStoreSelection()
             .doOnNext(selection -> analytics.sendBackToStoreButtonPressedEvent(product)))
         .doOnNext(loaded -> view.showLoading())
-        .flatMap(loading -> aptoidePay.authorize(paymentId).toObservable())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> {
-          CrashReport.getInstance().log(err);
-        });
-
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(created -> view.showLoading())
-        .flatMap(created -> Observable.combineLatest(
-            aptoidePay.payment(paymentId).observeOn(AndroidSchedulers.mainThread()),
-            aptoidePay.confirmation(product).observeOn(AndroidSchedulers.mainThread()),
-            (payment, confirmation) -> {
-              if (payment.getAuthorization().isPending() || confirmation.isPending()) {
-                view.showLoading();
-              } else if (confirmation.isCompleted()) {
-                view.hideLoading();
-                view.dismiss();
-              } else if (payment.getAuthorization().isAuthorized()) {
-                if (!processing) {
-                  processing = true;
-                  return aptoidePay.process(payment, product).toObservable();
-                }
-              } else if (payment.getAuthorization().isInitiated()) {
-                if (!loading) {
-                  loading = true;
-                  view.showUrl(((WebAuthorization) payment.getAuthorization()).getUrl(),
-                      ((WebAuthorization) payment.getAuthorization()).getRedirectUrl());
-                }
-              } else if (payment.getAuthorization().isFailed() || confirmation.isFailed()) {
-                view.showErrorAndDismiss();
-              }
-              return Observable.empty();
-            }))
-        .observeOn(AndroidSchedulers.mainThread())
-        .flatMap(observable -> observable)
+        .flatMap(created -> aptoidePay.getPayment(paymentId).toObservable())
+        .flatMap(payment -> processPaymentAndDismiss(payment))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnError(throwable -> view.showErrorAndDismiss())
         .onErrorReturn(null)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> {
-          CrashReport.getInstance().log(err);
-        });
+        .subscribe();
+
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(created -> view.showLoading())
+        .flatMap(created -> aptoidePay.getPayment(paymentId).toObservable())
+        .flatMap(payment -> payment.getAuthorization()
+            .takeUntil(authorization -> authorization.isInitiated() || authorization.isAuthorized())
+            .distinctUntilChanged()
+            .observeOn(AndroidSchedulers.mainThread())
+            .flatMap(authorization -> {
+
+              if (authorization.isAuthorized()) {
+                view.showLoading();
+                return processPaymentAndDismiss(payment);
+              }
+
+              if (authorization.isInitiated()) {
+                view.showUrl(((WebAuthorization) authorization).getUrl(),
+                    ((WebAuthorization) authorization).getRedirectUrl());
+                return Observable.empty();
+              }
+
+              return Observable.error(new PaymentFailureException(
+                  "Authorization is not initiated can not request user consent."));
+            }))
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnError(throwable -> view.showErrorAndDismiss())
+        .onErrorReturn(null)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
+  }
+
+  @NonNull public Observable<Object> processPaymentAndDismiss(Payment payment) {
+    return payment.process(product)
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnCompleted(() -> view.dismiss())
+        .toObservable();
   }
 
   @Override public void saveState(Bundle state) {

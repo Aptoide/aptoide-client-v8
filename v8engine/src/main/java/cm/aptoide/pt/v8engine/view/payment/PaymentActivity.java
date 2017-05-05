@@ -34,7 +34,6 @@ import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.PurchaseIntentFactory;
 import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
-import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.presenter.PaymentPresenter;
 import cm.aptoide.pt.v8engine.presenter.PaymentSelector;
 import cm.aptoide.pt.v8engine.presenter.PaymentView;
@@ -52,7 +51,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
 
   private static final String PRODUCT_EXTRA = "product";
   private static final String SELECTED_PAYMENT_ID = "selected_payment_id";
-  private static final int PAYPAL_PAYMENT_ID = 1;
+  private static final int PAYPAL_PAYMENT_ID = 17;
 
   private View overlay;
   private View body;
@@ -120,10 +119,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
         ((V8Engine) getApplicationContext()).getPaymentAnalytics();
     attachPresenter(new PaymentPresenter(this,
         new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
-            RepositoryFactory.getPaymentAuthorizationRepository(this),
-            new PaymentAuthorizationFactory(this),
-            RepositoryFactory.getPaymentRepository(this, product),
-            RepositoryFactory.getProductRepository(this, product), payer), product, accountManager,
+            RepositoryFactory.getProductRepository(this, product)), product, accountManager,
         new PaymentSelector(PAYPAL_PAYMENT_ID,
             PreferenceManager.getDefaultSharedPreferences(getApplicationContext())),
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),

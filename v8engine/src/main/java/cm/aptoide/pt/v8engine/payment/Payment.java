@@ -6,6 +6,8 @@
 package cm.aptoide.pt.v8engine.payment;
 
 import rx.Completable;
+import rx.Observable;
+import rx.Single;
 
 /**
  * Created by marcelobenites on 8/10/16.
@@ -18,7 +20,9 @@ public interface Payment {
 
   String getDescription();
 
-  Authorization getAuthorization();
+  Observable<Authorization> getAuthorization();
+
+  Observable<PaymentConfirmation> getConfirmation(Product product);
 
   Completable process(Product product);
 }

@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.payment.products;
 
 import android.os.Parcel;
+import android.os.Parcelable;
 import cm.aptoide.pt.v8engine.payment.Price;
 
 /**
@@ -22,29 +23,23 @@ public class PaidAppProduct extends ParcelableProduct {
       return new PaidAppProduct[size];
     }
   };
-
   private final long appId;
   private final String storeName;
+  private boolean sponsored;
 
   public PaidAppProduct(int id, String icon, String title, String description, long appId,
-      String storeName, Price price) {
+      String storeName, Price price, boolean sponsored) {
     super(id, icon, title, description, price);
     this.appId = appId;
     this.storeName = storeName;
+    this.sponsored = sponsored;
   }
 
   protected PaidAppProduct(Parcel in) {
     super(in);
     appId = in.readLong();
     storeName = in.readString();
-  }
-
-  public long getAppId() {
-    return appId;
-  }
-
-  public String getStoreName() {
-    return storeName;
+    sponsored = in.readByte() != 0;
   }
 
   @Override public int describeContents() {
@@ -55,5 +50,18 @@ public class PaidAppProduct extends ParcelableProduct {
     super.writeToParcel(dest, flags);
     dest.writeLong(appId);
     dest.writeString(storeName);
+    dest.writeByte((byte) (sponsored ? 1 : 0));
+  }
+
+  public long getAppId() {
+    return appId;
+  }
+
+  public String getStoreName() {
+    return storeName;
+  }
+
+  public boolean isSponsored() {
+    return sponsored;
   }
 }

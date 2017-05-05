@@ -45,7 +45,6 @@ import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationRepository;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
-import cm.aptoide.pt.v8engine.payment.repository.PaymentRepository;
 import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncDataConverter;
 import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncScheduler;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
@@ -99,13 +98,6 @@ public final class RepositoryFactory {
         AccessorFactory.getAccessorFor(Download.class));
   }
 
-  public static PaymentRepository getPaymentRepository(Context context, Product product) {
-    return new PaymentRepository(getProductRepository(context, product),
-        getPaymentConfirmationRepository(context, product),
-        getPaymentAuthorizationRepository(context), new PaymentAuthorizationFactory(context),
-        new PaymentFactory(context), getPayer(context));
-  }
-
   private static Payer getPayer(Context context) {
     return new AccountPayer(getAccountManager(context));
   }
@@ -114,15 +106,18 @@ public final class RepositoryFactory {
     final PurchaseFactory purchaseFactory = new PurchaseFactory(new InAppBillingSerializer());
     final PaymentFactory paymentFactory = new PaymentFactory(context);
     final NetworkOperatorManager operatorManager = getNetworkOperatorManager(context);
+    final PaymentAuthorizationFactory authorizationFactory =
+        new PaymentAuthorizationFactory(context);
     if (product instanceof InAppBillingProduct) {
-      return new InAppBillingProductRepository(new InAppBillingRepository(operatorManager,
-          AccessorFactory.getAccessorFor(PaymentConfirmation.class), getAccountManager(context),
-          getBaseBodyInterceptorV3(context), getHttpClient(context),
-          WebService.getDefaultConverter()), purchaseFactory, paymentFactory,
-          (InAppBillingProduct) product);
+      return new InAppBillingProductRepository(getInAppBillingRepository(context), purchaseFactory,
+          paymentFactory, (InAppBillingProduct) product, getPaymentAuthorizationRepository(context),
+          getPaymentConfirmationRepository(context, product), getPayer(context),
+          authorizationFactory);
     } else {
       return new PaidAppProductRepository(getAppRepository(context), purchaseFactory,
-          paymentFactory, (PaidAppProduct) product);
+          paymentFactory, (PaidAppProduct) product, getPaymentAuthorizationRepository(context),
+          getPaymentConfirmationRepository(context, product), getPayer(context),
+          authorizationFactory);
     }
   }
 
@@ -149,8 +144,8 @@ public final class RepositoryFactory {
     return new PaymentAuthorizationRepository(
         AccessorFactory.getAccessorFor(PaymentAuthorization.class), getBackgroundSync(context),
         new PaymentAuthorizationFactory(context), getAccountManager(context),
-        getBaseBodyInterceptorV3(context), getHttpClient(context),
-        WebService.getDefaultConverter(), getPayer(context));
+        getBaseBodyInterceptorV3(context), getHttpClient(context), WebService.getDefaultConverter(),
+        getPayer(context));
   }
 
   private static NetworkOperatorManager getNetworkOperatorManager(Context context) {

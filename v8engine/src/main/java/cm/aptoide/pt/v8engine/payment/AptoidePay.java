@@ -5,10 +5,10 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
+import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationRepository;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
-import cm.aptoide.pt.v8engine.payment.repository.PaymentRepository;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -17,54 +17,30 @@ import rx.Single;
 public class AptoidePay {
 
   private final PaymentConfirmationRepository confirmationRepository;
-  private final PaymentAuthorizationRepository authorizationRepository;
-  private final PaymentAuthorizationFactory authorizationFactory;
-  private final PaymentRepository paymentRepository;
   private final ProductRepository productRepository;
-  private final Payer payer;
 
   public AptoidePay(PaymentConfirmationRepository confirmationRepository,
-      PaymentAuthorizationRepository authorizationRepository,
-      PaymentAuthorizationFactory authorizationFactory, PaymentRepository paymentRepository,
-      ProductRepository productRepository, Payer payer) {
+      ProductRepository productRepository) {
     this.confirmationRepository = confirmationRepository;
-    this.authorizationRepository = authorizationRepository;
-    this.authorizationFactory = authorizationFactory;
-    this.paymentRepository = paymentRepository;
     this.productRepository = productRepository;
-    this.payer = payer;
   }
 
-  public Observable<List<Payment>> payments() {
-    return paymentRepository.getPayments();
+  public Single<List<Payment>> getPayments() {
+    return productRepository.getPayments();
   }
 
-  public Observable<Payment> payment(int paymentId) {
-    return paymentRepository.getPayment(paymentId);
+  public Single<Payment> getPayment(int paymentId) {
+    return getPayments().flatMapObservable(payments -> Observable.from(payments)
+        .filter(payment -> payment.getId() == paymentId)
+        .switchIfEmpty(Observable.error(
+            new PaymentFailureException("Payment " + paymentId + "not available")))).toSingle();
   }
 
-  public Completable initiate(Payment payment) {
-    if (payment.getAuthorization().isAuthorized() || payment.getAuthorization().isInitiated()) {
-      return Completable.complete();
-    }
-    return authorizationRepository.createPaymentAuthorization(payment.getId());
+  public Observable<PaymentConfirmation> getConfirmation(Product product) {
+    return confirmationRepository.getPaymentConfirmation(product);
   }
 
-  public Completable authorize(int paymentId) {
-    return payer.getId()
-        .flatMapCompletable(payerId -> authorizationRepository.saveAuthorization(
-            authorizationFactory.create(paymentId, Authorization.Status.PENDING, payerId)));
-  }
-
-  public Completable process(Payment payment, Product product) {
-    return payment.process(product);
-  }
-
-  public Observable<PaymentConfirmation> confirmation(Product product) {
-    return paymentRepository.getConfirmation(product);
-  }
-
-  public Single<Purchase> purchase(Product product) {
+  public Single<Purchase> getPurchase(Product product) {
     return productRepository.getPurchase(product);
   }
 }

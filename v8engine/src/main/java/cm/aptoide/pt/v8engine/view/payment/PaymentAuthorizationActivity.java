@@ -20,16 +20,12 @@ import android.webkit.WebViewClient;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.payment.AccountPayer;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
-import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
-import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.presenter.PaymentAuthorizationPresenter;
 import cm.aptoide.pt.v8engine.presenter.PaymentAuthorizationView;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.view.BackButton;
 import cm.aptoide.pt.v8engine.view.BackButtonActivity;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
@@ -72,10 +68,7 @@ public class PaymentAuthorizationActivity extends BackButtonActivity
       final AptoideAccountManager accountManager =
           ((V8Engine) getApplicationContext()).getAccountManager();
       aptoidePay = new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
-          RepositoryFactory.getPaymentAuthorizationRepository(this),
-          new PaymentAuthorizationFactory(this),
-          RepositoryFactory.getPaymentRepository(this, product),
-          RepositoryFactory.getProductRepository(this, product), new AccountPayer(accountManager));
+          RepositoryFactory.getProductRepository(this, product));
 
       webView = (WebView) findViewById(R.id.activity_boa_compra_authorization_web_view);
       webView.getSettings().setJavaScriptEnabled(true);

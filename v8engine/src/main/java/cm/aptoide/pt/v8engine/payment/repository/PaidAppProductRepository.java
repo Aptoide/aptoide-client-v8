@@ -7,6 +7,8 @@ package cm.aptoide.pt.v8engine.payment.repository;
 
 import cm.aptoide.pt.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.v8engine.app.AppRepository;
+import cm.aptoide.pt.v8engine.payment.Payer;
+import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.ProductRepository;
@@ -21,7 +23,7 @@ import rx.Single;
  * Created by marcelobenites on 29/11/16.
  */
 
-public class PaidAppProductRepository implements ProductRepository {
+public class PaidAppProductRepository extends ProductRepository {
 
   private final AppRepository appRepository;
   private final PurchaseFactory purchaseFactory;
@@ -29,7 +31,12 @@ public class PaidAppProductRepository implements ProductRepository {
   private final PaidAppProduct product;
 
   public PaidAppProductRepository(AppRepository appRepository, PurchaseFactory purchaseFactory,
-      PaymentFactory paymentFactory, PaidAppProduct product) {
+      PaymentFactory paymentFactory, PaidAppProduct product,
+      PaymentAuthorizationRepository authorizationRepository,
+      PaymentConfirmationRepository confirmationRepository, Payer payer,
+      PaymentAuthorizationFactory authorizationFactory) {
+    super(paymentFactory, authorizationRepository, confirmationRepository, payer,
+        authorizationFactory);
     this.appRepository = appRepository;
     this.purchaseFactory = purchaseFactory;
     this.paymentFactory = paymentFactory;
@@ -48,14 +55,11 @@ public class PaidAppProductRepository implements ProductRepository {
     });
   }
 
-  @Override public Single<List<PaymentServiceResponse>> getPayments() {
-    return getServerPaidAppPaymentServices(product.getAppId(), false, product.getStoreName(), true);
-  }
-
-  private Single<List<PaymentServiceResponse>> getServerPaidAppPaymentServices(long appId,
-      boolean sponsored, String storeName, boolean refresh) {
-    return appRepository.getPaidApp(appId, sponsored, storeName, refresh)
+  @Override public Single<List<Payment>> getPayments() {
+    return appRepository.getPaidApp(product.getAppId(), product.isSponsored(),
+        product.getStoreName(), false)
         .map(paidApp -> paidApp.getPayment().getPaymentServices())
-        .toSingle();
+        .toSingle()
+        .flatMap(payments -> convertResponseToPayment(payments));
   }
 }

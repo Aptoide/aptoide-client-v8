@@ -55,7 +55,7 @@ public class PaymentAuthorizationRepository {
       }
       return Observable.<Void> error(
           new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-    }).toCompletable();
+    }).toCompletable().andThen(syncAuthorizations(Collections.singletonList(paymentId)));
   }
 
   public Observable<Authorization> getPaymentAuthorization(int paymentId) {
@@ -64,7 +64,13 @@ public class PaymentAuthorizationRepository {
         .filter(authorization -> authorization.getPaymentId() == paymentId);
   }
 
-  public Observable<List<Authorization>> getPaymentAuthorizations(List<Integer> paymentIds) {
+  public Completable saveAuthorization(Authorization authorization) {
+    return Completable.fromAction(() -> authotizationAccessor.save(
+        authorizationFactory.convertToDatabasePaymentAuthorization(authorization)))
+        .andThen(syncAuthorizations(Collections.singletonList(authorization.getPaymentId())));
+  }
+
+  private Observable<List<Authorization>> getPaymentAuthorizations(List<Integer> paymentIds) {
     return payer.getId()
         .flatMapObservable(payerId -> syncAuthorizations(paymentIds).andThen(
             authotizationAccessor.getPaymentAuthorizations(payerId)
@@ -80,11 +86,5 @@ public class PaymentAuthorizationRepository {
         .toList()
         .flatMap(ids -> backgroundSync.syncAuthorizations(ids).toObservable())
         .toCompletable();
-  }
-
-  public Completable saveAuthorization(Authorization authorization) {
-    return Completable.fromAction(() -> authotizationAccessor.save(
-        authorizationFactory.convertToDatabasePaymentAuthorization(authorization)))
-        .andThen(syncAuthorizations(Collections.singletonList(authorization.getPaymentId())));
   }
 }

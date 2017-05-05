@@ -7,6 +7,8 @@ package cm.aptoide.pt.v8engine.payment.repository;
 
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.model.v3.PaymentServiceResponse;
+import cm.aptoide.pt.v8engine.payment.Payer;
+import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.ProductRepository;
@@ -19,7 +21,7 @@ import rx.Observable;
 import rx.Single;
 import rx.schedulers.Schedulers;
 
-public class InAppBillingProductRepository implements ProductRepository {
+public class InAppBillingProductRepository extends ProductRepository {
 
   private final InAppBillingRepository inAppBillingRepository;
   private final PurchaseFactory purchaseFactory;
@@ -27,7 +29,12 @@ public class InAppBillingProductRepository implements ProductRepository {
   private final InAppBillingProduct product;
 
   public InAppBillingProductRepository(InAppBillingRepository inAppBillingRepository,
-      PurchaseFactory purchaseFactory, PaymentFactory paymentFactory, InAppBillingProduct product) {
+      PurchaseFactory purchaseFactory, PaymentFactory paymentFactory, InAppBillingProduct product,
+      PaymentAuthorizationRepository authorizationRepository,
+      PaymentConfirmationRepository confirmationRepository, Payer payer,
+      PaymentAuthorizationFactory authorizationFactory) {
+    super(paymentFactory, authorizationRepository, confirmationRepository, payer,
+        authorizationFactory);
     this.inAppBillingRepository = inAppBillingRepository;
     this.purchaseFactory = purchaseFactory;
     this.paymentFactory = paymentFactory;
@@ -44,9 +51,10 @@ public class InAppBillingProductRepository implements ProductRepository {
         .subscribeOn(Schedulers.io());
   }
 
-  @Override public Single<List<PaymentServiceResponse>> getPayments() {
+  @Override public Single<List<Payment>> getPayments() {
     return getServerInAppBillingPaymentServices(product.getApiVersion(), product.getPackageName(),
-        product.getSku(), product.getType()).toSingle();
+        product.getSku(), product.getType()).toSingle()
+        .flatMap(payments -> convertResponseToPayment(payments));
   }
 
   private Observable<List<PaymentServiceResponse>> getServerInAppBillingPaymentServices(

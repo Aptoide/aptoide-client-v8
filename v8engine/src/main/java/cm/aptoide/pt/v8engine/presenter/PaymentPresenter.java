@@ -14,6 +14,7 @@ import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.Purchase;
+import cm.aptoide.pt.v8engine.payment.exception.PaymentNotAuthorizedException;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -93,14 +94,10 @@ public class PaymentPresenter implements Presenter {
         .flatMap(event -> loginLifecycle(event))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(loggedIn -> view.showLoading())
-        .flatMap(loading -> Observable.combineLatest(
-            aptoidePay.payments().observeOn(AndroidSchedulers.mainThread()),
-            aptoidePay.confirmation(product).observeOn(AndroidSchedulers.mainThread()),
-            (payments, confirmation) -> {
-              return showProductAndPayments(payments).<Purchase> andThen(
-                  treatLoadingAndGetPurchase(confirmation));
-            })).<Purchase> flatMap(observable -> observable).compose(
-        view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .flatMap(created -> showProductAndPayments().andThen(aptoidePay.getConfirmation(product)))
+        .observeOn(AndroidSchedulers.mainThread())
+        .flatMap(confirmation -> treatLoadingAndGetPurchase(confirmation))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(purchase -> dismiss(purchase), throwable -> dismiss(throwable));
   }
@@ -120,10 +117,11 @@ public class PaymentPresenter implements Presenter {
   }
 
   private Observable<Void> cancellationSelection() {
-    return Observable.merge(view.cancellationSelection().flatMap(cancelled ->
-        sendCancellationAnalytics().andThen(Observable.just(cancelled))), view
-        .tapOutsideSelection().flatMap(tappedOutside -> sendTapOutsideAnalytics().andThen
-            (Observable.just(tappedOutside))))
+    return Observable.merge(view.cancellationSelection()
+        .flatMap(cancelled -> sendCancellationAnalytics().andThen(Observable.just(cancelled))), view
+        .tapOutsideSelection()
+        .flatMap(
+            tappedOutside -> sendTapOutsideAnalytics().andThen(Observable.just(tappedOutside))))
         .doOnNext(cancelled -> view.dismiss());
   }
 
@@ -185,19 +183,23 @@ public class PaymentPresenter implements Presenter {
     return Observable.empty();
   }
 
-  private Completable showProductAndPayments(List<Payment> payments) {
-    return Completable.defer(() -> {
-      saveCurrentPayments(payments);
-      showProduct(product);
-      if (payments.isEmpty()) {
-        view.showPaymentsNotFoundMessage();
-        return Completable.complete();
-      } else {
-        return paymentSelector.selectedPayment(payments)
-            .observeOn(AndroidSchedulers.mainThread())
-            .flatMapCompletable(selectedPayment -> showPayments(payments, selectedPayment));
-      }
-    });
+  private Completable showProductAndPayments() {
+    return aptoidePay.getPayments()
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnSuccess(payments -> {
+          saveCurrentPayments(payments);
+          showProduct(product);
+        })
+        .flatMapCompletable(payments -> {
+          if (payments.isEmpty()) {
+            view.showPaymentsNotFoundMessage();
+            return Completable.complete();
+          } else {
+            return paymentSelector.selectedPayment(payments)
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMapCompletable(selectedPayment -> showPayments(payments, selectedPayment));
+          }
+        });
   }
 
   private Observable<Purchase> treatLoadingAndGetPurchase(PaymentConfirmation confirmation) {
@@ -207,7 +209,7 @@ public class PaymentPresenter implements Presenter {
       view.showLoading();
     } else if (confirmation.isCompleted()) {
       view.showLoading();
-      return aptoidePay.purchase(product).toObservable();
+      return aptoidePay.getPurchase(product).toObservable();
     }
     return Observable.empty();
   }
@@ -231,12 +233,15 @@ public class PaymentPresenter implements Presenter {
   }
 
   private Completable processOrNavigateToAuthorization(Payment payment) {
-    if (payment.getAuthorization().isAuthorized()) {
-      return aptoidePay.process(payment, product);
-    }
-    return aptoidePay.initiate(payment)
+    return payment.process(product)
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnCompleted(() -> view.navigateToAuthorizationView(payment.getId(), product));
+        .onErrorResumeNext(throwable -> {
+          if (throwable instanceof PaymentNotAuthorizedException) {
+            return Completable.fromAction(
+                () -> view.navigateToAuthorizationView(payment.getId(), product));
+          }
+          return Completable.error(throwable);
+        });
   }
 
   private void saveCurrentPayments(List<Payment> payments) {

@@ -40,6 +40,8 @@ public class PaymentSyncDataConverter {
   private static final String APP_ID = "cm.aptoide.pt.v8engine.repository.sync.PRODUCT_APP_ID";
   private static final String STORE_NAME =
       "cm.aptoide.pt.v8engine.repository.sync.PRODUCT_STORE_NAME";
+  private static final String SPONSORED =
+      "cm.aptoide.pt.v8engine.repository.sync.PRODUCT_SPONSORED";
   private static final String TAX_RATE = "cm.aptoide.pt.v8engine.repository.sync.PRICE_TAX_RATE";
   private static final String CURRENCY = "cm.aptoide.pt.v8engine.repository.sync.PRICE_CURRENCY";
   private static final String CURRENCY_SYMBOL =
@@ -63,6 +65,7 @@ public class PaymentSyncDataConverter {
 
     final long appId = bundle.getLong(APP_ID, -1);
     final String storeName = bundle.getString(STORE_NAME);
+    final boolean sponsored = bundle.getBoolean(SPONSORED);
 
     if (id != -1
         && icon != null
@@ -85,7 +88,7 @@ public class PaymentSyncDataConverter {
             developerPayload, type, price);
       }
       if (id != -1 && storeName != null) {
-        return new PaidAppProduct(id, icon, title, description, appId, storeName, price);
+        return new PaidAppProduct(id, icon, title, description, appId, storeName, price, sponsored);
       }
     }
     return null;
@@ -113,6 +116,7 @@ public class PaymentSyncDataConverter {
     if (product instanceof PaidAppProduct) {
       bundle.putLong(APP_ID, ((PaidAppProduct) product).getAppId());
       bundle.putString(STORE_NAME, ((PaidAppProduct) product).getStoreName());
+      bundle.putBoolean(SPONSORED, ((PaidAppProduct) product).isSponsored());
     }
 
     return bundle;

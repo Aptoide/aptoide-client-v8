@@ -9,6 +9,8 @@ import android.content.Context;
 import cm.aptoide.pt.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.payment.providers.paypal.PayPalPayment;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationRepository;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 
@@ -25,18 +27,22 @@ public class PaymentFactory {
     this.context = context;
   }
 
-  public Payment create(PaymentServiceResponse paymentService, Authorization authorization,
-      PaymentConfirmationRepository confirmationRepository) {
+  public Payment create(PaymentServiceResponse paymentService,
+      PaymentAuthorizationRepository authorizationRepository,
+      PaymentConfirmationRepository confirmationRepository,
+      PaymentAuthorizationFactory authorizationFactory, Payer payer) {
     switch (paymentService.getShortName()) {
       case PAYPAL:
         return new PayPalPayment(context, paymentService.getId(), paymentService.getName(),
-            paymentService.getDescription(), confirmationRepository, authorization,
-            getPayPalConfiguration());
+            paymentService.getDescription(), confirmationRepository, authorizationRepository,
+            getPayPalConfiguration(), paymentService.isAuthorizationRequired(),
+            authorizationFactory, payer);
       case BOACOMPRA:
       case BOACOMPRAGOLD:
       case DUMMY:
         return new AptoidePayment(paymentService.getId(), paymentService.getName(),
-            paymentService.getDescription(), confirmationRepository, authorization);
+            paymentService.getDescription(), confirmationRepository, authorizationRepository,
+            paymentService.isAuthorizationRequired(), authorizationFactory, payer);
       default:
         throw new IllegalArgumentException(
             "Payment not supported: " + paymentService.getShortName());

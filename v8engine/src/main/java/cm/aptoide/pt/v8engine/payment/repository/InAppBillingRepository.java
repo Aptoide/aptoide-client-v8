@@ -37,8 +37,8 @@ public class InAppBillingRepository {
   private final PaymentConfirmationAccessor confirmationAccessor;
   private final AptoideAccountManager accountManager;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
-  private OkHttpClient httpClient;
-  private Converter.Factory converterFactory;
+  private final OkHttpClient httpClient;
+  private final Converter.Factory converterFactory;
 
   public InAppBillingRepository(NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor confirmationAccessor, AptoideAccountManager accountManager,

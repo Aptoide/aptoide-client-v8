@@ -401,7 +401,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   public void buyApp(GetAppMeta.App app) {
-    final ParcelableProduct product = (ParcelableProduct) productFactory.create(app);
+    final ParcelableProduct product = (ParcelableProduct) productFactory.create(app, sponsored);
     paymentAnalytics.sendPaidAppBuyButtonPressedEvent(product);
     startActivityForResult(
         PaymentActivity.getIntent(getActivity(), product),

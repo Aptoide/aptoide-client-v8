@@ -10,11 +10,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.v8engine.payment.AptoidePayment;
-import cm.aptoide.pt.v8engine.payment.Authorization;
+import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationRepository;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import java.math.BigDecimal;
@@ -42,9 +44,11 @@ public class PayPalPayment extends AptoidePayment {
   private final PaymentConfirmationRepository confirmationRepository;
 
   public PayPalPayment(Context context, int id, String name, String description,
-      PaymentConfirmationRepository confirmationRepository, Authorization authorization,
-      PayPalConfiguration configuration) {
-    super(id, name, description, confirmationRepository, authorization);
+      PaymentConfirmationRepository confirmationRepository, PaymentAuthorizationRepository authorizationRepository,
+      PayPalConfiguration configuration, boolean authorizationRequired,
+      PaymentAuthorizationFactory authorizationFactory, Payer payer) {
+    super(id, name, description, confirmationRepository, authorizationRepository,
+        authorizationRequired, authorizationFactory, payer);
     this.context = context;
     this.configuration = configuration;
     this.confirmationRepository = confirmationRepository;
