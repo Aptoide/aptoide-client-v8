@@ -4,7 +4,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
@@ -83,39 +82,45 @@ public class NotificationShower {
   private Completable showNotification(Context context, int notificationId, String title,
       String body, String imageUrl, String trackUrl, String url) {
 
-    return Completable.fromAction(() -> {
-      PendingIntent pressIntentAction = getPressIntentAction(trackUrl, url, notificationId);
-
-      android.app.Notification notification =
-          buildNotification(context, title, body, imageUrl, pressIntentAction, notificationId);
-
-      managerNotification.notify(notificationId, notification);
-    }).subscribeOn(AndroidSchedulers.mainThread());
+    return getPressIntentAction(trackUrl, url, notificationId).flatMap(
+        pressIntentAction -> buildNotification(context, title, body, imageUrl, pressIntentAction,
+            notificationId))
+        .toObservable()
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .doOnNext(notification -> managerNotification.notify(notificationId, notification))
+        .toCompletable();
   }
 
-  @NonNull
-  private android.app.Notification buildNotification(Context context, String title, String body,
-      String imageUrl, PendingIntent pressIntentAction, int notificationId) {
-    android.app.Notification notification =
-        new NotificationCompat.Builder(Application.getContext()).setContentIntent(pressIntentAction)
-            .setOngoing(false)
-            .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-            .setLargeIcon(BitmapFactory.decodeResource(Application.getContext().getResources(),
-                Application.getConfiguration().getIcon()))
-            .setContentTitle(title)
-            .setContentText(body)
-            .build();
-    notification.flags =
-        android.app.Notification.DEFAULT_LIGHTS | android.app.Notification.FLAG_AUTO_CANCEL;
+  @NonNull private Single<android.app.Notification> buildNotification(Context context, String title,
+      String body, String imageUrl, PendingIntent pressIntentAction, int notificationId) {
+    return Single.fromCallable(() -> {
+      android.app.Notification notification =
+          new NotificationCompat.Builder(Application.getContext()).setContentIntent(
+              pressIntentAction)
+              .setOngoing(false)
+              .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+              .setLargeIcon(ImageLoader.with(context).loadBitmap(imageUrl))
+              .setContentTitle(title)
+              .setContentText(body)
+              .build();
+      notification.flags =
+          android.app.Notification.DEFAULT_LIGHTS | android.app.Notification.FLAG_AUTO_CANCEL;
+      return notification;
+    })
+        .subscribeOn(Schedulers.computation())
+        .observeOn(AndroidSchedulers.mainThread())
+        .map(notification -> setExpandedView(context, title, body, imageUrl, notificationId,
+            notification));
+  }
+
+  private android.app.Notification setExpandedView(Context context, String title, String body,
+      String imageUrl, int notificationId, android.app.Notification notification) {
 
     if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 24 && !TextUtils.isEmpty(imageUrl)) {
-
       RemoteViews expandedView = new RemoteViews(Application.getContext().getPackageName(),
           R.layout.pushnotificationlayout);
-      expandedView.setImageViewBitmap(R.id.icon,
-          BitmapFactory.decodeResource(Application.getContext().getResources(),
-              Application.getConfiguration().getIcon()));
-      expandedView.setTextViewText(R.id.text1, title);
+      expandedView.setImageViewBitmap(R.id.icon, notification.largeIcon);
+      expandedView.setTextViewText(R.id.title, title);
       expandedView.setTextViewText(R.id.description, body);
       notification.bigContentView = expandedView;
 
@@ -127,19 +132,22 @@ public class NotificationShower {
     return notification;
   }
 
-  private PendingIntent getPressIntentAction(String trackUrl, String url, int notificationId) {
-    Intent resultIntent = new Intent(Application.getContext(), PullingContentReceiver.class);
-    resultIntent.setAction(PullingContentReceiver.NOTIFICATION_PRESSED_ACTION);
+  private Single<PendingIntent> getPressIntentAction(String trackUrl, String url,
+      int notificationId) {
+    return Single.fromCallable(() -> {
+      Intent resultIntent = new Intent(Application.getContext(), PullingContentReceiver.class);
+      resultIntent.setAction(PullingContentReceiver.NOTIFICATION_PRESSED_ACTION);
 
-    if (!TextUtils.isEmpty(trackUrl)) {
-      resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TRACK_URL, trackUrl);
-    }
-    if (!TextUtils.isEmpty(url)) {
-      resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TARGET_URL, url);
-    }
+      if (!TextUtils.isEmpty(trackUrl)) {
+        resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TRACK_URL, trackUrl);
+      }
+      if (!TextUtils.isEmpty(url)) {
+        resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TARGET_URL, url);
+      }
 
-    return PendingIntent.getBroadcast(Application.getContext(), notificationId, resultIntent,
-        PendingIntent.FLAG_UPDATE_CURRENT);
+      return PendingIntent.getBroadcast(Application.getContext(), notificationId, resultIntent,
+          PendingIntent.FLAG_UPDATE_CURRENT);
+    }).subscribeOn(Schedulers.computation());
   }
 
   private Completable setNotificationAsViewed(Notification notification) {

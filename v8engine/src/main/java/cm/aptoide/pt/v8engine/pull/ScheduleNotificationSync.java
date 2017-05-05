@@ -7,7 +7,6 @@ import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.dataprovider.ws.notifications.GetPullNotificationsResponse;
 import cm.aptoide.pt.dataprovider.ws.notifications.PullCampaignNotificationsRequest;
 import cm.aptoide.pt.dataprovider.ws.notifications.PullSocialNotificationRequest;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import java.util.LinkedList;
 import java.util.List;
@@ -67,14 +66,11 @@ public class ScheduleNotificationSync {
   }
 
   private Single<LinkedList<Notification>> getSocialNotifications() {
-    return (((V8Engine) context.getApplicationContext()).getAccountManager()).accountStatus()
-        .first()
-        .filter(account -> account.isLoggedIn())
-        .flatMap(
-            packageInfo -> PullSocialNotificationRequest.of(idsRepository.getUniqueIdentifier(),
-                versionName, applicationId, httpClient, converterFactory)
-                .observe()
-                .map(response -> convertSocialNotifications(response))).first().toSingle();
+    return PullSocialNotificationRequest.of(idsRepository.getUniqueIdentifier(), versionName,
+        applicationId, httpClient, converterFactory)
+        .observe()
+        .map(response -> convertSocialNotifications(response))
+        .toSingle();
   }
 
   @NonNull private Single<LinkedList<Notification>> getCampaignNotifications() {
