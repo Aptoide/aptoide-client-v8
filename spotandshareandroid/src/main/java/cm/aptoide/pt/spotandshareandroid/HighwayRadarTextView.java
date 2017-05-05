@@ -208,8 +208,6 @@ public class HighwayRadarTextView extends FrameLayout
     String aux = group.getDeviceName();
     for (int i = 0; i < listOfHotspot.size(); i++) {
       if (listOfHotspot.get(i).getText().toString().equals(aux)) {
-        activity.deselectHotspot();
-        activity.setJoinGroupFlag(false);
         listOfHotspot.get(i).setTypeface(null, Typeface.NORMAL);
         listOfHotspot.get(i).setEffectColor(rippleViewDefaultColor);
       }
@@ -435,6 +433,16 @@ public class HighwayRadarTextView extends FrameLayout
           listTxt.set(i, kTmp);
           listTxt.set(k, iTmp);
         }
+      }
+    }
+  }
+
+  public void selectGroup(Group group) {
+    for (int i = 0; i < listOfHotspot.size(); i++) {
+      if (listOfHotspot.get(i).getText().equals(group.getDeviceName())) {
+        listOfHotspot.get(i).setEffectColor(getResources().getColor(R.color.aptoide_orange));
+        listOfHotspot.get(i).postInvalidate();
+        listOfHotspot.get(i).setTypeface(null, Typeface.BOLD);
       }
     }
   }

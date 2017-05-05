@@ -12,7 +12,7 @@ public interface HighwayView {
 
   void enableButtons(boolean enable);
 
-  void setUpListeners();
+  void setupViews();
 
   void showJoinGroupResult(int result);
 
@@ -37,6 +37,12 @@ public interface HighwayView {
   void hideSearchGroupsTextview(boolean hide);
 
   void openChatFromAppViewShare(String deviceName, String appFilepath);
+
+  void paintSelectedGroup(Group group);
+
+  void joinSingleHotspot();
+
+  void deselectHotspot(Group group);
 
   //    void setCreateGroupListener(View.OnClickListener listener );
   //

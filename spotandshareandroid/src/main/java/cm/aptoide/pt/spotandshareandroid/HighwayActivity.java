@@ -86,10 +86,21 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     attachPresenter(presenter);
   }
 
-  private void setupViews() {
+  @Override public void setupViews() {
     radarTextView.setOnHotspotClickListener(new HighwayRadarTextView.HotspotClickListener() {
       @Override public void onGroupClicked(Group group) {
         presenter.clickedOnGroup(group, chosenHotspot);
+      }
+    });
+
+    createGroupButton.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+          hideSearchGroupsTextview(true);
+          presenter.clickCreateGroup();
+        } else {
+          showNougatErrorToast();
+        }
       }
     });
   }
@@ -290,20 +301,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
-  @Override public void setUpListeners() {
-
-    createGroupButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-          hideSearchGroupsTextview(true);
-          presenter.clickCreateGroup();
-        } else {
-          showNougatErrorToast();
-        }
-      }
-    });
-  }
-
   @Override public void showJoinGroupResult(int result) {
     switch (result) {
       case ConnectionManager.ERROR_ON_RECONNECT:
@@ -426,6 +423,10 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     finish();
   }
 
+  @Override public void paintSelectedGroup(Group group) {
+    radarTextView.selectGroup(group);
+  }
+
   @Override public boolean checkPermissions() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       if (!checkNormalPermissions()) {
@@ -498,10 +499,14 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         Toast.LENGTH_SHORT).show();
   }
 
-  public void joinSingleHotspot() {
+  @Override public void joinSingleHotspot() {
     hideSearchGroupsTextview(true);
     //Group g = new Group(chosenHotspot);
     presenter.clickJoinGroup(chosenHotspot);
+  }
+
+  @Override public void deselectHotspot(Group group) {
+    radarTextView.deselectHotspot(group);
   }
 
   public Group getChosenHotspot() {

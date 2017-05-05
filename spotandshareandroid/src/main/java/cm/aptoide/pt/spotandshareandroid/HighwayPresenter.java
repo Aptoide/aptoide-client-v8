@@ -25,6 +25,7 @@ public class HighwayPresenter implements Presenter {
   private Subscription subscription;
   private String autoShareAppName;
   private String autoShareFilepath;
+  private Group chosenHotspot;
 
   public HighwayPresenter(HighwayView view, GroupNameProvider groupNameProvider,
       DeactivateHotspotTask deactivateHotspotTask, ConnectionManager connectionManager,
@@ -113,7 +114,7 @@ public class HighwayPresenter implements Presenter {
               } else {
                 connectionManager.cleanNetworks();
                 view.showConnections();
-                view.setUpListeners();
+                view.setupViews();
                 view.enableButtons(true);
               }
             }
@@ -236,5 +237,18 @@ public class HighwayPresenter implements Presenter {
 
   public void clickedOnGroup(Group group, Group chosenHotspot) {
 
+    if (chosenHotspot != null && chosenHotspot.equals(group)) {
+      view.deselectHotspot(group);
+      this.chosenHotspot=null;
+    } else {
+      if (chosenHotspot != null) {
+        view.deselectHotspot(chosenHotspot);
+        this.chosenHotspot=null;
+      }
+      this.chosenHotspot = group;
+      view.paintSelectedGroup(group);
+      view.hideSearchGroupsTextview(true);
+      clickJoinGroup(chosenHotspot);
+    }
   }
 }
