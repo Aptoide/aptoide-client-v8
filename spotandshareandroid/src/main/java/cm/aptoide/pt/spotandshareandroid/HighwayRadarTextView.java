@@ -139,7 +139,6 @@ public class HighwayRadarTextView extends FrameLayout
         } else {
           txt.setMode(HighwayRadarRippleView.MODE_OUT);
         }
-        //final String hotspotName = removeAPTXVFromString(keyword);
         final String hotspotName = group.getDeviceName();
         txt.setText(hotspotName);
         txt.setTextColor(ranColor);
@@ -150,17 +149,13 @@ public class HighwayRadarTextView extends FrameLayout
           @Override public void onClick(View view) {
 
             Group g = activity.getChosenHotspot();
-            String aux = "";
-            if (g != null) {
-              aux = activity.getChosenHotspot().getSsid();
-            }
 
             if (!activity.isJoinGroupFlag()) {
-              if (aux.equals(keyword)) {
-                deselectHotspot(keyword);
+              if (g != null && g.equals(group)) {
+                deselectHotspot(group);
               } else {
-                if (!aux.equals("")) {
-                  deselectHotspot(aux);
+                if (g != null) {
+                  deselectHotspot(g);
                 }
                 activity.setChosenHotspot(group);
                 txt.setEffectColor(getResources().getColor(R.color.aptoide_orange));
@@ -209,14 +204,8 @@ public class HighwayRadarTextView extends FrameLayout
     return arr;
   }
 
-  private String removeAPTXVFromString(String keyword) {
-    String[] array = keyword.split("_");
-    String deviceName = array[2];//0 is aptxv, 1 is the random chars
-    return deviceName;
-  }
-
-  public void deselectHotspot(String keyword) {
-    String aux = removeAPTXVFromString(keyword);
+  public void deselectHotspot(Group group) {
+    String aux = group.getDeviceName();
     for (int i = 0; i < listOfHotspot.size(); i++) {
       if (listOfHotspot.get(i).getText().toString().equals(aux)) {
         activity.deselectHotspot();
