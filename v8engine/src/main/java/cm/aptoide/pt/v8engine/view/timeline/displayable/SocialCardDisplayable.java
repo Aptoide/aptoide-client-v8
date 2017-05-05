@@ -70,7 +70,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
 
   public Spannable getBlackHighlightedLike(Context context, String string) {
     return spannableFactory.createColorSpan(context.getString(R.string.x_liked_it, string),
-        ContextCompat.getColor(context, R.color.black87alpha), string);
+        ContextCompat.getColor(context, R.color.black_87_alpha), string);
   }
 
   public void likesPreviewClick(FragmentNavigator navigator) {

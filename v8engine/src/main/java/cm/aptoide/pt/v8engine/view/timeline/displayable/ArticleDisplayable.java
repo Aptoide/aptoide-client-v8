@@ -144,7 +144,7 @@ public class ArticleDisplayable extends CardDisplayable {
 
   public Spannable getStyleText(Context context, String sourceName) {
     return spannableFactory.createColorSpan(context.getString(R.string.x_posted, sourceName),
-        ContextCompat.getColor(context, R.color.black87alpha), sourceName);
+        ContextCompat.getColor(context, R.color.black_87_alpha), sourceName);
   }
 
   public void sendOpenArticleEvent(String packageName) {

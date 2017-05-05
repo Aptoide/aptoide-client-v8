@@ -97,7 +97,7 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
   public Spannable getStyledTitle(Context context, String title) {
     return spannableFactory.createColorSpan(context.getString(
         R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, title),
-        ContextCompat.getColor(context, R.color.black87alpha), title);
+        ContextCompat.getColor(context, R.color.black_87_alpha), title);
   }
 
   public Spannable getAppText(Context context) {

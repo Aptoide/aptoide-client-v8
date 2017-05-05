@@ -116,7 +116,7 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
   public Spannable getStyledTitle(Context context, String title) {
     return spannableFactory.createColorSpan(
         context.getString(R.string.x_installed_and_recommended, title),
-        ContextCompat.getColor(context, R.color.black87alpha), title);
+        ContextCompat.getColor(context, R.color.black_87_alpha), title);
   }
 
   @Override

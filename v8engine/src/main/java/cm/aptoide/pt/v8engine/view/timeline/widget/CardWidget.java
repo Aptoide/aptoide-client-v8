@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.view.timeline.widget;
 
 import android.support.annotation.CallSuper;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -83,16 +84,20 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     like.setVisibility(View.VISIBLE);
     comment.setVisibility(View.VISIBLE);
 
-    compositeSubscription.add(RxView.clicks(like)
-        .subscribe(click -> likeButton.performClick(), throwable -> CrashReport.getInstance()
-            .log(throwable)));
+    compositeSubscription.add(RxView.clicks(like).subscribe(click -> {
+      if (!hasSocialPermissions(Analytics.Account.AccountOrigins.LIKE_CARD)) return;
+      likeButton.performClick();
+    }, throwable -> CrashReport.getInstance().log(throwable)));
 
     compositeSubscription.add(RxView.clicks(likeButton).subscribe(click -> {
-      shareCardWithoutPreview(displayable, (String cardId) -> likeCard(displayable, cardId, 1),
-          SharePreviewDialog.SharePreviewOpenMode.LIKE);
+      shareCardWithoutPreview(displayable, (String cardId) -> {
+        likeCard(displayable, cardId, 1);
+      }, SharePreviewDialog.SharePreviewOpenMode.LIKE);
     }, throwable -> CrashReport.getInstance().log(throwable)));
 
     compositeSubscription.add(RxView.clicks(comment).subscribe(click -> {
+      if (!hasSocialPermissions(Analytics.Account.AccountOrigins.SHARE_CARD)) return;
+
       FragmentManager fm = getContext().getSupportFragmentManager();
       CommentDialogFragment commentDialogFragment =
           CommentDialogFragment.newInstanceTimelineArticleComment(
@@ -104,7 +109,6 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
           }, SharePreviewDialog.SharePreviewOpenMode.COMMENT));
       commentDialogFragment.show(fm, "fragment_comment_dialog");
     }, throwable -> CrashReport.getInstance().log(throwable)));
-
     compositeSubscription.add(RxView.clicks(shareButton)
         .subscribe(
             click -> shareCard(displayable, null, SharePreviewDialog.SharePreviewOpenMode.SHARE),
@@ -118,41 +122,13 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
 
   private void shareCardWithoutPreview(T displayable, ShareCardCallback callback,
       SharePreviewDialog.SharePreviewOpenMode openMode) {
-    if (!accountManager.isLoggedIn()) {
-      ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
-          snackView -> accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.SHARE_CARD));
-      return;
-    }
-
-    if (TextUtils.isEmpty(account.getStoreName()) && !Account.Access.PUBLIC.equals(
-        account.getAccess())) {
-      ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
-          R.string.create_store_create, snackView -> {
-            Intent intent = new Intent(getContext(), CreateStoreActivity.class);
-            getContext().startActivity(intent);
-          });
-      return;
-    }
+    if (!hasSocialPermissions(Analytics.Account.AccountOrigins.SHARE_CARD)) return;
     displayable.share(getContext(), callback);
   }
 
   private void shareCard(T displayable, ShareCardCallback callback,
       SharePreviewDialog.SharePreviewOpenMode openMode) {
-    if (!accountManager.isLoggedIn()) {
-      ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
-          snackView -> accountNavigator.navigateToAccountView(
-              Analytics.Account.AccountOrigins.SHARE_CARD));
-      return;
-    }
-
-    if (TextUtils.isEmpty(account.getStoreName()) && !Account.Access.PUBLIC.equals(
-        account.getAccess())) {
-      ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
-          R.string.create_store_create, snackView -> {
-            getFragmentNavigator().navigateTo(CreateStoreFragment.newInstance());
-          });
-      return;
-    }
+    if (!hasSocialPermissions(Analytics.Account.AccountOrigins.SHARE_CARD)) return;
 
     SharePreviewDialog sharePreviewDialog =
         new SharePreviewDialog(displayable, accountManager, true, openMode);
@@ -196,14 +172,31 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
         });
   }
 
-  private boolean likeCard(T displayable, String cardId, int rating) {
+  private boolean hasSocialPermissions(Analytics.Account.AccountOrigins accountOrigins) {
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
-          snackView -> {
-            accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.LIKE_CARD);
+          snackView -> accountNavigator.navigateToAccountView(accountOrigins));
+      return false;
+    }
+
+    if (TextUtils.isEmpty(account.getStoreName()) && !Account.Access.PUBLIC.equals(
+        account.getAccess())) {
+      ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
+          R.string.create_store_create, snackView -> {
+            Fragment fragment =
+                CreateStoreFragment.newInstance();
+            getFragmentNavigator().navigateTo(fragment);
+
+            //Intent intent = new Intent(getContext(), CreateStoreActivity.class);
+            //getContext().startActivity(intent);
           });
       return false;
     }
+    return true;
+  }
+
+  private boolean likeCard(T displayable, String cardId, int rating) {
+    if(!hasSocialPermissions(Analytics.Account.AccountOrigins.LIKE_CARD))
     displayable.like(getContext(), cardId, getCardTypeName().toUpperCase(), rating);
     return true;
   }
