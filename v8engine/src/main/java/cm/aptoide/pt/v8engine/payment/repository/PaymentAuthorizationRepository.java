@@ -66,8 +66,7 @@ public class PaymentAuthorizationRepository {
 
   public Completable saveAuthorization(Authorization authorization) {
     return Completable.fromAction(() -> authotizationAccessor.save(
-        authorizationFactory.convertToDatabasePaymentAuthorization(authorization)))
-        .andThen(syncAuthorizations(Collections.singletonList(authorization.getPaymentId())));
+        authorizationFactory.convertToDatabasePaymentAuthorization(authorization)));
   }
 
   private Observable<List<Authorization>> getPaymentAuthorizations(List<Integer> paymentIds) {
