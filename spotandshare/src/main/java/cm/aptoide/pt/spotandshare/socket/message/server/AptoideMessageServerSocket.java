@@ -36,11 +36,13 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
 
   @Override public void shutdown() {
 
-    shutdown = true;
     onError = null;
 
-    for (AptoideMessageServerController aptoideMessageClientController : getAptoideMessageControllers()) {
-      aptoideMessageClientController.disable();
+    Iterator<AptoideMessageServerController> iterator = getAptoideMessageControllers().iterator();
+    while (iterator.hasNext()) {
+      AptoideMessageServerController aptoideMessageServerController = iterator.next();
+      aptoideMessageServerController.disable();
+      iterator.remove();
     }
     sendToOthersWithAck(null, new ServerLeftMessage(getHost()));
 
@@ -53,7 +55,7 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
 
   @Override protected void onNewClient(Socket socket) throws IOException {
 
-    if (shutdown) {
+    if (isShutdown()) {
       Print.d(TAG, "Server already shutdown!");
       return;
     }
