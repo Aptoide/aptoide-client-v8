@@ -16,6 +16,7 @@ import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 import com.bumptech.glide.request.target.NotificationTarget;
 import io.realm.Sort;
+import java.util.List;
 import rx.Completable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
@@ -60,23 +61,53 @@ public class NotificationShower {
   private Single<Boolean> shouldShowNotification(Notification notificationToShow) {
     // TODO: 04/05/2017 trinkes consider when notification was not dismissed(should be replaced by the new one)
     // TODO: 04/05/2017 trinkes one day missing
-    return notificationAccessor.getAllSorted(Sort.DESCENDING, notificationToShow.getType())
+
+    switch (notificationToShow.getType()) {
+      case Notification.CAMPAIGN:
+        return Single.just(true);
+      case Notification.COMMENT:
+      case Notification.LIKE:
+        return shouldShowSocial(NOTIFICATION_LIMIT_IN_PERIOD,
+            TIME_FRAME_TO_CONSIDER_TO_SHOW_NOTIFICATION);
+      case Notification.POPULAR:
+        return shouldShowPopular(NOTIFICATION_LIMIT_IN_PERIOD,
+            TIME_FRAME_TO_CONSIDER_TO_SHOW_NOTIFICATION);
+      default:
+        return Single.just(false);
+    }
+  }
+
+  private Single<Boolean> shouldShowSocial(int occurrencesLimit, long timeFrame) {
+    return notificationAccessor.getAllSorted(Sort.DESCENDING, new int[] {
+        Notification.COMMENT, Notification.LIKE
+    })
         .first()
         .observeOn(Schedulers.computation())
-        .map(notifications -> {
-          int occurrences = 0;
-          for (int i = 0; i < notifications.size() && occurrences < NOTIFICATION_LIMIT_IN_PERIOD;
-              i++) {
-            Notification notification = notifications.get(i);
-            if (notification.isShowed()
-                && notification.getTimeStamp()
-                > System.currentTimeMillis() - TIME_FRAME_TO_CONSIDER_TO_SHOW_NOTIFICATION) {
-              occurrences++;
-            }
-          }
-          return occurrences < NOTIFICATION_LIMIT_IN_PERIOD;
-        })
+        .map(notifications -> isDisplayedNotificationsLimit(notifications, occurrencesLimit,
+            timeFrame))
         .toSingle();
+  }
+
+  private Single<Boolean> shouldShowPopular(int occurrencesLimit, long timeFrame) {
+    return notificationAccessor.getAllSorted(Sort.DESCENDING, Notification.POPULAR)
+        .first()
+        .observeOn(Schedulers.computation())
+        .map(notifications -> isDisplayedNotificationsLimit(notifications, occurrencesLimit,
+            timeFrame))
+        .toSingle();
+  }
+
+  @NonNull private Boolean isDisplayedNotificationsLimit(List<Notification> notifications,
+      int occurrencesLimit, long timeFrame) {
+    int occurrences = 0;
+    for (int i = 0; i < notifications.size() && occurrences < occurrencesLimit; i++) {
+      Notification notification = notifications.get(i);
+      if (notification.isShowed()
+          && notification.getTimeStamp() > System.currentTimeMillis() - timeFrame) {
+        occurrences++;
+      }
+    }
+    return occurrences < NOTIFICATION_LIMIT_IN_PERIOD;
   }
 
   private Completable showNotification(Context context, int notificationId, String title,
