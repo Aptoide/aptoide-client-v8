@@ -738,7 +738,6 @@ public class Analytics {
   public static class ApplicationInstall {
 
     public static final String EVENT_NAME = "Application Install";
-    public static final String FACEBOOK_EVENT_NAME = "App Install";
     //this will be the one remaining after localytics is killed
 
     private static final String TYPE = "Type";
@@ -769,7 +768,7 @@ public class Analytics {
         parameters.putString(PACKAGE_NAME, packageName);
         parameters.putString(TRUSTED_BADGE, trustedBadge);
         parameters.putString(TYPE, type);
-        logFacebookEvents(FACEBOOK_EVENT_NAME, parameters);
+        logFacebookEvents(EVENT_NAME, parameters);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -783,7 +782,7 @@ public class Analytics {
   public static class ApplicationLaunch {
 
     public static final String EVENT_NAME = "Application Launch";
-    public static final String FACEBOOK_APP_LAUNCH = "App Launches";
+    public static final String FACEBOOK_APP_LAUNCH = "Aptoide Launch";
     public static final String SOURCE = "Source";
     public static final String LAUNCHER = "Launcher";
     public static final String WEBSITE = "Website";
