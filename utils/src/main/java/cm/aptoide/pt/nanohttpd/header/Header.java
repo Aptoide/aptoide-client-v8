@@ -1,4 +1,4 @@
-package cm.aptoide.pt.nanohttpd.misc;
+package cm.aptoide.pt.nanohttpd.header;
 
 import lombok.Data;
 
