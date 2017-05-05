@@ -49,10 +49,12 @@ abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent>
     //EQUIPMENTS
     List<String> imeis = AptoideUtils.SystemU.getImeis();
     List<DownloadInstallAnalyticsBaseBody.Id> ids = new LinkedList<>();
-    if (imeis != null) {
+    if (imeis != null && !imeis.isEmpty() && imeis.get(0) != null) {
       for (String imei : imeis) {
         ids.add(new DownloadInstallAnalyticsBaseBody.Id(imei));
       }
+    } else {
+      ids.add(new DownloadInstallAnalyticsBaseBody.Id(""));
     }
     data.setEquipment(
         new DownloadInstallAnalyticsBaseBody.Equipment(ids, AptoideUtils.SystemU.getSerialNumber(),

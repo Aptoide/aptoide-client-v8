@@ -1061,8 +1061,9 @@ public class AptoideUtils {
      * is given
      */
     @SuppressLint("HardwareIds") public static List<String> getImeis() {
-      List<String> imeis = new ArrayList<>();
+      List<String> imeis = null;
       if (checkPermission("android.permission.READ_PHONE_STATE")) {
+        imeis = new ArrayList<>();
         TelephonyManager tel =
             (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -1115,10 +1116,11 @@ public class AptoideUtils {
       if (checkPermission("android.permission.READ_PHONE_STATE")) {
         TelephonyManager tm =
             (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        return tm.getLine1Number();
-      } else {
-        return "";
+        if (tm.getLine1Number() != null) {
+          return tm.getLine1Number();
+        }
       }
+      return "";
     }
 
     /**
