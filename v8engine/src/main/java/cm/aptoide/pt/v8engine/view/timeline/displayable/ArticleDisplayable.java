@@ -140,6 +140,11 @@ public class ArticleDisplayable extends CardDisplayable {
         getLink().getUrl(), packageName);
   }
 
+  public void sendArticleWidgetCardClickEvent(String action, String socialAction) {
+    timelineAnalytics.sendArticleWidgetCardClickEvent(CARD_TYPE_NAME, getArticleTitle(), getTitle(),
+        action, socialAction);
+  }
+
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_article;
   }

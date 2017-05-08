@@ -141,6 +141,11 @@ public class VideoDisplayable extends CardDisplayable {
         packageName);
   }
 
+  public void sendVideoClickEvent(String action, String socialAction) {
+    timelineAnalytics.sendVideoClickEvent(CARD_TYPE_NAME, getVideoTitle(), action, socialAction,
+        getTitle());
+  }
+
   @Override
   public void share(Context context, boolean privacyResult, ShareCardCallback shareCardCallback) {
     socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);

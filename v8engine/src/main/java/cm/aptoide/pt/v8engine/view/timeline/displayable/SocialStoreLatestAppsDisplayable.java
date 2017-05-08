@@ -115,6 +115,12 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
         sharedStore.getName());
   }
 
+  public void sendSocialLatestAppsClickEvent(String action, String packageName, String socialAction,
+      String publisher) {
+    timelineAnalytics.sendSocialLatestClickEvent(CARD_TYPE_NAME, packageName, action, socialAction,
+        publisher);
+  }
+
   @Override
   public void share(Context context, boolean privacyResult, ShareCardCallback shareCardCallback) {
     socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);

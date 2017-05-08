@@ -51,6 +51,7 @@ import rx.android.schedulers.AndroidSchedulers;
 public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
 
   private static final String TAG = CardWidget.class.getName();
+  protected String socialAction = "(blank)";
   TextView shareButton;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
@@ -101,6 +102,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
       shareCard(displayable, (String cardId) -> likeCard(displayable, cardId, 1),
           SharePreviewDialog.SharePreviewOpenMode.LIKE);
       likeButton.setHeartState(false);
+      socialAction = "Like";
     }, throwable -> CrashReport.getInstance().log(throwable)));
 
     compositeSubscription.add(RxView.clicks(comment).subscribe(click -> {
@@ -114,11 +116,14 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
                 converterFactory).observe().subscribe();
           }, SharePreviewDialog.SharePreviewOpenMode.COMMENT));
       commentDialogFragment.show(fm, "fragment_comment_dialog");
+      socialAction = "Comment";
     }, throwable -> CrashReport.getInstance().log(throwable)));
 
     compositeSubscription.add(RxView.clicks(shareButton)
-        .subscribe(
-            click -> shareCard(displayable, null, SharePreviewDialog.SharePreviewOpenMode.SHARE),
+        .subscribe(click -> {
+              shareCard(displayable, null, SharePreviewDialog.SharePreviewOpenMode.SHARE);
+              socialAction = "Share";
+            },
             err -> CrashReport.getInstance().log(err)));
   }
 

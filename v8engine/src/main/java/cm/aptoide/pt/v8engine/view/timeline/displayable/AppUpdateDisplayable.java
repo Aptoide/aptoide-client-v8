@@ -228,6 +228,11 @@ public class AppUpdateDisplayable extends CardDisplayable {
         getPackageName(), getStoreName());
   }
 
+  public void sendAppUpdateCardClickEvent(String action, String socialAction) {
+    timelineAnalytics.sendAppUpdateCardClickEvent(CARD_TYPE_NAME, action, socialAction,
+        getPackageName(), getStoreName());
+  }
+
   @Override
   public void share(Context context, boolean privacyResult, ShareCardCallback shareCardCallback) {
     socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);

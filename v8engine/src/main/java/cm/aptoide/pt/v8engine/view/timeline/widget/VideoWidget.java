@@ -90,6 +90,7 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
           Analytics.AppsTimeline.OPEN_VIDEO);
       displayable.getLink().launch(context);
       displayable.sendOpenVideoEvent(packageName);
+      displayable.sendVideoClickEvent(Analytics.AppsTimeline.OPEN_VIDEO, socialAction);
     });
 
     compositeSubscription.add(displayable.getRelatedToApplication()
@@ -119,6 +120,7 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
           Analytics.AppsTimeline.BLANK, displayable.getVideoTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_VIDEO_HEADER);
       displayable.sendOpenChannelEvent(packageName);
+      displayable.sendVideoClickEvent(Analytics.AppsTimeline.OPEN_VIDEO_HEADER, socialAction);
     }));
   }
 

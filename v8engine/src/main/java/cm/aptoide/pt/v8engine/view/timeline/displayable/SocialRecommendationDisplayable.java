@@ -10,6 +10,7 @@ import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -21,6 +22,7 @@ import lombok.Getter;
  */
 public class SocialRecommendationDisplayable extends SocialCardDisplayable {
 
+  public static final String CARD_TYPE_NAME = "SOCIAL_RECOMMENDATION";
   @Getter private int avatarResource;
   @Getter private int titleResource;
   @Getter private Comment.User user;
@@ -32,6 +34,7 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
 
   private SpannableFactory spannableFactory;
   private SocialRepository socialRepository;
+  private TimelineAnalytics timelineAnalytics;
 
   public SocialRecommendationDisplayable() {
   }
@@ -40,7 +43,7 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
       int avatarResource, Store store, int titleResource, Comment.User user, long appId,
       String packageName, String appName, String appIcon, String abUrl, long numberOfLikes,
       long numberOfComments, SpannableFactory spannableFactory, SocialRepository socialRepository,
-      DateCalculator dateCalculator) {
+      DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics) {
     super(socialRecommendation, numberOfLikes, numberOfComments, store,
         socialRecommendation.getUser(), socialRecommendation.getUserSharer(),
         socialRecommendation.getMy().isLiked(), socialRecommendation.getLikes(),
@@ -55,11 +58,12 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
     this.abUrl = abUrl;
     this.spannableFactory = spannableFactory;
     this.socialRepository = socialRepository;
+    this.timelineAnalytics = timelineAnalytics;
   }
 
   public static Displayable from(SocialRecommendation socialRecommendation,
       SpannableFactory spannableFactory, SocialRepository socialRepository,
-      DateCalculator dateCalculator) {
+      DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics) {
 
     String abTestingURL = null;
 
@@ -76,18 +80,23 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
         socialRecommendation.getApp().getPackageName(), socialRecommendation.getApp().getName(),
         socialRecommendation.getApp().getIcon(), abTestingURL,
         socialRecommendation.getStats().getLikes(), socialRecommendation.getStats().getComments(),
-        spannableFactory, socialRepository, dateCalculator);
-  }
-
-  public String getTitle() {
-    return AptoideUtils.StringU.getFormattedString(titleResource,
-        Application.getConfiguration().getMarketName());
+        spannableFactory, socialRepository, dateCalculator, timelineAnalytics);
   }
 
   public Spannable getAppText(Context context) {
     return spannableFactory.createColorSpan(
         context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
         ContextCompat.getColor(context, R.color.appstimeline_grey), "");
+  }
+
+  public void sendSocialRecommendationClickEvent(String action, String socialAction) {
+    timelineAnalytics.sendSocialRecommendationClickEvent(CARD_TYPE_NAME, action, socialAction,
+        getPackageName(), getTitle());
+  }
+
+  public String getTitle() {
+    return AptoideUtils.StringU.getFormattedString(titleResource,
+        Application.getConfiguration().getMarketName());
   }
 
   @Override public int getViewLayout() {

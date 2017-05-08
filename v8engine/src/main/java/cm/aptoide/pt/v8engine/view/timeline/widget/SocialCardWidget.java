@@ -92,9 +92,12 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     }
 
     if (comments != null) {
-      compositeSubscription.add(RxView.clicks(comments)
-          .flatMap(aVoid -> showComments(displayable))
-          .subscribe(aVoid -> knockWithSixpackCredentials(displayable.getAbUrl()), showError()));
+      compositeSubscription.add(
+          RxView.clicks(comments)
+              .doOnNext(__ -> socialAction = "Comment") // For analytics purposes
+              .flatMap(aVoid -> showComments(displayable))
+              .subscribe(aVoid -> knockWithSixpackCredentials(displayable.getAbUrl()),
+                  showError()));
 
       comments.setVisibility(View.VISIBLE);
     } else {
@@ -132,6 +135,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
                 }
               }
             }
+            socialAction = "Like";
           }, err -> CrashReport.getInstance().log(err)));
 
       like.setVisibility(View.VISIBLE);
@@ -170,6 +174,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
             openStore(displayable.getStore().getName(),
                 displayable.getStore().getAppearance().getTheme());
           }
+          socialAction = "Go to Owner Timeline";
         }));
   }
 

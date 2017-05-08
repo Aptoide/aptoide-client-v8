@@ -88,9 +88,10 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
         spannableFactory, socialRepository, dateCalculator);
   }
 
-  public String getTitle() {
-    return AptoideUtils.StringU.getFormattedString(titleResource,
-        Application.getConfiguration().getMarketName());
+  public Spannable getAppText(Context context) {
+    return spannableFactory.createColorSpan(
+        context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
+        ContextCompat.getColor(context, R.color.appstimeline_grey), "");
   }
 
   //public String getSimilarAppPackageName() {
@@ -119,10 +120,8 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
   //      similarAppsNames.toArray(new String[similarAppsNames.size()]));
   //}
 
-  public Spannable getAppText(Context context) {
-    return spannableFactory.createColorSpan(
-        context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
-        ContextCompat.getColor(context, R.color.appstimeline_grey), "");
+  @Override public int getViewLayout() {
+    return R.layout.displayable_social_timeline_social_install;
   }
 
   //public String getTimeSinceLastUpdate(Context context) {
@@ -133,13 +132,19 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
   //  return dateCalculator.getTimeSinceDate(context, timestamp);
   //}
 
-  @Override public int getViewLayout() {
-    return R.layout.displayable_social_timeline_social_install;
-  }
-
   public void sendOpenAppEvent() {
     timelineAnalytics.sendOpenAppEvent(CARD_TYPE_NAME, TimelineAnalytics.SOURCE_APTOIDE,
         getPackageName());
+  }
+
+  public void sendSocialInstallClickEvent(String action, String socialAction) {
+    timelineAnalytics.sendSocialInstallClickEvent(CARD_TYPE_NAME, action, socialAction,
+        getPackageName(), getTitle());
+  }
+
+  public String getTitle() {
+    return AptoideUtils.StringU.getFormattedString(titleResource,
+        Application.getConfiguration().getMarketName());
   }
 
   @Override

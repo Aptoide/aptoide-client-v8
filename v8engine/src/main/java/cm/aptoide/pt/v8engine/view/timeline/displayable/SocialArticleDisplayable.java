@@ -158,6 +158,11 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
         packageName);
   }
 
+  public void sendSocialArticleClickEvent(String action, String socialAction) {
+    timelineAnalytics.sendSocialArticleClickEvent(CARD_TYPE_NAME, getArticleTitle(), getTitle(),
+        action, socialAction);
+  }
+
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_social_article;
   }

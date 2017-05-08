@@ -1,5 +1,7 @@
 package cm.aptoide.pt.v8engine.timeline;
 
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -18,6 +20,12 @@ import retrofit2.Converter;
 public class TimelineAnalytics {
 
   public static final String SOURCE_APTOIDE = "APTOIDE";
+  private static final String CARD_TYPE = "card_type";
+  private static final String ACTION = "action";
+  private static final String SOCIAL_ACTION = "social_action";
+  private static final String PACKAGE = "package_name";
+  private static final String PUBLISHER = "publisher";
+  private static final String TITLE = "title";
   private static final String OPEN_ARTICLE = "OPEN_ARTICLE";
   private static final String OPEN_BLOG = "OPEN_BLOG";
   private static final String OPEN_VIDEO = "OPEN_VIDEO";
@@ -27,8 +35,9 @@ public class TimelineAnalytics {
   private static final String UPDATE_APP = "UPDATE_APP";
   private static final String FOLLOW_FRIENDS = "Apps_Timeline_Follow_Friends";
   private static final String TIMELINE_TAB_CLICK = "Apps_Timeline_Open";
-  private static final String CARD_ACTION = "Apps_Timeline_Card_Action";
   private static final String SOCIAL_CARD_PREVIEW = "Apps_Timeline_Social_Card_Preview";
+  private static final String CARD_ACTION = "Apps_Timeline_Card_Action";
+  private static final String BLANK = "(blank)";
   private final Analytics analytics;
   private final AppEventsLogger facebook;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
@@ -43,7 +52,164 @@ public class TimelineAnalytics {
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
+  }
 
+  public void sendAppUpdateCardClickEvent(String cardType, String action, String socialAction,
+      String packageName, String publisher) {
+    analytics.sendEvent(new FacebookEvent(facebook, CARD_ACTION,
+        createAppUpdateCardData(cardType, action, socialAction, packageName, publisher)));
+  }
+
+  @NonNull
+  private Bundle createAppUpdateCardData(String cardType, String action, String socialAction,
+      String packageName, String publisher) {
+    Bundle bundle = new Bundle();
+    bundle.putString(CARD_TYPE, cardType);
+    bundle.putString(ACTION, action);
+    bundle.putString(SOCIAL_ACTION, socialAction);
+    bundle.putString(PACKAGE, packageName);
+    bundle.putString(PUBLISHER, publisher);
+    bundle.putString(TITLE, BLANK);
+    return bundle;
+  }
+
+  public void sendArticleWidgetCardClickEvent(String cardType, String title, String publisher,
+      String action, String socialAction) {
+    analytics.sendEvent(new FacebookEvent(facebook, CARD_ACTION,
+        createArticleCardData(cardType, title, publisher, action, socialAction)));
+  }
+
+  @NonNull private Bundle createArticleCardData(String cardType, String title, String publisher,
+      String action, String socialAction) {
+    Bundle bundle = new Bundle();
+    bundle.putString(CARD_TYPE, cardType);
+    bundle.putString(ACTION, action);
+    bundle.putString(SOCIAL_ACTION, socialAction);
+    bundle.putString(PACKAGE, BLANK);
+    bundle.putString(PUBLISHER, publisher);
+    bundle.putString(TITLE, title);
+    return bundle;
+  }
+
+  public void sendRecommendationCardClickEvent(String cardType, String action, String socialAction,
+      String packageName, String publisher) {
+    analytics.sendEvent(new FacebookEvent(facebook, CARD_ACTION,
+        createRecommendationCardData(cardType, action, socialAction, packageName, publisher)));
+  }
+
+  @NonNull
+  private Bundle createRecommendationCardData(String cardType, String action, String socialAction,
+      String packageName, String publisher) {
+    Bundle bundle = new Bundle();
+    bundle.putString(CARD_TYPE, cardType);
+    bundle.putString(ACTION, action);
+    bundle.putString(SOCIAL_ACTION, socialAction);
+    bundle.putString(PACKAGE, packageName);
+    bundle.putString(PUBLISHER, publisher);
+    bundle.putString(TITLE, BLANK);
+    return bundle;
+  }
+
+  public void sendSocialArticleClickEvent(String cardType, String title, String publisher,
+      String action, String socialAction) {
+    analytics.sendEvent(new FacebookEvent(facebook, CARD_ACTION,
+        createArticleCardData(cardType, title, publisher, action, socialAction)));
+  }
+
+  public void sendSocialInstallClickEvent(String cardType, String action, String socialAction,
+      String packageName, String publisher) {
+    analytics.sendEvent(new FacebookEvent(facebook, CARD_ACTION,
+        createNoTitleCardData(cardType, action, socialAction, packageName, publisher)));
+  }
+
+  @NonNull private Bundle createNoTitleCardData(String cardType, String action, String socialAction,
+      String packageName, String publisher) {
+    Bundle bundle = new Bundle();
+    bundle.putString(CARD_TYPE, cardType);
+    bundle.putString(ACTION, action);
+    bundle.putString(SOCIAL_ACTION, socialAction);
+    bundle.putString(PACKAGE, packageName);
+    bundle.putString(PUBLISHER, publisher);
+    bundle.putString(TITLE, BLANK);
+    return bundle;
+  }
+
+  public void sendSocialRecommendationClickEvent(String cardType, String action,
+      String socialAction, String packageName, String publisher) {
+    analytics.sendEvent(new FacebookEvent(facebook, CARD_ACTION,
+        createNoTitleCardData(cardType, action, socialAction, packageName, publisher)));
+  }
+
+  public void sendSocialLatestClickEvent(String cardType, String packageName, String action,
+      String socialAction, String publisher) {
+    analytics.sendEvent(new FacebookEvent(facebook, CARD_ACTION,
+        createSocialLatestData(cardType, packageName, action, socialAction, publisher)));
+  }
+
+  private Bundle createSocialLatestData(String cardType, String packageName, String action,
+      String socialAction, String publisher) {
+    Bundle bundle = new Bundle();
+    bundle.putString(CARD_TYPE, cardType);
+    bundle.putString(ACTION, action);
+    bundle.putString(SOCIAL_ACTION, socialAction);
+    bundle.putString(PACKAGE, packageName);
+    bundle.putString(PUBLISHER, publisher);
+    bundle.putString(TITLE, BLANK);
+    return bundle;
+  }
+
+  public void sendSocialVideoClickEvent(String cardType, String title, String action,
+      String socialAction, String publisher) {
+    analytics.sendEvent(new FacebookEvent(facebook, CARD_ACTION,
+        createSocialVideoData(cardType, title, action, socialAction, publisher)));
+  }
+
+  private Bundle createSocialVideoData(String cardType, String title, String action,
+      String socialAction, String publisher) {
+    Bundle bundle = new Bundle();
+    bundle.putString(CARD_TYPE, cardType);
+    bundle.putString(ACTION, action);
+    bundle.putString(SOCIAL_ACTION, socialAction);
+    bundle.putString(PACKAGE, BLANK);
+    bundle.putString(PUBLISHER, publisher);
+    bundle.putString(TITLE, title);
+    return bundle;
+  }
+
+  public void sendStoreLatestAppsClickEvent(String cardType, String action, String socialAction,
+      String packageName, String publisher) {
+    analytics.sendEvent(new FacebookEvent(facebook, CARD_ACTION,
+        createStoreLatestAppsData(cardType, action, socialAction, packageName, publisher)));
+  }
+
+  private Bundle createStoreLatestAppsData(String cardType, String action, String socialAction,
+      String packageName, String publisher) {
+    Bundle bundle = new Bundle();
+    bundle.putString(CARD_TYPE, cardType);
+    bundle.putString(ACTION, action);
+    bundle.putString(SOCIAL_ACTION, socialAction);
+    bundle.putString(PACKAGE, BLANK);
+    bundle.putString(PUBLISHER, publisher);
+    bundle.putString(TITLE, BLANK);
+    return bundle;
+  }
+
+  public void sendVideoClickEvent(String cardType, String title, String action, String socialAction,
+      String publisher) {
+    analytics.sendEvent(new FacebookEvent(facebook, CARD_ACTION,
+        createVideoData(cardType, title, action, socialAction, publisher)));
+  }
+
+  private Bundle createVideoData(String cardType, String title, String action, String socialAction,
+      String publisher) {
+    Bundle bundle = new Bundle();
+    bundle.putString(CARD_TYPE, cardType);
+    bundle.putString(ACTION, action);
+    bundle.putString(SOCIAL_ACTION, socialAction);
+    bundle.putString(PACKAGE, BLANK);
+    bundle.putString(PUBLISHER, publisher);
+    bundle.putString(TITLE, title);
+    return bundle;
   }
 
   public void sendTimelineTabClick() {
