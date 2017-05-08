@@ -1,7 +1,7 @@
 package cm.aptoide.pt.nanohttpd.servers.file;
 
+import cm.aptoide.pt.nanohttpd.MimeType;
 import cm.aptoide.pt.nanohttpd.header.decorator.FileHeaderDecorator;
-import cm.aptoide.pt.nanohttpd.misc.MimeType;
 import fi.iki.elonen.NanoHTTPD;
 import java.io.File;
 import java.io.FileInputStream;
