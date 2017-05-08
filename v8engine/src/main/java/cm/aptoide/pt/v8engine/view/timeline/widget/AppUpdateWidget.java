@@ -102,6 +102,10 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
 
     compositeSubscription.add(RxView.clicks(appIcon).subscribe(click -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
+      Analytics.AppsTimeline.clickOnCard(AppUpdateDisplayable.CARD_TYPE_NAME,
+          displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
+          Analytics.AppsTimeline.OPEN_APP_VIEW);
+      displayable.sendAppUpdateCardClickEvent(Analytics.AppsTimeline.OPEN_APP_VIEW, socialAction);
       displayable.sendOpenAppEvent();
       getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));

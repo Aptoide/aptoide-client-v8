@@ -56,7 +56,7 @@ public class RecommendationDisplayable extends CardDisplayable {
       String abUrl, List<String> similarAppsNames, List<String> similarPackageNames, Date date,
       Date timestamp, DateCalculator dateCalculator, SpannableFactory spannableFactory,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
-    super(recommendation);
+    super(recommendation, timelineAnalytics);
     this.avatarResource = avatarResource;
     this.titleResource = titleResource;
     this.appId = appId;

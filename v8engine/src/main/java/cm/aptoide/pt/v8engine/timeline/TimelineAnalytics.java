@@ -38,7 +38,7 @@ public class TimelineAnalytics extends AptoideAnalytics {
   private static final String OPEN_APP = "OPEN_APP";
   private static final String UPDATE_APP = "UPDATE_APP";
   private static final String FOLLOW_FRIENDS = "Apps_Timeline_Follow_Friends";
-  private static final String TIMELINE_TAB_CLICK = "Apps_Timeline_Open";
+  private static final String TIMELINE_OPENED = "Apps_Timeline_Open";
   private static final String SOCIAL_CARD_PREVIEW = "Apps_Timeline_Social_Card_Preview";
   private static final String CARD_ACTION = "Apps_Timeline_Card_Action";
   private static final String BLANK = "(blank)";
@@ -222,7 +222,7 @@ public class TimelineAnalytics extends AptoideAnalytics {
   }
 
   public void sendTimelineTabClick() {
-    analytics.sendEvent(new FacebookEvent(facebook, TIMELINE_TAB_CLICK));
+    analytics.sendEvent(new FacebookEvent(facebook, TIMELINE_OPENED));
   }
 
   public void sendFollowFriendsEvent() {

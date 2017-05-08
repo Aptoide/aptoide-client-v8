@@ -56,7 +56,7 @@ public class SimilarDisplayable extends CardDisplayable {
       List<String> similarAppsNames, List<String> similarAppsPackageNames, Date date,
       Date timestamp, DateCalculator dateCalculator, SpannableFactory spannableFactory,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
-    super(similar);
+    super(similar, timelineAnalytics);
     this.avatarResource = avatarResource;
     this.titleResource = titleResource;
     this.appId = appId;

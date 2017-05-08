@@ -227,9 +227,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
           }
         }
       }
-      timelineAnalytics.sendTimelineTabClick();
     });
-
 
     /* Be careful maintaining this code
      * this affects both the main ViewPager when we open app
@@ -242,6 +240,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
         StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
         if (Event.Name.getUserTimeline.equals(adapter.getEventName(position))) {
           Analytics.AppsTimeline.openTimeline();
+          timelineAnalytics.sendTimelineTabClick();
         }
       }
     });

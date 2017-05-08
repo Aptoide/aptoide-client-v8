@@ -56,7 +56,7 @@ public class ArticleDisplayable extends CardDisplayable {
       String abUrl, List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository) {
-    super(article);
+    super(article, timelineAnalytics);
     this.cardId = cardId;
     this.articleTitle = articleTitle;
     this.link = link;

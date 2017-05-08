@@ -18,8 +18,11 @@ public abstract class CardDisplayable extends Displayable {
   private TimelineCard timelineCard;
   private TimelineAnalytics timelineAnalytics;
 
-  CardDisplayable(TimelineAnalytics timelineAnalytics) {
-    this.timelineAnalytics = timelineAnalytics;
+  CardDisplayable() {
+  }
+
+  CardDisplayable(TimelineCard timelineCard) {
+    this.timelineCard = timelineCard;
   }
 
   CardDisplayable(TimelineCard timelineCard, TimelineAnalytics timelineAnalytics) {

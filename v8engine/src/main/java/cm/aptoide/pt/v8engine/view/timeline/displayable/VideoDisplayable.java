@@ -53,7 +53,7 @@ public class VideoDisplayable extends CardDisplayable {
       String thumbnailUrl, String avatarUrl, long appId, String abUrl, List<App> relatedToAppsList,
       Date date, DateCalculator dateCalculator, SpannableFactory spannableFactory,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
-    super(video);
+    super(video, timelineAnalytics);
     this.videoTitle = videoTitle;
     this.link = link;
     this.baseLink = baseLink;

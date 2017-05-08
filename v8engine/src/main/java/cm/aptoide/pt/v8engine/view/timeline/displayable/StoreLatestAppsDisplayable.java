@@ -37,7 +37,7 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
       String avatarUrl, List<LatestApp> latestApps, String abUrl, DateCalculator dateCalculator,
       Date date, TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
       String storeTheme) {
-    super(storeLatestApps);
+    super(storeLatestApps, timelineAnalytics);
     this.storeName = storeName;
     this.avatarUrl = avatarUrl;
     this.latestApps = latestApps;

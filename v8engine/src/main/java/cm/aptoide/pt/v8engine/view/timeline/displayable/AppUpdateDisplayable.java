@@ -73,7 +73,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
       DownloadEventConverter downloadConverter, InstallEventConverter installConverter,
       Analytics analytics, String storeTheme) {
-    super(appUpdate);
+    super(appUpdate, timelineAnalytics);
     this.appIconUrl = appIconUrl;
     this.storeIconUrl = storeIconUrl;
     this.storeName = storeName;
