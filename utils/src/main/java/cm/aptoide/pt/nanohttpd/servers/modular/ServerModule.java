@@ -7,9 +7,7 @@ import fi.iki.elonen.NanoHTTPD;
  */
 public interface ServerModule {
 
-  boolean accepts(String uri);
+  boolean accepts(NanoHTTPD.IHTTPSession session);
 
-  NanoHTTPD.Response process(String uri);
-
-  ServerModule register(ServerModule serverModule);
+  NanoHTTPD.Response serve(NanoHTTPD.IHTTPSession session);
 }
