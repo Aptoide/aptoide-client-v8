@@ -97,7 +97,8 @@ public class PullingContentService extends Service {
         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
     notificationSync =
         new ScheduleNotificationSync(idsRepository, this, httpClient, converterFactory, versionName,
-            BuildConfig.APPLICATION_ID, notificationAccessor, notificationShower);
+            BuildConfig.APPLICATION_ID, notificationAccessor, notificationShower,
+            ((V8Engine) getApplicationContext()).getAccountManager());
 
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
     if (!isAlarmUp(this, PUSH_NOTIFICATIONS_ACTION)) {

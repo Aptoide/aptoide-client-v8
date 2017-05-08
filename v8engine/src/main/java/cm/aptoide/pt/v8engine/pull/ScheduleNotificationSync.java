@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.pull;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.dataprovider.ws.notifications.GetPullNotificationsResponse;
@@ -30,11 +31,12 @@ public class ScheduleNotificationSync {
   private String applicationId;
   private NotificationAccessor notificationAccessor;
   private NotificationShower notificationShower;
+  private AptoideAccountManager accountManager;
 
   public ScheduleNotificationSync(IdsRepository idsRepository, Context context,
       OkHttpClient httpClient, Converter.Factory converterFactory, String versionName,
       String applicationId, NotificationAccessor notificationAccessor,
-      NotificationShower notificationShower) {
+      NotificationShower notificationShower, AptoideAccountManager accountManager) {
     this.idsRepository = idsRepository;
     this.context = context;
     this.httpClient = httpClient;
@@ -43,15 +45,19 @@ public class ScheduleNotificationSync {
     this.applicationId = applicationId;
     this.notificationAccessor = notificationAccessor;
     this.notificationShower = notificationShower;
+    this.accountManager = accountManager;
   }
 
   public Completable syncSocial(Context context) {
-    return getSocialNotifications().toObservable()
-        .doOnNext(notifications -> saveData(notifications))
-        .flatMap(notifications -> Observable.from(notifications)
-            .flatMapCompletable(
-                notification -> notificationShower.showNotification(context, notification,
-                    notification.getType())))
+    return accountManager.accountStatus()
+        .first()
+        .filter(account -> account.isLoggedIn())
+        .flatMap(account -> getSocialNotifications().toObservable()
+            .doOnNext(notifications -> saveData(notifications))
+            .flatMap(notifications -> Observable.from(notifications)
+                .flatMapCompletable(
+                    notification -> notificationShower.showNotification(context, notification,
+                        notification.getType()))))
         .toCompletable();
   }
 
