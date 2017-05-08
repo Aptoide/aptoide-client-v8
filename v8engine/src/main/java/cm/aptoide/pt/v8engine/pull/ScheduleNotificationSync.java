@@ -56,8 +56,7 @@ public class ScheduleNotificationSync {
             .doOnNext(notifications -> saveData(notifications))
             .flatMap(notifications -> Observable.from(notifications)
                 .flatMapCompletable(
-                    notification -> notificationShower.showNotification(context, notification,
-                        notification.getType()))))
+                    notification -> notificationShower.showNotification(context, notification))))
         .toCompletable();
   }
 
@@ -66,8 +65,7 @@ public class ScheduleNotificationSync {
         .doOnNext(notifications -> saveData(notifications))
         .flatMap(notifications -> Observable.from(notifications)
             .flatMapCompletable(
-                notification -> notificationShower.showNotification(context, notification,
-                    notification.getType())))
+                notification -> notificationShower.showNotification(context, notification)))
         .toCompletable();
   }
 

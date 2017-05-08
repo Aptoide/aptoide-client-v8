@@ -26,61 +26,60 @@ import rx.schedulers.Schedulers;
  * Created by trinkes on 03/05/2017.
  */
 
-public class NotificationShower {
+class NotificationShower {
   private static final String TAG = NotificationShower.class.getSimpleName();
 
   private NotificationAccessor notificationAccessor;
   private NotificationManager managerNotification;
+  private int[] commentLikeNotificationIds;
+  private int[] popularNotificationIds;
 
   NotificationShower(NotificationAccessor notificationAccessor,
       NotificationManager managerNotification) {
     this.notificationAccessor = notificationAccessor;
     this.managerNotification = managerNotification;
+    commentLikeNotificationIds = new int[] { Notification.COMMENT, Notification.LIKE };
+    popularNotificationIds = new int[] { Notification.POPULAR };
   }
 
-  public Completable showNotification(Context context, @NonNull Notification notification,
-      int notificationId) {
-    return shouldShowNotification(notification).flatMapCompletable(shouldShowNotification -> {
-      if (shouldShowNotification) {
-        return showNotification(context, notificationId, notification.getTitle(),
-            notification.getBody(), notification.getImg(), notification.getUrlTrack(),
-            notification.getUrl()).andThen(setNotificationAsViewed(notification));
-      } else {
-        return Completable.complete();
-      }
-    });
+  Completable showNotification(Context context, @NonNull Notification notification) {
+    return shouldShowNotification(notification, context).flatMapCompletable(
+        shouldShowNotification -> {
+          if (shouldShowNotification) {
+            return showNotification(context, getNotificationId(notification, context),
+                notification.getTitle(), notification.getBody(), notification.getImg(),
+                notification.getUrlTrack(), notification.getUrl()).andThen(
+                setNotificationAsViewed(notification));
+          } else {
+            return Completable.complete();
+          }
+        });
   }
 
-  private Single<Boolean> shouldShowNotification(Notification notificationToShow) {
-    // TODO: 04/05/2017 trinkes consider when notification was not dismissed(should be replaced by the new one)
+  private Single<Boolean> shouldShowNotification(Notification notificationToShow, Context context) {
     switch (notificationToShow.getType()) {
       case Notification.CAMPAIGN:
         return Single.just(true);
       case Notification.COMMENT:
       case Notification.LIKE:
-        return shouldShowSocial();
+        return shouldShowNotification(context, commentLikeNotificationIds);
       case Notification.POPULAR:
-        return shouldShowPopular();
+        return shouldShowNotification(context, popularNotificationIds);
       default:
         return Single.just(false);
     }
   }
 
-  private Single<Boolean> shouldShowSocial() {
-    int[] notificationType = { Notification.COMMENT, Notification.LIKE };
-    return notificationAccessor.getAllSorted(Sort.DESCENDING, notificationType)
-        .first()
-        .observeOn(Schedulers.computation())
-        .map(notifications -> applyPolicies(notifications))
-        .toSingle();
-  }
-
-  private Single<Boolean> shouldShowPopular() {
-    return notificationAccessor.getAllSorted(Sort.DESCENDING, Notification.POPULAR)
-        .first()
-        .observeOn(Schedulers.computation())
-        .map(notifications -> applyPolicies(notifications))
-        .toSingle();
+  private Single<Boolean> shouldShowNotification(Context context, int[] notificationsIds) {
+    if (getActiveNotificationId(notificationsIds, context) != -1) {
+      return Single.just(true);
+    } else {
+      return notificationAccessor.getAllSorted(Sort.DESCENDING, notificationsIds)
+          .first()
+          .observeOn(Schedulers.computation())
+          .map(notifications -> applyPolicies(notifications))
+          .toSingle();
+    }
   }
 
   private boolean applyPolicies(List<Notification> notifications) {
@@ -89,13 +88,12 @@ public class NotificationShower {
   }
 
   /**
-   * @param notificationIds the ids of notifications that should be searched
+   * @param notificationIds the ids of notifications that should be considered
    *
-   * @return the id of the notification that is currently being displayed or -1 if threr is no
+   * @return the id of the notification that is currently being displayed or -1 if there is no
    * notification being displayed
    */
-  private int getActiveNotification(@Notification.NotificationType int[] notificationIds,
-      Context context) {
+  private int getActiveNotificationId(int[] notificationIds, Context context) {
     for (final int type : notificationIds) {
       if (isNotificationActive(context, type)) {
         return type;
@@ -198,11 +196,27 @@ public class NotificationShower {
     });
   }
 
-  public boolean isNotificationActive(Context context, int notificationId) {
+  private boolean isNotificationActive(Context context, int notificationId) {
     Intent intent = new Intent(context, PullingContentReceiver.class);
-    intent.setAction(Intent.ACTION_VIEW);
+    intent.setAction(PullingContentReceiver.NOTIFICATION_PRESSED_ACTION);
     PendingIntent test =
         PendingIntent.getBroadcast(context, notificationId, intent, PendingIntent.FLAG_NO_CREATE);
     return test != null;
+  }
+
+  private int getNotificationId(Notification notification, Context context) {
+    switch (notification.getType()) {
+      case Notification.CAMPAIGN:
+        return (int) notification.getCampaignId();
+      case Notification.COMMENT:
+      case Notification.LIKE:
+        //check if there is an active notification, if it is, return its id
+        int activeNotificationId = getActiveNotificationId(commentLikeNotificationIds, context);
+        return activeNotificationId == -1 ? notification.getType() : activeNotificationId;
+      case Notification.POPULAR:
+        return Notification.POPULAR;
+      default:
+        return notification.getType();
+    }
   }
 }
