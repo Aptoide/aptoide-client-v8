@@ -50,6 +50,7 @@ public class AbstractServerModule implements ServerModule {
     throw new IllegalArgumentException("Given uri not supported!");
   }
 
+  @Override
   public ServerModule register(ServerModule serverModule) {
     servers.add(serverModule);
     return this;
