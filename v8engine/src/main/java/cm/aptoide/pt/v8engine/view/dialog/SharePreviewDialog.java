@@ -274,7 +274,7 @@ public class SharePreviewDialog {
       TextView sharedStoreTitleName = (TextView) view.findViewById(R.id.social_shared_store_name);
 
       LinearLayout latestAppsContainer = (LinearLayout) view.findViewById(
-          R.id.displayable_social_timeline_popular_app_users_container);
+          R.id.displayable_social_timeline_store_latest_apps_container);
 
       Map<View, Long> apps = new HashMap<>();
       Map<Long, String> appsPackages = new HashMap<>();
