@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.timeline.ShareCardCallback;
 
@@ -15,12 +16,15 @@ import cm.aptoide.pt.v8engine.view.timeline.ShareCardCallback;
 public abstract class CardDisplayable extends Displayable {
 
   private TimelineCard timelineCard;
+  private TimelineAnalytics timelineAnalytics;
 
-  CardDisplayable() {
+  CardDisplayable(TimelineAnalytics timelineAnalytics) {
+    this.timelineAnalytics = timelineAnalytics;
   }
 
-  CardDisplayable(TimelineCard timelineCard) {
+  CardDisplayable(TimelineCard timelineCard, TimelineAnalytics timelineAnalytics) {
     this.timelineCard = timelineCard;
+    this.timelineAnalytics = timelineAnalytics;
   }
 
   public TimelineCard getTimelineCard() {
@@ -60,4 +64,12 @@ public abstract class CardDisplayable extends Displayable {
   public abstract void like(Context context, String cardType, int rating);
 
   public abstract void like(Context context, String cardId, String cardType, int rating);
+
+  public void sendSocialActionEvent(String actionValue) {
+    timelineAnalytics.sendSocialActionEvent(actionValue);
+  }
+
+  public TimelineAnalytics getTimelineAnalytics() {
+    return timelineAnalytics;
+  }
 }

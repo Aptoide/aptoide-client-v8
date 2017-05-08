@@ -84,6 +84,7 @@ import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.v8engine.view.ThemeUtils;
@@ -104,6 +105,7 @@ import cm.aptoide.pt.v8engine.view.payment.PaymentActivity;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.store.StoreFragment;
+import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.LinkedList;
 import java.util.List;
@@ -183,6 +185,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private StoredMinimalAdAccessor storedMinimalAdAccessor;
   private PaymentAnalytics paymentAnalytics;
   private SpotAndShareAnalytics spotAndShareAnalytics;
+  private TimelineAnalytics timelineAnalytics;
 
 
   public static AppViewFragment newInstanceUname(String uname) {
@@ -278,6 +281,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
     paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
+    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
+        httpClient, converterFactory);
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
@@ -464,10 +470,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     }
   }
 
-  private void storeMinimalAdd(MinimalAd minimalAd) {
-    storedMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, null));
-  }
-
   @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
     List<String> keywords = getApp1.getNodes().getMeta().getData().getMedia().getKeywords();
     String packageName = getApp1.getNodes().getMeta().getData().getPackageName();
@@ -596,7 +598,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     final boolean shouldInstall = openType == OpenType.OPEN_AND_INSTALL;
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
-            installedRepository);
+            installedRepository, timelineAnalytics);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp));
     displayables.add(new AppViewRateAndCommentsDisplayable(getApp, storeCredentialsProvider));
@@ -673,6 +675,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   public void setupShare(GetApp app) {
     appName = app.getNodes().getMeta().getData().getName();
     wUrl = app.getNodes().getMeta().getData().getUrls().getW();
+  }
+
+  private void storeMinimalAdd(MinimalAd minimalAd) {
+    storedMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, null));
   }
 
   private boolean isMediaAvailable(GetAppMeta.Media media) {

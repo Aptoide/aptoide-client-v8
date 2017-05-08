@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.analytics.events.AptoideEvent;
 import cm.aptoide.pt.v8engine.analytics.events.FacebookEvent;
 import cm.aptoide.pt.v8engine.analytics.events.LocalyticsEvent;
@@ -17,9 +18,12 @@ import retrofit2.Converter;
 /**
  * Created by jdandrade on 27/10/2016.
  */
-public class TimelineAnalytics {
+public class TimelineAnalytics extends AptoideAnalytics {
 
   public static final String SOURCE_APTOIDE = "APTOIDE";
+
+  public static final String SOCIAL_CARD_ACTION_SHARE_CONTINUE = "Continue";
+  public static final String SOCIAL_CARD_ACTION_SHARE_CANCEL = "Cancel";
   private static final String CARD_TYPE = "card_type";
   private static final String ACTION = "action";
   private static final String SOCIAL_ACTION = "social_action";
@@ -52,6 +56,11 @@ public class TimelineAnalytics {
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
+  }
+
+  public void sendSocialActionEvent(String value) {
+    analytics.sendEvent(
+        new FacebookEvent(facebook, SOCIAL_CARD_PREVIEW, createBundleData(ACTION, value)));
   }
 
   public void sendAppUpdateCardClickEvent(String cardType, String action, String socialAction,
@@ -188,7 +197,7 @@ public class TimelineAnalytics {
     bundle.putString(CARD_TYPE, cardType);
     bundle.putString(ACTION, action);
     bundle.putString(SOCIAL_ACTION, socialAction);
-    bundle.putString(PACKAGE, BLANK);
+    bundle.putString(PACKAGE, packageName);
     bundle.putString(PUBLISHER, publisher);
     bundle.putString(TITLE, BLANK);
     return bundle;

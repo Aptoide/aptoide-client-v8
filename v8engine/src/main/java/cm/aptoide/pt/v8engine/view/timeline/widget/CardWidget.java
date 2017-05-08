@@ -23,6 +23,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.account.user.CreateStoreActivity;
 import cm.aptoide.pt.v8engine.view.comments.CommentDialogFragment;
@@ -151,7 +152,8 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     }
 
     SharePreviewDialog sharePreviewDialog =
-        new SharePreviewDialog(displayable, accountManager, true, openMode);
+        new SharePreviewDialog(displayable, accountManager, true, openMode,
+            displayable.getTimelineAnalytics());
     AlertDialog.Builder alertDialog = sharePreviewDialog.getPreviewDialogBuilder(getContext());
 
     Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
@@ -179,10 +181,12 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
       switch (eResponse) {
         case YES:
           ShowMessage.asSnack(getContext(), R.string.social_timeline_share_dialog_title);
+          displayable.sendSocialActionEvent(TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
           break;
         case NO:
           break;
         case CANCEL:
+          displayable.sendSocialActionEvent(TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
           break;
       }
     });
