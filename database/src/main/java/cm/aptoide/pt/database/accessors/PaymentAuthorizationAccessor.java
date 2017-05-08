@@ -19,15 +19,13 @@ public class PaymentAuthorizationAccessor extends SimpleAccessor<PaymentAuthoriz
     super(db, PaymentAuthorization.class);
   }
 
-  public Observable<List<PaymentAuthorization>> getPaymentAuthorizations(String payerId) {
+  public Observable<PaymentAuthorization> getPaymentAuthorization(String payerId, int paymentId) {
     return database.getRealm()
         .map(realm -> realm.where(PaymentAuthorization.class)
-            .equalTo(PaymentAuthorization.PAYER_ID, payerId))
-        .flatMap(query -> database.findAsSortedList(query, PaymentAuthorization.PAYMENT_ID));
-  }
-
-  public void updateAll(List<PaymentAuthorization> paymentAuthorizations) {
-    database.insertAll(paymentAuthorizations);
+            .equalTo(PaymentAuthorization.PAYER_ID, payerId)
+            .equalTo(PaymentAuthorization.PAYMENT_ID, paymentId))
+        .flatMap(
+            query -> database.findAsList(query).flatMapIterable(authorizations -> authorizations));
   }
 
   public void save(PaymentAuthorization paymentAuthorization) {

@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.repository.request;
 
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;

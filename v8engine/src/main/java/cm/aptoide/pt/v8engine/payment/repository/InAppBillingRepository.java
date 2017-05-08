@@ -15,7 +15,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingConsumeRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingSkuDetailsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.iab.SKU;
 import cm.aptoide.pt.model.v3.ErrorResponse;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
@@ -82,7 +82,7 @@ public class InAppBillingRepository {
   private Observable<InAppBillingSkuDetailsResponse> getSKUListDetails(int apiVersion,
       String packageName, List<String> skuList, String type) {
     return InAppBillingSkuDetailsRequest.of(apiVersion, packageName, skuList, operatorManager, type,
-        accountManager.getAccessToken(), bodyInterceptorV3, httpClient, converterFactory)
+        bodyInterceptorV3, httpClient, converterFactory)
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -102,8 +102,7 @@ public class InAppBillingRepository {
 
   public Observable<InAppBillingPurchasesResponse.PurchaseInformation> getInAppPurchaseInformation(
       int apiVersion, String packageName, String type) {
-    return InAppBillingPurchasesRequest.of(apiVersion, packageName, type,
-        accountManager.getAccessToken(), bodyInterceptorV3, httpClient, converterFactory)
+    return InAppBillingPurchasesRequest.of(apiVersion, packageName, type, bodyInterceptorV3, httpClient, converterFactory)
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -116,8 +115,7 @@ public class InAppBillingRepository {
 
   public Observable<Void> deleteInAppPurchase(int apiVersion, String packageName,
       String purchaseToken) {
-    return InAppBillingConsumeRequest.of(apiVersion, packageName, purchaseToken,
-        accountManager.getAccessToken(), bodyInterceptorV3, httpClient, converterFactory)
+    return InAppBillingConsumeRequest.of(apiVersion, packageName, purchaseToken, bodyInterceptorV3, httpClient, converterFactory)
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {

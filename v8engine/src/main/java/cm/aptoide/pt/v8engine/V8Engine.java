@@ -31,17 +31,18 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
 import cm.aptoide.pt.networkclient.okhttp.cache.POSTCacheInterceptor;
 import cm.aptoide.pt.networkclient.okhttp.cache.POSTCacheKeyAlgorithm;
-import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
@@ -60,7 +61,10 @@ import cm.aptoide.pt.v8engine.account.AndroidAccountManagerDataPersist;
 import cm.aptoide.pt.v8engine.account.AndroidAccountProvider;
 import cm.aptoide.pt.v8engine.account.BaseBodyInterceptorFactory;
 import cm.aptoide.pt.v8engine.account.DatabaseStoreDataPersist;
+import cm.aptoide.pt.v8engine.account.NoTokenBodyInterceptor;
 import cm.aptoide.pt.v8engine.account.SocialAccountFactory;
+import cm.aptoide.pt.v8engine.account.StoreAuthBodyInterceptor;
+import cm.aptoide.pt.v8engine.account.StoreMultipartBodyInterceptor;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.ConsoleLogger;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
@@ -93,6 +97,8 @@ import cm.aptoide.pt.v8engine.view.configuration.implementation.FragmentProvider
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.facebook.appevents.AppEventsLogger;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.Scopes;
@@ -109,6 +115,7 @@ import lombok.Setter;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -150,6 +157,9 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private AccountFactory accountFactory;
   private AndroidAccountProvider androidAccountProvider;
   private PaymentAnalytics paymentAnalytics;
+  private StoreAuthBodyInterceptor storeAuthBodyInterceptor;
+  private ObjectMapper nonNullObjectMapper;
+  private RequestBodyFactory requestBodyFactory;
 
   /**
    * call after this instance onCreate()
@@ -391,8 +401,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
   public AccountFactory getAccountFactory() {
     if (accountFactory == null) {
       accountFactory = new AccountFactory(new SocialAccountFactory(this, getGoogleSignInClient()),
-          new AccountService(getBaseBodyInterceptorV3(), getDefaultClient(),
-              WebService.getDefaultConverter()));
+          new AccountService(new NoTokenBodyInterceptor(getIdsRepository(), getAptoideMd5sum(),
+              getAptoidePackage()), getDefaultClient(), WebService.getDefaultConverter()));
     }
     return accountFactory;
   }
@@ -450,8 +460,9 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
   public PaymentAnalytics getPaymentAnalytics() {
     if (paymentAnalytics == null) {
-      paymentAnalytics = new PaymentAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(this),
-          getAptoidePackage());
+      paymentAnalytics =
+          new PaymentAnalytics(Analytics.getInstance(), AppEventsLogger.newLogger(this),
+              getAptoidePackage());
     }
     return paymentAnalytics;
   }
@@ -562,9 +573,40 @@ public abstract class V8Engine extends SpotAndShareApplication {
   public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBaseBodyInterceptorV3() {
     if (baseBodyInterceptorV3 == null) {
       baseBodyInterceptorV3 =
-          new BaseBodyInterceptorV3(getAptoideMd5sum(), getAptoidePackage(), getIdsRepository());
+          new BaseBodyInterceptorV3(getIdsRepository(), getAptoideMd5sum(), getAptoidePackage(),
+              getAccountManager());
     }
     return baseBodyInterceptorV3;
+  }
+
+  public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getStoreAuthBodyInterceptor() {
+    if (storeAuthBodyInterceptor == null) {
+      storeAuthBodyInterceptor =
+          new StoreAuthBodyInterceptor(getIdsRepository(), getAptoideMd5sum(), getAptoidePackage(),
+              getAccountManager());
+    }
+    return storeAuthBodyInterceptor;
+  }
+
+  public BodyInterceptor<HashMapNotNull<String, RequestBody>> getStoreMultipartBodyInterceptor(
+      String storeTheme, String storeDescription) {
+    return new StoreMultipartBodyInterceptor(getIdsRepository(), getAccountManager(),
+        getRequestBodyFactory(), storeTheme, storeDescription, getNonNullObjectMapper());
+  }
+
+  public RequestBodyFactory getRequestBodyFactory() {
+    if (requestBodyFactory == null) {
+      requestBodyFactory = new RequestBodyFactory();
+    }
+    return requestBodyFactory;
+  }
+
+  public ObjectMapper getNonNullObjectMapper() {
+    if (nonNullObjectMapper == null) {
+      nonNullObjectMapper = new ObjectMapper();
+      nonNullObjectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    }
+    return nonNullObjectMapper;
   }
 
   private String getAptoideMd5sum() {

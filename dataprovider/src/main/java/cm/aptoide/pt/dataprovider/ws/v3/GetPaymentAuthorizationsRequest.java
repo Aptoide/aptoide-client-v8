@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.PaymentAuthorizationsResponse;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -22,12 +22,10 @@ public class GetPaymentAuthorizationsRequest extends V3<PaymentAuthorizationsRes
     super(baseBody, httpClient, converterFactory, bodyInterceptor);
   }
 
-  public static GetPaymentAuthorizationsRequest of(String accessToken,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
-    BaseBody args = new BaseBody();
-    args.put("access_token", accessToken);
-    return new GetPaymentAuthorizationsRequest(args, bodyInterceptor, httpClient, converterFactory);
+  public static GetPaymentAuthorizationsRequest of(BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    return new GetPaymentAuthorizationsRequest(new BaseBody(), bodyInterceptor, httpClient,
+        converterFactory);
   }
 
   @Override

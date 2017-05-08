@@ -13,7 +13,7 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.networkclient.WebService;
@@ -61,7 +61,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
         .flatMap(wsWidget -> {
           return WSWidgetsUtils.loadWidgetNode(wsWidget,
               StoreUtils.getStoreCredentialsFromUrl(url, storeCredentialsProvider), refresh,
-              accountManager.getAccessToken(), idsRepository.getUniqueIdentifier(),
+              idsRepository.getUniqueIdentifier(),
               DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
                   V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
               accountManager.isAccountMature(), bodyInterceptor, httpClient, converterFactory);

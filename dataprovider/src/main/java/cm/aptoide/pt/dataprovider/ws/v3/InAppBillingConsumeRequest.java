@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.BaseV3Response;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -22,15 +22,14 @@ public class InAppBillingConsumeRequest extends V3<BaseV3Response> {
   }
 
   public static InAppBillingConsumeRequest of(int apiVersion, String packageName,
-      String purchaseToken, String accessToken, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
+      String purchaseToken, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("package", packageName);
     args.put("apiversion", String.valueOf(apiVersion));
     args.put("reqtype", "iabconsume");
     args.put("purchasetoken", purchaseToken);
-    args.put("access_token", accessToken);
     return new InAppBillingConsumeRequest(args, bodyInterceptor, httpClient, converterFactory);
   }
 

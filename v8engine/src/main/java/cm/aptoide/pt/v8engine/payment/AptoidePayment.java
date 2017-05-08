@@ -59,10 +59,6 @@ public class AptoidePayment implements Payment {
     return authorizationRepository.getPaymentAuthorization(id);
   }
 
-  @Override public Observable<PaymentConfirmation> getConfirmation(Product product) {
-    return confirmationRepository.getPaymentConfirmation(product);
-  }
-
   @Override public Completable process(Product product) {
     if (authorizationRequired) {
       return getAuthorization().distinctUntilChanged()

@@ -2,7 +2,7 @@ package cm.aptoide.accountmanager;
 
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.OAuth2AuthenticationRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Single;

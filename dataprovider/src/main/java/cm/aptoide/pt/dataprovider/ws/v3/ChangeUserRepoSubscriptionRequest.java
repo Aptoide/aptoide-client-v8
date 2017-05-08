@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.BaseV3Response;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -20,13 +20,12 @@ public class ChangeUserRepoSubscriptionRequest extends V3<BaseV3Response> {
   }
 
   public static ChangeUserRepoSubscriptionRequest of(String storeName, boolean subscribe,
-      String accessToken, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
     final BaseBody body = new BaseBody();
     body.put("mode", "json");
     body.put("repo", storeName);
     body.put("status", subscribe ? "subscribed" : "unsubscribed");
-    body.put("access_token", accessToken);
     return new ChangeUserRepoSubscriptionRequest(body, bodyInterceptor, httpClient,
         converterFactory);
   }

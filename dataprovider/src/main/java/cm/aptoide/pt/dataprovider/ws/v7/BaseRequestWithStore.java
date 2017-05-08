@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import lombok.Getter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;

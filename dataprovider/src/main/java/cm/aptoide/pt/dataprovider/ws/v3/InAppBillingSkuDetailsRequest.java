@@ -6,7 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -24,7 +24,7 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
   }
 
   public static InAppBillingSkuDetailsRequest of(int apiVersion, String packageName,
-      List<String> skuList, NetworkOperatorManager operatorManager, String type, String accessToken,
+      List<String> skuList, NetworkOperatorManager operatorManager, String type,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
     BaseBody args = new BaseBody();
@@ -33,7 +33,6 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
     args.put("apiversion", String.valueOf(apiVersion));
     args.put("reqtype", "iabskudetails");
     args.put("purchasetype", type);
-    args.put("access_token", accessToken);
 
     if (!skuList.isEmpty()) {
       final StringBuilder stringBuilder = new StringBuilder();

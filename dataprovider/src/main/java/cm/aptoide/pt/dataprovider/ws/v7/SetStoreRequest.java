@@ -1,6 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
@@ -27,11 +28,10 @@ public class SetStoreRequest extends V7<BaseV7Response, HashMapNotNull<String, R
     multipartBody = file;
   }
 
-  public static SetStoreRequest of(String accessToken, String storeName, String storeTheme,
-      String storeAvatarPath, BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
+  public static SetStoreRequest of(String storeName, String storeTheme, String storeAvatarPath,
+      BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, RequestBodyFactory requestBodyFactory) {
 
-    final RequestBodyFactory requestBodyFactory = new RequestBodyFactory();
     final HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
 
     body.put("store_name", requestBodyFactory.createBodyPartFromString(storeName));
@@ -41,11 +41,10 @@ public class SetStoreRequest extends V7<BaseV7Response, HashMapNotNull<String, R
         bodyInterceptor, httpClient, converterFactory);
   }
 
-  public static SetStoreRequest of(String accessToken, String storeName, String storeTheme,
-      String storeAvatarPath, String storeDescription, Boolean editStore, long storeId,
+  public static SetStoreRequest of(String storeName, String storeTheme, String storeAvatarPath,
+      String storeDescription, Boolean editStore, long storeId,
       BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
-    final RequestBodyFactory requestBodyFactory = new RequestBodyFactory();
+      Converter.Factory converterFactory, RequestBodyFactory requestBodyFactory) {
     final HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
 
     body.put("store_id", requestBodyFactory.createBodyPartFromLong(storeId));

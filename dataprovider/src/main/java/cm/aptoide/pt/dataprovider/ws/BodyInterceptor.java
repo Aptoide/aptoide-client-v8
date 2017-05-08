@@ -1,10 +1,6 @@
-package cm.aptoide.pt.dataprovider.ws.v7;
+package cm.aptoide.pt.dataprovider.ws;
 
 import rx.Single;
-
-/**
- * Created by marcelobenites on 06/03/17.
- */
 
 public interface BodyInterceptor<T> {
 

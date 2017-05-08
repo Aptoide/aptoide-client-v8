@@ -7,7 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.OAuth;
 import cm.aptoide.pt.preferences.Application;
 import lombok.Data;

@@ -12,7 +12,7 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.BaseV3Response;
 import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
 import cm.aptoide.pt.model.v3.ErrorResponse;
@@ -41,7 +41,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by sithengineer on 21/07/16.
@@ -116,8 +115,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
                 if (!accessTokenRetry) {
                   accessTokenRetry = true;
                   return DataProvider.invalidateAccessToken().flatMapObservable(s -> {
-                    this.map.setAccess_token(s);
-                    return V3.this.observe(bypassCache).observeOn(AndroidSchedulers.mainThread());
+                    return V3.this.observe(bypassCache);
                   });
                 }
               } else {

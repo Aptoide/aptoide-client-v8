@@ -121,19 +121,4 @@ public class PaymentSyncDataConverter {
 
     return bundle;
   }
-
-  public String toString(List<String> list) {
-    return TextUtils.join(",", list);
-  }
-
-  public List<String> toList(String listString) {
-    if (listString == null) {
-      return Collections.emptyList();
-    }
-    final String[] strings = TextUtils.split(listString, ",");
-    if (strings.length == 1) {
-      return Collections.singletonList(listString);
-    }
-    return Arrays.asList(strings);
-  }
 }

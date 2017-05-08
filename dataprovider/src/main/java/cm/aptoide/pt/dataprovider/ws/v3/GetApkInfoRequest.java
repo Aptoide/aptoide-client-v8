@@ -7,7 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.Api;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.PaidApp;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -24,14 +24,12 @@ public class GetApkInfoRequest extends V3<PaidApp> {
   }
 
   public static GetApkInfoRequest of(long appId, NetworkOperatorManager operatorManager,
-      boolean fromSponsored, String storeName, String accessToken,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      boolean fromSponsored, String storeName, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
     BaseBody args = new BaseBody();
     args.put("identif", "id:" + appId);
     args.put("repo", storeName);
     args.put("mode", "json");
-    args.put("access_token", accessToken);
 
     if (fromSponsored) {
       args.put("adview", "1");

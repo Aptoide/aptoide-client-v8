@@ -9,9 +9,6 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-/**
- * Created by marcelobenites on 8/10/16.
- */
 public interface Payment {
 
   int getId();
@@ -21,8 +18,6 @@ public interface Payment {
   String getDescription();
 
   Observable<Authorization> getAuthorization();
-
-  Observable<PaymentConfirmation> getConfirmation(Product product);
 
   Completable process(Product product);
 }

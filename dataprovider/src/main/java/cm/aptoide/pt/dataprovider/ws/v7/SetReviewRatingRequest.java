@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -7,6 +7,7 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;

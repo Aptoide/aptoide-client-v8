@@ -22,14 +22,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -39,17 +40,14 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.networking.IdsRepository;
-import cm.aptoide.pt.v8engine.networking.StoreBodyInterceptor;
 import cm.aptoide.pt.v8engine.view.MainActivity;
 import cm.aptoide.pt.v8engine.view.account.AccountPermissionsBaseActivity;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jakewharton.rxbinding.view.RxView;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import retrofit2.Converter;
 import rx.Observable;
 import rx.subscriptions.CompositeSubscription;
@@ -120,12 +118,12 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
   private AptoideAccountManager accountManager;
   private BodyInterceptor<BaseBody> bodyInterceptorV7;
   private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3;
-  private RequestBodyFactory requestBodyFactory;
-  private ObjectMapper serializer;
-  private IdsRepository idsRepository;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private OkHttpClient longTimeoutHttpClient;
+  private BodyInterceptor<HashMapNotNull<String, RequestBody>> storeMultipartBodyInterceptor;
+  private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> storeAuthBodyInterceptor;
+  private RequestBodyFactory requestBodyFactory;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     getData();
@@ -133,15 +131,15 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     setContentView(getLayoutId());
     accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
     httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
-    longTimeoutHttpClient =
-        ((V8Engine) getApplicationContext()).getLongTimeoutClient();
+    longTimeoutHttpClient = ((V8Engine) getApplicationContext()).getLongTimeoutClient();
     converterFactory = WebService.getDefaultConverter();
     bodyInterceptorV7 = ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV7();
     bodyInterceptorV3 = ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV3();
-    idsRepository = ((V8Engine) getApplicationContext()).getIdsRepository();
-    requestBodyFactory = new RequestBodyFactory();
-    serializer = new ObjectMapper();
-    serializer.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    storeMultipartBodyInterceptor =
+        ((V8Engine) getApplicationContext()).getStoreMultipartBodyInterceptor(storeTheme,
+            storeDescription);
+    requestBodyFactory = ((V8Engine) getApplicationContext()).getRequestBodyFactory();
+    storeAuthBodyInterceptor = ((V8Engine) getApplicationContext()).getStoreAuthBodyInterceptor();
     mSubscriptions = new CompositeSubscription();
     bindViews();
     editViews();
@@ -294,8 +292,8 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
               || CREATE_STORE_REQUEST_CODE == 3) {
             progressDialog.show();
             mSubscriptions.add(
-                CheckUserCredentialsRequest.of(storeName, accountManager.getAccessToken(),
-                    bodyInterceptorV3, httpClient, converterFactory).observe().subscribe(answer -> {
+                CheckUserCredentialsRequest.of(storeName, storeAuthBodyInterceptor, httpClient,
+                    converterFactory).observe().subscribe(answer -> {
                   if (answer.hasErrors()) {
                     if (answer.getErrors() != null && answer.getErrors().size() > 0) {
                       progressDialog.dismiss();
@@ -342,32 +340,34 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
               setStoreData();
               progressDialog.show();
               mSubscriptions.add(
-                  SetStoreRequest.of(accountManager.getAccessToken(), storeName, storeTheme,
-                      storeAvatarPath, storeDescription, true, storeId, createStoreInterceptor(),
-                      longTimeoutHttpClient, converterFactory).observe().subscribe(answer -> {
-                    accountManager.syncCurrentAccount().subscribe(() -> {
-                      progressDialog.dismiss();
-                      goToMainActivity();
-                    }, err -> err.printStackTrace());
-                  }, throwable -> {
-                    if (((AptoideWsV7Exception) throwable).getBaseResponse()
-                        .getErrors()
-                        .get(0)
-                        .getCode()
-                        .equals("API-1")) {
-                      progressDialog.dismiss();
-                      ShowMessage.asObservableSnack(this, R.string.ws_error_API_1)
-                          .subscribe(visibility -> {
-                            if (visibility == ShowMessage.DISMISSED) {
-                              goToMainActivity();
-                            }
-                          });
-                    } else {
-                      onCreateFail(
-                          ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
-                      progressDialog.dismiss();
-                    }
-                  }));
+                  SetStoreRequest.of(storeName, storeTheme, storeAvatarPath, storeDescription, true,
+                      storeId, storeMultipartBodyInterceptor, longTimeoutHttpClient, converterFactory,
+                      requestBodyFactory)
+                      .observe()
+                      .subscribe(answer -> {
+                        accountManager.syncCurrentAccount().subscribe(() -> {
+                          progressDialog.dismiss();
+                          goToMainActivity();
+                        }, err -> err.printStackTrace());
+                      }, throwable -> {
+                        if (((AptoideWsV7Exception) throwable).getBaseResponse()
+                            .getErrors()
+                            .get(0)
+                            .getCode()
+                            .equals("API-1")) {
+                          progressDialog.dismiss();
+                          ShowMessage.asObservableSnack(this, R.string.ws_error_API_1)
+                              .subscribe(visibility -> {
+                                if (visibility == ShowMessage.DISMISSED) {
+                                  goToMainActivity();
+                                }
+                              });
+                        } else {
+                          onCreateFail(
+                              ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+                          progressDialog.dismiss();
+                        }
+                      }));
             } else if (CREATE_STORE_REQUEST_CODE == 5) {
               /*
                * not multipart
@@ -586,59 +586,60 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
        * Multipart
        */
       setStoreData();
-      mSubscriptions.add(SetStoreRequest.of(accountManager.getAccessToken(), storeName, storeTheme,
-          storeAvatarPath, createStoreInterceptor(), longTimeoutHttpClient, converterFactory)
-          .observe()
-          .timeout(90, TimeUnit.SECONDS)
-          .subscribe(answer -> {
-            accountManager.syncCurrentAccount().subscribe(() -> {
-              progressDialog.dismiss();
-              goToMainActivity();
-            }, throwable -> throwable.printStackTrace());
-          }, throwable -> {
-            if (throwable.getClass().equals(SocketTimeoutException.class)) {
-              progressDialog.dismiss();
-              ShowMessage.asLongObservableSnack(this, R.string.store_upload_photo_failed)
-                  .subscribe(visibility -> {
-                    if (visibility == ShowMessage.DISMISSED) {
-                      goToMainActivity();
-                    }
-                  });
-            } else if (throwable.getClass().equals(TimeoutException.class)) {
-              progressDialog.dismiss();
-              ShowMessage.asLongObservableSnack(this, R.string.store_upload_photo_failed)
-                  .subscribe(visibility -> {
-                    if (visibility == ShowMessage.DISMISSED) {
-                      goToMainActivity();
-                    }
-                  });
-            } else if (((AptoideWsV7Exception) throwable).getBaseResponse()
-                .getErrors()
-                .get(0)
-                .getCode()
-                .equals("API-1")) {
-              progressDialog.dismiss();
-              ShowMessage.asLongObservableSnack(this, R.string.ws_error_API_1)
-                  .subscribe(visibility -> {
-                    if (visibility == ShowMessage.DISMISSED) {
-                      goToMainActivity();
-                    }
-                  });
-            } else {
-              progressDialog.dismiss();
-              ShowMessage.asLongObservableSnack(this,
-                  ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()))
-                  .subscribe(visibility -> {
-                    if (visibility == ShowMessage.DISMISSED) {
-                      goToMainActivity();
-                    }
-                  });
-            }
-            accountManager.syncCurrentAccount().subscribe(() -> {
-              progressDialog.dismiss();
-              goToMainActivity();
-            }, throwable1 -> throwable1.printStackTrace());
-          }));
+      mSubscriptions.add(
+          SetStoreRequest.of(storeName, storeTheme, storeAvatarPath, storeMultipartBodyInterceptor,
+              longTimeoutHttpClient, converterFactory, requestBodyFactory)
+              .observe()
+              .timeout(90, TimeUnit.SECONDS)
+              .subscribe(answer -> {
+                accountManager.syncCurrentAccount().subscribe(() -> {
+                  progressDialog.dismiss();
+                  goToMainActivity();
+                }, throwable -> throwable.printStackTrace());
+              }, throwable -> {
+                if (throwable.getClass().equals(SocketTimeoutException.class)) {
+                  progressDialog.dismiss();
+                  ShowMessage.asLongObservableSnack(this, R.string.store_upload_photo_failed)
+                      .subscribe(visibility -> {
+                        if (visibility == ShowMessage.DISMISSED) {
+                          goToMainActivity();
+                        }
+                      });
+                } else if (throwable.getClass().equals(TimeoutException.class)) {
+                  progressDialog.dismiss();
+                  ShowMessage.asLongObservableSnack(this, R.string.store_upload_photo_failed)
+                      .subscribe(visibility -> {
+                        if (visibility == ShowMessage.DISMISSED) {
+                          goToMainActivity();
+                        }
+                      });
+                } else if (((AptoideWsV7Exception) throwable).getBaseResponse()
+                    .getErrors()
+                    .get(0)
+                    .getCode()
+                    .equals("API-1")) {
+                  progressDialog.dismiss();
+                  ShowMessage.asLongObservableSnack(this, R.string.ws_error_API_1)
+                      .subscribe(visibility -> {
+                        if (visibility == ShowMessage.DISMISSED) {
+                          goToMainActivity();
+                        }
+                      });
+                } else {
+                  progressDialog.dismiss();
+                  ShowMessage.asLongObservableSnack(this,
+                      ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()))
+                      .subscribe(visibility -> {
+                        if (visibility == ShowMessage.DISMISSED) {
+                          goToMainActivity();
+                        }
+                      });
+                }
+                accountManager.syncCurrentAccount().subscribe(() -> {
+                  progressDialog.dismiss();
+                  goToMainActivity();
+                }, throwable1 -> throwable1.printStackTrace());
+              }));
     } else if (CREATE_STORE_REQUEST_CODE == 2 || CREATE_STORE_REQUEST_CODE == 3) {
       /*
        * not multipart
@@ -678,11 +679,6 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     if (storeDescription.equals("")) {
       storeDescription = null;
     }
-  }
-
-  @NonNull private StoreBodyInterceptor<BaseBody> createStoreInterceptor() {
-    return new StoreBodyInterceptor(idsRepository.getUniqueIdentifier(), accountManager,
-        requestBodyFactory, storeTheme, storeDescription, serializer);
   }
 
   private String getRepoTheme() {

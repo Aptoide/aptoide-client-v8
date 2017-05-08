@@ -26,7 +26,7 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;

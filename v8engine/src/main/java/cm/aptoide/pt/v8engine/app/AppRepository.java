@@ -9,7 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v7.GetApp;
@@ -109,8 +109,7 @@ public class AppRepository {
 
   public Observable<PaidApp> getPaidApp(long appId, boolean sponsored, String storeName,
       boolean refresh) {
-    return GetApkInfoRequest.of(appId, operatorManager, sponsored, storeName,
-        accountManager.getAccessToken(), bodyInterceptorV3, httpClient, converterFactory)
+    return GetApkInfoRequest.of(appId, operatorManager, sponsored, storeName, bodyInterceptorV3, httpClient, converterFactory)
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk() && response.isPaid()) {

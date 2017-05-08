@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.ws.Api;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import lombok.Data;

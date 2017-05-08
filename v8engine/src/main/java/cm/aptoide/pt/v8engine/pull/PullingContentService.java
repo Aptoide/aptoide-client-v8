@@ -18,7 +18,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.PushNotificationsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
 import cm.aptoide.pt.networkclient.WebService;

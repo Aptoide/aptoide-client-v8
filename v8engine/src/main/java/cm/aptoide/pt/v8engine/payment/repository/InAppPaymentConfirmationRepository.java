@@ -11,7 +11,7 @@ import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentConfirmationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
@@ -47,8 +47,7 @@ public class InAppPaymentConfirmationRepository extends PaymentConfirmationRepos
   @Override public Completable createPaymentConfirmation(int paymentId, Product product) {
 
     return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId, operatorManager,
-        ((InAppBillingProduct) product).getDeveloperPayload(), accountManager.getAccessToken(),
-        bodyInterceptorV3, httpClient, converterFactory).observe().flatMap
+        ((InAppBillingProduct) product).getDeveloperPayload(), bodyInterceptorV3, httpClient, converterFactory).observe().flatMap
         (response -> {
       if (response != null && response.isOk()) {
         return Observable.just(null);

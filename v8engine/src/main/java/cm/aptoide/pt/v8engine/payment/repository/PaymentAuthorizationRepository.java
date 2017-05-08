@@ -10,13 +10,11 @@ import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.v8engine.payment.Authorization;
 import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncScheduler;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
-import java.util.Collections;
-import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
@@ -48,20 +46,14 @@ public class PaymentAuthorizationRepository {
   }
 
   public Completable createPaymentAuthorization(int paymentId) {
-    return CreatePaymentAuthorizationRequest.of(accountManager.getAccessToken(), paymentId,
+    return CreatePaymentAuthorizationRequest.of(paymentId,
         bodyInterceptorV3, httpClient, converterFactory).observe().flatMap(response -> {
       if (response != null && response.isOk()) {
         return Observable.just(null);
       }
       return Observable.<Void> error(
           new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-    }).toCompletable().andThen(syncAuthorizations(Collections.singletonList(paymentId)));
-  }
-
-  public Observable<Authorization> getPaymentAuthorization(int paymentId) {
-    return getPaymentAuthorizations(Collections.singletonList(paymentId)).flatMapIterable(
-        authorizations -> authorizations)
-        .filter(authorization -> authorization.getPaymentId() == paymentId);
+    }).toCompletable().andThen(syncAuthorization(paymentId));
   }
 
   public Completable saveAuthorization(Authorization authorization) {
@@ -69,21 +61,15 @@ public class PaymentAuthorizationRepository {
         authorizationFactory.convertToDatabasePaymentAuthorization(authorization)));
   }
 
-  private Observable<List<Authorization>> getPaymentAuthorizations(List<Integer> paymentIds) {
+  public Observable<Authorization> getPaymentAuthorization(int paymentId) {
     return payer.getId()
-        .flatMapObservable(payerId -> syncAuthorizations(paymentIds).andThen(
-            authotizationAccessor.getPaymentAuthorizations(payerId)
-                .flatMap(paymentAuthorizations -> Observable.from(paymentAuthorizations)
-                    .map(paymentAuthorization -> authorizationFactory.convertToPaymentAuthorization(
-                        paymentAuthorization))
-                    .toList())));
+        .flatMapObservable(payerId -> syncAuthorization(paymentId).andThen(
+            authotizationAccessor.getPaymentAuthorization(payerId, paymentId)
+                .map(paymentAuthorization -> authorizationFactory.convertToPaymentAuthorization(
+                    paymentAuthorization))));
   }
 
-  private Completable syncAuthorizations(List<Integer> paymentIds) {
-    return Observable.from(paymentIds)
-        .map(paymentId -> String.valueOf(paymentId))
-        .toList()
-        .flatMap(ids -> backgroundSync.syncAuthorizations(ids).toObservable())
-        .toCompletable();
+  private Completable syncAuthorization(int paymentId) {
+    return backgroundSync.syncAuthorization(paymentId);
   }
 }

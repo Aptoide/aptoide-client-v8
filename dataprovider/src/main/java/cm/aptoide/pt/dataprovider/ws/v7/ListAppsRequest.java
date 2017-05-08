@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;

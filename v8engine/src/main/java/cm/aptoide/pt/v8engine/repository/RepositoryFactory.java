@@ -19,7 +19,7 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.iab.InAppBillingSerializer;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.Application;
