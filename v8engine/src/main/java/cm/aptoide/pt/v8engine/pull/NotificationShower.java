@@ -12,7 +12,6 @@ import android.widget.RemoteViews;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 import com.bumptech.glide.request.target.NotificationTarget;
 import io.realm.Sort;
@@ -68,8 +67,8 @@ public class NotificationShower {
   }
 
   private Single<Boolean> shouldShowSocial() {
-    return notificationAccessor.getAllSorted(Sort.DESCENDING,
-        new int[] { Notification.COMMENT, Notification.LIKE })
+    int[] notificationType = { Notification.COMMENT, Notification.LIKE };
+    return notificationAccessor.getAllSorted(Sort.DESCENDING, notificationType)
         .first()
         .observeOn(Schedulers.computation())
         .map(notifications -> applyPolicies(notifications))
@@ -85,11 +84,28 @@ public class NotificationShower {
   }
 
   private boolean applyPolicies(List<Notification> notifications) {
-    return isLimitReached(notifications, 1, TimeUnit.HOURS.toMillis(1)) && isLimitReached(
-        notifications, 3, TimeUnit.DAYS.toMillis(1));
+    return !isShowedLimitReached(notifications, 1, TimeUnit.HOURS.toMillis(1))
+        && !isShowedLimitReached(notifications, 3, TimeUnit.DAYS.toMillis(1));
   }
 
-  @NonNull private Boolean isLimitReached(List<Notification> notifications, int occurrencesLimit,
+  /**
+   * @param notificationIds the ids of notifications that should be searched
+   *
+   * @return the id of the notification that is currently being displayed or -1 if threr is no
+   * notification being displayed
+   */
+  private int getActiveNotification(@Notification.NotificationType int[] notificationIds,
+      Context context) {
+    for (final int type : notificationIds) {
+      if (isNotificationActive(context, type)) {
+        return type;
+      }
+    }
+    return -1;
+  }
+
+  @NonNull
+  private Boolean isShowedLimitReached(List<Notification> notifications, int occurrencesLimit,
       long timeFrame) {
     int occurrences = 0;
     for (int i = 0; i < notifications.size() && occurrences < occurrencesLimit; i++) {
@@ -102,13 +118,13 @@ public class NotificationShower {
         occurrences++;
       }
     }
-    return occurrences < occurrencesLimit;
+    return occurrences >= occurrencesLimit;
   }
 
   private Completable showNotification(Context context, int notificationId, String title,
       String body, String imageUrl, String trackUrl, String url) {
 
-    return getPressIntentAction(trackUrl, url, notificationId).flatMap(
+    return getPressIntentAction(trackUrl, url, notificationId, context).flatMap(
         pressIntentAction -> buildNotification(context, title, body, imageUrl, pressIntentAction,
             notificationId))
         .toObservable()
@@ -121,8 +137,7 @@ public class NotificationShower {
       String body, String imageUrl, PendingIntent pressIntentAction, int notificationId) {
     return Single.fromCallable(() -> {
       android.app.Notification notification =
-          new NotificationCompat.Builder(Application.getContext()).setContentIntent(
-              pressIntentAction)
+          new NotificationCompat.Builder(context).setContentIntent(pressIntentAction)
               .setOngoing(false)
               .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
               .setLargeIcon(ImageLoader.with(context).loadBitmap(imageUrl))
@@ -143,25 +158,25 @@ public class NotificationShower {
       String imageUrl, int notificationId, android.app.Notification notification) {
 
     if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 24 && !TextUtils.isEmpty(imageUrl)) {
-      RemoteViews expandedView = new RemoteViews(Application.getContext().getPackageName(),
-          R.layout.pushnotificationlayout);
+      RemoteViews expandedView =
+          new RemoteViews(context.getPackageName(), R.layout.pushnotificationlayout);
       expandedView.setImageViewBitmap(R.id.icon, notification.largeIcon);
       expandedView.setTextViewText(R.id.title, title);
       expandedView.setTextViewText(R.id.description, body);
       notification.bigContentView = expandedView;
 
       NotificationTarget notificationTarget =
-          new NotificationTarget(Application.getContext(), expandedView,
-              R.id.PushNotificationImageView, notification, notificationId);
+          new NotificationTarget(context, expandedView, R.id.PushNotificationImageView,
+              notification, notificationId);
       ImageLoader.with(context).loadImageToNotification(notificationTarget, imageUrl);
     }
     return notification;
   }
 
   private Single<PendingIntent> getPressIntentAction(String trackUrl, String url,
-      int notificationId) {
+      int notificationId, Context context) {
     return Single.fromCallable(() -> {
-      Intent resultIntent = new Intent(Application.getContext(), PullingContentReceiver.class);
+      Intent resultIntent = new Intent(context, PullingContentReceiver.class);
       resultIntent.setAction(PullingContentReceiver.NOTIFICATION_PRESSED_ACTION);
 
       if (!TextUtils.isEmpty(trackUrl)) {
@@ -171,7 +186,7 @@ public class NotificationShower {
         resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TARGET_URL, url);
       }
 
-      return PendingIntent.getBroadcast(Application.getContext(), notificationId, resultIntent,
+      return PendingIntent.getBroadcast(context, notificationId, resultIntent,
           PendingIntent.FLAG_UPDATE_CURRENT);
     }).subscribeOn(Schedulers.computation());
   }
@@ -181,5 +196,13 @@ public class NotificationShower {
       notification.setShowed(true);
       notificationAccessor.insert(notification);
     });
+  }
+
+  public boolean isNotificationActive(Context context, int notificationId) {
+    Intent intent = new Intent(context, PullingContentReceiver.class);
+    intent.setAction(Intent.ACTION_VIEW);
+    PendingIntent test =
+        PendingIntent.getBroadcast(context, notificationId, intent, PendingIntent.FLAG_NO_CREATE);
+    return test != null;
   }
 }
