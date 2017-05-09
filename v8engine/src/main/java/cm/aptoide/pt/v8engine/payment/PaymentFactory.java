@@ -9,6 +9,7 @@ import android.content.Context;
 import cm.aptoide.pt.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.payment.providers.paypal.PayPalPayment;
+import cm.aptoide.pt.v8engine.payment.providers.web.WebAuthorizationPayment;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationRepository;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
@@ -39,10 +40,12 @@ public class PaymentFactory {
             authorizationFactory, payer);
       case BOACOMPRA:
       case BOACOMPRAGOLD:
-      case DUMMY:
-        return new AptoidePayment(paymentService.getId(), paymentService.getName(),
+        return new WebAuthorizationPayment(paymentService.getId(), paymentService.getName(),
             paymentService.getDescription(), confirmationRepository, authorizationRepository,
             paymentService.isAuthorizationRequired(), authorizationFactory, payer);
+      case DUMMY:
+        return new AptoidePayment(paymentService.getId(), paymentService.getName(),
+            paymentService.getDescription(), confirmationRepository);
       default:
         throw new IllegalArgumentException(
             "Payment not supported: " + paymentService.getShortName());

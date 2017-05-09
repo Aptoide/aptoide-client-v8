@@ -5,9 +5,6 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-/**
- * Created by marcelobenites on 23/12/16.
- */
 public abstract class Authorization {
 
   private final int paymentId;
@@ -32,21 +29,18 @@ public abstract class Authorization {
     return Status.ACTIVE.equals(status) || Status.NONE.equals(status);
   }
 
-  public boolean isPendingInitiation() {
-    return Status.INACTIVE.equals(status) || Status.SESSION_EXPIRED.equals(status) || Status.EXPIRED
-        .equals(status);
-  }
-
-  public boolean isInitiated() {
-    return Status.INITIATED.equals(status);
-  }
-
   public boolean isPending() {
     return Status.PENDING.equals(status);
   }
 
+  public boolean isPendingUserConsent() {
+    return Status.INACTIVE.equals(status) || Status.INITIATED.equals(status);
+  }
+
   public boolean isFailed() {
-    return Status.CANCELLED.equals(status);
+    return Status.CANCELLED.equals(status)
+        || Status.EXPIRED.equals(status)
+        || Status.SESSION_EXPIRED.equals(status);
   }
 
   public Status getStatus() {

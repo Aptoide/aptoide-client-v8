@@ -62,7 +62,7 @@
         android:theme="@style/AppBaseTheme.Payment"/>
 
     <activity android:name=".payment.providers.paypal.PayPalPaymentActivity"/>
-    <activity android:name=".view.payment.PaymentAuthorizationActivity"/>
+    <activity android:name=".view.payment.WebAuthorizationActivity"/>
     <activity android:name=".view.account.LoginActivity"/>
     <activity android:name=".spotandshare.SpotSharePreviewActivity" />
 

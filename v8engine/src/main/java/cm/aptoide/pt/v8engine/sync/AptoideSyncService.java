@@ -34,7 +34,7 @@ public class AptoideSyncService extends Service {
     synchronized (lock) {
       if (syncAdapter == null) {
         syncAdapter = new AptoideSyncAdapter(getApplicationContext(), true, false,
-            new PaymentConfirmationFactory(), new PaymentAuthorizationFactory(this),
+            new PaymentConfirmationFactory(), new PaymentAuthorizationFactory(),
             new PaymentSyncDataConverter(), new NetworkOperatorManager(
             (TelephonyManager) getApplicationContext().getSystemService(TELEPHONY_SERVICE)),
             AccessorFactory.getAccessorFor(PaymentConfirmation.class),

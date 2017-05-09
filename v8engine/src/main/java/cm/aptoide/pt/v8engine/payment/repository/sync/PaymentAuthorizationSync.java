@@ -7,10 +7,10 @@ package cm.aptoide.pt.v8engine.payment.repository.sync;
 
 import android.content.SyncResult;
 import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.GetPaymentAuthorizationsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.v8engine.payment.Authorization;
 import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
@@ -23,9 +23,6 @@ import retrofit2.Converter;
 import rx.Observable;
 import rx.Single;
 
-/**
- * Created by marcelobenites on 22/11/16.
- */
 public class PaymentAuthorizationSync extends RepositorySync {
 
   private final int paymentId;
@@ -87,14 +84,12 @@ public class PaymentAuthorizationSync extends RepositorySync {
   private void saveAndReschedulePendingAuthorization(Authorization authorization,
       SyncResult syncResult, String payerId) {
 
-    if (authorization.isPending() || authorization.isInitiated()) {
+    if (authorization.isPending() || authorization.isPendingUserConsent()) {
       rescheduleSync(syncResult);
-    } else {
-      authorizationAccessor.save(authorizationFactory.convertToDatabasePaymentAuthorization(
-          authorizationFactory.create(Integer.valueOf(paymentId), Authorization.Status.CANCELLED,
-              payerId)));
     }
 
+    authorizationAccessor.save(
+        authorizationFactory.convertToDatabasePaymentAuthorization(authorization));
     paymentAnalytics.sendAuthorizationCompleteEvent(authorization);
   }
 
@@ -105,7 +100,7 @@ public class PaymentAuthorizationSync extends RepositorySync {
       rescheduleSync(syncResult);
     } else {
       authorizationAccessor.save(authorizationFactory.convertToDatabasePaymentAuthorization(
-          authorizationFactory.create(Integer.valueOf(paymentId), Authorization.Status.CANCELLED,
+          authorizationFactory.create(Integer.valueOf(paymentId), Authorization.Status.INACTIVE,
               payerId)));
     }
   }

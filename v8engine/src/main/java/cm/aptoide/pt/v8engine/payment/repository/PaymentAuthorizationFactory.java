@@ -12,14 +12,8 @@ import cm.aptoide.pt.v8engine.payment.authorizations.WebAuthorization;
 
 public class PaymentAuthorizationFactory {
 
-  private final Context context;
-
-  public PaymentAuthorizationFactory(Context context) {
-    this.context = context;
-  }
-
   public Authorization create(int paymentId, Authorization.Status status, String payerId) {
-    return new WebAuthorization(context, paymentId, "", "", status, payerId);
+    return new WebAuthorization(paymentId, "", "", status, payerId);
   }
 
   public cm.aptoide.pt.database.realm.PaymentAuthorization convertToDatabasePaymentAuthorization(
@@ -44,7 +38,7 @@ public class PaymentAuthorizationFactory {
 
   public Authorization convertToPaymentAuthorization(
       cm.aptoide.pt.database.realm.PaymentAuthorization paymentAuthorization) {
-    return new WebAuthorization(context, paymentAuthorization.getPaymentId(),
+    return new WebAuthorization(paymentAuthorization.getPaymentId(),
         paymentAuthorization.getUrl(), paymentAuthorization.getRedirectUrl(),
         WebAuthorization.Status.valueOf(paymentAuthorization.getStatus()),
         paymentAuthorization.getPayerId());
@@ -52,7 +46,7 @@ public class PaymentAuthorizationFactory {
 
   public Authorization convertToPaymentAuthorization(
       PaymentAuthorizationsResponse.PaymentAuthorizationResponse response, String payerId) {
-    return new WebAuthorization(context, response.getPaymentId(), response.getUrl(),
+    return new WebAuthorization(response.getPaymentId(), response.getUrl(),
         response.getSuccessUrl(),
         WebAuthorization.Status.valueOf(response.getAuthorizationStatus()), payerId);
   }

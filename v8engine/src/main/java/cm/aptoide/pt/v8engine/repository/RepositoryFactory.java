@@ -107,7 +107,7 @@ public final class RepositoryFactory {
     final PaymentFactory paymentFactory = new PaymentFactory(context);
     final NetworkOperatorManager operatorManager = getNetworkOperatorManager(context);
     final PaymentAuthorizationFactory authorizationFactory =
-        new PaymentAuthorizationFactory(context);
+        new PaymentAuthorizationFactory();
     if (product instanceof InAppBillingProduct) {
       return new InAppBillingProductRepository(getInAppBillingRepository(context), purchaseFactory,
           paymentFactory, (InAppBillingProduct) product, getPaymentAuthorizationRepository(context),
@@ -143,7 +143,7 @@ public final class RepositoryFactory {
   public static PaymentAuthorizationRepository getPaymentAuthorizationRepository(Context context) {
     return new PaymentAuthorizationRepository(
         AccessorFactory.getAccessorFor(PaymentAuthorization.class), getBackgroundSync(context),
-        new PaymentAuthorizationFactory(context), getAccountManager(context),
+        new PaymentAuthorizationFactory(), getAccountManager(context),
         getBaseBodyInterceptorV3(context), getHttpClient(context), WebService.getDefaultConverter(),
         getPayer(context));
   }

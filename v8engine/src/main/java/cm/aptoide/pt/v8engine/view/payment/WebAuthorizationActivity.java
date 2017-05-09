@@ -23,17 +23,14 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
-import cm.aptoide.pt.v8engine.presenter.PaymentAuthorizationPresenter;
+import cm.aptoide.pt.v8engine.presenter.WebAuthorizationPresenter;
 import cm.aptoide.pt.v8engine.presenter.PaymentAuthorizationView;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.BackButtonActivity;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 
-/**
- * Created by marcelobenites on 11/11/16.
- */
-public class PaymentAuthorizationActivity extends BackButtonActivity
+public class WebAuthorizationActivity extends BackButtonActivity
     implements PaymentAuthorizationView {
 
   private static final String EXTRA_PAYMENT_ID =
@@ -51,7 +48,7 @@ public class PaymentAuthorizationActivity extends BackButtonActivity
   private ClickHandler clickHandler;
 
   public static Intent getIntent(Context context, int paymentId, ParcelableProduct product) {
-    final Intent intent = new Intent(context, PaymentAuthorizationActivity.class);
+    final Intent intent = new Intent(context, WebAuthorizationActivity.class);
     intent.putExtra(EXTRA_PAYMENT_ID, paymentId);
     intent.putExtra(EXTRA_PRODUCT, product);
     return intent;
@@ -91,7 +88,7 @@ public class PaymentAuthorizationActivity extends BackButtonActivity
       final PaymentAnalytics paymentAnalytics =
           ((V8Engine) getApplicationContext()).getPaymentAnalytics();
       attachPresenter(
-          new PaymentAuthorizationPresenter(this, aptoidePay, product, paymentId, paymentAnalytics),
+          new WebAuthorizationPresenter(this, aptoidePay, product, paymentId, paymentAnalytics),
           savedInstanceState);
     } else {
       throw new IllegalStateException("Web payment urls must be provided");

@@ -17,7 +17,5 @@ public interface Payment {
 
   String getDescription();
 
-  Observable<Authorization> getAuthorization();
-
   Completable process(Product product);
 }

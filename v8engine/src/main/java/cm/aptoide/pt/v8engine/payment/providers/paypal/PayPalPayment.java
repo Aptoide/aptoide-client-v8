@@ -47,8 +47,7 @@ public class PayPalPayment extends AptoidePayment {
       PaymentConfirmationRepository confirmationRepository, PaymentAuthorizationRepository authorizationRepository,
       PayPalConfiguration configuration, boolean authorizationRequired,
       PaymentAuthorizationFactory authorizationFactory, Payer payer) {
-    super(id, name, description, confirmationRepository, authorizationRepository,
-        authorizationRequired, authorizationFactory, payer);
+    super(id, name, description, confirmationRepository);
     this.context = context;
     this.configuration = configuration;
     this.confirmationRepository = confirmationRepository;
