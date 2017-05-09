@@ -30,7 +30,6 @@ public class WebAuthorizationPayment extends AuthorizationPayment {
 
   @Override public Completable authorize() {
     return getAuthorization().takeUntil(authorization -> authorization.isAuthorized())
-        .distinctUntilChanged()
         .flatMapCompletable(authorization -> {
 
           if (authorization.isAuthorized()) {
@@ -57,6 +56,8 @@ public class WebAuthorizationPayment extends AuthorizationPayment {
   }
 
   @Override public Observable<WebAuthorization> getAuthorization() {
-    return authorizationRepository.getPaymentAuthorization(getId()).cast(WebAuthorization.class);
+    return authorizationRepository.getPaymentAuthorization(getId())
+        .distinctUntilChanged(authorization -> authorization.getStatus())
+        .cast(WebAuthorization.class);
   }
 }

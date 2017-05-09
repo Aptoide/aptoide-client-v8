@@ -78,7 +78,6 @@ public class WebAuthorizationPresenter implements Presenter {
             .cast(WebAuthorizationPayment.class))
         .flatMap(payment -> payment.getAuthorization()
             .takeUntil(authorization -> authorization.isAuthorized())
-            .distinctUntilChanged(authorization -> authorization.getStatus())
             .observeOn(AndroidSchedulers.mainThread())
             .flatMapCompletable(authorization -> {
 

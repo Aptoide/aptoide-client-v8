@@ -6,11 +6,8 @@
 package cm.aptoide.pt.v8engine.payment;
 
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
-import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
-import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationRepository;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
 import java.util.List;
-import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
@@ -37,7 +34,8 @@ public class AptoidePay {
   }
 
   public Observable<PaymentConfirmation> getConfirmation(Product product) {
-    return confirmationRepository.getPaymentConfirmation(product);
+    return confirmationRepository.getPaymentConfirmation(product)
+        .distinctUntilChanged(confirmation -> confirmation.getStatus());
   }
 
   public Single<Purchase> getPurchase(Product product) {
