@@ -4,6 +4,8 @@ import fi.iki.elonen.NanoHTTPD;
 import java.util.LinkedList;
 import java.util.List;
 
+import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
+
 /**
  * Created by neuro on 08-05-2017.
  */
@@ -32,7 +34,11 @@ public class ServerModuleList implements ServerModule {
       }
     }
 
-    throw new IllegalArgumentException("Given uri not supported!");
+    return newDefaultErrorResponse();
+  }
+
+  private NanoHTTPD.Response newDefaultErrorResponse() {
+    return newFixedLengthResponse("Sorry, endpoint not implemented :)");
   }
 
   public ServerModule register(ServerModule serverModule) {
