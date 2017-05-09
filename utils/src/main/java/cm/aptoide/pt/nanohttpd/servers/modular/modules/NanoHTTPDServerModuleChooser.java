@@ -1,7 +1,7 @@
 package cm.aptoide.pt.nanohttpd.servers.modular.modules;
 
 import android.content.pm.PackageManager;
-import cm.aptoide.pt.nanohttpd.servers.modular.ServerModule;
+import cm.aptoide.pt.nanohttpd.servers.modular.AbstractServerModule;
 import cm.aptoide.pt.nanohttpd.servers.modular.ServerModuleList;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
@@ -18,17 +18,17 @@ public class NanoHTTPDServerModuleChooser extends ServerModuleList {
     super(createServerModules());
   }
 
-  private static List<ServerModule> createServerModules() {
-    List<ServerModule> serverModules = new LinkedList<>();
+  private static List<AbstractServerModule> createServerModules() {
+    List<AbstractServerModule> abstractServerModules = new LinkedList<>();
 
     String path = getPathAndroid();
     File file = new File(path);
     String fileName = getFileName();
 
-    serverModules.add(new FileServerModule(file, fileName));
-    serverModules.add(new WelcomePage());
+    abstractServerModules.add(new FileServerModule(file, fileName));
+    abstractServerModules.add(new WelcomePage());
 
-    return serverModules;
+    return abstractServerModules;
   }
 
   private static String getPathAndroid() {
