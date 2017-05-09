@@ -31,13 +31,11 @@ public class NotificationAccessor extends SimpleAccessor<Notification> {
   }
 
   public Observable<List<Notification>> getAllSorted(Sort sortOrder,
-      @Notification.NotificationType int[] notificationType) {
+      @Notification.NotificationType Integer[] notificationType) {
     return Observable.fromCallable(() -> Database.getInternal())
         .flatMap(realm -> {
           RealmQuery<Notification> query = realm.where(Notification.class);
-          for (final int type : notificationType) {
-            query = query.or().equalTo("type", type);
-          }
+          query = query.in("type", notificationType);
           return query.findAllSorted("timeStamp", sortOrder).asObservable();
         })
         .unsubscribeOn(RealmSchedulers.getScheduler())

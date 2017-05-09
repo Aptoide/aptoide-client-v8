@@ -178,10 +178,9 @@ public class PullingContentService extends Service {
   private void setPushNotificationsAction(int startId) {
     subscriptions.add(
         Completable.merge(notificationSync.syncCampaign(this), notificationSync.syncSocial(this))
-            .subscribe(() -> stopSelf(startId), throwable -> {
-              stopSelf(startId);
-              CrashReport.getInstance().log(throwable);
-            }));
+            .doOnTerminate(() -> stopSelf(startId))
+            .subscribe(() -> {
+            }, throwable -> CrashReport.getInstance().log(throwable)));
   }
 
   /**

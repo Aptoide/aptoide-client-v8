@@ -31,15 +31,15 @@ class NotificationShower {
 
   private NotificationAccessor notificationAccessor;
   private NotificationManager managerNotification;
-  private int[] commentLikeNotificationIds;
-  private int[] popularNotificationIds;
+  private Integer[] commentLikeNotificationIds;
+  private Integer[] popularNotificationIds;
 
   NotificationShower(NotificationAccessor notificationAccessor,
       NotificationManager managerNotification) {
     this.notificationAccessor = notificationAccessor;
     this.managerNotification = managerNotification;
-    commentLikeNotificationIds = new int[] { Notification.COMMENT, Notification.LIKE };
-    popularNotificationIds = new int[] { Notification.POPULAR };
+    commentLikeNotificationIds = new Integer[] { Notification.COMMENT, Notification.LIKE };
+    popularNotificationIds = new Integer[] { Notification.POPULAR };
   }
 
   Completable showNotification(Context context, @NonNull Notification notification) {
@@ -62,27 +62,28 @@ class NotificationShower {
         return Single.just(true);
       case Notification.COMMENT:
       case Notification.LIKE:
-        return shouldShowNotification(context, commentLikeNotificationIds);
+        return shouldShowSocialNotification(context, commentLikeNotificationIds);
       case Notification.POPULAR:
-        return shouldShowNotification(context, popularNotificationIds);
+        return shouldShowSocialNotification(context, popularNotificationIds);
       default:
         return Single.just(false);
     }
   }
 
-  private Single<Boolean> shouldShowNotification(Context context, int[] notificationsIds) {
-    if (getActiveNotificationId(notificationsIds, context) != -1) {
+  private Single<Boolean> shouldShowSocialNotification(Context context,
+      Integer[] notificationsIds) {
+    if (Build.VERSION.SDK_INT < 18 || getActiveNotificationId(notificationsIds, context) != -1) {
       return Single.just(true);
     } else {
       return notificationAccessor.getAllSorted(Sort.DESCENDING, notificationsIds)
           .first()
           .observeOn(Schedulers.computation())
-          .map(notifications -> applyPolicies(notifications))
+          .map(notifications -> applySocialPolicies(notifications))
           .toSingle();
     }
   }
 
-  private boolean applyPolicies(List<Notification> notifications) {
+  private boolean applySocialPolicies(List<Notification> notifications) {
     return !isShowedLimitReached(notifications, 1, TimeUnit.HOURS.toMillis(1))
         && !isShowedLimitReached(notifications, 3, TimeUnit.DAYS.toMillis(1));
   }
@@ -93,7 +94,7 @@ class NotificationShower {
    * @return the id of the notification that is currently being displayed or -1 if there is no
    * notification being displayed
    */
-  private int getActiveNotificationId(int[] notificationIds, Context context) {
+  private int getActiveNotificationId(Integer[] notificationIds, Context context) {
     for (final int type : notificationIds) {
       if (isNotificationActive(context, type)) {
         return type;
@@ -207,7 +208,7 @@ class NotificationShower {
   private int getNotificationId(Notification notification, Context context) {
     switch (notification.getType()) {
       case Notification.CAMPAIGN:
-        return (int) notification.getCampaignId();
+        return Notification.CAMPAIGN;
       case Notification.COMMENT:
       case Notification.LIKE:
         //check if there is an active notification, if it is, return its id
