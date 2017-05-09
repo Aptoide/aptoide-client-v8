@@ -8,10 +8,10 @@ package cm.aptoide.pt.v8engine.payment.repository;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentConfirmationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
@@ -47,12 +47,17 @@ public class PaidAppPaymentConfirmationRepository extends PaymentConfirmationRep
 
   @Override public Completable createPaymentConfirmation(int paymentId, Product product) {
     return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId, operatorManager,
-        ((PaidAppProduct) product).getStoreName(), bodyInterceptorV3, httClient, converterFactory).observe().flatMap(response -> {
-      if (response != null && response.isOk()) {
-        return Observable.just(null);
-      }
-      return Observable.error(new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-    }).toCompletable().andThen(syncPaymentConfirmation(product));
+        ((PaidAppProduct) product).getStoreName(), bodyInterceptorV3, httClient, converterFactory)
+        .observe()
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            return Observable.just(null);
+          }
+          return Observable.error(
+              new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+        })
+        .toCompletable()
+        .andThen(syncPaymentConfirmation(product));
   }
 
   @Override

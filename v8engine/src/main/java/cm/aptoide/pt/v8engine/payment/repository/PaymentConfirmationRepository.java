@@ -50,11 +50,11 @@ public abstract class PaymentConfirmationRepository {
   }
 
   protected Completable syncPaymentConfirmation(Product product) {
-    return backgroundSync.syncConfirmation(product);
+    return backgroundSync.scheduleConfirmationSync(product);
   }
 
   protected Completable createPaymentConfirmation(Product product, int paymentId,
       String paymentConfirmationId) {
-    return backgroundSync.syncConfirmation(product, paymentId, paymentConfirmationId);
+    return backgroundSync.scheduleConfirmationSync(product, paymentId, paymentConfirmationId);
   }
 }

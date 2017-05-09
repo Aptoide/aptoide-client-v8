@@ -23,7 +23,7 @@ import retrofit2.Converter;
 import rx.Observable;
 import rx.Single;
 
-public class PaymentAuthorizationSync extends RepositorySync {
+public class AuthorizationSync extends RepositorySync {
 
   private final int paymentId;
   private final PaymentAuthorizationAccessor authorizationAccessor;
@@ -34,7 +34,7 @@ public class PaymentAuthorizationSync extends RepositorySync {
   private final Converter.Factory converterFactory;
   private final PaymentAnalytics paymentAnalytics;
 
-  public PaymentAuthorizationSync(int paymentId, PaymentAuthorizationAccessor authorizationAccessor,
+  public AuthorizationSync(int paymentId, PaymentAuthorizationAccessor authorizationAccessor,
       PaymentAuthorizationFactory authorizationFactory, Payer payer,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory, PaymentAnalytics paymentAnalytics) {

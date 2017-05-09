@@ -8,11 +8,11 @@ package cm.aptoide.pt.v8engine.payment.repository.sync;
 import android.content.SyncResult;
 import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentConfirmationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.GetPaymentConfirmationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
 import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
@@ -31,11 +31,7 @@ import retrofit2.Converter;
 import rx.Completable;
 import rx.Single;
 
-/**
- * Created by marcelobenites on 22/11/16.
- */
-
-public class PaymentConfirmationSync extends RepositorySync {
+public class ConfirmationSync extends RepositorySync {
 
   private final PaymentConfirmationRepository paymentConfirmationRepository;
   private final Product product;
@@ -50,7 +46,7 @@ public class PaymentConfirmationSync extends RepositorySync {
   private String paymentConfirmationId;
   private int paymentId;
 
-  public PaymentConfirmationSync(PaymentConfirmationRepository paymentConfirmationRepository,
+  public ConfirmationSync(PaymentConfirmationRepository paymentConfirmationRepository,
       Product product, NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor confirmationAccessor,
       PaymentConfirmationFactory confirmationFactory, String paymentConfirmationId, int paymentId,
@@ -70,7 +66,7 @@ public class PaymentConfirmationSync extends RepositorySync {
     this.analytics = analytics;
   }
 
-  public PaymentConfirmationSync(PaymentConfirmationRepository paymentConfirmationRepository,
+  public ConfirmationSync(PaymentConfirmationRepository paymentConfirmationRepository,
       Product product, NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor confirmationAccessor,
       PaymentConfirmationFactory confirmationFactory, Payer payer,
@@ -90,28 +86,28 @@ public class PaymentConfirmationSync extends RepositorySync {
 
   @Override public void sync(SyncResult syncResult) {
     try {
-      payer.getId()
-          .flatMap(payerId -> {
-            if (paymentConfirmationId != null) {
-              return createServerPaymentConfirmation(product, paymentConfirmationId,
-                  paymentId).andThen(Single.fromCallable(
+      payer.getId().flatMap(payerId -> {
+        if (paymentConfirmationId != null) {
+          return createServerPaymentConfirmation(product, paymentConfirmationId, paymentId).andThen(
+              Single.fromCallable(
                   () -> confirmationFactory.create(product.getId(), paymentConfirmationId,
-                      PaymentConfirmation.Status.COMPLETED, payerId))).onErrorReturn(throwable -> {
+                      PaymentConfirmation.Status.COMPLETED, payerId)))
+              .doOnSuccess(
+                  paymentConfirmation -> saveAndReschedulePendingConfirmation(paymentConfirmation,
+                      syncResult, payerId))
+              .onErrorReturn(throwable -> {
                 saveAndRescheduleOnNetworkError(syncResult, throwable, payerId);
                 return null;
               });
-            } else {
-              return getServerPaymentConfirmation(product, payerId).onErrorReturn(throwable -> {
-                saveAndRescheduleOnNetworkError(syncResult, throwable, payerId);
-                return null;
-              });
-            }
-          })
-          .doOnSuccess(
+        } else {
+          return getServerPaymentConfirmation(product, payerId).doOnSuccess(
               paymentConfirmation -> saveAndReschedulePendingConfirmation(paymentConfirmation,
-                  syncResult, paymentConfirmation.getPayerId()))
-          .toBlocking()
-          .value();
+                  syncResult, payerId)).onErrorReturn(throwable -> {
+            saveAndRescheduleOnNetworkError(syncResult, throwable, payerId);
+            return null;
+          });
+        }
+      }).toBlocking().value();
     } catch (RuntimeException e) {
       rescheduleSync(syncResult);
     }

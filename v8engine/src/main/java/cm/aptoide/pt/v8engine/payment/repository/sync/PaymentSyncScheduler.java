@@ -17,41 +17,52 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.subscriptions.Subscriptions;
 
-/**
- * Created by marcelobenites on 22/11/16.
- */
-
 public class PaymentSyncScheduler {
 
   private final AndroidAccountProvider androidAccountProvider;
-  private final PaymentSyncDataConverter syncDataConverter;
+  private final ProductBundleMapper syncDataConverter;
   private String authority;
 
-  public PaymentSyncScheduler(PaymentSyncDataConverter converter,
+  public PaymentSyncScheduler(ProductBundleMapper converter,
       AndroidAccountProvider androidAccountProvider, String authority) {
     this.androidAccountProvider = androidAccountProvider;
     this.syncDataConverter = converter;
     this.authority = authority;
   }
 
-  public Completable syncAuthorization(int paymentId) {
+  public Completable scheduleAuthorizationSync(int paymentId) {
     final Bundle bundle = new Bundle();
     bundle.putBoolean(AptoideSyncAdapter.EXTRA_PAYMENT_AUTHORIZATIONS, true);
     bundle.putInt(AptoideSyncAdapter.EXTRA_PAYMENT_ID, paymentId);
-    return sync(bundle);
+    return scheduleOneOffSync(bundle);
   }
 
-  private Completable sync(Bundle bundle) {
+  public Completable scheduleConfirmationSync(Product product) {
+    final Bundle bundle = syncDataConverter.mapToBundle(product);
+    bundle.putBoolean(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATIONS, true);
+    return scheduleOneOffSync(bundle);
+  }
+
+  public Completable scheduleConfirmationSync(Product product, int paymentId,
+      String paymentConfirmationId) {
+    final Bundle bundle = syncDataConverter.mapToBundle(product);
+    bundle.putBoolean(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATIONS, true);
+    bundle.putString(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATION_ID, paymentConfirmationId);
+    bundle.putInt(AptoideSyncAdapter.EXTRA_PAYMENT_ID, paymentId);
+    return scheduleOneOffSync(bundle);
+  }
+
+  private Completable scheduleOneOffSync(Bundle bundle) {
     return androidAccountProvider.getAndroidAccount().flatMapCompletable(account -> {
       bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
       bundle.putBoolean(ContentResolver.SYNC_EXTRAS_IGNORE_BACKOFF, true);
 
       ContentResolver.setSyncAutomatically(account, authority, true);
-      return sync(account, authority, bundle);
+      return scheduleSync(account, authority, bundle);
     });
   }
 
-  private Completable sync(Account account, String authority, Bundle bundle) {
+  private Completable scheduleSync(Account account, String authority, Bundle bundle) {
     return Observable.create(new Observable.OnSubscribe<Integer>() {
       @Override public void call(Subscriber<? super Integer> subscriber) {
         final Object handle =
@@ -70,20 +81,5 @@ public class PaymentSyncScheduler {
         ContentResolver.requestSync(account, authority, bundle);
       }
     }).toCompletable();
-  }
-
-  public Completable syncConfirmation(Product product) {
-    final Bundle bundle = syncDataConverter.toBundle(product);
-    bundle.putBoolean(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATIONS, true);
-    return sync(bundle);
-  }
-
-  public Completable syncConfirmation(Product product, int paymentId,
-      String paymentConfirmationId) {
-    final Bundle bundle = syncDataConverter.toBundle(product);
-    bundle.putBoolean(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATIONS, true);
-    bundle.putString(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATION_ID, paymentConfirmationId);
-    bundle.putInt(AptoideSyncAdapter.EXTRA_PAYMENT_ID, paymentId);
-    return sync(bundle);
   }
 }

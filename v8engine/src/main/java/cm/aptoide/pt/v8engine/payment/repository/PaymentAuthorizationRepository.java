@@ -70,6 +70,6 @@ public class PaymentAuthorizationRepository {
   }
 
   private Completable syncAuthorization(int paymentId) {
-    return backgroundSync.syncAuthorization(paymentId);
+    return backgroundSync.scheduleAuthorizationSync(paymentId);
   }
 }

@@ -45,7 +45,7 @@ import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationRepository;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
-import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncDataConverter;
+import cm.aptoide.pt.v8engine.payment.repository.sync.ProductBundleMapper;
 import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncScheduler;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.updates.UpdateRepository;
@@ -170,9 +170,7 @@ public final class RepositoryFactory {
   }
 
   private static PaymentSyncScheduler getBackgroundSync(Context context) {
-    return new PaymentSyncScheduler(new PaymentSyncDataConverter(),
-        ((V8Engine) context.getApplicationContext()).getAndroidAccountProvider(),
-        Application.getConfiguration().getContentAuthority());
+    return ((V8Engine) context.getApplicationContext()).getPaymentSyncScheduler();
   }
 
   public static InAppBillingRepository getInAppBillingRepository(Context context) {

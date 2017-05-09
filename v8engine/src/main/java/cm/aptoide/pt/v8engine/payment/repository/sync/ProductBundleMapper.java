@@ -15,11 +15,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by marcelobenites on 19/12/16.
- */
-
-public class PaymentSyncDataConverter {
+public class ProductBundleMapper {
 
   private static final String ID = "cm.aptoide.pt.v8engine.repository.sync.PRODUCT_ID";
   private static final String ICON = "cm.aptoide.pt.v8engine.repository.sync.PRODUCT_ICON";
@@ -47,7 +43,7 @@ public class PaymentSyncDataConverter {
   private static final String CURRENCY_SYMBOL =
       "cm.aptoide.pt.v8engine.repository.sync.PRICE_CURRENCY_SYMBOL";
 
-  public Product toProduct(Bundle bundle) {
+  public Product mapToProduct(Bundle bundle) {
     final int id = bundle.getInt(ID, -1);
     final String icon = bundle.getString(ICON);
     final String title = bundle.getString(TITLE);
@@ -94,7 +90,7 @@ public class PaymentSyncDataConverter {
     return null;
   }
 
-  public Bundle toBundle(Product product) {
+  public Bundle mapToBundle(Product product) {
     final Bundle bundle = new Bundle();
     bundle.putInt(ID, product.getId());
     bundle.putString(ICON, product.getIcon());

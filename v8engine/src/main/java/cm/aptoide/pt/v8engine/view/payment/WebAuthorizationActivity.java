@@ -21,10 +21,9 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
-import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
-import cm.aptoide.pt.v8engine.presenter.WebAuthorizationPresenter;
 import cm.aptoide.pt.v8engine.presenter.PaymentAuthorizationView;
+import cm.aptoide.pt.v8engine.presenter.WebAuthorizationPresenter;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.BackButtonActivity;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -85,11 +84,9 @@ public class WebAuthorizationActivity extends BackButtonActivity
       };
       registerBackClickHandler(clickHandler);
 
-      final PaymentAnalytics paymentAnalytics =
-          ((V8Engine) getApplicationContext()).getPaymentAnalytics();
-      attachPresenter(
-          new WebAuthorizationPresenter(this, aptoidePay, product, paymentId, paymentAnalytics),
-          savedInstanceState);
+      attachPresenter(new WebAuthorizationPresenter(this, aptoidePay, product, paymentId,
+          ((V8Engine) getApplicationContext()).getPaymentAnalytics(),
+          ((V8Engine) getApplicationContext()).getPaymentSyncScheduler()), savedInstanceState);
     } else {
       throw new IllegalStateException("Web payment urls must be provided");
     }

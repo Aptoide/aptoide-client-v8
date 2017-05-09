@@ -43,6 +43,7 @@ import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
 import cm.aptoide.pt.networkclient.okhttp.cache.POSTCacheInterceptor;
 import cm.aptoide.pt.networkclient.okhttp.cache.POSTCacheKeyAlgorithm;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
@@ -82,6 +83,8 @@ import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.UserAgentInterceptor;
 import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
+import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncScheduler;
+import cm.aptoide.pt.v8engine.payment.repository.sync.ProductBundleMapper;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -160,6 +163,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private StoreAuthBodyInterceptor storeAuthBodyInterceptor;
   private ObjectMapper nonNullObjectMapper;
   private RequestBodyFactory requestBodyFactory;
+  private PaymentSyncScheduler paymentSyncScheduler;
 
   /**
    * call after this instance onCreate()
@@ -465,6 +469,15 @@ public abstract class V8Engine extends SpotAndShareApplication {
               getAptoidePackage());
     }
     return paymentAnalytics;
+  }
+
+  public PaymentSyncScheduler getPaymentSyncScheduler() {
+    if (paymentSyncScheduler == null) {
+      paymentSyncScheduler = new PaymentSyncScheduler(new ProductBundleMapper(),
+          getAndroidAccountProvider(),
+          getConfiguration().getContentAuthority());
+    }
+    return paymentSyncScheduler;
   }
 
   private void clearFileCache() {

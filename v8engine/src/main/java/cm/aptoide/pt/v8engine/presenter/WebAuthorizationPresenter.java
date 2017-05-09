@@ -12,12 +12,9 @@ import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.payment.providers.web.WebAuthorizationPayment;
+import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncScheduler;
 import rx.Completable;
 import rx.android.schedulers.AndroidSchedulers;
-
-/**
- * Created by marcelobenites on 15/02/17.
- */
 
 public class WebAuthorizationPresenter implements Presenter {
 
@@ -26,17 +23,20 @@ public class WebAuthorizationPresenter implements Presenter {
   private final Product product;
   private final int paymentId;
   private final PaymentAnalytics analytics;
+  private final PaymentSyncScheduler syncScheduler;
 
   private boolean processing;
   private boolean loading;
 
   public WebAuthorizationPresenter(PaymentAuthorizationView view, AptoidePay aptoidePay,
-      Product product, int paymentId, PaymentAnalytics analytics) {
+      Product product, int paymentId, PaymentAnalytics analytics,
+      PaymentSyncScheduler syncScheduler) {
     this.view = view;
     this.aptoidePay = aptoidePay;
     this.product = product;
     this.paymentId = paymentId;
     this.analytics = analytics;
+    this.syncScheduler = syncScheduler;
   }
 
   @Override public void present() {
@@ -60,10 +60,9 @@ public class WebAuthorizationPresenter implements Presenter {
         .flatMap(created -> view.backToStoreSelection()
             .doOnNext(selection -> analytics.sendBackToStoreButtonPressedEvent(product)))
         .doOnNext(loaded -> view.showLoading())
-        .flatMap(created -> aptoidePay.getPayment(paymentId)
-            .toObservable()
-            .cast(WebAuthorizationPayment.class))
-        .flatMapCompletable(payment -> payment.authorize().onErrorComplete())
+        // Optimization to accelerate authorization sync once user interacts with the UI, should
+        // be removed once we have a better sync implementation
+        .flatMapCompletable(payment -> syncScheduler.scheduleAuthorizationSync(paymentId))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnError(throwable -> view.showErrorAndDismiss())
         .onErrorReturn(null)
