@@ -486,6 +486,7 @@ public class CreateStoreFragment extends PictureLoaderFragment {
           createStoreInterceptor(storeModel), httpClient, converterFactory)
           .observe()
           .timeout(90, TimeUnit.SECONDS)
+          .observeOn(AndroidSchedulers.mainThread())
           .flatMap(__ -> syncAccountAndNavigateHome())
           .subscribe(__ -> {
           }, err -> {
@@ -504,18 +505,25 @@ public class CreateStoreFragment extends PictureLoaderFragment {
                       navigateToHome();
                     }
                   });
-            } else if (((AptoideWsV7Exception) err).getBaseResponse()
-                .getErrors()
-                .get(0)
-                .getCode()
-                .equals(ERROR_API_1)) {
-              ShowMessage.asLongObservableSnack(getActivity(), R.string.ws_error_API_1)
-                  .subscribe(visibility -> {
-                    if (visibility == ShowMessage.DISMISSED) {
-                      navigateToHome();
-                    }
-                  });
             } else {
+              try {
+                if (((AptoideWsV7Exception) err).getBaseResponse()
+                    .getErrors()
+                    .get(0)
+                    .getCode()
+                    .equals(ERROR_API_1)) {
+                  ShowMessage.asLongObservableSnack(getActivity(), R.string.ws_error_API_1)
+                      .subscribe(visibility -> {
+                        if (visibility == ShowMessage.DISMISSED) {
+                          navigateToHome();
+                        }
+                      });
+                  return;
+                }
+              } catch (ClassCastException e) {
+
+              }
+
               ShowMessage.asLongObservableSnack(getActivity(),
                   ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage()))
                   .subscribe(visibility -> {
