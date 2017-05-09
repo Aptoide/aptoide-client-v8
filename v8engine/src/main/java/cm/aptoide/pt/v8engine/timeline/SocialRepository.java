@@ -42,6 +42,7 @@ public class SocialRepository {
 
   public void share(TimelineCard timelineCard, Context context, boolean privacy,
       ShareCardCallback shareCardCallback, TimelineSocialActionData timelineSocialActionData) {
+    //todo(pribeiro): check if timelineSocialActionData is null
     ShareCardRequest.of(timelineCard, bodyInterceptor, httpClient, converterFactory)
         .observe()
         .toSingle()
@@ -65,6 +66,7 @@ public class SocialRepository {
 
   public void share(TimelineCard timelineCard, Context context, ShareCardCallback shareCardCallback,
       TimelineSocialActionData timelineSocialActionData) {
+    //todo(pribeiro): check if timelineSocialActionData is null
     ShareCardRequest.of(timelineCard, bodyInterceptor, httpClient, converterFactory)
         .observe()
         .toSingle()
@@ -95,6 +97,7 @@ public class SocialRepository {
 
   public void share(String packageName, String shareType, boolean privacy,
       TimelineSocialActionData timelineSocialActionData) {
+    //todo(pribeiro): check if timelineSocialActionData is null
     ShareInstallCardRequest.of(packageName, shareType, bodyInterceptor, httpClient,
         converterFactory).observe().toSingle().flatMapCompletable(response -> {
       if (response.isOk()) {
@@ -108,6 +111,7 @@ public class SocialRepository {
 
   public void share(String packageName, String shareType,
       TimelineSocialActionData timelineSocialActionData) {
+    //todo(pribeiro): check if timelineSocialActionData is null
     ShareInstallCardRequest.of(packageName, shareType, bodyInterceptor, httpClient,
         converterFactory).observe().toSingle().flatMapCompletable(response -> {
       if (response.isOk()) {
