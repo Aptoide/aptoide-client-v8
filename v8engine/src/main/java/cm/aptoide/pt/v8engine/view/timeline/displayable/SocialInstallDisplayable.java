@@ -18,6 +18,8 @@ import cm.aptoide.pt.v8engine.view.timeline.ShareCardCallback;
 import java.util.Date;
 import lombok.Getter;
 
+import static cm.aptoide.pt.v8engine.analytics.Analytics.AppsTimeline.BLANK;
+
 /**
  * Created by jdandrade on 15/12/2016.
  */
@@ -149,18 +151,26 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
 
   @Override
   public void share(Context context, boolean privacyResult, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);
+    socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(), getTitle(),
+            BLANK));
   }
 
   @Override public void share(Context context, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard(), context, shareCardCallback);
+    socialRepository.share(getTimelineCard(), context, shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(), getTitle(),
+            BLANK));
   }
 
   @Override public void like(Context context, String cardType, int rating) {
-    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating);
+    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, getPackageName(), getTitle(),
+            BLANK));
   }
 
   @Override public void like(Context context, String cardId, String cardType, int rating) {
-    socialRepository.like(cardId, cardType, "", rating);
+    socialRepository.like(cardId, cardType, "", rating,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, getPackageName(), getTitle(),
+            BLANK));
   }
 }

@@ -187,7 +187,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private SpotAndShareAnalytics spotAndShareAnalytics;
   private TimelineAnalytics timelineAnalytics;
 
-
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
     bundle.putString(BundleKeys.UNAME.name(), uname);
@@ -267,8 +266,13 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
+    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
+        httpClient, converterFactory);
     socialRepository =
-        new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient);
+        new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
+            timelineAnalytics);
     productFactory = new ProductFactory();
     appRepository = RepositoryFactory.getAppRepository(getContext());
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
@@ -280,10 +284,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
-    paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
-    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
-        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
-        httpClient, converterFactory);
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
@@ -409,9 +409,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   public void buyApp(GetAppMeta.App app) {
     final ParcelableProduct product = (ParcelableProduct) productFactory.create(app);
     paymentAnalytics.sendPaidAppBuyButtonPressedEvent(product);
-    startActivityForResult(
-        PaymentActivity.getIntent(getActivity(), product),
-        PAY_APP_REQUEST_CODE);
+    startActivityForResult(PaymentActivity.getIntent(getActivity(), product), PAY_APP_REQUEST_CODE);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -754,7 +752,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
               sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(), appName,
                   app.getIcon());
           SocialRepository socialRepository =
-              new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient);
+              new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
+                  timelineAnalytics);
 
           sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
               sharePreviewDialog, alertDialog, socialRepository);

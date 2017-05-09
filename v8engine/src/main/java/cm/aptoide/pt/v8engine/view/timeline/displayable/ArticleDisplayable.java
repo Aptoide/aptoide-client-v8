@@ -24,6 +24,8 @@ import lombok.Getter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
+import static cm.aptoide.pt.v8engine.analytics.Analytics.AppsTimeline.BLANK;
+
 /**
  * Created by marcelobenites on 6/17/16.
  */
@@ -151,18 +153,26 @@ public class ArticleDisplayable extends CardDisplayable {
 
   @Override
   public void share(Context context, boolean privacyResult, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);
+    socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getTitle(),
+            getArticleTitle()));
   }
 
   @Override public void share(Context context, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard(), context, shareCardCallback);
+    socialRepository.share(getTimelineCard(), context, shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getTitle(),
+            getArticleTitle()));
   }
 
   @Override public void like(Context context, String cardType, int rating) {
-    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating);
+    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, BLANK, getTitle(),
+            getArticleTitle()));
   }
 
   @Override public void like(Context context, String cardId, String cardType, int rating) {
-    socialRepository.like(cardId, cardType, "", rating);
+    socialRepository.like(cardId, cardType, "", rating,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, BLANK, getTitle(),
+            getArticleTitle()));
   }
 }

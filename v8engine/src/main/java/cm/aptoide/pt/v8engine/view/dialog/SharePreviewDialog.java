@@ -608,13 +608,13 @@ public class SharePreviewDialog {
       switch (eResponse) {
         case YES:
           ShowMessage.asSnack((Activity) context, R.string.social_timeline_share_dialog_title);
-          timelineAnalytics.sendSocialActionEvent(
+          timelineAnalytics.sendSocialCardPreviewActionEvent(
               TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
           break;
         case NO:
           break;
         case CANCEL:
-          timelineAnalytics.sendSocialActionEvent(
+          timelineAnalytics.sendSocialCardPreviewActionEvent(
               TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
           break;
       }

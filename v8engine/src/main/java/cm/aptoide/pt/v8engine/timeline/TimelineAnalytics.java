@@ -58,9 +58,14 @@ public class TimelineAnalytics extends AptoideAnalytics {
     this.converterFactory = converterFactory;
   }
 
-  public void sendSocialActionEvent(String value) {
+  public void sendSocialCardPreviewActionEvent(String value) {
     analytics.sendEvent(
         new FacebookEvent(facebook, SOCIAL_CARD_PREVIEW, createBundleData(ACTION, value)));
+  }
+
+  public void sendSocialActionEvent(String socialAction) {
+    analytics.sendEvent(
+        new FacebookEvent(facebook, CARD_ACTION, createBundleData(ACTION, socialAction)));
   }
 
   public void sendAppUpdateCardClickEvent(String cardType, String action, String socialAction,
