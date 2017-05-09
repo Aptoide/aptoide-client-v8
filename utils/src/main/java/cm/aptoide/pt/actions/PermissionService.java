@@ -25,4 +25,7 @@ public interface PermissionService {
 
   void requestDownloadAccess(@Nullable Action0 toRunWhenAccessIsGranted,
       @Nullable Action0 toRunWhenAccessIsDenied);
+
+  @TargetApi(Build.VERSION_CODES.M) void requestAccessToCamera(
+      @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied);
 }

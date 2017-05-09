@@ -5,18 +5,12 @@
 
 package cm.aptoide.pt.v8engine.view.account.user;
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import cm.aptoide.pt.logger.Logger;
@@ -38,80 +32,20 @@ import java.util.Locale;
  */
 
 // FIXME: 6/4/2017
-// pass all the permission request actions to "PermissionServiceFragment"
 // migrate the profile picture rules to another entity or use a shrinking strategy to the supplied picture
-@Deprecated abstract class AccountPermissionsBaseFragment extends BaseToolbarFragment {
+@Deprecated abstract class PictureLoaderFragment extends BaseToolbarFragment {
 
+  private static final String TAG = PictureLoaderFragment.class.getName();
   public static final int GALLERY_CODE = 1046;
   public static final int REQUEST_IMAGE_CAPTURE = 1;
-  protected static final int CREATE_STORE_REQUEST_CODE = 1;
-  protected static final int USER_PROFILE_CODE = 125;
-  protected static final int STORAGE_REQUEST_CODE = 123;
-  protected static final int CAMERA_REQUEST_CODE = 124;
   protected static final String FILE_NAME = "file_name";
-  private static final String TAG = AccountPermissionsBaseFragment.class.getName();
-  private static final String STORAGE_PERMISSION_GIVEN = "storage_permission_given";
-  private static final String CAMERA_PERMISSION_GIVEN = "camera_permission_given";
-  private static final String STORAGE_PERMISSION_REQUESTED = "storage_permission_requested";
-  private static final String CAMERA_PERMISSION_REQUESTED = "camera_permission_requested";
-  private static final String TYPE_STORAGE = "storage";
-  private static final String TYPE_CAMERA = "camera";
   String photoFileName;
-  private boolean userHasGivenPermission;
   private boolean createUserProfile;
   private boolean createStore;
 
-  AccountPermissionsBaseFragment(boolean createUserProfile, boolean createStore) {
+  PictureLoaderFragment(boolean createUserProfile, boolean createStore) {
     this.createUserProfile = createUserProfile;
     this.createStore = createStore;
-  }
-
-  public static String checkAndAskPermission(final Activity activity, String type) {
-    if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-      if (type.equals(TYPE_STORAGE)) {
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED) {
-
-          if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
-              Manifest.permission.READ_EXTERNAL_STORAGE)) {
-
-            ActivityCompat.requestPermissions(activity,
-                new String[] { Manifest.permission.READ_EXTERNAL_STORAGE }, STORAGE_REQUEST_CODE);
-            return STORAGE_PERMISSION_REQUESTED;
-          } else {
-            ActivityCompat.requestPermissions(activity,
-                new String[] { Manifest.permission.READ_EXTERNAL_STORAGE }, STORAGE_REQUEST_CODE);
-          }
-        } else {
-          return STORAGE_PERMISSION_GIVEN;
-        }
-      } else if (type.equals(TYPE_CAMERA)) {
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA)
-            != PackageManager.PERMISSION_GRANTED) {
-          if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
-              Manifest.permission.CAMERA)) {
-
-            ActivityCompat.requestPermissions(activity, new String[] {
-                Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
-            }, CAMERA_REQUEST_CODE);
-            return CAMERA_PERMISSION_REQUESTED;
-          } else {
-            ActivityCompat.requestPermissions(activity, new String[] {
-                Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
-            }, CAMERA_REQUEST_CODE);
-          }
-        } else {
-          return CAMERA_PERMISSION_GIVEN;
-        }
-      }
-    } else {
-      if (type.equals(TYPE_CAMERA)) {
-        return CAMERA_PERMISSION_GIVEN;
-      } else if (type.equals(TYPE_STORAGE)) {
-        return STORAGE_PERMISSION_GIVEN;
-      }
-    }
-    return "";
   }
 
   public void chooseAvatarSource() {
@@ -121,14 +55,22 @@ import java.util.Locale;
     RxView.clicks(dialog.findViewById(R.id.button_camera))
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(click -> {
-          callPermissionAndAction(TYPE_CAMERA);
+          PictureLoaderFragment.this.requestAccessToCamera(() -> {
+            dispatchTakePictureIntent();
+          }, () -> {
+            Logger.e(TAG, "User denied access to camera");
+          });
           dialog.dismiss();
         });
 
     RxView.clicks(dialog.findViewById(R.id.button_gallery))
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(click -> {
-          callPermissionAndAction(TYPE_STORAGE);
+          PictureLoaderFragment.this.requestAccessToExternalFileSystem(() -> {
+            dispatchOpenGalleryIntent();
+          }, () -> {
+            Logger.e(TAG, "User denied access to camera");
+          });
           dialog.dismiss();
         });
 
@@ -139,50 +81,27 @@ import java.util.Locale;
     dialog.show();
   }
 
-  public void callPermissionAndAction(String type) {
-    String result = AccountPermissionsBaseFragment.checkAndAskPermission(getActivity(), type);
-    switch (result) {
-      case AccountPermissionsBaseFragment.CAMERA_PERMISSION_GIVEN:
-        setUserHasGivenPermission(true);
-        dispatchTakePictureIntent(getActivity().getApplicationContext());
-        break;
-      case AccountPermissionsBaseFragment.STORAGE_PERMISSION_GIVEN:
-        setUserHasGivenPermission(true);
-        dispatchOpenGalleryIntent();
-        break;
-    }
-  }
-
-  public void setUserHasGivenPermission(boolean b) {
-    userHasGivenPermission = b;
-  }
-
-  public void dispatchTakePictureIntent(Context context) {
-    if (userHasGivenPermission) {
-      photoFileName = getPhotoFileName();
-      Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-      if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-          Uri uriForFile = FileProvider.getUriForFile(context,
-              Application.getConfiguration().getAppId() + ".provider",
-              new File(getFileUriFromFileName(photoFileName).getPath()));
-          takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriForFile);
-        } else {
-          takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-              getFileUriFromFileName(photoFileName));
-        }
-        takePictureIntent.putExtra(FILE_NAME, photoFileName);
-        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+  public void dispatchTakePictureIntent() {
+    photoFileName = getPhotoFileName();
+    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        Uri uriForFile = FileProvider.getUriForFile(getActivity(),
+            Application.getConfiguration().getAppId() + ".provider",
+            new File(getFileUriFromFileName(photoFileName).getPath()));
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriForFile);
+      } else {
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, getFileUriFromFileName(photoFileName));
       }
+      takePictureIntent.putExtra(FILE_NAME, photoFileName);
+      startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
     }
   }
 
   public void dispatchOpenGalleryIntent() {
-    if (userHasGivenPermission) {
-      Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-      if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-        startActivityForResult(intent, GALLERY_CODE);
-      }
+    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+    if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+      startActivityForResult(intent, GALLERY_CODE);
     }
   }
 
@@ -262,7 +181,6 @@ import java.util.Locale;
       }
     }
 
-    //remove last \n
     int index = message.lastIndexOf("\n");
     if (index > 0) {
       message.delete(index, message.length());

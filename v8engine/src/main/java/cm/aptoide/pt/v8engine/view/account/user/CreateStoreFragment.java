@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,7 +25,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
+import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
@@ -37,6 +36,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.StoreBodyInterceptor;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,13 +53,10 @@ import rx.android.schedulers.AndroidSchedulers;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 // TODO
-// refactor (remove) more code
-//     - avoid using a base class for permissions
-//     - move some code to PermissionServiceFragment and the remainder for this class or other entity
 // chain Rx in method calls
 // apply MVP
 // save / restore data in input fields
-public class CreateStoreFragment extends AccountPermissionsBaseFragment {
+public class CreateStoreFragment extends PictureLoaderFragment {
 
   public static final String ERROR_CODE_2 = "WOP-2";
   public static final String ERROR_CODE_3 = "WOP-3";
@@ -72,7 +69,6 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
   private static final String STORE_DESCRIPTION = "storeDescription";
   private ProgressDialog waitDialog;
 
-  // fixme are these two vars necessary?
   private View storeAvatarLayout;
 
   private ImageView storeAvatar;
@@ -83,7 +79,6 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
   private Button createStoreBtn;
   private Button skipBtn;
 
-  //Theme related views
   private StoreThemeSelector storeThemeSelector;
 
   private AptoideAccountManager accountManager;
@@ -91,7 +86,7 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
   private BodyInterceptor<BaseBody> bodyInterceptorV7;
   private RequestBodyFactory requestBodyFactory;
   private ObjectMapper serializer;
-  private AptoideClientUUID aptoideClientUUID;
+  private IdsRepository idsRepository;
   private StoreModel storeModel;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
@@ -123,7 +118,7 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
     accountManager = engine.getAccountManager();
     bodyInterceptorV3 = engine.getBaseBodyInterceptorV3();
     bodyInterceptorV7 = engine.getBaseBodyInterceptorV7();
-    aptoideClientUUID = engine.getAptoideClientUUID();
+    idsRepository = engine.getIdsRepository();
     requestBodyFactory = new RequestBodyFactory();
     httpClient = engine.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
@@ -245,7 +240,12 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
       if (storeModel.getStoreRemoteUrl() != null) {
         loadImage(storeModel.getStoreRemoteUrl());
       }
-      storeThemeSelector.toggleTick(view, storeModel.getStoreThemeName(), true);
+
+      String storeThemeName = storeModel.getStoreThemeName();
+      StoreThemeSelector.Theme theme = StoreThemeSelector.getThemeFromName(storeThemeName);
+      final ImageView tick = theme.getTick(view);
+      storeThemeSelector.addTickTo(tick);
+
       createStoreBtn.setText(R.string.save_edit_store);
       skipBtn.setText(R.string.cancel);
     }
@@ -265,53 +265,41 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
         .subscribe(__ -> chooseAvatarSource(), err -> CrashReport.getInstance().log(err));
 
     RxView.clicks(skipBtn)
-        .flatMap(__ -> sendSkipAnalytics().doOnCompleted(()-> navigateToHome()).toObservable())
+        .flatMap(__ -> sendSkipAnalytics().doOnCompleted(() -> navigateToHome()).toObservable())
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> CrashReport.getInstance().log(err));
 
-    RxView.clicks(createStoreBtn)
-      .flatMap(
-        aVoid ->
-            Observable.fromCallable(() -> {
-              AptoideUtils.SystemU.hideKeyboard(getActivity());
-              return null;
-            })
-            .doOnNext(__ -> showWaitDialog())
-            .flatMap(__ -> {
-              final String storeName = this.storeName.getText().toString().trim().toLowerCase();
-              final String storeDescription = this.storeDescription.getText().toString().trim();
-              return Observable.just(new StoreModel(storeModel, storeName, storeDescription));
-            })
-            .flatMap(storeModel -> {
-              final CreateStoreType createStoreType = validateData(storeModel);
-              switch (createStoreType) {
-                default:
-                case None:
-                  return showErrorMessage(R.string.nothing_inserted_store);
+    RxView.clicks(createStoreBtn).flatMap(aVoid -> Observable.fromCallable(() -> {
+      AptoideUtils.SystemU.hideKeyboard(getActivity());
+      return null;
+    }).doOnNext(__ -> showWaitDialog()).flatMap(__ -> {
+      final String storeName = this.storeName.getText().toString().trim().toLowerCase();
+      final String storeDescription = this.storeDescription.getText().toString().trim();
+      return Observable.just(new StoreModel(storeModel, storeName, storeDescription));
+    }).flatMap(storeModel -> {
+      final CreateStoreType createStoreType = validateData(storeModel);
+      switch (createStoreType) {
+        default:
+        case None:
+          return dismissWaitAndShowErrorMessage(R.string.nothing_inserted_store);
 
-                case All:
-                case UserAndTheme:
-                case Theme:
-                  return createStoreType1(storeModel, createStoreType);
+        case All:
+        case UserAndTheme:
+        case Theme:
+          return createStoreType1(storeModel, createStoreType);
 
-                case Edit:
-                  return createStoreType2(storeModel);
+        case Edit:
+          return createStoreType2(storeModel);
 
-                case Edit2:
-                  return createStoreType3(storeModel);
-              }
-            })
-      )
-      .compose(bindUntilEvent(LifecycleEvent.DESTROY))
-      .retry()
-      .subscribe(
-          __ -> { },
-          err -> CrashReport.getInstance().log(err)
-      );
+        case Edit2:
+          return createStoreType3(storeModel);
+      }
+    })).compose(bindUntilEvent(LifecycleEvent.DESTROY)).retry().subscribe(__ -> {
+    }, err -> CrashReport.getInstance().log(err));
   }
 
-  @NonNull private Observable<Integer> showErrorMessage(@StringRes int stringRes) {
+  @NonNull private Observable<Integer> dismissWaitAndShowErrorMessage(@StringRes int stringRes) {
     return Observable.fromCallable(() -> {
       dismissWaitDialog();
       return null;
@@ -330,7 +318,7 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
     }
   }
 
-  @NonNull private Observable<Integer> showErrorMessage(Throwable err) {
+  @NonNull private Observable<Integer> dismissWaitAndShowErrorMessage(Throwable err) {
     return Observable.fromCallable(() -> {
       dismissWaitDialog();
       return null;
@@ -351,14 +339,12 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
             __ -> SimpleSetStoreRequest.of(storeModel.getStoreId(), storeModel.getStoreThemeName(),
                 storeModel.getStoreDescription(), bodyInterceptorV7, httpClient, converterFactory)
                 .observe())
-        .flatMap(
-            __ -> syncAccountAndNavigateHome())
+        .flatMap(__ -> syncAccountAndNavigateHome())
         .observeOn(AndroidSchedulers.mainThread())
         .onErrorResumeNext(err -> {
-          dismissWaitDialog();
           CrashReport.getInstance().log(err);
-          return showErrorMessage(
-              ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage())).map(__ -> null);
+          final int errorMessage = ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage());
+          return dismissWaitAndShowErrorMessage(errorMessage).map(__ -> null);
         })
         .map(__ -> null);
   }
@@ -375,27 +361,25 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
                 storeModel.getStoreThemeName(), storeModel.getStoreAvatarPath(),
                 storeModel.getStoreDescription(), true, storeModel.getStoreId(),
                 createStoreInterceptor(storeModel), httpClient, converterFactory).observe())
-        .flatMap(
-            __ -> syncAccountAndNavigateHome())
+        .flatMap(__ -> syncAccountAndNavigateHome())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnCompleted(() -> navigateToHome())
         .onErrorResumeNext(err -> {
+          @StringRes int errorMessage;
           if (((AptoideWsV7Exception) err).getBaseResponse()
               .getErrors()
               .get(0)
               .getCode()
               .equals(ERROR_API_1)) {
-            dismissWaitDialog();
-            return showErrorMessage(R.string.ws_error_API_1).filter(
-                vis -> vis == ShowMessage.DISMISSED)
-                .doOnCompleted(() -> navigateToHome())
-                .map(__ -> null);
+            errorMessage = R.string.ws_error_API_1;
+          } else {
+            errorMessage = ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage());
           }
 
-          // if it is not a known error...
-          dismissWaitDialog();
-          return showErrorMessage(
-              ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage())).map(__ -> null);
+          return dismissWaitAndShowErrorMessage(errorMessage).filter(
+              vis -> vis == ShowMessage.DISMISSED)
+              .doOnCompleted(() -> navigateToHome())
+              .map(__ -> null);
         })
         .map(__ -> null);
   }
@@ -404,45 +388,50 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
       @NonNull final CreateStoreType createStoreType) {
     showWaitDialog();
 
-    return CheckUserCredentialsRequest.of(storeModel.getStoreName(), bodyInterceptorV3, httpClient,
-        converterFactory).observe().observeOn(AndroidSchedulers.mainThread()).map(answer -> {
-      if (answer.hasErrors()) {
-        if (answer.getErrors() != null && answer.getErrors().size() > 0) {
+    return CheckUserCredentialsRequest.of(storeModel.getStoreName(),
+        accountManager.getAccessToken(), bodyInterceptorV3, httpClient, converterFactory)
+        .observe()
+        .observeOn(AndroidSchedulers.mainThread())
+        .map(answer -> {
           dismissWaitDialog();
-          if (answer.getErrors().get(0).code.equals(ERROR_CODE_2)) {
-
-            GenericDialogs.createGenericContinueMessage(getActivity(), "",
-                getApplicationContext().getResources().getString(R.string.ws_error_WOP_2))
+          if (answer.hasErrors()) {
+            handleStoreCreationErrors(answer);
+          } else if (!(createStoreType == CreateStoreType.Theme)) {
+            onCreateSuccess(storeModel, createStoreType);
+          } else {
+            ShowMessage.asLongObservableSnack(getActivity(), R.string.create_store_store_created)
+                .flatMap(__ -> syncAccountAndNavigateHome())
                 .subscribe(__ -> {
                 }, err -> CrashReport.getInstance().log(err));
-          } else if (answer.getErrors().get(0).code.equals(ERROR_CODE_3)) {
-            ShowMessage.asSnack(this,
-                ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
-          } else {
-            ShowMessage.asObservableSnack(this,
-                ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code))
-                .subscribe(visibility -> {
-                  if (visibility == ShowMessage.DISMISSED) {
-                    navigateToHome();
-                  }
-                });
           }
-        }
-      } else if (!(createStoreType == CreateStoreType.Theme)) {
-        onCreateSuccess(storeModel, createStoreType);
-      } else {
-        dismissWaitDialog();
-        ShowMessage.asLongObservableSnack(getActivity(), R.string.create_store_store_created)
-            .flatMap(__ -> syncAccountAndNavigateHome())
+
+          return null;
+        })
+        .onErrorResumeNext(err -> dismissWaitAndShowErrorMessage(err))
+        .map(__ -> null);
+  }
+
+  private void handleStoreCreationErrors(CheckUserCredentialsJson answer) {
+    if (answer.getErrors() != null && answer.getErrors().size() > 0) {
+      if (answer.getErrors().get(0).code.equals(ERROR_CODE_2)) {
+
+        GenericDialogs.createGenericContinueMessage(getActivity(), "",
+            getApplicationContext().getResources().getString(R.string.ws_error_WOP_2))
             .subscribe(__ -> {
             }, err -> CrashReport.getInstance().log(err));
+      } else if (answer.getErrors().get(0).code.equals(ERROR_CODE_3)) {
+        ShowMessage.asSnack(this,
+            ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
+      } else {
+        ShowMessage.asObservableSnack(this,
+            ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code))
+            .subscribe(visibility -> {
+              if (visibility == ShowMessage.DISMISSED) {
+                navigateToHome();
+              }
+            });
       }
-
-      return null;
-    }).onErrorResumeNext(err -> {
-      dismissWaitDialog();
-      return showErrorMessage(err);
-    }).map(__ -> null);
+    }
   }
 
   private Completable sendCreateAnalytics() {
@@ -559,12 +548,19 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
   }
 
   @NonNull private Observable<Object> syncAccountAndNavigateHome() {
-    return Completable.fromAction(() -> dismissWaitDialog()).andThen(accountManager.syncCurrentAccount())
-        .andThen(sendCreateAnalytics()).doOnCompleted(() -> navigateToHome()).toObservable();
+    return Completable.fromAction(() -> dismissWaitDialog())
+        .andThen(accountManager.syncCurrentAccount())
+        .andThen(sendCreateAnalytics())
+        .doOnCompleted(() -> navigateToHome())
+        .onErrorResumeNext(err -> {
+          CrashReport.getInstance().log(err);
+          return Completable.fromAction(() -> navigateToHome());
+        })
+        .toObservable();
   }
 
   @NonNull private StoreBodyInterceptor createStoreInterceptor(StoreModel storeModel) {
-    return new StoreBodyInterceptor(aptoideClientUUID.getUniqueIdentifier(), accountManager,
+    return new StoreBodyInterceptor(idsRepository.getUniqueIdentifier(), accountManager,
         requestBodyFactory, storeModel.getStoreThemeName(), storeModel.getStoreDescription(),
         serializer);
   }
@@ -584,29 +580,6 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
     final String filePath = new FileUtils().getMediaStoragePath(avatarUrl, applicationContext);
     storeModel.setStoreAvatarPath(filePath);
     checkAvatarRequirements(filePath, avatarUrl);
-  }
-
-  @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-      @NonNull int[] grantResults) {
-    switch (requestCode) {
-      case STORAGE_REQUEST_CODE:
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          setUserHasGivenPermission(true);
-          dispatchOpenGalleryIntent();
-        } else {
-          //TODO: Deal with permissions not being given by user
-        }
-        break;
-
-      case CAMERA_REQUEST_CODE:
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          setUserHasGivenPermission(true);
-          dispatchTakePictureIntent(getActivity().getApplicationContext());
-        } else {
-          //TODO: Deal with permissions not being given by user
-        }
-        break;
-    }
   }
 
   /**
@@ -739,7 +712,18 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
       this.storeModel = storeModel;
     }
 
-    // todo refactor this listener setup mechanism.
+    public static Theme getThemeFromName(String themeName) {
+      if (TextUtils.isEmpty(themeName)) return null;
+
+      for (final Theme t : Theme.values()) {
+        if (themeName.equalsIgnoreCase(t.getThemeName())) {
+          return t;
+        }
+      }
+
+      return null;
+    }
+
     private void bindThemeListeners(final View rootView) {
       for (final Theme t : Theme.values()) {
         RxView.clicks(t.getShape(rootView))
@@ -755,20 +739,6 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
       }
     }
 
-    // todo improve this search. maybe use a hash map with proper class and not an enum for the store
-    // themes. move the store themes to their own file
-    private Theme getThemeFromName(String themeName) {
-      if (TextUtils.isEmpty(themeName)) return null;
-
-      for (final Theme t : Theme.values()) {
-        if (themeName.equalsIgnoreCase(t.getThemeName())) {
-          return t;
-        }
-      }
-
-      return null;
-    }
-
     private void removeTickFrom(ImageView tickImage) {
       if (tickImage != null) {
         tickImage.setVisibility(View.GONE);
@@ -778,25 +748,6 @@ public class CreateStoreFragment extends AccountPermissionsBaseFragment {
     private void addTickTo(ImageView tickImage) {
       if (tickImage != null) {
         tickImage.setVisibility(View.VISIBLE);
-      }
-    }
-
-    /**
-     * refactor the code that needs this method to use methods {@link #addTickTo(ImageView)} and
-     * {@link #removeTickFrom(ImageView)}
-     */
-    @Deprecated private void toggleTick(final View rootView, String storeThemeName,
-        boolean visible) {
-      final Theme theme = getThemeFromName(storeThemeName);
-      if (theme != null) {
-        final ImageView tick = theme.getTick(rootView);
-        if (tick != null) {
-          if (visible) {
-            addTickTo(tick);
-          } else {
-            removeTickFrom(tick);
-          }
-        }
       }
     }
 

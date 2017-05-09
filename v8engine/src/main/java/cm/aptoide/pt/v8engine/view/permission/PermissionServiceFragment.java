@@ -10,7 +10,6 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
-import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import rx.functions.Action0;
 
 /**
@@ -18,6 +17,18 @@ import rx.functions.Action0;
  */
 
 public abstract class PermissionServiceFragment extends BackButtonFragment implements PermissionService {
+
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void requestAccessToCamera(@Nullable Action0 toRunWhenAccessIsGranted,
+      @Nullable Action0 toRunWhenAccessIsDenied) {
+    try {
+      ((PermissionService) this.getActivity()).requestAccessToCamera(
+          toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
+    } catch (ClassCastException e) {
+      throw new IllegalStateException("Containing activity of this fragment must implement "
+          + PermissionService.class.getName());
+    }
+  }
 
   @TargetApi(Build.VERSION_CODES.M) @Override
   public void requestAccessToExternalFileSystem(@Nullable Action0 toRunWhenAccessIsGranted,

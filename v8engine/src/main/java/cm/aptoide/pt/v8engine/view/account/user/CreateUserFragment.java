@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -39,13 +37,10 @@ import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 
 // TODO
-// refactor (remove) more code
-//     - avoid using a base class for permissions
-//     - move some code to PermissionServiceFragment and the remainder for this class or other entity
 // chain Rx in method calls
 // apply MVP
 // save / restore data in input fields
-public class CreateUserFragment extends AccountPermissionsBaseFragment {
+public class CreateUserFragment extends PictureLoaderFragment {
 
   private static final String TAG = CreateUserFragment.class.getName();
 
@@ -255,29 +250,6 @@ public class CreateUserFragment extends AccountPermissionsBaseFragment {
       checkAvatarRequirements(avatarPath, avatarUrl);
     } else {
       Logger.w(TAG, "URI for content is null or empty");
-    }
-  }
-
-  @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-      @NonNull int[] grantResults) {
-    switch (requestCode) {
-      case STORAGE_REQUEST_CODE:
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          setUserHasGivenPermission(true);
-          dispatchOpenGalleryIntent();
-        } else {
-          //TODO: Deal with permissions not being given by user
-        }
-        return;
-
-      case CAMERA_REQUEST_CODE:
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          setUserHasGivenPermission(true);
-          dispatchTakePictureIntent(getActivity().getApplicationContext());
-        } else {
-          //TODO: Deal with permissions not being given by user
-        }
-        break;
     }
   }
 }
