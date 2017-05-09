@@ -246,6 +246,11 @@ public class HighwayRadarTextView extends FrameLayout
     }
   }
 
+  public void stop() {
+    listOfHotspot = null;
+    hotspotListener = null;
+  }
+
   public interface HotspotClickListener {
     void onGroupClicked(Group group);
   }

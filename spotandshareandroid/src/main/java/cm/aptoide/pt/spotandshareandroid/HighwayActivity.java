@@ -38,13 +38,11 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   public LinearLayout createGroupButton;
   public HighwayRadarTextView radarTextView;
   public LinearLayout progressBarLayout;
-  public Group chosenHotspot;
   public LinearLayout groupButtonsLayout;
   private TextView searchGroupsTextview;
   private Toolbar mToolbar;
   private ProgressBar buttonsProgressBar;//progress bar for when user click the buttons
 
-  private boolean joinGroupFlag;
   private HighwayPresenter presenter;
   private SpotAndShareAnalyticsInterface analytics;
   private GroupManager groupManager;
@@ -506,5 +504,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   @Override protected void onDestroy() {
     presenter.onDestroy();
     super.onDestroy();
+    radarTextView.stop();
+    radarTextView = null;
   }
 }
