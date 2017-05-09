@@ -89,7 +89,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   @Override public void setupViews() {
     radarTextView.setOnHotspotClickListener(new HighwayRadarTextView.HotspotClickListener() {
       @Override public void onGroupClicked(Group group) {
-        presenter.clickedOnGroup(group, chosenHotspot);
+        presenter.clickedOnGroup(group);
       }
     });
 
@@ -116,7 +116,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
     buttonsProgressBar = (ProgressBar) findViewById(R.id.buttonsProgressBar);
     createGroupButton = (LinearLayout) findViewById(R.id.createGroup);
-    radarTextView.setActivity(this);
   }
 
   private void setUpToolbar() {
@@ -391,10 +390,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     radarTextView.show(clients);
   }
 
-  @Override public void refreshRadarLowerVersions(ArrayList<Group> clients) {
-    radarTextView.showForLowerVersions(clients);
-  }
-
   @Override public void showRecoveringWifiStateToast() {
     Toast.makeText(this, this.getResources().getString(R.string.recoveringWifiState),
         Toast.LENGTH_SHORT).show();
@@ -499,26 +494,8 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         Toast.LENGTH_SHORT).show();
   }
 
-  @Override public void joinSingleHotspot() {
-    hideSearchGroupsTextview(true);
-    //Group g = new Group(chosenHotspot);
-    presenter.clickJoinGroup(chosenHotspot);
-  }
-
   @Override public void deselectHotspot(Group group) {
     radarTextView.deselectHotspot(group);
-  }
-
-  public Group getChosenHotspot() {
-    return chosenHotspot;
-  }
-
-  public void setChosenHotspot(Group chosenHotspot) {
-    this.chosenHotspot = chosenHotspot;
-  }
-
-  public void deselectHotspot() {
-    this.chosenHotspot = null;
   }
 
   @Override protected void onResume() {
@@ -529,13 +506,5 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   @Override protected void onDestroy() {
     presenter.onDestroy();
     super.onDestroy();
-  }
-
-  public boolean isJoinGroupFlag() {
-    return joinGroupFlag;
-  }
-
-  public void setJoinGroupFlag(boolean joinGroupFlag) {
-    this.joinGroupFlag = joinGroupFlag;
   }
 }

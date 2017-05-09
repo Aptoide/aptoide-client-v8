@@ -28,8 +28,6 @@ public interface HighwayView {
 
   void refreshRadar(ArrayList<Group> clients);
 
-  void refreshRadarLowerVersions(ArrayList<Group> clients);
-
   void showRecoveringWifiStateToast();
 
   void dismiss();
@@ -39,8 +37,6 @@ public interface HighwayView {
   void openChatFromAppViewShare(String deviceName, String appFilepath);
 
   void paintSelectedGroup(Group group);
-
-  void joinSingleHotspot();
 
   void deselectHotspot(Group group);
 
