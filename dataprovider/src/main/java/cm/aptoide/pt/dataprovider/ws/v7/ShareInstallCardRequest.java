@@ -25,10 +25,10 @@ public class ShareInstallCardRequest extends V7<BaseV7Response, ShareInstallCard
     this.type = type;
   }
 
-  public static ShareInstallCardRequest of(String packageName, String shareType,
+  public static ShareInstallCardRequest of(String packageName, Long storeId, String shareType,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
-    ShareInstallCardRequest.Body body = new ShareInstallCardRequest.Body(packageName);
+    ShareInstallCardRequest.Body body = new ShareInstallCardRequest.Body(packageName, storeId);
     return new ShareInstallCardRequest(body, packageName, shareType, bodyInterceptor, httpClient,
         converterFactory);
   }
@@ -42,9 +42,16 @@ public class ShareInstallCardRequest extends V7<BaseV7Response, ShareInstallCard
       extends BaseBody {
 
     private String packageName;
+    private Long storeId;
 
     public Body(String packageName) {
       this.packageName = packageName;
+      this.storeId = null;
+    }
+
+    public Body(String packageName, Long cardUid) {
+      this.packageName = packageName;
+      this.storeId = cardUid;
     }
   }
 }

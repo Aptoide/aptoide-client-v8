@@ -30,6 +30,7 @@ public class PopularAppDisplayable extends CardDisplayable {
   private long appId;
   private String packageName;
   private String storeName;
+  private Long appStoreId;
 
   private SocialRepository socialRepository;
   private TimelineAnalytics timelineAnalytics;
@@ -52,6 +53,7 @@ public class PopularAppDisplayable extends CardDisplayable {
     this.appId = card.getPopularApplication().getId();
     this.timelineAnalytics = timelineAnalytics;
     this.socialRepository = socialRepository;
+    this.appStoreId = card.getPopularApplication().getStore().getId();
 
     if (card.getAb() != null
         && card.getAb().getConversion() != null
@@ -69,13 +71,13 @@ public class PopularAppDisplayable extends CardDisplayable {
     return R.layout.displayable_social_timeline_popular_app;
   }
 
-  @Override
-  public void share(Context context, boolean privacyResult, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);
+  @Override public void share(boolean privacyResult, ShareCardCallback shareCardCallback) {
+    socialRepository.share(getTimelineCard().getCardId(), getAppStoreId(), privacyResult,
+        shareCardCallback);
   }
 
-  @Override public void share(Context context, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard(), context, shareCardCallback);
+  @Override public void share(ShareCardCallback shareCardCallback) {
+    socialRepository.share(getTimelineCard().getCardId(), getAppStoreId(), shareCardCallback);
   }
 
   @Override public void like(Context context, String cardType, int rating) {
@@ -100,6 +102,10 @@ public class PopularAppDisplayable extends CardDisplayable {
 
   public int getNumberOfFriends() {
     return numberOfFriends;
+  }
+
+  public Long getAppStoreId() {
+    return appStoreId;
   }
 
   public String getAppIcon() {

@@ -29,6 +29,7 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
   @Getter private String appName;
   @Getter private String appIcon;
   @Getter private String abUrl;
+  @Getter private long appStoreId;
 
   private SpannableFactory spannableFactory;
   private SocialRepository socialRepository;
@@ -58,6 +59,7 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
     this.spannableFactory = spannableFactory;
     this.socialRepository = socialRepository;
     this.appRating = socialRecommendation.getApp().getStats().getRating().getAvg();
+    this.appStoreId = socialRecommendation.getApp().getStore().getId();
   }
 
   public static Displayable from(SocialRecommendation socialRecommendation,
@@ -110,13 +112,13 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
     return R.layout.displayable_social_timeline_social_recommendation;
   }
 
-  @Override
-  public void share(Context context, boolean privacyResult, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);
+  @Override public void share(boolean privacyResult, ShareCardCallback shareCardCallback) {
+    socialRepository.share(getTimelineCard().getCardId(), appStoreId, privacyResult,
+        shareCardCallback);
   }
 
-  @Override public void share(Context context, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard(), context, shareCardCallback);
+  @Override public void share(ShareCardCallback shareCardCallback) {
+    socialRepository.share(getTimelineCard().getCardId(), appStoreId, shareCardCallback);
   }
 
   @Override public void like(Context context, String cardType, int rating) {

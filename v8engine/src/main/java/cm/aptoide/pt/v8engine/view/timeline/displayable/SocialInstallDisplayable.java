@@ -33,6 +33,7 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
   @Getter private String appIcon;
   @Getter private String abUrl;
   @Getter private float rating;
+  @Getter private Long appStoreId;
 
   private TimelineAnalytics timelineAnalytics;
   private SpannableFactory spannableFactory;
@@ -61,6 +62,7 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
     this.timelineAnalytics = timelineAnalytics;
     this.spannableFactory = spannableFactory;
     this.socialRepository = socialRepository;
+    this.appStoreId = socialInstall.getStore().getId();
   }
 
   public static Displayable from(SocialInstall socialInstall, TimelineAnalytics timelineAnalytics,
@@ -119,13 +121,13 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
         ContextCompat.getColor(context, R.color.black_87_alpha), title);
   }
 
-  @Override
-  public void share(Context context, boolean privacyResult, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);
+  @Override public void share(boolean privacyResult, ShareCardCallback shareCardCallback) {
+    socialRepository.share(getTimelineCard().getCardId(), getAppStoreId(), privacyResult,
+        shareCardCallback);
   }
 
-  @Override public void share(Context context, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard(), context, shareCardCallback);
+  @Override public void share(ShareCardCallback shareCardCallback) {
+    socialRepository.share(getTimelineCard().getCardId(), getAppStoreId(), shareCardCallback);
   }
 
   @Override public void like(Context context, String cardType, int rating) {

@@ -48,6 +48,7 @@ public class RecommendationDisplayable extends CardDisplayable {
   private TimelineAnalytics timelineAnalytics;
   private SocialRepository socialRepository;
   @Getter private float appRating;
+  @Getter private Long appStoreId;
 
   public RecommendationDisplayable() {
   }
@@ -74,6 +75,7 @@ public class RecommendationDisplayable extends CardDisplayable {
     this.timelineAnalytics = timelineAnalytics;
     this.socialRepository = socialRepository;
     this.appRating = recommendation.getRecommendedApp().getStats().getRating().getAvg();
+    this.appStoreId = recommendation.getRecommendedApp().getStore().getId();
   }
 
   public static Displayable from(Recommendation recommendation, DateCalculator dateCalculator,
@@ -180,13 +182,13 @@ public class RecommendationDisplayable extends CardDisplayable {
     return "";
   }
 
-  @Override
-  public void share(Context context, boolean privacyResult, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);
+  @Override public void share(boolean privacyResult, ShareCardCallback shareCardCallback) {
+    socialRepository.share(getTimelineCard().getCardId(), getAppStoreId(), privacyResult,
+        shareCardCallback);
   }
 
-  @Override public void share(Context context, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard(), context, shareCardCallback);
+  @Override public void share(ShareCardCallback shareCardCallback) {
+    socialRepository.share(getTimelineCard().getCardId(), getAppStoreId(), shareCardCallback);
   }
 
   @Override public void like(Context context, String cardType, int rating) {

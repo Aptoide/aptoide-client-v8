@@ -63,6 +63,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
   private InstallEventConverter installConverter;
   private Analytics analytics;
   @Getter private float appRating;
+  @Getter private Long updateStoreId;
 
   public AppUpdateDisplayable() {
   }
@@ -96,6 +97,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
     this.analytics = analytics;
     this.storeTheme = storeTheme;
     this.appRating = appUpdate.getStats().getRating().getAvg();
+    this.updateStoreId = appUpdate.getStore().getId();
   }
 
   public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory,
@@ -240,13 +242,13 @@ public class AppUpdateDisplayable extends CardDisplayable {
         getPackageName(), getStoreName());
   }
 
-  @Override
-  public void share(Context context, boolean privacyResult, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);
+  @Override public void share(boolean privacyResult, ShareCardCallback shareCardCallback) {
+    socialRepository.share(getTimelineCard().getCardId(), updateStoreId, privacyResult,
+        shareCardCallback);
   }
 
-  @Override public void share(Context context, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard(), context, shareCardCallback);
+  @Override public void share(ShareCardCallback shareCardCallback) {
+    socialRepository.share(getTimelineCard().getCardId(), updateStoreId, shareCardCallback);
   }
 
   @Override public void like(Context context, String cardType, int rating) {

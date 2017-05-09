@@ -18,7 +18,6 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -546,37 +545,63 @@ public class SharePreviewDialog {
   }
 
   public AlertDialog.Builder getCustomRecommendationPreviewDialogBuilder(Context context,
-      String appName, String appIconUrl) {
+      String appName, String appIconUrl, float rating) {
     AlertDialog.Builder alertadd = new AlertDialog.Builder(context);
     LayoutInflater factory = LayoutInflater.from(context);
     View view =
         factory.inflate(R.layout.displayable_social_timeline_social_recommendation_preview, null);
-    CardView cardView = (CardView) view.findViewById(R.id.card);
-    LinearLayout like = (LinearLayout) view.findViewById(R.id.social_like);
-    LikeButtonView likeButtonView = (LikeButtonView) view.findViewById(R.id.social_like_button);
-    TextView comments = (TextView) view.findViewById(R.id.social_comment);
-
-    ImageView appIconV =
+    ImageView appIcon =
         (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
-    TextView appNameV =
+    TextView appNameT =
         (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_similar_apps);
-    TextView appSubTitle =
-        (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
     TextView getApp = (TextView) view.findViewById(
         R.id.displayable_social_timeline_recommendation_get_app_button);
+    RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
+
     if (appIconUrl != null) {
       ImageLoader.with(context)
           .load(appIconUrl, appIconV);
     }
-    appNameV.setText(appName);
-    appSubTitle.setText(AptoideUtils.StringU.getFormattedString(
-        R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, ""));
-
+    appNameT.setText(appName);
+    ratingBar.setRating(rating);
     SpannableFactory spannableFactory = new SpannableFactory();
 
     getApp.setText(spannableFactory.createColorSpan(
         context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
         ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
+
+    //
+    CardView cardView = (CardView) view.findViewById(R.id.card);
+    LinearLayout like = (LinearLayout) view.findViewById(R.id.social_like);
+    LikeButtonView likeButtonView = (LikeButtonView) view.findViewById(R.id.social_like_button);
+    TextView comments = (TextView) view.findViewById(R.id.social_comment);
+    LinearLayout socialInfoBar;
+    LinearLayout socialCommentBar;
+
+    socialInfoBar = (LinearLayout) view.findViewById(R.id.social_info_bar);
+    socialCommentBar = (LinearLayout) view.findViewById(R.id.social_latest_comment_bar);
+
+    socialInfoBar.setVisibility(View.GONE);
+    socialCommentBar.setVisibility(View.GONE);
+    //
+    //ImageView appIconV =
+    //    (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
+    //TextView appNameV =
+    //    (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_similar_apps);
+    //TextView appSubTitle =
+    //    (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
+    //TextView getApp = (TextView) view.findViewById(
+    //    R.id.displayable_social_timeline_recommendation_get_app_button);
+    //ImageLoader.with(context).load(appIconUrl, appIconV);
+    //appNameV.setText(appName);
+    //appSubTitle.setText(AptoideUtils.StringU.getFormattedString(
+    //    R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, ""));
+    //
+    //SpannableFactory spannableFactory = new SpannableFactory();
+    //
+    //getApp.setText(spannableFactory.createColorSpan(
+    //    context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
+    //    ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
 
     TextView storeName = (TextView) view.findViewById(R.id.card_title);
     TextView userName = (TextView) view.findViewById(R.id.card_subtitle);
@@ -615,13 +640,14 @@ public class SharePreviewDialog {
     return alertadd;
   }
 
-  public void showShareCardPreviewDialog(String packageName, String shareType, Context context,
-      SharePreviewDialog sharePreviewDialog, AlertDialog.Builder alertDialog,
+  public void showShareCardPreviewDialog(String packageName, Long storeId, String shareType,
+      Context context, SharePreviewDialog sharePreviewDialog, AlertDialog.Builder alertDialog,
       SocialRepository socialRepository) {
     Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
       if (!accountManager.isAccountAccessConfirmed()) {
         alertDialog.setPositiveButton(R.string.share, (dialogInterface, i) -> {
-          socialRepository.share(packageName, shareType, sharePreviewDialog.getPrivacyResult());
+          socialRepository.share(packageName, storeId, shareType,
+              sharePreviewDialog.getPrivacyResult());
           subscriber.onNext(GenericDialogs.EResponse.YES);
           subscriber.onCompleted();
         })
@@ -631,7 +657,7 @@ public class SharePreviewDialog {
             });
       } else {
         alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
-          socialRepository.share(packageName, shareType);
+          socialRepository.share(packageName, storeId, shareType);
           subscriber.onNext(GenericDialogs.EResponse.YES);
           subscriber.onCompleted();
         })
