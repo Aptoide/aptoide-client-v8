@@ -8,12 +8,10 @@ package cm.aptoide.pt.v8engine.presenter;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.account.LoginPreferences;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.view.LoginSignUpCredentialsView;
-import cm.aptoide.pt.v8engine.view.View;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -79,6 +77,14 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
         });
   }
 
+  @Override public void saveState(Bundle state) {
+    // does nothing
+  }
+
+  @Override public void restoreState(Bundle state) {
+    // does nothing
+  }
+
   private void showOrHideLogins() {
     showOrHideFacebookLogin();
     showOrHideGoogleLogin();
@@ -91,11 +97,17 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
             .observeOn(AndroidSchedulers.mainThread())
             .doOnCompleted(() -> {
               Logger.d(TAG, "google login successful");
-              Analytics.Account.loginSuccess(Analytics.Account.LoginMethod.GOOGLE);
+              Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
+                  Analytics.Account.SignUpLoginStatus.SUCCESS,
+                  Analytics.Account.LoginStatusDetail.SUCCESS);
               navigateToMainView();
             })
-            .doOnTerminate(() -> view.hideLoading())
-            .doOnError(throwable -> view.showError(throwable))
+            .doOnTerminate(() -> view.hideLoading()).doOnError(throwable -> {
+              view.showError(throwable);
+              Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
+                  Analytics.Account.SignUpLoginStatus.FAILED,
+                  Analytics.Account.LoginStatusDetail.SDK_ERROR);
+            })
             .toObservable()).retry();
   }
 
@@ -105,6 +117,9 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
           if (declinedRequiredPermissions(credentials.getDeniedPermissions())) {
             view.hideLoading();
             view.showPermissionsRequiredMessage();
+            Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
+                Analytics.Account.SignUpLoginStatus.FAILED,
+                Analytics.Account.LoginStatusDetail.PERMISSIONS_DENIED);
             return Observable.empty();
           }
 
@@ -114,7 +129,9 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
                   .observeOn(AndroidSchedulers.mainThread())
                   .doOnCompleted(() -> {
                     Logger.d(TAG, "facebook login successful");
-                    Analytics.Account.loginSuccess(Analytics.Account.LoginMethod.FACEBOOK);
+                    Analytics.Account.loginStatus(Analytics.Account.LoginMethod.FACEBOOK,
+                        Analytics.Account.SignUpLoginStatus.SUCCESS,
+                        Analytics.Account.LoginStatusDetail.SUCCESS);
                     navigateToMainView();
                   })
                   .doOnTerminate(() -> view.hideLoading())
@@ -131,11 +148,17 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
           .observeOn(AndroidSchedulers.mainThread())
           .doOnCompleted(() -> {
             Logger.d(TAG, "aptoide login successful");
-            Analytics.Account.loginSuccess(Analytics.Account.LoginMethod.APTOIDE);
+            Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
+                Analytics.Account.SignUpLoginStatus.SUCCESS,
+                Analytics.Account.LoginStatusDetail.SUCCESS);
             navigateToMainView();
           })
-          .doOnTerminate(() -> view.hideLoading())
-          .doOnError(throwable -> view.showError(throwable))
+          .doOnTerminate(() -> view.hideLoading()).doOnError(throwable -> {
+            view.showError(throwable);
+            Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
+                Analytics.Account.SignUpLoginStatus.FAILED,
+                Analytics.Account.LoginStatusDetail.GENERAL_ERROR);
+          })
           .toObservable();
     }).retry();
   }
@@ -148,11 +171,12 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
           .observeOn(AndroidSchedulers.mainThread())
           .doOnCompleted(() -> {
             Logger.d(TAG, "aptoide sign up successful");
-            Analytics.Account.signInSuccessAptoide();
+            Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.SUCCESS);
             view.navigateToCreateProfile();
+          }).doOnTerminate(() -> view.hideLoading()).doOnError(throwable -> {
+            Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.FAILED);
+            view.showError(throwable);
           })
-          .doOnTerminate(() -> view.hideLoading())
-          .doOnError(throwable -> view.showError(throwable))
           .toObservable();
     }).retry();
   }
@@ -235,13 +259,5 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
         request.executeAsync();
       }
     });
-  }
-
-  @Override public void saveState(Bundle state) {
-    // does nothing
-  }
-
-  @Override public void restoreState(Bundle state) {
-    // does nothing
   }
 }

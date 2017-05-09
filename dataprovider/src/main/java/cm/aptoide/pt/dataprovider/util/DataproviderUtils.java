@@ -9,9 +9,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.model.MinimalAdInterface;
-import cm.aptoide.pt.model.StoredMinimalAdInterface;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -55,14 +53,14 @@ public class DataproviderUtils {
 
   public static class AdNetworksUtils {
 
-    public static String parseMacros(@NonNull String clickUrl, IdsRepository idsRepository) {
+    public static String parseMacros(@NonNull String clickUrl, String androidId,
+        String uniqueIdentifier, String advertisingId) {
 
-      final String androidId = idsRepository.getAndroidId();
       if (!TextUtils.isEmpty(androidId)) {
         clickUrl = clickUrl.replace("[USER_ANDROID_ID]", androidId);
       }
-      clickUrl = clickUrl.replace("[USER_UDID]", idsRepository.getUniqueIdentifier());
-      clickUrl = clickUrl.replace("[USER_AAID]", idsRepository.getAdvertisingId());
+      clickUrl = clickUrl.replace("[USER_UDID]", uniqueIdentifier);
+      clickUrl = clickUrl.replace("[USER_AAID]", advertisingId);
       clickUrl = clickUrl.replace("[TIME_STAMP]", String.valueOf(new Date().getTime()));
 
       return clickUrl;
@@ -82,8 +80,8 @@ public class DataproviderUtils {
       // TODO: 28-07-2016 Baikova clicked on download button.
       knock(minimalAd.getCpdUrl());
     }
-
-    public static void knockCpi(StoredMinimalAdInterface minimalAd) {
+  
+    public static void knockCpi(MinimalAdInterface minimalAd) {
       // TODO: 28-07-2016 Baikova ad installed.
       knock(minimalAd.getCpiUrl());
     }

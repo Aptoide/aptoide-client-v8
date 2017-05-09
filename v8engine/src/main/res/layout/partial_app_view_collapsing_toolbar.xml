@@ -227,7 +227,7 @@
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_small"
-            tools:background="@color/blue"
+            tools:background="@color/indigo"
             tools:text="@string/unknown"
             />
 

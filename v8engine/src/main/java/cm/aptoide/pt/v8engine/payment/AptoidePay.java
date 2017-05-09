@@ -5,11 +5,10 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
-import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationRepository;
-import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
-import cm.aptoide.pt.v8engine.repository.PaymentRepository;
-import cm.aptoide.pt.v8engine.repository.ProductRepository;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationRepository;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentRepository;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -45,16 +44,15 @@ public class AptoidePay {
   }
 
   public Completable initiate(Payment payment) {
-    if (payment.getAuthorization().isAuthorized()
-        || payment.getAuthorization().isInitiated()) {
+    if (payment.getAuthorization().isAuthorized() || payment.getAuthorization().isInitiated()) {
       return Completable.complete();
     }
     return authorizationRepository.createPaymentAuthorization(payment.getId());
   }
 
   public Completable authorize(int paymentId) {
-    return authorizationRepository.saveAuthorization(authorizationFactory.create(paymentId,
-        Authorization.Status.PENDING, payer.getId()));
+    return authorizationRepository.saveAuthorization(
+        authorizationFactory.create(paymentId, Authorization.Status.PENDING, payer.getId()));
   }
 
   public Completable process(Payment payment, Product product) {

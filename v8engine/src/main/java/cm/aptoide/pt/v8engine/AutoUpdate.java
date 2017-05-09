@@ -9,16 +9,14 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.view.ContextThemeWrapper;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.activity.BaseActivity;
-import cm.aptoide.pt.v8engine.install.Installer;
-import cm.aptoide.pt.v8engine.util.DownloadFactory;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.download.DownloadFactory;
+import cm.aptoide.pt.v8engine.view.BaseActivity;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -35,19 +33,17 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
   private static final String TAG = AutoUpdate.class.getSimpleName();
   private final String url = Application.getConfiguration().getAutoUpdateUrl();
   private BaseActivity activity;
-  private Installer installer;
   private DownloadFactory downloadFactory;
-  private AptoideDownloadManager downloadManager;
   private ProgressDialog dialog;
   private PermissionManager permissionManager;
+  private InstallManager installManager;
 
-  public AutoUpdate(BaseActivity activity, Installer installer, DownloadFactory downloadFactory,
-      AptoideDownloadManager downloadManager, PermissionManager permissionManager) {
+  public AutoUpdate(BaseActivity activity, DownloadFactory downloadFactory, PermissionManager permissionManager,
+      InstallManager installManager) {
     this.activity = activity;
-    this.installer = installer;
     this.permissionManager = permissionManager;
     this.downloadFactory = downloadFactory;
-    this.downloadManager = downloadManager;
+    this.installManager = installManager;
   }
 
   @Override protected AutoUpdateInfo doInBackground(Void... params) {
@@ -134,9 +130,6 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
           dialog = new ProgressDialog(activity);
           dialog.setMessage(activity.getString(R.string.retrieving_update));
           dialog.show();
-
-          InstallManager installManager =
-              new InstallManager(AptoideDownloadManager.getInstance(), installer);
 
           permissionManager.requestDownloadAccess(activity)
               .flatMap(

@@ -15,7 +15,7 @@ android {
   buildToolsVersion BUILD_TOOLS_VERSION
 
   defaultConfig {
-    minSdkVersion 9
+    minSdkVersion project.LIB_MINIMUM_SDK_VERSION
   }
 
   lintOptions {
@@ -36,12 +36,25 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
-  packagingOptions {
-    exclude 'mockito-extensions/org.mockito.plugins.MockMaker'
-  }
-
   testOptions {
     unitTests.returnDefaultValues = true
+  }
+
+  packagingOptions {
+    exclude 'mockito-extensions/org.mockito.plugins.MockMaker'
+    exclude 'META-INF/services/javax.annotation.processing.Processor'
+    exclude 'META-INF/DEPENDENCIES.txt'
+    exclude 'META-INF/DEPENDENCIES'
+    exclude 'META-INF/LICENSE.txt'
+    exclude 'META-INF/LICENSE'
+    exclude 'META-INF/NOTICE.txt'
+    exclude 'META-INF/NOTICE'
+    exclude 'META-INF/MANIFEST.MF'
+    exclude 'META-INF/LGPL2.1'
+  }
+
+  lintOptions {
+    abortOnError false
   }
 }
 
@@ -72,6 +85,7 @@ dependencies {
   compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
   compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  compile "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
   // And ProGuard rules for RxJava!
   compile "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
   compile "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"

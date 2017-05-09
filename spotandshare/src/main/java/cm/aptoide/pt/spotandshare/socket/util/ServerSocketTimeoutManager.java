@@ -1,5 +1,6 @@
 package cm.aptoide.pt.spotandshare.socket.util;
 
+import cm.aptoide.pt.spotandshare.socket.Print;
 import java.io.IOException;
 import java.net.ServerSocket;
 
@@ -8,6 +9,8 @@ import java.net.ServerSocket;
  */
 
 public class ServerSocketTimeoutManager extends ScheduledStopable {
+
+  private static final String TAG = ServerSocketTimeoutManager.class.getSimpleName();
 
   private final ServerSocket serverSocket;
 
@@ -18,6 +21,7 @@ public class ServerSocketTimeoutManager extends ScheduledStopable {
 
   @Override protected void stop() {
     try {
+      Print.d(TAG, "Closing socket " + serverSocket);
       serverSocket.close();
     } catch (IOException e) {
       e.printStackTrace();

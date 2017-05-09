@@ -25,9 +25,9 @@ public class PaymentSelector {
   }
 
   public Single<Payment> selectedPayment(List<Payment> payments) {
-    return getSelectedPaymentId()
-        .flatMap(selectedPaymentId -> payment(payments, selectedPaymentId)
-            .switchIfEmpty(payment(payments, defaultPaymentId))
+    return getSelectedPaymentId().flatMap(
+        selectedPaymentId -> payment(payments, selectedPaymentId).switchIfEmpty(
+            payment(payments, defaultPaymentId))
             .switchIfEmpty(Observable.error(new IllegalStateException("No payment selected.")))
             .toSingle());
   }
@@ -44,7 +44,7 @@ public class PaymentSelector {
   }
 
   private Observable<Payment> payment(List<Payment> payments, int paymentId) {
-    return Observable.from(payments)
-        .<Payment>filter(payment -> paymentId != 0 && paymentId == payment.getId());
+    return Observable.from(payments).<Payment> filter(
+        payment -> paymentId != 0 && paymentId == payment.getId());
   }
 }

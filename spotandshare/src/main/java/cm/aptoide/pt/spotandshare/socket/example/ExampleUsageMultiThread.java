@@ -26,7 +26,7 @@ public class ExampleUsageMultiThread {
 
   public static void main(String[] args) throws InterruptedException {
 
-    new AptoideMessageServerSocket(MESSAGE_SERVER_PORT, 5000).startAsync();
+    new AptoideMessageServerSocket(MESSAGE_SERVER_PORT, 5000, 3000).startAsync();
 
     Thread.sleep(1000);
 
@@ -37,7 +37,7 @@ public class ExampleUsageMultiThread {
 
   private static AptoideMessageClientSocket newAptoideMessageClientSocket() {
     return new AptoideMessageClientSocket("localhost", MESSAGE_SERVER_PORT, null, null, null, null,
-        null) {
+        null, Integer.MAX_VALUE) {
 
       @Override protected void onConnected(Socket socket) throws IOException {
 

@@ -2,11 +2,10 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -20,20 +19,20 @@ public class SetConnectionRequest extends V7<BaseV7Response, SetConnectionReques
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
 
-  protected SetConnectionRequest(Body body, BodyInterceptor bodyInterceptor) {
-    super(body, BASE_HOST,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter(), bodyInterceptor);
+  protected SetConnectionRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
   }
 
-  public static SetConnectionRequest of(String userPhone, BodyInterceptor bodyInterceptor) {
+  public static SetConnectionRequest of(String userPhone, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
     final Body body = new Body(userPhone);
-    return new SetConnectionRequest(body, bodyInterceptor);
+    return new SetConnectionRequest(body, bodyInterceptor, httpClient, converterFactory);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.setConnection((Body) body);
+    return interfaces.setConnection(body);
   }
 
   @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {

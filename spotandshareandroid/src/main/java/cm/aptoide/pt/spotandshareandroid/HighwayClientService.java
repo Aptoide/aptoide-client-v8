@@ -14,7 +14,9 @@ import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
 import cm.aptoide.pt.spotandshare.socket.exception.ServerLeftException;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
+import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
+import cm.aptoide.pt.spotandshare.socket.interfaces.OnError;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
@@ -37,9 +39,19 @@ public class HighwayClientService extends Service {
   private int port;
   private ArrayList<App> listOfApps;
   private NotificationManagerCompat mNotifyManager;
-  private FileServerLifecycle<AndroidAppInfo> fileServerLifecycle;
-  private FileClientLifecycle<AndroidAppInfo> fileClientLifecycle;
+  private FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider;
   private AptoideMessageClientSocket aptoideMessageClientSocket;
+  private boolean serverLeftOnError;
+  private OnError<IOException> onError = e -> {
+    serverLeftOnError = true;
+    Intent i = new Intent();
+    i.setAction("SERVER_LEFT");
+    sendBroadcast(i);
+
+    if (mNotifyManager != null) {
+      mNotifyManager.cancelAll();
+    }
+  };
 
   @Override public void onCreate() {
     super.onCreate();
@@ -49,122 +61,206 @@ public class HighwayClientService extends Service {
       mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
     }
 
-    fileClientLifecycle = new FileClientLifecycle<AndroidAppInfo>() {
+    fileLifecycleProvider = new FileLifecycleProvider<AndroidAppInfo>() {
+      @Override public FileServerLifecycle<AndroidAppInfo> newFileServerLifecycle() {
+        return new FileServerLifecycle<AndroidAppInfo>() {
 
-      private ProgressFilter progressFilter;
+          private ProgressFilter progressFilter;
+          private AndroidAppInfo androidAppInfo;
 
-      @Override public void onError(IOException e) {
-        System.out.println("Fell on error  Client !! ");
+          @Override public void onStartSending(AndroidAppInfo androidAppInfo) {
+            System.out.println(" Started sending ");
+            this.androidAppInfo = androidAppInfo;
+            progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
 
-        if (mNotifyManager != null) {
-          mNotifyManager.cancelAll();
-        }
+            Intent i = new Intent();
+            i.putExtra("isSent", false);
+            i.putExtra("needReSend",
+                false);//add field with pos to resend and change its value only if it is != 100000 (onstartcommand)
+            i.putExtra("appName", androidAppInfo.getAppName());
+            i.putExtra("packageName", androidAppInfo.getPackageName());
+            i.putExtra("positionToReSend", 100000);
+            i.setAction("SENDAPP");
+            sendBroadcast(i);
 
-        Intent i = new Intent();
-        if (e instanceof ServerLeftException) {
-          i.setAction("SERVER_LEFT");
-        } else {
-          i.setAction("ERRORRECEIVING");
-        }
-        sendBroadcast(i);
+            createSendNotification();
+          }
+
+          @Override public void onFinishSending(AndroidAppInfo androidAppInfo) {
+            System.out.println(" Finished sending " + androidAppInfo);
+
+            finishSendNotification(androidAppInfo);
+
+            Intent i = new Intent();
+            i.putExtra("isSent", true);
+            i.putExtra("needReSend", false);
+            i.putExtra("appName", androidAppInfo.getAppName());
+            i.putExtra("packageName", androidAppInfo.getPackageName());
+            i.putExtra("positionToReSend", 100000);
+            i.setAction("SENDAPP");
+            sendBroadcast(i);
+          }
+
+          @Override public void onError(IOException e) {
+            e.printStackTrace();
+
+            if (!serverLeftOnError) {
+              if (mNotifyManager != null && androidAppInfo != null) {
+                mNotifyManager.cancel(androidAppInfo.getPackageName().hashCode());
+              }
+
+              Intent i = new Intent();
+              i.setAction("ERRORSENDING");
+              sendBroadcast(i);
+            }
+          }
+
+          @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
+
+            if (progressFilter.shouldUpdate(progress)) {
+              int actualProgress = Math.round(progress * 100);
+              showSendProgress(androidAppInfo.getAppName(), actualProgress, androidAppInfo);
+            }
+          }
+        };
       }
 
-      @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
-        System.out.println(" Started receiving ");
+      @Override public FileClientLifecycle<AndroidAppInfo> newFileClientLifecycle() {
+        return new FileClientLifecycle<AndroidAppInfo>() {
 
-        progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
+          private ProgressFilter progressFilter;
+          private AndroidAppInfo androidAppInfo;
 
-        //show notification
-        createReceiveNotification(androidAppInfo.getAppName());
+          @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
+            System.out.println(" Started receiving ");
+            this.androidAppInfo = androidAppInfo;
+            progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
 
-        Intent i = new Intent();
-        i.putExtra("FinishedReceiving", false);
-        i.putExtra("appName", androidAppInfo.getAppName());
-        i.setAction("RECEIVEAPP");
-        sendBroadcast(i);
-      }
+            //show notification
+            createReceiveNotification(androidAppInfo.getAppName());
 
-      @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
-        System.out.println(" Finished receiving " + androidAppInfo);
+            Intent i = new Intent();
+            i.putExtra("FinishedReceiving", false);
+            i.putExtra("appName", androidAppInfo.getAppName());
+            i.setAction("RECEIVEAPP");
+            sendBroadcast(i);
+          }
 
-        finishReceiveNotification(androidAppInfo.getApk().getFilePath(),
-            androidAppInfo.getPackageName(), androidAppInfo);
+          @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
+            System.out.println(" Finished receiving " + androidAppInfo);
 
-        Intent i = new Intent();
-        i.putExtra("FinishedReceiving", true);
-        i.putExtra("needReSend", false);
-        i.putExtra("appName", androidAppInfo.getAppName());
-        i.putExtra("packageName", androidAppInfo.getPackageName());
-        i.putExtra("filePath", androidAppInfo.getApk().getFilePath());
-        i.setAction("RECEIVEAPP");
-        sendBroadcast(i);
-      }
+            finishReceiveNotification(androidAppInfo.getApk().getFilePath(),
+                androidAppInfo.getPackageName(), androidAppInfo);
 
-      @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
-        if (progressFilter.shouldUpdate(progress)) {
-          int actualProgress = Math.round(progress * PROGRESS_SPLIT_SIZE);
-          showReceiveProgress(androidAppInfo.getAppName(), actualProgress, androidAppInfo);
-        }
+            Intent i = new Intent();
+            i.putExtra("FinishedReceiving", true);
+            i.putExtra("needReSend", false);
+            i.putExtra("appName", androidAppInfo.getAppName());
+            i.putExtra("packageName", androidAppInfo.getPackageName());
+            i.putExtra("filePath", androidAppInfo.getApk().getFilePath());
+            i.setAction("RECEIVEAPP");
+            sendBroadcast(i);
+          }
+
+          @Override public void onError(IOException e) {
+            System.out.println("Fell on error  Client !! ");
+
+            if (!serverLeftOnError) {
+              if (mNotifyManager != null && androidAppInfo != null) {
+                mNotifyManager.cancel(androidAppInfo.getPackageName().hashCode());
+              }
+
+              Intent i = new Intent();
+              if (e instanceof ServerLeftException) {
+                i.setAction("SERVER_LEFT");
+              } else {
+                i.setAction("ERRORRECEIVING");
+              }
+              sendBroadcast(i);
+            }
+          }
+
+          @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
+            if (progressFilter.shouldUpdate(progress)) {
+              int actualProgress = Math.round(progress * PROGRESS_SPLIT_SIZE);
+              showReceiveProgress(androidAppInfo.getAppName(), actualProgress, androidAppInfo);
+            }
+          }
+        };
       }
     };
+  }
 
-    fileServerLifecycle = new FileServerLifecycle<AndroidAppInfo>() {
+  @Override public int onStartCommand(Intent intent, int flags, int startId) {
 
-      private ProgressFilter progressFilter;
+    if (intent != null) {
 
-      @Override public void onStartSending(AndroidAppInfo o) {
-        System.out.println(" Started sending ");
+      if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
+        String serverIP = intent.getStringExtra("targetIP");
+        port = intent.getIntExtra("port", 0);
 
-        progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
+        final String externalStoragepath = intent.getStringExtra("ExternalStoragePath");
 
-        Intent i = new Intent();
-        i.putExtra("isSent", false);
-        i.putExtra("needReSend",
-            false);//add field with pos to resend and change its value only if it is != 100000 (onstartcommand)
-        i.putExtra("appName", o.getAppName());
-        i.putExtra("packageName", o.getPackageName());
-        i.putExtra("positionToReSend", 100000);
-        i.setAction("SENDAPP");
-        sendBroadcast(i);
+        StorageCapacity storageCapacity = new StorageCapacity() {
+          @Override public boolean hasCapacity(long bytes) {
+            long availableSpace = -1L;
+            StatFs stat = new StatFs(externalStoragepath);
+            availableSpace = (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
+            return availableSpace > bytes;
+          }
+        };
 
-        createSendNotification();
-      }
+        // TODO: 07-04-2017 asdsadefeqf neuro Filipe onError sff lol
+        aptoideMessageClientSocket =
+            new AptoideMessageClientSocket(serverIP, "192.168.43.1", port, externalStoragepath,
+                storageCapacity, fileLifecycleProvider, socketBinder, onError, Integer.MAX_VALUE);
+        aptoideMessageClientSocket.setSocketBinder(socketBinder);
+        aptoideMessageClientSocket.startAsync();
 
-      @Override public void onFinishSending(AndroidAppInfo o) {
-        System.out.println(" Finished sending " + o);
+        System.out.println(" Connected ! ");
+      } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
+        Bundle b = intent.getBundleExtra("bundle");
 
-        finishSendNotification(o);
+        listOfApps = b.getParcelableArrayList("listOfAppsToInstall");
+        for (int i = 0; i < listOfApps.size(); i++) {
 
-        Intent i = new Intent();
-        i.putExtra("isSent", true);
-        i.putExtra("needReSend", false);
-        i.putExtra("appName", o.getAppName());
-        i.putExtra("packageName", o.getPackageName());
-        i.putExtra("positionToReSend", 100000);
-        i.setAction("SENDAPP");
-        sendBroadcast(i);
-      }
+          String filePath = listOfApps.get(i).getFilePath();
+          String appName = listOfApps.get(i).getAppName();
+          String packageName = listOfApps.get(i).getPackageName();
+          String obbsFilePath = listOfApps.get(i).getObbsFilePath();
 
-      @Override public void onError(IOException e) {
-        e.printStackTrace();
+          List<FileInfo> fileInfoList = getFileInfo(filePath, obbsFilePath);
 
-        if (mNotifyManager != null) {
-          mNotifyManager.cancelAll();
+          final AndroidAppInfo appInfo = new AndroidAppInfo(appName, packageName, fileInfoList);
+
+          AptoideUtils.ThreadU.runOnIoThread(() -> aptoideMessageClientSocket.send(
+              new RequestPermissionToSend(aptoideMessageClientSocket.getLocalhost(), appInfo)));
         }
+      } else if (intent.getAction() != null && intent.getAction().equals("DISCONNECT")) {
+        System.out.println("Requested to disconnect !");
+        AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
+          @Override public void run() {
+            if (aptoideMessageClientSocket != null) {
+              aptoideMessageClientSocket.exit();
+            }
 
-        Intent i = new Intent();
-        i.setAction("ERRORSENDING");
-        sendBroadcast(i);
+            if (mNotifyManager != null) {
+              mNotifyManager.cancelAll();
+            }
+
+            Intent i = new Intent();
+            i.setAction("CLIENT_DISCONNECT");
+            sendBroadcast(i);
+          }
+        });
       }
+    }
 
-      @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
+    return START_STICKY;
+  }
 
-        if (progressFilter.shouldUpdate(progress)) {
-          int actualProgress = Math.round(progress * 100);
-          showSendProgress(androidAppInfo.getAppName(), actualProgress, androidAppInfo);
-        }
-      }
-    };
+  @Nullable @Override public IBinder onBind(Intent intent) {
+    return null;
   }
 
   private void createReceiveNotification(String receivingAppName) {
@@ -276,81 +372,6 @@ public class HighwayClientService extends Service {
       mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
     }
     mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(), mBuilderSend.build());
-  }
-
-  @Override public int onStartCommand(Intent intent, int flags, int startId) {
-
-    if (intent != null) {
-
-      if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
-        String serverIP = intent.getStringExtra("targetIP");
-        port = intent.getIntExtra("port", 0);
-
-        final String externalStoragepath = intent.getStringExtra("ExternalStoragePath");
-
-        StorageCapacity storageCapacity = new StorageCapacity() {
-          @Override public boolean hasCapacity(long bytes) {
-            long availableSpace = -1L;
-            StatFs stat = new StatFs(externalStoragepath);
-            availableSpace = (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
-            return availableSpace > bytes;
-          }
-        };
-
-        aptoideMessageClientSocket =
-            new AptoideMessageClientSocket(serverIP, "192.168.43.1", port, externalStoragepath,
-                storageCapacity, fileServerLifecycle, fileClientLifecycle, socketBinder);
-        aptoideMessageClientSocket.setSocketBinder(socketBinder);
-        aptoideMessageClientSocket.startAsync();
-
-        System.out.println(" Connected ! ");
-      } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
-        Bundle b = intent.getBundleExtra("bundle");
-
-        listOfApps = b.getParcelableArrayList("listOfAppsToInstall");
-        for (int i = 0; i < listOfApps.size(); i++) {
-
-          String filePath = listOfApps.get(i).getFilePath();
-          String appName = listOfApps.get(i).getAppName();
-          String packageName = listOfApps.get(i).getPackageName();
-          String obbsFilePath = listOfApps.get(i).getObbsFilePath();
-
-          List<FileInfo> fileInfoList = getFileInfo(filePath, obbsFilePath);
-
-          final AndroidAppInfo appInfo = new AndroidAppInfo(appName, packageName, fileInfoList);
-
-          AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
-            @Override public void run() {
-              aptoideMessageClientSocket.send(
-                  new RequestPermissionToSend(aptoideMessageClientSocket.getLocalhost(), appInfo));
-            }
-          });
-        }
-      } else if (intent.getAction() != null && intent.getAction().equals("DISCONNECT")) {
-        System.out.println("Requested to disconnect !");
-        AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
-          @Override public void run() {
-            if (aptoideMessageClientSocket != null) {
-              aptoideMessageClientSocket.exit();
-            }
-
-            if (mNotifyManager != null) {
-              mNotifyManager.cancelAll();
-            }
-
-            Intent i = new Intent();
-            i.setAction("CLIENT_DISCONNECT");
-            sendBroadcast(i);
-          }
-        });
-      }
-    }
-
-    return START_STICKY;
-  }
-
-  @Nullable @Override public IBinder onBind(Intent intent) {
-    return null;
   }
 
   public List<FileInfo> getFileInfo(String filePath, String obbsFilePath) {

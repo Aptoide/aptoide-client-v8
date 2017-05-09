@@ -7,12 +7,11 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.store.ListStores;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -24,23 +23,25 @@ public class GetMyStoreListRequest extends V7<ListStores, GetMyStoreListRequest.
   private static boolean useEndless;
   @Nullable private String url;
 
-  public GetMyStoreListRequest(String url, EndlessBody body, BodyInterceptor bodyInterceptor) {
-    super(body, BASE_HOST,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter(), bodyInterceptor);
+  public GetMyStoreListRequest(String url, EndlessBody body,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
     this.url = url;
   }
 
-  public static GetMyStoreListRequest of(String url, BodyInterceptor bodyInterceptor) {
-    return of(url, false, bodyInterceptor);
+  public static GetMyStoreListRequest of(String url, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    return of(url, false, bodyInterceptor, httpClient, converterFactory);
   }
 
   public static GetMyStoreListRequest of(String url, boolean useEndless,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     GetMyStoreListRequest.useEndless = useEndless;
 
     return new GetMyStoreListRequest(url, new EndlessBody(WidgetsArgs.createDefault()),
-        bodyInterceptor);
+        bodyInterceptor, httpClient, converterFactory);
   }
 
   @Override

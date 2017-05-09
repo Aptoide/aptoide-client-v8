@@ -7,12 +7,11 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -25,20 +24,21 @@ public class SetReviewRatingRequest extends V7<BaseV7Response, SetReviewRatingRe
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
 
-  protected SetReviewRatingRequest(Body body, BodyInterceptor bodyInterceptor) {
-    super(body, BASE_HOST,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter(), bodyInterceptor);
+  protected SetReviewRatingRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
   }
 
-  public static SetReviewRatingRequest of(long reviewId, boolean helpful, BodyInterceptor bodyInterceptor) {
+  public static SetReviewRatingRequest of(long reviewId, boolean helpful,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     final Body body = new Body(reviewId, helpful ? "up" : "down");
-    return new SetReviewRatingRequest(body, bodyInterceptor);
+    return new SetReviewRatingRequest(body, bodyInterceptor, httpClient, converterFactory);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.setReviewVote((Body) body, true);
+    return interfaces.setReviewVote(body, true);
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body

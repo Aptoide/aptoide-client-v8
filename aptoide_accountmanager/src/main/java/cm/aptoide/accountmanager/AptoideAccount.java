@@ -5,7 +5,7 @@
 
 package cm.aptoide.accountmanager;
 
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
+
 import java.util.List;
 import rx.Completable;
 
@@ -24,7 +24,6 @@ public final class AptoideAccount implements Account {
   private final boolean accessConfirmed;
   private final String password;
   private final List<Store> subscribedStores;
-  private final AptoideClientUUID aptoideClientUUID;
   private final AccountService accountService;
 
   private String token;
@@ -32,8 +31,7 @@ public final class AptoideAccount implements Account {
   public AptoideAccount(String id, String email, String nickname, String avatar,
       String refreshToken, String token, String password, Type type, String store,
       String storeAvatar, boolean adultContentEnabled, Access access, boolean accessConfirmed,
-      List<Store> subscribedStores, AptoideClientUUID aptoideClientUUID,
-      AccountService accountService) {
+      List<Store> subscribedStores, AccountService accountService) {
     this.id = id;
     this.email = email;
     this.nickname = nickname;
@@ -48,7 +46,6 @@ public final class AptoideAccount implements Account {
     this.access = access;
     this.accessConfirmed = accessConfirmed;
     this.subscribedStores = subscribedStores;
-    this.aptoideClientUUID = aptoideClientUUID;
     this.accountService = accountService;
   }
 
@@ -58,7 +55,8 @@ public final class AptoideAccount implements Account {
 
   @Override public Completable refreshToken() {
     return accountService.refreshToken(getRefreshToken())
-        .doOnSuccess(token -> refreshToken(token)).toCompletable();
+        .doOnSuccess(token -> refreshToken(token))
+        .toCompletable();
   }
 
   @Override public List<Store> getSubscribedStores() {
@@ -98,8 +96,10 @@ public final class AptoideAccount implements Account {
   }
 
   @Override public boolean isLoggedIn() {
-    return (!isEmpty(getEmail()) && !isEmpty(getAccessToken()) && !isEmpty(getRefreshToken()) && !isEmpty(
-        getPassword()));
+    return (!isEmpty(getEmail())
+        && !isEmpty(getAccessToken())
+        && !isEmpty(getRefreshToken())
+        && !isEmpty(getPassword()));
   }
 
   @Override public String getEmail() {
@@ -166,8 +166,6 @@ public final class AptoideAccount implements Account {
         + '\''
         + ", subscribedStores="
         + subscribedStores
-        + ", aptoideClientUUID="
-        + aptoideClientUUID
         + ", accountService="
         + accountService
         + ", token='"

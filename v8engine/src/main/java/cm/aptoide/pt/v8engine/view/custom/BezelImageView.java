@@ -18,17 +18,18 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 import cm.aptoide.pt.v8engine.R;
 
 /**
- * An {@link ImageView} that draws its contents inside a mask and draws a border drawable on top.
+ * An {@link AppCompatImageView} that draws its contents inside a mask and draws a border drawable
+ * on top.
  * This is useful for applying a beveled look to image contents, but is also flexible enough for
  * use
  * with other desired aesthetics.
  */
-public class BezelImageView extends ImageView {
+public class BezelImageView extends AppCompatImageView {
 
   private Paint mBlackPaint;
   private Paint mMaskedPaint;
@@ -126,19 +127,6 @@ public class BezelImageView extends ImageView {
     return changed;
   }
 
-  @Override protected void drawableStateChanged() {
-    super.drawableStateChanged();
-    if (mBorderDrawable != null && mBorderDrawable.isStateful()) {
-      mBorderDrawable.setState(getDrawableState());
-    }
-    if (mMaskDrawable != null && mMaskDrawable.isStateful()) {
-      mMaskDrawable.setState(getDrawableState());
-    }
-    if (isDuplicateParentStateEnabled()) {
-      ViewCompat.postInvalidateOnAnimation(this);
-    }
-  }
-
   @Override protected void onDraw(Canvas canvas) {
     if (mBounds == null) {
       return;
@@ -194,5 +182,18 @@ public class BezelImageView extends ImageView {
 
     // Draw from cache
     canvas.drawBitmap(mCacheBitmap, mBounds.left, mBounds.top, null);
+  }
+
+  @Override protected void drawableStateChanged() {
+    super.drawableStateChanged();
+    if (mBorderDrawable != null && mBorderDrawable.isStateful()) {
+      mBorderDrawable.setState(getDrawableState());
+    }
+    if (mMaskDrawable != null && mMaskDrawable.isStateful()) {
+      mMaskDrawable.setState(getDrawableState());
+    }
+    if (isDuplicateParentStateEnabled()) {
+      ViewCompat.postInvalidateOnAnimation(this);
+    }
   }
 }

@@ -6,14 +6,12 @@
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import android.content.pm.PackageInfo;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithAlphaBetaKey;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
@@ -39,17 +37,18 @@ import rx.schedulers.Schedulers;
 
   private static final int SPLIT_SIZE = 100;
 
-  private ListAppsUpdatesRequest(Body body, String baseHost, BodyInterceptor bodyInterceptor) {
-    super(body, baseHost,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter(), bodyInterceptor);
+  private ListAppsUpdatesRequest(Body body, String baseHost,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
+    super(body, baseHost, httpClient, converterFactory, bodyInterceptor);
   }
 
-  public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String aptoideClientUUID,
-      BodyInterceptor bodyInterceptor) {
+  public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String clientUniqueId,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     return new ListAppsUpdatesRequest(
-        new Body(getInstalledApks(), subscribedStoresIds, aptoideClientUUID), BASE_HOST,
-        bodyInterceptor);
+        new Body(getInstalledApks(), subscribedStoresIds, clientUniqueId), BASE_HOST,
+        bodyInterceptor, httpClient, converterFactory);
   }
 
   private static List<ApksData> getInstalledApks() {
@@ -138,12 +137,6 @@ import rx.schedulers.Schedulers;
       setSystemAppsUpdates();
     }
 
-    private void setSystemAppsUpdates() {
-      if (!ManagerPreferences.getUpdatesSystemAppsKey()) {
-        this.notPackageTags = "system";
-      }
-    }
-
     public Body(Body body) {
       this.apksData = body.getApksData();
       this.storeIds = body.getStoreIds();
@@ -153,6 +146,14 @@ import rx.schedulers.Schedulers;
       this.aaid = body.getAaid();
       this.setAptoideId(body.getAptoideId());
       this.notPackageTags = body.getNotPackageTags();
+      this.setAptoideMd5sum(body.getAptoideMd5sum());
+      this.setAptoidePackage(body.getAptoidePackage());
+    }
+
+    private void setSystemAppsUpdates() {
+      if (!ManagerPreferences.getUpdatesSystemAppsKey()) {
+        this.notPackageTags = "system";
+      }
     }
   }
 

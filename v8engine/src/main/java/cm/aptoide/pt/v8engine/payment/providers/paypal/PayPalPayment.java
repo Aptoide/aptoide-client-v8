@@ -15,7 +15,7 @@ import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
-import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import java.math.BigDecimal;
 import rx.Completable;

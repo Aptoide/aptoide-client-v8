@@ -54,10 +54,7 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
     presenter =
         new HighwayAppSelectionPresenter(applicationProvider, applicationSender, this, isHotspot);
     attachPresenter(presenter);
-
-
   }
-
 
   private void setUpToolbar() {
     if (mToolbar != null) {
@@ -150,7 +147,4 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
   @Override public void goBackToTransferRecord() {
     finish();
   }
-
-
-
 }

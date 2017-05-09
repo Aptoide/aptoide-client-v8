@@ -6,11 +6,11 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -18,15 +18,15 @@ import rx.Observable;
  */
 public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResponse> {
 
-  public InAppBillingSkuDetailsRequest(BaseBody baseBody) {
-    super(baseBody,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+  public InAppBillingSkuDetailsRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(baseBody, httpClient, converterFactory, bodyInterceptor);
   }
 
   public static InAppBillingSkuDetailsRequest of(int apiVersion, String packageName,
-      List<String> skuList, NetworkOperatorManager operatorManager, String type,
-      String accessToken) {
+      List<String> skuList, NetworkOperatorManager operatorManager, String type, String accessToken,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("package", packageName);
@@ -47,7 +47,7 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
 
     addNetworkInformation(operatorManager, args);
 
-    return new InAppBillingSkuDetailsRequest(args);
+    return new InAppBillingSkuDetailsRequest(args, bodyInterceptor, httpClient, converterFactory);
   }
 
   @Override

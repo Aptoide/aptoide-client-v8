@@ -195,7 +195,6 @@ public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
       if (listener != null) {
         listener.onInstallApp(getItem(position));
       }
-
     }
   }
 
@@ -211,11 +210,8 @@ public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
       if (listener != null) {
         listener.onDeleteApp(getItem(position));
       }
-
-
     }
   }
-
 
   class ReSendListener implements View.OnClickListener {
     private final int position;
@@ -229,7 +225,6 @@ public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
       if (listener != null) {
         listener.onReSendApp(getItem(position), position);
       }
-
     }
   }
 }

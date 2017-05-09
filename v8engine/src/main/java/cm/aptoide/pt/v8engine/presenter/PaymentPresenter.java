@@ -7,15 +7,14 @@ package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.navigation.AccountNavigator;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Payment;
+import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.Purchase;
-import cm.aptoide.pt.v8engine.view.PaymentView;
-import cm.aptoide.pt.v8engine.view.View;
+import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,14 +37,15 @@ public class PaymentPresenter implements Presenter {
   private final Product product;
   private final AptoideAccountManager accountManager;
   private final PaymentSelector paymentSelector;
-  private AccountNavigator accountNavigator;
+  private final AccountNavigator accountNavigator;
 
   private boolean processingLogin;
   private List<Payment> payments;
+  private PaymentAnalytics paymentAnalytics;
 
   public PaymentPresenter(PaymentView view, AptoidePay aptoidePay, Product product,
       AptoideAccountManager accountManager, PaymentSelector paymentSelector,
-      AccountNavigator accountNavigator) {
+      AccountNavigator accountNavigator, PaymentAnalytics paymentAnalytics) {
     this.view = view;
     this.aptoidePay = aptoidePay;
     this.product = product;
@@ -53,6 +53,7 @@ public class PaymentPresenter implements Presenter {
     this.paymentSelector = paymentSelector;
     this.accountNavigator = accountNavigator;
     this.payments = new ArrayList<>();
+    this.paymentAnalytics = paymentAnalytics;
   }
 
   @Override public void present() {
@@ -96,9 +97,9 @@ public class PaymentPresenter implements Presenter {
             aptoidePay.payments().observeOn(AndroidSchedulers.mainThread()),
             aptoidePay.confirmation(product).observeOn(AndroidSchedulers.mainThread()),
             (payments, confirmation) -> {
-              return showProductAndPayments(payments).<Purchase>andThen(
+              return showProductAndPayments(payments).<Purchase> andThen(
                   treatLoadingAndGetPurchase(confirmation));
-            })).<Purchase>flatMap(observable -> observable).compose(
+            })).<Purchase> flatMap(observable -> observable).compose(
         view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(purchase -> dismiss(purchase), throwable -> dismiss(throwable));
@@ -119,15 +120,33 @@ public class PaymentPresenter implements Presenter {
   }
 
   private Observable<Void> cancellationSelection() {
-    return view.cancellationSelection().doOnNext(cancellation -> view.dismiss());
+    return Observable.merge(view.cancellationSelection().flatMap(cancelled ->
+        sendCancellationAnalytics().andThen(Observable.just(cancelled))), view
+        .tapOutsideSelection().flatMap(tappedOutside -> sendTapOutsideAnalytics().andThen
+            (Observable.just(tappedOutside))))
+        .doOnNext(cancelled -> view.dismiss());
+  }
+
+  private Completable sendTapOutsideAnalytics() {
+    return paymentSelector.selectedPayment(payments)
+        .flatMapCompletable(payment -> Completable.fromAction(
+            () -> paymentAnalytics.sendPaymentTapOutsideEvent(product, payment)));
+  }
+
+  private Completable sendCancellationAnalytics() {
+    return paymentSelector.selectedPayment(payments)
+        .flatMapCompletable(payment -> Completable.fromAction(
+            () -> paymentAnalytics.sendPaymentCancelButtonPressedEvent(product, payment)));
   }
 
   private Observable<Void> buySelection() {
     return view.buySelection()
         .doOnNext(selected -> view.showLoading())
         .flatMap(selected -> paymentSelector.selectedPayment(getCurrentPayments())
-            .flatMapCompletable(
-                selectedPayment -> processOrNavigateToAuthorization(selectedPayment))
+            .flatMapCompletable(selectedPayment -> {
+              paymentAnalytics.sendPaymentBuyButtonPressedEvent(product, selectedPayment);
+              return processOrNavigateToAuthorization(selectedPayment);
+            })
             .toObservable());
   }
 

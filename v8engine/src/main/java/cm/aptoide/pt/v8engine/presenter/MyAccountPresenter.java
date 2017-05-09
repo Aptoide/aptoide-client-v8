@@ -2,10 +2,8 @@ package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.v8engine.view.MyAccountView;
-import cm.aptoide.pt.v8engine.view.View;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import rx.Observable;
 
 public class MyAccountPresenter implements Presenter {
@@ -29,18 +27,18 @@ public class MyAccountPresenter implements Presenter {
         .subscribe();
   }
 
-  private Observable<Void> signOutClick() {
-    return view.signOutClick().flatMap(click -> accountManager.logout().doOnCompleted(() -> {
-      ManagerPreferences.setAddressBookSyncValues(false);
-      view.navigateToHome();
-    }).doOnError(throwable -> crashReport.log(throwable)).<Void> toObservable()).retry();
-  }
-
   @Override public void saveState(Bundle state) {
     // does nothing
   }
 
   @Override public void restoreState(Bundle state) {
     // does nothing
+  }
+
+  private Observable<Void> signOutClick() {
+    return view.signOutClick().flatMap(click -> accountManager.logout().doOnCompleted(() -> {
+      ManagerPreferences.setAddressBookSyncValues(false);
+      view.navigateToHome();
+    }).doOnError(throwable -> crashReport.log(throwable)).<Void> toObservable()).retry();
   }
 }

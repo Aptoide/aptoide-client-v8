@@ -7,35 +7,40 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/store_activity_coordinator_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
   <include
       layout="@layout/partial_view_incl_no_network"
       android:layout_width="wrap_content"
       android:layout_height="match_parent"
       android:layout_gravity="center_horizontal"
-      android:layout_marginTop="?attr/actionBarSize" />
+      android:layout_marginTop="?attr/actionBarSize"
+      />
 
   <include
       layout="@layout/partial_view_error"
       android:layout_width="wrap_content"
       android:layout_height="match_parent"
       android:layout_gravity="center_horizontal"
-      android:layout_marginTop="?attr/actionBarSize" />
+      android:layout_marginTop="?attr/actionBarSize"
+      />
 
   <include
       layout="@layout/partial_view_progress_bar"
       android:layout_width="wrap_content"
       android:layout_height="match_parent"
       android:layout_gravity="center_horizontal"
-      android:layout_marginTop="?attr/actionBarSize" />
+      android:layout_marginTop="?attr/actionBarSize"
+      />
 
-  <include layout="@layout/view_pager" />
+  <include layout="@layout/view_pager"/>
 
   <android.support.design.widget.AppBarLayout
       android:id="@+id/app_bar_layout"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content">
+      android:layout_height="wrap_content"
+      >
 
     <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -48,7 +53,8 @@
         android:theme="?attr/toolbarTheme"
         app:layout_collapseMode="pin"
         app:layout_scrollFlags="scroll|enterAlways"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        >
 
       <ImageView
           android:layout_width="wrap_content"
@@ -66,7 +72,8 @@
         android:layout_height="@dimen/tabsHeight"
         android:background="?attr/backgroundTabs"
         android:theme="?attr/toolbarTheme"
-        app:pstsIndicatorHeight="4dp" />
+        app:pstsIndicatorHeight="4dp"
+        />
 
   </android.support.design.widget.AppBarLayout>
 
@@ -77,7 +84,8 @@
       android:layout_gravity="right|bottom"
       android:layout_margin="@dimen/fab_margin"
       android:src="@drawable/ic_add"
-      android:visibility="gone" />
+      android:visibility="gone"
+      />
 
 
 </android.support.design.widget.CoordinatorLayout>

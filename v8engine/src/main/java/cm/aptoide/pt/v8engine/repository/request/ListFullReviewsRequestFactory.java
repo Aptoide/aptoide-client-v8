@@ -1,25 +1,32 @@
 package cm.aptoide.pt.v8engine.repository.request;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.v8engine.BaseBodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 
 /**
  * Created by neuro on 03-01-2017.
  */
 class ListFullReviewsRequestFactory {
 
-  private final BodyInterceptor bodyInterceptor;
+  private final BodyInterceptor<BaseBody> bodyInterceptor;
+  private final OkHttpClient httpClient;
+  private final Converter.Factory converterFactory;
 
-  public ListFullReviewsRequestFactory(BodyInterceptor bodyInterceptor) {
+  public ListFullReviewsRequestFactory(BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
     this.bodyInterceptor = bodyInterceptor;
+    this.httpClient = httpClient;
+    this.converterFactory = converterFactory;
+
   }
 
   public ListFullReviewsRequest newListFullReviews(String url, boolean refresh,
       BaseRequestWithStore.StoreCredentials storeCredentials) {
-    return ListFullReviewsRequest.ofAction(url, refresh, storeCredentials, bodyInterceptor);
+    return ListFullReviewsRequest.ofAction(url, refresh, storeCredentials, bodyInterceptor,
+        httpClient, converterFactory);
   }
 }

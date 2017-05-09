@@ -6,10 +6,10 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.BaseV3Response;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -17,17 +17,20 @@ import rx.Observable;
  */
 public class CreatePaymentConfirmationRequest extends V3<BaseV3Response> {
 
-  private CreatePaymentConfirmationRequest(BaseBody baseBody) {
-    super(baseBody,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+  private CreatePaymentConfirmationRequest(BaseBody baseBody,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
+    super(baseBody, httpClient, converterFactory, bodyInterceptor);
   }
 
   public static CreatePaymentConfirmationRequest ofInApp(int productId, int paymentId,
-      NetworkOperatorManager operatorManager, String developerPayload, String accessToken) {
+      NetworkOperatorManager operatorManager, String developerPayload, String accessToken,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     final BaseBody args = getBaseBody(productId, paymentId, operatorManager, accessToken);
     args.put("developerPayload", developerPayload);
-    return new CreatePaymentConfirmationRequest(args);
+    return new CreatePaymentConfirmationRequest(args, bodyInterceptor, httpClient,
+        converterFactory);
   }
 
   private static BaseBody getBaseBody(int productId, int paymentId,
@@ -45,27 +48,34 @@ public class CreatePaymentConfirmationRequest extends V3<BaseV3Response> {
 
   public static CreatePaymentConfirmationRequest ofInApp(int productId, int paymentId,
       NetworkOperatorManager operatorManager, String developerPayload, String accessToken,
-      String paymentConfirmationId) {
+      String paymentConfirmationId, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
     final BaseBody args = getBaseBody(productId, paymentId, operatorManager, accessToken);
     args.put("paykey", paymentConfirmationId);
     args.put("developerPayload", developerPayload);
-    return new CreatePaymentConfirmationRequest(args);
-  }
-
-  public static CreatePaymentConfirmationRequest ofPaidApp(int productId, int paymentId,
-      NetworkOperatorManager operatorManager, String store, String accessToken) {
-    final BaseBody args = getBaseBody(productId, paymentId, operatorManager, accessToken);
-    args.put("repo", store);
-    return new CreatePaymentConfirmationRequest(args);
+    return new CreatePaymentConfirmationRequest(args, bodyInterceptor, httpClient,
+        converterFactory);
   }
 
   public static CreatePaymentConfirmationRequest ofPaidApp(int productId, int paymentId,
       NetworkOperatorManager operatorManager, String store, String accessToken,
-      String paymentConfirmationId) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
+    final BaseBody args = getBaseBody(productId, paymentId, operatorManager, accessToken);
+    args.put("repo", store);
+    return new CreatePaymentConfirmationRequest(args, bodyInterceptor, httpClient,
+        converterFactory);
+  }
+
+  public static CreatePaymentConfirmationRequest ofPaidApp(int productId, int paymentId,
+      NetworkOperatorManager operatorManager, String store, String accessToken,
+      String paymentConfirmationId, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
     final BaseBody args = getBaseBody(productId, paymentId, operatorManager, accessToken);
     args.put("paykey", paymentConfirmationId);
     args.put("repo", store);
-    return new CreatePaymentConfirmationRequest(args);
+    return new CreatePaymentConfirmationRequest(args, bodyInterceptor, httpClient,
+        converterFactory);
   }
 
   @Override protected Observable<BaseV3Response> loadDataFromNetwork(Interfaces interfaces,

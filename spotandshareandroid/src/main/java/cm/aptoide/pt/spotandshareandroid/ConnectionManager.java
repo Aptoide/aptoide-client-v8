@@ -18,9 +18,11 @@ import android.provider.Settings;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -39,16 +41,20 @@ public class ConnectionManager {
   public final static int ERROR_INVALID_GROUP = 1;
   public final static int SUCCESSFUL_JOIN = 2;
   public final static int ERROR_UNKNOWN = 3;
-  public final static int ERROR_MOBILE_DATA_ON_TOAST = 4;
-  public final static int ERROR_MOBILE_DATA_ON_DIALOG = 5;
 
   public static final int SUCCESS_HOTSPOT_CREATION = 6;
   public static final int FAILED_TO_CREATE_HOTSPOT = 7;
+  public static final String UNIQUE_ID = "uniqueID";
+  public static final int RULE_VERSION = 2;
   private static ConnectionManager instance;
   private final Context context;
   private final SharedPreferences prefs;
+  private final GroupValidator groupValidator;
+  private final HotspotControlCounter hotspotControlCounter;
+  private final GroupParser groupParser;
+  private HotspotSSIDCodeMapper hotspotSSIDCodeMapper;
   private WifiManager wifimanager;
-  private ArrayList<String> clients;
+  private ArrayList<Group> clients;
   private WifiStateListener listenerActivateButtons;
   private WifiStateListener listenerJoinWifi;
   private InactivityListener inactivityListener;
@@ -60,8 +66,9 @@ public class ConnectionManager {
       if (wifimanager == null) {
         wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
       }
-      if (listenerActivateButtons != null) {
+      if (wifimanager.getWifiState() == 3 && listenerActivateButtons != null) {
         listenerActivateButtons.onStateChanged(wifimanager.isWifiEnabled());
+        context.unregisterReceiver(this);
       }
     }
   };
@@ -72,9 +79,9 @@ public class ConnectionManager {
     @Override public void onReceive(Context context, Intent intent) {
       System.out.println("TOU AQUI NO WIFI RECEIVER !! ");
       System.out.println("o noHotspotsFOundCounter esta a : " + noHotspotsFoundCounter);
-      List<String> scanResultsSSID = new ArrayList<>();
+      List<Group> scanResultsSSID = new ArrayList<>();
       if (clients == null) {
-        clients = new ArrayList<String>();
+        clients = new ArrayList<Group>();
       }
 
       List<ScanResult> connResults = wifimanager.getScanResults();
@@ -83,25 +90,35 @@ public class ConnectionManager {
       if (connResults != null && connResults.size() != 0) {
         for (int i = 0; i < connResults.size(); i++) {
           String ssid = connResults.get(i).SSID;
+          if (groupValidator.filterSSID(ssid)) {
 
-          scanResultsSSID.add(ssid);
+            try {
+              Group group = groupParser.parse(connResults.get(i).SSID);
+              scanResultsSSID.add(group);
 
-          if (ssid.contains("APTXV") && !clients.contains(ssid)) {
-            System.out.println("Estou no : " + connResults.get(i).toString());
-
-            clients.add(ssid);
-            changes = true;
+              if (!clients.contains(group)) {
+                clients.add(group);
+                changes = true;
+                System.out.println("Estou no : " + connResults.get(i).toString());
+              }
+            } catch (ParseException e) {
+              Log.d("ConnectionManager: ", "Tried parsing an invalid group name SSID.");
+            }
           }
         }
         if (noHotspotsFoundCounter >= 2 && clients.size() < 1 && !showedNoHotspotMessage) {
           showedNoHotspotMessage = true;
-          inactivityListener.onInactivity(true);
+          if (inactivityListener != null) {
+            inactivityListener.onInactivity(true);
+          }
         }
 
+        groupValidator.flagGhosts(clients);
+
         for (int j = 0; j < clients.size(); j++) {
-          String tmp = clients.get(j);
+          Group tmp = clients.get(j);
           System.out.println("this is one of the keyword : " + tmp);
-          if (!scanResultsSSID.contains(tmp)) {
+          if (!tmp.isGhost() && !scanResultsSSID.contains(tmp)) {
             clients.remove(tmp);
             changes = true;
             System.out.println("removed this : " + tmp);
@@ -111,11 +128,14 @@ public class ConnectionManager {
         System.out.println("tHERE ARE NO APTXV NETWORKS");
         if (noHotspotsFoundCounter >= 2 && !showedNoHotspotMessage) {
           showedNoHotspotMessage = true;
-          inactivityListener.onInactivity(true);
+          if (inactivityListener != null) {
+            inactivityListener.onInactivity(true);
+          }
         }
       }
       if (changes) {
-        clientsConnectedListener.onNewClientsConnected(clients);
+        ArrayList<Group> clearedList = groupValidator.removeGhosts(clients);
+        clientsConnectedListener.onNewClientsConnected(clearedList);
       }
       if (noHotspotsFoundCounter <= 2
           && !showedNoHotspotMessage) {//to warn that there are no networks and they should create one.
@@ -147,13 +167,18 @@ public class ConnectionManager {
                   DataHolder.getInstance().network = network;
                   break;
                 } else {//connected to the wrong network
-                  if (!reconnected && !chosenHotspot.isEmpty()) {
-                    joinHotspot(chosenHotspot, true);//retry again with reconnect
+                  if (!reconnected && !TextUtils.isEmpty(chosenHotspot)) {
                     reconnected = true;
+                    new Thread(new Runnable() {
+                      @Override public void run() {
+                        joinHotspot(chosenHotspot, false);
+                      }
+                    }).start();
                   } else {
                     listenerJoinWifi.onStateChanged(false);
                     try {
                       context.unregisterReceiver(this);
+                      //// TODO: 28-03-2017 filipe  add unregister scanAptxNETWORKS
                     } catch (IllegalArgumentException e) {
                       System.out.println(
                           "There was an error while trying to unregister the wifireceiver and the wifireceiverforconnectingwifi");
@@ -179,15 +204,27 @@ public class ConnectionManager {
             if (wifiInfo.getSSID().contains("APTXV")) {
               isWifiConnected = true;
               break;
+              //// TODO: 28-03-2017 filipe add reconnect to these lower versions
             } else {
-              listenerJoinWifi.onStateChanged(false);
-              try {
-                context.unregisterReceiver(this);
-                context.unregisterReceiver(scanAPTXVNetworks);
-              } catch (IllegalArgumentException e) {
-                System.out.println(
-                    "There was an error while trying to unregister the wifireceiver and the wifireceiverforconnectingwifi");
+              if (!reconnected && !TextUtils.isEmpty(chosenHotspot)) {
+                reconnected = true;
+                new Thread(new Runnable() {
+                  @Override public void run() {
+                    joinHotspot(chosenHotspot, false);
+                  }
+                }).start();
+              } else {
+                listenerJoinWifi.onStateChanged(false);
+                try {
+                  context.unregisterReceiver(this);
+                  context.unregisterReceiver(scanAPTXVNetworks);
+                  Log.w("BROADCASTRECEIVER", "Unregistered scan receiver INSIDE CONECTING WIFI #1");
+                } catch (IllegalArgumentException e) {
+                  System.out.println(
+                      "There was an error while trying to unregister the wifireceiver and the wifireceiverforconnectingwifi");
+                }
               }
+              reconnected = false;
               break;
             }
           }
@@ -198,6 +235,7 @@ public class ConnectionManager {
         try {
           context.unregisterReceiver(this);
           context.unregisterReceiver(scanAPTXVNetworks);
+          Log.w("BROADCASTRECEIVER", "Unregistered scan receiver INSIDE CONNECTING WIFI #2");
         } catch (IllegalArgumentException e) {
           System.out.println(
               "There was an error while trying to unregister the wifireceiver and the wifireceiverforconnectingwifi");
@@ -207,24 +245,35 @@ public class ConnectionManager {
   };
 
   private ConnectionManager(Context context, SharedPreferences sharedPreferences,
-      WifiManager wifimanager) {
+      WifiManager wifimanager, HotspotSSIDCodeMapper hotspotSSIDCodeMapper,
+      HotspotControlCounter hotspotControlCounter, GroupParser groupParser,
+      GroupValidator groupValidator) {
     this.context = context;
     this.wifimanager = wifimanager;
-
     prefs = sharedPreferences;
-    prefs.edit().putBoolean("wifiOnStart", this.wifimanager.isWifiEnabled()).commit();
+    this.hotspotSSIDCodeMapper = hotspotSSIDCodeMapper;
+    this.hotspotControlCounter = hotspotControlCounter;
+    this.groupParser = groupParser;
+    this.groupValidator = groupValidator;
   }
 
   public static ConnectionManager getInstance(Context context) {
     if (instance == null) {
-      instance =
-          new ConnectionManager(context, PreferenceManager.getDefaultSharedPreferences(context),
-              (WifiManager) context.getSystemService(Context.WIFI_SERVICE));
+      SharedPreferences defaultSharedPreferences =
+          PreferenceManager.getDefaultSharedPreferences(context);
+      HotspotSSIDCodeMapper hotspotSSIDCodeMapper = new HotspotSSIDCodeMapper();
+
+      instance = new ConnectionManager(context, defaultSharedPreferences,
+          (WifiManager) context.getSystemService(Context.WIFI_SERVICE), hotspotSSIDCodeMapper,
+          new HotspotControlCounter(defaultSharedPreferences, hotspotSSIDCodeMapper),
+          new GroupParser(), new GroupValidator());
     }
     return instance;
   }
 
   public void start(WifiStateListener listener) {
+    prefs.edit().putBoolean("wifiOnStart", this.wifimanager.isWifiEnabled()).apply();
+
     this.listenerActivateButtons = listener;
     context.registerReceiver(activateButtonsReceiver,
         new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
@@ -243,6 +292,7 @@ public class ConnectionManager {
 
     context.registerReceiver(scanAPTXVNetworks,
         new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+    Log.w("BROADCASTRECEIVER", "registered scan receiver search APTX");
 
     scheduleScan();
   }
@@ -283,7 +333,7 @@ public class ConnectionManager {
     }
   }
 
-  public int enableHotspot(String randomAlphaNum, String deviceName) {
+  public int enableHotspot(String deviceName) {
     if (wifimanager == null) {
       wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
     }
@@ -310,13 +360,15 @@ public class ConnectionManager {
       if (method.getName().equals("setWifiApEnabled")) {
         methodFound = true;
         WifiConfiguration netConfig = new WifiConfiguration();
-        netConfig.SSID = "" + "APTXV" + "_" + randomAlphaNum + "_" + deviceName + "";
-        System.out.println("THE NEW SSID IS NOW : : : :" + "" + "APTXV"
+        netConfig.SSID = String.valueOf(hotspotSSIDCodeMapper.encode(RULE_VERSION))
+            + "APTXV"
+            + hotspotControlCounter.incrementAndGetStringCounter()
             + "_"
-            + randomAlphaNum
+            + getRandomAlphanumericString(5)
             + "_"
             + deviceName
-            + "");
+            + getSpotShareID()
+            + "";
         netConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED);
         netConfig.preSharedKey = "passwordAptoide";
         netConfig.status = WifiConfiguration.Status.ENABLED;
@@ -353,6 +405,31 @@ public class ConnectionManager {
       }
     }
     return ConnectionManager.ERROR_UNKNOWN;
+  }
+
+  private String getRandomAlphanumericString(int length) {
+    StringBuilder sb = new StringBuilder();
+    int tmp;
+    for (int i = 0; i < length; i++) {
+      tmp = generateRandomID();
+      sb.append(hotspotSSIDCodeMapper.encode(tmp));
+    }
+    return sb.toString();
+  }
+
+  private String getSpotShareID() {
+    String id = prefs.getString(UNIQUE_ID, "default");
+    if (id.equals("default")) {
+      int tmp = generateRandomID();
+      id = String.valueOf(hotspotSSIDCodeMapper.encode(tmp));
+      prefs.edit().putString(UNIQUE_ID, id).apply();
+    }
+    return id;
+  }
+
+  private int generateRandomID() {
+    Random r = new Random();
+    return r.nextInt(62);
   }
 
   public int joinHotspot(String chosenHotspot, boolean shouldReconnect) {
@@ -392,6 +469,7 @@ public class ConnectionManager {
             }
 
             if (shouldReconnect) {
+              this.chosenHotspot = chosenHotspot;//to save in case of needing to reconnect
               boolean recon = wifimanager.reconnect();
               System.out.println("O boolean do reconnect ta a : " + recon);
               try {
@@ -492,17 +570,6 @@ public class ConnectionManager {
     }
   }
 
-  public String generateRandomAlphanumericString(int lengthWanted) {
-    char[] array = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
-    StringBuilder sb = new StringBuilder();
-    Random r = new Random();
-    for (int i = 0; i < lengthWanted; i++) {
-      char c = array[r.nextInt(array.length)];
-      sb.append(c);
-    }
-    return sb.toString();
-  }
-
   public String getIPAddress() {
     return intToIp(wifimanager.getDhcpInfo().serverAddress);
   }
@@ -519,6 +586,7 @@ public class ConnectionManager {
         new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION));
     context.registerReceiver(scanAPTXVNetworks,
         new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+    Log.w("BROADCASTRECEIVER", "registered scan receiver RESUME");
   }
 
   public void stop() {
@@ -526,22 +594,55 @@ public class ConnectionManager {
     if (clients != null) {
       clients.clear();
     }
+    try {
+      context.unregisterReceiver(activateButtonsReceiver);
+    } catch (IllegalArgumentException e) {
+    }
+
+    try {
+      context.unregisterReceiver(scanAPTXVNetworks);
+      Log.w("BROADCASTRECEIVER", "Unregistered scan receiver ON STOP");
+    } catch (IllegalArgumentException e) {
+    }
+
+    try {
+      context.unregisterReceiver(connectingWifi);
+    } catch (IllegalArgumentException e) {
+    }
+
     this.listenerJoinWifi = null;
     this.listenerActivateButtons = null;
     this.clientsConnectedListener = null;
     this.inactivityListener = null;
-    try {
-      context.unregisterReceiver(activateButtonsReceiver);
-      context.unregisterReceiver(scanAPTXVNetworks);
-      context.unregisterReceiver(connectingWifi);
-    } catch (IllegalArgumentException e) {
-    }
     if (scanner != null) {
       scanner.cancel();
       scanner.purge();
-      scanner = null;
     }
   }
+
+  //public void reconnectToGroup(final String group) {
+  //  executor.execute(new Runnable() {
+  //    @Override public void run() {
+  //      joinHotspot(group, true);
+  //    }
+  //  });
+  //}
+
+  //private boolean isGhost(Group group, ArrayList<Group> clients) {
+  //  String ssidDeviceID = ssid.split("_")[2];
+  //  for (int i = 0; i < clients.size(); i++) {
+  //    String tmp = clients.get(i);
+  //    String deviceID = tmp.split("_")[2];
+  //    if (deviceID.equals(ssidDeviceID)) {
+  //
+  //    }
+  //  }
+  //  return true;
+  //}
+  //
+  //private void removeGhost(String tmp) {
+  //
+  //}
 
   public void recoverNetworkState() {
     if (wifimanager == null) {
@@ -579,6 +680,6 @@ public class ConnectionManager {
    * Return the list of new connected clients
    */
   public interface ClientsConnectedListener {
-    void onNewClientsConnected(ArrayList<String> clients);
+    void onNewClientsConnected(ArrayList<Group> clients);
   }
 }

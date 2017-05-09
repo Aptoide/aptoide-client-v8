@@ -16,9 +16,9 @@ import android.view.MenuItem;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.activity.SearchActivity;
-import cm.aptoide.pt.v8engine.fragment.FragmentView;
-import cm.aptoide.pt.v8engine.websocket.SearchAppsWebSocket;
+import cm.aptoide.pt.v8engine.search.websocket.SearchAppsWebSocket;
+import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.view.search.SearchActivity;
 
 /**
  * Created by neuro on 01-06-2016.
@@ -51,7 +51,7 @@ public class SearchUtils {
         boolean validQueryLength = s.length() > 1;
 
         if (validQueryLength) {
-          fragmentView.getNavigationManager().navigateTo(createSearchFragmentInterface.create(s));
+          fragmentView.getFragmentNavigator().navigateTo(createSearchFragmentInterface.create(s));
         } else {
           ShowMessage.asToast(V8Engine.getContext(), R.string.search_minimum_chars);
         }
@@ -72,7 +72,7 @@ public class SearchUtils {
       @Override public boolean onSuggestionClick(int position) {
         Cursor item = (Cursor) searchView.getSuggestionsAdapter().getItem(position);
 
-        fragmentView.getNavigationManager()
+        fragmentView.getFragmentNavigator()
             .navigateTo(createSearchFragmentInterface.create(item.getString(1)));
 
         return true;

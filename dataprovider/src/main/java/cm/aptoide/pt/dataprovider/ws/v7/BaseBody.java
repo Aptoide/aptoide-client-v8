@@ -19,6 +19,8 @@ import lombok.EqualsAndHashCode;
   @JsonProperty("aptoide_uid") private String aptoideId;
   private String accessToken;
   private int aptoideVercode;
+  private String aptoideMd5sum;
+  private String aptoidePackage;
   private String cdn;
   private String lang;
   private boolean mature;

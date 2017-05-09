@@ -37,8 +37,14 @@ public class DownloadInstallAnalyticsBaseBody extends AnalyticsBaseBody {
     App app;
     List<Obb> obb;
     String network;
-    String teleco;
+    String teleco; //typo telco - this will change in v2
     Result result;
+    Root root;
+  }
+
+  @lombok.Data public static class Root {
+    boolean phone;
+    boolean aptoideSettings;
   }
 
   @lombok.Data public static class App {

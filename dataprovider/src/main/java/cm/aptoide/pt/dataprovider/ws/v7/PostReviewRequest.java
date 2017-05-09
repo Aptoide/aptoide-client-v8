@@ -7,11 +7,10 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -24,22 +23,23 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
 
-  protected PostReviewRequest(Body body, BodyInterceptor bodyInterceptor) {
-    super(body, BASE_HOST,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter(), bodyInterceptor);
+  protected PostReviewRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
   }
 
   public static PostReviewRequest of(String storeName, String packageName, String title,
-      String textBody, Integer rating, BodyInterceptor bodyInterceptor) {
+      String textBody, Integer rating, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
     final Body body = new Body(storeName, packageName, title, textBody, rating);
-    return new PostReviewRequest(body, bodyInterceptor);
+    return new PostReviewRequest(body, bodyInterceptor, httpClient, converterFactory);
   }
 
   public static PostReviewRequest of(String packageName, String title, String textBody,
-      Integer rating, BodyInterceptor bodyInterceptor) {
+      Integer rating, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     final Body body = new Body(packageName, title, textBody, rating);
-    return new PostReviewRequest(body, bodyInterceptor);
+    return new PostReviewRequest(body, bodyInterceptor, httpClient, converterFactory);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

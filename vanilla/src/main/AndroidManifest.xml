@@ -36,7 +36,7 @@
       >
 
     <activity
-        android:name=".v8engine.OpenGLES20Activity"
+        android:name=".v8engine.view.OpenGLES20Activity"
         android:theme="@style/Theme.Transparent">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
@@ -90,13 +90,13 @@
         />
 
     <provider
-        android:name="cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider"
+        android:name="cm.aptoide.pt.v8engine.search.SearchSuggestionProvider"
         android:authorities="${suggestionProviderAuthority}"
         android:exported="false"
         />
 
     <provider
-        android:name="cm.aptoide.pt.v8engine.provider.StoreSearchSuggestionProvider"
+        android:name="cm.aptoide.pt.v8engine.search.StoreSearchSuggestionProvider"
         android:authorities="${storeSuggestionProviderAuthority}"
         android:exported="false"
         />
@@ -150,7 +150,7 @@
     </service>
 
     <service
-        android:name=".v8engine.repository.sync.AptoideSyncService"
+        android:name=".v8engine.sync.AptoideSyncService"
         android:exported="true">
       <intent-filter>
         <action android:name="android.content.SyncAdapter"/>

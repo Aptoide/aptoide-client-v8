@@ -29,8 +29,8 @@ public final class MultiDexHelper {
 
   public static final String EXTRACTED_SUFFIX = ".zip";
   private static final String EXTRACTED_NAME_EXT = ".classes";
-  private static final String SECONDARY_FOLDER_NAME = "code_cache" + File.separator +
-      "secondary-dexes";
+  private static final String SECONDARY_FOLDER_NAME =
+      "code_cache" + File.separator + "secondary-dexes";
 
   private static final String PREFS_FILE = "multidex.version";
   private static final String KEY_DEX_NUMBER = "dex.number";
@@ -39,7 +39,9 @@ public final class MultiDexHelper {
    * get all the classes name in "classes.dex", "classes2.dex", ....
    *
    * @param context the application context
+   *
    * @return all the classes name
+   *
    * @throws PackageManager.NameNotFoundException
    * @throws IOException
    */
@@ -61,8 +63,7 @@ public final class MultiDexHelper {
           classNames.add(new AbstractMap.SimpleImmutableEntry<>(dexEntries.nextElement(), path));
         }
       } catch (IOException e) {
-        throw new IOException("Error at loading dex file '" +
-            path + "'");
+        throw new IOException("Error at loading dex file '" + path + "'");
       } finally {
         if (dexfile != null) {
           dexfile.close();
@@ -76,7 +77,9 @@ public final class MultiDexHelper {
    * get all the dex path
    *
    * @param context the application context
+   *
    * @return all the dex path
+   *
    * @throws PackageManager.NameNotFoundException
    * @throws IOException
    */
@@ -103,8 +106,8 @@ public final class MultiDexHelper {
         sourcePaths.add(extractedFile.getAbsolutePath());
         //we ignore the verify zip part
       } else {
-        throw new IOException("Missing extracted secondary dex file '" +
-            extractedFile.getPath() + "'");
+        throw new IOException(
+            "Missing extracted secondary dex file '" + extractedFile.getPath() + "'");
       }
     }
 

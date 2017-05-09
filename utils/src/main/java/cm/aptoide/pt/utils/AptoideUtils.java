@@ -42,8 +42,6 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import cm.aptoide.pt.actions.UserData;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.permissions.ApkPermission;
 import java.io.BufferedReader;
@@ -437,7 +435,7 @@ public class AptoideUtils {
       return context.getResources().getConfiguration().orientation;
     }
 
-    public static int getPixels(int dipValue) {
+    public static int getPixelsForDip(int dipValue) {
       Resources r = context.getResources();
       int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue,
           r.getDisplayMetrics());
@@ -576,7 +574,9 @@ public class AptoideUtils {
      *
      * @param iterable the {@code Iterable} providing the values to join together, may be null
      * @param separator the separator character to use, null treated as ""
+     *
      * @return the joined String, {@code null} if null iterator input
+     *
      * @since 2.3
      */
     public static String join(final Iterable<?> iterable, final String separator) {
@@ -594,6 +594,7 @@ public class AptoideUtils {
      *
      * @param iterator the {@code Iterator} of values to join together, may be null
      * @param separator the separator character to use, null treated as ""
+     *
      * @return the joined String, {@code null} if null iterator input
      */
     public static String join(final Iterator<?> iterator, final String separator) {
@@ -657,6 +658,7 @@ public class AptoideUtils {
 
     /**
      * @param bytes file size
+     *
      * @return formatted string for file file showing a Human perceptible file size
      */
     public static String formatBytes(long bytes, boolean speed) {
@@ -779,37 +781,6 @@ public class AptoideUtils {
         e.printStackTrace();
       }
       return null;
-    }
-
-    public static void askForRoot() {
-      Process suProcess;
-
-      try {
-        suProcess = Runtime.getRuntime().exec("su");
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-
-    public static boolean isRooted() {
-      return findBinary("su");
-    }
-
-    private static boolean findBinary(String binaryName) {
-      boolean found = false;
-
-      String[] places = {
-          "/sbin/", "/system/bin/", "/system/xbin/", "/data/local/xbin/", "/data/local/bin/",
-          "/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/"
-      };
-      for (String where : places) {
-        if (new File(where + binaryName).exists()) {
-          found = true;
-          break;
-        }
-      }
-
-      return found;
     }
 
     public static List<PackageInfo> getUserInstalledApps() {
@@ -1134,7 +1105,9 @@ public class AptoideUtils {
      * Singleton constructor, needed to get access to the application context & strings for i18n
      *
      * @param context Context
+     *
      * @return DateTimeUtils singleton instance
+     *
      * @throws Exception
      */
     public static DateTimeU getInstance(Context context) {
@@ -1174,6 +1147,7 @@ public class AptoideUtils {
      * Checks if the given date is yesterday.
      *
      * @param date - Date to check.
+     *
      * @return TRUE if the date is yesterday, FALSE otherwise.
      */
     private static boolean isYesterday(long date) {
@@ -1224,6 +1198,7 @@ public class AptoideUtils {
      * Displays a user-friendly date difference string
      *
      * @param timedate Timestamp to format as date difference from now
+     *
      * @return Friendly-formatted date diff string
      */
     public String getTimeDiffString(Context context, long timedate) {
@@ -1495,6 +1470,7 @@ public class AptoideUtils {
      * filename ends with <b>_icon</b> it is an HD icon.
      *
      * @param iconUrl The String with the URL of the icon
+     *
      * @return A String with
      */
     private static String parseIcon(String iconUrl) {
@@ -1576,43 +1552,49 @@ public class AptoideUtils {
       return originalUrl;
     }
 
-    public static List<ImageSizeErrors> checkIconSizeProperties(String avatarPath, int minHeight,
+    public static List<ImageErrors> checkIconSizeProperties(String avatarPath, int minHeight,
         int maxHeight, int minWidth, int maxWidth, int maxImageSize) {
       ImageInfo imageInfo = getImageInfo(avatarPath);
-      List<ImageSizeErrors> errors = new LinkedList<>();
-      if (imageInfo.getHeight() < minHeight) {
-        errors.add(ImageSizeErrors.MIN_HEIGHT);
-      }
-      if (imageInfo.getWidth() < minWidth) {
-        errors.add(ImageSizeErrors.MIN_WIDTH);
-      }
-      if (imageInfo.getHeight() > maxHeight) {
-        errors.add(ImageSizeErrors.MAX_HEIGHT);
-      }
-      if (imageInfo.getWidth() > maxWidth) {
-        errors.add(ImageSizeErrors.MAX_WIDTH);
-      }
-      if (imageInfo.getSize() > maxImageSize) {
-        errors.add(ImageSizeErrors.MAX_IMAGE_SIZE);
+      List<ImageErrors> errors = new LinkedList<>();
+      if (imageInfo == null) {
+        errors.add(ImageErrors.ERROR_DECODING);
+      } else {
+        if (imageInfo.getHeight() < minHeight) {
+          errors.add(ImageErrors.MIN_HEIGHT);
+        }
+        if (imageInfo.getWidth() < minWidth) {
+          errors.add(ImageErrors.MIN_WIDTH);
+        }
+        if (imageInfo.getHeight() > maxHeight) {
+          errors.add(ImageErrors.MAX_HEIGHT);
+        }
+        if (imageInfo.getWidth() > maxWidth) {
+          errors.add(ImageErrors.MAX_WIDTH);
+        }
+        if (imageInfo.getSize() > maxImageSize) {
+          errors.add(ImageErrors.MAX_IMAGE_SIZE);
+        }
       }
       return errors;
     }
 
-    public static ImageInfo getImageInfo(String imagePath) {
-      ImageInfo imageInfo = new ImageInfo();
+    static ImageInfo getImageInfo(String imagePath) {
+      ImageInfo imageInfo = null;
       Bitmap image = BitmapFactory.decodeFile(imagePath);
-      imageInfo.setWidth(image.getWidth());
-      imageInfo.setHeight(image.getHeight());
-      imageInfo.setSize(new File(imagePath).length());
-
+      if (image != null) {
+        imageInfo = new ImageInfo();
+        imageInfo.setWidth(image.getWidth());
+        imageInfo.setHeight(image.getHeight());
+        imageInfo.setSize(new File(imagePath).length());
+      }
       return imageInfo;
     }
 
-    public enum ImageSizeErrors {
-      MIN_HEIGHT, MAX_HEIGHT, MIN_WIDTH, MAX_WIDTH, MAX_IMAGE_SIZE
+    public enum ImageErrors {
+      ERROR_DECODING, MIN_HEIGHT, MAX_HEIGHT, MIN_WIDTH, MAX_WIDTH, MAX_IMAGE_SIZE
     }
 
-    @Data public static class ImageInfo {
+    @Data static class ImageInfo {
       int height, width;
       long size;
     }
@@ -1650,6 +1632,7 @@ public class AptoideUtils {
      * code from <a href="http://blog.danlew.net/2015/03/02/dont-break-the-chain/">http://blog.danlew.net/2015/03/02/dont-break-the-chain/</a>
      *
      * @param <T> Observable of T
+     *
      * @return original Observable subscribed in an io thread and observed in the main thread
      */
     public static <T> Observable.Transformer<T, T> applySchedulers() {
@@ -1676,72 +1659,5 @@ public class AptoideUtils {
   public static final class LocaleU {
 
     public static final Locale DEFAULT = Locale.getDefault();
-  }
-
-  /**
-   * Network Utils
-   */
-  public static class NetworkUtils {
-
-    //public static boolean isGeneralDownloadPermitted(Context context, boolean wifiAllowed,
-    //    boolean mobileAllowed) {
-    //  final boolean wifiAvailable = isAvailable(context, TYPE_WIFI);
-    //  final boolean mobileAvailable = isAvailable(context, TYPE_MOBILE);
-    //  return !(wifiAvailable && !wifiAllowed) && !(mobileAvailable && !mobileAllowed);
-    //}
-
-    //public static boolean isAvailable(Context context, int networkType) {
-    //  final ConnectivityManager manager =
-    //      (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-    //  return Build.VERSION.SDK_INT < 21 ? isAvailableSdk1(manager, networkType)
-    //      : isAvailableSdk21(manager, networkType);
-    //}
-
-    //private static boolean isAvailableSdk1(final ConnectivityManager manager,
-    //    final int networkType) {
-    //  final NetworkInfo info = manager.getActiveNetworkInfo();
-    //  return info != null && info.getType() == networkType;
-    //}
-
-    //@TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    //private static boolean isAvailableSdk21(final ConnectivityManager manager,
-    //    final int networkType) {
-    //  for (final Network network : manager.getAllNetworks()) {
-    //    final NetworkInfo info = manager.getNetworkInfo(network);
-    //    if (info != null && info.isConnected() && info.getType() == networkType) {
-    //      return true;
-    //    }
-    //  }
-    //  return false;
-    //}
-
-    public static String getDefaultUserAgent(AptoideClientUUID aptoideClientUUID, UserData userData,
-        String vername, String oemid) {
-
-      //SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(context);
-      //String currentUserId = getUserId();
-      //String myscr = sPref.getInt(EnumPreferences.SCREEN_WIDTH.name(), 0) + "x" + sPref.getInt(EnumPreferences.SCREEN_HEIGHT.name(), 0);
-
-      DisplayMetrics displayMetrics = new DisplayMetrics();
-      String myscr = displayMetrics.widthPixels + "x" + displayMetrics.heightPixels;
-
-      StringBuilder sb =
-          new StringBuilder(vername + ";" + SystemU.TERMINAL_INFO + ";" + myscr + ";id:");
-
-      if (aptoideClientUUID != null) {
-        sb.append(aptoideClientUUID.getUniqueIdentifier());
-      }
-      sb.append(";");
-
-      String userEmail = userData.getEmail();
-      if (!TextUtils.isEmpty(userEmail)) {
-        sb.append(userEmail);
-      }
-      sb.append(";");
-      if (!TextUtils.isEmpty(oemid)) {
-        sb.append(oemid);
-      }
-      return sb.toString();
-    }
   }
 }

@@ -25,10 +25,9 @@ import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEvent;
+import cm.aptoide.pt.v8engine.download.DownloadEvent;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -69,10 +68,11 @@ public class InstallService extends Service {
   @Override public void onCreate() {
     super.onCreate();
     Logger.d(TAG, "Install service is starting");
-    downloadManager = AptoideDownloadManager.getInstance();
-    downloadManager.initDownloadService(this);
+    downloadManager = ((V8Engine) getApplicationContext()).getDownloadManager();
+    defaultInstaller = new InstallerFactory().create(this, InstallerFactory.DEFAULT);
     rollbackInstaller = new InstallerFactory().create(this, InstallerFactory.ROLLBACK);
-    installManager = new InstallManager(downloadManager, rollbackInstaller);
+    installManager = ((V8Engine) getApplicationContext()).getInstallManager(
+        InstallerFactory.ROLLBACK);
     subscriptions = new CompositeSubscription();
     setupNotification();
     installerTypeMap = new HashMap();
@@ -218,9 +218,6 @@ public class InstallService extends Service {
     Installer installer;
     switch (installerType) {
       case INSTALLER_TYPE_DEFAULT:
-        if (defaultInstaller == null) {
-          defaultInstaller = new InstallerFactory().create(this, InstallerFactory.DEFAULT);
-        }
         installer = defaultInstaller;
         break;
       case INSTALLER_TYPE_ROLLBACK:

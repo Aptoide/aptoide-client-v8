@@ -15,7 +15,9 @@ public class SpannableFactory {
   @NonNull public Spannable createStyleSpan(String text, int style, String... spanTexts) {
     return createSpan(text, new StyleSpan(style), spanTexts);
   }
-  @NonNull public Spannable createTextAppearanceSpan(Context context, @StyleRes int style, String text,
+
+  @NonNull
+  public Spannable createTextAppearanceSpan(Context context, @StyleRes int style, String text,
       String... spanTexts) {
     return createSpan(text, new TextAppearanceSpan(context, style), spanTexts);
   }
@@ -31,8 +33,8 @@ public class SpannableFactory {
       if (spanTextStart >= 0
           && spanTextStart < text.length()
           && spanText.length() <= text.length()) {
-        result.setSpan(span, spanTextStart,
-            (spanTextStart + spanText.length()), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        result.setSpan(span, spanTextStart, (spanTextStart + spanText.length()),
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
       }
     }
     return result;
@@ -45,6 +47,7 @@ public class SpannableFactory {
    * @param text Text
    * @param span array of {@link ParcelableSpan} that will be applied
    * @param spanTexts array of substrings that will be modified
+   *
    * @return {@link Spannable}
    */
   @NonNull public Spannable createSpan(String text, ParcelableSpan[] span, String... spanTexts) {

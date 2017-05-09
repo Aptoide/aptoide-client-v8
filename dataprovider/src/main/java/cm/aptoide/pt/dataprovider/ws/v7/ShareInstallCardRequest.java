@@ -1,12 +1,11 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -19,18 +18,19 @@ public class ShareInstallCardRequest extends V7<BaseV7Response, ShareInstallCard
   private final String type;
 
   protected ShareInstallCardRequest(Body body, String packageName, String type,
-      BodyInterceptor bodyInterceptor) {
-    super(body, BASE_HOST,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter(), bodyInterceptor);
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
     this.packageName = packageName;
     this.type = type;
   }
 
   public static ShareInstallCardRequest of(String packageName, String shareType,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     ShareInstallCardRequest.Body body = new ShareInstallCardRequest.Body(packageName);
-    return new ShareInstallCardRequest(body, packageName, shareType, bodyInterceptor);
+    return new ShareInstallCardRequest(body, packageName, shareType, bodyInterceptor, httpClient,
+        converterFactory);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

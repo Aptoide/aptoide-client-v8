@@ -123,31 +123,33 @@
         android:title="@string/settings_maxFileCache_title"/>
   </PreferenceCategory>
   <!--<PreferenceCategory-->
-      <!--android:key="changetheme"-->
-      <!--android:title="@string/change_theme">-->
+  <!--android:key="changetheme"-->
+  <!--android:title="@string/change_theme">-->
 
-    <!--<Preference-->
-        <!--android:key="soon"-->
-        <!--android:title="@string/change_theme_soon"/>-->
-    <!--&lt;!&ndash;<ListPreference&ndash;&gt;-->
-    <!--&lt;!&ndash;android:defaultValue="light"&ndash;&gt;-->
-    <!--&lt;!&ndash;android:entries="@array/theme_names"&ndash;&gt;-->
-    <!--&lt;!&ndash;android:entryValues="@array/themes"&ndash;&gt;-->
-    <!--&lt;!&ndash;android:key="theme"&ndash;&gt;-->
-    <!--&lt;!&ndash;android:title="@string/theme"/>&ndash;&gt;-->
+  <!--<Preference-->
+  <!--android:key="soon"-->
+  <!--android:title="@string/change_theme_soon"/>-->
+  <!--&lt;!&ndash;<ListPreference&ndash;&gt;-->
+  <!--&lt;!&ndash;android:defaultValue="light"&ndash;&gt;-->
+  <!--&lt;!&ndash;android:entries="@array/theme_names"&ndash;&gt;-->
+  <!--&lt;!&ndash;android:entryValues="@array/themes"&ndash;&gt;-->
+  <!--&lt;!&ndash;android:key="theme"&ndash;&gt;-->
+  <!--&lt;!&ndash;android:title="@string/theme"/>&ndash;&gt;-->
   <!--</PreferenceCategory>-->
-  <PreferenceCategory
-      android:key="rootCategory"
-      android:title="@string/root">
-    <CheckBoxPreference
-        android:key="allowRoot"
-        android:title="@string/allow_root"/>
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="auto_update"
-        android:summary="@string/setting_auto_update_sum"
-        android:title="@string/setting_auto_update_title"/>
-  </PreferenceCategory>
+
+  <!--AN-1533 - temporary solution was to remove root installation-->
+  <!--<PreferenceCategory-->
+      <!--android:key="rootCategory"-->
+      <!--android:title="@string/root">-->
+    <!--<CheckBoxPreference-->
+        <!--android:key="allowRoot"-->
+        <!--android:title="@string/allow_root"/>-->
+    <!--<CheckBoxPreference-->
+        <!--android:defaultValue="false"-->
+        <!--android:key="auto_update"-->
+        <!--android:summary="@string/setting_auto_update_sum"-->
+        <!--android:title="@string/setting_auto_update_title"/>-->
+  <!--</PreferenceCategory>-->
 
   <PreferenceCategory
       android:key="about"

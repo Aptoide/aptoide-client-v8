@@ -1,8 +1,7 @@
 package cm.aptoide.pt.spotandshare.socket.message.handlers.v1;
 
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
-import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
-import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
+import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.message.Message;
 import cm.aptoide.pt.spotandshare.socket.message.MessageHandler;
@@ -23,14 +22,13 @@ import static cm.aptoide.pt.spotandshare.socket.message.handlers.v1.HandlersFact
 public class DefaultClientHandlersListV1 {
 
   public static List<MessageHandler<? extends Message>> create(String rootDir,
-      StorageCapacity storageCapacity, FileServerLifecycle<AndroidAppInfo> serverLifecycle,
-      FileClientLifecycle<AndroidAppInfo> fileClientLifecycle,
+      StorageCapacity storageCapacity, FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider,
       AptoideMessageClientSocket aptoideMessageClientController, SocketBinder socketBinder) {
     List<MessageHandler<? extends Message>> messageHandlers = new LinkedList<>();
 
-    messageHandlers.add(new SendApkHandler(serverLifecycle));
+    messageHandlers.add(new SendApkHandler(fileLifecycleProvider));
     messageHandlers.add(
-        new ReceiveApkHandler(rootDir, storageCapacity, fileClientLifecycle, socketBinder));
+        new ReceiveApkHandler(rootDir, storageCapacity, fileLifecycleProvider, socketBinder));
     messageHandlers.add(new HostLeftMessageHandler(aptoideMessageClientController));
     messageHandlers.add(new ServerLeftHandler(aptoideMessageClientController));
 

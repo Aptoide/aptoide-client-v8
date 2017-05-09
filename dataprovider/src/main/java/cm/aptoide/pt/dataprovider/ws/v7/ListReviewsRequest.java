@@ -7,16 +7,14 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v7.ListReviews;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -33,17 +31,17 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
   private static final int MAX_REVIEWS = 10;
   private static final int MAX_COMMENTS = 10;
 
-  private ListReviewsRequest(Body body, BodyInterceptor bodyInterceptor) {
-    super(body, BASE_HOST, OkHttpClientFactory.getSingletonClient(new UserAgentGenerator() {
-      @Override public String generateUserAgent() {
-        return SecurePreferences.getUserAgent();
-      }
-    }, false), WebService.getDefaultConverter(), bodyInterceptor);
+  private ListReviewsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
   }
 
   public static ListReviewsRequest of(String storeName, String packageName,
-      BaseRequestWithStore.StoreCredentials storecredentials, BodyInterceptor bodyInterceptor) {
-    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, storecredentials, bodyInterceptor);
+      BaseRequestWithStore.StoreCredentials storecredentials,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
+    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, storecredentials, bodyInterceptor,
+        httpClient, converterFactory);
   }
 
   /**
@@ -51,10 +49,11 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
    */
   public static ListReviewsRequest of(String storeName, String packageName, int maxReviews,
       int maxComments, BaseRequestWithStore.StoreCredentials storecredentials,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     final Body body = new Body(storeName, packageName, maxReviews, maxComments,
         ManagerPreferences.getAndResetForceServerRefresh(), storecredentials);
-    return new ListReviewsRequest(body, bodyInterceptor);
+    return new ListReviewsRequest(body, bodyInterceptor, httpClient, converterFactory);
   }
 
   /**
@@ -62,8 +61,10 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
    */
   public static ListReviewsRequest ofTopReviews(String storeName, String packageName,
       int maxReviews, BaseRequestWithStore.StoreCredentials storeCredentials,
-      BodyInterceptor bodyInterceptor) {
-    return of(storeName, packageName, maxReviews, 0, storeCredentials, bodyInterceptor);
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
+    return of(storeName, packageName, maxReviews, 0, storeCredentials, bodyInterceptor, httpClient,
+        converterFactory);
   }
 
   @Override protected Observable<ListReviews> loadDataFromNetwork(Interfaces interfaces,

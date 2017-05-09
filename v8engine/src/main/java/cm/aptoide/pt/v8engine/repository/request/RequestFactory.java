@@ -1,6 +1,6 @@
 package cm.aptoide.pt.v8engine.repository.request;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
@@ -9,8 +9,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
-import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 
 /**
  * Created by neuro on 26-12-2016.
@@ -27,21 +28,28 @@ public class RequestFactory {
   private final GetUserRequestFactory getUserRequestFactory;
   private final GetStoreRecommendedRequestFactory getStoreRecommendedRequestFactory;
 
-  public RequestFactory(StoreCredentialsProvider storeCredentialsProvider, BodyInterceptor bodyInterceptor) {
+  public RequestFactory(StoreCredentialsProvider storeCredentialsProvider,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     listStoresRequestFactory =
-        new ListStoresRequestFactory(bodyInterceptor);
+        new ListStoresRequestFactory(bodyInterceptor, httpClient, converterFactory);
     listAppsRequestFactory =
-        new ListAppsRequestFactory(bodyInterceptor, storeCredentialsProvider);
+        new ListAppsRequestFactory(bodyInterceptor, storeCredentialsProvider, httpClient,
+            converterFactory);
     listFullReviewsRequestFactory =
-        new ListFullReviewsRequestFactory(bodyInterceptor);
+        new ListFullReviewsRequestFactory(bodyInterceptor, httpClient, converterFactory);
     getStoreRequestFactory =
-        new GetStoreRequestFactory(storeCredentialsProvider, bodyInterceptor);
+        new GetStoreRequestFactory(storeCredentialsProvider, bodyInterceptor, httpClient,
+            converterFactory);
     getStoreWidgetsRequestFactory =
-        new GetStoreWidgetsRequestFactory(storeCredentialsProvider, bodyInterceptor);
-    getUserRequestFactory = new GetUserRequestFactory(bodyInterceptor);
+        new GetStoreWidgetsRequestFactory(storeCredentialsProvider, bodyInterceptor, httpClient,
+            converterFactory);
+    getUserRequestFactory =
+        new GetUserRequestFactory(bodyInterceptor, httpClient, converterFactory);
 
-    getStoreRecommendedRequestFactory = new GetStoreRecommendedRequestFactory(bodyInterceptor);
+    getStoreRecommendedRequestFactory =
+        new GetStoreRecommendedRequestFactory(bodyInterceptor, httpClient, converterFactory);
   }
 
   public ListStoresRequest newListStoresRequest(int offset, int limit) {

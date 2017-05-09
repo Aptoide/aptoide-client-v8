@@ -17,7 +17,6 @@ public class GroupManager {
   private JoinGroupListener joinGrouplistener;
   private CreateGroupListener createGrouplistener;
   private String deviceName;
-  private String randomAlphaNum;
   private JoinHotspotTask joinHotspotTask;
   private ActivateHotspotTask activateHotspotTask;
   private AsyncTask<Void, Void, Integer> createTask;
@@ -34,7 +33,7 @@ public class GroupManager {
     }
     this.group = group;
     this.joinGrouplistener = listener;
-    if (group == null || TextUtils.isEmpty(group.getName())) {
+    if (group == null || TextUtils.isEmpty(group.getSsid())) {
       joinGrouplistener.onError(ConnectionManager.ERROR_INVALID_GROUP);
       return;
     }
@@ -51,7 +50,7 @@ public class GroupManager {
   }
 
   public void retryToJoinGroup(Group group) {//after mobileDataDialog
-    if (group == null || TextUtils.isEmpty(group.getName())) {
+    if (group == null || TextUtils.isEmpty(group.getSsid())) {
       joinGrouplistener.onError(ConnectionManager.ERROR_INVALID_GROUP);
       return;
     }
@@ -69,25 +68,37 @@ public class GroupManager {
     joinTask = joinHotspotTask.execute();
   }
 
-  public void createGroup(String randomAlphaNum, String deviceName, CreateGroupListener listener) {
+  public void createGroup(String deviceName, CreateGroupListener listener) {
     this.createGrouplistener = listener;
-    this.randomAlphaNum = randomAlphaNum;
     this.deviceName = deviceName;
-    createTask = activateHotspotTask.execute();
+    try {
+      createTask = activateHotspotTask.execute();
+    } catch (IllegalStateException e) {
+      createTask = new ActivateHotspotTask().execute();
+    }
   }
 
-  private String removeAPTXVFromString(String keyword) {
-    String[] array = keyword.split("_");
-    String deviceName = array[2];
-    return deviceName;
-  }
-
-  public void cancel() {
-    joinTask.cancel(false);
-    activateHotspotTask.cancel(false);
+  public void cancelTasks() {
+    if (joinTask != null) {
+      joinTask.cancel(false);
+      joinTask = null;
+    }
+    if (joinHotspotTask != null) {
+      joinHotspotTask.cancel(true);
+      joinHotspotTask = null;
+    }
+    if (createTask != null) {
+      createTask.cancel(false);
+      createTask = null;
+    }
+    if (activateHotspotTask != null) {
+      activateHotspotTask.cancel(true);
+      activateHotspotTask = null;
+    }
   }
 
   public void stop() {
+    //cancelTasks();
     this.createGrouplistener = null;
     this.joinGrouplistener = null;
     this.connectionManager.stop();
@@ -110,7 +121,7 @@ public class GroupManager {
   private class JoinHotspotTask extends AsyncTask<Void, Void, Integer> {
 
     @Override protected Integer doInBackground(Void... params) {
-      return connectionManager.joinHotspot(group.getName(), false);//future -> pass the whole group
+      return connectionManager.joinHotspot(group.getSsid(), true);//future -> pass the whole group
     }
 
     @Override protected void onPreExecute() {
@@ -127,7 +138,7 @@ public class GroupManager {
     protected void onPostExecute(Integer result) {
       if (joinGrouplistener != null) {
         if (result == ConnectionManager.SUCCESSFUL_JOIN) {
-          String hostDeviceName = removeAPTXVFromString(group.getName());
+          String hostDeviceName = group.getDeviceName();
           joinGrouplistener.onSuccess(hostDeviceName);
         } else {
           joinGrouplistener.onError(result);
@@ -140,7 +151,7 @@ public class GroupManager {
   private class ActivateHotspotTask extends AsyncTask<Void, Void, Integer> {
 
     @Override protected Integer doInBackground(Void... params) {
-      return connectionManager.enableHotspot(randomAlphaNum, deviceName);
+      return connectionManager.enableHotspot(deviceName);
     }
 
     @Override protected void onPreExecute() {

@@ -5,16 +5,16 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.store.GetHomeMeta;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -25,17 +25,17 @@ import rx.Observable;
 
   private final String url;
 
-  private GetHomeMetaRequest(Body body, String url, BodyInterceptor bodyInterceptor) {
-    super(body,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter(), bodyInterceptor);
+  private GetHomeMetaRequest(Body body, String url, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(body, httpClient, converterFactory, bodyInterceptor);
     this.url = url;
   }
 
   public static GetHomeMetaRequest ofAction(String url, StoreCredentials storeCredentials,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     return new GetHomeMetaRequest(new Body(storeCredentials),
-        new V7Url(url).remove("home/getMeta").get(), bodyInterceptor);
+        new V7Url(url).remove("home/getMeta").get(), bodyInterceptor, httpClient, converterFactory);
   }
 
   @Override protected Observable<GetHomeMeta> loadDataFromNetwork(Interfaces interfaces,

@@ -15,6 +15,15 @@ import cm.aptoide.pt.v8engine.payment.Product;
  */
 public class ParcelableProduct implements Product, Parcelable {
 
+  public static final Creator<ParcelableProduct> CREATOR = new Creator<ParcelableProduct>() {
+    @Override public ParcelableProduct createFromParcel(Parcel in) {
+      return new ParcelableProduct(in);
+    }
+
+    @Override public ParcelableProduct[] newArray(int size) {
+      return new ParcelableProduct[size];
+    }
+  };
   private final int id;
   private final String icon;
   private final String title;
@@ -37,20 +46,6 @@ public class ParcelableProduct implements Product, Parcelable {
     price = new Price(in.readDouble(), in.readString(), in.readString(), in.readDouble());
   }
 
-  public static final Creator<ParcelableProduct> CREATOR = new Creator<ParcelableProduct>() {
-    @Override public ParcelableProduct createFromParcel(Parcel in) {
-      return new ParcelableProduct(in);
-    }
-
-    @Override public ParcelableProduct[] newArray(int size) {
-      return new ParcelableProduct[size];
-    }
-  };
-
-  @Override public Price getPrice() {
-    return price;
-  }
-
   @Override public int getId() {
     return id;
   }
@@ -61,6 +56,10 @@ public class ParcelableProduct implements Product, Parcelable {
 
   @Override public String getTitle() {
     return title;
+  }
+
+  @Override public Price getPrice() {
+    return price;
   }
 
   @Override public String getDescription() {

@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.util;
 
 import android.support.v4.util.LongSparseArray;
 import cm.aptoide.pt.model.v7.Comment;
-import cm.aptoide.pt.viewRateAndCommentReviews.CommentNode;
+import cm.aptoide.pt.v8engine.comments.CommentNode;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,6 +13,7 @@ public class CommentOperations {
    * Uses depth-first search to transverse and flatten all the {@link CommentNode}
    *
    * @param comments a list of {@link CommentNode}
+   *
    * @return list of all {@link CommentNode} and children, sorted by depth
    */
   public List<CommentNode> flattenByDepth(List<CommentNode> comments) {

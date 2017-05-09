@@ -4,10 +4,10 @@ package cm.aptoide.pt.spotandshareandroid;
  * Created by filipegoncalves on 31-01-2017.
  */
 
-import android.net.Uri;
 import android.os.Build;
 import cm.aptoide.pt.spotandshareandroid.analytics.SpotAndShareAnalyticsInterface;
 import java.util.ArrayList;
+import rx.Subscription;
 
 /**
  * This class will store the logic of the HighwayActivity
@@ -18,39 +18,38 @@ public class HighwayPresenter implements Presenter {
   private final DeactivateHotspotTask deactivateHotspotTask;
   private final ConnectionManager connectionManager;
   private final PermissionManager permissionManager;
-  private String deviceName;
-  private boolean mobileData;
-  private boolean mobileDataDialog;
-  private boolean outsideShare;
-  private boolean joinGroupFlag;//to allow only 1 press of the radar elements
+  private GroupNameProvider groupNameProvider;
   private SpotAndShareAnalyticsInterface analytics;
   private GroupManager groupManager;
-  private OutsideShareManager outsideShareManager;
-  private boolean isOutsideShare;
   private boolean permissionRequested;
+  private Subscription subscription;
+  private String autoShareAppName;
+  private String autoShareFilepath;
 
-  private SpotAndShareAnalyticsInterface spotAndShareAnalyticsInterface;
-
-  public HighwayPresenter(HighwayView view, String deviceName,
+  public HighwayPresenter(HighwayView view, GroupNameProvider groupNameProvider,
       DeactivateHotspotTask deactivateHotspotTask, ConnectionManager connectionManager,
       SpotAndShareAnalyticsInterface analytics, GroupManager groupManager,
       PermissionManager permissionManager) {
     this.view = view;
-    this.deviceName = deviceName;
+    this.groupNameProvider = groupNameProvider;
     this.deactivateHotspotTask = deactivateHotspotTask;
     this.connectionManager = connectionManager;
     this.analytics = analytics;
     this.groupManager = groupManager;
     this.permissionManager = permissionManager;
-    this.spotAndShareAnalyticsInterface = spotAndShareAnalyticsInterface;
+  }
+
+  public HighwayPresenter(HighwayView view, GroupNameProvider groupNameProvider,
+      DeactivateHotspotTask deactivateHotspotTask, ConnectionManager connectionManager,
+      SpotAndShareAnalyticsInterface analytics, GroupManager groupManager,
+      PermissionManager permissionManager, String autoShareAppName, String autoShareFilepath) {
+    this(view, groupNameProvider, deactivateHotspotTask, connectionManager, analytics, groupManager,
+        permissionManager);
+    this.autoShareAppName = autoShareAppName;
+    this.autoShareFilepath = autoShareFilepath;
   }
 
   @Override public void onCreate() {
-
-    deviceName = Utils.getDeviceName();
-    mobileDataDialog = false;
-    outsideShare = false;
-    joinGroupFlag = false;
 
     permissionManager.registerListener(new PermissionListener() {
       @Override public void onPermissionGranted() {
@@ -70,25 +69,6 @@ public class HighwayPresenter implements Presenter {
     }
   }
 
-  private void deactivateHotspot() {
-    deactivateHotspotTask.setListener(new SimpleListener() {
-      @Override public void onEvent() {
-        connectionManager.start(new ConnectionManager.WifiStateListener() {
-          @Override public void onStateChanged(boolean enabled) {
-            if (enabled) {
-              connectionManager.cleanNetworks();
-              view.showConnections();
-              view.setUpListeners();
-              view.enableButtons(true);
-            }
-          }
-        });
-        connectionManager.enableWifi(true);
-      }
-    });
-    deactivateHotspotTask.execute();
-  }
-
   @Override public void onResume() {
     if (!permissionManager.checkPermissions() && !permissionRequested) {
       permissionManager.requestPermissions();
@@ -101,10 +81,14 @@ public class HighwayPresenter implements Presenter {
   }
 
   @Override public void onDestroy() {
+    if (subscription != null) {
+      subscription.unsubscribe();
+    }
     deactivateHotspotTask.cancel(false);
     connectionManager.stop();
     groupManager.stop();
     permissionManager.removeListener();
+    autoShareFilepath = null;
   }
 
   @Override public void onStop() {
@@ -113,6 +97,32 @@ public class HighwayPresenter implements Presenter {
 
   @Override public void onStart() {
 
+  }
+
+  private void deactivateHotspot() {
+    deactivateHotspotTask.setListener(new SimpleListener() {
+      @Override public void onEvent() {
+        connectionManager.start(new ConnectionManager.WifiStateListener() {
+          @Override public void onStateChanged(boolean enabled) {
+            if (enabled) {
+
+              if (autoShareFilepath != null) {
+                joinShareFromAppView(autoShareAppName, autoShareFilepath);
+                autoShareAppName = null;
+                autoShareFilepath = null;
+              } else {
+                connectionManager.cleanNetworks();
+                view.showConnections();
+                view.setUpListeners();
+                view.enableButtons(true);
+              }
+            }
+          }
+        });
+        connectionManager.enableWifi(true);
+      }
+    });
+    deactivateHotspotTask.execute();
   }
 
   public void onActivityResult(Group group) {
@@ -132,12 +142,7 @@ public class HighwayPresenter implements Presenter {
               analytics.joinGroupSuccess();
               view.enableButtons(true);
               String ipAddress = connectionManager.getIPAddress();
-              if (outsideShareManager != null) {
-                ArrayList<String> pathsFromOutside = outsideShareManager.getPathsFromOutsideShare();
-                view.openChatClient(ipAddress, fullGroupName, pathsFromOutside);
-              } else {
-                view.openChatClient(ipAddress, fullGroupName, null);
-              }
+              view.openChatClient(ipAddress, fullGroupName, null);
             } else {
               view.hideButtonsProgressBar();
               view.enableButtons(true);
@@ -158,27 +163,23 @@ public class HighwayPresenter implements Presenter {
   }
 
   public void clickCreateGroup() {
-    String randomAlphaNum = connectionManager.generateRandomAlphanumericString(5);
     view.enableButtons(false);
-    groupManager.createGroup(randomAlphaNum, deviceName, new GroupManager.CreateGroupListener() {
-      @Override public void onSuccess() {
-        view.hideButtonsProgressBar();
-        view.enableButtons(true);
-        analytics.createGroupSuccess();
-        if (outsideShareManager != null) {
-          ArrayList<String> pathsFromOutside = outsideShareManager.getPathsFromOutsideShare();
-          view.openChatHotspot(pathsFromOutside, deviceName);
-        } else {
-          view.openChatHotspot(null, deviceName);
+    subscription = groupNameProvider.getName().subscribe(deviceName -> {
+      groupManager.createGroup(deviceName, new GroupManager.CreateGroupListener() {
+        @Override public void onSuccess() {
+          view.hideButtonsProgressBar();
+          view.enableButtons(true);
+          analytics.createGroupSuccess();
+          view.openChatHotspot(null, deviceName);//null is due to the outsidesharemanager.
         }
-      }
 
-      @Override public void onError(int result) {
-        view.showCreateGroupResult(result);
-        view.hideButtonsProgressBar();
-        view.enableButtons(true);
-        view.hideSearchGroupsTextview(false);
-      }
+        @Override public void onError(int result) {
+          view.showCreateGroupResult(result);
+          view.hideButtonsProgressBar();
+          view.enableButtons(true);
+          view.hideSearchGroupsTextview(false);
+        }
+      });
     });
   }
 
@@ -188,7 +189,7 @@ public class HighwayPresenter implements Presenter {
         view.showInactivityToast();
       }
     }, new ConnectionManager.ClientsConnectedListener() {
-      @Override public void onNewClientsConnected(ArrayList<String> clients) {
+      @Override public void onNewClientsConnected(ArrayList<Group> clients) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
           view.refreshRadarLowerVersions(clients);
         } else {
@@ -206,20 +207,6 @@ public class HighwayPresenter implements Presenter {
     analytics.createGroupFailed();
   }
 
-  public void getAppFilePathFromOutside(Uri uri) {
-    isOutsideShare = true;
-    outsideShareManager.getApp(uri);
-  }
-
-  public void getMultipleAppFilePathsFromOutside(ArrayList<Uri> list) {
-    isOutsideShare = true;
-    outsideShareManager.getMultipleApps(list);
-  }
-
-  public void setOutsideShareManager(OutsideShareManager outsideShareManager) {
-    this.outsideShareManager = outsideShareManager;
-  }
-
   public void recoverNetworkState() {
     connectionManager.recoverNetworkState();
     view.showRecoveringWifiStateToast();
@@ -227,5 +214,23 @@ public class HighwayPresenter implements Presenter {
 
   public void forgetAPTXVNetwork() {
     connectionManager.cleanNetworks();
+  }
+
+  public void joinShareFromAppView(String appName, String appFilepath) {
+    //subscription = groupNameProvider.getName().subscribe(deviceName -> {
+    groupManager.createGroup(appName, new GroupManager.CreateGroupListener() {
+        @Override public void onSuccess() {
+          analytics.createGroupSuccess();
+          view.openChatFromAppViewShare(appName, appFilepath);
+        }
+
+        @Override public void onError(int result) {
+          view.showCreateGroupResult(result);
+          view.hideButtonsProgressBar();
+          view.enableButtons(true);
+          view.hideSearchGroupsTextview(false);
+        }
+      });
+    //});
   }
 }

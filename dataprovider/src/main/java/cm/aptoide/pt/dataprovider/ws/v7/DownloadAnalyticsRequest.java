@@ -2,9 +2,8 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -18,18 +17,19 @@ public class DownloadAnalyticsRequest extends V7<BaseV7Response, DownloadInstall
   private String context;
 
   protected DownloadAnalyticsRequest(DownloadInstallAnalyticsBaseBody body, String action,
-      String name, String context, BodyInterceptor bodyInterceptor) {
-    super(body, BASE_HOST,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter(), bodyInterceptor);
+      String name, String context, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
     this.action = action;
     this.name = name;
     this.context = context;
   }
 
   public static DownloadAnalyticsRequest of(DownloadInstallAnalyticsBaseBody body, String action,
-      String name, String context, BodyInterceptor bodyInterceptor) {
-    return new DownloadAnalyticsRequest(body, action, name, context, bodyInterceptor);
+      String name, String context, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+    return new DownloadAnalyticsRequest(body, action, name, context, bodyInterceptor, httpClient,
+        converterFactory);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

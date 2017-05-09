@@ -6,8 +6,7 @@
 package cm.aptoide.accountmanager;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.net.SocketTimeoutException;
 import rx.Completable;
@@ -36,14 +35,11 @@ public class AptoideAccountManager {
 
   public Observable<Account> accountStatus() {
     return Observable.merge(accountRelay,
-        getAccountAsync().onErrorReturn(throwable -> {
-          CrashReport.getInstance().log(throwable);
-          return createLocalAccount();
-        }).toObservable());
+        dataPersist.getAccount().onErrorReturn(throwable -> createLocalAccount()).toObservable());
   }
 
-  public Single<Account> getAccountAsync() {
-    return dataPersist.getAccount();
+  private Single<Account> singleAccountStatus() {
+    return accountStatus().first().toSingle();
   }
 
   private Account createLocalAccount() {
@@ -61,16 +57,16 @@ public class AptoideAccountManager {
   }
 
   /**
-   * Use {@link #getAccountAsync()} method instead.
+   * Use {@link #accountStatus()} method instead.
    *
    * @return user Account
    */
   @Deprecated public Account getAccount() {
-    return getAccountAsync().onErrorReturn(throwable -> null).toBlocking().value();
+    return singleAccountStatus().onErrorReturn(throwable -> null).toBlocking().value();
   }
 
   public Completable logout() {
-    return getAccountAsync().flatMapCompletable(
+    return singleAccountStatus().flatMapCompletable(
         account -> account.logout().andThen(removeAccount()));
   }
 
@@ -79,7 +75,7 @@ public class AptoideAccountManager {
   }
 
   public Completable refreshToken() {
-    return getAccountAsync().flatMapCompletable(
+    return singleAccountStatus().flatMapCompletable(
         account -> account.refreshToken().andThen(saveAccount(account)));
   }
 
@@ -111,7 +107,7 @@ public class AptoideAccountManager {
 
   private Completable syncAccount(String accessToken, String refreshToken, String password,
       Account.Type type) {
-    return accountManagerService.getAccount(accessToken, refreshToken, password, type.name())
+    return accountManagerService.getAccount(accessToken, refreshToken, password, type.name(), this)
         .flatMapCompletable(account -> saveAccount(account));
   }
 
@@ -142,7 +138,7 @@ public class AptoideAccountManager {
    */
   @Deprecated public boolean isAccountMature() {
     final Account account = getAccount();
-    return account == null ? false : account.isAdultContentEnabled();
+    return account != null && account.isAdultContentEnabled();
   }
 
   /**
@@ -152,7 +148,7 @@ public class AptoideAccountManager {
    */
   @Deprecated public boolean isAccountAccessConfirmed() {
     final Account account = getAccount();
-    return account == null ? false : account.isAccessConfirmed();
+    return account != null && account.isAccessConfirmed();
   }
 
   /**
@@ -165,13 +161,13 @@ public class AptoideAccountManager {
   }
 
   public Completable syncCurrentAccount() {
-    return getAccountAsync().flatMapCompletable(
+    return singleAccountStatus().flatMapCompletable(
         account -> syncAccount(account.getAccessToken(), account.getRefreshToken(),
             account.getPassword(), account.getType()));
   }
 
   public Completable updateAccount(boolean adultContentEnabled) {
-    return getAccountAsync().flatMapCompletable(
+    return singleAccountStatus().flatMapCompletable(
         account -> accountManagerService.updateAccount(adultContentEnabled,
             account.getAccessToken())
             .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
@@ -179,14 +175,14 @@ public class AptoideAccountManager {
   }
 
   public Completable updateAccount(Account.Access access) {
-    return getAccountAsync().flatMapCompletable(
+    return singleAccountStatus().flatMapCompletable(
         account -> accountManagerService.updateAccount(access.name(), this)
             .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
                 account.getPassword(), account.getType())));
   }
 
   public Completable updateAccount(String nickname, String avatarPath) {
-    return getAccountAsync().flatMapCompletable(account -> {
+    return singleAccountStatus().flatMapCompletable(account -> {
       if (TextUtils.isEmpty(nickname) && TextUtils.isEmpty(avatarPath)) {
         return Completable.error(
             new AccountValidationException(AccountValidationException.EMPTY_NAME_AND_AVATAR));
@@ -217,12 +213,6 @@ public class AptoideAccountManager {
     private PublishRelay<Account> accountRelay;
     private AccountAnalytics accountAnalytics;
     private AccountDataPersist accountDataPersist;
-    private AccountFactory accountFactory;
-
-    private AptoideClientUUID aptoideClientUUID;
-    private BasebBodyInterceptorFactory baseBodyInterceptorFactory;
-    private ExternalAccountFactory externalAccountFactory;
-    private AccountService accountService;
 
     public Builder setCredentialsValidator(CredentialsValidator credentialsValidator) {
       this.credentialsValidator = credentialsValidator;
@@ -249,32 +239,6 @@ public class AptoideAccountManager {
       return this;
     }
 
-    public Builder setAptoideClientUUID(AptoideClientUUID aptoideClientUUID) {
-      this.aptoideClientUUID = aptoideClientUUID;
-      return this;
-    }
-
-    public Builder setBaseBodyInterceptorFactory(
-        BasebBodyInterceptorFactory baseBodyInterceptorFactory) {
-      this.baseBodyInterceptorFactory = baseBodyInterceptorFactory;
-      return this;
-    }
-
-    public Builder setExternalAccountFactory(ExternalAccountFactory externalAccountFactory) {
-      this.externalAccountFactory = externalAccountFactory;
-      return this;
-    }
-
-    public Builder setAccountService(AccountService accountService) {
-      this.accountService = accountService;
-      return this;
-    }
-
-    public Builder setAccountFactory(AccountFactory accountFactory) {
-      this.accountFactory = accountFactory;
-      return this;
-    }
-
     public AptoideAccountManager build() {
 
       if (accountAnalytics == null) {
@@ -286,35 +250,7 @@ public class AptoideAccountManager {
       }
 
       if (accountManagerService == null) {
-
-        if (aptoideClientUUID == null) {
-          throw new IllegalArgumentException(
-              "AptoideClientUUID is mandatory if AccountManagerService is not provided.");
-        }
-
-        if (baseBodyInterceptorFactory == null) {
-          throw new IllegalArgumentException("BasebBodyInterceptorFactory is mandatory if "
-              + "AccountManagerService is not provided.");
-        }
-
-        if (accountFactory == null) {
-
-          if (externalAccountFactory == null) {
-            throw new IllegalArgumentException(
-                "ExternalAccountFactory is mandatory if AccountFactory is not provided.");
-          }
-
-          if (accountService == null) {
-            this.accountService = new AccountService(aptoideClientUUID);
-          }
-
-          this.accountFactory =
-              new AccountFactory(aptoideClientUUID, externalAccountFactory, accountService);
-        }
-
-        accountManagerService =
-            new AccountManagerService(aptoideClientUUID, baseBodyInterceptorFactory,
-                accountFactory);
+        throw new IllegalArgumentException("AccountManagerService is mandatory.");
       }
 
       if (credentialsValidator == null) {

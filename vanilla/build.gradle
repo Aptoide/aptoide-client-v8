@@ -12,16 +12,13 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'android-command'
-apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'realm-android'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.getkeepsafe.dexcount'
 
 retrolambda {
   jvmArgs '-noverify'
-  //defaultMethods true
 }
-
 
 android {
 
@@ -33,20 +30,23 @@ android {
     applicationId "${APPLICATION_ID}"
     minSdkVersion project.MINIMUM_SDK_VERSION
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
-    testProguardFile 'proguard-rules-test.pro'
     manifestPlaceholders = [toolboxProviderAuthority        : "cm.aptoide.pt.StubProvider",
                             suggestionProviderAuthority     : "cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider",
                             storeSuggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.StoreSearchSuggestionProvider",
                             currentApplicationId            : "cm.aptoide.pt",
                             fabricApiKey                    : project.FABRIC_API_KEY]
 
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     multiDexEnabled true
     resValue "string", "authenticator_account_type", APPLICATION_ID
     versionCode project.PROD_VERSION_CODE.toInteger()
-    versionName "8.2.0.4"
+    versionName "8.2.1.0"
     resValue "string", "content_authority", APPLICATION_ID + ".StubProvider"
     buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider\""
+    // test default configs
+    testProguardFile 'proguard-rules-test.pro'
+    //testInstrumentationRunner "cm.aptoide.pt.MultidexAndroidJunitRunner"
+    //testInstrumentationRunner "com.android.test.runner.MultiDexTestRunner"
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 
   lintOptions {
@@ -69,7 +69,7 @@ android {
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
       applicationIdSuffix ".internal"
 
-      versionName "8.2.0." + getDate()
+      versionName "8.2.1." + getDate()
       versionCode project.INTERNAL_VERSION_CODE.toInteger()
 
       resValue "string", "authenticator_account_type", APPLICATION_ID + ".internal"
@@ -88,7 +88,7 @@ android {
       applicationIdSuffix ".dev"
 
 
-      versionName "8.2.0." + getDate()
+      versionName "8.2.1." + getDate()
       versionCode project.DEV_VERSION_CODE.toInteger()
 
       resValue "string", "authenticator_account_type", APPLICATION_ID + ".dev"
@@ -101,8 +101,7 @@ android {
                               currentApplicationId            : "cm.aptoide.pt.dev"]
     }
 
-    prod {
-    }
+    prod {}
 
     leak {}
   }
@@ -122,9 +121,9 @@ android {
       buildConfigField "boolean", "CRASH_REPORTS_DISABLED", "true"
       ext.enableCrashlytics = false
       manifestPlaceholders = [LOCALYTICS_APP_KEY: project.LOCALYTICS_DEBUG_KEY]
-      zipAlignEnabled true
-      minifyEnabled true
-      shrinkResources true
+      zipAlignEnabled false
+      minifyEnabled false
+      shrinkResources false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
     }
   }
@@ -135,15 +134,15 @@ android {
   }
 
   packagingOptions {
-    pickFirst 'META-INF/services/javax.annotation.processing.Processor'
-    pickFirst 'META-INF/DEPENDENCIES.txt'
-    pickFirst 'META-INF/DEPENDENCIES'
-    pickFirst 'META-INF/LICENSE.txt'
-    pickFirst 'META-INF/LICENSE'
-    pickFirst 'META-INF/NOTICE.txt'
-    pickFirst 'META-INF/NOTICE'
-    pickFirst 'META-INF/MANIFEST.MF'
-    pickFirst 'META-INF/LGPL2.1'
+    exclude 'META-INF/services/javax.annotation.processing.Processor'
+    exclude 'META-INF/DEPENDENCIES.txt'
+    exclude 'META-INF/DEPENDENCIES'
+    exclude 'META-INF/LICENSE.txt'
+    exclude 'META-INF/LICENSE'
+    exclude 'META-INF/NOTICE.txt'
+    exclude 'META-INF/NOTICE'
+    exclude 'META-INF/MANIFEST.MF'
+    exclude 'META-INF/LGPL2.1'
   }
 
   testOptions {
@@ -159,7 +158,15 @@ android {
       def versionName = variant.versionName
       def versionCode = variant.versionCode
 
-      def newApkName = project + SEP + flavor + SEP + buildType + SEP + versionName + SEP + versionCode + ".apk"
+      def newApkName = project + SEP +
+          flavor +
+          SEP +
+          buildType +
+          SEP +
+          versionName +
+          SEP +
+          versionCode +
+          ".apk"
 
       output.outputFile = new File(output.outputFile.parent, newApkName)
     }
@@ -193,7 +200,12 @@ dependencies {
   }
   androidTestCompile "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
 
-  androidTestCompile "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  //androidTestCompile "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
+
+  androidTestCompile("com.android.support:multidex:${MULTIDEX_VERSION}") {
+    exclude group: "com.android.support", module: "support-annotations"
+  }
 
   compile("com.android.support:multidex:${MULTIDEX_VERSION}") {
     exclude group: "com.android.support", module: "support-annotations"

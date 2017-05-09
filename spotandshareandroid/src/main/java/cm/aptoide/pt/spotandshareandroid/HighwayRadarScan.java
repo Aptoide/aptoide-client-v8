@@ -54,6 +54,18 @@ public class HighwayRadarScan extends View {
     init(null, context);
   }
 
+  public HighwayRadarScan(Context context, AttributeSet attributeSet) {
+    super(context, attributeSet);
+
+    init(attributeSet, context);
+  }
+
+  public HighwayRadarScan(Context context, AttributeSet attributeSet, int defStyleAttr) {
+    super(context, attributeSet, defStyleAttr);
+
+    init(attributeSet, context);
+  }
+
   private void init(AttributeSet attributeSet, Context context) {
 
     circleColor = Color.parseColor("#cecece");
@@ -98,18 +110,6 @@ public class HighwayRadarScan extends View {
 
     DisplayMetrics metrics = context.getResources().getDisplayMetrics();
     return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
-  }
-
-  public HighwayRadarScan(Context context, AttributeSet attributeSet) {
-    super(context, attributeSet);
-
-    init(attributeSet, context);
-  }
-
-  public HighwayRadarScan(Context context, AttributeSet attributeSet, int defStyleAttr) {
-    super(context, attributeSet, defStyleAttr);
-
-    init(attributeSet, context);
   }
 
   @Override

@@ -154,8 +154,7 @@ public class ApplicationsManager {
     return obbsFilePath;
   }
 
-  public HighwayTransferRecordItem readApkArchive(String appName, String filePath,
-      boolean needReSend) {
+  public HighwayTransferRecordItem readApkArchive(String appName, String filePath) {
 
     PackageManager packageManager = context.getPackageManager();
     PackageInfo packageInfo = packageManager.getPackageArchiveInfo(filePath, 0);
@@ -174,10 +173,27 @@ public class ApplicationsManager {
     } else {
       System.out.println("Inside the error part of the receiving app bigger version");
       HighwayTransferRecordItem tmp = new HighwayTransferRecordItem(
-          context.getResources().getDrawable(R.drawable.sym_def_app_icon), appName,
-          "ErrorPackName", "Could not read the original filepath", true, "No version available");
+          context.getResources().getDrawable(R.drawable.sym_def_app_icon), appName, "ErrorPackName",
+          "Could not read the original filepath", true, "No version available");
       tmp.setFromOutside("inside");
       return tmp;
+    }
+  }
+
+  public App readApkArchive(String filepath) {
+    PackageManager packageManager = context.getPackageManager();
+    PackageInfo packageInfo = packageManager.getPackageArchiveInfo(filepath, 0);
+    if (packageInfo != null) {
+      packageInfo.applicationInfo.sourceDir = filepath;
+      packageInfo.applicationInfo.publicSourceDir = filepath;
+      Drawable icon = packageInfo.applicationInfo.loadIcon(packageManager);
+      String name = (String) packageInfo.applicationInfo.loadLabel(packageManager);
+      String packageName = packageInfo.applicationInfo.packageName;
+      App app = new App(icon, name, packageName, filepath,
+          "inside");//// TODO: 17-04-2017 filipe finish removing outside share code
+      return app;
+    } else {
+      throw new IllegalArgumentException();
     }
   }
 
@@ -217,5 +233,4 @@ public class ApplicationsManager {
     } catch (IllegalArgumentException e) {
     }
   }
-
 }

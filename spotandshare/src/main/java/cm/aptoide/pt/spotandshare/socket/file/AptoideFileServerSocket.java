@@ -27,13 +27,15 @@ public class AptoideFileServerSocket<T> extends AptoideServerSocket {
   private FileServerLifecycle<T> fileServerLifecycle;
   private ProgressAccumulator progressAccumulator;
 
-  public AptoideFileServerSocket(int port, List<FileInfo> fileInfos, int timeout) {
-    super(port, timeout);
+  public AptoideFileServerSocket(int port, List<FileInfo> fileInfos, int serverSocketTimeout,
+      int timeout) {
+    super(port, serverSocketTimeout, timeout);
     this.fileInfos = fileInfos;
   }
 
-  public AptoideFileServerSocket(int bufferSize, int port, List<FileInfo> fileInfos, int timeout) {
-    super(bufferSize, port, timeout);
+  public AptoideFileServerSocket(int bufferSize, int port, List<FileInfo> fileInfos,
+      int serverSocketTimeout, int timeout) {
+    super(bufferSize, port, serverSocketTimeout, timeout);
     this.fileInfos = fileInfos;
   }
 
@@ -51,7 +53,6 @@ public class AptoideFileServerSocket<T> extends AptoideServerSocket {
     } else {
       progressAccumulator.accumulate(computeTotalSize(fileInfos));
     }
-
 
     InputStream in = null;
 

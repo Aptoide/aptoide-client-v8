@@ -1,8 +1,11 @@
 package cm.aptoide.pt.v8engine.repository.request;
 
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
-import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 
 /**
  * Created by neuro on 03-01-2017.
@@ -10,16 +13,21 @@ import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 class GetStoreWidgetsRequestFactory {
 
   private final StoreCredentialsProvider storeCredentialsProvider;
-  private final BodyInterceptor bodyInterceptor;
+  private final BodyInterceptor<BaseBody> bodyInterceptor;
+  private final OkHttpClient httpClient;
+  private final Converter.Factory converterFactory;
 
   public GetStoreWidgetsRequestFactory(StoreCredentialsProvider storeCredentialsProvider,
-      BodyInterceptor bodyInterceptor) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.bodyInterceptor = bodyInterceptor;
+    this.httpClient = httpClient;
+    this.converterFactory = converterFactory;
   }
 
   public GetStoreWidgetsRequest newStoreWidgets(String url) {
     return GetStoreWidgetsRequest.ofAction(url, storeCredentialsProvider.fromUrl(url),
-        bodyInterceptor);
+        bodyInterceptor, httpClient, converterFactory);
   }
 }

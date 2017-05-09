@@ -5,10 +5,10 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.PaymentAuthorizationsResponse;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -16,16 +16,18 @@ import rx.Observable;
  */
 public class GetPaymentAuthorizationsRequest extends V3<PaymentAuthorizationsResponse> {
 
-  private GetPaymentAuthorizationsRequest(BaseBody baseBody) {
-    super(baseBody,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), false),
-        WebService.getDefaultConverter());
+  private GetPaymentAuthorizationsRequest(BaseBody baseBody,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
+    super(baseBody, httpClient, converterFactory, bodyInterceptor);
   }
 
-  public static GetPaymentAuthorizationsRequest of(String accessToken) {
+  public static GetPaymentAuthorizationsRequest of(String accessToken,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     BaseBody args = new BaseBody();
     args.put("access_token", accessToken);
-    return new GetPaymentAuthorizationsRequest(args);
+    return new GetPaymentAuthorizationsRequest(args, bodyInterceptor, httpClient, converterFactory);
   }
 
   @Override

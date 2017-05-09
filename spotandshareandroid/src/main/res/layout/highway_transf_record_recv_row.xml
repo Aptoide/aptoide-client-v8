@@ -145,38 +145,35 @@
         >
 
       <Button
-          android:id="@+id/transfRecRowInstall"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignParentEnd="true"
-          android:layout_alignParentRight="true"
-          android:background="@drawable/roundedcornerbuttons_blue"
+          android:id="@+id/transfRecRowDelete"
+          android:layout_width="110dp"
+          android:layout_height="48dp"
+          android:layout_marginEnd="12dp"
+          android:layout_marginRight="12dp"
+          android:layout_toLeftOf="@+id/transfRecRowInstall"
+          android:layout_toStartOf="@+id/transfRecRowInstall"
+          android:background="@drawable/roundedcornerbuttons_white"
           android:clickable="true"
-          android:paddingBottom="5dp"
-          android:paddingLeft="20dp"
-          android:paddingRight="20dp"
-          android:paddingTop="5dp"
-          android:text="@string/upperInstall"
-          android:textColor="@color/white"
+          android:ellipsize="end"
+          android:padding="5dp"
+          android:text="@string/upperDelete"
+          android:textColor="#e17117"
+          android:textSize="14sp"
           />
 
       <Button
-          android:id="@+id/transfRecRowDelete"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginEnd="12dp"
-          android:layout_marginRight="12dp"
-          android:layout_toLeftOf="@id/transfRecRowInstall"
-          android:layout_toStartOf="@id/transfRecRowInstall"
-          android:background="@drawable/roundedcornerbuttons_white"
+          android:id="@+id/transfRecRowInstall"
+          android:layout_width="110dp"
+          android:layout_height="48dp"
+          android:layout_alignParentEnd="true"
+          android:background="@drawable/roundedcornerbuttons_blue"
           android:clickable="true"
-          android:paddingBottom="5dp"
-          android:paddingLeft="20dp"
-          android:paddingRight="20dp"
-          android:paddingTop="5dp"
-          android:text="@string/upperDelete"
-          android:textColor="#e17117"
+          android:padding="5dp"
+          android:text="@string/upperInstall"
+          android:textColor="@color/white"
+          android:textSize="14sp"
           />
+
 
     </RelativeLayout>
 

@@ -80,7 +80,6 @@ public interface AptoidePreferencesConfiguration {
   boolean isCreateStoreAndSetUserPrivacyAvailable();
 
   enum SocialLogin {
-    FACEBOOK,
-    GOOGLE
+    FACEBOOK, GOOGLE
   }
 }

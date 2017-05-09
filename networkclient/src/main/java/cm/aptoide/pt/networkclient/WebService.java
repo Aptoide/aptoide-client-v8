@@ -17,8 +17,6 @@ import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-import lombok.Getter;
-import lombok.Setter;
 import okhttp3.OkHttpClient;
 import retrofit2.CallAdapter;
 import retrofit2.Converter;
@@ -36,6 +34,9 @@ import rx.schedulers.Schedulers;
  * @param <U> Returning type of the request.
  */
 public abstract class WebService<T, U> {
+
+  public static final String BYPASS_HEADER_KEY = "X-Bypass-Cache";
+  public static final String BYPASS_HEADER_VALUE = "true";
 
   private static Converter.Factory defaultConverterFactory;
 
@@ -55,7 +56,7 @@ public abstract class WebService<T, U> {
     this.baseHost = baseHost;
   }
 
-  protected static Converter.Factory getDefaultConverter() {
+  public static Converter.Factory getDefaultConverter() {
     if (defaultConverterFactory == null) {
       ObjectMapper objectMapper = new ObjectMapper();
       objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

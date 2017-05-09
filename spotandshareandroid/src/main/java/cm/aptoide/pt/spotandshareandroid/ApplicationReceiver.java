@@ -23,6 +23,7 @@ public class ApplicationReceiver {
   private BroadcastReceiver receive;
   private IntentFilter receiveFilter;
   private ReceiveAppListener listener;
+  private String autoShareFilePath;
 
   public ApplicationReceiver(Context context, boolean isHotspot, int port, String targetIPAddress,
       String nickname) {
@@ -35,6 +36,12 @@ public class ApplicationReceiver {
     receiveFilter.addAction("RECEIVEAPP");
     receiveFilter.addAction("ERRORRECEIVING");
     receiveFilter.addAction("SERVER_LEFT");
+  }
+
+  public ApplicationReceiver(Context context, boolean isHotspot, int port, String targetIPAddress,
+      String nickname, String autoShareFilePath) {
+    this(context, isHotspot, port, targetIPAddress, nickname);
+    this.autoShareFilePath = autoShareFilePath;
   }
 
   public void startListening(ReceiveAppListener receiveAppListener) {
@@ -69,7 +76,6 @@ public class ApplicationReceiver {
     if (isHotspot) {
       receiveIntent = new Intent(context, HighwayServerService.class);
       System.out.println("Will start a server service");
-      DataHolder.getInstance().createConnectedClientsList();
     } else {
 
       System.out.println("Will start a client service");
@@ -84,6 +90,11 @@ public class ApplicationReceiver {
     receiveIntent.putExtra("isHotspot", isHotspot);
     receiveIntent.putExtra("isOutsideShare", outsideShare);
     receiveIntent.setAction("RECEIVE");
+
+    if (autoShareFilePath != null) {
+      receiveIntent.putExtra("autoShareFilePath", autoShareFilePath);
+    }
+
     return receiveIntent;
   }
 
