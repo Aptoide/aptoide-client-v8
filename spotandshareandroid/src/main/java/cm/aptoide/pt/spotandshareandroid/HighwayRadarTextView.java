@@ -20,7 +20,6 @@ import java.util.Random;
 public class HighwayRadarTextView extends FrameLayout
     implements ViewTreeObserver.OnGlobalLayoutListener {
 
-  private static final int MAX = 5;
   private static final int idX = 0;
   private static final int idY = 1;
   private static final int idTxtLength = 2;
