@@ -139,10 +139,6 @@ public class CreateUserFragment extends PictureLoaderFragment {
         }, err -> CrashReport.getInstance().log(err));
   }
 
-  @Override protected boolean displayHomeUpAsEnabled() {
-    return true;
-  }
-
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
     super.setupToolbarDetails(toolbar);
     toolbar.setTitle(R.string.create_user_title);

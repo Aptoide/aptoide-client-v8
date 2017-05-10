@@ -183,10 +183,6 @@ public class CreateStoreFragment extends PictureLoaderFragment {
     setupListeners();
   }
 
-  @Override protected boolean displayHomeUpAsEnabled() {
-    return true;
-  }
-
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
     super.setupToolbarDetails(toolbar);
     toolbar.setTitle(getActivityTitle());
@@ -208,7 +204,7 @@ public class CreateStoreFragment extends PictureLoaderFragment {
   }
 
   private String getActivityTitle() {
-    if (!STORE_FROM_DEFAULT_VALUE.equalsIgnoreCase(storeModel.getStoreFrom())) {
+    if (isCreateStore()) {
       return getString(R.string.create_store_title);
     } else {
       return getString(R.string.edit_store_title);
@@ -224,7 +220,7 @@ public class CreateStoreFragment extends PictureLoaderFragment {
    * that's being edited
    */
   private void setupViewsDefaultValues(View view) {
-    if (!STORE_FROM_DEFAULT_VALUE.equalsIgnoreCase(storeModel.getStoreFrom())) {
+    if (isCreateStore()) {
       String appName = getString(R.string.app_name);
       storeHeader.setText(
           AptoideUtils.StringU.getFormattedString(R.string.create_store_header, appName));
@@ -240,15 +236,19 @@ public class CreateStoreFragment extends PictureLoaderFragment {
       if (storeModel.getStoreRemoteUrl() != null) {
         loadImage(storeModel.getStoreRemoteUrl());
       }
-
-      String storeThemeName = storeModel.getStoreThemeName();
-      StoreThemeSelector.Theme theme = StoreThemeSelector.getThemeFromName(storeThemeName);
-      final ImageView tick = theme.getTick(view);
-      storeThemeSelector.addTickTo(tick);
-
       createStoreBtn.setText(R.string.save_edit_store);
       skipBtn.setText(R.string.cancel);
     }
+
+    // set tick to the default or user picked theme
+    String storeThemeName = storeModel.getStoreThemeName();
+    StoreThemeSelector.Theme theme = StoreThemeSelector.getThemeFromName(storeThemeName);
+    final ImageView tick = theme.getTick(view);
+    storeThemeSelector.addTickTo(tick);
+  }
+
+  private boolean isCreateStore() {
+    return !STORE_FROM_DEFAULT_VALUE.equalsIgnoreCase(storeModel.getStoreFrom());
   }
 
   private Completable sendSkipAnalytics() {

@@ -25,7 +25,46 @@
       android:layout_height="match_parent"
       >
 
+    <LinearLayout
+        android:id="@+id/bottom_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_default_height"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/padding_medium_small"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/padding_small"
+        android:paddingLeft="@dimen/padding_small"
+        android:paddingRight="@dimen/padding_small"
+        android:paddingStart="@dimen/padding_small"
+        >
+
+      <Button
+          android:id="@+id/logged_in_more_info_button"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_marginEnd="23dp"
+          android:layout_marginRight="23dp"
+          android:layout_weight="1"
+          android:gravity="center"
+          android:text="@string/more_info"
+          style="?attr/customButtonWhite"
+          />
+
+      <Button
+          android:id="@+id/logged_in_continue"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:text="@string/continue_option"
+          style="?attr/customButton"
+          />
+
+    </LinearLayout>
+
     <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_above="@id/bottom_buttons"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
@@ -73,41 +112,5 @@
             />
       </LinearLayout>
     </ScrollView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/button_default_height"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/padding_medium_small"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingEnd="@dimen/padding_small"
-        android:paddingLeft="@dimen/padding_small"
-        android:paddingRight="@dimen/padding_small"
-        android:paddingStart="@dimen/padding_small"
-        >
-
-      <Button
-          android:id="@+id/logged_in_more_info_button"
-          android:layout_width="0dp"
-          android:layout_height="match_parent"
-          android:layout_marginEnd="23dp"
-          android:layout_marginRight="23dp"
-          android:layout_weight="1"
-          android:gravity="center"
-          android:text="@string/more_info"
-          style="?attr/customButtonWhite"
-          />
-
-      <Button
-          android:id="@+id/logged_in_continue"
-          android:layout_width="0dp"
-          android:layout_height="match_parent"
-          android:layout_weight="1"
-          android:text="@string/continue_option"
-          style="?attr/customButton"
-          />
-
-    </LinearLayout>
   </RelativeLayout>
 </LinearLayout>

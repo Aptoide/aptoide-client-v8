@@ -21,7 +21,6 @@ import com.jakewharton.rxbinding.view.RxView;
 import rx.Completable;
 
 // TODO
-// chain Rx in method calls
 // apply MVP
 // save / restore data in input fields
 public class ProfileStepOneFragment extends BaseToolbarFragment {
