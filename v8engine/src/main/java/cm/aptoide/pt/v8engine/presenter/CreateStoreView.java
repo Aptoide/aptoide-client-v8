@@ -3,9 +3,9 @@ package cm.aptoide.pt.v8engine.presenter;
 import rx.Observable;
 
 public interface CreateStoreView extends View {
-  Observable<Void> selectStoreImage();
+  Observable<Void> selectStoreImageClick();
 
-  Observable<Void> createStore();
+  Observable<Void> createStoreClick();
 
-  Observable<Void> skip();
+  Observable<Void> skipToHomeClick();
 }

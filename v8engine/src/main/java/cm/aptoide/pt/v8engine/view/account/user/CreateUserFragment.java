@@ -126,7 +126,7 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
   @Override public void setupViews() {
     super.setupViews();
 
-    selectUserImage().compose(bindUntilEvent(LifecycleEvent.DESTROY))
+    selectUserImageClick().compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(__ -> chooseAvatarSource());
 
     final Completable dismissProgressDialogCompletable =
@@ -170,7 +170,7 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
     return RxView.clicks(createUserButton);
   }
 
-  @Override public Observable<Void> selectUserImage() {
+  @Override public Observable<Void> selectUserImageClick() {
     return RxView.clicks(userPictureLayout);
   }
 

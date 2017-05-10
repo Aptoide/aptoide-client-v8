@@ -278,30 +278,31 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
             Analytics.Account.CreateStoreAction.SKIP));
   }
 
-  @Override public Observable<Void> selectStoreImage() {
+  @Override public Observable<Void> selectStoreImageClick() {
     return RxView.clicks(storeAvatarLayout);
   }
 
-  @Override public Observable<Void> createStore() {
+  @Override public Observable<Void> createStoreClick() {
     return RxView.clicks(createStoreBtn);
   }
 
-  @Override public Observable<Void> skip() {
+  @Override public Observable<Void> skipToHomeClick() {
     return RxView.clicks(skipBtn);
   }
 
   private void setupListeners() {
 
-    selectStoreImage().compose(bindUntilEvent(LifecycleEvent.DESTROY))
+    selectStoreImageClick().compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .retry()
         .subscribe(__ -> chooseAvatarSource(), err -> CrashReport.getInstance().log(err));
 
-    skip().flatMap(__ -> sendSkipAnalytics().doOnCompleted(() -> navigateToHome()).toObservable())
+    skipToHomeClick().flatMap(
+        __ -> sendSkipAnalytics().doOnCompleted(() -> navigateToHome()).toObservable())
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> CrashReport.getInstance().log(err));
 
-    createStore().flatMap(aVoid -> Observable.fromCallable(() -> {
+    createStoreClick().flatMap(aVoid -> Observable.fromCallable(() -> {
       AptoideUtils.SystemU.hideKeyboard(getActivity());
       return null;
     }).doOnNext(__ -> showWaitDialog()).flatMap(__ -> {

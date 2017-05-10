@@ -5,5 +5,5 @@ import rx.Observable;
 public interface CreateUserView extends View {
   Observable<Void> createUserButtonClick();
 
-  Observable<Void> selectUserImage();
+  Observable<Void> selectUserImageClick();
 }
