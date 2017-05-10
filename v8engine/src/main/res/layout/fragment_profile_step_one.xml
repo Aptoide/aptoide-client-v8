@@ -40,8 +40,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/icon_logged_in"
             android:layout_marginTop="@dimen/padding_extra_large"
+            android:src="@drawable/icon_logged_in"
             />
 
         <TextView
@@ -76,11 +76,10 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="66dp"
+        android:layout_height="@dimen/button_default_height"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/padding_medium_small"
-        android:layout_marginTop="@dimen/padding_large"
-        android:gravity="center|bottom"
+        android:gravity="center"
         android:orientation="horizontal"
         android:paddingEnd="@dimen/padding_small"
         android:paddingLeft="@dimen/padding_small"
@@ -91,7 +90,7 @@
       <Button
           android:id="@+id/logged_in_more_info_button"
           android:layout_width="0dp"
-          android:layout_height="@dimen/button_default_height"
+          android:layout_height="match_parent"
           android:layout_marginEnd="23dp"
           android:layout_marginRight="23dp"
           android:layout_weight="1"
@@ -103,7 +102,7 @@
       <Button
           android:id="@+id/logged_in_continue"
           android:layout_width="0dp"
-          android:layout_height="@dimen/button_default_height"
+          android:layout_height="match_parent"
           android:layout_weight="1"
           android:text="@string/continue_option"
           style="?attr/customButton"
