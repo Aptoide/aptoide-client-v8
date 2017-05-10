@@ -718,7 +718,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       unInstallAction.call();
       return true;
     } else if (i == R.id.menu_remote_install) {
-      //todo(pribeiro): install on tv event
+      appViewAnalytics.sendRemoteInstallEvent();
       if (AptoideUtils.SystemU.getConnectionType().equals("mobile")) {
         GenericDialogs.createGenericOkMessage(getContext(),
             getContext().getString(R.string.remote_install_menu_title),
