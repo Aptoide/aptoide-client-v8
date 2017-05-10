@@ -229,6 +229,7 @@
     </receiver>
 
     <service android:name=".pull.PullingContentService"/>
+    <service android:name=".pull.NotificationSyncService"/>
 
     <receiver android:name=".pull.PullingContentReceiver">
       <intent-filter>

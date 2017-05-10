@@ -10,7 +10,7 @@ import lombok.ToString;
  * Created by trinkes on 03/05/2017.
  */
 
-@ToString(of = { "title" }) public class Notification extends RealmObject {
+@ToString(of = { "title" }) public class AptoideNotification extends RealmObject {
   public static final int CAMPAIGN = 0;
   public static final int COMMENT = 1;
   public static final int LIKE = 2;
@@ -28,10 +28,10 @@ import lombok.ToString;
   private long timeStamp;
   private boolean showed;
 
-  public Notification() {
+  public AptoideNotification() {
   }
 
-  public Notification(String body, String img, String title, String url, int type) {
+  public AptoideNotification(String body, String img, String title, String url, int type) {
     this.body = body;
     this.img = img;
     this.title = title;
@@ -40,7 +40,7 @@ import lombok.ToString;
     this.timeStamp = System.currentTimeMillis();
   }
 
-  public Notification(String abTestingGroup, String body, int campaignId, String img, String lang,
+  public AptoideNotification(String abTestingGroup, String body, int campaignId, String img, String lang,
       String title, String url, String urlTrack) {
     this(body, img, title, url, CAMPAIGN);
     this.abTestingGroup = abTestingGroup;

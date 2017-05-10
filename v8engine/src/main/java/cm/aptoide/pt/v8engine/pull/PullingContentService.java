@@ -7,21 +7,15 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
@@ -29,14 +23,10 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.updates.UpdateRepository;
 import java.util.ArrayList;
 import java.util.List;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
-import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -54,8 +44,6 @@ public class PullingContentService extends Service {
   public static final int UPDATE_NOTIFICATION_ID = 123;
   private CompositeSubscription subscriptions;
   private InstallManager installManager;
-  private ScheduleNotificationSync notificationSync;
-  private NotificationShower notificationShower;
 
   public void setAlarm(AlarmManager am, Context context, String action, long time) {
     Intent intent = new Intent(context, PullingContentService.class);
@@ -68,42 +56,12 @@ public class PullingContentService extends Service {
   @Override public void onCreate() {
     super.onCreate();
 
-    long pushNotificationInterval;
-
-    if (ManagerPreferences.isDebug()
-        && ManagerPreferences.getPushNotificationPullingInterval() > 0) {
-      pushNotificationInterval = ManagerPreferences.getPushNotificationPullingInterval();
-    } else {
-      pushNotificationInterval = PUSH_NOTIFICATION_INTERVAL;
-    }
-
-    PackageInfo pInfo = null;
-    try {
-      pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-    } catch (PackageManager.NameNotFoundException e) {
-      e.printStackTrace();
-    }
-    String versionName = pInfo == null ? "" : pInfo.versionName;
-
     installManager =
         ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
-    final OkHttpClient httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
-    final Converter.Factory converterFactory = WebService.getDefaultConverter();
-    final IdsRepository idsRepository = ((V8Engine) getApplicationContext()).getIdsRepository();
-    subscriptions = new CompositeSubscription();
-    NotificationAccessor notificationAccessor =
-        AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Notification.class);
-    notificationShower = new NotificationShower(notificationAccessor,
-        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
-    notificationSync =
-        new ScheduleNotificationSync(idsRepository, this, httpClient, converterFactory, versionName,
-            BuildConfig.APPLICATION_ID, notificationAccessor, notificationShower,
-            ((V8Engine) getApplicationContext()).getAccountManager());
 
+    subscriptions = new CompositeSubscription();
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
-    if (!isAlarmUp(this, PUSH_NOTIFICATIONS_ACTION)) {
-      setAlarm(alarm, this, PUSH_NOTIFICATIONS_ACTION, pushNotificationInterval);
-    }
+
     if (!isAlarmUp(this, UPDATES_ACTION)) {
       setAlarm(alarm, this, UPDATES_ACTION, UPDATES_INTERVAL);
     }
@@ -117,12 +75,8 @@ public class PullingContentService extends Service {
         case UPDATES_ACTION:
           setUpdatesAction(startId);
           break;
-        case PUSH_NOTIFICATIONS_ACTION:
-          setPushNotificationsAction(startId);
-          break;
         case BOOT_COMPLETED_ACTION:
           setUpdatesAction(startId);
-          setPushNotificationsAction(startId);
           break;
       }
     }
@@ -168,19 +122,6 @@ public class PullingContentService extends Service {
           throwable.printStackTrace();
           CrashReport.getInstance().log(throwable);
         }));
-  }
-
-  /**
-   * setup on push notifications action received
-   *
-   * @param startId service startId
-   */
-  private void setPushNotificationsAction(int startId) {
-    subscriptions.add(
-        Completable.merge(notificationSync.syncCampaign(this), notificationSync.syncSocial(this))
-            .doOnTerminate(() -> stopSelf(startId))
-            .subscribe(() -> {
-            }, throwable -> CrashReport.getInstance().log(throwable)));
   }
 
   /**

@@ -6,6 +6,8 @@
 package cm.aptoide.pt.v8engine;
 
 import android.accounts.AccountManager;
+import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,6 +28,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.realm.AptoideNotification;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
@@ -79,6 +82,11 @@ import cm.aptoide.pt.v8engine.networking.UserAgentInterceptor;
 import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
+import cm.aptoide.pt.v8engine.pull.NotificationCenter;
+import cm.aptoide.pt.v8engine.pull.NotificationHandler;
+import cm.aptoide.pt.v8engine.pull.NotificationSyncScheduler;
+import cm.aptoide.pt.v8engine.pull.NotificationSyncService;
+import cm.aptoide.pt.v8engine.pull.SystemNotificationShower;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.AccountGroupNameProvider;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
@@ -100,6 +108,7 @@ import com.google.android.gms.common.api.Scope;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -149,6 +158,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private AccountFactory accountFactory;
   private AndroidAccountProvider androidAccountProvider;
   private PaymentAnalytics paymentAnalytics;
+  private NotificationHandler notificationHandler;
 
   /**
    * call after this instance onCreate()
@@ -246,6 +256,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
       db.close();
     }
 
+    startNotificationsSync();
+
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
   }
@@ -261,9 +273,44 @@ public abstract class V8Engine extends SpotAndShareApplication {
     };
   }
 
+  private void startNotificationsSync() {
+
+    long pushNotificationInterval;
+
+    if (ManagerPreferences.isDebug()
+        && ManagerPreferences.getPushNotificationPullingInterval() > 0) {
+      pushNotificationInterval = ManagerPreferences.getPushNotificationPullingInterval();
+    } else {
+      pushNotificationInterval = AlarmManager.INTERVAL_HOUR;
+    }
+
+    notificationHandler = new NotificationHandler(BuildConfig.APPLICATION_ID, getDefaultClient(),
+        WebService.getDefaultConverter(), idsRepository, BuildConfig.VERSION_NAME);
+
+    SystemNotificationShower systemNotificationShower = new SystemNotificationShower(this,
+        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
+    List<NotificationSyncScheduler.Schedule> scheduleList = new ArrayList<>(2);
+    // TODO: 10/05/2017 trinkes make 2 different schedules for campaigns and direct notifications
+    scheduleList.add(
+        new NotificationSyncScheduler.Schedule(NotificationSyncService.PUSH_NOTIFICATIONS_ACTION,
+            pushNotificationInterval));
+
+    NotificationSyncScheduler notificationSyncScheduler =
+        new NotificationSyncScheduler(this, (AlarmManager) getSystemService(ALARM_SERVICE),
+            NotificationSyncService.class, scheduleList);
+    NotificationCenter notificationCenter = new NotificationCenter(notificationHandler,
+        AccessorFactory.getAccessorFor(AptoideNotification.class), notificationSyncScheduler,
+        systemNotificationShower, CrashReport.getInstance());
+    notificationCenter.start();
+  }
+
   public GroupNameProvider getGroupNameProvider() {
     return new AccountGroupNameProvider(getAccountManager(), Build.MANUFACTURER, Build.MODEL,
         Build.ID);
+  }
+
+  public NotificationHandler getNotificationHandler() {
+    return notificationHandler;
   }
 
   public OkHttpClient getLongTimeoutClient() {
