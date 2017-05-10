@@ -3,10 +3,6 @@ package cm.aptoide.pt.v8engine.payment;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import rx.Single;
 
-/**
- * Created by marcelobenites on 04/05/17.
- */
-
 public class AccountPayer implements Payer {
 
   private final AptoideAccountManager accountManager;

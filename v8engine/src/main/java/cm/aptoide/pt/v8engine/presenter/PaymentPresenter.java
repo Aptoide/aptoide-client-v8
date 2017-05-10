@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.presenter;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.payment.AptoidePay;
+import cm.aptoide.pt.v8engine.payment.AptoideBilling;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
@@ -34,7 +34,7 @@ public class PaymentPresenter implements Presenter {
       "cm.aptoide.pt.v8engine.payment.extra.IS_PROCESSING_LOGIN";
 
   private final PaymentView view;
-  private final AptoidePay aptoidePay;
+  private final AptoideBilling aptoideBilling;
   private final Product product;
   private final AptoideAccountManager accountManager;
   private final PaymentSelector paymentSelector;
@@ -44,11 +44,11 @@ public class PaymentPresenter implements Presenter {
   private List<Payment> payments;
   private PaymentAnalytics paymentAnalytics;
 
-  public PaymentPresenter(PaymentView view, AptoidePay aptoidePay, Product product,
+  public PaymentPresenter(PaymentView view, AptoideBilling aptoideBilling, Product product,
       AptoideAccountManager accountManager, PaymentSelector paymentSelector,
       AccountNavigator accountNavigator, PaymentAnalytics paymentAnalytics) {
     this.view = view;
-    this.aptoidePay = aptoidePay;
+    this.aptoideBilling = aptoideBilling;
     this.product = product;
     this.accountManager = accountManager;
     this.paymentSelector = paymentSelector;
@@ -94,7 +94,7 @@ public class PaymentPresenter implements Presenter {
         .flatMap(event -> loginLifecycle(event))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(loggedIn -> view.showLoading())
-        .flatMap(created -> showProductAndPayments().andThen(aptoidePay.getConfirmation(product)))
+        .flatMap(created -> showProductAndPayments().andThen(aptoideBilling.getConfirmation(product)))
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(confirmation -> treatLoadingAndGetPurchase(confirmation))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -184,7 +184,7 @@ public class PaymentPresenter implements Presenter {
   }
 
   private Completable showProductAndPayments() {
-    return aptoidePay.getPayments()
+    return aptoideBilling.getPayments()
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSuccess(payments -> {
           saveCurrentPayments(payments);
@@ -209,7 +209,7 @@ public class PaymentPresenter implements Presenter {
       view.showLoading();
     } else if (confirmation.isCompleted()) {
       view.showLoading();
-      return aptoidePay.getPurchase(product).toObservable();
+      return aptoideBilling.getPurchase(product).toObservable();
     }
     return Observable.empty();
   }

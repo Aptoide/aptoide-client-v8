@@ -11,12 +11,12 @@ import java.util.List;
 import rx.Observable;
 import rx.Single;
 
-public class AptoidePay {
+public class AptoideBilling {
 
   private final PaymentConfirmationRepository confirmationRepository;
   private final ProductRepository productRepository;
 
-  public AptoidePay(PaymentConfirmationRepository confirmationRepository,
+  public AptoideBilling(PaymentConfirmationRepository confirmationRepository,
       ProductRepository productRepository) {
     this.confirmationRepository = confirmationRepository;
     this.productRepository = productRepository;

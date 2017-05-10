@@ -33,7 +33,6 @@ import rx.Single;
 
 public class ConfirmationSync extends RepositorySync {
 
-  private final PaymentConfirmationRepository paymentConfirmationRepository;
   private final Product product;
   private final NetworkOperatorManager operatorManager;
   private final PaymentConfirmationAccessor confirmationAccessor;
@@ -43,16 +42,15 @@ public class ConfirmationSync extends RepositorySync {
   private final Converter.Factory converterFactory;
   private final OkHttpClient httpClient;
   private final PaymentAnalytics analytics;
+
   private String paymentConfirmationId;
   private int paymentId;
 
-  public ConfirmationSync(PaymentConfirmationRepository paymentConfirmationRepository,
-      Product product, NetworkOperatorManager operatorManager,
+  public ConfirmationSync(Product product, NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor confirmationAccessor,
       PaymentConfirmationFactory confirmationFactory, String paymentConfirmationId, int paymentId,
       Payer payer, BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
       OkHttpClient httpClient, PaymentAnalytics analytics) {
-    this.paymentConfirmationRepository = paymentConfirmationRepository;
     this.product = product;
     this.operatorManager = operatorManager;
     this.confirmationAccessor = confirmationAccessor;
@@ -66,13 +64,11 @@ public class ConfirmationSync extends RepositorySync {
     this.analytics = analytics;
   }
 
-  public ConfirmationSync(PaymentConfirmationRepository paymentConfirmationRepository,
-      Product product, NetworkOperatorManager operatorManager,
+  public ConfirmationSync(Product product, NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor confirmationAccessor,
       PaymentConfirmationFactory confirmationFactory, Payer payer,
       BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
       OkHttpClient httpClient, PaymentAnalytics analytics) {
-    this.paymentConfirmationRepository = paymentConfirmationRepository;
     this.product = product;
     this.operatorManager = operatorManager;
     this.confirmationAccessor = confirmationAccessor;

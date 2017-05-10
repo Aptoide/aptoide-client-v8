@@ -27,7 +27,6 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.payment.AccountPayer;
-import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.payment.Product;
@@ -37,7 +36,6 @@ import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
 import cm.aptoide.pt.v8engine.presenter.PaymentPresenter;
 import cm.aptoide.pt.v8engine.presenter.PaymentSelector;
 import cm.aptoide.pt.v8engine.presenter.PaymentView;
-import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.BaseActivity;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -114,16 +112,14 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     final ParcelableProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
     final AptoideAccountManager accountManager =
         ((V8Engine) getApplicationContext()).getAccountManager();
-    final Payer payer = new AccountPayer(accountManager);
     final PaymentAnalytics paymentAnalytics =
         ((V8Engine) getApplicationContext()).getPaymentAnalytics();
-    attachPresenter(new PaymentPresenter(this,
-        new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
-            RepositoryFactory.getProductRepository(this, product)), product, accountManager,
-        new PaymentSelector(PAYPAL_PAYMENT_ID,
+    attachPresenter(
+        new PaymentPresenter(this, ((V8Engine) getApplicationContext()).getAptoideBilling(product),
+            product, accountManager, new PaymentSelector(PAYPAL_PAYMENT_ID,
             PreferenceManager.getDefaultSharedPreferences(getApplicationContext())),
-        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
-        paymentAnalytics), savedInstanceState);
+            new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
+            paymentAnalytics), savedInstanceState);
   }
 
   @Override public Observable<PaymentViewModel> paymentSelection() {
@@ -208,8 +204,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
   }
 
   @Override public void navigateToAuthorizationView(int paymentId, Product product) {
-    startActivity(
-        WebAuthorizationActivity.getIntent(this, paymentId, (ParcelableProduct) product));
+    startActivity(WebAuthorizationActivity.getIntent(this, paymentId, (ParcelableProduct) product));
   }
 
   @Override public void showPaymentsNotFoundMessage() {

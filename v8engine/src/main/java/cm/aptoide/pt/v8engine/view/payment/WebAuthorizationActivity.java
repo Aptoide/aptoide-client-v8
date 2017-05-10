@@ -20,11 +20,9 @@ import android.webkit.WebViewClient;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
 import cm.aptoide.pt.v8engine.presenter.PaymentAuthorizationView;
 import cm.aptoide.pt.v8engine.presenter.WebAuthorizationPresenter;
-import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.BackButtonActivity;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
@@ -37,8 +35,6 @@ public class WebAuthorizationActivity extends BackButtonActivity
   private static final String EXTRA_PRODUCT =
       "cm.aptoide.pt.v8engine.payment.providers.boacompra.intent.extra.PRODUCT";
   private WebView webView;
-  private AptoidePay aptoidePay;
-  private int paymentId;
   private View progressBarContainer;
   private AlertDialog unknownErrorDialog;
   private PublishRelay<Void> mainUrlSubject;
@@ -59,12 +55,6 @@ public class WebAuthorizationActivity extends BackButtonActivity
     setContentView(R.layout.activity_web_authorization);
 
     if (getIntent().hasExtra(EXTRA_PAYMENT_ID) && getIntent().hasExtra(EXTRA_PRODUCT)) {
-      paymentId = getIntent().getIntExtra(EXTRA_PAYMENT_ID, 0);
-      final ParcelableProduct product = getIntent().getParcelableExtra(EXTRA_PRODUCT);
-      final AptoideAccountManager accountManager =
-          ((V8Engine) getApplicationContext()).getAccountManager();
-      aptoidePay = new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
-          RepositoryFactory.getProductRepository(this, product));
 
       webView = (WebView) findViewById(R.id.activity_boa_compra_authorization_web_view);
       webView.getSettings().setJavaScriptEnabled(true);
@@ -84,7 +74,10 @@ public class WebAuthorizationActivity extends BackButtonActivity
       };
       registerBackClickHandler(clickHandler);
 
-      attachPresenter(new WebAuthorizationPresenter(this, aptoidePay, product, paymentId,
+      final ParcelableProduct product = getIntent().getParcelableExtra(EXTRA_PRODUCT);
+      attachPresenter(new WebAuthorizationPresenter(this,
+          ((V8Engine) getApplicationContext()).getAptoideBilling(product), product,
+          getIntent().getIntExtra(EXTRA_PAYMENT_ID, 0),
           ((V8Engine) getApplicationContext()).getPaymentAnalytics(),
           ((V8Engine) getApplicationContext()).getPaymentSyncScheduler()), savedInstanceState);
     } else {

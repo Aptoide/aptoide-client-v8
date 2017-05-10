@@ -24,7 +24,6 @@ import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.sync.AuthorizationSync;
 import cm.aptoide.pt.v8engine.payment.repository.sync.ConfirmationSync;
 import cm.aptoide.pt.v8engine.payment.repository.sync.ProductBundleMapper;
-import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -87,13 +86,11 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
       final String paymentConfirmationId = extras.getString(EXTRA_PAYMENT_CONFIRMATION_ID);
 
       if (paymentConfirmationId == null) {
-        new ConfirmationSync(
-            RepositoryFactory.getPaymentConfirmationRepository(getContext(), product), product,
+        new ConfirmationSync(product,
             operatorManager, confirmationAccessor, confirmationConverter, payer,
             bodyInterceptorV3, converterFactory, httpClient, paymentAnalytics).sync(syncResult);
       } else {
-        new ConfirmationSync(
-            RepositoryFactory.getPaymentConfirmationRepository(getContext(), product), product,
+        new ConfirmationSync(product,
             operatorManager, confirmationAccessor, confirmationConverter, paymentConfirmationId,
             paymentId, payer, bodyInterceptorV3, converterFactory,
             httpClient, paymentAnalytics).sync(syncResult);

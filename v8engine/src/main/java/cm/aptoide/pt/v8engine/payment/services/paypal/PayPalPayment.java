@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 11/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.payment.providers.paypal;
+package cm.aptoide.pt.v8engine.payment.services.paypal;
 
 import android.content.Context;
 import android.content.Intent;

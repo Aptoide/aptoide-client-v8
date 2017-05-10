@@ -107,7 +107,7 @@ public class AppRepository {
     });
   }
 
-  public Observable<PaidApp> getPaidApp(long appId, boolean sponsored, String storeName,
+  private Observable<PaidApp> getPaidApp(long appId, boolean sponsored, String storeName,
       boolean refresh) {
     return GetApkInfoRequest.of(appId, operatorManager, sponsored, storeName, bodyInterceptorV3, httpClient, converterFactory)
         .observe(refresh)

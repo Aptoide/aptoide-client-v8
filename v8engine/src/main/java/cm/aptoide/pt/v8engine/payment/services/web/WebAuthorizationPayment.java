@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.payment.providers.web;
+package cm.aptoide.pt.v8engine.payment.services.web;
 
 import cm.aptoide.pt.v8engine.payment.Authorization;
 import cm.aptoide.pt.v8engine.payment.AuthorizationPayment;

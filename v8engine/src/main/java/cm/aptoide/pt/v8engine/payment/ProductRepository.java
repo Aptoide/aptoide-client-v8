@@ -6,8 +6,6 @@
 package cm.aptoide.pt.v8engine.payment;
 
 import cm.aptoide.pt.model.v3.PaymentServiceResponse;
-import cm.aptoide.pt.v8engine.payment.Product;
-import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationRepository;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
@@ -43,8 +41,7 @@ public abstract class ProductRepository {
 
   protected Single<List<Payment>> convertResponseToPayment(List<PaymentServiceResponse> payments) {
     return Observable.from(payments)
-    .map(paymentService -> paymentFactory.create(paymentService, authorizationRepository,
-        confirmationRepository, authorizationFactory, payer))
+    .map(paymentService -> paymentFactory.create(paymentService))
     .toList().toSingle();
   }
 }
