@@ -72,6 +72,7 @@ import cm.aptoide.pt.v8engine.ads.AdsRepository;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.app.AppRepository;
+import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
@@ -186,6 +187,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private PaymentAnalytics paymentAnalytics;
   private SpotAndShareAnalytics spotAndShareAnalytics;
   private TimelineAnalytics timelineAnalytics;
+  private AppViewAnalytics appViewAnalytics;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -284,6 +286,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
+    appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
@@ -695,12 +699,13 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     if (i == R.id.menu_share) {
       if (getApp != null) {
+        appViewAnalytics.sendAppShareEvent();
         shareApp(appName, packageName, getApp.getNodes().getMeta().getData().getFile().getVercode(),
             wUrl);
       }
       return true;
     } else if (i == R.id.menu_schedule) {
-
+      //todo(pribeiro): schedule download event
       scheduled = Scheduled.from(app, appAction);
 
       ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(Scheduled.class);
@@ -713,6 +718,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       unInstallAction.call();
       return true;
     } else if (i == R.id.menu_remote_install) {
+      //todo(pribeiro): install on tv event
       if (AptoideUtils.SystemU.getConnectionType().equals("mobile")) {
         GenericDialogs.createGenericOkMessage(getContext(),
             getContext().getString(R.string.remote_install_menu_title),

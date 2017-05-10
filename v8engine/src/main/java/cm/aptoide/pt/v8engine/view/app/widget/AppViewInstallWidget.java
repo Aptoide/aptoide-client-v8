@@ -160,6 +160,7 @@ import rx.android.schedulers.AndroidSchedulers;
     GetAppMeta.App currentApp = getApp.getNodes().getMeta().getData();
     versionName.setText(currentApp.getFile().getVername());
     otherVersions.setOnClickListener(v -> {
+      //Todo(pribeiro) : other versions app view event
       Fragment fragment = V8Engine.getFragmentProvider()
           .newOtherVersionsFragment(currentApp.getName(), currentApp.getIcon(),
               currentApp.getPackageName());

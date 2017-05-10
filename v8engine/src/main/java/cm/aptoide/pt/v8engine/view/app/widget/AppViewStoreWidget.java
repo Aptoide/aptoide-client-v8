@@ -103,11 +103,13 @@ import rx.functions.Action1;
             WebService.getDefaultConverter());
 
     Action1<Void> openStore = __ -> {
+      //Todo(pribeiro) : open store app view event
       getFragmentNavigator().navigateTo(
           V8Engine.getFragmentProvider().newStoreFragment(storeName, storeTheme));
     };
 
     Action1<Void> subscribeStore = __ -> {
+      //Todo(pribeiro) : follow store app view event
       storeUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
         ShowMessage.asSnack(itemView,
             AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));

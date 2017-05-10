@@ -166,7 +166,7 @@ import rx.android.schedulers.AndroidSchedulers;
       setButtonPressed(v);
 
       final GetAppMeta.GetAppMetaFile.Flags.Vote.Type type = viewIdTypeMap.get(v.getId());
-
+      //todo (pribeiro): flag this app event
       compositeSubscription.add(AddApkFlagRequest.of(storeName, md5, type.name().toLowerCase(),
           accountManager.getAccessToken(), baseBodyInterceptorV3, httpClient)
           .observe(true)

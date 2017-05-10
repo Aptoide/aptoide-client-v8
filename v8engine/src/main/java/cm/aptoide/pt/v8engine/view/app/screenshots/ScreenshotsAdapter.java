@@ -128,6 +128,7 @@ public class ScreenshotsAdapter
               getPlaceholder(item.getOrientation()), screenshot);
 
       itemView.setOnClickListener(v -> {
+        
         // TODO improve this call
         navigator.navigateTo(
             V8Engine.getFragmentProvider().newScreenshotsViewerFragment(imagesUris, position));

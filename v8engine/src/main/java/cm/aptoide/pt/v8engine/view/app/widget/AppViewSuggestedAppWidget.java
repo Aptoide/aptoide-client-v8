@@ -41,8 +41,9 @@ public class AppViewSuggestedAppWidget extends Widget<AppViewSuggestedAppDisplay
     ImageLoader.with(context).load(pojo.getIconPath(), iconImageView);
     appNameTextView.setText(pojo.getName());
     descriptionTextView.setText(AptoideUtils.HtmlU.parse(pojo.getDescription()));
-    compositeSubscription.add(RxView.clicks(layout)
-        .subscribe(__ -> getFragmentNavigator().navigateTo(
-            V8Engine.getFragmentProvider().newAppViewFragment(pojo))));
+    compositeSubscription.add(RxView.clicks(layout).subscribe(__ -> {
+      //Todo(pribeiro) : recomended app click app view event
+      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider().newAppViewFragment(pojo));
+    }));
   }
 }
