@@ -1010,6 +1010,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
       final Malware malware = app.getFile().getMalware();
       badge.setOnClickListener(v -> {
+        appViewAnalytics.sendBadgeClickEvent();
         DialogBadgeV7.newInstance(malware, app.getName(), malware.getRank())
             .show(getFragmentManager(), BADGE_DIALOG_TAG);
       });
