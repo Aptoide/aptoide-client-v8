@@ -607,7 +607,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     // only show screen shots / video if the app has them
     if (isMediaAvailable(media)) {
-      displayables.add(new AppViewScreenshotsDisplayable(app));
+      displayables.add(new AppViewScreenshotsDisplayable(app, appViewAnalytics));
     }
     displayables.add(new AppViewDescriptionDisplayable(getApp));
 

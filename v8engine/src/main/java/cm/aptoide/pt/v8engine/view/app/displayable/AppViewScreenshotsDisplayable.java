@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.app.displayable;
 
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
 /**
@@ -14,11 +15,14 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class AppViewScreenshotsDisplayable extends DisplayablePojo<GetAppMeta.App> {
 
+  private AppViewAnalytics appViewAnalytics;
+
   public AppViewScreenshotsDisplayable() {
   }
 
-  public AppViewScreenshotsDisplayable(GetAppMeta.App pojo) {
+  public AppViewScreenshotsDisplayable(GetAppMeta.App pojo, AppViewAnalytics appViewAnalytics) {
     super(pojo);
+    this.appViewAnalytics = appViewAnalytics;
   }
 
   @Override protected Configs getConfig() {
@@ -27,5 +31,9 @@ public class AppViewScreenshotsDisplayable extends DisplayablePojo<GetAppMeta.Ap
 
   @Override public int getViewLayout() {
     return R.layout.displayable_app_view_images;
+  }
+
+  public AppViewAnalytics getAppViewAnalytics() {
+    return appViewAnalytics;
   }
 }
