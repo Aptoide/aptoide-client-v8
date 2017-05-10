@@ -705,7 +705,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       }
       return true;
     } else if (i == R.id.menu_schedule) {
-      //todo(pribeiro): schedule download event
+      appViewAnalytics.sendScheduleDownloadEvent();
       scheduled = Scheduled.from(app, appAction);
 
       ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(Scheduled.class);
