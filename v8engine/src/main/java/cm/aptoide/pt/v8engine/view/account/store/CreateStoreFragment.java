@@ -137,7 +137,11 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
     super.onViewCreated(view, savedInstanceState);
 
     if (savedInstanceState != null && savedInstanceState.containsKey(STORE_MODEL)) {
-      storeModel = Parcels.unwrap(savedInstanceState.getParcelable(STORE_MODEL));
+      CreateStoreModel createStoreModel =
+          Parcels.unwrap(savedInstanceState.getParcelable(STORE_MODEL));
+      if (createStoreModel != null) {
+        storeModel = createStoreModel;
+      }
     }
 
     setupViewsDefaultValues(view);

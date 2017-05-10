@@ -84,7 +84,10 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     if (savedInstanceState != null && savedInstanceState.containsKey(USER_IMAGE_PATH)) {
-      loadImage(Uri.parse(savedInstanceState.getString(USER_IMAGE_PATH)));
+      String uri = savedInstanceState.getString(USER_IMAGE_PATH);
+      if (!TextUtils.isEmpty(uri)) {
+        loadImage(Uri.parse(uri));
+      }
     }
   }
 

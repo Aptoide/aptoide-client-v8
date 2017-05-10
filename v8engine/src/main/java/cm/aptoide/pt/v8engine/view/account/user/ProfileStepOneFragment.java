@@ -20,6 +20,7 @@ import cm.aptoide.pt.v8engine.view.fragment.BaseToolbarFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Completable;
+import rx.Observable;
 
 // TODO
 // apply MVP
@@ -67,16 +68,19 @@ public class ProfileStepOneFragment extends BaseToolbarFragment {
     super.setupViews();
     RxView.clicks(continueBtn)
         .doOnNext(__ -> waitDialog.show())
-        .flatMap(__ -> accountManager.updateAccount(Account.Access.PUBLIC)
-            .andThen(showContinueSuccessMessage())
-            .doOnCompleted(() -> {
+        .flatMap(
+            __ -> accountManager.updateAccount(Account.Access.PUBLIC).onErrorResumeNext(err -> {
+              CrashReport.getInstance().log(err);
+              return Completable.complete();
+            }).andThen(showContinueSuccessMessage()).doOnNext(aVoid -> {
+              Analytics.Account.accountProfileAction(1, Analytics.Account.ProfileAction.CONTINUE);
+            }).doOnNext(aVoid -> {
               if (externalLogin) {
                 navigateToHome();
                 return;
               }
               navigateToCreateStore();
-            })
-            .toObservable())
+            }))
         .retry()
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -124,13 +128,10 @@ public class ProfileStepOneFragment extends BaseToolbarFragment {
     ShowMessage.asSnack(this, R.string.unknown_error);
   }
 
-  private Completable showContinueSuccessMessage() {
+  private Observable<Void> showContinueSuccessMessage() {
     return Completable.fromAction(() -> waitDialog.dismiss())
         .andThen(ShowMessage.asObservableSnack(this, R.string.successful))
-        .doOnCompleted(() -> {
-          Analytics.Account.accountProfileAction(1, Analytics.Account.ProfileAction.CONTINUE);
-        })
-        .toCompletable();
+        .map(__ -> null);
   }
 }
 

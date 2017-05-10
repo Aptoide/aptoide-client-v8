@@ -20,6 +20,7 @@ import cm.aptoide.pt.v8engine.view.fragment.BaseToolbarFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Completable;
+import rx.Observable;
 
 // TODO
 // apply MVP
@@ -67,29 +68,30 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment {
 
     RxView.clicks(continueBtn)
         .doOnNext(click -> waitDialog.show())
-        .flatMap(click -> accountManager.updateAccount(Account.Access.PUBLIC)
-            .andThen(showContinueSuccessMessage(Analytics.Account.ProfileAction.CONTINUE))
-            .onErrorResumeNext(err -> {
-              CrashReport.getInstance().log(err);
-              return showErrorMessage();
-            })
-            .doOnCompleted(() -> navigateToCreateStoreOrHome())
-            .toObservable())
+        .flatMap(
+            click -> accountManager.updateAccount(Account.Access.PUBLIC)
+                .onErrorResumeNext(err -> {
+                  CrashReport.getInstance().log(err);
+                  return showErrorMessage();
+                })
+                .andThen(showContinueSuccessMessage())
+                .doOnNext(__ -> sendAnalytics(Analytics.Account.ProfileAction.CONTINUE))
+                .doOnNext(__ -> navigateToCreateStoreOrHome()))
         .retry()
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe();
 
     RxView.clicks(privateProfileBtn)
-        .doOnNext(click -> waitDialog.show())
-        .flatMap(click -> accountManager.updateAccount(Account.Access.UNLISTED)
-            .doOnCompleted(
-                () -> showContinueSuccessMessage(Analytics.Account.ProfileAction.PRIVATE_PROFILE))
-            .onErrorResumeNext(err -> {
-              CrashReport.getInstance().log(err);
-              return showErrorMessage();
-            })
-            .doOnCompleted(() -> navigateToCreateStoreOrHome())
-            .toObservable())
+        .doOnNext(__ -> waitDialog.show())
+        .flatMap(
+            __ -> accountManager.updateAccount(Account.Access.UNLISTED)
+                .onErrorResumeNext(err -> {
+                  CrashReport.getInstance().log(err);
+                  return showErrorMessage();
+                })
+                .andThen(showContinueSuccessMessage())
+                .doOnNext(aVoid -> sendAnalytics(Analytics.Account.ProfileAction.PRIVATE_PROFILE))
+                .doOnNext(aVoid -> navigateToCreateStoreOrHome()))
         .retry()
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe();
@@ -111,12 +113,10 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment {
         .andThen(ShowMessage.asObservableSnack(this, R.string.unknown_error).toCompletable());
   }
 
-  private Completable showContinueSuccessMessage(Analytics.Account.ProfileAction action) {
+  private Observable<Void> showContinueSuccessMessage() {
     return Completable.fromAction(() -> waitDialog.dismiss())
-        .andThen(ShowMessage.asObservableSnack(this, R.string.successful)
-            .filter(vis -> vis == ShowMessage.DISMISSED)
-            .toCompletable()
-            .andThen(sendAnalytics(action)));
+        .andThen(ShowMessage.asObservableSnack(this, R.string.successful))
+        .map(__ -> null);
   }
 
   private Completable sendAnalytics(Analytics.Account.ProfileAction action) {
