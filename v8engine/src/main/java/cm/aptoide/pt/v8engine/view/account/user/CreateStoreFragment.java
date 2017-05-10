@@ -559,6 +559,7 @@ public class CreateStoreFragment extends PictureLoaderFragment {
     return Completable.fromAction(() -> dismissWaitDialog())
         .andThen(accountManager.syncCurrentAccount())
         .andThen(sendCreateAnalytics())
+        .observeOn(AndroidSchedulers.mainThread())
         .doOnCompleted(() -> navigateToHome())
         .onErrorResumeNext(err -> {
           CrashReport.getInstance().log(err);
