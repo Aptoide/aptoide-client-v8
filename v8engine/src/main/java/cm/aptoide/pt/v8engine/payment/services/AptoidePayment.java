@@ -3,26 +3,26 @@
  * Modified by Marcelo Benites on 02/01/2017.
  */
 
-package cm.aptoide.pt.v8engine.payment;
+package cm.aptoide.pt.v8engine.payment.services;
 
-import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
-import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationRepository;
-import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
+import cm.aptoide.pt.v8engine.payment.Payment;
+import cm.aptoide.pt.v8engine.payment.Product;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentRepositoryFactory;
 import rx.Completable;
 
 public class AptoidePayment implements Payment {
 
-  private final PaymentConfirmationRepository confirmationRepository;
+  private final PaymentRepositoryFactory paymentRepositoryFactory;
   private final int id;
   private final String name;
   private final String description;
 
   public AptoidePayment(int id, String name, String description,
-      PaymentConfirmationRepository confirmationRepository) {
+      PaymentRepositoryFactory paymentRepositoryFactory) {
     this.id = id;
     this.name = name;
     this.description = description;
-    this.confirmationRepository = confirmationRepository;
+    this.paymentRepositoryFactory = paymentRepositoryFactory;
   }
 
   @Override public int getId() {
@@ -38,6 +38,7 @@ public class AptoidePayment implements Payment {
   }
 
   @Override public Completable process(Product product) {
-    return confirmationRepository.createPaymentConfirmation(id, product);
+    return paymentRepositoryFactory.getPaymentConfirmationRepository(product)
+        .createPaymentConfirmation(id, product);
   }
 }

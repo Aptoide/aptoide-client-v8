@@ -7,9 +7,9 @@ package cm.aptoide.pt.v8engine.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v7.GetApp;
@@ -75,28 +75,9 @@ public class AppRepository {
   private Observable<GetApp> addPayment(boolean sponsored, GetApp getApp, boolean refresh) {
     return getPaidApp(getApp.getNodes().getMeta().getData().getId(), sponsored,
         getApp.getNodes().getMeta().getData().getStore().getName(), refresh).map(paidApp -> {
-
       if (paidApp.getPayment().isPaid()) {
         getApp.getNodes().getMeta().getData().getFile().setPath(paidApp.getPath().getStringPath());
-      } else {
-        getApp.getNodes()
-            .getMeta()
-            .getData()
-            .getPay()
-            .setProductId(paidApp.getPayment().getMetadata().getId());
-        getApp.getNodes()
-            .getMeta()
-            .getData()
-            .getPay()
-            .setCurrency(paidApp.getPayment().getPaymentServices().get(0).getCurrency());
-        getApp.getNodes()
-            .getMeta()
-            .getData()
-            .getPay()
-            .setTaxRate(paidApp.getPayment().getPaymentServices().get(0).getTaxRate());
       }
-      getApp.getNodes().getMeta().getData().getPay().setPrice(paidApp.getPayment().getAmount());
-      getApp.getNodes().getMeta().getData().getPay().setSymbol(paidApp.getPayment().getSymbol());
       getApp.getNodes().getMeta().getData().getPay().setStatus(paidApp.getPayment().getStatus());
       return getApp;
     }).onErrorResumeNext(throwable -> {
@@ -109,16 +90,15 @@ public class AppRepository {
 
   private Observable<PaidApp> getPaidApp(long appId, boolean sponsored, String storeName,
       boolean refresh) {
-    return GetApkInfoRequest.of(appId, operatorManager, sponsored, storeName, bodyInterceptorV3, httpClient, converterFactory)
-        .observe(refresh)
-        .flatMap(response -> {
-          if (response != null && response.isOk() && response.isPaid()) {
-            return Observable.just(response);
-          } else {
-            return Observable.error(new RepositoryItemNotFoundException(
-                "No paid app found for app id " + appId + " in store " + storeName));
-          }
-        });
+    return GetApkInfoRequest.of(appId, sponsored, storeName, operatorManager, bodyInterceptorV3,
+        httpClient, converterFactory).observe(refresh).flatMap(response -> {
+      if (response != null && response.isOk() && response.isPaid()) {
+        return Observable.just(response);
+      } else {
+        return Observable.error(new RepositoryItemNotFoundException(
+            "No paid app found for app id " + appId + " in store " + storeName));
+      }
+    });
   }
 
   public Observable<GetApp> getApp(String packageName, boolean refresh, boolean sponsored,

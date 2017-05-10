@@ -9,13 +9,13 @@ import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingAvailableRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingConsumeRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingSkuDetailsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.iab.SKU;
 import cm.aptoide.pt.model.v3.ErrorResponse;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
@@ -27,6 +27,7 @@ import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
+import rx.Single;
 
 /**
  * Created by marcelobenites on 8/11/16.
@@ -71,7 +72,7 @@ public class InAppBillingRepository {
 
   public Observable<List<SKU>> getSKUs(int apiVersion, String packageName, List<String> skuList,
       String type) {
-    return getSKUListDetails(apiVersion, packageName, skuList, type).flatMap(
+    return getSKUListDetails(apiVersion, packageName, skuList, type).flatMapObservable(
         details -> Observable.from(details.getPublisherResponse().getDetailList())
             .map(detail -> new SKU(detail.getProductId(), detail.getType(), detail.getPrice(),
                 detail.getCurrency(), (long) (detail.getPriceAmount() * 1000000), detail.getTitle(),
@@ -79,22 +80,24 @@ public class InAppBillingRepository {
             .toList());
   }
 
-  private Observable<InAppBillingSkuDetailsResponse> getSKUListDetails(int apiVersion,
+  private Single<InAppBillingSkuDetailsResponse> getSKUListDetails(int apiVersion,
       String packageName, List<String> skuList, String type) {
     return InAppBillingSkuDetailsRequest.of(apiVersion, packageName, skuList, operatorManager, type,
         bodyInterceptorV3, httpClient, converterFactory)
         .observe()
+        .first()
+        .toSingle()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
-            return Observable.just(response);
+            return Single.just(response);
           } else {
             final List<InAppBillingSkuDetailsResponse.PurchaseDataObject> detailList =
                 response.getPublisherResponse().getDetailList();
             if (detailList.isEmpty()) {
-              return Observable.error(
+              return Single.error(
                   new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
             }
-            return Observable.error(
+            return Single.error(
                 new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
           }
         });
@@ -102,34 +105,29 @@ public class InAppBillingRepository {
 
   public Observable<InAppBillingPurchasesResponse.PurchaseInformation> getInAppPurchaseInformation(
       int apiVersion, String packageName, String type) {
-    return InAppBillingPurchasesRequest.of(apiVersion, packageName, type, bodyInterceptorV3, httpClient, converterFactory)
-        .observe()
-        .flatMap(response -> {
-          if (response != null && response.isOk()) {
-            return Observable.just(response.getPurchaseInformation());
-          }
-          return Observable.error(
-              new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-        });
+    return InAppBillingPurchasesRequest.of(apiVersion, packageName, type, bodyInterceptorV3,
+        httpClient, converterFactory).observe().flatMap(response -> {
+      if (response != null && response.isOk()) {
+        return Observable.just(response.getPurchaseInformation());
+      }
+      return Observable.error(new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+    });
   }
 
   public Observable<Void> deleteInAppPurchase(int apiVersion, String packageName,
       String purchaseToken) {
-    return InAppBillingConsumeRequest.of(apiVersion, packageName, purchaseToken, bodyInterceptorV3, httpClient, converterFactory)
-        .observe()
-        .flatMap(response -> {
-          if (response != null && response.isOk()) {
-            // TODO sync all payment confirmations instead. For now there is no web service for that.
-            confirmationAccessor.removeAll();
-            return Observable.just(null);
-          }
-          if (isDeletionItemNotFound(response.getErrors())) {
-            return Observable.error(
-                new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
-          }
-          return Observable.error(
-              new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-        });
+    return InAppBillingConsumeRequest.of(apiVersion, packageName, purchaseToken, bodyInterceptorV3,
+        httpClient, converterFactory).observe().flatMap(response -> {
+      if (response != null && response.isOk()) {
+        // TODO sync all payment confirmations instead. For now there is no web service for that.
+        confirmationAccessor.removeAll();
+        return Observable.just(null);
+      }
+      if (isDeletionItemNotFound(response.getErrors())) {
+        return Observable.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
+      }
+      return Observable.error(new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+    });
   }
 
   @NonNull private boolean isDeletionItemNotFound(List<ErrorResponse> errors) {
@@ -141,8 +139,8 @@ public class InAppBillingRepository {
     return false;
   }
 
-  public Observable<InAppBillingSkuDetailsResponse> getSKUDetails(int apiVersion,
-      String packageName, String sku, String type) {
+  public Single<InAppBillingSkuDetailsResponse> getSKUDetails(int apiVersion, String packageName,
+      String sku, String type) {
     return getSKUListDetails(apiVersion, packageName, Collections.singletonList(sku), type);
   }
 }

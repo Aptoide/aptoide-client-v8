@@ -16,8 +16,6 @@ import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.payment.AccountPayer;
-import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.sync.ProductBundleMapper;
 
@@ -34,7 +32,8 @@ public class AptoideSyncService extends Service {
     synchronized (lock) {
       if (syncAdapter == null) {
         syncAdapter = new AptoideSyncAdapter(getApplicationContext(), true, false,
-            new PaymentConfirmationFactory(), new PaymentAuthorizationFactory(),
+            new PaymentConfirmationFactory(),
+            ((V8Engine) getApplicationContext()).getAuthorizationFactory(),
             new ProductBundleMapper(), new NetworkOperatorManager(
             (TelephonyManager) getApplicationContext().getSystemService(TELEPHONY_SERVICE)),
             AccessorFactory.getAccessorFor(PaymentConfirmation.class),

@@ -5,38 +5,56 @@
 
 package cm.aptoide.pt.v8engine.presenter;
 
+import android.content.Context;
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.payment.AptoideBilling;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
-import cm.aptoide.pt.v8engine.payment.services.web.WebAuthorizationPayment;
 import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncScheduler;
+import cm.aptoide.pt.v8engine.payment.services.web.WebAuthorizationPayment;
 import rx.Completable;
+import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class WebAuthorizationPresenter implements Presenter {
 
+  private final Context context;
   private final PaymentAuthorizationView view;
   private final AptoideBilling aptoideBilling;
-  private final Product product;
   private final int paymentId;
   private final PaymentAnalytics analytics;
   private final PaymentSyncScheduler syncScheduler;
 
-  private boolean processing;
-  private boolean loading;
+  private final long appId;
+  private final String storeName;
+  private final boolean sponsored;
 
-  public WebAuthorizationPresenter(PaymentAuthorizationView view, AptoideBilling aptoideBilling,
-      Product product, int paymentId, PaymentAnalytics analytics,
-      PaymentSyncScheduler syncScheduler) {
+  private final int apiVersion;
+  private final String type;
+  private final String sku;
+  private final String packageName;
+  private final String developerPayload;
+
+  public WebAuthorizationPresenter(Context context, PaymentAuthorizationView view,
+      AptoideBilling aptoideBilling, int paymentId, PaymentAnalytics analytics,
+      PaymentSyncScheduler syncScheduler, long appId, String storeName, boolean sponsored,
+      int apiVersion, String type, String sku, String packageName, String developerPayload) {
+    this.context = context;
     this.view = view;
     this.aptoideBilling = aptoideBilling;
-    this.product = product;
     this.paymentId = paymentId;
     this.analytics = analytics;
     this.syncScheduler = syncScheduler;
+    this.appId = appId;
+    this.storeName = storeName;
+    this.sponsored = sponsored;
+    this.apiVersion = apiVersion;
+    this.type = type;
+    this.sku = sku;
+    this.packageName = packageName;
+    this.developerPayload = developerPayload;
   }
 
   @Override public void present() {
@@ -44,7 +62,8 @@ public class WebAuthorizationPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.backButtonSelection())
-        .doOnNext(backPressed -> analytics.sendPaymentAuthorizationBackButtonPressedEvent(product))
+        .flatMapSingle(backButtonPressed -> getProduct())
+        .doOnNext(product -> analytics.sendPaymentAuthorizationBackButtonPressedEvent(product))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
 
@@ -58,11 +77,12 @@ public class WebAuthorizationPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.backToStoreSelection()
-            .doOnNext(selection -> analytics.sendBackToStoreButtonPressedEvent(product)))
-        .doOnNext(loaded -> view.showLoading())
+            .doOnNext(backToStorePressed -> view.showLoading())
+            .flatMapSingle(loading -> getProduct())
+            .doOnNext(product -> analytics.sendBackToStoreButtonPressedEvent(product)))
         // Optimization to accelerate authorization sync once user interacts with the UI, should
         // be removed once we have a better sync implementation
-        .flatMapCompletable(payment -> syncScheduler.scheduleAuthorizationSync(paymentId))
+        .flatMapCompletable(analyticsSent -> syncScheduler.scheduleAuthorizationSync(paymentId))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnError(throwable -> view.showErrorAndDismiss())
         .onErrorReturn(null)
@@ -72,29 +92,31 @@ public class WebAuthorizationPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> view.showLoading())
-        .flatMap(created -> aptoideBilling.getPayment(paymentId)
+        .flatMapSingle(lading -> getProduct())
+        .flatMap(product -> aptoideBilling.getPayment(context, paymentId, product)
             .toObservable()
-            .cast(WebAuthorizationPayment.class))
-        .flatMap(payment -> payment.getAuthorization()
-            .takeUntil(authorization -> authorization.isAuthorized())
-            .observeOn(AndroidSchedulers.mainThread())
-            .flatMapCompletable(authorization -> {
+            .cast(WebAuthorizationPayment.class)
+            .flatMap(payment -> payment.getAuthorization()
+                .takeUntil(authorization -> authorization.isAuthorized())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMapCompletable(authorization -> {
 
-              if (authorization.isPendingUserConsent()) {
-                view.showUrl(authorization.getUrl(), authorization.getRedirectUrl());
-                return Completable.complete();
-              }
+                  if (authorization.isPendingUserConsent()) {
+                    view.showUrl(authorization.getUrl(), authorization.getRedirectUrl());
+                    return Completable.complete();
+                  }
 
-              if (authorization.isAuthorized()) {
-                return processPaymentAndDismiss(payment);
-              }
+                  if (authorization.isAuthorized()) {
+                    return processPaymentAndDismiss(payment, product);
+                  }
 
-              if (authorization.isFailed()) {
-                return Completable.error(new PaymentFailureException("Web authorization failed."));
-              }
+                  if (authorization.isFailed()) {
+                    return Completable.error(
+                        new PaymentFailureException("Web authorization failed."));
+                  }
 
-              return Completable.complete();
-            }))
+                  return Completable.complete();
+                })))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnError(throwable -> view.showErrorAndDismiss())
         .onErrorReturn(null)
@@ -102,10 +124,23 @@ public class WebAuthorizationPresenter implements Presenter {
         .subscribe();
   }
 
-  public Completable processPaymentAndDismiss(Payment payment) {
+  public Completable processPaymentAndDismiss(Payment payment, Product product) {
     return payment.process(product)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnCompleted(() -> view.dismiss());
+  }
+
+  private Single<Product> getProduct() {
+
+    if (storeName != null) {
+      return aptoideBilling.getPaidAppProduct(appId, storeName, sponsored);
+    }
+
+    if (sku != null) {
+      return aptoideBilling.getInAppProduct(apiVersion, packageName, sku, type, developerPayload);
+    }
+
+    return Single.error(new IllegalStateException("No product information provided to presenter."));
   }
 
   @Override public void saveState(Bundle state) {

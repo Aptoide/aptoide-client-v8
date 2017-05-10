@@ -8,20 +8,7 @@ package cm.aptoide.pt.v8engine.payment.products;
 import android.os.Parcel;
 import cm.aptoide.pt.v8engine.payment.Price;
 
-/**
- * Created by marcelobenites on 8/16/16.
- */
-public class InAppBillingProduct extends ParcelableProduct {
-
-  public static final Creator<InAppBillingProduct> CREATOR = new Creator<InAppBillingProduct>() {
-    @Override public InAppBillingProduct createFromParcel(Parcel in) {
-      return new InAppBillingProduct(in);
-    }
-
-    @Override public InAppBillingProduct[] newArray(int size) {
-      return new InAppBillingProduct[size];
-    }
-  };
+public class InAppBillingProduct extends AbstractProduct {
 
   private final int apiVersion;
   private final String sku;
@@ -37,15 +24,6 @@ public class InAppBillingProduct extends ParcelableProduct {
     this.packageName = packageName;
     this.developerPayload = developerPayload;
     this.type = type;
-  }
-
-  protected InAppBillingProduct(Parcel in) {
-    super(in);
-    apiVersion = in.readInt();
-    sku = in.readString();
-    packageName = in.readString();
-    developerPayload = in.readString();
-    type = in.readString();
   }
 
   public int getApiVersion() {
@@ -68,16 +46,4 @@ public class InAppBillingProduct extends ParcelableProduct {
     return type;
   }
 
-  @Override public int describeContents() {
-    return 0;
-  }
-
-  @Override public void writeToParcel(Parcel dest, int flags) {
-    super.writeToParcel(dest, flags);
-    dest.writeInt(apiVersion);
-    dest.writeString(sku);
-    dest.writeString(packageName);
-    dest.writeString(developerPayload);
-    dest.writeString(type);
-  }
 }

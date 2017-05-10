@@ -3,11 +3,12 @@
  * Modified by Marcelo Benites on 26/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.payment;
+package cm.aptoide.pt.v8engine.view.payment;
 
 import android.content.Intent;
 import cm.aptoide.pt.iab.BillingBinder;
 import cm.aptoide.pt.iab.ErrorCodeFactory;
+import cm.aptoide.pt.v8engine.payment.Purchase;
 import java.io.IOException;
 
 /**

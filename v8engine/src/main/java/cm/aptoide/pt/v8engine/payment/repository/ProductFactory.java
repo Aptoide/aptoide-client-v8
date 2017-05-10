@@ -3,11 +3,13 @@
  * Modified by Marcelo Benites on 16/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.payment;
+package cm.aptoide.pt.v8engine.payment.repository;
 
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
+import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v3.PaymentServiceResponse;
-import cm.aptoide.pt.model.v7.GetAppMeta;
+import cm.aptoide.pt.v8engine.payment.Price;
+import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
 
@@ -16,11 +18,14 @@ import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
  */
 public class ProductFactory {
 
-  public Product create(GetAppMeta.App app, boolean sponsored) {
-    return new PaidAppProduct(app.getPay().getProductId(), app.getIcon(), app.getName(),
-        app.getMedia().getDescription(), app.getId(), app.getStore().getName(),
-        new Price(app.getPay().getPrice(), app.getPay().getCurrency(), app.getPay().getSymbol(),
-            app.getPay().getTaxRate()), sponsored);
+  public Product create(PaidApp app, boolean sponsored) {
+    final String icon = app.getPath().getIcon() == null ? app.getPath().getAlternativeIcon()
+        : app.getPath().getIcon();
+    return new PaidAppProduct(app.getPayment().getMetadata().getProductId(), icon,
+        app.getApp().getName(), app.getApp().getDescription(), app.getPath().getAppId(),
+        app.getPath().getStoreName(), new Price(app.getPayment().getAmount(),
+        app.getPayment().getPaymentServices().get(0).getCurrency(), app.getPayment().getSymbol(),
+        app.getPayment().getPaymentServices().get(0).getTaxRate()), sponsored);
   }
 
   public Product create(int apiVersion, String developerPayload, String packageName,

@@ -12,9 +12,8 @@ import android.os.RemoteException;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.payment.ProductFactory;
-import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
 import cm.aptoide.pt.v8engine.payment.repository.InAppBillingRepository;
+import cm.aptoide.pt.v8engine.payment.repository.ProductFactory;
 import cm.aptoide.pt.v8engine.view.payment.PaymentActivity;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -141,17 +140,9 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
       result.putInt(RESPONSE_CODE, RESULT_OK);
 
       try {
-        final PendingIntent pendingIntent =
-            repository.getSKUDetails(apiVersion, packageName, sku, type)
-                .map(response -> productFactory.create(apiVersion, developerPayload, packageName,
-                    response))
-                .map(product -> PendingIntent.getActivity(context, 0,
-                    PaymentActivity.getIntent(context, (ParcelableProduct) product),
-                    PendingIntent.FLAG_UPDATE_CURRENT))
-                .toBlocking()
-                .first();
-
-        result.putParcelable(BUY_INTENT, pendingIntent);
+        result.putParcelable(BUY_INTENT, PendingIntent.getActivity(context, 0,
+            PaymentActivity.getIntent(context, apiVersion, packageName, sku, type,
+                developerPayload), PendingIntent.FLAG_UPDATE_CURRENT));
       } catch (Exception exception) {
         CrashReport.getInstance().log(exception);
         result.putInt(RESPONSE_CODE, errorCodeFactory.create(exception.getCause()));

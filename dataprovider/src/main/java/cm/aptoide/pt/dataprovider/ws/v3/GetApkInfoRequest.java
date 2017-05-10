@@ -23,15 +23,15 @@ public class GetApkInfoRequest extends V3<PaidApp> {
     super(baseBody, httpClient, converterFactory, bodyInterceptor);
   }
 
-  public static GetApkInfoRequest of(long appId, NetworkOperatorManager operatorManager,
-      boolean fromSponsored, String storeName, BodyInterceptor<BaseBody> bodyInterceptor,
+  public static GetApkInfoRequest of(long appId, boolean sponsored, String storeName,
+      NetworkOperatorManager operatorManager, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory) {
     BaseBody args = new BaseBody();
     args.put("identif", "id:" + appId);
     args.put("repo", storeName);
     args.put("mode", "json");
 
-    if (fromSponsored) {
+    if (sponsored) {
       args.put("adview", "1");
     }
     addOptions(args, operatorManager);

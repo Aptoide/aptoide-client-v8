@@ -49,11 +49,9 @@ import lombok.EqualsAndHashCode;
 
   @Data public static class Pay {
 
-    private int productId;
     private double price;
-    private String currency;
     private String symbol;
-    private double taxRate;
+    private String currency;
     private String status;
 
     public boolean isPaid() {

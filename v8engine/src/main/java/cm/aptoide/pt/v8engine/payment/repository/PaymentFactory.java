@@ -3,14 +3,14 @@
  * Modified by Marcelo Benites on 11/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.payment;
+package cm.aptoide.pt.v8engine.payment.repository;
 
 import android.content.Context;
 import cm.aptoide.pt.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.v8engine.BuildConfig;
-import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
-import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationRepository;
-import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
+import cm.aptoide.pt.v8engine.payment.Payer;
+import cm.aptoide.pt.v8engine.payment.Payment;
+import cm.aptoide.pt.v8engine.payment.services.AptoidePayment;
 import cm.aptoide.pt.v8engine.payment.services.paypal.PayPalPayment;
 import cm.aptoide.pt.v8engine.payment.services.web.WebAuthorizationPayment;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
@@ -22,18 +22,16 @@ public class PaymentFactory {
   public static final String BOACOMPRAGOLD = "boacompragold";
   public static final String DUMMY = "dummy";
 
-  private final Context context;
-  private final PaymentConfirmationRepository confirmationRepository;
+  private final PaymentRepositoryFactory paymentRepositoryFactory;
   private final PaymentAuthorizationRepository authorizationRepository;
   private final PaymentAuthorizationFactory authorizationFactory;
   private final Payer payer;
   private PayPalConfiguration payPalConfiguration;
 
-  public PaymentFactory(Context context, PaymentConfirmationRepository confirmationRepository,
+  public PaymentFactory(PaymentRepositoryFactory paymentRepositoryFactory,
       PaymentAuthorizationRepository authorizationRepository,
       PaymentAuthorizationFactory authorizationFactory, Payer payer) {
-    this.context = context;
-    this.confirmationRepository = confirmationRepository;
+    this.paymentRepositoryFactory = paymentRepositoryFactory;
     this.authorizationRepository = authorizationRepository;
     this.authorizationFactory = authorizationFactory;
     this.payer = payer;
@@ -42,20 +40,20 @@ public class PaymentFactory {
     this.payPalConfiguration.clientId(BuildConfig.PAYPAL_KEY);
   }
 
-  public Payment create(PaymentServiceResponse paymentService) {
+  public Payment create(Context context, PaymentServiceResponse paymentService) {
     switch (paymentService.getShortName()) {
       case PAYPAL:
         return new PayPalPayment(context, paymentService.getId(), paymentService.getName(),
-            paymentService.getDescription(), confirmationRepository, authorizationRepository,
+            paymentService.getDescription(), paymentRepositoryFactory, authorizationRepository,
             payPalConfiguration, paymentService.isAuthorizationRequired(), authorizationFactory, payer);
       case BOACOMPRA:
       case BOACOMPRAGOLD:
         return new WebAuthorizationPayment(paymentService.getId(), paymentService.getName(),
-            paymentService.getDescription(), confirmationRepository, authorizationRepository,
+            paymentService.getDescription(), paymentRepositoryFactory, authorizationRepository,
             paymentService.isAuthorizationRequired(), authorizationFactory, payer);
       case DUMMY:
         return new AptoidePayment(paymentService.getId(), paymentService.getName(),
-            paymentService.getDescription(), confirmationRepository);
+            paymentService.getDescription(), paymentRepositoryFactory);
       default:
         throw new IllegalArgumentException(
             "Payment not supported: " + paymentService.getShortName());

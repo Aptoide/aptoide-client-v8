@@ -5,40 +5,54 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
+import android.content.Context;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
-import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentRepositoryFactory;
+import cm.aptoide.pt.v8engine.payment.repository.ProductRepositoryFactory;
 import java.util.List;
 import rx.Observable;
 import rx.Single;
 
 public class AptoideBilling {
 
-  private final PaymentConfirmationRepository confirmationRepository;
-  private final ProductRepository productRepository;
+  private final ProductRepositoryFactory productRepositoryFactory;
+  private final PaymentRepositoryFactory paymentRepositoryFactory;
 
-  public AptoideBilling(PaymentConfirmationRepository confirmationRepository,
-      ProductRepository productRepository) {
-    this.confirmationRepository = confirmationRepository;
-    this.productRepository = productRepository;
+  public AptoideBilling(ProductRepositoryFactory productRepositoryFactory,
+      PaymentRepositoryFactory paymentRepositoryFactory) {
+    this.productRepositoryFactory = productRepositoryFactory;
+    this.paymentRepositoryFactory = paymentRepositoryFactory;
   }
 
-  public Single<List<Payment>> getPayments() {
-    return productRepository.getPayments();
+  public Single<Product> getPaidAppProduct(long appId, String storeName, boolean sponsored) {
+    return productRepositoryFactory.getPaidAppProductRepository()
+        .getProduct(appId, sponsored, storeName);
   }
 
-  public Single<Payment> getPayment(int paymentId) {
-    return getPayments().flatMapObservable(payments -> Observable.from(payments)
+  public Single<Product> getInAppProduct(int apiVersion, String packageName, String sku,
+      String type, String developerPayload) {
+    return productRepositoryFactory.getInAppProductRepository()
+        .getProduct(apiVersion, packageName, sku, type, developerPayload);
+  }
+
+  public Single<List<Payment>> getPayments(Context context, Product product) {
+    return productRepositoryFactory.getProductRepository(product).getPayments(context, product);
+  }
+
+  public Single<Payment> getPayment(Context context, int paymentId, Product product) {
+    return getPayments(context, product).flatMapObservable(payments -> Observable.from(payments)
         .filter(payment -> payment.getId() == paymentId)
         .switchIfEmpty(Observable.error(
             new PaymentFailureException("Payment " + paymentId + "not available")))).toSingle();
   }
 
   public Observable<PaymentConfirmation> getConfirmation(Product product) {
-    return confirmationRepository.getPaymentConfirmation(product)
+    return paymentRepositoryFactory.getPaymentConfirmationRepository(product)
+        .getPaymentConfirmation(product)
         .distinctUntilChanged(confirmation -> confirmation.getStatus());
   }
 
   public Single<Purchase> getPurchase(Product product) {
-    return productRepository.getPurchase(product);
+    return productRepositoryFactory.getProductRepository(product).getPurchase(product);
   }
 }

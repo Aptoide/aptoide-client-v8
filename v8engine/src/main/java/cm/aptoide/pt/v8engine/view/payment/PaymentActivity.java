@@ -26,13 +26,12 @@ import cm.aptoide.pt.iab.ErrorCodeFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.payment.AccountPayer;
-import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.Purchase;
-import cm.aptoide.pt.v8engine.payment.PurchaseIntentFactory;
-import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
+import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
+import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
+import cm.aptoide.pt.v8engine.payment.products.AbstractProduct;
 import cm.aptoide.pt.v8engine.presenter.PaymentPresenter;
 import cm.aptoide.pt.v8engine.presenter.PaymentSelector;
 import cm.aptoide.pt.v8engine.presenter.PaymentView;
@@ -47,9 +46,22 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class PaymentActivity extends BaseActivity implements PaymentView {
 
-  private static final String PRODUCT_EXTRA = "product";
   private static final String SELECTED_PAYMENT_ID = "selected_payment_id";
   private static final int PAYPAL_PAYMENT_ID = 17;
+  private static final String EXTRA_APP_ID =
+      "cm.aptoide.pt.v8engine.view.payment.intent.extra.APP_ID";
+  private static final String EXTRA_STORE_NAME =
+      "cm.aptoide.pt.v8engine.view.payment.intent.extra.STORE_NAME";
+  private static final String EXTRA_SPONSORED =
+      "cm.aptoide.pt.v8engine.view.payment.intent.extra.SPONSORED";
+  private static final String EXTRA_API_VERSION =
+      "cm.aptoide.pt.v8engine.view.payment.intent.extra.API_VERSION";
+  private static final String EXTRA_PACKAGE_NAME =
+      "cm.aptoide.pt.v8engine.view.payment.intent.extra.PACKAGE_NAME";
+  private static final String EXTRA_SKU = "cm.aptoide.pt.v8engine.view.payment.intent.extra.SKU";
+  private static final String EXTRA_TYPE = "cm.aptoide.pt.v8engine.view.payment.intent.extra.TYPE";
+  private static final String EXTRA_DEVELOPER_PAYLOAD =
+      "cm.aptoide.pt.v8engine.view.payment.intent.extra.DEVELOPER_PAYLOAD";
 
   private View overlay;
   private View body;
@@ -69,9 +81,22 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
   private SparseArray<PaymentViewModel> paymentMap;
   private SpannableFactory spannableFactory;
 
-  public static Intent getIntent(Context context, ParcelableProduct product) {
+  public static Intent getIntent(Context context, long appId, String storeName, boolean sponsored) {
     final Intent intent = new Intent(context, PaymentActivity.class);
-    intent.putExtra(PRODUCT_EXTRA, product);
+    intent.putExtra(EXTRA_APP_ID, appId);
+    intent.putExtra(EXTRA_STORE_NAME, storeName);
+    intent.putExtra(EXTRA_SPONSORED, sponsored);
+    return intent;
+  }
+
+  public static Intent getIntent(Context context, int apiVersion, String packageName, String sku,
+      String type, String developerPayload) {
+    final Intent intent = new Intent(context, PaymentActivity.class);
+    intent.putExtra(EXTRA_API_VERSION, apiVersion);
+    intent.putExtra(EXTRA_PACKAGE_NAME, packageName);
+    intent.putExtra(EXTRA_TYPE, type);
+    intent.putExtra(EXTRA_SKU, sku);
+    intent.putExtra(EXTRA_DEVELOPER_PAYLOAD, developerPayload);
     return intent;
   }
 
@@ -109,17 +134,23 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
             .setPositiveButton(android.R.string.ok, null)
             .create();
 
-    final ParcelableProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
+    final AbstractProduct product = getIntent().getParcelableExtra(EXTRA_APP_ID);
     final AptoideAccountManager accountManager =
         ((V8Engine) getApplicationContext()).getAccountManager();
     final PaymentAnalytics paymentAnalytics =
         ((V8Engine) getApplicationContext()).getPaymentAnalytics();
+
     attachPresenter(
-        new PaymentPresenter(this, ((V8Engine) getApplicationContext()).getAptoideBilling(product),
-            product, accountManager, new PaymentSelector(PAYPAL_PAYMENT_ID,
+        new PaymentPresenter(this, this, ((V8Engine) getApplicationContext()).getAptoideBilling(),
+            accountManager, new PaymentSelector(PAYPAL_PAYMENT_ID,
             PreferenceManager.getDefaultSharedPreferences(getApplicationContext())),
             new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
-            paymentAnalytics), savedInstanceState);
+            paymentAnalytics, getIntent().getLongExtra(EXTRA_APP_ID, -1),
+            getIntent().getStringExtra(EXTRA_STORE_NAME),
+            getIntent().getBooleanExtra(EXTRA_SPONSORED, false),
+            getIntent().getIntExtra(EXTRA_API_VERSION, -1), getIntent().getStringExtra(EXTRA_TYPE),
+            getIntent().getStringExtra(EXTRA_SKU), getIntent().getStringExtra(EXTRA_PACKAGE_NAME),
+            getIntent().getStringExtra(EXTRA_DEVELOPER_PAYLOAD)), savedInstanceState);
   }
 
   @Override public Observable<PaymentViewModel> paymentSelection() {
@@ -204,7 +235,19 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
   }
 
   @Override public void navigateToAuthorizationView(int paymentId, Product product) {
-    startActivity(WebAuthorizationActivity.getIntent(this, paymentId, (ParcelableProduct) product));
+    if (product instanceof InAppBillingProduct) {
+      startActivity(WebAuthorizationActivity.getIntent(this, paymentId,
+          ((InAppBillingProduct) product).getApiVersion(),
+          ((InAppBillingProduct) product).getPackageName(),
+          ((InAppBillingProduct) product).getType(), ((InAppBillingProduct) product).getSku(),
+          ((InAppBillingProduct) product).getDeveloperPayload()));
+    } else if (product instanceof PaidAppProduct) {
+      startActivity(
+          WebAuthorizationActivity.getIntent(this, paymentId, ((PaidAppProduct) product).getAppId(),
+              ((PaidAppProduct) product).getStoreName(), ((PaidAppProduct) product).isSponsored()));
+    } else {
+      throw new IllegalArgumentException("Invalid product. Only in app and paid apps supported");
+    }
   }
 
   @Override public void showPaymentsNotFoundMessage() {

@@ -3,16 +3,14 @@
  * Modified by Marcelo Benites on 25/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.payment;
+package cm.aptoide.pt.v8engine.payment.repository;
 
 import cm.aptoide.pt.iab.InAppBillingSerializer;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.model.v3.PaidApp;
+import cm.aptoide.pt.v8engine.payment.Purchase;
 import java.io.IOException;
 
-/**
- * Created by marcelobenites on 8/25/16.
- */
 public class PurchaseFactory {
 
   private final InAppBillingSerializer serializer;

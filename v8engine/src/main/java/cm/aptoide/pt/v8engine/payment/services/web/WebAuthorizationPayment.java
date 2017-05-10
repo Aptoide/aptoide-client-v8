@@ -1,14 +1,14 @@
 package cm.aptoide.pt.v8engine.payment.services.web;
 
 import cm.aptoide.pt.v8engine.payment.Authorization;
-import cm.aptoide.pt.v8engine.payment.AuthorizationPayment;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentRepositoryFactory;
+import cm.aptoide.pt.v8engine.payment.services.AuthorizationPayment;
 import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.authorizations.WebAuthorization;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentNotAuthorizedException;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationRepository;
-import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
 import rx.Completable;
 import rx.Observable;
 
@@ -19,10 +19,10 @@ public class WebAuthorizationPayment extends AuthorizationPayment {
   private final Payer payer;
 
   public WebAuthorizationPayment(int id, String name, String description,
-      PaymentConfirmationRepository confirmationRepository,
+      PaymentRepositoryFactory paymentRepositoryFactory,
       PaymentAuthorizationRepository authorizationRepository, boolean authorizationRequired,
       PaymentAuthorizationFactory authorizationFactory, Payer payer) {
-    super(id, name, description, confirmationRepository);
+    super(id, name, description, paymentRepositoryFactory);
     this.authorizationRepository = authorizationRepository;
     this.authorizationFactory = authorizationFactory;
     this.payer = payer;

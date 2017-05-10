@@ -49,8 +49,8 @@ import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.iab.BillingBinder;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
@@ -75,8 +75,6 @@ import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
-import cm.aptoide.pt.v8engine.payment.ProductFactory;
-import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
@@ -152,7 +150,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private Action0 unInstallAction;
   private MenuItem uninstallMenuItem;
   private AppRepository appRepository;
-  private ProductFactory productFactory;
   private Subscription subscription;
   private AdsRepository adsRepository;
   private boolean sponsored;
@@ -183,7 +180,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private StoredMinimalAdAccessor storedMinimalAdAccessor;
   private PaymentAnalytics paymentAnalytics;
   private SpotAndShareAnalytics spotAndShareAnalytics;
-
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -266,7 +262,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     socialRepository =
         new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient);
-    productFactory = new ProductFactory();
     appRepository = RepositoryFactory.getAppRepository(getContext());
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
@@ -401,10 +396,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   public void buyApp(GetAppMeta.App app) {
-    final ParcelableProduct product = (ParcelableProduct) productFactory.create(app, sponsored);
-    paymentAnalytics.sendPaidAppBuyButtonPressedEvent(product);
+    paymentAnalytics.sendPaidAppBuyButtonPressedEvent(app.getPay().getPrice(),
+        app.getPay().getCurrency());
     startActivityForResult(
-        PaymentActivity.getIntent(getActivity(), product),
+        PaymentActivity.getIntent(getActivity(), app.getId(), app.getStore().getName(), sponsored),
         PAY_APP_REQUEST_CODE);
   }
 

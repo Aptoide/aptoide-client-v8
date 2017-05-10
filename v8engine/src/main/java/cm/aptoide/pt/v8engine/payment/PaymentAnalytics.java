@@ -20,9 +20,9 @@ public class PaymentAnalytics {
     this.aptoidePackageName = aptoidePackageName;
   }
 
-  public void sendPaidAppBuyButtonPressedEvent(Product product) {
-    analytics.sendEvent(
-        new FacebookEvent(facebook, "Clicked_On_Buy_Button", getProductBundle(product)));
+  public void sendPaidAppBuyButtonPressedEvent(double price, String currency) {
+    analytics.sendEvent(new FacebookEvent(facebook, "Clicked_On_Buy_Button",
+        getProductBundle(price, currency, aptoidePackageName)));
   }
 
   public void sendPaymentCancelButtonPressedEvent(Product product, Payment payment) {
@@ -112,14 +112,22 @@ public class PaymentAnalytics {
   }
 
   private Bundle getProductBundle(Product product) {
-    final Bundle bundle = new Bundle();
-    bundle.putDouble("purchase_value", product.getPrice().getAmount());
-    bundle.putString("purchase_currency", product.getPrice().getCurrency());
+
+    final String packageName;
     if (product instanceof InAppBillingProduct) {
-      bundle.putString("package_name_seller", ((InAppBillingProduct) product).getPackageName());
+      packageName = ((InAppBillingProduct) product).getPackageName();
     } else {
-      bundle.putString("package_name_seller", aptoidePackageName);
+      packageName = aptoidePackageName;
     }
+    return getProductBundle(product.getPrice().getAmount(), product.getPrice().getCurrency(),
+        packageName);
+  }
+
+  private Bundle getProductBundle(double price, String currency, String packageName) {
+    final Bundle bundle = new Bundle();
+    bundle.putDouble("purchase_value", price);
+    bundle.putString("purchase_currency", currency);
+    bundle.putString("package_name_seller", packageName);
     return bundle;
   }
 }

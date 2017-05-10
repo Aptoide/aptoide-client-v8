@@ -1,18 +1,18 @@
-package cm.aptoide.pt.v8engine.payment;
+package cm.aptoide.pt.v8engine.payment.services;
 
-import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
-import cm.aptoide.pt.v8engine.payment.exception.PaymentNotAuthorizedException;
-import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
-import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationRepository;
+import cm.aptoide.pt.v8engine.payment.Authorization;
+import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentRepositoryFactory;
+import cm.aptoide.pt.v8engine.payment.services.AptoidePayment;
 import rx.Completable;
 import rx.Observable;
 
 public abstract class AuthorizationPayment extends AptoidePayment {
 
   public AuthorizationPayment(int id, String name, String description,
-      PaymentConfirmationRepository confirmationRepository) {
-    super(id, name, description, confirmationRepository);
+      PaymentRepositoryFactory paymentRepositoryFactory) {
+    super(id, name, description, paymentRepositoryFactory);
   }
 
   @Override public Completable process(Product product) {

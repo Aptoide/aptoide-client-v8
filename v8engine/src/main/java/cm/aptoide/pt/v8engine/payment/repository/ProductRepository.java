@@ -3,19 +3,18 @@
  * Modified by Marcelo Benites on 29/11/2016.
  */
 
-package cm.aptoide.pt.v8engine.payment;
+package cm.aptoide.pt.v8engine.payment.repository;
 
+import android.content.Context;
 import cm.aptoide.pt.model.v3.PaymentServiceResponse;
-import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
-import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationRepository;
-import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
+import cm.aptoide.pt.v8engine.payment.Payer;
+import cm.aptoide.pt.v8engine.payment.Payment;
+import cm.aptoide.pt.v8engine.payment.Product;
+import cm.aptoide.pt.v8engine.payment.Purchase;
 import java.util.List;
 import rx.Observable;
 import rx.Single;
 
-/**
- * Created by marcelobenites on 29/11/16.
- */
 public abstract class ProductRepository {
 
   private final PaymentFactory paymentFactory;
@@ -37,11 +36,12 @@ public abstract class ProductRepository {
 
   public abstract Single<Purchase> getPurchase(Product product);
 
-  public abstract Single<List<Payment>> getPayments();
+  public abstract Single<List<Payment>> getPayments(Context context, Product product);
 
-  protected Single<List<Payment>> convertResponseToPayment(List<PaymentServiceResponse> payments) {
+  protected Single<List<Payment>> convertResponseToPayment(Context context,
+      List<PaymentServiceResponse> payments) {
     return Observable.from(payments)
-    .map(paymentService -> paymentFactory.create(paymentService))
+    .map(paymentService -> paymentFactory.create(context, paymentService))
     .toList().toSingle();
   }
 }

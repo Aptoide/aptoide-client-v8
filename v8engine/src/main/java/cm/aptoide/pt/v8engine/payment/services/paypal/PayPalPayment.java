@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
-import cm.aptoide.pt.v8engine.payment.AptoidePayment;
 import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
@@ -17,7 +16,8 @@ import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationRepository;
-import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentRepositoryFactory;
+import cm.aptoide.pt.v8engine.payment.services.AptoidePayment;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import java.math.BigDecimal;
 import rx.Completable;
@@ -41,16 +41,17 @@ public class PayPalPayment extends AptoidePayment {
 
   private final Context context;
   private final PayPalConfiguration configuration;
-  private final PaymentConfirmationRepository confirmationRepository;
+  private final PaymentRepositoryFactory paymentRepositoryFactory;
 
   public PayPalPayment(Context context, int id, String name, String description,
-      PaymentConfirmationRepository confirmationRepository, PaymentAuthorizationRepository authorizationRepository,
-      PayPalConfiguration configuration, boolean authorizationRequired,
-      PaymentAuthorizationFactory authorizationFactory, Payer payer) {
-    super(id, name, description, confirmationRepository);
+      PaymentRepositoryFactory paymentRepositoryFactory,
+      PaymentAuthorizationRepository authorizationRepository, PayPalConfiguration configuration,
+      boolean authorizationRequired, PaymentAuthorizationFactory authorizationFactory,
+      Payer payer) {
+    super(id, name, description, paymentRepositoryFactory);
     this.context = context;
     this.configuration = configuration;
-    this.confirmationRepository = confirmationRepository;
+    this.paymentRepositoryFactory = paymentRepositoryFactory;
   }
 
   @Override public Completable process(Product product) {
@@ -61,8 +62,10 @@ public class PayPalPayment extends AptoidePayment {
         .doOnSubscribe(() -> startPayPalActivity(product.getPrice(), product))
         .first(intent -> isPaymentConfirmationIntent(intent))
         .flatMap(intent -> getIntentPaymentConfirmationId(intent, getId(), product.getId()))
-        .flatMap(paymentConfirmationId -> confirmationRepository.createPaymentConfirmation(getId(),
-            paymentConfirmationId, product).toObservable())
+        .flatMap(paymentConfirmationId -> paymentRepositoryFactory.getPaymentConfirmationRepository(
+            product)
+            .createPaymentConfirmation(getId(), paymentConfirmationId, product)
+            .toObservable())
         .toCompletable();
   }
 

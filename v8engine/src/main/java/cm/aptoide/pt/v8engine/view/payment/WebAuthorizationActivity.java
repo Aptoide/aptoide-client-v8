@@ -17,10 +17,8 @@ import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
 import cm.aptoide.pt.v8engine.presenter.PaymentAuthorizationView;
 import cm.aptoide.pt.v8engine.presenter.WebAuthorizationPresenter;
 import cm.aptoide.pt.v8engine.view.BackButtonActivity;
@@ -30,10 +28,23 @@ import rx.Observable;
 public class WebAuthorizationActivity extends BackButtonActivity
     implements PaymentAuthorizationView {
 
+  private static final String EXTRA_APP_ID =
+      "cm.aptoide.pt.v8engine.view.payment.intent.extra.APP_ID";
+  private static final String EXTRA_STORE_NAME =
+      "cm.aptoide.pt.v8engine.view.payment.intent.extra.STORE_NAME";
+  private static final String EXTRA_SPONSORED =
+      "cm.aptoide.pt.v8engine.view.payment.intent.extra.SPONSORED";
+  private static final String EXTRA_API_VERSION =
+      "cm.aptoide.pt.v8engine.view.payment.intent.extra.API_VERSION";
+  private static final String EXTRA_PACKAGE_NAME =
+      "cm.aptoide.pt.v8engine.view.payment.intent.extra.PACKAGE_NAME";
+  private static final String EXTRA_SKU = "cm.aptoide.pt.v8engine.view.payment.intent.extra.SKU";
+  private static final String EXTRA_TYPE = "cm.aptoide.pt.v8engine.view.payment.intent.extra.TYPE";
+  private static final String EXTRA_DEVELOPER_PAYLOAD =
+      "cm.aptoide.pt.v8engine.view.payment.intent.extra.DEVELOPER_PAYLOAD";
   private static final String EXTRA_PAYMENT_ID =
-      "cm.aptoide.pt.v8engine.payment.providers.boacompra.intent.extra.PAYMENT_ID";
-  private static final String EXTRA_PRODUCT =
-      "cm.aptoide.pt.v8engine.payment.providers.boacompra.intent.extra.PRODUCT";
+      "cm.aptoide.pt.v8engine.view.payment.intent.extra.PAYMENT_ID";
+
   private WebView webView;
   private View progressBarContainer;
   private AlertDialog unknownErrorDialog;
@@ -42,10 +53,25 @@ public class WebAuthorizationActivity extends BackButtonActivity
   private PublishRelay<Void> backButtonSelectionSubject;
   private ClickHandler clickHandler;
 
-  public static Intent getIntent(Context context, int paymentId, ParcelableProduct product) {
+  public static Intent getIntent(Context context, int paymentId, long appId, String storeName,
+      boolean sponsored) {
+    final Intent intent = new Intent(context, PaymentActivity.class);
+    intent.putExtra(EXTRA_APP_ID, appId);
+    intent.putExtra(EXTRA_STORE_NAME, storeName);
+    intent.putExtra(EXTRA_SPONSORED, sponsored);
+    intent.putExtra(EXTRA_PAYMENT_ID, paymentId);
+    return intent;
+  }
+
+  public static Intent getIntent(Context context, int paymentId, int apiVersion, String packageName,
+      String type, String sku, String developerPayload) {
     final Intent intent = new Intent(context, WebAuthorizationActivity.class);
     intent.putExtra(EXTRA_PAYMENT_ID, paymentId);
-    intent.putExtra(EXTRA_PRODUCT, product);
+    intent.putExtra(EXTRA_API_VERSION, apiVersion);
+    intent.putExtra(EXTRA_PACKAGE_NAME, packageName);
+    intent.putExtra(EXTRA_TYPE, type);
+    intent.putExtra(EXTRA_SKU, sku);
+    intent.putExtra(EXTRA_DEVELOPER_PAYLOAD, developerPayload);
     return intent;
   }
 
@@ -54,35 +80,34 @@ public class WebAuthorizationActivity extends BackButtonActivity
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_web_authorization);
 
-    if (getIntent().hasExtra(EXTRA_PAYMENT_ID) && getIntent().hasExtra(EXTRA_PRODUCT)) {
+    webView = (WebView) findViewById(R.id.activity_boa_compra_authorization_web_view);
+    webView.getSettings().setJavaScriptEnabled(true);
+    webView.setWebChromeClient(new WebChromeClient());
+    progressBarContainer = findViewById(R.id.activity_web_authorization_preogress_bar);
+    unknownErrorDialog = new AlertDialog.Builder(this).setMessage(R.string.having_some_trouble)
+        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+          finish();
+        })
+        .create();
+    mainUrlSubject = PublishRelay.create();
+    redirectUrlSubject = PublishRelay.create();
+    backButtonSelectionSubject = PublishRelay.create();
+    clickHandler = () -> {
+      backButtonSelectionSubject.call(null);
+      return false;
+    };
+    registerBackClickHandler(clickHandler);
 
-      webView = (WebView) findViewById(R.id.activity_boa_compra_authorization_web_view);
-      webView.getSettings().setJavaScriptEnabled(true);
-      webView.setWebChromeClient(new WebChromeClient());
-      progressBarContainer = findViewById(R.id.activity_web_authorization_preogress_bar);
-      unknownErrorDialog = new AlertDialog.Builder(this).setMessage(R.string.having_some_trouble)
-          .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-            finish();
-          })
-          .create();
-      mainUrlSubject = PublishRelay.create();
-      redirectUrlSubject = PublishRelay.create();
-      backButtonSelectionSubject = PublishRelay.create();
-      clickHandler = () -> {
-        backButtonSelectionSubject.call(null);
-        return false;
-      };
-      registerBackClickHandler(clickHandler);
-
-      final ParcelableProduct product = getIntent().getParcelableExtra(EXTRA_PRODUCT);
-      attachPresenter(new WebAuthorizationPresenter(this,
-          ((V8Engine) getApplicationContext()).getAptoideBilling(product), product,
-          getIntent().getIntExtra(EXTRA_PAYMENT_ID, 0),
-          ((V8Engine) getApplicationContext()).getPaymentAnalytics(),
-          ((V8Engine) getApplicationContext()).getPaymentSyncScheduler()), savedInstanceState);
-    } else {
-      throw new IllegalStateException("Web payment urls must be provided");
-    }
+    attachPresenter(new WebAuthorizationPresenter(this, this,
+        ((V8Engine) getApplicationContext()).getAptoideBilling(),
+        getIntent().getIntExtra(EXTRA_PAYMENT_ID, 0),
+        ((V8Engine) getApplicationContext()).getPaymentAnalytics(),
+        ((V8Engine) getApplicationContext()).getPaymentSyncScheduler(),
+        getIntent().getLongExtra(EXTRA_APP_ID, -1), getIntent().getStringExtra(EXTRA_STORE_NAME),
+        getIntent().getBooleanExtra(EXTRA_SPONSORED, false),
+        getIntent().getIntExtra(EXTRA_API_VERSION, -1), getIntent().getStringExtra(EXTRA_TYPE),
+        getIntent().getStringExtra(EXTRA_SKU), getIntent().getStringExtra(EXTRA_PACKAGE_NAME),
+        getIntent().getStringExtra(EXTRA_DEVELOPER_PAYLOAD)), savedInstanceState);
   }
 
   @Override protected void onDestroy() {

@@ -90,12 +90,6 @@ import cm.aptoide.pt.v8engine.payment.AccountPayer;
 import cm.aptoide.pt.v8engine.payment.AptoideBilling;
 import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
-import cm.aptoide.pt.v8engine.payment.PaymentFactory;
-import cm.aptoide.pt.v8engine.payment.Product;
-import cm.aptoide.pt.v8engine.payment.ProductRepository;
-import cm.aptoide.pt.v8engine.payment.PurchaseFactory;
-import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
-import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
 import cm.aptoide.pt.v8engine.payment.repository.InAppBillingProductRepository;
 import cm.aptoide.pt.v8engine.payment.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.payment.repository.InAppPaymentConfirmationRepository;
@@ -104,7 +98,11 @@ import cm.aptoide.pt.v8engine.payment.repository.PaidAppProductRepository;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationRepository;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationFactory;
-import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentFactory;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentRepositoryFactory;
+import cm.aptoide.pt.v8engine.payment.repository.ProductFactory;
+import cm.aptoide.pt.v8engine.payment.repository.ProductRepositoryFactory;
+import cm.aptoide.pt.v8engine.payment.repository.PurchaseFactory;
 import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncScheduler;
 import cm.aptoide.pt.v8engine.payment.repository.sync.ProductBundleMapper;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
@@ -186,10 +184,11 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private ObjectMapper nonNullObjectMapper;
   private RequestBodyFactory requestBodyFactory;
   private PaymentSyncScheduler paymentSyncScheduler;
-  private PaymentAuthorizationRepository paymentAuthorizationRepository;
   private InAppBillingRepository inAppBillingRepository;
   private Payer accountPayer;
   private InAppBillingSerializer inAppBillingSerialzer;
+  private PaymentAuthorizationFactory authorizationFactory;
+  private AptoideBilling aptoideBilling;
 
   /**
    * call after this instance onCreate()
@@ -506,35 +505,64 @@ public abstract class V8Engine extends SpotAndShareApplication {
     return paymentSyncScheduler;
   }
 
-  public AptoideBilling getAptoideBilling(Product product) {
-    return new AptoideBilling(getPaymentConfirmationRepository(product),
-        getProductRepository(product));
+  public AptoideBilling getAptoideBilling() {
+
+    if (aptoideBilling == null) {
+
+      final PaymentAuthorizationRepository paymentAuthorizationRepository =
+          new PaymentAuthorizationRepository(
+              AccessorFactory.getAccessorFor(PaymentAuthorization.class), getPaymentSyncScheduler(),
+              getAuthorizationFactory(), getAccountManager(), getBaseBodyInterceptorV3(),
+              getDefaultClient(), WebService.getDefaultConverter(), getAccountPayer());
+
+      final ProductFactory productFactory = new ProductFactory();
+
+      final PaymentConfirmationFactory confirmationFactory = new PaymentConfirmationFactory();
+
+      final PaymentRepositoryFactory paymentRepositoryFactory = new PaymentRepositoryFactory(
+          new InAppPaymentConfirmationRepository(getNetworkOperatorManager(),
+              AccessorFactory.getAccessorFor(PaymentConfirmation.class), getPaymentSyncScheduler(),
+              confirmationFactory, getAccountManager(), getBaseBodyInterceptorV3(),
+              getDefaultClient(), WebService.getDefaultConverter(), getAccountPayer()),
+          new PaidAppPaymentConfirmationRepository(getNetworkOperatorManager(),
+              AccessorFactory.getAccessorFor(PaymentConfirmation.class), getPaymentSyncScheduler(),
+              confirmationFactory, getAccountManager(), getBaseBodyInterceptorV3(),
+              WebService.getDefaultConverter(), getDefaultClient(), getAccountPayer()));
+
+      final PurchaseFactory purchaseFactory = new PurchaseFactory(getInAppBillingSerializer());
+
+      final PaymentFactory paymentFactory =
+          new PaymentFactory(paymentRepositoryFactory, paymentAuthorizationRepository,
+              getAuthorizationFactory(), getAccountPayer());
+
+      final ProductRepositoryFactory productRepositoryFactory = new ProductRepositoryFactory(
+          new PaidAppProductRepository(purchaseFactory, paymentFactory,
+              paymentAuthorizationRepository,
+              paymentRepositoryFactory.getPaidAppConfirmationRepository(), getAccountPayer(),
+              getAuthorizationFactory(), getNetworkOperatorManager(), getBaseBodyInterceptorV3(),
+              getDefaultClient(), WebService.getDefaultConverter(), productFactory),
+          new InAppBillingProductRepository(getInAppBillingRepository(), purchaseFactory,
+              paymentFactory, paymentAuthorizationRepository,
+              paymentRepositoryFactory.getInAppConfirmationRepository(), getAccountPayer(),
+              getAuthorizationFactory(), productFactory));
+
+      aptoideBilling = new AptoideBilling(productRepositoryFactory, paymentRepositoryFactory);
+    }
+    return aptoideBilling;
   }
 
   public InAppBillingSerializer getInAppBillingSerializer() {
     if (inAppBillingSerialzer == null) {
-      inAppBillingSerialzer =  new InAppBillingSerializer();
+      inAppBillingSerialzer = new InAppBillingSerializer();
     }
     return inAppBillingSerialzer;
   }
 
-  public ProductRepository getProductRepository(Product product) {
-    final PurchaseFactory purchaseFactory = new PurchaseFactory(getInAppBillingSerializer());
-    final Payer payer = getAccountPayer();
-    final PaymentFactory paymentFactory =
-        new PaymentFactory(this, getPaymentConfirmationRepository(product),
-            getPaymentAuthorizationRepository(), new PaymentAuthorizationFactory(), payer);
-    final PaymentAuthorizationFactory authorizationFactory = new PaymentAuthorizationFactory();
-    if (product instanceof InAppBillingProduct) {
-      return new InAppBillingProductRepository(getInAppBillingRepository(), purchaseFactory,
-          paymentFactory, (InAppBillingProduct) product, getPaymentAuthorizationRepository(),
-          getPaymentConfirmationRepository(product), payer, authorizationFactory);
-    } else {
-      return new PaidAppProductRepository(purchaseFactory, paymentFactory, (PaidAppProduct) product,
-          getPaymentAuthorizationRepository(), getPaymentConfirmationRepository(product), payer,
-          authorizationFactory, getNetworkOperatorManager(), getBaseBodyInterceptorV3(),
-          getDefaultClient(), WebService.getDefaultConverter());
+  public PaymentAuthorizationFactory getAuthorizationFactory() {
+    if (authorizationFactory == null) {
+      authorizationFactory = new PaymentAuthorizationFactory();
     }
+    return authorizationFactory;
   }
 
   public Payer getAccountPayer() {
@@ -544,22 +572,6 @@ public abstract class V8Engine extends SpotAndShareApplication {
     return accountPayer;
   }
 
-  public PaymentConfirmationRepository getPaymentConfirmationRepository(Product product) {
-    if (product instanceof InAppBillingProduct) {
-      return new InAppPaymentConfirmationRepository(getNetworkOperatorManager(),
-          AccessorFactory.getAccessorFor(PaymentConfirmation.class), getPaymentSyncScheduler(),
-          new PaymentConfirmationFactory(), getAccountManager(), getBaseBodyInterceptorV3(),
-          getDefaultClient(), WebService.getDefaultConverter(), getAccountPayer());
-    } else if (product instanceof PaidAppProduct) {
-      return new PaidAppPaymentConfirmationRepository(getNetworkOperatorManager(),
-          AccessorFactory.getAccessorFor(PaymentConfirmation.class), getPaymentSyncScheduler(),
-          new PaymentConfirmationFactory(), getAccountManager(), getBaseBodyInterceptorV3(),
-          WebService.getDefaultConverter(), getDefaultClient(), getAccountPayer());
-    } else {
-      throw new IllegalArgumentException("No compatible repository for product " + product.getId());
-    }
-  }
-
   public InAppBillingRepository getInAppBillingRepository() {
     if (inAppBillingRepository == null) {
       inAppBillingRepository = new InAppBillingRepository(getNetworkOperatorManager(),
@@ -567,16 +579,6 @@ public abstract class V8Engine extends SpotAndShareApplication {
           getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter());
     }
     return inAppBillingRepository;
-  }
-
-  public PaymentAuthorizationRepository getPaymentAuthorizationRepository() {
-    if (paymentAuthorizationRepository == null) {
-      paymentAuthorizationRepository = new PaymentAuthorizationRepository(
-          AccessorFactory.getAccessorFor(PaymentAuthorization.class), getPaymentSyncScheduler(),
-          new PaymentAuthorizationFactory(), getAccountManager(), getBaseBodyInterceptorV3(),
-          getDefaultClient(), WebService.getDefaultConverter(), getAccountPayer());
-    }
-    return paymentAuthorizationRepository;
   }
 
   public NetworkOperatorManager getNetworkOperatorManager() {
