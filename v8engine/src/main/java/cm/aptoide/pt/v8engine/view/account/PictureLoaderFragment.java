@@ -35,13 +35,13 @@ import java.util.Locale;
 // migrate the profile picture rules to another entity
 @Deprecated public abstract class PictureLoaderFragment extends BaseToolbarFragment {
 
-  private static final String TAG = PictureLoaderFragment.class.getName();
   public static final int GALLERY_CODE = 1046;
   public static final int REQUEST_IMAGE_CAPTURE = 1;
   protected static final String FILE_NAME = "file_name";
+  private static final String TAG = PictureLoaderFragment.class.getName();
+  protected String photoFileName;
   private boolean createUserProfile;
   private boolean createStore;
-  protected String photoFileName;
 
   protected PictureLoaderFragment(boolean createUserProfile, boolean createStore) {
     this.createUserProfile = createUserProfile;
@@ -66,11 +66,12 @@ import java.util.Locale;
     RxView.clicks(dialog.findViewById(R.id.button_gallery))
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(click -> {
-          PictureLoaderFragment.this.requestAccessToExternalFileSystem(() -> {
-            dispatchOpenGalleryIntent();
-          }, () -> {
-            Logger.e(TAG, "User denied access to camera");
-          });
+          PictureLoaderFragment.this.requestAccessToExternalFileSystem(false,
+              R.string.access_to_open_gallery_rationale, () -> {
+                dispatchOpenGalleryIntent();
+              }, () -> {
+                Logger.e(TAG, "User denied access to camera");
+              });
           dialog.dismiss();
         });
 

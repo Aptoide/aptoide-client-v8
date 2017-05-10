@@ -136,7 +136,7 @@ public class ProfileStepOneFragment extends BaseToolbarFragment {
 
   private Completable showContinueSuccessMessage() {
     return Completable.fromAction(() -> waitDialog.dismiss())
-        .andThen(ShowMessage.asObservableSnack(this, R.string.successful)
+        .andThen(ShowMessage.asObservableSnack(this, R.string.title_successful)
             .takeUntil(visibility -> visibility == ShowMessage.DISMISSED))
         .toCompletable();
   }

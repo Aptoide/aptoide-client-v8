@@ -634,5 +634,6 @@
   <string name="search_minimum_chars">Search query must have at least 2 chars.</string>
 
   <string name="app_name">Aptoide</string>
+  <string name="access_to_open_gallery_rationale">You need to allow access to the Gallery</string>
 
 </resources>

@@ -4,13 +4,13 @@ import android.text.TextUtils;
 import org.parceler.Parcel;
 
 @Parcel class CreateStoreModel {
-  private long storeId;
-  private String storeName;
-  private String storeDescription;
-  private String storeAvatarPath;
-  private String storeThemeName;
-  private String storeFrom;
-  private String storeRemoteUrl;
+  long storeId;
+  String storeName;
+  String storeDescription;
+  String storeAvatarPath;
+  String storeThemeName;
+  String storeFrom;
+  String storeRemoteUrl;
 
   public CreateStoreModel() {
   }

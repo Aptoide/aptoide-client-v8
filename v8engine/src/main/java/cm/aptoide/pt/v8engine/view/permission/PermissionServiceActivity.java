@@ -64,49 +64,10 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
 
   @TargetApi(Build.VERSION_CODES.M) @Override
   public void requestAccessToExternalFileSystem(boolean forceShowRationale,
-      @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDennied) {
-    int hasPermission =
-        ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-    if (hasPermission != PackageManager.PERMISSION_GRANTED) {
-      this.toRunWhenAccessToFileSystemIsGranted = toRunWhenAccessIsGranted;
-      this.toRunWhenAccessToFileSystemIsDenied = toRunWhenAccessIsDennied;
-
-      if (forceShowRationale || ActivityCompat.shouldShowRequestPermissionRationale(this,
-          Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-        Logger.v(TAG, "showing rationale and requesting permission to access external storage");
-
-        // TODO: 19/07/16 sithengineer improve this rationale messages
-        showMessageOKCancel(R.string.storage_access_permission_request_message,
-            new SimpleSubscriber<GenericDialogs.EResponse>() {
-
-              @Override public void onNext(GenericDialogs.EResponse eResponse) {
-                super.onNext(eResponse);
-                if (eResponse != GenericDialogs.EResponse.YES) {
-                  if (toRunWhenAccessToFileSystemIsDenied != null) {
-                    toRunWhenAccessToFileSystemIsDenied.call();
-                  }
-                  return;
-                }
-
-                ActivityCompat.requestPermissions(PermissionServiceActivity.this, new String[] {
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                }, ACCESS_TO_EXTERNAL_FS_REQUEST_ID);
-              }
-            });
-        return;
-      }
-
-      ActivityCompat.requestPermissions(this, new String[] {
-          Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE
-      }, ACCESS_TO_EXTERNAL_FS_REQUEST_ID);
-      Logger.v(TAG, "requesting permission to access external storage");
-      return;
-    }
-    Logger.v(TAG, "already has permission to access external storage");
-    if (toRunWhenAccessIsGranted != null) {
-      toRunWhenAccessIsGranted.call();
-    }
+      @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
+    requestAccessToExternalFileSystem(forceShowRationale,
+        R.string.storage_access_permission_request_message, toRunWhenAccessIsGranted,
+        toRunWhenAccessIsDenied);
   }
 
   @TargetApi(Build.VERSION_CODES.M) @Override
@@ -243,14 +204,12 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
 
   @Override public void requestAccessToCamera(@Nullable Action0 toRunWhenAccessIsGranted,
       @Nullable Action0 toRunWhenAccessIsDenied) {
-    int hasPermission =
-        ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+    int hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
     if (hasPermission != PackageManager.PERMISSION_GRANTED) {
       this.toRunWhenAccessToFileSystemIsGranted = toRunWhenAccessIsGranted;
       this.toRunWhenAccessToFileSystemIsDenied = toRunWhenAccessIsDenied;
 
-      if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-          Manifest.permission.CAMERA)) {
+      if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
         Logger.v(TAG, "showing rationale and requesting permission to access camera");
 
         showMessageOKCancel(R.string.camera_access_permission_request_message,
@@ -280,6 +239,53 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
       return;
     }
     Logger.v(TAG, "already has permission to access camera");
+    if (toRunWhenAccessIsGranted != null) {
+      toRunWhenAccessIsGranted.call();
+    }
+  }
+
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void requestAccessToExternalFileSystem(boolean forceShowRationale,
+      @StringRes int rationaleMessage, @Nullable Action0 toRunWhenAccessIsGranted,
+      @Nullable Action0 toRunWhenAccessIsDennied) {
+    int hasPermission =
+        ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    if (hasPermission != PackageManager.PERMISSION_GRANTED) {
+      this.toRunWhenAccessToFileSystemIsGranted = toRunWhenAccessIsGranted;
+      this.toRunWhenAccessToFileSystemIsDenied = toRunWhenAccessIsDennied;
+
+      if (forceShowRationale || ActivityCompat.shouldShowRequestPermissionRationale(this,
+          Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        Logger.v(TAG, "showing rationale and requesting permission to access external storage");
+
+        // TODO: 19/07/16 sithengineer improve this rationale messages
+        showMessageOKCancel(rationaleMessage, new SimpleSubscriber<GenericDialogs.EResponse>() {
+
+          @Override public void onNext(GenericDialogs.EResponse eResponse) {
+            super.onNext(eResponse);
+            if (eResponse != GenericDialogs.EResponse.YES) {
+              if (toRunWhenAccessToFileSystemIsDenied != null) {
+                toRunWhenAccessToFileSystemIsDenied.call();
+              }
+              return;
+            }
+
+            ActivityCompat.requestPermissions(PermissionServiceActivity.this, new String[] {
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            }, ACCESS_TO_EXTERNAL_FS_REQUEST_ID);
+          }
+        });
+        return;
+      }
+
+      ActivityCompat.requestPermissions(this, new String[] {
+          Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE
+      }, ACCESS_TO_EXTERNAL_FS_REQUEST_ID);
+      Logger.v(TAG, "requesting permission to access external storage");
+      return;
+    }
+    Logger.v(TAG, "already has permission to access external storage");
     if (toRunWhenAccessIsGranted != null) {
       toRunWhenAccessIsGranted.call();
     }
