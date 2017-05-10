@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 09/02/2017.
  */
 
-package cm.aptoide.pt.v8engine.view.account.user;
+package cm.aptoide.pt.v8engine.view.account;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -32,18 +32,18 @@ import java.util.Locale;
  */
 
 // FIXME: 6/4/2017
-// migrate the profile picture rules to another entity or use a shrinking strategy to the supplied picture
-@Deprecated abstract class PictureLoaderFragment extends BaseToolbarFragment {
+// migrate the profile picture rules to another entity
+@Deprecated public abstract class PictureLoaderFragment extends BaseToolbarFragment {
 
   private static final String TAG = PictureLoaderFragment.class.getName();
   public static final int GALLERY_CODE = 1046;
   public static final int REQUEST_IMAGE_CAPTURE = 1;
   protected static final String FILE_NAME = "file_name";
-  String photoFileName;
   private boolean createUserProfile;
   private boolean createStore;
+  protected String photoFileName;
 
-  PictureLoaderFragment(boolean createUserProfile, boolean createStore) {
+  protected PictureLoaderFragment(boolean createUserProfile, boolean createStore) {
     this.createUserProfile = createUserProfile;
     this.createStore = createStore;
   }
@@ -124,7 +124,7 @@ import java.util.Locale;
     return new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
   }
 
-  Uri getFileUriFromFileName(String fileName) {
+  protected Uri getFileUriFromFileName(String fileName) {
     File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),
         ".aptoide/user_avatar");
     if (!storageDir.exists() && !storageDir.mkdirs()) {

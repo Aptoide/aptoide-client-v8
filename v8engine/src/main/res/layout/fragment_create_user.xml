@@ -28,11 +28,44 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <LinearLayout
+        android:id="@+id/bottom_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_default_height"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/padding_medium_small"
+        android:layout_marginEnd="@dimen/padding_medium_default"
+        android:layout_marginLeft="@dimen/padding_medium_default"
+        android:layout_marginRight="@dimen/padding_medium_default"
+        android:layout_marginStart="@dimen/padding_medium_default"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        >
+
+      <!--fake space-->
+      <View
+          android:layout_width="0dp"
+          android:layout_height="0dp"
+          android:layout_weight="1"
+          />
+
+      <Button
+          android:id="@+id/create_user_create_profile"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:text="@string/create_user_create_button"
+          style="?attr/customButton"
+          />
+
+    </LinearLayout>
 
     <ScrollView
         android:id="@+id/scroll_view"
+        android:layout_above="@id/bottom_buttons"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/appbar"
         >
 
@@ -153,40 +186,6 @@
       </LinearLayout>
 
     </ScrollView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@id/scroll_view"
-        android:layout_marginBottom="@dimen/padding_medium_small"
-        android:layout_marginEnd="@dimen/padding_medium_default"
-        android:layout_marginLeft="@dimen/padding_medium_default"
-        android:layout_marginRight="@dimen/padding_medium_default"
-        android:layout_marginStart="@dimen/padding_medium_default"
-        android:layout_marginTop="@dimen/padding_large"
-        android:gravity="bottom"
-        android:orientation="horizontal"
-        android:weightSum="2"
-        >
-
-      <!--fake space-->
-      <View
-          android:layout_width="0dp"
-          android:layout_height="0dp"
-          android:layout_weight="1"
-          />
-
-      <Button
-          android:id="@+id/create_user_create_profile"
-          android:layout_width="0dp"
-          android:layout_height="@dimen/button_default_height"
-          android:layout_weight="1"
-          android:text="@string/create_user_create_button"
-          style="?attr/customButton"
-          />
-
-    </LinearLayout>
 
   </RelativeLayout>
 

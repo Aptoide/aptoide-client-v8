@@ -26,31 +26,32 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.presenter.CreateUserView;
 import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
 import cm.aptoide.pt.v8engine.view.account.AccountErrorMapper;
+import cm.aptoide.pt.v8engine.view.account.PictureLoaderFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import rx.Completable;
+import rx.Observable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 
 // TODO
-// chain Rx in method calls
-// apply MVP
-// save / restore data in input fields
-public class CreateUserFragment extends PictureLoaderFragment {
+// create presenter and separate logic code from view
+public class CreateUserFragment extends PictureLoaderFragment implements CreateUserView {
 
   private static final String TAG = CreateUserFragment.class.getName();
+  private static final String USER_IMAGE_PATH = "user_image_path";
 
   private ThrowableToStringMapper errorMapper;
-
-  private String avatarPath;
-  private RelativeLayout userAvatar;
-  private EditText nameEditText;
+  private String userPicturePath;
+  private ImageView userPicture;
+  private RelativeLayout userPictureLayout;
+  private EditText userName;
   private Button createUserButton;
-  private ImageView avatarImage;
   private AptoideAccountManager accountManager;
   private ProgressDialog uploadWaitDialog;
   private ProgressDialog waitDialog;
@@ -80,6 +81,13 @@ public class CreateUserFragment extends PictureLoaderFragment {
         applicationContext.getString(R.string.please_wait));
   }
 
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    if (savedInstanceState != null && savedInstanceState.containsKey(USER_IMAGE_PATH)) {
+      loadImage(Uri.parse(savedInstanceState.getString(USER_IMAGE_PATH)));
+    }
+  }
+
   @Override public void onDestroy() {
     super.onDestroy();
 
@@ -92,12 +100,17 @@ public class CreateUserFragment extends PictureLoaderFragment {
     }
   }
 
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putString(USER_IMAGE_PATH, userPicturePath);
+  }
+
   @Override public int getContentViewId() {
     return R.layout.fragment_create_user;
   }
 
   public void loadImage(Uri imagePath) {
-    ImageLoader.with(getActivity()).loadWithCircleTransform(imagePath, avatarImage, false);
+    ImageLoader.with(getActivity()).loadWithCircleTransform(imagePath, userPicture, false);
   }
 
   @Override public void showIconPropertiesError(String errors) {
@@ -110,29 +123,27 @@ public class CreateUserFragment extends PictureLoaderFragment {
   @Override public void setupViews() {
     super.setupViews();
 
-    RxView.clicks(userAvatar)
-        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+    selectUserImage().compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(__ -> chooseAvatarSource());
 
     final Completable dismissProgressDialogCompletable =
         Completable.fromAction(() -> dismissProgressDialog());
 
     final Completable sendAnalytics = Completable.fromAction(
-        () -> Analytics.Account.createdUserProfile(!TextUtils.isEmpty(avatarPath)));
+        () -> Analytics.Account.createdUserProfile(!TextUtils.isEmpty(userPicturePath)));
 
-    RxView.clicks(createUserButton)
-        .doOnNext(__ -> hideKeyboardAndShowProgressDialog())
-        .flatMap(
-            __ -> accountManager.updateAccount(nameEditText.getText().toString().trim(), avatarPath)
-                .timeout(90, TimeUnit.SECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .andThen(Completable.merge(dismissProgressDialogCompletable, sendAnalytics))
-                .andThen(showSuccessMessageAndNavigateToLoggedInView())
-                .onErrorResumeNext(err -> {
-                  CrashReport.getInstance().log(err);
-                  return dismissProgressDialogCompletable.andThen(showError(err));
-                })
-                .toObservable())
+    createUserButtonClick().doOnNext(__ -> hideKeyboardAndShowProgressDialog())
+        .flatMap(__ -> accountManager.updateAccount(userName.getText().toString().trim(),
+            userPicturePath)
+            .timeout(90, TimeUnit.SECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .andThen(Completable.merge(dismissProgressDialogCompletable, sendAnalytics))
+            .andThen(showSuccessMessageAndNavigateToLoggedInView())
+            .onErrorResumeNext(err -> {
+              CrashReport.getInstance().log(err);
+              return dismissProgressDialogCompletable.andThen(showError(err));
+            })
+            .toObservable())
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .retry()
         .subscribe(__ -> {
@@ -146,10 +157,18 @@ public class CreateUserFragment extends PictureLoaderFragment {
 
   @Override public void bindViews(View view) {
     super.bindViews(view);
-    userAvatar = (RelativeLayout) view.findViewById(R.id.create_user_image_action);
-    nameEditText = (EditText) view.findViewById(R.id.create_user_username_inserted);
+    userPictureLayout = (RelativeLayout) view.findViewById(R.id.create_user_image_action);
+    userName = (EditText) view.findViewById(R.id.create_user_username_inserted);
     createUserButton = (Button) view.findViewById(R.id.create_user_create_profile);
-    avatarImage = (ImageView) view.findViewById(R.id.create_user_image);
+    userPicture = (ImageView) view.findViewById(R.id.create_user_image);
+  }
+
+  @Override public Observable<Void> createUserButtonClick() {
+    return RxView.clicks(createUserButton);
+  }
+
+  @Override public Observable<Void> selectUserImage() {
+    return RxView.clicks(userPictureLayout);
   }
 
   private void hideKeyboardAndShowProgressDialog() {
@@ -226,7 +245,7 @@ public class CreateUserFragment extends PictureLoaderFragment {
   }
 
   private boolean isAvatarSelected() {
-    return !TextUtils.isEmpty(avatarPath);
+    return !TextUtils.isEmpty(userPicturePath);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -242,8 +261,8 @@ public class CreateUserFragment extends PictureLoaderFragment {
     }
 
     if (avatarUrl != null && !TextUtils.isEmpty(avatarUrl.toString())) {
-      avatarPath = new FileUtils().getMediaStoragePath(avatarUrl, applicationContext);
-      checkAvatarRequirements(avatarPath, avatarUrl);
+      userPicturePath = new FileUtils().getMediaStoragePath(avatarUrl, applicationContext);
+      checkAvatarRequirements(userPicturePath, avatarUrl);
     } else {
       Logger.w(TAG, "URI for content is null or empty");
     }

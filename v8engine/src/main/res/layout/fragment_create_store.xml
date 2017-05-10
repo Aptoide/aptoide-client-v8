@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     >
 
   <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       >
-
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -38,10 +37,54 @@
         android:textColor="@color/white"
         />
 
+
+    <LinearLayout
+        android:id="@+id/bottom_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/padding_medium_small"
+        android:layout_marginEnd="@dimen/padding_small"
+        android:layout_marginLeft="@dimen/padding_small"
+        android:layout_marginRight="@dimen/padding_small"
+        android:layout_marginStart="@dimen/padding_small"
+        android:layout_marginTop="@dimen/padding_medium"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        >
+
+      <Button
+          android:id="@+id/create_store_skip"
+          android:layout_width="0dp"
+          android:layout_height="@dimen/button_default_height"
+          android:layout_marginEnd="@dimen/padding_smaller"
+          android:layout_marginRight="@dimen/padding_smaller"
+          android:layout_weight="1"
+          android:gravity="center"
+          android:text="@string/skip"
+          style="?attr/customButtonWhite"
+          />
+
+      <Button
+          android:id="@+id/create_store_action"
+          android:layout_width="0dp"
+          android:layout_height="@dimen/button_default_height"
+          android:layout_marginLeft="@dimen/padding_smaller"
+          android:layout_marginStart="@dimen/padding_smaller"
+          android:layout_weight="1"
+          android:gravity="center"
+          android:text="@string/create_store_create"
+          style="?attr/customButton"
+          />
+
+    </LinearLayout>
+
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@id/bottom_buttons"
         android:layout_below="@id/create_store_header"
         >
 
@@ -652,46 +695,6 @@
           </LinearLayout>
 
         </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/padding_medium_small"
-            android:layout_marginEnd="@dimen/padding_small"
-            android:layout_marginLeft="@dimen/padding_small"
-            android:layout_marginRight="@dimen/padding_small"
-            android:layout_marginStart="@dimen/padding_small"
-            android:layout_marginTop="@dimen/padding_medium"
-            android:gravity="bottom"
-            android:orientation="horizontal"
-            android:weightSum="2"
-            >
-
-          <Button
-              android:id="@+id/create_store_skip"
-              android:layout_width="0dp"
-              android:layout_height="@dimen/button_default_height"
-              android:layout_marginEnd="@dimen/padding_smaller"
-              android:layout_marginRight="@dimen/padding_smaller"
-              android:layout_weight="1"
-              android:gravity="center"
-              android:text="@string/skip"
-              style="?attr/customButtonWhite"
-              />
-
-          <Button
-              android:id="@+id/create_store_action"
-              android:layout_width="0dp"
-              android:layout_height="@dimen/button_default_height"
-              android:layout_marginLeft="@dimen/padding_smaller"
-              android:layout_marginStart="@dimen/padding_smaller"
-              android:layout_weight="1"
-              android:gravity="center"
-              android:text="@string/create_store_create"
-              style="?attr/customButton"
-              />
-
-        </LinearLayout>
 
       </LinearLayout>
 
