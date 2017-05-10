@@ -29,7 +29,6 @@
   <string name="setting_dont_show_mature_content">Show mature content</string>
   <string name="setting_mature_filtering">Adult Content</string>
   <string name="setting_updates">Updates</string>
-  <string name="whats_new">What\'s new?</string>
   <string name="setting_updates_notification_sum">Show new updates notifications</string>
   <string name="setting_updates_notification_title">Updates Notification</string>
   <string name="setting_auto_update_sum">Enable applications automatic update</string>
@@ -39,19 +38,14 @@
   <string name="setting_schdwninstallsum">Install scheduled downloads automatically when a WiFi connection is present</string>
   <string name="setting_schdwninstalltitle">Automatic Install</string>
   <string name="setting_clear_memory">Storage</string>
-  <string name="clearcontent_title">Remove data and configurations</string>
   <string name="settings_maxFileCache_sum">Set a maximum size to keep your apk files</string>
   <string name="settings_maxFileCache_title">Download File Cache (MB)</string>
-  <string name="change_theme">Change theme</string>
-  <string name="change_theme_soon">Coming soon</string>
-  <string name="theme">Themes</string>
-  <string name="root">Root</string>
-  <string name="allow_root">Allow root installation</string>
-  <string name="disable_social_timeline">Disable Social Timeline</string>
-  <string name="social_timeline_notifications_sum2">Enable Aptoide Social Timeline Notifications. You will receive the latest news on the notification bar.</string>
-  <string name="social_timeline_notifications">Timeline Notifications</string>
-  <string name="about_us">About us</string>
-  <string name="restart_aptoide">Please restart the application to change theme</string>
+  <string name="settings_change_theme">Change theme</string>
+  <string name="settings_change_theme_soon">Coming soon</string>
+  <string name="settings_theme">Themes</string>
+  <string name="settings_root">Root</string>
+  <string name="settings_allow_root">Allow root installation</string>
+  <string name="settings_about_us">About us</string>
   <string name="setting_sdk_version">SDK Version</string>
   <string name="setting_screen_size">Screen Size</string>
   <string name="setting_esgl_version">ESGL Version</string>
@@ -59,12 +53,5 @@
   <string name="cpuAbi">CPU</string>
   <string name="about_site">Website:</string>
   <string name="about_mail">Contact:</string>
-  <string name="clear_cache_sucess">Content successfully deleted</string>
-  <string name="clearcontent_sum">Deletes the data from the SD card.</string>
-  <string name="cache_using_X_mb">Using %s MB</string>
-  <string name="clearcache_sum">Deletes cache (icons, screenshots) from the SD card.</string>
-  <string name="clearcontent_sum_jolla">Deletes data</string>
-  <string name="clearcache_sum_jolla">Deletes cache (icons, screenshots)</string>
-
 
 </resources>

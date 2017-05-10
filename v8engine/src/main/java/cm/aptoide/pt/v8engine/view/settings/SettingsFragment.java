@@ -436,7 +436,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
             LinkMovementMethod.getInstance());
 
         new AlertDialog.Builder(context).setView(view)
-            .setTitle(getString(R.string.about_us))
+            .setTitle(getString(R.string.settings_about_us))
             .setIcon(android.R.drawable.ic_menu_info_details)
             .setPositiveButton(android.R.string.ok,
                 (dialogInterface, i) -> dialogInterface.cancel())

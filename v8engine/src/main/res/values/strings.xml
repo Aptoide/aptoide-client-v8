@@ -258,6 +258,7 @@
   <string name="add_store">Add store</string>
   <string name="downgrade_warning_dialog">By downgrading you may lose app related data and you may be logged out of the app’s account.</string>
 
+  <!--Clear storage-->
   <string name="freed_space">%s freed</string>
   <string name="storage_dialog_title">Clear Aptoide Storage</string>
   <string name="clear_cache_dialog_message">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data, …</string>

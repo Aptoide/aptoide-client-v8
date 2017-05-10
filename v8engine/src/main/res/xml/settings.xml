@@ -124,11 +124,11 @@
   </PreferenceCategory>
   <!--<PreferenceCategory-->
   <!--android:key="changetheme"-->
-  <!--android:title="@string/change_theme">-->
+  <!--android:title="@string/settings_change_theme">-->
 
   <!--<Preference-->
   <!--android:key="soon"-->
-  <!--android:title="@string/change_theme_soon"/>-->
+  <!--android:title="@string/settings_change_theme_soon"/>-->
   <!--&lt;!&ndash;<ListPreference&ndash;&gt;-->
   <!--&lt;!&ndash;android:defaultValue="light"&ndash;&gt;-->
   <!--&lt;!&ndash;android:entries="@array/theme_names"&ndash;&gt;-->
@@ -140,10 +140,10 @@
   <!--AN-1533 - temporary solution was to remove root installation-->
   <!--<PreferenceCategory-->
       <!--android:key="rootCategory"-->
-      <!--android:title="@string/root">-->
+      <!--android:title="@string/settings_root">-->
     <!--<CheckBoxPreference-->
         <!--android:key="allowRoot"-->
-        <!--android:title="@string/allow_root"/>-->
+        <!--android:title="@string/settings_allow_root"/>-->
     <!--<CheckBoxPreference-->
         <!--android:defaultValue="false"-->
         <!--android:key="auto_update"-->
@@ -153,10 +153,10 @@
 
   <PreferenceCategory
       android:key="about"
-      android:title="@string/about_us">
+      android:title="@string/settings_about_us">
     <Preference
         android:key="aboutDialog"
-        android:title="@string/about_us"/>
+        android:title="@string/settings_about_us"/>
   </PreferenceCategory>
 
   <!--
