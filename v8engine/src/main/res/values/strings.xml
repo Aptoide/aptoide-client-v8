@@ -23,7 +23,6 @@
   <string name="drawer_social_media_title">Let\'s stay connected</string>
 
 
-
   <string name="updates_filter_summary">Checking this, you won’t be notified of beta versions.</string>
   <string name="updates_filter_setting_title">Just show me stable app version updates</string>
   <string name="include_system_apps_title">Include system apps</string>
@@ -73,7 +72,6 @@
   <string name="appview_other_versions"><u>Other Versions</u></string>
   <string name="appview_latest_version_text">Latest version</string>
   <string name="appview_rate_this_app">rate this app</string>
-  <string name="appview_read_all">read all <![CDATA[>]]></string>
   <string name="zero">0</string>
   <string name="working_well">Working Well</string>
   <string name="needs_license">Needs License</string>
@@ -164,7 +162,7 @@
   <string name="description_not_available">No available description for this app</string>
   <string name="top_stores_fragment_title">Top Stores</string>
 
-  <!--server translations hammered-->
+  <!--server translations hammered aka bundle names and tab names-->
   <string name="home_title">Home</string>
   <string name="community">Community</string>
   <string name="stores">Stores</string>
@@ -244,7 +242,7 @@
   <string name="music_video">Music &amp; Video</string>
   <string name="essential_apps">Essential Apps</string>
   <string name="summer_apps">Summer Apps</string>
-  <string name="play_it">Play-It!</string>
+  <string name="title_play_it">Play-It!</string>
 
 
   <!--home Fragment-->
@@ -285,7 +283,6 @@
   <string name="version_number">Version: %1$s</string>
   <string name="app_size">Size: %1$s</string>
   <string name="comment_on_store">Comment %1$s store</string>
-  <string name="word_this">this</string>
 
   <!-- Store Meta widget -->
   <string name="edit_store">Edit</string>
@@ -302,9 +299,7 @@
   <string name="setting_category_autoupdate">%s Updates</string>
   <string name="setting_category_autoupdate_title">Get %s Update notifications</string>
   <string name="setting_category_autoupdate_message">Periodically check for %s new versions</string>
-  <string name="store_added_long_time_suggestion_message">show long term</string>
-  <string name="store_added_short_time_suggestion_message">show just created</string>
-  <string name="create_store_displayable_created_store_long_term_message">long term</string>
+  <string name="create_store_displayable_created_store_long_term_message" translatable="false">long term</string>
   <string name="create_store_displayable_explore_long_term_button">View Store</string>
   <string name="create_store_displayable_empty_description_message">Add a description for your Store. A good description helps you to get more followers and interaction.</string>
   <string name="fragment_spot_share_preview_start_button">Start</string>
@@ -344,7 +339,6 @@
   <!-- Spot and Share-->
   <string name="spot_share_line_1">Share apps with your friends</string>
   <string name="spot_share_line_2">Phone to phone, without Internet</string>
-
 
 
   <!--??-->
