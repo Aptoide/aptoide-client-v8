@@ -20,7 +20,7 @@ import cm.aptoide.pt.v8engine.view.fragment.BaseToolbarFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Completable;
-import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 // TODO
 // apply MVP
@@ -68,19 +68,25 @@ public class ProfileStepOneFragment extends BaseToolbarFragment {
     super.setupViews();
     RxView.clicks(continueBtn)
         .doOnNext(__ -> waitDialog.show())
-        .flatMap(
-            __ -> accountManager.updateAccount(Account.Access.PUBLIC).onErrorResumeNext(err -> {
-              CrashReport.getInstance().log(err);
-              return Completable.complete();
-            }).andThen(showContinueSuccessMessage()).doOnNext(aVoid -> {
-              Analytics.Account.accountProfileAction(1, Analytics.Account.ProfileAction.CONTINUE);
-            }).doOnNext(aVoid -> {
-              if (externalLogin) {
-                navigateToHome();
-                return;
-              }
-              navigateToCreateStore();
-            }))
+        .flatMapCompletable(
+            __ -> accountManager.updateAccount(Account.Access.PUBLIC)
+                .onErrorResumeNext(err -> {
+                  CrashReport.getInstance().log(err);
+                  return Completable.complete();
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .andThen(showContinueSuccessMessage())
+                .doOnCompleted(() -> {
+                  Analytics.Account.accountProfileAction(1,
+                      Analytics.Account.ProfileAction.CONTINUE);
+                })
+                .doOnCompleted(() -> {
+                  if (externalLogin) {
+                    navigateToHome();
+                    return;
+                  }
+                  navigateToCreateStore();
+                }))
         .retry()
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -128,10 +134,11 @@ public class ProfileStepOneFragment extends BaseToolbarFragment {
     ShowMessage.asSnack(this, R.string.unknown_error);
   }
 
-  private Observable<Void> showContinueSuccessMessage() {
+  private Completable showContinueSuccessMessage() {
     return Completable.fromAction(() -> waitDialog.dismiss())
-        .andThen(ShowMessage.asObservableSnack(this, R.string.successful))
-        .map(__ -> null);
+        .andThen(ShowMessage.asObservableSnack(this, R.string.successful)
+            .takeUntil(visibility -> visibility == ShowMessage.DISMISSED))
+        .toCompletable();
   }
 }
 

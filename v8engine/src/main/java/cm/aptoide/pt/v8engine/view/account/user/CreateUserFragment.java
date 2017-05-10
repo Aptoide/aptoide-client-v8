@@ -30,6 +30,7 @@ import cm.aptoide.pt.v8engine.presenter.CreateUserView;
 import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
 import cm.aptoide.pt.v8engine.view.account.AccountErrorMapper;
 import cm.aptoide.pt.v8engine.view.account.PictureLoaderFragment;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import com.jakewharton.rxbinding.view.RxView;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
@@ -240,7 +241,9 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
   }
 
   private void navigateToProfileStepOne() {
-    getFragmentNavigator().navigateTo(ProfileStepOneFragment.newInstance());
+    final FragmentNavigator fragmentNavigator = getFragmentNavigator();
+    fragmentNavigator.cleanBackStack();
+    fragmentNavigator.navigateTo(ProfileStepOneFragment.newInstance());
   }
 
   public void navigateToHome() {

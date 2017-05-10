@@ -20,7 +20,7 @@ import cm.aptoide.pt.v8engine.view.fragment.BaseToolbarFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Completable;
-import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 // TODO
 // apply MVP
@@ -68,30 +68,32 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment {
 
     RxView.clicks(continueBtn)
         .doOnNext(click -> waitDialog.show())
-        .flatMap(
+        .flatMapCompletable(
             click -> accountManager.updateAccount(Account.Access.PUBLIC)
                 .onErrorResumeNext(err -> {
                   CrashReport.getInstance().log(err);
                   return showErrorMessage();
                 })
+                .observeOn(AndroidSchedulers.mainThread())
                 .andThen(showContinueSuccessMessage())
-                .doOnNext(__ -> sendAnalytics(Analytics.Account.ProfileAction.CONTINUE))
-                .doOnNext(__ -> navigateToCreateStoreOrHome()))
+                .doOnCompleted(() -> sendAnalytics(Analytics.Account.ProfileAction.CONTINUE))
+                .doOnCompleted(() -> navigateToCreateStoreOrHome()))
         .retry()
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe();
 
     RxView.clicks(privateProfileBtn)
         .doOnNext(__ -> waitDialog.show())
-        .flatMap(
+        .flatMapCompletable(
             __ -> accountManager.updateAccount(Account.Access.UNLISTED)
                 .onErrorResumeNext(err -> {
                   CrashReport.getInstance().log(err);
                   return showErrorMessage();
                 })
+                .observeOn(AndroidSchedulers.mainThread())
                 .andThen(showContinueSuccessMessage())
-                .doOnNext(aVoid -> sendAnalytics(Analytics.Account.ProfileAction.PRIVATE_PROFILE))
-                .doOnNext(aVoid -> navigateToCreateStoreOrHome()))
+                .doOnCompleted(() -> sendAnalytics(Analytics.Account.ProfileAction.PRIVATE_PROFILE))
+                .doOnCompleted(() -> navigateToCreateStoreOrHome()))
         .retry()
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe();
@@ -113,10 +115,11 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment {
         .andThen(ShowMessage.asObservableSnack(this, R.string.unknown_error).toCompletable());
   }
 
-  private Observable<Void> showContinueSuccessMessage() {
+  private Completable showContinueSuccessMessage() {
     return Completable.fromAction(() -> waitDialog.dismiss())
-        .andThen(ShowMessage.asObservableSnack(this, R.string.successful))
-        .map(__ -> null);
+        .andThen(ShowMessage.asObservableSnack(this, R.string.successful)
+            .takeUntil(visibility -> visibility == ShowMessage.DISMISSED))
+        .toCompletable();
   }
 
   private Completable sendAnalytics(Analytics.Account.ProfileAction action) {

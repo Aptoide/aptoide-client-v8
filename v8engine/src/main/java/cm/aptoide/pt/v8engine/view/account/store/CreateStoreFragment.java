@@ -68,7 +68,6 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
   private static final String STORE_AVATAR = "storeAvatar";
   private static final String STORE_THEME = "storeTheme";
   private static final String STORE_DESCRIPTION = "storeDescription";
-  private static final String STORE_IMAGE_PATH = "store_image_path";
   private static final String STORE_MODEL = "store_model";
   private ProgressDialog waitDialog;
 
@@ -144,9 +143,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
       }
     }
 
-    setupViewsDefaultValues(view);
-    if (savedInstanceState != null && savedInstanceState.containsKey(STORE_IMAGE_PATH)) {
-      loadImage(Uri.parse(savedInstanceState.getString(STORE_IMAGE_PATH)));
+    if(storeModel != null && !TextUtils.isEmpty(storeModel.getStoreAvatarPath())){
+      loadImage(Uri.parse(storeModel.getStoreAvatarPath()));
     }
   }
 
@@ -618,9 +616,13 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
       avatarUrl = data.getData();
     }
 
-    final String filePath = new FileUtils().getMediaStoragePath(avatarUrl, applicationContext);
-    storeModel.setStoreAvatarPath(filePath);
-    checkAvatarRequirements(filePath, avatarUrl);
+    try {
+      final String filePath = new FileUtils().getMediaStoragePath(avatarUrl, applicationContext);
+      storeModel.setStoreAvatarPath(filePath);
+      checkAvatarRequirements(filePath, avatarUrl);
+    } catch (NullPointerException ex) {
+      CrashReport.getInstance().log(ex);
+    }
   }
 
   /**
