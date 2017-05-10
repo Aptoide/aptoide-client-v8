@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.pull;
 
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.database.realm.AptoideNotification;
 import cm.aptoide.pt.dataprovider.ws.notifications.GetPullNotificationsResponse;
 import cm.aptoide.pt.dataprovider.ws.notifications.PullCampaignNotificationsRequest;
 import cm.aptoide.pt.dataprovider.ws.notifications.PullSocialNotificationRequest;

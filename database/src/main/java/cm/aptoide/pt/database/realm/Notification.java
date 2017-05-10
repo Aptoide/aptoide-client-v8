@@ -1,20 +1,12 @@
 package cm.aptoide.pt.database.realm;
 
-import android.support.annotation.IntDef;
 import io.realm.RealmObject;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import lombok.ToString;
 
 /**
- * Created by trinkes on 03/05/2017.
+ * Created by trinkes on 10/05/2017.
  */
 
-@ToString(of = { "title" }) public class AptoideNotification extends RealmObject {
-  public static final int CAMPAIGN = 0;
-  public static final int COMMENT = 1;
-  public static final int LIKE = 2;
-  public static final int POPULAR = 3;
+public class Notification extends RealmObject {
 
   private String abTestingGroup;
   private String body;
@@ -24,29 +16,25 @@ import lombok.ToString;
   private String title;
   private String url;
   private String urlTrack;
-  private @NotificationType int type;
+  private int type;
   private long timeStamp;
   private boolean showed;
 
-  public AptoideNotification() {
-  }
-
-  public AptoideNotification(String body, String img, String title, String url, int type) {
+  public Notification(String abTestingGroup, String body, int campaignId, String img, String lang,
+      String title, String url, String urlTrack, long timeStamp, int type) {
     this.body = body;
     this.img = img;
     this.title = title;
     this.url = url;
     this.type = type;
-    this.timeStamp = System.currentTimeMillis();
-  }
-
-  public AptoideNotification(String abTestingGroup, String body, int campaignId, String img, String lang,
-      String title, String url, String urlTrack) {
-    this(body, img, title, url, CAMPAIGN);
     this.abTestingGroup = abTestingGroup;
     this.campaignId = campaignId;
     this.lang = lang;
     this.urlTrack = urlTrack;
+    this.timeStamp = timeStamp;
+  }
+
+  public Notification() {
   }
 
   public boolean isShowed() {
@@ -57,7 +45,7 @@ import lombok.ToString;
     this.showed = showed;
   }
 
-  public @NotificationType int getType() {
+  public int getType() {
     return type;
   }
 
@@ -69,7 +57,7 @@ import lombok.ToString;
     return body;
   }
 
-  public long getCampaignId() {
+  public int getCampaignId() {
     return campaignId;
   }
 
@@ -95,9 +83,5 @@ import lombok.ToString;
 
   public long getTimeStamp() {
     return timeStamp;
-  }
-
-  @Retention(RetentionPolicy.SOURCE) @IntDef({ CAMPAIGN, COMMENT, LIKE, POPULAR })
-  public @interface NotificationType {
   }
 }

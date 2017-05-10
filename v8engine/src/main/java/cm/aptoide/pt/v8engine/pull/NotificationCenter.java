@@ -1,42 +1,36 @@
 package cm.aptoide.pt.v8engine.pull;
 
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.database.accessors.NotificationAccessor;
-import cm.aptoide.pt.database.realm.AptoideNotification;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import io.realm.Sort;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by trinkes on 09/05/2017.
  */
 
 public class NotificationCenter {
-  private final Integer[] commentLikeNotificationIds;
-  private final Integer[] popularNotificationIds;
   private final CrashReport crashReport;
+  private NotificationStatusManager notificationStatusManager;
   private NotificationHandler notificationHandler;
-  private NotificationAccessor notificationAccessor;
+  private NotificationProvider notificationProvider;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SystemNotificationShower notificationShower;
 
   public NotificationCenter(NotificationHandler notificationHandler,
-      NotificationAccessor notificationAccessor,
+      NotificationProvider notificationProvider,
       NotificationSyncScheduler notificationSyncScheduler,
-      SystemNotificationShower notificationShower, CrashReport crashReport) {
+      SystemNotificationShower notificationShower, CrashReport crashReport,
+      NotificationStatusManager notificationStatusManager) {
     this.notificationHandler = notificationHandler;
-    this.notificationAccessor = notificationAccessor;
+    this.notificationProvider = notificationProvider;
     this.notificationSyncScheduler = notificationSyncScheduler;
     this.notificationShower = notificationShower;
     this.crashReport = crashReport;
-    commentLikeNotificationIds =
-        new Integer[] { AptoideNotification.COMMENT, AptoideNotification.LIKE };
-    popularNotificationIds = new Integer[] { AptoideNotification.POPULAR };
+    this.notificationStatusManager = notificationStatusManager;
   }
 
   public void start() {
@@ -44,14 +38,18 @@ public class NotificationCenter {
     getNewNotifications().flatMapCompletable(
         aptoideNotification -> notificationShower.showNotification(aptoideNotification,
             getNotificationId(aptoideNotification))
-            .andThen(updateNotification(aptoideNotification))).subscribe(aptoideNotification -> {
+            .andThen(updateNotification(aptoideNotification))
+            .onErrorComplete(throwable -> {
+              crashReport.log(throwable);
+              return true;
+            })).subscribe(aptoideNotification -> {
     }, throwable -> crashReport.log(throwable));
   }
 
   private Completable updateNotification(AptoideNotification aptoideNotification) {
     return Completable.fromAction(() -> {
       aptoideNotification.setShowed(true);
-      notificationAccessor.insert(aptoideNotification);
+      notificationProvider.save(aptoideNotification);
     });
   }
 
@@ -64,7 +62,8 @@ public class NotificationCenter {
               } else {
                 return Observable.empty();
               }
-            }));
+            }))
+        .onErrorResumeNext(throwable -> Observable.empty());
   }
 
   private Single<Boolean> shouldShowNotification(AptoideNotification aptoideNotificationToShow) {
@@ -73,26 +72,30 @@ public class NotificationCenter {
         return Single.just(true);
       case AptoideNotification.COMMENT:
       case AptoideNotification.LIKE:
-        return shouldShowSocialNotification(commentLikeNotificationIds);
+        return shouldShowSocialNotification(getNotificationId(aptoideNotificationToShow),
+            getNotificationType(aptoideNotificationToShow));
       case AptoideNotification.POPULAR:
-        return shouldShowSocialNotification(popularNotificationIds);
+        return shouldShowSocialNotification(getNotificationId(aptoideNotificationToShow),
+            getNotificationType(aptoideNotificationToShow));
       default:
         return Single.just(false);
     }
   }
 
-  private Single<Boolean> shouldShowSocialNotification(Integer[] notificationsIds) {
-    // TODO: 10/05/2017 trinkes consider visible notifications
-    return notificationAccessor.getAllSorted(Sort.DESCENDING, notificationsIds)
-        .first()
-        .observeOn(Schedulers.computation())
-        .map(notifications -> applySocialPolicies(notifications))
-        .toSingle();
+  private Single<Boolean> shouldShowSocialNotification(int notificationId,
+      Integer[] notificationsIds) {
+    return Single.zip(isNotificationVisible(notificationId), applySocialPolicies(notificationsIds),
+        (isNotificationVisible, isPolicies) -> isNotificationVisible || isPolicies);
   }
 
-  private boolean applySocialPolicies(List<AptoideNotification> aptoideNotifications) {
-    return !isShowedLimitReached(aptoideNotifications, 1, TimeUnit.HOURS.toMillis(1))
-        && !isShowedLimitReached(aptoideNotifications, 3, TimeUnit.DAYS.toMillis(1));
+  private Single<Boolean> isNotificationVisible(int notificationsId) {
+    return notificationStatusManager.isVisible(notificationsId);
+  }
+
+  private Single<Boolean> applySocialPolicies(Integer[] notificationsIds) {
+    return notificationProvider.getNotifications(notificationsIds)
+        .map(notifications -> !isShowedLimitReached(notifications, 1, TimeUnit.MINUTES.toMillis(1))
+            && !isShowedLimitReached(notifications, 3, TimeUnit.MINUTES.toMillis(5)));
   }
 
   @NonNull private Boolean isShowedLimitReached(List<AptoideNotification> aptoideNotifications,
@@ -111,17 +114,37 @@ public class NotificationCenter {
     return occurrences >= occurrencesLimit;
   }
 
-  private int getNotificationId(AptoideNotification aptoideNotification) {
+  private int getNotificationId(AptoideNotification aptoideNotification) throws RuntimeException {
     switch (aptoideNotification.getType()) {
       case AptoideNotification.CAMPAIGN:
-        return AptoideNotification.CAMPAIGN;
+        return 0;
       case AptoideNotification.COMMENT:
       case AptoideNotification.LIKE:
-        return aptoideNotification.getType();
+        return 1;
       case AptoideNotification.POPULAR:
-        return AptoideNotification.POPULAR;
+        return 2;
       default:
-        return aptoideNotification.getType();
+        throw new RuntimeException("unknown notification type ");
+    }
+  }
+
+  private Integer[] getNotificationType(AptoideNotification aptoideNotificationToShow) {
+    switch (aptoideNotificationToShow.getType()) {
+      case AptoideNotification.CAMPAIGN:
+        return new Integer[] {
+            AptoideNotification.CAMPAIGN
+        };
+      case AptoideNotification.COMMENT:
+      case AptoideNotification.LIKE:
+        return new Integer[] {
+            AptoideNotification.LIKE, AptoideNotification.COMMENT
+        };
+      case AptoideNotification.POPULAR:
+        return new Integer[] {
+            AptoideNotification.POPULAR,
+        };
+      default:
+        throw new RuntimeException("unknown notification type ");
     }
   }
 }

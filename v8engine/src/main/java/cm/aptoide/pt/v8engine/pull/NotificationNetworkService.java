@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.pull;
 
-import cm.aptoide.pt.database.realm.AptoideNotification;
 import java.util.List;
 import rx.Single;
 

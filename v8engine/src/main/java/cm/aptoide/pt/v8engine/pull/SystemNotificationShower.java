@@ -10,9 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
-import cm.aptoide.pt.database.realm.AptoideNotification;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
 import com.bumptech.glide.request.target.NotificationTarget;
 import rx.Completable;
@@ -35,18 +33,17 @@ public class SystemNotificationShower {
   }
 
   public Completable showNotification(AptoideNotification aptoideNotification, int notificationId) {
-    return mapToAndroidNotification(aptoideNotification).doOnSuccess(
-        notification -> notificationManager.notify(notificationId, notification))
-        .toCompletable()
-        .doOnCompleted(() -> Logger.d(TAG, "showNotification: "));
+    return mapToAndroidNotification(aptoideNotification, notificationId).doOnSuccess(
+        notification -> notificationManager.notify(notificationId, notification)).toCompletable();
   }
 
-  private Single<Notification> mapToAndroidNotification(AptoideNotification aptoideNotification) {
+  private Single<Notification> mapToAndroidNotification(AptoideNotification aptoideNotification,
+      int notificationId) {
     return getPressIntentAction(aptoideNotification.getUrlTrack(), aptoideNotification.getUrl(),
         aptoideNotification.getType(), context).flatMap(
         pressIntentAction -> buildNotification(context, aptoideNotification.getTitle(),
             aptoideNotification.getBody(), aptoideNotification.getImg(), pressIntentAction,
-            aptoideNotification.getType()));
+            notificationId));
   }
 
   private Single<PendingIntent> getPressIntentAction(String trackUrl, String url,

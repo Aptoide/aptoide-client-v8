@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.pull;
 
-import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import rx.Completable;
 
 /**
@@ -8,25 +7,25 @@ import rx.Completable;
  */
 
 class NotificationSync {
-  private NotificationAccessor notificationAccessor;
+  private NotificationProvider notificationProvider;
   private NotificationNetworkService notificationNetworkService;
 
-  public NotificationSync(NotificationAccessor notificationAccessor,
+  public NotificationSync(NotificationProvider notificationProvider,
       NotificationNetworkService notificationNetworkService) {
 
-    this.notificationAccessor = notificationAccessor;
+    this.notificationProvider = notificationProvider;
     this.notificationNetworkService = notificationNetworkService;
   }
 
   public Completable syncCampaigns() {
     return notificationNetworkService.getCampaignNotifications()
-        .flatMapCompletable(aptideNotifications -> Completable.fromAction(
-            () -> notificationAccessor.insertAll(aptideNotifications)));
+        .flatMapCompletable(
+            aptoideNotification -> notificationProvider.save(aptoideNotification));
   }
 
   public Completable syncSocial() {
     return notificationNetworkService.getSocialNotifications()
-        .flatMapCompletable(aptideNotifications -> Completable.fromAction(
-            () -> notificationAccessor.insertAll(aptideNotifications)));
+        .flatMapCompletable(aptoideNotification -> Completable.fromAction(
+            () -> notificationProvider.save(aptoideNotification)));
   }
 }

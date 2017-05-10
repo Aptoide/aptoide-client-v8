@@ -6,7 +6,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
-import cm.aptoide.pt.database.realm.AptoideNotification;
+import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.v8engine.V8Engine;
 
 /**
@@ -21,10 +21,11 @@ public class NotificationSyncService extends Service {
   @Override public void onCreate() {
     super.onCreate();
 
-    NotificationAccessor notificationAccessor =
-        AccessorFactory.getAccessorFor(AptoideNotification.class);
+    NotificationAccessor notificationAccessor = AccessorFactory.getAccessorFor(Notification.class);
+    NotificationProvider notificationProvider =
+        new NotificationProvider(notificationAccessor);
     notificationHandler = ((V8Engine) getApplicationContext()).getNotificationHandler();
-    notificationSync = new NotificationSync(notificationAccessor, notificationHandler);
+    notificationSync = new NotificationSync(notificationProvider, notificationHandler);
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {

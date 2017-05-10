@@ -28,9 +28,10 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
-import cm.aptoide.pt.database.realm.AptoideNotification;
+import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -84,6 +85,8 @@ import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
 import cm.aptoide.pt.v8engine.pull.NotificationCenter;
 import cm.aptoide.pt.v8engine.pull.NotificationHandler;
+import cm.aptoide.pt.v8engine.pull.NotificationProvider;
+import cm.aptoide.pt.v8engine.pull.NotificationStatusManager;
 import cm.aptoide.pt.v8engine.pull.NotificationSyncScheduler;
 import cm.aptoide.pt.v8engine.pull.NotificationSyncService;
 import cm.aptoide.pt.v8engine.pull.SystemNotificationShower;
@@ -298,9 +301,11 @@ public abstract class V8Engine extends SpotAndShareApplication {
     NotificationSyncScheduler notificationSyncScheduler =
         new NotificationSyncScheduler(this, (AlarmManager) getSystemService(ALARM_SERVICE),
             NotificationSyncService.class, scheduleList);
-    NotificationCenter notificationCenter = new NotificationCenter(notificationHandler,
-        AccessorFactory.getAccessorFor(AptoideNotification.class), notificationSyncScheduler,
-        systemNotificationShower, CrashReport.getInstance());
+    NotificationAccessor notificationAccessor = AccessorFactory.getAccessorFor(Notification.class);
+    NotificationCenter notificationCenter =
+        new NotificationCenter(notificationHandler, new NotificationProvider(notificationAccessor),
+            notificationSyncScheduler, systemNotificationShower, CrashReport.getInstance(),
+            new NotificationStatusManager(notificationAccessor));
     notificationCenter.start();
   }
 
