@@ -82,12 +82,7 @@ public abstract class CardDisplayable extends Displayable {
 
   public TimelineSocialActionData getTimelineSocialActionObject(String cardType, String action,
       String socialAction, String packageName, String publisher, String title) {
-    if (timelineSocialActionData == null || !timelineSocialActionData.getSocialAction()
-        .equals(socialAction)) {
-      timelineSocialActionData =
-          new TimelineSocialActionData(cardType, action, socialAction, packageName, publisher,
-              title);
-    }
-    return timelineSocialActionData;
+    return new TimelineSocialActionData(cardType, action, socialAction, packageName, publisher,
+        title);
   }
 }

@@ -63,9 +63,20 @@ public class TimelineAnalytics extends AptoideAnalytics {
         new FacebookEvent(facebook, SOCIAL_CARD_PREVIEW, createBundleData(ACTION, value)));
   }
 
-  public void sendSocialActionEvent(String socialAction) {
-    analytics.sendEvent(
-        new FacebookEvent(facebook, CARD_ACTION, createBundleData(ACTION, socialAction)));
+  public void sendSocialActionEvent(TimelineSocialActionData timelineSocialActionData) {
+    analytics.sendEvent(new FacebookEvent(facebook, CARD_ACTION,
+        createSocialActionEventData(timelineSocialActionData)));
+  }
+
+  private Bundle createSocialActionEventData(TimelineSocialActionData timelineSocialActionData) {
+    Bundle bundle = new Bundle();
+    bundle.putString(CARD_TYPE, timelineSocialActionData.getCardType());
+    bundle.putString(ACTION, timelineSocialActionData.getAction());
+    bundle.putString(SOCIAL_ACTION, timelineSocialActionData.getSocialAction());
+    bundle.putString(PACKAGE, timelineSocialActionData.getPackageName());
+    bundle.putString(PUBLISHER, timelineSocialActionData.getPublisher());
+    bundle.putString(TITLE, timelineSocialActionData.getTitle());
+    return bundle;
   }
 
   public void sendAppUpdateCardClickEvent(String cardType, String action, String socialAction,

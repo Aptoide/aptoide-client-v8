@@ -41,6 +41,7 @@ import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.TimelineSocialActionData;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.custom.HorizontalDividerItemDecoration;
@@ -58,6 +59,8 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 import rx.functions.Action1;
+
+import static cm.aptoide.pt.v8engine.analytics.Analytics.AppsTimeline.BLANK;
 
 // TODO: 21/12/2016 sithengineer refactor and split in multiple classes to list comments
 // for each type: store and timeline card
@@ -223,7 +226,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   void refreshData() {
     if (commentType == CommentType.TIMELINE) {
-      timelineAnalytics.sendSocialActionEvent("Comment");
+      timelineAnalytics.sendSocialActionEvent(
+          new TimelineSocialActionData(BLANK, BLANK, "Comment", BLANK, BLANK, BLANK));
       caseListSocialTimelineComments(true);
     } else {
       caseListStoreComments(url,
