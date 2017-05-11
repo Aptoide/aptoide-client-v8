@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 24/08/2016.
  */
 
-package cm.aptoide.pt.iab;
+package cm.aptoide.pt.v8engine.billing.iab;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

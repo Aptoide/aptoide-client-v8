@@ -16,7 +16,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingConsumeRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingSkuDetailsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.iab.SKU;
+import cm.aptoide.pt.v8engine.billing.iab.SKU;
 import cm.aptoide.pt.model.v3.ErrorResponse;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;

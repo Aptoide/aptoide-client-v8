@@ -41,7 +41,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.iab.InAppBillingSerializer;
+import cm.aptoide.pt.v8engine.billing.iab.InAppBillingSerializer;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;

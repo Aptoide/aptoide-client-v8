@@ -3,13 +3,14 @@
  * Modified by Marcelo Benites on 11/08/2016.
  */
 
-package cm.aptoide.pt.iab;
+package cm.aptoide.pt.v8engine.billing.iab;
 
 import android.app.PendingIntent;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.RemoteException;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.iab.AptoideInAppBillingService;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;

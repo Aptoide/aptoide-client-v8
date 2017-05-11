@@ -6,8 +6,8 @@
 package cm.aptoide.pt.v8engine.billing.view;
 
 import android.content.Intent;
-import cm.aptoide.pt.iab.BillingBinder;
-import cm.aptoide.pt.iab.ErrorCodeFactory;
+import cm.aptoide.pt.v8engine.billing.iab.BillingBinder;
+import cm.aptoide.pt.v8engine.billing.iab.ErrorCodeFactory;
 import cm.aptoide.pt.v8engine.billing.Purchase;
 import java.io.IOException;
 
