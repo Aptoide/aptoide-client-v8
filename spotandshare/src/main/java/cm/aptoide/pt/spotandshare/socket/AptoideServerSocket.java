@@ -28,7 +28,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
   private static final String TAG = AptoideServerSocket.class.getSimpleName();
   private final int port;
   private final int timeout;
-  protected boolean shutdown = false;
+  @Getter private boolean shutdown = false;
   private ServerSocketTimeoutManager serverSocketTimeoutManager;
   private List<Socket> connectedSockets = new CopyOnWriteArrayList<>();
   private ServerSocket ss;

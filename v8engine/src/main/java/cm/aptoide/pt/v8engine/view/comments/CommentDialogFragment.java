@@ -151,8 +151,9 @@ public class CommentDialogFragment
         titleTextView.setText(getString(R.string.comment));
         break;
       case STORE:
-        titleTextView.setText(String.format(getString(R.string.comment_on_store),
-            TextUtils.isEmpty(appOrStoreName) ? getString(R.string.word_this) : appOrStoreName));
+        titleTextView.setText(
+            TextUtils.isEmpty(appOrStoreName) ? getString(R.string.comment_store_title)
+                : getString(R.string.comment_on_store, appOrStoreName));
         break;
     }
 

@@ -71,11 +71,11 @@ public class GroupManager {
   public void createGroup(String deviceName, CreateGroupListener listener) {
     this.createGrouplistener = listener;
     this.deviceName = deviceName;
-    //try{
-    createTask = activateHotspotTask.execute();
-    //}catch (IllegalStateException e) {
-    //  createTask = new ActivateHotspotTask().execute();
-    //}
+    try {
+      createTask = activateHotspotTask.execute();
+    } catch (IllegalStateException e) {
+      createTask = new ActivateHotspotTask().execute();
+    }
   }
 
   public void cancelTasks() {
@@ -98,7 +98,7 @@ public class GroupManager {
   }
 
   public void stop() {
-    cancelTasks();
+    //cancelTasks();
     this.createGrouplistener = null;
     this.joinGrouplistener = null;
     this.connectionManager.stop();

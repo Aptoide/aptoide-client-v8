@@ -18,6 +18,7 @@ import android.provider.Settings;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -166,7 +167,7 @@ public class ConnectionManager {
                   DataHolder.getInstance().network = network;
                   break;
                 } else {//connected to the wrong network
-                  if (!reconnected && !chosenHotspot.isEmpty()) {
+                  if (!reconnected && !TextUtils.isEmpty(chosenHotspot)) {
                     reconnected = true;
                     new Thread(new Runnable() {
                       @Override public void run() {
@@ -205,7 +206,7 @@ public class ConnectionManager {
               break;
               //// TODO: 28-03-2017 filipe add reconnect to these lower versions
             } else {
-              if (!reconnected && !chosenHotspot.isEmpty()) {
+              if (!reconnected && !TextUtils.isEmpty(chosenHotspot)) {
                 reconnected = true;
                 new Thread(new Runnable() {
                   @Override public void run() {
@@ -468,6 +469,7 @@ public class ConnectionManager {
             }
 
             if (shouldReconnect) {
+              this.chosenHotspot = chosenHotspot;//to save in case of needing to reconnect
               boolean recon = wifimanager.reconnect();
               System.out.println("O boolean do reconnect ta a : " + recon);
               try {
