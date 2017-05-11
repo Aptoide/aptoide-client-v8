@@ -7,7 +7,7 @@
 
   <!-- NavDrawer List items -->
   <string name="my_account">My Account</string>
-  <string name="setting_schdwntitle">Scheduled Downloads</string>
+  <string name="schdwntitle">Scheduled Downloads</string>
   <string name="settings">Settings</string>
   <string name="facebook">Facebook</string>
   <string name="twitter">Twitter</string>
@@ -22,11 +22,6 @@
   <string name="feedback_send_button">Send Feedback</string>
   <string name="drawer_social_media_title">Let\'s stay connected</string>
 
-
-  <string name="updates_filter_summary">Checking this, you won’t be notified of beta versions.</string>
-  <string name="updates_filter_setting_title">Just show me stable app version updates</string>
-  <string name="include_system_apps_title">Include system apps</string>
-  <string name="include_system_apps_summary">Checking this, you will be notified of system apps (apps that were installed by the device\'s manufacturer) updates</string>
   <string name="aptoide_email">aptoide@aptoide.com</string>
   <string name="aptoide_url">http://www.aptoide.com/</string>
 
@@ -256,12 +251,6 @@
   <string name="add_store">Add store</string>
   <string name="downgrade_warning_dialog">By downgrading you may lose app related data and you may be logged out of the app’s account.</string>
 
-  <!--Clear storage-->
-  <string name="freed_space">%s freed</string>
-  <string name="storage_dialog_title">Clear Aptoide Storage</string>
-  <string name="clear_cache_dialog_message">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data, …</string>
-  <string name="clear_cache_summary">Deletes icons, images, apk downloaded, obb, webservice data, …</string>
-  <string name="clearcache_title">Clear Storage</string>
 
   <!-- Stores tab -->
   <string name="recommended_stores">Recommended Stores</string>
@@ -296,9 +285,6 @@
   <string name="reviews_expand_button">%d Replies</string>
   <string name="out_of_space_dialog_title">Out of space</string>
   <string name="out_of_space_dialog_message">Please, free space in order to proceed.</string>
-  <string name="setting_category_autoupdate">%s Updates</string>
-  <string name="setting_category_autoupdate_title">Get %s Update notifications</string>
-  <string name="setting_category_autoupdate_message">Periodically check for %s new versions</string>
   <string name="create_store_displayable_created_store_long_term_message" translatable="false">long term</string>
   <string name="create_store_displayable_explore_long_term_button">View Store</string>
   <string name="create_store_displayable_empty_description_message">Add a description for your Store. A good description helps you to get more followers and interaction.</string>
@@ -480,12 +466,6 @@
 
   <string name="reviewed_by">Reviewed by - %s</string>
   <string name="installed_this">%s installed this.</string>
-
-  <!-- adult -->
-  <string name="adult_pin_wrong">Wrong pin, try again.</string>
-  <string name="request_adult_pin">Insert pin to unlock</string>
-  <string name="are_you_adult">Are you at least 21 years old?</string>
-  <string name="facebook_logout_and_login">Logout and Login with Facebook</string>
 
   <string name="schDown_nodownloadselect">No Downloads Selected</string>
   <string name="no_sch_downloads">Browsing apps using mobile data and want to download later when you’re on a wifi connection? Use Schedule downloads and change your preferences on Settings -&gt; General Download Rules - to WiFi.</string>
