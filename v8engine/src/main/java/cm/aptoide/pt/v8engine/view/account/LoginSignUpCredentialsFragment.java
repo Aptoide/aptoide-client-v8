@@ -3,9 +3,9 @@ package cm.aptoide.pt.v8engine.view.account;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetBehavior;
@@ -154,7 +154,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     ShowMessage.asToast(getContext(), errorMapper.map(throwable));
   }
 
-
   @Override public void showFacebookLogin() {
     FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
     facebookLoginButton.setVisibility(View.VISIBLE);
@@ -188,7 +187,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void navigateToForgotPasswordView() {
-    // FIXME: remove hardcoded links
+    // FIXME remove hardcoded links
     Uri mobilePageUri = Uri.parse("http://m.aptoide.com/account/password-recovery");
     startActivity(new Intent(Intent.ACTION_VIEW, mobilePageUri));
   }
@@ -243,27 +242,14 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     return RxView.clicks(buttonLogin)
         .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.LOGIN,
             getStartupClickOrigin()))
-        .map(click -> new AptoideAccountViewModel(aptoideEmailEditText.getText().toString(),
-            aptoidePasswordEditText.getText().toString()));
+        .map(click -> getCredentials());
   }
 
   @Override public Observable<AptoideAccountViewModel> aptoideSignUpClick() {
     return RxView.clicks(buttonSignUp)
         .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.JOIN_APTOIDE,
             getStartupClickOrigin()))
-        .map(click -> new AptoideAccountViewModel(aptoideEmailEditText.getText().toString(),
-            aptoidePasswordEditText.getText().toString()));
-  }
-
-  @Override public boolean isPasswordVisible() {
-    return isPasswordVisible;
-  }
-
-  @Override public void navigateToCreateProfile() {
-    Intent i = new Intent(getContext(), CreateUserActivity.class);
-    FragmentActivity parent = getActivity();
-    parent.startActivity(i);
-    getFragmentNavigator().cleanBackStack();
+        .map(click -> getCredentials());
   }
 
   private Analytics.Account.StartupClickOrigin getStartupClickOrigin() {
@@ -309,7 +295,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
     backClickHandler = new BackButton.ClickHandler() {
       @Override public boolean handle() {
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         return tryCloseLoginBottomSheet();
       }
     };
@@ -361,17 +346,24 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
     facebookEmailRequiredDialog = new AlertDialog.Builder(context).setMessage(
         R.string.facebook_email_permission_regected_message)
-        .setPositiveButton(R.string.facebook_grant_permission_button,
-            (dialog, which) -> {
-              facebookLoginManager.logInWithReadPermissions(this, Arrays.asList("email"));
-            })
+        .setPositiveButton(R.string.facebook_grant_permission_button, (dialog, which) -> {
+          facebookLoginManager.logInWithReadPermissions(this, Arrays.asList("email"));
+        })
         .setNegativeButton(android.R.string.cancel, null)
         .create();
 
     progressDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
 
-    bottomSheetBehavior =
-        BottomSheetBehavior.from(view.getRootView().findViewById(R.id.login_signup_layout));
+    try {
+      bottomSheetBehavior =
+          BottomSheetBehavior.from(view.getRootView().findViewById(R.id.login_signup_layout));
+    } catch (IllegalArgumentException ex) {
+      // this happens because in landscape the R.id.login_signup_layout is not
+      // a child of CoordinatorLayout
+    }
+  }  @Override public void setCredentials(@NonNull AptoideAccountViewModel model) {
+    aptoideEmailEditText.setText(model.getUsername());
+    aptoidePasswordEditText.setText(model.getUsername());
   }
 
   private boolean tryCloseLoginBottomSheet() {
@@ -394,5 +386,21 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   @Override public void onDestroyView() {
     unregisterBackClickHandler(backClickHandler);
     super.onDestroyView();
+  }
+
+  @Override @NonNull public AptoideAccountViewModel getCredentials() {
+    return new AptoideAccountViewModel(aptoideEmailEditText.getText().toString(),
+        aptoidePasswordEditText.getText().toString());
+  }
+
+  @Override public boolean isPasswordVisible() {
+    return isPasswordVisible;
+  }
+
+  @Override public void navigateToCreateProfile() {
+    Intent i = new Intent(getContext(), CreateUserActivity.class);
+    FragmentActivity parent = getActivity();
+    parent.startActivity(i);
+    getFragmentNavigator().cleanBackStack();
   }
 }

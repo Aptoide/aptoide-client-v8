@@ -99,10 +99,6 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
         savedInstanceState);
   }
 
-  @Override public void changeOrientationToPortrait() {
-    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-  }
-
   @Override public void showWizard() {
     fragmentNavigator.navigateTo(new WizardFragment());
   }

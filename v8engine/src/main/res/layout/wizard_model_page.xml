@@ -6,6 +6,10 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:paddingBottom="@dimen/bottom_skip_bar_height"
+    android:paddingEnd="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingStart="10dp"
     >
 
   <ImageView
@@ -18,14 +22,18 @@
 
   <TextView
       android:layout_height="wrap_content"
+      android:layout_width="match_parent"
+      android:id="@+id/title"
       android:text="@string/wizard_title_viewpager_one"
-      style="@style/Wizard_Title"
+      style="@style/onBoardingTitle"
       />
 
   <TextView
       android:layout_height="wrap_content"
+      android:layout_width="match_parent"
+      android:id="@+id/description"
       android:text="@string/wizard_sub_title_viewpager_one"
-      style="@style/Wizard_Sub_Title"
+      style="@style/onBoardingSubTitle"
       />
 
 
@@ -33,8 +41,9 @@
       android:id="@android:id/icon"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:gravity="center"
-      android:scaleType="center"
+      android:layout_gravity="center"
+      android:layout_marginBottom="10dp"
       android:src="@drawable/wizard_one"
       />
+
 </LinearLayout>

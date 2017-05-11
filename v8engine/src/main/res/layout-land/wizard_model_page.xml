@@ -10,7 +10,7 @@
 
   <ImageView
       android:id="@+id/aptoide_logo"
-      android:layout_width="200dp"
+      android:layout_width="match_parent"
       android:layout_height="50dp"
       android:layout_margin="5dp"
       android:src="@drawable/logo"
@@ -18,23 +18,27 @@
 
   <TextView
       android:layout_height="wrap_content"
+      android:layout_width="match_parent"
+      android:id="@+id/title"
       android:text="@string/wizard_title_viewpager_one"
-      style="@style/Wizard_Title"
+      style="@style/onBoardingTitle"
       />
 
   <TextView
       android:layout_height="wrap_content"
+      android:layout_width="match_parent"
+      android:id="@+id/description"
       android:text="@string/wizard_sub_title_viewpager_one"
-      style="@style/Wizard_Sub_Title"
+      style="@style/onBoardingSubTitle"
       />
 
 
   <ImageView
       android:id="@android:id/icon"
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:gravity="center"
-      android:scaleType="center"
+      android:scaleType="fitCenter"
       android:src="@drawable/wizard_one"
       />
 </LinearLayout>

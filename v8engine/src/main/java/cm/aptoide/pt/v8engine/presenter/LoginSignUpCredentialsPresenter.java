@@ -12,6 +12,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.account.LoginPreferences;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.view.account.AptoideAccountViewModel;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -33,22 +34,25 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
 
   private static final String TAG = LoginSignUpCredentialsPresenter.class.getName();
 
+  private static final String USERNAME_KEY = "username_key";
+  private static final String PASSWORD_KEY = "password_key";
+
   private final LoginSignUpCredentialsView view;
   private final AptoideAccountManager accountManager;
   private final Collection<String> facebookRequiredPermissions;
   private final LoginPreferences loginAvailability;
   private final boolean navigateToHome;
-  private boolean dimissToNavigateToMainView;
+  private boolean dismissToNavigateToMainView;
 
   public LoginSignUpCredentialsPresenter(LoginSignUpCredentialsView view,
       AptoideAccountManager accountManager, Collection<String> facebookRequiredPermissions,
-      LoginPreferences loginAvailability, boolean dimissToNavigateToMainView,
+      LoginPreferences loginAvailability, boolean dismissToNavigateToMainView,
       boolean navigateToHome) {
     this.view = view;
     this.accountManager = accountManager;
     this.facebookRequiredPermissions = facebookRequiredPermissions;
     this.loginAvailability = loginAvailability;
-    this.dimissToNavigateToMainView = dimissToNavigateToMainView;
+    this.dismissToNavigateToMainView = dismissToNavigateToMainView;
     this.navigateToHome = navigateToHome;
   }
 
@@ -56,7 +60,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(created -> showOrHideLogins())
+        .doOnNext(created -> showOrHideLogin())
         .flatMap(resumed -> Observable.merge(googleLoginClick(), facebookLoginClick(),
             aptoideLoginClick(), aptoideSignUpClick(), aptoideShowLoginClick(),
             aptoideShowSignUpClick()))
@@ -78,14 +82,22 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
   }
 
   @Override public void saveState(Bundle state) {
-    // does nothing
+    final AptoideAccountViewModel credentials = view.getCredentials();
+    state.putString(USERNAME_KEY, credentials.getUsername());
+    // TODO use a safe method to store plain text password
+    state.putString(PASSWORD_KEY, credentials.getPassword());
   }
 
   @Override public void restoreState(Bundle state) {
-    // does nothing
+    if (state != null && state.containsKey(USERNAME_KEY) && state.containsKey(PASSWORD_KEY)) {
+      final AptoideAccountViewModel credentials =
+          new AptoideAccountViewModel(state.getString(USERNAME_KEY, ""),
+              state.getString(PASSWORD_KEY, ""));
+      view.setCredentials(credentials);
+    }
   }
 
-  private void showOrHideLogins() {
+  private void showOrHideLogin() {
     showOrHideFacebookLogin();
     showOrHideGoogleLogin();
   }
@@ -102,7 +114,8 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
                   Analytics.Account.LoginStatusDetail.SUCCESS);
               navigateToMainView();
             })
-            .doOnTerminate(() -> view.hideLoading()).doOnError(throwable -> {
+            .doOnTerminate(() -> view.hideLoading())
+            .doOnError(throwable -> {
               view.showError(throwable);
               Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
                   Analytics.Account.SignUpLoginStatus.FAILED,
@@ -153,7 +166,8 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
                 Analytics.Account.LoginStatusDetail.SUCCESS);
             navigateToMainView();
           })
-          .doOnTerminate(() -> view.hideLoading()).doOnError(throwable -> {
+          .doOnTerminate(() -> view.hideLoading())
+          .doOnError(throwable -> {
             view.showError(throwable);
             Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
                 Analytics.Account.SignUpLoginStatus.FAILED,
@@ -173,7 +187,9 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
             Logger.d(TAG, "aptoide sign up successful");
             Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.SUCCESS);
             view.navigateToCreateProfile();
-          }).doOnTerminate(() -> view.hideLoading()).doOnError(throwable -> {
+          })
+          .doOnTerminate(() -> view.hideLoading())
+          .doOnError(throwable -> {
             Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.FAILED);
             view.showError(throwable);
           })
@@ -220,7 +236,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
   }
 
   private void navigateToMainView() {
-    if (dimissToNavigateToMainView) {
+    if (dismissToNavigateToMainView) {
       view.dismiss();
     } else if (navigateToHome) {
       view.navigateToMainView();

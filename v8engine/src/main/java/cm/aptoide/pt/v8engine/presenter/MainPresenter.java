@@ -51,7 +51,6 @@ public class MainPresenter implements Presenter {
             SecurePreferences.setWizardAvailable(false);
           } else {
             if (SecurePreferences.isWizardAvailable()) {
-              view.changeOrientationToPortrait();
               view.showWizard();
               SecurePreferences.setWizardAvailable(false);
             }

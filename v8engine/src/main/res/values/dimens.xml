@@ -12,6 +12,7 @@
   <dimen name="recycler_margin">5dp</dimen>
 
 
+  <dimen name="text_size_huge">22.0sp</dimen>
   <dimen name="text_size_large">18.0sp</dimen>
   <dimen name="text_size_medium_large">16.0sp</dimen>
   <dimen name="text_size_medium">14.0sp</dimen>
