@@ -84,11 +84,6 @@ public class AppViewAnalytics extends AptoideAnalytics {
         new FacebookEvent(facebook, APP_VIEW_INTERACT, createBundleData(ACTION, "Open Badge")));
   }
 
-  public void sendOpenShareEvent() {
-    analytics.sendEvent(
-        new FacebookEvent(facebook, APP_VIEW_INTERACT, createBundleData(ACTION, "Open Share")));
-  }
-
   public void sendAppShareEvent() {
     analytics.sendEvent(
         new FacebookEvent(facebook, APP_VIEW_INTERACT, createBundleData(ACTION, "App Share")));
