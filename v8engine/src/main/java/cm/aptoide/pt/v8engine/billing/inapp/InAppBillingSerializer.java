@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 24/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.billing.iab;
+package cm.aptoide.pt.v8engine.billing.inapp;
 
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;

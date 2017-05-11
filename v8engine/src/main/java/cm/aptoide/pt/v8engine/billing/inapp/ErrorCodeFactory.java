@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 26/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.billing.iab;
+package cm.aptoide.pt.v8engine.billing.inapp;
 
 import cm.aptoide.pt.v8engine.billing.exception.PaymentCancellationException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;

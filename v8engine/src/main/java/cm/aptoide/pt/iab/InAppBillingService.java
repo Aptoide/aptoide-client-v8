@@ -9,9 +9,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.billing.iab.BillingBinder;
-import cm.aptoide.pt.v8engine.billing.iab.ErrorCodeFactory;
-import cm.aptoide.pt.v8engine.billing.iab.PurchaseErrorCodeFactory;
+import cm.aptoide.pt.v8engine.billing.inapp.BillingBinder;
+import cm.aptoide.pt.v8engine.billing.inapp.ErrorCodeFactory;
+import cm.aptoide.pt.v8engine.billing.inapp.PurchaseErrorCodeFactory;
 import cm.aptoide.pt.v8engine.billing.repository.ProductFactory;
 
 public class InAppBillingService extends Service {
