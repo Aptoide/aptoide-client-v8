@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.view.account;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -101,13 +102,16 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     errorMapper = new AccountErrorMapper(getContext());
     facebookRequestedPermissions = Arrays.asList("email", "user_friends");
     fragmentNavigator = getFragmentNavigator();
+    boolean isPortrait = getActivity().getResources().getConfiguration().orientation
+        == Configuration.ORIENTATION_PORTRAIT;
+
     presenter = new LoginSignUpCredentialsPresenter(this,
         ((V8Engine) getContext().getApplicationContext()).getAccountManager(),
         facebookRequestedPermissions,
         new LoginPreferences(getContext(), V8Engine.getConfiguration(),
             GoogleApiAvailability.getInstance()),
         getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW),
-        getArguments().getBoolean(CLEAN_BACK_STACK));
+        getArguments().getBoolean(CLEAN_BACK_STACK), isPortrait);
   }
 
   @Nullable @Override
@@ -252,6 +256,19 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         .map(click -> getCredentials());
   }
 
+  @Override public boolean tryCloseLoginBottomSheet() {
+    if (credentialsEditTextsArea.getVisibility() == View.VISIBLE) {
+      credentialsEditTextsArea.setVisibility(View.GONE);
+      loginSignupSelectionArea.setVisibility(View.VISIBLE);
+      loginArea.setVisibility(View.GONE);
+      signUpArea.setVisibility(View.GONE);
+      separator.setVisibility(View.VISIBLE);
+      termsAndConditions.setVisibility(View.VISIBLE);
+      return true;
+    }
+    return false;
+  }
+
   private Analytics.Account.StartupClickOrigin getStartupClickOrigin() {
     if (loginArea.getVisibility() == View.VISIBLE) {
       return Analytics.Account.StartupClickOrigin.LOGIN_UP;
@@ -290,17 +307,9 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-
     bindViews(view);
-
-    backClickHandler = new BackButton.ClickHandler() {
-      @Override public boolean handle() {
-        return tryCloseLoginBottomSheet();
-      }
-    };
-    registerBackClickHandler(backClickHandler);
-
     attachPresenter(presenter, savedInstanceState);
+    registerBackClickHandler(presenter);
   }
 
   @Override protected void showGoogleLoginError() {
@@ -361,26 +370,13 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
       // this happens because in landscape the R.id.login_signup_layout is not
       // a child of CoordinatorLayout
     }
-  }  @Override public void setCredentials(@NonNull AptoideAccountViewModel model) {
-    aptoideEmailEditText.setText(model.getUsername());
-    aptoidePasswordEditText.setText(model.getUsername());
-  }
-
-  private boolean tryCloseLoginBottomSheet() {
-    if (credentialsEditTextsArea.getVisibility() == View.VISIBLE) {
-      credentialsEditTextsArea.setVisibility(View.GONE);
-      loginSignupSelectionArea.setVisibility(View.VISIBLE);
-      loginArea.setVisibility(View.GONE);
-      signUpArea.setVisibility(View.GONE);
-      separator.setVisibility(View.VISIBLE);
-      termsAndConditions.setVisibility(View.VISIBLE);
-      return true;
-    }
-    return false;
   }
 
   public String getCompanyName() {
     return ((V8Engine) getActivity().getApplication()).createConfiguration().getMarketName();
+  }  @Override public void setCredentials(@NonNull AptoideAccountViewModel model) {
+    aptoideEmailEditText.setText(model.getUsername());
+    aptoidePasswordEditText.setText(model.getUsername());
   }
 
   @Override public void onDestroyView() {

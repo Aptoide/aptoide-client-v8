@@ -12,6 +12,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.account.LoginPreferences;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.view.BackButton;
 import cm.aptoide.pt.v8engine.view.account.AptoideAccountViewModel;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -22,7 +23,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import rx.Observable;
 import rx.Single;
-import rx.SingleSubscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.Subscriptions;
 
@@ -30,7 +30,7 @@ import rx.subscriptions.Subscriptions;
  * Created by marcelobenites on 06/02/17.
  */
 
-public class LoginSignUpCredentialsPresenter implements Presenter {
+public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.ClickHandler {
 
   private static final String TAG = LoginSignUpCredentialsPresenter.class.getName();
 
@@ -42,22 +42,23 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
   private final Collection<String> facebookRequiredPermissions;
   private final LoginPreferences loginAvailability;
   private final boolean navigateToHome;
+  private final boolean isPortrait;
   private boolean dismissToNavigateToMainView;
 
   public LoginSignUpCredentialsPresenter(LoginSignUpCredentialsView view,
       AptoideAccountManager accountManager, Collection<String> facebookRequiredPermissions,
       LoginPreferences loginAvailability, boolean dismissToNavigateToMainView,
-      boolean navigateToHome) {
+      boolean navigateToHome, boolean isPortrait) {
     this.view = view;
     this.accountManager = accountManager;
     this.facebookRequiredPermissions = facebookRequiredPermissions;
     this.loginAvailability = loginAvailability;
     this.dismissToNavigateToMainView = dismissToNavigateToMainView;
     this.navigateToHome = navigateToHome;
+    this.isPortrait = isPortrait;
   }
 
   @Override public void present() {
-
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> showOrHideLogin())
@@ -198,11 +199,23 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
   }
 
   private Observable<Void> aptoideShowLoginClick() {
-    return view.showAptoideLoginAreaClick().doOnNext(__ -> view.showAptoideLoginArea());
+    return view.showAptoideLoginAreaClick().doOnNext(__ -> {
+      view.showAptoideLoginArea();
+      if (!isPortrait) {
+        view.hideFacebookLogin();
+        view.hideGoogleLogin();
+      }
+    });
   }
 
   private Observable<Void> aptoideShowSignUpClick() {
-    return view.showAptoideSignUpAreaClick().doOnNext(__ -> view.showAptoideSignUpArea());
+    return view.showAptoideSignUpAreaClick().doOnNext(__ -> {
+      view.showAptoideSignUpArea();
+      if (!isPortrait) {
+        view.hideFacebookLogin();
+        view.hideGoogleLogin();
+      }
+    });
   }
 
   private Observable<Void> forgotPasswordSelection() {
@@ -250,30 +263,35 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
   }
 
   private Single<String> getFacebookUsername(AccessToken accessToken) {
-    return Single.create(new Single.OnSubscribe<String>() {
-      @Override public void call(SingleSubscriber<? super String> singleSubscriber) {
-        final GraphRequest request =
-            GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
-              @Override public void onCompleted(JSONObject object, GraphResponse response) {
-                if (!singleSubscriber.isUnsubscribed()) {
-                  if (response.getError() == null) {
-                    String email = null;
-                    try {
-                      email =
-                          object.has("email") ? object.getString("email") : object.getString("id");
-                    } catch (JSONException e) {
-                      singleSubscriber.onError(e);
-                    }
-                    singleSubscriber.onSuccess(email);
-                  } else {
-                    singleSubscriber.onError(response.getError().getException());
+    return Single.create(singleSubscriber -> {
+      final GraphRequest request =
+          GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
+            @Override public void onCompleted(JSONObject object, GraphResponse response) {
+              if (!singleSubscriber.isUnsubscribed()) {
+                if (response.getError() == null) {
+                  String email = null;
+                  try {
+                    email =
+                        object.has("email") ? object.getString("email") : object.getString("id");
+                  } catch (JSONException e) {
+                    singleSubscriber.onError(e);
                   }
+                  singleSubscriber.onSuccess(email);
+                } else {
+                  singleSubscriber.onError(response.getError().getException());
                 }
               }
-            });
-        singleSubscriber.add(Subscriptions.create(() -> request.setCallback(null)));
-        request.executeAsync();
-      }
+            }
+          });
+      singleSubscriber.add(Subscriptions.create(() -> request.setCallback(null)));
+      request.executeAsync();
     });
+  }
+
+  @Override public boolean handle() {
+    if(!isPortrait){
+      showOrHideLogin();
+    }
+    return view.tryCloseLoginBottomSheet();
   }
 }

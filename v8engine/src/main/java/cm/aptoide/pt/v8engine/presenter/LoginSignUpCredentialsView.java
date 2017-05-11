@@ -60,6 +60,8 @@ public interface LoginSignUpCredentialsView extends GoogleLoginView {
 
   Observable<AptoideAccountViewModel> aptoideSignUpClick();
 
+  boolean tryCloseLoginBottomSheet();
+
   void setCredentials(@NonNull AptoideAccountViewModel model);
 
   @NonNull AptoideAccountViewModel getCredentials();
