@@ -3,7 +3,7 @@
   <string name="or">or</string>
   <string name="username">Email</string>
   <string name="register">Sign Up</string>
-  <string name="successful">Successful</string>
+  <string name="title_successful">Successful</string>
   <string name="login_successful">Successful login</string>
   <string name="forgot_passwd"><u>Forgot password?</u></string>
   <string name="fields_cannot_empty">Please check your email and password.</string>

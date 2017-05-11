@@ -258,7 +258,7 @@ public class Translator {
         translated = Application.getContext().getString(R.string.summer_apps);
         break;
       case "Play-it!":
-        translated = Application.getContext().getString(R.string.play_it);
+        translated = Application.getContext().getString(R.string.title_play_it);
         break;
       case "More Editors Choice":
       case "More Editor's Choice":
