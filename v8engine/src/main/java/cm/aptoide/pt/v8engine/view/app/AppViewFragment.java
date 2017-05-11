@@ -687,7 +687,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     int i = item.getItemId();
 
     if (i == R.id.menu_share) {
-        shareApp(appName, packageName, wUrl);
+      shareApp(appName, packageName, wUrl);
       return true;
     } else if (i == R.id.menu_schedule) {
 
