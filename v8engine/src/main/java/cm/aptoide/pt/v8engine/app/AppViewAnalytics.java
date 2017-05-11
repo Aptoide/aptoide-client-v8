@@ -37,7 +37,7 @@ public class AppViewAnalytics extends AptoideAnalytics {
         new FacebookEvent(facebook, APP_VIEW_INTERACT, createBundleData(ACTION, "Rate This App")));
   }
 
-  public void sendRealAllEvent() {
+  public void sendReadAllEvent() {
     analytics.sendEvent(
         new FacebookEvent(facebook, APP_VIEW_INTERACT, createBundleData(ACTION, "Read All")));
   }

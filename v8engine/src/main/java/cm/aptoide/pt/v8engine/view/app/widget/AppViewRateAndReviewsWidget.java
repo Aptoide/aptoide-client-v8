@@ -140,14 +140,20 @@ import rx.functions.Action1;
     Observable<GenericDialogs.EResponse> showRateDialog =
         dialogUtils.showRateDialog(context, appName, packageName, storeName);
 
-    compositeSubscription.add(
-        RxView.clicks(rateThisButton).flatMap(__ -> showRateDialog).subscribe(__ -> {
+    compositeSubscription.add(RxView.clicks(rateThisButton)
+        .doOnNext(__ -> displayable.getAppViewAnalytics().sendRateThisAppEvent())
+        .flatMap(__ -> showRateDialog)
+        .subscribe(__ -> {
         }, handleError));
-    compositeSubscription.add(
-        RxView.clicks(rateThisButtonLarge).flatMap(__ -> showRateDialog).subscribe(__ -> {
+    compositeSubscription.add(RxView.clicks(rateThisButtonLarge)
+        .doOnNext(__ -> displayable.getAppViewAnalytics().sendRateThisAppEvent())
+        .flatMap(__ -> showRateDialog)
+        .subscribe(__ -> {
         }, handleError));
-    compositeSubscription.add(
-        RxView.clicks(ratingLayout).flatMap(__ -> showRateDialog).subscribe(__ -> {
+    compositeSubscription.add(RxView.clicks(ratingLayout)
+        .doOnNext(__ -> displayable.getAppViewAnalytics().sendRateThisAppEvent())
+        .flatMap(__ -> showRateDialog)
+        .subscribe(__ -> {
         }, handleError));
 
     Action1<Void> commentsOnClickListener = __ -> {
@@ -156,10 +162,13 @@ import rx.functions.Action1;
               app.getPackageName(), app.getStore().getAppearance().getTheme());
       getFragmentNavigator().navigateTo(fragment);
     };
-    compositeSubscription.add(
-        RxView.clicks(readAllButton).subscribe(commentsOnClickListener, handleError));
-    compositeSubscription.add(
-        RxView.clicks(commentsLayout).subscribe(commentsOnClickListener, handleError));
+
+    compositeSubscription.add(RxView.clicks(readAllButton)
+        .doOnNext(__ -> displayable.getAppViewAnalytics().sendReadAllEvent())
+        .subscribe(commentsOnClickListener, handleError));
+    compositeSubscription.add(RxView.clicks(commentsLayout)
+        .doOnNext(__ -> displayable.getAppViewAnalytics().sendReadAllEvent())
+        .subscribe(commentsOnClickListener, handleError));
 
     LinearLayoutManagerWithSmoothScroller layoutManager =
         new LinearLayoutManagerWithSmoothScroller(context, LinearLayoutManager.HORIZONTAL, false);
