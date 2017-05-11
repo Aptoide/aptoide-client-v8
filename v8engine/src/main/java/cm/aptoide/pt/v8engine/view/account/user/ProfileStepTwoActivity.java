@@ -105,7 +105,7 @@ public class ProfileStepTwoActivity extends AccountBaseActivity {
   }
 
   private void showContinueSuccessMessage(Analytics.Account.ProfileAction action) {
-    ShowMessage.asSnack(this, R.string.successful);
+    ShowMessage.asSnack(this, R.string.title_successful);
     Analytics.Account.accountProfileAction(2, action);
   }
 
