@@ -184,7 +184,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private PaymentAnalytics paymentAnalytics;
   private SpotAndShareAnalytics spotAndShareAnalytics;
 
-
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
     bundle.putString(BundleKeys.UNAME.name(), uname);
@@ -403,9 +402,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   public void buyApp(GetAppMeta.App app) {
     final ParcelableProduct product = (ParcelableProduct) productFactory.create(app);
     paymentAnalytics.sendPaidAppBuyButtonPressedEvent(product);
-    startActivityForResult(
-        PaymentActivity.getIntent(getActivity(), product),
-        PAY_APP_REQUEST_CODE);
+    startActivityForResult(PaymentActivity.getIntent(getActivity(), product), PAY_APP_REQUEST_CODE);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -690,10 +687,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     int i = item.getItemId();
 
     if (i == R.id.menu_share) {
-      if (getApp != null) {
-        shareApp(appName, packageName, getApp.getNodes().getMeta().getData().getFile().getVercode(),
-            wUrl);
-      }
+        shareApp(appName, packageName, wUrl);
       return true;
     } else if (i == R.id.menu_schedule) {
 
@@ -728,9 +722,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   // Scrollable interface
   //
 
-  private void shareApp(String appName, String packageName, int vercode, String wUrl) {
+  private void shareApp(String appName, String packageName, String wUrl) {
     GenericDialogs.createGenericShareDialog(getContext(), getString(R.string.share),
-        installedRepository.contains(packageName, vercode)).subscribe(eResponse -> {
+        installedRepository.contains(packageName)).subscribe(eResponse -> {
       if (GenericDialogs.EResponse.SHARE_EXTERNAL == eResponse) {
 
         shareDefault(appName, packageName, wUrl);
