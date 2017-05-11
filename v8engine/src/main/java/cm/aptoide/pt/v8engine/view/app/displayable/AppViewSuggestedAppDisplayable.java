@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.app.displayable;
 
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
 /**
@@ -14,11 +15,14 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class AppViewSuggestedAppDisplayable extends DisplayablePojo<MinimalAd> {
 
+  private AppViewAnalytics appViewAnalytics;
+
   public AppViewSuggestedAppDisplayable() {
   }
 
-  public AppViewSuggestedAppDisplayable(MinimalAd minimalAd) {
+  public AppViewSuggestedAppDisplayable(MinimalAd minimalAd, AppViewAnalytics appViewAnalytics) {
     super(minimalAd);
+    this.appViewAnalytics = appViewAnalytics;
   }
 
   @Override protected Configs getConfig() {
@@ -27,5 +31,9 @@ public class AppViewSuggestedAppDisplayable extends DisplayablePojo<MinimalAd> {
 
   @Override public int getViewLayout() {
     return R.layout.displayable_app_view_suggested_app;
+  }
+
+  public AppViewAnalytics getAppViewAnalytics() {
+    return appViewAnalytics;
   }
 }
