@@ -54,7 +54,6 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
   private LinearLayout socialInfoBar;
   private LinearLayout socialCommentBar;
   private ImageView latestCommentMainAvatar;
-  //private ImageView latestCommentSecondaryAvatar;
   private TextView socialCommentBody;
   private TextView socialCommentUsername;
 
@@ -78,8 +77,6 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
     userAvatar = (ImageView) itemView.findViewById(R.id.card_user_avatar);
     latestCommentMainAvatar = (ImageView) itemView.findViewById(R.id.card_last_comment_main_icon);
-    //latestCommentSecondaryAvatar =
-    //    (ImageView) itemView.findViewById(R.id.card_last_comment_secondary_icon);
     socialInfoBar = (LinearLayout) itemView.findViewById(R.id.social_info_bar);
     socialCommentBar = (LinearLayout) itemView.findViewById(R.id.social_latest_comment_bar);
     socialCommentUsername = (TextView) itemView.findViewById(R.id.social_latest_comment_user_name);
