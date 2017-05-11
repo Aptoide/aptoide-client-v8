@@ -34,8 +34,11 @@ public class NotificationProvider {
         aptoideNotification.getType(), aptoideNotification.isShowed());
   }
 
-  Single<List<AptoideNotification>> getNotifications(Integer[] notificationsIds) {
-    return notificationAccessor.getAllSorted(Sort.DESCENDING, notificationsIds)
+  Single<List<AptoideNotification>> getShowedNotifications(
+      @AptoideNotification.NotificationType Integer[] notificationsTypes, long startTime,
+      long endTime) {
+    return notificationAccessor.getAllSorted(Sort.DESCENDING, notificationsTypes, startTime,
+        endTime, true)
         .first()
         .flatMap(notifications -> Observable.from(notifications)
             .map(notification -> convertToAptoideNotification(notification))
@@ -47,8 +50,7 @@ public class NotificationProvider {
     return new AptoideNotification(notification.getAbTestingGroup(), notification.getBody(),
         notification.getCampaignId(), notification.getImg(), notification.getLang(),
         notification.getTitle(), notification.getUrl(), notification.getUrlTrack(),
-        notification.getTimeStamp(), notification.getType(),
-        notification.isShowed());
+        notification.getTimeStamp(), notification.getType(), notification.isShowed());
   }
 
   public Completable save(List<AptoideNotification> aptideNotifications) {

@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.pull;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
@@ -91,7 +90,7 @@ public class NotificationCenter {
 
   private Single<Boolean> shouldShowSocialNotification(int notificationId,
       Integer[] notificationsIds) {
-    return Single.zip(isNotificationVisible(notificationId), applySocialPolicies(notificationsIds),
+    return Single.zip(isNotificationVisible(notificationId), shouldShowByRules(notificationsIds),
         (isNotificationVisible, isPolicies) -> isNotificationVisible || isPolicies);
   }
 
@@ -99,26 +98,24 @@ public class NotificationCenter {
     return Single.just(notificationStatusManager.isVisible(notificationsId));
   }
 
-  private Single<Boolean> applySocialPolicies(Integer[] notificationsTypes) {
-    return notificationProvider.getNotifications(notificationsTypes)
-        .map(notifications -> !isShowedLimitReached(notifications, 1, TimeUnit.MINUTES.toMillis(2),
-            System.currentTimeMillis()) && !isShowedLimitReached(notifications, 3,
-            TimeUnit.MINUTES.toMillis(10), System.currentTimeMillis()));
+  private Single<Boolean> shouldShowByRules(Integer[] notificationsTypes) {
+    long now = System.currentTimeMillis();
+
+    long police1timeFrame = TimeUnit.MINUTES.toMillis(2);
+    long police2timeFrame = TimeUnit.MINUTES.toMillis(10);
+    long police1startTime = now - police1timeFrame;
+    long police2startTime = now - police2timeFrame;
+    int police1Occurrences = 1;
+    int police2Occurrences = 3;
+    return Single.zip(getRule(notificationsTypes, now, police1startTime, police1Occurrences),
+        getRule(notificationsTypes, now, police2startTime, police2Occurrences),
+        (passRule1, passRule2) -> passRule1 && passRule2);
   }
 
-  @NonNull private Boolean isShowedLimitReached(List<AptoideNotification> aptoideNotifications,
-      int occurrencesLimit, long timeFrame, long currentTime) {
-    int occurrences = 0;
-    for (int i = 0; i < aptoideNotifications.size() && occurrences < occurrencesLimit; i++) {
-      AptoideNotification aptoideNotification = aptoideNotifications.get(i);
-      if (aptoideNotification.getTimeStamp() < currentTime - timeFrame) {
-        break;
-      }
-      if (aptoideNotification.isShowed()
-          && aptoideNotification.getTimeStamp() > currentTime - timeFrame) {
-        occurrences++;
-      }
-    }
-    return occurrences >= occurrencesLimit;
+  @NonNull
+  private Single<Boolean> getRule(Integer[] notificationsTypes, long endTime, long startTime,
+      int occurrences) {
+    return notificationProvider.getShowedNotifications(notificationsTypes, startTime, endTime)
+        .map(aptoideNotifications -> aptoideNotifications.size() < occurrences);
   }
 }
