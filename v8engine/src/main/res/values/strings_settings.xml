@@ -15,7 +15,7 @@
 
 
   <string name="setting_category_autoupdate">%s Updates</string>
-  <string name="setting_category_autoupdate_title">Get %s Update notifications</string>
+  <string name="setting_category_autoupdate_title">Get %s Update</string>
   <string name="setting_category_autoupdate_message">Periodically check for %s new versions</string>
 
 
@@ -34,10 +34,15 @@
 
 
   <string name="setting_updates">Updates</string>
-  <string name="setting_updates_notification_title">Updates Notification</string>
-  <string name="setting_updates_notification_sum">Show new updates notifications</string>
   <string name="settings_include_system_apps_title">Include system apps</string>
   <string name="settings_include_system_apps_summary">Checking this, you will be notified of system apps (apps that were installed by the device\'s manufacturer) updates</string>
+
+
+  <string name="setting_notifications">Notifications</string>
+  <string name="setting_notifications_sub_section_1">App updates</string>
+  <string name="setting_notifications_sub_sub_section_1">Show notifications for App updates</string>
+  <string name="setting_notifications_sub_section_2">Social notifications</string>
+  <string name="setting_notifications_sub_sub_section_2">Social notifications regarding campaigns and social timeline</string>
 
 
   <string name="setting_schdwntitle">Scheduled Downloads</string>
