@@ -26,8 +26,8 @@ public class AccountGroupNameProvider implements GroupNameProvider {
 
   @Override public Single<String> getName() {
     return accountManager.accountStatus().first().toSingle().flatMap(account -> {
-      if (account.isLoggedIn()) {
-        String username = account.getNickname();
+      String username;
+      if (account.isLoggedIn() && (username = account.getNickname()) != null) {
         if (username.length() > 17) {
           username = username.substring(0, 17);
         }
