@@ -294,10 +294,11 @@ public abstract class V8Engine extends SpotAndShareApplication {
     SystemNotificationShower systemNotificationShower = new SystemNotificationShower(this,
         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
     List<NotificationSyncScheduler.Schedule> scheduleList = new ArrayList<>(2);
-    // TODO: 10/05/2017 trinkes make 2 different schedules for campaigns and direct notifications
-    scheduleList.add(
-        new NotificationSyncScheduler.Schedule(NotificationSyncService.PUSH_NOTIFICATIONS_ACTION,
-            pushNotificationInterval));
+
+    scheduleList.add(new NotificationSyncScheduler.Schedule(
+        NotificationSyncService.PUSH_NOTIFICATIONS_CAMPAIGN_ACTION, AlarmManager.INTERVAL_DAY));
+    scheduleList.add(new NotificationSyncScheduler.Schedule(
+        NotificationSyncService.PUSH_NOTIFICATIONS_SOCIAL_ACTION, pushNotificationInterval));
 
     NotificationSyncScheduler notificationSyncScheduler =
         new NotificationSyncScheduler(this, (AlarmManager) getSystemService(ALARM_SERVICE),
