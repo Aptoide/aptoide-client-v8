@@ -19,6 +19,7 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
 import cm.aptoide.pt.v8engine.install.rollback.RollbackRepository;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -80,8 +81,8 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 
   public AppViewInstallDisplayable(InstallManager installManager, GetApp getApp,
       MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository,
-      TimelineAnalytics timelineAnalytics) {
-    super(getApp);
+      TimelineAnalytics timelineAnalytics, AppViewAnalytics appViewAnalytics) {
+    super(getApp, appViewAnalytics);
     this.installManager = installManager;
     this.md5 = getApp.getNodes().getMeta().getData().getFile().getMd5sum();
     this.packageName = getApp.getNodes().getMeta().getData().getPackageName();
@@ -96,9 +97,9 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 
   public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager,
       MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository,
-      TimelineAnalytics timelineAnalytics) {
+      TimelineAnalytics timelineAnalytics, AppViewAnalytics appViewAnalytics) {
     return new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall,
-        installedRepository, timelineAnalytics);
+        installedRepository, timelineAnalytics, appViewAnalytics);
   }
 
   public void startInstallationProcess() {

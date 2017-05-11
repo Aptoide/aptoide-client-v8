@@ -600,7 +600,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     final boolean shouldInstall = openType == OpenType.OPEN_AND_INSTALL;
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
-            installedRepository, timelineAnalytics);
+            installedRepository, timelineAnalytics, appViewAnalytics);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics));
     displayables.add(
