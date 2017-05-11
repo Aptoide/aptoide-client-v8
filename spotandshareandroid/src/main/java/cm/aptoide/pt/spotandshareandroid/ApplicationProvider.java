@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -52,6 +53,8 @@ public class ApplicationProvider {
         }
       }
     }
+
+    Collections.sort(providedAppsList, (o1, o2) -> o1.getAppName().toLowerCase().compareTo(o2.getAppName().toLowerCase()));
   }
 
   public String checkIfHasObb(String packageName) {
