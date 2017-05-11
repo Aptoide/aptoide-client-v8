@@ -34,6 +34,7 @@ allprojects {
     maven { url 'http://maven.localytics.com/public' }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url "https://jitpack.io" }
+    maven { url "https://s3.amazonaws.com/avocarrot-android-builds/dist" }
   }
 }
 
