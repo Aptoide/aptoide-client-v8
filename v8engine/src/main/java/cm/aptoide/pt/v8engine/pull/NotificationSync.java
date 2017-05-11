@@ -19,13 +19,11 @@ class NotificationSync {
 
   public Completable syncCampaigns() {
     return notificationNetworkService.getCampaignNotifications()
-        .flatMapCompletable(
-            aptoideNotification -> notificationProvider.save(aptoideNotification));
+        .flatMapCompletable(aptoideNotification -> notificationProvider.save(aptoideNotification));
   }
 
   public Completable syncSocial() {
     return notificationNetworkService.getSocialNotifications()
-        .flatMapCompletable(aptoideNotification -> Completable.fromAction(
-            () -> notificationProvider.save(aptoideNotification)));
+        .flatMapCompletable(aptoideNotification -> notificationProvider.save(aptoideNotification));
   }
 }

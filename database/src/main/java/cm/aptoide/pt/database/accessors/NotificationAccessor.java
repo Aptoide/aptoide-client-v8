@@ -6,6 +6,7 @@ import io.realm.RealmQuery;
 import io.realm.Sort;
 import java.util.List;
 import rx.Observable;
+import rx.Single;
 import rx.schedulers.Schedulers;
 
 /**
@@ -28,5 +29,15 @@ public class NotificationAccessor extends SimpleAccessor<Notification> {
         .flatMap((data) -> database.copyFromRealm(data))
         .subscribeOn(RealmSchedulers.getScheduler())
         .observeOn(Schedulers.io());
+  }
+
+  public Single<Notification> getLastShowed(Integer[] notificationType) {
+    return getAllSorted(Sort.DESCENDING, notificationType).first().map(notifications -> {
+      if (notifications.isEmpty()) {
+        return null;
+      } else {
+        return notifications.get(0);
+      }
+    }).toSingle();
   }
 }

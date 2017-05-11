@@ -10,13 +10,22 @@ import rx.Single;
 
 public class NotificationStatusManager {
   private NotificationAccessor notificationAccessor;
+  private NotificationIdsMapper notificationIdsMapper;
 
-  public NotificationStatusManager(NotificationAccessor notificationAccessor) {
+  public NotificationStatusManager(NotificationAccessor notificationAccessor,
+      NotificationIdsMapper notificationIdsMapper) {
     this.notificationAccessor = notificationAccessor;
+    this.notificationIdsMapper = notificationIdsMapper;
   }
 
-  Completable setShowed(int notificationType) {
-    return null;
+  Completable setShowed(int notificationId) {
+    return notificationAccessor.getLastShowed(
+        notificationIdsMapper.getNotificationType(notificationId)).doOnSuccess(notification -> {
+      if (notification != null) {
+        notification.setShowed(true);
+        notificationAccessor.insert(notification);
+      }
+    }).toCompletable();
   }
 
   Single<Boolean> isVisible(@AptoideNotification.NotificationType int notificationType) {

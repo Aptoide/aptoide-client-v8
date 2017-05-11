@@ -30,9 +30,9 @@ public class NotificationSyncService extends Service {
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
     notificationSync.syncCampaigns()
-        .subscribe(() -> stopSelf(startId), throwable -> stopSelf(startId));
+        .subscribe(()->{},throwable -> throwable.printStackTrace());
     notificationSync.syncSocial()
-        .subscribe(() -> stopSelf(startId), throwable -> stopSelf(startId));
+        .subscribe(()->{},throwable -> throwable.printStackTrace());
 
     return Service.START_NOT_STICKY;
   }

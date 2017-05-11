@@ -85,6 +85,7 @@ import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
 import cm.aptoide.pt.v8engine.pull.NotificationCenter;
 import cm.aptoide.pt.v8engine.pull.NotificationHandler;
+import cm.aptoide.pt.v8engine.pull.NotificationIdsMapper;
 import cm.aptoide.pt.v8engine.pull.NotificationProvider;
 import cm.aptoide.pt.v8engine.pull.NotificationStatusManager;
 import cm.aptoide.pt.v8engine.pull.NotificationSyncScheduler;
@@ -303,9 +304,10 @@ public abstract class V8Engine extends SpotAndShareApplication {
             NotificationSyncService.class, scheduleList);
     NotificationAccessor notificationAccessor = AccessorFactory.getAccessorFor(Notification.class);
     NotificationCenter notificationCenter =
-        new NotificationCenter(notificationHandler, new NotificationProvider(notificationAccessor),
-            notificationSyncScheduler, systemNotificationShower, CrashReport.getInstance(),
-            new NotificationStatusManager(notificationAccessor));
+        new NotificationCenter(new NotificationIdsMapper(), notificationHandler,
+            new NotificationProvider(notificationAccessor), notificationSyncScheduler,
+            systemNotificationShower, CrashReport.getInstance(),
+            new NotificationStatusManager(notificationAccessor, new NotificationIdsMapper()));
     notificationCenter.start();
   }
 

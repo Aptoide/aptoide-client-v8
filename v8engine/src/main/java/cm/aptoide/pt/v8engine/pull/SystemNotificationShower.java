@@ -43,7 +43,7 @@ public class SystemNotificationShower {
         aptoideNotification.getType(), context).flatMap(
         pressIntentAction -> buildNotification(context, aptoideNotification.getTitle(),
             aptoideNotification.getBody(), aptoideNotification.getImg(), pressIntentAction,
-            notificationId));
+            notificationId, getOnDismissAction(notificationId)));
   }
 
   private Single<PendingIntent> getPressIntentAction(String trackUrl, String url,
@@ -65,7 +65,8 @@ public class SystemNotificationShower {
   }
 
   @NonNull private Single<android.app.Notification> buildNotification(Context context, String title,
-      String body, String imageUrl, PendingIntent pressIntentAction, int notificationId) {
+      String body, String imageUrl, PendingIntent pressIntentAction, int notificationId,
+      PendingIntent onDismissAction) {
     return Single.fromCallable(() -> {
       android.app.Notification notification =
           new NotificationCompat.Builder(context).setContentIntent(pressIntentAction)
@@ -74,6 +75,7 @@ public class SystemNotificationShower {
               .setLargeIcon(ImageLoader.with(context).loadBitmap(imageUrl))
               .setContentTitle(title)
               .setContentText(body)
+              .setDeleteIntent(onDismissAction)
               .build();
       notification.flags =
           android.app.Notification.DEFAULT_LIGHTS | android.app.Notification.FLAG_AUTO_CANCEL;
@@ -102,5 +104,14 @@ public class SystemNotificationShower {
       ImageLoader.with(context).loadImageToNotification(notificationTarget, imageUrl);
     }
     return notification;
+  }
+
+  public PendingIntent getOnDismissAction(int notificationId) {
+    Intent resultIntent = new Intent(context, PullingContentReceiver.class);
+    resultIntent.setAction(PullingContentReceiver.PUSH_NOTIFICATION_DISMISSED);
+    resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_NOTIFICATION_ID, notificationId);
+
+    return PendingIntent.getBroadcast(context, notificationId, resultIntent,
+        PendingIntent.FLAG_UPDATE_CURRENT);
   }
 }

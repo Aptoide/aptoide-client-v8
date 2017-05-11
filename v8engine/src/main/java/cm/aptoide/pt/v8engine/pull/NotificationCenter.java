@@ -14,17 +14,19 @@ import rx.Single;
 
 public class NotificationCenter {
   private final CrashReport crashReport;
+  private final NotificationIdsMapper notificationIdsMapper;
   private NotificationStatusManager notificationStatusManager;
   private NotificationHandler notificationHandler;
   private NotificationProvider notificationProvider;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SystemNotificationShower notificationShower;
 
-  public NotificationCenter(NotificationHandler notificationHandler,
-      NotificationProvider notificationProvider,
+  public NotificationCenter(NotificationIdsMapper notificationIdsMapper,
+      NotificationHandler notificationHandler, NotificationProvider notificationProvider,
       NotificationSyncScheduler notificationSyncScheduler,
       SystemNotificationShower notificationShower, CrashReport crashReport,
       NotificationStatusManager notificationStatusManager) {
+    this.notificationIdsMapper = notificationIdsMapper;
     this.notificationHandler = notificationHandler;
     this.notificationProvider = notificationProvider;
     this.notificationSyncScheduler = notificationSyncScheduler;
@@ -37,7 +39,7 @@ public class NotificationCenter {
     notificationSyncScheduler.schedule();
     getNewNotifications().flatMapCompletable(
         aptoideNotification -> notificationShower.showNotification(aptoideNotification,
-            getNotificationId(aptoideNotification))
+            notificationIdsMapper.getNotificationId(aptoideNotification.getType()))
             .andThen(updateNotification(aptoideNotification))
             .onErrorComplete(throwable -> {
               crashReport.log(throwable);
@@ -72,11 +74,13 @@ public class NotificationCenter {
         return Single.just(true);
       case AptoideNotification.COMMENT:
       case AptoideNotification.LIKE:
-        return shouldShowSocialNotification(getNotificationId(aptoideNotificationToShow),
-            getNotificationType(aptoideNotificationToShow));
+        return shouldShowSocialNotification(
+            notificationIdsMapper.getNotificationId(aptoideNotificationToShow.getType()),
+            notificationIdsMapper.getNotificationType(aptoideNotificationToShow.getType()));
       case AptoideNotification.POPULAR:
-        return shouldShowSocialNotification(getNotificationId(aptoideNotificationToShow),
-            getNotificationType(aptoideNotificationToShow));
+        return shouldShowSocialNotification(
+            notificationIdsMapper.getNotificationId(aptoideNotificationToShow.getType()),
+            notificationIdsMapper.getNotificationType(aptoideNotificationToShow.getType()));
       default:
         return Single.just(false);
     }
@@ -112,39 +116,5 @@ public class NotificationCenter {
       }
     }
     return occurrences >= occurrencesLimit;
-  }
-
-  private int getNotificationId(AptoideNotification aptoideNotification) throws RuntimeException {
-    switch (aptoideNotification.getType()) {
-      case AptoideNotification.CAMPAIGN:
-        return 0;
-      case AptoideNotification.COMMENT:
-      case AptoideNotification.LIKE:
-        return 1;
-      case AptoideNotification.POPULAR:
-        return 2;
-      default:
-        throw new RuntimeException("unknown notification type ");
-    }
-  }
-
-  private Integer[] getNotificationType(AptoideNotification aptoideNotificationToShow) {
-    switch (aptoideNotificationToShow.getType()) {
-      case AptoideNotification.CAMPAIGN:
-        return new Integer[] {
-            AptoideNotification.CAMPAIGN
-        };
-      case AptoideNotification.COMMENT:
-      case AptoideNotification.LIKE:
-        return new Integer[] {
-            AptoideNotification.LIKE, AptoideNotification.COMMENT
-        };
-      case AptoideNotification.POPULAR:
-        return new Integer[] {
-            AptoideNotification.POPULAR,
-        };
-      default:
-        throw new RuntimeException("unknown notification type ");
-    }
   }
 }
