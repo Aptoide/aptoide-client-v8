@@ -5,6 +5,14 @@
 
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+  <style name="Theme.AppCompat.Translucent">
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:colorBackgroundCacheHint">@null</item>
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowAnimationStyle">@android:style/Animation</item>
+  </style>
+
   <style name="Widget.Styled.ActionBar.Aptoide" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
     <item name="background">@drawable/ab_background_aptoide</item>
     <item name="logo">@drawable/ic_widget_launcher</item>
