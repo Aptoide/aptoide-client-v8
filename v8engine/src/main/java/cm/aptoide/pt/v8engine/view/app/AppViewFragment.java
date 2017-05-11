@@ -612,7 +612,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     }
     displayables.add(new AppViewDescriptionDisplayable(getApp, appViewAnalytics));
 
-    displayables.add(new AppViewFlagThisDisplayable(getApp));
+    displayables.add(new AppViewFlagThisDisplayable(getApp, appViewAnalytics));
     if (suggestedAds != null) {
       displayables.add(new AppViewSuggestedAppsDisplayable(suggestedAds, appViewAnalytics));
     }
