@@ -16,8 +16,8 @@ import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationFactory;
-import cm.aptoide.pt.v8engine.payment.repository.sync.ProductBundleMapper;
+import cm.aptoide.pt.v8engine.billing.repository.PaymentConfirmationFactory;
+import cm.aptoide.pt.v8engine.billing.repository.sync.ProductBundleMapper;
 
 /**
  * Created by marcelobenites on 18/11/16.

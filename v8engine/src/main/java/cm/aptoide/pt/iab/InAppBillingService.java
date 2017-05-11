@@ -9,7 +9,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.payment.repository.ProductFactory;
+import cm.aptoide.pt.v8engine.billing.repository.ProductFactory;
 
 public class InAppBillingService extends Service {
 

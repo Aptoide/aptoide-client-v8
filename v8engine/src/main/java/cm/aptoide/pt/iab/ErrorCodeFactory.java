@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.iab;
 
-import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
+import cm.aptoide.pt.v8engine.billing.exception.PaymentCancellationException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.io.IOException;

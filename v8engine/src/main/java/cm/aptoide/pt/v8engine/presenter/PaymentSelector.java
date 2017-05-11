@@ -6,7 +6,7 @@
 package cm.aptoide.pt.v8engine.presenter;
 
 import android.content.SharedPreferences;
-import cm.aptoide.pt.v8engine.payment.Payment;
+import cm.aptoide.pt.v8engine.billing.Payment;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;

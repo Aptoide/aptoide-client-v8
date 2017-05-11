@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.v8engine.presenter;
 
-import cm.aptoide.pt.v8engine.payment.Product;
-import cm.aptoide.pt.v8engine.payment.Purchase;
+import cm.aptoide.pt.v8engine.billing.Product;
+import cm.aptoide.pt.v8engine.billing.Purchase;
 import java.util.List;
 import rx.Observable;
 
