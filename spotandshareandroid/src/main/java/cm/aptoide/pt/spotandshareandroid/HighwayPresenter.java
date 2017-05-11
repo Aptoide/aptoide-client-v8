@@ -148,6 +148,9 @@ public class HighwayPresenter implements Presenter {
               view.enableButtons(true);
               view.hideSearchGroupsTextview(false);
               view.showJoinGroupResult(ConnectionManager.ERROR_UNKNOWN);
+              if (chosenHotspot != null) {
+                view.deselectHotspot(chosenHotspot);
+              }
             }
           }
         });
