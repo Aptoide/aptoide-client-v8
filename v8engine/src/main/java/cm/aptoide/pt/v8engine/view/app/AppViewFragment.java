@@ -609,7 +609,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     if (isMediaAvailable(media)) {
       displayables.add(new AppViewScreenshotsDisplayable(app, appViewAnalytics));
     }
-    displayables.add(new AppViewDescriptionDisplayable(getApp));
+    displayables.add(new AppViewDescriptionDisplayable(getApp, appViewAnalytics));
 
     displayables.add(new AppViewFlagThisDisplayable(getApp));
     if (suggestedAds != null) {
