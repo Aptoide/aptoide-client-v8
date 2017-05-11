@@ -15,7 +15,7 @@ public class NotificationIdsMapper {
       case AptoideNotification.POPULAR:
         return 2;
       default:
-        throw new RuntimeException("unknown notification type ");
+        throw new RuntimeException("unknown notification type " + notificationType);
     }
   }
 
@@ -36,7 +36,7 @@ public class NotificationIdsMapper {
             AptoideNotification.POPULAR,
         };
       default:
-        throw new RuntimeException("unknown notification notificationId ");
+        throw new RuntimeException("unknown notification notificationId " + notificationId);
     }
   }
 }

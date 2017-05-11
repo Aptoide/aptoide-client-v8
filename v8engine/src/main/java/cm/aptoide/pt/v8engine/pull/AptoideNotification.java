@@ -47,16 +47,18 @@ import lombok.ToString;
   public AptoideNotification(String abTestingGroup, String body, int campaignId, String img,
       String lang, String title, String url, String urlTrack) {
     this(abTestingGroup, body, campaignId, img, lang, title, url, urlTrack,
-        System.currentTimeMillis(), CAMPAIGN);
+        System.currentTimeMillis(), CAMPAIGN, false);
   }
 
   public AptoideNotification(String abTestingGroup, String body, int campaignId, String img,
-      String lang, String title, String url, String urlTrack, long timeStamp, int type) {
+      String lang, String title, String url, String urlTrack, long timeStamp, int type,
+      boolean showed) {
     this(body, img, title, url, type, timeStamp);
     this.abTestingGroup = abTestingGroup;
     this.campaignId = campaignId;
     this.lang = lang;
     this.urlTrack = urlTrack;
+    this.showed = showed;
   }
 
   public boolean isShowed() {

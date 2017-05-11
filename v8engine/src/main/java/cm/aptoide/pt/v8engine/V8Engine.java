@@ -307,7 +307,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
         new NotificationCenter(new NotificationIdsMapper(), notificationHandler,
             new NotificationProvider(notificationAccessor), notificationSyncScheduler,
             systemNotificationShower, CrashReport.getInstance(),
-            new NotificationStatusManager(notificationAccessor, new NotificationIdsMapper()));
+            new NotificationStatusManager(SecurePreferencesImplementation.getInstance(this)));
     notificationCenter.start();
   }
 

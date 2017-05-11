@@ -49,10 +49,10 @@ public class NotificationCenter {
   }
 
   private Completable updateNotification(AptoideNotification aptoideNotification) {
-    return Completable.fromAction(() -> {
-      aptoideNotification.setShowed(true);
-      notificationProvider.save(aptoideNotification);
-    });
+    aptoideNotification.setShowed(true);
+    notificationStatusManager.setVisible(
+        notificationIdsMapper.getNotificationId(aptoideNotification.getType()), true);
+    return notificationProvider.save(aptoideNotification);
   }
 
   private Observable<AptoideNotification> getNewNotifications() {
@@ -65,7 +65,10 @@ public class NotificationCenter {
                 return Observable.empty();
               }
             }))
-        .onErrorResumeNext(throwable -> Observable.empty());
+        .onErrorResumeNext(throwable -> {
+          throwable.printStackTrace();
+          return Observable.empty();
+        });
   }
 
   private Single<Boolean> shouldShowNotification(AptoideNotification aptoideNotificationToShow) {
@@ -93,25 +96,26 @@ public class NotificationCenter {
   }
 
   private Single<Boolean> isNotificationVisible(int notificationsId) {
-    return notificationStatusManager.isVisible(notificationsId);
+    return Single.just(notificationStatusManager.isVisible(notificationsId));
   }
 
-  private Single<Boolean> applySocialPolicies(Integer[] notificationsIds) {
-    return notificationProvider.getNotifications(notificationsIds)
-        .map(notifications -> !isShowedLimitReached(notifications, 1, TimeUnit.MINUTES.toMillis(1))
-            && !isShowedLimitReached(notifications, 3, TimeUnit.MINUTES.toMillis(5)));
+  private Single<Boolean> applySocialPolicies(Integer[] notificationsTypes) {
+    return notificationProvider.getNotifications(notificationsTypes)
+        .map(notifications -> !isShowedLimitReached(notifications, 1, TimeUnit.MINUTES.toMillis(2),
+            System.currentTimeMillis()) && !isShowedLimitReached(notifications, 3,
+            TimeUnit.MINUTES.toMillis(10), System.currentTimeMillis()));
   }
 
   @NonNull private Boolean isShowedLimitReached(List<AptoideNotification> aptoideNotifications,
-      int occurrencesLimit, long timeFrame) {
+      int occurrencesLimit, long timeFrame, long currentTime) {
     int occurrences = 0;
     for (int i = 0; i < aptoideNotifications.size() && occurrences < occurrencesLimit; i++) {
       AptoideNotification aptoideNotification = aptoideNotifications.get(i);
-      if (aptoideNotification.getTimeStamp() < System.currentTimeMillis() - timeFrame) {
+      if (aptoideNotification.getTimeStamp() < currentTime - timeFrame) {
         break;
       }
       if (aptoideNotification.isShowed()
-          && aptoideNotification.getTimeStamp() > System.currentTimeMillis() - timeFrame) {
+          && aptoideNotification.getTimeStamp() > currentTime - timeFrame) {
         occurrences++;
       }
     }

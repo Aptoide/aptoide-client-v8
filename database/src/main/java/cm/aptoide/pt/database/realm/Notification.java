@@ -1,6 +1,7 @@
 package cm.aptoide.pt.database.realm;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by trinkes on 10/05/2017.
@@ -17,11 +18,12 @@ public class Notification extends RealmObject {
   private String url;
   private String urlTrack;
   private int type;
+  @PrimaryKey
   private long timeStamp;
   private boolean showed;
 
   public Notification(String abTestingGroup, String body, int campaignId, String img, String lang,
-      String title, String url, String urlTrack, long timeStamp, int type) {
+      String title, String url, String urlTrack, long timeStamp, int type, boolean showed) {
     this.body = body;
     this.img = img;
     this.title = title;
@@ -32,6 +34,7 @@ public class Notification extends RealmObject {
     this.lang = lang;
     this.urlTrack = urlTrack;
     this.timeStamp = timeStamp;
+    this.showed = showed;
   }
 
   public Notification() {
@@ -39,10 +42,6 @@ public class Notification extends RealmObject {
 
   public boolean isShowed() {
     return showed;
-  }
-
-  public void setShowed(boolean showed) {
-    this.showed = showed;
   }
 
   public int getType() {

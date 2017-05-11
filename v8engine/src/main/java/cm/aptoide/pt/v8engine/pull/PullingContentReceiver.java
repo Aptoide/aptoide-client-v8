@@ -6,10 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 
 /**
@@ -32,8 +31,7 @@ public class PullingContentReceiver extends BroadcastReceiver {
         "onReceive() called with: " + "context = [" + context + "], intent = [" + intent + "]");
 
     notificationStatusManager =
-        new NotificationStatusManager(AccessorFactory.getAccessorFor(Notification.class),
-            new NotificationIdsMapper());
+        new NotificationStatusManager(SecurePreferencesImplementation.getInstance(context));
     String action = intent.getAction();
     if (action != null) {
       switch (action) {
@@ -43,6 +41,7 @@ public class PullingContentReceiver extends BroadcastReceiver {
           break;
         case NOTIFICATION_PRESSED_ACTION:
           pushNotificationPressed(context, intent);
+          notificationDismissed(intent.getIntExtra(PUSH_NOTIFICATION_NOTIFICATION_ID, -1));
           break;
         case PUSH_NOTIFICATION_DISMISSED:
           if (intent.hasExtra(PUSH_NOTIFICATION_NOTIFICATION_ID)) {
@@ -54,14 +53,10 @@ public class PullingContentReceiver extends BroadcastReceiver {
   }
 
   private void notificationDismissed(int notificationId) {
-    notificationStatusManager.setShowed(notificationId).subscribe(() -> {
-    }, throwable -> {
-      throwable.printStackTrace();
-    });
+    notificationStatusManager.setVisible(notificationId, false);
   }
 
   private void pushNotificationPressed(Context context, Intent intent) {
-    notificationDismissed(intent.getIntExtra(PUSH_NOTIFICATION_NOTIFICATION_ID, -1));
     String trackUrl = intent.getStringExtra(PUSH_NOTIFICATION_TRACK_URL);
     if (!TextUtils.isEmpty(trackUrl)) {
       DataproviderUtils.knock(trackUrl);
