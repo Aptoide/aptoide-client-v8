@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 26/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.payment;
+package cm.aptoide.pt.v8engine.payment.view;
 
 import android.content.Intent;
 import cm.aptoide.pt.iab.BillingBinder;

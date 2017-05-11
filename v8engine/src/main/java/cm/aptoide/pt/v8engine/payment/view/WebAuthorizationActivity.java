@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 26/01/2017.
  */
 
-package cm.aptoide.pt.v8engine.view.payment;
+package cm.aptoide.pt.v8engine.payment.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -20,7 +20,6 @@ import android.webkit.WebViewClient;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.presenter.PaymentAuthorizationView;
-import cm.aptoide.pt.v8engine.presenter.WebAuthorizationPresenter;
 import cm.aptoide.pt.v8engine.view.BackButtonActivity;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;

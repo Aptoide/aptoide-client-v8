@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 19/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.payment;
+package cm.aptoide.pt.v8engine.payment.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -32,7 +32,6 @@ import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
 import cm.aptoide.pt.v8engine.payment.products.AbstractProduct;
-import cm.aptoide.pt.v8engine.presenter.PaymentPresenter;
 import cm.aptoide.pt.v8engine.presenter.PaymentSelector;
 import cm.aptoide.pt.v8engine.presenter.PaymentView;
 import cm.aptoide.pt.v8engine.view.BaseActivity;

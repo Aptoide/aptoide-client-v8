@@ -98,7 +98,7 @@ import cm.aptoide.pt.v8engine.view.dialog.DialogBadgeV7;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.view.install.remote.RemoteInstallDialog;
-import cm.aptoide.pt.v8engine.view.payment.PaymentActivity;
+import cm.aptoide.pt.v8engine.payment.view.PaymentActivity;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.store.StoreFragment;

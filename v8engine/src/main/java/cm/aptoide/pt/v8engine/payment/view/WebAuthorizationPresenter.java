@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 15/02/2017.
  */
 
-package cm.aptoide.pt.v8engine.presenter;
+package cm.aptoide.pt.v8engine.payment.view;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,6 +14,9 @@ import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.payment.repository.sync.PaymentSyncScheduler;
 import cm.aptoide.pt.v8engine.payment.services.web.WebAuthorizationPayment;
+import cm.aptoide.pt.v8engine.presenter.PaymentAuthorizationView;
+import cm.aptoide.pt.v8engine.presenter.Presenter;
+import cm.aptoide.pt.v8engine.presenter.View;
 import rx.Completable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;

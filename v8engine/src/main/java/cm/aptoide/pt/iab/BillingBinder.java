@@ -14,7 +14,7 @@ import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.payment.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.payment.repository.ProductFactory;
-import cm.aptoide.pt.v8engine.view.payment.PaymentActivity;
+import cm.aptoide.pt.v8engine.payment.view.PaymentActivity;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

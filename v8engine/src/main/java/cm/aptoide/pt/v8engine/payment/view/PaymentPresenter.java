@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 29/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.presenter;
+package cm.aptoide.pt.v8engine.payment.view;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,6 +15,10 @@ import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentNotAuthorizedException;
+import cm.aptoide.pt.v8engine.presenter.PaymentSelector;
+import cm.aptoide.pt.v8engine.presenter.PaymentView;
+import cm.aptoide.pt.v8engine.presenter.Presenter;
+import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import java.io.IOException;
 import java.util.ArrayList;
