@@ -74,7 +74,6 @@ public class HomeFragment extends StoreFragment {
   private ImageView userAvatarImage;
   private DrawerAnalytics drawerAnalytics;
   private ClickHandler backClickHandler;
-  private SpotAndShareAnalytics spotAndShareAnalytics;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -85,6 +84,64 @@ public class HomeFragment extends StoreFragment {
     HomeFragment fragment = new HomeFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+
+    if (activity instanceof TabNavigator) {
+      tabNavigator = (TabNavigator) activity;
+    } else {
+      throw new IllegalStateException(
+          "Activity must implement " + TabNavigator.class.getSimpleName());
+    }
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+
+    getToolbar().setTitle("");
+
+    if (navigationView == null || navigationView.getVisibility() != View.VISIBLE) {
+      // if the navigation view is not visible do nothing
+      return;
+    }
+
+    View baseHeaderView = navigationView.getHeaderView(0);
+    userEmail = (TextView) baseHeaderView.findViewById(R.id.profile_email_text);
+    userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
+    userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
+
+    accountManager.accountStatus()
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.PAUSE))
+        .subscribe(account -> {
+          if (account == null || !account.isLoggedIn()) {
+            setInvisibleUserImageAndName();
+            return;
+          }
+          setVisibleUserImageAndName(account);
+        }, err -> CrashReport.getInstance()
+            .log(err));
+  }
+
+  private void setInvisibleUserImageAndName() {
+    userEmail.setText("");
+    userUsername.setText("");
+    userEmail.setVisibility(View.GONE);
+    userUsername.setVisibility(View.GONE);
+    ImageLoader.with(getContext())
+        .load(R.drawable.user_account_white, userAvatarImage);
+  }
+
+  private void setVisibleUserImageAndName(Account account) {
+    userEmail.setVisibility(View.VISIBLE);
+    userUsername.setVisibility(View.VISIBLE);
+    userEmail.setText(account.getEmail());
+    userUsername.setText(account.getNickname());
+    ImageLoader.with(getContext())
+        .loadWithCircleTransformAndPlaceHolder(account.getAvatar(), userAvatarImage,
+            R.drawable.user_account_white);
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -345,64 +402,6 @@ public class HomeFragment extends StoreFragment {
       default:
         throw new IllegalArgumentException("Invalid tab.");
     }
-  }
-
-  @Override public void onAttach(Activity activity) {
-    super.onAttach(activity);
-
-    if (activity instanceof TabNavigator) {
-      tabNavigator = (TabNavigator) activity;
-    } else {
-      throw new IllegalStateException(
-          "Activity must implement " + TabNavigator.class.getSimpleName());
-    }
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-
-    getToolbar().setTitle("");
-
-    if (navigationView == null || navigationView.getVisibility() != View.VISIBLE) {
-      // if the navigation view is not visible do nothing
-      return;
-    }
-
-    View baseHeaderView = navigationView.getHeaderView(0);
-    userEmail = (TextView) baseHeaderView.findViewById(R.id.profile_email_text);
-    userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
-    userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
-
-    accountManager.accountStatus()
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(FragmentEvent.PAUSE))
-        .subscribe(account -> {
-          if (account == null || !account.isLoggedIn()) {
-            setInvisibleUserImageAndName();
-            return;
-          }
-          setVisibleUserImageAndName(account);
-        }, err -> CrashReport.getInstance()
-            .log(err));
-  }
-
-  private void setInvisibleUserImageAndName() {
-    userEmail.setText("");
-    userUsername.setText("");
-    userEmail.setVisibility(View.GONE);
-    userUsername.setVisibility(View.GONE);
-    ImageLoader.with(getContext())
-        .load(R.drawable.user_account_white, userAvatarImage);
-  }
-
-  private void setVisibleUserImageAndName(Account account) {
-    userEmail.setVisibility(View.VISIBLE);
-    userUsername.setVisibility(View.VISIBLE);
-    userEmail.setText(account.getEmail());
-    userUsername.setText(account.getNickname());
-    ImageLoader.with(getContext())
-        .loadWithCircleTransformAndPlaceHolder(account.getAvatar(), userAvatarImage,
-            R.drawable.user_account_white);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

@@ -400,7 +400,8 @@ import rx.android.schedulers.AndroidSchedulers;
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
             if (accountManager.isLoggedIn()
-                && ManagerPreferences.isShowPreviewDialog() && Application.getConfiguration()
+                && ManagerPreferences.isShowPreviewDialog()
+                && Application.getConfiguration()
                 .isCreateStoreAndSetUserPrivacyAvailable()) {
               SharePreviewDialog sharePreviewDialog =
                   new SharePreviewDialog(displayable, accountManager, true,
@@ -594,7 +595,8 @@ import rx.android.schedulers.AndroidSchedulers;
       @Nullable ListAppVersions appVersions) {
     boolean canCompare = appVersions != null
         && appVersions.getList() != null
-        && appVersions.getList() != null && !appVersions.getList()
+        && appVersions.getList() != null
+        && !appVersions.getList()
         .isEmpty();
     if (canCompare) {
       boolean isLatestVersion = app.getFile()
@@ -626,7 +628,8 @@ import rx.android.schedulers.AndroidSchedulers;
       @Nullable ListAppVersions appVersions) {
     boolean canCompare = appVersions != null
         && appVersions.getList() != null
-        && appVersions.getList() != null && !appVersions.getList()
+        && appVersions.getList() != null
+        && !appVersions.getList()
         .isEmpty();
     if (canCompare) {
       return app.getFile()
