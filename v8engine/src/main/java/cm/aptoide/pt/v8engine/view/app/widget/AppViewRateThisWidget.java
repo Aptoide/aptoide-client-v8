@@ -50,15 +50,20 @@ import java.util.Locale;
 
     try {
 
-      GetAppMeta.App app = pojo.getNodes().getMeta().getData();
-      bigRateThisAppBar.setRating(app.getStats().getRating().getAvg());
+      GetAppMeta.App app = pojo.getNodes()
+          .getMeta()
+          .getData();
+      bigRateThisAppBar.setRating(app.getStats()
+          .getRating()
+          .getAvg());
       bigRateThisAppBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
         ShowMessage.asSnack(ratingBar, "TO DO");
         // TODO
       });
 
-      if (GetAppMeta.GetAppMetaFile.Flags.GOOD.equalsIgnoreCase(
-          app.getFile().getFlags().getReview())) {
+      if (GetAppMeta.GetAppMetaFile.Flags.GOOD.equalsIgnoreCase(app.getFile()
+          .getFlags()
+          .getReview())) {
         manualReviewedMessageLayout.setVisibility(View.GONE);
         flagThisApp.setVisibility(View.VISIBLE);
       } else {
@@ -66,19 +71,22 @@ import java.util.Locale;
         flagThisApp.setVisibility(View.GONE);
       }
     } catch (Exception ex) {
-      CrashReport.getInstance().log(ex);
+      CrashReport.getInstance()
+          .log(ex);
     }
 
     try {
       comunityRatingIndicator.bindView(pojo);
     } catch (Exception ex) {
-      CrashReport.getInstance().log(ex);
+      CrashReport.getInstance()
+          .log(ex);
     }
 
     try {
       flagThisApp.bindView(pojo);
     } catch (Exception ex) {
-      CrashReport.getInstance().log(ex);
+      CrashReport.getInstance()
+          .log(ex);
     }
   }
 
@@ -109,14 +117,18 @@ import java.util.Locale;
       });
 
       try {
-        GetAppMeta.GetAppMetaFile metaFile = getApp.getNodes().getMeta().getData().getFile();
+        GetAppMeta.GetAppMetaFile metaFile = getApp.getNodes()
+            .getMeta()
+            .getData()
+            .getFile();
         GetAppMeta.GetAppMetaFile.Flags flags = metaFile.getFlags();
 
         for (final GetAppMeta.GetAppMetaFile.Flags.Vote vote : flags.getVotes()) {
           bindVoteView(vote);
         }
       } catch (Exception e) {
-        CrashReport.getInstance().log(e);
+        CrashReport.getInstance()
+            .log(e);
       }
     }
 
@@ -191,7 +203,11 @@ import java.util.Locale;
     }
 
     public void bindView(GetApp getApp) {
-      GetAppMeta.Stats.Rating rating = getApp.getNodes().getMeta().getData().getStats().getRating();
+      GetAppMeta.Stats.Rating rating = getApp.getNodes()
+          .getMeta()
+          .getData()
+          .getStats()
+          .getRating();
 
       avgRating.setText(String.format(Locale.getDefault(), "%.1f", rating.getAvg()));
       avgRatingBar.setRating(rating.getAvg());
@@ -251,13 +267,18 @@ import java.util.Locale;
     public void bindView(GetApp getApp) {
 
       try {
-        GetAppMeta.Stats stats = getApp.getNodes().getMeta().getData().getStats();
+        GetAppMeta.Stats stats = getApp.getNodes()
+            .getMeta()
+            .getData()
+            .getStats();
 
-        for (final GetAppMeta.Stats.Rating.Vote vote : stats.getRating().getVotes()) {
+        for (final GetAppMeta.Stats.Rating.Vote vote : stats.getRating()
+            .getVotes()) {
           bindViewForBar(vote.getValue(), 0, vote.getCount());
         }
       } catch (Exception e) {
-        CrashReport.getInstance().log(e);
+        CrashReport.getInstance()
+            .log(e);
       }
     }
 

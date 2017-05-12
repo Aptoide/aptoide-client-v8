@@ -36,9 +36,13 @@ public class MyAccountPresenter implements Presenter {
   }
 
   private Observable<Void> signOutClick() {
-    return view.signOutClick().flatMap(click -> accountManager.logout().doOnCompleted(() -> {
-      ManagerPreferences.setAddressBookSyncValues(false);
-      view.navigateToHome();
-    }).doOnError(throwable -> crashReport.log(throwable)).<Void> toObservable()).retry();
+    return view.signOutClick()
+        .flatMap(click -> accountManager.logout()
+            .doOnCompleted(() -> {
+              ManagerPreferences.setAddressBookSyncValues(false);
+              view.navigateToHome();
+            })
+            .doOnError(throwable -> crashReport.log(throwable)).<Void>toObservable())
+        .retry();
   }
 }

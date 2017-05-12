@@ -8,8 +8,7 @@ import io.realm.annotations.PrimaryKey;
  */
 
 public class Notification extends RealmObject {
-  @PrimaryKey
-  private String key;
+  @PrimaryKey private String key;
   private String abTestingGroup;
   private String body;
   private int campaignId;

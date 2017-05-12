@@ -128,7 +128,8 @@ public class RootShell {
 
     try {
       //Try without root...
-      RootShell.getShell(false).add(command);
+      RootShell.getShell(false)
+          .add(command);
       commandWait(RootShell.getShell(false), command);
     } catch (Exception e) {
       RootShell.log("Exception: " + e);
@@ -136,7 +137,8 @@ public class RootShell {
     }
 
     for (String line : result) {
-      if (line.trim().equals(file)) {
+      if (line.trim()
+          .equals(file)) {
         return true;
       }
     }
@@ -153,7 +155,8 @@ public class RootShell {
     };
 
     try {
-      RootShell.getShell(true).add(command);
+      RootShell.getShell(true)
+          .add(command);
       commandWait(RootShell.getShell(true), command);
     } catch (Exception e) {
       RootShell.log("Exception: " + e);
@@ -165,7 +168,8 @@ public class RootShell {
     final_result.addAll(result);
 
     for (String line : final_result) {
-      if (line.trim().equals(file)) {
+      if (line.trim()
+          .equals(file)) {
         return true;
       }
     }
@@ -229,7 +233,8 @@ public class RootShell {
           }
         };
 
-        cc = RootShell.getShell(false).add(cc);
+        cc = RootShell.getShell(false)
+            .add(cc);
         commandWait(RootShell.getShell(false), cc);
 
         if (foundPaths.size() > 0 && singlePath) {
@@ -296,7 +301,8 @@ public class RootShell {
    * @return <code>List<String></code> A List of Strings representing the environment variable $PATH
    */
   public static List<String> getPath() {
-    return Arrays.asList(System.getenv("PATH").split(":"));
+    return Arrays.asList(System.getenv("PATH")
+        .split(":"));
   }
 
   /**
@@ -401,14 +407,16 @@ public class RootShell {
         }
       };
 
-      Shell.startRootShell().add(command);
+      Shell.startRootShell()
+          .add(command);
       commandWait(Shell.startRootShell(), command);
 
       //parse the userid
       for (String userid : ID) {
         RootShell.log(userid);
 
-        if (userid.toLowerCase().contains("uid=0")) {
+        if (userid.toLowerCase()
+            .contains("uid=0")) {
           RootShell.log("Access Given");
           return true;
         }
@@ -574,21 +582,24 @@ public class RootShell {
               "Waiting for a command to be executed in a shell that is not executing and not reading! \n\n Command: "
                   + cmd.getCommand());
           Exception e = new Exception();
-          e.setStackTrace(Thread.currentThread().getStackTrace());
+          e.setStackTrace(Thread.currentThread()
+              .getStackTrace());
           e.printStackTrace();
         } else if (shell.isExecuting && !shell.isReading) {
           RootShell.log(version,
               "Waiting for a command to be executed in a shell that is executing but not reading! \n\n Command: "
                   + cmd.getCommand());
           Exception e = new Exception();
-          e.setStackTrace(Thread.currentThread().getStackTrace());
+          e.setStackTrace(Thread.currentThread()
+              .getStackTrace());
           e.printStackTrace();
         } else {
           RootShell.log(version,
               "Waiting for a command to be executed in a shell that is not reading! \n\n Command: "
                   + cmd.getCommand());
           Exception e = new Exception();
-          e.setStackTrace(Thread.currentThread().getStackTrace());
+          e.setStackTrace(Thread.currentThread()
+              .getStackTrace());
           e.printStackTrace();
         }
       }

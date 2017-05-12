@@ -44,7 +44,8 @@ public class WSWidgetsUtils {
       String url = null;
       // Can be null in legacy ws :/
       if (wsWidget.getView() != null) {
-        url = wsWidget.getView().replace(V7.BASE_HOST, "");
+        url = wsWidget.getView()
+            .replace(V7.BASE_HOST, "");
       }
       switch (wsWidget.getType()) {
         case APPS_GROUP:

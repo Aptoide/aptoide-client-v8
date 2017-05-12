@@ -24,7 +24,8 @@ public class RxJavaStackTracer extends RxJavaObservableExecutionHook {
       @Override public void call(Subscriber<? super T> o) {
         try {
           Observable.Operator<T, T> operator = OperatorTraceOnError.traceOnError();
-          Subscriber<? super T> st = RxJavaStackTracer.this.onLift(operator).call(o);
+          Subscriber<? super T> st = RxJavaStackTracer.this.onLift(operator)
+              .call(o);
           try {
             st.onStart();
             onSubscribe.call(st);

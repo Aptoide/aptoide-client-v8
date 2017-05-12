@@ -9,7 +9,6 @@ import android.os.Bundle;
  * navigation events & data.
  *
  * Each of the specified fragments should implement its own TabNavigation.
- *
  */
 
 public interface TabNavigation {

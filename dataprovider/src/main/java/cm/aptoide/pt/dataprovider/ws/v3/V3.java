@@ -113,34 +113,38 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
   @Override public Observable<U> observe(boolean bypassCache) {
     return bodyInterceptor.intercept(map)
-        .flatMapObservable(body -> super.observe(bypassCache).onErrorResumeNext(throwable -> {
-          if (throwable instanceof HttpException) {
-            try {
+        .flatMapObservable(body -> super.observe(bypassCache)
+            .onErrorResumeNext(throwable -> {
+              if (throwable instanceof HttpException) {
+                try {
 
-              GenericResponseV3 genericResponseV3 =
-                  (GenericResponseV3) converterFactory.responseBodyConverter(
-                      GenericResponseV3.class, null, null)
-                      .convert(((HttpException) throwable).response().errorBody());
+                  GenericResponseV3 genericResponseV3 =
+                      (GenericResponseV3) converterFactory.responseBodyConverter(
+                          GenericResponseV3.class, null, null)
+                          .convert(((HttpException) throwable).response()
+                              .errorBody());
 
-              if (INVALID_ACCESS_TOKEN_CODE.equals(genericResponseV3.getError())) {
+                  if (INVALID_ACCESS_TOKEN_CODE.equals(genericResponseV3.getError())) {
 
-                if (!accessTokenRetry) {
-                  accessTokenRetry = true;
-                  return DataProvider.invalidateAccessToken().flatMapObservable(s -> {
-                    this.map.setAccess_token(s);
-                    return V3.this.observe(bypassCache).observeOn(AndroidSchedulers.mainThread());
-                  });
+                    if (!accessTokenRetry) {
+                      accessTokenRetry = true;
+                      return DataProvider.invalidateAccessToken()
+                          .flatMapObservable(s -> {
+                            this.map.setAccess_token(s);
+                            return V3.this.observe(bypassCache)
+                                .observeOn(AndroidSchedulers.mainThread());
+                          });
+                    }
+                  } else {
+                    return Observable.error(
+                        new AptoideWsV3Exception(throwable).setBaseResponse(genericResponseV3));
+                  }
+                } catch (IOException e) {
+                  e.printStackTrace();
                 }
-              } else {
-                return Observable.error(
-                    new AptoideWsV3Exception(throwable).setBaseResponse(genericResponseV3));
               }
-            } catch (IOException e) {
-              e.printStackTrace();
-            }
-          }
-          return Observable.error(throwable);
-        }));
+              return Observable.error(throwable);
+            }));
   }
 
   interface Interfaces {

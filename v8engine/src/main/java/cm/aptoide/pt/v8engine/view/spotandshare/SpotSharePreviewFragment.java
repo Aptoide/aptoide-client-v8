@@ -62,8 +62,7 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
     startButton = (Button) view.findViewById(R.id.fragment_spot_share_preview_start_button);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     attachPresenter(new SpotSharePreviewPresenter(this, showToolbar, getString(R.string.spot_share),
-            spotAndShareAnalytics),
-        savedInstanceState);
+        spotAndShareAnalytics), savedInstanceState);
   }
 
   @Override public void onDestroyView() {

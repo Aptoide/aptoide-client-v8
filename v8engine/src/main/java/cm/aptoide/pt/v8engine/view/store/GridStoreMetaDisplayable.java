@@ -33,8 +33,11 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
   }
 
   public List<Store.SocialChannel> getSocialLinks() {
-    return getPojo().getData().getStore().getSocialChannels() == null ? Collections.EMPTY_LIST
-        : getPojo().getData().getStore().getSocialChannels();
+    return getPojo().getData()
+        .getStore()
+        .getSocialChannels() == null ? Collections.EMPTY_LIST : getPojo().getData()
+        .getStore()
+        .getSocialChannels();
   }
 
   public StoreCredentialsProvider getStoreCredentialsProvider() {
@@ -42,14 +45,18 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
   }
 
   public String getStoreUserName() {
-    return storeCredentialsProvider.get(getStoreName()).getUsername();
+    return storeCredentialsProvider.get(getStoreName())
+        .getUsername();
   }
 
   public String getStoreName() {
-    return getPojo().getData().getStore().getName();
+    return getPojo().getData()
+        .getStore()
+        .getName();
   }
 
   public String getStorePassword() {
-    return storeCredentialsProvider.get(getStoreName()).getPasswordSha1();
+    return storeCredentialsProvider.get(getStoreName())
+        .getPasswordSha1();
   }
 }

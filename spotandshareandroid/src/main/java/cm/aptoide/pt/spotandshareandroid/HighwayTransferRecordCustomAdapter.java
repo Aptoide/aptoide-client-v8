@@ -85,7 +85,8 @@ public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
       viewHolder = (ViewHolder) convertView.getTag();
     }
 
-    if (listOfItems.get(position).isReceived()) {
+    if (listOfItems.get(position)
+        .isReceived()) {
       viewHolder.senderInfo.setText(R.string.youReceived);
 
       myOnClickListenerToInstall = new MyOnClickListenerToInstall(position);
@@ -94,7 +95,8 @@ public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
       myOnClickListenerToDelete = new MyOnClickListenerToDelete(position);
       viewHolder.deleteFile.setOnClickListener(myOnClickListenerToDelete);
 
-      if (listOfItems.get(position).isDeleted()) {
+      if (listOfItems.get(position)
+          .isDeleted()) {
         viewHolder.transfRecRecvRowIcons.setVisibility(View.GONE);
         viewHolder.transfRecRecvRowDeletedMessage.setVisibility(View.VISIBLE);
       } else {
@@ -103,29 +105,38 @@ public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
       }
     } else {
 
-      if (listOfItems.get(position).isNeedReSend()) {
+      if (listOfItems.get(position)
+          .isNeedReSend()) {
         viewHolder.reSendButton.setVisibility(View.VISIBLE);
         ReSendListener reSendListener = new ReSendListener(position);
         viewHolder.reSendButton.setOnClickListener(reSendListener);
-        if (listOfItems.get(position).getFromOutside().equals("outside")) {
+        if (listOfItems.get(position)
+            .getFromOutside()
+            .equals("outside")) {
           viewHolder.senderInfo.setText(R.string.reSendOutside);
         } else {
           viewHolder.senderInfo.setText(R.string.reSendError);
         }
-        viewHolder.senderInfo.setTextColor(context.getResources().getColor(R.color.errorRed));
+        viewHolder.senderInfo.setTextColor(context.getResources()
+            .getColor(R.color.errorRed));
       } else {
         viewHolder.reSendButton.setVisibility(View.GONE);
-        viewHolder.senderInfo.setTextColor(context.getResources().getColor(R.color.grey));
-        if (listOfItems.get(position).isSent()) {
+        viewHolder.senderInfo.setTextColor(context.getResources()
+            .getColor(R.color.grey));
+        if (listOfItems.get(position)
+            .isSent()) {
           viewHolder.senderInfo.setText(R.string.youSent);
         } else {
           viewHolder.senderInfo.setText(R.string.youAreSending);
         }
       }
     }
-    viewHolder.appNameLabel.setText(listOfItems.get(position).getAppName());
-    viewHolder.appImageIcon.setImageDrawable(listOfItems.get(position).getIcon());
-    viewHolder.appVersionLabel.setText(listOfItems.get(position).getVersionName());
+    viewHolder.appNameLabel.setText(listOfItems.get(position)
+        .getAppName());
+    viewHolder.appImageIcon.setImageDrawable(listOfItems.get(position)
+        .getIcon());
+    viewHolder.appVersionLabel.setText(listOfItems.get(position)
+        .getVersionName());
 
     //        convertView.setTag(viewHolder);
 
@@ -134,7 +145,8 @@ public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
 
   @Override public int getItemViewType(int position) {
 
-    if (listOfItems.get(position).isReceived()) {
+    if (listOfItems.get(position)
+        .isReceived()) {
       return 0;
     } else {
       return 1;
@@ -164,8 +176,10 @@ public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
 
   public void updateItem(int positionToUpdate, boolean isSent, boolean needReSend) {
     if (positionToUpdate < listOfItems.size()) {
-      listOfItems.get(positionToUpdate).setNeedReSend(needReSend);
-      listOfItems.get(positionToUpdate).setSent(isSent);
+      listOfItems.get(positionToUpdate)
+          .setNeedReSend(needReSend);
+      listOfItems.get(positionToUpdate)
+          .setSent(isSent);
     }
   }
 

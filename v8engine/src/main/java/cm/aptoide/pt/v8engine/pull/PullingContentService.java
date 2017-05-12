@@ -119,7 +119,8 @@ public class PullingContentService extends Service {
           setUpdatesNotification(updates, startId);
         }, throwable -> {
           throwable.printStackTrace();
-          CrashReport.getInstance().log(throwable);
+          CrashReport.getInstance()
+              .log(throwable);
         }));
   }
 
@@ -131,13 +132,16 @@ public class PullingContentService extends Service {
         ManagerPreferences.isAutoUpdateEnable() && ManagerPreferences.allowRootInstallation())
         .flatMap(shouldAutoUpdateRun -> {
           if (shouldAutoUpdateRun) {
-            return Observable.just(updateList).observeOn(Schedulers.io()).map(updates -> {
-              ArrayList<Download> downloadList = new ArrayList<>(updates.size());
-              for (Update update : updates) {
-                downloadList.add(new DownloadFactory().create(update));
-              }
-              return downloadList;
-            }).flatMap(downloads -> installManager.startInstalls(downloads, this));
+            return Observable.just(updateList)
+                .observeOn(Schedulers.io())
+                .map(updates -> {
+                  ArrayList<Download> downloadList = new ArrayList<>(updates.size());
+                  for (Update update : updates) {
+                    downloadList.add(new DownloadFactory().create(update));
+                  }
+                  return downloadList;
+                })
+                .flatMap(downloads -> installManager.startInstalls(downloads, this));
           } else {
             return Observable.just(false);
           }
@@ -145,8 +149,8 @@ public class PullingContentService extends Service {
   }
 
   private void setUpdatesNotification(List<Update> updates, int startId) {
-    Intent resultIntent = new Intent(Application.getContext(),
-        V8Engine.getActivityProvider().getMainActivityFragmentClass());
+    Intent resultIntent = new Intent(Application.getContext(), V8Engine.getActivityProvider()
+        .getMainActivityFragmentClass());
     resultIntent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES, true);
     PendingIntent resultPendingIntent =
         PendingIntent.getActivity(Application.getContext(), 0, resultIntent,
@@ -157,8 +161,10 @@ public class PullingContentService extends Service {
         && numberUpdates != ManagerPreferences.getLastUpdates()
         && ManagerPreferences.isUpdateNotificationEnable()) {
       CharSequence tickerText = AptoideUtils.StringU.getFormattedString(R.string.has_updates,
-          Application.getConfiguration().getMarketName());
-      CharSequence contentTitle = Application.getConfiguration().getMarketName();
+          Application.getConfiguration()
+              .getMarketName());
+      CharSequence contentTitle = Application.getConfiguration()
+          .getMarketName();
       CharSequence contentText =
           AptoideUtils.StringU.getFormattedString(R.string.new_updates, numberUpdates);
       if (numberUpdates == 1) {
@@ -171,8 +177,9 @@ public class PullingContentService extends Service {
               resultPendingIntent)
               .setOngoing(false)
               .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-              .setLargeIcon(BitmapFactory.decodeResource(Application.getContext().getResources(),
-                  Application.getConfiguration().getIcon()))
+              .setLargeIcon(BitmapFactory.decodeResource(Application.getContext()
+                  .getResources(), Application.getConfiguration()
+                  .getIcon()))
               .setContentTitle(contentTitle)
               .setContentText(contentText)
               .setTicker(tickerText)

@@ -21,7 +21,9 @@ public class StoreCredentialsProviderImpl implements StoreCredentialsProvider {
 
   @Override public BaseRequestWithStore.StoreCredentials get(long storeId) {
 
-    Store store = storeAccessor.get(storeId).toBlocking().first();
+    Store store = storeAccessor.get(storeId)
+        .toBlocking()
+        .first();
 
     String username = null;
     String passwordSha1 = null;
@@ -38,7 +40,9 @@ public class StoreCredentialsProviderImpl implements StoreCredentialsProvider {
 
   @Override public BaseRequestWithStore.StoreCredentials get(String storeName) {
 
-    Store store = storeAccessor.get(storeName).toBlocking().first();
+    Store store = storeAccessor.get(storeName)
+        .toBlocking()
+        .first();
 
     String username = null;
     String passwordSha1 = null;

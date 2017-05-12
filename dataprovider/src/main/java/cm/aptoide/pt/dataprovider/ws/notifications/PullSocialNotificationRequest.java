@@ -34,9 +34,8 @@ public class PullSocialNotificationRequest
     this.id = id;
   }
 
-  public static PullSocialNotificationRequest of(String uniqueIdentifier,
-      String versionName, String appId, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+  public static PullSocialNotificationRequest of(String uniqueIdentifier, String versionName,
+      String appId, OkHttpClient httpClient, Converter.Factory converterFactory) {
 
     Random r = new Random();
     int i1 = r.nextInt(100);
@@ -52,7 +51,8 @@ public class PullSocialNotificationRequest
 
     options.put("language", AptoideUtils.SystemU.getCountryCode());
     options.put("aptoide_version", versionName);
-    String oemid = DataProvider.getConfiguration().getExtraId();
+    String oemid = DataProvider.getConfiguration()
+        .getExtraId();
     if (!TextUtils.isEmpty(oemid)) {
       options.put("oem_id", oemid);
     }

@@ -34,7 +34,8 @@ public class SystemNotificationShower {
 
   public Completable showNotification(AptoideNotification aptoideNotification, int notificationId) {
     return mapToAndroidNotification(aptoideNotification, notificationId).doOnSuccess(
-        notification -> notificationManager.notify(notificationId, notification)).toCompletable();
+        notification -> notificationManager.notify(notificationId, notification))
+        .toCompletable();
   }
 
   private Single<Notification> mapToAndroidNotification(AptoideNotification aptoideNotification,
@@ -61,7 +62,8 @@ public class SystemNotificationShower {
 
       return PendingIntent.getBroadcast(context, notificationId, resultIntent,
           PendingIntent.FLAG_UPDATE_CURRENT);
-    }).subscribeOn(Schedulers.computation());
+    })
+        .subscribeOn(Schedulers.computation());
   }
 
   @NonNull private Single<android.app.Notification> buildNotification(Context context, String title,
@@ -72,7 +74,8 @@ public class SystemNotificationShower {
           new NotificationCompat.Builder(context).setContentIntent(pressIntentAction)
               .setOngoing(false)
               .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-              .setLargeIcon(ImageLoader.with(context).loadBitmap(imageUrl))
+              .setLargeIcon(ImageLoader.with(context)
+                  .loadBitmap(imageUrl))
               .setContentTitle(title)
               .setContentText(body)
               .setDeleteIntent(onDismissAction)
@@ -101,7 +104,8 @@ public class SystemNotificationShower {
       NotificationTarget notificationTarget =
           new NotificationTarget(context, expandedView, R.id.PushNotificationImageView,
               notification, notificationId);
-      ImageLoader.with(context).loadImageToNotification(notificationTarget, imageUrl);
+      ImageLoader.with(context)
+          .loadImageToNotification(notificationTarget, imageUrl);
     }
     return notification;
   }

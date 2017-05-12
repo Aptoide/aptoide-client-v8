@@ -52,23 +52,33 @@ import com.jakewharton.rxbinding.view.RxView;
     final long appId = pojo.getId();
     final FragmentActivity context = getContext();
 
-    ImageLoader.with(context).load(pojo.getIcon(), icon);
+    ImageLoader.with(context)
+        .load(pojo.getIcon(), icon);
 
-    int downloads = displayable.isTotalDownloads() ? pojo.getStats().getPdownloads()
-        : pojo.getStats().getDownloads();
+    int downloads = displayable.isTotalDownloads() ? pojo.getStats()
+        .getPdownloads() : pojo.getStats()
+        .getDownloads();
 
     name.setText(pojo.getName());
     this.downloads.setText(
         AptoideUtils.StringU.withSuffix(downloads) + context.getString(R.string._downloads));
-    ratingBar.setRating(pojo.getStats().getRating().getAvg());
-    tvStoreName.setText(pojo.getStore().getName());
-    tvAddedTime.setText(DATE_TIME_U.getTimeDiffString(context, pojo.getAdded().getTime()));
-    compositeSubscription.add(RxView.clicks(itemView).subscribe(v -> {
-      // FIXME
-      Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
-      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
-          .newAppViewFragment(appId, pojo.getPackageName(),
-              pojo.getStore().getAppearance().getTheme(), tvStoreName.getText().toString()));
-    }, throwable -> CrashReport.getInstance().log(throwable)));
+    ratingBar.setRating(pojo.getStats()
+        .getRating()
+        .getAvg());
+    tvStoreName.setText(pojo.getStore()
+        .getName());
+    tvAddedTime.setText(DATE_TIME_U.getTimeDiffString(context, pojo.getAdded()
+        .getTime()));
+    compositeSubscription.add(RxView.clicks(itemView)
+        .subscribe(v -> {
+          // FIXME
+          Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
+          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+              .newAppViewFragment(appId, pojo.getPackageName(), pojo.getStore()
+                  .getAppearance()
+                  .getTheme(), tvStoreName.getText()
+                  .toString()));
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable)));
   }
 }

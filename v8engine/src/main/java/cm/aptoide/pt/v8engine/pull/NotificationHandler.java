@@ -54,7 +54,8 @@ public class NotificationHandler implements NotificationNetworkService {
         .toSingle();
   }
 
-  @NonNull private Observable<List<AptoideNotification>> handle(List<AptoideNotification> aptoideNotifications) {
+  @NonNull private Observable<List<AptoideNotification>> handle(
+      List<AptoideNotification> aptoideNotifications) {
     return Observable.from(aptoideNotifications)
         .doOnNext(notification -> handler.call(notification))
         .toList();
@@ -69,8 +70,8 @@ public class NotificationHandler implements NotificationNetworkService {
     List<AptoideNotification> aptoideNotifications = new LinkedList<>();
     for (final GetPullNotificationsResponse notification : response) {
       aptoideNotifications.add(
-          new AptoideNotification(notification.getBody(), notification.getImg(), notification.getTitle(),
-              notification.getUrl(), notification.getType()));
+          new AptoideNotification(notification.getBody(), notification.getImg(),
+              notification.getTitle(), notification.getUrl(), notification.getType()));
     }
     return aptoideNotifications;
   }
@@ -79,10 +80,10 @@ public class NotificationHandler implements NotificationNetworkService {
       List<GetPullNotificationsResponse> response) {
     List<AptoideNotification> aptoideNotifications = new LinkedList<>();
     for (final GetPullNotificationsResponse notification : response) {
-      aptoideNotifications.add(new AptoideNotification(notification.getAbTestingGroup(),
-          notification.getBody(),
-          notification.getCampaignId(), notification.getImg(), notification.getLang(),
-          notification.getTitle(), notification.getUrl(), notification.getUrlTrack()));
+      aptoideNotifications.add(
+          new AptoideNotification(notification.getAbTestingGroup(), notification.getBody(),
+              notification.getCampaignId(), notification.getImg(), notification.getLang(),
+              notification.getTitle(), notification.getUrl(), notification.getUrlTrack()));
     }
     return aptoideNotifications;
   }

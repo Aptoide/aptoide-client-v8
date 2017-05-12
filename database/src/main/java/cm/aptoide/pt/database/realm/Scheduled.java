@@ -105,10 +105,14 @@ public class Scheduled extends RealmObject {
       }
     }
 
-    return new Scheduled(app.getName(), app.getFile().getVername(), app.getIcon(),
-        app.getFile().getPath(), app.getFile().getMd5sum(), app.getFile().getVercode(),
-        app.getPackageName(), app.getStore().getName(), app.getFile().getPathAlt(), mainObbName,
-        mainObbPath, mainObbMd5, patchObbName, patchObbPath, patchObbMd5, false, appAction.name());
+    return new Scheduled(app.getName(), app.getFile()
+        .getVername(), app.getIcon(), app.getFile()
+        .getPath(), app.getFile()
+        .getMd5sum(), app.getFile()
+        .getVercode(), app.getPackageName(), app.getStore()
+        .getName(), app.getFile()
+        .getPathAlt(), mainObbName, mainObbPath, mainObbMd5, patchObbName, patchObbPath,
+        patchObbMd5, false, appAction.name());
   }
 
   public String getName() {

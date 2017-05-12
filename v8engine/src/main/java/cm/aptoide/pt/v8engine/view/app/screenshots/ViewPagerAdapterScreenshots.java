@@ -34,12 +34,13 @@ public class ViewPagerAdapterScreenshots extends PagerAdapter {
   @Override public Object instantiateItem(ViewGroup container, final int position) {
     final Context context = container.getContext();
 
-    final View rootView =
-        LayoutInflater.from(context).inflate(R.layout.row_item_screenshots_big, null);
+    final View rootView = LayoutInflater.from(context)
+        .inflate(R.layout.row_item_screenshots_big, null);
 
     final ImageView imageView = (ImageView) rootView.findViewById(R.id.screenshot_image_big);
 
-    ImageLoader.with(context).load(uris.get(position), getPlaceholder(context), imageView);
+    ImageLoader.with(context)
+        .load(uris.get(position), getPlaceholder(context), imageView);
 
     container.addView(rootView);
 
@@ -56,8 +57,8 @@ public class ViewPagerAdapterScreenshots extends PagerAdapter {
 
   private int getPlaceholder(Context context) {
     int id;
-    if (context.getResources().getConfiguration().orientation
-        == Configuration.ORIENTATION_PORTRAIT) {
+    if (context.getResources()
+        .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
       id = R.drawable.placeholder_9_16;
     } else {
       id = R.drawable.placeholder_16_9;

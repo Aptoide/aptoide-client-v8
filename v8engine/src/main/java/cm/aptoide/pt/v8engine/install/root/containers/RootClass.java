@@ -139,7 +139,9 @@ public class RootClass /* #ANNOTATIONS extends AbstractProcessor */ {
             + File.separator
             + "RootClass$AnnotationsFinder$2.class";
         String[] cmd;
-        boolean onWindows = (-1 != System.getProperty("os.name").toLowerCase().indexOf("win"));
+        boolean onWindows = (-1 != System.getProperty("os.name")
+            .toLowerCase()
+            .indexOf("win"));
         if (onWindows) {
           StringBuilder sb =
               new StringBuilder(" " + rc1 + " " + rc2 + " " + rc3 + " " + rc4 + " " + rc5);
@@ -167,7 +169,8 @@ public class RootClass /* #ANNOTATIONS extends AbstractProcessor */ {
         ProcessBuilder jarBuilder = new ProcessBuilder(cmd);
         jarBuilder.directory(builtPath);
         try {
-          jarBuilder.start().waitFor();
+          jarBuilder.start()
+              .waitFor();
         } catch (IOException e) {
         } catch (InterruptedException e) {
         }
@@ -198,7 +201,8 @@ public class RootClass /* #ANNOTATIONS extends AbstractProcessor */ {
         }
         ProcessBuilder dexBuilder = new ProcessBuilder(cmd);
         try {
-          dexBuilder.start().waitFor();
+          dexBuilder.start()
+              .waitFor();
         } catch (IOException e) {
         } catch (InterruptedException e) {
         }
@@ -211,17 +215,21 @@ public class RootClass /* #ANNOTATIONS extends AbstractProcessor */ {
     }
 
     protected void lookup(File path, List<File> fileList) {
-      String desourcedPath = path.toString().replace("src" + File.separator, "");
+      String desourcedPath = path.toString()
+          .replace("src" + File.separator, "");
       File[] files = path.listFiles();
       for (File file : files) {
         if (file.isDirectory()) {
-          if (-1 == file.getAbsolutePath().indexOf(AVOIDDIRPATH)) {
+          if (-1 == file.getAbsolutePath()
+              .indexOf(AVOIDDIRPATH)) {
             lookup(file, fileList);
           }
         } else {
-          if (file.getName().endsWith(".java")) {
+          if (file.getName()
+              .endsWith(".java")) {
             if (hasClassAnnotation(file)) {
-              final String fileNamePrefix = file.getName().replace(".java", "");
+              final String fileNamePrefix = file.getName()
+                  .replace(".java", "");
               final File compiledPath =
                   new File(getBuiltPath().toString() + File.separator + desourcedPath);
               File[] classAndInnerClassFiles = compiledPath.listFiles(new FilenameFilter() {
@@ -282,8 +290,10 @@ public class RootClass /* #ANNOTATIONS extends AbstractProcessor */ {
       for (File file : files) {
 
         String fileName = null;
-        if (file.getName().contains("-")) {
-          String[] splitFileName = file.getName().split("-");
+        if (file.getName()
+            .contains("-")) {
+          String[] splitFileName = file.getName()
+              .split("-");
           if (splitFileName[1].contains("W")) {
             char[] fileNameChars = splitFileName[1].toCharArray();
             fileName = String.valueOf(fileNameChars[0]);

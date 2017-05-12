@@ -9,5 +9,6 @@ import rx.Single;
 
 public interface NotificationNetworkService {
   Single<List<AptoideNotification>> getSocialNotifications();
+
   Single<List<AptoideNotification>> getCampaignNotifications();
 }

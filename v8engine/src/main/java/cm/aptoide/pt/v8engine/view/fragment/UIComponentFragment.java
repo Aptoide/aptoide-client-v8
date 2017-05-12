@@ -20,7 +20,8 @@ public abstract class UIComponentFragment extends PermissionServiceFragment impl
     if (getArguments() != null) {
       loadExtras(getArguments());
     }
-    ScreenTrackingUtils.getInstance().incrementNumberOfScreens();
+    ScreenTrackingUtils.getInstance()
+        .incrementNumberOfScreens();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -31,7 +32,8 @@ public abstract class UIComponentFragment extends PermissionServiceFragment impl
 
   @Override public void onDestroy() {
     super.onDestroy();
-    ScreenTrackingUtils.getInstance().decrementNumberOfScreens();
+    ScreenTrackingUtils.getInstance()
+        .decrementNumberOfScreens();
   }
 
   /**
@@ -55,7 +57,8 @@ public abstract class UIComponentFragment extends PermissionServiceFragment impl
   @Override public void setUserVisibleHint(boolean isVisibleToUser) {
     super.setUserVisibleHint(isVisibleToUser);
     if (isVisibleToUser) {
-      ScreenTrackingUtils.getInstance().addScreenToHistory(getClass().getSimpleName());
+      ScreenTrackingUtils.getInstance()
+          .addScreenToHistory(getClass().getSimpleName());
     }
   }
 

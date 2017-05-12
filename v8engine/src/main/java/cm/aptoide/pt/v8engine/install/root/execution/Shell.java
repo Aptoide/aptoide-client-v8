@@ -324,7 +324,8 @@ public class Shell {
     this.shellContext = shellContext;
 
     if (this.shellContext == ShellContext.NORMAL) {
-      this.proc = Runtime.getRuntime().exec(cmd);
+      this.proc = Runtime.getRuntime()
+          .exec(cmd);
     } else {
       String display = getSuVersion(false);
       String internal = getSuVersion(true);
@@ -341,7 +342,8 @@ public class Shell {
         RootShell.log("SELinuxEnforcing: " + isSELinuxEnforcing());
       }
 
-      this.proc = Runtime.getRuntime().exec(cmd);
+      this.proc = Runtime.getRuntime()
+          .exec(cmd);
     }
 
     this.inputStream =
@@ -420,7 +422,8 @@ public class Shell {
       }
     } catch (InterruptedException ex) {
       worker.interrupt();
-      Thread.currentThread().interrupt();
+      Thread.currentThread()
+          .interrupt();
       throw new TimeoutException();
     }
   }
@@ -489,11 +492,13 @@ public class Shell {
 
   public static Command runRootCommand(Command command)
       throws IOException, TimeoutException, RootDeniedException {
-    return Shell.startRootShell().add(command);
+    return Shell.startRootShell()
+        .add(command);
   }
 
   public static Command runCommand(Command command) throws IOException, TimeoutException {
-    return Shell.startShell().add(command);
+    return Shell.startShell()
+        .add(command);
   }
 
   public static Shell startRootShell() throws IOException, TimeoutException, RootDeniedException {
@@ -747,7 +752,8 @@ public class Shell {
       // Replace libsuperuser:Shell.run with manual process execution
       Process process;
       try {
-        process = Runtime.getRuntime().exec(internal ? "su -V" : "su -v", null);
+        process = Runtime.getRuntime()
+            .exec(internal ? "su -V" : "su -v", null);
         process.waitFor();
       } catch (IOException e) {
         e.printStackTrace();
@@ -958,7 +964,9 @@ public class Shell {
       } catch (Exception e) {
         e.printStackTrace();
       }
-    }    public void run() {
+    }
+
+    public void run() {
 
       /**
        * Trying to open the shell.
@@ -998,7 +1006,5 @@ public class Shell {
         }
       }
     }
-
-
   }
 }

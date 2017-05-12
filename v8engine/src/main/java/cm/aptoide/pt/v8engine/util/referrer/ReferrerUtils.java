@@ -103,7 +103,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
       wv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
           LinearLayout.LayoutParams.MATCH_PARENT));
       view.addView(wv);
-      wv.getSettings().setJavaScriptEnabled(true);
+      wv.getSettings()
+          .setJavaScriptEnabled(true);
       wv.setWebViewClient(new WebViewClient() {
 
         Future<Void> future;
@@ -173,7 +174,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
             Logger.d("ExtractReferrer", "Sending RegisterAdRefererRequest with value " + success);
 
             RegisterAdRefererRequest.of(minimalAd.getAdId(), minimalAd.getAppId(),
-                minimalAd.getClickUrl(), success, httpClient, converterFactory).execute();
+                minimalAd.getClickUrl(), success, httpClient, converterFactory)
+                .execute();
 
             Logger.d("ExtractReferrer", "Retries left: " + retries);
 
@@ -219,7 +221,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
       windowManager.addView(view, params);
     } catch (Exception e) {
       // TODO: 09-06-2016 neuro
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     }
   }
 
@@ -245,7 +248,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
       i.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
     }
     i.putExtra("referrer", referrer);
-    DataProvider.getContext().sendBroadcast(i);
+    DataProvider.getContext()
+        .sendBroadcast(i);
     Logger.d(TAG, "Sent broadcast to " + packageName + " with referrer " + referrer);
     // TODO: 28-07-2016 Baikova referrer broadcasted.
   }

@@ -43,8 +43,9 @@ public class NotificationCenter {
             .onErrorComplete(throwable -> {
               crashReport.log(throwable);
               return true;
-            })).subscribe(aptoideNotification -> {
-    }, throwable -> crashReport.log(throwable));
+            }))
+        .subscribe(aptoideNotification -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private Completable updateNotification(AptoideNotification aptoideNotification) {

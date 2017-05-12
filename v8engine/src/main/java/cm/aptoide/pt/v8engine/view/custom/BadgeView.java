@@ -214,7 +214,8 @@ public class BadgeView extends TextView {
 
     RoundRectShape rr = new RoundRectShape(outerR, null, null);
     ShapeDrawable drawable = new ShapeDrawable(rr);
-    drawable.getPaint().setColor(badgeColor);
+    drawable.getPaint()
+        .setColor(badgeColor);
 
     return drawable;
   }

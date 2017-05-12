@@ -121,12 +121,16 @@ public class AddStoreDialog extends BaseDialog {
     bindViews(view);
     setupSearchView(view);
     setupStoreSearch(searchView);
-    mSubscriptions.add(RxView.clicks(addStoreButton).subscribe(click -> {
-      addStoreAction();
-    }));
-    mSubscriptions.add(RxView.clicks(topStoresButton).subscribe(click -> topStoresAction()));
-    mSubscriptions.add(RxView.clicks(topStoreText1).subscribe(click -> topStoresAction()));
-    mSubscriptions.add(RxView.clicks(topStoreText2).subscribe(click -> topStoresAction()));
+    mSubscriptions.add(RxView.clicks(addStoreButton)
+        .subscribe(click -> {
+          addStoreAction();
+        }));
+    mSubscriptions.add(RxView.clicks(topStoresButton)
+        .subscribe(click -> topStoresAction()));
+    mSubscriptions.add(RxView.clicks(topStoreText1)
+        .subscribe(click -> topStoresAction()));
+    mSubscriptions.add(RxView.clicks(topStoreText2)
+        .subscribe(click -> topStoresAction()));
   }
 
   @Override public void onDetach() {
@@ -158,13 +162,15 @@ public class AddStoreDialog extends BaseDialog {
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     if (getDialog() != null) {
-      getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+      getDialog().getWindow()
+          .requestFeature(Window.FEATURE_NO_TITLE);
     }
     return inflater.inflate(R.layout.dialog_add_store, container, false);
   }
 
   private void addStoreAction() {
-    givenStoreName = searchView.getQuery().toString();
+    givenStoreName = searchView.getQuery()
+        .toString();
     if (givenStoreName.length() > 0) {
       AddStoreDialog.this.storeName = givenStoreName;
       getStore(givenStoreName);
@@ -197,8 +203,8 @@ public class AddStoreDialog extends BaseDialog {
   }
 
   private void setupStoreSearch(SearchView searchView) {
-    final SearchManager searchManager =
-        (SearchManager) V8Engine.getContext().getSystemService(Context.SEARCH_SERVICE);
+    final SearchManager searchManager = (SearchManager) V8Engine.getContext()
+        .getSystemService(Context.SEARCH_SERVICE);
     ComponentName cn = new ComponentName(V8Engine.getContext(), StoreSearchActivity.class);
     searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
     StoreAutoCompleteWebSocket storeAutoCompleteWebSocket = new StoreAutoCompleteWebSocket();
@@ -223,7 +229,8 @@ public class AddStoreDialog extends BaseDialog {
       }
 
       @Override public boolean onSuggestionClick(int position) {
-        Cursor item = (Cursor) searchView.getSuggestionsAdapter().getItem(position);
+        Cursor item = (Cursor) searchView.getSuggestionsAdapter()
+            .getItem(position);
         givenStoreName = item.getString(1);
         searchView.setQuery(givenStoreName, false);
         return true;
@@ -258,7 +265,8 @@ public class AddStoreDialog extends BaseDialog {
   }
 
   private void topStoresAction() {
-    navigator.navigateTo(V8Engine.getFragmentProvider().newFragmentTopStores());
+    navigator.navigateTo(V8Engine.getFragmentProvider()
+        .newFragmentTopStores());
     if (isAdded()) {
       dismiss();
     }

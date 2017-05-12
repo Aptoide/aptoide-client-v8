@@ -43,7 +43,8 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
     final Rollback pojo = displayable.getPojo();
 
     final FragmentActivity context = getContext();
-    ImageLoader.with(context).load(pojo.getIcon(), appIcon);
+    ImageLoader.with(context)
+        .load(pojo.getIcon(), appIcon);
     appName.setText(pojo.getAppName());
     appUpdateVersion.setText(pojo.getVersionName());
 
@@ -72,37 +73,39 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
         String.format(context.getString(R.string.at_time), timeFormat.format(pojo.getTimestamp())));
     appState.setText(builder.toString());
 
-    compositeSubscription.add(RxView.clicks(rollbackAction).subscribe(view -> {
+    compositeSubscription.add(RxView.clicks(rollbackAction)
+        .subscribe(view -> {
 
-      final PermissionService permissionRequest = ((PermissionService) context);
+          final PermissionService permissionRequest = ((PermissionService) context);
 
-      permissionRequest.requestAccessToExternalFileSystem(() -> {
-        Rollback.Action action = Rollback.Action.valueOf(pojo.getAction());
-        switch (action) {
-          case DOWNGRADE:
-            displayable.update(getFragmentNavigator());
-            break;
-          case INSTALL:
-            //only if the app is installed
-            //ShowMessage.asSnack(view, R.string.uninstall_msg);
-            ShowMessage.asSnack(context, R.string.uninstall);
-            compositeSubscription.add(
-                displayable.uninstall(context, displayable.getDownloadFromPojo())
-                    .subscribe(uninstalled -> {
-                    }, throwable -> throwable.printStackTrace()));
-            break;
+          permissionRequest.requestAccessToExternalFileSystem(() -> {
+            Rollback.Action action = Rollback.Action.valueOf(pojo.getAction());
+            switch (action) {
+              case DOWNGRADE:
+                displayable.update(getFragmentNavigator());
+                break;
+              case INSTALL:
+                //only if the app is installed
+                //ShowMessage.asSnack(view, R.string.uninstall_msg);
+                ShowMessage.asSnack(context, R.string.uninstall);
+                compositeSubscription.add(
+                    displayable.uninstall(context, displayable.getDownloadFromPojo())
+                        .subscribe(uninstalled -> {
+                        }, throwable -> throwable.printStackTrace()));
+                break;
 
-          case UNINSTALL:
-            displayable.install(getFragmentNavigator());
-            break;
+              case UNINSTALL:
+                displayable.install(getFragmentNavigator());
+                break;
 
-          case UPDATE:
-            displayable.update(getFragmentNavigator());
-            break;
-        }
-      }, () -> {
-        Logger.e(TAG, "Unable to access external file system");
-      });
-    }, throwable -> CrashReport.getInstance().log(throwable)));
+              case UPDATE:
+                displayable.update(getFragmentNavigator());
+                break;
+            }
+          }, () -> {
+            Logger.e(TAG, "Unable to access external file system");
+          });
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable)));
   }
 }

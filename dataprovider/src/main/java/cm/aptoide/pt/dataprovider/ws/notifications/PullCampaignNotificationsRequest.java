@@ -34,15 +34,13 @@ public class PullCampaignNotificationsRequest
     this.id = id;
   }
 
-  public static PullCampaignNotificationsRequest of(String aptoideClientUuid,
-      String versionName, String appId, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+  public static PullCampaignNotificationsRequest of(String aptoideClientUuid, String versionName,
+      String appId, OkHttpClient httpClient, Converter.Factory converterFactory) {
 
     Random r = new Random();
     int i1 = r.nextInt(100);
 
     //aptoideClientUuid = aptoideClientUuid + "_" + i1;
-
 
     Map<String, String> options = new HashMap<String, String>();
 
@@ -53,7 +51,8 @@ public class PullCampaignNotificationsRequest
 
     options.put("language", AptoideUtils.SystemU.getCountryCode());
     options.put("aptoide_version", versionName);
-    String oemid = DataProvider.getConfiguration().getExtraId();
+    String oemid = DataProvider.getConfiguration()
+        .getExtraId();
     if (!TextUtils.isEmpty(oemid)) {
       options.put("oem_id", oemid);
     }

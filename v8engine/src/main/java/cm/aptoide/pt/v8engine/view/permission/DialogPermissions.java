@@ -44,14 +44,17 @@ public class DialogPermissions extends DialogFragment {
   private String size;
 
   public static DialogPermissions newInstance(GetApp getApp) {
-    GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+    GetAppMeta.App app = getApp.getNodes()
+        .getMeta()
+        .getData();
     DialogPermissions dialog = new DialogPermissions();
     dialog.getApp = getApp;
     dialog.appName = app.getName();
-    dialog.versionName = app.getFile().getVername();
+    dialog.versionName = app.getFile()
+        .getVername();
     dialog.icon = app.getIcon();
-    dialog.size = AptoideUtils.StringU.formatBytes(
-        AppUtils.sumFileSizes(app.getFile().getFilesize(), app.getObb()), false);
+    dialog.size = AptoideUtils.StringU.formatBytes(AppUtils.sumFileSizes(app.getFile()
+        .getFilesize(), app.getObb()), false);
     return dialog;
   }
 
@@ -74,11 +77,13 @@ public class DialogPermissions extends DialogFragment {
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-    @SuppressLint("InflateParams") final View v =
-        LayoutInflater.from(getActivity()).inflate(R.layout.layout_dialog_permissions, null);
-    AlertDialog builder = new AlertDialog.Builder(getActivity()).setView(v).create();
+    @SuppressLint("InflateParams") final View v = LayoutInflater.from(getActivity())
+        .inflate(R.layout.layout_dialog_permissions, null);
+    AlertDialog builder = new AlertDialog.Builder(getActivity()).setView(v)
+        .create();
 
-    v.findViewById(R.id.dialog_ok_button).setOnClickListener(v1 -> dismiss());
+    v.findViewById(R.id.dialog_ok_button)
+        .setOnClickListener(v1 -> dismiss());
 
     TextView tvAppInfo = (TextView) v.findViewById(R.id.dialog_app_info);
     tvAppInfo.setText(getString(R.string.dialog_version_size, versionName, size));
@@ -86,12 +91,17 @@ public class DialogPermissions extends DialogFragment {
     TextView tvAppName = (TextView) v.findViewById(R.id.dialog_app_name);
     tvAppName.setText(appName);
 
-    Glide.with(this).load(icon).into((ImageView) v.findViewById(R.id.dialog_appview_icon));
+    Glide.with(this)
+        .load(icon)
+        .into((ImageView) v.findViewById(R.id.dialog_appview_icon));
 
     final TableLayout tableLayout = (TableLayout) v.findViewById(R.id.dialog_table_permissions);
 
-    final List<String> usedPermissions =
-        getApp.getNodes().getMeta().getData().getFile().getUsedPermissions();
+    final List<String> usedPermissions = getApp.getNodes()
+        .getMeta()
+        .getData()
+        .getFile()
+        .getUsedPermissions();
 
     List<ApkPermission> apkPermissions =
         AptoideUtils.SystemU.parsePermissions(getContext(), usedPermissions);

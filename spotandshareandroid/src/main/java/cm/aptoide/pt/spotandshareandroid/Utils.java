@@ -23,16 +23,17 @@ public class Utils {
   public static String filters(Context context) {
 
     int minSdk = AptoideUtils.HWSpecifications.getSdkVer();
-    String minScreen = Filters.Screen.values()[AptoideUtils.HWSpecifications.getScreenSize(context)]
-        .name()
-        .toLowerCase(Locale.ENGLISH);
+    String minScreen =
+        Filters.Screen.values()[AptoideUtils.HWSpecifications.getScreenSize(context)].name()
+            .toLowerCase(Locale.ENGLISH);
     String minGlEs = AptoideUtils.HWSpecifications.getGlEsVer(context);
 
     final int density = AptoideUtils.HWSpecifications.getDensityDpi(context);
 
     String cpuAbi = AptoideUtils.HWSpecifications.getCpuAbi();
 
-    if (AptoideUtils.HWSpecifications.getCpuAbi2().length() > 0) {
+    if (AptoideUtils.HWSpecifications.getCpuAbi2()
+        .length() > 0) {
       cpuAbi += "," + AptoideUtils.HWSpecifications.getCpuAbi2();
     }
     int myversionCode = 0;
@@ -104,13 +105,13 @@ public class Utils {
        * @return the screenSize
        */
       static public int getScreenSize(Context context) {
-        return context.getResources().getConfiguration().screenLayout
-            & Configuration.SCREENLAYOUT_SIZE_MASK;
+        return context.getResources()
+            .getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
       }
 
       static public int getNumericScreenSize(Context context) {
-        int size = context.getResources().getConfiguration().screenLayout
-            & Configuration.SCREENLAYOUT_SIZE_MASK;
+        int size = context.getResources()
+            .getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
         return (size + 1) * 100;
       }
 
@@ -119,14 +120,16 @@ public class Utils {
        */
       static public String getGlEsVer(Context context) {
         return ((ActivityManager) context.getSystemService(
-            Context.ACTIVITY_SERVICE)).getDeviceConfigurationInfo().getGlEsVersion();
+            Context.ACTIVITY_SERVICE)).getDeviceConfigurationInfo()
+            .getGlEsVersion();
       }
 
       public static int getDensityDpi(Context context) {
 
         DisplayMetrics metrics = new DisplayMetrics();
         WindowManager manager = (WindowManager) context.getSystemService(Service.WINDOW_SERVICE);
-        manager.getDefaultDisplay().getMetrics(metrics);
+        manager.getDefaultDisplay()
+            .getMetrics(metrics);
 
         int dpi = metrics.densityDpi;
 

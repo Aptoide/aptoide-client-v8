@@ -28,7 +28,8 @@ public class Logger {
   }
 
   public static void d(Object object, String msg) {
-    d(object.getClass().getSimpleName(), msg);
+    d(object.getClass()
+        .getSimpleName(), msg);
   }
 
   public static void d(String tag, String msg) {
@@ -44,7 +45,8 @@ public class Logger {
   }
 
   public static void i(Object object, String msg) {
-    i(object.getClass().getSimpleName(), msg);
+    i(object.getClass()
+        .getSimpleName(), msg);
   }
 
   public static void i(String tag, String msg) {
@@ -73,7 +75,8 @@ public class Logger {
    * Instead of calling this method, consider using CrashReport.getInstance().log(Exception)
    */
   public static void e(Object object, String msg) {
-    e(object.getClass().getName(), msg);
+    e(object.getClass()
+        .getName(), msg);
   }
 
   /**
@@ -89,7 +92,8 @@ public class Logger {
    * Instead of calling this method, consider using CrashReport.getInstance().log(Exception)
    */
   public static void e(Object object, Throwable tr) {
-    e(object.getClass().getName(), tr);
+    e(object.getClass()
+        .getName(), tr);
   }
 
   /**

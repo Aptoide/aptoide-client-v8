@@ -54,25 +54,29 @@ public class InAppBillingRepository {
 
   public Observable<Void> getInAppBilling(int apiVersion, String packageName, String type) {
     return InAppBillingAvailableRequest.of(apiVersion, packageName, type, bodyInterceptorV3,
-        httpClient, converterFactory).observe().flatMap(response -> {
-      if (response != null && response.isOk()) {
-        if (response.getInAppBillingAvailable().isAvailable()) {
-          return Observable.just(null);
-        } else {
-          return Observable.error(
-              new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
-        }
-      } else {
-        return Observable.error(
-            new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-      }
-    });
+        httpClient, converterFactory)
+        .observe()
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            if (response.getInAppBillingAvailable()
+                .isAvailable()) {
+              return Observable.just(null);
+            } else {
+              return Observable.error(
+                  new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
+            }
+          } else {
+            return Observable.error(
+                new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+          }
+        });
   }
 
   public Observable<List<SKU>> getSKUs(int apiVersion, String packageName, List<String> skuList,
       String type) {
     return getSKUListDetails(apiVersion, packageName, skuList, type).flatMap(
-        details -> Observable.from(details.getPublisherResponse().getDetailList())
+        details -> Observable.from(details.getPublisherResponse()
+            .getDetailList())
             .map(detail -> new SKU(detail.getProductId(), detail.getType(), detail.getPrice(),
                 detail.getCurrency(), (long) (detail.getPriceAmount() * 1000000), detail.getTitle(),
                 detail.getDescription()))
@@ -89,7 +93,8 @@ public class InAppBillingRepository {
             return Observable.just(response);
           } else {
             final List<InAppBillingSkuDetailsResponse.PurchaseDataObject> detailList =
-                response.getPublisherResponse().getDetailList();
+                response.getPublisherResponse()
+                    .getDetailList();
             if (detailList.isEmpty()) {
               return Observable.error(
                   new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
