@@ -1,8 +1,8 @@
 package cm.aptoide.pt.v8engine.networking;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import rx.Single;
 import rx.schedulers.Schedulers;
 

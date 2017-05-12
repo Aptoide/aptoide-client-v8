@@ -11,14 +11,14 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.iab.AptoideInAppBillingService;
-import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.v8engine.billing.AptoideBilling;
-import cm.aptoide.pt.v8engine.billing.view.ErrorCodeFactory;
-import cm.aptoide.pt.v8engine.billing.view.PurchaseErrorCodeFactory;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.billing.Purchase;
+import cm.aptoide.pt.v8engine.billing.purchase.InAppPurchase;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.billing.repository.ProductFactory;
 import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
+import cm.aptoide.pt.v8engine.billing.view.PaymentThrowableCodeMapper;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,15 +62,15 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
   private final Context context;
   private final InAppBillingRepository repository;
   private final InAppBillingSerializer serializer;
-  private final ErrorCodeFactory errorCodeFactory;
-  private final PurchaseErrorCodeFactory purchaseErrorCodeFactory;
+  private final PaymentThrowableCodeMapper errorCodeFactory;
+  private final PaymentThrowableCodeMapper purchaseErrorCodeFactory;
   private final ProductFactory productFactory;
   private final AptoideAccountManager accountManager;
   private final AptoideBilling billing;
 
   public BillingBinder(Context context, InAppBillingRepository repository,
-      InAppBillingSerializer serializer, ErrorCodeFactory errorCodeFactory,
-      PurchaseErrorCodeFactory purchaseErrorCodeFactory, ProductFactory productFactory,
+      InAppBillingSerializer serializer, PaymentThrowableCodeMapper errorCodeFactory,
+      PaymentThrowableCodeMapper purchaseErrorCodeFactory, ProductFactory productFactory,
       AptoideAccountManager accountManager, AptoideBilling billing) {
     this.context = context;
     this.repository = repository;
@@ -84,16 +84,15 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
 
   @Override public int isBillingSupported(int apiVersion, String packageName, String type)
       throws RemoteException {
-
     try {
-      return repository.getInAppBilling(apiVersion, packageName, type)
-          .map(billing -> RESULT_OK)
+      return billing.isBillingSupported(packageName, apiVersion, type)
+          .map(available -> available ? RESULT_OK : RESULT_BILLING_UNAVAILABLE)
           .toBlocking()
-          .first();
+          .value();
     } catch (Exception exception) {
       CrashReport.getInstance()
           .log(exception);
-      return errorCodeFactory.create(exception.getCause());
+      return errorCodeFactory.map(exception.getCause());
     }
   }
 
@@ -136,7 +135,7 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
     } catch (Exception exception) {
       CrashReport.getInstance()
           .log(exception);
-      result.putInt(RESPONSE_CODE, errorCodeFactory.create(exception.getCause()));
+      result.putInt(RESPONSE_CODE, errorCodeFactory.map(exception.getCause()));
       return result;
     }
   }
@@ -159,7 +158,7 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
       } catch (Exception exception) {
         CrashReport.getInstance()
             .log(exception);
-        result.putInt(RESPONSE_CODE, errorCodeFactory.create(exception.getCause()));
+        result.putInt(RESPONSE_CODE, errorCodeFactory.map(exception.getCause()));
       }
     }
 
@@ -186,23 +185,29 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
 
     try {
 
-      final InAppBillingPurchasesResponse.PurchaseInformation purchaseInformation =
-          repository.getInAppPurchaseInformation(apiVersion, packageName, type)
-              .toBlocking()
-              .first();
+      final List<Purchase> purchases = billing.getInAppPurchases(apiVersion, packageName, type)
+          .toBlocking()
+          .value();
 
-      result.putStringArrayList(INAPP_PURCHASE_DATA_LIST,
-          new ArrayList<>(serializer.serializePurchases(purchaseInformation.getPurchaseList())));
-      result.putStringArrayList(INAPP_PURCHASE_ITEM_LIST,
-          new ArrayList<>(purchaseInformation.getSkuList()));
-      result.putStringArrayList(INAPP_DATA_SIGNATURE_LIST,
-          new ArrayList<>(purchaseInformation.getSignatureList()));
+      final List<String> dataList = new ArrayList<>();
+      final List<String> signatureList = new ArrayList<>();
+      final List<String> skuList = new ArrayList<>();
+
+      for (Purchase purchase : purchases) {
+        dataList.add(((InAppPurchase) purchase).getSignatureData());
+        signatureList.add(((InAppPurchase) purchase).getSignature());
+        skuList.add(((InAppPurchase) purchase).getSku());
+      }
+
+      result.putStringArrayList(INAPP_PURCHASE_DATA_LIST, (ArrayList<String>) dataList);
+      result.putStringArrayList(INAPP_PURCHASE_ITEM_LIST, (ArrayList<String>) skuList);
+      result.putStringArrayList(INAPP_DATA_SIGNATURE_LIST, (ArrayList<String>) signatureList);
       result.putInt(RESPONSE_CODE, RESULT_OK);
       return result;
     } catch (Exception exception) {
       CrashReport.getInstance()
           .log(exception);
-      result.putInt(RESPONSE_CODE, errorCodeFactory.create(exception.getCause()));
+      result.putInt(RESPONSE_CODE, errorCodeFactory.map(exception.getCause()));
       return result;
     }
   }
@@ -217,7 +222,7 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
     } catch (Exception exception) {
       CrashReport.getInstance()
           .log(exception);
-      return purchaseErrorCodeFactory.create(exception.getCause());
+      return purchaseErrorCodeFactory.map(exception.getCause());
     }
   }
 }

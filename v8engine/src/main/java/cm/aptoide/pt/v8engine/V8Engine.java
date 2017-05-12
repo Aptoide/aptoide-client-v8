@@ -90,6 +90,8 @@ import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.PurchaseFactory;
 import cm.aptoide.pt.v8engine.billing.repository.sync.PaymentSyncScheduler;
 import cm.aptoide.pt.v8engine.billing.repository.sync.ProductBundleMapper;
+import cm.aptoide.pt.v8engine.billing.view.PaymentThrowableCodeMapper;
+import cm.aptoide.pt.v8engine.billing.view.PurchaseIntentMapper;
 import cm.aptoide.pt.v8engine.crashreports.ConsoleLogger;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.crashreports.CrashlyticsCrashLogger;
@@ -189,6 +191,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private InAppBillingSerializer inAppBillingSerialzer;
   private PaymentAuthorizationFactory authorizationFactory;
   private AptoideBilling aptoideBilling;
+  private PurchaseIntentMapper purchaseIntentMapper;
 
   /**
    * call after this instance onCreate()
@@ -553,9 +556,17 @@ public abstract class V8Engine extends SpotAndShareApplication {
               paymentRepositoryFactory.getInAppConfirmationRepository(), getAccountPayer(),
               getAuthorizationFactory(), productFactory));
 
-      aptoideBilling = new AptoideBilling(productRepositoryFactory, paymentRepositoryFactory);
+      aptoideBilling = new AptoideBilling(productRepositoryFactory, paymentRepositoryFactory,
+          getInAppBillingRepository());
     }
     return aptoideBilling;
+  }
+
+  public PurchaseIntentMapper getPurchaseIntentMapper() {
+    if (purchaseIntentMapper == null) {
+      purchaseIntentMapper = new PurchaseIntentMapper(new PaymentThrowableCodeMapper());
+    }
+    return purchaseIntentMapper;
   }
 
   public InAppBillingSerializer getInAppBillingSerializer() {

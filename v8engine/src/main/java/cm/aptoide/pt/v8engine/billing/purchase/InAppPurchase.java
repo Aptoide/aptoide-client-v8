@@ -1,40 +1,43 @@
 package cm.aptoide.pt.v8engine.billing.purchase;
 
-import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.v8engine.billing.Purchase;
-import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingSerializer;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
-import java.io.IOException;
 import rx.Completable;
 
 public class InAppPurchase implements Purchase {
 
-  private final InAppBillingPurchasesResponse.InAppBillingPurchase purchase;
-  private final String purchaseSignature;
-  private final InAppBillingSerializer serializer;
+  private final String signature;
   private final InAppBillingRepository repository;
   private final int apiVersion;
+  private final String signatureData;
+  private final String packageName;
+  private final String purchaseToken;
+  private final String sku;
 
-  public InAppPurchase(InAppBillingPurchasesResponse.InAppBillingPurchase purchase,
-      String purchaseSignature, InAppBillingSerializer serializer,
-      InAppBillingRepository repository, int apiVersion) {
-    this.purchase = purchase;
-    this.purchaseSignature = purchaseSignature;
-    this.serializer = serializer;
+  public InAppPurchase(int apiVersion, String packageName, String purchaseToken, String signature,
+      String signatureData, InAppBillingRepository repository, String sku) {
+    this.signature = signature;
     this.repository = repository;
     this.apiVersion = apiVersion;
-  }
-
-  @Override public String getData() throws IOException {
-    return serializer.serializePurchase(purchase);
-  }
-
-  @Override public String getSignature() {
-    return purchaseSignature;
+    this.signatureData = signatureData;
+    this.packageName = packageName;
+    this.purchaseToken = purchaseToken;
+    this.sku = sku;
   }
 
   @Override public Completable consume() {
-    return repository.deleteInAppPurchase(apiVersion, purchase.getPackageName(),
-        purchase.getPurchaseToken());
+    return repository.deleteInAppPurchase(apiVersion, packageName, purchaseToken);
+  }
+
+  public String getSignature() {
+    return signature;
+  }
+
+  public String getSignatureData() {
+    return signatureData;
+  }
+
+  public String getSku() {
+    return sku;
   }
 }

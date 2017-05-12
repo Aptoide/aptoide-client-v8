@@ -1,14 +1,14 @@
 package cm.aptoide.pt.v8engine.billing.services.web;
 
 import cm.aptoide.pt.v8engine.billing.Authorization;
-import cm.aptoide.pt.v8engine.billing.repository.PaymentRepositoryFactory;
-import cm.aptoide.pt.v8engine.billing.services.AuthorizationPayment;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.authorizations.WebAuthorization;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentNotAuthorizedException;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentAuthorizationRepository;
+import cm.aptoide.pt.v8engine.billing.repository.PaymentRepositoryFactory;
+import cm.aptoide.pt.v8engine.billing.services.AuthorizationPayment;
 import rx.Completable;
 import rx.Observable;
 

@@ -19,4 +19,8 @@ public class PaymentException extends BaseException {
   public PaymentException(Throwable throwable) {
     super(throwable);
   }
+
+  public PaymentException() {
+
+  }
 }

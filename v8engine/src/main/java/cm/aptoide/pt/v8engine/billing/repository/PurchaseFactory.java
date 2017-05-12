@@ -11,6 +11,7 @@ import cm.aptoide.pt.v8engine.billing.Purchase;
 import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingSerializer;
 import cm.aptoide.pt.v8engine.billing.purchase.InAppPurchase;
 import cm.aptoide.pt.v8engine.billing.purchase.PaidAppPurchase;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class PurchaseFactory {
 
@@ -23,8 +24,13 @@ public class PurchaseFactory {
   }
 
   public Purchase create(InAppBillingPurchasesResponse.InAppBillingPurchase purchase,
-      String purchaseSignature, int apiVersion) {
-    return new InAppPurchase(purchase, purchaseSignature, serializer, repository, apiVersion);
+      String purchaseSignature, int apiVersion, String sku) {
+    try {
+      return new InAppPurchase(apiVersion, purchase.getPackageName(), purchase.getPurchaseToken(),
+          purchaseSignature, serializer.serializePurchase(purchase), repository, sku);
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public Purchase create(PaidApp app) {

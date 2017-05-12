@@ -1,7 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import java.io.File;
-import java.io.Serializable;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;

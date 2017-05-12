@@ -72,6 +72,13 @@ public class InAppBillingProductRepository extends ProductRepository {
         .subscribeOn(Schedulers.io());
   }
 
+  public Single<List<Purchase>> getPurchases(int apiVersion, String packageName, String type) {
+    return inAppBillingRepository.getInAppPurchaseInformation(apiVersion, packageName, type)
+        .first()
+        .toSingle()
+        .flatMap(purchaseInformation -> convertToPurchases(purchaseInformation, apiVersion));
+  }
+
   private Single<List<PaymentServiceResponse>> getServerInAppBillingPaymentServices(int apiVersion,
       String packageName, String sku, String type) {
     return inAppBillingRepository.getSKUDetails(apiVersion, packageName, sku, type)
@@ -84,7 +91,8 @@ public class InAppBillingProductRepository extends ProductRepository {
         Observable.from(purchaseInformation.getSignatureList()), (purchase, signature) -> {
           if (purchase.getProductId()
               .equals(product.getSku()) && purchase.getPurchaseState() == 0) {
-            return purchaseFactory.create(purchase, signature, product.getApiVersion());
+            return purchaseFactory.create(purchase, signature, product.getApiVersion(),
+                purchase.getProductId());
           }
           return null;
         })
@@ -100,8 +108,8 @@ public class InAppBillingProductRepository extends ProductRepository {
     return Observable.zip(Observable.from(purchaseInformation.getPurchaseList()),
         Observable.from(purchaseInformation.getSignatureList()), (purchase, signature) -> {
           if (purchase.getPurchaseToken()
-              .equals(purchaseToken)) {
-            return purchaseFactory.create(purchase, signature, apiVersion);
+              .equals(purchaseToken) && purchase.getPurchaseState() == 0) {
+            return purchaseFactory.create(purchase, signature, apiVersion, purchase.getProductId());
           }
           return null;
         })
@@ -109,5 +117,15 @@ public class InAppBillingProductRepository extends ProductRepository {
         .switchIfEmpty(Observable.error(
             new RepositoryItemNotFoundException("No purchase found for token" + purchaseToken)))
         .first();
+  }
+
+  private Single<List<Purchase>> convertToPurchases(
+      InAppBillingPurchasesResponse.PurchaseInformation purchaseInformation, int apiVersion) {
+    return Observable.zip(Observable.from(purchaseInformation.getPurchaseList()),
+        Observable.from(purchaseInformation.getSignatureList()), (purchase, signature) -> {
+          return purchaseFactory.create(purchase, signature, apiVersion, purchase.getProductId());
+        })
+        .toList()
+        .toSingle();
   }
 }

@@ -5,14 +5,9 @@
 
 package cm.aptoide.pt.v8engine.billing;
 
-import java.io.IOException;
 import rx.Completable;
 
 public interface Purchase {
-
-  public String getData() throws IOException;
-
-  public String getSignature();
 
   public Completable consume();
 }

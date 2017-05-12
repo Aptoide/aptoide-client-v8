@@ -2,8 +2,6 @@ package cm.aptoide.pt.v8engine.billing.purchase;
 
 import cm.aptoide.pt.v8engine.billing.Purchase;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentException;
-import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
-import java.io.IOException;
 import rx.Completable;
 
 public class PaidAppPurchase implements Purchase {
@@ -14,12 +12,8 @@ public class PaidAppPurchase implements Purchase {
     this.apkPath = apkPath;
   }
 
-  @Override public String getData() throws IOException {
+  public String getApkPath() {
     return apkPath;
-  }
-
-  @Override public String getSignature() {
-    return null;
   }
 
   @Override public Completable consume() {

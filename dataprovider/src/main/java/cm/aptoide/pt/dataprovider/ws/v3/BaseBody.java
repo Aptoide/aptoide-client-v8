@@ -6,8 +6,6 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import lombok.Getter;
-import lombok.Setter;
 
 public class BaseBody extends HashMapNotNull<String, Object> {
 

@@ -13,4 +13,8 @@ public class PaymentCancellationException extends PaymentException {
   public PaymentCancellationException(String message) {
     super(message);
   }
+
+  public PaymentCancellationException() {
+    super();
+  }
 }

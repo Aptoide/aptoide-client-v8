@@ -6,7 +6,6 @@
 package cm.aptoide.pt.database.accessors;
 
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
-import java.util.List;
 import rx.Observable;
 
 /**

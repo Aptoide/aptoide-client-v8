@@ -28,9 +28,9 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Purchase;
+import cm.aptoide.pt.v8engine.billing.product.AbstractProduct;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
-import cm.aptoide.pt.v8engine.billing.product.AbstractProduct;
 import cm.aptoide.pt.v8engine.presenter.PaymentSelector;
 import cm.aptoide.pt.v8engine.presenter.PaymentView;
 import cm.aptoide.pt.v8engine.view.BaseActivity;
@@ -73,7 +73,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
   private Button buyButton;
   private TextView productPrice;
 
-  private PurchaseIntentConverter intentFactory;
+  private PurchaseIntentMapper intentFactory;
   private AlertDialog networkErrorDialog;
   private AlertDialog unknownErrorDialog;
   private SparseArray<PaymentViewModel> paymentMap;
@@ -120,7 +120,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     buyButton = (Button) findViewById(R.id.activity_payment_buy_button);
 
     paymentMap = new SparseArray<>();
-    intentFactory = new PurchaseIntentConverter(new ErrorCodeFactory());
+    intentFactory = ((V8Engine) getApplicationContext()).getPurchaseIntentMapper();
     final ContextThemeWrapper dialogTheme =
         new ContextThemeWrapper(this, R.style.AptoideThemeDefault);
 
@@ -223,15 +223,15 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
   }
 
   @Override public void dismiss(Purchase purchase) {
-    finish(RESULT_OK, intentFactory.convert(purchase));
+    finish(RESULT_OK, intentFactory.map(purchase));
   }
 
   @Override public void dismiss(Throwable throwable) {
-    finish(RESULT_CANCELED, intentFactory.convert(throwable));
+    finish(RESULT_CANCELED, intentFactory.map(throwable));
   }
 
   @Override public void dismiss() {
-    finish(RESULT_CANCELED, intentFactory.convertCancellation());
+    finish(RESULT_CANCELED, intentFactory.mapCancellation());
   }
 
   @Override public void navigateToAuthorizationView(int paymentId, Product product) {

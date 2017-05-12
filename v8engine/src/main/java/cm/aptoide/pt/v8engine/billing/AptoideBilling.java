@@ -8,8 +8,10 @@ package cm.aptoide.pt.v8engine.billing;
 import android.content.Context;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.inapp.BillingBinder;
+import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
+import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -19,11 +21,27 @@ public class AptoideBilling {
 
   private final ProductRepositoryFactory productRepositoryFactory;
   private final PaymentRepositoryFactory paymentRepositoryFactory;
+  private final InAppBillingRepository inAppBillingRepository;
 
   public AptoideBilling(ProductRepositoryFactory productRepositoryFactory,
-      PaymentRepositoryFactory paymentRepositoryFactory) {
+      PaymentRepositoryFactory paymentRepositoryFactory,
+      InAppBillingRepository inAppBillingRepository) {
     this.productRepositoryFactory = productRepositoryFactory;
     this.paymentRepositoryFactory = paymentRepositoryFactory;
+    this.inAppBillingRepository = inAppBillingRepository;
+  }
+
+  public Single<Boolean> isBillingSupported(String packageName, int apiVersion, String type) {
+    return inAppBillingRepository.getInAppBilling(apiVersion, packageName, type)
+        .map(billing -> true)
+        .onErrorResumeNext(throwable -> {
+          if (throwable instanceof RepositoryItemNotFoundException) {
+            return Observable.just(false);
+          }
+          return Observable.error(throwable);
+        })
+        .first()
+        .toSingle();
   }
 
   public Single<Product> getPaidAppProduct(long appId, String storeName, boolean sponsored) {
@@ -35,6 +53,11 @@ public class AptoideBilling {
       String type, String developerPayload) {
     return productRepositoryFactory.getInAppProductRepository()
         .getProduct(apiVersion, packageName, sku, type, developerPayload);
+  }
+
+  public Single<List<Purchase>> getInAppPurchases(int apiVersion, String packageName, String type) {
+    return productRepositoryFactory.getInAppProductRepository()
+        .getPurchases(apiVersion, packageName, type);
   }
 
   public Completable consumeInAppPurchase(int apiVersion, String packageName,

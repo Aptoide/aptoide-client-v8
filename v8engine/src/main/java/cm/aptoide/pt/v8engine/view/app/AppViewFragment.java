@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.app;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -51,7 +50,6 @@ import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.v8engine.billing.inapp.BillingBinder;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
@@ -72,9 +70,13 @@ import cm.aptoide.pt.v8engine.ads.AdsRepository;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.app.AppRepository;
+import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
+import cm.aptoide.pt.v8engine.billing.exception.PaymentCancellationException;
+import cm.aptoide.pt.v8engine.billing.purchase.PaidAppPurchase;
+import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
+import cm.aptoide.pt.v8engine.billing.view.PurchaseIntentMapper;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
@@ -98,7 +100,6 @@ import cm.aptoide.pt.v8engine.view.dialog.DialogBadgeV7;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.view.install.remote.RemoteInstallDialog;
-import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.store.StoreFragment;
@@ -180,6 +181,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private StoredMinimalAdAccessor storedMinimalAdAccessor;
   private PaymentAnalytics paymentAnalytics;
   private SpotAndShareAnalytics spotAndShareAnalytics;
+  private PurchaseIntentMapper purchaseIntentMapper;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -253,6 +255,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    purchaseIntentMapper =
+        ((V8Engine) getContext().getApplicationContext()).getPurchaseIntentMapper();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator =
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
@@ -409,31 +413,24 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == PAY_APP_REQUEST_CODE) {
-      if (resultCode == Activity.RESULT_OK) {
+      try {
+        final PaidAppPurchase purchase =
+            (PaidAppPurchase) purchaseIntentMapper.map(data, resultCode);
 
-        // download app and install app
         FragmentActivity fragmentActivity = getActivity();
         Intent installApp = new Intent(AppBoughtReceiver.APP_BOUGHT);
         installApp.putExtra(AppBoughtReceiver.APP_ID, appId);
-        installApp.putExtra(AppBoughtReceiver.APP_PATH,
-            data.getStringExtra(BillingBinder.INAPP_PURCHASE_DATA));
+        installApp.putExtra(AppBoughtReceiver.APP_PATH, purchase.getApkPath());
         fragmentActivity.sendBroadcast(installApp);
-      } else if (resultCode == Activity.RESULT_CANCELED) {
-
-        if (data != null
-            && data.hasExtra(BillingBinder.RESPONSE_CODE)
-            && BillingBinder.RESULT_ITEM_ALREADY_OWNED == data.getIntExtra(
-            BillingBinder.RESPONSE_CODE, -1)) {
-          openType = OpenType.OPEN_AND_INSTALL;
-          load(true, true, null);
-        } else {
+      } catch (Throwable throwable) {
+        if (throwable instanceof PaymentCancellationException) {
           Logger.i(TAG, "The user canceled.");
           ShowMessage.asSnack(header.badge, R.string.user_cancelled);
+        } else {
+          Logger.i(TAG,
+              "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
+          ShowMessage.asSnack(header.badge, R.string.unknown_error);
         }
-      } else {
-        Logger.i(TAG,
-            "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
-        ShowMessage.asSnack(header.badge, R.string.unknown_error);
       }
     } else {
       super.onActivityResult(requestCode, resultCode, data);

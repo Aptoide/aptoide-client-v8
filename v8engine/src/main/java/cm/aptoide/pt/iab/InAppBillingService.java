@@ -10,9 +10,8 @@ import android.content.Intent;
 import android.os.IBinder;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.inapp.BillingBinder;
-import cm.aptoide.pt.v8engine.billing.view.ErrorCodeFactory;
-import cm.aptoide.pt.v8engine.billing.view.PurchaseErrorCodeFactory;
 import cm.aptoide.pt.v8engine.billing.repository.ProductFactory;
+import cm.aptoide.pt.v8engine.billing.view.PaymentThrowableCodeMapper;
 
 public class InAppBillingService extends Service {
 
@@ -23,8 +22,8 @@ public class InAppBillingService extends Service {
     billingBinder =
         new BillingBinder(this, ((V8Engine) getApplicationContext()).getInAppBillingRepository(),
             ((V8Engine) getApplicationContext()).getInAppBillingSerializer(),
-            new ErrorCodeFactory(), new PurchaseErrorCodeFactory(), new ProductFactory(),
-            ((V8Engine) getApplicationContext()).getAccountManager(),
+            new PaymentThrowableCodeMapper(), new PaymentThrowableCodeMapper(),
+            new ProductFactory(), ((V8Engine) getApplicationContext()).getAccountManager(),
             ((V8Engine) getApplicationContext()).getAptoideBilling());
   }
 
