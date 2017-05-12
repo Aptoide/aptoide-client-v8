@@ -135,14 +135,14 @@ public class SharePreviewDialog {
       View latestAppView;
       ImageView latestAppIcon;
       TextView latestAppName;
-      for (StoreLatestAppsDisplayable.LatestApp latestApp : ((StoreLatestAppsDisplayable) displayable)
-          .getLatestApps()) {
+      for (StoreLatestAppsDisplayable.LatestApp latestApp : ((StoreLatestAppsDisplayable) displayable).getLatestApps()) {
         latestAppView =
             factory.inflate(R.layout.social_timeline_latest_app, latestAppsContainer, false);
         latestAppIcon =
             (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app_icon);
         latestAppName = (TextView) latestAppView.findViewById(R.id.social_timeline_latest_app_name);
-        ImageLoader.with(context).load(latestApp.getIconUrl(), latestAppIcon);
+        ImageLoader.with(context)
+            .load(latestApp.getIconUrl(), latestAppIcon);
         latestAppName.setMaxLines(1);
         latestAppName.setText(latestApp.getName());
         latestAppsContainer.addView(latestAppView);
@@ -180,7 +180,8 @@ public class SharePreviewDialog {
           R.id.displayable_social_timeline_recommendation_get_app_button);
       RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
 
-      ImageLoader.with(context).load(((AppUpdateDisplayable) displayable).getAppIconUrl(), appIcon);
+      ImageLoader.with(context)
+          .load(((AppUpdateDisplayable) displayable).getAppIconUrl(), appIcon);
       appName.setText(((AppUpdateDisplayable) displayable).getAppName());
       ratingBar.setRating(((AppUpdateDisplayable) displayable).getAppRating());
 
@@ -278,10 +279,10 @@ public class SharePreviewDialog {
       Map<View, Long> apps = new HashMap<>();
       Map<Long, String> appsPackages = new HashMap<>();
 
-      sharedStoreTitleName.setText(
-          ((SocialStoreLatestAppsDisplayable) displayable).getSharedStore().getName());
-      sharedStoreName.setText(
-          ((SocialStoreLatestAppsDisplayable) displayable).getSharedStore().getName());
+      sharedStoreTitleName.setText(((SocialStoreLatestAppsDisplayable) displayable).getSharedStore()
+          .getName());
+      sharedStoreName.setText(((SocialStoreLatestAppsDisplayable) displayable).getSharedStore()
+          .getName());
       ImageLoader.with(context)
           .loadWithShadowCircleTransform(
               ((SocialStoreLatestAppsDisplayable) displayable).getSharedStore()
@@ -293,7 +294,8 @@ public class SharePreviewDialog {
             factory.inflate(R.layout.social_timeline_latest_app, latestAppsContainer, false);
         latestAppIcon =
             (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app_icon);
-        ImageLoader.with(context).load(latestApp.getIconUrl(), latestAppIcon);
+        ImageLoader.with(context)
+            .load(latestApp.getIconUrl(), latestAppIcon);
         latestAppsContainer.addView(latestAppView);
         apps.put(latestAppView, latestApp.getAppId());
         appsPackages.put(latestApp.getAppId(), latestApp.getPackageName());
@@ -328,7 +330,8 @@ public class SharePreviewDialog {
           R.id.displayable_social_timeline_recommendation_get_app_button);
       RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
 
-      ImageLoader.with(context).load(((PopularAppDisplayable) displayable).getAppIcon(), appIcon);
+      ImageLoader.with(context)
+          .load(((PopularAppDisplayable) displayable).getAppIcon(), appIcon);
       appName.setText(((PopularAppDisplayable) displayable).getAppName());
       ratingBar.setRating(((PopularAppDisplayable) displayable).getAppAverageRating());
 
@@ -405,8 +408,9 @@ public class SharePreviewDialog {
 
   private void setCardHeader(Context context, TextView storeName, TextView userName,
       ImageView storeAvatar, ImageView userAvatar) {
-    if (accountManager.getAccount().getStoreName() != null) {
-      storeName.setTextColor(ContextCompat.getColor(context, R.color.black_87_alpha));
+    if (accountManager.getAccount()
+        .getStoreName() != null) {
+      storeName.setTextColor(ContextCompat.getColor(context, R.color.black87alpha));
       if (Account.Access.PUBLIC.equals(accountManager.getAccountAccess())) {
         storeAvatar.setVisibility(View.VISIBLE);
         userAvatar.setVisibility(View.VISIBLE);
@@ -558,9 +562,7 @@ public class SharePreviewDialog {
         R.id.displayable_social_timeline_recommendation_get_app_button);
     RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
 
-    if (appIconUrl != null) {
-      ImageLoader.with(context)
-          .load(appIconUrl, appIconV);
+    if (appIconUrl != null) {ImageLoader.with(context).load(appIconUrl, appIconV);
     }
     appNameT.setText(appName);
     ratingBar.setRating(rating);

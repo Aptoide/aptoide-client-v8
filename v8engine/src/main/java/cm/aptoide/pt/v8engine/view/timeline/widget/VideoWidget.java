@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.timeline.widget;
 
-import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
@@ -68,8 +67,10 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
     subtitle.setText(displayable.getTimeSinceLastUpdate(context));
     videoTitle.setText(displayable.getVideoTitle());
     setCardViewMargin(displayable, cardView);
-    ImageLoader.with(context).loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
-    ImageLoader.with(context).load(displayable.getThumbnailUrl(), thumbnail);
+    ImageLoader.with(context)
+        .loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
+    ImageLoader.with(context)
+        .load(displayable.getThumbnailUrl(), thumbnail);
     thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
     play_button.setVisibility(View.VISIBLE);
 

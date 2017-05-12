@@ -1,13 +1,10 @@
 package cm.aptoide.pt.v8engine.view.timeline.widget;
 
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.CardView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -55,7 +52,8 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
     final FragmentActivity context = getContext();
     if (displayable.getStore() != null) {
       storeName.setVisibility(View.VISIBLE);
-      storeName.setText(displayable.getStyledTitle(context, displayable.getStore().getName()));
+      storeName.setText(displayable.getStyledTitle(context, displayable.getStore()
+          .getName()));
       storeAvatar.setVisibility(View.VISIBLE);
       ImageLoader.with(context)
           .loadWithShadowCircleTransform(displayable.getStore()
@@ -77,7 +75,8 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
       userAvatar.setVisibility(View.GONE);
       if (displayable.getUser() != null) {
         storeName.setVisibility(View.VISIBLE);
-        storeName.setText(displayable.getStyledTitle(context, displayable.getUser().getName()));
+        storeName.setText(displayable.getStyledTitle(context, displayable.getUser()
+            .getName()));
         storeAvatar.setVisibility(View.VISIBLE);
         ImageLoader.with(context)
             .loadWithShadowCircleTransform(displayable.getUser()
@@ -97,15 +96,17 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
     getApp.setVisibility(View.VISIBLE);
     getApp.setText(displayable.getAppText(context));
 
-    RxView.clicks(getApp).subscribe(view -> {
-      knockWithSixpackCredentials(displayable.getAbUrl());
+    RxView.clicks(getApp)
+        .subscribe(view -> {
+          knockWithSixpackCredentials(displayable.getAbUrl());
 
-      Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, displayable.getPackageName(),
-          Analytics.AppsTimeline.BLANK, displayable.getTitle(),
-          Analytics.AppsTimeline.OPEN_APP_VIEW);
-      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
-          .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
-    }, throwable -> CrashReport.getInstance().log(throwable));
+          Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, displayable.getPackageName(),
+              Analytics.AppsTimeline.BLANK, displayable.getTitle(),
+              Analytics.AppsTimeline.OPEN_APP_VIEW);
+          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+              .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable));
   }
 
   @Override String getCardTypeName() {

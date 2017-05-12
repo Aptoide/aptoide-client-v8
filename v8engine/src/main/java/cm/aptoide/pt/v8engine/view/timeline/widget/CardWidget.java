@@ -84,31 +84,39 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     like.setVisibility(View.VISIBLE);
     comment.setVisibility(View.VISIBLE);
 
-    compositeSubscription.add(RxView.clicks(like).subscribe(click -> {
-      if (!hasSocialPermissions(Analytics.Account.AccountOrigins.LIKE_CARD)) return;
-      likeButton.performClick();
-    }, throwable -> CrashReport.getInstance().log(throwable)));
+    compositeSubscription.add(RxView.clicks(like)
+        .subscribe(click -> {
+          if (!hasSocialPermissions(Analytics.Account.AccountOrigins.LIKE_CARD)) return;
+          likeButton.performClick();
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable)));
 
-    compositeSubscription.add(RxView.clicks(likeButton).subscribe(click -> {
-      shareCardWithoutPreview(displayable, (String cardId) -> {
-        likeCard(displayable, cardId, 1);
-      }, SharePreviewDialog.SharePreviewOpenMode.LIKE);
-    }, throwable -> CrashReport.getInstance().log(throwable)));
+    compositeSubscription.add(RxView.clicks(likeButton)
+        .subscribe(click -> {
+          shareCardWithoutPreview(displayable, (String cardId) -> {
+            likeCard(displayable, cardId, 1);
+          }, SharePreviewDialog.SharePreviewOpenMode.LIKE);
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable)));
 
-    compositeSubscription.add(RxView.clicks(comment).subscribe(click -> {
-      if (!hasSocialPermissions(Analytics.Account.AccountOrigins.SHARE_CARD)) return;
+    compositeSubscription.add(RxView.clicks(comment)
+        .subscribe(click -> {
+          if (!hasSocialPermissions(Analytics.Account.AccountOrigins.SHARE_CARD)) return;
 
-      FragmentManager fm = getContext().getSupportFragmentManager();
-      CommentDialogFragment commentDialogFragment =
-          CommentDialogFragment.newInstanceTimelineArticleComment(
-              displayable.getTimelineCard().getCardId());
-      commentDialogFragment.setCommentBeforeSubmissionCallbackContract(
-          (inputText) -> shareCardWithoutPreview(displayable, cardId -> {
-            PostCommentForTimelineArticle.of(cardId, inputText, bodyInterceptor, httpClient,
-                converterFactory).observe().subscribe();
-          }, SharePreviewDialog.SharePreviewOpenMode.COMMENT));
-      commentDialogFragment.show(fm, "fragment_comment_dialog");
-    }, throwable -> CrashReport.getInstance().log(throwable)));
+          FragmentManager fm = getContext().getSupportFragmentManager();
+          CommentDialogFragment commentDialogFragment =
+              CommentDialogFragment.newInstanceTimelineArticleComment(displayable.getTimelineCard()
+                  .getCardId());
+          commentDialogFragment.setCommentBeforeSubmissionCallbackContract(
+              (inputText) -> shareCardWithoutPreview(displayable, cardId -> {
+                PostCommentForTimelineArticle.of(cardId, inputText, bodyInterceptor, httpClient,
+                    converterFactory)
+                    .observe()
+                    .subscribe();
+              }, SharePreviewDialog.SharePreviewOpenMode.COMMENT));
+          commentDialogFragment.show(fm, "fragment_comment_dialog");
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable)));
     compositeSubscription.add(RxView.clicks(shareButton)
         .subscribe(
             click -> shareCard(displayable, null, SharePreviewDialog.SharePreviewOpenMode.SHARE),
@@ -245,10 +253,10 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     CardView.LayoutParams layoutParams =
         new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
             CardView.LayoutParams.WRAP_CONTENT);
-    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
-        getContext().getResources().getConfiguration().orientation), 0,
-        displayable.getMarginWidth(getContext(),
-            getContext().getResources().getConfiguration().orientation), 15);
+    layoutParams.setMargins(displayable.getMarginWidth(getContext(), getContext().getResources()
+        .getConfiguration().orientation), 0, displayable.getMarginWidth(getContext(),
+        getContext().getResources()
+            .getConfiguration().orientation), 15);
     cardView.setLayoutParams(layoutParams);
   }
 }

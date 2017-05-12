@@ -402,10 +402,16 @@ import rx.android.schedulers.AndroidSchedulers;
               AlertDialog.Builder alertDialog =
                   sharePreviewDialog.getPreviewDialogBuilder(getContext());
 
-              sharePreviewDialog.showShareCardPreviewDialog(
-                  displayable.getPojo().getNodes().getMeta().getData().getPackageName(),
-                  displayable.getPojo().getNodes().getMeta().getData().getStore().getId(),
-                  "install", context, sharePreviewDialog, alertDialog, socialRepository);
+              sharePreviewDialog.showShareCardPreviewDialog(displayable.getPojo()
+                  .getNodes()
+                  .getMeta()
+                  .getData()
+                  .getPackageName(), displayable.getPojo()
+                  .getNodes()
+                  .getMeta()
+                  .getData()
+                  .getStore()
+                  .getId(), "install", context, sharePreviewDialog, alertDialog, socialRepository);
             }
             ShowMessage.asSnack(v, installOrUpgradeMsg);
           }, err -> {

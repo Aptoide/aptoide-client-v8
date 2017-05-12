@@ -74,10 +74,13 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
           .getConversion()
           .getUrl();
     }
-    return new StoreLatestAppsDisplayable(storeLatestApps, storeLatestApps.getStore().getName(),
-        storeLatestApps.getStore().getAvatar(), latestApps, abTestingURL, spannableFactory,
-        dateCalculator, storeLatestApps.getLatestUpdate(), timelineAnalytics, socialRepository,
-        storeLatestApps.getStore().getAppearance().getTheme());
+    return new StoreLatestAppsDisplayable(storeLatestApps, storeLatestApps.getStore()
+        .getName(), storeLatestApps.getStore()
+        .getAvatar(), latestApps, abTestingURL, spannableFactory, dateCalculator,
+        storeLatestApps.getLatestUpdate(), timelineAnalytics, socialRepository,
+        storeLatestApps.getStore()
+            .getAppearance()
+            .getTheme());
   }
 
   public String getTimeSinceLastUpdate(Context context) {
@@ -98,8 +101,7 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
         packageName, storeName);
   }
 
-  @Override
-  public void share(boolean privacyResult, ShareCardCallback shareCardCallback) {
+  @Override public void share(boolean privacyResult, ShareCardCallback shareCardCallback) {
     socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback);
   }
 

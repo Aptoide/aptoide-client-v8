@@ -96,8 +96,11 @@ public class AppUpdateDisplayable extends CardDisplayable {
     this.installConverter = installConverter;
     this.analytics = analytics;
     this.storeTheme = storeTheme;
-    this.appRating = appUpdate.getStats().getRating().getAvg();
-    this.updateStoreId = appUpdate.getStore().getId();
+    this.appRating = appUpdate.getStats()
+        .getRating()
+        .getAvg();
+    this.updateStoreId = appUpdate.getStore()
+        .getId();
   }
 
   public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory,

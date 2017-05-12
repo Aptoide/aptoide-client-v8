@@ -142,7 +142,7 @@ public class ImageLoader {
     }
     return null;
   }
-  
+
   /**
    * Loads image url with a circular shape transformation and a circle shadow around and a
    * placeholder.

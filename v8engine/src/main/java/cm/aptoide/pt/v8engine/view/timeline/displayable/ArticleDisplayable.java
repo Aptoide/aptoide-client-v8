@@ -156,8 +156,7 @@ public class ArticleDisplayable extends CardDisplayable {
     return R.layout.displayable_social_timeline_article;
   }
 
-  @Override
-  public void share(boolean privacyResult, ShareCardCallback shareCardCallback) {
+  @Override public void share(boolean privacyResult, ShareCardCallback shareCardCallback) {
     socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback);
   }
 

@@ -43,22 +43,39 @@ public class PopularAppDisplayable extends CardDisplayable {
     super(card);
     this.date = card.getDate();
     this.friends = card.getUsers();
-    this.numberOfFriends = card.getUsers().size();
-    this.appIcon = card.getPopularApplication().getIcon();
-    this.appName = card.getPopularApplication().getName();
-    this.appAverageRating = card.getPopularApplication().getStats().getRating().getAvg();
+    this.numberOfFriends = card.getUsers()
+        .size();
+    this.appIcon = card.getPopularApplication()
+        .getIcon();
+    this.appName = card.getPopularApplication()
+        .getName();
+    this.appAverageRating = card.getPopularApplication()
+        .getStats()
+        .getRating()
+        .getAvg();
     this.dateCalculator = dateCalculator;
-    this.packageName = card.getPopularApplication().getPackageName();
-    this.storeName = card.getPopularApplication().getStore().getName();
-    this.appId = card.getPopularApplication().getId();
+    this.packageName = card.getPopularApplication()
+        .getPackageName();
+    this.storeName = card.getPopularApplication()
+        .getStore()
+        .getName();
+    this.appId = card.getPopularApplication()
+        .getId();
     this.timelineAnalytics = timelineAnalytics;
     this.socialRepository = socialRepository;
-    this.appStoreId = card.getPopularApplication().getStore().getId();
+    this.appStoreId = card.getPopularApplication()
+        .getStore()
+        .getId();
 
     if (card.getAb() != null
-        && card.getAb().getConversion() != null
-        && card.getAb().getConversion().getUrl() != null) {
-      this.abUrl = card.getAb().getConversion().getUrl();
+        && card.getAb()
+        .getConversion() != null
+        && card.getAb()
+        .getConversion()
+        .getUrl() != null) {
+      this.abUrl = card.getAb()
+          .getConversion()
+          .getUrl();
     }
   }
 

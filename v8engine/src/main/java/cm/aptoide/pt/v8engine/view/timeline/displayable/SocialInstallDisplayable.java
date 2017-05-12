@@ -48,8 +48,9 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
       TimelineAnalytics timelineAnalytics, SpannableFactory spannableFactory,
       SocialRepository socialRepository, DateCalculator dateCalculator) {
     super(socialInstall, likes, comments, store, socialInstall.getUser(),
-        socialInstall.getUserSharer(), socialInstall.getMy().isLiked(), socialInstall.getLikes(),
-        socialInstall.getComments(), date, spannableFactory, dateCalculator, abTestingURL);
+        socialInstall.getUserSharer(), socialInstall.getMy()
+            .isLiked(), socialInstall.getLikes(), socialInstall.getComments(), date,
+        spannableFactory, dateCalculator, abTestingURL);
     this.avatarResource = icon;
     this.titleResource = titleResource;
     this.user = user;
@@ -58,11 +59,15 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
     this.appName = appName;
     this.appIcon = appIcon;
     this.abUrl = abTestingURL;
-    this.rating = socialInstall.getApp().getStats().getRating().getAvg();
+    this.rating = socialInstall.getApp()
+        .getStats()
+        .getRating()
+        .getAvg();
     this.timelineAnalytics = timelineAnalytics;
     this.spannableFactory = spannableFactory;
     this.socialRepository = socialRepository;
-    this.appStoreId = socialInstall.getStore().getId();
+    this.appStoreId = socialInstall.getStore()
+        .getId();
   }
 
   public static Displayable from(SocialInstall socialInstall, TimelineAnalytics timelineAnalytics,

@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.view.timeline.widget;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -44,8 +43,10 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
     title.setText(displayable.getTitle(context));
     subtitle.setText(displayable.getTimeSinceLastUpdate(context));
     articleTitle.setText(displayable.getTitleResource());
-    ImageLoader.with(context).loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
-    ImageLoader.with(context).load(displayable.getThumbnailUrl(), thumbnail);
+    ImageLoader.with(context)
+        .loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
+    ImageLoader.with(context)
+        .load(displayable.getThumbnailUrl(), thumbnail);
 
     compositeSubscription.add(RxView.clicks(url)
         .subscribe(v -> context.startActivity(

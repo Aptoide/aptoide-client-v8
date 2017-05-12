@@ -30,8 +30,7 @@ import lombok.Getter;
       @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab,
       @JsonProperty("user_sharer") Comment.User userSharer, @JsonProperty("my") My my,
       @JsonProperty("likes") List<UserTimeline> likes,
-      @JsonProperty("comments") List<CardComment> comments, @JsonProperty("user") Comment.User
-      user,
+      @JsonProperty("comments") List<CardComment> comments, @JsonProperty("user") Comment.User user,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("stats") SocialCardStats stats, @JsonProperty("store") Store store) {
     super(likes, comments, my);

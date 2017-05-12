@@ -65,8 +65,10 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
     articleTitle.setText(displayable.getArticleTitle());
     relatedTo.setTextSize(11);
     setCardViewMargin(displayable, cardView);
-    ImageLoader.with(context).loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
-    ImageLoader.with(context).load(displayable.getThumbnailUrl(), thumbnail);
+    ImageLoader.with(context)
+        .loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
+    ImageLoader.with(context)
+        .load(displayable.getThumbnailUrl(), thumbnail);
     thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
     url.setOnClickListener(v -> {

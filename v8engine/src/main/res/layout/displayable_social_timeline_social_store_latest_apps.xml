@@ -36,8 +36,8 @@
         android:layout_marginStart="23.7dp"
         android:layout_marginTop="7dp"
         android:textStyle="bold"
-        style="@style/Aptoide.TextView.Medium.S"
         tools:text="Marcelo storenz"
+        style="@style/Aptoide.TextView.Medium.S"
         />
 
 

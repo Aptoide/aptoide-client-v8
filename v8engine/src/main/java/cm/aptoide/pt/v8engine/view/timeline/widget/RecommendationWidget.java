@@ -74,12 +74,14 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
 
     appName.setText(displayable.getAppName());
 
-    relatedToText.setText(context.getString(R.string.related_to).toLowerCase());
+    relatedToText.setText(context.getString(R.string.related_to)
+        .toLowerCase());
     relatedToApp.setText(displayable.getSimilarAppName());
     getApp.setVisibility(View.VISIBLE);
 
-    compositeSubscription.add(RxView.clicks(getApp).subscribe(a -> {
-      knockWithSixpackCredentials(displayable.getAbUrl());
+    compositeSubscription.add(RxView.clicks(getApp)
+        .subscribe(a -> {
+          knockWithSixpackCredentials(displayable.getAbUrl());
 
           Analytics.AppsTimeline.clickOnCard(RecommendationDisplayable.CARD_TYPE_NAME,
               displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getTitle(),

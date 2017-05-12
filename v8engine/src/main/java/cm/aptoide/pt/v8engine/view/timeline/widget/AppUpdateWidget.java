@@ -18,7 +18,6 @@ import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.AppUpdateDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
@@ -66,7 +65,9 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
 
     appName.setText(displayable.getAppTitle(context));
     setCardViewMargin(displayable, cardView);
-    updateButton.setText(displayable.getUpdateAppText(context).toString().toUpperCase());
+    updateButton.setText(displayable.getUpdateAppText(context)
+        .toString()
+        .toUpperCase());
     updateButton.setEnabled(true);
     ImageLoader.with(context)
         .load(displayable.getAppIconUrl(), appIcon);

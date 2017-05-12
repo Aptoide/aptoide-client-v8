@@ -161,8 +161,9 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
       Logger.w(TAG, "like button is null in this view");
     }
 
-    if ((displayable.getUserLikes() != null && displayable.getUserLikes().size() != 0)
-        || displayable.getNumberOfComments() > 0) {
+    if ((displayable.getUserLikes() != null
+        && displayable.getUserLikes()
+        .size() != 0) || displayable.getNumberOfComments() > 0) {
       socialInfoBar.setVisibility(View.VISIBLE);
     } else {
       socialInfoBar.setVisibility(View.GONE);
@@ -173,13 +174,18 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
       if (numberOfLikes > 1) {
         numberLikes.setVisibility(View.VISIBLE);
         numberLikes.setText(String.format("%s %s", String.valueOf(numberOfLikes),
-            getContext().getString(R.string.likes).toLowerCase()));
+            getContext().getString(R.string.likes)
+                .toLowerCase()));
         numberLikesOneLike.setVisibility(View.INVISIBLE);
-      } else if (displayable.getUserLikes() != null && displayable.getUserLikes().size() != 0) {
+      } else if (displayable.getUserLikes() != null
+          && displayable.getUserLikes()
+          .size() != 0) {
         numberLikes.setVisibility(View.INVISIBLE);
         numberLikesOneLike.setVisibility(View.VISIBLE);
         numberLikesOneLike.setText(displayable.getBlackHighlightedLike(getContext(),
-            displayable.getUserLikes().get(0).getName()));
+            displayable.getUserLikes()
+                .get(0)
+                .getName()));
       }
     } else {
       numberLikes.setVisibility(View.INVISIBLE);
@@ -190,13 +196,16 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
       numberComments.setVisibility(View.VISIBLE);
       numberComments.setText(
           String.format("%s %s", String.valueOf(displayable.getNumberOfComments()),
-              getContext().getString(R.string.comments).toLowerCase()));
+              getContext().getString(R.string.comments)
+                  .toLowerCase()));
       socialCommentBar.setVisibility(View.VISIBLE);
       ImageLoader.with(getContext())
-          .loadWithShadowCircleTransform(displayable.getLatestComment().getAvatar(),
-              latestCommentMainAvatar);
-      socialCommentUsername.setText(displayable.getLatestComment().getName());
-      socialCommentBody.setText(displayable.getLatestComment().getBody());
+          .loadWithShadowCircleTransform(displayable.getLatestComment()
+              .getAvatar(), latestCommentMainAvatar);
+      socialCommentUsername.setText(displayable.getLatestComment()
+          .getName());
+      socialCommentBody.setText(displayable.getLatestComment()
+          .getBody());
     } else {
       numberComments.setVisibility(View.INVISIBLE);
       socialCommentBar.setVisibility(View.GONE);
@@ -240,7 +249,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
 
   private Observable<Void> showCommentsWithInputReady(T displayable) {
     return Observable.fromCallable(() -> {
-      final String elementId = displayable.getTimelineCard().getCardId();
+      final String elementId = displayable.getTimelineCard()
+          .getCardId();
       Fragment fragment = V8Engine.getFragmentProvider()
           .newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType.TIMELINE, elementId);
       getFragmentNavigator().navigateTo(fragment);

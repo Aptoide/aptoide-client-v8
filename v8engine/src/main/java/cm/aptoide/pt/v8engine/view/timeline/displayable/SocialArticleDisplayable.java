@@ -61,8 +61,9 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
       SpannableFactory spannableFactory, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository) {
     super(socialArticle, numberOfLikes, numberOfComments, store, user,
-        socialArticle.getUserSharer(), socialArticle.getMy().isLiked(), socialArticle.getLikes(),
-        socialArticle.getComments(), date, spannableFactory, dateCalculator, abUrl);
+        socialArticle.getUserSharer(), socialArticle.getMy()
+            .isLiked(), socialArticle.getLikes(), socialArticle.getComments(), date,
+        spannableFactory, dateCalculator, abUrl);
     this.articleTitle = articleTitle;
     this.link = link;
     this.developerLink = developerLink;
@@ -176,8 +177,7 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
     return R.layout.displayable_social_timeline_social_article;
   }
 
-  @Override
-  public void share(boolean privacyResult, ShareCardCallback shareCardCallback) {
+  @Override public void share(boolean privacyResult, ShareCardCallback shareCardCallback) {
     socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback);
   }
 

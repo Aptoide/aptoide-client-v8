@@ -74,8 +74,13 @@ public class RecommendationDisplayable extends CardDisplayable {
     this.spannableFactory = spannableFactory;
     this.timelineAnalytics = timelineAnalytics;
     this.socialRepository = socialRepository;
-    this.appRating = recommendation.getRecommendedApp().getStats().getRating().getAvg();
-    this.appStoreId = recommendation.getRecommendedApp().getStore().getId();
+    this.appRating = recommendation.getRecommendedApp()
+        .getStats()
+        .getRating()
+        .getAvg();
+    this.appStoreId = recommendation.getRecommendedApp()
+        .getStore()
+        .getId();
   }
 
   public static Displayable from(Recommendation recommendation, DateCalculator dateCalculator,

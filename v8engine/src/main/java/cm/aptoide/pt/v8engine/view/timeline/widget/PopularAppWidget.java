@@ -66,18 +66,21 @@ public class PopularAppWidget extends CardWidget<PopularAppDisplayable> {
     appName.setText(displayable.getAppName());
     ratingBar.setRating(displayable.getAppAverageRating());
 
-    ImageLoader.with(context).load(displayable.getAppIcon(), appIcon);
+    ImageLoader.with(context)
+        .load(displayable.getAppIcon(), appIcon);
 
     buildFriendsIcons(displayable, context);
 
-    RxView.clicks(getApp).subscribe(click -> {
-      knockWithSixpackCredentials(displayable.getAbUrl());
-      Analytics.AppsTimeline.clickOnCard(PopularAppDisplayable.CARD_TYPE_NAME,
-          displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
-          Analytics.AppsTimeline.OPEN_APP_VIEW);
-      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
-          .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
-    }, throwable -> CrashReport.getInstance().log(throwable));
+    RxView.clicks(getApp)
+        .subscribe(click -> {
+          knockWithSixpackCredentials(displayable.getAbUrl());
+          Analytics.AppsTimeline.clickOnCard(PopularAppDisplayable.CARD_TYPE_NAME,
+              displayable.getPackageName(), Analytics.AppsTimeline.BLANK,
+              displayable.getStoreName(), Analytics.AppsTimeline.OPEN_APP_VIEW);
+          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+              .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable));
   }
 
   @Override String getCardTypeName() {
@@ -91,7 +94,8 @@ public class PopularAppWidget extends CardWidget<PopularAppDisplayable> {
     for (Comment.User friend : displayable.getFriends()) {
       friendView = inflater.inflate(R.layout.social_timeline_friend, usersContainer, false);
       friendAvatar = (ImageView) friendView.findViewById(R.id.social_timeline_friend_avatar);
-      ImageLoader.with(context).loadWithShadowCircleTransform(friend.getAvatar(), friendAvatar);
+      ImageLoader.with(context)
+          .loadWithShadowCircleTransform(friend.getAvatar(), friendAvatar);
       usersContainer.addView(friendView);
     }
   }

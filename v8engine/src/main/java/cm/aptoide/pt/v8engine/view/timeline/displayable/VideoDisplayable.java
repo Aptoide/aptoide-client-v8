@@ -153,8 +153,7 @@ public class VideoDisplayable extends CardDisplayable {
         packageName);
   }
 
-  @Override
-  public void share(boolean privacyResult, ShareCardCallback shareCardCallback) {
+  @Override public void share(boolean privacyResult, ShareCardCallback shareCardCallback) {
     socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback);
   }
 

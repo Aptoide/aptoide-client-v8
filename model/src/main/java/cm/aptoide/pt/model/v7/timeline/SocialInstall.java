@@ -30,9 +30,8 @@ import lombok.Getter;
   public SocialInstall(@JsonProperty("uid") String cardId, @JsonProperty("apps") List<App> apps,
       @JsonProperty("ab") Ab ab, @JsonProperty("user_sharer") Comment.User userSharer,
       @JsonProperty("user") Comment.User user, @JsonProperty("likes") List<UserTimeline> likes,
-      @JsonProperty("comments") List<CardComment> comments, @JsonProperty("stats") SocialCardStats
-      stats,
-      @JsonProperty("my") My my,
+      @JsonProperty("comments") List<CardComment> comments,
+      @JsonProperty("stats") SocialCardStats stats, @JsonProperty("my") My my,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("store") Store store) {
     super(likes, comments, my);

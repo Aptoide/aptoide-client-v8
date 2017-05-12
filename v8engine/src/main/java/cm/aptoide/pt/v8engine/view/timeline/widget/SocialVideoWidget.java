@@ -58,7 +58,8 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
     final FragmentActivity context = getContext();
     if (displayable.getStore() != null) {
       title.setVisibility(View.VISIBLE);
-      title.setText(displayable.getStyledTitle(context, displayable.getStore().getName()));
+      title.setText(displayable.getStyledTitle(context, displayable.getStore()
+          .getName()));
       storeAvatar.setVisibility(View.VISIBLE);
       ImageLoader.with(context)
           .loadWithShadowCircleTransform(displayable.getStore()
@@ -80,7 +81,8 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
       userAvatar.setVisibility(View.GONE);
       if (displayable.getUser() != null) {
         title.setVisibility(View.VISIBLE);
-        title.setText(displayable.getStyledTitle(context, displayable.getUser().getName()));
+        title.setText(displayable.getStyledTitle(context, displayable.getUser()
+            .getName()));
         storeAvatar.setVisibility(View.VISIBLE);
         ImageLoader.with(context)
             .loadWithShadowCircleTransform(displayable.getUser()
@@ -91,7 +93,8 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
     ratingBar.setVisibility(View.INVISIBLE);
     videoTitle.setText(displayable.getVideoTitle());
     setCardViewMargin(displayable, cardView);
-    ImageLoader.with(context).load(displayable.getThumbnailUrl(), thumbnail);
+    ImageLoader.with(context)
+        .load(displayable.getThumbnailUrl(), thumbnail);
     thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
     play_button.setVisibility(View.VISIBLE);
 

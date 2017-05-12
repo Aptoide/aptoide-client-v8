@@ -59,9 +59,9 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
       SpannableFactory spannableFactory, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository) {
     super(socialVideo, numberOfLikes, numberOfComments, socialVideo.getStore(),
-        socialVideo.getUser(), socialVideo.getUserSharer(), socialVideo.getMy().isLiked(),
-        socialVideo.getLikes(), socialVideo.getComments(), date, spannableFactory, dateCalculator,
-        abUrl);
+        socialVideo.getUser(), socialVideo.getUserSharer(), socialVideo.getMy()
+            .isLiked(), socialVideo.getLikes(), socialVideo.getComments(), date, spannableFactory,
+        dateCalculator, abUrl);
     this.videoTitle = videoTitle;
     this.link = link;
     this.baseLink = baseLink;
@@ -171,8 +171,7 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
         packageName);
   }
 
-  @Override
-  public void share(boolean privacyResult, ShareCardCallback shareCardCallback) {
+  @Override public void share(boolean privacyResult, ShareCardCallback shareCardCallback) {
     socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback);
   }
 

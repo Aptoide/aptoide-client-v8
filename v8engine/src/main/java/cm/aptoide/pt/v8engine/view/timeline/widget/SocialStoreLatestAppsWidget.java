@@ -126,7 +126,8 @@ public class SocialStoreLatestAppsWidget
       userAvatar.setVisibility(View.GONE);
       if (displayable.getUser() != null) {
         storeName.setVisibility(View.VISIBLE);
-        storeName.setText(displayable.getStyledTitle(context, displayable.getUser().getName()));
+        storeName.setText(displayable.getStyledTitle(context, displayable.getUser()
+            .getName()));
         storeAvatar.setVisibility(View.VISIBLE);
         ImageLoader.with(context)
             .loadWithShadowCircleTransform(displayable.getUser()
@@ -134,15 +135,20 @@ public class SocialStoreLatestAppsWidget
       }
     }
 
-    sharedStoreNameBodyTitle.setText(displayable.getSharedStore().getName());
+    sharedStoreNameBodyTitle.setText(displayable.getSharedStore()
+        .getName());
 
     ImageLoader.with(getContext())
-        .loadWithShadowCircleTransform(displayable.getSharedStore().getAvatar(), sharedStoreAvatar);
-    sharedStoreName.setText(displayable.getSharedStore().getName());
-    sharedStoreSubscribersNumber.setText(
-        String.valueOf(displayable.getSharedStore().getStats().getSubscribers()));
-    sharedStoreAppsNumber.setText(
-        String.valueOf(displayable.getSharedStore().getStats().getApps()));
+        .loadWithShadowCircleTransform(displayable.getSharedStore()
+            .getAvatar(), sharedStoreAvatar);
+    sharedStoreName.setText(displayable.getSharedStore()
+        .getName());
+    sharedStoreSubscribersNumber.setText(String.valueOf(displayable.getSharedStore()
+        .getStats()
+        .getSubscribers()));
+    sharedStoreAppsNumber.setText(String.valueOf(displayable.getSharedStore()
+        .getStats()
+        .getApps()));
 
     appsContainer.removeAllViews();
     apps.clear();
@@ -153,7 +159,8 @@ public class SocialStoreLatestAppsWidget
       latestAppView = inflater.inflate(R.layout.social_timeline_latest_app, appsContainer, false);
       latestAppIcon = (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app_icon);
       latestAppName = (TextView) latestAppView.findViewById(R.id.social_timeline_latest_app_name);
-      ImageLoader.with(context).load(latestApp.getIconUrl(), latestAppIcon);
+      ImageLoader.with(context)
+          .load(latestApp.getIconUrl(), latestAppIcon);
       latestAppName.setText(latestApp.getAppName());
       appsContainer.addView(latestAppView);
       apps.put(latestAppView, latestApp.getAppId());

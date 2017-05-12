@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.view.timeline.widget;
 
-import android.graphics.Typeface;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
@@ -60,7 +59,8 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
     final FragmentActivity context = getContext();
     if (displayable.getStore() != null) {
       title.setVisibility(View.VISIBLE);
-      title.setText(displayable.getStyledTitle(context, displayable.getStore().getName()));
+      title.setText(displayable.getStyledTitle(context, displayable.getStore()
+          .getName()));
       storeAvatar.setVisibility(View.VISIBLE);
       ImageLoader.with(context)
           .loadWithShadowCircleTransform(displayable.getStore()
@@ -82,7 +82,8 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
       userAvatar.setVisibility(View.GONE);
       if (displayable.getUser() != null) {
         title.setVisibility(View.VISIBLE);
-        title.setText(displayable.getStyledTitle(context, displayable.getUser().getName()));
+        title.setText(displayable.getStyledTitle(context, displayable.getUser()
+            .getName()));
         storeAvatar.setVisibility(View.VISIBLE);
         ImageLoader.with(context)
             .loadWithShadowCircleTransform(displayable.getUser()
@@ -95,7 +96,8 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
     articleTitle.setText(displayable.getArticleTitle());
     setCardViewMargin(displayable, cardView);
 
-    ImageLoader.with(context).load(displayable.getThumbnailUrl(), thumbnail);
+    ImageLoader.with(context)
+        .load(displayable.getThumbnailUrl(), thumbnail);
     thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
     url.setOnClickListener(v -> {
@@ -112,7 +114,8 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(installeds -> {
           if (installeds != null && !installeds.isEmpty()) {
-            appName = installeds.get(0).getName();
+            appName = installeds.get(0)
+                .getName();
           } else {
             setAppNameToFirstLinkedApp(displayable);
           }
