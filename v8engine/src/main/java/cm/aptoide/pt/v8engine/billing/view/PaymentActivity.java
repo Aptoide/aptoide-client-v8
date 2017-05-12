@@ -22,16 +22,15 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.v8engine.billing.inapp.ErrorCodeFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Purchase;
-import cm.aptoide.pt.v8engine.billing.products.InAppBillingProduct;
-import cm.aptoide.pt.v8engine.billing.products.PaidAppProduct;
-import cm.aptoide.pt.v8engine.billing.products.AbstractProduct;
+import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
+import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
+import cm.aptoide.pt.v8engine.billing.product.AbstractProduct;
 import cm.aptoide.pt.v8engine.presenter.PaymentSelector;
 import cm.aptoide.pt.v8engine.presenter.PaymentView;
 import cm.aptoide.pt.v8engine.view.BaseActivity;
@@ -74,7 +73,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
   private Button buyButton;
   private TextView productPrice;
 
-  private PurchaseIntentFactory intentFactory;
+  private PurchaseIntentConverter intentFactory;
   private AlertDialog networkErrorDialog;
   private AlertDialog unknownErrorDialog;
   private SparseArray<PaymentViewModel> paymentMap;
@@ -121,7 +120,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     buyButton = (Button) findViewById(R.id.activity_payment_buy_button);
 
     paymentMap = new SparseArray<>();
-    intentFactory = new PurchaseIntentFactory(new ErrorCodeFactory());
+    intentFactory = new PurchaseIntentConverter(new ErrorCodeFactory());
     final ContextThemeWrapper dialogTheme =
         new ContextThemeWrapper(this, R.style.AptoideThemeDefault);
 
@@ -222,24 +221,24 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
   }
 
   @Override public void dismiss(Purchase purchase) {
-    finish(RESULT_OK, intentFactory.create(purchase));
+    finish(RESULT_OK, intentFactory.convert(purchase));
   }
 
   @Override public void dismiss(Throwable throwable) {
-    finish(RESULT_CANCELED, intentFactory.create(throwable));
+    finish(RESULT_CANCELED, intentFactory.convert(throwable));
   }
 
   @Override public void dismiss() {
-    finish(RESULT_CANCELED, intentFactory.createFromCancellation());
+    finish(RESULT_CANCELED, intentFactory.convertCancellation());
   }
 
   @Override public void navigateToAuthorizationView(int paymentId, Product product) {
-    if (product instanceof InAppBillingProduct) {
+    if (product instanceof InAppProduct) {
       startActivity(WebAuthorizationActivity.getIntent(this, paymentId,
-          ((InAppBillingProduct) product).getApiVersion(),
-          ((InAppBillingProduct) product).getPackageName(),
-          ((InAppBillingProduct) product).getType(), ((InAppBillingProduct) product).getSku(),
-          ((InAppBillingProduct) product).getDeveloperPayload()));
+          ((InAppProduct) product).getApiVersion(),
+          ((InAppProduct) product).getPackageName(),
+          ((InAppProduct) product).getType(), ((InAppProduct) product).getSku(),
+          ((InAppProduct) product).getDeveloperPayload()));
     } else if (product instanceof PaidAppProduct) {
       startActivity(
           WebAuthorizationActivity.getIntent(this, paymentId, ((PaidAppProduct) product).getAppId(),

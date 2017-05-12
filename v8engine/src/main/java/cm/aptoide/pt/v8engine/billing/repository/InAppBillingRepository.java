@@ -16,16 +16,17 @@ import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingConsumeRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingSkuDetailsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.v8engine.billing.inapp.SKU;
 import cm.aptoide.pt.model.v3.ErrorResponse;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
+import cm.aptoide.pt.v8engine.billing.inapp.SKU;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
@@ -114,19 +115,19 @@ public class InAppBillingRepository {
     });
   }
 
-  public Observable<Void> deleteInAppPurchase(int apiVersion, String packageName,
-      String purchaseToken) {
+  public Completable deleteInAppPurchase(int apiVersion, String packageName, String purchaseToken) {
     return InAppBillingConsumeRequest.of(apiVersion, packageName, purchaseToken, bodyInterceptorV3,
-        httpClient, converterFactory).observe().flatMap(response -> {
+        httpClient, converterFactory).observe().first().toSingle().flatMapCompletable(response -> {
       if (response != null && response.isOk()) {
         // TODO sync all payment confirmations instead. For now there is no web service for that.
         confirmationAccessor.removeAll();
-        return Observable.just(null);
+        return Completable.complete();
       }
       if (isDeletionItemNotFound(response.getErrors())) {
-        return Observable.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
+        return Completable.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
       }
-      return Observable.error(new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+      return Completable.error(
+          new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
     });
   }
 

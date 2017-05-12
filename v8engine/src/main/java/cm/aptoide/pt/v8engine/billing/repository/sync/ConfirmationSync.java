@@ -18,8 +18,8 @@ import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.billing.Product;
-import cm.aptoide.pt.v8engine.billing.products.InAppBillingProduct;
-import cm.aptoide.pt.v8engine.billing.products.PaidAppProduct;
+import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
+import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentConfirmationFactory;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
@@ -110,10 +110,10 @@ public class ConfirmationSync extends RepositorySync {
 
   private Completable createServerPaymentConfirmation(Product product, String paymentConfirmationId,
       int paymentId) {
-    return Single.just(product instanceof InAppBillingProduct).flatMap(isInAppBilling -> {
+    return Single.just(product instanceof InAppProduct).flatMap(isInAppBilling -> {
       if (isInAppBilling) {
         return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId, operatorManager,
-            ((InAppBillingProduct) product).getDeveloperPayload(), paymentConfirmationId,
+            ((InAppProduct) product).getDeveloperPayload(), paymentConfirmationId,
             bodyInterceptorV3, httpClient, converterFactory).observe().toSingle();
       }
       return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId, operatorManager,
@@ -130,10 +130,10 @@ public class ConfirmationSync extends RepositorySync {
 
   private Single<PaymentConfirmation> getServerPaymentConfirmation(Product product,
       String payerId) {
-    return Single.just(product instanceof InAppBillingProduct).flatMap(isInAppBilling -> {
+    return Single.just(product instanceof InAppProduct).flatMap(isInAppBilling -> {
       if (isInAppBilling) {
         return GetPaymentConfirmationRequest.of(product.getId(), operatorManager,
-            ((InAppBillingProduct) product).getApiVersion(), bodyInterceptorV3, httpClient,
+            ((InAppProduct) product).getApiVersion(), bodyInterceptorV3, httpClient,
             converterFactory).observe().cast(PaymentConfirmationResponse.class).toSingle();
       }
       return GetPaymentConfirmationRequest.of(product.getId(), operatorManager, bodyInterceptorV3,

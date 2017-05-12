@@ -12,6 +12,9 @@ import android.os.RemoteException;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.iab.AptoideInAppBillingService;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
+import cm.aptoide.pt.v8engine.billing.AptoideBilling;
+import cm.aptoide.pt.v8engine.billing.view.ErrorCodeFactory;
+import cm.aptoide.pt.v8engine.billing.view.PurchaseErrorCodeFactory;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.billing.repository.ProductFactory;
@@ -20,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
+import rx.Single;
 
 public class BillingBinder extends AptoideInAppBillingService.Stub {
 
@@ -62,11 +66,12 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
   private final PurchaseErrorCodeFactory purchaseErrorCodeFactory;
   private final ProductFactory productFactory;
   private final AptoideAccountManager accountManager;
+  private final AptoideBilling billing;
 
   public BillingBinder(Context context, InAppBillingRepository repository,
       InAppBillingSerializer serializer, ErrorCodeFactory errorCodeFactory,
       PurchaseErrorCodeFactory purchaseErrorCodeFactory, ProductFactory productFactory,
-      AptoideAccountManager accountManager) {
+      AptoideAccountManager accountManager, AptoideBilling billing) {
     this.context = context;
     this.repository = repository;
     this.serializer = serializer;
@@ -74,6 +79,7 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
     this.purchaseErrorCodeFactory = purchaseErrorCodeFactory;
     this.productFactory = productFactory;
     this.accountManager = accountManager;
+    this.billing = billing;
   }
 
   @Override public int isBillingSupported(int apiVersion, String packageName, String type)
@@ -196,10 +202,10 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
   @Override public int consumePurchase(int apiVersion, String packageName, String purchaseToken)
       throws RemoteException {
     try {
-      return repository.deleteInAppPurchase(apiVersion, packageName, purchaseToken)
-          .map(success -> RESULT_OK)
+      return billing.consumeInAppPurchase(apiVersion, packageName, purchaseToken)
+          .andThen(Single.just(RESULT_OK))
           .toBlocking()
-          .first();
+          .value();
     } catch (Exception exception) {
       CrashReport.getInstance().log(exception);
       return purchaseErrorCodeFactory.create(exception.getCause());

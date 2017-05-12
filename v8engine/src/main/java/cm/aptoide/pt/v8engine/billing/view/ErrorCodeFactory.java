@@ -3,9 +3,10 @@
  * Modified by Marcelo Benites on 26/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.billing.inapp;
+package cm.aptoide.pt.v8engine.billing.view;
 
 import cm.aptoide.pt.v8engine.billing.exception.PaymentCancellationException;
+import cm.aptoide.pt.v8engine.billing.inapp.BillingBinder;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.io.IOException;

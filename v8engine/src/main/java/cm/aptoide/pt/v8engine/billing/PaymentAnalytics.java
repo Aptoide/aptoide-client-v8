@@ -4,7 +4,7 @@ import android.os.Bundle;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.Event;
 import cm.aptoide.pt.v8engine.analytics.events.FacebookEvent;
-import cm.aptoide.pt.v8engine.billing.products.InAppBillingProduct;
+import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
 import com.facebook.appevents.AppEventsLogger;
 
 public class PaymentAnalytics {
@@ -114,8 +114,8 @@ public class PaymentAnalytics {
   private Bundle getProductBundle(Product product) {
 
     final String packageName;
-    if (product instanceof InAppBillingProduct) {
-      packageName = ((InAppBillingProduct) product).getPackageName();
+    if (product instanceof InAppProduct) {
+      packageName = ((InAppProduct) product).getPackageName();
     } else {
       packageName = aptoidePackageName;
     }

@@ -41,7 +41,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingSerializer;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
@@ -71,25 +70,11 @@ import cm.aptoide.pt.v8engine.account.SocialAccountFactory;
 import cm.aptoide.pt.v8engine.account.StoreAuthBodyInterceptor;
 import cm.aptoide.pt.v8engine.account.StoreMultipartBodyInterceptor;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.crashreports.ConsoleLogger;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.crashreports.CrashlyticsCrashLogger;
-import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
-import cm.aptoide.pt.v8engine.download.DownloadAnalytics;
-import cm.aptoide.pt.v8engine.download.DownloadMirrorEventInterceptor;
-import cm.aptoide.pt.v8engine.download.PaidAppsDownloadInterceptor;
-import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
-import cm.aptoide.pt.v8engine.filemanager.FileManager;
-import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.leak.LeakTool;
-import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
-import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
-import cm.aptoide.pt.v8engine.networking.IdsRepository;
-import cm.aptoide.pt.v8engine.networking.UserAgentInterceptor;
 import cm.aptoide.pt.v8engine.billing.AccountPayer;
 import cm.aptoide.pt.v8engine.billing.AptoideBilling;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
+import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingSerializer;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingProductRepository;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.billing.repository.InAppPaymentConfirmationRepository;
@@ -105,6 +90,21 @@ import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.PurchaseFactory;
 import cm.aptoide.pt.v8engine.billing.repository.sync.PaymentSyncScheduler;
 import cm.aptoide.pt.v8engine.billing.repository.sync.ProductBundleMapper;
+import cm.aptoide.pt.v8engine.crashreports.ConsoleLogger;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.crashreports.CrashlyticsCrashLogger;
+import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
+import cm.aptoide.pt.v8engine.download.DownloadAnalytics;
+import cm.aptoide.pt.v8engine.download.DownloadMirrorEventInterceptor;
+import cm.aptoide.pt.v8engine.download.PaidAppsDownloadInterceptor;
+import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
+import cm.aptoide.pt.v8engine.filemanager.FileManager;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.leak.LeakTool;
+import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
+import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
+import cm.aptoide.pt.v8engine.networking.IdsRepository;
+import cm.aptoide.pt.v8engine.networking.UserAgentInterceptor;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -529,7 +529,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
               confirmationFactory, getAccountManager(), getBaseBodyInterceptorV3(),
               WebService.getDefaultConverter(), getDefaultClient(), getAccountPayer()));
 
-      final PurchaseFactory purchaseFactory = new PurchaseFactory(getInAppBillingSerializer());
+      final PurchaseFactory purchaseFactory =
+          new PurchaseFactory(getInAppBillingSerializer(), getInAppBillingRepository());
 
       final PaymentFactory paymentFactory =
           new PaymentFactory(paymentRepositoryFactory, paymentAuthorizationRepository,

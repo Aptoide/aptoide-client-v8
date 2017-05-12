@@ -7,22 +7,18 @@ package cm.aptoide.pt.v8engine.billing.view;
 
 import android.content.Intent;
 import cm.aptoide.pt.v8engine.billing.inapp.BillingBinder;
-import cm.aptoide.pt.v8engine.billing.inapp.ErrorCodeFactory;
 import cm.aptoide.pt.v8engine.billing.Purchase;
 import java.io.IOException;
 
-/**
- * Created by marcelobenites on 8/26/16.
- */
-public class PurchaseIntentFactory {
+public class PurchaseIntentConverter {
 
   private final ErrorCodeFactory codeFactory;
 
-  public PurchaseIntentFactory(ErrorCodeFactory codeFactory) {
+  public PurchaseIntentConverter(ErrorCodeFactory codeFactory) {
     this.codeFactory = codeFactory;
   }
 
-  public Intent create(Purchase purchase) {
+  public Intent convert(Purchase purchase) {
     Intent intent;
 
     try {
@@ -34,16 +30,16 @@ public class PurchaseIntentFactory {
         intent.putExtra(BillingBinder.INAPP_DATA_SIGNATURE, purchase.getSignature());
       }
     } catch (IOException e) {
-      intent = create(e);
+      intent = convert(e);
     }
     return intent;
   }
 
-  public Intent create(Throwable throwable) {
+  public Intent convert(Throwable throwable) {
     return new Intent().putExtra(BillingBinder.RESPONSE_CODE, codeFactory.create(throwable));
   }
 
-  public Intent createFromCancellation() {
+  public Intent convertCancellation() {
     return new Intent().putExtra(BillingBinder.RESPONSE_CODE, BillingBinder.RESULT_USER_CANCELLED);
   }
 }

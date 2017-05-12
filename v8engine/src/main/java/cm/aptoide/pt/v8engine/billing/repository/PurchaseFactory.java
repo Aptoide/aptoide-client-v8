@@ -5,44 +5,29 @@
 
 package cm.aptoide.pt.v8engine.billing.repository;
 
-import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingSerializer;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.v8engine.billing.Purchase;
-import java.io.IOException;
+import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingSerializer;
+import cm.aptoide.pt.v8engine.billing.purchase.InAppPurchase;
+import cm.aptoide.pt.v8engine.billing.purchase.PaidAppPurchase;
 
 public class PurchaseFactory {
 
   private final InAppBillingSerializer serializer;
+  private final InAppBillingRepository repository;
 
-  public PurchaseFactory(InAppBillingSerializer serializer) {
+  public PurchaseFactory(InAppBillingSerializer serializer, InAppBillingRepository repository) {
     this.serializer = serializer;
+    this.repository = repository;
   }
 
   public Purchase create(InAppBillingPurchasesResponse.InAppBillingPurchase purchase,
-      String purchaseSignature) {
-    return new Purchase() {
-
-      @Override public String getData() throws IOException {
-        return serializer.serializePurchase(purchase);
-      }
-
-      @Override public String getSignature() {
-        return purchaseSignature;
-      }
-    };
+      String purchaseSignature, int apiVersion) {
+    return new InAppPurchase(purchase, purchaseSignature, serializer, repository, apiVersion);
   }
 
   public Purchase create(PaidApp app) {
-    return new Purchase() {
-
-      @Override public String getData() {
-        return app.getPath().getStringPath();
-      }
-
-      @Override public String getSignature() {
-        return null;
-      }
-    };
+    return new PaidAppPurchase(app.getPath().getStringPath());
   }
 }

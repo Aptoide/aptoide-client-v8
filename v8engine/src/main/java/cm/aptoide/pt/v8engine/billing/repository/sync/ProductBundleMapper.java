@@ -8,8 +8,8 @@ package cm.aptoide.pt.v8engine.billing.repository.sync;
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.billing.Price;
 import cm.aptoide.pt.v8engine.billing.Product;
-import cm.aptoide.pt.v8engine.billing.products.InAppBillingProduct;
-import cm.aptoide.pt.v8engine.billing.products.PaidAppProduct;
+import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
+import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
 
 public class ProductBundleMapper {
 
@@ -76,7 +76,7 @@ public class ProductBundleMapper {
           && packageName != null
           && type != null
           && apiVersion != -1) {
-        return new InAppBillingProduct(id, icon, title, description, apiVersion, sku, packageName,
+        return new InAppProduct(id, icon, title, description, apiVersion, sku, packageName,
             developerPayload, type, price);
       }
       if (id != -1 && storeName != null) {
@@ -97,12 +97,12 @@ public class ProductBundleMapper {
     bundle.putString(CURRENCY, product.getPrice().getCurrency());
     bundle.putString(CURRENCY_SYMBOL, product.getPrice().getCurrencySymbol());
 
-    if (product instanceof InAppBillingProduct) {
-      bundle.putString(DEVELOPER_PAYLOAD, ((InAppBillingProduct) product).getDeveloperPayload());
-      bundle.putString(SKU, ((InAppBillingProduct) product).getSku());
-      bundle.putString(PACKAGE_NAME, ((InAppBillingProduct) product).getPackageName());
-      bundle.putString(TYPE, ((InAppBillingProduct) product).getType());
-      bundle.putInt(API_VERSION, ((InAppBillingProduct) product).getApiVersion());
+    if (product instanceof InAppProduct) {
+      bundle.putString(DEVELOPER_PAYLOAD, ((InAppProduct) product).getDeveloperPayload());
+      bundle.putString(SKU, ((InAppProduct) product).getSku());
+      bundle.putString(PACKAGE_NAME, ((InAppProduct) product).getPackageName());
+      bundle.putString(TYPE, ((InAppProduct) product).getType());
+      bundle.putInt(API_VERSION, ((InAppProduct) product).getApiVersion());
     }
 
     if (product instanceof PaidAppProduct) {

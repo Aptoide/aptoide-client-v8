@@ -3,11 +3,11 @@
  * Modified by Marcelo Benites on 16/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.billing.products;
+package cm.aptoide.pt.v8engine.billing.product;
 
 import cm.aptoide.pt.v8engine.billing.Price;
 
-public class InAppBillingProduct extends AbstractProduct {
+public class InAppProduct extends AbstractProduct {
 
   private final int apiVersion;
   private final String sku;
@@ -15,7 +15,7 @@ public class InAppBillingProduct extends AbstractProduct {
   private final String developerPayload;
   private final String type;
 
-  public InAppBillingProduct(int id, String icon, String title, String description, int apiVersion,
+  public InAppProduct(int id, String icon, String title, String description, int apiVersion,
       String sku, String packageName, String developerPayload, String type, Price price) {
     super(id, icon, title, description, price);
     this.apiVersion = apiVersion;

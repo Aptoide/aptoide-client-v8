@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 16/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.billing.products;
+package cm.aptoide.pt.v8engine.billing.product;
 
 import cm.aptoide.pt.v8engine.billing.Price;
 

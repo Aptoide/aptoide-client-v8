@@ -7,9 +7,11 @@ package cm.aptoide.pt.v8engine.billing;
 
 import android.content.Context;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
+import cm.aptoide.pt.v8engine.billing.inapp.BillingBinder;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
@@ -33,6 +35,13 @@ public class AptoideBilling {
       String type, String developerPayload) {
     return productRepositoryFactory.getInAppProductRepository()
         .getProduct(apiVersion, packageName, sku, type, developerPayload);
+  }
+
+  public Completable consumeInAppPurchase(int apiVersion, String packageName,
+      String purchaseToken) {
+    return productRepositoryFactory.getInAppProductRepository()
+        .getPurchase(apiVersion, packageName, purchaseToken, BillingBinder.ITEM_TYPE_INAPP)
+        .flatMapCompletable(purchase -> purchase.consume());
   }
 
   public Single<List<Payment>> getPayments(Context context, Product product) {

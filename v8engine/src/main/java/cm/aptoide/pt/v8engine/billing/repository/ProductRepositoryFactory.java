@@ -1,8 +1,8 @@
 package cm.aptoide.pt.v8engine.billing.repository;
 
 import cm.aptoide.pt.v8engine.billing.Product;
-import cm.aptoide.pt.v8engine.billing.products.InAppBillingProduct;
-import cm.aptoide.pt.v8engine.billing.products.PaidAppProduct;
+import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
+import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
 
 public class ProductRepositoryFactory {
 
@@ -28,7 +28,7 @@ public class ProductRepositoryFactory {
       return getPaidAppProductRepository();
     }
 
-    if (product instanceof InAppBillingProduct) {
+    if (product instanceof InAppProduct) {
       return getInAppProductRepository();
     }
 

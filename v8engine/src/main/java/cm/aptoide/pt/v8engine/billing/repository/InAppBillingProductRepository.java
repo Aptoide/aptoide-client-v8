@@ -12,7 +12,7 @@ import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Payment;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Purchase;
-import cm.aptoide.pt.v8engine.billing.products.InAppBillingProduct;
+import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
 import rx.Observable;
@@ -48,19 +48,28 @@ public class InAppBillingProductRepository extends ProductRepository {
 
   @Override public Single<Purchase> getPurchase(Product product) {
     return inAppBillingRepository.getInAppPurchaseInformation(
-        ((InAppBillingProduct) product).getApiVersion(),
-        ((InAppBillingProduct) product).getPackageName(), ((InAppBillingProduct) product).getType())
-        .flatMap(purchaseInformation -> convertToPurchase(purchaseInformation,
-            ((InAppBillingProduct) product)))
+        ((InAppProduct) product).getApiVersion(), ((InAppProduct) product).getPackageName(),
+        ((InAppProduct) product).getType())
+        .flatMap(
+            purchaseInformation -> convertToPurchase(purchaseInformation, ((InAppProduct) product)))
         .toSingle()
         .subscribeOn(Schedulers.io());
   }
 
   @Override public Single<List<Payment>> getPayments(Context context, Product product) {
-    return getServerInAppBillingPaymentServices(((InAppBillingProduct) product).getApiVersion(),
-        ((InAppBillingProduct) product).getPackageName(), ((InAppBillingProduct) product).getSku(),
-        ((InAppBillingProduct) product).getType()).flatMap(
+    return getServerInAppBillingPaymentServices(((InAppProduct) product).getApiVersion(),
+        ((InAppProduct) product).getPackageName(), ((InAppProduct) product).getSku(),
+        ((InAppProduct) product).getType()).flatMap(
         payments -> convertResponseToPayment(context, payments));
+  }
+
+  public Single<Purchase> getPurchase(int apiVersion, String packageName, String purchaseToken,
+      String type) {
+    return inAppBillingRepository.getInAppPurchaseInformation(apiVersion, packageName, type)
+        .flatMap(purchaseInformation -> convertToPurchase(purchaseInformation, purchaseToken,
+            apiVersion))
+        .toSingle()
+        .subscribeOn(Schedulers.io());
   }
 
   private Single<List<PaymentServiceResponse>> getServerInAppBillingPaymentServices(int apiVersion,
@@ -70,17 +79,34 @@ public class InAppBillingProductRepository extends ProductRepository {
   }
 
   private Observable<Purchase> convertToPurchase(
-      InAppBillingPurchasesResponse.PurchaseInformation purchaseInformation, InAppBillingProduct product) {
+      InAppBillingPurchasesResponse.PurchaseInformation purchaseInformation, InAppProduct product) {
     return Observable.zip(Observable.from(purchaseInformation.getPurchaseList()),
         Observable.from(purchaseInformation.getSignatureList()), (purchase, signature) -> {
-          if (purchase.getProductId().equals(product.getSku()) && purchase.getPurchaseState() == 0) {
-            return purchaseFactory.create(purchase, signature);
+          if (purchase.getProductId().equals(product.getSku())
+              && purchase.getPurchaseState() == 0) {
+            return purchaseFactory.create(purchase, signature, product.getApiVersion());
           }
           return null;
         })
         .filter(purchase -> purchase != null)
         .switchIfEmpty(Observable.error(
             new RepositoryItemNotFoundException("No purchase found for SKU " + product)))
+        .first();
+  }
+
+  private Observable<Purchase> convertToPurchase(
+      InAppBillingPurchasesResponse.PurchaseInformation purchaseInformation, String purchaseToken,
+      int apiVersion) {
+    return Observable.zip(Observable.from(purchaseInformation.getPurchaseList()),
+        Observable.from(purchaseInformation.getSignatureList()), (purchase, signature) -> {
+          if (purchase.getPurchaseToken().equals(purchaseToken)) {
+            return purchaseFactory.create(purchase, signature, apiVersion);
+          }
+          return null;
+        })
+        .filter(purchase -> purchase != null)
+        .switchIfEmpty(Observable.error(
+            new RepositoryItemNotFoundException("No purchase found for token" + purchaseToken)))
         .first();
   }
 }
