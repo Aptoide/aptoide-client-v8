@@ -107,6 +107,7 @@ public abstract class BaseLoaderFragment extends UIComponentFragment implements 
     if (loaderLayoutHandler != null) {
       loaderLayoutHandler.finishLoading(throwable);
     }
-    CrashReport.getInstance().log(throwable);
+    CrashReport.getInstance()
+        .log(throwable);
   }
 }

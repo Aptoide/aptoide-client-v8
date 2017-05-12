@@ -38,8 +38,8 @@ import rx.Observable;
 
     final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
 
-    return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets").get(), body,
-        bodyInterceptor, httpClient, converterFactory);
+    return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets")
+        .get(), body, bodyInterceptor, httpClient, converterFactory);
   }
 
   @Override protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces,

@@ -49,7 +49,8 @@ public class L2CacheUnitTest {
     responseBuilder.addHeader("Content-Type", "application/json");
     responseBuilder.addHeader("Cache-Control", "max-age=1800, public");
     responseBuilder.addHeader("Content-Length", Integer.toString(responseData.getBytes().length));
-    responseBuilder.request(request.newBuilder().build());
+    responseBuilder.request(request.newBuilder()
+        .build());
     responseBuilder.protocol(Protocol.HTTP_1_1);
     responseBuilder.body(ResponseBody.create(MediaType.parse("application/json"), responseData));
 
@@ -62,10 +63,14 @@ public class L2CacheUnitTest {
 
     Charset charset = Charset.forName("UTF-8");
     try {
-      assertEquals("stored response body after put() is not the same",
-          response.body().source().readString(charset), resp1.body().source().readString(charset));
+      assertEquals("stored response body after put() is not the same", response.body()
+          .source()
+          .readString(charset), resp1.body()
+          .source()
+          .readString(charset));
     } catch (Exception e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
       fail();
     }
   }
@@ -74,24 +79,30 @@ public class L2CacheUnitTest {
     cache.put(request, response);
     Response cachedResponse = cache.get(request);
 
-    String expectedResponseBodyData =
-        cachedResponse.body().source().readString(Charset.forName("UTF-8"));
+    String expectedResponseBodyData = cachedResponse.body()
+        .source()
+        .readString(Charset.forName("UTF-8"));
     try {
       Response resp2 = cache.get(request);
       assertNotNull(resp2);
 
-      String currentData = resp2.body().source().readString(Charset.forName("UTF-8"));
+      String currentData = resp2.body()
+          .source()
+          .readString(Charset.forName("UTF-8"));
 
       assertEquals("response body content after get() is not the same", expectedResponseBodyData,
           currentData);
     } catch (Exception e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
       fail();
     }
   }
 
   @Test(timeout = 300) public void cacheControlInvalidatedResponse() throws InterruptedException {
-    Response response2 = response.newBuilder().header("Cache-Control", "max-age=0").build();
+    Response response2 = response.newBuilder()
+        .header("Cache-Control", "max-age=0")
+        .build();
 
     cache.put(request, response2);
 

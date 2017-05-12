@@ -58,10 +58,13 @@ public class IdsRepository {
 
     // if android id is null or empty use random generated UUID
     if (TextUtils.isEmpty(aptoideId)) {
-      aptoideId = UUID.randomUUID().toString();
+      aptoideId = UUID.randomUUID()
+          .toString();
     }
 
-    sharedPreferences.edit().putString(APTOIDE_CLIENT_UUID, aptoideId).apply();
+    sharedPreferences.edit()
+        .putString(APTOIDE_CLIENT_UUID, aptoideId)
+        .apply();
     return aptoideId;
   }
 
@@ -78,14 +81,20 @@ public class IdsRepository {
 
     if (DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context)) {
       try {
-        googleAdvertisingId = AdvertisingIdClient.getAdvertisingIdInfo(context).getId();
+        googleAdvertisingId = AdvertisingIdClient.getAdvertisingIdInfo(context)
+            .getId();
       } catch (Exception e) {
-        CrashReport.getInstance().log(e);
+        CrashReport.getInstance()
+            .log(e);
       }
     }
 
-    sharedPreferences.edit().putString(GOOGLE_ADVERTISING_ID_CLIENT, googleAdvertisingId).apply();
-    sharedPreferences.edit().putBoolean(GOOGLE_ADVERTISING_ID_CLIENT_SET, true).apply();
+    sharedPreferences.edit()
+        .putString(GOOGLE_ADVERTISING_ID_CLIENT, googleAdvertisingId)
+        .apply();
+    sharedPreferences.edit()
+        .putBoolean(GOOGLE_ADVERTISING_ID_CLIENT_SET, true)
+        .apply();
 
     return googleAdvertisingId;
   }
@@ -105,7 +114,9 @@ public class IdsRepository {
     }
 
     // save the generated advertising id for this user and return it
-    sharedPreferences.edit().putString(ADVERTISING_ID_CLIENT, advertisingId).apply();
+    sharedPreferences.edit()
+        .putString(ADVERTISING_ID_CLIENT, advertisingId)
+        .apply();
     return advertisingId;
   }
 
@@ -121,7 +132,9 @@ public class IdsRepository {
       throw new RuntimeException("Android ID already set!");
     }
 
-    sharedPreferences.edit().putString(ANDROID_ID_CLIENT, androidId).apply();
+    sharedPreferences.edit()
+        .putString(ANDROID_ID_CLIENT, androidId)
+        .apply();
     return androidId;
   }
 
@@ -130,12 +143,14 @@ public class IdsRepository {
     String androidId = this.androidId;
 
     if (androidId == null) {
-      androidId = UUID.randomUUID().toString();
+      androidId = UUID.randomUUID()
+          .toString();
     }
 
     SecureRandom secureRandom = new SecureRandom();
     secureRandom.setSeed(androidId.hashCode());
     secureRandom.nextBytes(data);
-    return UUID.nameUUIDFromBytes(data).toString();
+    return UUID.nameUUIDFromBytes(data)
+        .toString();
   }
 }

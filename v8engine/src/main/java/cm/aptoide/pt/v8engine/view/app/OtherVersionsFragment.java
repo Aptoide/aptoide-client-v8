@@ -193,13 +193,13 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
     // ctor
     ViewHeader(@NonNull View view) {
-      composedTitle1 = new SpannableString(
-          view.getResources().getString(R.string.other_versions_partial_title_1));
+      composedTitle1 = new SpannableString(view.getResources()
+          .getString(R.string.other_versions_partial_title_1));
       this.view = view;
       composedTitle1.setSpan(new StyleSpan(Typeface.ITALIC), 0, composedTitle1.length(), 0);
 
-      composedTitle2 = new SpannableString(
-          view.getResources().getString(R.string.other_versions_partial_title_2));
+      composedTitle2 = new SpannableString(view.getResources()
+          .getString(R.string.other_versions_partial_title_2));
       composedTitle2.setSpan(new StyleSpan(Typeface.ITALIC), 0, composedTitle2.length(), 0);
 
       animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus();
@@ -215,7 +215,9 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
           switch (state) {
             case EXPANDED: {
               if (animationsEnabled) {
-                appIcon.animate().alpha(1F).start();
+                appIcon.animate()
+                    .alpha(1F)
+                    .start();
               } else {
                 appIcon.setVisibility(View.VISIBLE);
               }
@@ -226,7 +228,9 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
             case IDLE:
             case COLLAPSED: {
               if (animationsEnabled) {
-                appIcon.animate().alpha(0F).start();
+                appIcon.animate()
+                    .alpha(0F)
+                    .start();
               } else {
                 appIcon.setVisibility(View.INVISIBLE);
               }
@@ -239,7 +243,8 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     }
 
     private void setImage(String imgUrl) {
-      ImageLoader.with(view.getContext()).load(imgUrl, appIcon);
+      ImageLoader.with(view.getContext())
+          .load(imgUrl, appIcon);
     }
   }
 

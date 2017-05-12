@@ -21,7 +21,8 @@ import lombok.EqualsAndHashCode;
   public boolean isPaid() {
     return (payment != null
         && payment.getAmount() != null
-        && payment.getAmount().floatValue() > 0.0f);
+        && payment.getAmount()
+        .floatValue() > 0.0f);
   }
 
   @Data public static class Payment {

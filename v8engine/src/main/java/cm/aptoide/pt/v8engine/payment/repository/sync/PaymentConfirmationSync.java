@@ -106,10 +106,13 @@ public class PaymentConfirmationSync extends RepositorySync {
       }
       serverPaymentConfirmation.doOnSuccess(
           paymentConfirmation -> saveAndReschedulePendingConfirmation(paymentConfirmation,
-              syncResult, payerId)).onErrorReturn(throwable -> {
-        saveAndRescheduleOnNetworkError(syncResult, throwable, payerId);
-        return null;
-      }).toBlocking().value();
+              syncResult, payerId))
+          .onErrorReturn(throwable -> {
+            saveAndRescheduleOnNetworkError(syncResult, throwable, payerId);
+            return null;
+          })
+          .toBlocking()
+          .value();
     } catch (RuntimeException e) {
       rescheduleSync(syncResult);
     }
@@ -117,46 +120,55 @@ public class PaymentConfirmationSync extends RepositorySync {
 
   private Completable createServerPaymentConfirmation(Product product, String paymentConfirmationId,
       int paymentId, String accessToken) {
-    return Single.just(product instanceof InAppBillingProduct).flatMap(isInAppBilling -> {
-      if (isInAppBilling) {
-        return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId, operatorManager,
-            ((InAppBillingProduct) product).getDeveloperPayload(), accessToken,
-            paymentConfirmationId, bodyInterceptorV3, httpClient, converterFactory)
-            .observe()
-            .toSingle();
-      }
-      return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId, operatorManager,
-          ((PaidAppProduct) product).getStoreName(), accessToken, paymentConfirmationId,
-          bodyInterceptorV3, httpClient, converterFactory).observe().toSingle();
-    }).flatMapCompletable(response -> {
-      if (response != null && response.isOk()) {
-        return Completable.complete();
-      }
-      return Completable.error(
-          new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-    });
+    return Single.just(product instanceof InAppBillingProduct)
+        .flatMap(isInAppBilling -> {
+          if (isInAppBilling) {
+            return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId,
+                operatorManager, ((InAppBillingProduct) product).getDeveloperPayload(), accessToken,
+                paymentConfirmationId, bodyInterceptorV3, httpClient, converterFactory)
+                .observe()
+                .toSingle();
+          }
+          return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId,
+              operatorManager, ((PaidAppProduct) product).getStoreName(), accessToken,
+              paymentConfirmationId, bodyInterceptorV3, httpClient, converterFactory)
+              .observe()
+              .toSingle();
+        })
+        .flatMapCompletable(response -> {
+          if (response != null && response.isOk()) {
+            return Completable.complete();
+          }
+          return Completable.error(
+              new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+        });
   }
 
   private Single<PaymentConfirmation> getServerPaymentConfirmation(Product product, String payerId,
       String accessToken) {
-    return Single.just(product instanceof InAppBillingProduct).flatMap(isInAppBilling -> {
-      if (isInAppBilling) {
-        return GetPaymentConfirmationRequest.of(product.getId(), operatorManager,
-            ((InAppBillingProduct) product).getApiVersion(), accessToken, bodyInterceptorV3,
-            httpClient, converterFactory)
-            .observe()
-            .cast(PaymentConfirmationResponse.class)
-            .toSingle();
-      }
-      return GetPaymentConfirmationRequest.of(product.getId(), operatorManager, accessToken,
-          bodyInterceptorV3, httpClient, converterFactory).observe().toSingle();
-    }).flatMap(response -> {
-      if (response != null && response.isOk()) {
-        return Single.just(
-            confirmationFactory.convertToPaymentConfirmation(product.getId(), response, payerId));
-      }
-      return Single.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
-    });
+    return Single.just(product instanceof InAppBillingProduct)
+        .flatMap(isInAppBilling -> {
+          if (isInAppBilling) {
+            return GetPaymentConfirmationRequest.of(product.getId(), operatorManager,
+                ((InAppBillingProduct) product).getApiVersion(), accessToken, bodyInterceptorV3,
+                httpClient, converterFactory)
+                .observe()
+                .cast(PaymentConfirmationResponse.class)
+                .toSingle();
+          }
+          return GetPaymentConfirmationRequest.of(product.getId(), operatorManager, accessToken,
+              bodyInterceptorV3, httpClient, converterFactory)
+              .observe()
+              .toSingle();
+        })
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            return Single.just(
+                confirmationFactory.convertToPaymentConfirmation(product.getId(), response,
+                    payerId));
+          }
+          return Single.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
+        });
   }
 
   private void saveAndReschedulePendingConfirmation(PaymentConfirmation paymentConfirmation,

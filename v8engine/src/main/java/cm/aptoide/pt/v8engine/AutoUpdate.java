@@ -31,15 +31,16 @@ import org.xml.sax.ext.DefaultHandler2;
 public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo> {
 
   private static final String TAG = AutoUpdate.class.getSimpleName();
-  private final String url = Application.getConfiguration().getAutoUpdateUrl();
+  private final String url = Application.getConfiguration()
+      .getAutoUpdateUrl();
   private BaseActivity activity;
   private DownloadFactory downloadFactory;
   private ProgressDialog dialog;
   private PermissionManager permissionManager;
   private InstallManager installManager;
 
-  public AutoUpdate(BaseActivity activity, DownloadFactory downloadFactory, PermissionManager permissionManager,
-      InstallManager installManager) {
+  public AutoUpdate(BaseActivity activity, DownloadFactory downloadFactory,
+      PermissionManager permissionManager, InstallManager installManager) {
     this.activity = activity;
     this.permissionManager = permissionManager;
     this.downloadFactory = downloadFactory;
@@ -51,7 +52,8 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
     HttpURLConnection connection = null;
 
     try {
-      SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+      SAXParser parser = SAXParserFactory.newInstance()
+          .newSAXParser();
       AutoUpdateHandler autoUpdateHandler = new AutoUpdateHandler();
 
       Logger.d("TAG", "Requesting auto-update from " + url);
@@ -70,8 +72,8 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
         int minsdk = autoUpdateInfo.minsdk;
         int minvercode = autoUpdateInfo.minAptoideVercode;
         try {
-          int localVersionCode =
-              activity.getPackageManager().getPackageInfo(packageName, 0).versionCode;
+          int localVersionCode = activity.getPackageManager()
+              .getPackageInfo(packageName, 0).versionCode;
           // FIXME: 7/15/16 trinkes check what is the isAlwaysUpdate()
           if (vercode > localVersionCode
               && localVersionCode > minvercode
@@ -80,22 +82,27 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
             return autoUpdateInfo;
           }
         } catch (PackageManager.NameNotFoundException e) {
-          CrashReport.getInstance().log(e);
+          CrashReport.getInstance()
+              .log(e);
           e.printStackTrace();
         }
       }
     } catch (ParserConfigurationException e) {
       e.printStackTrace();
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     } catch (SAXException e) {
       e.printStackTrace();
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     } catch (MalformedURLException e) {
       e.printStackTrace();
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     } catch (IOException e) {
       e.printStackTrace();
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     } finally {
       if (connection != null) {
         connection.disconnect();
@@ -116,13 +123,16 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
     V8Engine.setAutoUpdateWasCalled(true);
 
     ContextThemeWrapper wrapper = new ContextThemeWrapper(activity,
-        activity.obtainStyledAttributes(new int[] { R.attr.alertDialog }).getResourceId(0, 0));
+        activity.obtainStyledAttributes(new int[] { R.attr.alertDialog })
+            .getResourceId(0, 0));
     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(wrapper);
     final AlertDialog updateSelfDialog = dialogBuilder.create();
     updateSelfDialog.setTitle(activity.getText(R.string.update_self_title));
-    updateSelfDialog.setIcon(Application.getConfiguration().getIcon());
+    updateSelfDialog.setIcon(Application.getConfiguration()
+        .getIcon());
     updateSelfDialog.setMessage(AptoideUtils.StringU.getFormattedString(R.string.update_self_msg,
-        Application.getConfiguration().getMarketName()));
+        Application.getConfiguration()
+            .getMarketName()));
     updateSelfDialog.setCancelable(false);
     updateSelfDialog.setButton(DialogInterface.BUTTON_POSITIVE,
         activity.getString(android.R.string.yes), (arg0, arg1) -> {
@@ -144,7 +154,8 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
                 }
                 dismissDialog();
               }, throwable -> {
-                CrashReport.getInstance().log(throwable);
+                CrashReport.getInstance()
+                    .log(throwable);
                 dismissDialog();
               });
 
@@ -161,10 +172,14 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
   }
 
   private boolean isDownloading(Progress<Download> progress) {
-    return progress.getRequest().getOverallDownloadStatus() == Download.PROGRESS
-        || progress.getRequest().getOverallDownloadStatus() == Download.PENDING
-        || progress.getRequest().getOverallDownloadStatus() == Download.INVALID_STATUS
-        || progress.getRequest().getOverallDownloadStatus() == Download.IN_QUEUE;
+    return progress.getRequest()
+        .getOverallDownloadStatus() == Download.PROGRESS
+        || progress.getRequest()
+        .getOverallDownloadStatus() == Download.PENDING
+        || progress.getRequest()
+        .getOverallDownloadStatus() == Download.INVALID_STATUS
+        || progress.getRequest()
+        .getOverallDownloadStatus() == Download.IN_QUEUE;
   }
 
   private void dismissDialog() {

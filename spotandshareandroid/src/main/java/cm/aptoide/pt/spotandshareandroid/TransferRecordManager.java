@@ -29,11 +29,16 @@ public class TransferRecordManager {
       List<HighwayTransferRecordItem> listOfApps) {
     List<HighwayTransferRecordItem> toRemoveList = new ArrayList<>();
     for (int i = 0; i < listOfApps.size(); i++) {
-      if (listOfApps.get(i).isSent() || listOfApps.get(i).isReceived()) {
-        listOfApps.get(i).setDeleted(true);
+      if (listOfApps.get(i)
+          .isSent() || listOfApps.get(i)
+          .isReceived()) {
+        listOfApps.get(i)
+            .setDeleted(true);
         toRemoveList.add(listOfApps.get(i));
-        if (listOfApps.get(i).isReceived()) {
-          String tmpFilePath = listOfApps.get(i).getFilePath();
+        if (listOfApps.get(i)
+            .isReceived()) {
+          String tmpFilePath = listOfApps.get(i)
+              .getFilePath();
           System.out.println("GOing to delete this filepath : " + tmpFilePath);
           applicationsManager.deleteAppFile(tmpFilePath);
         }

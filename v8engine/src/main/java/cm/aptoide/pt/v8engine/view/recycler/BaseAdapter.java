@@ -37,7 +37,8 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> implements Lifecyc
   }
 
   @Override public int getItemViewType(int position) {
-    return displayables.get(position).getViewLayout();
+    return displayables.get(position)
+        .getViewLayout();
   }
 
   @Override public long getItemId(int position) {

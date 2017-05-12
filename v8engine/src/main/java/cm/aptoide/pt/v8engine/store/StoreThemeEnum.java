@@ -200,7 +200,8 @@ public enum StoreThemeEnum {
   }
 
   public static StoreThemeEnum get(Store store) {
-    return get(store.getAppearance().getTheme());
+    return get(store.getAppearance()
+        .getTheme());
   }
 
   public static StoreThemeEnum get(String s) {
@@ -233,7 +234,9 @@ public enum StoreThemeEnum {
   }
 
   @ColorInt public int getStoreHeaderInt() {
-    return V8Engine.getContext().getResources().getColor(getStoreHeader());
+    return V8Engine.getContext()
+        .getResources()
+        .getColor(getStoreHeader());
   }
 
   /**
@@ -267,7 +270,9 @@ public enum StoreThemeEnum {
   }
 
   public Drawable getButtonLayoutDrawable() {
-    return V8Engine.getContext().getResources().getDrawable(getButtonLayout());
+    return V8Engine.getContext()
+        .getResources()
+        .getDrawable(getButtonLayout());
   }
 
   @DrawableRes public int getButtonLayout() {

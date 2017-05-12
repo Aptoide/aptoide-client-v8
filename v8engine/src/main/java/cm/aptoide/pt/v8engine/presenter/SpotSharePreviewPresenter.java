@@ -31,7 +31,8 @@ public class SpotSharePreviewPresenter implements Presenter {
             resumed -> startSelection().compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> CrashReport.getInstance().log(err));
+        }, err -> CrashReport.getInstance()
+            .log(err));
 
     if (showToolbar) {
       view.showToolbar(toolbarTitle);
@@ -47,14 +48,17 @@ public class SpotSharePreviewPresenter implements Presenter {
   }
 
   private Observable<Void> startSelection() {
-    return view.startSelection().observeOn(AndroidSchedulers.mainThread()).doOnNext(selection -> {
-      view.navigateToSpotShareView();
-      if (!showToolbar) {
-        analytics.clickShareApps(SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_TAB);
-      } else {
-        analytics.clickShareApps(SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_DRAWER);
-        view.finish();
-      }
-    });
+    return view.startSelection()
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(selection -> {
+          view.navigateToSpotShareView();
+          if (!showToolbar) {
+            analytics.clickShareApps(SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_TAB);
+          } else {
+            analytics.clickShareApps(
+                SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_DRAWER);
+            view.finish();
+          }
+        });
   }
 }

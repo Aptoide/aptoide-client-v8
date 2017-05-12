@@ -39,7 +39,8 @@ public class ApplicationsManager {
     if (installNotificationReceiver == null) {
       installNotificationReceiver = new BroadcastReceiver() {
         @Override public void onReceive(Context context, Intent intent) {
-          if (intent.getAction() != null && intent.getAction().equals("INSTALL_APP_NOTIFICATION")) {
+          if (intent.getAction() != null && intent.getAction()
+              .equals("INSTALL_APP_NOTIFICATION")) {
             String filePath = intent.getStringExtra("filePath");
             String packageName = intent.getStringExtra("packageName");
             //move obbs
@@ -144,7 +145,8 @@ public class ApplicationsManager {
         System.out.println("appName is : " + appName);
         for (int i = 0; i < list.length; i++) {
           System.out.println("List get name is : " + list[i].getName());
-          if (list[i].getName().equals(appName)) {
+          if (list[i].getName()
+              .equals(appName)) {
             hasObb = true;
             obbsFilePath = list[i].getAbsolutePath();
           }
@@ -172,8 +174,8 @@ public class ApplicationsManager {
       return tmp;
     } else {
       System.out.println("Inside the error part of the receiving app bigger version");
-      HighwayTransferRecordItem tmp = new HighwayTransferRecordItem(
-          context.getResources().getDrawable(R.drawable.sym_def_app_icon), appName, "ErrorPackName",
+      HighwayTransferRecordItem tmp = new HighwayTransferRecordItem(context.getResources()
+          .getDrawable(R.drawable.sym_def_app_icon), appName, "ErrorPackName",
           "Could not read the original filepath", true, "No version available");
       tmp.setFromOutside("inside");
       return tmp;
@@ -209,12 +211,14 @@ public class ApplicationsManager {
       if ((applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0
           && applicationInfo.packageName != null) {
 
-        if (applicationInfo.loadLabel(packageManager).toString().equals(nameOfTheApp)
-            && applicationInfo.packageName.equals(packageName)) {//compare with the packageName
+        if (applicationInfo.loadLabel(packageManager)
+            .toString()
+            .equals(nameOfTheApp) && applicationInfo.packageName.equals(
+            packageName)) {//compare with the packageName
           HighwayTransferRecordItem tmp =
               new HighwayTransferRecordItem(applicationInfo.loadIcon(packageManager),
-                  applicationInfo.loadLabel(packageManager).toString(), packageName,
-                  applicationInfo.sourceDir, false, pack.versionName);
+                  applicationInfo.loadLabel(packageManager)
+                      .toString(), packageName, applicationInfo.sourceDir, false, pack.versionName);
 
           tmp.setNeedReSend(needReSend);
           tmp.setSent(isSent);

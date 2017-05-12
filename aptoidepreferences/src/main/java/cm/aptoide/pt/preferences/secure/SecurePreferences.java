@@ -20,7 +20,8 @@ public class SecurePreferences {
   }
 
   public static boolean isFirstRun() {
-    return SecurePreferencesImplementation.getInstance().getBoolean(SecureKeys.FIRST_RUN, true);
+    return SecurePreferencesImplementation.getInstance()
+        .getBoolean(SecureKeys.FIRST_RUN, true);
   }
 
   public static void setFirstRun(boolean b) {

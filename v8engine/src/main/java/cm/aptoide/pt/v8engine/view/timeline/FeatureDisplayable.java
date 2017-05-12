@@ -51,17 +51,25 @@ public class FeatureDisplayable extends Displayable {
       SpannableFactory spannableFactory) {
     String appName = null;
     long appId = 0;
-    if (feature.getApps() != null && feature.getApps().size() > 0) {
-      appName = feature.getApps().get(0).getName();
-      appId = feature.getApps().get(0).getId();
+    if (feature.getApps() != null
+        && feature.getApps()
+        .size() > 0) {
+      appName = feature.getApps()
+          .get(0)
+          .getName();
+      appId = feature.getApps()
+          .get(0)
+          .getId();
     }
-    return new FeatureDisplayable(Application.getConfiguration().getIcon(),
-        R.string.fragment_social_timeline_aptoide_team, feature.getThumbnailUrl(), feature.getUrl(),
-        appName, feature.getTitle(), feature.getDate(), dateCalculator, spannableFactory);
+    return new FeatureDisplayable(Application.getConfiguration()
+        .getIcon(), R.string.fragment_social_timeline_aptoide_team, feature.getThumbnailUrl(),
+        feature.getUrl(), appName, feature.getTitle(), feature.getDate(), dateCalculator,
+        spannableFactory);
   }
 
   public int getMarginWidth(Context context, int orientation) {
-    if (!context.getResources().getBoolean(R.bool.is_this_a_tablet_device)) {
+    if (!context.getResources()
+        .getBoolean(R.bool.is_this_a_tablet_device)) {
       return 0;
     }
 

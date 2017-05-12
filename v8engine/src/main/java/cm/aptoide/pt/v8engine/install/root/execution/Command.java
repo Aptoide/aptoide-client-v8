@@ -296,8 +296,10 @@ public class Command {
     static final public int COMMAND_TERMINATED = 0x03;
 
     public final void handleMessage(Message msg) {
-      int action = msg.getData().getInt(ACTION);
-      String text = msg.getData().getString(TEXT);
+      int action = msg.getData()
+          .getInt(ACTION);
+      String text = msg.getData()
+          .getString(TEXT);
 
       switch (action) {
         case COMMAND_OUTPUT:

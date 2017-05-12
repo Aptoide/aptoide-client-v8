@@ -22,7 +22,8 @@ public class POSTCacheInterceptor implements Interceptor {
     final Request request = chain.request();
 
     // we only intercept and cache POST requests
-    if (!request.method().equalsIgnoreCase("POST")) {
+    if (!request.method()
+        .equalsIgnoreCase("POST")) {
       return chain.proceed(request);
     }
 

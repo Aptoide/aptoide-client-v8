@@ -36,7 +36,8 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
   private final List<Download> completedDownloads;
 
   public DownloadsAdapter(InstallEventConverter installConverter,
-      DownloadEventConverter downloadConverter, InstallManager installManager, Analytics analytics) {
+      DownloadEventConverter downloadConverter, InstallManager installManager,
+      Analytics analytics) {
     this.activeDownloads = new ArrayList<>();
     this.standByDownloads = new ArrayList<>();
     this.completedDownloads = new ArrayList<>();

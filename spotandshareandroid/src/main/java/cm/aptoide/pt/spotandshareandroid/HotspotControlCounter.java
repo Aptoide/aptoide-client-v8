@@ -67,6 +67,9 @@ public class HotspotControlCounter {
   }
 
   private void save() {
-    prefs.edit().putLong(TIMESTAMP, currentTimestamp).putInt(VALUE, currentControlCounter).apply();
+    prefs.edit()
+        .putLong(TIMESTAMP, currentTimestamp)
+        .putInt(VALUE, currentControlCounter)
+        .apply();
   }
 }

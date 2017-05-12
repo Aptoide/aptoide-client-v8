@@ -49,7 +49,7 @@ public class PaymentRepository {
             payments -> Observable.combineLatest(getAuthorizations(payments, payerId),
                 Observable.just(payments), (authorizations, paymentList) -> {
                   if (payments.isEmpty() || authorizations.isEmpty()) {
-                    return Observable.<List<Payment>> empty();
+                    return Observable.<List<Payment>>empty();
                   }
                   return getPaymentsWithAuthorizations(payments, authorizations, payerId);
                 }))
@@ -74,7 +74,8 @@ public class PaymentRepository {
                 authorizationFactory.create(payment.getId(), Authorization.Status.NONE, payerId);
           }
           return paymentFactory.create(payment, authorization, confirmationRepository);
-        }).toList();
+        })
+        .toList();
   }
 
   public Observable<Payment> getPayment(int paymentId, String payerId) {
@@ -95,6 +96,9 @@ public class PaymentRepository {
   }
 
   private Single<List<Integer>> getPaymentIds(List<PaymentServiceResponse> payments) {
-    return Observable.from(payments).map(payment -> payment.getId()).toList().toSingle();
+    return Observable.from(payments)
+        .map(payment -> payment.getId())
+        .toList()
+        .toSingle();
   }
 }

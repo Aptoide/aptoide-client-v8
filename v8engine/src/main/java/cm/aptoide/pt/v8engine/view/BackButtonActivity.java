@@ -28,7 +28,7 @@ public class BackButtonActivity extends ActivityView implements BackButton {
 
   @Override public void backClick() {
     boolean handled = false;
-    for (ClickHandler clickHandler: clickHandlers) {
+    for (ClickHandler clickHandler : clickHandlers) {
       if (clickHandler.handle()) {
         handled = true;
       }
