@@ -1649,7 +1649,8 @@ public class AptoideUtils {
 
     public void end() {
       long endTime = System.currentTimeMillis();
-      Logger.d(TAG, "Thread: " + Thread.currentThread()
+      Logger.d(TAG, "Thread: "
+          + Thread.currentThread()
           .getId()
           + " Method:"
           + methodName

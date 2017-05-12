@@ -287,135 +287,134 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
         }));
     mSubscriptions.add(RxView.clicks(mCreateStore)
         .subscribe(click -> {
-          AptoideUtils.SystemU.hideKeyboard(this);
-          storeName = mStoreName.getText()
-              .toString()
-              .trim()
-              .toLowerCase();
-          storeDescription = mStoreDescription.getText()
-              .toString()
-              .trim();
-          validateData();
-          progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
-              getApplicationContext().getString(R.string.please_wait_upload));
-          if (CREATE_STORE_REQUEST_CODE == 1
-              || CREATE_STORE_REQUEST_CODE == 2
-              || CREATE_STORE_REQUEST_CODE == 3) {
-            progressDialog.show();
-            mSubscriptions.add(
-                CheckUserCredentialsRequest.of(storeName, accountManager.getAccessToken(),
-                    bodyInterceptorV3, httpClient, converterFactory)
-                    .observe()
-                    .subscribe(answer -> {
-                      if (answer.hasErrors()) {
-                        if (answer.getErrors() != null
-                            && answer.getErrors()
-                            .size() > 0) {
-                          progressDialog.dismiss();
-                          if (answer.getErrors()
-                              .get(0).code.equals("WOP-2")) {
-                            mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
-                                getApplicationContext().getResources()
-                                    .getString(R.string.ws_error_WOP_2))
-                                .subscribe(__ -> {/*does nothing*/}, err -> {
-                                  CrashReport.getInstance()
-                                      .log(err);
-                                }));
-                          } else if (answer.getErrors()
-                              .get(0).code.equals("WOP-3")) {
-                            ShowMessage.asSnack(this,
-                                ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors()
-                                    .get(0).code));
+              AptoideUtils.SystemU.hideKeyboard(this);
+              storeName = mStoreName.getText()
+                  .toString()
+                  .trim()
+                  .toLowerCase();
+              storeDescription = mStoreDescription.getText()
+                  .toString()
+                  .trim();
+              validateData();
+              progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+                  getApplicationContext().getString(R.string.please_wait_upload));
+              if (CREATE_STORE_REQUEST_CODE == 1
+                  || CREATE_STORE_REQUEST_CODE == 2
+                  || CREATE_STORE_REQUEST_CODE == 3) {
+                progressDialog.show();
+                mSubscriptions.add(
+                    CheckUserCredentialsRequest.of(storeName, accountManager.getAccessToken(),
+                        bodyInterceptorV3, httpClient, converterFactory)
+                        .observe()
+                        .subscribe(answer -> {
+                          if (answer.hasErrors()) {
+                            if (answer.getErrors() != null
+                                && answer.getErrors()
+                                .size() > 0) {
+                              progressDialog.dismiss();
+                              if (answer.getErrors()
+                                  .get(0).code.equals("WOP-2")) {
+                                mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
+                                    getApplicationContext().getResources()
+                                        .getString(R.string.ws_error_WOP_2))
+                                    .subscribe(__ -> {/*does nothing*/}, err -> {
+                                      CrashReport.getInstance()
+                                          .log(err);
+                                    }));
+                              } else if (answer.getErrors()
+                                  .get(0).code.equals("WOP-3")) {
+                                ShowMessage.asSnack(this,
+                                    ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors()
+                                        .get(0).code));
+                              } else {
+                                ShowMessage.asObservableSnack(this,
+                                    ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors()
+                                        .get(0).code))
+                                    .subscribe(visibility -> {
+                                      if (visibility == ShowMessage.DISMISSED) {
+                                        goToMainActivity();
+                                      }
+                                    });
+                              }
+                            }
+                          } else if (!(CREATE_STORE_REQUEST_CODE == 3)) {
+                            onCreateSuccess(progressDialog);
                           } else {
-                            ShowMessage.asObservableSnack(this,
-                                ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors()
-                                    .get(0).code))
-                                .subscribe(visibility -> {
-                                  if (visibility == ShowMessage.DISMISSED) {
-                                    goToMainActivity();
-                                  }
-                                });
-                          }
-                        }
-                      } else if (!(CREATE_STORE_REQUEST_CODE == 3)) {
-                        onCreateSuccess(progressDialog);
-                          } else {
-                        progressDialog.dismiss();
-                        ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created)
+                            progressDialog.dismiss();
+                            ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created)
                                 .subscribe(visibility -> {
                                   mSubscriptions.add(accountManager.syncCurrentAccount()
                                       .subscribe(() -> {
                                       }, err -> err.printStackTrace()));
                                   if (visibility == ShowMessage.DISMISSED) {
-                                    Analytics.Account.createStore(
-                                        !TextUtils.isEmpty(storeAvatarPath),
+                                    Analytics.Account.createStore(!TextUtils.isEmpty(storeAvatarPath),
                                         Analytics.Account.CreateStoreAction.CREATE);
                                     goToMainActivity();
                                   }
                                 });
                           }
-                    }, throwable -> {
-                      onCreateFail(
-                          ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+                        }, throwable -> {
+                          onCreateFail(
+                              ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
                           progressDialog.dismiss();
-                    }));
-          } else {
-            if (CREATE_STORE_REQUEST_CODE == 4) {
-              setStoreData();
-              progressDialog.show();
-              mSubscriptions.add(
-                  SetStoreRequest.of(accountManager.getAccessToken(), storeName, storeTheme,
-                      storeAvatarPath, storeDescription, true, storeId, createStoreInterceptor(),
-                      longTimeoutHttpClient, converterFactory)
-                      .observe()
-                      .subscribe(answer -> {
-                        accountManager.syncCurrentAccount()
-                            .subscribe(() -> {
+                        }));
+              } else {
+                if (CREATE_STORE_REQUEST_CODE == 4) {
+                  setStoreData();
+                  progressDialog.show();
+                  mSubscriptions.add(
+                      SetStoreRequest.of(accountManager.getAccessToken(), storeName, storeTheme,
+                          storeAvatarPath, storeDescription, true, storeId, createStoreInterceptor(),
+                          longTimeoutHttpClient, converterFactory)
+                          .observe()
+                          .subscribe(answer -> {
+                            accountManager.syncCurrentAccount()
+                                .subscribe(() -> {
+                                  progressDialog.dismiss();
+                                  goToMainActivity();
+                                }, err -> err.printStackTrace());
+                          }, throwable -> {
+                            if (((AptoideWsV7Exception) throwable).getBaseResponse()
+                                .getErrors()
+                                .get(0)
+                                .getCode()
+                                .equals("API-1")) {
                               progressDialog.dismiss();
-                                  goToMainActivity();
-                            }, err -> err.printStackTrace());
-                      }, throwable -> {
-                        if (((AptoideWsV7Exception) throwable).getBaseResponse()
-                            .getErrors()
-                            .get(0)
-                            .getCode()
-                            .equals("API-1")) {
-                          progressDialog.dismiss();
-                          ShowMessage.asObservableSnack(this, R.string.ws_error_API_1)
-                              .subscribe(visibility -> {
-                                if (visibility == ShowMessage.DISMISSED) {
-                                  goToMainActivity();
-                                }
-                              });
-                        } else {
-                          onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(
-                              throwable.getMessage()));
-                          progressDialog.dismiss();
+                              ShowMessage.asObservableSnack(this, R.string.ws_error_API_1)
+                                  .subscribe(visibility -> {
+                                    if (visibility == ShowMessage.DISMISSED) {
+                                      goToMainActivity();
+                                    }
+                                  });
+                            } else {
+                              onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(
+                                  throwable.getMessage()));
+                              progressDialog.dismiss();
                             }
-                      }));
-            } else if (CREATE_STORE_REQUEST_CODE == 5) {
+                          }));
+                } else if (CREATE_STORE_REQUEST_CODE == 5) {
               /*
                * not multipart
                */
-              setStoreData();
-              progressDialog.show();
-              mSubscriptions.add(
-                  SimpleSetStoreRequest.of(storeId, storeTheme, storeDescription, bodyInterceptorV7,
-                      httpClient, converterFactory)
-                      .observe()
-                      .subscribe(answer -> {
-                        accountManager.syncCurrentAccount()
-                            .subscribe(() -> {
-                              progressDialog.dismiss();
-                              goToMainActivity();
-                            }, err -> err.printStackTrace());
-                      }, throwable -> {
-                        onCreateFail(
-                            ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
-                        progressDialog.dismiss();
-                      }));
-            }
-          }
+                  setStoreData();
+                  progressDialog.show();
+                  mSubscriptions.add(
+                      SimpleSetStoreRequest.of(storeId, storeTheme, storeDescription, bodyInterceptorV7,
+                          httpClient, converterFactory)
+                          .observe()
+                          .subscribe(answer -> {
+                            accountManager.syncCurrentAccount()
+                                .subscribe(() -> {
+                                  progressDialog.dismiss();
+                                  goToMainActivity();
+                                }, err -> err.printStackTrace());
+                          }, throwable -> {
+                            onCreateFail(
+                                ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+                            progressDialog.dismiss();
+                          }));
+                }
+              }
             }
 
         ));

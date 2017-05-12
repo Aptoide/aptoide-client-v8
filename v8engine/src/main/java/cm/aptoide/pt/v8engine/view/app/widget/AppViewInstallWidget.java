@@ -586,7 +586,9 @@ import rx.android.schedulers.AndroidSchedulers;
   private boolean isThisTheLatestTrustedVersionAvailable(GetAppMeta.App app,
       @Nullable ListAppVersions appVersions) {
     boolean canCompare = appVersions != null
-        && appVersions.getList() != null && appVersions.getList() != null && !appVersions.getList()
+        && appVersions.getList() != null
+        && appVersions.getList() != null
+        && !appVersions.getList()
         .isEmpty();
     if (canCompare) {
       boolean isLatestVersion = app.getFile()
@@ -617,7 +619,9 @@ import rx.android.schedulers.AndroidSchedulers;
   private boolean isThisTheLatestVersionAvailable(GetAppMeta.App app,
       @Nullable ListAppVersions appVersions) {
     boolean canCompare = appVersions != null
-        && appVersions.getList() != null && appVersions.getList() != null && !appVersions.getList()
+        && appVersions.getList() != null
+        && appVersions.getList() != null
+        && !appVersions.getList()
         .isEmpty();
     if (canCompare) {
       return app.getFile()
