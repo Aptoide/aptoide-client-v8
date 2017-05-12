@@ -23,7 +23,10 @@ public class Vanilla extends AptoideBase {
   private void clearAppDataOnNewBuild() {
     if (getLastRunVersionCode() != BuildConfig.VERSION_CODE) {
       AptoideUtils.SystemU.clearApplicationData(this);
-      PreferenceManager.getDefaultSharedPreferences(this).edit().clear().commit();
+      PreferenceManager.getDefaultSharedPreferences(this)
+          .edit()
+          .clear()
+          .commit();
       setLastRunVersionCode(BuildConfig.VERSION_CODE);
     }
   }

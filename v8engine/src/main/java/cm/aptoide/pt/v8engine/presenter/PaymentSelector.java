@@ -33,8 +33,9 @@ public class PaymentSelector {
   }
 
   public Completable selectPayment(Payment selectedPayment) {
-    return Completable.fromAction(
-        () -> preferences.edit().putInt(SELECTED_PAYMENT_ID, selectedPayment.getId()).commit())
+    return Completable.fromAction(() -> preferences.edit()
+        .putInt(SELECTED_PAYMENT_ID, selectedPayment.getId())
+        .commit())
         .subscribeOn(Schedulers.io());
   }
 
@@ -44,7 +45,7 @@ public class PaymentSelector {
   }
 
   private Observable<Payment> payment(List<Payment> payments, int paymentId) {
-    return Observable.from(payments).<Payment> filter(
+    return Observable.from(payments).<Payment>filter(
         payment -> paymentId != 0 && paymentId == payment.getId());
   }
 }

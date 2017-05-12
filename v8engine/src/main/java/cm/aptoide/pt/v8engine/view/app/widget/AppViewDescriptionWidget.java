@@ -42,18 +42,25 @@ import com.jakewharton.rxbinding.view.RxView;
   }
 
   @Override public void bindView(AppViewDescriptionDisplayable displayable) {
-    this.app = displayable.getPojo().getNodes().getMeta().getData();
+    this.app = displayable.getPojo()
+        .getNodes()
+        .getMeta()
+        .getData();
     this.media = app.getMedia();
-    this.storeName = app.getStore().getName();
-    this.storeTheme = app.getStore().getAppearance().getTheme();
+    this.storeName = app.getStore()
+        .getName();
+    this.storeTheme = app.getStore()
+        .getAppearance()
+        .getTheme();
 
     if (!TextUtils.isEmpty(media.getDescription())) {
       descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
-      compositeSubscription.add(RxView.clicks(readMoreBtn).subscribe(click -> {
-        Fragment fragment = V8Engine.getFragmentProvider()
-            .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme);
-        getFragmentNavigator().navigateTo(fragment);
-      }));
+      compositeSubscription.add(RxView.clicks(readMoreBtn)
+          .subscribe(click -> {
+            Fragment fragment = V8Engine.getFragmentProvider()
+                .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme);
+            getFragmentNavigator().navigateTo(fragment);
+          }));
     } else {
       // only show "default" description if the app doesn't have one
       descriptionTextView.setText(R.string.description_not_available);
@@ -62,11 +69,12 @@ import com.jakewharton.rxbinding.view.RxView;
 
     if (!TextUtils.isEmpty(media.getDescription())) {
       descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
-      compositeSubscription.add(RxView.clicks(readMoreBtn).subscribe(click -> {
-        Fragment fragment = V8Engine.getFragmentProvider()
-            .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme);
-        getFragmentNavigator().navigateTo(fragment);
-      }));
+      compositeSubscription.add(RxView.clicks(readMoreBtn)
+          .subscribe(click -> {
+            Fragment fragment = V8Engine.getFragmentProvider()
+                .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme);
+            getFragmentNavigator().navigateTo(fragment);
+          }));
     } else {
       // only show "default" description if the app doesn't have one
       descriptionTextView.setText(R.string.description_not_available);

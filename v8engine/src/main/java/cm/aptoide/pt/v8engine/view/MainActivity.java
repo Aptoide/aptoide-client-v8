@@ -103,9 +103,9 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
   }
 
   @Override public void showHome() {
-    Fragment home =
-        HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
-            V8Engine.getConfiguration().getDefaultTheme());
+    Fragment home = HomeFragment.newInstance(V8Engine.getConfiguration()
+        .getDefaultStore(), StoreContext.home, V8Engine.getConfiguration()
+        .getDefaultTheme());
     fragmentNavigator.navigateToWithoutBackSave(home);
   }
 
@@ -134,8 +134,8 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.SEARCH_FRAGMENT)) {
       searchDeepLink(intent.getStringExtra(SearchManager.QUERY));
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO)) {
-      newrepoDeepLink(
-          intent.getExtras().getStringArrayList(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO));
+      newrepoDeepLink(intent.getExtras()
+          .getStringArrayList(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO));
     } else if (intent.hasExtra(
         DeepLinkIntentReceiver.DeepLinksTargets.FROM_DOWNLOAD_NOTIFICATION)) {
       downloadNotificationDeepLink(intent);
@@ -167,19 +167,20 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
   private void appViewDeepLink(long appId, String packageName, boolean showPopup) {
     AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
         : AppViewFragment.OpenType.OPEN_ONLY;
-    fragmentNavigator.navigateTo(
-        V8Engine.getFragmentProvider().newAppViewFragment(appId, packageName, openType));
+    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+        .newAppViewFragment(appId, packageName, openType));
   }
 
   private void appViewDeepLink(String packageName, String storeName, boolean showPopup) {
     AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
         : AppViewFragment.OpenType.OPEN_ONLY;
-    fragmentNavigator.navigateTo(
-        V8Engine.getFragmentProvider().newAppViewFragment(packageName, storeName, openType));
+    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+        .newAppViewFragment(packageName, storeName, openType));
   }
 
   private void searchDeepLink(String query) {
-    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider().newSearchFragment(query));
+    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+        .newSearchFragment(query));
   }
 
   private void newrepoDeepLink(ArrayList<String> repos) {
@@ -209,12 +210,14 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
                   .flatMapCompletable(store -> openStore(store))
                   .map(success -> stores);
             } else {
-              return navigateToStores().toObservable().map(success -> stores);
+              return navigateToStores().toObservable()
+                  .map(success -> stores);
             }
           })
           .subscribe(stores -> Logger.d(TAG, "newrepoDeepLink: all stores added"), throwable -> {
             Logger.e(TAG, "newrepoDeepLink: " + throwable);
-            CrashReport.getInstance().log(throwable);
+            CrashReport.getInstance()
+                .log(throwable);
           });
       getIntent().removeExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO);
     }
@@ -226,7 +229,8 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
 
   @NonNull private Completable openStore(Store store) {
     return Completable.fromAction(() -> getFragmentNavigator().navigateTo(
-        V8Engine.getFragmentProvider().newStoreFragment(store.getStoreName(), store.getTheme())));
+        V8Engine.getFragmentProvider()
+            .newStoreFragment(store.getStoreName(), store.getTheme())));
   }
 
   private void downloadNotificationDeepLink(Intent intent) {
@@ -263,7 +267,8 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
             .newStoreTabGridRecyclerFragment(event,
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME),
-                V8Engine.getConfiguration().getDefaultTheme(), StoreContext.home));
+                V8Engine.getConfiguration()
+                    .getDefaultTheme(), StoreContext.home));
       } catch (UnsupportedEncodingException | IllegalArgumentException e) {
         e.printStackTrace();
       }

@@ -24,19 +24,23 @@ public class GroupValidator {
   public void flagGhosts(ArrayList<Group> groupsList) {
     ghostsClearHashmap = new HashMap<>();
     for (int i = 0; i < groupsList.size(); i++) {
-      String groupDeviceID = groupsList.get(i).getDeviceID();
-      String hotspotCounter = groupsList.get(i).getHotspotControlCounter();
+      String groupDeviceID = groupsList.get(i)
+          .getDeviceID();
+      String hotspotCounter = groupsList.get(i)
+          .getHotspotControlCounter();
 
       if (!groupDeviceID.equals("") && !groupsList.get(i)
           .isGhost()) {//to avoid rule 1 - default groupDeviceID = ""
         if (!ghostsClearHashmap.containsKey(groupDeviceID)) {
           ghostsClearHashmap.put(groupDeviceID, groupsList.get(i));
-          groupsList.get(i).setGhostFlag(false);
+          groupsList.get(i)
+              .setGhostFlag(false);
         } else if ((int) hotspotCounter.charAt(0) > (int) ghostsClearHashmap.get(groupDeviceID)
             .getHotspotControlCounter()
             .charAt(0)) {
 
-          ghostsClearHashmap.get(groupDeviceID).setGhostFlag(true);
+          ghostsClearHashmap.get(groupDeviceID)
+              .setGhostFlag(true);
           //update the new actual host for that groupdeviceid
           ghostsClearHashmap.put(groupDeviceID, groupsList.get(i));
         }
@@ -47,7 +51,8 @@ public class GroupValidator {
   public ArrayList<Group> removeGhosts(ArrayList<Group> clientsList) {
     ArrayList<Group> clearedList = new ArrayList<>();
     for (int i = 0; i < clientsList.size(); i++) {
-      if (!clientsList.get(i).isGhost()) {
+      if (!clientsList.get(i)
+          .isGhost()) {
         clearedList.add(clientsList.get(i));
       }
     }

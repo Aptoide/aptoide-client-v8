@@ -39,7 +39,8 @@ public class InstallWarningDialog {
     this.trustedVersionAvailable = trustedVersionAvailable;
     this.rank = rank;
 
-    View contentView = LayoutInflater.from(ctx).inflate(R.layout.dialog_install_warning, null);
+    View contentView = LayoutInflater.from(ctx)
+        .inflate(R.layout.dialog_install_warning, null);
     AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
     builder.setView(contentView);
 
@@ -89,8 +90,8 @@ public class InstallWarningDialog {
     final String placeholder = "[placeholder]";
     final String stringTextTemp = contentView.getContext()
         .getString(R.string.dialog_install_warning_credibility_text, placeholder);
-    final String stringText =
-        stringTextTemp.replaceFirst("Aptoide", Application.getConfiguration().getMarketName());
+    final String stringText = stringTextTemp.replaceFirst("Aptoide", Application.getConfiguration()
+        .getMarketName());
     final SpannableString text = new SpannableString(stringText);
 
     final int placeholderIndex = stringText.indexOf(placeholder);
@@ -114,8 +115,8 @@ public class InstallWarningDialog {
     } else {
       topString = contentView.getContext()
           .getString(R.string.dialog_install_warning_search_for_trusted_app_button);
-      bottonString =
-          contentView.getContext().getString(R.string.dialog_install_warning_trusted_app_button);
+      bottonString = contentView.getContext()
+          .getString(R.string.dialog_install_warning_trusted_app_button);
     }
     final int topStringLength = topString.length();
     final int bottonStringLength = bottonString.length();

@@ -187,50 +187,61 @@ public class CommentDialogFragment
 
   private void setupLogic() {
 
-    textInputLayout.getEditText().addTextChangedListener(new TextWatcher() {
-      @Override
-      public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-      }
+    textInputLayout.getEditText()
+        .addTextChangedListener(new TextWatcher() {
+          @Override public void beforeTextChanged(CharSequence charSequence, int start, int count,
+              int after) {
+          }
 
-      @Override
-      public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
-        if (charSequence.length() > 0) {
+          @Override
+          public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
+            if (charSequence.length() > 0) {
+              disableError();
+            }
+          }
+
+          @Override public void afterTextChanged(Editable editable) {
+          }
+        });
+
+    RxView.clicks(commentButton)
+        .flatMap(a -> Observable.just(getText()))
+        .filter(inputText -> {
+          if (TextUtils.isEmpty(inputText)) {
+            enableError(onEmptyTextError);
+            return false;
+          }
           disableError();
-        }
-      }
-
-      @Override public void afterTextChanged(Editable editable) {
-      }
-    });
-
-    RxView.clicks(commentButton).flatMap(a -> Observable.just(getText())).filter(inputText -> {
-      if (TextUtils.isEmpty(inputText)) {
-        enableError(onEmptyTextError);
-        return false;
-      }
-      disableError();
-      return true;
-    }).flatMap(inputText -> {
-      if (commentBeforeSubmissionCallback != null) {
-        commentBeforeSubmissionCallback.onCommentBeforeSubmission(inputText);
-        this.dismiss();
-        return Observable.empty();
-      }
-      return submitComment(inputText, idAsLong, previousCommentId, idAsString).observeOn(
-          AndroidSchedulers.mainThread()).doOnError(e -> {
-        CrashReport.getInstance().log(e);
-        ShowMessage.asSnack(this, R.string.error_occured);
-      }).retry().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW));
-    }).subscribe(resp -> {
-      if (resp.isOk()) {
-        this.dismiss();
-        if (commentDialogCallbackContract != null) {
-          commentDialogCallbackContract.okSelected(resp, idAsLong, previousCommentId, idAsString);
-        }
-      } else {
-        ShowMessage.asSnack(this, R.string.error_occured);
-      }
-    }, throwable -> CrashReport.getInstance().log(throwable));
+          return true;
+        })
+        .flatMap(inputText -> {
+          if (commentBeforeSubmissionCallback != null) {
+            commentBeforeSubmissionCallback.onCommentBeforeSubmission(inputText);
+            this.dismiss();
+            return Observable.empty();
+          }
+          return submitComment(inputText, idAsLong, previousCommentId, idAsString).observeOn(
+              AndroidSchedulers.mainThread())
+              .doOnError(e -> {
+                CrashReport.getInstance()
+                    .log(e);
+                ShowMessage.asSnack(this, R.string.error_occured);
+              })
+              .retry()
+              .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW));
+        })
+        .subscribe(resp -> {
+          if (resp.isOk()) {
+            this.dismiss();
+            if (commentDialogCallbackContract != null) {
+              commentDialogCallbackContract.okSelected(resp, idAsLong, previousCommentId,
+                  idAsString);
+            }
+          } else {
+            ShowMessage.asSnack(this, R.string.error_occured);
+          }
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable));
   }
 
   private void disableError() {
@@ -239,7 +250,9 @@ public class CommentDialogFragment
 
   private String getText() {
     if (textInputLayout != null) {
-      return textInputLayout.getEditText().getEditableText().toString();
+      return textInputLayout.getEditText()
+          .getEditableText()
+          .toString();
     }
     return null;
   }
@@ -254,26 +267,31 @@ public class CommentDialogFragment
       case REVIEW:
         // new comment on a review
         return PostCommentForReview.of(idAsLong, inputText, baseBodyBodyInterceptor, httpClient,
-            converterFactory).observe();
+            converterFactory)
+            .observe();
 
       case STORE:
         // check if this is a new comment on a store or a reply to a previous one
         if (previousCommentId == null) {
           return PostCommentForStore.of(idAsLong, inputText, baseBodyBodyInterceptor, httpClient,
-              converterFactory).observe();
+              converterFactory)
+              .observe();
         }
 
         return PostCommentForStore.of(idAsLong, previousCommentId, inputText,
-            baseBodyBodyInterceptor, httpClient, converterFactory).observe();
+            baseBodyBodyInterceptor, httpClient, converterFactory)
+            .observe();
 
       case TIMELINE:
         // check if this is a new comment on a article or a reply to a previous one
         if (previousCommentId == null) {
           return PostCommentForTimelineArticle.of(idAsString, inputText, baseBodyBodyInterceptor,
-              httpClient, converterFactory).observe();
+              httpClient, converterFactory)
+              .observe();
         }
         return PostCommentForTimelineArticle.of(idAsString, previousCommentId, inputText,
-            baseBodyBodyInterceptor, httpClient, converterFactory).observe();
+            baseBodyBodyInterceptor, httpClient, converterFactory)
+            .observe();
     }
     // default case
     Logger.e(this.getTag(), "Unable to create reply due to missing comment type");

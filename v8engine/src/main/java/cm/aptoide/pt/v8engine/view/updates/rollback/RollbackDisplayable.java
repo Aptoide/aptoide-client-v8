@@ -52,12 +52,14 @@ public class RollbackDisplayable extends DisplayablePojo<Rollback> {
   }
 
   public void openAppview(FragmentNavigator navigator) {
-    navigator.navigateTo(V8Engine.getFragmentProvider().newAppViewFragment(getPojo().getMd5()));
+    navigator.navigateTo(V8Engine.getFragmentProvider()
+        .newAppViewFragment(getPojo().getMd5()));
   }
 
   public Observable<Void> uninstall(Context context, Download appDownload) {
-    return installManager.uninstall(context,
-        appDownload.getFilesToDownload().get(0).getPackageName(), appDownload.getVersionName());
+    return installManager.uninstall(context, appDownload.getFilesToDownload()
+        .get(0)
+        .getPackageName(), appDownload.getVersionName());
   }
 
   public void downgrade(FragmentNavigator navigator) {

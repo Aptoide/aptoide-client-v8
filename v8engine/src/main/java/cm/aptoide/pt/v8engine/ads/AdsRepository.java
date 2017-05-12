@@ -37,7 +37,8 @@ public class AdsRepository {
     this.accountManager = accountManager;
     this.googlePlayServicesAvailabilityChecker =
         (context) -> DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context);
-    this.partnerIdProvider = () -> DataProvider.getConfiguration().getPartnerId();
+    this.partnerIdProvider = () -> DataProvider.getConfiguration()
+        .getPartnerId();
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
   }
@@ -46,8 +47,11 @@ public class AdsRepository {
     return ads != null
         && !ads.isEmpty()
         && ads.get(0) != null
-        && ads.get(0).getPartner() != null
-        && ads.get(0).getPartner().getData() != null;
+        && ads.get(0)
+        .getPartner() != null
+        && ads.get(0)
+        .getPartner()
+        .getData() != null;
   }
 
   public static boolean validAds(GetAdsResponse getAdsResponse) {
@@ -55,11 +59,12 @@ public class AdsRepository {
   }
 
   public Observable<MinimalAd> getAdsFromAppView(String packageName, String storeName) {
-    return mapToMinimalAd(GetAdsRequest.ofAppviewOrganic(packageName, storeName,
-        idsRepository.getUniqueIdentifier(),
-        googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
-        partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
-        converterFactory).observe());
+    return mapToMinimalAd(
+        GetAdsRequest.ofAppviewOrganic(packageName, storeName, idsRepository.getUniqueIdentifier(),
+            googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
+            partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
+            converterFactory)
+            .observe());
   }
 
   private Observable<MinimalAd> mapToMinimalAd(
@@ -78,7 +83,8 @@ public class AdsRepository {
     return mapToMinimalAds(GetAdsRequest.ofHomepageMore(idsRepository.getUniqueIdentifier(),
         googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
         partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
-        converterFactory).observe(refresh));
+        converterFactory)
+        .observe(refresh));
   }
 
   private Observable<List<MinimalAd>> mapToMinimalAds(
@@ -88,13 +94,15 @@ public class AdsRepository {
         return Observable.error(new IllegalStateException("Invalid ads returned from server"));
       }
       return Observable.just(ads);
-    }).map((getAdsResponse) -> getAdsResponse.getAds()).map(ads -> {
-      List<MinimalAd> minimalAds = new LinkedList<>();
-      for (GetAdsResponse.Ad ad : ads) {
-        minimalAds.add(MinimalAd.from(ad));
-      }
-      return minimalAds;
-    });
+    })
+        .map((getAdsResponse) -> getAdsResponse.getAds())
+        .map(ads -> {
+          List<MinimalAd> minimalAds = new LinkedList<>();
+          for (GetAdsResponse.Ad ad : ads) {
+            minimalAds.add(MinimalAd.from(ad));
+          }
+          return minimalAds;
+        });
   }
 
   public Observable<List<MinimalAd>> getAdsFromAppviewSuggested(String packageName,
@@ -103,14 +111,16 @@ public class AdsRepository {
         GetAdsRequest.ofAppviewSuggested(keywords, idsRepository.getUniqueIdentifier(),
             googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()), packageName,
             partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
-            converterFactory).observe());
+            converterFactory)
+            .observe());
   }
 
   public Observable<MinimalAd> getAdsFromSearch(String query) {
     return mapToMinimalAd(GetAdsRequest.ofSearch(query, idsRepository.getUniqueIdentifier(),
         googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
         partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
-        converterFactory).observe());
+        converterFactory)
+        .observe());
   }
 
   public Observable<MinimalAd> getAdsFromSecondInstall(String packageName) {
@@ -121,7 +131,8 @@ public class AdsRepository {
             GetAdsRequest.ofSecondInstall(packageName, idsRepository.getUniqueIdentifier(),
                 googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
                 partnerIdProvider.getPartnerId(), account.isAdultContentEnabled(), httpClient,
-                converterFactory).observe()));
+                converterFactory)
+                .observe()));
   }
 
   public Observable<MinimalAd> getAdsFromSecondTry(String packageName) {
@@ -129,6 +140,7 @@ public class AdsRepository {
         GetAdsRequest.ofSecondTry(packageName, idsRepository.getUniqueIdentifier(),
             googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
             partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
-            converterFactory).observe());
+            converterFactory)
+            .observe());
   }
 }

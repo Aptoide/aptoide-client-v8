@@ -61,12 +61,18 @@ public class Rollback extends RealmObject {
     appName = app.getName();
     icon = app.getIcon();
     packageName = app.getPackageName();
-    timestamp = Calendar.getInstance().getTimeInMillis();
-    md5 = app.getFile().getMd5sum();
-    apkPath = app.getFile().getPath();
-    alternativeApkPath = app.getFile().getPathAlt();
-    versionName = app.getFile().getVername();
-    versionCode = app.getFile().getVercode();
+    timestamp = Calendar.getInstance()
+        .getTimeInMillis();
+    md5 = app.getFile()
+        .getMd5sum();
+    apkPath = app.getFile()
+        .getPath();
+    alternativeApkPath = app.getFile()
+        .getPathAlt();
+    versionName = app.getFile()
+        .getVername();
+    versionCode = app.getFile()
+        .getVercode();
 
     Obb obb = app.getObb();
     if (obb != null) {

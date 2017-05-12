@@ -143,7 +143,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
       }
     }
 
-    if(storeModel != null && !TextUtils.isEmpty(storeModel.getStoreAvatarPath())){
+    if (storeModel != null && !TextUtils.isEmpty(storeModel.getStoreAvatarPath())) {
       loadImage(Uri.parse(storeModel.getStoreAvatarPath()));
     }
   }
@@ -178,7 +178,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
 
   @Override public void loadImage(Uri imagePath) {
     if (imagePath != null && !TextUtils.isEmpty(imagePath.toString())) {
-      ImageLoader.with(getActivity()).loadWithCircleTransform(imagePath, storeAvatar, false);
+      ImageLoader.with(getActivity())
+          .loadWithCircleTransform(imagePath, storeAvatar, false);
     }
   }
 
@@ -187,12 +188,14 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
         getString(R.string.image_requirements_error_popup_title), errors)
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe(__ -> {
-        }, err -> CrashReport.getInstance().log(err));
+        }, err -> CrashReport.getInstance()
+            .log(err));
   }
 
   private void loadImage(String imagePath) {
     if (imagePath != null && !TextUtils.isEmpty(imagePath)) {
-      ImageLoader.with(getActivity()).loadWithCircleTransform(imagePath, storeAvatar, false);
+      ImageLoader.with(getActivity())
+          .loadWithCircleTransform(imagePath, storeAvatar, false);
     }
   }
 
@@ -292,48 +295,63 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
 
     selectStoreImageClick().compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .retry()
-        .subscribe(__ -> chooseAvatarSource(), err -> CrashReport.getInstance().log(err));
+        .subscribe(__ -> chooseAvatarSource(), err -> CrashReport.getInstance()
+            .log(err));
 
-    skipToHomeClick().flatMap(
-        __ -> sendSkipAnalytics().doOnCompleted(() -> navigateToHome()).toObservable())
+    skipToHomeClick().flatMap(__ -> sendSkipAnalytics().doOnCompleted(() -> navigateToHome())
+        .toObservable())
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> CrashReport.getInstance().log(err));
+        }, err -> CrashReport.getInstance()
+            .log(err));
 
     createStoreClick().flatMap(aVoid -> Observable.fromCallable(() -> {
       AptoideUtils.SystemU.hideKeyboard(getActivity());
       return null;
-    }).doOnNext(__ -> showWaitDialog()).flatMap(__ -> {
-      final String storeName = this.storeName.getText().toString().trim().toLowerCase();
-      final String storeDescription = this.storeDescription.getText().toString().trim();
-      return Observable.just(new CreateStoreModel(storeModel, storeName, storeDescription));
-    }).flatMap(storeModel -> {
-      final CreateStoreType createStoreType = validateData(storeModel);
-      switch (createStoreType) {
-        default:
-        case None:
-          return dismissWaitAndShowErrorMessage(R.string.nothing_inserted_store);
+    })
+        .doOnNext(__ -> showWaitDialog())
+        .flatMap(__ -> {
+          final String storeName = this.storeName.getText()
+              .toString()
+              .trim()
+              .toLowerCase();
+          final String storeDescription = this.storeDescription.getText()
+              .toString()
+              .trim();
+          return Observable.just(new CreateStoreModel(storeModel, storeName, storeDescription));
+        })
+        .flatMap(storeModel -> {
+          final CreateStoreType createStoreType = validateData(storeModel);
+          switch (createStoreType) {
+            default:
+            case None:
+              return dismissWaitAndShowErrorMessage(R.string.nothing_inserted_store);
 
-        case All:
-        case UserAndTheme:
-        case Theme:
-          return createStoreType1(storeModel, createStoreType);
+            case All:
+            case UserAndTheme:
+            case Theme:
+              return createStoreType1(storeModel, createStoreType);
 
-        case Edit:
-          return createStoreType2(storeModel);
+            case Edit:
+              return createStoreType2(storeModel);
 
-        case Edit2:
-          return createStoreType3(storeModel);
-      }
-    })).compose(bindUntilEvent(LifecycleEvent.DESTROY)).retry().subscribe(__ -> {
-    }, err -> CrashReport.getInstance().log(err));
+            case Edit2:
+              return createStoreType3(storeModel);
+          }
+        }))
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+        .retry()
+        .subscribe(__ -> {
+        }, err -> CrashReport.getInstance()
+            .log(err));
   }
 
   @NonNull private Observable<Integer> dismissWaitAndShowErrorMessage(@StringRes int stringRes) {
     return Observable.fromCallable(() -> {
       dismissWaitDialog();
       return null;
-    }).flatMap(__ -> ShowMessage.asObservableSnack(createStoreBtn, stringRes));
+    })
+        .flatMap(__ -> ShowMessage.asObservableSnack(createStoreBtn, stringRes));
   }
 
   private void dismissWaitDialog() {
@@ -352,7 +370,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
     return Observable.fromCallable(() -> {
       dismissWaitDialog();
       return null;
-    }).flatMap(__ -> ShowMessage.asObservableSnack(createStoreBtn, err.getMessage()));
+    })
+        .flatMap(__ -> ShowMessage.asObservableSnack(createStoreBtn, err.getMessage()));
   }
 
   /**
@@ -372,7 +391,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
         .flatMap(__ -> syncAccountAndNavigateHome())
         .observeOn(AndroidSchedulers.mainThread())
         .onErrorResumeNext(err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
           final int errorMessage = ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage());
           return dismissWaitAndShowErrorMessage(errorMessage).map(__ -> null);
         })
@@ -390,7 +410,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
             __ -> SetStoreRequest.of(accountManager.getAccessToken(), storeModel.getStoreName(),
                 storeModel.getStoreThemeName(), storeModel.getStoreAvatarPath(),
                 storeModel.getStoreDescription(), true, storeModel.getStoreId(),
-                createStoreInterceptor(storeModel), httpClient, converterFactory).observe())
+                createStoreInterceptor(storeModel), httpClient, converterFactory)
+                .observe())
         .flatMap(__ -> syncAccountAndNavigateHome())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnCompleted(() -> navigateToHome())
@@ -432,7 +453,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
             ShowMessage.asLongObservableSnack(getActivity(), R.string.create_store_store_created)
                 .flatMap(__ -> syncAccountAndNavigateHome())
                 .subscribe(__ -> {
-                }, err -> CrashReport.getInstance().log(err));
+                }, err -> CrashReport.getInstance()
+                    .log(err));
           }
 
           return null;
@@ -442,19 +464,26 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
   }
 
   private void handleStoreCreationErrors(CheckUserCredentialsJson answer) {
-    if (answer.getErrors() != null && answer.getErrors().size() > 0) {
-      if (answer.getErrors().get(0).code.equals(ERROR_CODE_2)) {
+    if (answer.getErrors() != null
+        && answer.getErrors()
+        .size() > 0) {
+      if (answer.getErrors()
+          .get(0).code.equals(ERROR_CODE_2)) {
 
         GenericDialogs.createGenericContinueMessage(getActivity(), "",
-            getApplicationContext().getResources().getString(R.string.ws_error_WOP_2))
+            getApplicationContext().getResources()
+                .getString(R.string.ws_error_WOP_2))
             .subscribe(__ -> {
-            }, err -> CrashReport.getInstance().log(err));
-      } else if (answer.getErrors().get(0).code.equals(ERROR_CODE_3)) {
-        ShowMessage.asSnack(this,
-            ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
+            }, err -> CrashReport.getInstance()
+                .log(err));
+      } else if (answer.getErrors()
+          .get(0).code.equals(ERROR_CODE_3)) {
+        ShowMessage.asSnack(this, ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors()
+            .get(0).code));
       } else {
-        ShowMessage.asObservableSnack(this,
-            ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code))
+        ShowMessage.asObservableSnack(this, ErrorsMapper.getWebServiceErrorMessageFromCode(
+            answer.getErrors()
+                .get(0).code))
             .subscribe(visibility -> {
               if (visibility == ShowMessage.DISMISSED) {
                 navigateToHome();
@@ -580,7 +609,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
             @StringRes int reason =
                 ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage());
             ShowMessage.asSnack(createStoreBtn, reason);
-            CrashReport.getInstance().log(err);
+            CrashReport.getInstance()
+                .log(err);
           });
     }
   }
@@ -592,7 +622,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
         .observeOn(AndroidSchedulers.mainThread())
         .doOnCompleted(() -> navigateToHome())
         .onErrorResumeNext(err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
           return Completable.fromAction(() -> navigateToHome());
         })
         .toObservable();
@@ -621,7 +652,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
       storeModel.setStoreAvatarPath(filePath);
       checkAvatarRequirements(filePath, avatarUrl);
     } catch (NullPointerException ex) {
-      CrashReport.getInstance().log(ex);
+      CrashReport.getInstance()
+          .log(ex);
     }
   }
 
@@ -673,7 +705,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
             .doOnNext(__ -> addTickTo(t.getTick(rootView)))
             .doOnNext(__ -> storeModel.setStoreThemeName(t.getThemeName()))
             .subscribe(__ -> {
-            }, err -> CrashReport.getInstance().log(err));
+            }, err -> CrashReport.getInstance()
+                .log(err));
       }
     }
 

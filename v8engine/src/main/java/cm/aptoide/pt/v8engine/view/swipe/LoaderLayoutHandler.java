@@ -76,7 +76,8 @@ public class LoaderLayoutHandler {
   }
 
   public void finishLoading(Throwable throwable) {
-    CrashReport.getInstance().log(throwable);
+    CrashReport.getInstance()
+        .log(throwable);
 
     AptoideUtils.ThreadU.runOnUiThread(() -> onFinishLoading(throwable));
   }
@@ -119,10 +120,13 @@ public class LoaderLayoutHandler {
     Observable.fromCallable(() -> {
       onFinishLoading();
       return null;
-    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(o -> {
-    }, e -> {
-      CrashReport.getInstance().log(e);
-    });
+    })
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .subscribe(o -> {
+        }, e -> {
+          CrashReport.getInstance()
+              .log(e);
+        });
   }
 
   @UiThread protected void onFinishLoading() {

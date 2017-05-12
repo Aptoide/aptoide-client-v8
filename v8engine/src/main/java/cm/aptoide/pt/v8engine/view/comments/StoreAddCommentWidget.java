@@ -53,7 +53,8 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
       d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
       commentStore.setBackground(d);
     } else {
-      Drawable d = context.getResources().getDrawable(R.drawable.dialog_bg_2);
+      Drawable d = context.getResources()
+          .getDrawable(R.drawable.dialog_bg_2);
       d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
       commentStore.setBackgroundDrawable(d);
     }
@@ -64,15 +65,18 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
         .subscribe(a -> {
           // all done when we get here.
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         }));
   }
 
   private int getColorOrDefault(StoreThemeEnum theme, Context context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      return context.getResources().getColor(theme.getStoreHeader(), context.getTheme());
+      return context.getResources()
+          .getColor(theme.getStoreHeader(), context.getTheme());
     } else {
-      return context.getResources().getColor(theme.getStoreHeader());
+      return context.getResources()
+          .getColor(theme.getStoreHeader());
     }
   }
 
@@ -80,23 +84,24 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
       @NonNull final String storeName, @NonNull final FragmentManager fragmentManager,
       @NonNull final View view) {
 
-    return Observable.just(accountManager.isLoggedIn()).flatMap(isLoggedIn -> {
+    return Observable.just(accountManager.isLoggedIn())
+        .flatMap(isLoggedIn -> {
 
-      if (isLoggedIn) {
-        // show fragment CommentDialog
-        CommentDialogFragment commentDialogFragment =
-            CommentDialogFragment.newInstanceStoreComment(storeId, storeName);
+          if (isLoggedIn) {
+            // show fragment CommentDialog
+            CommentDialogFragment commentDialogFragment =
+                CommentDialogFragment.newInstanceStoreComment(storeId, storeName);
 
-        return commentDialogFragment.lifecycle()
-            .doOnSubscribe(
-                () -> commentDialogFragment.show(fragmentManager, "fragment_comment_dialog"))
-            .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-            .doOnNext(a -> reloadComments())
-            .flatMap(event -> Observable.empty());
-      }
+            return commentDialogFragment.lifecycle()
+                .doOnSubscribe(
+                    () -> commentDialogFragment.show(fragmentManager, "fragment_comment_dialog"))
+                .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
+                .doOnNext(a -> reloadComments())
+                .flatMap(event -> Observable.empty());
+          }
 
-      return showSignInMessage(view);
-    });
+          return showSignInMessage(view);
+        });
   }
 
   private void reloadComments() {
@@ -108,6 +113,7 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
     return ShowMessage.asObservableSnack(view, R.string.you_need_to_be_logged_in, R.string.login,
         snackView -> {
           accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.STORE_COMMENT);
-        }).flatMap(a -> Observable.empty());
+        })
+        .flatMap(a -> Observable.empty());
   }
 }

@@ -25,8 +25,8 @@ android {
   publishNonDefault true
 
   productFlavors {
-    prod { }
-    internal { }
+    prod {}
+    internal {}
   }
 
   buildTypes {

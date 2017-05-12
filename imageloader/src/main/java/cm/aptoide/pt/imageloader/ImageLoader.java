@@ -80,10 +80,13 @@ public class ImageLoader {
     if (context != null) {
       try {
         return Glide.
-            with(context).
-            load(apkIconPath).
-            asBitmap().
-            into(-1, -1). // full size
+            with(context)
+            .
+                load(apkIconPath)
+            .
+                asBitmap()
+            .
+                into(-1, -1). // full size
             get();
       } catch (InterruptedException e) {
         e.printStackTrace();
@@ -219,7 +222,9 @@ public class ImageLoader {
   public Target<GlideDrawable> load(@DrawableRes int drawableId, ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
-      return Glide.with(context).load(drawableId).into(imageView);
+      return Glide.with(context)
+          .load(drawableId)
+          .into(imageView);
     } else {
       Log.e(TAG, "::load() Context is null");
     }
@@ -244,7 +249,10 @@ public class ImageLoader {
       ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
-      return Glide.with(context).load(url).placeholder(loadingPlaceHolder).into(imageView);
+      return Glide.with(context)
+          .load(url)
+          .placeholder(loadingPlaceHolder)
+          .into(imageView);
     } else {
       Log.e(TAG, "::load() Context is null");
     }
@@ -254,7 +262,9 @@ public class ImageLoader {
   public Target<GlideDrawable> load(String url, ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
-      return Glide.with(context).load(AptoideUtils.IconSizeU.getNewImageUrl(url)).into(imageView);
+      return Glide.with(context)
+          .load(AptoideUtils.IconSizeU.getNewImageUrl(url))
+          .into(imageView);
     } else {
       Log.e(TAG, "::load() Context is null");
     }
@@ -276,9 +286,11 @@ public class ImageLoader {
     Context context = weakContext.get();
     if (context != null) {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        return context.getResources().getDrawable(drawableId, context.getTheme());
+        return context.getResources()
+            .getDrawable(drawableId, context.getTheme());
       }
-      return context.getResources().getDrawable(drawableId);
+      return context.getResources()
+          .getDrawable(drawableId);
     } else {
       Log.e(TAG, "::load() Context is null");
     }
@@ -295,10 +307,13 @@ public class ImageLoader {
     if (context != null) {
       try {
         return Glide.
-            with(context).
-            load(apkIconPath).
-            asBitmap().
-            into(-1, -1). // full size
+            with(context)
+            .
+                load(apkIconPath)
+            .
+                asBitmap()
+            .
+                into(-1, -1). // full size
             get();
       } catch (InterruptedException e) {
         e.printStackTrace();
@@ -335,7 +350,10 @@ public class ImageLoader {
       @NonNull ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
-      return Glide.with(context).load(url).transform(new CircleTransform(context)).into(imageView);
+      return Glide.with(context)
+          .load(url)
+          .transform(new CircleTransform(context))
+          .into(imageView);
     } else {
       Log.e(TAG, "::loadUsingCircleTransform() Context is null");
     }

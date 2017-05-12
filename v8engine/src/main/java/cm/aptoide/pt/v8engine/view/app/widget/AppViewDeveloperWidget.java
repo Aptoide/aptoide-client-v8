@@ -48,7 +48,10 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
   }
 
   @Override public void bindView(AppViewDeveloperDisplayable displayable) {
-    final GetAppMeta.App app = displayable.getPojo().getNodes().getMeta().getData();
+    final GetAppMeta.App app = displayable.getPojo()
+        .getNodes()
+        .getMeta()
+        .getData();
     final Context ctx = getContext();
 
 		/*
@@ -89,49 +92,57 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 		});
 		*/
 
-    if (!TextUtils.isEmpty(app.getDeveloper().getWebsite())) {
+    if (!TextUtils.isEmpty(app.getDeveloper()
+        .getWebsite())) {
       websiteLabel.setText(String.format(ctx.getString(R.string.developer_website),
-          app.getDeveloper().getWebsite()));
+          app.getDeveloper()
+              .getWebsite()));
     } else {
       websiteLabel.setText(String.format(ctx.getString(R.string.developer_website),
           ctx.getString(R.string.not_available)));
     }
     websiteLabel.setOnClickListener(v -> {
-      if (!TextUtils.isEmpty(app.getDeveloper().getWebsite())) {
-        Intent browserIntent =
-            new Intent(Intent.ACTION_VIEW, Uri.parse(app.getDeveloper().getWebsite()));
+      if (!TextUtils.isEmpty(app.getDeveloper()
+          .getWebsite())) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(app.getDeveloper()
+            .getWebsite()));
         ctx.startActivity(browserIntent);
       }
     });
 
-    if (!TextUtils.isEmpty(app.getDeveloper().getEmail())) {
-      emailLabel.setText(
-          String.format(ctx.getString(R.string.developer_email), app.getDeveloper().getEmail()));
+    if (!TextUtils.isEmpty(app.getDeveloper()
+        .getEmail())) {
+      emailLabel.setText(String.format(ctx.getString(R.string.developer_email), app.getDeveloper()
+          .getEmail()));
     } else {
       emailLabel.setText(String.format(ctx.getString(R.string.developer_email),
           ctx.getString(R.string.not_available)));
     }
     emailLabel.setOnClickListener(v -> {
-      if (!TextUtils.isEmpty(app.getDeveloper().getEmail())) {
+      if (!TextUtils.isEmpty(app.getDeveloper()
+          .getEmail())) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        Uri data = Uri.parse(
-            "mailto:" + app.getDeveloper().getEmail() + "?subject=" + "Feedback" + "&body=" + "");
+        Uri data = Uri.parse("mailto:" + app.getDeveloper()
+            .getEmail() + "?subject=" + "Feedback" + "&body=" + "");
         intent.setData(data);
         ctx.startActivity(intent);
       }
     });
 
-    if (!TextUtils.isEmpty(app.getDeveloper().getPrivacy())) {
+    if (!TextUtils.isEmpty(app.getDeveloper()
+        .getPrivacy())) {
       privacyPolicyLabel.setText(String.format(ctx.getString(R.string.developer_privacy_policy),
-          app.getDeveloper().getPrivacy()));
+          app.getDeveloper()
+              .getPrivacy()));
     } else {
       privacyPolicyLabel.setText(String.format(ctx.getString(R.string.developer_privacy_policy),
           ctx.getString(R.string.not_available)));
     }
     privacyPolicyLabel.setOnClickListener(v -> {
-      if (!TextUtils.isEmpty(app.getDeveloper().getPrivacy())) {
-        Intent browserIntent =
-            new Intent(Intent.ACTION_VIEW, Uri.parse(app.getDeveloper().getPrivacy()));
+      if (!TextUtils.isEmpty(app.getDeveloper()
+          .getPrivacy())) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(app.getDeveloper()
+            .getPrivacy()));
         ctx.startActivity(browserIntent);
       }
     });

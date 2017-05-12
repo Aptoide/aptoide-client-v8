@@ -35,7 +35,10 @@ public class AppViewRateAndCommentsDisplayable extends AppViewDisplayable {
   }
 
   public BaseRequestWithStore.StoreCredentials getStoreCredentials() {
-    return storeCredentialsProvider.get(
-        getPojo().getNodes().getMeta().getData().getStore().getName());
+    return storeCredentialsProvider.get(getPojo().getNodes()
+        .getMeta()
+        .getData()
+        .getStore()
+        .getName());
   }
 }

@@ -29,7 +29,8 @@ public class CacheHelperTest {
     cacheHelper = new CacheHelper(0, folders, fileUtilsMock);
 
     TestSubscriber subscriber = TestSubscriber.create();
-    cacheHelper.cleanCache().subscribe(subscriber);
+    cacheHelper.cleanCache()
+        .subscribe(subscriber);
     subscriber.awaitTerminalEvent();
     subscriber.assertCompleted();
     subscriber.assertNoErrors();
@@ -43,7 +44,8 @@ public class CacheHelperTest {
     cacheHelper = new CacheHelper(0, folders, fileUtilsMock);
 
     TestSubscriber subscriber = TestSubscriber.create();
-    cacheHelper.cleanCache().subscribe(subscriber);
+    cacheHelper.cleanCache()
+        .subscribe(subscriber);
     subscriber.awaitTerminalEvent();
     subscriber.assertCompleted();
     subscriber.assertNoErrors();
@@ -63,7 +65,8 @@ public class CacheHelperTest {
     cacheHelper = new CacheHelper(9L, folders, fileUtilsMock);
 
     TestSubscriber subscriber = TestSubscriber.create();
-    cacheHelper.cleanCache().subscribe(subscriber);
+    cacheHelper.cleanCache()
+        .subscribe(subscriber);
     subscriber.awaitTerminalEvent();
     subscriber.assertCompleted();
     subscriber.assertNoErrors();
@@ -83,7 +86,8 @@ public class CacheHelperTest {
     cacheHelper = new CacheHelper(11L, folders, fileUtilsMock);
 
     TestSubscriber subscriber = TestSubscriber.create();
-    cacheHelper.cleanCache().subscribe(subscriber);
+    cacheHelper.cleanCache()
+        .subscribe(subscriber);
     subscriber.awaitTerminalEvent();
     subscriber.assertCompleted();
     subscriber.assertNoErrors();
@@ -111,7 +115,8 @@ public class CacheHelperTest {
     cacheHelper = new CacheHelper(1L, folders, fileUtilsMock);
 
     TestSubscriber subscriber = TestSubscriber.create();
-    cacheHelper.cleanCache().subscribe(subscriber);
+    cacheHelper.cleanCache()
+        .subscribe(subscriber);
     subscriber.awaitTerminalEvent();
     subscriber.assertCompleted();
     subscriber.assertNoErrors();
@@ -142,7 +147,8 @@ public class CacheHelperTest {
     cacheHelper = new CacheHelper(1L, folders, fileUtilsMock);
 
     TestSubscriber subscriber = TestSubscriber.create();
-    cacheHelper.cleanCache().subscribe(subscriber);
+    cacheHelper.cleanCache()
+        .subscribe(subscriber);
     subscriber.awaitTerminalEvent();
     subscriber.assertCompleted();
     subscriber.assertNoErrors();
@@ -201,7 +207,8 @@ public class CacheHelperTest {
     cacheHelper = new CacheHelper(0, folders, fileUtilsMock);
 
     TestSubscriber subscriber = TestSubscriber.create();
-    cacheHelper.cleanCache().subscribe(subscriber);
+    cacheHelper.cleanCache()
+        .subscribe(subscriber);
     subscriber.awaitTerminalEvent();
     subscriber.assertCompleted();
     subscriber.assertNoErrors();
@@ -263,7 +270,8 @@ public class CacheHelperTest {
     cacheHelper = new CacheHelper(10, folders, fileUtilsMock);
 
     TestSubscriber subscriber = TestSubscriber.create();
-    cacheHelper.cleanCache().subscribe(subscriber);
+    cacheHelper.cleanCache()
+        .subscribe(subscriber);
     subscriber.awaitTerminalEvent();
     subscriber.assertCompleted();
     subscriber.assertNoErrors();

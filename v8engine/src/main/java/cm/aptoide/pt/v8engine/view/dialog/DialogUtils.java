@@ -75,7 +75,8 @@ public class DialogUtils {
         return;
       }
 
-      final View view = LayoutInflater.from(activity).inflate(R.layout.dialog_rate_app, null);
+      final View view = LayoutInflater.from(activity)
+          .inflate(R.layout.dialog_rate_app, null);
 
       final TextView titleTextView = (TextView) view.findViewById(R.id.title);
       final AppCompatRatingBar reviewRatingBar =
@@ -107,8 +108,12 @@ public class DialogUtils {
 
         AptoideUtils.SystemU.hideKeyboard(activity);
 
-        final String reviewTitle = titleTextInputLayout.getEditText().getText().toString();
-        final String reviewText = reviewTextInputLayout.getEditText().getText().toString();
+        final String reviewTitle = titleTextInputLayout.getEditText()
+            .getText()
+            .toString();
+        final String reviewText = reviewTextInputLayout.getEditText()
+            .getText()
+            .toString();
         final int reviewRating = Math.round(reviewRatingBar.getRating());
 
         if (TextUtils.isEmpty(reviewTitle)) {
@@ -136,7 +141,8 @@ public class DialogUtils {
 
         // WS error listener
         final ErrorRequestListener errorRequestListener = e -> {
-          CrashReport.getInstance().log(e);
+          CrashReport.getInstance()
+              .log(e);
           ShowMessage.asSnack(activity, R.string.error_occured);
           subscriber.onNext(GenericDialogs.EResponse.CANCEL);
           subscriber.onCompleted();
@@ -149,7 +155,8 @@ public class DialogUtils {
               .execute(successRequestListener, errorRequestListener);
         } else {
           PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor,
-              httpClient, converterFactory).execute(successRequestListener, errorRequestListener);
+              httpClient, converterFactory)
+              .execute(successRequestListener, errorRequestListener);
         }
       });
 
@@ -171,7 +178,8 @@ public class DialogUtils {
       return;
     }
 
-    final View view = LayoutInflater.from(activity).inflate(R.layout.dialog_rate_app, null);
+    final View view = LayoutInflater.from(activity)
+        .inflate(R.layout.dialog_rate_app, null);
 
     final TextView titleTextView = (TextView) view.findViewById(R.id.title);
     final AppCompatRatingBar reviewRatingBar =
@@ -193,8 +201,12 @@ public class DialogUtils {
 
       AptoideUtils.SystemU.hideKeyboard(activity);
 
-      final String reviewTitle = titleTextInputLayout.getEditText().getText().toString();
-      final String reviewText = reviewTextInputLayout.getEditText().getText().toString();
+      final String reviewTitle = titleTextInputLayout.getEditText()
+          .getText()
+          .toString();
+      final String reviewText = reviewTextInputLayout.getEditText()
+          .getText()
+          .toString();
       final int reviewRating = Math.round(reviewRatingBar.getRating());
 
       if (TextUtils.isEmpty(reviewTitle)) {
@@ -219,7 +231,8 @@ public class DialogUtils {
       };
 
       final ErrorRequestListener errorRequestListener = e -> {
-        CrashReport.getInstance().log(e);
+        CrashReport.getInstance()
+            .log(e);
         ShowMessage.asSnack(activity, R.string.error_occured);
       };
 
@@ -229,7 +242,8 @@ public class DialogUtils {
             .execute(successRequestListener, errorRequestListener);
       } else {
         PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor,
-            httpClient, converterFactory).execute(successRequestListener, errorRequestListener);
+            httpClient, converterFactory)
+            .execute(successRequestListener, errorRequestListener);
       }
     });
 

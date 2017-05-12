@@ -34,16 +34,20 @@ public class DownloadAccessor extends SimpleAccessor<Download> {
     Observable.fromCallable(() -> {
       database.delete(Download.class, Download.DOWNLOAD_ID, downloadId);
       return null;
-    }).subscribeOn(RealmSchedulers.getScheduler()).subscribe(o -> {
-    }, throwable -> throwable.printStackTrace());
+    })
+        .subscribeOn(RealmSchedulers.getScheduler())
+        .subscribe(o -> {
+        }, throwable -> throwable.printStackTrace());
   }
 
   public void delete(String md5) {
     Observable.fromCallable(() -> {
       database.delete(Download.class, Download.MD5, md5);
       return null;
-    }).subscribeOn(RealmSchedulers.getScheduler()).subscribe(o -> {
-    }, throwable -> throwable.printStackTrace());
+    })
+        .subscribeOn(RealmSchedulers.getScheduler())
+        .subscribe(o -> {
+        }, throwable -> throwable.printStackTrace());
   }
 
   public void save(Download download) {
@@ -84,8 +88,9 @@ public class DownloadAccessor extends SimpleAccessor<Download> {
 
   public Observable<List<Download>> getAllSorted(Sort sort) {
     return Observable.fromCallable(() -> Database.getInternal())
-        .flatMap(
-            realm -> realm.where(Download.class).findAllSorted("timeStamp", sort).asObservable())
+        .flatMap(realm -> realm.where(Download.class)
+            .findAllSorted("timeStamp", sort)
+            .asObservable())
         .unsubscribeOn(RealmSchedulers.getScheduler())
         .flatMap((data) -> database.copyFromRealm(data))
         .subscribeOn(RealmSchedulers.getScheduler())

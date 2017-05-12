@@ -14,45 +14,58 @@ import cm.aptoide.pt.preferences.Application;
 public class ManagerPreferences {
 
   public static boolean getHWSpecsFilter() {
-    return Preferences.get().getBoolean(ManagedKeys.HWSPECS_FILTER, true);
+    return Preferences.get()
+        .getBoolean(ManagedKeys.HWSPECS_FILTER, true);
   }
 
   public static void setHWSpecsFilter(boolean flag) {
-    Preferences.get().edit().putBoolean(ManagedKeys.HWSPECS_FILTER, flag).apply();
+    Preferences.get()
+        .edit()
+        .putBoolean(ManagedKeys.HWSPECS_FILTER, flag)
+        .apply();
   }
 
   /**
    * @return true when updates should hide alpha and beta versions.
    */
   public static boolean getUpdatesFilterAlphaBetaKey() {
-    return Preferences.get().getBoolean(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY, false);
+    return Preferences.get()
+        .getBoolean(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY, false);
   }
 
   /**
    * @return true when updates should include system apps
    */
   public static boolean getUpdatesSystemAppsKey() {
-    return Preferences.get().getBoolean(ManagedKeys.UPDATES_SYSTEM_APPS_KEY, false);
+    return Preferences.get()
+        .getBoolean(ManagedKeys.UPDATES_SYSTEM_APPS_KEY, false);
   }
 
   public static int getLastPushNotificationId() {
-    return Preferences.get().getInt(ManagedKeys.LAST_PUSH_NOTIFICATION_ID, 0);
+    return Preferences.get()
+        .getInt(ManagedKeys.LAST_PUSH_NOTIFICATION_ID, 0);
   }
 
   public static void setLastPushNotificationId(int notificationId) {
-    Preferences.get().edit().putInt(ManagedKeys.LAST_PUSH_NOTIFICATION_ID, notificationId).apply();
+    Preferences.get()
+        .edit()
+        .putInt(ManagedKeys.LAST_PUSH_NOTIFICATION_ID, notificationId)
+        .apply();
   }
 
   public static boolean getGeneralDownloadsWifi() {
-    return Preferences.get().getBoolean(ManagedKeys.GENERAL_DOWNLOADS_WIFI, true);
+    return Preferences.get()
+        .getBoolean(ManagedKeys.GENERAL_DOWNLOADS_WIFI, true);
   }
 
   public static boolean scheduledDownloadsEnabled() {
-    return Preferences.get().getBoolean(ManagedKeys.SCHEDULE_DOWNLOAD_SETTING, true);
+    return Preferences.get()
+        .getBoolean(ManagedKeys.SCHEDULE_DOWNLOAD_SETTING, true);
   }
 
   public static boolean getGeneralDownloadsMobile() {
-    return Preferences.get().getBoolean(ManagedKeys.GENERAL_DOWNLOADS_MOBILE, true);
+    return Preferences.get()
+        .getBoolean(ManagedKeys.GENERAL_DOWNLOADS_MOBILE, true);
   }
 
   public static boolean getAnimationsEnabledStatus() {
@@ -72,7 +85,10 @@ public class ManagerPreferences {
   }
 
   public static void setAutoUpdateEnable(boolean state) {
-    Preferences.get().edit().putBoolean(ManagedKeys.AUTO_UPDATE_ENABLE, state).apply();
+    Preferences.get()
+        .edit()
+        .putBoolean(ManagedKeys.AUTO_UPDATE_ENABLE, state)
+        .apply();
   }
 
   public static boolean isAllwaysUpdate() {
@@ -86,7 +102,10 @@ public class ManagerPreferences {
   }
 
   public static void setLastUpdates(int lastUpdates) {
-    Preferences.get().edit().putInt(ManagedKeys.LAST_UPDATES_KEY, lastUpdates).apply();
+    Preferences.get()
+        .edit()
+        .putInt(ManagedKeys.LAST_UPDATES_KEY, lastUpdates)
+        .apply();
   }
 
   public static long getCacheLimit() {
@@ -109,7 +128,10 @@ public class ManagerPreferences {
   }
 
   public static void setForceServerRefreshFlag(boolean state) {
-    Preferences.get().edit().putBoolean(ManagedKeys.FORCE_SERVER_REFRESH_FLAG, state).apply();
+    Preferences.get()
+        .edit()
+        .putBoolean(ManagedKeys.FORCE_SERVER_REFRESH_FLAG, state)
+        .apply();
   }
 
   public static boolean needsSqliteDbMigration() {
@@ -140,7 +162,10 @@ public class ManagerPreferences {
   }
 
   public static void setForceCountry(String forcedCountry) {
-    Preferences.get().edit().putString(ManagedKeys.FORCE_COUNTRY, forcedCountry).apply();
+    Preferences.get()
+        .edit()
+        .putString(ManagedKeys.FORCE_COUNTRY, forcedCountry)
+        .apply();
   }
 
   public static boolean isDebug() {
@@ -149,7 +174,10 @@ public class ManagerPreferences {
   }
 
   public static void setDebug(boolean debug) {
-    Preferences.get().edit().putBoolean(ManagedKeys.DEBUG, debug).apply();
+    Preferences.get()
+        .edit()
+        .putBoolean(ManagedKeys.DEBUG, debug)
+        .apply();
   }
 
   public static String getNotificationType() {
@@ -158,7 +186,10 @@ public class ManagerPreferences {
   }
 
   public static void setNotificationType(String notificationType) {
-    Preferences.get().edit().putString(ManagedKeys.NOTIFICATION_TYPE, notificationType).apply();
+    Preferences.get()
+        .edit()
+        .putString(ManagedKeys.NOTIFICATION_TYPE, notificationType)
+        .apply();
   }
 
   public static void setAllowRootInstallation(boolean allowRootInstallation) {
@@ -179,7 +210,10 @@ public class ManagerPreferences {
   }
 
   public static void setShowPreviewDialog(boolean showPreviewDialog) {
-    Preferences.get().edit().putBoolean(ManagedKeys.DONT_SHOW_ME_AGAIN, showPreviewDialog).apply();
+    Preferences.get()
+        .edit()
+        .putBoolean(ManagedKeys.DONT_SHOW_ME_AGAIN, showPreviewDialog)
+        .apply();
   }
 
   public static boolean isFirstRunV7() {
@@ -193,7 +227,10 @@ public class ManagerPreferences {
   }
 
   public static void setAddressBookAsSynced() {
-    Preferences.get().edit().putBoolean(ManagedKeys.ADDRESS_BOOK_SYNC, true).apply();
+    Preferences.get()
+        .edit()
+        .putBoolean(ManagedKeys.ADDRESS_BOOK_SYNC, true)
+        .apply();
   }
 
   public static boolean getTwitterSyncState() {
@@ -202,7 +239,10 @@ public class ManagerPreferences {
   }
 
   public static void setTwitterAsSynced() {
-    Preferences.get().edit().putBoolean(ManagedKeys.TWITTER_SYNC, true).apply();
+    Preferences.get()
+        .edit()
+        .putBoolean(ManagedKeys.TWITTER_SYNC, true)
+        .apply();
   }
 
   public static boolean getFacebookSyncState() {
@@ -211,12 +251,24 @@ public class ManagerPreferences {
   }
 
   public static void setFacebookAsSynced() {
-    Preferences.get().edit().putBoolean(ManagedKeys.FACEBOOK_SYNC, true).apply();
+    Preferences.get()
+        .edit()
+        .putBoolean(ManagedKeys.FACEBOOK_SYNC, true)
+        .apply();
   }
 
   public static void setAddressBookSyncValues(Boolean value) {
-    Preferences.get().edit().putBoolean(ManagedKeys.ADDRESS_BOOK_SYNC, value).apply();
-    Preferences.get().edit().putBoolean(ManagedKeys.TWITTER_SYNC, value).apply();
-    Preferences.get().edit().putBoolean(ManagedKeys.FACEBOOK_SYNC, value).apply();
+    Preferences.get()
+        .edit()
+        .putBoolean(ManagedKeys.ADDRESS_BOOK_SYNC, value)
+        .apply();
+    Preferences.get()
+        .edit()
+        .putBoolean(ManagedKeys.TWITTER_SYNC, value)
+        .apply();
+    Preferences.get()
+        .edit()
+        .putBoolean(ManagedKeys.FACEBOOK_SYNC, value)
+        .apply();
   }
 }

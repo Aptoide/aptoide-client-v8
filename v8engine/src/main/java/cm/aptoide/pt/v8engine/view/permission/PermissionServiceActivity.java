@@ -57,20 +57,6 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
   }
 
   @TargetApi(Build.VERSION_CODES.M) @Override
-  public void requestAccessToExternalFileSystem(@Nullable Action0 toRunWhenAccessIsGranted,
-      @Nullable Action0 toRunWhenAccessIsDennied) {
-    requestAccessToExternalFileSystem(true, toRunWhenAccessIsGranted, toRunWhenAccessIsDennied);
-  }
-
-  @TargetApi(Build.VERSION_CODES.M) @Override
-  public void requestAccessToExternalFileSystem(boolean forceShowRationale,
-      @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
-    requestAccessToExternalFileSystem(forceShowRationale,
-        R.string.storage_access_permission_request_message, toRunWhenAccessIsGranted,
-        toRunWhenAccessIsDenied);
-  }
-
-  @TargetApi(Build.VERSION_CODES.M) @Override
   public void requestAccessToAccounts(@Nullable Action0 toRunWhenAccessIsGranted,
       @Nullable Action0 toRunWhenAccessIsDenied) {
     requestAccessToAccounts(true, toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
@@ -165,20 +151,21 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
       @Nullable Action0 toRunWhenAccessIsDenied) {
     int message = R.string.general_downloads_dialog_no_download_rule_message;
 
-    if ((AptoideUtils.SystemU.getConnectionType().equals("mobile")
-        && !ManagerPreferences.getGeneralDownloadsMobile())
-        || (AptoideUtils.SystemU.getConnectionType().equals("wifi")
-        && !ManagerPreferences.getGeneralDownloadsWifi())) {
-      if ((AptoideUtils.SystemU.getConnectionType().equals("wifi")
-          || AptoideUtils.SystemU.getConnectionType().equals("mobile"))
+    if ((AptoideUtils.SystemU.getConnectionType()
+        .equals("mobile") && !ManagerPreferences.getGeneralDownloadsMobile())
+        || (AptoideUtils.SystemU.getConnectionType()
+        .equals("wifi") && !ManagerPreferences.getGeneralDownloadsWifi())) {
+      if ((AptoideUtils.SystemU.getConnectionType()
+          .equals("wifi") || AptoideUtils.SystemU.getConnectionType()
+          .equals("mobile"))
           && !ManagerPreferences.getGeneralDownloadsWifi()
           && !ManagerPreferences.getGeneralDownloadsMobile()) {
         message = R.string.general_downloads_dialog_no_download_rule_message;
-      } else if (AptoideUtils.SystemU.getConnectionType().equals("wifi")
-          && !ManagerPreferences.getGeneralDownloadsWifi()) {
+      } else if (AptoideUtils.SystemU.getConnectionType()
+          .equals("wifi") && !ManagerPreferences.getGeneralDownloadsWifi()) {
         message = R.string.general_downloads_dialog_only_mobile_message;
-      } else if (AptoideUtils.SystemU.getConnectionType().equals("mobile")
-          && !ManagerPreferences.getGeneralDownloadsMobile()) {
+      } else if (AptoideUtils.SystemU.getConnectionType()
+          .equals("mobile") && !ManagerPreferences.getGeneralDownloadsMobile()) {
         message = R.string.general_downloads_dialog_only_wifi_message;
       }
 
@@ -187,7 +174,8 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
         @Override public void onNext(GenericDialogs.EResponse eResponse) {
           super.onNext(eResponse);
           if (eResponse == GenericDialogs.EResponse.YES) {
-            getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider().newSettingsFragment());
+            getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+                .newSettingsFragment());
           } else {
             if (toRunWhenAccessIsDenied != null) {
               toRunWhenAccessIsDenied.call();
@@ -245,6 +233,20 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
   }
 
   @TargetApi(Build.VERSION_CODES.M) @Override
+  public void requestAccessToExternalFileSystem(@Nullable Action0 toRunWhenAccessIsGranted,
+      @Nullable Action0 toRunWhenAccessIsDennied) {
+    requestAccessToExternalFileSystem(true, toRunWhenAccessIsGranted, toRunWhenAccessIsDennied);
+  }
+
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void requestAccessToExternalFileSystem(boolean forceShowRationale,
+      @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
+    requestAccessToExternalFileSystem(forceShowRationale,
+        R.string.storage_access_permission_request_message, toRunWhenAccessIsGranted,
+        toRunWhenAccessIsDenied);
+  }
+
+  @TargetApi(Build.VERSION_CODES.M) @Override
   public void requestAccessToExternalFileSystem(boolean forceShowRationale,
       @StringRes int rationaleMessage, @Nullable Action0 toRunWhenAccessIsGranted,
       @Nullable Action0 toRunWhenAccessIsDennied) {
@@ -298,7 +300,8 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
 
   private void showMessageOKCancel(String message,
       SimpleSubscriber<GenericDialogs.EResponse> subscriber) {
-    GenericDialogs.createGenericOkCancelMessage(this, "", message).subscribe(subscriber);
+    GenericDialogs.createGenericOkCancelMessage(this, "", message)
+        .subscribe(subscriber);
   }
 
   @TargetApi(Build.VERSION_CODES.M) @Override

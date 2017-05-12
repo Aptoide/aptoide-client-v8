@@ -87,9 +87,8 @@ import java.util.Locale;
     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        Uri uriForFile = FileProvider.getUriForFile(getActivity(),
-            Application.getConfiguration().getAppId() + ".provider",
-            new File(getFileUriFromFileName(photoFileName).getPath()));
+        Uri uriForFile = FileProvider.getUriForFile(getActivity(), Application.getConfiguration()
+            .getAppId() + ".provider", new File(getFileUriFromFileName(photoFileName).getPath()));
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriForFile);
       } else {
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, getFileUriFromFileName(photoFileName));
@@ -126,10 +125,11 @@ import java.util.Locale;
   }
 
   protected Uri getFileUriFromFileName(String fileName) {
-    File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),
-        ".aptoide/user_avatar");
+    File storageDir = new File(Environment.getExternalStorageDirectory()
+        .getAbsolutePath(), ".aptoide/user_avatar");
     if (!storageDir.exists() && !storageDir.mkdirs()) {
-      CrashReport.getInstance().log(new IOException("Failed to create directory"));
+      CrashReport.getInstance()
+          .log(new IOException("Failed to create directory"));
     }
     return Uri.fromFile(new File(storageDir.getPath() + File.separator + fileName));
   }

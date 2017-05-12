@@ -55,56 +55,97 @@ public class AppRepository {
     //If vanilla, don't pass the store name.
     //store name is already in appId
     //[AN-1160] - [AppView] latest version bug
-    return GetAppRequest.of(appId,
-        V8Engine.getConfiguration().getPartnerId() == null ? null : storeName,
+    return GetAppRequest.of(appId, V8Engine.getConfiguration()
+            .getPartnerId() == null ? null : storeName,
         StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
-        bodyInterceptorV7, httpClient, converterFactory).observe(refresh).flatMap(response -> {
-      if (response != null && response.isOk()) {
-        if (response.getNodes().getMeta().getData().isPaid()) {
-          return addPayment(sponsored, response, refresh);
-        } else {
-          return Observable.just(response);
-        }
-      } else {
-        return Observable.error(
-            new RepositoryItemNotFoundException("No app found for app id " + appId));
-      }
-    });
+        bodyInterceptorV7, httpClient, converterFactory)
+        .observe(refresh)
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            if (response.getNodes()
+                .getMeta()
+                .getData()
+                .isPaid()) {
+              return addPayment(sponsored, response, refresh);
+            } else {
+              return Observable.just(response);
+            }
+          } else {
+            return Observable.error(
+                new RepositoryItemNotFoundException("No app found for app id " + appId));
+          }
+        });
   }
 
   private Observable<GetApp> addPayment(boolean sponsored, GetApp getApp, boolean refresh) {
-    return getPaidApp(getApp.getNodes().getMeta().getData().getId(), sponsored,
-        getApp.getNodes().getMeta().getData().getStore().getName(), refresh).map(paidApp -> {
+    return getPaidApp(getApp.getNodes()
+        .getMeta()
+        .getData()
+        .getId(), sponsored, getApp.getNodes()
+        .getMeta()
+        .getData()
+        .getStore()
+        .getName(), refresh).map(paidApp -> {
 
-      if (paidApp.getPayment().isPaid()) {
-        getApp.getNodes().getMeta().getData().getFile().setPath(paidApp.getPath().getStringPath());
+      if (paidApp.getPayment()
+          .isPaid()) {
+        getApp.getNodes()
+            .getMeta()
+            .getData()
+            .getFile()
+            .setPath(paidApp.getPath()
+                .getStringPath());
       } else {
         getApp.getNodes()
             .getMeta()
             .getData()
             .getPay()
-            .setProductId(paidApp.getPayment().getMetadata().getId());
+            .setProductId(paidApp.getPayment()
+                .getMetadata()
+                .getId());
         getApp.getNodes()
             .getMeta()
             .getData()
             .getPay()
-            .setCurrency(paidApp.getPayment().getPaymentServices().get(0).getCurrency());
+            .setCurrency(paidApp.getPayment()
+                .getPaymentServices()
+                .get(0)
+                .getCurrency());
         getApp.getNodes()
             .getMeta()
             .getData()
             .getPay()
-            .setTaxRate(paidApp.getPayment().getPaymentServices().get(0).getTaxRate());
+            .setTaxRate(paidApp.getPayment()
+                .getPaymentServices()
+                .get(0)
+                .getTaxRate());
       }
-      getApp.getNodes().getMeta().getData().getPay().setPrice(paidApp.getPayment().getAmount());
-      getApp.getNodes().getMeta().getData().getPay().setSymbol(paidApp.getPayment().getSymbol());
-      getApp.getNodes().getMeta().getData().getPay().setStatus(paidApp.getPayment().getStatus());
+      getApp.getNodes()
+          .getMeta()
+          .getData()
+          .getPay()
+          .setPrice(paidApp.getPayment()
+              .getAmount());
+      getApp.getNodes()
+          .getMeta()
+          .getData()
+          .getPay()
+          .setSymbol(paidApp.getPayment()
+              .getSymbol());
+      getApp.getNodes()
+          .getMeta()
+          .getData()
+          .getPay()
+          .setStatus(paidApp.getPayment()
+              .getStatus());
       return getApp;
-    }).onErrorResumeNext(throwable -> {
-      if (throwable instanceof RepositoryItemNotFoundException) {
-        return Observable.just(getApp);
-      }
-      return Observable.error(throwable);
-    });
+    })
+        .onErrorResumeNext(throwable -> {
+          if (throwable instanceof RepositoryItemNotFoundException) {
+            return Observable.just(getApp);
+          }
+          return Observable.error(throwable);
+        });
   }
 
   public Observable<PaidApp> getPaidApp(long appId, boolean sponsored, String storeName,
@@ -128,7 +169,10 @@ public class AppRepository {
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
-            if (response.getNodes().getMeta().getData().isPaid()) {
+            if (response.getNodes()
+                .getMeta()
+                .getData()
+                .isPaid()) {
               return addPayment(sponsored, response, refresh);
             } else {
               return Observable.just(response);
@@ -145,7 +189,10 @@ public class AppRepository {
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
-            if (response.getNodes().getMeta().getData().isPaid()) {
+            if (response.getNodes()
+                .getMeta()
+                .getData()
+                .isPaid()) {
               return addPayment(sponsored, response, refresh);
             } else {
               return Observable.just(response);
@@ -162,7 +209,10 @@ public class AppRepository {
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
-            if (response.getNodes().getMeta().getData().isPaid()) {
+            if (response.getNodes()
+                .getMeta()
+                .getData()
+                .isPaid()) {
               return addPayment(sponsored, response, refresh);
             } else {
               return Observable.just(response);

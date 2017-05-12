@@ -19,9 +19,8 @@ public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
   private final String aptoideMd5sum;
   private final String aptoidePackage;
 
-  public BaseBodyInterceptorV7(IdsRepository idsRepository,
-      AptoideAccountManager accountManager, AdultContent adultContent, String aptoideMd5sum,
-      String aptoidePackage) {
+  public BaseBodyInterceptorV7(IdsRepository idsRepository, AptoideAccountManager accountManager,
+      AdultContent adultContent, String aptoideMd5sum, String aptoidePackage) {
     this.idsRepository = idsRepository;
     this.accountManager = accountManager;
     this.adultContent = adultContent;
@@ -30,30 +29,34 @@ public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
   }
 
   public Single<BaseBody> intercept(BaseBody body) {
-    return Single.zip(adultContent.enabled().first().toSingle(),
-        accountManager.accountStatus().first().toSingle(), (adultContentEnabled, account) -> {
-          if (account.isLoggedIn()) {
-            body.setAccessToken(account.getAccessToken());
-          }
+    return Single.zip(adultContent.enabled()
+        .first()
+        .toSingle(), accountManager.accountStatus()
+        .first()
+        .toSingle(), (adultContentEnabled, account) -> {
+      if (account.isLoggedIn()) {
+        body.setAccessToken(account.getAccessToken());
+      }
 
-          body.setAptoideId(idsRepository.getUniqueIdentifier());
-          body.setAptoideVercode(AptoideUtils.Core.getVerCode());
-          body.setCdn("pool");
-          body.setLang(Api.LANG);
-          body.setMature(adultContentEnabled);
-          if (ManagerPreferences.getHWSpecsFilter()) {
-            body.setQ(Api.Q);
-          }
-          if (ManagerPreferences.isDebug()) {
-            String forceCountry = ManagerPreferences.getForceCountry();
-            if (!TextUtils.isEmpty(forceCountry)) {
-              body.setCountry(forceCountry);
-            }
-          }
-          body.setAptoideMd5sum(aptoideMd5sum);
-          body.setAptoidePackage(aptoidePackage);
+      body.setAptoideId(idsRepository.getUniqueIdentifier());
+      body.setAptoideVercode(AptoideUtils.Core.getVerCode());
+      body.setCdn("pool");
+      body.setLang(Api.LANG);
+      body.setMature(adultContentEnabled);
+      if (ManagerPreferences.getHWSpecsFilter()) {
+        body.setQ(Api.Q);
+      }
+      if (ManagerPreferences.isDebug()) {
+        String forceCountry = ManagerPreferences.getForceCountry();
+        if (!TextUtils.isEmpty(forceCountry)) {
+          body.setCountry(forceCountry);
+        }
+      }
+      body.setAptoideMd5sum(aptoideMd5sum);
+      body.setAptoidePackage(aptoidePackage);
 
-          return body;
-        }).subscribeOn(Schedulers.computation());
+      return body;
+    })
+        .subscribeOn(Schedulers.computation());
   }
 }

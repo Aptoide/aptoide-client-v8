@@ -47,8 +47,9 @@ public class ScheduledAccessor extends SimpleAccessor<Scheduled> {
       @Cleanup Realm realm = Database.get();
       realm.beginTransaction();
       realm.insertOrUpdate(scheduledList);
-      RealmResults<Scheduled> results =
-          realm.where(Scheduled.class).in(Scheduled.MD5, md5s).findAll();
+      RealmResults<Scheduled> results = realm.where(Scheduled.class)
+          .in(Scheduled.MD5, md5s)
+          .findAll();
       for (Scheduled dbScheduled : results) {
         dbScheduled.setDownloading(true);
       }
@@ -63,8 +64,9 @@ public class ScheduledAccessor extends SimpleAccessor<Scheduled> {
 
       @Cleanup Realm realm = Database.get();
       realm.beginTransaction();
-      Scheduled dbScheduled =
-          realm.where(Scheduled.class).equalTo(Scheduled.MD5, scheduled.getMd5()).findFirst();
+      Scheduled dbScheduled = realm.where(Scheduled.class)
+          .equalTo(Scheduled.MD5, scheduled.getMd5())
+          .findFirst();
       dbScheduled.setDownloading(true);
       realm.commitTransaction();
       return scheduled;
@@ -73,6 +75,8 @@ public class ScheduledAccessor extends SimpleAccessor<Scheduled> {
 
   public boolean hasScheduleDownloads() {
     @Cleanup Realm realm = Database.get();
-    return realm.where(Scheduled.class).findAll().size() != 0;
+    return realm.where(Scheduled.class)
+        .findAll()
+        .size() != 0;
   }
 }

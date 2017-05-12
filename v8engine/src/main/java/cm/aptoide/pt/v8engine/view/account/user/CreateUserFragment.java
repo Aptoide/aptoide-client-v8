@@ -114,7 +114,8 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
   }
 
   public void loadImage(Uri imagePath) {
-    ImageLoader.with(getActivity()).loadWithCircleTransform(imagePath, userPicture, false);
+    ImageLoader.with(getActivity())
+        .loadWithCircleTransform(imagePath, userPicture, false);
   }
 
   @Override public void showIconPropertiesError(String errors) {
@@ -137,21 +138,24 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
         () -> Analytics.Account.createdUserProfile(!TextUtils.isEmpty(userPicturePath)));
 
     createUserButtonClick().doOnNext(__ -> hideKeyboardAndShowProgressDialog())
-        .flatMap(__ -> accountManager.updateAccount(userName.getText().toString().trim(),
-            userPicturePath)
+        .flatMap(__ -> accountManager.updateAccount(userName.getText()
+            .toString()
+            .trim(), userPicturePath)
             .timeout(90, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .andThen(Completable.merge(dismissProgressDialogCompletable, sendAnalytics))
             .andThen(showSuccessMessageAndNavigateToLoggedInView())
             .onErrorResumeNext(err -> {
-              CrashReport.getInstance().log(err);
+              CrashReport.getInstance()
+                  .log(err);
               return dismissProgressDialogCompletable.andThen(showError(err));
             })
             .toObservable())
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .retry()
         .subscribe(__ -> {
-        }, err -> CrashReport.getInstance().log(err));
+        }, err -> CrashReport.getInstance()
+            .log(err));
   }
 
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
@@ -197,7 +201,8 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
     }
 
     // don't go home
-    return ShowMessage.asObservableSnack(createUserButton, message).toCompletable();
+    return ShowMessage.asObservableSnack(createUserButton, message)
+        .toCompletable();
   }
 
   private void dismissProgressDialog() {
@@ -209,8 +214,8 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
   }
 
   private Completable showSuccessMessageAndNavigateToLoggedInView() {
-    final boolean showPrivacyConfigs =
-        Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable();
+    final boolean showPrivacyConfigs = Application.getConfiguration()
+        .isCreateStoreAndSetUserPrivacyAvailable();
 
     Single<Integer> showUserCreated =
         ShowMessage.asObservableSnack(createUserButton, R.string.user_created)

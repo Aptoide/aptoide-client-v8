@@ -48,7 +48,8 @@ public class ShowMessage {
 
   @NonNull private static Snackbar asSnackInternal(View view, String msg, String actionMsg,
       View.OnClickListener action) {
-    return Snackbar.make(view, msg, Snackbar.LENGTH_SHORT).setAction(actionMsg, action);
+    return Snackbar.make(view, msg, Snackbar.LENGTH_SHORT)
+        .setAction(actionMsg, action);
   }
 
   /**
@@ -121,7 +122,8 @@ public class ShowMessage {
 
   private static Snackbar asSnackInternal(View view, @StringRes int msg, @StringRes int actionMsg,
       View.OnClickListener action) {
-    return Snackbar.make(view, msg, Snackbar.LENGTH_SHORT).setAction(actionMsg, action);
+    return Snackbar.make(view, msg, Snackbar.LENGTH_SHORT)
+        .setAction(actionMsg, action);
   }
 
   /**
@@ -282,7 +284,8 @@ public class ShowMessage {
     if (view == null) {
       return null;
     }
-    return Snackbar.make(view, msg, Snackbar.LENGTH_SHORT).setAction(actionMsg, action);
+    return Snackbar.make(view, msg, Snackbar.LENGTH_SHORT)
+        .setAction(actionMsg, action);
   }
 
   //
@@ -319,7 +322,8 @@ public class ShowMessage {
   }
 
   @Deprecated public static void asToast(Context context, String msg) {
-    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+    Toast.makeText(context, msg, Toast.LENGTH_SHORT)
+        .show();
   }
 
   //
@@ -327,7 +331,8 @@ public class ShowMessage {
   //
 
   @Deprecated public static void asToast(Context context, @StringRes int msg) {
-    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+    Toast.makeText(context, msg, Toast.LENGTH_SHORT)
+        .show();
   }
 
   @Retention(SOURCE) @IntDef({ VISIBLE, DISMISSED }) public @interface SnackbarVisibility {

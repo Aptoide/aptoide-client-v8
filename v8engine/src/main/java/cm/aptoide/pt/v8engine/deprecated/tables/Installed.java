@@ -23,7 +23,8 @@ import io.realm.RealmObject;
 public final class Installed extends BaseTable {
 
   private static final String TAG = Installed.class.getSimpleName();
-  private final PackageManager pm = AptoideUtils.getContext().getPackageManager();
+  private final PackageManager pm = AptoideUtils.getContext()
+      .getPackageManager();
   /*
   public static final String NAME = "installed";
 
@@ -64,7 +65,8 @@ public final class Installed extends BaseTable {
           return new cm.aptoide.pt.database.realm.Installed(packageInfo);
         }
       } catch (PackageManager.NameNotFoundException ex) {
-        CrashReport.getInstance().log(ex);
+        CrashReport.getInstance()
+            .log(ex);
       }
     }
     return null;

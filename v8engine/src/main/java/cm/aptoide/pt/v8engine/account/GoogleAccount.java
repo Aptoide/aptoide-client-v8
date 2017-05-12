@@ -24,7 +24,8 @@ public class GoogleAccount implements Account {
       if (client.isConnected()) {
         Auth.GoogleSignInApi.signOut(client);
       }
-    }).subscribeOn(Schedulers.computation());
+    })
+        .subscribeOn(Schedulers.computation());
   }
 
   @Override public Completable refreshToken() {

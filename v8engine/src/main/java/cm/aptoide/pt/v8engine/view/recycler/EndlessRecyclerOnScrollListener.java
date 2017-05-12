@@ -122,7 +122,8 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
                 total += response.getTotal();
                 offset += response.getNextSize();
               }
-              v7request.getBody().setOffset(offset);
+              v7request.getBody()
+                  .setOffset(offset);
             }
 
             if (onFirstLoadListener != null && !firstCallbackCalled) {

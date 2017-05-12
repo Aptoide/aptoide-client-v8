@@ -101,10 +101,11 @@ public class StoreUtilsProxy {
 
     return getStoreMetaRequest.observe()
         .flatMap(getStoreMeta -> {
-          if (BaseV7Response.Info.Status.OK.equals(getStoreMeta.getInfo().getStatus())) {
+          if (BaseV7Response.Info.Status.OK.equals(getStoreMeta.getInfo()
+              .getStatus())) {
             if (accountManager.isLoggedIn()) {
-              return accountManager.subscribeStore(getStoreMeta.getData().getName(),
-                  storeCredentials.getUsername(), storeCredentials.getPasswordSha1())
+              return accountManager.subscribeStore(getStoreMeta.getData()
+                  .getName(), storeCredentials.getUsername(), storeCredentials.getPasswordSha1())
                   .andThen(Observable.just(getStoreMeta));
             } else {
               return Observable.just(getStoreMeta);
@@ -115,7 +116,8 @@ public class StoreUtilsProxy {
         })
         .doOnNext(
             getStoreMeta -> saveStore(getStoreMeta.getData(), getStoreMetaRequest, storeAccessor))
-        .doOnError((throwable) -> CrashReport.getInstance().log(throwable))
+        .doOnError((throwable) -> CrashReport.getInstance()
+            .log(throwable))
         .toCompletable();
   }
 
@@ -125,20 +127,26 @@ public class StoreUtilsProxy {
 
     store.setStoreId(storeData.getId());
     store.setStoreName(storeData.getName());
-    store.setDownloads(storeData.getStats().getDownloads());
+    store.setDownloads(storeData.getStats()
+        .getDownloads());
 
     store.setIconPath(storeData.getAvatar());
-    store.setTheme(storeData.getAppearance().getTheme());
+    store.setTheme(storeData.getAppearance()
+        .getTheme());
 
     if (isPrivateCredentialsSet(getStoreMetaRequest)) {
-      store.setUsername(getStoreMetaRequest.getBody().getStoreUser());
-      store.setPasswordSha1(getStoreMetaRequest.getBody().getStorePassSha1());
+      store.setUsername(getStoreMetaRequest.getBody()
+          .getStoreUser());
+      store.setPasswordSha1(getStoreMetaRequest.getBody()
+          .getStorePassSha1());
     }
     storeAccessor.save(store);
   }
 
   private boolean isPrivateCredentialsSet(GetStoreMetaRequest getStoreMetaRequest) {
-    return getStoreMetaRequest.getBody().getStoreUser() != null
-        && getStoreMetaRequest.getBody().getStorePassSha1() != null;
+    return getStoreMetaRequest.getBody()
+        .getStoreUser() != null
+        && getStoreMetaRequest.getBody()
+        .getStorePassSha1() != null;
   }
 }

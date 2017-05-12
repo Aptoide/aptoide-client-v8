@@ -218,7 +218,8 @@ public class FileUtils {
           long size = deleteDir(filePath);
           Logger.d(TAG, "deleting folder " + filePath.getPath() + " size: " + size);
           return size;
-        }).onErrorResumeNext(throwable -> Observable.empty()))
+        })
+            .onErrorResumeNext(throwable -> Observable.empty()))
         .toList()
         .map(deletedSizes -> {
           long size = 0;
@@ -238,21 +239,22 @@ public class FileUtils {
   }
 
   public String getMediaStoragePath(Uri contentUri, Context context) {
-    if(contentUri==null){
+    if (contentUri == null) {
       throw new NullPointerException("content Uri is null");
     }
 
     Cursor cursor = null;
     try {
       String[] projection = { MediaStore.Images.Media.DATA };
-      cursor = context.getContentResolver().query(contentUri, projection, null, null, null);
+      cursor = context.getContentResolver()
+          .query(contentUri, projection, null, null, null);
       int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
       cursor.moveToFirst();
       return cursor.getString(column_index);
     } catch (NullPointerException ex) {
       Logger.e(TAG, ex);
     } finally {
-      if(cursor!=null) {
+      if (cursor != null) {
         cursor.close();
       }
     }

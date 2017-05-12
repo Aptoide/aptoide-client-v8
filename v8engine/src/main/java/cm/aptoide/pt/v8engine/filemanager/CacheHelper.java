@@ -43,13 +43,13 @@ public class CacheHelper implements CacheManager {
   public static CacheHelper build() {
     List<CacheHelper.FolderToManage> folders = new LinkedList<>();
 
-    String cachePath = Application.getConfiguration().getCachePath();
+    String cachePath = Application.getConfiguration()
+        .getCachePath();
 
     folders.add(new CacheHelper.FolderToManage(new File(cachePath), DateUtils.HOUR_IN_MILLIS));
     folders.add(new CacheHelper.FolderToManage(new File(cachePath + "icons/"), MONTH_CACHE_TIME));
-    folders.add(new CacheHelper.FolderToManage(
-        new File(Application.getContext().getCacheDir() + "image_manager_disk_cache/"),
-        MONTH_CACHE_TIME));
+    folders.add(new CacheHelper.FolderToManage(new File(Application.getContext()
+        .getCacheDir() + "image_manager_disk_cache/"), MONTH_CACHE_TIME));
     return new CacheHelper(ManagerPreferences.getCacheLimit(), folders, new FileUtils());
   }
 
@@ -58,7 +58,8 @@ public class CacheHelper implements CacheManager {
     return Observable.just(foldersToCleanPath)
         .filter(folderToManages -> shouldClean(folderToManages, maxCacheSize))
         .flatMapIterable(folders -> folders)
-        .filter(folder -> folder.getFolder().exists())
+        .filter(folder -> folder.getFolder()
+            .exists())
         .map(folder -> removeOldFiles(folder.getFolder(), folder.getCacheTime(), now))
         .toList()
         .map(sizes -> {
@@ -75,7 +76,8 @@ public class CacheHelper implements CacheManager {
   private boolean shouldClean(List<FolderToManage> foldersToCleanPath, long maxCacheSize) {
     long cacheSize = 0;
     for (int i = 0; i < foldersToCleanPath.size(); i++) {
-      cacheSize += fileUtils.dirSize(this.foldersToCleanPath.get(i).getFolder());
+      cacheSize += fileUtils.dirSize(this.foldersToCleanPath.get(i)
+          .getFolder());
     }
     return cacheSize > maxCacheSize;
   }
@@ -137,7 +139,9 @@ public class CacheHelper implements CacheManager {
    */
   private boolean checkIfInFoldersToClean(List<FolderToManage> foldersToCleanPath, File folder) {
     for (FolderToManage folderToManage : foldersToCleanPath) {
-      if (folderToManage.getFolder().getAbsolutePath().equals(folder.getAbsolutePath())) {
+      if (folderToManage.getFolder()
+          .getAbsolutePath()
+          .equals(folder.getAbsolutePath())) {
         return true;
       }
     }

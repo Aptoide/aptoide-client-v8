@@ -41,13 +41,15 @@ public class ScreenshotsViewerFragment extends UIComponentFragment {
   // methods
   @Override public void loadExtras(Bundle extras) {
     if (extras == null) {
-      currentItem = getActivity().getIntent().getIntExtra(BundleArgs.POSITION.name(), 0);
+      currentItem = getActivity().getIntent()
+          .getIntExtra(BundleArgs.POSITION.name(), 0);
     } else {
       currentItem = extras.getInt(BundleArgs.POSITION.name(), 0);
     }
 
     if (extras == null) {
-      uris = getActivity().getIntent().getStringArrayListExtra(BundleArgs.URIs.name());
+      uris = getActivity().getIntent()
+          .getStringArrayListExtra(BundleArgs.URIs.name());
     } else {
       uris = extras.getStringArrayList(BundleArgs.URIs.name());
     }

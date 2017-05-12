@@ -15,8 +15,8 @@ import org.parceler.Parcel;
   public CreateStoreModel() {
   }
 
-  public CreateStoreModel(long storeId, String storeFrom, String storeRemoteUrl, String storeThemeName,
-      String storeDescription) {
+  public CreateStoreModel(long storeId, String storeFrom, String storeRemoteUrl,
+      String storeThemeName, String storeDescription) {
     this.storeId = storeId;
     this.storeName = "";
     this.storeDescription = storeDescription;
@@ -26,7 +26,8 @@ import org.parceler.Parcel;
     this.storeRemoteUrl = storeRemoteUrl;
   }
 
-  public CreateStoreModel(CreateStoreModel otherStoreModel, String storeName, String storeDescription) {
+  public CreateStoreModel(CreateStoreModel otherStoreModel, String storeName,
+      String storeDescription) {
     this.storeId = otherStoreModel.getStoreId();
     this.storeName = storeName;
     this.storeDescription = storeDescription;

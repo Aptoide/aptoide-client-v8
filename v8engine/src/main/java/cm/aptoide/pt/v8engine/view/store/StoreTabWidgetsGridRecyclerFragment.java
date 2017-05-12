@@ -57,17 +57,20 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
 
   protected Observable<List<Displayable>> loadGetStoreWidgets(GetStoreWidgets getStoreWidgets,
       boolean refresh, String url) {
-    return Observable.from(getStoreWidgets.getDatalist().getList())
+    return Observable.from(getStoreWidgets.getDatalist()
+        .getList())
         .flatMap(wsWidget -> {
           return WSWidgetsUtils.loadWidgetNode(wsWidget,
               StoreUtils.getStoreCredentialsFromUrl(url, storeCredentialsProvider), refresh,
               accountManager.getAccessToken(), idsRepository.getUniqueIdentifier(),
               DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                  V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
-              accountManager.isAccountMature(), bodyInterceptor, httpClient, converterFactory);
+                  V8Engine.getContext()), DataProvider.getConfiguration()
+                  .getPartnerId(), accountManager.isAccountMature(), bodyInterceptor, httpClient,
+              converterFactory);
         })
         .toList()
-        .flatMapIterable(wsWidgets -> getStoreWidgets.getDatalist().getList())
+        .flatMapIterable(wsWidgets -> getStoreWidgets.getDatalist()
+            .getList())
         .concatMap(wsWidget -> {
           return DisplayablesFactory.parse(wsWidget, storeTheme, storeRepository, storeContext,
               getContext(), accountManager, storeUtilsProxy);

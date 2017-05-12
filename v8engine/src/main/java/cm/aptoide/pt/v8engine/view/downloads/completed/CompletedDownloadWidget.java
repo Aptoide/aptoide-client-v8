@@ -54,7 +54,8 @@ import rx.schedulers.Schedulers;
     Download download = displayable.getDownload();
     appName.setText(download.getAppName());
     if (!TextUtils.isEmpty(download.getIcon())) {
-      ImageLoader.with(context).load(download.getIcon(), appIcon);
+      ImageLoader.with(context)
+          .load(download.getIcon(), appIcon);
     }
 
     //save original colors
@@ -83,7 +84,8 @@ import rx.schedulers.Schedulers;
 
     compositeSubscription.add(RxView.clicks(cancelDownloadButton)
         .subscribe(click -> displayable.removeDownload(context), err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         }));
 
     compositeSubscription.add(displayable.downloadStatus()
@@ -96,7 +98,8 @@ import rx.schedulers.Schedulers;
           } else {
             resumeDownloadButton.setVisibility(View.GONE);
           }
-        }, throwable -> CrashReport.getInstance().log(throwable)));
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable)));
   }
 
   private void updateStatus(Download download) {
@@ -106,7 +109,8 @@ import rx.schedulers.Schedulers;
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         statusTextColor = context.getColor(R.color.red_700);
       } else {
-        statusTextColor = context.getResources().getColor(R.color.red_700);
+        statusTextColor = context.getResources()
+            .getColor(R.color.red_700);
       }
       status.setTextColor(statusTextColor);
     } else {

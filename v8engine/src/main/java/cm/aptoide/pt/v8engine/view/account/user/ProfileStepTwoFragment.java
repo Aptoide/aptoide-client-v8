@@ -68,32 +68,32 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment {
 
     RxView.clicks(continueBtn)
         .doOnNext(click -> waitDialog.show())
-        .flatMapCompletable(
-            click -> accountManager.updateAccount(Account.Access.PUBLIC)
-                .onErrorResumeNext(err -> {
-                  CrashReport.getInstance().log(err);
-                  return showErrorMessage();
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .andThen(showContinueSuccessMessage())
-                .doOnCompleted(() -> sendAnalytics(Analytics.Account.ProfileAction.CONTINUE))
-                .doOnCompleted(() -> navigateToCreateStoreOrHome()))
+        .flatMapCompletable(click -> accountManager.updateAccount(Account.Access.PUBLIC)
+            .onErrorResumeNext(err -> {
+              CrashReport.getInstance()
+                  .log(err);
+              return showErrorMessage();
+            })
+            .observeOn(AndroidSchedulers.mainThread())
+            .andThen(showContinueSuccessMessage())
+            .doOnCompleted(() -> sendAnalytics(Analytics.Account.ProfileAction.CONTINUE))
+            .doOnCompleted(() -> navigateToCreateStoreOrHome()))
         .retry()
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe();
 
     RxView.clicks(privateProfileBtn)
         .doOnNext(__ -> waitDialog.show())
-        .flatMapCompletable(
-            __ -> accountManager.updateAccount(Account.Access.UNLISTED)
-                .onErrorResumeNext(err -> {
-                  CrashReport.getInstance().log(err);
-                  return showErrorMessage();
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .andThen(showContinueSuccessMessage())
-                .doOnCompleted(() -> sendAnalytics(Analytics.Account.ProfileAction.PRIVATE_PROFILE))
-                .doOnCompleted(() -> navigateToCreateStoreOrHome()))
+        .flatMapCompletable(__ -> accountManager.updateAccount(Account.Access.UNLISTED)
+            .onErrorResumeNext(err -> {
+              CrashReport.getInstance()
+                  .log(err);
+              return showErrorMessage();
+            })
+            .observeOn(AndroidSchedulers.mainThread())
+            .andThen(showContinueSuccessMessage())
+            .doOnCompleted(() -> sendAnalytics(Analytics.Account.ProfileAction.PRIVATE_PROFILE))
+            .doOnCompleted(() -> navigateToCreateStoreOrHome()))
         .retry()
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe();
@@ -112,7 +112,8 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment {
 
   private Completable showErrorMessage() {
     return Completable.fromAction(() -> waitDialog.dismiss())
-        .andThen(ShowMessage.asObservableSnack(this, R.string.unknown_error).toCompletable());
+        .andThen(ShowMessage.asObservableSnack(this, R.string.unknown_error)
+            .toCompletable());
   }
 
   private Completable showContinueSuccessMessage() {

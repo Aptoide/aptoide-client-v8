@@ -15,7 +15,8 @@ import okio.Buffer;
 public class POSTCacheKeyAlgorithm implements KeyAlgorithm<Request, String> {
 
   @Override public String getKeyFrom(Request request) {
-    final Request clonedRequest = request.newBuilder().build();
+    final Request clonedRequest = request.newBuilder()
+        .build();
     final StringBuilder content = new StringBuilder();
 
     // append url
@@ -35,17 +36,21 @@ public class POSTCacheKeyAlgorithm implements KeyAlgorithm<Request, String> {
     try {
 
       // append body if existing
-      if (clonedRequest.body() != null && clonedRequest.body().contentLength() > 0) {
+      if (clonedRequest.body() != null
+          && clonedRequest.body()
+          .contentLength() > 0) {
         content.append("Body:\n");
         final Buffer bodyBuffer = new Buffer();
-        clonedRequest.body().writeTo(bodyBuffer);
+        clonedRequest.body()
+            .writeTo(bodyBuffer);
         content.append(bodyBuffer.readUtf8());
       }
 
       // return hash sum of the digest content
       return AptoideUtils.AlgorithmU.computeSha1(content.toString());
     } catch (IOException e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     }
 
     return null;

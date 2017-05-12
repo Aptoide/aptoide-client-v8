@@ -54,7 +54,8 @@ import rx.android.schedulers.AndroidSchedulers;
         InstallerFactory.ROLLBACK);
     Scheduled scheduled = displayable.getPojo();
     final FragmentActivity context = getContext();
-    ImageLoader.with(context).load(scheduled.getIcon(), appIcon);
+    ImageLoader.with(context)
+        .load(scheduled.getIcon(), appIcon);
     appName.setText(scheduled.getName());
     appVersion.setText(scheduled.getVersionName());
 
@@ -69,8 +70,9 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   private void isDownloading(ScheduledDownloadDisplayable displayable) {
-    Observable<Progress<Download>> installation =
-        installManager.getInstallation(displayable.getPojo().getMd5());
+    Observable<Progress<Download>> installation = installManager.getInstallation(
+        displayable.getPojo()
+            .getMd5());
 
     compositeSubscription.add(installation.map(
         downloadProgress -> installManager.isInstalling(downloadProgress)

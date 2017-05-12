@@ -53,7 +53,10 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
     while (iterator.hasNext()) {
       GetStoreTabs.Tab next = iterator.next();
 
-      if (next.getEvent().getName() == null || next.getEvent().getType() == null) {
+      if (next.getEvent()
+          .getName() == null
+          || next.getEvent()
+          .getType() == null) {
         iterator.remove();
       }
     }
@@ -61,7 +64,8 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 
   private void fillAvailableEventsMap(List<GetStoreTabs.Tab> list) {
     for (int i = 0; i < list.size(); i++) {
-      Event event = list.get(i).getEvent();
+      Event event = list.get(i)
+          .getEvent();
 
       if (!containsEventName(event.getName())) {
         availableEventsMap.put(event.getName(), i);
@@ -104,8 +108,12 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
     switch (event.getName()) {
       case getUserTimeline:
         Long userId = null;
-        if (event.getData() != null && event.getData().getUser() != null) {
-          userId = event.getData().getUser().getId();
+        if (event.getData() != null
+            && event.getData()
+            .getUser() != null) {
+          userId = event.getData()
+              .getUser()
+              .getId();
         }
         return V8Engine.getFragmentProvider()
             .newAppsTimelineFragment(event.getAction(), userId, storeId, storeContext);
@@ -118,11 +126,14 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
   private Fragment caseClient(Event event, GetStoreTabs.Tab tab) {
     switch (event.getName()) {
       case myUpdates:
-        return V8Engine.getFragmentProvider().newUpdatesFragment();
+        return V8Engine.getFragmentProvider()
+            .newUpdatesFragment();
       case myDownloads:
-        return V8Engine.getFragmentProvider().newDownloadsFragment();
+        return V8Engine.getFragmentProvider()
+            .newDownloadsFragment();
       case mySpotShare:
-        return V8Engine.getFragmentProvider().newSpotShareFragment(false);
+        return V8Engine.getFragmentProvider()
+            .newSpotShareFragment(false);
       case myStores:
         return V8Engine.getFragmentProvider()
             .newSubscribedStoresFragment(event, storeTheme, tab.getTag());
@@ -135,7 +146,8 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
   private Fragment caseV3(Event event) {
     switch (event.getName()) {
       case getReviews:
-        return V8Engine.getFragmentProvider().newLatestReviewsFragment(storeId);
+        return V8Engine.getFragmentProvider()
+            .newLatestReviewsFragment(storeId);
       default:
         // Safe to throw exception as the tab should be filtered prior to getting here.
         throw new RuntimeException("Fragment type not implemented!");
@@ -143,7 +155,9 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
   }
 
   public Event.Name getEventName(int position) {
-    return tabs.get(position).getEvent().getName();
+    return tabs.get(position)
+        .getEvent()
+        .getName();
   }
 
   /**
@@ -167,6 +181,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
   }
 
   @Override public CharSequence getPageTitle(int position) {
-    return tabs.get(position).getLabel();
+    return tabs.get(position)
+        .getLabel();
   }
 }

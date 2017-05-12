@@ -15,7 +15,9 @@ public class Preferences {
   }
 
   public Completable save(String key, boolean value) {
-    return Completable.fromAction(() -> preferences.edit().putBoolean(key, value).commit());
+    return Completable.fromAction(() -> preferences.edit()
+        .putBoolean(key, value)
+        .commit());
   }
 
   public Observable<Boolean> getBoolean(String key, boolean defaultValue) {
@@ -24,7 +26,9 @@ public class Preferences {
   }
 
   public Completable save(String key, String value) {
-    return Completable.fromAction(() -> preferences.edit().putString(key, value).commit());
+    return Completable.fromAction(() -> preferences.edit()
+        .putString(key, value)
+        .commit());
   }
 
   public Observable<String> getString(String key, String defaultValue) {
@@ -33,7 +37,9 @@ public class Preferences {
   }
 
   public Completable save(String key, int value) {
-    return Completable.fromAction(() -> preferences.edit().putInt(key, value).commit());
+    return Completable.fromAction(() -> preferences.edit()
+        .putInt(key, value)
+        .commit());
   }
 
   public Observable<Integer> getInt(String key, int defaultValue) {
@@ -64,6 +70,8 @@ public class Preferences {
   }
 
   public Completable remove(String key) {
-    return Completable.fromAction(() -> preferences.edit().remove(key).commit());
+    return Completable.fromAction(() -> preferences.edit()
+        .remove(key)
+        .commit());
   }
 }

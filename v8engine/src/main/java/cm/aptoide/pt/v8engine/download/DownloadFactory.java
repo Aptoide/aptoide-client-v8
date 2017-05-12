@@ -39,24 +39,31 @@ public class DownloadFactory {
         appToDownload.getName(), file != null ? file.getPath() : null,
         file != null ? file.getPathAlt() : null);
 
-    String path = appToDownload.getFile().getPath();
-    String altPath = appToDownload.getFile().getPathAlt();
+    String path = appToDownload.getFile()
+        .getPath();
+    String altPath = appToDownload.getFile()
+        .getPathAlt();
 
     ApkPaths downloadPaths = getDownloadPaths(downloadAction, path, altPath);
 
     Download download = new Download();
-    download.setMd5(appToDownload.getFile().getMd5sum());
+    download.setMd5(appToDownload.getFile()
+        .getMd5sum());
     download.setIcon(appToDownload.getIcon());
     download.setAppName(appToDownload.getName());
     download.setAction(downloadAction);
     download.setPackageName(appToDownload.getPackageName());
-    download.setVersionCode(appToDownload.getFile().getVercode());
-    download.setVersionName(appToDownload.getFile().getVername());
+    download.setVersionCode(appToDownload.getFile()
+        .getVercode());
+    download.setVersionName(appToDownload.getFile()
+        .getVername());
 
     download.setFilesToDownload(
         createFileList(appToDownload.getMd5(), appToDownload.getPackageName(), downloadPaths.path,
-            appToDownload.getFile().getMd5sum(), appToDownload.getObb(), downloadPaths.altPath,
-            appToDownload.getFile().getVercode(), appToDownload.getFile().getVername()));
+            appToDownload.getFile()
+                .getMd5sum(), appToDownload.getObb(), downloadPaths.altPath, appToDownload.getFile()
+                .getVercode(), appToDownload.getFile()
+                .getVername()));
 
     return download;
   }
@@ -175,27 +182,33 @@ public class DownloadFactory {
 
   public Download create(App appToDownload, int downloadAction) {
     final File file = appToDownload.getFile();
-    validateApp(appToDownload.getFile().getMd5sum(), appToDownload.getObb(),
-        appToDownload.getPackageName(), appToDownload.getName(),
-        file != null ? file.getPath() : null, file != null ? file.getPathAlt() : null);
+    validateApp(appToDownload.getFile()
+            .getMd5sum(), appToDownload.getObb(), appToDownload.getPackageName(),
+        appToDownload.getName(), file != null ? file.getPath() : null,
+        file != null ? file.getPathAlt() : null);
 
-    String path = appToDownload.getFile().getPath();
-    String altPath = appToDownload.getFile().getPathAlt();
+    String path = appToDownload.getFile()
+        .getPath();
+    String altPath = appToDownload.getFile()
+        .getPathAlt();
     ApkPaths downloadPaths = getDownloadPaths(downloadAction, path, altPath);
 
     Download download = new Download();
-    download.setMd5(appToDownload.getFile().getMd5sum());
+    download.setMd5(appToDownload.getFile()
+        .getMd5sum());
     download.setIcon(appToDownload.getIcon());
     download.setAction(downloadAction);
     download.setAppName(appToDownload.getName());
     download.setPackageName(appToDownload.getPackageName());
-    download.setVersionCode(appToDownload.getFile().getVercode());
-    download.setVersionName(appToDownload.getFile().getVername());
-    download.setFilesToDownload(
-        createFileList(appToDownload.getFile().getMd5sum(), appToDownload.getPackageName(),
-            downloadPaths.path, appToDownload.getFile().getMd5sum(), appToDownload.getObb(),
-            downloadPaths.altPath, appToDownload.getFile().getVercode(),
-            appToDownload.getFile().getVername()));
+    download.setVersionCode(appToDownload.getFile()
+        .getVercode());
+    download.setVersionName(appToDownload.getFile()
+        .getVername());
+    download.setFilesToDownload(createFileList(appToDownload.getFile()
+        .getMd5sum(), appToDownload.getPackageName(), downloadPaths.path, appToDownload.getFile()
+        .getMd5sum(), appToDownload.getObb(), downloadPaths.altPath, appToDownload.getFile()
+        .getVercode(), appToDownload.getFile()
+        .getVername()));
     return download;
   }
 
@@ -261,7 +274,8 @@ public class DownloadFactory {
 
   public Download create(AutoUpdate.AutoUpdateInfo autoUpdateInfo) {
     Download download = new Download();
-    download.setAppName(Application.getConfiguration().getMarketName());
+    download.setAppName(Application.getConfiguration()
+        .getMarketName());
     download.setMd5(autoUpdateInfo.md5);
     download.setVersionCode(autoUpdateInfo.vercode);
     //download.setVersionName(null); // no info available

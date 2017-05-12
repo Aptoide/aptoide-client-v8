@@ -68,39 +68,42 @@ public class ProfileStepOneFragment extends BaseToolbarFragment {
     super.setupViews();
     RxView.clicks(continueBtn)
         .doOnNext(__ -> waitDialog.show())
-        .flatMapCompletable(
-            __ -> accountManager.updateAccount(Account.Access.PUBLIC)
-                .onErrorResumeNext(err -> {
-                  CrashReport.getInstance().log(err);
-                  return Completable.complete();
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .andThen(showContinueSuccessMessage())
-                .doOnCompleted(() -> {
-                  Analytics.Account.accountProfileAction(1,
-                      Analytics.Account.ProfileAction.CONTINUE);
-                })
-                .doOnCompleted(() -> {
-                  if (externalLogin) {
-                    navigateToHome();
-                    return;
-                  }
-                  navigateToCreateStore();
-                }))
+        .flatMapCompletable(__ -> accountManager.updateAccount(Account.Access.PUBLIC)
+            .onErrorResumeNext(err -> {
+              CrashReport.getInstance()
+                  .log(err);
+              return Completable.complete();
+            })
+            .observeOn(AndroidSchedulers.mainThread())
+            .andThen(showContinueSuccessMessage())
+            .doOnCompleted(() -> {
+              Analytics.Account.accountProfileAction(1, Analytics.Account.ProfileAction.CONTINUE);
+            })
+            .doOnCompleted(() -> {
+              if (externalLogin) {
+                navigateToHome();
+                return;
+              }
+              navigateToCreateStore();
+            }))
         .retry()
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
           showErrorMessage();
         });
 
-    RxView.clicks(moreInfoBtn).compose(bindUntilEvent(LifecycleEvent.DESTROY)).subscribe(__ -> {
-      Analytics.Account.accountProfileAction(1, Analytics.Account.ProfileAction.MORE_INFO);
-      navigateToProfileStepTwoView();
-    }, err -> {
-      CrashReport.getInstance().log(err);
-    });
+    RxView.clicks(moreInfoBtn)
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+          Analytics.Account.accountProfileAction(1, Analytics.Account.ProfileAction.MORE_INFO);
+          navigateToProfileStepTwoView();
+        }, err -> {
+          CrashReport.getInstance()
+              .log(err);
+        });
   }
 
   @Override protected void setupToolbarDetails(Toolbar toolbar) {

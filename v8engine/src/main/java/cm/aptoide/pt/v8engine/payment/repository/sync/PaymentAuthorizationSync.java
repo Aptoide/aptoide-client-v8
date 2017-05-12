@@ -62,10 +62,13 @@ public class PaymentAuthorizationSync extends RepositorySync {
       final String payerId = accountManager.getAccountEmail();
       getServerAuthorizations(accessToken).doOnSuccess(
           response -> saveAndReschedulePendingAuthorization(response, syncResult, paymentIds,
-              payerId)).onErrorReturn(throwable -> {
-        saveAndRescheduleOnNetworkError(syncResult, throwable, paymentIds, payerId);
-        return null;
-      }).toBlocking().value();
+              payerId))
+          .onErrorReturn(throwable -> {
+            saveAndRescheduleOnNetworkError(syncResult, throwable, paymentIds, payerId);
+            return null;
+          })
+          .toBlocking()
+          .value();
     } catch (RuntimeException e) {
       rescheduleSync(syncResult);
     }

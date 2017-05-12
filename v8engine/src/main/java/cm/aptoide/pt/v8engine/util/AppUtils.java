@@ -27,9 +27,12 @@ public final class AppUtils {
     if (obb == null || obb.getMain() == null) {
       return fileSize;
     } else if (obb.getPatch() == null) {
-      return fileSize + obb.getMain().getFilesize();
+      return fileSize + obb.getMain()
+          .getFilesize();
     } else {
-      return fileSize + obb.getMain().getFilesize() + obb.getPatch().getFilesize();
+      return fileSize + obb.getMain()
+          .getFilesize() + obb.getPatch()
+          .getFilesize();
     }
   }
 
@@ -49,7 +52,8 @@ public final class AppUtils {
 
         ApkPermission permission = permissions.get(i);
 
-        if (!permission.getName().equals(prevName)) {
+        if (!permission.getName()
+            .equals(prevName)) {
           prevName = permission.getName();
           apkPermission = new ApkPermissionGroup(permission.getName(), permission.getDescription());
           list.add(apkPermission);

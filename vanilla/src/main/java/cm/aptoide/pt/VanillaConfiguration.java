@@ -15,8 +15,8 @@ import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
  */
 public class VanillaConfiguration implements AptoidePreferencesConfiguration {
 
-  private static final String PATH_SDCARD =
-      Environment.getExternalStorageDirectory().getAbsolutePath();
+  private static final String PATH_SDCARD = Environment.getExternalStorageDirectory()
+      .getAbsolutePath();
   private static final String PATH_CACHE = PATH_SDCARD + "/.aptoide/";
   private static final String PATH_CACHE_APKS = PATH_CACHE + "apks/";
   private static final String PATH_CACHE_IMAGES = PATH_CACHE + "icons/";
@@ -109,7 +109,8 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
   }
 
   @Override public int getDefaultThemeRes() {
-    return StoreThemeEnum.get(getDefaultTheme()).getThemeResource();
+    return StoreThemeEnum.get(getDefaultTheme())
+        .getThemeResource();
   }
 
   @Override public String getFeedbackEmail() {

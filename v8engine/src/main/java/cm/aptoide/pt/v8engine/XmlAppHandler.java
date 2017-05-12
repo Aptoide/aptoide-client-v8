@@ -23,7 +23,8 @@ public class XmlAppHandler extends DefaultHandler {
 
     super.startElement(uri, localName, qName, attributes);
     sb.setLength(0);
-    switch (Elements.lookup(localName.toUpperCase().trim())) {
+    switch (Elements.lookup(localName.toUpperCase()
+        .trim())) {
       case GETAPP:
         app = new HashMap<>();
 
@@ -37,7 +38,8 @@ public class XmlAppHandler extends DefaultHandler {
 
   @Override public void endElement(String uri, String localName, String qName) throws SAXException {
 
-    switch (Elements.lookup(localName.toUpperCase().trim())) {
+    switch (Elements.lookup(localName.toUpperCase()
+        .trim())) {
       case GET:
         app.put("path", sb.toString());
         break;

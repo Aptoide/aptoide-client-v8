@@ -88,9 +88,11 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
   @Override public void setupViews() {
     super.setupViews();
     setHasOptionsMenu(true);
-    RxView.clicks(sendFeedbackBtn).subscribe(aVoid -> sendFeedback(), err -> {
-      CrashReport.getInstance().log(err);
-    });
+    RxView.clicks(sendFeedbackBtn)
+        .subscribe(aVoid -> sendFeedback(), err -> {
+          CrashReport.getInstance()
+              .log(err);
+        });
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -174,8 +176,10 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
             }
 
             emailIntent.putExtra(Intent.EXTRA_SUBJECT,
-                "[Feedback]-" + versionName + ": " + subgectEdit.getText().toString());
-            emailIntent.putExtra(Intent.EXTRA_TEXT, messageBodyEdit.getText().toString());
+                "[Feedback]-" + versionName + ": " + subgectEdit.getText()
+                    .toString());
+            emailIntent.putExtra(Intent.EXTRA_TEXT, messageBodyEdit.getText()
+                .toString());
             //attach screenshots and logs
             if (logsAndScreenshotsCb.isChecked()) {
               ArrayList<Uri> uris = new ArrayList<Uri>();
@@ -183,9 +187,8 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
                 File ss = new File(screenShotPath);
                 uris.add(getUriFromFile(ss));
               }
-              File logs =
-                  AptoideUtils.SystemU.readLogs(Application.getConfiguration().getCachePath(),
-                      LOGS_FILE_NAME);
+              File logs = AptoideUtils.SystemU.readLogs(Application.getConfiguration()
+                  .getCachePath(), LOGS_FILE_NAME);
               if (logs != null) {
                 uris.add(getUriFromFile(logs));
               }
@@ -205,7 +208,8 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
   }
 
   public boolean isContentValid() {
-    return !TextUtils.isEmpty(subgectEdit.getText().toString());
+    return !TextUtils.isEmpty(subgectEdit.getText()
+        .toString());
   }
 
   private Uri getUriFromFile(File file) {
@@ -213,8 +217,8 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     //read: https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en
     if (Build.VERSION.SDK_INT > 23) {
       //content://....apk for nougat
-      photoURI = FileProvider.getUriForFile(getContext(),
-          V8Engine.getConfiguration().getAppId() + ".provider", file);
+      photoURI = FileProvider.getUriForFile(getContext(), V8Engine.getConfiguration()
+          .getAppId() + ".provider", file);
     } else {
       //file://....apk for < nougat
       photoURI = Uri.fromFile(file);

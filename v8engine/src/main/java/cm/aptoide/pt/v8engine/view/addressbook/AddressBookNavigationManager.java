@@ -36,8 +36,8 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
   }
 
   @Override public void navigateToPhoneInputView() {
-    this.navigator.navigateTo(
-        V8Engine.getFragmentProvider().newPhoneInputFragment(exitNavigationFragmentTag));
+    this.navigator.navigateTo(V8Engine.getFragmentProvider()
+        .newPhoneInputFragment(exitNavigationFragmentTag));
   }
 
   @Override
@@ -60,7 +60,8 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
                 exitNavigationFragmentTag));
         break;
       default:
-        Logger.d(this.getClass().getSimpleName(), "Wrong openMode type.");
+        Logger.d(this.getClass()
+            .getSimpleName(), "Wrong openMode type.");
     }
   }
 
@@ -70,12 +71,12 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
   }
 
   @Override public void showSuccessFragment(List<Contact> contacts) {
-    navigator.navigateTo(
-        V8Engine.getFragmentProvider().newSyncSuccessFragment(contacts, exitNavigationFragmentTag));
+    navigator.navigateTo(V8Engine.getFragmentProvider()
+        .newSyncSuccessFragment(contacts, exitNavigationFragmentTag));
   }
 
   @Override public void navigateToThankYouConnectingFragment() {
-    navigator.navigateTo(
-        V8Engine.getFragmentProvider().newThankYouConnectingFragment(exitNavigationFragmentTag));
+    navigator.navigateTo(V8Engine.getFragmentProvider()
+        .newThankYouConnectingFragment(exitNavigationFragmentTag));
   }
 }

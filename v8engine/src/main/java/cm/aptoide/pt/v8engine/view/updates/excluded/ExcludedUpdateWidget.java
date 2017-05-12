@@ -37,7 +37,8 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
   @Override public void bindView(final ExcludedUpdateDisplayable displayable) {
     final Update excludedUpdate = displayable.getPojo();
 
-    ImageLoader.with(getContext()).load(excludedUpdate.getIcon(), icon);
+    ImageLoader.with(getContext())
+        .load(excludedUpdate.getIcon(), icon);
     name.setText(excludedUpdate.getLabel());
     versionCode.setText(excludedUpdate.getUpdateVersionName());
     packageName.setText(excludedUpdate.getPackageName());

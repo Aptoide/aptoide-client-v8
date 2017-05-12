@@ -49,7 +49,8 @@ public class Updates extends BaseTable {
   private static final String TAG = Updates.class.getSimpleName();
   private static final String NAME = "updates";
   private static final Realm realm = Realm.getDefaultInstance();
-  private final PackageManager pm = AptoideUtils.getContext().getPackageManager();
+  private final PackageManager pm = AptoideUtils.getContext()
+      .getPackageManager();
 
   @Override public String getTableName() {
     return NAME;
@@ -91,7 +92,8 @@ public class Updates extends BaseTable {
 
         return realmObject;
       } catch (PackageManager.NameNotFoundException ex) {
-        CrashReport.getInstance().log(ex);
+        CrashReport.getInstance()
+            .log(ex);
       }
     }
 
@@ -106,6 +108,8 @@ public class Updates extends BaseTable {
     //    .findFirst() != null;
 
     UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
-    return updateAccessor.get(packageName, true).toBlocking().firstOrDefault(null) != null;
+    return updateAccessor.get(packageName, true)
+        .toBlocking()
+        .firstOrDefault(null) != null;
   }
 }

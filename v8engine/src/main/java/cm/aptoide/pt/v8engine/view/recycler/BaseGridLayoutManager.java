@@ -39,11 +39,8 @@ public class BaseGridLayoutManager extends GridLayoutManager {
           return displayable.getSpanSize();
         } else {
           CrashReport.getInstance()
-              .log(new IllegalArgumentException("Displayable "
-                  + displayable.getClass().getSimpleName()
-                  + " at position "
-                  + position
-                  + " spanSize > getSpanCount()! "));
+              .log(new IllegalArgumentException("Displayable " + displayable.getClass()
+                  .getSimpleName() + " at position " + position + " spanSize > getSpanCount()! "));
           return getSpanCount();
         }
       }

@@ -57,7 +57,8 @@ public class GenericDialogs {
       // cleaning up
       subscriber.add(Subscriptions.create(() -> dialog.dismiss()));
       dialog.show();
-    }).subscribeOn(AndroidSchedulers.mainThread());
+    })
+        .subscribeOn(AndroidSchedulers.mainThread());
   }
 
   /**

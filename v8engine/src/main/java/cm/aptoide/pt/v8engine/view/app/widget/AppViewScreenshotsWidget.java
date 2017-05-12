@@ -32,7 +32,8 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
   }
 
   @Override public void bindView(AppViewScreenshotsDisplayable displayable) {
-    final GetAppMeta.Media media = displayable.getPojo().getMedia();
+    final GetAppMeta.Media media = displayable.getPojo()
+        .getMedia();
     //		mediaList.addItemDecoration(new DividerItemDecoration(AptoideUtils.ScreenU.getPixels(6), (DividerItemDecoration.RIGHT | DividerItemDecoration
     // .BOTTOM))
     //		);

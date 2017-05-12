@@ -63,7 +63,8 @@ public abstract class BaseTable {
 
       Logger.d(TAG, "Table " + tableName + " migrated with success.");
     } catch (Exception e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     } finally {
       if (cursor != null && !cursor.isClosed()) {
         cursor.close();
