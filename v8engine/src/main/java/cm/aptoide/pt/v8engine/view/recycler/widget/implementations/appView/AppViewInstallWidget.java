@@ -529,12 +529,12 @@ import rx.android.schedulers.AndroidSchedulers;
     return origin;
   }
 
-  private void setDownloadBarInvisible() {
+  protected void setDownloadBarInvisible() {
     installAndLatestVersionLayout.setVisibility(View.VISIBLE);
     downloadProgressLayout.setVisibility(View.GONE);
   }
 
-  private void setDownloadBarVisible() {
+  protected void setDownloadBarVisible() {
     installAndLatestVersionLayout.setVisibility(View.GONE);
     downloadProgressLayout.setVisibility(View.VISIBLE);
   }
