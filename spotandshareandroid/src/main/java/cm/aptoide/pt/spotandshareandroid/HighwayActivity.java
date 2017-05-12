@@ -38,13 +38,11 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   public LinearLayout createGroupButton;
   public HighwayRadarTextView radarTextView;
   public LinearLayout progressBarLayout;
-  public Group chosenHotspot;
   public LinearLayout groupButtonsLayout;
   private TextView searchGroupsTextview;
   private Toolbar mToolbar;
   private ProgressBar buttonsProgressBar;//progress bar for when user click the buttons
 
-  private boolean joinGroupFlag;
   private HighwayPresenter presenter;
   private SpotAndShareAnalyticsInterface analytics;
   private GroupManager groupManager;
@@ -67,6 +65,8 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     setContentView(R.layout.highway_activity);
 
     bindViews();
+    setupViews();
+
     Intent intent = getIntent();
     if (intent.getAction() != null && intent.getAction().equals("APPVIEW_SHARE")) {
       enableButtons(false);
@@ -82,8 +82,25 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
 
     attachPresenter(presenter);
+  }
 
+  @Override public void setupViews() {
+    radarTextView.setOnHotspotClickListener(new HighwayRadarTextView.HotspotClickListener() {
+      @Override public void onGroupClicked(Group group) {
+        presenter.clickedOnGroup(group);
+      }
+    });
 
+    createGroupButton.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+          hideSearchGroupsTextview(true);
+          presenter.clickCreateGroup();
+        } else {
+          showNougatErrorToast();
+        }
+      }
+    });
   }
 
   private void bindViews() {
@@ -97,7 +114,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
     buttonsProgressBar = (ProgressBar) findViewById(R.id.buttonsProgressBar);
     createGroupButton = (LinearLayout) findViewById(R.id.createGroup);
-    radarTextView.setActivity(this);
   }
 
   private void setUpToolbar() {
@@ -282,20 +298,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
-  @Override public void setUpListeners() {
-
-    createGroupButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-          hideSearchGroupsTextview(true);
-          presenter.clickCreateGroup();
-        } else {
-          showNougatErrorToast();
-        }
-      }
-    });
-  }
-
   @Override public void showJoinGroupResult(int result) {
     switch (result) {
       case ConnectionManager.ERROR_ON_RECONNECT:
@@ -386,10 +388,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     radarTextView.show(clients);
   }
 
-  @Override public void refreshRadarLowerVersions(ArrayList<Group> clients) {
-    radarTextView.showForLowerVersions(clients);
-  }
-
   @Override public void showRecoveringWifiStateToast() {
     Toast.makeText(this, this.getResources().getString(R.string.recoveringWifiState),
         Toast.LENGTH_SHORT).show();
@@ -416,6 +414,10 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     intent.setAction("APPVIEW_SHARE");
     startActivity(intent);
     finish();
+  }
+
+  @Override public void paintSelectedGroup(Group group) {
+    radarTextView.selectGroup(group);
   }
 
   @Override public boolean checkPermissions() {
@@ -490,22 +492,8 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         Toast.LENGTH_SHORT).show();
   }
 
-  public void joinSingleHotspot() {
-    hideSearchGroupsTextview(true);
-    //Group g = new Group(chosenHotspot);
-    presenter.clickJoinGroup(chosenHotspot);
-  }
-
-  public Group getChosenHotspot() {
-    return chosenHotspot;
-  }
-
-  public void setChosenHotspot(Group chosenHotspot) {
-    this.chosenHotspot = chosenHotspot;
-  }
-
-  public void deselectHotspot() {
-    this.chosenHotspot = null;
+  @Override public void deselectHotspot(Group group) {
+    radarTextView.deselectHotspot(group);
   }
 
   @Override protected void onResume() {
@@ -516,13 +504,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   @Override protected void onDestroy() {
     presenter.onDestroy();
     super.onDestroy();
-  }
-
-  public boolean isJoinGroupFlag() {
-    return joinGroupFlag;
-  }
-
-  public void setJoinGroupFlag(boolean joinGroupFlag) {
-    this.joinGroupFlag = joinGroupFlag;
+    radarTextView.stop();
+    radarTextView = null;
   }
 }
