@@ -27,9 +27,6 @@ import lombok.ToString;
   private long timeStamp;
   private boolean showed;
 
-  public AptoideNotification() {
-  }
-
   public AptoideNotification(String body, String img, String title, String url, int type,
       long timeStamp) {
     this.body = body;

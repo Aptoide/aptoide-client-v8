@@ -107,13 +107,13 @@ public class NotificationCenter {
     long police2startTime = now - police2timeFrame;
     int police1Occurrences = 1;
     int police2Occurrences = 3;
-    return Single.zip(getRule(notificationsTypes, now, police1startTime, police1Occurrences),
-        getRule(notificationsTypes, now, police2startTime, police2Occurrences),
+    return Single.zip(createPolicy(notificationsTypes, now, police1startTime, police1Occurrences),
+        createPolicy(notificationsTypes, now, police2startTime, police2Occurrences),
         (passRule1, passRule2) -> passRule1 && passRule2);
   }
 
   @NonNull
-  private Single<Boolean> getRule(Integer[] notificationsTypes, long endTime, long startTime,
+  private Single<Boolean> createPolicy(Integer[] notificationsTypes, long endTime, long startTime,
       int occurrences) {
     return notificationProvider.getShowedNotifications(notificationsTypes, startTime, endTime)
         .map(aptoideNotifications -> aptoideNotifications.size() < occurrences);

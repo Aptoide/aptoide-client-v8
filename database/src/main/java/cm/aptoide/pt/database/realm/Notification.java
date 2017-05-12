@@ -8,7 +8,8 @@ import io.realm.annotations.PrimaryKey;
  */
 
 public class Notification extends RealmObject {
-
+  @PrimaryKey
+  private String key;
   private String abTestingGroup;
   private String body;
   private int campaignId;
@@ -18,7 +19,6 @@ public class Notification extends RealmObject {
   private String url;
   private String urlTrack;
   private int type;
-  @PrimaryKey
   private long timeStamp;
   private boolean showed;
 
@@ -35,6 +35,7 @@ public class Notification extends RealmObject {
     this.urlTrack = urlTrack;
     this.timeStamp = timeStamp;
     this.showed = showed;
+    key = String.valueOf(timeStamp + type);
   }
 
   public Notification() {
