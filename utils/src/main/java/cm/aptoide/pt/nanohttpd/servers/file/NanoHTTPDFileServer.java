@@ -20,6 +20,8 @@ public class NanoHTTPDFileServer extends NanoHTTPD {
   }
 
   @Override public Response serve(IHTTPSession session) {
-    return new FileServerResponseBuilder().setFile(file).setFileName(fileName).build();
+    return new FileServerResponseBuilder().setFile(file)
+        .setFileName(fileName)
+        .build();
   }
 }

@@ -21,7 +21,9 @@ public abstract class AbstractAssetServer extends AbstractServerModule {
     String out;
 
     try {
-      inputStream = AptoideUtils.getContext().getAssets().open(assetPath);
+      inputStream = AptoideUtils.getContext()
+          .getAssets()
+          .open(assetPath);
 
       byte[] buffer;
       buffer = new byte[inputStream.available()];

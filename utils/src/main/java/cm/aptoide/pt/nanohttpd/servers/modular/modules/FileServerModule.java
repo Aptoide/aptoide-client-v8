@@ -21,6 +21,8 @@ class FileServerModule extends AbstractServerModule {
   }
 
   @Override public NanoHTTPD.Response serve(NanoHTTPD.IHTTPSession session) {
-    return new FileServerResponseBuilder().setFile(file).setFileName(fileName).build();
+    return new FileServerResponseBuilder().setFile(file)
+        .setFileName(fileName)
+        .build();
   }
 }

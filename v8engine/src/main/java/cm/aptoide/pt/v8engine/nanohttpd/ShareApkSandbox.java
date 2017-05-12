@@ -22,10 +22,6 @@ public class ShareApkSandbox extends NanoHTTPD {
     shareApkServer = new ShareApkServer(new File(getPathAndroid(context)), getFileName(context));
   }
 
-  public void start() throws IOException {
-    start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
-  }
-
   private static String getPathAndroid(Context context) {
     String sourceDir = null;
     try {
@@ -42,8 +38,8 @@ public class ShareApkSandbox extends NanoHTTPD {
     String versionName = null;
     String appName = null;
     try {
-      PackageInfo packageInfo =
-          context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+      PackageInfo packageInfo = context.getPackageManager()
+          .getPackageInfo(context.getPackageName(), 0);
       versionName = packageInfo.versionName;
       appName = getApplicationName(context);
     } catch (PackageManager.NameNotFoundException e) {
@@ -58,6 +54,10 @@ public class ShareApkSandbox extends NanoHTTPD {
     int stringId = applicationInfo.labelRes;
     return stringId == 0 ? applicationInfo.nonLocalizedLabel.toString()
         : context.getString(stringId);
+  }
+
+  public void start() throws IOException {
+    start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
   }
 
   @Override public Response serve(IHTTPSession session) {
