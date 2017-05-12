@@ -1,6 +1,5 @@
 package cm.aptoide.pt.spotandshareandroid;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
