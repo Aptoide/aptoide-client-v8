@@ -69,6 +69,7 @@ public class IdsRepository {
     if (TextUtils.isEmpty(aptoideId)) {
       aptoideId = UUID.randomUUID()
           .toString();
+      Logger.v(TAG, "getUniqueIdentifier: randomUUID: " + aptoideId);
     }
 
     sharedPreferences.edit()
