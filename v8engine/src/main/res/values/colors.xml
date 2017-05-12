@@ -117,6 +117,6 @@
   <color name="greyfog">#d8d8d8</color>
   <color name="greydarkfog">#cccccc</color>
   <color name="greymedium">#828282</color>
-  <color name="back87aplha">#DD212121</color>
+  <color name="black87alpha">#DD212121</color>
 
 </resources>

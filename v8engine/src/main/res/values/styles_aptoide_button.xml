@@ -1,0 +1,34 @@
+<resources>
+
+
+  <style name="Aptoide.Button" parent="Widget.AppCompat.Button">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">52dp</item>
+    <item name="android:textColor">@android:color/white</item>
+    <item name="android:fontFamily">sans-serif-medium</item>
+    <item name="android:textSize">14sp</item>
+    <item name="android:textAllCaps">true</item>
+  </style>
+
+
+  <style name="Aptoide.Button.Ghost">
+    <item name="android:background">@drawable/btn_ghost_theme</item>
+    <item name="android:textColor">@color/orange</item>
+  </style>
+
+  <style name="Aptoide.Button.Ghost.ThinBlackAlpha">
+    <item name="android:background">@drawable/btn_ghost_theme_blackalpha</item>
+    <item name="android:textColor">@color/black87alpha</item>
+  </style>
+
+  <style name="Aptoide.Button.S">
+    <item name="android:layout_height">44dp</item>
+    <item name="android:textSize">10sp</item>
+  </style>
+
+  <style name="Aptoide.Button.Ghost.S">
+    <item name="android:layout_height">44dp</item>
+    <item name="android:textSize">10sp</item>
+  </style>
+
+</resources>
