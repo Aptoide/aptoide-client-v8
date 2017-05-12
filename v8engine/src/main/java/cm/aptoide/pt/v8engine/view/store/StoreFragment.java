@@ -100,7 +100,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
   public static StoreFragment newInstance(String storeName, String storeTheme,
       Event.Name defaultTab, OpenType openType) {
     StoreFragment storeFragment = newInstance(storeName, storeTheme, openType);
-    storeFragment.getArguments().putSerializable(BundleCons.DEFAULT_TAB_TO_OPEN, defaultTab);
+    storeFragment.getArguments()
+        .putSerializable(BundleCons.DEFAULT_TAB_TO_OPEN, defaultTab);
     return storeFragment;
   }
 
@@ -132,8 +133,9 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void onDestroy() {
     super.onDestroy();
     if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(),
-          StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(
+          V8Engine.getConfiguration()
+              .getDefaultTheme()));
     }
   }
 
@@ -282,23 +284,42 @@ public class StoreFragment extends BasePagerToolbarFragment {
             storeContext, bodyInterceptor, httpClient, converterFactory)
             .observe(refresh)
             .map(getHome -> {
-              Store store = getHome.getNodes().getMeta().getData().getStore();
+              Store store = getHome.getNodes()
+                  .getMeta()
+                  .getData()
+                  .getStore();
               String storeName = store != null ? store.getName() : null;
               Long storeId = store != null ? store.getId() : null;
-              setupVariables(getHome.getNodes().getTabs().getList(), storeId, storeName);
-              HomeUser user = getHome.getNodes().getMeta().getData().getUser();
+              setupVariables(getHome.getNodes()
+                  .getTabs()
+                  .getList(), storeId, storeName);
+              HomeUser user = getHome.getNodes()
+                  .getMeta()
+                  .getData()
+                  .getUser();
               return TextUtils.isEmpty(storeName) ? user.getName() : storeName;
             });
       case GetStore:
       default:
         return GetStoreRequest.of(
             StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), storeContext,
-            bodyInterceptor, httpClient, converterFactory).observe(refresh).map(getStore -> {
-          setupVariables(getStore.getNodes().getTabs().getList(),
-              getStore.getNodes().getMeta().getData().getId(),
-              getStore.getNodes().getMeta().getData().getName());
-          return getStore.getNodes().getMeta().getData().getName();
-        });
+            bodyInterceptor, httpClient, converterFactory)
+            .observe(refresh)
+            .map(getStore -> {
+              setupVariables(getStore.getNodes()
+                  .getTabs()
+                  .getList(), getStore.getNodes()
+                  .getMeta()
+                  .getData()
+                  .getId(), getStore.getNodes()
+                  .getMeta()
+                  .getData()
+                  .getName());
+              return getStore.getNodes()
+                  .getMeta()
+                  .getData()
+                  .getName();
+            });
     }
   }
 
@@ -306,7 +327,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
     if (throwable instanceof AptoideWsV7Exception) {
       BaseV7Response baseResponse = ((AptoideWsV7Exception) throwable).getBaseResponse();
 
-      switch (StoreUtils.getErrorType(baseResponse.getError().getCode())) {
+      switch (StoreUtils.getErrorType(baseResponse.getError()
+          .getCode())) {
         case PRIVATE_STORE_ERROR:
         case PRIVATE_STORE_WRONG_CREDENTIALS:
           DialogFragment dialogFragment =
@@ -346,16 +368,17 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   private void showStoreSuspendedPopup(String storeName) {
     GenericDialogs.createGenericOkCancelMessage(getContext(), "", R.string.store_suspended_message,
-        android.R.string.ok, R.string.unfollow).subscribe(eResponse -> {
-      switch (eResponse) {
-        case NO:
-          StoreUtils.unSubscribeStore(storeName, accountManager, storeCredentialsProvider);
-        case YES:
-        case CANCEL:
-          getActivity().onBackPressed();
-          break;
-      }
-    });
+        android.R.string.ok, R.string.unfollow)
+        .subscribe(eResponse -> {
+          switch (eResponse) {
+            case NO:
+              StoreUtils.unSubscribeStore(storeName, accountManager, storeCredentialsProvider);
+            case YES:
+            case CANCEL:
+              getActivity().onBackPressed();
+              break;
+          }
+        });
   }
 
   protected void setupSearch(Menu menu) {

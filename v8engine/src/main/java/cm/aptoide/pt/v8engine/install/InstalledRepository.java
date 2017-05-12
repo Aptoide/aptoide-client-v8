@@ -33,7 +33,9 @@ public class InstalledRepository {
   }
 
   public boolean contains(String packageName) {
-    return accessor.isInstalled(packageName).toBlocking().first();
+    return accessor.isInstalled(packageName)
+        .toBlocking()
+        .first();
   }
 
   public Observable<List<Installed>> getAllSorted() {

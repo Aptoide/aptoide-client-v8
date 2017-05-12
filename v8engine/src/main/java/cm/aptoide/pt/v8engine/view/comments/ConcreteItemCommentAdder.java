@@ -21,18 +21,21 @@ public class ConcreteItemCommentAdder<T> extends CommentAdder {
   @Override public void addComment(List<Comment> comments) {
     List<Displayable> displayableList = new ArrayList<>();
     commentAdderView.createDisplayableComments(comments, displayableList);
-    int reviewPosition = commentAdderView.getAdapter().getItemPosition(itemIndex);
+    int reviewPosition = commentAdderView.getAdapter()
+        .getItemPosition(itemIndex);
     if (comments.size() > 2) {
       displayableList.add(commentAdderView.createReadMoreDisplayable(reviewPosition, review));
     }
-    commentAdderView.getAdapter().addDisplayables(reviewPosition + 1, displayableList);
+    commentAdderView.getAdapter()
+        .addDisplayables(reviewPosition + 1, displayableList);
   }
 
   @Override public void collapseComments() {
     CommentsAdapter adapter = commentAdderView.getAdapter();
     int reviewIndex = adapter.getItemPosition(this.itemIndex);
     int nextReview = adapter.getItemPosition(this.itemIndex + 1);
-    nextReview = nextReview == -1 ? commentAdderView.getAdapter().getItemCount() : nextReview;
+    nextReview = nextReview == -1 ? commentAdderView.getAdapter()
+        .getItemCount() : nextReview;
     adapter.removeDisplayables(reviewIndex + 1, nextReview - 1);
     // the -1 because we don't want to remove the next review,only until
     // the comment before the review

@@ -27,8 +27,11 @@ import lombok.Data;
   public boolean hasComments() {
     return commentList != null
         && commentList.getDatalist() != null
-        && commentList.getDatalist().getList() != null
-        && !commentList.getDatalist().getList().isEmpty();
+        && commentList.getDatalist()
+        .getList() != null
+        && !commentList.getDatalist()
+        .getList()
+        .isEmpty();
   }
 
   @Data public static class User {

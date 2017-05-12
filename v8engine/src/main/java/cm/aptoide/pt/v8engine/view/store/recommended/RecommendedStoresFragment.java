@@ -50,7 +50,8 @@ public class RecommendedStoresFragment extends GetStoreEndlessFragment<ListStore
 
   @Override protected Action1<ListStores> buildAction() {
     return listStores -> Observable.just(listStores)
-        .flatMapIterable(getStoreWidgets -> getStoreWidgets.getDatalist().getList())
+        .flatMapIterable(getStoreWidgets -> getStoreWidgets.getDatalist()
+            .getList())
         .map(store -> new RecommendedStoreDisplayable(store, storeRepository, accountManager,
             storeUtilsProxy, storeCredentialsProvider))
         .toList()

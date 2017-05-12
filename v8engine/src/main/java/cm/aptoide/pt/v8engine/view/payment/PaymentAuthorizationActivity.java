@@ -28,7 +28,6 @@ import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.presenter.PaymentAuthorizationPresenter;
 import cm.aptoide.pt.v8engine.presenter.PaymentAuthorizationView;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.view.BackButton;
 import cm.aptoide.pt.v8engine.view.BackButtonActivity;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
@@ -77,7 +76,8 @@ public class PaymentAuthorizationActivity extends BackButtonActivity
           RepositoryFactory.getProductRepository(this, product), new Payer(accountManager));
 
       webView = (WebView) findViewById(R.id.activity_boa_compra_authorization_web_view);
-      webView.getSettings().setJavaScriptEnabled(true);
+      webView.getSettings()
+          .setJavaScriptEnabled(true);
       webView.setWebChromeClient(new WebChromeClient());
       progressBarContainer = findViewById(R.id.activity_web_authorization_preogress_bar);
       unknownErrorDialog = new AlertDialog.Builder(this).setMessage(R.string.having_some_trouble)

@@ -43,10 +43,12 @@ public abstract class GridRecyclerFragment<T extends BaseAdapter>
 
   @Override protected T createAdapter() {
     try {
-      return (T) adapterClass.getConstructor().newInstance();
+      return (T) adapterClass.getConstructor()
+          .newInstance();
     } catch (Exception e) {
       e.printStackTrace();
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     }
 
     // default case. code should never reach here

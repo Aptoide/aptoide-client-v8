@@ -48,14 +48,17 @@ public class RollbackFactory {
         rollback.setIcon(icon);
       } else {
         String apkIconPath = AptoideUtils.SystemU.getApkIconPath(info);
-        Bitmap theBitmap = ImageLoader.with(context).loadBitmap(apkIconPath);
-        String imagesCachePath = Application.getConfiguration().getImagesCachePath();
+        Bitmap theBitmap = ImageLoader.with(context)
+            .loadBitmap(apkIconPath);
+        String imagesCachePath = Application.getConfiguration()
+            .getImagesCachePath();
         FileUtils.saveBitmapToFile(new File(imagesCachePath), packageName, theBitmap,
             Bitmap.CompressFormat.PNG, 100);
         rollback.setIcon(imagesCachePath + packageName);
       }
       return rollback;
-    }).subscribeOn(Schedulers.computation());
+    })
+        .subscribeOn(Schedulers.computation());
   }
 
   @NonNull

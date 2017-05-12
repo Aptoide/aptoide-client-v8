@@ -19,29 +19,29 @@ public class HotspotSSIDCodeMapper {
     if (c > '9') {
       value -= ('A' - ('9' + 1));
     }
-  
+
     if (c > 'Z') {
       value -= ('a' - ('Z' + 1));
     }
     return value;
   }
-  
+
   private boolean assertDomain(char value) {
     if (value >= 0 && value <= 9) {
       return true;
     }
-    
+
     if (value >= 'A' && value <= 'Z') {
       return true;
     }
-    
+
     if (value >= 'a' && value <= 'z') {
       return true;
     }
-    
+
     return true;
   }
-  
+
   private boolean assertDomain(int value) {
     return value >= 0 && value <= 61;
   }

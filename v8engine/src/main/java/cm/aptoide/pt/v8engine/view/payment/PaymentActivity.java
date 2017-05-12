@@ -187,11 +187,13 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
   }
 
   @Override public void showProduct(Product product) {
-    ImageLoader.with(this).load(product.getIcon(), productIcon);
+    ImageLoader.with(this)
+        .load(product.getIcon(), productIcon);
     productName.setText(product.getTitle());
     productDescription.setText(product.getDescription());
-    productPrice.setText(
-        product.getPrice().getCurrencySymbol() + " " + product.getPrice().getAmount());
+    productPrice.setText(product.getPrice()
+        .getCurrencySymbol() + " " + product.getPrice()
+        .getAmount());
   }
 
   @Override public void hideLoading() {

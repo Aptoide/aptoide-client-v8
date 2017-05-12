@@ -36,8 +36,10 @@ public class WidgetFactory {
 
   public static Widget newBaseViewHolder(ViewGroup parent, @LayoutRes int viewType) {
     //long nanoTime = System.nanoTime();
-    View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
-    Widget w = V8Engine.getDisplayableWidgetMapping().newWidget(view, viewType);
+    View view = LayoutInflater.from(parent.getContext())
+        .inflate(viewType, parent, false);
+    Widget w = V8Engine.getDisplayableWidgetMapping()
+        .newWidget(view, viewType);
     //Logger.d(TAG, "newBaseViewHolder = " + ((System.nanoTime() - nanoTime) / 1000000) );
     return w;
   }
@@ -57,8 +59,8 @@ public class WidgetFactory {
 
   private static int[] getDisplayablesSizes() {
 
-    List<Displayable> displayableList =
-        V8Engine.getDisplayableWidgetMapping().getCachedDisplayables();
+    List<Displayable> displayableList = V8Engine.getDisplayableWidgetMapping()
+        .getCachedDisplayables();
 
     int[] arr = new int[displayableList.size()];
     int i = 0;

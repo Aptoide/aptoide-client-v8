@@ -25,8 +25,6 @@ import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.view.ActivityView;
-import cm.aptoide.pt.v8engine.view.BackButtonActivity;
 import cm.aptoide.pt.v8engine.view.account.LoginBottomSheetActivity;
 import com.facebook.FacebookSdk;
 import rx.functions.Action0;
@@ -35,7 +33,8 @@ import rx.functions.Action0;
  * Created by marcelobenites on 18/01/17.
  */
 
-public abstract class PermissionServiceActivity extends LoginBottomSheetActivity implements PermissionService {
+public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
+    implements PermissionService {
 
   private static final String TAG = PermissionServiceActivity.class.getName();
   private static final int ACCESS_TO_EXTERNAL_FS_REQUEST_ID = 61;
@@ -209,22 +208,23 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
       @Nullable Action0 toRunWhenAccessIsDenied) {
     int message = R.string.general_downloads_dialog_no_download_rule_message;
 
-    if ((AptoideUtils.SystemU.getConnectionType().equals("mobile")
-        && !ManagerPreferences.getGeneralDownloadsMobile())
-        || (AptoideUtils.SystemU.getConnectionType().equals("wifi")
-        && !ManagerPreferences.getGeneralDownloadsWifi())) {
+    if ((AptoideUtils.SystemU.getConnectionType()
+        .equals("mobile") && !ManagerPreferences.getGeneralDownloadsMobile())
+        || (AptoideUtils.SystemU.getConnectionType()
+        .equals("wifi") && !ManagerPreferences.getGeneralDownloadsWifi())) {
       this.toRunWhenDownloadAccessIsGranted = toRunWhenAccessIsGranted;
       this.toRunWhenDownloadAccessIsDenied = toRunWhenAccessIsDenied;
-      if ((AptoideUtils.SystemU.getConnectionType().equals("wifi")
-          || AptoideUtils.SystemU.getConnectionType().equals("mobile"))
+      if ((AptoideUtils.SystemU.getConnectionType()
+          .equals("wifi") || AptoideUtils.SystemU.getConnectionType()
+          .equals("mobile"))
           && !ManagerPreferences.getGeneralDownloadsWifi()
           && !ManagerPreferences.getGeneralDownloadsMobile()) {
         message = R.string.general_downloads_dialog_no_download_rule_message;
-      } else if (AptoideUtils.SystemU.getConnectionType().equals("wifi")
-          && !ManagerPreferences.getGeneralDownloadsWifi()) {
+      } else if (AptoideUtils.SystemU.getConnectionType()
+          .equals("wifi") && !ManagerPreferences.getGeneralDownloadsWifi()) {
         message = R.string.general_downloads_dialog_only_mobile_message;
-      } else if (AptoideUtils.SystemU.getConnectionType().equals("mobile")
-          && !ManagerPreferences.getGeneralDownloadsMobile()) {
+      } else if (AptoideUtils.SystemU.getConnectionType()
+          .equals("mobile") && !ManagerPreferences.getGeneralDownloadsMobile()) {
         message = R.string.general_downloads_dialog_only_wifi_message;
       }
 
@@ -233,7 +233,8 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
         @Override public void onNext(GenericDialogs.EResponse eResponse) {
           super.onNext(eResponse);
           if (eResponse == GenericDialogs.EResponse.YES) {
-            getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider().newSettingsFragment());
+            getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+                .newSettingsFragment());
           } else {
             if (toRunWhenAccessIsDenied != null) {
               toRunWhenAccessIsDenied.call();
@@ -250,7 +251,8 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
 
   private void showMessageOKCancel(String message,
       SimpleSubscriber<GenericDialogs.EResponse> subscriber) {
-    GenericDialogs.createGenericOkCancelMessage(this, "", message).subscribe(subscriber);
+    GenericDialogs.createGenericOkCancelMessage(this, "", message)
+        .subscribe(subscriber);
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {

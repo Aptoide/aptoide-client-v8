@@ -44,21 +44,26 @@ import com.jakewharton.rxbinding.view.RxView;
     storeName.setText(store.getStoreName());
 
     storeLayout.setBackgroundColor(Color.WHITE);
-    compositeSubscription.add(RxView.clicks(storeLayout).subscribe(__ -> {
-      final Fragment fragment = V8Engine.getFragmentProvider()
-          .newStoreFragment(displayable.getPojo().getStoreName(), displayable.getPojo().getTheme());
-      getFragmentNavigator().navigateTo(fragment);
-    }));
+    compositeSubscription.add(RxView.clicks(storeLayout)
+        .subscribe(__ -> {
+          final Fragment fragment = V8Engine.getFragmentProvider()
+              .newStoreFragment(displayable.getPojo()
+                  .getStoreName(), displayable.getPojo()
+                  .getTheme());
+          getFragmentNavigator().navigateTo(fragment);
+        }));
 
     final Context context = getContext();
     if (store.getStoreId() == -1 || TextUtils.isEmpty(store.getIconPath())) {
       ImageLoader.with(context)
           .loadWithShadowCircleTransform(R.drawable.ic_avatar_apps, storeAvatar,
-              StoreThemeEnum.get(store.getTheme()).getStoreHeaderInt());
+              StoreThemeEnum.get(store.getTheme())
+                  .getStoreHeaderInt());
     } else {
       ImageLoader.with(context)
           .loadWithShadowCircleTransform(store.getIconPath(), storeAvatar,
-              StoreThemeEnum.get(store.getTheme()).getStoreHeaderInt());
+              StoreThemeEnum.get(store.getTheme())
+                  .getStoreHeaderInt());
     }
   }
 }

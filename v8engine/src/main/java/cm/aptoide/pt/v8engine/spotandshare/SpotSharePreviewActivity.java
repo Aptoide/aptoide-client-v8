@@ -16,7 +16,7 @@ public class SpotSharePreviewActivity extends BaseActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.frame_layout);
 
-    getFragmentNavigator().navigateToWithoutBackSave(
-        V8Engine.getFragmentProvider().newSpotShareFragment(true));
+    getFragmentNavigator().navigateToWithoutBackSave(V8Engine.getFragmentProvider()
+        .newSpotShareFragment(true));
   }
 }
