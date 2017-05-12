@@ -44,7 +44,9 @@ public class AptoidePay {
   }
 
   public Completable initiate(Payment payment) {
-    if (payment.getAuthorization().isAuthorized() || payment.getAuthorization().isInitiated()) {
+    if (payment.getAuthorization()
+        .isAuthorized() || payment.getAuthorization()
+        .isInitiated()) {
       return Completable.complete();
     }
     return authorizationRepository.createPaymentAuthorization(payment.getId());

@@ -69,7 +69,8 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
   private ArrayList<String> server;
   private HashMap<String, String> app;
   private String TMP_MYAPP_FILE;
-  private Class startClass = V8Engine.getActivityProvider().getMainActivityFragmentClass();
+  private Class startClass = V8Engine.getActivityProvider()
+      .getMainActivityFragmentClass();
   private AsyncTask<String, Void, Void> asyncTask;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,7 +90,8 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     //Loogin for url from the new site
     if (u != null && u.getHost() != null) {
 
-      if (u.getHost().contains("webservices.aptoide.com")) {
+      if (u.getHost()
+          .contains("webservices.aptoide.com")) {
 
         /** refactored to remove org.apache libs */
         Map<String, String> params = null;
@@ -97,13 +99,15 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
         try {
           params = AptoideUtils.StringU.splitQuery(URI.create(uri));
         } catch (UnsupportedEncodingException e) {
-          CrashReport.getInstance().log(e);
+          CrashReport.getInstance()
+              .log(e);
         }
 
         if (params != null) {
           String uid = null;
           for (Map.Entry<String, String> entry : params.entrySet()) {
-            if (entry.getKey().equals("uid")) {
+            if (entry.getKey()
+                .equals("uid")) {
               uid = entry.getValue();
             }
           }
@@ -113,25 +117,30 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
               long id = Long.parseLong(uid);
               startFromAppView(id, null, true);
             } catch (NumberFormatException e) {
-              CrashReport.getInstance().log(e);
-              CrashReport.getInstance().log(e);
+              CrashReport.getInstance()
+                  .log(e);
+              CrashReport.getInstance()
+                  .log(e);
               ShowMessage.asToast(getApplicationContext(), R.string.simple_error_occured + uid);
             }
           }
         }
 
         finish();
-      } else if (u.getHost().contains("imgs.aptoide.com")) {
+      } else if (u.getHost()
+          .contains("imgs.aptoide.com")) {
 
         String[] strings = uri.split("-");
         long id = Long.parseLong(strings[strings.length - 1].split("\\.myapp")[0]);
 
         startFromAppView(id, null, false);
-      } else if (u.getHost().contains("aptoide.com")) {
+      } else if (u.getHost()
+          .contains("aptoide.com")) {
         /**
          * This could be a store or a app from the new web site
          */
-        if (u.getPath() != null && u.getPath().contains("store")) {
+        if (u.getPath() != null && u.getPath()
+            .contains("store")) {
 
           /**
            * store
@@ -141,7 +150,8 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
           list.add(u.getLastPathSegment());
           startWithRepo(list);
         } else {
-          String[] appName = u.getHost().split("\\.");
+          String[] appName = u.getHost()
+              .split("\\.");
           if (appName != null && appName.length == 4) {
 
             /**
@@ -195,9 +205,11 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
         param = param.substring(4);
       } else {
         try {
-          param = Uri.parse(uri).getQueryParameter("id");
+          param = Uri.parse(uri)
+              .getQueryParameter("id");
         } catch (NullPointerException e) {
-          CrashReport.getInstance().log(e);
+          CrashReport.getInstance()
+              .log(e);
         }
       }
       startFromPackageName(param);
@@ -208,7 +220,8 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 
       if (!TextUtils.isEmpty(param)) {
 
-        param = param.replaceAll("\\*", "_").replaceAll("\\+", "/");
+        param = param.replaceAll("\\*", "_")
+            .replaceAll("\\+", "/");
 
         String json = new String(Base64.decode(param.getBytes(), 0));
 
@@ -218,7 +231,8 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
         try {
           ad = new ObjectMapper().readValue(json, GetAdsResponse.Ad.class);
         } catch (IOException e) {
-          CrashReport.getInstance().log(e);
+          CrashReport.getInstance()
+              .log(e);
         }
 
         if (ad != null) {
@@ -274,7 +288,8 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       server = handler.getServers();
       app = handler.getApp();
     } catch (IOException | SAXException | ParserConfigurationException e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     }
   }
 
@@ -285,15 +300,17 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 
   public void startFromPackageName(String packageName) {
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    installedAccessor.get(packageName).subscribe(installed -> {
-      if (installed != null) {
-        startFromAppView(packageName);
-      } else {
-        startFromSearch(packageName);
-      }
-    }, err -> {
-      CrashReport.getInstance().log(err);
-    });
+    installedAccessor.get(packageName)
+        .subscribe(installed -> {
+          if (installed != null) {
+            startFromAppView(packageName);
+          } else {
+            startFromSearch(packageName);
+          }
+        }, err -> {
+          CrashReport.getInstance()
+              .log(err);
+        });
   }
 
   public void aptoidevoiceSearch(String param) {
@@ -348,11 +365,14 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     String packageName = null;
     boolean showPopup = false;
     for (String property : split) {
-      if (property.toLowerCase().contains("package")) {
+      if (property.toLowerCase()
+          .contains("package")) {
         packageName = property.split("=")[1];
-      } else if (property.toLowerCase().contains("store")) {
+      } else if (property.toLowerCase()
+          .contains("store")) {
         repo = property.split("=")[1];
-      } else if (property.toLowerCase().contains("show_install_popup")) {
+      } else if (property.toLowerCase()
+          .contains("show_install_popup")) {
         showPopup = property.split("=")[1].equals("true");
       } else {
         //old version only with app id
@@ -361,7 +381,8 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
           startFromAppView(id, packageName, false);
           return;
         } catch (NumberFormatException e) {
-          CrashReport.getInstance().log(e);
+          CrashReport.getInstance()
+              .log(e);
         }
       }
     }
@@ -447,7 +468,8 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       getit.close();
       saveit.close();
     } catch (Exception e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     }
   }
 
@@ -461,7 +483,8 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       server = handler.getServers();
       app = handler.getApp();
     } catch (IOException | SAXException | ParserConfigurationException e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     }
   }
 
@@ -518,7 +541,8 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
         downloadMyAppFile(params[0]);
         parseXmlMyapp(TMP_MYAPP_FILE);
       } catch (Exception e) {
-        CrashReport.getInstance().log(e);
+        CrashReport.getInstance()
+            .log(e);
       }
 
       return null;

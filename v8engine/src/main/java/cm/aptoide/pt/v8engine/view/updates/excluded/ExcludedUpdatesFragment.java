@@ -71,7 +71,8 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter> {
             clearDisplayables().addDisplayables(displayables, true);
           }
         }, t -> {
-          CrashReport.getInstance().log(t);
+          CrashReport.getInstance()
+              .log(t);
           emptyData.setText(R.string.no_excluded_updates_msg);
           emptyData.setVisibility(View.VISIBLE);
           clearDisplayables();
@@ -131,7 +132,8 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter> {
           .doOnNext(update -> update.setExcluded(false))
           .toList()
           .subscribe(updates -> updateAccessor.insertAll(updates), err -> {
-            CrashReport.getInstance().log(err);
+            CrashReport.getInstance()
+                .log(err);
           });
 
       return true;

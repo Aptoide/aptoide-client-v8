@@ -48,7 +48,8 @@ public abstract class GridRecyclerFragmentWithDecorator<T extends BaseAdapter>
         FragmentActivity activity = getActivity();
         if (activity != null) {
           offset = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5,
-              activity.getResources().getDisplayMetrics());
+              activity.getResources()
+                  .getDisplayMetrics());
           top = offset;
           bottom = offset;
           left = offset;

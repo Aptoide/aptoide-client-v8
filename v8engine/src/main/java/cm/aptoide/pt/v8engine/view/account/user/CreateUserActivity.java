@@ -91,7 +91,8 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
   }
 
   @Override public void loadImage(Uri imagePath) {
-    ImageLoader.with(this).loadWithCircleTransform(imagePath, avatarImage, false);
+    ImageLoader.with(this)
+        .loadWithCircleTransform(imagePath, avatarImage, false);
   }
 
   @Override public void showIconPropertiesError(String errors) {
@@ -101,13 +102,16 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
   }
 
   private void setupListeners() {
-    subscriptions.add(RxView.clicks(userAvatar).subscribe(click -> chooseAvatarSource()));
-    subscriptions.add(RxView.clicks(createUserButton).doOnNext(click -> {
-      hideKeyboardAndShowProgressDialog();
-      Analytics.Account.createdUserProfile(!TextUtils.isEmpty(avatarPath));
-    })
-        .flatMap(click -> accountManager.updateAccount(nameEditText.getText().toString().trim(),
-            avatarPath)
+    subscriptions.add(RxView.clicks(userAvatar)
+        .subscribe(click -> chooseAvatarSource()));
+    subscriptions.add(RxView.clicks(createUserButton)
+        .doOnNext(click -> {
+          hideKeyboardAndShowProgressDialog();
+          Analytics.Account.createdUserProfile(!TextUtils.isEmpty(avatarPath));
+        })
+        .flatMap(click -> accountManager.updateAccount(nameEditText.getText()
+            .toString()
+            .trim(), avatarPath)
             .toObservable()
             .timeout(90, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
@@ -149,11 +153,12 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
 
   private void showSuccessMessageAndNavigateToLoggedInView() {
     ShowMessage.asSnack(content, R.string.user_created);
-    if (Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
+    if (Application.getConfiguration()
+        .isCreateStoreAndSetUserPrivacyAvailable()) {
       startActivity(new Intent(this, ProfileStepOneActivity.class));
     } else {
-      Toast.makeText(this, R.string.create_profile_pub_pri_suc_login,
-          Toast.LENGTH_LONG).show();
+      Toast.makeText(this, R.string.create_profile_pub_pri_suc_login, Toast.LENGTH_LONG)
+          .show();
     }
     finish();
   }

@@ -40,7 +40,9 @@ import lombok.Data;
 
   private FileInfo extractApk() {
     for (int i = 0; i < fileInfos.size(); i++) {
-      if (fileInfos.get(i).getFilePath().endsWith(".apk")) {
+      if (fileInfos.get(i)
+          .getFilePath()
+          .endsWith(".apk")) {
         return fileInfos.get(i);
       }
     }
@@ -55,7 +57,8 @@ import lombok.Data;
     long total = 0;
     if (fileInfos != null) {
       for (int i = 0; i < fileInfos.size(); i++) {
-        total += fileInfos.get(i).getSize();
+        total += fileInfos.get(i)
+            .getSize();
       }
     }
     return total;

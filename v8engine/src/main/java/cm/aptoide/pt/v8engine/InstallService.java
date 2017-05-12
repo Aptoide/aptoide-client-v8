@@ -71,8 +71,8 @@ public class InstallService extends Service {
     downloadManager = ((V8Engine) getApplicationContext()).getDownloadManager();
     defaultInstaller = new InstallerFactory().create(this, InstallerFactory.DEFAULT);
     rollbackInstaller = new InstallerFactory().create(this, InstallerFactory.ROLLBACK);
-    installManager = ((V8Engine) getApplicationContext()).getInstallManager(
-        InstallerFactory.ROLLBACK);
+    installManager =
+        ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
     subscriptions = new CompositeSubscription();
     setupNotification();
     installerTypeMap = new HashMap();
@@ -115,7 +115,8 @@ public class InstallService extends Service {
   }
 
   private Observable<Boolean> stopDownload(String md5) {
-    return downloadManager.pauseDownloadSync(md5).andThen(hasNextDownload());
+    return downloadManager.pauseDownloadSync(md5)
+        .andThen(hasNextDownload());
   }
 
   private void stopAllDownloads() {
@@ -229,31 +230,36 @@ public class InstallService extends Service {
   }
 
   private void setupNotification() {
-    subscriptions.add(installManager.getCurrentInstallation().subscribe(progress -> {
-      if (!progress.isIndeterminate()) {
+    subscriptions.add(installManager.getCurrentInstallation()
+        .subscribe(progress -> {
+          if (!progress.isIndeterminate()) {
 
-        int requestCode = progress.getRequest().getFilesToDownload().get(0).getDownloadId();
-        String md5 = progress.getRequest().getMd5();
+            int requestCode = progress.getRequest()
+                .getFilesToDownload()
+                .get(0)
+                .getDownloadId();
+            String md5 = progress.getRequest()
+                .getMd5();
 
-        NotificationCompat.Action downloadManagerAction =
-            getDownloadManagerAction(requestCode, md5);
-        PendingIntent appViewPendingIntent =
-            getPendingIntent(requestCode, ACTION_OPEN_APP_VIEW, md5);
-        NotificationCompat.Action pauseAction = getPauseAction(requestCode, md5);
+            NotificationCompat.Action downloadManagerAction =
+                getDownloadManagerAction(requestCode, md5);
+            PendingIntent appViewPendingIntent =
+                getPendingIntent(requestCode, ACTION_OPEN_APP_VIEW, md5);
+            NotificationCompat.Action pauseAction = getPauseAction(requestCode, md5);
 
-        if (notification == null) {
-          notification =
-              buildNotification(progress, pauseAction, downloadManagerAction, appViewPendingIntent);
-        } else {
-          long oldWhen = notification.when;
-          notification =
-              buildNotification(progress, pauseAction, downloadManagerAction, appViewPendingIntent);
-          notification.when = oldWhen;
-        }
+            if (notification == null) {
+              notification = buildNotification(progress, pauseAction, downloadManagerAction,
+                  appViewPendingIntent);
+            } else {
+              long oldWhen = notification.when;
+              notification = buildNotification(progress, pauseAction, downloadManagerAction,
+                  appViewPendingIntent);
+              notification.when = oldWhen;
+            }
 
-        startForeground(NOTIFICATION_ID, notification);
-      }
-    }, throwable -> removeNotificationAndStop()));
+            startForeground(NOTIFICATION_ID, notification);
+          }
+        }, throwable -> removeNotificationAndStop()));
   }
 
   @NonNull private NotificationCompat.Action getPauseAction(int requestCode, String md5) {
@@ -278,13 +284,16 @@ public class InstallService extends Service {
     builder.setSmallIcon(android.R.drawable.stat_sys_download)
         .setContentTitle(String.format(Locale.ENGLISH,
             getResources().getString(cm.aptoide.pt.downloadmanager.R.string.aptoide_downloading),
-            Application.getConfiguration().getMarketName()))
-        .setContentText(new StringBuilder().append(progress.getRequest().getAppName())
+            Application.getConfiguration()
+                .getMarketName()))
+        .setContentText(new StringBuilder().append(progress.getRequest()
+            .getAppName())
             .append(" - ")
-            .append(progress.getRequest().getStatusName(this)))
+            .append(progress.getRequest()
+                .getStatusName(this)))
         .setContentIntent(contentIntent)
-        .setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE,
-            progress.getRequest().getOverallProgress(), progress.isIndeterminate())
+        .setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE, progress.getRequest()
+            .getOverallProgress(), progress.isIndeterminate())
         .addAction(pauseAction)
         .addAction(openDownloadManager);
     return builder.build();
@@ -321,8 +330,8 @@ public class InstallService extends Service {
 
   @NonNull private Intent createDeeplinkingIntent() {
     Intent intent = new Intent();
-    intent.setClass(Application.getContext(),
-        V8Engine.getActivityProvider().getMainActivityFragmentClass());
+    intent.setClass(Application.getContext(), V8Engine.getActivityProvider()
+        .getMainActivityFragmentClass());
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
     return intent;
   }

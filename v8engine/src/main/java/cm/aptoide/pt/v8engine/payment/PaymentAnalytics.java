@@ -113,8 +113,10 @@ public class PaymentAnalytics {
 
   private Bundle getProductBundle(Product product) {
     final Bundle bundle = new Bundle();
-    bundle.putDouble("purchase_value", product.getPrice().getAmount());
-    bundle.putString("purchase_currency", product.getPrice().getCurrency());
+    bundle.putDouble("purchase_value", product.getPrice()
+        .getAmount());
+    bundle.putString("purchase_currency", product.getPrice()
+        .getCurrency());
     if (product instanceof InAppBillingProduct) {
       bundle.putString("package_name_seller", ((InAppBillingProduct) product).getPackageName());
     } else {

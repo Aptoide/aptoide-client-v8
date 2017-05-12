@@ -50,7 +50,8 @@ public class ApplicationReceiver {
     context.startService(intent);
     receive = new BroadcastReceiver() {
       @Override public void onReceive(Context context, Intent intent) {
-        if (intent.getAction() != null && intent.getAction().equals("RECEIVEAPP")) {
+        if (intent.getAction() != null && intent.getAction()
+            .equals("RECEIVEAPP")) {
           boolean finishedReceiving = intent.getBooleanExtra("FinishedReceiving", false);
           String appName = intent.getStringExtra("appName");
           if (finishedReceiving) {
@@ -61,9 +62,11 @@ public class ApplicationReceiver {
           } else {
             listener.onStartedReceiving(appName);
           }
-        } else if (intent.getAction() != null && intent.getAction().equals("ERRORRECEIVING")) {
+        } else if (intent.getAction() != null && intent.getAction()
+            .equals("ERRORRECEIVING")) {
           listener.onErrorReceiving();
-        } else if (intent.getAction() != null && intent.getAction().equals("SERVER_LEFT")) {
+        } else if (intent.getAction() != null && intent.getAction()
+            .equals("SERVER_LEFT")) {
           listener.onServerLeft();
         }
       }
@@ -86,7 +89,8 @@ public class ApplicationReceiver {
     receiveIntent.putExtra("nickname", nickname);
     receiveIntent.putExtra("port", port);
     receiveIntent.putExtra("ExternalStoragePath",
-        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString());
+        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            .toString());
     receiveIntent.putExtra("isHotspot", isHotspot);
     receiveIntent.putExtra("isOutsideShare", outsideShare);
     receiveIntent.setAction("RECEIVE");

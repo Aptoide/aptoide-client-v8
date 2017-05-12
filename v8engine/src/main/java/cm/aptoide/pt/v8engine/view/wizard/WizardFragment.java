@@ -68,8 +68,8 @@ public class WizardFragment extends BackButtonFragment {
     radioGroup = (RadioGroup) view.findViewById(R.id.view_pager_radio_group);
     skipText = view.findViewById(R.id.skip_text);
     nextIcon = view.findViewById(R.id.next_icon);
-    isInPortraitMode = getActivity().getResources().getConfiguration().orientation
-        == Configuration.ORIENTATION_PORTRAIT;
+    isInPortraitMode = getActivity().getResources()
+        .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
     return view;
   }
 
@@ -207,7 +207,8 @@ public class WizardFragment extends BackButtonFragment {
    */
   private void handleSelectedPage(int selectedPage) {
     // mark the current page as selected in the radio group
-    wizardButtons.get(selectedPage).setChecked(true);
+    wizardButtons.get(selectedPage)
+        .setChecked(true);
     if (selectedPage > 0 && selectedPage < wizardButtons.size() - 1) {
       // show the arrow in all pages except the last
       skipText.setVisibility(View.GONE);

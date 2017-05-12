@@ -17,17 +17,17 @@
       />
 
   <TextView
-      android:layout_height="wrap_content"
-      android:layout_width="match_parent"
       android:id="@+id/title"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
       android:text="@string/wizard_title_viewpager_one"
       style="@style/onBoardingTitle"
       />
 
   <TextView
-      android:layout_height="wrap_content"
-      android:layout_width="match_parent"
       android:id="@+id/description"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
       android:text="@string/wizard_sub_title_viewpager_one"
       style="@style/onBoardingSubTitle"
       />

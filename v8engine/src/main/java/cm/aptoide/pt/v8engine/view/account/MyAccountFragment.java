@@ -68,9 +68,9 @@ public class MyAccountFragment extends FragmentView implements MyAccountView {
 
   @Override public void navigateToHome() {
     final FragmentNavigator navManager = getFragmentNavigator();
-    Fragment home =
-        HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
-            V8Engine.getConfiguration().getDefaultTheme());
+    Fragment home = HomeFragment.newInstance(V8Engine.getConfiguration()
+        .getDefaultStore(), StoreContext.home, V8Engine.getConfiguration()
+        .getDefaultTheme());
     navManager.cleanBackStack();
     navManager.navigateToWithoutBackSave(home);
   }

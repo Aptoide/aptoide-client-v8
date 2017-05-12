@@ -99,7 +99,8 @@ public class ConnectionManager {
               if (!clients.contains(group)) {
                 clients.add(group);
                 changes = true;
-                System.out.println("Estou no : " + connResults.get(i).toString());
+                System.out.println("Estou no : " + connResults.get(i)
+                    .toString());
               }
             } catch (ParseException e) {
               Log.d("ConnectionManager: ", "Tried parsing an invalid group name SSID.");
@@ -162,7 +163,8 @@ public class ConnectionManager {
               if (info.isAvailable() && info.isConnected()) {
 
                 WifiInfo wifiInfo = wifimanager.getConnectionInfo();
-                if (wifiInfo.getSSID().contains("APTXV")) {
+                if (wifiInfo.getSSID()
+                    .contains("APTXV")) {
                   isWifiConnected = true;
                   DataHolder.getInstance().network = network;
                   break;
@@ -201,7 +203,8 @@ public class ConnectionManager {
               && inf.getType() == ConnectivityManager.TYPE_WIFI) {
 
             WifiInfo wifiInfo = wifimanager.getConnectionInfo();
-            if (wifiInfo.getSSID().contains("APTXV")) {
+            if (wifiInfo.getSSID()
+                .contains("APTXV")) {
               isWifiConnected = true;
               break;
               //// TODO: 28-03-2017 filipe add reconnect to these lower versions
@@ -272,7 +275,9 @@ public class ConnectionManager {
   }
 
   public void start(WifiStateListener listener) {
-    prefs.edit().putBoolean("wifiOnStart", this.wifimanager.isWifiEnabled()).apply();
+    prefs.edit()
+        .putBoolean("wifiOnStart", this.wifimanager.isWifiEnabled())
+        .apply();
 
     this.listenerActivateButtons = listener;
     context.registerReceiver(activateButtonsReceiver,
@@ -314,13 +319,15 @@ public class ConnectionManager {
 
   public void resetHotspot(boolean enable) {
     WifiManager wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    WifiConfiguration wc = DataHolder.getInstance().getWcOnJoin();
+    WifiConfiguration wc = DataHolder.getInstance()
+        .getWcOnJoin();
 
     Method[] wmMethods = wifimanager.getClass()
         .getDeclaredMethods();   //Get all declared methods in WifiManager class
     boolean methodFound = false;
     for (Method method : wmMethods) {
-      if (method.getName().equals("setWifiApEnabled")) {
+      if (method.getName()
+          .equals("setWifiApEnabled")) {
 
         try {
           method.invoke(wifimanager, wc, enable);
@@ -344,20 +351,24 @@ public class ConnectionManager {
         .getDeclaredMethods();   //Get all declared methods in WifiManager class
     boolean methodFound = false;
     for (Method method : wmMethods) {
-      if (method.getName().equals("getWifiApConfiguration")) {
+      if (method.getName()
+          .equals("getWifiApConfiguration")) {
         System.out.println("saving old ssid .");
         try {
           WifiConfiguration config = (WifiConfiguration) method.invoke(wifimanager);
           System.out.println("THE ACTUAL SSID IS : : : " + config.SSID);
-          DataHolder.getInstance().setWcOnJoin(config);
+          DataHolder.getInstance()
+              .setWcOnJoin(config);
         } catch (IllegalAccessException e) {
           e.printStackTrace();
         } catch (InvocationTargetException e) {
-          e.getCause().printStackTrace();
+          e.getCause()
+              .printStackTrace();
           e.printStackTrace();
         }
       }
-      if (method.getName().equals("setWifiApEnabled")) {
+      if (method.getName()
+          .equals("setWifiApEnabled")) {
         methodFound = true;
         WifiConfiguration netConfig = new WifiConfiguration();
         netConfig.SSID = String.valueOf(hotspotSSIDCodeMapper.encode(RULE_VERSION))
@@ -378,11 +389,13 @@ public class ConnectionManager {
         try {
           boolean apstatus = (Boolean) method.invoke(wifimanager, netConfig, true);
           for (Method isWifiApEnabledmethod : wmMethods) {
-            if (isWifiApEnabledmethod.getName().equals("isWifiApEnabled")) {
+            if (isWifiApEnabledmethod.getName()
+                .equals("isWifiApEnabled")) {
               while (!(Boolean) isWifiApEnabledmethod.invoke(wifimanager)) {
               }
               for (Method method1 : wmMethods) {
-                if (method1.getName().equals("getWifiApState")) {
+                if (method1.getName()
+                    .equals("getWifiApState")) {
                   int apstate;
                   apstate = (Integer) method1.invoke(wifimanager);
                 }
@@ -399,7 +412,8 @@ public class ConnectionManager {
         } catch (IllegalAccessException e) {
           e.printStackTrace();
         } catch (InvocationTargetException e) {
-          e.getCause().printStackTrace();
+          e.getCause()
+              .printStackTrace();
           e.printStackTrace();
         }
       }
@@ -422,7 +436,9 @@ public class ConnectionManager {
     if (id.equals("default")) {
       int tmp = generateRandomID();
       id = String.valueOf(hotspotSSIDCodeMapper.encode(tmp));
-      prefs.edit().putString(UNIQUE_ID, id).apply();
+      prefs.edit()
+          .putString(UNIQUE_ID, id)
+          .apply();
     }
     return id;
   }
@@ -525,14 +541,15 @@ public class ConnectionManager {
     TelephonyManager mTelephonyManager =
         (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      List<SubscriptionInfo> aux =
-          SubscriptionManager.from(context).getActiveSubscriptionInfoList();
+      List<SubscriptionInfo> aux = SubscriptionManager.from(context)
+          .getActiveSubscriptionInfoList();
       if (aux != null) {
         for (int i = 0; i < aux.size(); i++) {
           try {
-            Method getDataEnabled =
-                mTelephonyManager.getClass().getMethod("getDataEnabled", int.class);
-            if ((boolean) getDataEnabled.invoke(mTelephonyManager, aux.get(i).getSimSlotIndex())) {
+            Method getDataEnabled = mTelephonyManager.getClass()
+                .getMethod("getDataEnabled", int.class);
+            if ((boolean) getDataEnabled.invoke(mTelephonyManager, aux.get(i)
+                .getSimSlotIndex())) {
               isOn = true;
             }
           } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
@@ -552,7 +569,8 @@ public class ConnectionManager {
     ConnectivityManager cm = (ConnectivityManager) connectivityService;
 
     try {
-      Class<?> c = Class.forName(cm.getClass().getName());
+      Class<?> c = Class.forName(cm.getClass()
+          .getName());
       Method m = c.getDeclaredMethod("getMobileDataEnabled");
       m.setAccessible(true);
       return (Boolean) m.invoke(cm);

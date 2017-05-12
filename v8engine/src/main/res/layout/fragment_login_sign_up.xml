@@ -46,16 +46,16 @@ android:fitsSystemWindows="true"
           />
 
       <TextView
-          android:layout_height="wrap_content"
           android:layout_width="match_parent"
+          android:layout_height="wrap_content"
           android:text="@string/login_sign_up_title"
           style="@style/onBoardingTitle"
           />
 
 
       <TextView
-          android:layout_height="match_parent"
           android:layout_width="match_parent"
+          android:layout_height="match_parent"
           android:text="@string/wizard_sub_title_viewpager_three"
           style="@style/onBoardingSubTitle"
           />
@@ -69,8 +69,8 @@ android:fitsSystemWindows="true"
           />
 
       <TextView
-          android:layout_height="match_parent"
           android:layout_width="match_parent"
+          android:layout_height="match_parent"
           android:paddingEnd="10dp"
           android:paddingLeft="10dp"
           android:paddingRight="10dp"

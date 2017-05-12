@@ -30,8 +30,7 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
 
   public static OAuth2AuthenticationRequest of(String username, String password, String mode,
       @Nullable String nameForGoogle, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
 
     final BaseBody body = new BaseBody();
 
@@ -63,8 +62,10 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
       }
     }
 
-    if (!TextUtils.isEmpty(Application.getConfiguration().getExtraId())) {
-      body.put("oem_id", Application.getConfiguration().getExtraId());
+    if (!TextUtils.isEmpty(Application.getConfiguration()
+        .getExtraId())) {
+      body.put("oem_id", Application.getConfiguration()
+          .getExtraId());
     }
 
     return new OAuth2AuthenticationRequest(body, bodyInterceptor, httpClient, converterFactory);
@@ -80,8 +81,10 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
     body.put("client_id", "Aptoide");
     body.put("mode", "json");
 
-    if (!TextUtils.isEmpty(Application.getConfiguration().getExtraId())) {
-      body.put("oem_id", Application.getConfiguration().getExtraId());
+    if (!TextUtils.isEmpty(Application.getConfiguration()
+        .getExtraId())) {
+      body.put("oem_id", Application.getConfiguration()
+          .getExtraId());
     }
     body.put("refresh_token", refreshToken);
 

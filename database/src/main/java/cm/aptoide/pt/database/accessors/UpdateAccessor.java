@@ -90,7 +90,8 @@ public class UpdateAccessor extends SimpleAccessor<Update> {
     return Observable.fromCallable(() -> Database.getInternal())
         .flatMap(realm -> database.count(realm.where(Update.class)
             .equalTo(Update.PACKAGE_NAME, packageName)
-            .equalTo(Update.EXCLUDED, true)).map(count -> count > 0L))
+            .equalTo(Update.EXCLUDED, true))
+            .map(count -> count > 0L))
         .unsubscribeOn(RealmSchedulers.getScheduler())
         .subscribeOn(RealmSchedulers.getScheduler())
         .observeOn(Schedulers.io());

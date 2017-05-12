@@ -42,7 +42,8 @@ public class SecureCoderDecoder {
 
   static String generateAesKeyName(Context context)
       throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
-    final char[] password = context.getPackageName().toCharArray();
+    final char[] password = context.getPackageName()
+        .toCharArray();
 
     final byte[] salt = getDeviceSerialNumber(context).getBytes();
 
@@ -68,7 +69,8 @@ public class SecureCoderDecoder {
     // We're using the Reflection API because Build.SERIAL is only available
     // since API Level 9 (Gingerbread, Android 2.3).
     try {
-      String deviceSerial = (String) Build.class.getField("SERIAL").get(null);
+      String deviceSerial = (String) Build.class.getField("SERIAL")
+          .get(null);
       if (TextUtils.isEmpty(deviceSerial)) {
         deviceSerial =
             Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -127,7 +129,8 @@ public class SecureCoderDecoder {
         generator.init(128, random);
       }
     }
-    return encode(generator.generateKey().getEncoded());
+    return encode(generator.generateKey()
+        .getEncoded());
   }
 
   static byte[] decode(String input) {
@@ -190,7 +193,9 @@ public class SecureCoderDecoder {
         String value = defaultSharedPreferences.getString(key, null);
         if (value == null) {
           value = generateAesKeyValue();
-          defaultSharedPreferences.edit().putString(key, value).commit();
+          defaultSharedPreferences.edit()
+              .putString(key, value)
+              .commit();
         }
         secureCoderDecoder = new SecureCoderDecoder(SecureCoderDecoder.decode(value));
       } catch (Exception e) {

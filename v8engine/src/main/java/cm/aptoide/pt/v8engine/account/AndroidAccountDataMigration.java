@@ -91,8 +91,7 @@ public class AndroidAccountDataMigration {
 
       Log.i(TAG, "migrating from v7");
 
-      final android.accounts.Account[] accounts =
-          accountManager.getAccountsByType(accountType);
+      final android.accounts.Account[] accounts = accountManager.getAccountsByType(accountType);
       final Account oldAccount = accounts[0];
 
       String sharedPrefsData;
@@ -139,8 +138,7 @@ public class AndroidAccountDataMigration {
       // migration from an older v8.x to this v8
       //
 
-      final Account[] accounts =
-          accountManager.getAccountsByType(accountType);
+      final Account[] accounts = accountManager.getAccountsByType(accountType);
 
       if (!accountHasKeysForMigration(MIGRATION_KEYS, secureSharedPreferences)
           || accounts.length == 0) {
@@ -196,7 +194,9 @@ public class AndroidAccountDataMigration {
       SharedPreferences sharedPreferences) {
     for (int i = 0; i < migrationKeys.length; ++i) {
       if (sharedPreferences.contains(migrationKeys[i])) {
-        sharedPreferences.edit().remove(migrationKeys[i]).commit();
+        sharedPreferences.edit()
+            .remove(migrationKeys[i])
+            .commit();
       }
     }
   }

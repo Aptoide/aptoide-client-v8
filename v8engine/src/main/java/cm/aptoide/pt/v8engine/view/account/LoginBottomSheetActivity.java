@@ -7,8 +7,7 @@ import cm.aptoide.pt.v8engine.view.BackButtonActivity;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import rx.Observable;
 
-public class LoginBottomSheetActivity extends BackButtonActivity
-    implements LoginBottomSheet {
+public class LoginBottomSheetActivity extends BackButtonActivity implements LoginBottomSheet {
 
   private BehaviorRelay<State> stateSubject;
 

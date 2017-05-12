@@ -102,8 +102,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     errorMapper = new AccountErrorMapper(getContext());
     facebookRequestedPermissions = Arrays.asList("email", "user_friends");
     fragmentNavigator = getFragmentNavigator();
-    boolean isPortrait = getActivity().getResources().getConfiguration().orientation
-        == Configuration.ORIENTATION_PORTRAIT;
+    boolean isPortrait = getActivity().getResources()
+        .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
 
     presenter = new LoginSignUpCredentialsPresenter(this,
         ((V8Engine) getContext().getApplicationContext()).getAccountManager(),
@@ -217,9 +217,9 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void navigateToMainView() {
-    Fragment home =
-        HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
-            V8Engine.getConfiguration().getDefaultTheme());
+    Fragment home = HomeFragment.newInstance(V8Engine.getConfiguration()
+        .getDefaultStore(), StoreContext.home, V8Engine.getConfiguration()
+        .getDefaultTheme());
     fragmentNavigator.cleanBackStack();
     fragmentNavigator.navigateTo(home);
   }
@@ -267,6 +267,28 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
       return true;
     }
     return false;
+  }
+
+  @Override @NonNull public AptoideAccountViewModel getCredentials() {
+    return new AptoideAccountViewModel(aptoideEmailEditText.getText()
+        .toString(), aptoidePasswordEditText.getText()
+        .toString());
+  }
+
+  @Override public void setCredentials(@NonNull AptoideAccountViewModel model) {
+    aptoideEmailEditText.setText(model.getUsername());
+    aptoidePasswordEditText.setText(model.getUsername());
+  }
+
+  @Override public boolean isPasswordVisible() {
+    return isPasswordVisible;
+  }
+
+  @Override public void navigateToCreateProfile() {
+    Intent i = new Intent(getContext(), CreateUserActivity.class);
+    FragmentActivity parent = getActivity();
+    parent.startActivity(i);
+    getFragmentNavigator().cleanBackStack();
   }
 
   private Analytics.Account.StartupClickOrigin getStartupClickOrigin() {
@@ -364,8 +386,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     progressDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
 
     try {
-      bottomSheetBehavior =
-          BottomSheetBehavior.from(view.getRootView().findViewById(R.id.login_signup_layout));
+      bottomSheetBehavior = BottomSheetBehavior.from(view.getRootView()
+          .findViewById(R.id.login_signup_layout));
     } catch (IllegalArgumentException ex) {
       // this happens because in landscape the R.id.login_signup_layout is not
       // a child of CoordinatorLayout
@@ -373,30 +395,12 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   public String getCompanyName() {
-    return ((V8Engine) getActivity().getApplication()).createConfiguration().getMarketName();
-  }  @Override public void setCredentials(@NonNull AptoideAccountViewModel model) {
-    aptoideEmailEditText.setText(model.getUsername());
-    aptoidePasswordEditText.setText(model.getUsername());
+    return ((V8Engine) getActivity().getApplication()).createConfiguration()
+        .getMarketName();
   }
 
   @Override public void onDestroyView() {
     unregisterBackClickHandler(backClickHandler);
     super.onDestroyView();
-  }
-
-  @Override @NonNull public AptoideAccountViewModel getCredentials() {
-    return new AptoideAccountViewModel(aptoideEmailEditText.getText().toString(),
-        aptoidePasswordEditText.getText().toString());
-  }
-
-  @Override public boolean isPasswordVisible() {
-    return isPasswordVisible;
-  }
-
-  @Override public void navigateToCreateProfile() {
-    Intent i = new Intent(getContext(), CreateUserActivity.class);
-    FragmentActivity parent = getActivity();
-    parent.startActivity(i);
-    getFragmentNavigator().cleanBackStack();
   }
 }

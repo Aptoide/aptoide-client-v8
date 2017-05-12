@@ -48,8 +48,9 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
       StoreCredentialsProvider storeCredentialsProvider) {
     super(socialStoreLatestApps, likes, comments, socialStoreLatestApps.getOwnerStore(),
         socialStoreLatestApps.getUser(), socialStoreLatestApps.getUserSharer(),
-        socialStoreLatestApps.getMy().isLiked(), socialStoreLatestApps.getLikes(),
-        socialStoreLatestApps.getDate(), spannableFactory, dateCalculator, abTestingUrl);
+        socialStoreLatestApps.getMy()
+            .isLiked(), socialStoreLatestApps.getLikes(), socialStoreLatestApps.getDate(),
+        spannableFactory, dateCalculator, abTestingUrl);
     this.storeName = storeName;
     //socialStoreLatestApps.getSharedStore().getId();
     this.avatarUrl = avatarUrl;
@@ -77,23 +78,31 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
     String abTestingURL = null;
 
     if (socialStoreLatestApps.getAb() != null
-        && socialStoreLatestApps.getAb().getConversion() != null
-        && socialStoreLatestApps.getAb().getConversion().getUrl() != null) {
-      abTestingURL = socialStoreLatestApps.getAb().getConversion().getUrl();
+        && socialStoreLatestApps.getAb()
+        .getConversion() != null
+        && socialStoreLatestApps.getAb()
+        .getConversion()
+        .getUrl() != null) {
+      abTestingURL = socialStoreLatestApps.getAb()
+          .getConversion()
+          .getUrl();
     }
 
     String ownerStoreName = "";
     String ownerStoreAvatar = "";
     if (socialStoreLatestApps.getOwnerStore() != null) {
-      ownerStoreName = socialStoreLatestApps.getOwnerStore().getName();
-      ownerStoreAvatar = socialStoreLatestApps.getOwnerStore().getAvatar();
+      ownerStoreName = socialStoreLatestApps.getOwnerStore()
+          .getName();
+      ownerStoreAvatar = socialStoreLatestApps.getOwnerStore()
+          .getAvatar();
     }
 
-    // TODO: 22/12/2016 socialStoreLatestApps.getLatestUpdate() 
+    // TODO: 22/12/2016 socialStoreLatestApps.getLatestUpdate()
     return new SocialStoreLatestAppsDisplayable(socialStoreLatestApps, ownerStoreName,
-        ownerStoreAvatar, latestApps, abTestingURL, socialStoreLatestApps.getStats().getLikes(),
-        socialStoreLatestApps.getStats().getComments(), dateCalculator, timelineAnalytics,
-        socialRepository, spannableFactory, storeCredentialsProvider);
+        ownerStoreAvatar, latestApps, abTestingURL, socialStoreLatestApps.getStats()
+        .getLikes(), socialStoreLatestApps.getStats()
+        .getComments(), dateCalculator, timelineAnalytics, socialRepository, spannableFactory,
+        storeCredentialsProvider);
   }
 
   @Override public int getViewLayout() {

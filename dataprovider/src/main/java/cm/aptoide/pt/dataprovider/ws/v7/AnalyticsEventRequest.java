@@ -30,8 +30,9 @@ public class AnalyticsEventRequest extends V7<BaseV7Response, AnalyticsEventRequ
   public static AnalyticsEventRequest of(String eventName, String context, String action,
       Map<String, Object> data, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
-    final AnalyticsEventRequest.Body body =
-        new AnalyticsEventRequest.Body(DataProvider.getConfiguration().getAppId(), data);
+    final AnalyticsEventRequest.Body body = new AnalyticsEventRequest.Body(
+        DataProvider.getConfiguration()
+            .getAppId(), data);
 
     return new AnalyticsEventRequest(body, action, eventName, context, bodyInterceptor, httpClient,
         converterFactory);

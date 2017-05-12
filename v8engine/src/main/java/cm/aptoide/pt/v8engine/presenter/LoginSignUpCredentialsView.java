@@ -62,9 +62,9 @@ public interface LoginSignUpCredentialsView extends GoogleLoginView {
 
   boolean tryCloseLoginBottomSheet();
 
-  void setCredentials(@NonNull AptoideAccountViewModel model);
-
   @NonNull AptoideAccountViewModel getCredentials();
+
+  void setCredentials(@NonNull AptoideAccountViewModel model);
 
   boolean isPasswordVisible();
 

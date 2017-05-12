@@ -5,7 +5,6 @@
 
 package cm.aptoide.accountmanager;
 
-
 import java.util.List;
 import rx.Completable;
 
@@ -127,7 +126,9 @@ public final class AptoideAccount implements Account {
   }
 
   private boolean isEmpty(String string) {
-    return string == null || string.trim().length() == 0;
+    return string == null
+        || string.trim()
+        .length() == 0;
   }
 
   @Override public String toString() {

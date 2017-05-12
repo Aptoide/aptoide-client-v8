@@ -23,7 +23,8 @@ public class ThemeUtils {
       Window window = activity.getWindow();
       window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
       window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-      window.setStatusBarColor(activity.getResources().getColor(storeThemeEnum.getColor700tint()));
+      window.setStatusBarColor(activity.getResources()
+          .getColor(storeThemeEnum.getColor700tint()));
     }
   }
 
@@ -34,11 +35,17 @@ public class ThemeUtils {
 
     SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(activity);
 
-    if (sPref.getString("theme", "light").equals("dark")) {
-      sPref.edit().putString("theme", "default_dark").commit();
+    if (sPref.getString("theme", "light")
+        .equals("dark")) {
+      sPref.edit()
+          .putString("theme", "default_dark")
+          .commit();
       activity.setTheme(R.style.AptoideThemeDefaultDark);
     } else {
-      sPref.edit().putString("theme", V8Engine.getConfiguration().getDefaultTheme()).commit();
+      sPref.edit()
+          .putString("theme", V8Engine.getConfiguration()
+              .getDefaultTheme())
+          .commit();
       activity.setTheme(R.style.AptoideThemeDefault);
     }
   }
@@ -56,7 +63,8 @@ public class ThemeUtils {
    * Returns applied theme
    */
   public static StoreThemeEnum getAppliedTheme(Activity activity) {
-    StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(activity.getTheme().toString());
+    StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(activity.getTheme()
+        .toString());
     return storeThemeEnum;
   }
 }
