@@ -339,24 +339,25 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
                         }
                       } else if (!(CREATE_STORE_REQUEST_CODE == 3)) {
                         onCreateSuccess(progressDialog);
-                      } else {
+                          } else {
                         progressDialog.dismiss();
                         ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created)
-                            .subscribe(visibility -> {
-                              mSubscriptions.add(accountManager.syncCurrentAccount()
-                                  .subscribe(() -> {
-                                  }, err -> err.printStackTrace()));
-                              if (visibility == ShowMessage.DISMISSED) {
-                                Analytics.Account.createStore(!TextUtils.isEmpty(storeAvatarPath),
-                                    Analytics.Account.CreateStoreAction.CREATE);
-                                goToMainActivity();
-                              }
-                            });
+                                .subscribe(visibility -> {
+                                  mSubscriptions.add(accountManager.syncCurrentAccount()
+                                      .subscribe(() -> {
+                                      }, err -> err.printStackTrace()));
+                                  if (visibility == ShowMessage.DISMISSED) {
+                                    Analytics.Account.createStore(
+                                        !TextUtils.isEmpty(storeAvatarPath),
+                                        Analytics.Account.CreateStoreAction.CREATE);
+                                    goToMainActivity();
+                                  }
+                                });
                           }
                     }, throwable -> {
                       onCreateFail(
                           ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
-                      progressDialog.dismiss();
+                          progressDialog.dismiss();
                     }));
           } else {
             if (CREATE_STORE_REQUEST_CODE == 4) {
@@ -371,7 +372,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
                         accountManager.syncCurrentAccount()
                             .subscribe(() -> {
                               progressDialog.dismiss();
-                              goToMainActivity();
+                                  goToMainActivity();
                             }, err -> err.printStackTrace());
                       }, throwable -> {
                         if (((AptoideWsV7Exception) throwable).getBaseResponse()

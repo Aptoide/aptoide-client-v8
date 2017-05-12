@@ -138,7 +138,8 @@ public final class PRNGFixes {
     if (!LinuxPRNGSecureRandomProvider.class.equals(rng2.getProvider()
         .getClass())) {
       throw new SecurityException("SecureRandom.getInstance(\"SHA1PRNG\") backed by wrong"
-          + " Provider: " + rng2.getProvider()
+          + " Provider: "
+          + rng2.getProvider()
           .getClass());
     }
   }

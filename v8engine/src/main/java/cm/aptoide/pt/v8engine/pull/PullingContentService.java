@@ -261,7 +261,8 @@ public class PullingContentService extends Service {
 
       if (Build.VERSION.SDK_INT >= 16
           && Build.VERSION.SDK_INT < 24
-          && pushNotification.getImages() != null && TextUtils.isEmpty(pushNotification.getImages()
+          && pushNotification.getImages() != null
+          && TextUtils.isEmpty(pushNotification.getImages()
           .getIconUrl())) {
 
         String imageUrl = pushNotification.getImages()
