@@ -4,7 +4,6 @@ import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.FileUtils;
-import cm.aptoide.pt.v8engine.V8Engine;
 import rx.Observable;
 
 /**

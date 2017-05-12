@@ -25,8 +25,6 @@ import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.view.ActivityView;
-import cm.aptoide.pt.v8engine.view.BackButtonActivity;
 import cm.aptoide.pt.v8engine.view.account.LoginBottomSheetActivity;
 import com.facebook.FacebookSdk;
 import rx.functions.Action0;

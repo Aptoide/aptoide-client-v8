@@ -28,7 +28,6 @@ import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.presenter.PaymentAuthorizationPresenter;
 import cm.aptoide.pt.v8engine.presenter.PaymentAuthorizationView;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.view.BackButton;
 import cm.aptoide.pt.v8engine.view.BackButtonActivity;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;

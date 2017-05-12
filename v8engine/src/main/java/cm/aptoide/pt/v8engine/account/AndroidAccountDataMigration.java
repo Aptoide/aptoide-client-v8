@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import rx.Completable;
 
