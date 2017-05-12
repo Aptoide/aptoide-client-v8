@@ -68,7 +68,8 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
     bindViews();
     Intent intent = getIntent();
-    if (intent.getAction() != null && intent.getAction().equals("APPVIEW_SHARE")) {
+    if (intent.getAction() != null && intent.getAction()
+        .equals("APPVIEW_SHARE")) {
       enableButtons(false);
       autoShareAppName = intent.getStringExtra("APPVIEW_SHARE_APPNAME");
       autoShareFilepath = intent.getStringExtra("APPVIEW_SHARE_FILEPATH");
@@ -82,8 +83,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
 
     attachPresenter(presenter);
-
-
   }
 
   private void bindViews() {
@@ -244,21 +243,23 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   private Dialog buildLocationPermissionDialog() {
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-    builder.setTitle(this.getResources().getString(R.string.warning))
-        .setMessage(this.getResources().getString(R.string.locationDialog))
-        .setPositiveButton(this.getResources().getString(R.string.turn_on),
-            new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int id) {
-                requestLocationPermission();
-              }
-            })
-        .setNegativeButton(this.getResources().getString(R.string.cancel),
-            new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-                onPermissionsDenied();
-              }
-            });
+    builder.setTitle(this.getResources()
+        .getString(R.string.warning))
+        .setMessage(this.getResources()
+            .getString(R.string.locationDialog))
+        .setPositiveButton(this.getResources()
+            .getString(R.string.turn_on), new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int id) {
+            requestLocationPermission();
+          }
+        })
+        .setNegativeButton(this.getResources()
+            .getString(R.string.cancel), new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int id) {
+            // User cancelled the dialog
+            onPermissionsDenied();
+          }
+        });
     return builder.create();
   }
 
@@ -299,21 +300,21 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   @Override public void showJoinGroupResult(int result) {
     switch (result) {
       case ConnectionManager.ERROR_ON_RECONNECT:
-        Toast.makeText(HighwayActivity.this,
-            HighwayActivity.this.getResources().getString(R.string.errorJoiningNetwork),
-            Toast.LENGTH_SHORT).show();
+        Toast.makeText(HighwayActivity.this, HighwayActivity.this.getResources()
+            .getString(R.string.errorJoiningNetwork), Toast.LENGTH_SHORT)
+            .show();
         //tag join unsuccess
         presenter.tagAnalyticsUnsuccessJoin();
         break;
       case ConnectionManager.ERROR_INVALID_GROUP:
-        Toast.makeText(HighwayActivity.this,
-            HighwayActivity.this.getResources().getString(R.string.noSelectedHotspot),
-            Toast.LENGTH_SHORT).show();
+        Toast.makeText(HighwayActivity.this, HighwayActivity.this.getResources()
+            .getString(R.string.noSelectedHotspot), Toast.LENGTH_SHORT)
+            .show();
         break;
       case ConnectionManager.ERROR_UNKNOWN:
-        Toast.makeText(HighwayActivity.this,
-            HighwayActivity.this.getResources().getString(R.string.unkownJoinNetError),
-            Toast.LENGTH_SHORT).show();
+        Toast.makeText(HighwayActivity.this, HighwayActivity.this.getResources()
+            .getString(R.string.unkownJoinNetError), Toast.LENGTH_SHORT)
+            .show();
         //tag join unsuccess
         presenter.tagAnalyticsUnsuccessJoin();
         break;
@@ -325,17 +326,20 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     switch (result) {
       case ConnectionManager.FAILED_TO_CREATE_HOTSPOT:
         Toast.makeText(this, getResources().getString(R.string.couldNotCreateHotspot),
-            Toast.LENGTH_SHORT).show();
+            Toast.LENGTH_SHORT)
+            .show();
         break;
       case ConnectionManager.ERROR_UNKNOWN:
         Toast.makeText(this, getResources().getString(R.string.unkownHotspotError),
-            Toast.LENGTH_SHORT).show();
+            Toast.LENGTH_SHORT)
+            .show();
         break;
     }
   }
 
   @Override public void showInactivityToast() {
-    Toast.makeText(this, getResources().getString(R.string.noHotspotYet), Toast.LENGTH_LONG).show();
+    Toast.makeText(this, getResources().getString(R.string.noHotspotYet), Toast.LENGTH_LONG)
+        .show();
   }
 
   @Override public void hideButtonsProgressBar() {
@@ -391,8 +395,9 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   }
 
   @Override public void showRecoveringWifiStateToast() {
-    Toast.makeText(this, this.getResources().getString(R.string.recoveringWifiState),
-        Toast.LENGTH_SHORT).show();
+    Toast.makeText(this, this.getResources()
+        .getString(R.string.recoveringWifiState), Toast.LENGTH_SHORT)
+        .show();
   }
 
   @Override public void dismiss() {
@@ -486,8 +491,9 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   }
 
   private void showNougatErrorToast() {
-    Toast.makeText(this, this.getResources().getString(R.string.hotspotCreationErrorNougat),
-        Toast.LENGTH_SHORT).show();
+    Toast.makeText(this, this.getResources()
+        .getString(R.string.hotspotCreationErrorNougat), Toast.LENGTH_SHORT)
+        .show();
   }
 
   public void joinSingleHotspot() {

@@ -22,12 +22,15 @@ public class AccountService {
 
   public Single<String> refreshToken(String refreshToken) {
     return OAuth2AuthenticationRequest.of(refreshToken, baseBodyInterceptorV3, httpClient,
-        converterFactory).observe().toSingle().flatMap(oAuth -> {
-      if (!oAuth.hasErrors()) {
-        return Single.just(oAuth.getAccessToken());
-      } else {
-        return Single.error(new AccountException(oAuth.getError()));
-      }
-    });
+        converterFactory)
+        .observe()
+        .toSingle()
+        .flatMap(oAuth -> {
+          if (!oAuth.hasErrors()) {
+            return Single.just(oAuth.getAccessToken());
+          } else {
+            return Single.error(new AccountException(oAuth.getError()));
+          }
+        });
   }
 }

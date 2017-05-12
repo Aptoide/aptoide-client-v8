@@ -32,8 +32,8 @@ public class PaymentAuthorizationFactory {
       Authorization paymentAuthorization) {
     return new cm.aptoide.pt.database.realm.PaymentAuthorization(
         paymentAuthorization.getPaymentId(), ((WebAuthorization) paymentAuthorization).getUrl(),
-        ((WebAuthorization) paymentAuthorization).getRedirectUrl(),
-        paymentAuthorization.getStatus().name(), paymentAuthorization.getPayerId());
+        ((WebAuthorization) paymentAuthorization).getRedirectUrl(), paymentAuthorization.getStatus()
+        .name(), paymentAuthorization.getPayerId());
   }
 
   public cm.aptoide.pt.database.realm.PaymentAuthorization convertToDatabasePaymentAuthorization(

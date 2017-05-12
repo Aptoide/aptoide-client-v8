@@ -82,50 +82,61 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
         0);
     updateButton.setText(displayable.getUpdateAppText(context));
     updateButton.setEnabled(true);
-    ImageLoader.with(context).load(displayable.getAppIconUrl(), appIcon);
+    ImageLoader.with(context)
+        .load(displayable.getAppIconUrl(), appIcon);
     ImageLoader.with(context)
         .loadWithShadowCircleTransform(displayable.getStoreIconUrl(), storeImage);
     storeName.setText(displayable.getStoreName());
     updateDate.setText(displayable.getTimeSinceLastUpdate(context));
     errorText.setVisibility(View.GONE);
 
-    compositeSubscription.add(RxView.clicks(store).subscribe(click -> {
-      knockWithSixpackCredentials(displayable.getAbUrl());
-      Analytics.AppsTimeline.clickOnCard(AppUpdateDisplayable.CARD_TYPE_NAME,
-          displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
-          Analytics.AppsTimeline.OPEN_STORE);
-      displayable.sendAppUpdateCardClickEvent(Analytics.AppsTimeline.OPEN_STORE, socialAction);
-      displayable.sendOpenStoreEvent();
-      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
-          .newStoreFragment(displayable.getStoreName(), displayable.getStoreTheme()));
-    }));
+    compositeSubscription.add(RxView.clicks(store)
+        .subscribe(click -> {
+          knockWithSixpackCredentials(displayable.getAbUrl());
+          Analytics.AppsTimeline.clickOnCard(AppUpdateDisplayable.CARD_TYPE_NAME,
+              displayable.getPackageName(), Analytics.AppsTimeline.BLANK,
+              displayable.getStoreName(), Analytics.AppsTimeline.OPEN_STORE);
+          displayable.sendAppUpdateCardClickEvent(Analytics.AppsTimeline.OPEN_STORE, socialAction);
+          displayable.sendOpenStoreEvent();
+          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+              .newStoreFragment(displayable.getStoreName(), displayable.getStoreTheme()));
+        }));
 
-    compositeSubscription.add(RxView.clicks(appIcon).subscribe(click -> {
-      knockWithSixpackCredentials(displayable.getAbUrl());
-      Analytics.AppsTimeline.clickOnCard(AppUpdateDisplayable.CARD_TYPE_NAME,
-          displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
-          Analytics.AppsTimeline.OPEN_APP_VIEW);
-      displayable.sendAppUpdateCardClickEvent(Analytics.AppsTimeline.OPEN_APP_VIEW, socialAction);
-      displayable.sendOpenAppEvent();
-      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
-          .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
-    }));
+    compositeSubscription.add(RxView.clicks(appIcon)
+        .subscribe(click -> {
+          knockWithSixpackCredentials(displayable.getAbUrl());
+          Analytics.AppsTimeline.clickOnCard(AppUpdateDisplayable.CARD_TYPE_NAME,
+              displayable.getPackageName(), Analytics.AppsTimeline.BLANK,
+              displayable.getStoreName(), Analytics.AppsTimeline.OPEN_APP_VIEW);
+          displayable.sendAppUpdateCardClickEvent(Analytics.AppsTimeline.OPEN_APP_VIEW,
+              socialAction);
+          displayable.sendOpenAppEvent();
+          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+              .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
+        }));
 
-    compositeSubscription.add(RxView.clicks(updateButton).flatMap(click -> {
-      knockWithSixpackCredentials(displayable.getAbUrl());
-      Analytics.AppsTimeline.clickOnCard(AppUpdateDisplayable.CARD_TYPE_NAME,
-          displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
-          Analytics.AppsTimeline.UPDATE_APP);
-      displayable.sendAppUpdateCardClickEvent(Analytics.AppsTimeline.UPDATE_APP, socialAction);
-      displayable.sendUpdateAppEvent();
-      return displayable.requestPermission(context).flatMap(success -> displayable.update(context));
-    }).retryWhen(errors -> errors.observeOn(AndroidSchedulers.mainThread()).flatMap(error -> {
-      showDownloadError(displayable);
-      Logger.d(this.getClass().getSimpleName(), " stack : " + error.getMessage());
-      return Observable.just(null);
-    })).observeOn(AndroidSchedulers.mainThread()).subscribe(downloadProgress -> {
-      updateInstallProgress(displayable, downloadProgress);
-    }, throwable -> showDownloadError(displayable)));
+    compositeSubscription.add(RxView.clicks(updateButton)
+        .flatMap(click -> {
+          knockWithSixpackCredentials(displayable.getAbUrl());
+          Analytics.AppsTimeline.clickOnCard(AppUpdateDisplayable.CARD_TYPE_NAME,
+              displayable.getPackageName(), Analytics.AppsTimeline.BLANK,
+              displayable.getStoreName(), Analytics.AppsTimeline.UPDATE_APP);
+          displayable.sendAppUpdateCardClickEvent(Analytics.AppsTimeline.UPDATE_APP, socialAction);
+          displayable.sendUpdateAppEvent();
+          return displayable.requestPermission(context)
+              .flatMap(success -> displayable.update(context));
+        })
+        .retryWhen(errors -> errors.observeOn(AndroidSchedulers.mainThread())
+            .flatMap(error -> {
+              showDownloadError(displayable);
+              Logger.d(this.getClass()
+                  .getSimpleName(), " stack : " + error.getMessage());
+              return Observable.just(null);
+            }))
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(downloadProgress -> {
+          updateInstallProgress(displayable, downloadProgress);
+        }, throwable -> showDownloadError(displayable)));
   }
 
   @Override String getCardTypeName() {
@@ -162,7 +173,8 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
         break;
       case Progress.ERROR:
         showDownloadError(displayable, displayable.getErrorMessage(getContext(),
-            downloadProgress.getRequest().getDownloadError()));
+            downloadProgress.getRequest()
+                .getDownloadError()));
         break;
       case Progress.INACTIVE:
       default:

@@ -46,8 +46,8 @@ import rx.Observable;
 
     final GetStoreBody body = new GetStoreBody(storeCredentials, WidgetsArgs.createDefault());
 
-    return new GetStoreRequest(new V7Url(url).remove("getStore").get(), body, bodyInterceptor,
-        httpClient, converterFactory);
+    return new GetStoreRequest(new V7Url(url).remove("getStore")
+        .get(), body, bodyInterceptor, httpClient, converterFactory);
   }
 
   @Override

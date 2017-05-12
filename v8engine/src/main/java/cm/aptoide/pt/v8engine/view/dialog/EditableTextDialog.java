@@ -37,7 +37,8 @@ public class EditableTextDialog implements DialogInterface {
   }
 
   public Observable<CharSequence> positiveClicks() {
-    return dialog.positiveClicks().map(click -> editText.getText());
+    return dialog.positiveClicks()
+        .map(click -> editText.getText());
   }
 
   public Observable<DialogInterface> negativeClicks() {

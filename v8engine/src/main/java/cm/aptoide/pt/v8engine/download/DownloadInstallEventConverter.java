@@ -19,7 +19,8 @@ abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent>
       DownloadInstallAnalyticsBaseBody.ResultStatus status, @Nullable Throwable error) {
 
     DownloadInstallAnalyticsBaseBody.Data data = new DownloadInstallAnalyticsBaseBody.Data();
-    data.setOrigin(DownloadInstallAnalyticsBaseBody.DataOrigin.valueOf(report.getOrigin().name()));
+    data.setOrigin(DownloadInstallAnalyticsBaseBody.DataOrigin.valueOf(report.getOrigin()
+        .name()));
 
     DownloadInstallAnalyticsBaseBody.App app = new DownloadInstallAnalyticsBaseBody.App();
     app.setPackageName(report.getPackageName());
@@ -41,7 +42,8 @@ abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent>
       data.setObb(obbs);
     }
 
-    data.setNetwork(AptoideUtils.SystemU.getConnectionType().toUpperCase());
+    data.setNetwork(AptoideUtils.SystemU.getConnectionType()
+        .toUpperCase());
     data.setTeleco(AptoideUtils.SystemU.getCarrierName());
 
     DownloadInstallAnalyticsBaseBody.Result result = new DownloadInstallAnalyticsBaseBody.Result();
@@ -51,13 +53,14 @@ abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent>
       DownloadInstallAnalyticsBaseBody.ResultError resultError =
           new DownloadInstallAnalyticsBaseBody.ResultError();
       resultError.setMessage(error.getMessage());
-      resultError.setType(error.getClass().getSimpleName());
+      resultError.setType(error.getClass()
+          .getSimpleName());
       result.setError(resultError);
     }
 
     data.setResult(result);
-    return new DownloadInstallAnalyticsBaseBody(DataProvider.getConfiguration().getAppId(),
-        convertSpecificFields(report, data));
+    return new DownloadInstallAnalyticsBaseBody(DataProvider.getConfiguration()
+        .getAppId(), convertSpecificFields(report, data));
   }
 
   protected abstract DownloadInstallAnalyticsBaseBody.Data convertSpecificFields(T report,
@@ -76,11 +79,14 @@ abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent>
 
     RealmList<FileToDownload> filesToDownload = download.getFilesToDownload();
     if (!filesToDownload.isEmpty()) {
-      appUrl = filesToDownload.get(0).getLink();
+      appUrl = filesToDownload.get(0)
+          .getLink();
       if (filesToDownload.size() > 1) {
-        obbPath = filesToDownload.get(1).getLink();
+        obbPath = filesToDownload.get(1)
+            .getLink();
         if (filesToDownload.size() > 2) {
-          patchObbPath = filesToDownload.get(2).getLink();
+          patchObbPath = filesToDownload.get(2)
+              .getLink();
         }
       }
     }

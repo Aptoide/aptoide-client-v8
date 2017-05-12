@@ -2,8 +2,6 @@ package cm.aptoide.pt.v8engine.download;
 
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.v8engine.download.DownloadInstallBaseEvent;
-import cm.aptoide.pt.v8engine.download.DownloadInstallEventConverter;
 import lombok.Setter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;

@@ -90,42 +90,49 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     accountNavigator =
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
 
-    compositeSubscription.add(
-        accountManager.accountStatus().doOnNext(account -> updateAccount(account)).subscribe());
+    compositeSubscription.add(accountManager.accountStatus()
+        .doOnNext(account -> updateAccount(account))
+        .subscribe());
     like.setVisibility(View.VISIBLE);
     comment.setVisibility(View.VISIBLE);
 
     compositeSubscription.add(RxView.clicks(like)
-        .subscribe(click -> likeButton.performClick(),
-            throwable -> CrashReport.getInstance().log(throwable)));
+        .subscribe(click -> likeButton.performClick(), throwable -> CrashReport.getInstance()
+            .log(throwable)));
 
-    compositeSubscription.add(RxView.clicks(likeButton).subscribe(click -> {
-      shareCard(displayable, (String cardId) -> likeCard(displayable, cardId, 1),
-          SharePreviewDialog.SharePreviewOpenMode.LIKE);
-      likeButton.setHeartState(false);
-      socialAction = "Like";
-    }, throwable -> CrashReport.getInstance().log(throwable)));
+    compositeSubscription.add(RxView.clicks(likeButton)
+        .subscribe(click -> {
+          shareCard(displayable, (String cardId) -> likeCard(displayable, cardId, 1),
+              SharePreviewDialog.SharePreviewOpenMode.LIKE);
+          likeButton.setHeartState(false);
+          socialAction = "Like";
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable)));
 
-    compositeSubscription.add(RxView.clicks(comment).subscribe(click -> {
-      FragmentManager fm = getContext().getSupportFragmentManager();
-      CommentDialogFragment commentDialogFragment =
-          CommentDialogFragment.newInstanceTimelineArticleComment(
-              displayable.getTimelineCard().getCardId());
-      commentDialogFragment.setCommentBeforeSubmissionCallbackContract(
-          (inputText) -> shareCard(displayable, cardId -> {
-            PostCommentForTimelineArticle.of(cardId, inputText, bodyInterceptor, httpClient,
-                converterFactory).observe().subscribe();
-          }, SharePreviewDialog.SharePreviewOpenMode.COMMENT));
-      commentDialogFragment.show(fm, "fragment_comment_dialog");
-      socialAction = "Comment";
-    }, throwable -> CrashReport.getInstance().log(throwable)));
+    compositeSubscription.add(RxView.clicks(comment)
+        .subscribe(click -> {
+          FragmentManager fm = getContext().getSupportFragmentManager();
+          CommentDialogFragment commentDialogFragment =
+              CommentDialogFragment.newInstanceTimelineArticleComment(displayable.getTimelineCard()
+                  .getCardId());
+          commentDialogFragment.setCommentBeforeSubmissionCallbackContract(
+              (inputText) -> shareCard(displayable, cardId -> {
+                PostCommentForTimelineArticle.of(cardId, inputText, bodyInterceptor, httpClient,
+                    converterFactory)
+                    .observe()
+                    .subscribe();
+              }, SharePreviewDialog.SharePreviewOpenMode.COMMENT));
+          commentDialogFragment.show(fm, "fragment_comment_dialog");
+          socialAction = "Comment";
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable)));
 
     compositeSubscription.add(RxView.clicks(shareButton)
         .subscribe(click -> {
-              shareCard(displayable, null, SharePreviewDialog.SharePreviewOpenMode.SHARE);
-              socialAction = "Share";
-            },
-            err -> CrashReport.getInstance().log(err)));
+          shareCard(displayable, null, SharePreviewDialog.SharePreviewOpenMode.SHARE);
+          socialAction = "Share";
+        }, err -> CrashReport.getInstance()
+            .log(err)));
   }
 
   private void updateAccount(Account account) {
@@ -162,34 +169,39 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
           displayable.share(getContext(), sharePreviewDialog.getPrivacyResult(), callback);
           subscriber.onNext(GenericDialogs.EResponse.YES);
           subscriber.onCompleted();
-        }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
-          subscriber.onNext(GenericDialogs.EResponse.NO);
-          subscriber.onCompleted();
-        });
+        })
+            .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+              subscriber.onNext(GenericDialogs.EResponse.NO);
+              subscriber.onCompleted();
+            });
       } else {
         alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
           displayable.share(getContext(), callback);
           subscriber.onNext(GenericDialogs.EResponse.YES);
           subscriber.onCompleted();
-        }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
-          subscriber.onNext(GenericDialogs.EResponse.NO);
-          subscriber.onCompleted();
-        });
+        })
+            .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+              subscriber.onNext(GenericDialogs.EResponse.NO);
+              subscriber.onCompleted();
+            });
       }
       alertDialog.show();
-    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(eResponse -> {
-      switch (eResponse) {
-        case YES:
-          ShowMessage.asSnack(getContext(), R.string.social_timeline_share_dialog_title);
-          displayable.sendSocialActionEvent(TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
-          break;
-        case NO:
-          break;
-        case CANCEL:
-          displayable.sendSocialActionEvent(TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
-          break;
-      }
-    });
+    })
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .subscribe(eResponse -> {
+          switch (eResponse) {
+            case YES:
+              ShowMessage.asSnack(getContext(), R.string.social_timeline_share_dialog_title);
+              displayable.sendSocialActionEvent(
+                  TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
+              break;
+            case NO:
+              break;
+            case CANCEL:
+              displayable.sendSocialActionEvent(TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
+              break;
+          }
+        });
   }
 
   private boolean likeCard(T displayable, String cardId, int rating) {
@@ -219,18 +231,24 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
 
     OkHttpClient client = new OkHttpClient();
 
-    Request click = new Request.Builder().url(url).addHeader("authorization", credential).build();
+    Request click = new Request.Builder().url(url)
+        .addHeader("authorization", credential)
+        .build();
 
-    client.newCall(click).enqueue(new Callback() {
-      @Override public void onFailure(Call call, IOException e) {
-        Logger.d(this.getClass().getSimpleName(), "sixpack request fail " + call.toString());
-      }
+    client.newCall(click)
+        .enqueue(new Callback() {
+          @Override public void onFailure(Call call, IOException e) {
+            Logger.d(this.getClass()
+                .getSimpleName(), "sixpack request fail " + call.toString());
+          }
 
-      @Override public void onResponse(Call call, Response response) throws IOException {
-        Logger.d(this.getClass().getSimpleName(), "sixpack knock success");
-        response.body().close();
-      }
-    });
+          @Override public void onResponse(Call call, Response response) throws IOException {
+            Logger.d(this.getClass()
+                .getSimpleName(), "sixpack knock success");
+            response.body()
+                .close();
+          }
+        });
   }
 
   //
@@ -241,10 +259,10 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     CardView.LayoutParams layoutParams =
         new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
             CardView.LayoutParams.WRAP_CONTENT);
-    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
-        getContext().getResources().getConfiguration().orientation), 0,
-        displayable.getMarginWidth(getContext(),
-            getContext().getResources().getConfiguration().orientation), 30);
+    layoutParams.setMargins(displayable.getMarginWidth(getContext(), getContext().getResources()
+        .getConfiguration().orientation), 0, displayable.getMarginWidth(getContext(),
+        getContext().getResources()
+            .getConfiguration().orientation), 30);
     cardView.setLayoutParams(layoutParams);
   }
 }

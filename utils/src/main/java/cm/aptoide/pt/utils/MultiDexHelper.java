@@ -85,8 +85,8 @@ public final class MultiDexHelper {
    */
   public static List<String> getSourcePaths(Context context)
       throws PackageManager.NameNotFoundException, IOException {
-    ApplicationInfo applicationInfo =
-        context.getPackageManager().getApplicationInfo(context.getPackageName(), 0);
+    ApplicationInfo applicationInfo = context.getPackageManager()
+        .getApplicationInfo(context.getPackageName(), 0);
     File sourceApk = new File(applicationInfo.sourceDir);
     File dexDir = new File(applicationInfo.dataDir, SECONDARY_FOLDER_NAME);
 

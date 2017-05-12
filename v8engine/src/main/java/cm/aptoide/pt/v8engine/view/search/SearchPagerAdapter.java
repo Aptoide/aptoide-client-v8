@@ -35,7 +35,8 @@ public class SearchPagerAdapter extends FragmentStatePagerAdapter {
 
   @Override public Fragment getItem(int position) {
     if (storeName != null) {
-      return V8Engine.getFragmentProvider().newSearchPagerTabFragment(query, storeName);
+      return V8Engine.getFragmentProvider()
+          .newSearchPagerTabFragment(query, storeName);
     } else {
       if (getCount() > 1) {
         if (position == 0) {

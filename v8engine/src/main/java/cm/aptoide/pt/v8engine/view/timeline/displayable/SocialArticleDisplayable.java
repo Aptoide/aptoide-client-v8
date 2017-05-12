@@ -63,8 +63,8 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
       SpannableFactory spannableFactory, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository) {
     super(socialArticle, numberOfLikes, numberOfComments, store, user,
-        socialArticle.getUserSharer(), socialArticle.getMy().isLiked(), socialArticle.getLikes(),
-        date, spannableFactory, dateCalculator, abUrl);
+        socialArticle.getUserSharer(), socialArticle.getMy()
+            .isLiked(), socialArticle.getLikes(), date, spannableFactory, dateCalculator, abUrl);
     this.articleTitle = articleTitle;
     this.link = link;
     this.developerLink = developerLink;
@@ -95,20 +95,27 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
     String abTestingURL = null;
 
     if (socialArticle.getAb() != null
-        && socialArticle.getAb().getConversion() != null
-        && socialArticle.getAb().getConversion().getUrl() != null) {
-      abTestingURL = socialArticle.getAb().getConversion().getUrl();
+        && socialArticle.getAb()
+        .getConversion() != null
+        && socialArticle.getAb()
+        .getConversion()
+        .getUrl() != null) {
+      abTestingURL = socialArticle.getAb()
+          .getConversion()
+          .getUrl();
     }
 
     return new SocialArticleDisplayable(socialArticle, socialArticle.getTitle(),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, socialArticle.getUrl()),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
-            socialArticle.getPublisher().getBaseUrl()), socialArticle.getPublisher().getName(),
-        socialArticle.getThumbnailUrl(), socialArticle.getPublisher().getLogoUrl(), appId,
-        abTestingURL, socialArticle.getStore(), socialArticle.getUser(),
-        socialArticle.getStats().getLikes(), socialArticle.getStats().getComments(),
-        socialArticle.getApps(), socialArticle.getDate(), dateCalculator, spannableFactory,
-        timelineAnalytics, socialRepository);
+            socialArticle.getPublisher()
+                .getBaseUrl()), socialArticle.getPublisher()
+        .getName(), socialArticle.getThumbnailUrl(), socialArticle.getPublisher()
+        .getLogoUrl(), appId, abTestingURL, socialArticle.getStore(), socialArticle.getUser(),
+        socialArticle.getStats()
+            .getLikes(), socialArticle.getStats()
+        .getComments(), socialArticle.getApps(), socialArticle.getDate(), dateCalculator,
+        spannableFactory, timelineAnalytics, socialRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -117,13 +124,15 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
       List<String> packageNamesList = new ArrayList<>();
 
       for (int i = 0; i < relatedToAppsList.size(); i++) {
-        packageNamesList.add(relatedToAppsList.get(i).getPackageName());
+        packageNamesList.add(relatedToAppsList.get(i)
+            .getPackageName());
       }
 
       final String[] packageNames = packageNamesList.toArray(new String[packageNamesList.size()]);
 
       if (installedAccessor != null) {
-        return installedAccessor.get(packageNames).observeOn(Schedulers.computation());
+        return installedAccessor.get(packageNames)
+            .observeOn(Schedulers.computation());
       }
       //appId = video.getApps().get(0).getId();
     }

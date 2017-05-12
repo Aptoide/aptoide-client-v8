@@ -12,7 +12,6 @@ import android.widget.TextView;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.BackButton;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
-import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 
 /**
  * Created by jdandrade on 18-07-2016.

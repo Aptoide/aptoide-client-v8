@@ -87,29 +87,38 @@ public class SimilarDisplayable extends CardDisplayable {
     String abTestingURL = null;
 
     if (similar.getAb() != null
-        && similar.getAb().getConversion() != null
-        && similar.getAb().getConversion().getUrl() != null) {
-      abTestingURL = similar.getAb().getConversion().getUrl();
+        && similar.getAb()
+        .getConversion() != null
+        && similar.getAb()
+        .getConversion()
+        .getUrl() != null) {
+      abTestingURL = similar.getAb()
+          .getConversion()
+          .getUrl();
     }
 
-    return new SimilarDisplayable(similar, Application.getConfiguration().getIcon(),
-        R.string.displayable_social_timeline_recommendation_atptoide_team_recommends,
-        similar.getRecommendedApp().getId(), similar.getRecommendedApp().getPackageName(),
-        similar.getRecommendedApp().getName(), similar.getRecommendedApp().getIcon(), abTestingURL,
-        similarAppsNames, similarAppsPackageNames, similar.getRecommendedApp().getUpdated(),
-        similar.getTimestamp(), dateCalculator, spannableFactory, timelineAnalytics,
-        socialRepository);
+    return new SimilarDisplayable(similar, Application.getConfiguration()
+        .getIcon(), R.string.displayable_social_timeline_recommendation_atptoide_team_recommends,
+        similar.getRecommendedApp()
+            .getId(), similar.getRecommendedApp()
+        .getPackageName(), similar.getRecommendedApp()
+        .getName(), similar.getRecommendedApp()
+        .getIcon(), abTestingURL, similarAppsNames, similarAppsPackageNames,
+        similar.getRecommendedApp()
+            .getUpdated(), similar.getTimestamp(), dateCalculator, spannableFactory,
+        timelineAnalytics, socialRepository);
   }
 
   public Spannable getStyledTitle(Context context) {
-    String aptoide = Application.getConfiguration().getMarketName();
+    String aptoide = Application.getConfiguration()
+        .getMarketName();
     return spannableFactory.createColorSpan(getTitle(),
         ContextCompat.getColor(context, R.color.appstimeline_recommends_title), aptoide);
   }
 
   public String getTitle() {
-    return AptoideUtils.StringU.getFormattedString(titleResource,
-        Application.getConfiguration().getMarketName());
+    return AptoideUtils.StringU.getFormattedString(titleResource, Application.getConfiguration()
+        .getMarketName());
   }
 
   public Spannable getSimilarAppsText(Context context) {

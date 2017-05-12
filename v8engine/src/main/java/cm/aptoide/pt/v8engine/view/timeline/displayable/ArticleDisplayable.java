@@ -88,18 +88,23 @@ public class ArticleDisplayable extends CardDisplayable {
     String abTestingURL = null;
 
     if (article.getAb() != null
-        && article.getAb().getConversion() != null
-        && article.getAb().getConversion().getUrl() != null) {
-      abTestingURL = article.getAb().getConversion().getUrl();
+        && article.getAb()
+        .getConversion() != null
+        && article.getAb()
+        .getConversion()
+        .getUrl() != null) {
+      abTestingURL = article.getAb()
+          .getConversion()
+          .getUrl();
     }
 
     return new ArticleDisplayable(article, article.getCardId(), article.getTitle(),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, article.getUrl()),
-        linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
-            article.getPublisher().getBaseUrl()), article.getPublisher().getName(),
-        article.getThumbnailUrl(), article.getPublisher().getLogoUrl(), appId, abTestingURL,
-        article.getApps(), article.getDate(), dateCalculator, spannableFactory, timelineAnalytics,
-        socialRepository);
+        linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, article.getPublisher()
+            .getBaseUrl()), article.getPublisher()
+        .getName(), article.getThumbnailUrl(), article.getPublisher()
+        .getLogoUrl(), appId, abTestingURL, article.getApps(), article.getDate(), dateCalculator,
+        spannableFactory, timelineAnalytics, socialRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -108,13 +113,15 @@ public class ArticleDisplayable extends CardDisplayable {
       List<String> packageNamesList = new ArrayList<String>();
 
       for (int i = 0; i < relatedToAppsList.size(); i++) {
-        packageNamesList.add(relatedToAppsList.get(i).getPackageName());
+        packageNamesList.add(relatedToAppsList.get(i)
+            .getPackageName());
       }
 
       final String[] packageNames = packageNamesList.toArray(new String[packageNamesList.size()]);
 
       if (installedAccessor != null) {
-        return installedAccessor.get(packageNames).observeOn(Schedulers.computation());
+        return installedAccessor.get(packageNames)
+            .observeOn(Schedulers.computation());
       }
       //appId = video.getApps().get(0).getId();
     }

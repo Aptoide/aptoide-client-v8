@@ -89,7 +89,9 @@ public final class Database {
       //.encryptionKey(key)
       realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
           //.encryptionKey(strBuilder.toString().substring(0, 64).getBytes()) // FIXME: 30/08/16 sithengineer activate DB encryption
-          .schemaVersion(SCHEMA_VERSION).migration(new RealmToRealmDatabaseMigration()).build();
+          .schemaVersion(SCHEMA_VERSION)
+          .migration(new RealmToRealmDatabaseMigration())
+          .build();
     }
 
     //if (BuildConfig.DELETE_DB) {
@@ -134,7 +136,8 @@ public final class Database {
 
   public <E extends RealmObject> Observable<Long> count(RealmQuery<E> query) {
     return Observable.just(query.count())
-        .flatMap(count -> Observable.just(count).unsubscribeOn(RealmSchedulers.getScheduler()))
+        .flatMap(count -> Observable.just(count)
+            .unsubscribeOn(RealmSchedulers.getScheduler()))
         .defaultIfEmpty(0L);
   }
 
@@ -142,7 +145,7 @@ public final class Database {
       String fieldName) {
     return Observable.just(query.findAllSorted(fieldName))
         .filter(realmObject -> realmObject != null)
-        .flatMap(realmObject -> realmObject.<E> asObservable().unsubscribeOn(
+        .flatMap(realmObject -> realmObject.<E>asObservable().unsubscribeOn(
             RealmSchedulers.getScheduler()))
         .flatMap(realmObject -> copyFromRealm(realmObject))
         .defaultIfEmpty(null);
@@ -151,12 +154,14 @@ public final class Database {
   <E extends RealmObject> Observable<List<E>> copyFromRealm(RealmResults<E> results) {
     return Observable.just(results)
         .filter(data -> data.isLoaded())
-        .map(realmObjects -> Database.getInternal().copyFromRealm(realmObjects))
+        .map(realmObjects -> Database.getInternal()
+            .copyFromRealm(realmObjects))
         .observeOn(Schedulers.io());
   }
 
   public Observable<Long> count(Class clazz) {
-    return getRealm().flatMap(realm -> Observable.just(realm.where(clazz).count())
+    return getRealm().flatMap(realm -> Observable.just(realm.where(clazz)
+        .count())
         .unsubscribeOn(RealmSchedulers.getScheduler()));
   }
 
@@ -167,27 +172,29 @@ public final class Database {
   }
 
   public <E extends RealmObject> Observable<List<E>> getAll(Class<E> clazz) {
-    return getRealm().flatMap(
-        realm -> realm.where(clazz).findAll().<List<E>> asObservable().unsubscribeOn(
-            RealmSchedulers.getScheduler())).flatMap(results -> copyFromRealm(results));
+    return getRealm().flatMap(realm -> realm.where(clazz)
+        .findAll().<List<E>>asObservable().unsubscribeOn(RealmSchedulers.getScheduler()))
+        .flatMap(results -> copyFromRealm(results));
   }
 
   public <E extends RealmObject> Observable<List<E>> getAllSorted(Class<E> clazz,
       String fieldName) {
-    return getRealm().flatMap(
-        realm -> realm.where(clazz).findAllSorted(fieldName).<List<E>> asObservable().unsubscribeOn(
-            RealmSchedulers.getScheduler())).flatMap(results -> copyFromRealm(results));
+    return getRealm().flatMap(realm -> realm.where(clazz)
+        .findAllSorted(fieldName).<List<E>>asObservable().unsubscribeOn(
+            RealmSchedulers.getScheduler()))
+        .flatMap(results -> copyFromRealm(results));
   }
 
   public <E extends RealmObject> Observable<E> get(Class<E> clazz, String key, String value) {
-    return getRealm().map(realm -> realm.where(clazz).equalTo(key, value))
+    return getRealm().map(realm -> realm.where(clazz)
+        .equalTo(key, value))
         .flatMap(query -> findFirst(query));
   }
 
   <E extends RealmObject> Observable<E> findFirst(RealmQuery<E> query) {
     return Observable.just(query.findFirst())
         .filter(realmObject -> realmObject != null)
-        .flatMap(realmObject -> realmObject.<E> asObservable().unsubscribeOn(
+        .flatMap(realmObject -> realmObject.<E>asObservable().unsubscribeOn(
             RealmSchedulers.getScheduler()))
         .flatMap(realmObject -> copyFromRealm(realmObject))
         .defaultIfEmpty(null);
@@ -196,30 +203,34 @@ public final class Database {
   private <E extends RealmObject> Observable<E> copyFromRealm(E object) {
     return Observable.just(object)
         .filter(data -> data.isLoaded())
-        .map(realmObject -> Database.getInternal().copyFromRealm(realmObject))
+        .map(realmObject -> Database.getInternal()
+            .copyFromRealm(realmObject))
         .observeOn(Schedulers.io());
   }
 
   public <E extends RealmObject> Observable<E> get(Class<E> clazz, String key, Integer value) {
-    return getRealm().map(realm -> realm.where(clazz).equalTo(key, value))
+    return getRealm().map(realm -> realm.where(clazz)
+        .equalTo(key, value))
         .flatMap(query -> findFirst(query));
   }
 
   public <E extends RealmObject> Observable<E> get(Class<E> clazz, String key, Long value) {
-    return getRealm().map(realm -> realm.where(clazz).equalTo(key, value))
+    return getRealm().map(realm -> realm.where(clazz)
+        .equalTo(key, value))
         .flatMap(query -> findFirst(query));
   }
 
   public <E extends RealmObject> Observable<List<E>> getAsList(Class<E> clazz, String key,
       String value) {
-    return getRealm().map(realm -> realm.where(clazz).equalTo(key, value))
+    return getRealm().map(realm -> realm.where(clazz)
+        .equalTo(key, value))
         .flatMap(query -> findAsList(query));
   }
 
   <E extends RealmObject> Observable<List<E>> findAsList(RealmQuery<E> query) {
     return Observable.just(query.findAll())
         .filter(realmObject -> realmObject != null)
-        .flatMap(realmObject -> realmObject.<E> asObservable().unsubscribeOn(
+        .flatMap(realmObject -> realmObject.<E>asObservable().unsubscribeOn(
             RealmSchedulers.getScheduler()))
         .flatMap(realmObject -> copyFromRealm(realmObject))
         .defaultIfEmpty(null);
@@ -227,19 +238,23 @@ public final class Database {
 
   public <E extends RealmObject> Observable<List<E>> getAsList(Class<E> clazz, String key,
       Integer value) {
-    return getRealm().map(realm -> realm.where(clazz).equalTo(key, value))
+    return getRealm().map(realm -> realm.where(clazz)
+        .equalTo(key, value))
         .flatMap(query -> findAsList(query));
   }
 
   public <E extends RealmObject> Observable<List<E>> getAsList(Class<E> clazz, String key,
       Long value) {
-    return getRealm().map(realm -> realm.where(clazz).equalTo(key, value))
+    return getRealm().map(realm -> realm.where(clazz)
+        .equalTo(key, value))
         .flatMap(query -> findAsList(query));
   }
 
   public <E extends RealmObject> void delete(Class<E> clazz, String key, String value) {
     @Cleanup Realm realm = get();
-    E obj = realm.where(clazz).equalTo(key, value).findFirst();
+    E obj = realm.where(clazz)
+        .equalTo(key, value)
+        .findFirst();
     deleteObject(realm, obj);
   }
 
@@ -253,20 +268,25 @@ public final class Database {
         realm.cancelTransaction();
       }
     } catch (Exception ex) {
-      CrashReport.getInstance().log(ex);
+      CrashReport.getInstance()
+          .log(ex);
       realm.cancelTransaction();
     }
   }
 
   public <E extends RealmObject> void delete(Class<E> clazz, String key, Integer value) {
     @Cleanup Realm realm = get();
-    E obj = realm.where(clazz).equalTo(key, value).findFirst();
+    E obj = realm.where(clazz)
+        .equalTo(key, value)
+        .findFirst();
     deleteObject(realm, obj);
   }
 
   public <E extends RealmObject> void delete(Class<E> clazz, String key, Long value) {
     @Cleanup Realm realm = get();
-    E obj = realm.where(clazz).equalTo(key, value).findFirst();
+    E obj = realm.where(clazz)
+        .equalTo(key, value)
+        .findFirst();
     deleteObject(realm, obj);
   }
 
@@ -295,7 +315,10 @@ public final class Database {
       String[] fieldsIn) {
     @Cleanup Realm realm = get();
     realm.beginTransaction();
-    realm.where(classType).in(classField, fieldsIn).findAll().deleteAllFromRealm();
+    realm.where(classType)
+        .in(classField, fieldsIn)
+        .findAll()
+        .deleteAllFromRealm();
     realm.commitTransaction();
   }
 }

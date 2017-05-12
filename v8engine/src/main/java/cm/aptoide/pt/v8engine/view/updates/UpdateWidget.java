@@ -96,7 +96,8 @@ import rx.android.schedulers.AndroidSchedulers;
     updateVersionName.setText(updateDisplayable.getUpdateVersionName());
 
     // load row image
-    ImageLoader.with(context).load(updateDisplayable.getIcon(), icon);
+    ImageLoader.with(context)
+        .load(updateDisplayable.getIcon(), icon);
 
     final Observable<Void> handleUpdateButtonClick =
         handleUpdateButtonClick(updateDisplayable, context);
@@ -116,11 +117,13 @@ import rx.android.schedulers.AndroidSchedulers;
     compositeSubscription.add(
         Observable.merge(handleUpdateButtonClick, showInstalledVersionName, showProgress,
             handleLongClicks, handleUpdateRowClick)
-            .subscribe(__ -> {/* do nothing */}, err -> CrashReport.getInstance().log(err)));
+            .subscribe(__ -> {/* do nothing */}, err -> CrashReport.getInstance()
+                .log(err)));
   }
 
   private Observable<Void> handleUpdateButtonClick(UpdateDisplayable displayable, Context context) {
-    return RxView.clicks(updateButtonLayout).doOnNext(__ -> updatesAnalytics.updates("Update"))
+    return RxView.clicks(updateButtonLayout)
+        .doOnNext(__ -> updatesAnalytics.updates("Update"))
         .flatMap(click -> displayable.downloadAndInstall(context, (PermissionService) context))
         .retry()
         .map(__ -> null);
@@ -150,12 +153,13 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   @NonNull private Observable<Void> handleUpdateRowClick(UpdateDisplayable updateDisplayable) {
-    return RxView.clicks(updateRowLayout).doOnNext(v -> {
-      updatesAnalytics.updates("Open App View");
-      final Fragment fragment = V8Engine.getFragmentProvider()
-          .newAppViewFragment(updateDisplayable.getAppId(), updateDisplayable.getPackageName());
-      getFragmentNavigator().navigateTo(fragment);
-    });
+    return RxView.clicks(updateRowLayout)
+        .doOnNext(v -> {
+          updatesAnalytics.updates("Open App View");
+          final Fragment fragment = V8Engine.getFragmentProvider()
+              .newAppViewFragment(updateDisplayable.getAppId(), updateDisplayable.getPackageName());
+          getFragmentNavigator().navigateTo(fragment);
+        });
   }
 
   /**
@@ -180,9 +184,12 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   private boolean isDownloadingOrInstalling(Progress<Download> progress) {
-    return progress.getRequest().getOverallDownloadStatus() == Download.PROGRESS
-        || progress.getRequest().getOverallDownloadStatus() == Download.PENDING
-        || progress.getRequest().getOverallDownloadStatus() == Download.IN_QUEUE;
+    return progress.getRequest()
+        .getOverallDownloadStatus() == Download.PROGRESS
+        || progress.getRequest()
+        .getOverallDownloadStatus() == Download.PENDING
+        || progress.getRequest()
+        .getOverallDownloadStatus() == Download.IN_QUEUE;
   }
 
   @NonNull
@@ -199,13 +206,15 @@ import rx.android.schedulers.AndroidSchedulers;
                       String.format("Update with package name %s was excluded", packageName)),
                       throwable -> {
                         ShowMessage.asSnack(context, R.string.unknown_error);
-                        CrashReport.getInstance().log(throwable);
+                        CrashReport.getInstance()
+                            .log(throwable);
                       }));
             }
             dialog.dismiss();
           });
 
-      builder.create().show();
+      builder.create()
+          .show();
       return null;
     });
   }

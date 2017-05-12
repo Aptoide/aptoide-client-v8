@@ -66,9 +66,11 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
 
     setCardViewMargin(displayable, cardView);
 
-    ImageLoader.with(context).loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
+    ImageLoader.with(context)
+        .loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
 
-    ImageLoader.with(context).load(displayable.getAppIcon(), appIcon);
+    ImageLoader.with(context)
+        .load(displayable.getAppIcon(), appIcon);
 
     appName.setText(displayable.getAppName());
 
@@ -77,18 +79,19 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
     getApp.setVisibility(View.VISIBLE);
     getApp.setText(displayable.getAppText(context));
 
-    compositeSubscription.add(RxView.clicks(cardContent).subscribe(a -> {
-      knockWithSixpackCredentials(displayable.getAbUrl());
+    compositeSubscription.add(RxView.clicks(cardContent)
+        .subscribe(a -> {
+          knockWithSixpackCredentials(displayable.getAbUrl());
 
-      Analytics.AppsTimeline.clickOnCard(RecommendationDisplayable.CARD_TYPE_NAME,
-          displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getTitle(),
-          Analytics.AppsTimeline.OPEN_APP_VIEW);
-      displayable.sendRecommendedOpenAppEvent();
-      displayable.sendRecommendationCardClickEvent(Analytics.AppsTimeline.OPEN_APP_VIEW,
-          socialAction);
-      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
-          .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
-    }));
+          Analytics.AppsTimeline.clickOnCard(RecommendationDisplayable.CARD_TYPE_NAME,
+              displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getTitle(),
+              Analytics.AppsTimeline.OPEN_APP_VIEW);
+          displayable.sendRecommendedOpenAppEvent();
+          displayable.sendRecommendationCardClickEvent(Analytics.AppsTimeline.OPEN_APP_VIEW,
+              socialAction);
+          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+              .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
+        }));
   }
 
   @Override String getCardTypeName() {

@@ -40,7 +40,11 @@ import lombok.experimental.Accessors;
     private Data data;
 
     public boolean hasActions() {
-      return (actions != null && actions.size() > 0 && actions.get(0).getEvent().getName() != null);
+      return (actions != null
+          && actions.size() > 0
+          && actions.get(0)
+          .getEvent()
+          .getName() != null);
     }
 
     @lombok.Data public static class Data {

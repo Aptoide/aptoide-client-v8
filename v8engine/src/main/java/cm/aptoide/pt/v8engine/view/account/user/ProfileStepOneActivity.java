@@ -84,10 +84,11 @@ public class ProfileStepOneActivity extends AccountBaseActivity {
             .toObservable())
         .retry()
         .subscribe());
-    mSubscriptions.add(RxView.clicks(mMoreInfoButton).subscribe(clicks -> {
-      Analytics.Account.accountProfileAction(1, Analytics.Account.ProfileAction.MORE_INFO);
-      navigateToProfileStepTwoView();
-    }));
+    mSubscriptions.add(RxView.clicks(mMoreInfoButton)
+        .subscribe(clicks -> {
+          Analytics.Account.accountProfileAction(1, Analytics.Account.ProfileAction.MORE_INFO);
+          navigateToProfileStepTwoView();
+        }));
   }
 
   private void navigateToProfileStepTwoView() {

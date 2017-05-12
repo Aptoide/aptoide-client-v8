@@ -80,18 +80,23 @@ public class VideoDisplayable extends CardDisplayable {
     String abTestingURL = null;
 
     if (video.getAb() != null
-        && video.getAb().getConversion() != null
-        && video.getAb().getConversion().getUrl() != null) {
-      abTestingURL = video.getAb().getConversion().getUrl();
+        && video.getAb()
+        .getConversion() != null
+        && video.getAb()
+        .getConversion()
+        .getUrl() != null) {
+      abTestingURL = video.getAb()
+          .getConversion()
+          .getUrl();
     }
 
     return new VideoDisplayable(video, video.getTitle(),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, video.getUrl()),
-        linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
-            video.getPublisher().getBaseUrl()), video.getPublisher().getName(),
-        video.getThumbnailUrl(), video.getPublisher().getLogoUrl(), appId, abTestingURL,
-        video.getApps(), video.getDate(), dateCalculator, spannableFactory, timelineAnalytics,
-        socialRepository);
+        linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, video.getPublisher()
+            .getBaseUrl()), video.getPublisher()
+        .getName(), video.getThumbnailUrl(), video.getPublisher()
+        .getLogoUrl(), appId, abTestingURL, video.getApps(), video.getDate(), dateCalculator,
+        spannableFactory, timelineAnalytics, socialRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -100,13 +105,15 @@ public class VideoDisplayable extends CardDisplayable {
       List<String> packageNamesList = new ArrayList<String>();
 
       for (int i = 0; i < relatedToAppsList.size(); i++) {
-        packageNamesList.add(relatedToAppsList.get(i).getPackageName());
+        packageNamesList.add(relatedToAppsList.get(i)
+            .getPackageName());
       }
 
       final String[] packageNames = packageNamesList.toArray(new String[packageNamesList.size()]);
 
       if (installedAccessor != null) {
-        return installedAccessor.get(packageNames).observeOn(Schedulers.computation());
+        return installedAccessor.get(packageNames)
+            .observeOn(Schedulers.computation());
       }
       //appId = video.getApps().get(0).getId();
     }

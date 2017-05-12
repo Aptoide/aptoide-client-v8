@@ -123,16 +123,18 @@ public abstract class AccountPermissionsBaseActivity extends AccountBaseActivity
   public void chooseAvatarSource() {
     final Dialog dialog = new Dialog(this);
     dialog.setContentView(R.layout.dialog_choose_avatar_layout);
-    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_camera)).subscribe(click -> {
-      callPermissionAndAction(TYPE_CAMERA);
-      dialog.dismiss();
-    }));
-    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_gallery)).subscribe(click -> {
-      callPermissionAndAction(TYPE_STORAGE);
-      dialog.dismiss();
-    }));
-    mSubscriptions.add(
-        RxView.clicks(dialog.findViewById(R.id.cancel)).subscribe(click -> dialog.dismiss()));
+    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_camera))
+        .subscribe(click -> {
+          callPermissionAndAction(TYPE_CAMERA);
+          dialog.dismiss();
+        }));
+    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_gallery))
+        .subscribe(click -> {
+          callPermissionAndAction(TYPE_STORAGE);
+          dialog.dismiss();
+        }));
+    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.cancel))
+        .subscribe(click -> dialog.dismiss()));
     dialog.show();
   }
 
@@ -162,9 +164,8 @@ public abstract class AccountPermissionsBaseActivity extends AccountBaseActivity
       Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
       if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-          Uri uriForFile = FileProvider.getUriForFile(context,
-              Application.getConfiguration().getAppId() + ".provider",
-              new File(getPhotoFileUri(photoAvatar).getPath()));
+          Uri uriForFile = FileProvider.getUriForFile(context, Application.getConfiguration()
+              .getAppId() + ".provider", new File(getPhotoFileUri(photoAvatar).getPath()));
           takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriForFile);
         } else {
           takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(photoAvatar));
@@ -195,8 +196,8 @@ public abstract class AccountPermissionsBaseActivity extends AccountBaseActivity
   }
 
   public Uri getPhotoFileUri(String fileName) {
-    File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),
-        ".aptoide/user_avatar");
+    File storageDir = new File(Environment.getExternalStorageDirectory()
+        .getAbsolutePath(), ".aptoide/user_avatar");
     if (!storageDir.exists() && !storageDir.mkdirs()) {
       Logger.d(TAG, "Failed to create directory");
     }
@@ -231,24 +232,19 @@ public abstract class AccountPermissionsBaseActivity extends AccountBaseActivity
     for (AptoideUtils.IconSizeU.ImageErrors imageSizeError : imageErrors) {
       switch (imageSizeError) {
         case MIN_HEIGHT:
-          message.append(
-              getString(R.string.image_requirements_error_min_height));
+          message.append(getString(R.string.image_requirements_error_min_height));
           break;
         case MAX_HEIGHT:
-          message.append(
-              getString(R.string.image_requirements_error_max_height));
+          message.append(getString(R.string.image_requirements_error_max_height));
           break;
         case MIN_WIDTH:
-          message.append(
-              getString(R.string.image_requirements_error_min_width));
+          message.append(getString(R.string.image_requirements_error_min_width));
           break;
         case MAX_WIDTH:
-          message.append(
-              getString(R.string.image_requirements_error_max_width));
+          message.append(getString(R.string.image_requirements_error_max_width));
           break;
         case MAX_IMAGE_SIZE:
-          message.append(
-              getString(R.string.image_requirements_error_max_file_size));
+          message.append(getString(R.string.image_requirements_error_max_file_size));
           break;
         case ERROR_DECODING:
           message.append(getString(R.string.image_requirements_error_open_image));

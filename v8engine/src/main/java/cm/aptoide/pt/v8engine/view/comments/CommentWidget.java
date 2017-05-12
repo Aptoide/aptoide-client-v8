@@ -52,12 +52,14 @@ public class CommentWidget extends Widget<CommentDisplayable> {
 
     final FragmentActivity context = getContext();
     ImageLoader.with(context)
-        .loadWithCircleTransformAndPlaceHolderAvatarSize(comment.getUser().getAvatar(), userAvatar,
-            R.drawable.layer_1);
-    userName.setText(comment.getUser().getName());
+        .loadWithCircleTransformAndPlaceHolderAvatarSize(comment.getUser()
+            .getAvatar(), userAvatar, R.drawable.layer_1);
+    userName.setText(comment.getUser()
+        .getName());
 
     String date = AptoideUtils.DateTimeU.getInstance()
-        .getTimeDiffString(context, comment.getAdded().getTime());
+        .getTimeDiffString(context, comment.getAdded()
+            .getTime());
     datePos1.setText(date);
     datePos2.setText(date);
 
@@ -81,7 +83,8 @@ public class CommentWidget extends Widget<CommentDisplayable> {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       color = context.getColor(bgColor);
     } else {
-      color = context.getResources().getColor(bgColor);
+      color = context.getResources()
+          .getColor(bgColor);
     }
     outerLayout.setBackgroundColor(color);
 
@@ -92,12 +95,14 @@ public class CommentWidget extends Widget<CommentDisplayable> {
       // first level
       replyLayout.setVisibility(View.VISIBLE);
       compositeSubscription.add(RxView.clicks(replyLayout)
-          .flatMap(aVoid -> complexComment.observeReplySubmission().doOnError(err -> {
-            ShowMessage.asSnack(userAvatar, R.string.error_occured);
-          }))
+          .flatMap(aVoid -> complexComment.observeReplySubmission()
+              .doOnError(err -> {
+                ShowMessage.asSnack(userAvatar, R.string.error_occured);
+              }))
           .retry()
           .subscribe(aVoid -> { /* nothing else to do */ }, err -> {
-            CrashReport.getInstance().log(err);
+            CrashReport.getInstance()
+                .log(err);
           }));
     } else {
       // other levels

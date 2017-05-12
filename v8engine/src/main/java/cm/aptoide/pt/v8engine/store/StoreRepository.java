@@ -17,11 +17,13 @@ public class StoreRepository {
   }
 
   public Observable<Boolean> isSubscribed(long storeId) {
-    return storeAccessor.getAsList(storeId).map(stores -> stores != null && stores.size() > 0);
+    return storeAccessor.getAsList(storeId)
+        .map(stores -> stores != null && stores.size() > 0);
   }
 
   public Observable<Boolean> isSubscribed(String storeName) {
-    return storeAccessor.get(storeName).map(store -> store != null);
+    return storeAccessor.get(storeName)
+        .map(store -> store != null);
   }
 
   public Observable<Long> count() {

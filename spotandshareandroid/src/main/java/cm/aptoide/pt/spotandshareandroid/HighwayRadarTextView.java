@@ -152,7 +152,8 @@ public class HighwayRadarTextView extends FrameLayout
             Group g = activity.getChosenHotspot();
             String aux = "";
             if (g != null) {
-              aux = activity.getChosenHotspot().getSsid();
+              aux = activity.getChosenHotspot()
+                  .getSsid();
             }
 
             if (!activity.isJoinGroupFlag()) {
@@ -218,11 +219,16 @@ public class HighwayRadarTextView extends FrameLayout
   public void deselectHotspot(String keyword) {
     String aux = removeAPTXVFromString(keyword);
     for (int i = 0; i < listOfHotspot.size(); i++) {
-      if (listOfHotspot.get(i).getText().toString().equals(aux)) {
+      if (listOfHotspot.get(i)
+          .getText()
+          .toString()
+          .equals(aux)) {
         activity.deselectHotspot();
         activity.setJoinGroupFlag(false);
-        listOfHotspot.get(i).setTypeface(null, Typeface.NORMAL);
-        listOfHotspot.get(i).setEffectColor(rippleViewDefaultColor);
+        listOfHotspot.get(i)
+            .setTypeface(null, Typeface.NORMAL);
+        listOfHotspot.get(i)
+            .setEffectColor(rippleViewDefaultColor);
       }
     }
   }
@@ -238,7 +244,8 @@ public class HighwayRadarTextView extends FrameLayout
       int yMove = Math.abs(yDistance);
       inner:
       for (int k = i - 1; k >= 0; k--) {
-        int[] kXY = (int[]) listTxt.get(k).getTag();
+        int[] kXY = (int[]) listTxt.get(k)
+            .getTag();
         int startX = kXY[idX];
         int endX = startX + kXY[idTxtLength];
         if (yDistance * (kXY[idY] - yCenter) > 0) {
@@ -273,7 +280,9 @@ public class HighwayRadarTextView extends FrameLayout
   private void sortXYList(LinkedList<HighwayRadarRippleView> listTxt, int endIdx) {
     for (int i = 0; i < endIdx; i++) {
       for (int k = i + 1; k < endIdx; k++) {
-        if (((int[]) listTxt.get(k).getTag())[idDist] < ((int[]) listTxt.get(i).getTag())[idDist]) {
+        if (((int[]) listTxt.get(k)
+            .getTag())[idDist] < ((int[]) listTxt.get(i)
+            .getTag())[idDist]) {
           HighwayRadarRippleView iTmp = listTxt.get(i);
           HighwayRadarRippleView kTmp = listTxt.get(k);
           listTxt.set(i, kTmp);
@@ -345,7 +354,8 @@ public class HighwayRadarTextView extends FrameLayout
         txt.setOnClickListener(new OnClickListener() {
           @Override public void onClick(View view) {
 
-            String aux = activity.getChosenHotspot().getSsid();
+            String aux = activity.getChosenHotspot()
+                .getSsid();
             if (aux.equals(keyword)) {
               deselectHotspotLowVersion(keyword);
             } else {
@@ -387,9 +397,12 @@ public class HighwayRadarTextView extends FrameLayout
 
   public void deselectHotspotLowVersion(String keyword) {
     for (int i = 0; i < listOfHotspotLow.size(); i++) {
-      if (listOfHotspotLow.get(i).getText().equals(keyword)) {
+      if (listOfHotspotLow.get(i)
+          .getText()
+          .equals(keyword)) {
         activity.deselectHotspot();
-        listOfHotspotLow.get(i).setTypeface(null, Typeface.NORMAL);
+        listOfHotspotLow.get(i)
+            .setTypeface(null, Typeface.NORMAL);
       }
     }
   }
@@ -405,7 +418,8 @@ public class HighwayRadarTextView extends FrameLayout
       int yMove = Math.abs(yDistance);
       inner:
       for (int k = i - 1; k >= 0; k--) {
-        int[] kXY = (int[]) listTxt.get(k).getTag();
+        int[] kXY = (int[]) listTxt.get(k)
+            .getTag();
         int startX = kXY[idX];
         int endX = startX + kXY[idTxtLength];
         if (yDistance * (kXY[idY] - yCenter) > 0) {
@@ -440,7 +454,9 @@ public class HighwayRadarTextView extends FrameLayout
   private void sortXYListLow(LinkedList<HighwayRadarLowElement> listTxt, int endIdx) {
     for (int i = 0; i < endIdx; i++) {
       for (int k = i + 1; k < endIdx; k++) {
-        if (((int[]) listTxt.get(k).getTag())[idDist] < ((int[]) listTxt.get(i).getTag())[idDist]) {
+        if (((int[]) listTxt.get(k)
+            .getTag())[idDist] < ((int[]) listTxt.get(i)
+            .getTag())[idDist]) {
           HighwayRadarLowElement iTmp = listTxt.get(i);
           HighwayRadarLowElement kTmp = listTxt.get(k);
           listTxt.set(i, kTmp);

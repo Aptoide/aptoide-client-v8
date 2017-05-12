@@ -78,12 +78,14 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
 
     if (displayable.getUserSharer() != null) {
-      if (displayable.getUserSharer().getName() != null && !displayable.getUser()
+      if (displayable.getUserSharer()
+          .getName() != null && !displayable.getUser()
           .getName()
-          .equals(displayable.getUserSharer().getName())) {
+          .equals(displayable.getUserSharer()
+              .getName())) {
         sharedBy.setVisibility(View.VISIBLE);
-        sharedBy.setText(
-            displayable.getSharedBy(getContext(), displayable.getUserSharer().getName()));
+        sharedBy.setText(displayable.getSharedBy(getContext(), displayable.getUserSharer()
+            .getName()));
       } else {
         sharedBy.setVisibility(View.GONE);
       }
@@ -92,12 +94,10 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     }
 
     if (comments != null) {
-      compositeSubscription.add(
-          RxView.clicks(comments)
-              .doOnNext(__ -> socialAction = "Comment") // For analytics purposes
-              .flatMap(aVoid -> showComments(displayable))
-              .subscribe(aVoid -> knockWithSixpackCredentials(displayable.getAbUrl()),
-                  showError()));
+      compositeSubscription.add(RxView.clicks(comments)
+          .doOnNext(__ -> socialAction = "Comment") // For analytics purposes
+          .flatMap(aVoid -> showComments(displayable))
+          .subscribe(aVoid -> knockWithSixpackCredentials(displayable.getAbUrl()), showError()));
 
       comments.setVisibility(View.VISIBLE);
     } else {
@@ -116,7 +116,10 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
       }
 
       compositeSubscription.add(RxView.clicks(likeButton)
-          .flatMap(__ -> accountManager.accountStatus().first().toSingle().toObservable())
+          .flatMap(__ -> accountManager.accountStatus()
+              .first()
+              .toSingle()
+              .toObservable())
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(account -> {
             if (likeCard(displayable, 1, account)) {
@@ -136,7 +139,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
               }
             }
             socialAction = "Like";
-          }, err -> CrashReport.getInstance().log(err)));
+          }, err -> CrashReport.getInstance()
+              .log(err)));
 
       like.setVisibility(View.VISIBLE);
     } else {
@@ -164,23 +168,29 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
 
     compositeSubscription.add(RxView.clicks(likePreviewContainer)
         .subscribe(click -> displayable.likesPreviewClick(getFragmentNavigator()),
-            err -> CrashReport.getInstance().log(err)));
+            err -> CrashReport.getInstance()
+                .log(err)));
 
     compositeSubscription.add(
-        Observable.merge(RxView.clicks(storeAvatar), RxView.clicks(userAvatar)).subscribe(click -> {
-          if (displayable.getStore() == null) {
-            openStore(displayable.getUser().getId(), "DEFAULT");
-          } else {
-            openStore(displayable.getStore().getName(),
-                displayable.getStore().getAppearance().getTheme());
-          }
-          socialAction = "Go to Owner Timeline";
-        }));
+        Observable.merge(RxView.clicks(storeAvatar), RxView.clicks(userAvatar))
+            .subscribe(click -> {
+              if (displayable.getStore() == null) {
+                openStore(displayable.getUser()
+                    .getId(), "DEFAULT");
+              } else {
+                openStore(displayable.getStore()
+                    .getName(), displayable.getStore()
+                    .getAppearance()
+                    .getTheme());
+              }
+              socialAction = "Go to Owner Timeline";
+            }));
   }
 
   private Observable<Void> showComments(T displayable) {
     return Observable.fromCallable(() -> {
-      final String elementId = displayable.getTimelineCard().getCardId();
+      final String elementId = displayable.getTimelineCard()
+          .getCardId();
       Fragment fragment = V8Engine.getFragmentProvider()
           .newCommentGridRecyclerFragment(CommentType.TIMELINE, elementId);
       getFragmentNavigator().navigateTo(fragment);
@@ -189,7 +199,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
   }
 
   @NonNull private Action1<Throwable> showError() {
-    return err -> CrashReport.getInstance().log(err);
+    return err -> CrashReport.getInstance()
+        .log(err);
   }
 
   private boolean likeCard(T displayable, int rating, Account account) {
@@ -221,9 +232,11 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
       if (user.getAvatar() != null) {
         ImageLoader.with(context)
             .loadWithShadowCircleTransform(user.getAvatar(), likeUserPreviewIcon);
-      } else if (user.getStore().getAvatar() != null) {
+      } else if (user.getStore()
+          .getAvatar() != null) {
         ImageLoader.with(context)
-            .loadWithShadowCircleTransform(user.getStore().getAvatar(), likeUserPreviewIcon);
+            .loadWithShadowCircleTransform(user.getStore()
+                .getAvatar(), likeUserPreviewIcon);
       }
       likePreviewContainer.addView(likeUserPreviewView);
       marginOfTheNextLikePreview -= 20;
@@ -235,8 +248,10 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     for (int j = 0; j < displayable.getNumberOfLikes(); j++) {
 
       UserTimeline user = null;
-      if (displayable.getUserLikes() != null && j < displayable.getUserLikes().size()) {
-        user = displayable.getUserLikes().get(j);
+      if (displayable.getUserLikes() != null && j < displayable.getUserLikes()
+          .size()) {
+        user = displayable.getUserLikes()
+            .get(j);
       }
       addUserToPreview(marginOfTheNextLikePreview, user);
       if (marginOfTheNextLikePreview < 0) {

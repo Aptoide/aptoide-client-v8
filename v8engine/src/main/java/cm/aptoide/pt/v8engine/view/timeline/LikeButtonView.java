@@ -58,7 +58,8 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
   }
 
   private void init() {
-    LayoutInflater.from(getContext()).inflate(R.layout.view_like_button, this, true);
+    LayoutInflater.from(getContext())
+        .inflate(R.layout.view_like_button, this, true);
     vHeart = (ImageView) findViewById(R.id.vHeart);
     vDotsView = (DotsView) findViewById(R.id.vDotsView);
     vCircle = (CircleView) findViewById(R.id.vCircle);
@@ -94,11 +95,17 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
         }
         break;
       case MotionEvent.ACTION_CANCEL:
-        vHeart.animate().scaleX(1).scaleY(1).setInterpolator(DECCELERATE_INTERPOLATOR);
+        vHeart.animate()
+            .scaleX(1)
+            .scaleY(1)
+            .setInterpolator(DECCELERATE_INTERPOLATOR);
         setPressed(false);
         break;
       case MotionEvent.ACTION_UP:
-        vHeart.animate().scaleX(1).scaleY(1).setInterpolator(DECCELERATE_INTERPOLATOR);
+        vHeart.animate()
+            .scaleX(1)
+            .scaleY(1)
+            .setInterpolator(DECCELERATE_INTERPOLATOR);
         if (isPressed()) {
           performClick();
           setPressed(false);
@@ -114,9 +121,11 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
     }
 
     if (!isChecked) {
-      if (((V8Engine) getContext().getApplicationContext()).getAccountManager().isLoggedIn()) {
+      if (((V8Engine) getContext().getApplicationContext()).getAccountManager()
+          .isLoggedIn()) {
         vHeart.setImageResource(R.drawable.heart_on);
-        vHeart.animate().cancel();
+        vHeart.animate()
+            .cancel();
         vHeart.setScaleX(0);
         vHeart.setScaleY(0);
         vCircle.setInnerCircleRadiusProgress(0);

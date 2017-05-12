@@ -72,8 +72,12 @@ public class RemoteInstallDialog extends BaseDialog implements RemoteInstallatio
     // Needed for rounded edges
     if (getDialog() != null
         && getDialog().getWindow() != null
-        && getDialog().getWindow().getDecorView() != null) {
-      getDialog().getWindow().getDecorView().getBackground().setAlpha(0);
+        && getDialog().getWindow()
+        .getDecorView() != null) {
+      getDialog().getWindow()
+          .getDecorView()
+          .getBackground()
+          .setAlpha(0);
     }
     View v = inflater.inflate(R.layout.dialog_remote_install, container, false);
     pBar = (ProgressBar) v.findViewById(R.id.progressBar);
@@ -150,12 +154,14 @@ public class RemoteInstallDialog extends BaseDialog implements RemoteInstallatio
   }
 
   @Override public void onAppSendSuccess() {
-    Toast.makeText(getContext(), R.string.remote_install_success, Toast.LENGTH_LONG).show();
+    Toast.makeText(getContext(), R.string.remote_install_success, Toast.LENGTH_LONG)
+        .show();
     dismiss();
   }
 
   @Override public void onAppSendUnsuccess() {
-    Toast.makeText(getContext(), R.string.remote_install_fail, Toast.LENGTH_LONG).show();
+    Toast.makeText(getContext(), R.string.remote_install_fail, Toast.LENGTH_LONG)
+        .show();
     dismiss();
   }
 

@@ -108,17 +108,24 @@ public class AppUpdateDisplayable extends CardDisplayable {
     String abTestingURL = null;
 
     if (appUpdate.getAb() != null
-        && appUpdate.getAb().getConversion() != null
-        && appUpdate.getAb().getConversion().getUrl() != null) {
-      abTestingURL = appUpdate.getAb().getConversion().getUrl();
+        && appUpdate.getAb()
+        .getConversion() != null
+        && appUpdate.getAb()
+        .getConversion()
+        .getUrl() != null) {
+      abTestingURL = appUpdate.getAb()
+          .getConversion()
+          .getUrl();
     }
-    return new AppUpdateDisplayable(appUpdate, appUpdate.getIcon(),
-        appUpdate.getStore().getAvatar(), appUpdate.getStore().getName(), appUpdate.getAdded(),
-        appUpdate.getFile().getVername(), spannableFactory, appUpdate.getName(),
-        appUpdate.getPackageName(), downloadFactory.create(appUpdate, Download.ACTION_UPDATE),
-        dateCalculator, appUpdate.getId(), abTestingURL, installManager, permissionManager,
-        timelineAnalytics, socialRepository, downloadConverter, installConverter, analytics,
-        appUpdate.getStore().getAppearance().getTheme());
+    return new AppUpdateDisplayable(appUpdate, appUpdate.getIcon(), appUpdate.getStore()
+        .getAvatar(), appUpdate.getStore()
+        .getName(), appUpdate.getAdded(), appUpdate.getFile()
+        .getVername(), spannableFactory, appUpdate.getName(), appUpdate.getPackageName(),
+        downloadFactory.create(appUpdate, Download.ACTION_UPDATE), dateCalculator,
+        appUpdate.getId(), abTestingURL, installManager, permissionManager, timelineAnalytics,
+        socialRepository, downloadConverter, installConverter, analytics, appUpdate.getStore()
+        .getAppearance()
+        .getTheme());
   }
 
   public Observable<Progress<Download>> update(Context context) {
@@ -136,7 +143,8 @@ public class AppUpdateDisplayable extends CardDisplayable {
             }
           });
     }
-    return installManager.install(context, download).doOnSubscribe(() -> setupEvents());
+    return installManager.install(context, download)
+        .doOnSubscribe(() -> setupEvents());
   }
 
   private void setupEvents() {
@@ -152,8 +160,10 @@ public class AppUpdateDisplayable extends CardDisplayable {
 
   public Observable<Progress<Download>> updateProgress() {
     return installManager.getInstallations()
-        .filter(downloadProgress -> (!TextUtils.isEmpty(downloadProgress.getRequest().getMd5())
-            && downloadProgress.getRequest().getMd5().equals(download.getMd5())));
+        .filter(downloadProgress -> (!TextUtils.isEmpty(downloadProgress.getRequest()
+            .getMd5()) && downloadProgress.getRequest()
+            .getMd5()
+            .equals(download.getMd5())));
   }
 
   public String getAppName() {

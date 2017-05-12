@@ -48,8 +48,9 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
       DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics) {
     super(socialRecommendation, numberOfLikes, numberOfComments, store,
         socialRecommendation.getUser(), socialRecommendation.getUserSharer(),
-        socialRecommendation.getMy().isLiked(), socialRecommendation.getLikes(),
-        socialRecommendation.getDate(), spannableFactory, dateCalculator, abUrl);
+        socialRecommendation.getMy()
+            .isLiked(), socialRecommendation.getLikes(), socialRecommendation.getDate(),
+        spannableFactory, dateCalculator, abUrl);
     this.avatarResource = avatarResource;
     this.titleResource = titleResource;
     this.user = user;
@@ -70,19 +71,26 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
     String abTestingURL = null;
 
     if (socialRecommendation.getAb() != null
-        && socialRecommendation.getAb().getConversion() != null
-        && socialRecommendation.getAb().getConversion().getUrl() != null) {
-      abTestingURL = socialRecommendation.getAb().getConversion().getUrl();
+        && socialRecommendation.getAb()
+        .getConversion() != null
+        && socialRecommendation.getAb()
+        .getConversion()
+        .getUrl() != null) {
+      abTestingURL = socialRecommendation.getAb()
+          .getConversion()
+          .getUrl();
     }
 
-    return new SocialRecommendationDisplayable(socialRecommendation,
-        Application.getConfiguration().getIcon(), socialRecommendation.getStore(),
+    return new SocialRecommendationDisplayable(socialRecommendation, Application.getConfiguration()
+        .getIcon(), socialRecommendation.getStore(),
         R.string.displayable_social_timeline_recommendation_atptoide_team_recommends,
-        socialRecommendation.getUser(), socialRecommendation.getApp().getId(),
-        socialRecommendation.getApp().getPackageName(), socialRecommendation.getApp().getName(),
-        socialRecommendation.getApp().getIcon(), abTestingURL,
-        socialRecommendation.getStats().getLikes(), socialRecommendation.getStats().getComments(),
-        spannableFactory, socialRepository, dateCalculator, timelineAnalytics);
+        socialRecommendation.getUser(), socialRecommendation.getApp()
+        .getId(), socialRecommendation.getApp()
+        .getPackageName(), socialRecommendation.getApp()
+        .getName(), socialRecommendation.getApp()
+        .getIcon(), abTestingURL, socialRecommendation.getStats()
+        .getLikes(), socialRecommendation.getStats()
+        .getComments(), spannableFactory, socialRepository, dateCalculator, timelineAnalytics);
   }
 
   public Spannable getAppText(Context context) {
@@ -97,8 +105,8 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
   }
 
   public String getTitle() {
-    return AptoideUtils.StringU.getFormattedString(titleResource,
-        Application.getConfiguration().getMarketName());
+    return AptoideUtils.StringU.getFormattedString(titleResource, Application.getConfiguration()
+        .getMarketName());
   }
 
   @Override public int getViewLayout() {

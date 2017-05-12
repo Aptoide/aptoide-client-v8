@@ -24,7 +24,8 @@ public class RatingBarsLayout {
   }
 
   public void setup(GetAppMeta.App data) {
-    GetAppMeta.Stats.Rating rating = data.getStats().getRating();
+    GetAppMeta.Stats.Rating rating = data.getStats()
+        .getRating();
     final int total = rating.getTotal();
     for (final GetAppMeta.Stats.Rating.Vote vote : rating.getVotes()) {
       progressAndTextLayouts[vote.getValue() - 1].setup(total, vote.getCount());

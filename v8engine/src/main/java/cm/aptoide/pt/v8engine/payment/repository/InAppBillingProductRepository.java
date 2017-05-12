@@ -59,7 +59,8 @@ public class InAppBillingProductRepository implements ProductRepository {
       InAppBillingPurchasesResponse.PurchaseInformation purchaseInformation, String sku) {
     return Observable.zip(Observable.from(purchaseInformation.getPurchaseList()),
         Observable.from(purchaseInformation.getSignatureList()), (purchase, signature) -> {
-          if (purchase.getProductId().equals(sku) && purchase.getPurchaseState() == 0) {
+          if (purchase.getProductId()
+              .equals(sku) && purchase.getPurchaseState() == 0) {
             return purchaseFactory.create(purchase, signature);
           }
           return null;
