@@ -157,9 +157,14 @@ public class HighwayRadarTextView extends FrameLayout
   public void deselectHotspot(Group group) {
     String aux = group.getDeviceName();
     for (int i = 0; i < listOfHotspot.size(); i++) {
-      if (listOfHotspot.get(i).getText().toString().equals(aux)) {
-        listOfHotspot.get(i).setTypeface(null, Typeface.NORMAL);
-        listOfHotspot.get(i).setEffectColor(rippleViewDefaultColor);
+      if (listOfHotspot.get(i)
+          .getText()
+          .toString()
+          .equals(aux)) {
+        listOfHotspot.get(i)
+            .setTypeface(null, Typeface.NORMAL);
+        listOfHotspot.get(i)
+            .setEffectColor(rippleViewDefaultColor);
       }
     }
   }
@@ -175,7 +180,8 @@ public class HighwayRadarTextView extends FrameLayout
       int yMove = Math.abs(yDistance);
       inner:
       for (int k = i - 1; k >= 0; k--) {
-        int[] kXY = (int[]) listTxt.get(k).getTag();
+        int[] kXY = (int[]) listTxt.get(k)
+            .getTag();
         int startX = kXY[idX];
         int endX = startX + kXY[idTxtLength];
         if (yDistance * (kXY[idY] - yCenter) > 0) {
@@ -210,7 +216,9 @@ public class HighwayRadarTextView extends FrameLayout
   private void sortXYList(LinkedList<HighwayRadarRippleView> listTxt, int endIdx) {
     for (int i = 0; i < endIdx; i++) {
       for (int k = i + 1; k < endIdx; k++) {
-        if (((int[]) listTxt.get(k).getTag())[idDist] < ((int[]) listTxt.get(i).getTag())[idDist]) {
+        if (((int[]) listTxt.get(k)
+            .getTag())[idDist] < ((int[]) listTxt.get(i)
+            .getTag())[idDist]) {
           HighwayRadarRippleView iTmp = listTxt.get(i);
           HighwayRadarRippleView kTmp = listTxt.get(k);
           listTxt.set(i, kTmp);
@@ -237,10 +245,15 @@ public class HighwayRadarTextView extends FrameLayout
 
   public void selectGroup(Group group) {
     for (int i = 0; i < listOfHotspot.size(); i++) {
-      if (listOfHotspot.get(i).getText().equals(group.getDeviceName())) {
-        listOfHotspot.get(i).setEffectColor(getResources().getColor(R.color.aptoide_orange));
-        listOfHotspot.get(i).postInvalidate();
-        listOfHotspot.get(i).setTypeface(null, Typeface.BOLD);
+      if (listOfHotspot.get(i)
+          .getText()
+          .equals(group.getDeviceName())) {
+        listOfHotspot.get(i)
+            .setEffectColor(getResources().getColor(R.color.aptoide_orange));
+        listOfHotspot.get(i)
+            .postInvalidate();
+        listOfHotspot.get(i)
+            .setTypeface(null, Typeface.BOLD);
       }
     }
   }

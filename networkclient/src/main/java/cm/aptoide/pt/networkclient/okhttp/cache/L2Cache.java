@@ -88,7 +88,8 @@ public class L2Cache extends StringBaseCache<Request, Response> {
     try {
       store();
     } catch (IOException e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     }
 
     int value;
@@ -104,7 +105,8 @@ public class L2Cache extends StringBaseCache<Request, Response> {
    */
   private void removeInvalid() {
     for (Map.Entry<String, ResponseCacheEntry> cacheEntry : cache.entrySet()) {
-      if (!cacheEntry.getValue().isValid()) {
+      if (!cacheEntry.getValue()
+          .isValid()) {
         cache.remove(cacheEntry.getKey());
       }
     }
@@ -173,7 +175,8 @@ public class L2Cache extends StringBaseCache<Request, Response> {
         }
       }
     } catch (Exception e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     }
 
     return 0;

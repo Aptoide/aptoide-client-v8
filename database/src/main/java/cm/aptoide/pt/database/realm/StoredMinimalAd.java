@@ -27,7 +27,8 @@ public class StoredMinimalAd extends RealmObject implements MinimalAdInterface {
   }
 
   // apagar
-  public StoredMinimalAd(String packageName, String referrer, String cpcUrl, String cpdUrl, String cpiUrl, long adId) {
+  public StoredMinimalAd(String packageName, String referrer, String cpcUrl, String cpdUrl,
+      String cpiUrl, long adId) {
     this.packageName = packageName;
     this.referrer = referrer;
     this.cpcUrl = cpcUrl;
@@ -36,15 +37,15 @@ public class StoredMinimalAd extends RealmObject implements MinimalAdInterface {
     this.adId = adId;
     this.timestamp = System.currentTimeMillis();
   }
-  
+
   public static StoredMinimalAd from(MinimalAd minimalAd, String referrer) {
-    
+
     String packageName = minimalAd.getPackageName();
     String cpcUrl = minimalAd.getCpcUrl();
     String cpdUrl = minimalAd.getCpdUrl();
     String cpiUrl = minimalAd.getCpiUrl();
     Long adId = minimalAd.getAdId();
-    
+
     return new StoredMinimalAd(packageName, referrer, cpcUrl, cpdUrl, cpiUrl, adId);
   }
 
@@ -63,14 +64,12 @@ public class StoredMinimalAd extends RealmObject implements MinimalAdInterface {
   public void setReferrer(String referrer) {
     this.referrer = referrer;
   }
-  
-  @Override
-  public String getCpcUrl() {
+
+  @Override public String getCpcUrl() {
     return cpcUrl;
   }
-  
-  @Override
-  public String getCpdUrl() {
+
+  @Override public String getCpdUrl() {
     return cpdUrl;
   }
 
@@ -78,15 +77,14 @@ public class StoredMinimalAd extends RealmObject implements MinimalAdInterface {
     this.cpdUrl = cpdUrl;
   }
 
-  @Override
-  public String getCpiUrl() {
+  @Override public String getCpiUrl() {
     return cpiUrl;
   }
-  
+
   public void setCpiUrl(String cpiUrl) {
     this.cpiUrl = cpiUrl;
   }
-  
+
   public long getTimestamp() {
     return timestamp;
   }

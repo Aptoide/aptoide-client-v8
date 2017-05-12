@@ -56,14 +56,16 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
   void unsubscribeStore() {
     if (accountManager.isLoggedIn()) {
       accountManager.unsubscribeStore(getPojo().getName(),
-          storeCredentialsProvider.get(getPojo().getName()).getName(),
-          storeCredentialsProvider.get(getPojo().getName()).getPasswordSha1());
+          storeCredentialsProvider.get(getPojo().getName())
+              .getName(), storeCredentialsProvider.get(getPojo().getName())
+              .getPasswordSha1());
     }
     StoreUtils.unSubscribeStore(getPojo().getName(), accountManager, storeCredentialsProvider);
   }
 
   void openStoreFragment(FragmentNavigator navigator) {
     navigator.navigateTo(V8Engine.getFragmentProvider()
-        .newStoreFragment(getPojo().getName(), getPojo().getAppearance().getTheme()));
+        .newStoreFragment(getPojo().getName(), getPojo().getAppearance()
+            .getTheme()));
   }
 }

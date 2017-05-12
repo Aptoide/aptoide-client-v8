@@ -43,11 +43,9 @@ public class DownloadMirrorEventInterceptor implements Interceptor {
     return response;
   }
 
-  private void addMirrorToDownloadEvent(String v, String packageName, int fileType,
-      String mirror) {
+  private void addMirrorToDownloadEvent(String v, String packageName, int fileType, String mirror) {
 
-    final DownloadEvent event =
-        (DownloadEvent) analytics.get(packageName + v, DownloadEvent.class);
+    final DownloadEvent event = (DownloadEvent) analytics.get(packageName + v, DownloadEvent.class);
 
     if (event != null) {
       if (fileType == 0) {

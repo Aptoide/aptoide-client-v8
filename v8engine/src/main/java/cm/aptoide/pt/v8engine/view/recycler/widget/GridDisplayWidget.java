@@ -47,7 +47,8 @@ import rx.functions.Action1;
   @Override public void bindView(GridDisplayDisplayable displayable) {
     GetStoreDisplays.EventImage pojo = displayable.getPojo();
     final FragmentActivity context = getContext();
-    ImageLoader.with(context).load(pojo.getGraphic(), imageView);
+    ImageLoader.with(context)
+        .load(pojo.getGraphic(), imageView);
 
     final Action1<Void> imageClickHandler = v -> {
       Event event = pojo.getEvent();
@@ -66,7 +67,8 @@ import rx.functions.Action1;
                       installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
                       event.getAction()));
                 }, err -> {
-                  CrashReport.getInstance().log(err);
+                  CrashReport.getInstance()
+                      .log(err);
                 }));
             break;
           case twitch:
@@ -78,7 +80,8 @@ import rx.functions.Action1;
       }
     };
     compositeSubscription.add(RxView.clicks(imageView)
-        .subscribe(imageClickHandler, throwable -> CrashReport.getInstance().log(throwable)));
+        .subscribe(imageClickHandler, throwable -> CrashReport.getInstance()
+            .log(throwable)));
   }
 
   private void sendActionEvent(String eventActionUrl) {
@@ -86,7 +89,8 @@ import rx.functions.Action1;
     if (eventActionUrl != null) {
       i = new Intent(Intent.ACTION_VIEW);
       i.setData(Uri.parse(eventActionUrl));
-      itemView.getContext().startActivity(i);
+      itemView.getContext()
+          .startActivity(i);
     }
   }
 }

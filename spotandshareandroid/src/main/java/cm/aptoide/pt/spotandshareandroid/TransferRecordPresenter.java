@@ -105,10 +105,14 @@ public class TransferRecordPresenter implements Presenter {
         if (listOfApps.size() > 0) {
           if (positionToReSend == 100000) {
             for (int i = listOfApps.size() - 1; i >= 0; i--) {
-              if (listOfApps.get(i).getAppName().equals(appName) && !received && !listOfApps.get(i)
+              if (listOfApps.get(i)
+                  .getAppName()
+                  .equals(appName) && !received && !listOfApps.get(i)
                   .isSent()) {
-                listOfApps.get(i).setNeedReSend(needReSend);
-                listOfApps.get(i).setSent(isSent);
+                listOfApps.get(i)
+                    .setNeedReSend(needReSend);
+                listOfApps.get(i)
+                    .setSent(isSent);
                 view.updateItemStatus(i, isSent, needReSend);
                 if (!view.getTransparencyClearHistory()) {
                   view.setTransparencyClearHistory(false);
@@ -116,8 +120,10 @@ public class TransferRecordPresenter implements Presenter {
               }
             }
           } else {
-            listOfApps.get(positionToReSend).setNeedReSend(needReSend);
-            listOfApps.get(positionToReSend).setSent(isSent);
+            listOfApps.get(positionToReSend)
+                .setNeedReSend(needReSend);
+            listOfApps.get(positionToReSend)
+                .setSent(isSent);
 
             if (!view.getTransparencyClearHistory()) {
               view.setTransparencyClearHistory(false);

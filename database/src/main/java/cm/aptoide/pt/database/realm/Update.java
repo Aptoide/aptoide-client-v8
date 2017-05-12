@@ -67,13 +67,22 @@ public class Update extends RealmObject {
     //		versionCode = app.getFile().getVercode();
     //		signature = app.get;
     //		timestamp = app.getModified();
-    md5 = app.getFile().getMd5sum();
-    apkPath = app.getFile().getPath();
-    fileSize = app.getFile().getFilesize();
-    updateVersionName = app.getFile().getVername();
-    alternativeApkPath = app.getFile().getPathAlt();
-    updateVersionCode = app.getFile().getVercode();
-    trustedBadge = app.getFile().getMalware().getRank().name();
+    md5 = app.getFile()
+        .getMd5sum();
+    apkPath = app.getFile()
+        .getPath();
+    fileSize = app.getFile()
+        .getFilesize();
+    updateVersionName = app.getFile()
+        .getVername();
+    alternativeApkPath = app.getFile()
+        .getPathAlt();
+    updateVersionCode = app.getFile()
+        .getVercode();
+    trustedBadge = app.getFile()
+        .getMalware()
+        .getRank()
+        .name();
 
     Obb obb = app.getObb();
     if (obb != null) {

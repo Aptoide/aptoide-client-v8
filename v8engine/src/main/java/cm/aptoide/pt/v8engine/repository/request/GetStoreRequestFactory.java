@@ -24,7 +24,6 @@ class GetStoreRequestFactory {
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
-
   }
 
   public GetStoreRequest newStore(String url) {

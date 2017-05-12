@@ -63,7 +63,8 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         });
 
     view.getLifecycle()
@@ -73,7 +74,8 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         });
   }
 
@@ -91,29 +93,31 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
   }
 
   private Observable<Void> googleLoginClick() {
-    return view.googleLoginClick().doOnNext(selected -> view.showLoading()).<Void>flatMap(
-        credentials -> accountManager.login(Account.Type.GOOGLE, credentials.getEmail(),
-            credentials.getToken(), credentials.getDisplayName())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnCompleted(() -> {
-              Logger.d(TAG, "google login successful");
-              Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
-                  Analytics.Account.SignUpLoginStatus.SUCCESS,
-                  Analytics.Account.LoginStatusDetail.SUCCESS);
-              navigateToMainView();
-            })
-            .doOnTerminate(() -> view.hideLoading()).doOnError(throwable -> {
-              view.showError(throwable);
-              Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
-                  Analytics.Account.SignUpLoginStatus.FAILED,
-                  Analytics.Account.LoginStatusDetail.SDK_ERROR);
-            })
-            .toObservable()).retry();
+    return view.googleLoginClick()
+        .doOnNext(selected -> view.showLoading()).<Void>flatMap(
+            credentials -> accountManager.login(Account.Type.GOOGLE, credentials.getEmail(),
+                credentials.getToken(), credentials.getDisplayName())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnCompleted(() -> {
+                  Logger.d(TAG, "google login successful");
+                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
+                      Analytics.Account.SignUpLoginStatus.SUCCESS,
+                      Analytics.Account.LoginStatusDetail.SUCCESS);
+                  navigateToMainView();
+                })
+                .doOnTerminate(() -> view.hideLoading())
+                .doOnError(throwable -> {
+                  view.showError(throwable);
+                  Analytics.Account.loginStatus(Analytics.Account.LoginMethod.GOOGLE,
+                      Analytics.Account.SignUpLoginStatus.FAILED,
+                      Analytics.Account.LoginStatusDetail.SDK_ERROR);
+                })
+                .toObservable()).retry();
   }
 
   private Observable<Void> facebookLoginClick() {
-    return view.facebookLoginClick().doOnNext(selected -> view.showLoading()).<Void>flatMap(
-        credentials -> {
+    return view.facebookLoginClick()
+        .doOnNext(selected -> view.showLoading()).<Void>flatMap(credentials -> {
           if (declinedRequiredPermissions(credentials.getDeniedPermissions())) {
             view.hideLoading();
             view.showPermissionsRequiredMessage();
@@ -125,7 +129,8 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
 
           return getFacebookUsername(credentials.getToken()).flatMapCompletable(
               username -> accountManager.login(Account.Type.FACEBOOK, username,
-                  credentials.getToken().getToken(), null)
+                  credentials.getToken()
+                      .getToken(), null)
                   .observeOn(AndroidSchedulers.mainThread())
                   .doOnCompleted(() -> {
                     Logger.d(TAG, "facebook login successful");
@@ -135,7 +140,8 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
                     navigateToMainView();
                   })
                   .doOnTerminate(() -> view.hideLoading())
-                  .doOnError(throwable -> view.showError(throwable))).toObservable();
+                  .doOnError(throwable -> view.showError(throwable)))
+              .toObservable();
         }).retry();
   }
 
@@ -153,7 +159,8 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
                 Analytics.Account.LoginStatusDetail.SUCCESS);
             navigateToMainView();
           })
-          .doOnTerminate(() -> view.hideLoading()).doOnError(throwable -> {
+          .doOnTerminate(() -> view.hideLoading())
+          .doOnError(throwable -> {
             view.showError(throwable);
             Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
                 Analytics.Account.SignUpLoginStatus.FAILED,
@@ -173,7 +180,9 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
             Logger.d(TAG, "aptoide sign up successful");
             Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.SUCCESS);
             view.navigateToCreateProfile();
-          }).doOnTerminate(() -> view.hideLoading()).doOnError(throwable -> {
+          })
+          .doOnTerminate(() -> view.hideLoading())
+          .doOnError(throwable -> {
             Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.FAILED);
             view.showError(throwable);
           })
@@ -182,25 +191,29 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
   }
 
   private Observable<Void> aptoideShowLoginClick() {
-    return view.showAptoideLoginAreaClick().doOnNext(__ -> view.showAptoideLoginArea());
+    return view.showAptoideLoginAreaClick()
+        .doOnNext(__ -> view.showAptoideLoginArea());
   }
 
   private Observable<Void> aptoideShowSignUpClick() {
-    return view.showAptoideSignUpAreaClick().doOnNext(__ -> view.showAptoideSignUpArea());
+    return view.showAptoideSignUpAreaClick()
+        .doOnNext(__ -> view.showAptoideSignUpArea());
   }
 
   private Observable<Void> forgotPasswordSelection() {
-    return view.forgotPasswordClick().doOnNext(selection -> view.navigateToForgotPasswordView());
+    return view.forgotPasswordClick()
+        .doOnNext(selection -> view.navigateToForgotPasswordView());
   }
 
   private Observable<Void> showHidePassword() {
-    return view.showHidePasswordClick().doOnNext(__ -> {
-      if (view.isPasswordVisible()) {
-        view.hidePassword();
-      } else {
-        view.showPassword();
-      }
-    });
+    return view.showHidePasswordClick()
+        .doOnNext(__ -> {
+          if (view.isPasswordVisible()) {
+            view.hidePassword();
+          } else {
+            view.showPassword();
+          }
+        });
   }
 
   private void showOrHideFacebookLogin() {
@@ -250,7 +263,8 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
                     }
                     singleSubscriber.onSuccess(email);
                   } else {
-                    singleSubscriber.onError(response.getError().getException());
+                    singleSubscriber.onError(response.getError()
+                        .getException());
                   }
                 }
               }

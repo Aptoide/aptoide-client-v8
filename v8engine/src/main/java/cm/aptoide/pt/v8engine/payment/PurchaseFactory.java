@@ -39,7 +39,8 @@ public class PurchaseFactory {
     return new Purchase() {
 
       @Override public String getData() {
-        return app.getPath().getStringPath();
+        return app.getPath()
+            .getStringPath();
       }
 
       @Override public String getSignature() {

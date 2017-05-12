@@ -47,7 +47,8 @@ public class PaymentAuthorizationPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         });
 
     view.getLifecycle()
@@ -57,7 +58,8 @@ public class PaymentAuthorizationPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         });
 
     view.getLifecycle()
@@ -65,41 +67,47 @@ public class PaymentAuthorizationPresenter implements Presenter {
         .flatMap(created -> view.backToStoreSelection()
             .doOnNext(selection -> analytics.sendBackToStoreButtonPressedEvent(product)))
         .doOnNext(loaded -> view.showLoading())
-        .flatMap(loading -> aptoidePay.authorize(paymentId).toObservable())
+        .flatMap(loading -> aptoidePay.authorize(paymentId)
+            .toObservable())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         });
 
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> view.showLoading())
-        .flatMap(created -> Observable.combineLatest(
-            aptoidePay.payment(paymentId).observeOn(AndroidSchedulers.mainThread()),
-            aptoidePay.confirmation(product).observeOn(AndroidSchedulers.mainThread()),
-            (payment, confirmation) -> {
-              if (payment.getAuthorization().isPending() || confirmation.isPending()) {
-                view.showLoading();
-              } else if (confirmation.isCompleted()) {
-                view.hideLoading();
-                view.dismiss();
-              } else if (payment.getAuthorization().isAuthorized()) {
-                if (!processing) {
-                  processing = true;
-                  return aptoidePay.process(payment, product).toObservable();
-                }
-              } else if (payment.getAuthorization().isInitiated()) {
-                if (!loading) {
-                  loading = true;
-                  view.showUrl(((WebAuthorization) payment.getAuthorization()).getUrl(),
-                      ((WebAuthorization) payment.getAuthorization()).getRedirectUrl());
-                }
-              } else if (payment.getAuthorization().isFailed() || confirmation.isFailed()) {
-                view.showErrorAndDismiss();
-              }
-              return Observable.empty();
-            }))
+        .flatMap(created -> Observable.combineLatest(aptoidePay.payment(paymentId)
+            .observeOn(AndroidSchedulers.mainThread()), aptoidePay.confirmation(product)
+            .observeOn(AndroidSchedulers.mainThread()), (payment, confirmation) -> {
+          if (payment.getAuthorization()
+              .isPending() || confirmation.isPending()) {
+            view.showLoading();
+          } else if (confirmation.isCompleted()) {
+            view.hideLoading();
+            view.dismiss();
+          } else if (payment.getAuthorization()
+              .isAuthorized()) {
+            if (!processing) {
+              processing = true;
+              return aptoidePay.process(payment, product)
+                  .toObservable();
+            }
+          } else if (payment.getAuthorization()
+              .isInitiated()) {
+            if (!loading) {
+              loading = true;
+              view.showUrl(((WebAuthorization) payment.getAuthorization()).getUrl(),
+                  ((WebAuthorization) payment.getAuthorization()).getRedirectUrl());
+            }
+          } else if (payment.getAuthorization()
+              .isFailed() || confirmation.isFailed()) {
+            view.showErrorAndDismiss();
+          }
+          return Observable.empty();
+        }))
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(observable -> observable)
         .observeOn(AndroidSchedulers.mainThread())
@@ -108,7 +116,8 @@ public class PaymentAuthorizationPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         });
   }
 

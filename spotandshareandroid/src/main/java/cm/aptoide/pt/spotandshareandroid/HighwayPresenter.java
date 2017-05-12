@@ -167,23 +167,24 @@ public class HighwayPresenter implements Presenter {
 
   public void clickCreateGroup() {
     view.enableButtons(false);
-    subscription = groupNameProvider.getName().subscribe(deviceName -> {
-      groupManager.createGroup(deviceName, new GroupManager.CreateGroupListener() {
-        @Override public void onSuccess() {
-          view.hideButtonsProgressBar();
-          view.enableButtons(true);
-          analytics.createGroupSuccess();
-          view.openChatHotspot(null, deviceName);//null is due to the outsidesharemanager.
-        }
+    subscription = groupNameProvider.getName()
+        .subscribe(deviceName -> {
+          groupManager.createGroup(deviceName, new GroupManager.CreateGroupListener() {
+            @Override public void onSuccess() {
+              view.hideButtonsProgressBar();
+              view.enableButtons(true);
+              analytics.createGroupSuccess();
+              view.openChatHotspot(null, deviceName);//null is due to the outsidesharemanager.
+            }
 
-        @Override public void onError(int result) {
-          view.showCreateGroupResult(result);
-          view.hideButtonsProgressBar();
-          view.enableButtons(true);
-          view.hideSearchGroupsTextview(false);
-        }
-      });
-    });
+            @Override public void onError(int result) {
+              view.showCreateGroupResult(result);
+              view.hideButtonsProgressBar();
+              view.enableButtons(true);
+              view.hideSearchGroupsTextview(false);
+            }
+          });
+        });
   }
 
   public void scanNetworks() {

@@ -40,7 +40,6 @@ public class TimelineAnalytics {
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
-
   }
 
   public void sendFollowFriendsEvent() {

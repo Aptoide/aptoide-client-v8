@@ -30,7 +30,8 @@ public class PushNotificationsRequest extends V3<GetPushNotificationsResponse> {
       OkHttpClient httpClient, Converter.Factory converterFactory) {
     BaseBody args = new BaseBody();
 
-    String oemid = DataProvider.getConfiguration().getExtraId();
+    String oemid = DataProvider.getConfiguration()
+        .getExtraId();
     if (!TextUtils.isEmpty(oemid)) {
       args.put("oem_id", oemid);
     }

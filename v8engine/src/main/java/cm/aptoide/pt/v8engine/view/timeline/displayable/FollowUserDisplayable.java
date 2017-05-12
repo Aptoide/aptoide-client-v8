@@ -40,13 +40,15 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
   }
 
   public String storeName() {
-    return getPojo().getStore().getName();
+    return getPojo().getStore()
+        .getName();
   }
 
   public String getFollowing() {
     long number;
     if (getPojo().getStats() != null) {
-      number = getPojo().getStats().getFollowing();
+      number = getPojo().getStats()
+          .getFollowing();
     } else {
       number = 0;
     }
@@ -56,7 +58,8 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
   public String getFollowers() {
     long number;
     if (getPojo().getStats() != null) {
-      number = getPojo().getStats().getFollowers();
+      number = getPojo().getStats()
+          .getFollowers();
     } else {
       number = 0;
     }
@@ -64,11 +67,13 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
   }
 
   public String getStoreName() {
-    return getPojo().getStore() == null ? null : getPojo().getStore().getName();
+    return getPojo().getStore() == null ? null : getPojo().getStore()
+        .getName();
   }
 
   public String getStoreAvatar() {
-    return getPojo().getStore().getAvatar();
+    return getPojo().getStore()
+        .getAvatar();
   }
 
   public String getUserAvatar() {
@@ -80,8 +85,9 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
   }
 
   public boolean hasStore() {
-    return getPojo().getStore() != null && (!TextUtils.isEmpty(getPojo().getStore().getName())
-        || (!TextUtils.isEmpty(getPojo().getStore().getAvatar())));
+    return getPojo().getStore() != null && (!TextUtils.isEmpty(getPojo().getStore()
+        .getName()) || (!TextUtils.isEmpty(getPojo().getStore()
+        .getAvatar())));
   }
 
   public boolean hasUser() {
@@ -91,9 +97,13 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
   public int getStoreColor() {
     Store store = getPojo().getStore();
     if (store != null && store.getAppearance() != null) {
-      return StoreThemeEnum.get(store.getAppearance().getTheme()).getStoreHeaderInt();
+      return StoreThemeEnum.get(store.getAppearance()
+          .getTheme())
+          .getStoreHeaderInt();
     } else {
-      return StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()).getStoreHeaderInt();
+      return StoreThemeEnum.get(V8Engine.getConfiguration()
+          .getDefaultTheme())
+          .getStoreHeaderInt();
     }
   }
 
@@ -124,11 +134,13 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
   private String getStoreTheme(Store store) {
     String theme;
     if (store != null && store.getAppearance() != null) {
-      theme =
-          store.getAppearance().getTheme() == null ? V8Engine.getConfiguration().getDefaultTheme()
-              : store.getAppearance().getTheme();
+      theme = store.getAppearance()
+          .getTheme() == null ? V8Engine.getConfiguration()
+          .getDefaultTheme() : store.getAppearance()
+          .getTheme();
     } else {
-      theme = V8Engine.getConfiguration().getDefaultTheme();
+      theme = V8Engine.getConfiguration()
+          .getDefaultTheme();
     }
     return theme;
   }

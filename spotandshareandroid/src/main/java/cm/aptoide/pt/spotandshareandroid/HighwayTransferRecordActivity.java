@@ -66,10 +66,12 @@ public class HighwayTransferRecordActivity extends ActivityView
 
     if (isHotspot) {
       setTransparencySend(true);
-      welcomeText.setText(this.getResources().getString(R.string.created_group, nickname));
+      welcomeText.setText(this.getResources()
+          .getString(R.string.created_group, nickname));
       setTextViewMessage(false);
     } else {
-      welcomeText.setText(this.getResources().getString(R.string.joined_group, nickname));
+      welcomeText.setText(this.getResources()
+          .getString(R.string.joined_group, nickname));
       setTextViewMessage(true);
     }
     setTransparencyClearHistory(true);
@@ -88,7 +90,6 @@ public class HighwayTransferRecordActivity extends ActivityView
           new ApplicationReceiver(getApplicationContext(), isHotspot, porto, targetIPAddress,
               nickname);
     }
-
 
     applicationSender = ApplicationSender.getInstance(getApplicationContext(), isHotspot);
     transferRecordManager = new TransferRecordManager(applicationsManager);
@@ -152,40 +153,44 @@ public class HighwayTransferRecordActivity extends ActivityView
     if (isHotspot) {
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-      builder.setTitle(this.getResources().getString(R.string.alert))
-          .setMessage(this.getResources().getString(R.string.alertCreatorLeave))
-          .setPositiveButton(this.getResources().getString(R.string.leave),
-              new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                  sendServerShutdownMessage();
-                  presenter.listenToDisconnect();
-                }
-              })
-          .setNegativeButton(this.getResources().getString(R.string.cancel),
-              new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                  // User cancelled the dialog
-                }
-              });
+      builder.setTitle(this.getResources()
+          .getString(R.string.alert))
+          .setMessage(this.getResources()
+              .getString(R.string.alertCreatorLeave))
+          .setPositiveButton(this.getResources()
+              .getString(R.string.leave), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+              sendServerShutdownMessage();
+              presenter.listenToDisconnect();
+            }
+          })
+          .setNegativeButton(this.getResources()
+              .getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+              // User cancelled the dialog
+            }
+          });
       return builder.create();
     } else {
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-      builder.setTitle(this.getResources().getString(R.string.alert))
-          .setMessage(this.getResources().getString(R.string.alertClientLeave))
-          .setPositiveButton(this.getResources().getString(R.string.leave),
-              new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                  presenter.listenToDisconnect();
-                  sendDisconnectMessage();
-                }
-              })
-          .setNegativeButton(this.getResources().getString(R.string.cancel),
-              new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                  // User cancelled the dialog
-                }
-              });
+      builder.setTitle(this.getResources()
+          .getString(R.string.alert))
+          .setMessage(this.getResources()
+              .getString(R.string.alertClientLeave))
+          .setPositiveButton(this.getResources()
+              .getString(R.string.leave), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+              presenter.listenToDisconnect();
+              sendDisconnectMessage();
+            }
+          })
+          .setNegativeButton(this.getResources()
+              .getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+              // User cancelled the dialog
+            }
+          });
       return builder.create();
     }
   }
@@ -257,9 +262,9 @@ public class HighwayTransferRecordActivity extends ActivityView
   }
 
   @Override public void showNoRecordsToDeleteToast() {
-    Toast.makeText(this,
-        HighwayTransferRecordActivity.this.getResources().getString(R.string.noRecordsDelete),
-        Toast.LENGTH_SHORT).show();
+    Toast.makeText(this, HighwayTransferRecordActivity.this.getResources()
+        .getString(R.string.noRecordsDelete), Toast.LENGTH_SHORT)
+        .show();
   }
 
   @Override public void showDeleteHistoryDialog() {
@@ -312,12 +317,14 @@ public class HighwayTransferRecordActivity extends ActivityView
   }
 
   @Override public void showGeneralErrorToast() {
-    Toast.makeText(this, R.string.generalError, Toast.LENGTH_LONG).show();
+    Toast.makeText(this, R.string.generalError, Toast.LENGTH_LONG)
+        .show();
   }
 
   @Override public void showRecoveringWifiStateToast() {
-    Toast.makeText(this, this.getResources().getString(R.string.recoveringWifiState),
-        Toast.LENGTH_SHORT).show();
+    Toast.makeText(this, this.getResources()
+        .getString(R.string.recoveringWifiState), Toast.LENGTH_SHORT)
+        .show();
   }
 
   @Override public void dismiss() {
@@ -325,8 +332,9 @@ public class HighwayTransferRecordActivity extends ActivityView
   }
 
   @Override public void showServerLeftMessage() {
-    Toast.makeText(this, this.getResources().getString(R.string.groupCreatorLeft),
-        Toast.LENGTH_SHORT).show();
+    Toast.makeText(this, this.getResources()
+        .getString(R.string.groupCreatorLeft), Toast.LENGTH_SHORT)
+        .show();
   }
 
   @Override public void clearAdapter() {
@@ -373,14 +381,17 @@ public class HighwayTransferRecordActivity extends ActivityView
     if (wifimanager == null) {
       wifimanager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
     }
-    Method[] methods = wifimanager.getClass().getDeclaredMethods();
-    WifiConfiguration wc = DataHolder.getInstance().getWcOnJoin();
+    Method[] methods = wifimanager.getClass()
+        .getDeclaredMethods();
+    WifiConfiguration wc = DataHolder.getInstance()
+        .getWcOnJoin();
     for (Method m : methods) {
-      if (m.getName().equals("setWifiApConfiguration")) {
+      if (m.getName()
+          .equals("setWifiApConfiguration")) {
 
         try {
-          Method setConfigMethod =
-              wifimanager.getClass().getMethod("setWifiApConfiguration", WifiConfiguration.class);
+          Method setConfigMethod = wifimanager.getClass()
+              .getMethod("setWifiApConfiguration", WifiConfiguration.class);
           System.out.println("Re-seting the wifiAp configuration to what it was before !!! ");
           setConfigMethod.invoke(wifimanager, wc);
         } catch (NoSuchMethodException e) {
@@ -391,7 +402,8 @@ public class HighwayTransferRecordActivity extends ActivityView
           e.printStackTrace();
         }
       }
-      if (m.getName().equals("setWifiApEnabled")) {
+      if (m.getName()
+          .equals("setWifiApEnabled")) {
 
         try {
           System.out.println("Desligar o hostpot ");
@@ -409,24 +421,26 @@ public class HighwayTransferRecordActivity extends ActivityView
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-    builder.setTitle(this.getResources().getString(R.string.warning))
-        .setMessage(this.getResources().getString(R.string.clear_history_warning))
-        .setPositiveButton(this.getResources().getString(R.string.delete),
-            new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int id) {
+    builder.setTitle(this.getResources()
+        .getString(R.string.warning))
+        .setMessage(this.getResources()
+            .getString(R.string.clear_history_warning))
+        .setPositiveButton(this.getResources()
+            .getString(R.string.delete), new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int id) {
 
-                setTransparencyClearHistory(true);
-                presenter.deleteAllApps();
-              }
-            })
-        .setNegativeButton(this.getResources().getString(R.string.cancel),
-            new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-                System.out.println(
-                    "TransferREcordsCustomAdapter : Person pressed the CANCEL BUTTON !!!!!!!! ");
-              }
-            });
+            setTransparencyClearHistory(true);
+            presenter.deleteAllApps();
+          }
+        })
+        .setNegativeButton(this.getResources()
+            .getString(R.string.cancel), new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int id) {
+            // User cancelled the dialog
+            System.out.println(
+                "TransferREcordsCustomAdapter : Person pressed the CANCEL BUTTON !!!!!!!! ");
+          }
+        });
     return builder.create();
   }
 
@@ -437,12 +451,12 @@ public class HighwayTransferRecordActivity extends ActivityView
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
     builder.setMessage(message);
-    builder.setPositiveButton(this.getResources().getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int id) {
-            System.out.println("Pressed OK in the error of the app version");
-          }
-        });
+    builder.setPositiveButton(this.getResources()
+        .getString(R.string.ok), new DialogInterface.OnClickListener() {
+      public void onClick(DialogInterface dialog, int id) {
+        System.out.println("Pressed OK in the error of the app version");
+      }
+    });
 
     AlertDialog dialog = builder.create();
     return dialog;

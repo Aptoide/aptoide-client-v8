@@ -104,9 +104,9 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
   }
 
   @Override public void showNoAppsSelectedToast() {
-    Toast.makeText(HighwayAppSelectionActivity.this,
-        HighwayAppSelectionActivity.this.getResources().getString(R.string.noSelectedAppsToSend),
-        Toast.LENGTH_SHORT).show();
+    Toast.makeText(HighwayAppSelectionActivity.this, HighwayAppSelectionActivity.this.getResources()
+        .getString(R.string.noSelectedAppsToSend), Toast.LENGTH_SHORT)
+        .show();
   }
 
   @Override public void enableGridView(boolean enable) {

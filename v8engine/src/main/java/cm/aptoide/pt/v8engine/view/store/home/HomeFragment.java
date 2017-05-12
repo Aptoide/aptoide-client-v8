@@ -119,7 +119,8 @@ public class HomeFragment extends StoreFragment {
             return;
           }
           setVisibleUserImageAndName(account);
-        }, err -> CrashReport.getInstance().log(err));
+        }, err -> CrashReport.getInstance()
+            .log(err));
   }
 
   private void setInvisibleUserImageAndName() {
@@ -127,7 +128,8 @@ public class HomeFragment extends StoreFragment {
     userUsername.setText("");
     userEmail.setVisibility(View.GONE);
     userUsername.setVisibility(View.GONE);
-    ImageLoader.with(getContext()).load(R.drawable.user_account_white, userAvatarImage);
+    ImageLoader.with(getContext())
+        .load(R.drawable.user_account_white, userAvatarImage);
   }
 
   private void setVisibleUserImageAndName(Account account) {
@@ -185,7 +187,8 @@ public class HomeFragment extends StoreFragment {
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(size -> refreshUpdatesBadge(size), throwable -> {
-          CrashReport.getInstance().log(throwable);
+          CrashReport.getInstance()
+              .log(throwable);
         });
 
     tabNavigator.navigation()
@@ -193,7 +196,8 @@ public class HomeFragment extends StoreFragment {
             ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(getEventName(tab))))
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(__ -> {
-        }, err -> CrashReport.getInstance().log(err));
+        }, err -> CrashReport.getInstance()
+            .log(err));
   }
 
   @Override public int getContentViewId() {
@@ -231,7 +235,8 @@ public class HomeFragment extends StoreFragment {
             .findItem(R.id.shareapps)
             .setTitle(getString(R.string.spot_share) + new String(" \uD83D\uDD38"));
       } catch (Exception e) {
-        CrashReport.getInstance().log(e);
+        CrashReport.getInstance()
+            .log(e);
       }
       navigationView.setItemIconTintList(null);
       navigationView.setNavigationItemSelectedListener(menuItem -> {
@@ -244,13 +249,17 @@ public class HomeFragment extends StoreFragment {
           if (itemId == R.id.shareapps) {
             getActivityNavigator().navigateTo(SpotSharePreviewActivity.class);
           } else if (itemId == R.id.navigation_item_rollback) {
-            navigator.navigateTo(V8Engine.getFragmentProvider().newRollbackFragment());
+            navigator.navigateTo(V8Engine.getFragmentProvider()
+                .newRollbackFragment());
           } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
-            navigator.navigateTo(V8Engine.getFragmentProvider().newScheduledDownloadsFragment());
+            navigator.navigateTo(V8Engine.getFragmentProvider()
+                .newScheduledDownloadsFragment());
           } else if (itemId == R.id.navigation_item_excluded_updates) {
-            navigator.navigateTo(V8Engine.getFragmentProvider().newExcludedUpdatesFragment());
+            navigator.navigateTo(V8Engine.getFragmentProvider()
+                .newExcludedUpdatesFragment());
           } else if (itemId == R.id.navigation_item_settings) {
-            navigator.navigateTo(V8Engine.getFragmentProvider().newSettingsFragment());
+            navigator.navigateTo(V8Engine.getFragmentProvider()
+                .newSettingsFragment());
           } else if (itemId == R.id.navigation_item_facebook) {
             openFacebook();
           } else if (itemId == R.id.navigation_item_twitter) {
@@ -281,7 +290,8 @@ public class HomeFragment extends StoreFragment {
                       installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
                       APTOIDE_FACEBOOK_LINK)));
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         });
   }
 
@@ -306,13 +316,17 @@ public class HomeFragment extends StoreFragment {
             startActivity(i);
           }
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         });
   }
 
   private void startFeedbackFragment() {
-    String downloadFolderPath = Application.getContext().getCacheDir().getPath();
-    String screenshotFileName = getActivity().getClass().getSimpleName() + ".jpg";
+    String downloadFolderPath = Application.getContext()
+        .getCacheDir()
+        .getPath();
+    String screenshotFileName = getActivity().getClass()
+        .getSimpleName() + ".jpg";
     AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
     getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
         .newSendFeedbackFragment(downloadFolderPath + screenshotFileName));
@@ -326,14 +340,15 @@ public class HomeFragment extends StoreFragment {
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(installedFacebook -> {
           if (installedFacebook == null) {
-            getFragmentNavigator().navigateTo(
-                V8Engine.getFragmentProvider().newSocialFragment(socialUrl, pageTitle));
+            getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+                .newSocialFragment(socialUrl, pageTitle));
           } else {
             Intent sharingIntent = new Intent(Intent.ACTION_VIEW, uriToOpenApp);
             getContext().startActivity(sharingIntent);
           }
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         });
   }
 
@@ -346,7 +361,8 @@ public class HomeFragment extends StoreFragment {
     updatesBadge.setTextSize(11);
 
     if (num > 0) {
-      updatesBadge.setText(NumberFormat.getIntegerInstance().format(num));
+      updatesBadge.setText(NumberFormat.getIntegerInstance()
+          .format(num));
       if (!updatesBadge.isShown()) {
         updatesBadge.show(true);
       }

@@ -139,30 +139,36 @@ public class InstallManager {
 
   public boolean isInstalling(Progress<Download> progress) {
     return isDownloading(progress) || (progress.getState() != Progress.DONE
-        && progress.getRequest().getOverallDownloadStatus() == Download.COMPLETED);
+        && progress.getRequest()
+        .getOverallDownloadStatus() == Download.COMPLETED);
   }
 
   public boolean isDownloading(Progress<Download> progress) {
-    return progress.getRequest().getOverallDownloadStatus() == Download.PROGRESS;
+    return progress.getRequest()
+        .getOverallDownloadStatus() == Download.PROGRESS;
   }
 
   public Observable<Progress<Download>> getInstallation(String md5) {
-    return aptoideDownloadManager.getDownload(md5).flatMap(download -> convertToProgress(download));
+    return aptoideDownloadManager.getDownload(md5)
+        .flatMap(download -> convertToProgress(download));
   }
 
   public Observable<Progress<Download>> getAsListInstallation(String md5) {
-    return aptoideDownloadManager.getAsListDownload(md5).flatMap(downloads -> {
-      if (downloads.isEmpty()) {
-        return Observable.just(null);
-      } else {
-        return convertToProgress(downloads.get(0));
-      }
-    });
+    return aptoideDownloadManager.getAsListDownload(md5)
+        .flatMap(downloads -> {
+          if (downloads.isEmpty()) {
+            return Observable.just(null);
+          } else {
+            return convertToProgress(downloads.get(0));
+          }
+        });
   }
 
   public boolean isPending(Progress<Download> progress) {
-    return progress.getRequest().getOverallDownloadStatus() == Download.PENDING
-        || progress.getRequest().getOverallDownloadStatus() == Download.IN_QUEUE;
+    return progress.getRequest()
+        .getOverallDownloadStatus() == Download.PENDING
+        || progress.getRequest()
+        .getOverallDownloadStatus() == Download.IN_QUEUE;
   }
 
   public Observable<Progress<Download>> install(Context context, Download download) {
@@ -170,8 +176,10 @@ public class InstallManager {
         .map(progress -> updateDownloadAction(download, progress))
         .retryWhen(errors -> createDownloadAndRetry(errors, download))
         .doOnNext(downloadProgress -> {
-          if (downloadProgress.getRequest().getOverallDownloadStatus() == Download.ERROR) {
-            downloadProgress.getRequest().setOverallDownloadStatus(Download.INVALID_STATUS);
+          if (downloadProgress.getRequest()
+              .getOverallDownloadStatus() == Download.ERROR) {
+            downloadProgress.getRequest()
+                .setOverallDownloadStatus(Download.INVALID_STATUS);
             downloadRepository.save(downloadProgress.getRequest());
           }
         })
@@ -180,12 +188,15 @@ public class InstallManager {
 
   @NonNull
   private Progress<Download> updateDownloadAction(Download download, Progress<Download> progress) {
-    if (progress.getRequest().getAction() != download.getAction()) {
-      progress.getRequest().setAction(download.getAction());
+    if (progress.getRequest()
+        .getAction() != download.getAction()) {
+      progress.getRequest()
+          .setAction(download.getAction());
     }
 
     // Update files to download to avoid reusing an invalid download file
-    progress.getRequest().setFilesToDownload(download.getFilesToDownload());
+    progress.getRequest()
+        .setFilesToDownload(download.getFilesToDownload());
     downloadRepository.save(progress.getRequest());
     return progress;
   }
@@ -204,18 +215,20 @@ public class InstallManager {
 
   private Observable<Progress<Download>> installInBackground(Context context,
       Progress<Download> progress) {
-    return getInstallation(progress.getRequest().getMd5()).mergeWith(
-        startBackgroundInstallationAndWait(context, progress));
+    return getInstallation(progress.getRequest()
+        .getMd5()).mergeWith(startBackgroundInstallationAndWait(context, progress));
   }
 
   @NonNull
   private Observable<Progress<Download>> startBackgroundInstallationAndWait(Context context,
       Progress<Download> progress) {
-    return waitBackgroundInstallationResult(context, progress.getRequest().getMd5()).doOnSubscribe(
-        () -> startBackgroundInstallation(context, progress.getRequest().getMd5())).map(success -> {
-      progress.setState(Progress.DONE);
-      return progress;
-    });
+    return waitBackgroundInstallationResult(context, progress.getRequest()
+        .getMd5()).doOnSubscribe(() -> startBackgroundInstallation(context, progress.getRequest()
+        .getMd5()))
+        .map(success -> {
+          progress.setState(Progress.DONE);
+          return progress;
+        });
   }
 
   private Observable<Void> waitBackgroundInstallationResult(Context context, String md5) {
