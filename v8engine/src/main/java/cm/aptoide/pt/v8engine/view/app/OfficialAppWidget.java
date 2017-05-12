@@ -67,12 +67,16 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
 
     int color;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      color = context.getResources().getColor(R.color.default_color, context.getTheme());
+      color = context.getResources()
+          .getColor(R.color.default_color, context.getTheme());
     } else {
-      color = context.getResources().getColor(R.color.default_color);
+      color = context.getResources()
+          .getColor(R.color.default_color);
     }
 
-    final GetAppMeta.App appData = messageAndApp.second.getNodes().getMeta().getData();
+    final GetAppMeta.App appData = messageAndApp.second.getNodes()
+        .getMeta()
+        .getData();
     final String appName = appData.getName();
 
     if (!TextUtils.isEmpty(messageAndApp.first)) {
@@ -96,19 +100,25 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
       hideOfficialAppMessage();
     }
 
-    appRating.setRating(appData.getStats().getRating().getAvg());
+    appRating.setRating(appData.getStats()
+        .getRating()
+        .getAvg());
 
     this.appName.setText(appName);
     this.appDownloads.setText(String.format(context.getString(R.string.downloads_count),
-        AptoideUtils.StringU.withSuffix(appData.getStats().getDownloads())));
+        AptoideUtils.StringU.withSuffix(appData.getStats()
+            .getDownloads())));
 
-    this.appVersion.setText(
-        String.format(context.getString(R.string.version_number), appData.getFile().getVername()));
+    this.appVersion.setText(String.format(context.getString(R.string.version_number),
+        appData.getFile()
+            .getVername()));
 
     this.appSize.setText(String.format(context.getString(R.string.app_size),
-        AptoideUtils.StringU.formatBytes(appData.getFile().getFilesize(), false)));
+        AptoideUtils.StringU.formatBytes(appData.getFile()
+            .getFilesize(), false)));
 
-    ImageLoader.with(context).load(appData.getIcon(), this.appImage);
+    ImageLoader.with(context)
+        .load(appData.getIcon(), this.appImage);
 
     // check if app is installed. if it is, show open button
 
@@ -118,31 +128,37 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
       d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
       installButton.setBackground(d);
     } else {
-      Drawable d = context.getResources().getDrawable(R.drawable.dialog_bg_2);
+      Drawable d = context.getResources()
+          .getDrawable(R.drawable.dialog_bg_2);
       d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
       installButton.setBackgroundDrawable(d);
     }
 
     installButton.setText(context.getString(isAppInstalled ? R.string.open : R.string.install));
 
-    compositeSubscription.add(RxView.clicks(installButton).subscribe(a -> {
-      if (isAppInstalled) {
-        AptoideUtils.SystemU.openApp(appData.getPackageName());
-      } else {
-        // show app view to install app
-        Fragment appView = V8Engine.getFragmentProvider()
-            .newAppViewFragment(appData.getPackageName(),
-                AppViewFragment.OpenType.OPEN_AND_INSTALL);
-        getFragmentNavigator().navigateTo(appView);
-      }
-    }, err -> {
-      CrashReport.getInstance().log(err);
-    }));
+    compositeSubscription.add(RxView.clicks(installButton)
+        .subscribe(a -> {
+          if (isAppInstalled) {
+            AptoideUtils.SystemU.openApp(appData.getPackageName());
+          } else {
+            // show app view to install app
+            Fragment appView = V8Engine.getFragmentProvider()
+                .newAppViewFragment(appData.getPackageName(),
+                    AppViewFragment.OpenType.OPEN_AND_INSTALL);
+            getFragmentNavigator().navigateTo(appView);
+          }
+        }, err -> {
+          CrashReport.getInstance()
+              .log(err);
+        }));
   }
 
   private boolean isAppInstalled(GetApp app) {
     InstalledRepository installedRepo = RepositoryFactory.getInstalledRepository();
-    return installedRepo.contains(app.getNodes().getMeta().getData().getPackageName());
+    return installedRepo.contains(app.getNodes()
+        .getMeta()
+        .getData()
+        .getPackageName());
   }
 
   private void hideOfficialAppMessage() {

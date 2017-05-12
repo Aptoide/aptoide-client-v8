@@ -66,7 +66,8 @@ public class PaymentPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         });
 
     view.getLifecycle()
@@ -77,7 +78,8 @@ public class PaymentPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         });
 
     view.getLifecycle()
@@ -86,20 +88,20 @@ public class PaymentPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         });
 
     view.getLifecycle()
         .flatMap(event -> loginLifecycle(event))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(loggedIn -> view.showLoading())
-        .flatMap(loading -> Observable.combineLatest(
-            aptoidePay.payments().observeOn(AndroidSchedulers.mainThread()),
-            aptoidePay.confirmation(product).observeOn(AndroidSchedulers.mainThread()),
-            (payments, confirmation) -> {
-              return showProductAndPayments(payments).<Purchase> andThen(
-                  treatLoadingAndGetPurchase(confirmation));
-            })).<Purchase> flatMap(observable -> observable).compose(
+        .flatMap(loading -> Observable.combineLatest(aptoidePay.payments()
+            .observeOn(AndroidSchedulers.mainThread()), aptoidePay.confirmation(product)
+            .observeOn(AndroidSchedulers.mainThread()), (payments, confirmation) -> {
+          return showProductAndPayments(payments).<Purchase>andThen(
+              treatLoadingAndGetPurchase(confirmation));
+        })).<Purchase>flatMap(observable -> observable).compose(
         view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(purchase -> dismiss(purchase), throwable -> dismiss(throwable));
@@ -116,14 +118,16 @@ public class PaymentPresenter implements Presenter {
   private Observable<Void> paymentSelection() {
     return view.paymentSelection()
         .flatMap(paymentViewModel -> getPayment(paymentViewModel).flatMapCompletable(
-            payment -> paymentSelector.selectPayment(payment)).toObservable());
+            payment -> paymentSelector.selectPayment(payment))
+            .toObservable());
   }
 
   private Observable<Void> cancellationSelection() {
-    return Observable.merge(view.cancellationSelection().flatMap(cancelled ->
-        sendCancellationAnalytics().andThen(Observable.just(cancelled))), view
-        .tapOutsideSelection().flatMap(tappedOutside -> sendTapOutsideAnalytics().andThen
-            (Observable.just(tappedOutside))))
+    return Observable.merge(view.cancellationSelection()
+            .flatMap(cancelled -> sendCancellationAnalytics().andThen(Observable.just(cancelled))),
+        view.tapOutsideSelection()
+            .flatMap(
+                tappedOutside -> sendTapOutsideAnalytics().andThen(Observable.just(tappedOutside))))
         .doOnNext(cancelled -> view.dismiss());
   }
 
@@ -207,7 +211,8 @@ public class PaymentPresenter implements Presenter {
       view.showLoading();
     } else if (confirmation.isCompleted()) {
       view.showLoading();
-      return aptoidePay.purchase(product).toObservable();
+      return aptoidePay.purchase(product)
+          .toObservable();
     }
     return Observable.empty();
   }
@@ -231,7 +236,8 @@ public class PaymentPresenter implements Presenter {
   }
 
   private Completable processOrNavigateToAuthorization(Payment payment) {
-    if (payment.getAuthorization().isAuthorized()) {
+    if (payment.getAuthorization()
+        .isAuthorized()) {
       return aptoidePay.process(payment, product);
     }
     return aptoidePay.initiate(payment)
@@ -250,7 +256,8 @@ public class PaymentPresenter implements Presenter {
 
   private Completable showPayments(List<Payment> payments, Payment selectedPayment) {
     return convertToViewModel(payments, selectedPayment).doOnSuccess(
-        paymentViewModels -> view.showPayments(paymentViewModels)).toCompletable();
+        paymentViewModels -> view.showPayments(paymentViewModels))
+        .toCompletable();
   }
 
   private Single<List<PaymentView.PaymentViewModel>> convertToViewModel(List<Payment> payments,

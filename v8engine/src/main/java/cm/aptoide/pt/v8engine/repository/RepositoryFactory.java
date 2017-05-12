@@ -172,7 +172,8 @@ public final class RepositoryFactory {
   private static PaymentSyncScheduler getBackgroundSync(Context context) {
     return new PaymentSyncScheduler(new PaymentSyncDataConverter(),
         ((V8Engine) context.getApplicationContext()).getAndroidAccountProvider(),
-        Application.getConfiguration().getContentAuthority());
+        Application.getConfiguration()
+            .getContentAuthority());
   }
 
   public static InAppBillingRepository getInAppBillingRepository(Context context) {

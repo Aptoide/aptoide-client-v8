@@ -67,8 +67,8 @@ public class Analytics {
   private static boolean isFirstSession;
 
   static {
-    idsRepository =
-        ((V8Engine) DataProvider.getContext().getApplicationContext()).getIdsRepository();
+    idsRepository = ((V8Engine) DataProvider.getContext()
+        .getApplicationContext()).getIdsRepository();
   }
 
   private final AnalyticsDataSaver saver;
@@ -99,7 +99,8 @@ public class Analytics {
 
       Logger.d(TAG, "Event: " + event + ", Key: " + key + ", attr: " + attr);
     } catch (Exception e) {
-      Logger.d(TAG, e.getStackTrace().toString());
+      Logger.d(TAG, e.getStackTrace()
+          .toString());
     }
   }
 
@@ -118,7 +119,8 @@ public class Analytics {
         Logger.d(TAG, "Flurry Event: " + event + ", Map: " + map);
       }
     } catch (Exception e) {
-      Logger.d(TAG, e.getStackTrace().toString());
+      Logger.d(TAG, e.getStackTrace()
+          .toString());
     }
   }
 
@@ -127,6 +129,7 @@ public class Analytics {
    *
    * @param flag flags fornecidas
    * @param accepted flags aceitáveis
+   *
    * @return true caso as flags fornecidas constem em accepted.
    */
   private static boolean checkAcceptability(int flag, int accepted) {
@@ -154,44 +157,14 @@ public class Analytics {
     facebookLogger.logEvent(eventName, bundle);
   }
 
-  public void save(@NonNull String key, @NonNull Event event) {
-    saver.save(key, event);
-  }
-
-  public @Nullable Event get(String key, Class<? extends Event> clazz) {
-    return saver.get(key + clazz.getName());
-  }
-
-  public void sendEvent(Event event) {
-    event.send();
-    saver.remove(event);
-  }
-
-  /**
-   * This method is dealing with spot and share events only and should be refactored in case
-   * one would want to send the same event to fabric AND any other analytics platform
-   */
-  public void sendSpotAndShareEvents(String eventName, Map<String, String> attributes,
-      boolean fabric) {
-    if (fabric) {
-      logFabricEvent(eventName, attributes, FABRIC);
-    } else {
-      logFacebookEvents(eventName, attributes);
-      if (attributes != null) {
-        track(eventName, new HashMap<String, String>(attributes), LOCALYTICS);
-      } else {
-        track(eventName, LOCALYTICS);
-      }
-    }
-  }
-
   private static void logFabricEvent(String event, Map<String, String> map, int flags) {
     if (checkAcceptability(flags, FABRIC)) {
       CustomEvent customEvent = new CustomEvent(event);
       for (Map.Entry<String, String> entry : map.entrySet()) {
         customEvent.putCustomAttribute(entry.getKey(), entry.getValue());
       }
-      Answers.getInstance().logCustom(customEvent);
+      Answers.getInstance()
+          .logCustom(customEvent);
       Logger.d(TAG, "Fabric Event: " + event + ", Map: " + map);
     }
   }
@@ -238,6 +211,37 @@ public class Analytics {
     facebookLogger.logEvent(eventName, parameters);
   }
 
+  public void save(@NonNull String key, @NonNull Event event) {
+    saver.save(key, event);
+  }
+
+  public @Nullable Event get(String key, Class<? extends Event> clazz) {
+    return saver.get(key + clazz.getName());
+  }
+
+  public void sendEvent(Event event) {
+    event.send();
+    saver.remove(event);
+  }
+
+  /**
+   * This method is dealing with spot and share events only and should be refactored in case
+   * one would want to send the same event to fabric AND any other analytics platform
+   */
+  public void sendSpotAndShareEvents(String eventName, Map<String, String> attributes,
+      boolean fabric) {
+    if (fabric) {
+      logFabricEvent(eventName, attributes, FABRIC);
+    } else {
+      logFacebookEvents(eventName, attributes);
+      if (attributes != null) {
+        track(eventName, new HashMap<String, String>(attributes), LOCALYTICS);
+      } else {
+        track(eventName, LOCALYTICS);
+      }
+    }
+  }
+
   public static class Lifecycle {
 
     public static class Application {
@@ -253,8 +257,11 @@ public class Analytics {
         Observable.fromCallable(() -> {
           AppEventsLogger.setUserID(idsRepository.getUniqueIdentifier());
           return null;
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(o -> {
-        }, Throwable::printStackTrace);
+        })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(o -> {
+            }, Throwable::printStackTrace);
         SharedPreferences sPref =
             PreferenceManager.getDefaultSharedPreferences(application.getBaseContext());
         ACTIVATE_LOCALYTICS =
@@ -285,7 +292,8 @@ public class Analytics {
         try {
           final String sourceDir = V8Engine.getContext()
               .getPackageManager()
-              .getPackageInfo(V8Engine.getContext().getPackageName(), 0).applicationInfo.sourceDir;
+              .getPackageInfo(V8Engine.getContext()
+                  .getPackageName(), 0).applicationInfo.sourceDir;
           myZipFile = new ZipFile(sourceDir);
           final InputStream utmInputStream =
               myZipFile.getInputStream(myZipFile.getEntry("META-INF/utm"));
@@ -845,13 +853,15 @@ public class Analytics {
         HashMap<String, String> map = new HashMap<>();
 
         map.put(APPLICATION_NAME, app.getPackageName());
-        map.put(APPLICATION_PUBLISHER, app.getDeveloper().getName());
+        map.put(APPLICATION_PUBLISHER, app.getDeveloper()
+            .getName());
 
         track(EVENT_NAME, map, ALL);
 
         Bundle parameters = new Bundle();
         parameters.putString(APPLICATION_NAME, app.getPackageName());
-        parameters.putString(APPLICATION_PUBLISHER, app.getDeveloper().getName());
+        parameters.putString(APPLICATION_PUBLISHER, app.getDeveloper()
+            .getName());
         logFacebookEvents(EVENT_NAME, parameters);
       } catch (Exception e) {
         e.printStackTrace();
@@ -889,7 +899,10 @@ public class Analytics {
         HashMap<String, String> map = new HashMap<>();
         map.put(SOURCE, lastStep);
         map.put(PACKAGE_NAME, app.getPackageName());
-        map.put(TRUSTED_BADGE, app.getFile().getMalware().getRank().name());
+        map.put(TRUSTED_BADGE, app.getFile()
+            .getMalware()
+            .getRank()
+            .name());
 
         track(EVENT_NAME, map, ALL);
         logFacebookEvents(EVENT_NAME, map);
@@ -981,8 +994,10 @@ public class Analytics {
 
   public static class Dimensions {
 
-    public static final String VERTICAL = V8Engine.getConfiguration().getVerticalDimension();
-    public static final String PARTNER = V8Engine.getConfiguration().getPartnerDimension();
+    public static final String VERTICAL = V8Engine.getConfiguration()
+        .getVerticalDimension();
+    public static final String PARTNER = V8Engine.getConfiguration()
+        .getPartnerDimension();
     public static final String UNKNOWN = "unknown";
     public static final String APKFY = "Apkfy";
     public static final String WEBSITE = "Website";
@@ -1128,7 +1143,8 @@ public class Analytics {
     protected static boolean containsUnwantedValues(String source) {
       String[] sourceArray = source.split("_");
       for (String step : sourceArray) {
-        if (Arrays.asList(unwantedValuesList).contains(step)) {
+        if (Arrays.asList(unwantedValuesList)
+            .contains(step)) {
           return true;
         }
       }
@@ -1137,7 +1153,8 @@ public class Analytics {
 
     public static void addStepToList(String step) {
       if (!TextUtils.isEmpty(step)) {
-        STEPS.add(step.replace(" ", "-").toLowerCase());
+        STEPS.add(step.replace(" ", "-")
+            .toLowerCase());
         Logger.d(TAG, "addStepToList() called with: step = [" + step + "]");
         if (STEPS.size() > NUMBER_OF_STEPS_TO_RECORD) {
           STEPS.remove(0);
@@ -1191,9 +1208,11 @@ public class Analytics {
       HashMap<String, String> map = new HashMap<>();
       map.put("Application Name", packageName);
       if (isHome) {
-        map.put("Search Position", "Home_" + Integer.valueOf(position).toString());
+        map.put("Search Position", "Home_" + Integer.valueOf(position)
+            .toString());
       } else {
-        map.put("Search Position", "More_" + Integer.valueOf(position).toString());
+        map.put("Search Position", "More_" + Integer.valueOf(position)
+            .toString());
       }
 
       track(HOME_PAGE_EDITORS_CHOICE, map, FLURRY);

@@ -46,7 +46,7 @@ public class HandlersFactoryV1 {
   static class SendApkHandler extends MessageHandler<SendApk> {
 
     private final FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider;
-  
+
     public SendApkHandler(FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider) {
       super(SendApk.class);
       this.fileLifecycleProvider = fileLifecycleProvider;

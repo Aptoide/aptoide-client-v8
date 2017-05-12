@@ -69,7 +69,9 @@ import rx.functions.Action1;
 
     GetApp getApp = displayable.getPojo();
 
-    GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+    GetAppMeta.App app = getApp.getNodes()
+        .getMeta()
+        .getData();
     Store store = app.getStore();
 
     final FragmentActivity context = getContext();
@@ -77,7 +79,8 @@ import rx.functions.Action1;
       ImageLoader.with(context)
           .loadUsingCircleTransform(R.drawable.ic_avatar_apps, storeAvatarView);
     } else {
-      ImageLoader.with(context).loadUsingCircleTransform(store.getAvatar(), storeAvatarView);
+      ImageLoader.with(context)
+          .loadUsingCircleTransform(store.getAvatar(), storeAvatarView);
     }
 
     StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(store);
@@ -85,9 +88,10 @@ import rx.functions.Action1;
     storeNameView.setText(store.getName());
     storeNameView.setTextColor(storeThemeEnum.getStoreHeaderInt());
 
-    storeNumberUsersView.setText(String.format(Locale.ENGLISH,
-        V8Engine.getContext().getString(R.string.appview_followers_count_text),
-        AptoideUtils.StringU.withSuffix(store.getStats().getSubscribers())));
+    storeNumberUsersView.setText(String.format(Locale.ENGLISH, V8Engine.getContext()
+        .getString(R.string.appview_followers_count_text), AptoideUtils.StringU.withSuffix(
+        store.getStats()
+            .getSubscribers())));
 
     followButton.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable());
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -95,7 +99,8 @@ import rx.functions.Action1;
     }
 
     final String storeName = store.getName();
-    final String storeTheme = store.getAppearance().getTheme();
+    final String storeTheme = store.getAppearance()
+        .getTheme();
 
     final StoreUtilsProxy storeUtilsProxy =
         new StoreUtilsProxy(accountManager, baseBodyInterceptor, new StoreCredentialsProviderImpl(),
@@ -103,8 +108,8 @@ import rx.functions.Action1;
             WebService.getDefaultConverter());
 
     Action1<Void> openStore = __ -> {
-      getFragmentNavigator().navigateTo(
-          V8Engine.getFragmentProvider().newStoreFragment(storeName, storeTheme));
+      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+          .newStoreFragment(storeName, storeTheme));
     };
 
     Action1<Void> subscribeStore = __ -> {
@@ -112,12 +117,14 @@ import rx.functions.Action1;
         ShowMessage.asSnack(itemView,
             AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
       }, err -> {
-        CrashReport.getInstance().log(err);
+        CrashReport.getInstance()
+            .log(err);
       }, accountManager);
     };
 
     followButton.setTextColor(storeThemeEnum.getStoreHeaderInt());
-    compositeSubscription.add(RxView.clicks(storeLayout).subscribe(openStore));
+    compositeSubscription.add(RxView.clicks(storeLayout)
+        .subscribe(openStore));
 
     compositeSubscription.add(storeRepository.isSubscribed(store.getId())
         .observeOn(AndroidSchedulers.mainThread())
@@ -126,13 +133,16 @@ import rx.functions.Action1;
             //int checkmarkDrawable = storeThemeEnum.getCheckmarkDrawable();
             //followButton.setCompoundDrawablesWithIntrinsicBounds(checkmarkDrawable, 0, 0, 0);
             followButton.setText(R.string.followed);
-            compositeSubscription.add(RxView.clicks(followButton).subscribe(openStore));
+            compositeSubscription.add(RxView.clicks(followButton)
+                .subscribe(openStore));
           } else {
             //int plusMarkDrawable = storeThemeEnum.getPlusmarkDrawable();
             //followButton.setCompoundDrawablesWithIntrinsicBounds(plusMarkDrawable, 0, 0, 0);
             followButton.setText(R.string.follow);
-            compositeSubscription.add(RxView.clicks(followButton).subscribe(subscribeStore));
+            compositeSubscription.add(RxView.clicks(followButton)
+                .subscribe(subscribeStore));
           }
-        }, throwable -> CrashReport.getInstance().log(throwable)));
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable)));
   }
 }

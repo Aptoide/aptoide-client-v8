@@ -34,8 +34,10 @@ public abstract class BaseActivity extends PermissionServiceActivity {
           getResources().getConfiguration().locale.getLanguage());
     } else {
       ((CrashlyticsCrashLogger) CrashReport.getInstance()
-          .getLogger(CrashlyticsCrashLogger.class)).setLanguage(
-          getResources().getConfiguration().getLocales().get(0).getLanguage());
+          .getLogger(CrashlyticsCrashLogger.class)).setLanguage(getResources().getConfiguration()
+          .getLocales()
+          .get(0)
+          .getLanguage());
     }
 
     setUpAnalytics();

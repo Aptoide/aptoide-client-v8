@@ -44,8 +44,8 @@ public class ApplicationProvider {
         String obbsfilepath = checkIfHasObb(applicationInfo.packageName);
         System.out.println("obbs is : " + obbsfilepath);
         App aux = new App(applicationInfo.loadIcon(packageManager),
-            applicationInfo.loadLabel(packageManager).toString(), applicationInfo.packageName,
-            applicationInfo.sourceDir, "inside");
+            applicationInfo.loadLabel(packageManager)
+                .toString(), applicationInfo.packageName, applicationInfo.sourceDir, "inside");
         aux.setObbsFilePath(obbsfilepath);
         if (!providedAppsList.contains(aux)) {
           providedAppsList.add(aux);
@@ -66,7 +66,8 @@ public class ApplicationProvider {
         System.out.println("appName is : " + packageName);
         for (int i = 0; i < list.length; i++) {
           System.out.println("List get name is : " + list[i].getName());
-          if (list[i].getName().equals(packageName)) {
+          if (list[i].getName()
+              .equals(packageName)) {
             hasObb = true;
             obbsFilePath = list[i].getAbsolutePath();
           }
@@ -90,7 +91,9 @@ public class ApplicationProvider {
 
   public App getApp(String packageName) {
     for (int i = 0; i < providedAppsList.size(); i++) {
-      if (providedAppsList.get(i).getPackageName().equals(packageName)) {
+      if (providedAppsList.get(i)
+          .getPackageName()
+          .equals(packageName)) {
         return providedAppsList.get(i);
       }
     }

@@ -102,16 +102,17 @@ public class PrivateStoreDialog extends BaseDialog {
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     Context context = getActivity();
-    final View rootView =
-        LayoutInflater.from(context).inflate(R.layout.dialog_add_pvt_store, null, false);
+    final View rootView = LayoutInflater.from(context)
+        .inflate(R.layout.dialog_add_pvt_store, null, false);
 
     return new AlertDialog.Builder(context).setTitle(R.string.subscribe_pvt_store)
         .setView(rootView)
         .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
-          storeUser =
-              ((EditText) rootView.findViewById(R.id.edit_store_username)).getText().toString();
+          storeUser = ((EditText) rootView.findViewById(R.id.edit_store_username)).getText()
+              .toString();
           storePassSha1 = AptoideUtils.AlgorithmU.computeSha1(
-              ((EditText) rootView.findViewById(R.id.edit_store_password)).getText().toString());
+              ((EditText) rootView.findViewById(R.id.edit_store_password)).getText()
+                  .toString());
           storeUtilsProxy.subscribeStore(buildRequest(), getStoreMeta -> {
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
             dismissLoadingDialog();
@@ -121,7 +122,8 @@ public class PrivateStoreDialog extends BaseDialog {
             if (e instanceof AptoideWsV7Exception) {
               BaseV7Response baseResponse = ((AptoideWsV7Exception) e).getBaseResponse();
 
-              switch (StoreUtils.getErrorType(baseResponse.getError().getCode())) {
+              switch (StoreUtils.getErrorType(baseResponse.getError()
+                  .getCode())) {
                 case PRIVATE_STORE_WRONG_CREDENTIALS:
                   storeUser = null;
                   storePassSha1 = null;

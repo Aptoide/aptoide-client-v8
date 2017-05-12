@@ -40,15 +40,16 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
     } else {
       button.setText(R.string.login);
     }
-    RxView.clicks(button).subscribe(aVoid -> {
-      if (accountManager.isLoggedIn()) {
-        button.setText(R.string.create_store_displayable_button);
-        Intent intent = new Intent(getContext(), CreateStoreActivity.class);
-        getContext().startActivity(intent);
-      } else {
-        button.setText(R.string.login);
-        accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.STORE);
-      }
-    });
+    RxView.clicks(button)
+        .subscribe(aVoid -> {
+          if (accountManager.isLoggedIn()) {
+            button.setText(R.string.create_store_displayable_button);
+            Intent intent = new Intent(getContext(), CreateStoreActivity.class);
+            getContext().startActivity(intent);
+          } else {
+            button.setText(R.string.login);
+            accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.STORE);
+          }
+        });
   }
 }

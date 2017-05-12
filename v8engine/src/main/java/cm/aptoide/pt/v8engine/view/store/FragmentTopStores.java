@@ -32,7 +32,8 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
       listStores -> Observable.fromCallable(() -> createDisplayables(listStores))
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(displayables -> addDisplayables(displayables), err -> {
-            CrashReport.getInstance().log(err);
+            CrashReport.getInstance()
+                .log(err);
           });
 
   public static FragmentTopStores newInstance() {
@@ -41,7 +42,8 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
 
   @NonNull private List<Displayable> createDisplayables(ListStores listStores) {
     List<Displayable> displayables = new ArrayList<>();
-    for (final Store store : listStores.getDatalist().getList()) {
+    for (final Store store : listStores.getDatalist()
+        .getList()) {
       displayables.add(new GridStoreDisplayable(store));
     }
     return displayables;

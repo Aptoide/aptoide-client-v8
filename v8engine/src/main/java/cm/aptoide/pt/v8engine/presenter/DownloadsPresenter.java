@@ -46,7 +46,8 @@ public class DownloadsPresenter implements Presenter {
         .subscribe(__ -> {
           // does nothing
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
           view.showEmptyDownloadList();
         });
   }

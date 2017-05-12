@@ -48,9 +48,9 @@ public class InviteFriendsFragment extends UIComponentFragment
     mActionsListener = new InviteFriendsPresenter(this,
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
-            Application.getConfiguration().getMarketName())), openMode,
-        new AddressBookAnalytics(Analytics.getInstance(),
-            AppEventsLogger.newLogger(getContext().getApplicationContext())));
+            Application.getConfiguration()
+                .getMarketName())), openMode, new AddressBookAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext())));
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -60,9 +60,12 @@ public class InviteFriendsFragment extends UIComponentFragment
   }
 
   @Override public void setupViews() {
-    RxView.clicks(allowFind).subscribe(click -> mActionsListener.allowFindClicked());
-    RxView.clicks(done).subscribe(click -> mActionsListener.doneClicked());
-    RxView.clicks(share).subscribe(click -> mActionsListener.shareClicked(getContext()));
+    RxView.clicks(allowFind)
+        .subscribe(click -> mActionsListener.allowFindClicked());
+    RxView.clicks(done)
+        .subscribe(click -> mActionsListener.doneClicked());
+    RxView.clicks(share)
+        .subscribe(click -> mActionsListener.shareClicked(getContext()));
     setupMessage(openMode);
   }
 
@@ -73,13 +76,15 @@ public class InviteFriendsFragment extends UIComponentFragment
         break;
       case NO_FRIENDS:
         message.setText(getString(R.string.we_didn_t_find_any_contacts_that_are_using_aptoide,
-            Application.getConfiguration().getMarketName()));
+            Application.getConfiguration()
+                .getMarketName()));
         break;
       case CONTACTS_PERMISSION_DENIAL:
         message.setText(R.string.addressbook_we_werent_able_to_connect_you);
         break;
       default:
-        Logger.d(this.getClass().getSimpleName(), "Wrong openMode type.");
+        Logger.d(this.getClass()
+            .getSimpleName(), "Wrong openMode type.");
     }
   }
 

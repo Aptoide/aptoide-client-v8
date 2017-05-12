@@ -24,7 +24,8 @@ public class V7Url {
   }
 
   public String getStoreName() {
-    Matcher matcher = AptoideUtils.RegexU.getStoreNameFromGetUrlPattern().matcher(url);
+    Matcher matcher = AptoideUtils.RegexU.getStoreNameFromGetUrlPattern()
+        .matcher(url);
     if (matcher.find()) {
       return matcher.group(1);
     }
@@ -33,7 +34,8 @@ public class V7Url {
   }
 
   public Long getStoreId() {
-    Matcher matcher = AptoideUtils.RegexU.getStoreIdFromGetUrlPattern().matcher(url);
+    Matcher matcher = AptoideUtils.RegexU.getStoreIdFromGetUrlPattern()
+        .matcher(url);
     if (matcher.find()) {
       return Long.parseLong(matcher.group(1));
     }

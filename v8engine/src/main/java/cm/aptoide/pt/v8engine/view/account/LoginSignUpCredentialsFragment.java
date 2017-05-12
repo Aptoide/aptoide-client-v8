@@ -154,7 +154,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     ShowMessage.asToast(getContext(), errorMapper.map(throwable));
   }
 
-
   @Override public void showFacebookLogin() {
     FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
     facebookLoginButton.setVisibility(View.VISIBLE);
@@ -214,9 +213,9 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void navigateToMainView() {
-    Fragment home =
-        HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
-            V8Engine.getConfiguration().getDefaultTheme());
+    Fragment home = HomeFragment.newInstance(V8Engine.getConfiguration()
+        .getDefaultStore(), StoreContext.home, V8Engine.getConfiguration()
+        .getDefaultTheme());
     fragmentNavigator.cleanBackStack();
     fragmentNavigator.navigateTo(home);
   }
@@ -243,16 +242,18 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     return RxView.clicks(buttonLogin)
         .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.LOGIN,
             getStartupClickOrigin()))
-        .map(click -> new AptoideAccountViewModel(aptoideEmailEditText.getText().toString(),
-            aptoidePasswordEditText.getText().toString()));
+        .map(click -> new AptoideAccountViewModel(aptoideEmailEditText.getText()
+            .toString(), aptoidePasswordEditText.getText()
+            .toString()));
   }
 
   @Override public Observable<AptoideAccountViewModel> aptoideSignUpClick() {
     return RxView.clicks(buttonSignUp)
         .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.JOIN_APTOIDE,
             getStartupClickOrigin()))
-        .map(click -> new AptoideAccountViewModel(aptoideEmailEditText.getText().toString(),
-            aptoidePasswordEditText.getText().toString()));
+        .map(click -> new AptoideAccountViewModel(aptoideEmailEditText.getText()
+            .toString(), aptoidePasswordEditText.getText()
+            .toString()));
   }
 
   @Override public boolean isPasswordVisible() {
@@ -361,17 +362,16 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
     facebookEmailRequiredDialog = new AlertDialog.Builder(context).setMessage(
         R.string.facebook_email_permission_regected_message)
-        .setPositiveButton(R.string.facebook_grant_permission_button,
-            (dialog, which) -> {
-              facebookLoginManager.logInWithReadPermissions(this, Arrays.asList("email"));
-            })
+        .setPositiveButton(R.string.facebook_grant_permission_button, (dialog, which) -> {
+          facebookLoginManager.logInWithReadPermissions(this, Arrays.asList("email"));
+        })
         .setNegativeButton(android.R.string.cancel, null)
         .create();
 
     progressDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
 
-    bottomSheetBehavior =
-        BottomSheetBehavior.from(view.getRootView().findViewById(R.id.login_signup_layout));
+    bottomSheetBehavior = BottomSheetBehavior.from(view.getRootView()
+        .findViewById(R.id.login_signup_layout));
   }
 
   private boolean tryCloseLoginBottomSheet() {
@@ -388,7 +388,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   public String getCompanyName() {
-    return ((V8Engine) getActivity().getApplication()).createConfiguration().getMarketName();
+    return ((V8Engine) getActivity().getApplication()).createConfiguration()
+        .getMarketName();
   }
 
   @Override public void onDestroyView() {

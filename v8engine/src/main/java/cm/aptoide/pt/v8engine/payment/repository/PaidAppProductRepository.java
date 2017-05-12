@@ -39,13 +39,16 @@ public class PaidAppProductRepository implements ProductRepository {
   @Override public Single<Purchase> getPurchase(Product product) {
     final PaidAppProduct paidAppProduct = (PaidAppProduct) product;
     return appRepository.getPaidApp(paidAppProduct.getAppId(), false, paidAppProduct.getStoreName(),
-        true).toSingle().flatMap(app -> {
-      if (app.getPayment().isPaid()) {
-        return Single.just(purchaseFactory.create(app));
-      }
-      return Single.error(new RepositoryItemNotFoundException(
-          "Purchase not found for product " + paidAppProduct.getId()));
-    });
+        true)
+        .toSingle()
+        .flatMap(app -> {
+          if (app.getPayment()
+              .isPaid()) {
+            return Single.just(purchaseFactory.create(app));
+          }
+          return Single.error(new RepositoryItemNotFoundException(
+              "Purchase not found for product " + paidAppProduct.getId()));
+        });
   }
 
   @Override public Single<List<PaymentServiceResponse>> getPayments() {
@@ -55,7 +58,8 @@ public class PaidAppProductRepository implements ProductRepository {
   private Single<List<PaymentServiceResponse>> getServerPaidAppPaymentServices(long appId,
       boolean sponsored, String storeName, boolean refresh) {
     return appRepository.getPaidApp(appId, sponsored, storeName, refresh)
-        .map(paidApp -> paidApp.getPayment().getPaymentServices())
+        .map(paidApp -> paidApp.getPayment()
+            .getPaymentServices())
         .toSingle();
   }
 }

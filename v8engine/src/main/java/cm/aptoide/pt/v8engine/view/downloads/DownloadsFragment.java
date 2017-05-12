@@ -15,9 +15,9 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.download.InstallEventConverter;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.repository.DownloadRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -89,14 +89,17 @@ import rx.schedulers.Schedulers;
             .toList())
         // wait for all displayables are created
         .observeOn(AndroidSchedulers.mainThread())
-        .flatMap(__ -> addListHeaders().andThen(updateUi()).doOnCompleted(() -> {
-          Logger.v(TAG, "updated list of download states");
-        }).toObservable())
+        .flatMap(__ -> addListHeaders().andThen(updateUi())
+            .doOnCompleted(() -> {
+              Logger.v(TAG, "updated list of download states");
+            })
+            .toObservable())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(__ -> {
           // does nothing
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         });
   }
 
@@ -156,9 +159,11 @@ import rx.schedulers.Schedulers;
         noDownloadsView.setVisibility(View.GONE);
 
         clearDisplayables().
-            addDisplayables(downloadingDisplayables, false).
-            addDisplayables(standingByDisplayables, false).
-            addDisplayables(completedDisplayables, true);
+            addDisplayables(downloadingDisplayables, false)
+            .
+                addDisplayables(standingByDisplayables, false)
+            .
+                addDisplayables(completedDisplayables, true);
       }
     });
   }

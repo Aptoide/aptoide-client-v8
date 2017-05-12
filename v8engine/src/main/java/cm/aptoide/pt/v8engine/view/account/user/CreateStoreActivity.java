@@ -133,8 +133,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     setContentView(getLayoutId());
     accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
     httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
-    longTimeoutHttpClient =
-        ((V8Engine) getApplicationContext()).getLongTimeoutClient();
+    longTimeoutHttpClient = ((V8Engine) getApplicationContext()).getLongTimeoutClient();
     converterFactory = WebService.getDefaultConverter();
     bodyInterceptorV7 = ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV7();
     bodyInterceptorV3 = ((V8Engine) getApplicationContext()).getBaseBodyInterceptorV3();
@@ -173,14 +172,16 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
   }
 
   @Override public void loadImage(Uri imagePath) {
-    ImageLoader.with(this).loadWithCircleTransform(imagePath, mStoreAvatar, false);
+    ImageLoader.with(this)
+        .loadWithCircleTransform(imagePath, mStoreAvatar, false);
   }
 
   @Override public void showIconPropertiesError(String errors) {
     mSubscriptions.add(GenericDialogs.createGenericOkMessage(this,
         getString(R.string.image_requirements_error_popup_title), errors)
         .subscribe(__ -> {/* does nothing */}, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         }));
   }
 
@@ -190,8 +191,8 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     storeRemoteUrl = getIntent().getStringExtra("storeAvatar");
     storeTheme = getIntent().getStringExtra("storeTheme") == null ? ""
         : getIntent().getStringExtra("storeTheme");
-    storeDescription = getIntent() != null && getIntent().hasExtra("storeDescription") ? getIntent()
-        .getStringExtra("storeDescription") : "";
+    storeDescription = getIntent() != null && getIntent().hasExtra("storeDescription")
+        ? getIntent().getStringExtra("storeDescription") : "";
   }
 
   private void bindViews() {
@@ -260,7 +261,8 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
       mStoreDescription.setVisibility(View.VISIBLE);
       mStoreDescription.setText(storeDescription);
       if (storeRemoteUrl != null) {
-        ImageLoader.with(this).loadUsingCircleTransform(storeRemoteUrl, mStoreAvatar);
+        ImageLoader.with(this)
+            .loadUsingCircleTransform(storeRemoteUrl, mStoreAvatar);
       }
       handleThemeTick(storeTheme, "visible");
       mCreateStore.setText(R.string.save_edit_store);
@@ -278,207 +280,249 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
   }
 
   private void setupListeners() {
-    mSubscriptions.add(
-        RxView.clicks(mStoreAvatarLayout).subscribe(click -> chooseAvatarSource(), err -> {
-          CrashReport.getInstance().log(err);
+    mSubscriptions.add(RxView.clicks(mStoreAvatarLayout)
+        .subscribe(click -> chooseAvatarSource(), err -> {
+          CrashReport.getInstance()
+              .log(err);
         }));
-    mSubscriptions.add(RxView.clicks(mCreateStore).subscribe(click -> {
-          AptoideUtils.SystemU.hideKeyboard(this);
-          storeName = mStoreName.getText().toString().trim().toLowerCase();
-          storeDescription = mStoreDescription.getText().toString().trim();
-          validateData();
-          progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
-              getApplicationContext().getString(R.string.please_wait_upload));
-          if (CREATE_STORE_REQUEST_CODE == 1
-              || CREATE_STORE_REQUEST_CODE == 2
-              || CREATE_STORE_REQUEST_CODE == 3) {
-            progressDialog.show();
-            mSubscriptions.add(
-                CheckUserCredentialsRequest.of(storeName, accountManager.getAccessToken(),
-                    bodyInterceptorV3, httpClient, converterFactory).observe().subscribe(answer -> {
-                  if (answer.hasErrors()) {
-                    if (answer.getErrors() != null && answer.getErrors().size() > 0) {
-                      progressDialog.dismiss();
-                      if (answer.getErrors().get(0).code.equals("WOP-2")) {
-                        mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
-                            getApplicationContext().getResources().getString(R.string.ws_error_WOP_2))
-                            .subscribe(__ -> {/*does nothing*/}, err -> {
-                              CrashReport.getInstance().log(err);
-                            }));
-                      } else if (answer.getErrors().get(0).code.equals("WOP-3")) {
-                        ShowMessage.asSnack(this, ErrorsMapper.getWebServiceErrorMessageFromCode(
-                            answer.getErrors().get(0).code));
-                      } else {
-                        ShowMessage.asObservableSnack(this,
-                            ErrorsMapper.getWebServiceErrorMessageFromCode(
-                                answer.getErrors().get(0).code)).subscribe(visibility -> {
-                          if (visibility == ShowMessage.DISMISSED) {
-                            goToMainActivity();
-                          }
-                        });
-                      }
-                    }
-                  } else if (!(CREATE_STORE_REQUEST_CODE == 3)) {
-                    onCreateSuccess(progressDialog);
-                  } else {
-                    progressDialog.dismiss();
-                    ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created)
-                        .subscribe(visibility -> {
-                          mSubscriptions.add(accountManager.syncCurrentAccount().subscribe(() -> {
-                          }, err -> err.printStackTrace()));
-                          if (visibility == ShowMessage.DISMISSED) {
-                            Analytics.Account.createStore(!TextUtils.isEmpty(storeAvatarPath),
-                                Analytics.Account.CreateStoreAction.CREATE);
-                            goToMainActivity();
-                          }
-                        });
-                  }
-                }, throwable -> {
-                  onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
-                  progressDialog.dismiss();
-                }));
-          } else {
-            if (CREATE_STORE_REQUEST_CODE == 4) {
-              setStoreData();
-              progressDialog.show();
-              mSubscriptions.add(
-                  SetStoreRequest.of(accountManager.getAccessToken(), storeName, storeTheme,
-                      storeAvatarPath, storeDescription, true, storeId, createStoreInterceptor(),
-                      longTimeoutHttpClient, converterFactory).observe().subscribe(answer -> {
-                    accountManager.syncCurrentAccount().subscribe(() -> {
-                      progressDialog.dismiss();
-                      goToMainActivity();
-                    }, err -> err.printStackTrace());
-                  }, throwable -> {
-                    if (((AptoideWsV7Exception) throwable).getBaseResponse()
-                        .getErrors()
-                        .get(0)
-                        .getCode()
-                        .equals("API-1")) {
-                      progressDialog.dismiss();
-                      ShowMessage.asObservableSnack(this, R.string.ws_error_API_1)
-                          .subscribe(visibility -> {
-                            if (visibility == ShowMessage.DISMISSED) {
-                              goToMainActivity();
+    mSubscriptions.add(RxView.clicks(mCreateStore)
+        .subscribe(click -> {
+              AptoideUtils.SystemU.hideKeyboard(this);
+              storeName = mStoreName.getText()
+                  .toString()
+                  .trim()
+                  .toLowerCase();
+              storeDescription = mStoreDescription.getText()
+                  .toString()
+                  .trim();
+              validateData();
+              progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+                  getApplicationContext().getString(R.string.please_wait_upload));
+              if (CREATE_STORE_REQUEST_CODE == 1
+                  || CREATE_STORE_REQUEST_CODE == 2
+                  || CREATE_STORE_REQUEST_CODE == 3) {
+                progressDialog.show();
+                mSubscriptions.add(
+                    CheckUserCredentialsRequest.of(storeName, accountManager.getAccessToken(),
+                        bodyInterceptorV3, httpClient, converterFactory)
+                        .observe()
+                        .subscribe(answer -> {
+                          if (answer.hasErrors()) {
+                            if (answer.getErrors() != null
+                                && answer.getErrors()
+                                .size() > 0) {
+                              progressDialog.dismiss();
+                              if (answer.getErrors()
+                                  .get(0).code.equals("WOP-2")) {
+                                mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
+                                    getApplicationContext().getResources()
+                                        .getString(R.string.ws_error_WOP_2))
+                                    .subscribe(__ -> {/*does nothing*/}, err -> {
+                                      CrashReport.getInstance()
+                                          .log(err);
+                                    }));
+                              } else if (answer.getErrors()
+                                  .get(0).code.equals("WOP-3")) {
+                                ShowMessage.asSnack(this,
+                                    ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors()
+                                        .get(0).code));
+                              } else {
+                                ShowMessage.asObservableSnack(this,
+                                    ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors()
+                                        .get(0).code))
+                                    .subscribe(visibility -> {
+                                      if (visibility == ShowMessage.DISMISSED) {
+                                        goToMainActivity();
+                                      }
+                                    });
+                              }
                             }
-                          });
-                    } else {
-                      onCreateFail(
-                          ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
-                      progressDialog.dismiss();
-                    }
-                  }));
-            } else if (CREATE_STORE_REQUEST_CODE == 5) {
+                          } else if (!(CREATE_STORE_REQUEST_CODE == 3)) {
+                            onCreateSuccess(progressDialog);
+                          } else {
+                            progressDialog.dismiss();
+                            ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created)
+                                .subscribe(visibility -> {
+                                  mSubscriptions.add(accountManager.syncCurrentAccount()
+                                      .subscribe(() -> {
+                                      }, err -> err.printStackTrace()));
+                                  if (visibility == ShowMessage.DISMISSED) {
+                                    Analytics.Account.createStore(!TextUtils.isEmpty(storeAvatarPath),
+                                        Analytics.Account.CreateStoreAction.CREATE);
+                                    goToMainActivity();
+                                  }
+                                });
+                          }
+                        }, throwable -> {
+                          onCreateFail(
+                              ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+                          progressDialog.dismiss();
+                        }));
+              } else {
+                if (CREATE_STORE_REQUEST_CODE == 4) {
+                  setStoreData();
+                  progressDialog.show();
+                  mSubscriptions.add(
+                      SetStoreRequest.of(accountManager.getAccessToken(), storeName, storeTheme,
+                          storeAvatarPath, storeDescription, true, storeId, createStoreInterceptor(),
+                          longTimeoutHttpClient, converterFactory)
+                          .observe()
+                          .subscribe(answer -> {
+                            accountManager.syncCurrentAccount()
+                                .subscribe(() -> {
+                                  progressDialog.dismiss();
+                                  goToMainActivity();
+                                }, err -> err.printStackTrace());
+                          }, throwable -> {
+                            if (((AptoideWsV7Exception) throwable).getBaseResponse()
+                                .getErrors()
+                                .get(0)
+                                .getCode()
+                                .equals("API-1")) {
+                              progressDialog.dismiss();
+                              ShowMessage.asObservableSnack(this, R.string.ws_error_API_1)
+                                  .subscribe(visibility -> {
+                                    if (visibility == ShowMessage.DISMISSED) {
+                                      goToMainActivity();
+                                    }
+                                  });
+                            } else {
+                              onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(
+                                  throwable.getMessage()));
+                              progressDialog.dismiss();
+                            }
+                          }));
+                } else if (CREATE_STORE_REQUEST_CODE == 5) {
               /*
                * not multipart
                */
-              setStoreData();
-              progressDialog.show();
-              mSubscriptions.add(
-                  SimpleSetStoreRequest.of(storeId, storeTheme, storeDescription, bodyInterceptorV7,
-                      httpClient, converterFactory).observe().subscribe(answer -> {
-                    accountManager.syncCurrentAccount().subscribe(() -> {
-                      progressDialog.dismiss();
-                      goToMainActivity();
-                    }, err -> err.printStackTrace());
-                  }, throwable -> {
-                    onCreateFail(
-                        ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
-                    progressDialog.dismiss();
-                  }));
+                  setStoreData();
+                  progressDialog.show();
+                  mSubscriptions.add(
+                      SimpleSetStoreRequest.of(storeId, storeTheme, storeDescription, bodyInterceptorV7,
+                          httpClient, converterFactory)
+                          .observe()
+                          .subscribe(answer -> {
+                            accountManager.syncCurrentAccount()
+                                .subscribe(() -> {
+                                  progressDialog.dismiss();
+                                  goToMainActivity();
+                                }, err -> err.printStackTrace());
+                          }, throwable -> {
+                            onCreateFail(
+                                ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+                            progressDialog.dismiss();
+                          }));
+                }
+              }
             }
-          }
-        }
 
-    ));
+        ));
     mSubscriptions.add(RxView.clicks(mSkip)
-        .flatMap(click -> accountManager.syncCurrentAccount().andThen(Observable.just(true)))
+        .flatMap(click -> accountManager.syncCurrentAccount()
+            .andThen(Observable.just(true)))
         .doOnNext(__ -> Analytics.Account.createStore(!TextUtils.isEmpty(storeAvatarPath),
             Analytics.Account.CreateStoreAction.SKIP))
         .subscribe(__ -> goToMainActivity()));
   }
 
   private void setupThemeListeners() {
-    mSubscriptions.add(RxView.clicks(mOrangeShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mOrangeTick.setVisibility(View.VISIBLE);
-      storeTheme = "orange";
-    }));
-    mSubscriptions.add(RxView.clicks(mGreenShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mGreenTick.setVisibility(View.VISIBLE);
-      storeTheme = "green";
-    }));
-    mSubscriptions.add(RxView.clicks(mRedShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mRedTick.setVisibility(View.VISIBLE);
-      storeTheme = "red";
-    }));
-    mSubscriptions.add(RxView.clicks(mIndigoShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mIndigoTick.setVisibility(View.VISIBLE);
-      storeTheme = "indigo";
-    }));
-    mSubscriptions.add(RxView.clicks(mTealShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mTealTick.setVisibility(View.VISIBLE);
-      storeTheme = "teal";
-    }));
-    mSubscriptions.add(RxView.clicks(mPinkShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mPinkTick.setVisibility(View.VISIBLE);
-      storeTheme = "pink";
-    }));
-    mSubscriptions.add(RxView.clicks(mLimeShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mLimeTick.setVisibility(View.VISIBLE);
-      storeTheme = "lime";
-    }));
-    mSubscriptions.add(RxView.clicks(mAmberShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mAmberTick.setVisibility(View.VISIBLE);
-      storeTheme = "amber";
-    }));
-    mSubscriptions.add(RxView.clicks(mBrownShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mBrownTick.setVisibility(View.VISIBLE);
-      storeTheme = "brown";
-    }));
-    mSubscriptions.add(RxView.clicks(mLightblueShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mLightblueTick.setVisibility(View.VISIBLE);
-      storeTheme = "light-blue";
-    }));
-    mSubscriptions.add(RxView.clicks(mDefaultShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mDefaultTick.setVisibility(View.VISIBLE);
-      storeTheme = "default";
-    }));
-    mSubscriptions.add(RxView.clicks(mBlackShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mBlackTick.setVisibility(View.VISIBLE);
-      storeTheme = "black";
-    }));
-    mSubscriptions.add(RxView.clicks(mBlueGreyShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mBlueGreyTick.setVisibility(View.VISIBLE);
-      storeTheme = "blue-grey";
-    }));
-    mSubscriptions.add(RxView.clicks(mDeepPurpleShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mDeepPurpleTick.setVisibility(View.VISIBLE);
-      storeTheme = "deep-purple";
-    }));
-    mSubscriptions.add(RxView.clicks(mLightGreenShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mLightGreenTick.setVisibility(View.VISIBLE);
-      storeTheme = "light-green";
-    }));
-    mSubscriptions.add(RxView.clicks(mGreyShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mGreyTick.setVisibility(View.VISIBLE);
-      storeTheme = "grey";
-    }));
+    mSubscriptions.add(RxView.clicks(mOrangeShape)
+        .subscribe(click -> {
+          handleThemeTick(storeTheme, "gone");
+          mOrangeTick.setVisibility(View.VISIBLE);
+          storeTheme = "orange";
+        }));
+    mSubscriptions.add(RxView.clicks(mGreenShape)
+        .subscribe(click -> {
+          handleThemeTick(storeTheme, "gone");
+          mGreenTick.setVisibility(View.VISIBLE);
+          storeTheme = "green";
+        }));
+    mSubscriptions.add(RxView.clicks(mRedShape)
+        .subscribe(click -> {
+          handleThemeTick(storeTheme, "gone");
+          mRedTick.setVisibility(View.VISIBLE);
+          storeTheme = "red";
+        }));
+    mSubscriptions.add(RxView.clicks(mIndigoShape)
+        .subscribe(click -> {
+          handleThemeTick(storeTheme, "gone");
+          mIndigoTick.setVisibility(View.VISIBLE);
+          storeTheme = "indigo";
+        }));
+    mSubscriptions.add(RxView.clicks(mTealShape)
+        .subscribe(click -> {
+          handleThemeTick(storeTheme, "gone");
+          mTealTick.setVisibility(View.VISIBLE);
+          storeTheme = "teal";
+        }));
+    mSubscriptions.add(RxView.clicks(mPinkShape)
+        .subscribe(click -> {
+          handleThemeTick(storeTheme, "gone");
+          mPinkTick.setVisibility(View.VISIBLE);
+          storeTheme = "pink";
+        }));
+    mSubscriptions.add(RxView.clicks(mLimeShape)
+        .subscribe(click -> {
+          handleThemeTick(storeTheme, "gone");
+          mLimeTick.setVisibility(View.VISIBLE);
+          storeTheme = "lime";
+        }));
+    mSubscriptions.add(RxView.clicks(mAmberShape)
+        .subscribe(click -> {
+          handleThemeTick(storeTheme, "gone");
+          mAmberTick.setVisibility(View.VISIBLE);
+          storeTheme = "amber";
+        }));
+    mSubscriptions.add(RxView.clicks(mBrownShape)
+        .subscribe(click -> {
+          handleThemeTick(storeTheme, "gone");
+          mBrownTick.setVisibility(View.VISIBLE);
+          storeTheme = "brown";
+        }));
+    mSubscriptions.add(RxView.clicks(mLightblueShape)
+        .subscribe(click -> {
+          handleThemeTick(storeTheme, "gone");
+          mLightblueTick.setVisibility(View.VISIBLE);
+          storeTheme = "light-blue";
+        }));
+    mSubscriptions.add(RxView.clicks(mDefaultShape)
+        .subscribe(click -> {
+          handleThemeTick(storeTheme, "gone");
+          mDefaultTick.setVisibility(View.VISIBLE);
+          storeTheme = "default";
+        }));
+    mSubscriptions.add(RxView.clicks(mBlackShape)
+        .subscribe(click -> {
+          handleThemeTick(storeTheme, "gone");
+          mBlackTick.setVisibility(View.VISIBLE);
+          storeTheme = "black";
+        }));
+    mSubscriptions.add(RxView.clicks(mBlueGreyShape)
+        .subscribe(click -> {
+          handleThemeTick(storeTheme, "gone");
+          mBlueGreyTick.setVisibility(View.VISIBLE);
+          storeTheme = "blue-grey";
+        }));
+    mSubscriptions.add(RxView.clicks(mDeepPurpleShape)
+        .subscribe(click -> {
+          handleThemeTick(storeTheme, "gone");
+          mDeepPurpleTick.setVisibility(View.VISIBLE);
+          storeTheme = "deep-purple";
+        }));
+    mSubscriptions.add(RxView.clicks(mLightGreenShape)
+        .subscribe(click -> {
+          handleThemeTick(storeTheme, "gone");
+          mLightGreenTick.setVisibility(View.VISIBLE);
+          storeTheme = "light-green";
+        }));
+    mSubscriptions.add(RxView.clicks(mGreyShape)
+        .subscribe(click -> {
+          handleThemeTick(storeTheme, "gone");
+          mGreyTick.setVisibility(View.VISIBLE);
+          storeTheme = "grey";
+        }));
   }
 
   /**
@@ -591,12 +635,14 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
           .observe()
           .timeout(90, TimeUnit.SECONDS)
           .subscribe(answer -> {
-            accountManager.syncCurrentAccount().subscribe(() -> {
-              progressDialog.dismiss();
-              goToMainActivity();
-            }, throwable -> throwable.printStackTrace());
+            accountManager.syncCurrentAccount()
+                .subscribe(() -> {
+                  progressDialog.dismiss();
+                  goToMainActivity();
+                }, throwable -> throwable.printStackTrace());
           }, throwable -> {
-            if (throwable.getClass().equals(SocketTimeoutException.class)) {
+            if (throwable.getClass()
+                .equals(SocketTimeoutException.class)) {
               progressDialog.dismiss();
               ShowMessage.asLongObservableSnack(this, R.string.store_upload_photo_failed)
                   .subscribe(visibility -> {
@@ -604,7 +650,8 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
                       goToMainActivity();
                     }
                   });
-            } else if (throwable.getClass().equals(TimeoutException.class)) {
+            } else if (throwable.getClass()
+                .equals(TimeoutException.class)) {
               progressDialog.dismiss();
               ShowMessage.asLongObservableSnack(this, R.string.store_upload_photo_failed)
                   .subscribe(visibility -> {
@@ -634,10 +681,11 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
                     }
                   });
             }
-            accountManager.syncCurrentAccount().subscribe(() -> {
-              progressDialog.dismiss();
-              goToMainActivity();
-            }, throwable1 -> throwable1.printStackTrace());
+            accountManager.syncCurrentAccount()
+                .subscribe(() -> {
+                  progressDialog.dismiss();
+                  goToMainActivity();
+                }, throwable1 -> throwable1.printStackTrace());
           }));
     } else if (CREATE_STORE_REQUEST_CODE == 2 || CREATE_STORE_REQUEST_CODE == 3) {
       /*
@@ -645,17 +693,20 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
        */
       setStoreData();
       SimpleSetStoreRequest.of(storeName, storeTheme, bodyInterceptorV7, httpClient,
-          converterFactory).execute(answer -> {
-        accountManager.syncCurrentAccount().subscribe(() -> {
-          progressDialog.dismiss();
-          goToMainActivity();
-        }, err -> err.printStackTrace());
-      }, throwable -> {
-        onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
-        accountManager.syncCurrentAccount().subscribe(() -> {
-          progressDialog.dismiss();
-        }, err -> err.printStackTrace());
-      });
+          converterFactory)
+          .execute(answer -> {
+            accountManager.syncCurrentAccount()
+                .subscribe(() -> {
+                  progressDialog.dismiss();
+                  goToMainActivity();
+                }, err -> err.printStackTrace());
+          }, throwable -> {
+            onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+            accountManager.syncCurrentAccount()
+                .subscribe(() -> {
+                  progressDialog.dismiss();
+                }, err -> err.printStackTrace());
+          });
     }
   }
 
@@ -690,7 +741,9 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
   }
 
   private String getRepoDescription() {
-    return storeDescription == null ? "" : mStoreDescription.getText().toString().trim();
+    return storeDescription == null ? "" : mStoreDescription.getText()
+        .toString()
+        .trim();
   }
 
   private String getRepoAvatar() {
@@ -698,7 +751,10 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
   }
 
   private String getRepoName() {
-    return storeName == null ? "" : mStoreName.getText().toString().trim().toLowerCase();
+    return storeName == null ? "" : mStoreName.getText()
+        .toString()
+        .trim()
+        .toLowerCase();
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {

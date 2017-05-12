@@ -65,28 +65,38 @@ import java.util.Locale;
     try {
       final App app = displayable.getPojo();
       appId = app.getId();
-      storeName = app.getStore().getName();
+      storeName = app.getStore()
+          .getName();
       packageName = app.getPackageName();
 
-      version.setText(app.getFile().getVername());
+      version.setText(app.getFile()
+          .getVername());
       setBadge(app);
-      date.setText(DATE_TIME_U.getTimeDiffString(getContext(), app.getModified().getTime()));
+      date.setText(DATE_TIME_U.getTimeDiffString(getContext(), app.getModified()
+          .getTime()));
       downloads.setText(String.format(DEFAULT_LOCALE,
           getContext().getString(R.string.other_versions_downloads_count_text),
-          AptoideUtils.StringU.withSuffix(app.getStats().getDownloads())));
+          AptoideUtils.StringU.withSuffix(app.getStats()
+              .getDownloads())));
 
-      ImageLoader.with(getContext()).load(app.getStore().getAvatar(), storeIcon);
-      storeNameView.setText(app.getStore().getName());
+      ImageLoader.with(getContext())
+          .load(app.getStore()
+              .getAvatar(), storeIcon);
+      storeNameView.setText(app.getStore()
+          .getName());
       followers.setText(String.format(DEFAULT_LOCALE,
-          getContext().getString(R.string.appview_followers_count_text),
-          app.getStore().getStats().getSubscribers()));
+          getContext().getString(R.string.appview_followers_count_text), app.getStore()
+              .getStats()
+              .getSubscribers()));
     } catch (NullPointerException e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     }
   }
 
   private void setItemBackgroundColor(View itemView) {
-    final Resources.Theme theme = itemView.getContext().getTheme();
+    final Resources.Theme theme = itemView.getContext()
+        .getTheme();
     final Resources res = itemView.getResources();
 
     int color;
@@ -110,8 +120,11 @@ import java.util.Locale;
   private void setBadge(App app) {
     @DrawableRes int badgeResId;
 
-    Malware.Rank rank = app.getFile().getMalware().getRank() == null ? Malware.Rank.UNKNOWN
-        : app.getFile().getMalware().getRank();
+    Malware.Rank rank = app.getFile()
+        .getMalware()
+        .getRank() == null ? Malware.Rank.UNKNOWN : app.getFile()
+        .getMalware()
+        .getRank();
     switch (rank) {
       case TRUSTED:
         badgeResId = R.drawable.ic_badge_trusted;
@@ -140,7 +153,7 @@ import java.util.Locale;
 
   @Override public void onClick(View v) {
     Logger.d(TAG, "showing other version for app with id = " + appId);
-    getFragmentNavigator().navigateTo(
-        V8Engine.getFragmentProvider().newAppViewFragment(appId, packageName, null, storeName));
+    getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+        .newAppViewFragment(appId, packageName, null, storeName));
   }
 }
