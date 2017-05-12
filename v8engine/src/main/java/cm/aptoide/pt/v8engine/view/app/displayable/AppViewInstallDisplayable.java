@@ -80,9 +80,18 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
       MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository) {
     super(getApp);
     this.installManager = installManager;
-    this.md5 = getApp.getNodes().getMeta().getData().getFile().getMd5sum();
-    this.packageName = getApp.getNodes().getMeta().getData().getPackageName();
-    currentApp = getApp.getNodes().getMeta().getData();
+    this.md5 = getApp.getNodes()
+        .getMeta()
+        .getData()
+        .getFile()
+        .getMd5sum();
+    this.packageName = getApp.getNodes()
+        .getMeta()
+        .getData()
+        .getPackageName();
+    currentApp = getApp.getNodes()
+        .getMeta()
+        .getData();
     this.minimalAd = minimalAd;
     this.shouldInstall = shouldInstall;
     this.rollbackRepository = RepositoryFactory.getRollbackRepository();
@@ -146,37 +155,43 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 
   private Observable<WidgetState> getInstallationObservable(String md5,
       InstallManager installManager) {
-    return installManager.getAsListInstallation(md5).map(progress -> {
-      if (progress != null && progress.getState() != Progress.DONE && (progress.getState()
-          == Progress.ACTIVE
-          || progress.getRequest().getOverallDownloadStatus() == Download.PAUSED)) {
+    return installManager.getAsListInstallation(md5)
+        .map(progress -> {
+          if (progress != null && progress.getState() != Progress.DONE && (progress.getState()
+              == Progress.ACTIVE
+              || progress.getRequest()
+              .getOverallDownloadStatus() == Download.PAUSED)) {
 
-        widgetState.setButtonState(ACTION_INSTALLING);
-      } else {
-        widgetState.setButtonState(ACTION_NO_STATE);
-      }
-      widgetState.setProgress(progress);
-      return widgetState;
-    });
+            widgetState.setButtonState(ACTION_INSTALLING);
+          } else {
+            widgetState.setButtonState(ACTION_NO_STATE);
+          }
+          widgetState.setProgress(progress);
+          return widgetState;
+        });
   }
 
   @NonNull private Observable<WidgetState> getInstalledAppObservable(GetAppMeta.App currentApp,
       InstalledRepository installedRepository) {
-    return installedRepository.getAsList(currentApp.getPackageName()).map(installeds -> {
-      if (installeds != null && installeds.size() > 0) {
-        Installed installed = installeds.get(0);
-        if (currentApp.getFile().getVercode() == installed.getVersionCode()) {
-          widgetState.setButtonState(ACTION_OPEN);
-        } else if (currentApp.getFile().getVercode() <= installed.getVersionCode()) {
-          widgetState.setButtonState(ACTION_DOWNGRADE);
-        } else if (currentApp.getFile().getVercode() >= installed.getVersionCode()) {
-          widgetState.setButtonState(ACTION_UPDATE);
-        }
-      } else {
-        widgetState.setButtonState(ACTION_INSTALL);
-      }
-      return widgetState;
-    });
+    return installedRepository.getAsList(currentApp.getPackageName())
+        .map(installeds -> {
+          if (installeds != null && installeds.size() > 0) {
+            Installed installed = installeds.get(0);
+            if (currentApp.getFile()
+                .getVercode() == installed.getVersionCode()) {
+              widgetState.setButtonState(ACTION_OPEN);
+            } else if (currentApp.getFile()
+                .getVercode() <= installed.getVersionCode()) {
+              widgetState.setButtonState(ACTION_DOWNGRADE);
+            } else if (currentApp.getFile()
+                .getVercode() >= installed.getVersionCode()) {
+              widgetState.setButtonState(ACTION_UPDATE);
+            }
+          } else {
+            widgetState.setButtonState(ACTION_INSTALL);
+          }
+          return widgetState;
+        });
   }
 
   @IntDef({

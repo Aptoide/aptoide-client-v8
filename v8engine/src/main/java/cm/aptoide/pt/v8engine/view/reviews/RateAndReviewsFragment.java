@@ -113,14 +113,16 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     installMenuItem = menu.findItem(R.id.menu_install);
 
     InstalledAccessor accessor = AccessorFactory.getAccessorFor(Installed.class);
-    accessor.get(packageName).subscribe(installed -> {
-      if (installed != null) {
-        // app installed... update text
-        installMenuItem.setTitle(R.string.open);
-      }
-    }, err -> {
-      CrashReport.getInstance().log(err);
-    });
+    accessor.get(packageName)
+        .subscribe(installed -> {
+          if (installed != null) {
+            // app installed... update text
+            installMenuItem.setTitle(R.string.open);
+          }
+        }, err -> {
+          CrashReport.getInstance()
+              .log(err);
+        });
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -163,8 +165,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     RxView.clicks(floatingActionButton)
         .flatMap(__ -> dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName))
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(__ -> Analytics.Updates.createReview(),
-            err -> CrashReport.getInstance().log(err));
+        .subscribe(__ -> Analytics.Updates.createReview(), err -> CrashReport.getInstance()
+            .log(err));
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -197,13 +199,16 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(getApp -> {
           if (getApp.isOk()) {
-            GetAppMeta.App data = getApp.getNodes().getMeta().getData();
+            GetAppMeta.App data = getApp.getNodes()
+                .getMeta()
+                .getData();
             setupTitle(data.getName());
             setupRating(data);
           }
           finishLoading();
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         });
   }
 
@@ -252,9 +257,9 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @NonNull @Override
   public CommentsReadMoreDisplayable createReadMoreDisplayable(final int itemPosition,
       Review review) {
-    return new CommentsReadMoreDisplayable(review.getId(), true,
-        review.getCommentList().getDatalist().getNext(),
-        new SimpleReviewCommentAdder(itemPosition, this));
+    return new CommentsReadMoreDisplayable(review.getId(), true, review.getCommentList()
+        .getDatalist()
+        .getNext(), new SimpleReviewCommentAdder(itemPosition, this));
   }
 
   @Override protected CommentsAdapter createAdapter() {

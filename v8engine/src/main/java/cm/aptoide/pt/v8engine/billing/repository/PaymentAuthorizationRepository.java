@@ -46,14 +46,18 @@ public class PaymentAuthorizationRepository {
   }
 
   public Completable createPaymentAuthorization(int paymentId) {
-    return CreatePaymentAuthorizationRequest.of(paymentId,
-        bodyInterceptorV3, httpClient, converterFactory).observe().flatMap(response -> {
-      if (response != null && response.isOk()) {
-        return Observable.just(null);
-      }
-      return Observable.<Void> error(
-          new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-    }).toCompletable().andThen(syncAuthorization(paymentId));
+    return CreatePaymentAuthorizationRequest.of(paymentId, bodyInterceptorV3, httpClient,
+        converterFactory)
+        .observe()
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            return Observable.just(null);
+          }
+          return Observable.<Void>error(
+              new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+        })
+        .toCompletable()
+        .andThen(syncAuthorization(paymentId));
   }
 
   public Completable saveAuthorization(Authorization authorization) {

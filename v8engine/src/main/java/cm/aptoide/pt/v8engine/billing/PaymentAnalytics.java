@@ -119,8 +119,9 @@ public class PaymentAnalytics {
     } else {
       packageName = aptoidePackageName;
     }
-    return getProductBundle(product.getPrice().getAmount(), product.getPrice().getCurrency(),
-        packageName);
+    return getProductBundle(product.getPrice()
+        .getAmount(), product.getPrice()
+        .getCurrency(), packageName);
   }
 
   private Bundle getProductBundle(double price, String currency, String packageName) {

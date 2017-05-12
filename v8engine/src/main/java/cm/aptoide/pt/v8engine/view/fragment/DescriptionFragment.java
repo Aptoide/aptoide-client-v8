@@ -134,13 +134,15 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
       }
       finishLoading();
     } else if (hasAppId) {
-      GetAppRequest.of(appId, V8Engine.getConfiguration().getPartnerId() == null ? null : storeName,
+      GetAppRequest.of(appId, V8Engine.getConfiguration()
+              .getPartnerId() == null ? null : storeName,
           StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
-          baseBodyBodyInterceptor, httpClient, converterFactory).execute(getApp -> {
-        setupAppDescription(getApp);
-        setupTitle(getApp);
-        finishLoading();
-      }, false);
+          baseBodyBodyInterceptor, httpClient, converterFactory)
+          .execute(getApp -> {
+            setupAppDescription(getApp);
+            setupTitle(getApp);
+            finishLoading();
+          }, false);
     } else {
       Logger.e(TAG, "App id unavailable");
       setDataUnavailable();
@@ -149,20 +151,27 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
 
   private void setupAppDescription(GetApp getApp) {
     try {
-      GetAppMeta.Media media = getApp.getNodes().getMeta().getData().getMedia();
+      GetAppMeta.Media media = getApp.getNodes()
+          .getMeta()
+          .getData()
+          .getMedia();
       if (!TextUtils.isEmpty(media.getDescription())) {
         descriptionContainer.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
         return;
       }
     } catch (NullPointerException e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     }
     setDataUnavailable();
   }
 
   private void setupTitle(GetApp getApp) {
     try {
-      String appName = getApp.getNodes().getMeta().getData().getName();
+      String appName = getApp.getNodes()
+          .getMeta()
+          .getData()
+          .getName();
       if (!TextUtils.isEmpty(appName)) {
         if (hasToolbar()) {
           ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
@@ -171,7 +180,8 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
         }
       }
     } catch (NullPointerException e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     }
     setDataUnavailable();
   }
@@ -189,8 +199,9 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
     if (bar != null) {
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
-      bar.setBackgroundDrawable(new ColorDrawable(
-          getActivity().getResources().getColor(StoreThemeEnum.get(storeTheme).getStoreHeader())));
+      bar.setBackgroundDrawable(new ColorDrawable(getActivity().getResources()
+          .getColor(StoreThemeEnum.get(storeTheme)
+              .getStoreHeader())));
     }
   }
 

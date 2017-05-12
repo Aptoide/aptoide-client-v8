@@ -35,11 +35,15 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
     name.setText(pojo.getName());
 
     final FragmentActivity context = getContext();
-    ImageLoader.with(context).load(pojo.getIconPath(), icon);
+    ImageLoader.with(context)
+        .load(pojo.getIconPath(), icon);
 
-    compositeSubscription.add(RxView.clicks(itemView).subscribe(v -> {
-      Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
-      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider().newAppViewFragment(pojo));
-    }, throwable -> CrashReport.getInstance().log(throwable)));
+    compositeSubscription.add(RxView.clicks(itemView)
+        .subscribe(v -> {
+          Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
+          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+              .newAppViewFragment(pojo));
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable)));
   }
 }

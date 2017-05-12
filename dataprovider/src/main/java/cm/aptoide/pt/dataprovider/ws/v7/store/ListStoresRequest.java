@@ -45,7 +45,8 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
     final Body baseBody = new Body();
     baseBody.setOffset(offset);
     baseBody.limit = limit;
-    return new ListStoresRequest(baseBody, BASE_HOST, bodyInterceptor, httpClient, converterFactory);
+    return new ListStoresRequest(baseBody, BASE_HOST, bodyInterceptor, httpClient,
+        converterFactory);
   }
 
   public static ListStoresRequest ofAction(String url, BodyInterceptor<BaseBody> bodyInterceptor,

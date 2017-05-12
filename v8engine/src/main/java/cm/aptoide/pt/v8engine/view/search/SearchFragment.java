@@ -142,11 +142,12 @@ public class SearchFragment extends BasePagerToolbarFragment {
       noSearchLayout.setVisibility(View.VISIBLE);
       buttonsLayout.setVisibility(View.INVISIBLE);
       noSearchLayoutSearchButton.setOnClickListener(v -> {
-        String s = noSearchLayoutSearchQuery.getText().toString();
+        String s = noSearchLayoutSearchQuery.getText()
+            .toString();
 
         if (s.length() > 1) {
-          getFragmentNavigator().navigateTo(
-              V8Engine.getFragmentProvider().newSearchFragment(s, storeName));
+          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+              .newSearchFragment(s, storeName));
         }
       });
     }
@@ -214,7 +215,8 @@ public class SearchFragment extends BasePagerToolbarFragment {
         //only show the search results after choosing the tab to show
         setupAbTest().compose(bindUntilEvent(LifecycleEvent.DESTROY))
             .subscribe(setup -> finishLoading(), throwable -> {
-              CrashReport.getInstance().log(throwable);
+              CrashReport.getInstance()
+                  .log(throwable);
               finishLoading();
             });
       } else {
@@ -225,8 +227,8 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   private Observable<Void> setupAbTest() {
     if (hasSubscribedResults && hasEverywhereResults) {
-      ABTest<SearchTabOptions> searchAbTest =
-          ABTestManager.getInstance().get(ABTestManager.SEARCH_TAB_TEST);
+      ABTest<SearchTabOptions> searchAbTest = ABTestManager.getInstance()
+          .get(ABTestManager.SEARCH_TAB_TEST);
       return searchAbTest.participate()
           .observeOn(AndroidSchedulers.mainThread())
           .map(experiment -> setTabAccordingAbTest(searchAbTest));
@@ -236,7 +238,8 @@ public class SearchFragment extends BasePagerToolbarFragment {
   }
 
   private Void setTabAccordingAbTest(ABTest<SearchTabOptions> searchAbTest) {
-    if (searchAbTest.alternative().chooseTab() == 1) {
+    if (searchAbTest.alternative()
+        .chooseTab() == 1) {
       everywhereButtonListener(false);
     }
     return null;
@@ -251,7 +254,8 @@ public class SearchFragment extends BasePagerToolbarFragment {
           ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
               bodyInterceptor, httpClient, converterFactory);
       of.execute(listSearchApps -> {
-        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
+        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
+            .getList();
 
         if (list != null && hasMoreResults(listSearchApps)) {
           hasSubscribedResults = true;
@@ -263,39 +267,43 @@ public class SearchFragment extends BasePagerToolbarFragment {
       }, e -> finishLoading());
     } else {
       ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          bodyInterceptor, httpClient, converterFactory).execute(listSearchApps -> {
-        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
+          bodyInterceptor, httpClient, converterFactory)
+          .execute(listSearchApps -> {
+            List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
+                .getList();
 
-        if (list != null && hasMoreResults(listSearchApps)) {
-          hasSubscribedResults = true;
-          handleFinishLoading(create);
-        } else {
-          hasSubscribedResults = false;
-          handleFinishLoading(create);
-        }
-      }, e -> finishLoading());
+            if (list != null && hasMoreResults(listSearchApps)) {
+              hasSubscribedResults = true;
+              handleFinishLoading(create);
+            } else {
+              hasSubscribedResults = false;
+              handleFinishLoading(create);
+            }
+          }, e -> finishLoading());
 
       // Other stores
       ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          bodyInterceptor, httpClient, converterFactory).execute(listSearchApps -> {
-        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
+          bodyInterceptor, httpClient, converterFactory)
+          .execute(listSearchApps -> {
+            List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
+                .getList();
 
-        if (list != null && hasMoreResults(listSearchApps)) {
-          hasEverywhereResults = true;
-          handleFinishLoading(create);
-        } else {
-          hasEverywhereResults = false;
-          handleFinishLoading(create);
-        }
-      }, e -> finishLoading());
+            if (list != null && hasMoreResults(listSearchApps)) {
+              hasEverywhereResults = true;
+              handleFinishLoading(create);
+            } else {
+              hasEverywhereResults = false;
+              handleFinishLoading(create);
+            }
+          }, e -> finishLoading());
     }
   }
 
   private boolean hasMoreResults(ListSearchApps listSearchApps) {
     Datalist<ListSearchApps.SearchAppsApp> datalist = listSearchApps.getDatalist();
 
-    return datalist.getList().size() > 0
-        || listSearchApps.getTotal() > listSearchApps.getNextSize();
+    return datalist.getList()
+        .size() > 0 || listSearchApps.getTotal() > listSearchApps.getNextSize();
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {

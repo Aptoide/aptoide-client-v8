@@ -79,7 +79,8 @@ public abstract class GooglePlayServicesFragment extends PermissionServiceFragme
       result.startResolutionForResult(getActivity(), RESOLVE_CONNECTION_ERROR_REQUEST_CODE);
       resolvingError = true;
     } catch (IntentSender.SendIntentException e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
       connect();
     }
   }

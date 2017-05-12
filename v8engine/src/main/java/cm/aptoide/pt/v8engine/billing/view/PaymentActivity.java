@@ -209,11 +209,13 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
   }
 
   @Override public void showProduct(Product product) {
-    ImageLoader.with(this).load(product.getIcon(), productIcon);
+    ImageLoader.with(this)
+        .load(product.getIcon(), productIcon);
     productName.setText(product.getTitle());
     productDescription.setText(product.getDescription());
-    productPrice.setText(
-        product.getPrice().getCurrencySymbol() + " " + product.getPrice().getAmount());
+    productPrice.setText(product.getPrice()
+        .getCurrencySymbol() + " " + product.getPrice()
+        .getAmount());
   }
 
   @Override public void hideLoading() {
@@ -235,8 +237,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
   @Override public void navigateToAuthorizationView(int paymentId, Product product) {
     if (product instanceof InAppProduct) {
       startActivity(WebAuthorizationActivity.getIntent(this, paymentId,
-          ((InAppProduct) product).getApiVersion(),
-          ((InAppProduct) product).getPackageName(),
+          ((InAppProduct) product).getApiVersion(), ((InAppProduct) product).getPackageName(),
           ((InAppProduct) product).getType(), ((InAppProduct) product).getSku(),
           ((InAppProduct) product).getDeveloperPayload()));
     } else if (product instanceof PaidAppProduct) {

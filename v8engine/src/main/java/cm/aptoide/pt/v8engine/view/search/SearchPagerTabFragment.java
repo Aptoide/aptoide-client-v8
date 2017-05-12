@@ -55,7 +55,8 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
         LinkedList<Displayable> displayables = new LinkedList<>();
 
-        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
+        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
+            .getList();
         Observable<ListSearchApps.SearchAppsApp> from = Observable.from(list);
 
         if (addSubscribedStores) {
@@ -101,7 +102,8 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     final AptoideAccountManager accountManager =
         ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    searchAbTest = ABTestManager.getInstance().get(ABTestManager.SEARCH_TAB_TEST);
+    searchAbTest = ABTestManager.getInstance()
+        .get(ABTestManager.SEARCH_TAB_TEST);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();

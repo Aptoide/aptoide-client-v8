@@ -10,5 +10,4 @@ import rx.Single;
 public interface Payer {
 
   public Single<String> getId();
-
 }

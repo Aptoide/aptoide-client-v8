@@ -24,7 +24,8 @@ public class GetPaymentConfirmationRequest extends V3<PaymentConfirmationRespons
   }
 
   public static GetPaymentConfirmationRequest of(int productId,
-      NetworkOperatorManager operatorManager, int apiVersion, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      NetworkOperatorManager operatorManager, int apiVersion,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
     final BaseBody args = getBaseBody(productId, operatorManager);
     args.put("reqtype", "iabpurchasestatus");

@@ -41,7 +41,8 @@ public abstract class ProductRepository {
   protected Single<List<Payment>> convertResponseToPayment(Context context,
       List<PaymentServiceResponse> payments) {
     return Observable.from(payments)
-    .map(paymentService -> paymentFactory.create(context, paymentService))
-    .toList().toSingle();
+        .map(paymentService -> paymentFactory.create(context, paymentService))
+        .toList()
+        .toSingle();
   }
 }

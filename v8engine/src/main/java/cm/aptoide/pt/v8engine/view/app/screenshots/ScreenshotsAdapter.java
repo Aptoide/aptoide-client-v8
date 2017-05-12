@@ -100,10 +100,11 @@ public class ScreenshotsAdapter
           .load(item.getThumbnail(), R.drawable.placeholder_square, screenshot);
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        media_layout.setForeground(
-            context.getResources().getDrawable(R.color.overlay_black, context.getTheme()));
+        media_layout.setForeground(context.getResources()
+            .getDrawable(R.color.overlay_black, context.getTheme()));
       } else {
-        media_layout.setForeground(context.getResources().getDrawable(R.color.overlay_black));
+        media_layout.setForeground(context.getResources()
+            .getDrawable(R.color.overlay_black));
       }
 
       play_button.setVisibility(View.VISIBLE);
@@ -129,8 +130,8 @@ public class ScreenshotsAdapter
 
       itemView.setOnClickListener(v -> {
         // TODO improve this call
-        navigator.navigateTo(
-            V8Engine.getFragmentProvider().newScreenshotsViewerFragment(imagesUris, position));
+        navigator.navigateTo(V8Engine.getFragmentProvider()
+            .newScreenshotsViewerFragment(imagesUris, position));
       });
     }
 

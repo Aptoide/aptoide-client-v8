@@ -80,7 +80,8 @@ public class WebAuthorizationActivity extends BackButtonActivity
     setContentView(R.layout.activity_web_authorization);
 
     webView = (WebView) findViewById(R.id.activity_boa_compra_authorization_web_view);
-    webView.getSettings().setJavaScriptEnabled(true);
+    webView.getSettings()
+        .setJavaScriptEnabled(true);
     webView.setWebChromeClient(new WebChromeClient());
     progressBarContainer = findViewById(R.id.activity_web_authorization_preogress_bar);
     unknownErrorDialog = new AlertDialog.Builder(this).setMessage(R.string.having_some_trouble)

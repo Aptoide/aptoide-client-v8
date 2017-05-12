@@ -20,11 +20,12 @@ public class StoreAuthBodyInterceptor extends BaseBodyInterceptorV3 {
     return accountManager.accountStatus()
         .first()
         .toSingle()
-        .flatMap(account -> super.intercept(body).map(baseBody -> {
-          if (account.isLoggedIn()) {
-            baseBody.put("oauthToken", account.getAccessToken());
-          }
-          return baseBody;
-        }));
+        .flatMap(account -> super.intercept(body)
+            .map(baseBody -> {
+              if (account.isLoggedIn()) {
+                baseBody.put("oauthToken", account.getAccessToken());
+              }
+              return baseBody;
+            }));
   }
 }

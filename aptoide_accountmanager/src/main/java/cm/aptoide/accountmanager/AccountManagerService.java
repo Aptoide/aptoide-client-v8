@@ -52,7 +52,8 @@ public class AccountManagerService {
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof AptoideWsV3Exception) {
             return Completable.error(new AccountException(
-                ((AptoideWsV3Exception) throwable).getBaseResponse().getError()));
+                ((AptoideWsV3Exception) throwable).getBaseResponse()
+                    .getError()));
           }
           return Completable.error(throwable);
         });
@@ -74,7 +75,8 @@ public class AccountManagerService {
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof AptoideWsV3Exception) {
             return Single.error(new AccountException(
-                ((AptoideWsV3Exception) throwable).getBaseResponse().getError()));
+                ((AptoideWsV3Exception) throwable).getBaseResponse()
+                    .getError()));
           }
           return Single.error(throwable);
         });
@@ -97,13 +99,16 @@ public class AccountManagerService {
 
   public Completable updateAccount(String accessLevel, AptoideAccountManager accountManager) {
     return SetUserRequest.of(accessLevel, interceptorFactory.createV7(accountManager), httpClient,
-        converterFactory).observe(true).toSingle().flatMapCompletable(response -> {
-      if (response.isOk()) {
-        return Completable.complete();
-      } else {
-        return Completable.error(new Exception(V7.getErrorMessage(response)));
-      }
-    });
+        converterFactory)
+        .observe(true)
+        .toSingle()
+        .flatMapCompletable(response -> {
+          if (response.isOk()) {
+            return Completable.complete();
+          } else {
+            return Completable.error(new Exception(V7.getErrorMessage(response)));
+          }
+        });
   }
 
   public Completable unsubscribeStore(String storeName, String storeUserName, String storePassword,
@@ -132,7 +137,8 @@ public class AccountManagerService {
       AptoideAccountManager accountManager) {
     return new GetMySubscribedStoresRequest(accessToken,
         interceptorFactory.createV7(accountManager), httpClient, converterFactory).observe()
-        .map(getUserRepoSubscription -> getUserRepoSubscription.getDatalist().getList())
+        .map(getUserRepoSubscription -> getUserRepoSubscription.getDatalist()
+            .getList())
         .flatMapIterable(list -> list)
         .map(store -> mapToStore(store))
         .toList()
@@ -140,8 +146,9 @@ public class AccountManagerService {
   }
 
   private Store mapToStore(cm.aptoide.pt.model.v7.store.Store store) {
-    return new Store(store.getStats().getDownloads(), store.getAvatar(), store.getId(),
-        store.getName(), store.getAppearance().getTheme(), null, null);
+    return new Store(store.getStats()
+        .getDownloads(), store.getAvatar(), store.getId(), store.getName(), store.getAppearance()
+        .getTheme(), null, null);
   }
 
   public Single<Account> getAccount(String accessToken, String refreshToken,
@@ -154,13 +161,17 @@ public class AccountManagerService {
 
   private Single<CheckUserCredentialsJson> getServerAccount(String accessToken,
       AptoideAccountManager accountManager) {
-    return CheckUserCredentialsRequest.of(interceptorFactory.createV3(accountManager),
-        httpClient, converterFactory, accessToken).observe().toSingle().flatMap(response -> {
-      if (response.getStatus().equals("OK")) {
-        return Single.just(response);
-      }
-      return Single.error(new IllegalStateException("Failed to get user account"));
-    });
+    return CheckUserCredentialsRequest.of(interceptorFactory.createV3(accountManager), httpClient,
+        converterFactory, accessToken)
+        .observe()
+        .toSingle()
+        .flatMap(response -> {
+          if (response.getStatus()
+              .equals("OK")) {
+            return Single.just(response);
+          }
+          return Single.error(new IllegalStateException("Failed to get user account"));
+        });
   }
 
   private Account mapServerAccountToAccount(CheckUserCredentialsJson serverUser,
@@ -170,17 +181,20 @@ public class AccountManagerService {
         String.valueOf(serverUser.getId()), serverUser.getEmail(), serverUser.getUsername(),
         serverUser.getAvatar(), refreshToken, accessToken, encryptedPassword,
         Account.Type.valueOf(type), serverUser.getRepo(), serverUser.getRavatarHd(),
-        serverUser.getSettings().getMatureswitch().equals("active"),
-        serverUser.isAccessConfirmed());
+        serverUser.getSettings()
+            .getMatureswitch()
+            .equals("active"), serverUser.isAccessConfirmed());
   }
 
   public Completable updateAccount(boolean adultContentEnabled, String accessToken,
       AptoideAccountManager accountManager) {
-    return ChangeUserSettingsRequest.of(adultContentEnabled, interceptorFactory.createV3(accountManager), httpClient, converterFactory)
+    return ChangeUserSettingsRequest.of(adultContentEnabled,
+        interceptorFactory.createV3(accountManager), httpClient, converterFactory)
         .observe(true)
         .toSingle()
         .flatMapCompletable(response -> {
-          if (response.getStatus().equals("OK")) {
+          if (response.getStatus()
+              .equals("OK")) {
             return Completable.complete();
           } else {
             return Completable.error(new Exception(V3.getErrorMessage(response)));

@@ -15,5 +15,4 @@ public interface Purchase {
   public String getSignature();
 
   public Completable consume();
-
 }

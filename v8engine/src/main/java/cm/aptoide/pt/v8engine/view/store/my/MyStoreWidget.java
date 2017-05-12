@@ -50,39 +50,46 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
   @Override public void bindView(MyStoreDisplayable displayable) {
 
     final FragmentActivity context = getContext();
-    Store store = displayable.getMeta().getData().getStore();
+    Store store = displayable.getMeta()
+        .getData()
+        .getStore();
     suggestionMessage.setText(displayable.getSuggestionMessage(context));
     createStoreText.setText(displayable.getCreateStoreText());
     createStoreText.setVisibility(displayable.getCreateStoreTextViewVisibility());
     exploreButton.setText(displayable.getExploreButtonText());
-    String storeTheme = store.getAppearance().getTheme();
+    String storeTheme = store.getAppearance()
+        .getTheme();
     @ColorInt int color = getColorOrDefault(StoreThemeEnum.get(storeTheme), context);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       Drawable d = context.getDrawable(R.drawable.dialog_bg_2);
       d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
       widgetLayout.setBackground(d);
     } else {
-      Drawable d = context.getResources().getDrawable(R.drawable.dialog_bg_2);
+      Drawable d = context.getResources()
+          .getDrawable(R.drawable.dialog_bg_2);
       d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
       widgetLayout.setBackgroundDrawable(d);
     }
     exploreButton.setTextColor(color);
 
-    ImageLoader.with(context).loadWithShadowCircleTransform(store.getAvatar(), storeIcon);
+    ImageLoader.with(context)
+        .loadWithShadowCircleTransform(store.getAvatar(), storeIcon);
 
     storeName.setText(store.getName());
     compositeSubscription.add(RxView.clicks(exploreButton)
-        .subscribe(click -> getFragmentNavigator().navigateTo(
-            V8Engine.getFragmentProvider().newStoreFragment(store.getName(), storeTheme))));
+        .subscribe(click -> getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+            .newStoreFragment(store.getName(), storeTheme))));
 
     setupSocialLinks(displayable.getSocialChannels(), socialChannelsLayout);
   }
 
   private int getColorOrDefault(StoreThemeEnum theme, Context context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      return context.getResources().getColor(theme.getStoreHeader(), context.getTheme());
+      return context.getResources()
+          .getColor(theme.getStoreHeader(), context.getTheme());
     } else {
-      return context.getResources().getColor(theme.getStoreHeader());
+      return context.getResources()
+          .getColor(theme.getStoreHeader());
     }
   }
 }

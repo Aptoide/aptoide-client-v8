@@ -87,13 +87,15 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
       updateReloadSubscription.unsubscribe();
     }
 
-    updateReloadSubscription = updateRepository.sync(true).subscribe(() -> finishLoading(), e -> {
-      if (e instanceof RepositoryItemNotFoundException) {
-        ShowMessage.asSnack(getView(), R.string.add_store);
-      }
-      CrashReport.getInstance().log(e);
-      finishLoading();
-    });
+    updateReloadSubscription = updateRepository.sync(true)
+        .subscribe(() -> finishLoading(), e -> {
+          if (e instanceof RepositoryItemNotFoundException) {
+            ShowMessage.asSnack(getView(), R.string.add_store);
+          }
+          CrashReport.getInstance()
+              .log(e);
+          finishLoading();
+        });
   }
 
   @Override public void onDestroyView() {
@@ -125,7 +127,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
           Logger.v(TAG, "listing updates and installed");
         }, err -> {
           Logger.e(TAG, "listing updates or installed threw an exception");
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
           finishLoading();
         });
   }
@@ -226,11 +229,12 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
    */
   // TODO: 31/1/2017 sithengineer instead of Observable<Installed> use Single<Installed>
   private Observable<Installed> filterUpdates(Installed item) {
-    return updateRepository.contains(item.getPackageName(), false).flatMap(isUpdate -> {
-      if (isUpdate) {
-        return Observable.empty();
-      }
-      return Observable.just(item);
-    });
+    return updateRepository.contains(item.getPackageName(), false)
+        .flatMap(isUpdate -> {
+          if (isUpdate) {
+            return Observable.empty();
+          }
+          return Observable.just(item);
+        });
   }
 }

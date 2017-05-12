@@ -57,8 +57,10 @@ public class CreateUserRequest extends V3<BaseV3Response> {
     parameters.put("email", email);
     parameters.put("passhash", passhash);
 
-    if (!TextUtils.isEmpty(Application.getConfiguration().getExtraId())) {
-      parameters.put("oem_id", Application.getConfiguration().getExtraId());
+    if (!TextUtils.isEmpty(Application.getConfiguration()
+        .getExtraId())) {
+      parameters.put("oem_id", Application.getConfiguration()
+          .getExtraId());
     }
   }
 
@@ -70,8 +72,10 @@ public class CreateUserRequest extends V3<BaseV3Response> {
     final String passhash = AptoideUtils.AlgorithmU.computeSha1(password);
     if (!TextUtils.isEmpty(userAvatarPath)) {
 
-      if (!TextUtils.isEmpty(Application.getConfiguration().getExtraId())) {
-        body.put("oem_id", createBodyPartFromString(Application.getConfiguration().getExtraId()));
+      if (!TextUtils.isEmpty(Application.getConfiguration()
+          .getExtraId())) {
+        body.put("oem_id", createBodyPartFromString(Application.getConfiguration()
+            .getExtraId()));
       }
       HashMapNotNull<String, RequestBody> multipartBody = new HashMapNotNull<>();
       multipartBody.put("mode", createBodyPartFromString("json"));

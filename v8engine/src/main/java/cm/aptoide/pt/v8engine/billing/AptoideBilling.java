@@ -45,14 +45,16 @@ public class AptoideBilling {
   }
 
   public Single<List<Payment>> getPayments(Context context, Product product) {
-    return productRepositoryFactory.getProductRepository(product).getPayments(context, product);
+    return productRepositoryFactory.getProductRepository(product)
+        .getPayments(context, product);
   }
 
   public Single<Payment> getPayment(Context context, int paymentId, Product product) {
     return getPayments(context, product).flatMapObservable(payments -> Observable.from(payments)
         .filter(payment -> payment.getId() == paymentId)
         .switchIfEmpty(Observable.error(
-            new PaymentFailureException("Payment " + paymentId + "not available")))).toSingle();
+            new PaymentFailureException("Payment " + paymentId + "not available"))))
+        .toSingle();
   }
 
   public Observable<PaymentConfirmation> getConfirmation(Product product) {
@@ -62,6 +64,7 @@ public class AptoideBilling {
   }
 
   public Single<Purchase> getPurchase(Product product) {
-    return productRepositoryFactory.getProductRepository(product).getPurchase(product);
+    return productRepositoryFactory.getProductRepository(product)
+        .getPurchase(product);
   }
 }

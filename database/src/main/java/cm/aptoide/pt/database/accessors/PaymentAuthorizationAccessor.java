@@ -24,8 +24,8 @@ public class PaymentAuthorizationAccessor extends SimpleAccessor<PaymentAuthoriz
         .map(realm -> realm.where(PaymentAuthorization.class)
             .equalTo(PaymentAuthorization.PAYER_ID, payerId)
             .equalTo(PaymentAuthorization.PAYMENT_ID, paymentId))
-        .flatMap(
-            query -> database.findAsList(query).flatMapIterable(authorizations -> authorizations));
+        .flatMap(query -> database.findAsList(query)
+            .flatMapIterable(authorizations -> authorizations));
   }
 
   public void save(PaymentAuthorization paymentAuthorization) {

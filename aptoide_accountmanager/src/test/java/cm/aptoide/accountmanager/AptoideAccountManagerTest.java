@@ -97,7 +97,8 @@ public class AptoideAccountManagerTest {
 
     final TestSubscriber testSubscriber = TestSubscriber.create();
 
-    accountManager.signUp("john.lennon@aptoide.com", "imagine").subscribe(testSubscriber);
+    accountManager.signUp("john.lennon@aptoide.com", "imagine")
+        .subscribe(testSubscriber);
 
     testSubscriber.assertCompleted();
     testSubscriber.assertNoErrors();
@@ -132,7 +133,8 @@ public class AptoideAccountManagerTest {
 
     final TestSubscriber testSubscriber = TestSubscriber.create();
 
-    accountManager.signUp("john.lennon@aptoide.com", "imagine").subscribe(testSubscriber);
+    accountManager.signUp("john.lennon@aptoide.com", "imagine")
+        .subscribe(testSubscriber);
 
     testSubscriber.assertCompleted();
     testSubscriber.assertNoErrors();

@@ -35,8 +35,8 @@ public class FragmentNavigator {
       String action = event.getAction();
       String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
 
-      fragment =
-          V8Engine.getFragmentProvider().newCommentGridRecyclerFragmentUrl(CommentType.STORE, url);
+      fragment = V8Engine.getFragmentProvider()
+          .newCommentGridRecyclerFragmentUrl(CommentType.STORE, url);
     } else {
       fragment = V8Engine.getFragmentProvider()
           .newStoreTabGridRecyclerFragment(event, title, storeTheme, tag, storeContext);

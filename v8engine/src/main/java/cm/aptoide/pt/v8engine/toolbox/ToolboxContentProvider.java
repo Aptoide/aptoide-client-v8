@@ -56,7 +56,8 @@ public class ToolboxContentProvider extends ContentProvider {
 
   @Override public boolean onCreate() {
     securityManager = new ToolboxSecurityManager(getContext().getPackageManager());
-    final String authority = Application.getConfiguration().getContentAuthority();
+    final String authority = Application.getConfiguration()
+        .getContentAuthority();
     uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     uriMatcher.addURI(authority, "token", TOKEN);
     uriMatcher.addURI(authority, "refreshToken", REFRESH_TOKEN);
@@ -120,8 +121,10 @@ public class ToolboxContentProvider extends ContentProvider {
 
           if (account != null) {
             final MatrixCursor loginTypeCursor = new MatrixCursor(new String[] { "loginType" }, 1);
-            loginTypeCursor.addRow(
-                new String[] { account.getType().name().toLowerCase(Locale.US) });
+            loginTypeCursor.addRow(new String[] {
+                account.getType()
+                    .name().toLowerCase(Locale.US)
+            });
             return loginTypeCursor;
           }
           throw new IllegalStateException("User not logged in.");
@@ -169,41 +172,48 @@ public class ToolboxContentProvider extends ContentProvider {
       if (result == PackageManager.SIGNATURE_MATCH) {
         switch (uriMatcher.match(uri)) {
           case CHANGE_PREFERENCE:
-            SharedPreferences.Editor edit =
-                PreferenceManager.getDefaultSharedPreferences(context).edit();
+            SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(context)
+                .edit();
             for (final Map.Entry<String, Object> entry : values.valueSet()) {
               Object value = entry.getValue();
               if (value instanceof String) {
                 if (!ManagerPreferences.isDebug()) {
                   AptoideUtils.ThreadU.runOnUiThread(
                       () -> Toast.makeText(context, "Please enable debug mode for toolbox to work.",
-                          Toast.LENGTH_LONG).show());
+                          Toast.LENGTH_LONG)
+                          .show());
                 }
-                if (entry.getKey().equals(ManagedKeys.FORCE_COUNTRY)) {
+                if (entry.getKey()
+                    .equals(ManagedKeys.FORCE_COUNTRY)) {
                   ManagerPreferences.setForceCountry((String) value);
                   changed++;
-                } else if (entry.getKey().equals(ManagedKeys.NOTIFICATION_TYPE)) {
+                } else if (entry.getKey()
+                    .equals(ManagedKeys.NOTIFICATION_TYPE)) {
                   ManagerPreferences.setNotificationType((String) value);
                   changed++;
-                } else if (entry.getKey().equals("pullNotificationAction")) {
+                } else if (entry.getKey()
+                    .equals("pullNotificationAction")) {
                   Intent intent = new Intent(context, PullingContentService.class);
                   intent.setAction(PullingContentService.PUSH_NOTIFICATIONS_ACTION);
                   context.startService(intent);
                   changed++;
-                } else if (entry.getKey().equals("UpdatesAction")) {
+                } else if (entry.getKey()
+                    .equals("UpdatesAction")) {
                   Intent intent = new Intent(context, PullingContentService.class);
                   intent.setAction(PullingContentService.UPDATES_ACTION);
                   context.startService(intent);
                   changed++;
                 }
               } else if (value instanceof Boolean) {
-                if (entry.getKey().equals(ManagedKeys.DEBUG)) {
+                if (entry.getKey()
+                    .equals(ManagedKeys.DEBUG)) {
                   ManagerPreferences.setDebug((Boolean) entry.getValue());
                   Logger.setDBG((Boolean) entry.getValue());
                   changed++;
                 }
               }
-              if (changed > 0 && !TextUtils.isEmpty(entry.getValue().toString())) {
+              if (changed > 0 && !TextUtils.isEmpty(entry.getValue()
+                  .toString())) {
                 AptoideUtils.ThreadU.runOnUiThread(() -> Toast.makeText(context,
                     "Preference set: " + entry.getKey() + "=" + entry.getValue(), Toast.LENGTH_LONG)
                     .show());
@@ -218,7 +228,8 @@ public class ToolboxContentProvider extends ContentProvider {
       }
     } catch (NullPointerException e) {
       //it can happen if package manager or context is null
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     }
     return changed;
   }

@@ -28,7 +28,8 @@ public class AndroidAccountProvider {
         return Single.error(new IllegalStateException("No account found."));
       }
       return Single.just(accounts[0]);
-    }).observeOn(scheduler);
+    })
+        .observeOn(scheduler);
   }
 
   public Single<Account> createAndroidAccount(String email, String password) {
@@ -48,6 +49,7 @@ public class AndroidAccountProvider {
       } else {
         androidAccountManager.removeAccount(androidAccount, null, null);
       }
-    }).toCompletable();
+    })
+        .toCompletable();
   }
 }

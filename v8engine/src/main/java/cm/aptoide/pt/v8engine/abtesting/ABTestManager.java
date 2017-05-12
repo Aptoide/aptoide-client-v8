@@ -46,7 +46,8 @@ public class ABTestManager {
               .newBuilder()
               .header("Authorization",
                   Credentials.basic(BuildConfig.SIXPACK_USER, BuildConfig.SIXPACK_PASSWORD))
-              .build()).build(), BuildConfig.SIXPACK_URL);
+              .build())
+          .build(), BuildConfig.SIXPACK_URL);
     }
     return instance;
   }
@@ -77,14 +78,16 @@ public class ABTestManager {
   private Observable<Void> prefetchTests() {
     return Observable.from(tests)
         .observeOn(Schedulers.computation())
-        .flatMap(test -> test.prefetch().toList())
+        .flatMap(test -> test.prefetch()
+            .toList())
         .map(success -> null);
   }
 
   @SuppressWarnings("unchecked") public <T> ABTest<T> get(String name) {
     if (isInitialized()) {
       for (ABTest test : tests) {
-        if (test.getName().equals(name)) {
+        if (test.getName()
+            .equals(name)) {
           return test;
         }
       }
@@ -102,7 +105,8 @@ public class ABTestManager {
     synchronized (controlTests) {
       registerControlTests();
       for (ABTest test : controlTests) {
-        if (test.getName().equals(name)) {
+        if (test.getName()
+            .equals(name)) {
           return test;
         }
       }

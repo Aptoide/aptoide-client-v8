@@ -72,11 +72,13 @@ public class StoreUtils {
 
     return getStoreMetaRequest.observe()
         .flatMap(getStoreMeta -> {
-          if (BaseV7Response.Info.Status.OK.equals(getStoreMeta.getInfo().getStatus())) {
+          if (BaseV7Response.Info.Status.OK.equals(getStoreMeta.getInfo()
+              .getStatus())) {
             // TODO: 18-05-2016 neuro private ainda na ta
             if (accountManager.isLoggedIn()) {
-              return accountManager.subscribeStore(getStoreMeta.getData().getName(), storeUserName,
-                  storePassword).andThen(Observable.just(getStoreMeta));
+              return accountManager.subscribeStore(getStoreMeta.getData()
+                  .getName(), storeUserName, storePassword)
+                  .andThen(Observable.just(getStoreMeta));
             } else {
               return Observable.just(getStoreMeta);
             }
@@ -106,7 +108,8 @@ public class StoreUtils {
           if (errorRequestListener != null) {
             errorRequestListener.onError(e);
           }
-          CrashReport.getInstance().log(e);
+          CrashReport.getInstance()
+              .log(e);
         });
   }
 
@@ -124,26 +127,33 @@ public class StoreUtils {
 
     store.setStoreId(storeData.getId());
     store.setStoreName(storeData.getName());
-    store.setDownloads(storeData.getStats().getDownloads());
+    store.setDownloads(storeData.getStats()
+        .getDownloads());
 
     store.setIconPath(storeData.getAvatar());
-    store.setTheme(storeData.getAppearance().getTheme());
+    store.setTheme(storeData.getAppearance()
+        .getTheme());
 
     if (isPrivateCredentialsSet(getStoreMetaRequest)) {
-      store.setUsername(getStoreMetaRequest.getBody().getStoreUser());
-      store.setPasswordSha1(getStoreMetaRequest.getBody().getStorePassSha1());
+      store.setUsername(getStoreMetaRequest.getBody()
+          .getStoreUser());
+      store.setPasswordSha1(getStoreMetaRequest.getBody()
+          .getStorePassSha1());
     }
     storeAccessor.save(store);
   }
 
   private static boolean isPrivateCredentialsSet(GetStoreMetaRequest getStoreMetaRequest) {
-    return getStoreMetaRequest.getBody().getStoreUser() != null
-        && getStoreMetaRequest.getBody().getStorePassSha1() != null;
+    return getStoreMetaRequest.getBody()
+        .getStoreUser() != null
+        && getStoreMetaRequest.getBody()
+        .getStorePassSha1() != null;
   }
 
   public static Observable<Boolean> isSubscribedStore(String storeName) {
     StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-    return storeAccessor.get(storeName).map(store -> store != null);
+    return storeAccessor.get(storeName)
+        .map(store -> store != null);
   }
 
   public static ArrayList<String> split(List<String> repoUrl) {
@@ -188,7 +198,9 @@ public class StoreUtils {
 
     List<Long> storesNames = new LinkedList<>();
     StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-    List<Store> stores = storeAccessor.getAll().toBlocking().first();
+    List<Store> stores = storeAccessor.getAll()
+        .toBlocking()
+        .first();
     for (Store store : stores) {
       storesNames.add(store.getStoreId());
     }
@@ -199,7 +211,9 @@ public class StoreUtils {
   public static HashMapNotNull<String, List<String>> getSubscribedStoresAuthMap() {
     StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
     HashMapNotNull<String, List<String>> storesAuthMap = new HashMapNotNull<>();
-    List<Store> stores = storeAccessor.getAll().toBlocking().first();
+    List<Store> stores = storeAccessor.getAll()
+        .toBlocking()
+        .first();
     for (Store store : stores) {
       if (store.getPasswordSha1() != null) {
         storesAuthMap.put(store.getStoreName(),
@@ -216,8 +230,9 @@ public class StoreUtils {
         .first()
         .subscribe(isLoggedIn -> {
           if (isLoggedIn) {
-            accountManager.unsubscribeStore(name, storeCredentialsProvider.get(name).getName(),
-                storeCredentialsProvider.get(name).getPasswordSha1());
+            accountManager.unsubscribeStore(name, storeCredentialsProvider.get(name)
+                .getName(), storeCredentialsProvider.get(name)
+                .getPasswordSha1());
           }
           StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
           storeAccessor.remove(name);

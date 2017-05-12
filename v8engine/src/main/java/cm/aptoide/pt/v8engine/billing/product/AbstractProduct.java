@@ -43,5 +43,4 @@ public class AbstractProduct implements Product {
   @Override public String getDescription() {
     return description;
   }
-
 }

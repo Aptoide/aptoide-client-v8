@@ -29,7 +29,6 @@ public class DataHolder {
     holder = null;
   }
 
-
   public WifiConfiguration getWcOnJoin() {
     return wcOnJoin;
   }

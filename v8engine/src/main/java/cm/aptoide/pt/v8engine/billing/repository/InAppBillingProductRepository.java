@@ -82,8 +82,8 @@ public class InAppBillingProductRepository extends ProductRepository {
       InAppBillingPurchasesResponse.PurchaseInformation purchaseInformation, InAppProduct product) {
     return Observable.zip(Observable.from(purchaseInformation.getPurchaseList()),
         Observable.from(purchaseInformation.getSignatureList()), (purchase, signature) -> {
-          if (purchase.getProductId().equals(product.getSku())
-              && purchase.getPurchaseState() == 0) {
+          if (purchase.getProductId()
+              .equals(product.getSku()) && purchase.getPurchaseState() == 0) {
             return purchaseFactory.create(purchase, signature, product.getApiVersion());
           }
           return null;
@@ -99,7 +99,8 @@ public class InAppBillingProductRepository extends ProductRepository {
       int apiVersion) {
     return Observable.zip(Observable.from(purchaseInformation.getPurchaseList()),
         Observable.from(purchaseInformation.getSignatureList()), (purchase, signature) -> {
-          if (purchase.getPurchaseToken().equals(purchaseToken)) {
+          if (purchase.getPurchaseToken()
+              .equals(purchaseToken)) {
             return purchaseFactory.create(purchase, signature, apiVersion);
           }
           return null;

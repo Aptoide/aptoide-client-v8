@@ -127,6 +127,14 @@ public class WebAuthorizationPresenter implements Presenter {
         .subscribe();
   }
 
+  @Override public void saveState(Bundle state) {
+
+  }
+
+  @Override public void restoreState(Bundle state) {
+
+  }
+
   public Completable processPaymentAndDismiss(Payment payment, Product product) {
     return payment.process(product)
         .observeOn(AndroidSchedulers.mainThread())
@@ -144,13 +152,5 @@ public class WebAuthorizationPresenter implements Presenter {
     }
 
     return Single.error(new IllegalStateException("No product information provided to presenter."));
-  }
-
-  @Override public void saveState(Bundle state) {
-
-  }
-
-  @Override public void restoreState(Bundle state) {
-
   }
 }

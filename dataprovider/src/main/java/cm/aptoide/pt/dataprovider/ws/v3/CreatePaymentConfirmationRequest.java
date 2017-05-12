@@ -24,7 +24,8 @@ public class CreatePaymentConfirmationRequest extends V3<BaseV3Response> {
   }
 
   public static CreatePaymentConfirmationRequest ofInApp(int productId, int paymentId,
-      NetworkOperatorManager operatorManager, String developerPayload, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      NetworkOperatorManager operatorManager, String developerPayload,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
     final BaseBody args = getBaseBody(productId, paymentId, operatorManager);
     args.put("developerPayload", developerPayload);
@@ -46,7 +47,8 @@ public class CreatePaymentConfirmationRequest extends V3<BaseV3Response> {
 
   public static CreatePaymentConfirmationRequest ofInApp(int productId, int paymentId,
       NetworkOperatorManager operatorManager, String developerPayload, String paymentConfirmationId,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient, Converter.Factory converterFactory) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     final BaseBody args = getBaseBody(productId, paymentId, operatorManager);
     args.put("paykey", paymentConfirmationId);
     args.put("developerPayload", developerPayload);
@@ -55,7 +57,8 @@ public class CreatePaymentConfirmationRequest extends V3<BaseV3Response> {
   }
 
   public static CreatePaymentConfirmationRequest ofPaidApp(int productId, int paymentId,
-      NetworkOperatorManager operatorManager, String store, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      NetworkOperatorManager operatorManager, String store,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
     final BaseBody args = getBaseBody(productId, paymentId, operatorManager);
     args.put("repo", store);
@@ -65,7 +68,8 @@ public class CreatePaymentConfirmationRequest extends V3<BaseV3Response> {
 
   public static CreatePaymentConfirmationRequest ofPaidApp(int productId, int paymentId,
       NetworkOperatorManager operatorManager, String store, String paymentConfirmationId,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient, Converter.Factory converterFactory) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
     final BaseBody args = getBaseBody(productId, paymentId, operatorManager);
     args.put("paykey", paymentConfirmationId);
     args.put("repo", store);

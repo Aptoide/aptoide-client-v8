@@ -53,10 +53,11 @@ public class AuthorizationSync extends RepositorySync {
       payer.getId()
           .flatMap(payerId -> getServerAuthorization(payerId).doOnSuccess(
               authorization -> saveAndReschedulePendingAuthorization(authorization, syncResult,
-                  payerId)).onErrorReturn(throwable -> {
-            saveAndRescheduleOnNetworkError(syncResult, throwable, payerId);
-            return null;
-          }))
+                  payerId))
+              .onErrorReturn(throwable -> {
+                saveAndRescheduleOnNetworkError(syncResult, throwable, payerId);
+                return null;
+              }))
           .toBlocking()
           .value();
     } catch (RuntimeException e) {

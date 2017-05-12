@@ -34,12 +34,14 @@ public class AptoideAccountManager {
   }
 
   public Observable<Account> accountStatus() {
-    return Observable.merge(accountRelay,
-        dataPersist.getAccount().onErrorReturn(throwable -> createLocalAccount()).toObservable());
+    return Observable.merge(accountRelay, dataPersist.getAccount()
+        .onErrorReturn(throwable -> createLocalAccount())
+        .toObservable());
   }
 
   private Single<Account> singleAccountStatus() {
-    return accountStatus().first().toSingle();
+    return accountStatus().first()
+        .toSingle();
   }
 
   private Account createLocalAccount() {
@@ -62,25 +64,29 @@ public class AptoideAccountManager {
    * @return user Account
    */
   @Deprecated public Account getAccount() {
-    return singleAccountStatus().onErrorReturn(throwable -> null).toBlocking().value();
+    return singleAccountStatus().onErrorReturn(throwable -> null)
+        .toBlocking()
+        .value();
   }
 
   public Completable logout() {
-    return singleAccountStatus().flatMapCompletable(
-        account -> account.logout().andThen(removeAccount()));
+    return singleAccountStatus().flatMapCompletable(account -> account.logout()
+        .andThen(removeAccount()));
   }
 
   public Completable removeAccount() {
-    return dataPersist.removeAccount().doOnCompleted(() -> accountRelay.call(createLocalAccount()));
+    return dataPersist.removeAccount()
+        .doOnCompleted(() -> accountRelay.call(createLocalAccount()));
   }
 
   public Completable refreshToken() {
-    return singleAccountStatus().flatMapCompletable(
-        account -> account.refreshToken().andThen(saveAccount(account)));
+    return singleAccountStatus().flatMapCompletable(account -> account.refreshToken()
+        .andThen(saveAccount(account)));
   }
 
   private Completable saveAccount(Account account) {
-    return dataPersist.saveAccount(account).doOnCompleted(() -> accountRelay.call(account));
+    return dataPersist.saveAccount(account)
+        .doOnCompleted(() -> accountRelay.call(account));
   }
 
   public Completable signUp(String email, String password) {
@@ -114,7 +120,8 @@ public class AptoideAccountManager {
   public void unsubscribeStore(String storeName, String storeUserName, String storePassword) {
     accountManagerService.unsubscribeStore(storeName, storeUserName, storePassword, this)
         .subscribe(() -> {
-        }, throwable -> CrashReport.getInstance().log(throwable));
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable));
   }
 
   public Completable subscribeStore(String storeName, String storeUserName, String storePassword) {

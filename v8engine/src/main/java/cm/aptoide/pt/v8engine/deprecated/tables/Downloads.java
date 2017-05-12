@@ -40,7 +40,8 @@ public class Downloads {
     File[] files = oldPathToDownloads.listFiles();
     // sort files having most recent first
     // does some un-necessary auto-boxing to compare 2 longs
-    Arrays.sort(files, (f1, f2) -> Long.valueOf(f1.lastModified()).compareTo(f2.lastModified()));
+    Arrays.sort(files, (f1, f2) -> Long.valueOf(f1.lastModified())
+        .compareTo(f2.lastModified()));
     long cacheSum = 0;
     for (File downloadFile : files) {
       if (downloadFile.exists() && downloadFile.isFile()) {
@@ -48,9 +49,9 @@ public class Downloads {
         long fileSize = downloadFile.length();
 
         // only migrate APKs
-        if ((MAX_SIZE_CACHE > (cacheSum + fileSize))
-            && downloadFile.getName().endsWith(".apk")
-            && downloadFile.renameTo(new File(newPathToDownloads, downloadFile.getName()))) {
+        if ((MAX_SIZE_CACHE > (cacheSum + fileSize)) && downloadFile.getName()
+            .endsWith(".apk") && downloadFile.renameTo(
+            new File(newPathToDownloads, downloadFile.getName()))) {
           cacheSum += fileSize;
           saveDbEntry(downloadFile, downloadAccessor);
         } else {

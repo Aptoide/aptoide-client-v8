@@ -22,14 +22,18 @@ public class BaseBodyInterceptorV3 implements BodyInterceptor<BaseBody> {
   }
 
   public Single<BaseBody> intercept(BaseBody body) {
-    return accountManager.accountStatus().first().toSingle().map(account -> {
-      body.setAptoideMd5sum(aptoideMd5sum);
-      body.setAptoidePackage(aptoidePackage);
-      body.setAptoideUid(idsRepository.getUniqueIdentifier());
-      if (account.isLoggedIn()) {
-        body.setAccessToken(account.getAccessToken());
-      }
-      return body;
-    }).subscribeOn(Schedulers.computation());
+    return accountManager.accountStatus()
+        .first()
+        .toSingle()
+        .map(account -> {
+          body.setAptoideMd5sum(aptoideMd5sum);
+          body.setAptoidePackage(aptoidePackage);
+          body.setAptoideUid(idsRepository.getUniqueIdentifier());
+          if (account.isLoggedIn()) {
+            body.setAccessToken(account.getAccessToken());
+          }
+          return body;
+        })
+        .subscribeOn(Schedulers.computation());
   }
 }

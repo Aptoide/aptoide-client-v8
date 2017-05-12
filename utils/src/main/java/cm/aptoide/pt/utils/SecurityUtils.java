@@ -94,7 +94,8 @@ public final class SecurityUtils {
   }
 
   public static String getInstallerPackageName(final Context context, String packageName) {
-    return context.getPackageManager().getInstallerPackageName(packageName);
+    return context.getPackageManager()
+        .getInstallerPackageName(packageName);
   }
 
   @StringDef({ APTOIDE_STORE_APP_ID, PLAY_STORE_APP_ID, AMAZON_STORE_APP_ID, XIAOMI_STORE_APP_ID })

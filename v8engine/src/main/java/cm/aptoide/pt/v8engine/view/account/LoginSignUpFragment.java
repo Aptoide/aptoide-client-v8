@@ -117,9 +117,11 @@ public class LoginSignUpFragment extends BackButtonFragment implements LoginSign
     final View mainContent = view.findViewById(R.id.main_content);
     final int originalBottomPadding = withBottomBar ? mainContent.getPaddingBottom() : 0;
     if (withBottomBar) {
-      view.findViewById(R.id.appbar).setVisibility(View.GONE);
+      view.findViewById(R.id.appbar)
+          .setVisibility(View.GONE);
     } else {
-      view.findViewById(R.id.appbar).setVisibility(View.VISIBLE);
+      view.findViewById(R.id.appbar)
+          .setVisibility(View.VISIBLE);
       setupToolbar(view, getString(R.string.my_account));
     }
     mainContent.setPadding(0, 0, 0, originalBottomPadding);

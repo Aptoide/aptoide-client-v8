@@ -93,7 +93,8 @@ import retrofit2.Converter;
     labelTextView.setText(pojo.getName());
     verNameTextView.setText(pojo.getVersionName());
     final FragmentActivity context = getContext();
-    ImageLoader.with(context).load(pojo.getIcon(), iconImageView);
+    ImageLoader.with(context)
+        .load(pojo.getIcon(), iconImageView);
 
     installedItemFrame.setOnClickListener(v -> {
       // TODO: 25-05-2016 neuro apagar em principio
@@ -106,8 +107,8 @@ import retrofit2.Converter;
       createReviewLayout.setVisibility(View.VISIBLE);
       compositeSubscription.add(RxView.clicks(createReviewLayout)
           .flatMap(__ -> dialogUtils.showRateDialog(getContext(), appName, packageName, storeName))
-          .subscribe(__ -> Analytics.Updates.createReview(),
-              err -> CrashReport.getInstance().log(err)));
+          .subscribe(__ -> Analytics.Updates.createReview(), err -> CrashReport.getInstance()
+              .log(err)));
     } else {
       createReviewLayout.setVisibility(View.GONE);
     }
@@ -115,7 +116,8 @@ import retrofit2.Converter;
 
   private void showRateDialog() {
     final Context ctx = getContext();
-    final View view = LayoutInflater.from(ctx).inflate(R.layout.dialog_rate_app, null);
+    final View view = LayoutInflater.from(ctx)
+        .inflate(R.layout.dialog_rate_app, null);
 
     final TextView titleTextView = (TextView) view.findViewById(R.id.title);
     final AppCompatRatingBar reviewRatingBar =
@@ -137,8 +139,12 @@ import retrofit2.Converter;
 
       AptoideUtils.SystemU.hideKeyboard(getContext());
 
-      final String reviewTitle = titleTextInputLayout.getEditText().getText().toString();
-      final String reviewText = reviewTextInputLayout.getEditText().getText().toString();
+      final String reviewTitle = titleTextInputLayout.getEditText()
+          .getText()
+          .toString();
+      final String reviewText = reviewTextInputLayout.getEditText()
+          .getText()
+          .toString();
       final int reviewRating = Math.round(reviewRatingBar.getRating());
 
       if (TextUtils.isEmpty(reviewTitle)) {
@@ -151,18 +157,20 @@ import retrofit2.Converter;
 
       dialog.dismiss();
       PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor,
-          httpClient, converterFactory).execute(response -> {
-        if (response.isOk()) {
-          Logger.d(TAG, "review added");
-          ShowMessage.asSnack(labelTextView, R.string.review_success);
-          ManagerPreferences.setForceServerRefreshFlag(true);
-        } else {
-          ShowMessage.asSnack(labelTextView, R.string.error_occured);
-        }
-      }, e -> {
-        CrashReport.getInstance().log(e);
-        ShowMessage.asSnack(labelTextView, R.string.error_occured);
-      });
+          httpClient, converterFactory)
+          .execute(response -> {
+            if (response.isOk()) {
+              Logger.d(TAG, "review added");
+              ShowMessage.asSnack(labelTextView, R.string.review_success);
+              ManagerPreferences.setForceServerRefreshFlag(true);
+            } else {
+              ShowMessage.asSnack(labelTextView, R.string.error_occured);
+            }
+          }, e -> {
+            CrashReport.getInstance()
+                .log(e);
+            ShowMessage.asSnack(labelTextView, R.string.error_occured);
+          });
     });
 
     // create and show rating dialog

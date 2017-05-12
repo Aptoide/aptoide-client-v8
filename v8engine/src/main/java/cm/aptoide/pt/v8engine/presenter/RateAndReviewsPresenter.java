@@ -51,27 +51,37 @@ public class RateAndReviewsPresenter implements Presenter {
         .subscribe(aVoid -> {
         }, err -> {
           view.showError(err);
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         });
 
-    view.nextReviews().flatMap(offset -> {
-      ListReviewsRequest.Body body = request.getBody();
-      body.setOffset(offset);
-      return request.observe().observeOn(schedulerProvider.ui()).doOnNext(response -> {
-        if (response.isOk()) {
-          view.showNextReviews(0, response.getDatalist().getList());
-        } else {
-          // TODO: 17/11/2016 sithengineer improve this exception
-          IllegalStateException exception = new IllegalStateException("Unexpected response");
-          view.showError(exception);
-          CrashReport.getInstance().log(exception);
-        }
-      });
-    }).compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY)).subscribe(aVoid -> {
-    }, err -> {
-      view.showError(err);
-      CrashReport.getInstance().log(err);
-    });
+    view.nextReviews()
+        .flatMap(offset -> {
+          ListReviewsRequest.Body body = request.getBody();
+          body.setOffset(offset);
+          return request.observe()
+              .observeOn(schedulerProvider.ui())
+              .doOnNext(response -> {
+                if (response.isOk()) {
+                  view.showNextReviews(0, response.getDatalist()
+                      .getList());
+                } else {
+                  // TODO: 17/11/2016 sithengineer improve this exception
+                  IllegalStateException exception =
+                      new IllegalStateException("Unexpected response");
+                  view.showError(exception);
+                  CrashReport.getInstance()
+                      .log(exception);
+                }
+              });
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(aVoid -> {
+        }, err -> {
+          view.showError(err);
+          CrashReport.getInstance()
+              .log(err);
+        });
   }
 
   @Override public void saveState(Bundle state) {
@@ -83,28 +93,41 @@ public class RateAndReviewsPresenter implements Presenter {
   }
 
   @NonNull private Observable<Object> showReviews() {
-    return request.observe().observeOn(schedulerProvider.ui()).doOnNext(response -> {
-      if (response.isOk()) {
-        view.showNextReviews(0, response.getDatalist().getList());
-      } else {
-        // TODO: 17/11/2016 sithengineer improve this exception
-        IllegalStateException exception = new IllegalStateException("Unexpected response");
-        view.showError(exception);
-        CrashReport.getInstance().log(exception);
-      }
-    }).map(response -> null);
+    return request.observe()
+        .observeOn(schedulerProvider.ui())
+        .doOnNext(response -> {
+          if (response.isOk()) {
+            view.showNextReviews(0, response.getDatalist()
+                .getList());
+          } else {
+            // TODO: 17/11/2016 sithengineer improve this exception
+            IllegalStateException exception = new IllegalStateException("Unexpected response");
+            view.showError(exception);
+            CrashReport.getInstance()
+                .log(exception);
+          }
+        })
+        .map(response -> null);
   }
 
   @NonNull private Observable<Object> showRating() {
-    return ratingRequest.observe().observeOn(schedulerProvider.ui()).doOnNext(response -> {
-      if (response.isOk()) {
-        view.showRating(response.getNodes().getMeta().getData().getStats().getRating());
-      } else {
-        // TODO: 17/11/2016 sithengineer improve this exception
-        IllegalStateException exception = new IllegalStateException("Unexpected response");
-        view.showError(exception);
-        CrashReport.getInstance().log(exception);
-      }
-    }).map(response -> null);
+    return ratingRequest.observe()
+        .observeOn(schedulerProvider.ui())
+        .doOnNext(response -> {
+          if (response.isOk()) {
+            view.showRating(response.getNodes()
+                .getMeta()
+                .getData()
+                .getStats()
+                .getRating());
+          } else {
+            // TODO: 17/11/2016 sithengineer improve this exception
+            IllegalStateException exception = new IllegalStateException("Unexpected response");
+            view.showError(exception);
+            CrashReport.getInstance()
+                .log(exception);
+          }
+        })
+        .map(response -> null);
   }
 }

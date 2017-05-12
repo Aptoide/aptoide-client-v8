@@ -21,48 +21,48 @@ public class ExampleMessageController extends AptoideMessageClientController {
 
   private static FileLifecycleProvider<AndroidAppInfo> newFileServerLifecycleProvider() {
     return new FileLifecycleProvider<AndroidAppInfo>() {
-      @Override
-      public FileServerLifecycle<AndroidAppInfo> newFileServerLifecycle() {
+      @Override public FileServerLifecycle<AndroidAppInfo> newFileServerLifecycle() {
         return new FileServerLifecycle<AndroidAppInfo>() {
           @Override public void onError(IOException e) {
             e.printStackTrace();
           }
-  
+
           @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
-            System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
+            System.out.println(
+                "onProgressChanged() called with: " + "progress = [" + progress + "]");
           }
-  
+
           @Override public void onStartSending(AndroidAppInfo androidAppInfo) {
             System.out.println(
-                    "onStartSending() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
+                "onStartSending() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
           }
-  
+
           @Override public void onFinishSending(AndroidAppInfo androidAppInfo) {
             System.out.println(
-                    "onFinishSending() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
+                "onFinishSending() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
           }
         };
       }
-  
-      @Override
-      public FileClientLifecycle<AndroidAppInfo> newFileClientLifecycle() {
+
+      @Override public FileClientLifecycle<AndroidAppInfo> newFileClientLifecycle() {
         return new FileClientLifecycle<AndroidAppInfo>() {
           @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
             System.out.println(
-                    "onStartReceiving() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
+                "onStartReceiving() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
           }
-  
+
           @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
             System.out.println(
-                    "onFinishReceiving() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
+                "onFinishReceiving() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
           }
-  
+
           @Override public void onError(IOException e) {
             e.printStackTrace();
           }
-  
+
           @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
-            System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
+            System.out.println(
+                "onProgressChanged() called with: " + "progress = [" + progress + "]");
           }
         };
       }

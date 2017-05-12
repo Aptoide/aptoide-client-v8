@@ -79,19 +79,23 @@ public class CompletedDownloadDisplayable extends Displayable {
 
   public Observable<Integer> downloadStatus() {
     return installManager.getInstallation(download.getMd5())
-        .map(installationProgress -> installationProgress.getRequest().getOverallDownloadStatus())
+        .map(installationProgress -> installationProgress.getRequest()
+            .getOverallDownloadStatus())
         .onErrorReturn(throwable -> Download.NOT_DOWNLOADED);
   }
 
   public Observable<Progress<Download>> installOrOpenDownload(Context context,
       PermissionService permissionRequest) {
-    return installManager.getInstallation(download.getMd5()).flatMap(installed -> {
-      if (installed.getState() == Progress.DONE) {
-        AptoideUtils.SystemU.openApp(download.getFilesToDownload().get(0).getPackageName());
-        return Observable.empty();
-      }
-      return resumeDownload(context, permissionRequest);
-    });
+    return installManager.getInstallation(download.getMd5())
+        .flatMap(installed -> {
+          if (installed.getState() == Progress.DONE) {
+            AptoideUtils.SystemU.openApp(download.getFilesToDownload()
+                .get(0)
+                .getPackageName());
+            return Observable.empty();
+          }
+          return resumeDownload(context, permissionRequest);
+        });
   }
 
   public Observable<Progress<Download>> resumeDownload(Context context,

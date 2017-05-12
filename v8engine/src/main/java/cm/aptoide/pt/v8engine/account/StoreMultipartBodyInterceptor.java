@@ -16,7 +16,8 @@ import rx.schedulers.Schedulers;
  * Created by marcelobenites on 13/03/17.
  */
 
-public class StoreMultipartBodyInterceptor implements BodyInterceptor<HashMapNotNull<String, RequestBody>> {
+public class StoreMultipartBodyInterceptor
+    implements BodyInterceptor<HashMapNotNull<String, RequestBody>> {
 
   private final IdsRepository idsRepository;
   private final AptoideAccountManager accountManager;
@@ -25,9 +26,9 @@ public class StoreMultipartBodyInterceptor implements BodyInterceptor<HashMapNot
   private final String storeDescription;
   private final ObjectMapper serializer;
 
-  public StoreMultipartBodyInterceptor(IdsRepository idsRepository, AptoideAccountManager accountManager,
-      RequestBodyFactory requestBodyFactory, String storeTheme, String storeDescription,
-      ObjectMapper serializer) {
+  public StoreMultipartBodyInterceptor(IdsRepository idsRepository,
+      AptoideAccountManager accountManager, RequestBodyFactory requestBodyFactory,
+      String storeTheme, String storeDescription, ObjectMapper serializer) {
     this.idsRepository = idsRepository;
     this.accountManager = accountManager;
     this.requestBodyFactory = requestBodyFactory;
@@ -38,24 +39,28 @@ public class StoreMultipartBodyInterceptor implements BodyInterceptor<HashMapNot
 
   @Override public Single<HashMapNotNull<String, RequestBody>> intercept(
       HashMapNotNull<String, RequestBody> body) {
-    return accountManager.accountStatus().first().toSingle().flatMap(account -> {
-      try {
-        body.put("store_properties", requestBodyFactory.createBodyPartFromString(
-            serializer.writeValueAsString(
-                new SimpleSetStoreRequest.StoreProperties(storeTheme, storeDescription))));
-      } catch (JsonProcessingException e) {
-        Single.error(e);
-      }
+    return accountManager.accountStatus()
+        .first()
+        .toSingle()
+        .flatMap(account -> {
+          try {
+            body.put("store_properties", requestBodyFactory.createBodyPartFromString(
+                serializer.writeValueAsString(
+                    new SimpleSetStoreRequest.StoreProperties(storeTheme, storeDescription))));
+          } catch (JsonProcessingException e) {
+            Single.error(e);
+          }
 
-      if (account.isLoggedIn()) {
-        body.put("access_token",
-            requestBodyFactory.createBodyPartFromString(account.getAccessToken()));
-      }
+          if (account.isLoggedIn()) {
+            body.put("access_token",
+                requestBodyFactory.createBodyPartFromString(account.getAccessToken()));
+          }
 
-      body.put("aptoide_uid",
-          requestBodyFactory.createBodyPartFromString(idsRepository.getUniqueIdentifier()));
+          body.put("aptoide_uid",
+              requestBodyFactory.createBodyPartFromString(idsRepository.getUniqueIdentifier()));
 
-      return Single.just(body);
-    }).subscribeOn(Schedulers.computation());
+          return Single.just(body);
+        })
+        .subscribeOn(Schedulers.computation());
   }
 }

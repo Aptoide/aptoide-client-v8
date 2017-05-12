@@ -53,7 +53,9 @@ public class UpdateRepository {
     return storeAccessor.getAll()
         .first()
         .observeOn(Schedulers.io())
-        .flatMap(stores -> Observable.from(stores).map(store -> store.getStoreId()).toList())
+        .flatMap(stores -> Observable.from(stores)
+            .map(store -> store.getStoreId())
+            .toList())
         .flatMap(storeIds -> getNetworkUpdates(storeIds, bypassCache))
         .toSingle()
         .flatMapCompletable(updates -> {
@@ -67,13 +69,15 @@ public class UpdateRepository {
 
   private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
     Logger.d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
-    return ListAppsUpdatesRequest.of(storeIds, idsRepository.getUniqueIdentifier(),
-        bodyInterceptor, httpClient, converterFactory).observe(bypassCache).map(result -> {
-      if (result != null && result.isOk()) {
-        return result.getList();
-      }
-      return Collections.<App> emptyList();
-    });
+    return ListAppsUpdatesRequest.of(storeIds, idsRepository.getUniqueIdentifier(), bodyInterceptor,
+        httpClient, converterFactory)
+        .observe(bypassCache)
+        .map(result -> {
+          if (result != null && result.isOk()) {
+            return result.getList();
+          }
+          return Collections.<App>emptyList();
+        });
   }
 
   public Completable removeAllNonExcluded() {
@@ -112,12 +116,13 @@ public class UpdateRepository {
     // remove excluded from list
     // save the remainder
     return Observable.from(updateList)
-        .flatMap(update -> updateAccessor.isExcluded(update.getPackageName()).flatMap(excluded -> {
-          if (excluded) {
-            return Observable.empty();
-          }
-          return Observable.just(update);
-        }))
+        .flatMap(update -> updateAccessor.isExcluded(update.getPackageName())
+            .flatMap(excluded -> {
+              if (excluded) {
+                return Observable.empty();
+              }
+              return Observable.just(update);
+            }))
         .toList()
         .toSingle()
         .doOnSuccess(updateListFiltered -> {
@@ -156,16 +161,19 @@ public class UpdateRepository {
 
   public Observable<List<Update>> getNonExcludedUpdates() {
     return updateAccessor.getAll()
-        .flatMap(
-            updates -> Observable.from(updates).filter(update -> !update.isExcluded()).toList());
+        .flatMap(updates -> Observable.from(updates)
+            .filter(update -> !update.isExcluded())
+            .toList());
   }
 
   public Observable<Void> setExcluded(String packageName, boolean excluded) {
-    return updateAccessor.get(packageName).first().map(update -> {
-      update.setExcluded(excluded);
-      updateAccessor.insert(update);
-      return null;
-    });
+    return updateAccessor.get(packageName)
+        .first()
+        .map(update -> {
+          update.setExcluded(excluded);
+          updateAccessor.insert(update);
+          return null;
+        });
   }
 
   public Observable<Boolean> contains(String packageName, boolean isExcluded) {

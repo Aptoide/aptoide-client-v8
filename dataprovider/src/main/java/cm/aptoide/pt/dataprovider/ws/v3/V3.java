@@ -101,33 +101,36 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
   @Override public Observable<U> observe(boolean bypassCache) {
     return bodyInterceptor.intercept(map)
-        .flatMapObservable(body -> super.observe(bypassCache).onErrorResumeNext(throwable -> {
-          if (throwable instanceof HttpException) {
-            try {
+        .flatMapObservable(body -> super.observe(bypassCache)
+            .onErrorResumeNext(throwable -> {
+              if (throwable instanceof HttpException) {
+                try {
 
-              GenericResponseV3 genericResponseV3 =
-                  (GenericResponseV3) converterFactory.responseBodyConverter(
-                      GenericResponseV3.class, null, null)
-                      .convert(((HttpException) throwable).response().errorBody());
+                  GenericResponseV3 genericResponseV3 =
+                      (GenericResponseV3) converterFactory.responseBodyConverter(
+                          GenericResponseV3.class, null, null)
+                          .convert(((HttpException) throwable).response()
+                              .errorBody());
 
-              if (INVALID_ACCESS_TOKEN_CODE.equals(genericResponseV3.getError())) {
+                  if (INVALID_ACCESS_TOKEN_CODE.equals(genericResponseV3.getError())) {
 
-                if (!accessTokenRetry) {
-                  accessTokenRetry = true;
-                  return DataProvider.invalidateAccessToken().flatMapObservable(s -> {
-                    return V3.this.observe(bypassCache);
-                  });
+                    if (!accessTokenRetry) {
+                      accessTokenRetry = true;
+                      return DataProvider.invalidateAccessToken()
+                          .flatMapObservable(s -> {
+                            return V3.this.observe(bypassCache);
+                          });
+                    }
+                  } else {
+                    return Observable.error(
+                        new AptoideWsV3Exception(throwable).setBaseResponse(genericResponseV3));
+                  }
+                } catch (IOException e) {
+                  e.printStackTrace();
                 }
-              } else {
-                return Observable.error(
-                    new AptoideWsV3Exception(throwable).setBaseResponse(genericResponseV3));
               }
-            } catch (IOException e) {
-              e.printStackTrace();
-            }
-          }
-          return Observable.error(throwable);
-        }));
+              return Observable.error(throwable);
+            }));
   }
 
   interface Interfaces {
@@ -137,8 +140,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("addApkFlag") @FormUrlEncoded Observable<GenericResponseV2> addApkFlag(
-        @FieldMap BaseBody arg,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @FieldMap BaseBody arg, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("getApkInfo") @FormUrlEncoded Observable<PaidApp> getApkInfo(@FieldMap BaseBody args,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
@@ -168,28 +170,24 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
     Observable<BaseV3Response> createPaymentAuthorization(@FieldMap BaseBody args);
 
     @POST("oauth2Authentication") @FormUrlEncoded Observable<OAuth> oauth2Authentication(
-        @FieldMap BaseBody args,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("getUserInfo") @FormUrlEncoded Observable<CheckUserCredentialsJson> getUserInfo(
-        @FieldMap BaseBody args,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("checkUserCredentials") @FormUrlEncoded
     Observable<CheckUserCredentialsJson> checkUserCredentials(@FieldMap BaseBody args,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("createUser") @FormUrlEncoded Observable<BaseV3Response> createUser(
-        @FieldMap BaseBody args,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("createUser") @Multipart Observable<BaseV3Response> createUserWithFile(
         @Part MultipartBody.Part user_avatar, @PartMap() HashMapNotNull<String, RequestBody> args,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("changeUserSettings") @FormUrlEncoded Observable<BaseV3Response> changeUserSettings(
-        @FieldMap BaseBody args,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("changeUserRepoSubscription") @FormUrlEncoded
     Observable<BaseV3Response> changeUserRepoSubscription(@FieldMap BaseBody args);

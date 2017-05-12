@@ -92,10 +92,14 @@ public class ProductBundleMapper {
     bundle.putString(ICON, product.getIcon());
     bundle.putString(TITLE, product.getTitle());
     bundle.putString(DESCRIPTION, product.getDescription());
-    bundle.putDouble(AMOUNT, product.getPrice().getAmount());
-    bundle.putDouble(TAX_RATE, product.getPrice().getTaxRate());
-    bundle.putString(CURRENCY, product.getPrice().getCurrency());
-    bundle.putString(CURRENCY_SYMBOL, product.getPrice().getCurrencySymbol());
+    bundle.putDouble(AMOUNT, product.getPrice()
+        .getAmount());
+    bundle.putDouble(TAX_RATE, product.getPrice()
+        .getTaxRate());
+    bundle.putString(CURRENCY, product.getPrice()
+        .getCurrency());
+    bundle.putString(CURRENCY_SYMBOL, product.getPrice()
+        .getCurrencySymbol());
 
     if (product instanceof InAppProduct) {
       bundle.putString(DEVELOPER_PAYLOAD, ((InAppProduct) product).getDeveloperPayload());

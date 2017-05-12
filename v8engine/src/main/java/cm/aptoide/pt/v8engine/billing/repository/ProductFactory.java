@@ -19,22 +19,38 @@ import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
 public class ProductFactory {
 
   public Product create(PaidApp app, boolean sponsored) {
-    final String icon = app.getPath().getIcon() == null ? app.getPath().getAlternativeIcon()
-        : app.getPath().getIcon();
-    return new PaidAppProduct(app.getPayment().getMetadata().getProductId(), icon,
-        app.getApp().getName(), app.getApp().getDescription(), app.getPath().getAppId(),
-        app.getPath().getStoreName(), new Price(app.getPayment().getAmount(),
-        app.getPayment().getPaymentServices().get(0).getCurrency(), app.getPayment().getSymbol(),
-        app.getPayment().getPaymentServices().get(0).getTaxRate()), sponsored);
+    final String icon = app.getPath()
+        .getIcon() == null ? app.getPath()
+        .getAlternativeIcon() : app.getPath()
+        .getIcon();
+    return new PaidAppProduct(app.getPayment()
+        .getMetadata()
+        .getProductId(), icon, app.getApp()
+        .getName(), app.getApp()
+        .getDescription(), app.getPath()
+        .getAppId(), app.getPath()
+        .getStoreName(), new Price(app.getPayment()
+        .getAmount(), app.getPayment()
+        .getPaymentServices()
+        .get(0)
+        .getCurrency(), app.getPayment()
+        .getSymbol(), app.getPayment()
+        .getPaymentServices()
+        .get(0)
+        .getTaxRate()), sponsored);
   }
 
   public Product create(int apiVersion, String developerPayload, String packageName,
       InAppBillingSkuDetailsResponse response) {
     final InAppBillingSkuDetailsResponse.PurchaseDataObject purchaseDataObject =
-        response.getPublisherResponse().getDetailList().get(0);
-    PaymentServiceResponse paymentServiceResponse = response.getPaymentServices().get(0);
-    return new InAppProduct(response.getMetadata().getId(), response.getMetadata().getIcon(),
-        purchaseDataObject.getTitle(), purchaseDataObject.getDescription(), apiVersion,
+        response.getPublisherResponse()
+            .getDetailList()
+            .get(0);
+    PaymentServiceResponse paymentServiceResponse = response.getPaymentServices()
+        .get(0);
+    return new InAppProduct(response.getMetadata()
+        .getId(), response.getMetadata()
+        .getIcon(), purchaseDataObject.getTitle(), purchaseDataObject.getDescription(), apiVersion,
         purchaseDataObject.getProductId(), packageName, developerPayload,
         purchaseDataObject.getType(),
         new Price(purchaseDataObject.getPriceAmount(), purchaseDataObject.getCurrency(),

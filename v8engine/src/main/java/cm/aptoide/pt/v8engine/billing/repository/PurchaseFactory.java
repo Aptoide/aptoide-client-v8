@@ -28,6 +28,7 @@ public class PurchaseFactory {
   }
 
   public Purchase create(PaidApp app) {
-    return new PaidAppPurchase(app.getPath().getStringPath());
+    return new PaidAppPurchase(app.getPath()
+        .getStringPath());
   }
 }

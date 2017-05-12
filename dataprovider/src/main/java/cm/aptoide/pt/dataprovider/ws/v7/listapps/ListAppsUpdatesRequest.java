@@ -66,56 +66,58 @@ import rx.schedulers.Schedulers;
 
   @Override protected Observable<ListAppsUpdates> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return Observable.just(body.getApksData().size()).flatMap(bodySize -> {
-      if (bodySize > SPLIT_SIZE) {
-        //
-        // we need to split the request in several requests due to having too much apps
-        //
-        // necessary steps to take
-        //
-        // 1) create necessary request bodies
-        // 2) create requests with each body
-        // 3) do parallel requests
-        // 4) wait for all requests
-        // 5) merge all the request results in one object
-        //
+    return Observable.just(body.getApksData()
+        .size())
+        .flatMap(bodySize -> {
+          if (bodySize > SPLIT_SIZE) {
+            //
+            // we need to split the request in several requests due to having too much apps
+            //
+            // necessary steps to take
+            //
+            // 1) create necessary request bodies
+            // 2) create requests with each body
+            // 3) do parallel requests
+            // 4) wait for all requests
+            // 5) merge all the request results in one object
+            //
 
-        List<ApksData> apksData = body.getApksData();
-        ArrayList<Body> bodies = new ArrayList<>();
+            List<ApksData> apksData = body.getApksData();
+            ArrayList<Body> bodies = new ArrayList<>();
 
-        for (int n = 0; n < apksData.size(); n += SPLIT_SIZE) {
-          bodies.add(getBody(apksData, n));
-        }
+            for (int n = 0; n < apksData.size(); n += SPLIT_SIZE) {
+              bodies.add(getBody(apksData, n));
+            }
 
-        return Observable.from(bodies)
-            // switch to I/O scheduler
-            .observeOn(Schedulers.io())
-            // map bodies to request with bodies
-            //.map(body -> fetchDataUsingBodyWithRetry(interfaces, body, bypassCache, 3))
-            .map(body -> interfaces.listAppsUpdates(body, bypassCache))
-            // wait for all requests to be ready and return a list of requests
-            .toList()
-            // subscribe to all observables (list of observables<request>) at the same time using merge
-            .flatMap(requestList -> Observable.merge(requestList))
-            // wait for all responses
-            .toList()
-            // flat the list of [list of updates] into a list of updates
-            .flatMapIterable(responses -> responses)
-            // get the inner list of updates
-            .map(response -> response.getList())
-            // iterate over each update
-            .flatMapIterable(responseList -> responseList)
-            // create list of updates
-            .toList()
-            // return the resulting list of updates into a single object
-            .map(listAppUpdates -> {
-              ListAppsUpdates resultListAppsUpdates = new ListAppsUpdates();
-              resultListAppsUpdates.setList(listAppUpdates);
-              return resultListAppsUpdates;
-            });
-      }
-      return interfaces.listAppsUpdates(body, bypassCache);
-    });
+            return Observable.from(bodies)
+                // switch to I/O scheduler
+                .observeOn(Schedulers.io())
+                // map bodies to request with bodies
+                //.map(body -> fetchDataUsingBodyWithRetry(interfaces, body, bypassCache, 3))
+                .map(body -> interfaces.listAppsUpdates(body, bypassCache))
+                // wait for all requests to be ready and return a list of requests
+                .toList()
+                // subscribe to all observables (list of observables<request>) at the same time using merge
+                .flatMap(requestList -> Observable.merge(requestList))
+                // wait for all responses
+                .toList()
+                // flat the list of [list of updates] into a list of updates
+                .flatMapIterable(responses -> responses)
+                // get the inner list of updates
+                .map(response -> response.getList())
+                // iterate over each update
+                .flatMapIterable(responseList -> responseList)
+                // create list of updates
+                .toList()
+                // return the resulting list of updates into a single object
+                .map(listAppUpdates -> {
+                  ListAppsUpdates resultListAppsUpdates = new ListAppsUpdates();
+                  resultListAppsUpdates.setList(listAppUpdates);
+                  return resultListAppsUpdates;
+                });
+          }
+          return interfaces.listAppsUpdates(body, bypassCache);
+        });
   }
 
   private Body getBody(List<ApksData> apksData, int n) {

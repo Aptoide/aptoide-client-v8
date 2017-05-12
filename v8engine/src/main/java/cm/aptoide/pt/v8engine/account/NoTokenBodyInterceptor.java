@@ -25,6 +25,7 @@ public class NoTokenBodyInterceptor implements BodyInterceptor<BaseBody> {
       body.setAptoidePackage(aptoidePackage);
       body.setAptoideUid(idsRepository.getUniqueIdentifier());
       return body;
-    }).subscribeOn(Schedulers.computation());
+    })
+        .subscribeOn(Schedulers.computation());
   }
 }

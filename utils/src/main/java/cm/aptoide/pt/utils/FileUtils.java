@@ -218,7 +218,8 @@ public class FileUtils {
           long size = deleteDir(filePath);
           Logger.d(TAG, "deleting folder " + filePath.getPath() + " size: " + size);
           return size;
-        }).onErrorResumeNext(throwable -> Observable.empty()))
+        })
+            .onErrorResumeNext(throwable -> Observable.empty()))
         .toList()
         .map(deletedSizes -> {
           long size = 0;
@@ -240,7 +241,8 @@ public class FileUtils {
   public String getPath(Uri contentUri, Context context) {
     try {
       String[] proj = { MediaStore.Images.Media.DATA };
-      Cursor cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+      Cursor cursor = context.getContentResolver()
+          .query(contentUri, proj, null, null, null);
       int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
       cursor.moveToFirst();
       return cursor.getString(column_index);

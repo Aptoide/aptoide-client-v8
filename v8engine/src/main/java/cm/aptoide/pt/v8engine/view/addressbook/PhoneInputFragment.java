@@ -74,7 +74,8 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
             AppEventsLogger.newLogger(getContext().getApplicationContext())),
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
-            Application.getConfiguration().getMarketName())));
+            Application.getConfiguration()
+                .getMarketName())));
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
     contactUtils = new ContactUtils(
         (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
@@ -87,8 +88,8 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
 
   @Override public void setupViews() {
     mNotNowV.setPaintFlags(mNotNowV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-    mSharePhoneV.setText(getString(R.string.addressbook_share_phone,
-        Application.getConfiguration().getMarketName()));
+    mSharePhoneV.setText(getString(R.string.addressbook_share_phone, Application.getConfiguration()
+        .getMarketName()));
 
     String countryCodeE164 = contactUtils.getCountryCodeForRegion();
     if (!countryCodeE164.isEmpty()) {
@@ -115,23 +116,31 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
     mPhoneNumber.setOnEditorActionListener((textView, actionId, keyEvent) -> {
       if ((keyEvent != null && (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId
           == EditorInfo.IME_ACTION_DONE)) {
-        String countryCode = mCountryNumber.getText().toString();
-        mActionsListener.submitClicked(countryCode.concat(mPhoneNumber.getText().toString()));
+        String countryCode = mCountryNumber.getText()
+            .toString();
+        mActionsListener.submitClicked(countryCode.concat(mPhoneNumber.getText()
+            .toString()));
       }
       return false;
     });
 
-    RxView.clicks(mNotNowV).subscribe(click -> this.mActionsListener.notNowClicked());
-    RxView.clicks(mSaveNumber).subscribe(click -> {
+    RxView.clicks(mNotNowV)
+        .subscribe(click -> this.mActionsListener.notNowClicked());
+    RxView.clicks(mSaveNumber)
+        .subscribe(click -> {
 
-      String countryCode = mCountryNumber.getText().toString();
+          String countryCode = mCountryNumber.getText()
+              .toString();
 
-      if (mCountryNumber.getText().toString().isEmpty()) {
-        countryCode = String.valueOf(mCountryNumber.getHint());
-      }
+          if (mCountryNumber.getText()
+              .toString()
+              .isEmpty()) {
+            countryCode = String.valueOf(mCountryNumber.getHint());
+          }
 
-      this.mActionsListener.submitClicked(countryCode.concat(mPhoneNumber.getText().toString()));
-    });
+          this.mActionsListener.submitClicked(countryCode.concat(mPhoneNumber.getText()
+              .toString()));
+        });
   }
 
   @Override public int getContentViewId() {
@@ -159,7 +168,8 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
   }
 
   @Override public void showSubmissionError() {
-    Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+    Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT)
+        .show();
   }
 
   @Override public void hideVirtualKeyboard() {

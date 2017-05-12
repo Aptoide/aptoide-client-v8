@@ -43,14 +43,18 @@ public class ListFullReviewsSuccessRequestListener implements SuccessRequestList
 
   @Override public void call(ListReviews listFullReviews) {
 
-    List<Review> reviews = listFullReviews.getDatalist().getList();
+    List<Review> reviews = listFullReviews.getDatalist()
+        .getList();
     List<Displayable> displayables = new LinkedList<>();
 
     Observable.from(reviews)
         .flatMap(review -> ListCommentsRequest.of( // fetch the list of comments for each review
-            review.getComments().getView(), review.getId(), 3,
+            review.getComments()
+                .getView(), review.getId(), 3,
             StoreUtils.getStoreCredentials(fragment.getStoreName(), storeCredentialsProvider), true,
-            bodyBodyInterceptor, httpClient, converterFactory).observe().subscribeOn(Schedulers.io()) // parallel I/O split point
+            bodyBodyInterceptor, httpClient, converterFactory)
+            .observe()
+            .subscribeOn(Schedulers.io()) // parallel I/O split point
             .map(listComments -> {
               review.setCommentList(listComments);
               return review;
@@ -61,7 +65,8 @@ public class ListFullReviewsSuccessRequestListener implements SuccessRequestList
         .subscribe(reviewList -> {
           addRateAndReviewDisplayables(reviews, displayables);
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         });
   }
 
@@ -71,18 +76,25 @@ public class ListFullReviewsSuccessRequestListener implements SuccessRequestList
     for (final Review review : reviews) {
       displayables.add(
           new RateAndReviewCommentDisplayable(new ReviewWithAppName(fragment.getAppName(), review),
-              new ConcreteItemCommentAdder(count, fragment, review),
-              review.getCommentList().getTotal()));
+              new ConcreteItemCommentAdder(count, fragment, review), review.getCommentList()
+              .getTotal()));
 
       if (review.getId() == fragment.getReviewId()) {
         index = count;
       }
       if (review.getCommentList() != null
-          && review.getCommentList().getDatalist() != null
-          && review.getCommentList().getDatalist().getLimit() != null) {
-        fragment.createDisplayableComments(review.getCommentList().getDatalist().getList(),
-            displayables);
-        if (review.getCommentList().getDatalist().getList().size() > 2) {
+          && review.getCommentList()
+          .getDatalist() != null
+          && review.getCommentList()
+          .getDatalist()
+          .getLimit() != null) {
+        fragment.createDisplayableComments(review.getCommentList()
+            .getDatalist()
+            .getList(), displayables);
+        if (review.getCommentList()
+            .getDatalist()
+            .getList()
+            .size() > 2) {
           displayables.add(fragment.createReadMoreDisplayable(count, review));
         }
       }
@@ -90,14 +102,17 @@ public class ListFullReviewsSuccessRequestListener implements SuccessRequestList
     }
 
     // Hammered to fix layout not visible on first call.
-    if (fragment.getAdapter().getItemCount() == 0) {
+    if (fragment.getAdapter()
+        .getItemCount() == 0) {
       index = 0;
     }
 
     fragment.checkAndRemoveProgressBarDisplayable();
     fragment.addDisplayables(displayables);
     if (index >= 0) {
-      fragment.getLayoutManager().scrollToPosition(fragment.getAdapter().getItemPosition(index));
+      fragment.getLayoutManager()
+          .scrollToPosition(fragment.getAdapter()
+              .getItemPosition(index));
     }
   }
 }

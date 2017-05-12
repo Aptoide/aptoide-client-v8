@@ -53,13 +53,14 @@ public class PaymentSyncScheduler {
   }
 
   private Completable scheduleOneOffSync(Bundle bundle) {
-    return androidAccountProvider.getAndroidAccount().flatMapCompletable(account -> {
-      bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-      bundle.putBoolean(ContentResolver.SYNC_EXTRAS_IGNORE_BACKOFF, true);
+    return androidAccountProvider.getAndroidAccount()
+        .flatMapCompletable(account -> {
+          bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+          bundle.putBoolean(ContentResolver.SYNC_EXTRAS_IGNORE_BACKOFF, true);
 
-      ContentResolver.setSyncAutomatically(account, authority, true);
-      return scheduleSync(account, authority, bundle);
-    });
+          ContentResolver.setSyncAutomatically(account, authority, true);
+          return scheduleSync(account, authority, bundle);
+        });
   }
 
   private Completable scheduleSync(Account account, String authority, Bundle bundle) {
@@ -80,6 +81,7 @@ public class PaymentSyncScheduler {
             Subscriptions.create(() -> ContentResolver.removeStatusChangeListener(handle)));
         ContentResolver.requestSync(account, authority, bundle);
       }
-    }).toCompletable();
+    })
+        .toCompletable();
   }
 }

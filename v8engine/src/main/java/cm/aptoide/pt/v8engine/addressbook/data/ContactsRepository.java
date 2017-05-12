@@ -44,32 +44,35 @@ public class ContactsRepository {
   }
 
   public void getContacts(@NonNull LoadContactsCallback callback1) {
-    Observable.just(callback1).observeOn(Schedulers.computation()).subscribe(callback -> {
+    Observable.just(callback1)
+        .observeOn(Schedulers.computation())
+        .subscribe(callback -> {
 
-      ContactsModel contacts = contactUtils.getContacts(V8Engine.getContext());
+          ContactsModel contacts = contactUtils.getContacts(V8Engine.getContext());
 
-      List<String> numbers = contacts.getMobileNumbers();
-      List<String> emails = contacts.getEmails();
+          List<String> numbers = contacts.getMobileNumbers();
+          List<String> emails = contacts.getEmails();
 
-      SyncAddressBookRequest.of(numbers, emails, bodyInterceptor, httpClient, converterFactory)
-          .observe()
-          .subscribe(getFollowers -> {
-            List<Contact> contactList = new ArrayList<>();
-            for (GetFollowers.TimelineUser user : getFollowers.getDatalist().getList()) {
-              Contact contact = new Contact();
-              contact.setStore(user.getStore());
-              Comment.User person = new Comment.User();
-              person.setAvatar(user.getAvatar());
-              person.setName(user.getName());
-              contact.setPerson(person);
-              contactList.add(contact);
-            }
-            callback.onContactsLoaded(contactList, true);
-          }, (throwable) -> {
-            throwable.printStackTrace();
-            callback.onContactsLoaded(null, false);
-          });
-    });
+          SyncAddressBookRequest.of(numbers, emails, bodyInterceptor, httpClient, converterFactory)
+              .observe()
+              .subscribe(getFollowers -> {
+                List<Contact> contactList = new ArrayList<>();
+                for (GetFollowers.TimelineUser user : getFollowers.getDatalist()
+                    .getList()) {
+                  Contact contact = new Contact();
+                  contact.setStore(user.getStore());
+                  Comment.User person = new Comment.User();
+                  person.setAvatar(user.getAvatar());
+                  person.setName(user.getName());
+                  contact.setPerson(person);
+                  contactList.add(contact);
+                }
+                callback.onContactsLoaded(contactList, true);
+              }, (throwable) -> {
+                throwable.printStackTrace();
+                callback.onContactsLoaded(null, false);
+              });
+        });
   }
 
   public void getTwitterContacts(@NonNull TwitterModel twitterModel,
@@ -79,7 +82,8 @@ public class ContactsRepository {
         .observe()
         .subscribe(getFollowers -> {
           List<Contact> contactList = new ArrayList<>();
-          for (GetFollowers.TimelineUser user : getFollowers.getDatalist().getList()) {
+          for (GetFollowers.TimelineUser user : getFollowers.getDatalist()
+              .getList()) {
             Contact contact = new Contact();
             contact.setStore(user.getStore());
             Comment.User person = new Comment.User();
@@ -98,22 +102,25 @@ public class ContactsRepository {
   public void getFacebookContacts(@NonNull FacebookModel facebookModel,
       @NonNull LoadContactsCallback callback) {
     SyncAddressBookRequest.of(facebookModel.getId(), facebookModel.getAccessToken(),
-        bodyInterceptor, httpClient, converterFactory).observe().subscribe(getFriends -> {
-      List<Contact> contactList = new ArrayList<>();
-      for (GetFollowers.TimelineUser user : getFriends.getDatalist().getList()) {
-        Contact contact = new Contact();
-        contact.setStore(user.getStore());
-        Comment.User person = new Comment.User();
-        person.setAvatar(user.getAvatar());
-        person.setName(user.getName());
-        contact.setPerson(person);
-        contactList.add(contact);
-      }
-      callback.onContactsLoaded(contactList, true);
-    }, throwable -> {
-      throwable.printStackTrace();
-      callback.onContactsLoaded(null, false);
-    });
+        bodyInterceptor, httpClient, converterFactory)
+        .observe()
+        .subscribe(getFriends -> {
+          List<Contact> contactList = new ArrayList<>();
+          for (GetFollowers.TimelineUser user : getFriends.getDatalist()
+              .getList()) {
+            Contact contact = new Contact();
+            contact.setStore(user.getStore());
+            Comment.User person = new Comment.User();
+            person.setAvatar(user.getAvatar());
+            person.setName(user.getName());
+            contact.setPerson(person);
+            contactList.add(contact);
+          }
+          callback.onContactsLoaded(contactList, true);
+        }, throwable -> {
+          throwable.printStackTrace();
+          callback.onContactsLoaded(null, false);
+        });
   }
 
   public void submitPhoneNumber(@NonNull SubmitContactCallback callback, String phoneNumber) {

@@ -45,7 +45,8 @@ public class PaymentFactory {
       case PAYPAL:
         return new PayPalPayment(context, paymentService.getId(), paymentService.getName(),
             paymentService.getDescription(), paymentRepositoryFactory, authorizationRepository,
-            payPalConfiguration, paymentService.isAuthorizationRequired(), authorizationFactory, payer);
+            payPalConfiguration, paymentService.isAuthorizationRequired(), authorizationFactory,
+            payer);
       case BOACOMPRA:
       case BOACOMPRAGOLD:
         return new WebAuthorizationPayment(paymentService.getId(), paymentService.getName(),

@@ -28,7 +28,8 @@ public class PaymentConfirmationFactory {
       PaymentConfirmation paymentConfirmation) {
     return new cm.aptoide.pt.database.realm.PaymentConfirmation(
         paymentConfirmation.getPaymentConfirmationId(), paymentConfirmation.getProductId(),
-        paymentConfirmation.getStatus().name(), paymentConfirmation.getPayerId());
+        paymentConfirmation.getStatus()
+            .name(), paymentConfirmation.getPayerId());
   }
 
   public PaymentConfirmation convertToPaymentConfirmation(

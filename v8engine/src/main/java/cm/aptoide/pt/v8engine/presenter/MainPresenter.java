@@ -56,7 +56,8 @@ public class MainPresenter implements Presenter {
               SecurePreferences.setWizardAvailable(false);
             }
           }
-        }, throwable -> CrashReport.getInstance().log(throwable));
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable));
   }
 
   @Override public void saveState(Bundle state) {

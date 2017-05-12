@@ -61,7 +61,8 @@ public class PaidAppProductRepository extends ProductRepository {
     return getPaidApp(true, ((PaidAppProduct) product).getAppId(),
         ((PaidAppProduct) product).isSponsored(),
         ((PaidAppProduct) product).getStoreName()).flatMap(app -> {
-      if (app.getPayment().isPaid()) {
+      if (app.getPayment()
+          .isPaid()) {
         return Single.just(purchaseFactory.create(app));
       }
       return Single.error(new RepositoryItemNotFoundException(
@@ -72,20 +73,25 @@ public class PaidAppProductRepository extends ProductRepository {
   @Override public Single<List<Payment>> getPayments(Context context, Product product) {
     return getPaidApp(false, ((PaidAppProduct) product).getAppId(),
         ((PaidAppProduct) product).isSponsored(), ((PaidAppProduct) product).getStoreName()).map(
-        paidApp -> paidApp.getPayment().getPaymentServices())
+        paidApp -> paidApp.getPayment()
+            .getPaymentServices())
         .flatMap(payments -> convertResponseToPayment(context, payments));
   }
 
   private Single<PaidApp> getPaidApp(boolean refresh, long appId, boolean sponsored,
       String storeName) {
     return GetApkInfoRequest.of(appId, sponsored, storeName, operatorManager, bodyInterceptorV3,
-        httpClient, converterFactory).observe(refresh).flatMap(response -> {
-      if (response != null && response.isOk() && response.isPaid()) {
-        return Observable.just(response);
-      } else {
-        return Observable.error(new RepositoryItemNotFoundException(
-            "No paid app found for app id " + appId + " in store " + storeName));
-      }
-    }).first().toSingle();
+        httpClient, converterFactory)
+        .observe(refresh)
+        .flatMap(response -> {
+          if (response != null && response.isOk() && response.isPaid()) {
+            return Observable.just(response);
+          } else {
+            return Observable.error(new RepositoryItemNotFoundException(
+                "No paid app found for app id " + appId + " in store " + storeName));
+          }
+        })
+        .first()
+        .toSingle();
   }
 }

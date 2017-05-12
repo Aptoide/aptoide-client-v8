@@ -13,7 +13,5 @@ public interface BackButton {
   interface ClickHandler {
 
     boolean handle();
-
   }
-
 }

@@ -55,50 +55,75 @@ public class AppRepository {
     //If vanilla, don't pass the store name.
     //store name is already in appId
     //[AN-1160] - [AppView] latest version bug
-    return GetAppRequest.of(appId,
-        V8Engine.getConfiguration().getPartnerId() == null ? null : storeName,
+    return GetAppRequest.of(appId, V8Engine.getConfiguration()
+            .getPartnerId() == null ? null : storeName,
         StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
-        bodyInterceptorV7, httpClient, converterFactory).observe(refresh).flatMap(response -> {
-      if (response != null && response.isOk()) {
-        if (response.getNodes().getMeta().getData().isPaid()) {
-          return addPayment(sponsored, response, refresh);
-        } else {
-          return Observable.just(response);
-        }
-      } else {
-        return Observable.error(
-            new RepositoryItemNotFoundException("No app found for app id " + appId));
-      }
-    });
+        bodyInterceptorV7, httpClient, converterFactory)
+        .observe(refresh)
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            if (response.getNodes()
+                .getMeta()
+                .getData()
+                .isPaid()) {
+              return addPayment(sponsored, response, refresh);
+            } else {
+              return Observable.just(response);
+            }
+          } else {
+            return Observable.error(
+                new RepositoryItemNotFoundException("No app found for app id " + appId));
+          }
+        });
   }
 
   private Observable<GetApp> addPayment(boolean sponsored, GetApp getApp, boolean refresh) {
-    return getPaidApp(getApp.getNodes().getMeta().getData().getId(), sponsored,
-        getApp.getNodes().getMeta().getData().getStore().getName(), refresh).map(paidApp -> {
-      if (paidApp.getPayment().isPaid()) {
-        getApp.getNodes().getMeta().getData().getFile().setPath(paidApp.getPath().getStringPath());
+    return getPaidApp(getApp.getNodes()
+        .getMeta()
+        .getData()
+        .getId(), sponsored, getApp.getNodes()
+        .getMeta()
+        .getData()
+        .getStore()
+        .getName(), refresh).map(paidApp -> {
+      if (paidApp.getPayment()
+          .isPaid()) {
+        getApp.getNodes()
+            .getMeta()
+            .getData()
+            .getFile()
+            .setPath(paidApp.getPath()
+                .getStringPath());
       }
-      getApp.getNodes().getMeta().getData().getPay().setStatus(paidApp.getPayment().getStatus());
+      getApp.getNodes()
+          .getMeta()
+          .getData()
+          .getPay()
+          .setStatus(paidApp.getPayment()
+              .getStatus());
       return getApp;
-    }).onErrorResumeNext(throwable -> {
-      if (throwable instanceof RepositoryItemNotFoundException) {
-        return Observable.just(getApp);
-      }
-      return Observable.error(throwable);
-    });
+    })
+        .onErrorResumeNext(throwable -> {
+          if (throwable instanceof RepositoryItemNotFoundException) {
+            return Observable.just(getApp);
+          }
+          return Observable.error(throwable);
+        });
   }
 
   private Observable<PaidApp> getPaidApp(long appId, boolean sponsored, String storeName,
       boolean refresh) {
     return GetApkInfoRequest.of(appId, sponsored, storeName, operatorManager, bodyInterceptorV3,
-        httpClient, converterFactory).observe(refresh).flatMap(response -> {
-      if (response != null && response.isOk() && response.isPaid()) {
-        return Observable.just(response);
-      } else {
-        return Observable.error(new RepositoryItemNotFoundException(
-            "No paid app found for app id " + appId + " in store " + storeName));
-      }
-    });
+        httpClient, converterFactory)
+        .observe(refresh)
+        .flatMap(response -> {
+          if (response != null && response.isOk() && response.isPaid()) {
+            return Observable.just(response);
+          } else {
+            return Observable.error(new RepositoryItemNotFoundException(
+                "No paid app found for app id " + appId + " in store " + storeName));
+          }
+        });
   }
 
   public Observable<GetApp> getApp(String packageName, boolean refresh, boolean sponsored,
@@ -107,7 +132,10 @@ public class AppRepository {
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
-            if (response.getNodes().getMeta().getData().isPaid()) {
+            if (response.getNodes()
+                .getMeta()
+                .getData()
+                .isPaid()) {
               return addPayment(sponsored, response, refresh);
             } else {
               return Observable.just(response);
@@ -124,7 +152,10 @@ public class AppRepository {
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
-            if (response.getNodes().getMeta().getData().isPaid()) {
+            if (response.getNodes()
+                .getMeta()
+                .getData()
+                .isPaid()) {
               return addPayment(sponsored, response, refresh);
             } else {
               return Observable.just(response);
@@ -141,7 +172,10 @@ public class AppRepository {
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
-            if (response.getNodes().getMeta().getData().isPaid()) {
+            if (response.getNodes()
+                .getMeta()
+                .getData()
+                .isPaid()) {
               return addPayment(sponsored, response, refresh);
             } else {
               return Observable.just(response);

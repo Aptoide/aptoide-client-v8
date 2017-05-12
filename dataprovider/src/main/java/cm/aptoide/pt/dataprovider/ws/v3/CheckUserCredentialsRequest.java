@@ -22,7 +22,8 @@ public class CheckUserCredentialsRequest extends V3<CheckUserCredentialsJson> {
     this.createStore = createStore;
   }
 
-  public static CheckUserCredentialsRequest of(String store, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+  public static CheckUserCredentialsRequest of(String store,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
 
     final BaseBody body = new BaseBody();
