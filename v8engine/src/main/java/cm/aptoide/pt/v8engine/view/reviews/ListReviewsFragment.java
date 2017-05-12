@@ -37,8 +37,10 @@ public class ListReviewsFragment extends GetStoreEndlessFragment<ListFullReviews
     return listFullReviews -> {
       if (listFullReviews != null
           && listFullReviews.getDatalist() != null
-          && listFullReviews.getDatalist().getList() != null) {
-        List<FullReview> reviews = listFullReviews.getDatalist().getList();
+          && listFullReviews.getDatalist()
+          .getList() != null) {
+        List<FullReview> reviews = listFullReviews.getDatalist()
+            .getList();
         ArrayList<Displayable> displayables = new ArrayList<>(reviews.size());
         for (int i = 0; i < reviews.size(); i++) {
           FullReview review = reviews.get(i);

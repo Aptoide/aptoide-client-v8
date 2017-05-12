@@ -65,9 +65,11 @@ public class SimilarWidget extends CardWidget<SimilarDisplayable> {
 
     setCardViewMargin(displayable, cardView);
 
-    ImageLoader.with(context).loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
+    ImageLoader.with(context)
+        .loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
 
-    ImageLoader.with(context).load(displayable.getAppIcon(), appIcon);
+    ImageLoader.with(context)
+        .load(displayable.getAppIcon(), appIcon);
 
     appName.setText(displayable.getAppName());
 

@@ -50,7 +50,8 @@ public class AptoideFileClientSocket<T> extends AptoideClientSocket {
             fileDescriptor);
 
     for (FileInfo fileInfo : fileInfos) {
-      System.out.println(Thread.currentThread().getId() + ": Start receiving " + fileInfo);
+      System.out.println(Thread.currentThread()
+          .getId() + ": Start receiving " + fileInfo);
       OutputStream out = new FileOutputStream(fileInfo.getFilePath());
 
       copy(socket.getInputStream(), out, fileInfo.getSize(), progressAccumulator);

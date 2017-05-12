@@ -54,9 +54,8 @@ import rx.Observable;
     this.mature = mature;
   }
 
-  public static GetAdsRequest ofHomepage(String clientUniqueId,
-      boolean googlePlayServicesAvailable, String oemid, boolean mature, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+  public static GetAdsRequest ofHomepage(String clientUniqueId, boolean googlePlayServicesAvailable,
+      String oemid, boolean mature, OkHttpClient httpClient, Converter.Factory converterFactory) {
     // TODO: 09-06-2016 neuro limit based on max colums
     return of(Location.homepage, Type.ADS.getPerLineCount(), clientUniqueId,
         googlePlayServicesAvailable, oemid, mature, httpClient, converterFactory);
@@ -73,7 +72,9 @@ import rx.Observable;
       String clientUniqueId, boolean googlePlayServicesAvailable, String oemid, boolean mature,
       OkHttpClient httpClient, Converter.Factory converterFactory) {
     return new GetAdsRequest(clientUniqueId, googlePlayServicesAvailable, oemid, mature,
-        converterFactory, httpClient).setLocation(location).setKeyword(keyword).setLimit(limit);
+        converterFactory, httpClient).setLocation(location)
+        .setKeyword(keyword)
+        .setLimit(limit);
   }
 
   public static GetAdsRequest ofHomepageMore(String clientUniqueId,
@@ -130,8 +131,8 @@ import rx.Observable;
   public static GetAdsRequest ofSearch(String query, String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, boolean mature, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
-    return of(Location.search, query, 1, clientUniqueId, googlePlayServicesAvailable, oemid,
-        mature, httpClient, converterFactory);
+    return of(Location.search, query, 1, clientUniqueId, googlePlayServicesAvailable, oemid, mature,
+        httpClient, converterFactory);
   }
 
   public static GetAdsRequest ofSecondInstall(String packageName, String clientUniqueId,
@@ -192,8 +193,8 @@ import rx.Observable;
 
     parameters.put("excluded_partners", excludedNetworks);
 
-    Observable<GetAdsResponse> result =
-        interfaces.getAds(parameters, bypassCache).doOnNext(getAdsResponse -> {
+    Observable<GetAdsResponse> result = interfaces.getAds(parameters, bypassCache)
+        .doOnNext(getAdsResponse -> {
 
           // Impression click for those networks who need it
           for (GetAdsResponse.Ad ad : getAdsResponse.getAds()) {

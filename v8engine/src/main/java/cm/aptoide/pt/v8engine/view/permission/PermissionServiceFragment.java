@@ -10,14 +10,14 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
-import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import rx.functions.Action0;
 
 /**
  * Created by marcelobenites on 18/01/17.
  */
 
-public abstract class PermissionServiceFragment extends BackButtonFragment implements PermissionService {
+public abstract class PermissionServiceFragment extends BackButtonFragment
+    implements PermissionService {
 
   @TargetApi(Build.VERSION_CODES.M) @Override
   public void requestAccessToExternalFileSystem(@Nullable Action0 toRunWhenAccessIsGranted,

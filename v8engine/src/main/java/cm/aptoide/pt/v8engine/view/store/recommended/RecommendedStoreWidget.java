@@ -44,47 +44,55 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
   @Override public void bindView(RecommendedStoreDisplayable displayable) {
     Store store = displayable.getPojo();
     storeName.setText(store.getName());
-    followingUsers.setText(String.valueOf(store.getStats().getSubscribers()));
-    numberStoreApps.setText(String.valueOf(store.getStats().getApps()));
+    followingUsers.setText(String.valueOf(store.getStats()
+        .getSubscribers()));
+    numberStoreApps.setText(String.valueOf(store.getStats()
+        .getApps()));
     final FragmentActivity context = getContext();
     ImageLoader.with(context)
-        .loadWithShadowCircleTransform(store.getAvatar(), storeIcon,
-            StoreThemeEnum.get(store).getStoreHeaderInt());
+        .loadWithShadowCircleTransform(store.getAvatar(), storeIcon, StoreThemeEnum.get(store)
+            .getStoreHeaderInt());
     setFollowButtonListener(displayable);
     setButtonText(displayable);
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(click -> displayable.openStoreFragment(getFragmentNavigator()),
-            throwable -> CrashReport.getInstance().log(throwable)));
+            throwable -> CrashReport.getInstance()
+                .log(throwable)));
   }
 
   private void setFollowButtonListener(RecommendedStoreDisplayable displayable) {
-    compositeSubscription.add(RxView.clicks(followButton).flatMap(click -> {
-      followButton.setEnabled(false);
-      return displayable.isFollowing()
-          .first()
-          .observeOn(Schedulers.computation())
-          .map(isSubscribed -> {
-            if (isSubscribed) {
-              displayable.unsubscribeStore();
-            } else {
-              displayable.subscribeStore(getContext());
-            }
-            return !isSubscribed;
-          });
-    }).observeOn(AndroidSchedulers.mainThread()).subscribe(isSubscribing -> {
-      followButton.setEnabled(true);
-      int message;
-      if (isSubscribing) {
-        message = R.string.store_followed;
-      } else {
-        message = R.string.unfollowing_store_message;
-      }
-      ShowMessage.asSnack(itemView,
-          AptoideUtils.StringU.getFormattedString(message, displayable.getPojo().getName()));
-    }, throwable -> {
-      CrashReport.getInstance().log(throwable);
-      ShowMessage.asSnack(itemView, R.string.error_occured);
-    }));
+    compositeSubscription.add(RxView.clicks(followButton)
+        .flatMap(click -> {
+          followButton.setEnabled(false);
+          return displayable.isFollowing()
+              .first()
+              .observeOn(Schedulers.computation())
+              .map(isSubscribed -> {
+                if (isSubscribed) {
+                  displayable.unsubscribeStore();
+                } else {
+                  displayable.subscribeStore(getContext());
+                }
+                return !isSubscribed;
+              });
+        })
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(isSubscribing -> {
+          followButton.setEnabled(true);
+          int message;
+          if (isSubscribing) {
+            message = R.string.store_followed;
+          } else {
+            message = R.string.unfollowing_store_message;
+          }
+          ShowMessage.asSnack(itemView, AptoideUtils.StringU.getFormattedString(message,
+              displayable.getPojo()
+                  .getName()));
+        }, throwable -> {
+          CrashReport.getInstance()
+              .log(throwable);
+          ShowMessage.asSnack(itemView, R.string.error_occured);
+        }));
   }
 
   private void setButtonText(RecommendedStoreDisplayable displayable) {
@@ -98,8 +106,9 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
           } else {
             message = R.string.follow;
           }
-          followButton.setText(
-              AptoideUtils.StringU.getFormattedString(message, displayable.getPojo().getName()));
+          followButton.setText(AptoideUtils.StringU.getFormattedString(message,
+              displayable.getPojo()
+                  .getName()));
           followButton.setVisibility(View.VISIBLE);
         }));
   }

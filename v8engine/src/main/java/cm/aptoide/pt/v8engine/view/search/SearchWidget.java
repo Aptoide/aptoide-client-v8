@@ -63,16 +63,18 @@ import rx.functions.Action1;
     final Action0 clickCallback = displayable.getClickCallback();
     final Action1<Void> clickToOpenStore =
         __ -> handleClickToOpenPopupMenu(clickCallback, overflowImageView, searchAppsApp);
-    compositeSubscription.add(RxView.clicks(overflowImageView).subscribe(clickToOpenStore));
+    compositeSubscription.add(RxView.clicks(overflowImageView)
+        .subscribe(clickToOpenStore));
 
     nameTextView.setText(searchAppsApp.getName());
-    String downloadNumber =
-        AptoideUtils.StringU.withSuffix(searchAppsApp.getStats().getPdownloads()) + " " + bottomView
-            .getContext()
-            .getString(R.string.downloads);
+    String downloadNumber = AptoideUtils.StringU.withSuffix(searchAppsApp.getStats()
+        .getPdownloads()) + " " + bottomView.getContext()
+        .getString(R.string.downloads);
     downloadsTextView.setText(downloadNumber);
 
-    float avg = searchAppsApp.getStats().getRating().getAvg();
+    float avg = searchAppsApp.getStats()
+        .getRating()
+        .getAvg();
     if (avg <= 0) {
       ratingBar.setVisibility(View.GONE);
     } else {
@@ -89,31 +91,42 @@ import rx.functions.Action1;
       }
     }
 
-    final StoreThemeEnum theme =
-        StoreThemeEnum.get(searchAppsApp.getStore().getAppearance().getTheme());
+    final StoreThemeEnum theme = StoreThemeEnum.get(searchAppsApp.getStore()
+        .getAppearance()
+        .getTheme());
 
     Drawable background = bottomView.getBackground();
     if (background instanceof ShapeDrawable) {
       ((ShapeDrawable) background).getPaint()
-          .setColor(itemView.getContext().getResources().getColor(theme.getStoreHeader()));
+          .setColor(itemView.getContext()
+              .getResources()
+              .getColor(theme.getStoreHeader()));
     } else if (background instanceof GradientDrawable) {
-      ((GradientDrawable) background).setColor(
-          itemView.getContext().getResources().getColor(theme.getStoreHeader()));
+      ((GradientDrawable) background).setColor(itemView.getContext()
+          .getResources()
+          .getColor(theme.getStoreHeader()));
     }
 
     background = storeTextView.getBackground();
     if (background instanceof ShapeDrawable) {
       ((ShapeDrawable) background).getPaint()
-          .setColor(itemView.getContext().getResources().getColor(theme.getStoreHeader()));
+          .setColor(itemView.getContext()
+              .getResources()
+              .getColor(theme.getStoreHeader()));
     } else if (background instanceof GradientDrawable) {
-      ((GradientDrawable) background).setColor(
-          itemView.getContext().getResources().getColor(theme.getStoreHeader()));
+      ((GradientDrawable) background).setColor(itemView.getContext()
+          .getResources()
+          .getColor(theme.getStoreHeader()));
     }
 
-    storeTextView.setText(searchAppsApp.getStore().getName());
-    ImageLoader.with(getContext()).load(searchAppsApp.getIcon(), iconImageView);
+    storeTextView.setText(searchAppsApp.getStore()
+        .getName());
+    ImageLoader.with(getContext())
+        .load(searchAppsApp.getIcon(), iconImageView);
 
-    if (Malware.Rank.TRUSTED.equals(searchAppsApp.getFile().getMalware().getRank())) {
+    if (Malware.Rank.TRUSTED.equals(searchAppsApp.getFile()
+        .getMalware()
+        .getRank())) {
       icTrustedImageView.setVisibility(View.VISIBLE);
     } else {
       icTrustedImageView.setVisibility(View.GONE);
@@ -121,7 +134,8 @@ import rx.functions.Action1;
 
     final Action1<Void> clickToOpenAppView =
         v -> handleClickToOpenAppView(clickCallback, searchAppsApp);
-    compositeSubscription.add(RxView.clicks(itemView).subscribe(clickToOpenAppView));
+    compositeSubscription.add(RxView.clicks(itemView)
+        .subscribe(clickToOpenAppView));
   }
 
   private void handleClickToOpenPopupMenu(Action0 clickCallback, View view,
@@ -131,32 +145,38 @@ import rx.functions.Action1;
     MenuInflater inflater = popup.getMenuInflater();
     inflater.inflate(R.menu.menu_search_item, popup.getMenu());
 
-    MenuItem menuItemVersions = popup.getMenu().findItem(R.id.versions);
+    MenuItem menuItemVersions = popup.getMenu()
+        .findItem(R.id.versions);
     if (searchAppsApp.isHasVersions()) {
       menuItemVersions.setVisible(true);
-      compositeSubscription.add(RxMenuItem.clicks(menuItemVersions).subscribe(aVoid -> {
-        if (clickCallback != null) {
-          clickCallback.call();
-        }
+      compositeSubscription.add(RxMenuItem.clicks(menuItemVersions)
+          .subscribe(aVoid -> {
+            if (clickCallback != null) {
+              clickCallback.call();
+            }
 
-        String name = searchAppsApp.getName();
-        String icon = searchAppsApp.getIcon();
-        String packageName = searchAppsApp.getPackageName();
+            String name = searchAppsApp.getName();
+            String icon = searchAppsApp.getIcon();
+            String packageName = searchAppsApp.getPackageName();
 
-        getFragmentNavigator().navigateTo(
-            V8Engine.getFragmentProvider().newOtherVersionsFragment(name, icon, packageName));
-      }));
+            getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+                .newOtherVersionsFragment(name, icon, packageName));
+          }));
     }
 
-    MenuItem menuItemGoToStore = popup.getMenu().findItem(R.id.go_to_store);
-    compositeSubscription.add(RxMenuItem.clicks(menuItemGoToStore).subscribe(__ -> {
-      if (clickCallback != null) {
-        clickCallback.call();
-      }
-      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
-          .newStoreFragment(searchAppsApp.getStore().getName(),
-              searchAppsApp.getStore().getAppearance().getTheme()));
-    }));
+    MenuItem menuItemGoToStore = popup.getMenu()
+        .findItem(R.id.go_to_store);
+    compositeSubscription.add(RxMenuItem.clicks(menuItemGoToStore)
+        .subscribe(__ -> {
+          if (clickCallback != null) {
+            clickCallback.call();
+          }
+          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+              .newStoreFragment(searchAppsApp.getStore()
+                  .getName(), searchAppsApp.getStore()
+                  .getAppearance()
+                  .getTheme()));
+        }));
 
     popup.show();
   }
@@ -168,7 +188,9 @@ import rx.functions.Action1;
     }
     getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
         .newAppViewFragment(searchAppsApp.getId(), searchAppsApp.getPackageName(),
-            searchAppsApp.getStore().getAppearance().getTheme(),
-            searchAppsApp.getStore().getName()));
+            searchAppsApp.getStore()
+                .getAppearance()
+                .getTheme(), searchAppsApp.getStore()
+                .getName()));
   }
 }

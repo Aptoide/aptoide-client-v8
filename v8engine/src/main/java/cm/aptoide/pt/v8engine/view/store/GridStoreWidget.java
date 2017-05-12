@@ -49,19 +49,22 @@ import rx.functions.Action1;
 
     final Action1<Void> handleStoreClick = v -> getFragmentNavigator().navigateTo(
         V8Engine.getFragmentProvider()
-            .newStoreFragment(gridStoreDisplayable.getPojo().getName(),
-                store.getAppearance().getTheme()));
-    compositeSubscription.add(RxView.clicks(storeLayout).subscribe(handleStoreClick));
+            .newStoreFragment(gridStoreDisplayable.getPojo()
+                .getName(), store.getAppearance()
+                .getTheme()));
+    compositeSubscription.add(RxView.clicks(storeLayout)
+        .subscribe(handleStoreClick));
 
     final FragmentActivity context = getContext();
     if (store.getId() == -1 || TextUtils.isEmpty(store.getAvatar())) {
       ImageLoader.with(context)
           .loadWithShadowCircleTransform(R.drawable.ic_avatar_apps, storeAvatar,
-              StoreThemeEnum.get(store).getStoreHeaderInt());
+              StoreThemeEnum.get(store)
+                  .getStoreHeaderInt());
     } else {
       ImageLoader.with(context)
-          .loadWithShadowCircleTransform(store.getAvatar(), storeAvatar,
-              StoreThemeEnum.get(store).getStoreHeaderInt());
+          .loadWithShadowCircleTransform(store.getAvatar(), storeAvatar, StoreThemeEnum.get(store)
+              .getStoreHeaderInt());
     }
   }
 }

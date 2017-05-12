@@ -20,7 +20,8 @@ public abstract class AccountBaseActivity extends ActivityView {
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setTitle(getActivityTitle());
-    getTheme().applyStyle(Application.getConfiguration().getDefaultThemeRes(), true);
+    getTheme().applyStyle(Application.getConfiguration()
+        .getDefaultThemeRes(), true);
   }
 
   public abstract String getActivityTitle();

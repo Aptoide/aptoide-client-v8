@@ -27,27 +27,31 @@ public class ListAppsFragment extends GetStoreEndlessFragment<ListApps> {
     return listApps -> {
 
       // Load sub nodes
-      List<App> list = listApps.getDatalist().getList();
+      List<App> list = listApps.getDatalist()
+          .getList();
 
       List<Displayable> displayables = new LinkedList<>();
       if (layout != null) {
         switch (layout) {
           case GRAPHIC:
             for (App app : list) {
-              app.getStore().setAppearance(new Store.Appearance(storeTheme, null));
+              app.getStore()
+                  .setAppearance(new Store.Appearance(storeTheme, null));
               displayables.add(new AppBrickListDisplayable(app, tag));
             }
             break;
           default:
             for (App app : list) {
-              app.getStore().setAppearance(new Store.Appearance(storeTheme, null));
+              app.getStore()
+                  .setAppearance(new Store.Appearance(storeTheme, null));
               displayables.add(new GridAppDisplayable(app, tag, storeContext == StoreContext.home));
             }
             break;
         }
       } else {
         for (App app : list) {
-          app.getStore().setAppearance(new Store.Appearance(storeTheme, null));
+          app.getStore()
+              .setAppearance(new Store.Appearance(storeTheme, null));
           displayables.add(new GridAppDisplayable(app, tag, storeContext == StoreContext.home));
         }
       }

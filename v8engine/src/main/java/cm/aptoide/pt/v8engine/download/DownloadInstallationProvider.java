@@ -29,7 +29,7 @@ public class DownloadInstallationProvider implements InstallationProvider {
   private final AptoideDownloadManager downloadManager;
   private final DownloadAccessor downloadAccessor;
   private StoredMinimalAdAccessor storedMinimalAdAccessor;
-  
+
   public DownloadInstallationProvider(AptoideDownloadManager downloadManager,
       DownloadAccessor downloadAccessor) {
     this.downloadManager = downloadManager;
@@ -38,19 +38,21 @@ public class DownloadInstallationProvider implements InstallationProvider {
   }
 
   @Override public Observable<RollbackInstallation> getInstallation(String md5) {
-    return downloadManager.getDownload(md5).first().flatMap(download -> {
-      if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-        return Observable.just(new DownloadInstallationAdapter(download, downloadAccessor))
-            .doOnNext(downloadInstallationAdapter -> {
-              storedMinimalAdAccessor.get(download.getPackageName())
-                  .doOnNext(handleCpd())
-                  .subscribeOn(Schedulers.io())
-                  .subscribe(storedMinimalAd -> {
-                  }, Throwable::printStackTrace);
-            });
-      }
-      return Observable.error(new InstallationException("Installation file not available."));
-    });
+    return downloadManager.getDownload(md5)
+        .first()
+        .flatMap(download -> {
+          if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+            return Observable.just(new DownloadInstallationAdapter(download, downloadAccessor))
+                .doOnNext(downloadInstallationAdapter -> {
+                  storedMinimalAdAccessor.get(download.getPackageName())
+                      .doOnNext(handleCpd())
+                      .subscribeOn(Schedulers.io())
+                      .subscribe(storedMinimalAd -> {
+                      }, Throwable::printStackTrace);
+                });
+          }
+          return Observable.error(new InstallationException("Installation file not available."));
+        });
   }
 
   @NonNull private Action1<StoredMinimalAd> handleCpd() {

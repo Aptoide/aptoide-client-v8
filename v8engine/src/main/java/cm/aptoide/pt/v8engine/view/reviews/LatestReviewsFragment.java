@@ -92,7 +92,8 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
               StoreUtils.getStoreCredentials(storeId, storeCredentialsProvider),
               baseBodyInterceptor, httpClient, converterFactory);
       Action1<ListFullReviews> listFullReviewsAction = listTopFullReviews -> {
-        List<FullReview> reviews = listTopFullReviews.getDatalist().getList();
+        List<FullReview> reviews = listTopFullReviews.getDatalist()
+            .getList();
         displayables = new LinkedList<>();
         for (final FullReview review : reviews) {
           displayables.add(new RowReviewDisplayable(review));

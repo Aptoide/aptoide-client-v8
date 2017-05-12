@@ -53,8 +53,8 @@ public class HighwayServerService extends Service {
     Intent i = new Intent();
     i.setAction("SERVER_DISCONNECT");
     sendBroadcast(i);
-
   };
+
   @Override public void onCreate() {
     super.onCreate();
     if (mNotifyManager == null) {
@@ -105,7 +105,8 @@ public class HighwayServerService extends Service {
             e.printStackTrace();
 
             if (mNotifyManager != null && androidAppInfo != null) {
-              mNotifyManager.cancel(androidAppInfo.getPackageName().hashCode());
+              mNotifyManager.cancel(androidAppInfo.getPackageName()
+                  .hashCode());
             }
             Intent i = new Intent();
             i.setAction("ERRORSENDING");
@@ -143,15 +144,16 @@ public class HighwayServerService extends Service {
 
           @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
 
-            finishReceiveNotification(androidAppInfo.getApk().getFilePath(),
-                androidAppInfo.getPackageName(), androidAppInfo);
+            finishReceiveNotification(androidAppInfo.getApk()
+                .getFilePath(), androidAppInfo.getPackageName(), androidAppInfo);
 
             Intent i = new Intent();
             i.putExtra("FinishedReceiving", true);
             i.putExtra("needReSend", false);
             i.putExtra("appName", androidAppInfo.getAppName());
             i.putExtra("packageName", androidAppInfo.getPackageName());
-            i.putExtra("filePath", androidAppInfo.getApk().getFilePath());
+            i.putExtra("filePath", androidAppInfo.getApk()
+                .getFilePath());
             i.setAction("RECEIVEAPP");
             sendBroadcast(i);
           }
@@ -159,11 +161,13 @@ public class HighwayServerService extends Service {
           @Override public void onError(IOException e) {
 
             if (mNotifyManager != null && androidAppInfo != null) {
-              mNotifyManager.cancel(androidAppInfo.getPackageName().hashCode());
+              mNotifyManager.cancel(androidAppInfo.getPackageName()
+                  .hashCode());
             }
 
             // Não ta facil perceber pk é k isto cai aqui quando só há um cliente, martelo ftw :/
-            if (aptoideMessageServerSocket.getAptoideMessageControllers().size() <= 1) {
+            if (aptoideMessageServerSocket.getAptoideMessageControllers()
+                .size() <= 1) {
               return;
             }
 
@@ -189,12 +193,14 @@ public class HighwayServerService extends Service {
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
     if (intent != null) {
 
-      if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
+      if (intent.getAction() != null && intent.getAction()
+          .equals("RECEIVE")) {
         final String externalStoragepath = intent.getStringExtra("ExternalStoragePath");
 
         System.out.println("Going to start serving");
         HostsCallbackManager hostsCallbackManager;
-        if (intent.getExtras().containsKey("autoShareFilePath")) {
+        if (intent.getExtras()
+            .containsKey("autoShareFilePath")) {
           String autoShareFilePath = intent.getStringExtra("autoShareFilePath");
           hostsCallbackManager =
               new HostsCallbackManager(this.getApplicationContext(), autoShareFilePath);
@@ -223,16 +229,21 @@ public class HighwayServerService extends Service {
         aptoideMessageClientSocket.startAsync();
 
         System.out.println("Connected 342");
-      } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
+      } else if (intent.getAction() != null && intent.getAction()
+          .equals("SEND")) {
         Bundle b = intent.getBundleExtra("bundle");
 
         listOfApps = b.getParcelableArrayList("listOfAppsToInstall");
 
         for (int i = 0; i < listOfApps.size(); i++) {
-          String filePath = listOfApps.get(i).getFilePath();
-          String appName = listOfApps.get(i).getAppName();
-          String packageName = listOfApps.get(i).getPackageName();
-          String obbsFilePath = listOfApps.get(i).getObbsFilePath();
+          String filePath = listOfApps.get(i)
+              .getFilePath();
+          String appName = listOfApps.get(i)
+              .getAppName();
+          String packageName = listOfApps.get(i)
+              .getPackageName();
+          String obbsFilePath = listOfApps.get(i)
+              .getObbsFilePath();
 
           File apk = new File(filePath);
 
@@ -250,7 +261,8 @@ public class HighwayServerService extends Service {
             }
           });
         }
-      } else if (intent.getAction() != null && intent.getAction().equals("SHUTDOWN_SERVER")) {
+      } else if (intent.getAction() != null && intent.getAction()
+          .equals("SHUTDOWN_SERVER")) {
         if (aptoideMessageServerSocket != null) {
           aptoideMessageClientSocket.disable();
           aptoideMessageServerSocket.shutdown(new Runnable() {
@@ -279,10 +291,11 @@ public class HighwayServerService extends Service {
   private void createReceiveNotification(String receivingAppName) {
 
     NotificationCompat.Builder mBuilderReceive = new NotificationCompat.Builder(this);
-    mBuilderReceive.setContentTitle(
-        this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
-            .getString(R.string.receive))
-        .setContentText(this.getResources().getString(R.string.receiving) + " " + receivingAppName);
+    mBuilderReceive.setContentTitle(this.getResources()
+        .getString(R.string.spot_share) + " - " + this.getResources()
+        .getString(R.string.receive))
+        .setContentText(this.getResources()
+            .getString(R.string.receiving) + " " + receivingAppName);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       mBuilderReceive.setSmallIcon(R.drawable.ic_stat_aptoide_notification);
     } else {
@@ -293,10 +306,11 @@ public class HighwayServerService extends Service {
   private void finishReceiveNotification(String receivedApkFilePath, String packageName,
       AndroidAppInfo androidAppInfo) {
     NotificationCompat.Builder mBuilderReceive = new NotificationCompat.Builder(this);
-    mBuilderReceive.setContentTitle(
-        this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
-            .getString(R.string.receive))
-        .setContentText(this.getResources().getString(R.string.transfCompleted))
+    mBuilderReceive.setContentTitle(this.getResources()
+        .getString(R.string.spot_share) + " - " + this.getResources()
+        .getString(R.string.receive))
+        .setContentText(this.getResources()
+            .getString(R.string.transfCompleted))
         .setSmallIcon(android.R.drawable.stat_sys_download_done)
         .setProgress(0, 0, false)
         .setAutoCancel(true);
@@ -313,17 +327,19 @@ public class HighwayServerService extends Service {
     if (mNotifyManager == null) {
       mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
     }
-    mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(), mBuilderReceive.build());
+    mNotifyManager.notify(androidAppInfo.getPackageName()
+        .hashCode(), mBuilderReceive.build());
   }
 
   private void showReceiveProgress(String receivingAppName, int actual,
       AndroidAppInfo androidAppInfo) {
 
     NotificationCompat.Builder mBuilderReceive = new NotificationCompat.Builder(this);
-    mBuilderReceive.setContentTitle(
-        this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
-            .getString(R.string.receive))
-        .setContentText(this.getResources().getString(R.string.receiving) + " " + receivingAppName);
+    mBuilderReceive.setContentTitle(this.getResources()
+        .getString(R.string.spot_share) + " - " + this.getResources()
+        .getString(R.string.receive))
+        .setContentText(this.getResources()
+            .getString(R.string.receiving) + " " + receivingAppName);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       mBuilderReceive.setSmallIcon(R.drawable.ic_stat_aptoide_notification);
     } else {
@@ -334,16 +350,18 @@ public class HighwayServerService extends Service {
     if (mNotifyManager == null) {
       mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
     }
-    mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(), mBuilderReceive.build());
+    mNotifyManager.notify(androidAppInfo.getPackageName()
+        .hashCode(), mBuilderReceive.build());
   }
 
   private void createSendNotification() {
 
     NotificationCompat.Builder mBuilderSend = new NotificationCompat.Builder(this);
-    mBuilderSend.setContentTitle(
-        this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
-            .getString(R.string.send))
-        .setContentText(this.getResources().getString(R.string.preparingSend));
+    mBuilderSend.setContentTitle(this.getResources()
+        .getString(R.string.spot_share) + " - " + this.getResources()
+        .getString(R.string.send))
+        .setContentText(this.getResources()
+            .getString(R.string.preparingSend));
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       mBuilderSend.setSmallIcon(R.drawable.ic_stat_aptoide_notification);
     } else {
@@ -354,26 +372,29 @@ public class HighwayServerService extends Service {
   private void finishSendNotification(AndroidAppInfo androidAppInfo) {
 
     NotificationCompat.Builder mBuilderSend = new NotificationCompat.Builder(this);
-    mBuilderSend.setContentTitle(
-        this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
-            .getString(R.string.send))
-        .setContentText(this.getResources().getString(R.string.transfCompleted))
+    mBuilderSend.setContentTitle(this.getResources()
+        .getString(R.string.spot_share) + " - " + this.getResources()
+        .getString(R.string.send))
+        .setContentText(this.getResources()
+            .getString(R.string.transfCompleted))
         .setSmallIcon(android.R.drawable.stat_sys_download_done)
         .setProgress(0, 0, false)
         .setAutoCancel(true);
     if (mNotifyManager == null) {
       mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
     }
-    mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(), mBuilderSend.build());
+    mNotifyManager.notify(androidAppInfo.getPackageName()
+        .hashCode(), mBuilderSend.build());
   }
 
   private void showSendProgress(String sendingAppName, int actual, AndroidAppInfo androidAppInfo) {
 
     NotificationCompat.Builder mBuilderSend = new NotificationCompat.Builder(this);
-    mBuilderSend.setContentTitle(
-        this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
-            .getString(R.string.send))
-        .setContentText(this.getResources().getString(R.string.sending) + " " + sendingAppName);
+    mBuilderSend.setContentTitle(this.getResources()
+        .getString(R.string.spot_share) + " - " + this.getResources()
+        .getString(R.string.send))
+        .setContentText(this.getResources()
+            .getString(R.string.sending) + " " + sendingAppName);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       mBuilderSend.setSmallIcon(R.drawable.ic_stat_aptoide_notification);
     } else {
@@ -384,7 +405,8 @@ public class HighwayServerService extends Service {
     if (mNotifyManager == null) {
       mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
     }
-    mNotifyManager.notify(androidAppInfo.getPackageName().hashCode(), mBuilderSend.build());
+    mNotifyManager.notify(androidAppInfo.getPackageName()
+        .hashCode(), mBuilderSend.build());
   }
 
   public List<FileInfo> getFileInfo(String filePath, String obbsFilePath) {
@@ -414,14 +436,17 @@ public class HighwayServerService extends Service {
   @Deprecated public void setInitialApConfig() {
     WifiManager wifimanager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
 
-    Method[] methods = wifimanager.getClass().getDeclaredMethods();
-    WifiConfiguration wc = DataHolder.getInstance().getWcOnJoin();
+    Method[] methods = wifimanager.getClass()
+        .getDeclaredMethods();
+    WifiConfiguration wc = DataHolder.getInstance()
+        .getWcOnJoin();
     for (Method m : methods) {
-      if (m.getName().equals("setWifiApConfiguration")) {
+      if (m.getName()
+          .equals("setWifiApConfiguration")) {
 
         try {
-          Method setConfigMethod =
-              wifimanager.getClass().getMethod("setWifiApConfiguration", WifiConfiguration.class);
+          Method setConfigMethod = wifimanager.getClass()
+              .getMethod("setWifiApConfiguration", WifiConfiguration.class);
           System.out.println("Re-seting the wifiAp configuration to what it was before !!! ");
           setConfigMethod.invoke(wifimanager, wc);
         } catch (NoSuchMethodException e) {
@@ -432,7 +457,8 @@ public class HighwayServerService extends Service {
           e.printStackTrace();
         }
       }
-      if (m.getName().equals("setWifiApEnabled")) {
+      if (m.getName()
+          .equals("setWifiApEnabled")) {
 
         try {
           System.out.println("Desligar o hostpot ");

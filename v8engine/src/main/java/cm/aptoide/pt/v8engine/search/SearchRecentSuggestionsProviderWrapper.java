@@ -55,7 +55,8 @@ public abstract class SearchRecentSuggestionsProviderWrapper
               .add("1");
         }
       } catch (InterruptedException e) {
-        CrashReport.getInstance().log(e);
+        CrashReport.getInstance()
+            .log(e);
       } finally {
         c.close();
       }

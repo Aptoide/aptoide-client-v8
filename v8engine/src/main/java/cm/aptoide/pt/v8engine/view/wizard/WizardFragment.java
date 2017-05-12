@@ -190,7 +190,8 @@ public class WizardFragment extends BackButtonFragment {
    */
   private void handleSelectedPage(int selectedPage) {
     // mark the current page as selected in the radio group
-    wizardButtons.get(selectedPage).setChecked(true);
+    wizardButtons.get(selectedPage)
+        .setChecked(true);
     if (selectedPage > 0 && selectedPage < wizardButtons.size() - 1) {
       // show the arrow in all pages except the last
       skipText.setVisibility(View.GONE);

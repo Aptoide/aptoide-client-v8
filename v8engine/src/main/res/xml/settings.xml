@@ -125,25 +125,25 @@
   <!--android:key="soon"-->
   <!--android:title="@string/settings_change_theme_soon"/>-->
   <!--<ListPreference-->
-      <!--android:defaultValue="light"-->
-      <!--android:entries="@array/theme_names"-->
-      <!--android:entryValues="@array/theme"-->
-      <!--android:key="theme"-->
-      <!--android:title="@string/theme"/>-->
+  <!--android:defaultValue="light"-->
+  <!--android:entries="@array/theme_names"-->
+  <!--android:entryValues="@array/theme"-->
+  <!--android:key="theme"-->
+  <!--android:title="@string/theme"/>-->
   <!--</PreferenceCategory>-->
 
   <!--AN-1533 - temporary solution was to remove root installation-->
   <!--<PreferenceCategory-->
-      <!--android:key="rootCategory"-->
-      <!--android:title="@string/settings_root">-->
-    <!--<CheckBoxPreference-->
-        <!--android:key="allowRoot"-->
-        <!--android:title="@string/settings_allow_root"/>-->
-    <!--<CheckBoxPreference-->
-        <!--android:defaultValue="false"-->
-        <!--android:key="auto_update"-->
-        <!--android:summary="@string/setting_auto_update_sum"-->
-        <!--android:title="@string/setting_auto_update_title"/>-->
+  <!--android:key="rootCategory"-->
+  <!--android:title="@string/settings_root">-->
+  <!--<CheckBoxPreference-->
+  <!--android:key="allowRoot"-->
+  <!--android:title="@string/settings_allow_root"/>-->
+  <!--<CheckBoxPreference-->
+  <!--android:defaultValue="false"-->
+  <!--android:key="auto_update"-->
+  <!--android:summary="@string/setting_auto_update_sum"-->
+  <!--android:title="@string/setting_auto_update_title"/>-->
   <!--</PreferenceCategory>-->
 
   <PreferenceCategory

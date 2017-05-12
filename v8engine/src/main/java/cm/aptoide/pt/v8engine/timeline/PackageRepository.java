@@ -68,7 +68,8 @@ public class PackageRepository {
       final List<PackageInfo> result = new ArrayList<>();
       BufferedReader bufferedReader = null;
       try {
-        final Process process = Runtime.getRuntime().exec("pm list packages");
+        final Process process = Runtime.getRuntime()
+            .exec("pm list packages");
         bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line;
         while ((line = bufferedReader.readLine()) != null) {

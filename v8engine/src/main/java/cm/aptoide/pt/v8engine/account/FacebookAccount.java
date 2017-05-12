@@ -21,7 +21,8 @@ public class FacebookAccount implements Account {
   @Override public Completable logout() {
     return Completable.fromAction(() -> {
       FacebookSdk.sdkInitialize(applicationContext);
-      LoginManager.getInstance().logOut();
+      LoginManager.getInstance()
+          .logOut();
     });
   }
 

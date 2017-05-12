@@ -25,16 +25,19 @@ public class AccountGroupNameProvider implements GroupNameProvider {
   }
 
   @Override public Single<String> getName() {
-    return accountManager.accountStatus().first().toSingle().flatMap(account -> {
-      String username;
-      if (account.isLoggedIn() && (username = account.getNickname()) != null) {
-        if (username.length() > 17) {
-          username = username.substring(0, 17);
-        }
-        return Single.just(username);
-      }
-      return getDefaultName();
-    });
+    return accountManager.accountStatus()
+        .first()
+        .toSingle()
+        .flatMap(account -> {
+          String username;
+          if (account.isLoggedIn() && (username = account.getNickname()) != null) {
+            if (username.length() > 17) {
+              username = username.substring(0, 17);
+            }
+            return Single.just(username);
+          }
+          return getDefaultName();
+        });
   }
 
   private Single<String> getDefaultName() {

@@ -44,7 +44,8 @@ public class ScreenTrackingUtils {
       history.remove(0);
     }
     history.add(screenName);
-    CrashReport.getInstance().log(SCREEN_HISTORY, history.toString());
+    CrashReport.getInstance()
+        .log(SCREEN_HISTORY, history.toString());
     Logger.d(TAG, "addScreenToHistory: " + history.toString());
   }
 
@@ -55,10 +56,12 @@ public class ScreenTrackingUtils {
   public void incrementNumberOfScreens() {
     totalNumberScreens++;
     numberScreensOnBackStack++;
-    CrashReport.getInstance().log(NUMBER_OF_SCREENS, String.valueOf(totalNumberScreens));
+    CrashReport.getInstance()
+        .log(NUMBER_OF_SCREENS, String.valueOf(totalNumberScreens));
     CrashReport.getInstance()
         .log(NUMBER_OF_SCREENS_ON_BACK_STACK, String.valueOf(numberScreensOnBackStack));
-    CrashReport.getInstance().log(LIFE_CYCLE_STATE, LifeCycle.CREATE.toString());
+    CrashReport.getInstance()
+        .log(LIFE_CYCLE_STATE, LifeCycle.CREATE.toString());
     Logger.d(TAG, "incrementNumberOfScreens: NOS: "
         + NUMBER_OF_SCREENS
         + ", NOSOBS: "
@@ -72,7 +75,8 @@ public class ScreenTrackingUtils {
     numberScreensOnBackStack--;
     CrashReport.getInstance()
         .log(NUMBER_OF_SCREENS_ON_BACK_STACK, String.valueOf(numberScreensOnBackStack));
-    CrashReport.getInstance().log(LIFE_CYCLE_STATE, LifeCycle.DESTROY.toString());
+    CrashReport.getInstance()
+        .log(LIFE_CYCLE_STATE, LifeCycle.DESTROY.toString());
     Logger.d(TAG, "decrementNumberOfScreens: NOSOBS: " + String.valueOf(numberScreensOnBackStack));
   }
 

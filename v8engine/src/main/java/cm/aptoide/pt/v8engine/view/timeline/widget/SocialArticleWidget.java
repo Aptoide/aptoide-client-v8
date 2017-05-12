@@ -64,16 +64,20 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
     final FragmentActivity context = getContext();
     if (displayable.getStore() != null) {
       title.setVisibility(View.VISIBLE);
-      title.setText(displayable.getStore().getName());
+      title.setText(displayable.getStore()
+          .getName());
       storeAvatar.setVisibility(View.VISIBLE);
       ImageLoader.with(context)
-          .loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
+          .loadWithShadowCircleTransform(displayable.getStore()
+              .getAvatar(), storeAvatar);
       if (displayable.getUser() != null) {
         subtitle.setVisibility(View.VISIBLE);
-        subtitle.setText(displayable.getUser().getName());
+        subtitle.setText(displayable.getUser()
+            .getName());
         userAvatar.setVisibility(View.VISIBLE);
         ImageLoader.with(context)
-            .loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
+            .loadWithShadowCircleTransform(displayable.getUser()
+                .getAvatar(), userAvatar);
       } else {
         subtitle.setVisibility(View.GONE);
         userAvatar.setVisibility(View.GONE);
@@ -83,10 +87,12 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
       userAvatar.setVisibility(View.GONE);
       if (displayable.getUser() != null) {
         title.setVisibility(View.VISIBLE);
-        title.setText(displayable.getUser().getName());
+        title.setText(displayable.getUser()
+            .getName());
         storeAvatar.setVisibility(View.VISIBLE);
         ImageLoader.with(context)
-            .loadWithShadowCircleTransform(displayable.getUser().getAvatar(), storeAvatar);
+            .loadWithShadowCircleTransform(displayable.getUser()
+                .getAvatar(), storeAvatar);
       }
     }
 
@@ -98,11 +104,13 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
 
     //time.setText(displayable.getTimeSinceLastUpdate(getContext()));
 
-    ImageLoader.with(context).load(displayable.getThumbnailUrl(), thumbnail);
+    ImageLoader.with(context)
+        .load(displayable.getThumbnailUrl(), thumbnail);
 
     url.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
-      displayable.getLink().launch(context);
+      displayable.getLink()
+          .launch(context);
       Analytics.AppsTimeline.clickOnCard(SocialArticleDisplayable.CARD_TYPE_NAME,
           Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE);
@@ -113,8 +121,10 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(installeds -> {
           if (installeds != null && !installeds.isEmpty()) {
-            appName = installeds.get(0).getName();
-            packageName = installeds.get(0).getPackageName();
+            appName = installeds.get(0)
+                .getName();
+            packageName = installeds.get(0)
+                .getPackageName();
           } else {
             setAppNameToFirstLinkedApp(displayable);
           }
@@ -129,19 +139,24 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
           throwable.printStackTrace();
         }));
 
-    compositeSubscription.add(RxView.clicks(articleHeader).subscribe(click -> {
-      knockWithSixpackCredentials(displayable.getAbUrl());
-      displayable.getDeveloperLink().launch(context);
-      Analytics.AppsTimeline.clickOnCard(SocialArticleDisplayable.CARD_TYPE_NAME,
-          Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(),
-          Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
-      displayable.sendOpenBlogEvent();
-    }));
+    compositeSubscription.add(RxView.clicks(articleHeader)
+        .subscribe(click -> {
+          knockWithSixpackCredentials(displayable.getAbUrl());
+          displayable.getDeveloperLink()
+              .launch(context);
+          Analytics.AppsTimeline.clickOnCard(SocialArticleDisplayable.CARD_TYPE_NAME,
+              Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(),
+              Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
+          displayable.sendOpenBlogEvent();
+        }));
   }
 
   private void setAppNameToFirstLinkedApp(SocialArticleDisplayable displayable) {
-    if (!displayable.getRelatedToAppsList().isEmpty()) {
-      appName = displayable.getRelatedToAppsList().get(0).getName();
+    if (!displayable.getRelatedToAppsList()
+        .isEmpty()) {
+      appName = displayable.getRelatedToAppsList()
+          .get(0)
+          .getName();
     }
   }
 }

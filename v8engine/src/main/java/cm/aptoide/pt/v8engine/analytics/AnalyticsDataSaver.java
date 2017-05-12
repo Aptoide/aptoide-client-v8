@@ -15,7 +15,8 @@ public class AnalyticsDataSaver {
   }
 
   public void save(String key, Event event) {
-    map.put(key + event.getClass().getName(), event);
+    map.put(key + event.getClass()
+        .getName(), event);
   }
 
   public Event get(String key) {
@@ -23,6 +24,7 @@ public class AnalyticsDataSaver {
   }
 
   public void remove(@NonNull Event event) {
-    map.values().remove(event);
+    map.values()
+        .remove(event);
   }
 }

@@ -70,7 +70,8 @@ public class SyncResultFragment extends UIComponentFragment implements SyncResul
             AppEventsLogger.newLogger(getContext().getApplicationContext())),
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
-            Application.getConfiguration().getMarketName())));
+            Application.getConfiguration()
+                .getMarketName())));
     mListAdapter = new SyncResultAdapter((ArrayList<Contact>) contacts, getContext());
   }
 
@@ -90,10 +91,13 @@ public class SyncResultFragment extends UIComponentFragment implements SyncResul
 
     successMessage.setText(
         getString(R.string.addressbook_success_connected_friends, Integer.toString(contacts.size()),
-            Application.getConfiguration().getMarketName()));
+            Application.getConfiguration()
+                .getMarketName()));
 
-    RxView.clicks(allowFind).subscribe(click -> mActionsListener.allowFindClicked());
-    RxView.clicks(done).subscribe(click -> mActionsListener.doneClicked());
+    RxView.clicks(allowFind)
+        .subscribe(click -> mActionsListener.allowFindClicked());
+    RxView.clicks(done)
+        .subscribe(click -> mActionsListener.doneClicked());
   }
 
   @Override public void finishView() {

@@ -24,7 +24,6 @@ class ListAppsRequestFactory {
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
-
   }
 
   public ListAppsRequest newListAppsRequest(String url) {

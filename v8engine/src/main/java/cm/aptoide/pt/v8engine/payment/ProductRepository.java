@@ -6,8 +6,6 @@
 package cm.aptoide.pt.v8engine.payment;
 
 import cm.aptoide.pt.model.v3.PaymentServiceResponse;
-import cm.aptoide.pt.v8engine.payment.Product;
-import cm.aptoide.pt.v8engine.payment.Purchase;
 import java.util.List;
 import rx.Single;
 

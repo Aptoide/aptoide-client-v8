@@ -28,8 +28,8 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
   public static GetUserRequest of(String url, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory) {
     final GetUserRequest.Body body = new GetUserRequest.Body(WidgetsArgs.createDefault());
-    return new GetUserRequest(new V7Url(url).remove("user/get").get(), body, bodyInterceptor,
-        httpClient, converterFactory);
+    return new GetUserRequest(new V7Url(url).remove("user/get")
+        .get(), body, bodyInterceptor, httpClient, converterFactory);
   }
 
   @Override

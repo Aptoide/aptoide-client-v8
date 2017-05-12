@@ -122,9 +122,11 @@ public final class PRNGFixes {
     // SecureRandom.getInstance("SHA1PRNG") return a SecureRandom backed
     // by the Linux PRNG-based SecureRandom implementation.
     SecureRandom rng1 = new SecureRandom();
-    if (!LinuxPRNGSecureRandomProvider.class.equals(rng1.getProvider().getClass())) {
+    if (!LinuxPRNGSecureRandomProvider.class.equals(rng1.getProvider()
+        .getClass())) {
       throw new SecurityException(
-          "new SecureRandom() backed by wrong Provider: " + rng1.getProvider().getClass());
+          "new SecureRandom() backed by wrong Provider: " + rng1.getProvider()
+              .getClass());
     }
 
     SecureRandom rng2;
@@ -133,10 +135,12 @@ public final class PRNGFixes {
     } catch (NoSuchAlgorithmException e) {
       throw new SecurityException("SHA1PRNG not available", e);
     }
-    if (!LinuxPRNGSecureRandomProvider.class.equals(rng2.getProvider().getClass())) {
+    if (!LinuxPRNGSecureRandomProvider.class.equals(rng2.getProvider()
+        .getClass())) {
       throw new SecurityException("SecureRandom.getInstance(\"SHA1PRNG\") backed by wrong"
           + " Provider: "
-          + rng2.getProvider().getClass());
+          + rng2.getProvider()
+          .getClass());
     }
   }
 
@@ -170,7 +174,8 @@ public final class PRNGFixes {
       result.append(serial);
     }
     try {
-      return result.toString().getBytes("UTF-8");
+      return result.toString()
+          .getBytes("UTF-8");
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException("UTF-8 encoding not supported");
     }
@@ -185,7 +190,8 @@ public final class PRNGFixes {
     // We're using the Reflection API because Build.SERIAL is only available
     // since API Level 9 (Gingerbread, Android 2.3).
     try {
-      return (String) Build.class.getField("SERIAL").get(null);
+      return (String) Build.class.getField("SERIAL")
+          .get(null);
     } catch (Exception ignored) {
       return null;
     }

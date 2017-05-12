@@ -47,12 +47,17 @@ public class PaidAppPaymentConfirmationRepository extends PaymentConfirmationRep
   @Override public Completable createPaymentConfirmation(int paymentId, Product product) {
     return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId, operatorManager,
         ((PaidAppProduct) product).getStoreName(), accountManager.getAccessToken(),
-        bodyInterceptorV3, httClient, converterFactory).observe().flatMap(response -> {
-      if (response != null && response.isOk()) {
-        return Observable.just(null);
-      }
-      return Observable.error(new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-    }).toCompletable().andThen(syncPaymentConfirmation(product));
+        bodyInterceptorV3, httClient, converterFactory)
+        .observe()
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            return Observable.just(null);
+          }
+          return Observable.error(
+              new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+        })
+        .toCompletable()
+        .andThen(syncPaymentConfirmation(product));
   }
 
   @Override

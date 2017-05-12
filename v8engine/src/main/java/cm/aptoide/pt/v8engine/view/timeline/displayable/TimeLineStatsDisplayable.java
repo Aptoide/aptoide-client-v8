@@ -51,34 +51,37 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
 
   CharSequence getFollowersText(Context context) {
 
-    return spannableFactory.createSpan(
-        context.getString(R.string.timeline_followers, getPojo().getData().getFollowers()),
-        new ParcelableSpan[] { new ForegroundColorSpan(Color.BLACK) },
-        String.valueOf(getPojo().getData().getFollowers()),
-        String.valueOf(getPojo().getData().getFollowers()));
+    return spannableFactory.createSpan(context.getString(R.string.timeline_followers,
+        getPojo().getData()
+            .getFollowers()), new ParcelableSpan[] { new ForegroundColorSpan(Color.BLACK) },
+        String.valueOf(getPojo().getData()
+            .getFollowers()), String.valueOf(getPojo().getData()
+            .getFollowers()));
   }
 
   CharSequence getFollowingText(Context context) {
 
-    return spannableFactory.createSpan(
-        context.getString(R.string.timeline_followed, getPojo().getData().getFollowing()),
-        new ParcelableSpan[] { new ForegroundColorSpan(Color.BLACK) },
-        String.valueOf(getPojo().getData().getFollowing()),
-        String.valueOf(getPojo().getData().getFollowing()));
+    return spannableFactory.createSpan(context.getString(R.string.timeline_followed,
+        getPojo().getData()
+            .getFollowing()), new ParcelableSpan[] { new ForegroundColorSpan(Color.BLACK) },
+        String.valueOf(getPojo().getData()
+            .getFollowing()), String.valueOf(getPojo().getData()
+            .getFollowing()));
   }
 
   public Void followersClick(FragmentNavigator navigator) {
     if (storeId > 0) {
       navigator.navigateTo(V8Engine.getFragmentProvider()
-          .newTimeLineFollowersUsingStoreIdFragment(storeId, getPojo().getData().getFollowers(),
-              storeTheme));
+          .newTimeLineFollowersUsingStoreIdFragment(storeId, getPojo().getData()
+              .getFollowers(), storeTheme));
     } else if (userId != null && userId > 0) {
       navigator.navigateTo(V8Engine.getFragmentProvider()
-          .newTimeLineFollowersUsingUserIdFragment(userId, getPojo().getData().getFollowers(),
-              storeTheme));
+          .newTimeLineFollowersUsingUserIdFragment(userId, getPojo().getData()
+              .getFollowers(), storeTheme));
     } else {
       navigator.navigateTo(V8Engine.getFragmentProvider()
-          .newTimeLineFollowersFragment(getPojo().getData().getFollowers(), storeTheme));
+          .newTimeLineFollowersFragment(getPojo().getData()
+              .getFollowers(), storeTheme));
     }
     return null;
   }
@@ -86,18 +89,19 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
   public Void followingClick(FragmentNavigator navigator) {
     if (storeId > 0) {
       navigator.navigateTo(V8Engine.getFragmentProvider()
-          .newTimeLineFollowingFragmentUsingStoreId(storeId, getPojo().getData().getFollowing(),
-              storeTheme));
+          .newTimeLineFollowingFragmentUsingStoreId(storeId, getPojo().getData()
+              .getFollowing(), storeTheme));
     } else {
       navigator.navigateTo(V8Engine.getFragmentProvider()
-          .newTimeLineFollowingFragmentUsingUserId(userId, getPojo().getData().getFollowing(),
-              storeTheme));
+          .newTimeLineFollowingFragmentUsingUserId(userId, getPojo().getData()
+              .getFollowing(), storeTheme));
     }
     return null;
   }
 
   void followFriendsClick(FragmentNavigator navigator) {
     timelineAnalytics.sendFollowFriendsEvent();
-    navigator.navigateTo(V8Engine.getFragmentProvider().newAddressBookFragment());
+    navigator.navigateTo(V8Engine.getFragmentProvider()
+        .newAddressBookFragment());
   }
 }
