@@ -44,9 +44,9 @@ import cm.aptoide.pt.v8engine.view.dialog.BaseDialog;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.search.StoreSearchActivity;
 import com.jakewharton.rxbinding.view.RxView;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created with IntelliJ IDEA. User: rmateus Date: 18-10-2013 Time: 17:27 To change this template
@@ -59,12 +59,13 @@ public class AddStoreDialog extends BaseDialog {
   public static final int PRIVATE_STORE_ERROR_CODE = 22;
   private static final String TAG = AddStoreDialog.class.getName();
   private static StoreAutoCompleteWebSocket storeAutoCompleteWebSocket;
+
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
+
   private AptoideAccountManager accountManager;
   private FragmentNavigator navigator;
   private String storeName;
   private Dialog loadingDialog;
-  private CompositeSubscription mSubscriptions;
   private SearchView searchView;
   private Button addStoreButton;
   private LinearLayout topStoresButton;
@@ -110,7 +111,7 @@ public class AddStoreDialog extends BaseDialog {
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     baseBodyBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    mSubscriptions = new CompositeSubscription();
+
     if (savedInstanceState != null) {
       storeName = savedInstanceState.getString(BundleArgs.STORE_NAME.name());
     }
@@ -119,23 +120,28 @@ public class AddStoreDialog extends BaseDialog {
   @Override public void onViewCreated(final View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     bindViews(view);
-    setupSearchView(view);
+    setupSearchView();
     setupStoreSearch(searchView);
-    mSubscriptions.add(RxView.clicks(addStoreButton)
+    RxView.clicks(addStoreButton)
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(click -> {
           addStoreAction();
-        }));
-    mSubscriptions.add(RxView.clicks(topStoresButton)
-        .subscribe(click -> topStoresAction()));
-    mSubscriptions.add(RxView.clicks(topStoreText1)
-        .subscribe(click -> topStoresAction()));
-    mSubscriptions.add(RxView.clicks(topStoreText2)
-        .subscribe(click -> topStoresAction()));
+        });
+    RxView.clicks(topStoresButton)
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(click -> topStoresAction());
+
+    RxView.clicks(topStoreText1)
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(click -> topStoresAction());
+
+    RxView.clicks(topStoreText2)
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(click -> topStoresAction());
   }
 
   @Override public void onDetach() {
     super.onDetach();
-    mSubscriptions.clear();
     if (storeAutoCompleteWebSocket != null) {
       storeAutoCompleteWebSocket.disconnect();
     }
@@ -188,7 +194,7 @@ public class AddStoreDialog extends BaseDialog {
     searchAutoComplete = (SearchView.SearchAutoComplete) view.findViewById(R.id.search_src_text);
   }
 
-  private void setupSearchView(View view) {
+  private void setupSearchView() {
     searchView.setIconifiedByDefault(false);
     image.setImageDrawable(null);
     searchAutoComplete.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -207,7 +213,7 @@ public class AddStoreDialog extends BaseDialog {
         .getSystemService(Context.SEARCH_SERVICE);
     ComponentName cn = new ComponentName(V8Engine.getContext(), StoreSearchActivity.class);
     searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
-    StoreAutoCompleteWebSocket storeAutoCompleteWebSocket = new StoreAutoCompleteWebSocket();
+    storeAutoCompleteWebSocket = new StoreAutoCompleteWebSocket();
 
     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
       @Override public boolean onQueryTextSubmit(String query) {
