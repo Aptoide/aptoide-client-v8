@@ -2,15 +2,12 @@ package cm.aptoide.pt.utils.q;
 
 import cm.aptoide.pt.utils.Invalidate;
 import java.util.Arrays;
-import lombok.Getter;
 
 /**
  * Created by neuro on 12-05-2017.
  */
 
 class GlExtensionsManager implements Invalidate {
-
-  @Getter private static final GlExtensionsManager instance = new GlExtensionsManager();
 
   private final String[] supportedOpenGLExtensions = {
       "GL_OES_compressed_ETC1_RGB8_texture", "GL_OES_compressed_paletted_texture",
@@ -23,7 +20,7 @@ class GlExtensionsManager implements Invalidate {
 
   private String computedValue;
 
-  private GlExtensionsManager() {
+  GlExtensionsManager() {
   }
 
   private String computeOpenGLExtensions() {

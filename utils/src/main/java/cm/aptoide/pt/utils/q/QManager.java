@@ -22,7 +22,7 @@ public class QManager implements Invalidate {
   private String cachedFilters;
 
   public QManager() {
-    this.glExtensionsManager = GlExtensionsManager.getInstance();
+    this.glExtensionsManager = new GlExtensionsManager();
   }
 
   private int computeMinSdk() {
