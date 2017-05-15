@@ -41,7 +41,7 @@ public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
       body.setAptoideId(idsRepository.getUniqueIdentifier());
       body.setAptoideVercode(AptoideUtils.Core.getVerCode());
       body.setCdn("pool");
-      body.setLang(Api.getLang());
+      body.setLang(AptoideUtils.SystemU.getCountryCode());
       body.setMature(adultContentEnabled);
       if (ManagerPreferences.getHWSpecsFilter()) {
         body.setQ(Api.getQ());
