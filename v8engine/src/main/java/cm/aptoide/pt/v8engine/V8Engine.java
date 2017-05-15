@@ -125,9 +125,10 @@ public abstract class V8Engine extends SpotAndShareApplication {
   @Getter private static FragmentProvider fragmentProvider;
   @Getter private static ActivityProvider activityProvider;
   @Getter private static DisplayableWidgetMapping displayableWidgetMapping;
+  @Getter private static QManager qManager;
   @Setter @Getter private static boolean autoUpdateWasCalled = false;
-  @Getter @Setter private static ShareApps shareApps;
 
+  @Getter @Setter private static ShareApps shareApps;
   private AptoideAccountManager accountManager;
   private BaseBodyInterceptorFactory baseBodyInterceptorFactory;
   private BodyInterceptor<BaseBody> baseBodyInterceptorV7;
@@ -197,9 +198,10 @@ public abstract class V8Engine extends SpotAndShareApplication {
     displayableWidgetMapping = createDisplayableWidgetMapping();
     shareApps = new ShareApps(new SpotAndShareAnalytics(Analytics.getInstance()));
 
+    qManager = QManager.getInstance();
     baseBodyInterceptorFactory =
         new BaseBodyInterceptorFactory(getIdsRepository(), getPreferences(), getSecurePreferences(),
-            getAptoideMd5sum(), getAptoidePackage(), QManager.getInstance());
+            getAptoideMd5sum(), getAptoidePackage(), qManager);
 
     //
     // do not erase this code. it is useful to figure out when someone forgot to attach an error handler when subscribing and the app

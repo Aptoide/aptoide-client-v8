@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import cm.aptoide.pt.utils.q.QManager;
+import cm.aptoide.pt.v8engine.V8Engine;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -20,7 +21,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
   public MyGLRenderer(Context context) {
     this.context = context;
 
-    qManager = QManager.getInstance();
+    qManager = V8Engine.getQManager();
   }
 
   @Override public void onSurfaceCreated(GL10 gl, EGLConfig config) {
