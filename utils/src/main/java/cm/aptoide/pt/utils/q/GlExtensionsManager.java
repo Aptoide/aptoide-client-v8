@@ -51,10 +51,10 @@ class GlExtensionsManager {
 
   void setSupportedOpenGLExtensions(String SupportedOpenGLExtensions) {
     this.supportedOpenGLExtensions = SupportedOpenGLExtensions;
-    setSetoredGLTextutes(computedValue = computeSupportedOpenGLExtensions());
+    setSetoredSupportedOpenGLExtensions(computedValue = computeSupportedOpenGLExtensions());
   }
 
-  public String get() {
+  public String getSupportedExtensions() {
     if (isGLTextutesStored()) {
       computedValue = getStoredGlTextures();
     }
@@ -74,7 +74,7 @@ class GlExtensionsManager {
     return sharedPreferences.getString(GL_TEXTURES_DEFINED, null);
   }
 
-  private void setSetoredGLTextutes(String glTextures) {
+  private void setSetoredSupportedOpenGLExtensions(String glTextures) {
     sharedPreferences.edit()
         .putString(GL_TEXTURES, glTextures)
         .putBoolean(GL_TEXTURES_DEFINED, true)

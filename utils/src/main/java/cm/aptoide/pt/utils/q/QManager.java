@@ -45,8 +45,8 @@ public class QManager {
     return SystemU.getAbis();
   }
 
-  public String getGlExtensionsManager() {
-    return glExtensionsManager.get();
+  public String getSupportedOpenGlExtensionsManager() {
+    return glExtensionsManager.getSupportedExtensions();
   }
 
   public String getFilters(boolean hwSpecsFilter) {
@@ -71,8 +71,8 @@ public class QManager {
         + "&myCPU="
         + getCpuAbi()
         + "&myDensity="
-        + getDensityDpi()
-        + (getGlExtensionsManager().equals("") ? "" : "&myGLTex=" + getGlExtensionsManager());
+        + getDensityDpi() + (getSupportedOpenGlExtensionsManager().equals("") ? ""
+        : "&myGLTex=" + getSupportedOpenGlExtensionsManager());
 
     return Base64.encodeToString(filters.getBytes(), 0)
         .replace("=", "")
