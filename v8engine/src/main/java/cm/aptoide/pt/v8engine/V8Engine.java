@@ -192,6 +192,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private PaymentAuthorizationFactory authorizationFactory;
   private AptoideBilling aptoideBilling;
   private PurchaseIntentMapper purchaseIntentMapper;
+  private PaymentThrowableCodeMapper paymentThrowableCodeMapper;
 
   /**
    * call after this instance onCreate()
@@ -554,7 +555,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
           new InAppBillingProductRepository(getInAppBillingRepository(), purchaseFactory,
               paymentFactory, paymentAuthorizationRepository,
               paymentRepositoryFactory.getInAppConfirmationRepository(), getAccountPayer(),
-              getAuthorizationFactory(), productFactory));
+              getAuthorizationFactory(), productFactory, getBaseBodyInterceptorV3(),
+              getDefaultClient(), WebService.getDefaultConverter(), getNetworkOperatorManager()));
 
       aptoideBilling = new AptoideBilling(productRepositoryFactory, paymentRepositoryFactory,
           getInAppBillingRepository());
@@ -562,9 +564,16 @@ public abstract class V8Engine extends SpotAndShareApplication {
     return aptoideBilling;
   }
 
+  public PaymentThrowableCodeMapper getPaymentThrowableCodeMapper() {
+    if (paymentThrowableCodeMapper == null) {
+      paymentThrowableCodeMapper = new PaymentThrowableCodeMapper();
+    }
+    return paymentThrowableCodeMapper;
+  }
+
   public PurchaseIntentMapper getPurchaseIntentMapper() {
     if (purchaseIntentMapper == null) {
-      purchaseIntentMapper = new PurchaseIntentMapper(new PaymentThrowableCodeMapper());
+      purchaseIntentMapper = new PurchaseIntentMapper(getPaymentThrowableCodeMapper());
     }
     return purchaseIntentMapper;
   }
@@ -592,9 +601,9 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
   public InAppBillingRepository getInAppBillingRepository() {
     if (inAppBillingRepository == null) {
-      inAppBillingRepository = new InAppBillingRepository(getNetworkOperatorManager(),
-          AccessorFactory.getAccessorFor(PaymentConfirmation.class), getAccountManager(),
-          getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter());
+      inAppBillingRepository =
+          new InAppBillingRepository(AccessorFactory.getAccessorFor(PaymentConfirmation.class),
+              getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter());
     }
     return inAppBillingRepository;
   }

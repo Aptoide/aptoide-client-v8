@@ -7,7 +7,7 @@ package cm.aptoide.pt.v8engine.billing;
 
 import android.content.Context;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
-import cm.aptoide.pt.v8engine.billing.inapp.BillingBinder;
+import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingBinder;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
@@ -49,6 +49,12 @@ public class AptoideBilling {
         .getProduct(appId, sponsored, storeName);
   }
 
+  public Single<List<Product>> getInAppProducts(int apiVersion, String packageName,
+      List<String> skus, String type) {
+    return productRepositoryFactory.getInAppProductRepository()
+        .getProducts(apiVersion, packageName, skus, type);
+  }
+
   public Single<Product> getInAppProduct(int apiVersion, String packageName, String sku,
       String type, String developerPayload) {
     return productRepositoryFactory.getInAppProductRepository()
@@ -63,7 +69,7 @@ public class AptoideBilling {
   public Completable consumeInAppPurchase(int apiVersion, String packageName,
       String purchaseToken) {
     return productRepositoryFactory.getInAppProductRepository()
-        .getPurchase(apiVersion, packageName, purchaseToken, BillingBinder.ITEM_TYPE_INAPP)
+        .getPurchase(apiVersion, packageName, purchaseToken, InAppBillingBinder.ITEM_TYPE_INAPP)
         .flatMapCompletable(purchase -> purchase.consume());
   }
 

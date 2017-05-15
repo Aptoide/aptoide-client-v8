@@ -9,23 +9,19 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.RemoteException;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.iab.AptoideInAppBillingService;
 import cm.aptoide.pt.v8engine.billing.AptoideBilling;
 import cm.aptoide.pt.v8engine.billing.Purchase;
 import cm.aptoide.pt.v8engine.billing.purchase.InAppPurchase;
-import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
-import cm.aptoide.pt.v8engine.billing.repository.ProductFactory;
 import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
 import cm.aptoide.pt.v8engine.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import rx.Observable;
 import rx.Single;
 
-public class BillingBinder extends AptoideInAppBillingService.Stub {
+public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
 
   // Response result codes
   public static final int RESULT_OK = 0;
@@ -60,25 +56,15 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
   public static final String SERVICES_LIST = "SERVICES_LIST";
 
   private final Context context;
-  private final InAppBillingRepository repository;
   private final InAppBillingSerializer serializer;
   private final PaymentThrowableCodeMapper errorCodeFactory;
-  private final PaymentThrowableCodeMapper purchaseErrorCodeFactory;
-  private final ProductFactory productFactory;
-  private final AptoideAccountManager accountManager;
   private final AptoideBilling billing;
 
-  public BillingBinder(Context context, InAppBillingRepository repository,
-      InAppBillingSerializer serializer, PaymentThrowableCodeMapper errorCodeFactory,
-      PaymentThrowableCodeMapper purchaseErrorCodeFactory, ProductFactory productFactory,
-      AptoideAccountManager accountManager, AptoideBilling billing) {
+  public InAppBillingBinder(Context context, InAppBillingSerializer serializer,
+      PaymentThrowableCodeMapper errorCodeFactory, AptoideBilling billing) {
     this.context = context;
-    this.repository = repository;
     this.serializer = serializer;
     this.errorCodeFactory = errorCodeFactory;
-    this.purchaseErrorCodeFactory = purchaseErrorCodeFactory;
-    this.productFactory = productFactory;
-    this.accountManager = accountManager;
     this.billing = billing;
   }
 
@@ -107,7 +93,7 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
       return result;
     }
 
-    List<String> itemIdList = skusBundle.getStringArrayList(ITEM_ID_LIST);
+    final List<String> itemIdList = skusBundle.getStringArrayList(ITEM_ID_LIST);
 
     if (itemIdList == null || itemIdList.size() <= 0) {
       result.putInt(RESPONSE_CODE, RESULT_DEVELOPER_ERROR);
@@ -116,18 +102,16 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
 
     try {
       final List<String> serializedProducts =
-          repository.getSKUs(apiVersion, packageName, itemIdList, type)
+          billing.getInAppProducts(apiVersion, packageName, itemIdList, type)
               .flatMap(products -> {
                 try {
-                  return Observable.just(serializer.serializeProducts(products));
+                  return Single.just(serializer.serializeProducts(products));
                 } catch (IOException e) {
-                  CrashReport.getInstance()
-                      .log(e);
-                  return Observable.error(e);
+                  return Single.error(e);
                 }
               })
               .toBlocking()
-              .first();
+              .value();
 
       result.putInt(RESPONSE_CODE, RESULT_OK);
       result.putStringArrayList(DETAILS_LIST, new ArrayList<>(serializedProducts));
@@ -144,22 +128,15 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
       String developerPayload) throws RemoteException {
 
     final Bundle result = new Bundle();
-    if (apiVersion < 3 || apiVersion > 4 || !(type.equals(ITEM_TYPE_INAPP) || type.equals(
-        ITEM_TYPE_SUBS))) {
-      result.putInt(RESPONSE_CODE, RESULT_DEVELOPER_ERROR);
-    } else {
-
+    try {
       result.putInt(RESPONSE_CODE, RESULT_OK);
-
-      try {
-        result.putParcelable(BUY_INTENT, PendingIntent.getActivity(context, 0,
-            PaymentActivity.getIntent(context, apiVersion, packageName, sku, type,
-                developerPayload), PendingIntent.FLAG_UPDATE_CURRENT));
-      } catch (Exception exception) {
-        CrashReport.getInstance()
-            .log(exception);
-        result.putInt(RESPONSE_CODE, errorCodeFactory.map(exception.getCause()));
-      }
+      result.putParcelable(BUY_INTENT, PendingIntent.getActivity(context, 0,
+          PaymentActivity.getIntent(context, apiVersion, packageName, sku, type, developerPayload),
+          PendingIntent.FLAG_UPDATE_CURRENT));
+    } catch (Exception exception) {
+      CrashReport.getInstance()
+          .log(exception);
+      result.putInt(RESPONSE_CODE, errorCodeFactory.map(exception.getCause()));
     }
 
     return result;
@@ -169,20 +146,6 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
       String continuationToken) throws RemoteException {
 
     final Bundle result = new Bundle();
-
-    if (!(type.equals(ITEM_TYPE_INAPP) || type.equals(ITEM_TYPE_SUBS))) {
-      result.putInt(RESPONSE_CODE, RESULT_DEVELOPER_ERROR);
-      return result;
-    }
-
-    if (!accountManager.isLoggedIn()) {
-      result.putStringArrayList(INAPP_PURCHASE_ITEM_LIST, new ArrayList<>());
-      result.putStringArrayList(INAPP_PURCHASE_DATA_LIST, new ArrayList<>());
-      result.putStringArrayList(INAPP_DATA_SIGNATURE_LIST, new ArrayList<>());
-      result.putInt(RESPONSE_CODE, RESULT_OK);
-      return result;
-    }
-
     try {
 
       final List<Purchase> purchases = billing.getInAppPurchases(apiVersion, packageName, type)
@@ -222,7 +185,7 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
     } catch (Exception exception) {
       CrashReport.getInstance()
           .log(exception);
-      return purchaseErrorCodeFactory.map(exception.getCause());
+      return errorCodeFactory.map(exception.getCause());
     }
   }
 }
