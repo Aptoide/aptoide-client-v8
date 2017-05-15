@@ -94,7 +94,7 @@ public class SystemNotificationShower {
   private android.app.Notification setExpandedView(Context context, String title, String body,
       int notificationId, Notification notification, String appName, String graphic) {
 
-    if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 24 && !TextUtils.isEmpty(graphic)) {
+    if (Build.VERSION.SDK_INT >= 16 && !TextUtils.isEmpty(graphic)) {
       RemoteViews expandedView =
           new RemoteViews(context.getPackageName(), R.layout.pushnotificationlayout);
       //in this case, large icon is loaded already, so instead of reloading it, we just reuse it
