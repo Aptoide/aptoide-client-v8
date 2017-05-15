@@ -851,27 +851,22 @@
   </style>
 
 
-  <style name="onBoardingTitle">
+  <style name="onBoardingTitle" parent="Aptoide.TextView.Medium.L">
     <item name="android:layout_marginBottom">16dp</item>
     <item name="android:layout_marginTop">10dp</item>
-    <item name="android:fontFamily">sans-serif</item>
     <item name="android:textColor">@color/white</item>
-    <item name="android:textSize">@dimen/text_size_huge</item>
     <item name="android:textStyle">bold</item>
     <item name="android:gravity">center</item>
   </style>
 
 
-  <style name="onBoardingSubTitle">
+  <style name="onBoardingSubTitle" parent="Aptoide.TextView.Regular.S">
     <item name="android:gravity">center</item>
     <item name="android:layout_marginLeft">10dp</item>
     <item name="android:layout_marginRight">10dp</item>
     <item name="android:layout_marginStart">10dp</item>
     <item name="android:layout_marginEnd">10dp</item>
     <item name="android:layout_marginBottom">10dp</item>
-    <item name="android:fontFamily">sans-serif</item>
     <item name="android:textColor">@color/white</item>
-    <item name="android:textSize">@dimen/text_size_medium</item>
-    <item name="android:lineSpacingMultiplier">1.33</item>
   </style>
 </resources>

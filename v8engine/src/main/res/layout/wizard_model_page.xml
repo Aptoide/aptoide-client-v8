@@ -36,13 +36,12 @@
       style="@style/onBoardingSubTitle"
       />
 
-
   <ImageView
       android:id="@android:id/icon"
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
-      android:layout_marginBottom="10dp"
+      android:scaleType="centerInside"
       android:src="@drawable/wizard_one"
       />
 
