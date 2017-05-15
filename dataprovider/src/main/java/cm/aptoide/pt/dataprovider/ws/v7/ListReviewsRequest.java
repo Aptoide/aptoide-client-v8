@@ -79,7 +79,7 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
     @Getter @Setter private int offset;
     private String lang;
     private boolean mature;
-    private String q = Api.Q;
+    private String q = Api.getQ();
     @Getter private boolean refresh;
 
     private Order order;

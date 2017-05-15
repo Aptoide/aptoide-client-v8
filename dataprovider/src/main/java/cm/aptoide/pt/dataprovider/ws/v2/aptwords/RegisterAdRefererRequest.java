@@ -63,7 +63,7 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
     map.put("success", success);
     map.put("adid", Long.toString(adId));
     map.put("appid", Long.toString(appId));
-    map.put("q", Api.Q);
+    map.put("q", Api.getQ());
     map.put("androidversion", Build.VERSION.RELEASE);
     map.put("tracker", tracker);
 

@@ -161,8 +161,8 @@ import rx.Observable;
 
     HashMapNotNull<String, String> parameters = new HashMapNotNull<>();
 
-    parameters.put("q", Api.Q);
-    parameters.put("lang", Api.LANG);
+    parameters.put("q", Api.getQ());
+    parameters.put("lang", Api.getLang());
     parameters.put("cpuid", clientUniqueId);
     parameters.put("aptvercode", Integer.toString(AptoideUtils.Core.getVerCode()));
     parameters.put("location", location.toString());

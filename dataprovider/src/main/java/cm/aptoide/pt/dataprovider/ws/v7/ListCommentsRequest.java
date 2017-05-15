@@ -121,7 +121,7 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     private int offset;
     private Integer limit;
     private boolean refresh;
-    private String q = Api.Q;
+    private String q = Api.getQ();
     private Order order;
     private String commentType = CommentType.REVIEW.name();
     private Long reviewId;

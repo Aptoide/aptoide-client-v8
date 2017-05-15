@@ -44,8 +44,8 @@ public class GetApkInfoRequest extends V3<PaidApp> {
     BaseBody options = new BaseBody();
     options.put("cmtlimit", "5");
     options.put("payinfo", "true");
-    options.put("q", Api.Q);
-    options.put("lang", Api.LANG);
+    options.put("q", Api.getQ());
+    options.put("lang", Api.getLang());
 
     addNetworkInformation(operatorManager, options);
 
