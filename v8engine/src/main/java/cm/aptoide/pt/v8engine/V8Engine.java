@@ -122,10 +122,10 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private static final String CACHE_FILE_NAME = "aptoide.wscache";
   private static final String TAG = V8Engine.class.getName();
 
+  @Getter private static QManager qManager;
   @Getter private static FragmentProvider fragmentProvider;
   @Getter private static ActivityProvider activityProvider;
   @Getter private static DisplayableWidgetMapping displayableWidgetMapping;
-  @Getter private static QManager qManager;
   @Setter @Getter private static boolean autoUpdateWasCalled = false;
 
   @Getter @Setter private static ShareApps shareApps;
@@ -193,12 +193,12 @@ public abstract class V8Engine extends SpotAndShareApplication {
     // hack to set the debug flag active in case of Debug
     //
 
+    qManager = new QManager(PreferenceManager.getDefaultSharedPreferences(this));
     fragmentProvider = createFragmentProvider();
     activityProvider = createActivityProvider();
     displayableWidgetMapping = createDisplayableWidgetMapping();
     shareApps = new ShareApps(new SpotAndShareAnalytics(Analytics.getInstance()));
 
-    qManager = new QManager();
     baseBodyInterceptorFactory =
         new BaseBodyInterceptorFactory(getIdsRepository(), getPreferences(), getSecurePreferences(),
             getAptoideMd5sum(), getAptoidePackage(), qManager);

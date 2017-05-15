@@ -1,7 +1,7 @@
 package cm.aptoide.pt.utils.q;
 
+import android.content.SharedPreferences;
 import android.util.Base64;
-import cm.aptoide.pt.utils.Invalidate;
 import lombok.Getter;
 
 import static cm.aptoide.pt.utils.AptoideUtils.ScreenU;
@@ -10,7 +10,7 @@ import static cm.aptoide.pt.utils.AptoideUtils.SystemU;
 /**
  * Created by neuro on 12-05-2017.
  */
-public class QManager implements Invalidate {
+public class QManager {
 
   @Getter(lazy = true) private final int minSdk = computeMinSdk();
   @Getter(lazy = true) private final String screenSize = computeScreenSize();
@@ -21,8 +21,8 @@ public class QManager implements Invalidate {
 
   private String cachedFilters;
 
-  public QManager() {
-    this.glExtensionsManager = new GlExtensionsManager();
+  public QManager(SharedPreferences sharedPreferences) {
+    this.glExtensionsManager = new GlExtensionsManager(sharedPreferences);
   }
 
   private int computeMinSdk() {
@@ -81,12 +81,12 @@ public class QManager implements Invalidate {
         .replace("\n", "");
   }
 
-  @Override public void invalidate() {
+  private void invalidate() {
     cachedFilters = null;
   }
 
-  public void setOpenGLExtensions(String openGLExtensions) {
-    glExtensionsManager.setOpenGLExtensions(openGLExtensions);
+  public void setSupportedOpenGLExtensions(String openGLExtensions) {
+    glExtensionsManager.setSupportedOpenGLExtensions(openGLExtensions);
     invalidate();
   }
 }
