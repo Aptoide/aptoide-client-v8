@@ -51,7 +51,7 @@ import retrofit2.Converter;
   private TextView verNameTextView;
   private ImageView iconImageView;
   private View installedItemFrame;
-  private ViewGroup createReviewLayout;
+  private ViewGroup shareButtonLayout;
 
   private String appName;
   private String packageName;
@@ -69,7 +69,8 @@ import retrofit2.Converter;
     iconImageView = (ImageView) itemView.findViewById(R.id.icon);
     verNameTextView = (TextView) itemView.findViewById(R.id.app_version);
     installedItemFrame = itemView.findViewById(R.id.installedItemFrame);
-    createReviewLayout = (ViewGroup) itemView.findViewById(R.id.reviewButtonLayout);
+    shareButtonLayout = (ViewGroup) itemView.findViewById(R.id.shareButtonLayout);
+    //// TODO: 15-05-2017 filipe request for the new icon
   }
 
   @Override public void bindView(InstalledAppDisplayable displayable) {
@@ -104,13 +105,13 @@ import retrofit2.Converter;
     // only show create review if store info is associated with this install
     final String storeName = pojo.getStoreName();
     if (!TextUtils.isEmpty(storeName)) {
-      createReviewLayout.setVisibility(View.VISIBLE);
-      compositeSubscription.add(RxView.clicks(createReviewLayout)
+      shareButtonLayout.setVisibility(View.VISIBLE);
+      compositeSubscription.add(RxView.clicks(shareButtonLayout)
           .flatMap(__ -> dialogUtils.showRateDialog(getContext(), appName, packageName, storeName))
           .subscribe(__ -> Analytics.Updates.createReview(), err -> CrashReport.getInstance()
               .log(err)));
     } else {
-      createReviewLayout.setVisibility(View.GONE);
+      //shareButtonLayout.setVisibility(View.GONE);
     }
   }
 
