@@ -79,6 +79,8 @@ public interface AptoidePreferencesConfiguration {
    */
   boolean isCreateStoreAndSetUserPrivacyAvailable();
 
+  String getVersionName();
+
   enum SocialLogin {
     FACEBOOK, GOOGLE
   }

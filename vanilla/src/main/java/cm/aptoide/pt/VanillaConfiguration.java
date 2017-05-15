@@ -137,4 +137,8 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
   @Override public boolean isCreateStoreAndSetUserPrivacyAvailable() {
     return true;
   }
+
+  @Override public String getVersionName() {
+    return BuildConfig.VERSION_NAME;
+  }
 }
