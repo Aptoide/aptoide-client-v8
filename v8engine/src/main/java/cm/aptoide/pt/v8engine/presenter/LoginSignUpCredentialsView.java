@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.presenter;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.v8engine.view.account.AptoideAccountViewModel;
 import cm.aptoide.pt.v8engine.view.account.FacebookAccountViewModel;
@@ -69,4 +70,6 @@ public interface LoginSignUpCredentialsView extends GoogleLoginView {
   boolean isPasswordVisible();
 
   void navigateToCreateProfile();
+
+  Context getApplicationContext();
 }

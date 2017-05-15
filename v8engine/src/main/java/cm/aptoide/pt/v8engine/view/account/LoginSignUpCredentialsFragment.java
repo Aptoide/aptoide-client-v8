@@ -38,7 +38,6 @@ import cm.aptoide.pt.v8engine.view.store.home.HomeFragment;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -159,7 +158,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void showFacebookLogin() {
-    FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
     facebookLoginButton.setVisibility(View.VISIBLE);
     facebookLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
       @Override public void onSuccess(LoginResult loginResult) {
@@ -282,6 +280,10 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override public boolean isPasswordVisible() {
     return isPasswordVisible;
+  }
+
+  @Override public Context getApplicationContext() {
+    return getActivity().getApplicationContext();
   }
 
   @Override public void navigateToCreateProfile() {

@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.presenter;
 
+import android.content.Context;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -15,6 +16,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.BackButton;
 import cm.aptoide.pt.v8engine.view.account.AptoideAccountViewModel;
 import com.facebook.AccessToken;
+import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import java.util.Collection;
@@ -61,6 +63,10 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   @Override public void present() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(__ -> {
+          Context appContext = view.getApplicationContext();
+          FacebookSdk.sdkInitialize(appContext);
+        })
         .doOnNext(created -> showOrHideLogin())
         .flatMap(resumed -> Observable.merge(googleLoginClick(), facebookLoginClick(),
             aptoideLoginClick(), aptoideSignUpClick(), aptoideShowLoginClick(),
