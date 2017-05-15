@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.pull;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import java.util.concurrent.TimeUnit;
-import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
@@ -14,7 +13,6 @@ import rx.Single;
 public class NotificationCenter {
   private final CrashReport crashReport;
   private final NotificationIdsMapper notificationIdsMapper;
-  private NotificationStatusManager notificationStatusManager;
   private NotificationHandler notificationHandler;
   private NotificationProvider notificationProvider;
   private NotificationSyncScheduler notificationSyncScheduler;
@@ -23,36 +21,22 @@ public class NotificationCenter {
   public NotificationCenter(NotificationIdsMapper notificationIdsMapper,
       NotificationHandler notificationHandler, NotificationProvider notificationProvider,
       NotificationSyncScheduler notificationSyncScheduler,
-      SystemNotificationShower notificationShower, CrashReport crashReport,
-      NotificationStatusManager notificationStatusManager) {
+      SystemNotificationShower notificationShower, CrashReport crashReport) {
     this.notificationIdsMapper = notificationIdsMapper;
     this.notificationHandler = notificationHandler;
     this.notificationProvider = notificationProvider;
     this.notificationSyncScheduler = notificationSyncScheduler;
     this.notificationShower = notificationShower;
     this.crashReport = crashReport;
-    this.notificationStatusManager = notificationStatusManager;
   }
 
   public void start() {
     notificationSyncScheduler.schedule();
     getNewNotifications().flatMapCompletable(
         aptoideNotification -> notificationShower.showNotification(aptoideNotification,
-            notificationIdsMapper.getNotificationId(aptoideNotification.getType()))
-            .andThen(updateNotification(aptoideNotification))
-            .onErrorComplete(throwable -> {
-              crashReport.log(throwable);
-              return true;
-            }))
+            notificationIdsMapper.getNotificationId(aptoideNotification.getType())))
         .subscribe(aptoideNotification -> {
         }, throwable -> crashReport.log(throwable));
-  }
-
-  private Completable updateNotification(AptoideNotification aptoideNotification) {
-    aptoideNotification.setShowed(true);
-    notificationStatusManager.setVisible(
-        notificationIdsMapper.getNotificationId(aptoideNotification.getType()), true);
-    return notificationProvider.save(aptoideNotification);
   }
 
   private Observable<AptoideNotification> getNewNotifications() {
@@ -77,26 +61,13 @@ public class NotificationCenter {
         return Single.just(true);
       case AptoideNotification.COMMENT:
       case AptoideNotification.LIKE:
-        return shouldShowSocialNotification(
-            notificationIdsMapper.getNotificationId(aptoideNotificationToShow.getType()),
-            notificationIdsMapper.getNotificationType(aptoideNotificationToShow.getType()));
+        return shouldShowByRules(
+            new Integer[] { AptoideNotification.COMMENT, AptoideNotification.LIKE });
       case AptoideNotification.POPULAR:
-        return shouldShowSocialNotification(
-            notificationIdsMapper.getNotificationId(aptoideNotificationToShow.getType()),
-            notificationIdsMapper.getNotificationType(aptoideNotificationToShow.getType()));
+        return shouldShowByRules(new Integer[] { AptoideNotification.POPULAR });
       default:
         return Single.just(false);
     }
-  }
-
-  private Single<Boolean> shouldShowSocialNotification(int notificationId,
-      Integer[] notificationsIds) {
-    return Single.zip(isNotificationVisible(notificationId), shouldShowByRules(notificationsIds),
-        (isNotificationVisible, isPolicies) -> isNotificationVisible || isPolicies);
-  }
-
-  private Single<Boolean> isNotificationVisible(int notificationsId) {
-    return Single.just(notificationStatusManager.isVisible(notificationsId));
   }
 
   private Single<Boolean> shouldShowByRules(Integer[] notificationsTypes) {
@@ -116,7 +87,7 @@ public class NotificationCenter {
   @NonNull
   private Single<Boolean> createPolicy(Integer[] notificationsTypes, long endTime, long startTime,
       int occurrences) {
-    return notificationProvider.getShowedNotifications(notificationsTypes, startTime, endTime)
+    return notificationProvider.getDismissedNotifications(notificationsTypes, startTime, endTime)
         .map(aptoideNotifications -> aptoideNotifications.size() < occurrences);
   }
 }

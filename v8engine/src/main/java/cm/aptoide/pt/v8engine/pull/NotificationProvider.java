@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.pull;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.realm.Notification;
-import io.realm.Sort;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -21,25 +20,20 @@ public class NotificationProvider {
     this.notificationAccessor = notificationAccessor;
   }
 
-  Completable save(AptoideNotification aptoideNotification) {
-    return Completable.fromAction(
-        () -> notificationAccessor.insert(convertToNotification(aptoideNotification)));
-  }
-
   @NonNull private Notification convertToNotification(AptoideNotification aptoideNotification) {
     return new Notification(aptoideNotification.getAbTestingGroup(), aptoideNotification.getBody(),
         aptoideNotification.getCampaignId(), aptoideNotification.getImg(),
         aptoideNotification.getLang(), aptoideNotification.getTitle(), aptoideNotification.getUrl(),
         aptoideNotification.getUrlTrack(), aptoideNotification.getTimeStamp(),
-        aptoideNotification.getType(), aptoideNotification.isShowed(),
+        aptoideNotification.getType(), aptoideNotification.getDismissed(),
         aptoideNotification.getAppName(), aptoideNotification.getGraphic());
   }
 
-  Single<List<AptoideNotification>> getShowedNotifications(
+  Single<List<AptoideNotification>> getDismissedNotifications(
       @AptoideNotification.NotificationType Integer[] notificationsTypes, long startTime,
       long endTime) {
-    return notificationAccessor.getAllSorted(Sort.DESCENDING, notificationsTypes, startTime,
-        endTime, true)
+    return notificationAccessor.getDismissed(notificationsTypes, startTime,
+        endTime)
         .first()
         .flatMap(notifications -> Observable.from(notifications)
             .map(notification -> convertToAptoideNotification(notification))
@@ -51,7 +45,7 @@ public class NotificationProvider {
     return new AptoideNotification(notification.getAbTestingGroup(), notification.getBody(),
         notification.getCampaignId(), notification.getImg(), notification.getLang(),
         notification.getTitle(), notification.getUrl(), notification.getUrlTrack(),
-        notification.getTimeStamp(), notification.getType(), notification.isShowed(),
+        notification.getTimeStamp(), notification.getType(), notification.getDismissed(),
         notification.getAppName(), notification.getGraphic());
   }
 

@@ -81,7 +81,7 @@ public class NotificationHandler implements NotificationNetworkService {
       aptoideNotifications.add(
           new AptoideNotification(notification.getBody(), notification.getImg(),
               notification.getTitle(), notification.getUrl(), notification.getType(), appName,
-              graphic));
+              graphic, -1));
     }
     return aptoideNotifications;
   }

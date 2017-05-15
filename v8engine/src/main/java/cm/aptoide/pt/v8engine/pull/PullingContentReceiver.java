@@ -6,9 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.NotificationAccessor;
+import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 
 /**
@@ -23,19 +25,22 @@ public class PullingContentReceiver extends BroadcastReceiver {
   public static final String PUSH_NOTIFICATION_NOTIFICATION_ID =
       "PUSH_NOTIFICATION_NOTIFICATION_ID";
   private static final String TAG = PullingContentReceiver.class.getSimpleName();
-  private NotificationStatusManager notificationStatusManager;
+  private CrashReport crashReport;
+  private NotificationAccessor notificationAccessor;
+  private NotificationIdsMapper notificationIdsMapper;
 
   @Override public void onReceive(Context context, Intent intent) {
     Logger.d(TAG,
         "onReceive() called with: " + "context = [" + context + "], intent = [" + intent + "]");
-
-    notificationStatusManager =
-        new NotificationStatusManager(SecurePreferencesImplementation.getInstance(context));
+    notificationAccessor = AccessorFactory.getAccessorFor(Notification.class);
+    crashReport = CrashReport.getInstance();
+    notificationIdsMapper = new NotificationIdsMapper();
     String action = intent.getAction();
     if (action != null) {
       switch (action) {
         case Intent.ACTION_BOOT_COMPLETED:
-          bootCompleted();
+          //This action is here in order to make sure the v8engine runs on boot. This allows us to
+          // start pulling notification V8Engine#startNotificationsSync
           break;
         case NOTIFICATION_PRESSED_ACTION:
           pushNotificationPressed(context, intent);
@@ -50,12 +55,14 @@ public class PullingContentReceiver extends BroadcastReceiver {
     }
   }
 
-  private void bootCompleted() {
-    notificationStatusManager.reset();
-  }
-
   private void notificationDismissed(int notificationId) {
-    notificationStatusManager.setVisible(notificationId, false);
+    notificationAccessor.getLastShowed(notificationIdsMapper.getNotificationType(notificationId))
+        .doOnSuccess(notification -> {
+          notification.setDismissed(System.currentTimeMillis());
+          notificationAccessor.insert(notification);
+        })
+        .subscribe(notification -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void pushNotificationPressed(Context context, Intent intent) {

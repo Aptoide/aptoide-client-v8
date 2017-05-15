@@ -16,6 +16,7 @@ import lombok.ToString;
   public static final int POPULAR = 3;
   private final String appName;
   private final String graphic;
+  private final long dismissed;
   private String abTestingGroup;
   private String body;
   private int campaignId;
@@ -26,10 +27,9 @@ import lombok.ToString;
   private String urlTrack;
   private @NotificationType int type;
   private long timeStamp;
-  private boolean showed;
 
   public AptoideNotification(String body, String img, String title, String url, int type,
-      long timeStamp, String appName, String graphic) {
+      long timeStamp, String appName, String graphic, long dismissed) {
     this.body = body;
     this.img = img;
     this.title = title;
@@ -38,28 +38,32 @@ import lombok.ToString;
     this.timeStamp = timeStamp;
     this.appName = appName;
     this.graphic = graphic;
+    this.dismissed = dismissed;
   }
 
   public AptoideNotification(String body, String img, String title, String url, int type,
-      String appName, String graphic) {
-    this(body, img, title, url, type, System.currentTimeMillis(), appName, graphic);
+      String appName, String graphic, long dismissed) {
+    this(body, img, title, url, type, System.currentTimeMillis(), appName, graphic, dismissed);
   }
 
   public AptoideNotification(String abTestingGroup, String body, int campaignId, String img,
       String lang, String title, String url, String urlTrack, String appName, String graphic) {
     this(abTestingGroup, body, campaignId, img, lang, title, url, urlTrack,
-        System.currentTimeMillis(), CAMPAIGN, false, appName, graphic);
+        System.currentTimeMillis(), CAMPAIGN, -1, appName, graphic);
   }
 
   public AptoideNotification(String abTestingGroup, String body, int campaignId, String img,
       String lang, String title, String url, String urlTrack, long timeStamp, int type,
-      boolean showed, String appName, String graphic) {
-    this(body, img, title, url, type, timeStamp, appName, graphic);
+      long dismissed, String appName, String graphic) {
+    this(body, img, title, url, type, timeStamp, appName, graphic, dismissed);
     this.abTestingGroup = abTestingGroup;
     this.campaignId = campaignId;
     this.lang = lang;
     this.urlTrack = urlTrack;
-    this.showed = showed;
+  }
+
+  public long getDismissed() {
+    return dismissed;
   }
 
   public String getAppName() {
@@ -68,14 +72,6 @@ import lombok.ToString;
 
   public String getGraphic() {
     return graphic;
-  }
-
-  public boolean isShowed() {
-    return showed;
-  }
-
-  public void setShowed(boolean showed) {
-    this.showed = showed;
   }
 
   public @NotificationType int getType() {

@@ -22,16 +22,15 @@ public class NotificationIdsMapper {
   @AptoideNotification.NotificationType Integer[] getNotificationType(int notificationId)
       throws RuntimeException {
     switch (notificationId) {
-      case AptoideNotification.CAMPAIGN:
+      case 0:
         return new Integer[] {
             AptoideNotification.CAMPAIGN
         };
-      case AptoideNotification.COMMENT:
-      case AptoideNotification.LIKE:
+      case 1:
         return new Integer[] {
             AptoideNotification.LIKE, AptoideNotification.COMMENT
         };
-      case AptoideNotification.POPULAR:
+      case 2:
         return new Integer[] {
             AptoideNotification.POPULAR,
         };
