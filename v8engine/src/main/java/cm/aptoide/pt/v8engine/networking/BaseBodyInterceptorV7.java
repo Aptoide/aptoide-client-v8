@@ -6,6 +6,7 @@ import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import rx.Single;
 import rx.schedulers.Schedulers;
@@ -16,9 +17,9 @@ public class BaseBodyInterceptorV7 extends BaseBodyInterceptor<BaseBody> {
   private final AdultContent adultContent;
 
   public BaseBodyInterceptorV7(String aptoideMd5sum, String aptoidePackage,
-      IdsRepository idsRepository, AptoideAccountManager accountManager,
-      AdultContent adultContent) {
-    super(aptoideMd5sum, aptoidePackage, idsRepository);
+      IdsRepository idsRepository, AptoideAccountManager accountManager, AdultContent adultContent,
+      QManager qManager) {
+    super(aptoideMd5sum, aptoidePackage, idsRepository, qManager);
     this.accountManager = accountManager;
     this.adultContent = adultContent;
   }

@@ -52,6 +52,7 @@ import cm.aptoide.pt.spotandshareandroid.SpotAndShareApplication;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
+import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.account.AccountEventsAnalytcs;
 import cm.aptoide.pt.v8engine.account.AndroidAccountDataMigration;
@@ -72,8 +73,6 @@ import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.leak.LeakTool;
-import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
-import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.UserAgentInterceptor;
 import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
@@ -130,6 +129,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   @Getter @Setter private static ShareApps shareApps;
 
   private AptoideAccountManager accountManager;
+  private BaseBodyInterceptorFactory baseBodyInterceptorFactory;
   private BodyInterceptor<BaseBody> baseBodyInterceptorV7;
   private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> baseBodyInterceptorV3;
   private Preferences preferences;
@@ -196,6 +196,10 @@ public abstract class V8Engine extends SpotAndShareApplication {
     activityProvider = createActivityProvider();
     displayableWidgetMapping = createDisplayableWidgetMapping();
     shareApps = new ShareApps(new SpotAndShareAnalytics(Analytics.getInstance()));
+
+    baseBodyInterceptorFactory =
+        new BaseBodyInterceptorFactory(getIdsRepository(), getPreferences(), getSecurePreferences(),
+            getAptoideMd5sum(), getAptoidePackage(), QManager.getInstance());
 
     //
     // do not erase this code. it is useful to figure out when someone forgot to attach an error handler when subscribing and the app
@@ -366,8 +370,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
     if (accountManager == null) {
 
       final AccountManagerService accountManagerService = new AccountManagerService(
-          new BaseBodyInterceptorFactory(getIdsRepository(), getPreferences(),
-              getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage()), getAccountFactory(),
+          baseBodyInterceptorFactory, getAccountFactory(),
           getDefaultClient(), getLongTimeoutClient(), WebService.getDefaultConverter());
 
       final AndroidAccountDataMigration accountDataMigration =
@@ -566,17 +569,14 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
   public BodyInterceptor<BaseBody> getBaseBodyInterceptorV7() {
     if (baseBodyInterceptorV7 == null) {
-      baseBodyInterceptorV7 =
-          new BaseBodyInterceptorV7(getAptoideMd5sum(), getAptoidePackage(), getIdsRepository(),
-              getAccountManager(), getAdultContent(getSecurePreferences()));
+      baseBodyInterceptorV7 = baseBodyInterceptorFactory.createV7(getAccountManager());
     }
     return baseBodyInterceptorV7;
   }
 
   public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBaseBodyInterceptorV3() {
     if (baseBodyInterceptorV3 == null) {
-      baseBodyInterceptorV3 =
-          new BaseBodyInterceptorV3(getAptoideMd5sum(), getAptoidePackage(), getIdsRepository());
+      baseBodyInterceptorV3 = baseBodyInterceptorFactory.createV3();
     }
     return baseBodyInterceptorV3;
   }
