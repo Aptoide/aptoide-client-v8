@@ -566,8 +566,9 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
   public BodyInterceptor<BaseBody> getBaseBodyInterceptorV7() {
     if (baseBodyInterceptorV7 == null) {
-      baseBodyInterceptorV7 = new BaseBodyInterceptorV7(getIdsRepository(), getAccountManager(),
-          getAdultContent(getSecurePreferences()), getAptoideMd5sum(), getAptoidePackage());
+      baseBodyInterceptorV7 =
+          new BaseBodyInterceptorV7(getAptoideMd5sum(), getAptoidePackage(), getIdsRepository(),
+              getAccountManager(), getAdultContent(getSecurePreferences()));
     }
     return baseBodyInterceptorV7;
   }

@@ -29,9 +29,8 @@ public class BaseBodyInterceptorFactory implements BasebBodyInterceptorFactory {
   }
 
   @Override public BodyInterceptor<BaseBody> createV7(AptoideAccountManager accountManager) {
-    return new BaseBodyInterceptorV7(idsRepository, accountManager,
-        new AdultContent(accountManager, preferences, securePreferences), aptoideMd5sum,
-        aptoidePackage);
+    return new BaseBodyInterceptorV7(aptoideMd5sum, aptoidePackage, idsRepository, accountManager,
+        new AdultContent(accountManager, preferences, securePreferences));
   }
 
   @Override public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> createV3() {
