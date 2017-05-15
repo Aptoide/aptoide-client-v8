@@ -61,6 +61,7 @@ public class ConnectionManager {
   private ClientsConnectedListener clientsConnectedListener;
   private Timer scanner;
   private String chosenHotspot;
+  public static final String TAG = ConnectionManager.class.getSimpleName();
   private BroadcastReceiver activateButtonsReceiver = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
       if (wifimanager == null) {
@@ -77,7 +78,6 @@ public class ConnectionManager {
     public int noHotspotsFoundCounter;
 
     @Override public void onReceive(Context context, Intent intent) {
-      System.out.println("noHotspotsFoundCounter" + noHotspotsFoundCounter);
       List<Group> scanResultsSSID = new ArrayList<>();
       if (clients == null) {
         clients = new ArrayList<Group>();
@@ -122,11 +122,11 @@ public class ConnectionManager {
                 .equals(chosenHotspot)) {
               listenerJoinWifi.onStateChanged(false);
             }
-            System.out.println("removed this : " + tmp);
+            Log.d(TAG,"removed this : " + tmp);
           }
         }
       } else {
-        System.out.println("THERE ARE NO APTXV NETWORKS");
+        Log.d(TAG,"THERE ARE NO APTXV NETWORKS");
         if (noHotspotsFoundCounter >= 2 && !showedNoHotspotMessage) {
           showedNoHotspotMessage = true;
           if (inactivityListener != null) {
@@ -182,7 +182,7 @@ public class ConnectionManager {
                     try {
                       context.unregisterReceiver(this);
                     } catch (IllegalArgumentException e) {
-                      System.out.println(
+                      Log.d(TAG,
                           "There was an error while trying to unregister the ConnectingToWifi receiver");
                     }
                     reconnected = false;
@@ -219,7 +219,7 @@ public class ConnectionManager {
                   context.unregisterReceiver(this);
                   context.unregisterReceiver(scanAPTXVNetworks);
                 } catch (IllegalArgumentException e) {
-                  System.out.println(
+                  Log.d(TAG,
                       "There was an error while trying to unregister the ConnectingToWifi or the ScanAPTXNetworks receiver");
                 }
                 reconnected = false;
@@ -236,7 +236,7 @@ public class ConnectionManager {
           context.unregisterReceiver(scanAPTXVNetworks);
           Log.w("BROADCASTRECEIVER", "Unregistered scan receiver INSIDE CONNECTING WIFI #2");
         } catch (IllegalArgumentException e) {
-          System.out.println(
+          Log.d(TAG,
               "There was an error while trying to unregister the wifireceiver and the wifireceiverforconnectingwifi");
         }
       }
@@ -349,10 +349,9 @@ public class ConnectionManager {
     for (Method method : wmMethods) {
       if (method.getName()
           .equals("getWifiApConfiguration")) {
-        System.out.println("saving old ssid .");
+        Log.d(TAG,"saving old ssid ");
         try {
           WifiConfiguration config = (WifiConfiguration) method.invoke(wifimanager);
-          System.out.println("THE ACTUAL SSID IS : : : " + config.SSID);
           DataHolder.getInstance()
               .setWcOnJoin(config);
         } catch (IllegalAccessException e) {
@@ -447,7 +446,7 @@ public class ConnectionManager {
   public int joinHotspot(String chosenHotspot, boolean shouldReconnect) {
 
     WifiConfiguration conf = new WifiConfiguration();
-    System.out.println("chosen hotspot is : " + chosenHotspot);
+    Log.d(TAG,"chosen hotspot is : " + chosenHotspot);
     conf.SSID = "\"" + chosenHotspot + "\"";
     conf.preSharedKey = "\"passwordAptoide\"";
     conf.hiddenSSID = true;
@@ -468,9 +467,8 @@ public class ConnectionManager {
             } catch (InterruptedException e) {
             }
             boolean enab = wifimanager.enableNetwork(i.networkId, true);
-            System.out.print(
+            Log.d(TAG,
                 "i.networkId " + i.networkId + "\n" + "o net id do add esta a : " + netid);
-            System.out.println("o boolean do resetHotspot : " + enab);
 
             try {
               Thread.sleep(2000);
@@ -480,14 +478,12 @@ public class ConnectionManager {
             if (shouldReconnect) {
               this.chosenHotspot = chosenHotspot;//to save in case of needing to reconnect
               boolean recon = wifimanager.reconnect();
-              System.out.println("O boolean do reconnect ta a : " + recon);
               try {
                 Thread.sleep(2000);
               } catch (InterruptedException e) {
               }
 
               if (recon) {
-                System.out.println("Correctly joined the network");
                 return SUCCESSFUL_JOIN;
               } else {
                 return ERROR_ON_RECONNECT;
@@ -514,15 +510,11 @@ public class ConnectionManager {
       for (WifiConfiguration i : list) {
         String[] separated = i.SSID.split("_");
         String tmp = separated[0].trim();
-        System.out.println("Trying to remove a APTXV network.");
-        System.out.println("This one is i : " + i.SSID);
-        System.out.println("SEPARATED 0 is : " + tmp);
         if (tmp.contains("APTXV")) {
-          System.out.println("TRying to remove a network");
           boolean remove = wifimanager.removeNetwork(i.networkId);
-          System.out.println("boolean from remove network is : " + remove);
+          Log.d(TAG, "boolean from remove network is : " + remove);
         } else {
-          System.out.println("tmp is not aptxV can not remove this network;");
+          Log.d(TAG,"Not a APTXV network. Can not remove this network;");
         }
       }
     }
@@ -530,7 +522,6 @@ public class ConnectionManager {
 
   public boolean isMobileDataOn() {
     boolean isOn = false;
-    System.out.println("Inside the getslots");
     TelephonyManager mTelephonyManager =
         (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -601,7 +592,7 @@ public class ConnectionManager {
   }
 
   public void stop() {
-    System.out.println("Going to cancel the tasks");
+    Log.d(TAG,"Going to cancel the tasks");
     if (clients != null) {
       clients.clear();
     }
@@ -663,7 +654,7 @@ public class ConnectionManager {
     Boolean wifiOnStart = prefs.getBoolean("wifiOnStart", false);
     if (wifiOnStart) {
       wifimanager.setWifiEnabled(true);
-      System.out.println("Recovering wifi state, it was on before. ");
+      Log.d(TAG, "Recovering wifi state, it was on before. ");
     } else {
       wifimanager.setWifiEnabled(false);
     }

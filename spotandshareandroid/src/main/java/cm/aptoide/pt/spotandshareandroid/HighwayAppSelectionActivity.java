@@ -1,6 +1,5 @@
 package cm.aptoide.pt.spotandshareandroid;
 
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -11,22 +10,14 @@ import android.view.View;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import java.util.ArrayList;
 import java.util.List;
 
 public class HighwayAppSelectionActivity extends ActivityView implements HighwayAppSelectionView {
 
-  private static final int porto = 55555;//12341
-  public List<App> gridViewAppItemsList = new ArrayList<App>();
-  private PackageManager packageManager;
-  private HighwayAppSelectionActivity highwayAppSelectionActivity;
-  private String targetIPAddress;
   private boolean isHotspot;
   private HighwayAppSelectionCustomAdapter adapter;
-  private List<App> listOfSelectedApps = new ArrayList<>();
   private FloatingActionButton sendButton;
   private GridView gridView;
-  private String nickname;
   private ProgressBar progressBar;
   private HighwayAppSelectionPresenter presenter;
   private ApplicationProvider applicationProvider;
@@ -46,7 +37,6 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
 
     isHotspot = getIntent().getBooleanExtra("isAHotspot", false);
     setUpToolbar();
-    highwayAppSelectionActivity = this;
 
     applicationProvider = new ApplicationProvider(this);
     applicationSender = ApplicationSender.getInstance(this, isHotspot);
@@ -75,8 +65,6 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
   }
 
   @Override public void onBackPressed() {
-
-    System.out.println("Cleaned the list of apps");
     super.onBackPressed();
   }
 
@@ -98,7 +86,6 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
     sendButton.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         presenter.clickedSendButton();
-        System.out.println("Clicked send button!");
       }
     });
   }
@@ -116,12 +103,8 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
 
   @Override public void generateAdapter(boolean isHotspot, List<AppViewModel> itemList) {
     if (isHotspot) {
-      System.out.println("Estou no true do ser hotspot, na app selection.");
       adapter = new HighwayAppSelectionCustomAdapter(this, gridView.getContext(), itemList, true);
     } else {
-      System.out.println(
-          " hIGHWAY APP SELECTION : Not a hotspot, na app selection - Cliente - so p test se ta a null "
-              + isHotspot);
       adapter = new HighwayAppSelectionCustomAdapter(this, gridView.getContext(), itemList, false);
     }
 

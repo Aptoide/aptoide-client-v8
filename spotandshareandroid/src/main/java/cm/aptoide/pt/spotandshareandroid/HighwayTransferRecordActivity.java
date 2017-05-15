@@ -44,6 +44,7 @@ public class HighwayTransferRecordActivity extends ActivityView
   private ApplicationSender applicationSender;
   private Toolbar mToolbar;
   private SpotAndShareAnalyticsInterface analytics;
+  public static final String TAG = HighwayTransferRecordActivity.class.getSimpleName();
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -255,8 +256,6 @@ public class HighwayTransferRecordActivity extends ActivityView
   @Override public void openAppSelectionView() {
     Intent appSelection = new Intent().setClass(HighwayTransferRecordActivity.this,
         HighwayAppSelectionActivity.class);
-    Log.i("TransferRecordActivity ", "going to start the app selection activity");
-    System.out.println("The is hotspot boolean is : " + isHotspot);
     appSelection.putExtra("isAHotspot", isHotspot);
     startActivityForResult(appSelection, SELECT_APPS_REQUEST_CODE);
   }
@@ -392,7 +391,7 @@ public class HighwayTransferRecordActivity extends ActivityView
         try {
           Method setConfigMethod = wifimanager.getClass()
               .getMethod("setWifiApConfiguration", WifiConfiguration.class);
-          System.out.println("Re-seting the wifiAp configuration to what it was before !!! ");
+          Log.d(TAG, "Re-seting the wifiAp configuration to what it was before !!! ");
           setConfigMethod.invoke(wifimanager, wc);
         } catch (NoSuchMethodException e) {
           e.printStackTrace();
@@ -406,7 +405,7 @@ public class HighwayTransferRecordActivity extends ActivityView
           .equals("setWifiApEnabled")) {
 
         try {
-          System.out.println("Desligar o hostpot ");
+          Log.d(TAG,"Desligar o hostpot ");
           m.invoke(wifimanager, wc, false);
         } catch (IllegalAccessException e) {
           e.printStackTrace();
@@ -437,8 +436,7 @@ public class HighwayTransferRecordActivity extends ActivityView
             .getString(R.string.cancel), new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int id) {
             // User cancelled the dialog
-            System.out.println(
-                "TransferREcordsCustomAdapter : Person pressed the CANCEL BUTTON !!!!!!!! ");
+            Log.d(TAG,"Pressed cancel button");
           }
         });
     return builder.create();
@@ -454,7 +452,7 @@ public class HighwayTransferRecordActivity extends ActivityView
     builder.setPositiveButton(this.getResources()
         .getString(R.string.ok), new DialogInterface.OnClickListener() {
       public void onClick(DialogInterface dialog, int id) {
-        System.out.println("Pressed OK in the error of the app version");
+        Log.d(TAG,"Pressed OK in the error of the app version");
       }
     });
 

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.spotandshareandroid;
 
+import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class HighwayAppSelectionPresenter implements Presenter {
   private boolean isHotspot;
   private List<AppViewModel> viewModelApps;
   private List<App> selectedApps;
+  public static final String TAG = HighwayAppSelectionPresenter.class.getSimpleName();
 
   public HighwayAppSelectionPresenter(ApplicationProvider applicationProvider,
       ApplicationSender applicationSender, HighwayAppSelectionView view, boolean isHotspot) {
@@ -80,7 +82,7 @@ public class HighwayAppSelectionPresenter implements Presenter {
 
   public void clickedSendButton() {
 
-    System.out.println("selectedApps size : " + selectedApps.size());
+    Log.d(TAG,"selectedApps size : " + selectedApps.size());
 
     if (selectedApps.size() > 0) {
       applicationSender.sendApp(selectedApps);

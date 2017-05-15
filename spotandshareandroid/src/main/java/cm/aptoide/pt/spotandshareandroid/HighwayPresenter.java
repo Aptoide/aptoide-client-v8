@@ -138,7 +138,6 @@ public class HighwayPresenter implements Presenter {
           @Override public void onStateChanged(boolean enabled) {
             if (enabled) {
               view.hideButtonsProgressBar();
-              System.out.println("Inside presenter on Success for join group");
               analytics.joinGroupSuccess();
               view.enableButtons(true);
               String ipAddress = connectionManager.getIPAddress();

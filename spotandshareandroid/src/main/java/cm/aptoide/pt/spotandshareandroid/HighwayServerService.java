@@ -12,6 +12,7 @@ import android.os.StatFs;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
@@ -34,6 +35,7 @@ import java.util.List;
 public class HighwayServerService extends Service {
 
   public static final int INSTALL_APP_NOTIFICATION_REQUEST_CODE = 147;
+  public static final String TAG = HighwayServerService.class.getSimpleName();
   private final int PROGRESS_SPLIT_SIZE = 10;
   private final SocketBinder socketBinder = Utils.Socket.newDefaultSocketBinder();
   private NotificationManagerCompat mNotifyManager;
@@ -86,7 +88,7 @@ public class HighwayServerService extends Service {
           }
 
           @Override public void onFinishSending(AndroidAppInfo androidAppInfo) {
-            System.out.println("Server : finished sending " + androidAppInfo);
+            Log.d(TAG, "Server : finished sending " + androidAppInfo);
 
             finishSendNotification(androidAppInfo);
 
@@ -101,7 +103,7 @@ public class HighwayServerService extends Service {
           }
 
           @Override public void onError(IOException e) {
-            System.out.println("Fell on error Server !! ");
+            Log.d(TAG,"Fell on error Server !! ");
             e.printStackTrace();
 
             if (mNotifyManager != null && androidAppInfo != null) {
@@ -197,7 +199,7 @@ public class HighwayServerService extends Service {
           .equals("RECEIVE")) {
         final String externalStoragepath = intent.getStringExtra("ExternalStoragePath");
 
-        System.out.println("Going to start serving");
+        Log.d(TAG,"Going to start serving");
         HostsCallbackManager hostsCallbackManager;
         if (intent.getExtras()
             .containsKey("autoShareFilePath")) {
@@ -228,7 +230,6 @@ public class HighwayServerService extends Service {
                 storageCapacity, fileLifecycleProvider, socketBinder, onError, Integer.MAX_VALUE);
         aptoideMessageClientSocket.startAsync();
 
-        System.out.println("Connected 342");
       } else if (intent.getAction() != null && intent.getAction()
           .equals("SEND")) {
         Bundle b = intent.getBundleExtra("bundle");
@@ -447,7 +448,7 @@ public class HighwayServerService extends Service {
         try {
           Method setConfigMethod = wifimanager.getClass()
               .getMethod("setWifiApConfiguration", WifiConfiguration.class);
-          System.out.println("Re-seting the wifiAp configuration to what it was before !!! ");
+          Log.d(TAG,"Re-seting the wifiAp configuration to what it was before !!! ");
           setConfigMethod.invoke(wifimanager, wc);
         } catch (NoSuchMethodException e) {
           e.printStackTrace();
@@ -461,7 +462,7 @@ public class HighwayServerService extends Service {
           .equals("setWifiApEnabled")) {
 
         try {
-          System.out.println("Desligar o hostpot ");
+          Log.d(TAG,"Desligar o hostpot ");
           m.invoke(wifimanager, wc, false);
         } catch (IllegalAccessException e) {
           e.printStackTrace();

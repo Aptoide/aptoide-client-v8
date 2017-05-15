@@ -10,6 +10,7 @@ import android.os.StatFs;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
 import cm.aptoide.pt.spotandshare.socket.exception.ServerLeftException;
@@ -34,6 +35,7 @@ import java.util.List;
 public class HighwayClientService extends Service {
 
   public static final int INSTALL_APP_NOTIFICATION_REQUEST_CODE = 147;
+  public static final String TAG = HighwayClientService.class.getSimpleName();
   private final int PROGRESS_SPLIT_SIZE = 10;
   private final SocketBinder socketBinder = Utils.Socket.newDefaultSocketBinder();
   private int port;
@@ -55,7 +57,6 @@ public class HighwayClientService extends Service {
 
   @Override public void onCreate() {
     super.onCreate();
-    System.out.println("Inside the onCreate of the service");
 
     if (mNotifyManager == null) {
       mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
@@ -69,7 +70,7 @@ public class HighwayClientService extends Service {
           private AndroidAppInfo androidAppInfo;
 
           @Override public void onStartSending(AndroidAppInfo androidAppInfo) {
-            System.out.println(" Started sending ");
+            Log.d(TAG," Started sending ");
             this.androidAppInfo = androidAppInfo;
             progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
 
@@ -87,7 +88,7 @@ public class HighwayClientService extends Service {
           }
 
           @Override public void onFinishSending(AndroidAppInfo androidAppInfo) {
-            System.out.println(" Finished sending " + androidAppInfo);
+            Log.d(TAG," Finished sending " + androidAppInfo);
 
             finishSendNotification(androidAppInfo);
 
@@ -133,7 +134,7 @@ public class HighwayClientService extends Service {
           private AndroidAppInfo androidAppInfo;
 
           @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
-            System.out.println(" Started receiving ");
+            Log.d(TAG," Started receiving ");
             this.androidAppInfo = androidAppInfo;
             progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
 
@@ -148,7 +149,7 @@ public class HighwayClientService extends Service {
           }
 
           @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
-            System.out.println(" Finished receiving " + androidAppInfo);
+            Log.d(TAG," Finished receiving " + androidAppInfo);
 
             finishReceiveNotification(androidAppInfo.getApk()
                 .getFilePath(), androidAppInfo.getPackageName(), androidAppInfo);
@@ -165,7 +166,7 @@ public class HighwayClientService extends Service {
           }
 
           @Override public void onError(IOException e) {
-            System.out.println("Fell on error  Client !! ");
+            Log.d(TAG,"Fell on error  Client !! ");
 
             if (!serverLeftOnError) {
               if (mNotifyManager != null && androidAppInfo != null) {
@@ -221,7 +222,7 @@ public class HighwayClientService extends Service {
         aptoideMessageClientSocket.setSocketBinder(socketBinder);
         aptoideMessageClientSocket.startAsync();
 
-        System.out.println(" Connected ! ");
+        Log.d(TAG," Connected ! ");
       } else if (intent.getAction() != null && intent.getAction()
           .equals("SEND")) {
         Bundle b = intent.getBundleExtra("bundle");
@@ -247,7 +248,7 @@ public class HighwayClientService extends Service {
         }
       } else if (intent.getAction() != null && intent.getAction()
           .equals("DISCONNECT")) {
-        System.out.println("Requested to disconnect !");
+        Log.d(TAG,"Requested to disconnect !");
         AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
           @Override public void run() {
             if (aptoideMessageClientSocket != null) {

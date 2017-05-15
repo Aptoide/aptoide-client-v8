@@ -275,7 +275,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     if (enable) {
       progressBarLayout.setVisibility(View.GONE);
       groupButtonsLayout.setVisibility(View.VISIBLE);
-      System.out.println("Activating the buttons !");
     } else {//disable
       progressBarLayout.setVisibility(View.VISIBLE);
       groupButtonsLayout.setVisibility(View.GONE);
@@ -352,14 +351,11 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   @Override public void openChatClient(String ipAddress, String deviceName,
       ArrayList<String> pathsFromOutsideShare) {
-    System.out.println("Yes, wifi is connected.");
     Intent history =
         new Intent().setClass(HighwayActivity.this, HighwayTransferRecordActivity.class);
     Log.i("Highway Activity ", "Going to the list of Applications");
     history.putExtra("isAHotspot", false);
     history.putExtra("nickname", deviceName);
-    System.out.println("this is the valor of the IPADDRESS : :::::::::::" + ipAddress);
-    System.out.println("I am going to send this IP Address " + ipAddress);
     history.putExtra("targetIP", ipAddress);
     if (pathsFromOutsideShare != null) {
       Bundle tmp = new Bundle();
@@ -377,7 +373,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   public void openChatHotspot(ArrayList<String> pathsFromOutsideShare, String deviceName) {
     Intent history =
         new Intent().setClass(HighwayActivity.this, HighwayTransferRecordActivity.class);
-    System.out.println("Highway activity : going to start the transferRecordActivity !!!!");
     history.putExtra("isAHotspot", true);
     history.putExtra("nickname", deviceName);
     if (pathsFromOutsideShare != null) {

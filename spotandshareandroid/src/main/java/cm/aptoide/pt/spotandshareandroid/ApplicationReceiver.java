@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Environment;
+import android.util.Log;
 
 /**
  * Created by filipegoncalves on 10-02-2017.
@@ -24,6 +25,7 @@ public class ApplicationReceiver {
   private IntentFilter receiveFilter;
   private ReceiveAppListener listener;
   private String autoShareFilePath;
+  private static final String TAG = ApplicationReceiver.class.getSimpleName();
 
   public ApplicationReceiver(Context context, boolean isHotspot, int port, String targetIPAddress,
       String nickname) {
@@ -78,10 +80,10 @@ public class ApplicationReceiver {
     Intent receiveIntent = null;
     if (isHotspot) {
       receiveIntent = new Intent(context, HighwayServerService.class);
-      System.out.println("Will start a server service");
+      Log.d(TAG,"Will start a SERVER service");
     } else {
 
-      System.out.println("Will start a client service");
+      Log.d(TAG,"Will start a CLIENT service");
 
       receiveIntent = new Intent(context, HighwayClientService.class);
       receiveIntent.putExtra("targetIP", targetIPAddress);

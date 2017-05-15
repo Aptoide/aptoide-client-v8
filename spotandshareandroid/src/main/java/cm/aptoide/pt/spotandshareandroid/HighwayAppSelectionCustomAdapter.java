@@ -73,8 +73,6 @@ public class HighwayAppSelectionCustomAdapter extends BaseAdapter {
 
     if (appsList.get(position)
         .isSelected()) {
-      System.out.println("just ordered to paint the background of  : " + appsList.get(position)
-          .getAppName());
       viewHolder.linearLayout.setBackgroundColor(context.getResources()
           .getColor(R.color.light_grey));
       //            notifyDataSetChanged();

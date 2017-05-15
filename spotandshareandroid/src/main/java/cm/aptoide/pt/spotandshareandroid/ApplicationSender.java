@@ -32,7 +32,6 @@ public class ApplicationSender {
         @Override public void onReceive(Context context, Intent intent) {
           if (intent.getAction() != null && intent.getAction()
               .equals("SHOW_SEND_BUTTON")) {
-            System.out.println("Ordering to show send button");
             hostsListener.onAvailableClients();
           } else if (intent.getAction() != null && intent.getAction()
               .equals("HIDE_SEND_BUTTON")) {
@@ -104,7 +103,6 @@ public class ApplicationSender {
               sendListener.onAppStartingToSend(appName, packageName, needReSend, isSent,
                   positionToReSend);
             } else {
-              System.out.println("Application Sender : : : : Sent an App");
               sendListener.onAppSent(appName, needReSend, isSent, false, positionToReSend);
             }
           } else if (intent.getAction() != null && intent.getAction()
