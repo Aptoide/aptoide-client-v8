@@ -16,7 +16,7 @@ public class Api {
   private static final QManager qManager;
 
   static {
-    qManager = QManager.getInstance();
+    qManager = new QManager();
   }
 
   public static String getQ() {

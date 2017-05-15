@@ -12,8 +12,6 @@ import static cm.aptoide.pt.utils.AptoideUtils.SystemU;
  */
 public class QManager implements Invalidate {
 
-  @Getter private static final QManager instance = new QManager();
-
   @Getter(lazy = true) private final int minSdk = computeMinSdk();
   @Getter(lazy = true) private final String screenSize = computeScreenSize();
   @Getter(lazy = true) private final String glEs = computeGlEs();
@@ -23,7 +21,7 @@ public class QManager implements Invalidate {
 
   private String cachedFilters;
 
-  private QManager() {
+  public QManager() {
     this.glExtensionsManager = GlExtensionsManager.getInstance();
   }
 

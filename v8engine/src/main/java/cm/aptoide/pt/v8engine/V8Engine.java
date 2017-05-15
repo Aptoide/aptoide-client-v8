@@ -198,7 +198,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
     displayableWidgetMapping = createDisplayableWidgetMapping();
     shareApps = new ShareApps(new SpotAndShareAnalytics(Analytics.getInstance()));
 
-    qManager = QManager.getInstance();
+    qManager = new QManager();
     baseBodyInterceptorFactory =
         new BaseBodyInterceptorFactory(getIdsRepository(), getPreferences(), getSecurePreferences(),
             getAptoideMd5sum(), getAptoidePackage(), qManager);
