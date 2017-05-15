@@ -3,10 +3,11 @@
  * Modified by Marcelo Benites on 19/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.presenter;
+package cm.aptoide.pt.v8engine.billing.view;
 
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Purchase;
+import cm.aptoide.pt.v8engine.presenter.View;
 import java.util.List;
 import rx.Observable;
 
@@ -36,8 +37,6 @@ public interface PaymentView extends View {
   void dismiss(Throwable throwable);
 
   void dismiss();
-
-  void navigateToAuthorizationView(int paymentId, Product product);
 
   void showPaymentsNotFoundMessage();
 

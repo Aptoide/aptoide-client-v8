@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.billing.repository;
 
-import android.content.Context;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
@@ -43,9 +42,9 @@ public class InAppBillingProductRepository extends ProductRepository {
 
   public InAppBillingProductRepository(InAppBillingRepository inAppBillingRepository,
       PurchaseFactory purchaseFactory, PaymentFactory paymentFactory,
-      PaymentAuthorizationRepository authorizationRepository,
+      AuthorizationRepository authorizationRepository,
       PaymentConfirmationRepository confirmationRepository, Payer payer,
-      PaymentAuthorizationFactory authorizationFactory, ProductFactory productFactory,
+      AuthorizationFactory authorizationFactory, ProductFactory productFactory,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory, NetworkOperatorManager operatorManager) {
     super(paymentFactory, authorizationRepository, confirmationRepository, payer,
@@ -68,11 +67,11 @@ public class InAppBillingProductRepository extends ProductRepository {
         .subscribeOn(Schedulers.io());
   }
 
-  @Override public Single<List<Payment>> getPayments(Context context, Product product) {
+  @Override public Single<List<Payment>> getPayments(Product product) {
     return getServerInAppBillingPaymentServices(((InAppProduct) product).getApiVersion(),
         ((InAppProduct) product).getPackageName(), ((InAppProduct) product).getSku(),
         ((InAppProduct) product).getType()).flatMap(
-        payments -> convertResponseToPayment(context, payments));
+        payments -> convertResponseToPayment(payments));
   }
 
   public Single<Product> getProduct(int apiVersion, String packageName, String sku, String type,

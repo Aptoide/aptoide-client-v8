@@ -14,7 +14,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.v8engine.billing.Authorization;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
-import cm.aptoide.pt.v8engine.billing.repository.PaymentAuthorizationFactory;
+import cm.aptoide.pt.v8engine.billing.repository.AuthorizationFactory;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.v8engine.sync.RepositorySync;
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class AuthorizationSync extends RepositorySync {
 
   private final int paymentId;
   private final PaymentAuthorizationAccessor authorizationAccessor;
-  private final PaymentAuthorizationFactory authorizationFactory;
+  private final AuthorizationFactory authorizationFactory;
   private final Payer payer;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final OkHttpClient httpClient;
@@ -35,7 +35,7 @@ public class AuthorizationSync extends RepositorySync {
   private final PaymentAnalytics paymentAnalytics;
 
   public AuthorizationSync(int paymentId, PaymentAuthorizationAccessor authorizationAccessor,
-      PaymentAuthorizationFactory authorizationFactory, Payer payer,
+      AuthorizationFactory authorizationFactory, Payer payer,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory, PaymentAnalytics paymentAnalytics) {
     this.paymentId = paymentId;

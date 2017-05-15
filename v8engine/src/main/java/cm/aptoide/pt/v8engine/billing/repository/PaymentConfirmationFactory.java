@@ -10,9 +10,6 @@ import cm.aptoide.pt.v8engine.billing.PaymentConfirmation;
 
 public class PaymentConfirmationFactory {
 
-  public PaymentConfirmationFactory() {
-  }
-
   public PaymentConfirmation create(int productId, String paymentConfirmationId,
       PaymentConfirmation.Status status, String payerId) {
     return new PaymentConfirmation(productId, payerId, paymentConfirmationId, status);

@@ -7,13 +7,11 @@ package cm.aptoide.pt.v8engine.billing.repository;
 
 import android.content.Context;
 import cm.aptoide.pt.model.v3.PaymentServiceResponse;
-import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Payment;
 import cm.aptoide.pt.v8engine.billing.services.AptoidePayment;
-import cm.aptoide.pt.v8engine.billing.services.paypal.PayPalPayment;
-import cm.aptoide.pt.v8engine.billing.services.web.WebAuthorizationPayment;
-import com.paypal.android.sdk.payments.PayPalConfiguration;
+import cm.aptoide.pt.v8engine.billing.services.AuthorizedPayment;
+import cm.aptoide.pt.v8engine.billing.services.PayPalPayment;
 
 public class PaymentFactory {
 
@@ -22,36 +20,33 @@ public class PaymentFactory {
   public static final String BOACOMPRAGOLD = "boacompragold";
   public static final String DUMMY = "dummy";
 
+  private final Context context;
   private final PaymentRepositoryFactory paymentRepositoryFactory;
-  private final PaymentAuthorizationRepository authorizationRepository;
-  private final PaymentAuthorizationFactory authorizationFactory;
+  private final AuthorizationRepository authorizationRepository;
+  private final AuthorizationFactory authorizationFactory;
   private final Payer payer;
-  private PayPalConfiguration payPalConfiguration;
 
-  public PaymentFactory(PaymentRepositoryFactory paymentRepositoryFactory,
-      PaymentAuthorizationRepository authorizationRepository,
-      PaymentAuthorizationFactory authorizationFactory, Payer payer) {
+  public PaymentFactory(Context context, PaymentRepositoryFactory paymentRepositoryFactory,
+      AuthorizationRepository authorizationRepository, AuthorizationFactory authorizationFactory,
+      Payer payer) {
+    this.context = context;
     this.paymentRepositoryFactory = paymentRepositoryFactory;
     this.authorizationRepository = authorizationRepository;
     this.authorizationFactory = authorizationFactory;
     this.payer = payer;
-    this.payPalConfiguration = new PayPalConfiguration();
-    this.payPalConfiguration.environment(BuildConfig.PAYPAL_ENVIRONMENT);
-    this.payPalConfiguration.clientId(BuildConfig.PAYPAL_KEY);
   }
 
-  public Payment create(Context context, PaymentServiceResponse paymentService) {
+  public Payment create(PaymentServiceResponse paymentService) {
     switch (paymentService.getShortName()) {
       case PAYPAL:
         return new PayPalPayment(context, paymentService.getId(), paymentService.getName(),
-            paymentService.getDescription(), paymentRepositoryFactory, authorizationRepository,
-            payPalConfiguration, paymentService.isAuthorizationRequired(), authorizationFactory,
-            payer);
+            paymentService.getDescription(), paymentRepositoryFactory, payer,
+            authorizationRepository, authorizationFactory);
       case BOACOMPRA:
       case BOACOMPRAGOLD:
-        return new WebAuthorizationPayment(paymentService.getId(), paymentService.getName(),
-            paymentService.getDescription(), paymentRepositoryFactory, authorizationRepository,
-            paymentService.isAuthorizationRequired(), authorizationFactory, payer);
+        return new AuthorizedPayment(paymentService.getId(), paymentService.getName(),
+            paymentService.getDescription(), paymentRepositoryFactory, payer,
+            authorizationRepository, authorizationFactory);
       case DUMMY:
         return new AptoidePayment(paymentService.getId(), paymentService.getName(),
             paymentService.getDescription(), paymentRepositoryFactory);

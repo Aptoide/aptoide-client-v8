@@ -5,9 +5,9 @@
 
 package cm.aptoide.pt.v8engine.billing;
 
-import android.content.Context;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingBinder;
+import cm.aptoide.pt.v8engine.billing.repository.AuthorizationRepository;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
@@ -22,13 +22,16 @@ public class AptoideBilling {
   private final ProductRepositoryFactory productRepositoryFactory;
   private final PaymentRepositoryFactory paymentRepositoryFactory;
   private final InAppBillingRepository inAppBillingRepository;
+  private final AuthorizationRepository authorizationRepository;
 
   public AptoideBilling(ProductRepositoryFactory productRepositoryFactory,
       PaymentRepositoryFactory paymentRepositoryFactory,
-      InAppBillingRepository inAppBillingRepository) {
+      InAppBillingRepository inAppBillingRepository,
+      AuthorizationRepository authorizationRepository) {
     this.productRepositoryFactory = productRepositoryFactory;
     this.paymentRepositoryFactory = paymentRepositoryFactory;
     this.inAppBillingRepository = inAppBillingRepository;
+    this.authorizationRepository = authorizationRepository;
   }
 
   public Single<Boolean> isBillingSupported(String packageName, int apiVersion, String type) {
@@ -42,6 +45,16 @@ public class AptoideBilling {
         })
         .first()
         .toSingle();
+  }
+
+  public Completable process(int paymentId, Product product, String authorizationCode) {
+    return getPayment(paymentId, product).flatMapCompletable(
+        payment -> authorizationRepository.createPaymentAuthorization(paymentId, authorizationCode)
+            .andThen(payment.process(product)));
+  }
+
+  public Completable authorizeWeb(int paymentId) {
+    return authorizationRepository.createPaymentAuthorization(paymentId);
   }
 
   public Single<Product> getPaidAppProduct(long appId, String storeName, boolean sponsored) {
@@ -73,13 +86,13 @@ public class AptoideBilling {
         .flatMapCompletable(purchase -> purchase.consume());
   }
 
-  public Single<List<Payment>> getPayments(Context context, Product product) {
+  public Single<List<Payment>> getPayments(Product product) {
     return productRepositoryFactory.getProductRepository(product)
-        .getPayments(context, product);
+        .getPayments(product);
   }
 
-  public Single<Payment> getPayment(Context context, int paymentId, Product product) {
-    return getPayments(context, product).flatMapObservable(payments -> Observable.from(payments)
+  public Single<Payment> getPayment(int paymentId, Product product) {
+    return getPayments(product).flatMapObservable(payments -> Observable.from(payments)
         .filter(payment -> payment.getId() == paymentId)
         .switchIfEmpty(Observable.error(
             new PaymentFailureException("Payment " + paymentId + "not available"))))

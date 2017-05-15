@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.billing.view;
 
-import android.content.Context;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.billing.AptoideBilling;
@@ -16,7 +15,6 @@ import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Purchase;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentNotAuthorizedException;
 import cm.aptoide.pt.v8engine.presenter.PaymentSelector;
-import cm.aptoide.pt.v8engine.presenter.PaymentView;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
@@ -37,12 +35,12 @@ public class PaymentPresenter implements Presenter {
   private static final String EXTRA_IS_PROCESSING_LOGIN =
       "cm.aptoide.pt.v8engine.payment.extra.IS_PROCESSING_LOGIN";
 
-  private final Context context;
   private final PaymentView view;
   private final AptoideBilling aptoideBilling;
   private final AptoideAccountManager accountManager;
   private final PaymentSelector paymentSelector;
   private final AccountNavigator accountNavigator;
+  private final AuthorizationNavigator authorizationNavigator;
 
   private boolean processingLogin;
   private List<Payment> payments;
@@ -58,17 +56,17 @@ public class PaymentPresenter implements Presenter {
   private String packageName;
   private String developerPayload;
 
-  public PaymentPresenter(Context context, PaymentView view, AptoideBilling aptoideBilling,
+  public PaymentPresenter(PaymentView view, AptoideBilling aptoideBilling,
       AptoideAccountManager accountManager, PaymentSelector paymentSelector,
-      AccountNavigator accountNavigator, PaymentAnalytics paymentAnalytics, long appId,
-      String storeName, boolean sponsored, int apiVersion, String type, String sku,
-      String packageName, String developerPayload) {
-    this.context = context;
+      AccountNavigator accountNavigator, AuthorizationNavigator authorizationNavigator,
+      PaymentAnalytics paymentAnalytics, long appId, String storeName, boolean sponsored,
+      int apiVersion, String type, String sku, String packageName, String developerPayload) {
     this.view = view;
     this.aptoideBilling = aptoideBilling;
     this.accountManager = accountManager;
     this.paymentSelector = paymentSelector;
     this.accountNavigator = accountNavigator;
+    this.authorizationNavigator = authorizationNavigator;
     this.payments = new ArrayList<>();
     this.paymentAnalytics = paymentAnalytics;
     this.appId = appId;
@@ -224,7 +222,7 @@ public class PaymentPresenter implements Presenter {
   }
 
   private Completable showProductAndPayments(Product product) {
-    return aptoideBilling.getPayments(context, product)
+    return aptoideBilling.getPayments(product)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSuccess(payments -> {
           saveCurrentPayments(payments);
@@ -279,8 +277,9 @@ public class PaymentPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof PaymentNotAuthorizedException) {
-            return Completable.fromAction(
-                () -> view.navigateToAuthorizationView(payment.getId(), product));
+            authorizationNavigator.navigateToAuthorizationView(payment, product);
+            view.hideLoading();
+            return Completable.complete();
           }
           return Completable.error(throwable);
         });

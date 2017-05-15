@@ -12,6 +12,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentConfirmationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
+import cm.aptoide.pt.model.v3.BaseV3Response;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
@@ -21,33 +22,30 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
-
-/**
- * Created by marcelobenites on 16/12/16.
- */
+import rx.Single;
 
 public class PaidAppPaymentConfirmationRepository extends PaymentConfirmationRepository {
 
   private final AptoideAccountManager accountManager;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final Converter.Factory converterFactory;
-  private final OkHttpClient httClient;
+  private final OkHttpClient httpClient;
 
   public PaidAppPaymentConfirmationRepository(NetworkOperatorManager operatorManager,
-      PaymentConfirmationAccessor paymentDatabase, PaymentSyncScheduler backgroundSync,
+      PaymentConfirmationAccessor confirmationAccessor, PaymentSyncScheduler backgroundSync,
       PaymentConfirmationFactory confirmationFactory, AptoideAccountManager accountManager,
       BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
-      OkHttpClient httClient, Payer payer) {
-    super(operatorManager, paymentDatabase, backgroundSync, confirmationFactory, payer);
+      OkHttpClient httpClient, Payer payer) {
+    super(operatorManager, confirmationAccessor, backgroundSync, confirmationFactory, payer);
     this.accountManager = accountManager;
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.converterFactory = converterFactory;
-    this.httClient = httClient;
+    this.httpClient = httpClient;
   }
 
   @Override public Completable createPaymentConfirmation(int paymentId, Product product) {
     return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId, operatorManager,
-        ((PaidAppProduct) product).getStoreName(), bodyInterceptorV3, httClient, converterFactory)
+        ((PaidAppProduct) product).getStoreName(), bodyInterceptorV3, httpClient, converterFactory)
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -61,8 +59,12 @@ public class PaidAppPaymentConfirmationRepository extends PaymentConfirmationRep
   }
 
   @Override
-  public Completable createPaymentConfirmation(int paymentId, String paymentConfirmationId,
-      Product product) {
-    return createPaymentConfirmation(product, paymentId, paymentConfirmationId);
+  protected Single<BaseV3Response> createServerConfirmation(Product product, int paymentId,
+      String paymentConfirmationId) {
+    return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId, operatorManager,
+        ((PaidAppProduct) product).getStoreName(), paymentConfirmationId, bodyInterceptorV3,
+        httpClient, converterFactory)
+        .observe()
+        .toSingle();
   }
 }

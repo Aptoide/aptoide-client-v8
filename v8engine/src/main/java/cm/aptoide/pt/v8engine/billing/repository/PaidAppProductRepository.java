@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.billing.repository;
 
-import android.content.Context;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
@@ -37,9 +36,9 @@ public class PaidAppProductRepository extends ProductRepository {
   private final ProductFactory productFactory;
 
   public PaidAppProductRepository(PurchaseFactory purchaseFactory, PaymentFactory paymentFactory,
-      PaymentAuthorizationRepository authorizationRepository,
+      AuthorizationRepository authorizationRepository,
       PaymentConfirmationRepository confirmationRepository, Payer payer,
-      PaymentAuthorizationFactory authorizationFactory, NetworkOperatorManager operatorManager,
+      AuthorizationFactory authorizationFactory, NetworkOperatorManager operatorManager,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
       Converter.Factory converterFactory, ProductFactory productFactory) {
     super(paymentFactory, authorizationRepository, confirmationRepository, payer,
@@ -70,12 +69,12 @@ public class PaidAppProductRepository extends ProductRepository {
     });
   }
 
-  @Override public Single<List<Payment>> getPayments(Context context, Product product) {
+  @Override public Single<List<Payment>> getPayments(Product product) {
     return getPaidApp(false, ((PaidAppProduct) product).getAppId(),
         ((PaidAppProduct) product).isSponsored(), ((PaidAppProduct) product).getStoreName()).map(
         paidApp -> paidApp.getPayment()
             .getPaymentServices())
-        .flatMap(payments -> convertResponseToPayment(context, payments));
+        .flatMap(payments -> convertResponseToPayment(payments));
   }
 
   private Single<PaidApp> getPaidApp(boolean refresh, long appId, boolean sponsored,

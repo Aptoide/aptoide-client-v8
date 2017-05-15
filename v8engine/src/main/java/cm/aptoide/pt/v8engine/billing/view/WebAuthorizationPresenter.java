@@ -5,16 +5,15 @@
 
 package cm.aptoide.pt.v8engine.billing.view;
 
-import android.content.Context;
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.billing.AptoideBilling;
 import cm.aptoide.pt.v8engine.billing.Payment;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.Product;
+import cm.aptoide.pt.v8engine.billing.services.WebAuthorization;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.billing.repository.sync.PaymentSyncScheduler;
-import cm.aptoide.pt.v8engine.billing.services.web.WebAuthorizationPayment;
-import cm.aptoide.pt.v8engine.presenter.PaymentAuthorizationView;
+import cm.aptoide.pt.v8engine.billing.services.AuthorizedPayment;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import rx.Completable;
@@ -23,8 +22,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class WebAuthorizationPresenter implements Presenter {
 
-  private final Context context;
-  private final PaymentAuthorizationView view;
+  private final WebAuthorizationView view;
   private final AptoideBilling aptoideBilling;
   private final int paymentId;
   private final PaymentAnalytics analytics;
@@ -40,11 +38,10 @@ public class WebAuthorizationPresenter implements Presenter {
   private final String packageName;
   private final String developerPayload;
 
-  public WebAuthorizationPresenter(Context context, PaymentAuthorizationView view,
-      AptoideBilling aptoideBilling, int paymentId, PaymentAnalytics analytics,
-      PaymentSyncScheduler syncScheduler, long appId, String storeName, boolean sponsored,
-      int apiVersion, String type, String sku, String packageName, String developerPayload) {
-    this.context = context;
+  public WebAuthorizationPresenter(WebAuthorizationView view, AptoideBilling aptoideBilling,
+      int paymentId, PaymentAnalytics analytics, PaymentSyncScheduler syncScheduler, long appId,
+      String storeName, boolean sponsored, int apiVersion, String type, String sku,
+      String packageName, String developerPayload) {
     this.view = view;
     this.aptoideBilling = aptoideBilling;
     this.paymentId = paymentId;
@@ -96,17 +93,20 @@ public class WebAuthorizationPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> view.showLoading())
         .flatMapSingle(lading -> getProduct())
-        .flatMap(product -> aptoideBilling.getPayment(context, paymentId, product)
+        .flatMap(product -> aptoideBilling.getPayment(paymentId, product)
             .toObservable()
-            .cast(WebAuthorizationPayment.class)
+            .cast(AuthorizedPayment.class)
             .flatMap(payment -> payment.getAuthorization()
+                .cast(WebAuthorization.class)
                 .takeUntil(authorization -> authorization.isAuthorized())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMapCompletable(authorization -> {
 
                   if (authorization.isPendingUserConsent()) {
-                    view.showUrl(authorization.getUrl(), authorization.getRedirectUrl());
-                    return Completable.complete();
+                    return aptoideBilling.authorizeWeb(payment.getId())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnCompleted(() -> view.showUrl(authorization.getUrl(),
+                            authorization.getRedirectUrl()));
                   }
 
                   if (authorization.isAuthorized()) {

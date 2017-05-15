@@ -29,10 +29,7 @@ import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Purchase;
 import cm.aptoide.pt.v8engine.billing.product.AbstractProduct;
-import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
-import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
 import cm.aptoide.pt.v8engine.presenter.PaymentSelector;
-import cm.aptoide.pt.v8engine.presenter.PaymentView;
 import cm.aptoide.pt.v8engine.view.BaseActivity;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -132,18 +129,18 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
             .setPositiveButton(android.R.string.ok, null)
             .create();
 
-    final AbstractProduct product = getIntent().getParcelableExtra(EXTRA_APP_ID);
     final AptoideAccountManager accountManager =
         ((V8Engine) getApplicationContext()).getAccountManager();
     final PaymentAnalytics paymentAnalytics =
         ((V8Engine) getApplicationContext()).getPaymentAnalytics();
 
     attachPresenter(
-        new PaymentPresenter(this, this, ((V8Engine) getApplicationContext()).getAptoideBilling(),
+        new PaymentPresenter(this, ((V8Engine) getApplicationContext()).getAptoideBilling(),
             accountManager, new PaymentSelector(PAYPAL_PAYMENT_ID,
             PreferenceManager.getDefaultSharedPreferences(getApplicationContext())),
             new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
-            paymentAnalytics, getIntent().getLongExtra(EXTRA_APP_ID, -1),
+            new AuthorizationNavigator(getActivityNavigator()), paymentAnalytics,
+            getIntent().getLongExtra(EXTRA_APP_ID, -1),
             getIntent().getStringExtra(EXTRA_STORE_NAME),
             getIntent().getBooleanExtra(EXTRA_SPONSORED, false),
             getIntent().getIntExtra(EXTRA_API_VERSION, -1), getIntent().getStringExtra(EXTRA_TYPE),
@@ -232,21 +229,6 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
 
   @Override public void dismiss() {
     finish(RESULT_CANCELED, intentFactory.mapCancellation());
-  }
-
-  @Override public void navigateToAuthorizationView(int paymentId, Product product) {
-    if (product instanceof InAppProduct) {
-      startActivity(WebAuthorizationActivity.getIntent(this, paymentId,
-          ((InAppProduct) product).getApiVersion(), ((InAppProduct) product).getPackageName(),
-          ((InAppProduct) product).getType(), ((InAppProduct) product).getSku(),
-          ((InAppProduct) product).getDeveloperPayload()));
-    } else if (product instanceof PaidAppProduct) {
-      startActivity(
-          WebAuthorizationActivity.getIntent(this, paymentId, ((PaidAppProduct) product).getAppId(),
-              ((PaidAppProduct) product).getStoreName(), ((PaidAppProduct) product).isSponsored()));
-    } else {
-      throw new IllegalArgumentException("Invalid product. Only in app and paid apps supported");
-    }
   }
 
   @Override public void showPaymentsNotFoundMessage() {

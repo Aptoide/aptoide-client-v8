@@ -19,7 +19,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.Product;
-import cm.aptoide.pt.v8engine.billing.repository.PaymentAuthorizationFactory;
+import cm.aptoide.pt.v8engine.billing.repository.AuthorizationFactory;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentConfirmationFactory;
 import cm.aptoide.pt.v8engine.billing.repository.sync.AuthorizationSync;
 import cm.aptoide.pt.v8engine.billing.repository.sync.ConfirmationSync;
@@ -27,14 +27,8 @@ import cm.aptoide.pt.v8engine.billing.repository.sync.ProductBundleMapper;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
-/**
- * Created by marcelobenites on 18/11/16.
- */
-
 public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
 
-  public static final String EXTRA_PAYMENT_CONFIRMATION_ID =
-      "cm.aptoide.pt.v8engine.repository.sync.PAYMENT_CONFIRMATION_ID";
   public static final String EXTRA_PAYMENT_ID = "cm.aptoide.pt.v8engine.repository.sync.PAYMENT_ID";
   public static final String EXTRA_PAYMENT_AUTHORIZATIONS =
       "cm.aptoide.pt.v8engine.repository.sync.EXTRA_PAYMENT_AUTHORIZATIONS";
@@ -44,7 +38,7 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
   private final ProductBundleMapper productConverter;
   private final NetworkOperatorManager operatorManager;
   private final PaymentConfirmationFactory confirmationConverter;
-  private final PaymentAuthorizationFactory authorizationConverter;
+  private final AuthorizationFactory authorizationConverter;
   private final PaymentConfirmationAccessor confirmationAccessor;
   private final PaymentAuthorizationAccessor authorizationAcessor;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
@@ -55,7 +49,7 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
 
   public AptoideSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs,
       PaymentConfirmationFactory confirmationConverter,
-      PaymentAuthorizationFactory authorizationConverter, ProductBundleMapper productConverter,
+      AuthorizationFactory authorizationConverter, ProductBundleMapper productConverter,
       NetworkOperatorManager operatorManager, PaymentConfirmationAccessor confirmationAccessor,
       PaymentAuthorizationAccessor authorizationAcessor,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
@@ -79,22 +73,13 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
     final boolean authorizations = extras.getBoolean(EXTRA_PAYMENT_AUTHORIZATIONS);
     final boolean confirmations = extras.getBoolean(EXTRA_PAYMENT_CONFIRMATIONS);
 
-    final int paymentId = extras.getInt(EXTRA_PAYMENT_ID);
-
     if (confirmations) {
       final Product product = productConverter.mapToProduct(extras);
-      final String paymentConfirmationId = extras.getString(EXTRA_PAYMENT_CONFIRMATION_ID);
-
-      if (paymentConfirmationId == null) {
-        new ConfirmationSync(product, operatorManager, confirmationAccessor, confirmationConverter,
-            payer, bodyInterceptorV3, converterFactory, httpClient, paymentAnalytics).sync(
-            syncResult);
-      } else {
-        new ConfirmationSync(product, operatorManager, confirmationAccessor, confirmationConverter,
-            paymentConfirmationId, paymentId, payer, bodyInterceptorV3, converterFactory,
-            httpClient, paymentAnalytics).sync(syncResult);
-      }
+      new ConfirmationSync(product, operatorManager, confirmationAccessor, confirmationConverter,
+          payer, bodyInterceptorV3, converterFactory, httpClient, paymentAnalytics).sync(
+          syncResult);
     } else if (authorizations) {
+      final int paymentId = extras.getInt(EXTRA_PAYMENT_ID);
       new AuthorizationSync(paymentId, authorizationAcessor, authorizationConverter, payer,
           bodyInterceptorV3, httpClient, converterFactory, paymentAnalytics).sync(syncResult);
     }

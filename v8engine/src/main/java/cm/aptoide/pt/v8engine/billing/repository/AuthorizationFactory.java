@@ -7,9 +7,9 @@ package cm.aptoide.pt.v8engine.billing.repository;
 
 import cm.aptoide.pt.model.v3.PaymentAuthorizationsResponse;
 import cm.aptoide.pt.v8engine.billing.Authorization;
-import cm.aptoide.pt.v8engine.billing.authorizations.WebAuthorization;
+import cm.aptoide.pt.v8engine.billing.services.WebAuthorization;
 
-public class PaymentAuthorizationFactory {
+public class AuthorizationFactory {
 
   public Authorization create(int paymentId, Authorization.Status status, String payerId) {
     return new WebAuthorization(paymentId, "", "", status, payerId);

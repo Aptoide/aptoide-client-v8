@@ -10,7 +10,6 @@ import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentConfirmationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.GetPaymentConfirmationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
@@ -19,15 +18,12 @@ import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
-import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentConfirmationFactory;
-import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.v8engine.sync.RepositorySync;
 import java.io.IOException;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
-import rx.Completable;
 import rx.Single;
 
 public class ConfirmationSync extends RepositorySync {
@@ -41,27 +37,6 @@ public class ConfirmationSync extends RepositorySync {
   private final Converter.Factory converterFactory;
   private final OkHttpClient httpClient;
   private final PaymentAnalytics analytics;
-
-  private String paymentConfirmationId;
-  private int paymentId;
-
-  public ConfirmationSync(Product product, NetworkOperatorManager operatorManager,
-      PaymentConfirmationAccessor confirmationAccessor,
-      PaymentConfirmationFactory confirmationFactory, String paymentConfirmationId, int paymentId,
-      Payer payer, BodyInterceptor<BaseBody> bodyInterceptorV3, Converter.Factory converterFactory,
-      OkHttpClient httpClient, PaymentAnalytics analytics) {
-    this.product = product;
-    this.operatorManager = operatorManager;
-    this.confirmationAccessor = confirmationAccessor;
-    this.confirmationFactory = confirmationFactory;
-    this.paymentConfirmationId = paymentConfirmationId;
-    this.paymentId = paymentId;
-    this.payer = payer;
-    this.bodyInterceptorV3 = bodyInterceptorV3;
-    this.converterFactory = converterFactory;
-    this.httpClient = httpClient;
-    this.analytics = analytics;
-  }
 
   public ConfirmationSync(Product product, NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor confirmationAccessor,
@@ -82,59 +57,18 @@ public class ConfirmationSync extends RepositorySync {
   @Override public void sync(SyncResult syncResult) {
     try {
       payer.getId()
-          .flatMap(payerId -> {
-            if (paymentConfirmationId != null) {
-              return createServerPaymentConfirmation(product, paymentConfirmationId,
-                  paymentId).andThen(Single.fromCallable(
-                  () -> confirmationFactory.create(product.getId(), paymentConfirmationId,
-                      PaymentConfirmation.Status.COMPLETED, payerId)))
-                  .doOnSuccess(paymentConfirmation -> saveAndReschedulePendingConfirmation(
-                      paymentConfirmation, syncResult, payerId))
-                  .onErrorReturn(throwable -> {
-                    saveAndRescheduleOnNetworkError(syncResult, throwable, payerId);
-                    return null;
-                  });
-            } else {
-              return getServerPaymentConfirmation(product, payerId).doOnSuccess(
-                  paymentConfirmation -> saveAndReschedulePendingConfirmation(paymentConfirmation,
-                      syncResult, payerId))
-                  .onErrorReturn(throwable -> {
-                    saveAndRescheduleOnNetworkError(syncResult, throwable, payerId);
-                    return null;
-                  });
-            }
-          })
+          .flatMap(payerId -> getServerPaymentConfirmation(product, payerId).doOnSuccess(
+              paymentConfirmation -> saveAndReschedulePendingConfirmation(paymentConfirmation,
+                  syncResult, payerId))
+              .onErrorReturn(throwable -> {
+                saveAndRescheduleOnNetworkError(syncResult, throwable, payerId);
+                return null;
+              }))
           .toBlocking()
           .value();
     } catch (RuntimeException e) {
       rescheduleSync(syncResult);
     }
-  }
-
-  private Completable createServerPaymentConfirmation(Product product, String paymentConfirmationId,
-      int paymentId) {
-    return Single.just(product instanceof InAppProduct)
-        .flatMap(isInAppBilling -> {
-          if (isInAppBilling) {
-            return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId,
-                operatorManager, ((InAppProduct) product).getDeveloperPayload(),
-                paymentConfirmationId, bodyInterceptorV3, httpClient, converterFactory)
-                .observe()
-                .toSingle();
-          }
-          return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId,
-              operatorManager, ((PaidAppProduct) product).getStoreName(), paymentConfirmationId,
-              bodyInterceptorV3, httpClient, converterFactory)
-              .observe()
-              .toSingle();
-        })
-        .flatMapCompletable(response -> {
-          if (response != null && response.isOk()) {
-            return Completable.complete();
-          }
-          return Completable.error(
-              new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-        });
   }
 
   private Single<PaymentConfirmation> getServerPaymentConfirmation(Product product,

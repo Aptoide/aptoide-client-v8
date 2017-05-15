@@ -61,7 +61,10 @@
         android:name=".billing.view.PaymentActivity"
         android:theme="@style/AppBaseTheme.Payment"/>
 
-    <activity android:name=".billing.services.paypal.PayPalPaymentActivity"/>
+    <activity
+        android:name=".billing.view.PayPalAuthorizationActivity"
+        android:theme="@style/AppBaseTheme.Payment"/>
+
     <activity android:name=".billing.view.WebAuthorizationActivity"/>
     <activity android:name=".view.account.LoginActivity"/>
     <activity android:name=".spotandshare.SpotSharePreviewActivity"/>

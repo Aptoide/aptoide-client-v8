@@ -36,7 +36,7 @@ public class PurchaseIntentMapper {
       }
     } else if (purchase instanceof PaidAppPurchase) {
       intent.putExtra(InAppBillingBinder.RESPONSE_CODE, InAppBillingBinder.RESULT_OK);
-      intent.putExtra(APK_PATH, ((InAppPurchase) purchase).getSignatureData());
+      intent.putExtra(APK_PATH, ((PaidAppPurchase) purchase).getApkPath());
     } else {
       intent.putExtra(InAppBillingBinder.RESPONSE_CODE, throwableCodeMapper.map(
           new IllegalArgumentException(

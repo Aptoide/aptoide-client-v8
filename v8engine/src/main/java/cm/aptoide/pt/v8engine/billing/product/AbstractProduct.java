@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.billing.product;
 import cm.aptoide.pt.v8engine.billing.Price;
 import cm.aptoide.pt.v8engine.billing.Product;
 
-public class AbstractProduct implements Product {
+public abstract class AbstractProduct implements Product {
 
   private final int id;
   private final String icon;

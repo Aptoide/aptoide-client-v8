@@ -43,15 +43,6 @@ public class PaymentSyncScheduler {
     return scheduleOneOffSync(bundle);
   }
 
-  public Completable scheduleConfirmationSync(Product product, int paymentId,
-      String paymentConfirmationId) {
-    final Bundle bundle = syncDataConverter.mapToBundle(product);
-    bundle.putBoolean(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATIONS, true);
-    bundle.putString(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATION_ID, paymentConfirmationId);
-    bundle.putInt(AptoideSyncAdapter.EXTRA_PAYMENT_ID, paymentId);
-    return scheduleOneOffSync(bundle);
-  }
-
   private Completable scheduleOneOffSync(Bundle bundle) {
     return androidAccountProvider.getAndroidAccount()
         .flatMapCompletable(account -> {

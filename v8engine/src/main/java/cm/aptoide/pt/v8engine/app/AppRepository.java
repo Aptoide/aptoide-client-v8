@@ -66,7 +66,7 @@ public class AppRepository {
                 .getMeta()
                 .getData()
                 .isPaid()) {
-              return addPayment(sponsored, response, refresh);
+              return addPayment(sponsored, response);
             } else {
               return Observable.just(response);
             }
@@ -77,7 +77,7 @@ public class AppRepository {
         });
   }
 
-  private Observable<GetApp> addPayment(boolean sponsored, GetApp getApp, boolean refresh) {
+  private Observable<GetApp> addPayment(boolean sponsored, GetApp getApp) {
     return getPaidApp(getApp.getNodes()
         .getMeta()
         .getData()
@@ -85,7 +85,7 @@ public class AppRepository {
         .getMeta()
         .getData()
         .getStore()
-        .getName(), refresh).map(paidApp -> {
+        .getName(), true).map(paidApp -> {
       if (paidApp.getPayment()
           .isPaid()) {
         getApp.getNodes()
@@ -136,7 +136,7 @@ public class AppRepository {
                 .getMeta()
                 .getData()
                 .isPaid()) {
-              return addPayment(sponsored, response, refresh);
+              return addPayment(sponsored, response);
             } else {
               return Observable.just(response);
             }
@@ -156,7 +156,7 @@ public class AppRepository {
                 .getMeta()
                 .getData()
                 .isPaid()) {
-              return addPayment(sponsored, response, refresh);
+              return addPayment(sponsored, response);
             } else {
               return Observable.just(response);
             }
@@ -176,7 +176,7 @@ public class AppRepository {
                 .getMeta()
                 .getData()
                 .isPaid()) {
-              return addPayment(sponsored, response, refresh);
+              return addPayment(sponsored, response);
             } else {
               return Observable.just(response);
             }
