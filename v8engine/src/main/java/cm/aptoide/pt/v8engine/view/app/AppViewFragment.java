@@ -736,13 +736,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     int i = item.getItemId();
 
     if (i == R.id.menu_share) {
-      if (getApp != null) {
-        shareApp(appName, packageName, getApp.getNodes()
-            .getMeta()
-            .getData()
-            .getFile()
-            .getVercode(), wUrl);
-      }
+      shareApp(appName, packageName, wUrl);
       return true;
     } else if (i == R.id.menu_schedule) {
 
@@ -780,9 +774,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   // Scrollable interface
   //
 
-  private void shareApp(String appName, String packageName, int vercode, String wUrl) {
+  private void shareApp(String appName, String packageName, String wUrl) {
     GenericDialogs.createGenericShareDialog(getContext(), getString(R.string.share),
-        installedRepository.contains(packageName, vercode))
+        installedRepository.contains(packageName))
         .subscribe(eResponse -> {
           if (GenericDialogs.EResponse.SHARE_EXTERNAL == eResponse) {
 
