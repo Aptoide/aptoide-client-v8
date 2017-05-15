@@ -6,7 +6,6 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
-import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -45,7 +44,6 @@ public class GetApkInfoRequest extends V3<PaidApp> {
     BaseBody options = new BaseBody();
     options.put("cmtlimit", "5");
     options.put("payinfo", "true");
-    options.put("q", Api.getQ());
     options.put("lang", AptoideUtils.SystemU.getCountryCode());
 
     addNetworkInformation(operatorManager, options);
