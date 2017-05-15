@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.pull;
+package cm.aptoide.pt.v8engine.notification;
 
 import android.support.annotation.IntDef;
 import java.lang.annotation.Retention;

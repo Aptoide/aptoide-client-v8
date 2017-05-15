@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.pull;
+package cm.aptoide.pt.v8engine.notification;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.ws.notifications.GetPullNotificationsResponse;
