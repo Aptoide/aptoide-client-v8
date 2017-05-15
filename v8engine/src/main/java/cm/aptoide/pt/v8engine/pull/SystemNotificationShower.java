@@ -41,7 +41,7 @@ public class SystemNotificationShower {
   private Single<Notification> mapToAndroidNotification(AptoideNotification aptoideNotification,
       int notificationId) {
     return getPressIntentAction(aptoideNotification.getUrlTrack(), aptoideNotification.getUrl(),
-        aptoideNotification.getType(), context).flatMap(
+        notificationId, context).flatMap(
         pressIntentAction -> buildNotification(context, aptoideNotification.getTitle(),
             aptoideNotification.getBody(), aptoideNotification.getImg(), pressIntentAction,
             notificationId, getOnDismissAction(notificationId), aptoideNotification.getAppName(),
@@ -53,6 +53,9 @@ public class SystemNotificationShower {
     return Single.fromCallable(() -> {
       Intent resultIntent = new Intent(context, PullingContentReceiver.class);
       resultIntent.setAction(PullingContentReceiver.NOTIFICATION_PRESSED_ACTION);
+
+      resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_NOTIFICATION_ID,
+          notificationId);
 
       if (!TextUtils.isEmpty(trackUrl)) {
         resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TRACK_URL, trackUrl);

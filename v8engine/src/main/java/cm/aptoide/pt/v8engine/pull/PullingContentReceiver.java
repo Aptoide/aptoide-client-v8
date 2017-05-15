@@ -12,6 +12,8 @@ import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import rx.Completable;
+import rx.Single;
 
 /**
  * Created by trinkes on 7/13/16.
@@ -44,25 +46,30 @@ public class PullingContentReceiver extends BroadcastReceiver {
           break;
         case NOTIFICATION_PRESSED_ACTION:
           pushNotificationPressed(context, intent);
-          notificationDismissed(intent.getIntExtra(PUSH_NOTIFICATION_NOTIFICATION_ID, -1));
+          notificationDismissed(
+              intent.getIntExtra(PUSH_NOTIFICATION_NOTIFICATION_ID, -1)).subscribe(() -> {
+          }, throwable -> crashReport.log(throwable));
           break;
         case PUSH_NOTIFICATION_DISMISSED:
           if (intent.hasExtra(PUSH_NOTIFICATION_NOTIFICATION_ID)) {
-            notificationDismissed(intent.getIntExtra(PUSH_NOTIFICATION_NOTIFICATION_ID, -1));
+            notificationDismissed(
+                intent.getIntExtra(PUSH_NOTIFICATION_NOTIFICATION_ID, -1)).subscribe(() -> {
+            }, throwable -> crashReport.log(throwable));
           }
           break;
       }
     }
   }
 
-  private void notificationDismissed(int notificationId) {
-    notificationAccessor.getLastShowed(notificationIdsMapper.getNotificationType(notificationId))
-        .doOnSuccess(notification -> {
-          notification.setDismissed(System.currentTimeMillis());
-          notificationAccessor.insert(notification);
-        })
-        .subscribe(notification -> {
-        }, throwable -> crashReport.log(throwable));
+  private Completable notificationDismissed(int notificationId) {
+    return Single.defer(
+        () -> Single.just(notificationIdsMapper.getNotificationType(notificationId)))
+        .doOnSuccess(id -> notificationAccessor.getLastShowed(id)
+            .doOnSuccess(notification -> {
+              notification.setDismissed(System.currentTimeMillis());
+              notificationAccessor.insert(notification);
+            }))
+        .toCompletable();
   }
 
   private void pushNotificationPressed(Context context, Intent intent) {
