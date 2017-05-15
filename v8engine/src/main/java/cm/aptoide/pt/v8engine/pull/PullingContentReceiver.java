@@ -22,7 +22,6 @@ public class PullingContentReceiver extends BroadcastReceiver {
   public static final String PUSH_NOTIFICATION_DISMISSED = "PUSH_NOTIFICATION_DISMISSED";
   public static final String PUSH_NOTIFICATION_NOTIFICATION_ID =
       "PUSH_NOTIFICATION_NOTIFICATION_ID";
-  public static final String BOOT_COMPLETED_ACTION = "BOOT_COMPLETED_ACTION";
   private static final String TAG = PullingContentReceiver.class.getSimpleName();
   private NotificationStatusManager notificationStatusManager;
 
@@ -36,8 +35,7 @@ public class PullingContentReceiver extends BroadcastReceiver {
     if (action != null) {
       switch (action) {
         case Intent.ACTION_BOOT_COMPLETED:
-          context.startService(
-              new Intent(context, PullingContentService.class).setAction(BOOT_COMPLETED_ACTION));
+          bootCompleted();
           break;
         case NOTIFICATION_PRESSED_ACTION:
           pushNotificationPressed(context, intent);
@@ -50,6 +48,10 @@ public class PullingContentReceiver extends BroadcastReceiver {
           break;
       }
     }
+  }
+
+  private void bootCompleted() {
+    notificationStatusManager.reset();
   }
 
   private void notificationDismissed(int notificationId) {

@@ -72,8 +72,6 @@ public class PullingContentService extends Service {
     if (action != null) {
       switch (action) {
         case UPDATES_ACTION:
-          setUpdatesAction(startId);
-          break;
         case BOOT_COMPLETED_ACTION:
           setUpdatesAction(startId);
           break;
