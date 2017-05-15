@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
-import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithApp;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
@@ -77,7 +76,6 @@ import rx.Observable;
     @Setter @Getter private int offset;
     private Integer packageId;
     private String packageName;
-    private String q = Api.getQ();
     private List<Long> storeIds;
     private List<String> storeNames;
     @Getter private HashMapNotNull<String, List<String>> storesAuthMap;
