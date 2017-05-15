@@ -49,6 +49,10 @@ public class QManager {
     return glExtensionsManager.getSupportedExtensions();
   }
 
+  public boolean isSupportedExtensionsDefined() {
+    return glExtensionsManager.isSupportedExtensionsDefined();
+  }
+
   public String getFilters(boolean hwSpecsFilter) {
     if (!hwSpecsFilter) {
       return null;

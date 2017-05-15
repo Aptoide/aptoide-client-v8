@@ -54,7 +54,7 @@ class GlExtensionsManager {
     setSetoredSupportedOpenGLExtensions(computedValue = computeSupportedOpenGLExtensions());
   }
 
-  public String getSupportedExtensions() {
+  String getSupportedExtensions() {
     if (isGLTextutesStored()) {
       computedValue = getStoredGlTextures();
     }
@@ -64,6 +64,10 @@ class GlExtensionsManager {
     }
 
     return computedValue;
+  }
+
+  boolean isSupportedExtensionsDefined() {
+    return !"".equals(getSupportedExtensions());
   }
 
   private boolean isGLTextutesStored() {
