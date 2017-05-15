@@ -37,7 +37,7 @@ public class WSWidgetsUtils {
       boolean refresh, String accessToken, String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, boolean mature,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, String q) {
 
     if (isKnownType(wsWidget.getType())) {
 
@@ -76,7 +76,7 @@ public class WSWidgetsUtils {
 
         case ADS:
           return GetAdsRequest.ofHomepage(clientUniqueId, googlePlayServicesAvailable, oemid,
-              mature, httpClient, converterFactory)
+              mature, httpClient, converterFactory, q)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
