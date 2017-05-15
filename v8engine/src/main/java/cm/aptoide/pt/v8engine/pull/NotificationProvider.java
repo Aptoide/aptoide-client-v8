@@ -31,7 +31,8 @@ public class NotificationProvider {
         aptoideNotification.getCampaignId(), aptoideNotification.getImg(),
         aptoideNotification.getLang(), aptoideNotification.getTitle(), aptoideNotification.getUrl(),
         aptoideNotification.getUrlTrack(), aptoideNotification.getTimeStamp(),
-        aptoideNotification.getType(), aptoideNotification.isShowed());
+        aptoideNotification.getType(), aptoideNotification.isShowed(),
+        aptoideNotification.getAppName(), aptoideNotification.getGraphic());
   }
 
   Single<List<AptoideNotification>> getShowedNotifications(
@@ -50,7 +51,8 @@ public class NotificationProvider {
     return new AptoideNotification(notification.getAbTestingGroup(), notification.getBody(),
         notification.getCampaignId(), notification.getImg(), notification.getLang(),
         notification.getTitle(), notification.getUrl(), notification.getUrlTrack(),
-        notification.getTimeStamp(), notification.getType(), notification.isShowed());
+        notification.getTimeStamp(), notification.getType(), notification.isShowed(),
+        notification.getAppName(), notification.getGraphic());
   }
 
   public Completable save(List<AptoideNotification> aptideNotifications) {

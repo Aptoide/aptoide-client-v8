@@ -14,7 +14,8 @@ import lombok.ToString;
   public static final int COMMENT = 1;
   public static final int LIKE = 2;
   public static final int POPULAR = 3;
-
+  private final String appName;
+  private final String graphic;
   private String abTestingGroup;
   private String body;
   private int campaignId;
@@ -28,34 +29,45 @@ import lombok.ToString;
   private boolean showed;
 
   public AptoideNotification(String body, String img, String title, String url, int type,
-      long timeStamp) {
+      long timeStamp, String appName, String graphic) {
     this.body = body;
     this.img = img;
     this.title = title;
     this.url = url;
     this.type = type;
     this.timeStamp = timeStamp;
+    this.appName = appName;
+    this.graphic = graphic;
   }
 
-  public AptoideNotification(String body, String img, String title, String url, int type) {
-    this(body, img, title, url, type, System.currentTimeMillis());
+  public AptoideNotification(String body, String img, String title, String url, int type,
+      String appName, String graphic) {
+    this(body, img, title, url, type, System.currentTimeMillis(), appName, graphic);
   }
 
   public AptoideNotification(String abTestingGroup, String body, int campaignId, String img,
-      String lang, String title, String url, String urlTrack) {
+      String lang, String title, String url, String urlTrack, String appName, String graphic) {
     this(abTestingGroup, body, campaignId, img, lang, title, url, urlTrack,
-        System.currentTimeMillis(), CAMPAIGN, false);
+        System.currentTimeMillis(), CAMPAIGN, false, appName, graphic);
   }
 
   public AptoideNotification(String abTestingGroup, String body, int campaignId, String img,
       String lang, String title, String url, String urlTrack, long timeStamp, int type,
-      boolean showed) {
-    this(body, img, title, url, type, timeStamp);
+      boolean showed, String appName, String graphic) {
+    this(body, img, title, url, type, timeStamp, appName, graphic);
     this.abTestingGroup = abTestingGroup;
     this.campaignId = campaignId;
     this.lang = lang;
     this.urlTrack = urlTrack;
     this.showed = showed;
+  }
+
+  public String getAppName() {
+    return appName;
+  }
+
+  public String getGraphic() {
+    return graphic;
   }
 
   public boolean isShowed() {

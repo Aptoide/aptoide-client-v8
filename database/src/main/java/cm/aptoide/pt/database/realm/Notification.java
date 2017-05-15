@@ -20,9 +20,12 @@ public class Notification extends RealmObject {
   private int type;
   private long timeStamp;
   private boolean showed;
+  private String appName;
+  private String graphic;
 
   public Notification(String abTestingGroup, String body, int campaignId, String img, String lang,
-      String title, String url, String urlTrack, long timeStamp, int type, boolean showed) {
+      String title, String url, String urlTrack, long timeStamp, int type, boolean showed,
+      String appName, String graphic) {
     this.body = body;
     this.img = img;
     this.title = title;
@@ -34,10 +37,20 @@ public class Notification extends RealmObject {
     this.urlTrack = urlTrack;
     this.timeStamp = timeStamp;
     this.showed = showed;
+    this.appName = appName;
+    this.graphic = graphic;
     key = String.valueOf(timeStamp + type);
   }
 
   public Notification() {
+  }
+
+  public String getAppName() {
+    return appName;
+  }
+
+  public String getGraphic() {
+    return graphic;
   }
 
   public boolean isShowed() {

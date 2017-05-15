@@ -69,9 +69,19 @@ public class NotificationHandler implements NotificationNetworkService {
       List<GetPullNotificationsResponse> response) {
     List<AptoideNotification> aptoideNotifications = new LinkedList<>();
     for (final GetPullNotificationsResponse notification : response) {
+      String appName = null;
+      String graphic = null;
+      if (notification.getAttr() != null) {
+        appName = notification.getAttr()
+            .getAppName();
+        graphic = notification.getAttr()
+            .getAppGraphic();
+      }
+
       aptoideNotifications.add(
           new AptoideNotification(notification.getBody(), notification.getImg(),
-              notification.getTitle(), notification.getUrl(), notification.getType()));
+              notification.getTitle(), notification.getUrl(), notification.getType(), appName,
+              graphic));
     }
     return aptoideNotifications;
   }
@@ -80,10 +90,20 @@ public class NotificationHandler implements NotificationNetworkService {
       List<GetPullNotificationsResponse> response) {
     List<AptoideNotification> aptoideNotifications = new LinkedList<>();
     for (final GetPullNotificationsResponse notification : response) {
+      String appName = null;
+      String graphic = null;
+      if (notification.getAttr() != null) {
+        appName = notification.getAttr()
+            .getAppName();
+        graphic = notification.getAttr()
+            .getAppGraphic();
+      }
+
       aptoideNotifications.add(
           new AptoideNotification(notification.getAbTestingGroup(), notification.getBody(),
               notification.getCampaignId(), notification.getImg(), notification.getLang(),
-              notification.getTitle(), notification.getUrl(), notification.getUrlTrack()));
+              notification.getTitle(), notification.getUrl(), notification.getUrlTrack(), appName,
+              graphic));
     }
     return aptoideNotifications;
   }

@@ -44,7 +44,8 @@ public class SystemNotificationShower {
         aptoideNotification.getType(), context).flatMap(
         pressIntentAction -> buildNotification(context, aptoideNotification.getTitle(),
             aptoideNotification.getBody(), aptoideNotification.getImg(), pressIntentAction,
-            notificationId, getOnDismissAction(notificationId)));
+            notificationId, getOnDismissAction(notificationId), aptoideNotification.getAppName(),
+            aptoideNotification.getGraphic()));
   }
 
   private Single<PendingIntent> getPressIntentAction(String trackUrl, String url,
@@ -67,15 +68,15 @@ public class SystemNotificationShower {
   }
 
   @NonNull private Single<android.app.Notification> buildNotification(Context context, String title,
-      String body, String imageUrl, PendingIntent pressIntentAction, int notificationId,
-      PendingIntent onDismissAction) {
+      String body, String iconUrl, PendingIntent pressIntentAction, int notificationId,
+      PendingIntent onDismissAction, String appName, String graphic) {
     return Single.fromCallable(() -> {
       android.app.Notification notification =
           new NotificationCompat.Builder(context).setContentIntent(pressIntentAction)
               .setOngoing(false)
               .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
               .setLargeIcon(ImageLoader.with(context)
-                  .loadBitmap(imageUrl))
+                  .loadBitmap(iconUrl))
               .setContentTitle(title)
               .setContentText(body)
               .setDeleteIntent(onDismissAction)
@@ -86,26 +87,28 @@ public class SystemNotificationShower {
     })
         .subscribeOn(Schedulers.computation())
         .observeOn(AndroidSchedulers.mainThread())
-        .map(notification -> setExpandedView(context, title, body, imageUrl, notificationId,
-            notification));
+        .map(notification -> setExpandedView(context, title, body, notificationId, notification,
+            appName, graphic));
   }
 
   private android.app.Notification setExpandedView(Context context, String title, String body,
-      String imageUrl, int notificationId, android.app.Notification notification) {
+      int notificationId, Notification notification, String appName, String graphic) {
 
-    if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 24 && !TextUtils.isEmpty(imageUrl)) {
+    if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 24 && !TextUtils.isEmpty(graphic)) {
       RemoteViews expandedView =
           new RemoteViews(context.getPackageName(), R.layout.pushnotificationlayout);
+      //in this case, large icon is loaded already, so instead of reloading it, we just reuse it
       expandedView.setImageViewBitmap(R.id.icon, notification.largeIcon);
       expandedView.setTextViewText(R.id.title, title);
+      expandedView.setTextViewText(R.id.app_name, appName);
       expandedView.setTextViewText(R.id.description, body);
       notification.bigContentView = expandedView;
 
       NotificationTarget notificationTarget =
-          new NotificationTarget(context, expandedView, R.id.PushNotificationImageView,
+          new NotificationTarget(context, expandedView, R.id.push_notification_graphic,
               notification, notificationId);
       ImageLoader.with(context)
-          .loadImageToNotification(notificationTarget, imageUrl);
+          .loadImageToNotification(notificationTarget, graphic);
     }
     return notification;
   }

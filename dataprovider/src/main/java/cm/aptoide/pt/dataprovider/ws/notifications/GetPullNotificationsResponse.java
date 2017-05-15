@@ -26,6 +26,12 @@ import lombok.Data;
   private String title;
   private String url;
   private String urlTrack;
+  private Attr attr;
+
+  @Data public static class Attr {
+    String appName;
+    String appGraphic;
+  }
 
   //private List<Notification> results;
   //
