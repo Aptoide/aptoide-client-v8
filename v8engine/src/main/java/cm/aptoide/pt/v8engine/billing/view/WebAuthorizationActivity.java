@@ -60,11 +60,8 @@ public class WebAuthorizationActivity extends AuthorizationActivity
         getIntent().getIntExtra(EXTRA_PAYMENT_ID, 0),
         ((V8Engine) getApplicationContext()).getPaymentAnalytics(),
         ((V8Engine) getApplicationContext()).getPaymentSyncScheduler(),
-        getIntent().getLongExtra(EXTRA_APP_ID, -1), getIntent().getStringExtra(EXTRA_STORE_NAME),
-        getIntent().getBooleanExtra(EXTRA_SPONSORED, false),
-        getIntent().getIntExtra(EXTRA_API_VERSION, -1), getIntent().getStringExtra(EXTRA_TYPE),
-        getIntent().getStringExtra(EXTRA_SKU), getIntent().getStringExtra(EXTRA_PACKAGE_NAME),
-        getIntent().getStringExtra(EXTRA_DEVELOPER_PAYLOAD)), savedInstanceState);
+        ProductProvider.fromIntent(((V8Engine) getApplicationContext()).getAptoideBilling(),
+            getIntent())), savedInstanceState);
   }
 
   @Override protected void onDestroy() {

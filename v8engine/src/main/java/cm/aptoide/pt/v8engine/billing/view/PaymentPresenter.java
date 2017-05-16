@@ -41,26 +41,16 @@ public class PaymentPresenter implements Presenter {
   private final PaymentSelector paymentSelector;
   private final AccountNavigator accountNavigator;
   private final AuthorizationNavigator authorizationNavigator;
+  private final ProductProvider productProvider;
 
   private boolean processingLogin;
   private List<Payment> payments;
   private PaymentAnalytics paymentAnalytics;
 
-  private long appId;
-  private String storeName;
-  private boolean sponsored;
-
-  private int apiVersion;
-  private String type;
-  private String sku;
-  private String packageName;
-  private String developerPayload;
-
   public PaymentPresenter(PaymentView view, AptoideBilling aptoideBilling,
       AptoideAccountManager accountManager, PaymentSelector paymentSelector,
       AccountNavigator accountNavigator, AuthorizationNavigator authorizationNavigator,
-      PaymentAnalytics paymentAnalytics, long appId, String storeName, boolean sponsored,
-      int apiVersion, String type, String sku, String packageName, String developerPayload) {
+      PaymentAnalytics paymentAnalytics, ProductProvider productProvider) {
     this.view = view;
     this.aptoideBilling = aptoideBilling;
     this.accountManager = accountManager;
@@ -69,21 +59,14 @@ public class PaymentPresenter implements Presenter {
     this.authorizationNavigator = authorizationNavigator;
     this.payments = new ArrayList<>();
     this.paymentAnalytics = paymentAnalytics;
-    this.appId = appId;
-    this.storeName = storeName;
-    this.sponsored = sponsored;
-    this.apiVersion = apiVersion;
-    this.type = type;
-    this.sku = sku;
-    this.packageName = packageName;
-    this.developerPayload = developerPayload;
+    this.productProvider = productProvider;
   }
 
   @Override public void present() {
 
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.RESUME.equals(event))
-        .flatMapSingle(resumed -> getProduct())
+        .flatMapSingle(resumed -> productProvider.getProduct())
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(product -> Observable.merge(paymentSelection(), cancellationSelection(product))
             .retry()
@@ -94,7 +77,7 @@ public class PaymentPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
-        .flatMapSingle(created -> getProduct())
+        .flatMapSingle(created -> productProvider.getProduct())
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(product -> buySelection(product).observeOn(AndroidSchedulers.mainThread())
             .doOnError(throwable -> hideLoadingAndShowError(throwable))
@@ -114,7 +97,7 @@ public class PaymentPresenter implements Presenter {
         .flatMap(event -> loginLifecycle(event))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(loggedIn -> view.showLoading())
-        .flatMapSingle(loading -> getProduct())
+        .flatMapSingle(loading -> productProvider.getProduct())
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(product -> showProductAndPayments(product).andThen(
             aptoideBilling.getConfirmation(product))
@@ -131,19 +114,6 @@ public class PaymentPresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
     this.processingLogin = state.getBoolean(EXTRA_IS_PROCESSING_LOGIN);
-  }
-
-  private Single<Product> getProduct() {
-
-    if (storeName != null) {
-      return aptoideBilling.getPaidAppProduct(appId, storeName, sponsored);
-    }
-
-    if (sku != null) {
-      return aptoideBilling.getInAppProduct(apiVersion, packageName, sku, type, developerPayload);
-    }
-
-    return Single.error(new IllegalStateException("No product information provided to presenter."));
   }
 
   private Observable<Void> paymentSelection() {

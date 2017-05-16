@@ -28,7 +28,6 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Purchase;
-import cm.aptoide.pt.v8engine.billing.product.AbstractProduct;
 import cm.aptoide.pt.v8engine.presenter.PaymentSelector;
 import cm.aptoide.pt.v8engine.view.BaseActivity;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
@@ -43,20 +42,6 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
 
   private static final String SELECTED_PAYMENT_ID = "selected_payment_id";
   private static final int PAYPAL_PAYMENT_ID = 17;
-  private static final String EXTRA_APP_ID =
-      "cm.aptoide.pt.v8engine.view.payment.intent.extra.APP_ID";
-  private static final String EXTRA_STORE_NAME =
-      "cm.aptoide.pt.v8engine.view.payment.intent.extra.STORE_NAME";
-  private static final String EXTRA_SPONSORED =
-      "cm.aptoide.pt.v8engine.view.payment.intent.extra.SPONSORED";
-  private static final String EXTRA_API_VERSION =
-      "cm.aptoide.pt.v8engine.view.payment.intent.extra.API_VERSION";
-  private static final String EXTRA_PACKAGE_NAME =
-      "cm.aptoide.pt.v8engine.view.payment.intent.extra.PACKAGE_NAME";
-  private static final String EXTRA_SKU = "cm.aptoide.pt.v8engine.view.payment.intent.extra.SKU";
-  private static final String EXTRA_TYPE = "cm.aptoide.pt.v8engine.view.payment.intent.extra.TYPE";
-  private static final String EXTRA_DEVELOPER_PAYLOAD =
-      "cm.aptoide.pt.v8engine.view.payment.intent.extra.DEVELOPER_PAYLOAD";
 
   private View overlay;
   private View body;
@@ -78,20 +63,15 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
 
   public static Intent getIntent(Context context, long appId, String storeName, boolean sponsored) {
     final Intent intent = new Intent(context, PaymentActivity.class);
-    intent.putExtra(EXTRA_APP_ID, appId);
-    intent.putExtra(EXTRA_STORE_NAME, storeName);
-    intent.putExtra(EXTRA_SPONSORED, sponsored);
+    intent.putExtras(ProductProvider.createIntentBundle(appId, storeName, sponsored));
     return intent;
   }
 
   public static Intent getIntent(Context context, int apiVersion, String packageName, String sku,
       String type, String developerPayload) {
     final Intent intent = new Intent(context, PaymentActivity.class);
-    intent.putExtra(EXTRA_API_VERSION, apiVersion);
-    intent.putExtra(EXTRA_PACKAGE_NAME, packageName);
-    intent.putExtra(EXTRA_TYPE, type);
-    intent.putExtra(EXTRA_SKU, sku);
-    intent.putExtra(EXTRA_DEVELOPER_PAYLOAD, developerPayload);
+    intent.putExtras(
+        ProductProvider.createIntentBundle(apiVersion, packageName, type, sku, developerPayload));
     return intent;
   }
 
@@ -140,12 +120,8 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
             PreferenceManager.getDefaultSharedPreferences(getApplicationContext())),
             new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
             new AuthorizationNavigator(getActivityNavigator()), paymentAnalytics,
-            getIntent().getLongExtra(EXTRA_APP_ID, -1),
-            getIntent().getStringExtra(EXTRA_STORE_NAME),
-            getIntent().getBooleanExtra(EXTRA_SPONSORED, false),
-            getIntent().getIntExtra(EXTRA_API_VERSION, -1), getIntent().getStringExtra(EXTRA_TYPE),
-            getIntent().getStringExtra(EXTRA_SKU), getIntent().getStringExtra(EXTRA_PACKAGE_NAME),
-            getIntent().getStringExtra(EXTRA_DEVELOPER_PAYLOAD)), savedInstanceState);
+            ProductProvider.fromIntent(((V8Engine) getApplicationContext()).getAptoideBilling(),
+                getIntent())), savedInstanceState);
   }
 
   @Override public Observable<PaymentViewModel> paymentSelection() {

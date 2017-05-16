@@ -37,12 +37,9 @@ public class PayPalAuthorizationActivity extends AuthorizationActivity
 
     attachPresenter(new PayPalAuthorizationPresenter(this,
         ((V8Engine) getApplicationContext()).getAptoideBilling(),
-        getIntent().getIntExtra(EXTRA_PAYMENT_ID, 0), getIntent().getLongExtra(EXTRA_APP_ID, -1),
-        getIntent().getStringExtra(EXTRA_STORE_NAME),
-        getIntent().getBooleanExtra(EXTRA_SPONSORED, false),
-        getIntent().getIntExtra(EXTRA_API_VERSION, -1), getIntent().getStringExtra(EXTRA_TYPE),
-        getIntent().getStringExtra(EXTRA_SKU), getIntent().getStringExtra(EXTRA_PACKAGE_NAME),
-        getIntent().getStringExtra(EXTRA_DEVELOPER_PAYLOAD)), savedInstanceState);
+        getIntent().getIntExtra(EXTRA_PAYMENT_ID, 0),
+        ProductProvider.fromIntent(((V8Engine) getApplicationContext()).getAptoideBilling(),
+            getIntent())), savedInstanceState);
   }
 
   @Override public void showPayPalAuthorization() {
