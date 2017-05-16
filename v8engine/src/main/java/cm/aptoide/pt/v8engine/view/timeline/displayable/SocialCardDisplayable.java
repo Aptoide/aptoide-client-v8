@@ -62,6 +62,10 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
     return dateCalculator.getTimeSinceDate(context, date);
   }
 
+  public String getTimeSinceLastUpdate(Context context, Date date) {
+    return dateCalculator.getTimeSinceDate(context, date);
+  }
+
   public Spannable getSharedBy(Context context, String userSharer) {
     return spannableFactory.createColorSpan(
         context.getString(R.string.social_timeline_shared_by, userSharer),

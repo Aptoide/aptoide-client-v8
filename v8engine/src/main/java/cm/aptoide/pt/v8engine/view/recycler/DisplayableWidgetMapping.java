@@ -101,6 +101,7 @@ import cm.aptoide.pt.v8engine.view.store.recommended.RecommendedStoreWidget;
 import cm.aptoide.pt.v8engine.view.store.subscribed.SubscribedStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.store.subscribed.SubscribedStoreWidget;
 import cm.aptoide.pt.v8engine.view.timeline.FeatureDisplayable;
+import cm.aptoide.pt.v8engine.view.timeline.displayable.AggregatedSocialInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.AppUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.FollowStoreDisplayable;
@@ -120,6 +121,7 @@ import cm.aptoide.pt.v8engine.view.timeline.follow.FollowStoreWidget;
 import cm.aptoide.pt.v8engine.view.timeline.follow.FollowUserWidget;
 import cm.aptoide.pt.v8engine.view.timeline.login.TimelineLoginDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.login.TimelineLoginWidget;
+import cm.aptoide.pt.v8engine.view.timeline.widget.AggregatedSocialInstallWidget;
 import cm.aptoide.pt.v8engine.view.timeline.widget.AppUpdateWidget;
 import cm.aptoide.pt.v8engine.view.timeline.widget.ArticleWidget;
 import cm.aptoide.pt.v8engine.view.timeline.widget.FeatureWidget;
@@ -257,6 +259,8 @@ public class DisplayableWidgetMapping {
         SocialRecommendationDisplayable.class));
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(PopularAppWidget.class, PopularAppDisplayable.class));
+    displayableWidgetMappings.add(new DisplayableWidgetMapping(AggregatedSocialInstallWidget.class,
+        AggregatedSocialInstallDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(RollbackWidget.class, RollbackDisplayable.class));

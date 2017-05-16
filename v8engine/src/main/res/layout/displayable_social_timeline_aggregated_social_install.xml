@@ -1,8 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (c) 2016.
-  ~ Modified by Marcelo Benites on 08/07/2016.
-  -->
-
+<?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card"
@@ -17,7 +13,7 @@
       android:orientation="vertical"
       >
 
-    <include layout="@layout/apps_timeline_card_header"/>
+    <include layout="@layout/apps_timeline_multiple_heads_card_header"/>
 
     <TextView
         android:id="@+id/social_shared_by"
@@ -33,8 +29,30 @@
         tools:visibility="visible"
         />
 
-
     <include layout="@layout/apps_timeline_recommendation_body"/>
+
+    <LinearLayout
+        android:id="@+id/timeline_sub_minimal_card_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/timeline_aggregated_see_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+        android:textAllCaps="true"
+        android:visibility="gone"
+        tools:text="@string/see_more"
+        tools:visibility="visible"
+        style="@style/Aptoide.TextView.Regular.XS.GreyFog"
+        />
 
     <View
         android:id="@+id/partial_social_timeline_thumbnail_divider2"
@@ -48,44 +66,12 @@
         android:visibility="visible"
         />
 
-    <include layout="@layout/social_info_bar_timeline"/>
-
-    <include layout="@layout/social_last_comment_bar"/>
-
-    <include layout="@layout/social_bar_timeline"/>
-
-    <LinearLayout
-        android:id="@+id/social_privacy_terms"
-        android:layout_width="wrap_content"
+    <include
+        layout="@layout/social_bar_timeline"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="60dp"
-        android:orientation="horizontal"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
         android:visibility="gone"
-        tools:visibility="visible"
-        >
+        />
 
-      <CheckBox
-          android:id="@+id/social_preview_checkbox"
-          android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
-          android:layout_margin="5dp"
-          style="?android:attr/textAppearanceMedium"
-          />
-
-      <TextView
-          android:id="@+id/social_text_privacy"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="fill"
-          android:layout_marginEnd="15dp"
-          android:layout_marginRight="15dp"
-          android:clickable="true"
-          android:text="@string/social_timeline_share_title_checkbox"
-          android:textColor="@color/almost_black"
-          />
-    </LinearLayout>
   </LinearLayout>
 </android.support.v7.widget.CardView>
-

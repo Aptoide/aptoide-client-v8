@@ -128,7 +128,7 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     this.account = account;
   }
 
-  private void shareCardWithoutPreview(T displayable, ShareCardCallback callback,
+  protected void shareCardWithoutPreview(T displayable, ShareCardCallback callback,
       SharePreviewDialog.SharePreviewOpenMode openMode) {
     if (!hasSocialPermissions(Analytics.Account.AccountOrigins.SHARE_CARD)) return;
     displayable.share(callback);
@@ -180,7 +180,7 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
         });
   }
 
-  private boolean hasSocialPermissions(Analytics.Account.AccountOrigins accountOrigins) {
+  protected boolean hasSocialPermissions(Analytics.Account.AccountOrigins accountOrigins) {
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> accountNavigator.navigateToAccountView(accountOrigins));
