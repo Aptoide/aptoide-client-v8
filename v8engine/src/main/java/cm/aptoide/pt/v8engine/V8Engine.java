@@ -292,8 +292,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
       pushNotificationInterval = AlarmManager.INTERVAL_HOUR;
     }
 
-    notificationHandler = new NotificationHandler(BuildConfig.APPLICATION_ID, getDefaultClient(),
-        WebService.getDefaultConverter(), idsRepository, BuildConfig.VERSION_NAME);
+    notificationHandler = new NotificationHandler(getConfiguration().getAppId(), getDefaultClient(),
+        WebService.getDefaultConverter(), idsRepository, getConfiguration().getVersionName());
 
     SystemNotificationShower systemNotificationShower = new SystemNotificationShower(this,
         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
