@@ -964,9 +964,7 @@ public class Shell {
       } catch (Exception e) {
         e.printStackTrace();
       }
-    }
-
-    public void run() {
+    }    public void run() {
 
       /**
        * Trying to open the shell.
@@ -1006,5 +1004,7 @@ public class Shell {
         }
       }
     }
+
+
   }
 }
