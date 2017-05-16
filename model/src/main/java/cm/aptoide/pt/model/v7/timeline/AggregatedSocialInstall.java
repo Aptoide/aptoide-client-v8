@@ -15,7 +15,7 @@ import java.util.List;
 public class AggregatedSocialInstall extends SocialInstall {
 
   private final List<MinimalCard> minimalCardList;
-  private final List<UserTimeline> sharers;
+  private final List<UserSharerTimeline> sharers;
 
   public AggregatedSocialInstall(@JsonProperty("uid") String cardId,
       @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab,
@@ -26,7 +26,7 @@ public class AggregatedSocialInstall extends SocialInstall {
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("store") Store store,
       @JsonProperty("cards_shared") List<MinimalCard> minimalCardList,
-      @JsonProperty("sharers") List<UserTimeline> sharers) {
+      @JsonProperty("sharers") List<UserSharerTimeline> sharers) {
     super(cardId, apps, ab, userSharer, user, likes, comments, stats, my, date, store);
     this.minimalCardList = minimalCardList;
     this.sharers = sharers;
@@ -36,7 +36,7 @@ public class AggregatedSocialInstall extends SocialInstall {
     return minimalCardList;
   }
 
-  public List<UserTimeline> getSharers() {
+  public List<UserSharerTimeline> getSharers() {
     return sharers;
   }
 }

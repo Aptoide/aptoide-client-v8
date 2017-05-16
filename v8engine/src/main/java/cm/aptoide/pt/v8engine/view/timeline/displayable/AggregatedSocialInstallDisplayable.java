@@ -5,7 +5,7 @@ import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.AggregatedSocialInstall;
 import cm.aptoide.pt.model.v7.timeline.MinimalCard;
-import cm.aptoide.pt.model.v7.timeline.UserTimeline;
+import cm.aptoide.pt.model.v7.timeline.UserSharerTimeline;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
@@ -25,7 +25,7 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
 
   public static final String CARD_TYPE_NAME = "AGGREGATED_SOCIAL_INSTALL";
   private List<MinimalCard> minimalCardList;
-  private List<UserTimeline> sharers;
+  private List<UserSharerTimeline> sharers;
   private SocialRepository socialRepository;
   private long appStoreId;
   private long appId;
@@ -117,7 +117,7 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
     return minimalCardList;
   }
 
-  public List<UserTimeline> getSharers() {
+  public List<UserSharerTimeline> getSharers() {
     return sharers;
   }
 
@@ -168,8 +168,9 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
 
   public String getCardHeaderNames() {
     String cardHeaderNames = "";
-    for (UserTimeline user : getSharers()) {
-      cardHeaderNames += user.getName() + " ";
+    for (UserSharerTimeline user : getSharers()) {
+      cardHeaderNames += user.getStore()
+          .getName() + " ";
     }
     return cardHeaderNames;
   }

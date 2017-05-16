@@ -75,10 +75,12 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
     ImageLoader.with(getContext())
         .loadWithShadowCircleTransform(displayable.getSharers()
             .get(0)
+            .getStore()
             .getAvatar(), headerAvatar1);
     ImageLoader.with(getContext())
         .loadWithShadowCircleTransform(displayable.getSharers()
             .get(1)
+            .getStore()
             .getAvatar(), headerAvatar2);
     headerNames.setText(displayable.getCardHeaderNames());
     headerTime.setText(displayable.getTimeSinceLastUpdate(getContext()));
@@ -137,10 +139,12 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
       ImageLoader.with(getContext())
           .loadWithShadowCircleTransform(minimalCard.getSharers()
               .get(0)
+              .getUser()
               .getAvatar(), minimalCardHeaderSecondaryAvatar);
 
       minimalCardHeaderSecondaryName.setText(minimalCard.getSharers()
           .get(0)
+          .getUser()
           .getName());
 
       cardHeaderTimestamp.setText(
