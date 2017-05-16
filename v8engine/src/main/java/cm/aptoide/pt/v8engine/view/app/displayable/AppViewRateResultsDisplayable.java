@@ -9,7 +9,7 @@ import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.v8engine.R;
 
 /**
- * Created by sithengineer on 04/05/16.
+ * Created on 04/05/16.
  */
 public class AppViewRateResultsDisplayable extends AppViewDisplayable {
 

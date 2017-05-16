@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 23/08/2016.
+ * Modified on 23/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.app;
@@ -9,7 +9,7 @@ import android.support.annotation.Nullable;
 import rx.functions.Action0;
 
 /**
- * Created by sithengineer on 19/07/16.
+ * Created on 19/07/16.
  *
  * Interface used to add an abstraction to menu methods in an implementing component (probably an
  * {@link android.app.Activity}).

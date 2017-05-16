@@ -11,7 +11,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
 /**
- * Created by sithengineer on 29/04/16.
+ * Created on 29/04/16.
  */
 public class GridStoreDisplayable extends DisplayablePojo<Store> {
 
