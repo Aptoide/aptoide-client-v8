@@ -218,7 +218,8 @@ public class FileUtils {
           long size = deleteDir(filePath);
           Logger.d(TAG, "deleting folder " + filePath.getPath() + " size: " + size);
           return size;
-        }).onErrorResumeNext(throwable -> Observable.empty()))
+        })
+            .onErrorResumeNext(throwable -> Observable.empty()))
         .toList()
         .map(deletedSizes -> {
           long size = 0;

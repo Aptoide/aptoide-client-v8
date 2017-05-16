@@ -17,16 +17,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.MyAccountPresenter;
 import cm.aptoide.pt.v8engine.presenter.MyAccountView;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
-import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
-import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.v8engine.view.store.home.HomeFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
 
