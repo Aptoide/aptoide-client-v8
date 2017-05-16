@@ -14,7 +14,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
-import android.util.Log;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.FileUtils;
 import java.io.File;
 import java.util.ArrayList;
@@ -95,7 +95,6 @@ public class ApplicationsManager {
     Intent intent = new Intent(Intent.ACTION_VIEW);
 
     Uri photoURI = null;
-    // https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en
     if (Build.VERSION.SDK_INT > 23) {
       //content://....apk for nougat
       photoURI = FileProvider.getUriForFile(context, "cm.aptoide.pt.provider", file);
@@ -170,7 +169,7 @@ public class ApplicationsManager {
 
       return tmp;
     } else {
-      Log.d(TAG, "Inside the error part of the receiving app bigger version");
+      Logger.d(TAG, "Inside the error part of the receiving app bigger version");
       HighwayTransferRecordItem tmp = new HighwayTransferRecordItem(context.getResources()
           .getDrawable(R.drawable.sym_def_app_icon), appName, "ErrorPackName",
           "Could not read the original filepath", true, "No version available");

@@ -16,7 +16,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -353,7 +352,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
       ArrayList<String> pathsFromOutsideShare) {
     Intent history =
         new Intent().setClass(HighwayActivity.this, HighwayTransferRecordActivity.class);
-    Log.i("Highway Activity ", "Going to the list of Applications");
     history.putExtra("isAHotspot", false);
     history.putExtra("nickname", deviceName);
     history.putExtra("targetIP", ipAddress);

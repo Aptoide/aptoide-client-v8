@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Environment;
-import android.util.Log;
+import cm.aptoide.pt.logger.Logger;
 
 /**
  * Created by filipegoncalves on 10-02-2017.
@@ -80,10 +80,10 @@ public class ApplicationReceiver {
     Intent receiveIntent = null;
     if (isHotspot) {
       receiveIntent = new Intent(context, HighwayServerService.class);
-      Log.d(TAG, "Will start a SERVER service");
+      Logger.d(TAG, "Will start a SERVER service");
     } else {
 
-      Log.d(TAG, "Will start a CLIENT service");
+      Logger.d(TAG, "Will start a CLIENT service");
 
       receiveIntent = new Intent(context, HighwayClientService.class);
       receiveIntent.putExtra("targetIP", targetIPAddress);

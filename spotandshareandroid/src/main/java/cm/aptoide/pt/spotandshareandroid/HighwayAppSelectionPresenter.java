@@ -1,6 +1,6 @@
 package cm.aptoide.pt.spotandshareandroid;
 
-import android.util.Log;
+import cm.aptoide.pt.logger.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,7 +82,7 @@ public class HighwayAppSelectionPresenter implements Presenter {
 
   public void clickedSendButton() {
 
-    Log.d(TAG, "selectedApps size : " + selectedApps.size());
+    Logger.d(TAG, "selectedApps size : " + selectedApps.size());
 
     if (selectedApps.size() > 0) {
       applicationSender.sendApp(selectedApps);

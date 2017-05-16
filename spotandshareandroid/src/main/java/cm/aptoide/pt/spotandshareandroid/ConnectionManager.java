@@ -19,7 +19,7 @@ import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
+import cm.aptoide.pt.logger.Logger;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -100,7 +100,7 @@ public class ConnectionManager {
                 changes = true;
               }
             } catch (ParseException e) {
-              Log.d("ConnectionManager: ", "Tried parsing an invalid group name SSID.");
+              Logger.d(TAG, "Tried parsing an invalid group name SSID.");
             }
           }
         }
@@ -122,11 +122,11 @@ public class ConnectionManager {
                 .equals(chosenHotspot)) {
               listenerJoinWifi.onStateChanged(false);
             }
-            Log.d(TAG, "removed this : " + tmp);
+            Logger.d(TAG, "removed this : " + tmp);
           }
         }
       } else {
-        Log.d(TAG, "THERE ARE NO APTXV NETWORKS");
+        Logger.d(TAG, "THERE ARE NO APTXV NETWORKS");
         if (noHotspotsFoundCounter >= 2 && !showedNoHotspotMessage) {
           showedNoHotspotMessage = true;
           if (inactivityListener != null) {
@@ -182,7 +182,7 @@ public class ConnectionManager {
                     try {
                       context.unregisterReceiver(this);
                     } catch (IllegalArgumentException e) {
-                      Log.d(TAG,
+                      Logger.e(TAG,
                           "There was an error while trying to unregister the ConnectingToWifi receiver");
                     }
                     reconnected = false;
@@ -219,7 +219,7 @@ public class ConnectionManager {
                   context.unregisterReceiver(this);
                   context.unregisterReceiver(scanAPTXVNetworks);
                 } catch (IllegalArgumentException e) {
-                  Log.d(TAG,
+                  Logger.e(TAG,
                       "There was an error while trying to unregister the ConnectingToWifi or the ScanAPTXNetworks receiver");
                 }
                 reconnected = false;
@@ -234,9 +234,9 @@ public class ConnectionManager {
         try {
           context.unregisterReceiver(this);
           context.unregisterReceiver(scanAPTXVNetworks);
-          Log.w("BROADCASTRECEIVER", "Unregistered scan receiver INSIDE CONNECTING WIFI #2");
+          Logger.d("BROADCASTRECEIVER", "Unregistered scan receiver INSIDE CONNECTING WIFI");
         } catch (IllegalArgumentException e) {
-          Log.d(TAG,
+          Logger.e(TAG,
               "There was an error while trying to unregister the wifireceiver and the wifireceiverforconnectingwifi");
         }
       }
@@ -293,8 +293,6 @@ public class ConnectionManager {
 
     context.registerReceiver(scanAPTXVNetworks,
         new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-    Log.w("BROADCASTRECEIVER", "registered scan receiver search APTX");
-
     scheduleScan();
   }
 
@@ -349,7 +347,7 @@ public class ConnectionManager {
     for (Method method : wmMethods) {
       if (method.getName()
           .equals("getWifiApConfiguration")) {
-        Log.d(TAG, "saving old ssid ");
+        Logger.d(TAG, "saving old ssid ");
         try {
           WifiConfiguration config = (WifiConfiguration) method.invoke(wifimanager);
           DataHolder.getInstance()
@@ -446,7 +444,7 @@ public class ConnectionManager {
   public int joinHotspot(String chosenHotspot, boolean shouldReconnect) {
 
     WifiConfiguration conf = new WifiConfiguration();
-    Log.d(TAG, "chosen hotspot is : " + chosenHotspot);
+    Logger.d(TAG, "chosen hotspot is : " + chosenHotspot);
     conf.SSID = "\"" + chosenHotspot + "\"";
     conf.preSharedKey = "\"passwordAptoide\"";
     conf.hiddenSSID = true;
@@ -454,7 +452,7 @@ public class ConnectionManager {
     conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
 
     int netid = wifimanager.addNetwork(conf);
-    Log.e("O net id meu esta a : ", "netid : " + netid);
+    Logger.d(TAG, "netid is: " + netid);
 
     List<WifiConfiguration> list = wifimanager.getConfiguredNetworks();
     if (list != null) {
@@ -467,7 +465,8 @@ public class ConnectionManager {
             } catch (InterruptedException e) {
             }
             boolean enab = wifimanager.enableNetwork(i.networkId, true);
-            Log.d(TAG, "i.networkId " + i.networkId + "\n" + "o net id do add esta a : " + netid);
+            Logger.d(TAG,
+                "i.networkId " + i.networkId + "\n" + "o net id do add esta a : " + netid);
 
             try {
               Thread.sleep(2000);
@@ -511,9 +510,9 @@ public class ConnectionManager {
         String tmp = separated[0].trim();
         if (tmp.contains("APTXV")) {
           boolean remove = wifimanager.removeNetwork(i.networkId);
-          Log.d(TAG, "boolean from remove network is : " + remove);
+          Logger.d(TAG, "boolean from remove network is : " + remove);
         } else {
-          Log.d(TAG, "Not a APTXV network. Can not remove this network;");
+          Logger.d(TAG, "Not a APTXV network. Can not remove this network;");
         }
       }
     }
@@ -587,28 +586,29 @@ public class ConnectionManager {
         new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION));
     context.registerReceiver(scanAPTXVNetworks,
         new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-    Log.w("BROADCASTRECEIVER", "registered scan receiver RESUME");
   }
 
   public void stop() {
-    Log.d(TAG, "Going to cancel the tasks");
+    Logger.d(TAG, "Going to cancel the tasks");
     if (clients != null) {
       clients.clear();
     }
     try {
       context.unregisterReceiver(activateButtonsReceiver);
     } catch (IllegalArgumentException e) {
+      Logger.e(TAG, "error unregistering activateButtonsReceiver");
     }
 
     try {
       context.unregisterReceiver(scanAPTXVNetworks);
-      Log.w("BROADCASTRECEIVER", "Unregistered scan receiver ON STOP");
     } catch (IllegalArgumentException e) {
+      Logger.e(TAG, "error unregistering scanAPTXVNetworks");
     }
 
     try {
       context.unregisterReceiver(connectingWifi);
     } catch (IllegalArgumentException e) {
+      Logger.e(TAG, "error unregistering connectingWifi");
     }
 
     this.listenerJoinWifi = null;
@@ -653,7 +653,7 @@ public class ConnectionManager {
     Boolean wifiOnStart = prefs.getBoolean("wifiOnStart", false);
     if (wifiOnStart) {
       wifimanager.setWifiEnabled(true);
-      Log.d(TAG, "Recovering wifi state, it was on before. ");
+      Logger.d(TAG, "Recovering wifi state, it was on before. ");
     } else {
       wifimanager.setWifiEnabled(false);
     }
