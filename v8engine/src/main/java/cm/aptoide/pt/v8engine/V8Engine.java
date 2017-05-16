@@ -88,6 +88,7 @@ import cm.aptoide.pt.v8engine.view.configuration.ActivityProvider;
 import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.view.configuration.implementation.ActivityProviderImpl;
 import cm.aptoide.pt.v8engine.view.configuration.implementation.FragmentProviderImpl;
+import cm.aptoide.pt.v8engine.view.entry.EntryPointChooser;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.facebook.appevents.AppEventsLogger;
@@ -123,6 +124,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private static final String TAG = V8Engine.class.getName();
 
   @Getter private static QManager qManager;
+  @Getter private static EntryPointChooser entryPointChooser;
   @Getter private static FragmentProvider fragmentProvider;
   @Getter private static ActivityProvider activityProvider;
   @Getter private static DisplayableWidgetMapping displayableWidgetMapping;
@@ -194,6 +196,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
     //
 
     qManager = new QManager(PreferenceManager.getDefaultSharedPreferences(this));
+    entryPointChooser = new EntryPointChooser(() -> qManager.isSupportedExtensionsDefined());
     fragmentProvider = createFragmentProvider();
     activityProvider = createActivityProvider();
     displayableWidgetMapping = createDisplayableWidgetMapping();
