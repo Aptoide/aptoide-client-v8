@@ -12,18 +12,26 @@ public class MyAccountPresenter implements Presenter {
   private final MyAccountView view;
   private final AptoideAccountManager accountManager;
   private final CrashReport crashReport;
+  private final MyAccountNavigator navigator;
 
   public MyAccountPresenter(MyAccountView view, AptoideAccountManager accountManager,
-      CrashReport crashReport) {
+      CrashReport crashReport, MyAccountNavigator navigator) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
+    this.navigator = navigator;
   }
 
   @Override public void present() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> signOutClick())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(resumed -> view.moreNotificationsClick()
+            .doOnNext(__ -> navigator.navigateToInboxView()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }

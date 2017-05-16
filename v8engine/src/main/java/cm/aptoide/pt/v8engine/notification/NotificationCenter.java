@@ -1,7 +1,10 @@
 package cm.aptoide.pt.v8engine.notification;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import io.realm.Sort;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.Single;
@@ -13,6 +16,7 @@ import rx.Single;
 public class NotificationCenter {
   private final CrashReport crashReport;
   private final NotificationIdsMapper notificationIdsMapper;
+  private final NotificationAccessor notificationAccessor;
   private NotificationHandler notificationHandler;
   private NotificationProvider notificationProvider;
   private NotificationSyncScheduler notificationSyncScheduler;
@@ -21,13 +25,15 @@ public class NotificationCenter {
   public NotificationCenter(NotificationIdsMapper notificationIdsMapper,
       NotificationHandler notificationHandler, NotificationProvider notificationProvider,
       NotificationSyncScheduler notificationSyncScheduler,
-      SystemNotificationShower notificationShower, CrashReport crashReport) {
+      SystemNotificationShower notificationShower, CrashReport crashReport,
+      NotificationAccessor notificationAccessor) {
     this.notificationIdsMapper = notificationIdsMapper;
     this.notificationHandler = notificationHandler;
     this.notificationProvider = notificationProvider;
     this.notificationSyncScheduler = notificationSyncScheduler;
     this.notificationShower = notificationShower;
     this.crashReport = crashReport;
+    this.notificationAccessor = notificationAccessor;
   }
 
   public void start() {
@@ -89,5 +95,12 @@ public class NotificationCenter {
       int occurrences) {
     return notificationProvider.getDismissedNotifications(notificationsTypes, startTime, endTime)
         .map(aptoideNotifications -> aptoideNotifications.size() < occurrences);
+  }
+
+  public Observable<List<AptoideNotification>> getInboxNotifications() {
+    return notificationAccessor.getAllSorted(Sort.DESCENDING)
+        .flatMap(notifications -> Observable.from(notifications)
+            .map(notification -> notificationProvider.convertToAptoideNotification(notification))
+            .toList());
   }
 }

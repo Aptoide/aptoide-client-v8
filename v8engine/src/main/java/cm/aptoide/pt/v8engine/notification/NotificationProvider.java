@@ -41,7 +41,7 @@ public class NotificationProvider {
         .toSingle();
   }
 
-  private AptoideNotification convertToAptoideNotification(Notification notification) {
+  public AptoideNotification convertToAptoideNotification(Notification notification) {
     return new AptoideNotification(notification.getAbTestingGroup(), notification.getBody(),
         notification.getCampaignId(), notification.getImg(), notification.getLang(),
         notification.getTitle(), notification.getUrl(), notification.getUrlTrack(),

@@ -24,6 +24,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.presenter.MyAccountNavigator;
 import cm.aptoide.pt.v8engine.presenter.MyAccountPresenter;
 import cm.aptoide.pt.v8engine.presenter.MyAccountView;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
@@ -49,6 +50,7 @@ public class MyAccountFragment extends FragmentView implements MyAccountView {
 
   private float strokeSize = 0.04f;
   private String userAvatarUrl = null;
+  private Button moreNotificationsButton;
 
   public static Fragment newInstance() {
     return new MyAccountFragment();
@@ -78,6 +80,7 @@ public class MyAccountFragment extends FragmentView implements MyAccountView {
     userAvatar = (ImageView) view.findViewById(R.id.my_account_user_avatar);
     storeAvatar = (ImageView) view.findViewById(R.id.my_account_store_avatar);
     separator = (View) view.findViewById(R.id.my_account_separator);
+    moreNotificationsButton = (Button) view.findViewById(R.id.my_account_more_notifications_button);
   }
 
   public int getLayoutId() {
@@ -86,6 +89,10 @@ public class MyAccountFragment extends FragmentView implements MyAccountView {
 
   public Observable<Void> signOutClick() {
     return RxView.clicks(logoutButton);
+  }
+
+  @Override public Observable<Void> moreNotificationsClick() {
+    return RxView.clicks(moreNotificationsButton);
   }
 
   @Override public void navigateToHome() {
@@ -99,7 +106,8 @@ public class MyAccountFragment extends FragmentView implements MyAccountView {
 
     setupToolbar(view, getString(R.string.my_account));
 
-    attachPresenter(new MyAccountPresenter(this, accountManager, CrashReport.getInstance()),
+    attachPresenter(new MyAccountPresenter(this, accountManager, CrashReport.getInstance(),
+            new MyAccountNavigator(getFragmentNavigator())),
         savedInstanceState);
   }
 

@@ -55,4 +55,15 @@ public class NotificationAccessor extends SimpleAccessor<Notification> {
         })
         .toSingle();
   }
+
+  public Observable<List<Notification>> getAllSorted(Sort sort) {
+    return Observable.fromCallable(() -> Database.getInternal())
+        .flatMap(realm -> realm.where(Notification.class)
+            .findAllSorted("timeStamp", sort)
+            .asObservable())
+        .unsubscribeOn(RealmSchedulers.getScheduler())
+        .flatMap((data) -> database.copyFromRealm(data))
+        .subscribeOn(RealmSchedulers.getScheduler())
+        .observeOn(Schedulers.io());
+  }
 }
