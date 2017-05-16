@@ -11,12 +11,16 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
@@ -35,6 +39,16 @@ public class MyAccountFragment extends FragmentView implements MyAccountView {
 
   private Button logoutButton;
   private TextView usernameTextView;
+  private TextView storeNameTextView;
+  private ImageView userAvatar;
+  private ImageView storeAvatar;
+  private Button userProfileEditButton;
+  private Button userStoreEditButton;
+  private View separator;
+  private RelativeLayout storeLayout;
+
+  private float strokeSize = 0.04f;
+  private String userAvatarUrl = null;
 
   public static Fragment newInstance() {
     return new MyAccountFragment();
@@ -50,9 +64,20 @@ public class MyAccountFragment extends FragmentView implements MyAccountView {
       @Nullable Bundle savedInstanceState) {
     super.onCreateView(layoutInflater, container, savedInstanceState);
     View view = layoutInflater.inflate(getLayoutId(), null);
-    logoutButton = (Button) view.findViewById(R.id.button_logout);
-    usernameTextView = (TextView) view.findViewById(R.id.username);
+    bindViews(view);
     return view;
+  }
+
+  private void bindViews(View view) {
+    logoutButton = (Button) view.findViewById(R.id.button_logout);
+    usernameTextView = (TextView) view.findViewById(R.id.my_account_username);
+    storeNameTextView = (TextView) view.findViewById(R.id.my_account_store_name);
+    userProfileEditButton = (Button) view.findViewById(R.id.my_account_edit_user_profile);
+    userStoreEditButton = (Button) view.findViewById(R.id.my_account_edit_user_store);
+    storeLayout = (RelativeLayout) view.findViewById(R.id.my_account_store);
+    userAvatar = (ImageView) view.findViewById(R.id.my_account_user_avatar);
+    storeAvatar = (ImageView) view.findViewById(R.id.my_account_store_avatar);
+    separator = (View) view.findViewById(R.id.my_account_separator);
   }
 
   public int getLayoutId() {
@@ -70,12 +95,45 @@ public class MyAccountFragment extends FragmentView implements MyAccountView {
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    usernameTextView.setText(accountManager.getAccountEmail());
+    setupAccountLayout();
 
     setupToolbar(view, getString(R.string.my_account));
 
     attachPresenter(new MyAccountPresenter(this, accountManager, CrashReport.getInstance()),
         savedInstanceState);
+  }
+
+  private void setupAccountLayout() {
+
+    if (!TextUtils.isEmpty(accountManager.getAccount()
+        .getNickname())) {
+      usernameTextView.setText(accountManager.getAccount()
+          .getNickname());
+    } else {
+      usernameTextView.setText(accountManager.getAccountEmail());
+    }
+
+    if (!TextUtils.isEmpty(accountManager.getAccount()
+        .getAvatar())) {
+      userAvatarUrl = accountManager.getAccount()
+          .getAvatar();
+      userAvatarUrl = userAvatarUrl.replace("50", "150");
+    }
+    ImageLoader.with(getContext())
+        .loadWithShadowCircleTransformWithPlaceholder(userAvatarUrl, userAvatar,
+            R.drawable.user_account_white, strokeSize);
+
+    if (!TextUtils.isEmpty(accountManager.getAccount()
+        .getStoreName())) {
+      storeNameTextView.setText(accountManager.getAccount()
+          .getStoreName());
+      ImageLoader.with(getContext())
+          .loadWithShadowCircleTransform(accountManager.getAccount()
+              .getStoreAvatar(), storeAvatar);
+    } else {
+      separator.setVisibility(View.GONE);
+      storeLayout.setVisibility(View.GONE);
+    }
   }
 
   private Toolbar setupToolbar(View view, String title) {

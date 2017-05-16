@@ -94,6 +94,10 @@
     <item name="android:textColor">@color/grey</item>
   </style>
 
+  <style name="Aptoide.TextView.Regular.S.GreyMedium">
+    <item name="android:textColor">@color/greymedium</item>
+  </style>
+
   <style name="Aptoide.TextView.Regular.XS.Grey">
     <item name="android:textColor">@color/grey</item>
   </style>

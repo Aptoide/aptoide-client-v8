@@ -636,4 +636,10 @@
   <string name="app_name">Aptoide</string>
   <string name="access_to_open_gallery_rationale">You need to allow access to the Gallery</string>
 
+  <!-- My account -->
+  <string name="my_account_my_profile">My Profile</string>
+  <string name="my_account_user_store">My Store</string>
+  <string name="my_account_edit_store">Edit</string>
+  <string name="my_account_log_out">LOG OUT</string>
+
 </resources>
