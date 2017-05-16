@@ -29,7 +29,6 @@ import cm.aptoide.pt.v8engine.account.LoginPreferences;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsView;
-import cm.aptoide.pt.v8engine.view.BackButton;
 import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
 import cm.aptoide.pt.v8engine.view.account.user.CreateUserFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
@@ -80,7 +79,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   private ThrowableToStringMapper errorMapper;
   private LoginSignUpCredentialsPresenter presenter;
   private List<String> facebookRequestedPermissions;
-  private BackButton.ClickHandler backClickHandler;
   private FragmentNavigator fragmentNavigator;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
@@ -399,7 +397,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void onDestroyView() {
-    unregisterBackClickHandler(backClickHandler);
+    unregisterBackClickHandler(presenter);
     super.onDestroyView();
   }
 }
