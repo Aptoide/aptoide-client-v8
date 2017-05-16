@@ -1,12 +1,12 @@
 package cm.aptoide.pt.v8engine.view.store;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -31,7 +31,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
-import cm.aptoide.pt.v8engine.view.account.user.CreateStoreActivity;
+import cm.aptoide.pt.v8engine.view.account.store.CreateStoreFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.text.NumberFormat;
 import java.util.List;
@@ -287,13 +287,10 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
 
   private void editStore(long storeId, String storeTheme, String storeDescription,
       String storeAvatar) {
-    Intent intent = new Intent(getContext(), CreateStoreActivity.class);
-    intent.putExtra("storeId", storeId);
-    intent.putExtra("storeTheme", storeTheme);
-    intent.putExtra("storeDescription", storeDescription);
-    intent.putExtra("storeAvatar", storeAvatar);
-    intent.putExtra("from", "store");
-    getContext().startActivity(intent);
+    Fragment fragment =
+        CreateStoreFragment.newInstance(storeId, storeTheme, storeDescription, storeAvatar,
+            CreateStoreFragment.STORE_FROM_DEFAULT_VALUE);
+    getFragmentNavigator().navigateTo(fragment);
   }
 
   private void setSecondaryInfoVisibility(boolean userVisibility) {

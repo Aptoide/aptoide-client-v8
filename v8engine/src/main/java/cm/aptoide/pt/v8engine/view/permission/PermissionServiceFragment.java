@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.view.permission;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.v8engine.view.BackButtonFragment;
 import rx.functions.Action0;
@@ -18,30 +19,6 @@ import rx.functions.Action0;
 
 public abstract class PermissionServiceFragment extends BackButtonFragment
     implements PermissionService {
-
-  @TargetApi(Build.VERSION_CODES.M) @Override
-  public void requestAccessToExternalFileSystem(@Nullable Action0 toRunWhenAccessIsGranted,
-      @Nullable Action0 toRunWhenAccessIsDenied) {
-    try {
-      ((PermissionService) this.getActivity()).requestAccessToExternalFileSystem(
-          toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
-    } catch (ClassCastException e) {
-      throw new IllegalStateException("Containing activity of this fragment must implement "
-          + PermissionService.class.getName());
-    }
-  }
-
-  @TargetApi(Build.VERSION_CODES.M) @Override
-  public void requestAccessToExternalFileSystem(boolean forceShowRationale,
-      @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
-    try {
-      ((PermissionService) this.getActivity()).requestAccessToExternalFileSystem(forceShowRationale,
-          toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
-    } catch (ClassCastException e) {
-      throw new IllegalStateException("Containing activity of this fragment must implement "
-          + PermissionService.class.getName());
-    }
-  }
 
   @TargetApi(Build.VERSION_CODES.M) @Override
   public void requestAccessToAccounts(@Nullable Action0 toRunWhenAccessIsGranted,
@@ -85,6 +62,55 @@ public abstract class PermissionServiceFragment extends BackButtonFragment
     try {
       ((PermissionService) this.getActivity()).requestDownloadAccess(toRunWhenAccessIsGranted,
           toRunWhenAccessIsDenied);
+    } catch (ClassCastException e) {
+      throw new IllegalStateException("Containing activity of this fragment must implement "
+          + PermissionService.class.getName());
+    }
+  }
+
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void requestAccessToCamera(@Nullable Action0 toRunWhenAccessIsGranted,
+      @Nullable Action0 toRunWhenAccessIsDenied) {
+    try {
+      ((PermissionService) this.getActivity()).requestAccessToCamera(toRunWhenAccessIsGranted,
+          toRunWhenAccessIsDenied);
+    } catch (ClassCastException e) {
+      throw new IllegalStateException("Containing activity of this fragment must implement "
+          + PermissionService.class.getName());
+    }
+  }
+
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void requestAccessToExternalFileSystem(@Nullable Action0 toRunWhenAccessIsGranted,
+      @Nullable Action0 toRunWhenAccessIsDenied) {
+    try {
+      ((PermissionService) this.getActivity()).requestAccessToExternalFileSystem(
+          toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
+    } catch (ClassCastException e) {
+      throw new IllegalStateException("Containing activity of this fragment must implement "
+          + PermissionService.class.getName());
+    }
+  }
+
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void requestAccessToExternalFileSystem(boolean forceShowRationale,
+      @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
+    try {
+      ((PermissionService) this.getActivity()).requestAccessToExternalFileSystem(forceShowRationale,
+          toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
+    } catch (ClassCastException e) {
+      throw new IllegalStateException("Containing activity of this fragment must implement "
+          + PermissionService.class.getName());
+    }
+  }
+
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void requestAccessToExternalFileSystem(boolean forceShowRationale,
+      @StringRes int rationaleMessage, @Nullable Action0 toRunWhenAccessIsGranted,
+      @Nullable Action0 toRunWhenAccessIsDenied) {
+    try {
+      ((PermissionService) this.getActivity()).requestAccessToExternalFileSystem(forceShowRationale,
+          rationaleMessage, toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
     } catch (ClassCastException e) {
       throw new IllegalStateException("Containing activity of this fragment must implement "
           + PermissionService.class.getName());

@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.view;
 
 import android.app.SearchManager;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -100,10 +99,6 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
     attachPresenter(
         new MainPresenter(this, new ApkFy(this, getIntent()), autoUpdate, new ContentPuller(this)),
         savedInstanceState);
-  }
-
-  @Override public void changeOrientationToPortrait() {
-    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
   }
 
   @Override public void showWizard() {

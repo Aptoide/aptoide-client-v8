@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.view.wizard;
 
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -43,7 +42,6 @@ public class WizardPageTwoFragment extends BackButtonFragment {
     super.onViewCreated(view, savedInstanceState);
     clickHandler = new BackButton.ClickHandler() {
       @Override public boolean handle() {
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         return false;
       }
     };

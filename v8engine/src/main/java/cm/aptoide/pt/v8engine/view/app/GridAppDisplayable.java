@@ -13,7 +13,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import lombok.Getter;
 
 /**
- * Created by sithengineer on 28/04/16.
+ * Created on 28/04/16.
  *
  * @author SithEngineer
  */

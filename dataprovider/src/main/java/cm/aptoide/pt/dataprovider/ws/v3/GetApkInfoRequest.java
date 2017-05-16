@@ -14,7 +14,7 @@ import retrofit2.Converter;
 import rx.Observable;
 
 /**
- * Created by sithengineer on 21/07/16.
+ * Created on 21/07/16.
  */
 public class GetApkInfoRequest extends V3<PaidApp> {
 
