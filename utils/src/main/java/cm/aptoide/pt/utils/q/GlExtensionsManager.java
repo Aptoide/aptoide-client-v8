@@ -59,11 +59,11 @@ class GlExtensionsManager {
       computedValue = getStoredGlTextures();
     }
 
-    if ("".equals(computedValue)) {
+    if (computedValue == null || "".equals(computedValue)) {
       Logger.w(TAG, "Supported OpenGL Extensions is empty!");
     }
 
-    return computedValue;
+    return computedValue != null ? computedValue : "";
   }
 
   boolean isSupportedExtensionsDefined() {
@@ -71,11 +71,11 @@ class GlExtensionsManager {
   }
 
   private boolean isGLTextutesStored() {
-    return sharedPreferences.getBoolean(GL_TEXTURES_DEFINED, true);
+    return sharedPreferences.getBoolean(GL_TEXTURES_DEFINED, false);
   }
 
   private String getStoredGlTextures() {
-    return sharedPreferences.getString(GL_TEXTURES_DEFINED, null);
+    return sharedPreferences.getString(GL_TEXTURES, null);
   }
 
   private void setSetoredSupportedOpenGLExtensions(String glTextures) {

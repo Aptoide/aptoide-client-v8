@@ -199,10 +199,6 @@ public abstract class V8Engine extends SpotAndShareApplication {
     displayableWidgetMapping = createDisplayableWidgetMapping();
     shareApps = new ShareApps(new SpotAndShareAnalytics(Analytics.getInstance()));
 
-    baseBodyInterceptorFactory =
-        new BaseBodyInterceptorFactory(getIdsRepository(), getPreferences(), getSecurePreferences(),
-            getAptoideMd5sum(), getAptoidePackage(), qManager);
-
     //
     // do not erase this code. it is useful to figure out when someone forgot to attach an error handler when subscribing and the app
     // is crashing in Rx without a proper stack trace
@@ -371,9 +367,9 @@ public abstract class V8Engine extends SpotAndShareApplication {
   public AptoideAccountManager getAccountManager() {
     if (accountManager == null) {
 
-      final AccountManagerService accountManagerService = new AccountManagerService(
-          baseBodyInterceptorFactory, getAccountFactory(),
-          getDefaultClient(), getLongTimeoutClient(), WebService.getDefaultConverter());
+      final AccountManagerService accountManagerService =
+          new AccountManagerService(getBaseBodyInterceptorFactory(), getAccountFactory(),
+              getDefaultClient(), getLongTimeoutClient(), WebService.getDefaultConverter());
 
       final AndroidAccountDataMigration accountDataMigration =
           new AndroidAccountDataMigration(SecurePreferencesImplementation.getInstance(this),
@@ -571,14 +567,14 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
   public BodyInterceptor<BaseBody> getBaseBodyInterceptorV7() {
     if (baseBodyInterceptorV7 == null) {
-      baseBodyInterceptorV7 = baseBodyInterceptorFactory.createV7(getAccountManager());
+      baseBodyInterceptorV7 = getBaseBodyInterceptorFactory().createV7(getAccountManager());
     }
     return baseBodyInterceptorV7;
   }
 
   public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBaseBodyInterceptorV3() {
     if (baseBodyInterceptorV3 == null) {
-      baseBodyInterceptorV3 = baseBodyInterceptorFactory.createV3();
+      baseBodyInterceptorV3 = getBaseBodyInterceptorFactory().createV3();
     }
     return baseBodyInterceptorV3;
   }
@@ -698,5 +694,15 @@ public abstract class V8Engine extends SpotAndShareApplication {
         .penaltyLog()
         .penaltyDeath()
         .build());
+  }
+
+  public BaseBodyInterceptorFactory getBaseBodyInterceptorFactory() {
+    if (baseBodyInterceptorFactory == null) {
+      baseBodyInterceptorFactory =
+          new BaseBodyInterceptorFactory(getIdsRepository(), getPreferences(),
+              getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage(), qManager);
+    }
+
+    return baseBodyInterceptorFactory;
   }
 }
