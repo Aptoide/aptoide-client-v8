@@ -3,7 +3,6 @@
   ~ Modified by Neurophobic Animal on 25/05/2016.
   -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/installedItemFrame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -125,9 +124,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:lines="2"
             android:text="@string/spot_share_share"
-            android:textSize="@dimen/text_size_small"
+            android:textSize="12sp"
             />
       </LinearLayout>
 
