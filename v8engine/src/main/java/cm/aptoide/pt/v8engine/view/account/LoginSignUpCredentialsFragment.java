@@ -3,14 +3,14 @@ package cm.aptoide.pt.v8engine.view.account;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
@@ -29,15 +29,13 @@ import cm.aptoide.pt.v8engine.account.LoginPreferences;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsView;
-import cm.aptoide.pt.v8engine.view.BackButton;
 import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
-import cm.aptoide.pt.v8engine.view.account.user.CreateUserActivity;
+import cm.aptoide.pt.v8engine.view.account.user.CreateUserFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.store.home.HomeFragment;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -81,7 +79,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   private ThrowableToStringMapper errorMapper;
   private LoginSignUpCredentialsPresenter presenter;
   private List<String> facebookRequestedPermissions;
-  private BackButton.ClickHandler backClickHandler;
   private FragmentNavigator fragmentNavigator;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
@@ -101,13 +98,16 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     errorMapper = new AccountErrorMapper(getContext());
     facebookRequestedPermissions = Arrays.asList("email", "user_friends");
     fragmentNavigator = getFragmentNavigator();
+    boolean isPortrait = getActivity().getResources()
+        .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+
     presenter = new LoginSignUpCredentialsPresenter(this,
         ((V8Engine) getContext().getApplicationContext()).getAccountManager(),
         facebookRequestedPermissions,
         new LoginPreferences(getContext(), V8Engine.getConfiguration(),
             GoogleApiAvailability.getInstance()),
         getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW),
-        getArguments().getBoolean(CLEAN_BACK_STACK));
+        getArguments().getBoolean(CLEAN_BACK_STACK), isPortrait);
   }
 
   @Nullable @Override
@@ -155,7 +155,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void showFacebookLogin() {
-    FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
     facebookLoginButton.setVisibility(View.VISIBLE);
     facebookLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
       @Override public void onSuccess(LoginResult loginResult) {
@@ -187,7 +186,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void navigateToForgotPasswordView() {
-    // FIXME: remove hardcoded links
+    // FIXME remove hardcoded links
     Uri mobilePageUri = Uri.parse("http://m.aptoide.com/account/password-recovery");
     startActivity(new Intent(Intent.ACTION_VIEW, mobilePageUri));
   }
@@ -242,29 +241,51 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     return RxView.clicks(buttonLogin)
         .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.LOGIN,
             getStartupClickOrigin()))
-        .map(click -> new AptoideAccountViewModel(aptoideEmailEditText.getText()
-            .toString(), aptoidePasswordEditText.getText()
-            .toString()));
+        .map(click -> getCredentials());
   }
 
   @Override public Observable<AptoideAccountViewModel> aptoideSignUpClick() {
     return RxView.clicks(buttonSignUp)
         .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.JOIN_APTOIDE,
             getStartupClickOrigin()))
-        .map(click -> new AptoideAccountViewModel(aptoideEmailEditText.getText()
-            .toString(), aptoidePasswordEditText.getText()
-            .toString()));
+        .map(click -> getCredentials());
+  }
+
+  @Override public boolean tryCloseLoginBottomSheet() {
+    if (credentialsEditTextsArea.getVisibility() == View.VISIBLE) {
+      credentialsEditTextsArea.setVisibility(View.GONE);
+      loginSignupSelectionArea.setVisibility(View.VISIBLE);
+      loginArea.setVisibility(View.GONE);
+      signUpArea.setVisibility(View.GONE);
+      separator.setVisibility(View.VISIBLE);
+      termsAndConditions.setVisibility(View.VISIBLE);
+      return true;
+    }
+    return false;
+  }
+
+  @Override @NonNull public AptoideAccountViewModel getCredentials() {
+    return new AptoideAccountViewModel(aptoideEmailEditText.getText()
+        .toString(), aptoidePasswordEditText.getText()
+        .toString());
+  }
+
+  @Override public void setCredentials(@NonNull AptoideAccountViewModel model) {
+    aptoideEmailEditText.setText(model.getUsername());
+    aptoidePasswordEditText.setText(model.getUsername());
   }
 
   @Override public boolean isPasswordVisible() {
     return isPasswordVisible;
   }
 
+  @Override public Context getApplicationContext() {
+    return getActivity().getApplicationContext();
+  }
+
   @Override public void navigateToCreateProfile() {
-    Intent i = new Intent(getContext(), CreateUserActivity.class);
-    FragmentActivity parent = getActivity();
-    parent.startActivity(i);
     getFragmentNavigator().cleanBackStack();
+    getFragmentNavigator().navigateTo(CreateUserFragment.newInstance());
   }
 
   private Analytics.Account.StartupClickOrigin getStartupClickOrigin() {
@@ -305,18 +326,9 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-
     bindViews(view);
-
-    backClickHandler = new BackButton.ClickHandler() {
-      @Override public boolean handle() {
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-        return tryCloseLoginBottomSheet();
-      }
-    };
-    registerBackClickHandler(backClickHandler);
-
     attachPresenter(presenter, savedInstanceState);
+    registerBackClickHandler(presenter);
   }
 
   @Override protected void showGoogleLoginError() {
@@ -370,21 +382,13 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
     progressDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
 
-    bottomSheetBehavior = BottomSheetBehavior.from(view.getRootView()
-        .findViewById(R.id.login_signup_layout));
-  }
-
-  private boolean tryCloseLoginBottomSheet() {
-    if (credentialsEditTextsArea.getVisibility() == View.VISIBLE) {
-      credentialsEditTextsArea.setVisibility(View.GONE);
-      loginSignupSelectionArea.setVisibility(View.VISIBLE);
-      loginArea.setVisibility(View.GONE);
-      signUpArea.setVisibility(View.GONE);
-      separator.setVisibility(View.VISIBLE);
-      termsAndConditions.setVisibility(View.VISIBLE);
-      return true;
+    try {
+      bottomSheetBehavior = BottomSheetBehavior.from(view.getRootView()
+          .findViewById(R.id.login_signup_layout));
+    } catch (IllegalArgumentException ex) {
+      // this happens because in landscape the R.id.login_signup_layout is not
+      // a child of CoordinatorLayout
     }
-    return false;
   }
 
   public String getCompanyName() {
@@ -393,7 +397,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void onDestroyView() {
-    unregisterBackClickHandler(backClickHandler);
+    unregisterBackClickHandler(presenter);
     super.onDestroyView();
   }
 }

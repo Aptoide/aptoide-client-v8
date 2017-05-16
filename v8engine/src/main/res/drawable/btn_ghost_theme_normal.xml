@@ -11,7 +11,7 @@
 
       <stroke
           android:color="?attr/colorButtonNormal"
-          android:width="2dp"
+          android:width="1dp"
           >
       </stroke>
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.downloads.scheduled;
@@ -25,7 +25,7 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * created by SithEngineer
+ * Created
  */
 @Displayables({ ScheduledDownloadDisplayable.class }) public class ScheduledDownloadWidget
     extends Widget<ScheduledDownloadDisplayable> {

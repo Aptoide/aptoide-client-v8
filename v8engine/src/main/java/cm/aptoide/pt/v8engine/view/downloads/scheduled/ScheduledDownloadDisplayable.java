@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.downloads.scheduled;
@@ -14,7 +14,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.SelectableDisplayablePoj
 import lombok.Getter;
 
 /**
- * created by SithEngineer
+ * Created
  */
 public class ScheduledDownloadDisplayable extends SelectableDisplayablePojo<Scheduled> {
 

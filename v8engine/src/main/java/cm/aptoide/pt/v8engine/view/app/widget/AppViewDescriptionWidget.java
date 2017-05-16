@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 17/08/2016.
+ * Modified on 17/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.app.widget;
@@ -20,7 +20,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 
 /**
- * Created by sithengineer on 10/05/16.
+ * Created on 10/05/16.
  */
 @Displayables({ AppViewDescriptionDisplayable.class }) public class AppViewDescriptionWidget
     extends Widget<AppViewDescriptionDisplayable> {
