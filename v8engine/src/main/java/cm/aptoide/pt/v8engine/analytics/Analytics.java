@@ -1203,4 +1203,48 @@ public class Analytics {
       track(FIRST_INSTALL_START_DOWNLOAD, map, FLURRY);
     }
   }
+
+  public static class AvocarrotSDK {
+    public static final String AVOCARROT_ON_AD_LOADED = "Avocarrot_On_Ad_Loaded";
+    public static final String AVOCARROT_ON_AD_ERROR = "Avocarrot_On_Ad_Error";
+    public static final String AVOCARROT_ON_AD_CLICKED = "Avocarrot_On_Ad_Clicked";
+    public static final String AVOCARROT_ON_AD_IMPRESSION = "Avocarrot_On_Ad_Impression";
+    public static final String AVOCARROT_AD_ID = "avocarrot_ad_id";
+    public static final String AVOCARROT_AD_PLACEMENT = "avocarrot_ad_placement";
+
+    public static void onAdLoaded(String adId, String placement) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(AVOCARROT_AD_ID, adId);
+      map.put(AVOCARROT_AD_PLACEMENT, placement);
+      logFacebookEvents(AVOCARROT_ON_AD_LOADED, map);
+      track(AVOCARROT_ON_AD_LOADED, map, LOCALYTICS);
+      track(AVOCARROT_ON_AD_LOADED, map, FLURRY);
+    }
+
+    public static void onAdError(String placement) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(AVOCARROT_AD_PLACEMENT, placement);
+      logFacebookEvents(AVOCARROT_ON_AD_ERROR, map);
+      track(AVOCARROT_ON_AD_ERROR, map, LOCALYTICS);
+      track(AVOCARROT_ON_AD_ERROR, map, FLURRY);
+    }
+
+    public static void onAdClicked(String adId, String placement) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(AVOCARROT_AD_ID, adId);
+      map.put(AVOCARROT_AD_PLACEMENT, placement);
+      logFacebookEvents(AVOCARROT_ON_AD_CLICKED, map);
+      track(AVOCARROT_ON_AD_CLICKED, map, LOCALYTICS);
+      track(AVOCARROT_ON_AD_CLICKED, map, FLURRY);
+    }
+
+    public static void onAdImpression(String adId, String placement) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(AVOCARROT_AD_ID, adId);
+      map.put(AVOCARROT_AD_PLACEMENT, placement);
+      logFacebookEvents(AVOCARROT_ON_AD_IMPRESSION, map);
+      track(AVOCARROT_ON_AD_IMPRESSION, map, LOCALYTICS);
+      track(AVOCARROT_ON_AD_IMPRESSION, map, FLURRY);
+    }
+  }
 }
