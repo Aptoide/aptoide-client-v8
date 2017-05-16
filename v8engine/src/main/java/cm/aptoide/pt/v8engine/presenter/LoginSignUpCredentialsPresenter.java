@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.presenter;
 
+import android.content.Context;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -12,7 +13,10 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.account.LoginPreferences;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.view.BackButton;
+import cm.aptoide.pt.v8engine.view.account.AptoideAccountViewModel;
 import com.facebook.AccessToken;
+import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import java.util.Collection;
@@ -21,7 +25,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import rx.Observable;
 import rx.Single;
-import rx.SingleSubscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.Subscriptions;
 
@@ -29,34 +32,42 @@ import rx.subscriptions.Subscriptions;
  * Created by marcelobenites on 06/02/17.
  */
 
-public class LoginSignUpCredentialsPresenter implements Presenter {
+public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.ClickHandler {
 
   private static final String TAG = LoginSignUpCredentialsPresenter.class.getName();
+
+  private static final String USERNAME_KEY = "username_key";
+  private static final String PASSWORD_KEY = "password_key";
 
   private final LoginSignUpCredentialsView view;
   private final AptoideAccountManager accountManager;
   private final Collection<String> facebookRequiredPermissions;
   private final LoginPreferences loginAvailability;
   private final boolean navigateToHome;
-  private boolean dimissToNavigateToMainView;
+  private final boolean isPortrait;
+  private boolean dismissToNavigateToMainView;
 
   public LoginSignUpCredentialsPresenter(LoginSignUpCredentialsView view,
       AptoideAccountManager accountManager, Collection<String> facebookRequiredPermissions,
-      LoginPreferences loginAvailability, boolean dimissToNavigateToMainView,
-      boolean navigateToHome) {
+      LoginPreferences loginAvailability, boolean dismissToNavigateToMainView,
+      boolean navigateToHome, boolean isPortrait) {
     this.view = view;
     this.accountManager = accountManager;
     this.facebookRequiredPermissions = facebookRequiredPermissions;
     this.loginAvailability = loginAvailability;
-    this.dimissToNavigateToMainView = dimissToNavigateToMainView;
+    this.dismissToNavigateToMainView = dismissToNavigateToMainView;
     this.navigateToHome = navigateToHome;
+    this.isPortrait = isPortrait;
   }
 
   @Override public void present() {
-
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(created -> showOrHideLogins())
+        .doOnNext(__ -> {
+          Context appContext = view.getApplicationContext();
+          FacebookSdk.sdkInitialize(appContext);
+        })
+        .doOnNext(created -> showOrHideLogin())
         .flatMap(resumed -> Observable.merge(googleLoginClick(), facebookLoginClick(),
             aptoideLoginClick(), aptoideSignUpClick(), aptoideShowLoginClick(),
             aptoideShowSignUpClick()))
@@ -80,14 +91,22 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
   }
 
   @Override public void saveState(Bundle state) {
-    // does nothing
+    final AptoideAccountViewModel credentials = view.getCredentials();
+    state.putString(USERNAME_KEY, credentials.getUsername());
+    // TODO use a safe method to store plain text password
+    state.putString(PASSWORD_KEY, credentials.getPassword());
   }
 
   @Override public void restoreState(Bundle state) {
-    // does nothing
+    if (state != null && state.containsKey(USERNAME_KEY) && state.containsKey(PASSWORD_KEY)) {
+      final AptoideAccountViewModel credentials =
+          new AptoideAccountViewModel(state.getString(USERNAME_KEY, ""),
+              state.getString(PASSWORD_KEY, ""));
+      view.setCredentials(credentials);
+    }
   }
 
-  private void showOrHideLogins() {
+  private void showOrHideLogin() {
     showOrHideFacebookLogin();
     showOrHideGoogleLogin();
   }
@@ -192,12 +211,24 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
 
   private Observable<Void> aptoideShowLoginClick() {
     return view.showAptoideLoginAreaClick()
-        .doOnNext(__ -> view.showAptoideLoginArea());
+        .doOnNext(__ -> {
+          view.showAptoideLoginArea();
+          if (!isPortrait) {
+            view.hideFacebookLogin();
+            view.hideGoogleLogin();
+          }
+        });
   }
 
   private Observable<Void> aptoideShowSignUpClick() {
     return view.showAptoideSignUpAreaClick()
-        .doOnNext(__ -> view.showAptoideSignUpArea());
+        .doOnNext(__ -> {
+          view.showAptoideSignUpArea();
+          if (!isPortrait) {
+            view.hideFacebookLogin();
+            view.hideGoogleLogin();
+          }
+        });
   }
 
   private Observable<Void> forgotPasswordSelection() {
@@ -233,7 +264,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
   }
 
   private void navigateToMainView() {
-    if (dimissToNavigateToMainView) {
+    if (dismissToNavigateToMainView) {
       view.dismiss();
     } else if (navigateToHome) {
       view.navigateToMainView();
@@ -247,31 +278,36 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
   }
 
   private Single<String> getFacebookUsername(AccessToken accessToken) {
-    return Single.create(new Single.OnSubscribe<String>() {
-      @Override public void call(SingleSubscriber<? super String> singleSubscriber) {
-        final GraphRequest request =
-            GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
-              @Override public void onCompleted(JSONObject object, GraphResponse response) {
-                if (!singleSubscriber.isUnsubscribed()) {
-                  if (response.getError() == null) {
-                    String email = null;
-                    try {
-                      email =
-                          object.has("email") ? object.getString("email") : object.getString("id");
-                    } catch (JSONException e) {
-                      singleSubscriber.onError(e);
-                    }
-                    singleSubscriber.onSuccess(email);
-                  } else {
-                    singleSubscriber.onError(response.getError()
-                        .getException());
+    return Single.create(singleSubscriber -> {
+      final GraphRequest request =
+          GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
+            @Override public void onCompleted(JSONObject object, GraphResponse response) {
+              if (!singleSubscriber.isUnsubscribed()) {
+                if (response.getError() == null) {
+                  String email = null;
+                  try {
+                    email =
+                        object.has("email") ? object.getString("email") : object.getString("id");
+                  } catch (JSONException e) {
+                    singleSubscriber.onError(e);
                   }
+                  singleSubscriber.onSuccess(email);
+                } else {
+                  singleSubscriber.onError(response.getError()
+                      .getException());
                 }
               }
-            });
-        singleSubscriber.add(Subscriptions.create(() -> request.setCallback(null)));
-        request.executeAsync();
-      }
+            }
+          });
+      singleSubscriber.add(Subscriptions.create(() -> request.setCallback(null)));
+      request.executeAsync();
     });
+  }
+
+  @Override public boolean handle() {
+    if (!isPortrait) {
+      showOrHideLogin();
+    }
+    return view.tryCloseLoginBottomSheet();
   }
 }
