@@ -28,6 +28,4 @@ public class BaseBody extends HashMapNotNull<String, Object> {
   public void setQ(String q) {
     put("q", q);
   }
-
-
 }

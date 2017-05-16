@@ -74,8 +74,7 @@ public class QManager {
         + getGlEs()
         + "&myCPU="
         + getCpuAbi()
-        + "&myDensity="
-        + getDensityDpi() + (getSupportedOpenGlExtensionsManager().equals("") ? ""
+        + "&myDensity=" + getDensityDpi() + (getSupportedOpenGlExtensionsManager().equals("") ? ""
         : "&myGLTex=" + getSupportedOpenGlExtensionsManager());
 
     return Base64.encodeToString(filters.getBytes(), 0)
