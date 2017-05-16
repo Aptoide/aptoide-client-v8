@@ -21,9 +21,6 @@ import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 
-import static cm.aptoide.pt.preferences.Application.getContext;
-import static cm.aptoide.pt.utils.AptoideUtils.ResourseU.getString;
-
 /**
  * Created by neuro on 16-05-2017.
  */
@@ -50,7 +47,7 @@ public class ShareAppHelper {
   }
 
   public void shareApp(String appName, String packageName, String wUrl, String iconPath) {
-    GenericDialogs.createGenericShareDialog(getContext(), getString(R.string.share),
+    GenericDialogs.createGenericShareDialog(activity, activity.getString(R.string.share),
         installedRepository.contains(packageName))
         .subscribe(eResponse -> {
           if (GenericDialogs.EResponse.SHARE_EXTERNAL == eResponse) {
@@ -68,11 +65,11 @@ public class ShareAppHelper {
               SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(accountManager, false,
                   SharePreviewDialog.SharePreviewOpenMode.SHARE);
               AlertDialog.Builder alertDialog =
-                  sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(),
-                      appName, iconPath);
+                  sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(activity, appName,
+                      iconPath);
               SocialRepository socialRepository = RepositoryFactory.getSocialRepository(activity);
 
-              sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
+              sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", activity,
                   sharePreviewDialog, alertDialog, socialRepository);
             }
           } else if (GenericDialogs.EResponse.SHARE_SPOT_AND_SHARE == eResponse) {
@@ -92,7 +89,7 @@ public class ShareAppHelper {
   }
 
   private String getFilepath(String packageName) {
-    PackageManager packageManager = getContext().getPackageManager();
+    PackageManager packageManager = activity.getPackageManager();
     PackageInfo packageInfo = null;
     try {
       packageInfo = packageManager.getPackageInfo(packageName, 0);
@@ -118,9 +115,10 @@ public class ShareAppHelper {
       Intent sharingIntent = new Intent(Intent.ACTION_SEND);
       sharingIntent.setType("text/plain");
       sharingIntent.putExtra(Intent.EXTRA_SUBJECT,
-          getString(R.string.install) + " \"" + appName + "\"");
+          activity.getString(R.string.install) + " \"" + appName + "\"");
       sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
-      activityStarter.startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
+      activityStarter.startActivity(
+          Intent.createChooser(sharingIntent, activity.getString(R.string.share)));
     }
   }
 }
