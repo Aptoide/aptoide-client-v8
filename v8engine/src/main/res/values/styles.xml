@@ -488,11 +488,11 @@
   </style>
 
   <style name="ToolbarBluegrey" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/bluegrey</item>
+    <item name="pstsIndicatorColor">@color/blue_grey</item>
   </style>
 
   <style name="ToolbarLightgreen" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/lightgreen</item>
+    <item name="pstsIndicatorColor">@color/light_green</item>
   </style>
 
   <style name="ToolbarAmber" parent="@style/Theme.AppCompat">
@@ -524,7 +524,7 @@
   </style>
 
   <style name="ToolbarDeeppurple" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/deeppurple</item>
+    <item name="pstsIndicatorColor">@color/deep_purple</item>
   </style>
 
   <style name="ToolbarBlack" parent="@style/Theme.AppCompat">
@@ -532,7 +532,7 @@
   </style>
 
   <style name="ToolbarLightblue" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/lightblue</item>
+    <item name="pstsIndicatorColor">@color/light_blue</item>
   </style>
 
   <style name="ToolbarGreyTransparent" parent="@style/Theme.AppCompat">
@@ -548,11 +548,11 @@
   </style>
 
   <style name="ToolbarBluegreyTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/bluegrey_700</item>
+    <item name="pstsIndicatorColor">@color/blue_grey_700</item>
   </style>
 
   <style name="ToolbarLightgreenTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/lightgreen_700</item>
+    <item name="pstsIndicatorColor">@color/light_green_700</item>
   </style>
 
   <style name="ToolbarAmberTransparent" parent="@style/Theme.AppCompat">
@@ -584,7 +584,7 @@
   </style>
 
   <style name="ToolbarDeeppurpleTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/deeppurple_700</item>
+    <item name="pstsIndicatorColor">@color/deep_purple_700</item>
   </style>
 
   <style name="ToolbarBlackTransparent" parent="@style/Theme.AppCompat">
@@ -592,7 +592,7 @@
   </style>
 
   <style name="ToolbarLightblueTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/lightblue_700</item>
+    <item name="pstsIndicatorColor">@color/light_blue_700</item>
   </style>
 
 
@@ -658,7 +658,7 @@
 
   <style name="WidgetButtonCustomAptoideDeepPurple" parent="WidgetButtonCustomAptoide">
     <item name="android:background">@drawable/deep_purple_btn_default_holo_light</item>
-    <item name="android:textColor">@color/deeppurple_700</item>
+    <item name="android:textColor">@color/deep_purple_700</item>
   </style>
 
   <style name="WidgetButtonCustomAmber" parent="WidgetButtonCustom">
@@ -685,7 +685,7 @@
 
   <style name="WidgetButtonCustomAptoideLightblue" parent="WidgetButtonCustomAptoide">
     <item name="android:background">@drawable/lightblue_btn_default_holo_light</item>
-    <item name="android:textColor">@color/lightblue_700</item>
+    <item name="android:textColor">@color/light_blue_700</item>
   </style>
 
   <style name="WidgetButtonCustomLightgreen" parent="WidgetButtonCustom">
@@ -694,7 +694,7 @@
 
   <style name="WidgetButtonCustomAptoideLightgreen" parent="WidgetButtonCustomAptoide">
     <item name="android:background">@drawable/light_green_btn_default_holo_light</item>
-    <item name="android:textColor">@color/lightgreen_700</item>
+    <item name="android:textColor">@color/light_green_700</item>
   </style>
 
   <style name="WidgetButtonCustomBluegrey" parent="WidgetButtonCustom">
@@ -703,7 +703,7 @@
 
   <style name="WidgetButtonCustomAptoideBluegrey" parent="WidgetButtonCustomAptoide">
     <item name="android:background">@drawable/blue_grey_btn_default_holo_light</item>
-    <item name="android:textColor">@color/bluegrey_700</item>
+    <item name="android:textColor">@color/blue_grey_700</item>
   </style>
 
   <style name="WidgetButtonCustomBrown" parent="WidgetButtonCustom">

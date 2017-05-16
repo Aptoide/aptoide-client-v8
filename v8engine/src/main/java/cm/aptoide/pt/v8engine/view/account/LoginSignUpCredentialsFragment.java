@@ -279,13 +279,13 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     return isPasswordVisible;
   }
 
-  @Override public Context getApplicationContext() {
-    return getActivity().getApplicationContext();
-  }
-
   @Override public void navigateToCreateProfile() {
     getFragmentNavigator().cleanBackStack();
     getFragmentNavigator().navigateTo(CreateUserFragment.newInstance());
+  }
+
+  @Override public Context getApplicationContext() {
+    return getActivity().getApplicationContext();
   }
 
   private Analytics.Account.StartupClickOrigin getStartupClickOrigin() {
