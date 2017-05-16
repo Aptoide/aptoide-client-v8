@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 13/07/2016.
+ * Modified on 13/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.updates.excluded;
@@ -10,7 +10,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
 /**
- * Created by sithengineer on 15/06/16.
+ * Created on 15/06/16.
  */
 public class ExcludedUpdateDisplayable extends DisplayablePojo<Update> {
 

@@ -108,6 +108,7 @@
 
   <!-- Radar colors -->
   <color name="radar_color_2">#6c6c6c</color>
+  <color name="create_user_dark_orange">#C16114</color>
 
 
   <!--new-->
@@ -117,5 +118,9 @@
   <color name="greydarkfog">#cccccc</color>
   <color name="greymedium">#828282</color>
   <color name="black87alpha">#DD212121</color>
+
+  <!-- ?? -->
+  <color name="default_color">#e17117</color>
+  <color name="very_dark_gray">#4a4a4a</color>
 
 </resources>

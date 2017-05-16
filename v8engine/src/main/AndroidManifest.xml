@@ -74,27 +74,6 @@
         />
 
     <activity
-        android:name=".view.account.user.CreateUserActivity"
-        android:windowSoftInputMode="stateHidden"
-        />
-
-    <activity
-        android:name=".view.account.user.CreateStoreActivity"
-        android:exported="true"
-        android:windowSoftInputMode="stateHidden"
-        />
-
-    <activity
-        android:name=".view.account.user.ProfileStepOneActivity"
-        android:windowSoftInputMode="stateHidden"
-        />
-
-    <activity
-        android:name=".view.account.user.ProfileStepTwoActivity"
-        android:windowSoftInputMode="stateHidden"
-        />
-
-    <activity
         android:name=".DeepLinkIntentReceiver"
         android:exported="true">
       <intent-filter>

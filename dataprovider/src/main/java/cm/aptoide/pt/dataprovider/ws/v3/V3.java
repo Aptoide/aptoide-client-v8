@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 03/08/2016.
+ * Modified on 03/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v3;
@@ -44,7 +44,7 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * Created by sithengineer on 21/07/16.
+ * Created on 21/07/16.
  */
 public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 

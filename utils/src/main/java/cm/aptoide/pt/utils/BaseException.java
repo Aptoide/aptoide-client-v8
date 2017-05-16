@@ -1,7 +1,7 @@
 package cm.aptoide.pt.utils;
 
 /**
- * created by SithEngineer
+ * Created
  */
 public abstract class BaseException extends RuntimeException {
   public BaseException() {
