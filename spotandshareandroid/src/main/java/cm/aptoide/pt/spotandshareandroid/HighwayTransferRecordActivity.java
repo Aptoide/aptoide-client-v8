@@ -24,6 +24,7 @@ import java.util.List;
 public class HighwayTransferRecordActivity extends ActivityView
     implements HighwayTransferRecordView {
 
+  public static final String TAG = HighwayTransferRecordActivity.class.getSimpleName();
   private static final int SELECT_APPS_REQUEST_CODE = 53110;
   private static List<HighwayTransferRecordItem> listOfItems = new ArrayList<>();
   private boolean isHotspot;
@@ -44,7 +45,6 @@ public class HighwayTransferRecordActivity extends ActivityView
   private ApplicationSender applicationSender;
   private Toolbar mToolbar;
   private SpotAndShareAnalyticsInterface analytics;
-  public static final String TAG = HighwayTransferRecordActivity.class.getSimpleName();
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -405,7 +405,7 @@ public class HighwayTransferRecordActivity extends ActivityView
           .equals("setWifiApEnabled")) {
 
         try {
-          Log.d(TAG,"Desligar o hostpot ");
+          Log.d(TAG, "Desligar o hostpot ");
           m.invoke(wifimanager, wc, false);
         } catch (IllegalAccessException e) {
           e.printStackTrace();
@@ -436,7 +436,7 @@ public class HighwayTransferRecordActivity extends ActivityView
             .getString(R.string.cancel), new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int id) {
             // User cancelled the dialog
-            Log.d(TAG,"Pressed cancel button");
+            Log.d(TAG, "Pressed cancel button");
           }
         });
     return builder.create();
@@ -452,7 +452,7 @@ public class HighwayTransferRecordActivity extends ActivityView
     builder.setPositiveButton(this.getResources()
         .getString(R.string.ok), new DialogInterface.OnClickListener() {
       public void onClick(DialogInterface dialog, int id) {
-        Log.d(TAG,"Pressed OK in the error of the app version");
+        Log.d(TAG, "Pressed OK in the error of the app version");
       }
     });
 

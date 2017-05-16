@@ -46,6 +46,7 @@ public class ConnectionManager {
   public static final int FAILED_TO_CREATE_HOTSPOT = 7;
   public static final String UNIQUE_ID = "uniqueID";
   public static final int RULE_VERSION = 2;
+  public static final String TAG = ConnectionManager.class.getSimpleName();
   private static ConnectionManager instance;
   private final Context context;
   private final SharedPreferences prefs;
@@ -61,7 +62,6 @@ public class ConnectionManager {
   private ClientsConnectedListener clientsConnectedListener;
   private Timer scanner;
   private String chosenHotspot;
-  public static final String TAG = ConnectionManager.class.getSimpleName();
   private BroadcastReceiver activateButtonsReceiver = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
       if (wifimanager == null) {
@@ -122,11 +122,11 @@ public class ConnectionManager {
                 .equals(chosenHotspot)) {
               listenerJoinWifi.onStateChanged(false);
             }
-            Log.d(TAG,"removed this : " + tmp);
+            Log.d(TAG, "removed this : " + tmp);
           }
         }
       } else {
-        Log.d(TAG,"THERE ARE NO APTXV NETWORKS");
+        Log.d(TAG, "THERE ARE NO APTXV NETWORKS");
         if (noHotspotsFoundCounter >= 2 && !showedNoHotspotMessage) {
           showedNoHotspotMessage = true;
           if (inactivityListener != null) {
@@ -349,7 +349,7 @@ public class ConnectionManager {
     for (Method method : wmMethods) {
       if (method.getName()
           .equals("getWifiApConfiguration")) {
-        Log.d(TAG,"saving old ssid ");
+        Log.d(TAG, "saving old ssid ");
         try {
           WifiConfiguration config = (WifiConfiguration) method.invoke(wifimanager);
           DataHolder.getInstance()
@@ -446,7 +446,7 @@ public class ConnectionManager {
   public int joinHotspot(String chosenHotspot, boolean shouldReconnect) {
 
     WifiConfiguration conf = new WifiConfiguration();
-    Log.d(TAG,"chosen hotspot is : " + chosenHotspot);
+    Log.d(TAG, "chosen hotspot is : " + chosenHotspot);
     conf.SSID = "\"" + chosenHotspot + "\"";
     conf.preSharedKey = "\"passwordAptoide\"";
     conf.hiddenSSID = true;
@@ -467,8 +467,7 @@ public class ConnectionManager {
             } catch (InterruptedException e) {
             }
             boolean enab = wifimanager.enableNetwork(i.networkId, true);
-            Log.d(TAG,
-                "i.networkId " + i.networkId + "\n" + "o net id do add esta a : " + netid);
+            Log.d(TAG, "i.networkId " + i.networkId + "\n" + "o net id do add esta a : " + netid);
 
             try {
               Thread.sleep(2000);
@@ -514,7 +513,7 @@ public class ConnectionManager {
           boolean remove = wifimanager.removeNetwork(i.networkId);
           Log.d(TAG, "boolean from remove network is : " + remove);
         } else {
-          Log.d(TAG,"Not a APTXV network. Can not remove this network;");
+          Log.d(TAG, "Not a APTXV network. Can not remove this network;");
         }
       }
     }
@@ -592,7 +591,7 @@ public class ConnectionManager {
   }
 
   public void stop() {
-    Log.d(TAG,"Going to cancel the tasks");
+    Log.d(TAG, "Going to cancel the tasks");
     if (clients != null) {
       clients.clear();
     }

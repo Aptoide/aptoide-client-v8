@@ -29,10 +29,10 @@ import java.util.List;
 
 public class ApplicationsManager {
 
+  public static final String TAG = ApplicationsManager.class.getSimpleName();
   private Context context;
   private BroadcastReceiver installNotificationReceiver;
   private IntentFilter intentFilter;
-  public static final String TAG = ApplicationsManager.class.getSimpleName();
 
   public ApplicationsManager(Context context) {
     this.context = context;
@@ -170,7 +170,7 @@ public class ApplicationsManager {
 
       return tmp;
     } else {
-      Log.d(TAG,"Inside the error part of the receiving app bigger version");
+      Log.d(TAG, "Inside the error part of the receiving app bigger version");
       HighwayTransferRecordItem tmp = new HighwayTransferRecordItem(context.getResources()
           .getDrawable(R.drawable.sym_def_app_icon), appName, "ErrorPackName",
           "Could not read the original filepath", true, "No version available");

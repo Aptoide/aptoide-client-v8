@@ -103,7 +103,7 @@ public class HighwayServerService extends Service {
           }
 
           @Override public void onError(IOException e) {
-            Log.d(TAG,"Fell on error Server !! ");
+            Log.d(TAG, "Fell on error Server !! ");
             e.printStackTrace();
 
             if (mNotifyManager != null && androidAppInfo != null) {
@@ -199,7 +199,7 @@ public class HighwayServerService extends Service {
           .equals("RECEIVE")) {
         final String externalStoragepath = intent.getStringExtra("ExternalStoragePath");
 
-        Log.d(TAG,"Going to start serving");
+        Log.d(TAG, "Going to start serving");
         HostsCallbackManager hostsCallbackManager;
         if (intent.getExtras()
             .containsKey("autoShareFilePath")) {
@@ -229,7 +229,6 @@ public class HighwayServerService extends Service {
             new AptoideMessageClientSocket("192.168.43.1", 55555, externalStoragepath,
                 storageCapacity, fileLifecycleProvider, socketBinder, onError, Integer.MAX_VALUE);
         aptoideMessageClientSocket.startAsync();
-
       } else if (intent.getAction() != null && intent.getAction()
           .equals("SEND")) {
         Bundle b = intent.getBundleExtra("bundle");
@@ -448,7 +447,7 @@ public class HighwayServerService extends Service {
         try {
           Method setConfigMethod = wifimanager.getClass()
               .getMethod("setWifiApConfiguration", WifiConfiguration.class);
-          Log.d(TAG,"Re-seting the wifiAp configuration to what it was before !!! ");
+          Log.d(TAG, "Re-seting the wifiAp configuration to what it was before !!! ");
           setConfigMethod.invoke(wifimanager, wc);
         } catch (NoSuchMethodException e) {
           e.printStackTrace();
@@ -462,7 +461,7 @@ public class HighwayServerService extends Service {
           .equals("setWifiApEnabled")) {
 
         try {
-          Log.d(TAG,"Desligar o hostpot ");
+          Log.d(TAG, "Desligar o hostpot ");
           m.invoke(wifimanager, wc, false);
         } catch (IllegalAccessException e) {
           e.printStackTrace();

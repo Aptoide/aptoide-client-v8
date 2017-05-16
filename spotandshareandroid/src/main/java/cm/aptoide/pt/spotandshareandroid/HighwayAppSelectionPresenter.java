@@ -10,13 +10,13 @@ import java.util.List;
 
 public class HighwayAppSelectionPresenter implements Presenter {
 
+  public static final String TAG = HighwayAppSelectionPresenter.class.getSimpleName();
   private ApplicationProvider applicationProvider;
   private ApplicationSender applicationSender;
   private HighwayAppSelectionView view;
   private boolean isHotspot;
   private List<AppViewModel> viewModelApps;
   private List<App> selectedApps;
-  public static final String TAG = HighwayAppSelectionPresenter.class.getSimpleName();
 
   public HighwayAppSelectionPresenter(ApplicationProvider applicationProvider,
       ApplicationSender applicationSender, HighwayAppSelectionView view, boolean isHotspot) {
@@ -82,7 +82,7 @@ public class HighwayAppSelectionPresenter implements Presenter {
 
   public void clickedSendButton() {
 
-    Log.d(TAG,"selectedApps size : " + selectedApps.size());
+    Log.d(TAG, "selectedApps size : " + selectedApps.size());
 
     if (selectedApps.size() > 0) {
       applicationSender.sendApp(selectedApps);
