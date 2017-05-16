@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = PopularAppTimelineItem.class, name = "POPULAR_APP"),
     @JsonSubTypes.Type(value = AggregatedSocialInstallTimelineItem.class, name = "AGGREGATED_SOCIAL_INSTALL")
 }) public interface TimelineItem<T> {
+  
 
   T getData();
 }
