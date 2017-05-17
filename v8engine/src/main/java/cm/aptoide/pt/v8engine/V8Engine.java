@@ -79,6 +79,7 @@ import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.leak.LeakTool;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.UserAgentInterceptor;
+import cm.aptoide.pt.v8engine.notification.AptoideNotification;
 import cm.aptoide.pt.v8engine.notification.NotificationCenter;
 import cm.aptoide.pt.v8engine.notification.NotificationHandler;
 import cm.aptoide.pt.v8engine.notification.NotificationIdsMapper;
@@ -133,9 +134,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
  */
 public abstract class V8Engine extends SpotAndShareApplication {
 
+  /**
+   * Time between pull request for campaign notifications: {@link AptoideNotification.NotificationType#CAMPAIGN}
+   */
+  public static final long PUSH_NOTIFICATION_CAMPAIGN_PERIODICITY = AlarmManager.INTERVAL_DAY;
   private static final String CACHE_FILE_NAME = "aptoide.wscache";
   private static final String TAG = V8Engine.class.getName();
-
   @Getter private static QManager qManager;
   @Getter private static EntryPointChooser entryPointChooser;
   @Getter private static FragmentProvider fragmentProvider;
@@ -166,6 +170,11 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private AndroidAccountProvider androidAccountProvider;
   private PaymentAnalytics paymentAnalytics;
   private NotificationHandler notificationHandler;
+  /**
+   * Time between pull request for social notifications: {@link AptoideNotification.NotificationType#LIKE}{@link
+   * AptoideNotification.NotificationType#COMMENT}{@link AptoideNotification.NotificationType#POPULAR}
+   */
+  private long pushNotificationSocialPeriodicity = AlarmManager.INTERVAL_HOUR;
 
   /**
    * call after this instance onCreate()
@@ -289,13 +298,9 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
   private void startNotificationsSync() {
 
-    long pushNotificationInterval;
-
     if (ManagerPreferences.isDebug()
         && ManagerPreferences.getPushNotificationPullingInterval() > 0) {
-      pushNotificationInterval = ManagerPreferences.getPushNotificationPullingInterval();
-    } else {
-      pushNotificationInterval = AlarmManager.INTERVAL_HOUR;
+      pushNotificationSocialPeriodicity = ManagerPreferences.getPushNotificationPullingInterval();
     }
 
     notificationHandler = new NotificationHandler(getConfiguration().getAppId(), getDefaultClient(),
@@ -306,9 +311,11 @@ public abstract class V8Engine extends SpotAndShareApplication {
     List<NotificationSyncScheduler.Schedule> scheduleList = new ArrayList<>(2);
 
     scheduleList.add(new NotificationSyncScheduler.Schedule(
-        NotificationSyncService.PUSH_NOTIFICATIONS_CAMPAIGN_ACTION, AlarmManager.INTERVAL_DAY));
+        NotificationSyncService.PUSH_NOTIFICATIONS_CAMPAIGN_ACTION,
+        PUSH_NOTIFICATION_CAMPAIGN_PERIODICITY));
     scheduleList.add(new NotificationSyncScheduler.Schedule(
-        NotificationSyncService.PUSH_NOTIFICATIONS_SOCIAL_ACTION, pushNotificationInterval));
+        NotificationSyncService.PUSH_NOTIFICATIONS_SOCIAL_ACTION,
+        pushNotificationSocialPeriodicity));
 
     NotificationSyncScheduler notificationSyncScheduler =
         new NotificationSyncScheduler(this, (AlarmManager) getSystemService(ALARM_SERVICE),
@@ -317,8 +324,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
     NotificationProvider notificationProvider = new NotificationProvider(notificationAccessor);
     NotificationCenter notificationCenter =
         new NotificationCenter(new NotificationIdsMapper(), notificationHandler,
-            notificationSyncScheduler, systemNotificationShower,
-            CrashReport.getInstance(), new NotificationPolicyFactory(notificationProvider));
+            notificationSyncScheduler, systemNotificationShower, CrashReport.getInstance(),
+            new NotificationPolicyFactory(notificationProvider));
     notificationCenter.start();
   }
 
