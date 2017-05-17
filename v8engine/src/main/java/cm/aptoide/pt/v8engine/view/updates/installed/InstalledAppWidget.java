@@ -98,7 +98,7 @@ import retrofit2.Converter;
 
     shareButtonLayout.setVisibility(View.VISIBLE);
     compositeSubscription.add(RxView.clicks(shareButtonLayout)
-        .subscribe(__ -> shareAppHelper.shareApp(appName, packageName, null, pojo.getIcon()),
+        .subscribe(__ -> shareAppHelper.shareApp(appName, packageName, pojo.getIcon()),
             err -> CrashReport.getInstance()
                 .log(err)));
   }

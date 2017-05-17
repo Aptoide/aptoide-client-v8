@@ -10,7 +10,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.spotandshareandroid.HighwayActivity;
-import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -20,6 +19,7 @@ import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
+import rx.Observable;
 
 /**
  * Created by neuro on 16-05-2017.
@@ -43,46 +43,85 @@ public class ShareAppHelper {
     this.spotAndShareAnalytics = spotAndShareAnalytics;
   }
 
+  private boolean isInstalled(String packageName) {
+    return installedRepository.contains(packageName);
+  }
+
   public void shareApp(String appName, String packageName, String wUrl, String iconPath) {
-    GenericDialogs.createGenericShareDialog(activity, activity.getString(R.string.share),
-        installedRepository.contains(packageName))
-        .subscribe(eResponse -> {
-          if (GenericDialogs.EResponse.SHARE_EXTERNAL == eResponse) {
 
-            shareDefault(appName, packageName, wUrl);
-          } else if (GenericDialogs.EResponse.SHARE_TIMELINE == eResponse) {
-            if (!accountManager.isLoggedIn()) {
-              ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
-                  snackView -> accountNavigator.navigateToAccountView(
-                      Analytics.Account.AccountOrigins.APP_VIEW_SHARE));
-              return;
-            }
-            if (Application.getConfiguration()
-                .isCreateStoreAndSetUserPrivacyAvailable()) {
-              SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(accountManager, false,
-                  SharePreviewDialog.SharePreviewOpenMode.SHARE);
-              AlertDialog.Builder alertDialog =
-                  sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(activity, appName,
-                      iconPath);
-              SocialRepository socialRepository = RepositoryFactory.getSocialRepository(activity);
+    String title = activity.getString(R.string.share);
 
-              sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", activity,
-                  sharePreviewDialog, alertDialog, socialRepository);
-            }
-          } else if (GenericDialogs.EResponse.SHARE_SPOT_AND_SHARE == eResponse) {
+    Observable<ShareDialogs.ShareResponse> genericAppviewShareDialog =
+        isInstalled(packageName) ? ShareDialogs.createAppviewShareWithSpotandShareDialog(activity,
+            title) : ShareDialogs.createAppviewShareDialog(activity, title);
 
-            spotAndShareAnalytics.clickShareApps(
-                SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW);
+    genericAppviewShareDialog.subscribe(eResponse -> {
+      if (ShareDialogs.ShareResponse.SHARE_EXTERNAL == eResponse) {
+        caseDefaultShare(appName, wUrl);
+      } else if (ShareDialogs.ShareResponse.SHARE_TIMELINE == eResponse) {
+        caseAppsTimelineShare(appName, packageName, iconPath);
+      } else if (ShareDialogs.ShareResponse.SHARE_SPOT_AND_SHARE == eResponse) {
+        caseSpotandShareShare(appName, packageName);
+      }
+    }, err -> err.printStackTrace());
+  }
 
-            String filepath = getFilepath(packageName);
-            String appNameToShare = filterAppName(appName);
-            Intent intent = new Intent(activity, HighwayActivity.class);
-            intent.setAction("APPVIEW_SHARE");
-            intent.putExtra("APPVIEW_SHARE_FILEPATH", filepath);
-            intent.putExtra("APPVIEW_SHARE_APPNAME", appNameToShare);
-            activity.startActivity(intent);
+  public void shareApp(String appName, String packageName, String iconPath) {
+    ShareDialogs.createInstalledShareWithSpotandShareDialog(activity,
+        activity.getString(R.string.share))
+        .subscribe(shareResponse -> {
+          if (ShareDialogs.ShareResponse.SHARE_TIMELINE == shareResponse) {
+            caseAppsTimelineShare(appName, packageName, iconPath);
+          } else if (ShareDialogs.ShareResponse.SHARE_SPOT_AND_SHARE == shareResponse) {
+            caseSpotandShareShare(appName, packageName);
           }
         }, err -> err.printStackTrace());
+  }
+
+  @Partners private void caseDefaultShare(String appName, String wUrl) {
+    if (wUrl != null) {
+      Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+      sharingIntent.setType("text/plain");
+      sharingIntent.putExtra(Intent.EXTRA_SUBJECT,
+          activity.getString(R.string.install) + " \"" + appName + "\"");
+      sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
+      activity.startActivity(
+          Intent.createChooser(sharingIntent, activity.getString(R.string.share)));
+    }
+  }
+
+  private void caseAppsTimelineShare(String appName, String packageName, String iconPath) {
+    if (!accountManager.isLoggedIn()) {
+      ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
+          snackView -> accountNavigator.navigateToAccountView(
+              Analytics.Account.AccountOrigins.APP_VIEW_SHARE));
+      return;
+    }
+    if (Application.getConfiguration()
+        .isCreateStoreAndSetUserPrivacyAvailable()) {
+      SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(accountManager, false,
+          SharePreviewDialog.SharePreviewOpenMode.SHARE);
+      AlertDialog.Builder alertDialog =
+          sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(activity, appName,
+              iconPath);
+      SocialRepository socialRepository = RepositoryFactory.getSocialRepository(activity);
+
+      sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", activity,
+          sharePreviewDialog, alertDialog, socialRepository);
+    }
+  }
+
+  private void caseSpotandShareShare(String appName, String packageName) {
+    spotAndShareAnalytics.clickShareApps(
+        SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW);
+
+    String filepath = getFilepath(packageName);
+    String appNameToShare = filterAppName(appName);
+    Intent intent = new Intent(activity, HighwayActivity.class);
+    intent.setAction("APPVIEW_SHARE");
+    intent.putExtra("APPVIEW_SHARE_FILEPATH", filepath);
+    intent.putExtra("APPVIEW_SHARE_APPNAME", appNameToShare);
+    activity.startActivity(intent);
   }
 
   private String getFilepath(String packageName) {
@@ -105,17 +144,5 @@ public class ShareAppHelper {
       appName = appName.replace("_", " ");
     }
     return appName;
-  }
-
-  @Partners protected void shareDefault(String appName, String packageName, String wUrl) {
-    if (wUrl != null) {
-      Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-      sharingIntent.setType("text/plain");
-      sharingIntent.putExtra(Intent.EXTRA_SUBJECT,
-          activity.getString(R.string.install) + " \"" + appName + "\"");
-      sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
-      activity.startActivity(
-          Intent.createChooser(sharingIntent, activity.getString(R.string.share)));
-    }
   }
 }
