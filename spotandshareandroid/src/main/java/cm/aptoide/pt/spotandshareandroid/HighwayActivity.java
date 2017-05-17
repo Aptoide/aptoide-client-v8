@@ -44,7 +44,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   private ProgressBar buttonsProgressBar;//progress bar for when user click the buttons
   private Button shareAptoideApkButton;
 
-
   private HighwayPresenter presenter;
   private SpotAndShareAnalyticsInterface analytics;
   private GroupManager groupManager;
