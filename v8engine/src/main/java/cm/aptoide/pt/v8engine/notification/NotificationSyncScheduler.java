@@ -25,16 +25,24 @@ public class NotificationSyncScheduler {
     this.scheduleList = scheduleList;
   }
 
-  public void schedule() {
+  void schedule() {
 
     for (final Schedule schedule : scheduleList) {
-      Intent intent = new Intent(context, serviceClass);
-      intent.setAction(schedule.getAction());
-      PendingIntent pendingIntent =
-          PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
       alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, schedule.getInterval(),
-          pendingIntent);
+          getPendingIntent(schedule));
     }
+  }
+
+  void stop() {
+    for (final Schedule schedule : scheduleList) {
+      alarmManager.cancel(getPendingIntent(schedule));
+    }
+  }
+
+  private PendingIntent getPendingIntent(Schedule schedule) {
+    Intent intent = new Intent(context, serviceClass);
+    intent.setAction(schedule.getAction());
+    return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
   }
 
   public static class Schedule {
@@ -51,7 +59,7 @@ public class NotificationSyncScheduler {
       return action;
     }
 
-    public long getInterval() {
+    long getInterval() {
       return interval;
     }
   }

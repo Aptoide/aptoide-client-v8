@@ -52,4 +52,8 @@ public class NotificationCenter {
           return Observable.empty();
         });
   }
+
+  public void stop() {
+    notificationSyncScheduler.stop();
+  }
 }
