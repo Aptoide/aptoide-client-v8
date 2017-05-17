@@ -31,7 +31,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.pull.PullingContentService;
+import cm.aptoide.pt.v8engine.notification.PullingContentService;
 import java.util.Locale;
 import java.util.Map;
 
@@ -209,6 +209,12 @@ public class ToolboxContentProvider extends ContentProvider {
                     .equals(ManagedKeys.DEBUG)) {
                   ManagerPreferences.setDebug((Boolean) entry.getValue());
                   Logger.setDBG((Boolean) entry.getValue());
+                  changed++;
+                }
+              } else if (value instanceof Long) {
+                if (entry.getKey()
+                    .equals(ManagedKeys.PUSH_NOTIFICATION_PULL_INTERVAL)) {
+                  ManagerPreferences.setPushNotificationPullingInterval(((Long) value));
                   changed++;
                 }
               }

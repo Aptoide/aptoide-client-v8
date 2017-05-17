@@ -53,6 +53,21 @@ public class ManagerPreferences {
         .apply();
   }
 
+  public static long getPushNotificationPullingInterval() {
+    return Preferences.get()
+        .getLong(ManagedKeys.PUSH_NOTIFICATION_PULL_INTERVAL, -1);
+  }
+
+  /**
+   * @param intervalTime time in ms
+   */
+  public static void setPushNotificationPullingInterval(long intervalTime) {
+    Preferences.get()
+        .edit()
+        .putLong(ManagedKeys.PUSH_NOTIFICATION_PULL_INTERVAL, intervalTime)
+        .apply();
+  }
+
   public static boolean getGeneralDownloadsWifi() {
     return Preferences.get()
         .getBoolean(ManagedKeys.GENERAL_DOWNLOADS_WIFI, true);

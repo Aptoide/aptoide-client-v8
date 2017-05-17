@@ -17,6 +17,8 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
+import cm.aptoide.pt.v8engine.view.navigator.SimpleTabNavigation;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.ArrayList;
@@ -74,7 +76,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
       }, () -> {
       });
 
-      tabNavigator.navigate(TabNavigator.DOWNLOADS);
+      tabNavigator.navigate(new SimpleTabNavigation(TabNavigation.DOWNLOADS));
       Analytics.Updates.updateAll();
     });
   }

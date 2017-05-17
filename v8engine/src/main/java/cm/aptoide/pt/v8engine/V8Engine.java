@@ -6,6 +6,8 @@
 package cm.aptoide.pt.v8engine;
 
 import android.accounts.AccountManager;
+import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,8 +28,10 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -75,6 +79,15 @@ import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.leak.LeakTool;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.UserAgentInterceptor;
+import cm.aptoide.pt.v8engine.notification.AptoideNotification;
+import cm.aptoide.pt.v8engine.notification.NotificationCenter;
+import cm.aptoide.pt.v8engine.notification.NotificationHandler;
+import cm.aptoide.pt.v8engine.notification.NotificationIdsMapper;
+import cm.aptoide.pt.v8engine.notification.NotificationPolicyFactory;
+import cm.aptoide.pt.v8engine.notification.NotificationProvider;
+import cm.aptoide.pt.v8engine.notification.NotificationSyncScheduler;
+import cm.aptoide.pt.v8engine.notification.NotificationSyncService;
+import cm.aptoide.pt.v8engine.notification.SystemNotificationShower;
 import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
@@ -100,6 +113,7 @@ import com.google.android.gms.common.api.Scope;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -120,9 +134,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
  */
 public abstract class V8Engine extends SpotAndShareApplication {
 
+  /**
+   * Time between pull request for campaign notifications: {@link AptoideNotification.NotificationType#CAMPAIGN}
+   */
+  public static final long PUSH_NOTIFICATION_CAMPAIGN_PERIODICITY = AlarmManager.INTERVAL_DAY;
   private static final String CACHE_FILE_NAME = "aptoide.wscache";
   private static final String TAG = V8Engine.class.getName();
-
   @Getter private static QManager qManager;
   @Getter private static EntryPointChooser entryPointChooser;
   @Getter private static FragmentProvider fragmentProvider;
@@ -152,6 +169,12 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private AccountFactory accountFactory;
   private AndroidAccountProvider androidAccountProvider;
   private PaymentAnalytics paymentAnalytics;
+  private NotificationHandler notificationHandler;
+  /**
+   * Time between pull request for social notifications: {@link AptoideNotification.NotificationType#LIKE}{@link
+   * AptoideNotification.NotificationType#COMMENT}{@link AptoideNotification.NotificationType#POPULAR}
+   */
+  private long pushNotificationSocialPeriodicity = AlarmManager.INTERVAL_HOUR;
 
   /**
    * call after this instance onCreate()
@@ -254,6 +277,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
       db.close();
     }
 
+    startNotificationsSync();
+
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
   }
@@ -271,9 +296,46 @@ public abstract class V8Engine extends SpotAndShareApplication {
     };
   }
 
+  private void startNotificationsSync() {
+
+    if (ManagerPreferences.isDebug()
+        && ManagerPreferences.getPushNotificationPullingInterval() > 0) {
+      pushNotificationSocialPeriodicity = ManagerPreferences.getPushNotificationPullingInterval();
+    }
+
+    notificationHandler = new NotificationHandler(getConfiguration().getAppId(), getDefaultClient(),
+        WebService.getDefaultConverter(), idsRepository, getConfiguration().getVersionName());
+
+    SystemNotificationShower systemNotificationShower = new SystemNotificationShower(this,
+        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
+    List<NotificationSyncScheduler.Schedule> scheduleList = new ArrayList<>(2);
+
+    scheduleList.add(new NotificationSyncScheduler.Schedule(
+        NotificationSyncService.PUSH_NOTIFICATIONS_CAMPAIGN_ACTION,
+        PUSH_NOTIFICATION_CAMPAIGN_PERIODICITY));
+    scheduleList.add(new NotificationSyncScheduler.Schedule(
+        NotificationSyncService.PUSH_NOTIFICATIONS_SOCIAL_ACTION,
+        pushNotificationSocialPeriodicity));
+
+    NotificationSyncScheduler notificationSyncScheduler =
+        new NotificationSyncScheduler(this, (AlarmManager) getSystemService(ALARM_SERVICE),
+            NotificationSyncService.class, scheduleList);
+    NotificationAccessor notificationAccessor = AccessorFactory.getAccessorFor(Notification.class);
+    NotificationProvider notificationProvider = new NotificationProvider(notificationAccessor);
+    NotificationCenter notificationCenter =
+        new NotificationCenter(new NotificationIdsMapper(), notificationHandler,
+            notificationSyncScheduler, systemNotificationShower, CrashReport.getInstance(),
+            new NotificationPolicyFactory(notificationProvider));
+    notificationCenter.start();
+  }
+
   public GroupNameProvider getGroupNameProvider() {
     return new AccountGroupNameProvider(getAccountManager(), Build.MANUFACTURER, Build.MODEL,
         Build.ID);
+  }
+
+  public NotificationHandler getNotificationHandler() {
+    return notificationHandler;
   }
 
   public OkHttpClient getLongTimeoutClient() {

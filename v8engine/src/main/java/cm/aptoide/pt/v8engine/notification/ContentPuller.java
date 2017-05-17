@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 18/01/2017.
  */
 
-package cm.aptoide.pt.v8engine.pull;
+package cm.aptoide.pt.v8engine.notification;
 
 import android.content.Context;
 import android.content.Intent;
