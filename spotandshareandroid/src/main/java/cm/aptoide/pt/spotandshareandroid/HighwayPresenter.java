@@ -249,4 +249,8 @@ public class HighwayPresenter implements Presenter {
       clickJoinGroup(group);
     }
   }
+
+  public void clickShareAptoide() {
+    view.openShareAptoide();
+  }
 }

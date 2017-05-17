@@ -26,6 +26,16 @@
       android:weightSum="1"
       >
 
+    <Button
+        android:id="@+id/share_aptoide_apk_button"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_gravity="right"
+        android:layout_marginTop="50dp"
+        >
+
+    </Button>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -47,13 +57,6 @@
           android:layout_height="match_parent"
           android:layout_margin="5dp"
           />
-
-      <!--<cm.aptoide.lite.HighwayRadarLowElement-->
-      <!--android:layout_width="match_parent"-->
-      <!--android:layout_height="match_parent"-->
-      <!--android:layout_margin="5dp"-->
-      <!--android:visibility="gone"-->
-      <!--android:id="@+id/hotspotLowTextView"/>-->
 
       <TextView
           android:id="@+id/searching_groups"

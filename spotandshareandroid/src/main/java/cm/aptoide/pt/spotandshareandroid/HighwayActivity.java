@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -41,6 +42,8 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   private TextView searchGroupsTextview;
   private Toolbar mToolbar;
   private ProgressBar buttonsProgressBar;//progress bar for when user click the buttons
+  private Button shareAptoideApkButton;
+
 
   private HighwayPresenter presenter;
   private SpotAndShareAnalyticsInterface analytics;
@@ -95,6 +98,8 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
     buttonsProgressBar = (ProgressBar) findViewById(R.id.buttonsProgressBar);
     createGroupButton = (LinearLayout) findViewById(R.id.createGroup);
+
+    shareAptoideApkButton = (Button) findViewById(R.id.share_aptoide_apk_button);
   }
 
   private void setUpToolbar() {
@@ -297,6 +302,12 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         }
       }
     });
+
+    shareAptoideApkButton.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        presenter.clickShareAptoide();
+      }
+    });
   }
 
   @Override public void showJoinGroupResult(int result) {
@@ -422,6 +433,12 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   @Override public void deselectHotspot(Group group) {
     radarTextView.deselectHotspot(group);
+  }
+
+  @Override public void openShareAptoide() {
+    Intent intent = new Intent(HighwayActivity.this, ShareAptoideActivity.class);
+    startActivity(intent);
+    //finish();
   }
 
   @Override public boolean checkPermissions() {
