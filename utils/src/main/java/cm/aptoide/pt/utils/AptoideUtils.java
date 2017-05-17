@@ -740,15 +740,11 @@ public class AptoideUtils {
     private static String caculateMd5Sum() {
       try {
         return AptoideUtils.AlgorithmU.computeMd5(
-            context.getPackageManager().getPackageInfo(getAptoidePackage(), 0));
+            context.getPackageManager().getPackageInfo(context.getPackageName(), 0));
       } catch (PackageManager.NameNotFoundException e) {
         e.printStackTrace();
       }
       return null;
-    }
-
-    public static String getAptoidePackage() {
-      return context.getPackageName();
     }
 
     public static String getProduct() {

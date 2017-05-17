@@ -10,6 +10,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.store.GetStore;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -61,12 +62,16 @@ import rx.Observable;
     @Getter @Setter private StoreContext context;
     @Getter @Setter private String aptoideMd5sum;
     @Getter @Setter private String aptoidePackage;
+    @Getter @Setter private String oem_id;
+    @Getter @Setter private String config_type;
 
     public Body(StoreCredentials storeCredentials, WidgetsArgs widgetsArgs) {
       super(storeCredentials);
       this.widgetsArgs = widgetsArgs;
       this.aptoideMd5sum = AptoideUtils.SystemU.getAptoideMd5sum();
-      this.aptoidePackage = AptoideUtils.SystemU.getAptoidePackage();
+      this.aptoidePackage = Application.getConfiguration().getAppId();
+      this.oem_id = Application.getConfiguration().getPartnerId();
+      this.config_type = Application.getConfiguration().getVerticalDimension();
     }
   }
 }
