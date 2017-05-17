@@ -80,7 +80,6 @@ public class Utils {
     long size = 0;
     for (File file : dir.listFiles()) {
       if (file.isFile()) {
-        System.out.println(file.getName() + " " + file.length());
         size += file.length();
       } else {
         size += getFolderSize(file);

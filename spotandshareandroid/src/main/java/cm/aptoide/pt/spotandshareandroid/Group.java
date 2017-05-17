@@ -33,7 +33,7 @@ public class Group {
 
   @Override public boolean equals(Object obj) {
     Group group = (Group) obj;
-    if (ssid.equals(group.getSsid())) {
+    if (group != null && ssid.equals(group.getSsid())) {
       return true;
     }
     return false;

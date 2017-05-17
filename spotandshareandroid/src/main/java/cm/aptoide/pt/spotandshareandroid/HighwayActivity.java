@@ -16,7 +16,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -38,13 +37,11 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   public LinearLayout createGroupButton;
   public HighwayRadarTextView radarTextView;
   public LinearLayout progressBarLayout;
-  public Group chosenHotspot;
   public LinearLayout groupButtonsLayout;
   private TextView searchGroupsTextview;
   private Toolbar mToolbar;
   private ProgressBar buttonsProgressBar;//progress bar for when user click the buttons
 
-  private boolean joinGroupFlag;
   private HighwayPresenter presenter;
   private SpotAndShareAnalyticsInterface analytics;
   private GroupManager groupManager;
@@ -67,6 +64,8 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     setContentView(R.layout.highway_activity);
 
     bindViews();
+    setupViews();
+
     Intent intent = getIntent();
     if (intent.getAction() != null && intent.getAction()
         .equals("APPVIEW_SHARE")) {
@@ -96,7 +95,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
     buttonsProgressBar = (ProgressBar) findViewById(R.id.buttonsProgressBar);
     createGroupButton = (LinearLayout) findViewById(R.id.createGroup);
-    radarTextView.setActivity(this);
   }
 
   private void setUpToolbar() {
@@ -276,14 +274,18 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     if (enable) {
       progressBarLayout.setVisibility(View.GONE);
       groupButtonsLayout.setVisibility(View.VISIBLE);
-      System.out.println("Activating the buttons !");
     } else {//disable
       progressBarLayout.setVisibility(View.VISIBLE);
       groupButtonsLayout.setVisibility(View.GONE);
     }
   }
 
-  @Override public void setUpListeners() {
+  @Override public void setupViews() {
+    radarTextView.setOnHotspotClickListener(new HighwayRadarTextView.HotspotClickListener() {
+      @Override public void onGroupClicked(Group group) {
+        presenter.clickedOnGroup(group);
+      }
+    });
 
     createGroupButton.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
@@ -348,14 +350,10 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   @Override public void openChatClient(String ipAddress, String deviceName,
       ArrayList<String> pathsFromOutsideShare) {
-    System.out.println("Yes, wifi is connected.");
     Intent history =
         new Intent().setClass(HighwayActivity.this, HighwayTransferRecordActivity.class);
-    Log.i("Highway Activity ", "Going to the list of Applications");
     history.putExtra("isAHotspot", false);
     history.putExtra("nickname", deviceName);
-    System.out.println("this is the valor of the IPADDRESS : :::::::::::" + ipAddress);
-    System.out.println("I am going to send this IP Address " + ipAddress);
     history.putExtra("targetIP", ipAddress);
     if (pathsFromOutsideShare != null) {
       Bundle tmp = new Bundle();
@@ -373,7 +371,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   public void openChatHotspot(ArrayList<String> pathsFromOutsideShare, String deviceName) {
     Intent history =
         new Intent().setClass(HighwayActivity.this, HighwayTransferRecordActivity.class);
-    System.out.println("Highway activity : going to start the transferRecordActivity !!!!");
     history.putExtra("isAHotspot", true);
     history.putExtra("nickname", deviceName);
     if (pathsFromOutsideShare != null) {
@@ -388,10 +385,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   @Override public void refreshRadar(ArrayList<Group> clients) {
     radarTextView.show(clients);
-  }
-
-  @Override public void refreshRadarLowerVersions(ArrayList<Group> clients) {
-    radarTextView.showForLowerVersions(clients);
   }
 
   @Override public void showRecoveringWifiStateToast() {
@@ -421,6 +414,14 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     intent.setAction("APPVIEW_SHARE");
     startActivity(intent);
     finish();
+  }
+
+  @Override public void paintSelectedGroup(Group group) {
+    radarTextView.selectGroup(group);
+  }
+
+  @Override public void deselectHotspot(Group group) {
+    radarTextView.deselectHotspot(group);
   }
 
   @Override public boolean checkPermissions() {
@@ -496,24 +497,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         .show();
   }
 
-  public void joinSingleHotspot() {
-    hideSearchGroupsTextview(true);
-    //Group g = new Group(chosenHotspot);
-    presenter.clickJoinGroup(chosenHotspot);
-  }
-
-  public Group getChosenHotspot() {
-    return chosenHotspot;
-  }
-
-  public void setChosenHotspot(Group chosenHotspot) {
-    this.chosenHotspot = chosenHotspot;
-  }
-
-  public void deselectHotspot() {
-    this.chosenHotspot = null;
-  }
-
   @Override protected void onResume() {
     presenter.onResume();
     super.onResume();
@@ -522,13 +505,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   @Override protected void onDestroy() {
     presenter.onDestroy();
     super.onDestroy();
-  }
-
-  public boolean isJoinGroupFlag() {
-    return joinGroupFlag;
-  }
-
-  public void setJoinGroupFlag(boolean joinGroupFlag) {
-    this.joinGroupFlag = joinGroupFlag;
+    radarTextView.stop();
+    radarTextView = null;
   }
 }

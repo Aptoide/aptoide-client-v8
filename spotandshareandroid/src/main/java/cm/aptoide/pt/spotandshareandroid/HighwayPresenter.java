@@ -4,7 +4,6 @@ package cm.aptoide.pt.spotandshareandroid;
  * Created by filipegoncalves on 31-01-2017.
  */
 
-import android.os.Build;
 import cm.aptoide.pt.spotandshareandroid.analytics.SpotAndShareAnalyticsInterface;
 import java.util.ArrayList;
 import rx.Subscription;
@@ -25,6 +24,7 @@ public class HighwayPresenter implements Presenter {
   private Subscription subscription;
   private String autoShareAppName;
   private String autoShareFilepath;
+  private Group chosenHotspot;
 
   public HighwayPresenter(HighwayView view, GroupNameProvider groupNameProvider,
       DeactivateHotspotTask deactivateHotspotTask, ConnectionManager connectionManager,
@@ -113,7 +113,7 @@ public class HighwayPresenter implements Presenter {
               } else {
                 connectionManager.cleanNetworks();
                 view.showConnections();
-                view.setUpListeners();
+                view.setupViews();
                 view.enableButtons(true);
               }
             }
@@ -138,7 +138,6 @@ public class HighwayPresenter implements Presenter {
           @Override public void onStateChanged(boolean enabled) {
             if (enabled) {
               view.hideButtonsProgressBar();
-              System.out.println("Inside presenter on Success for join group");
               analytics.joinGroupSuccess();
               view.enableButtons(true);
               String ipAddress = connectionManager.getIPAddress();
@@ -148,6 +147,9 @@ public class HighwayPresenter implements Presenter {
               view.enableButtons(true);
               view.hideSearchGroupsTextview(false);
               view.showJoinGroupResult(ConnectionManager.ERROR_UNKNOWN);
+              if (chosenHotspot != null) {
+                view.deselectHotspot(chosenHotspot);
+              }
             }
           }
         });
@@ -191,11 +193,7 @@ public class HighwayPresenter implements Presenter {
       }
     }, new ConnectionManager.ClientsConnectedListener() {
       @Override public void onNewClientsConnected(ArrayList<Group> clients) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-          view.refreshRadarLowerVersions(clients);
-        } else {
-          view.refreshRadar(clients);
-        }
+        view.refreshRadar(clients);
       }
     });
   }
@@ -233,5 +231,22 @@ public class HighwayPresenter implements Presenter {
       }
     });
     //});
+  }
+
+  public void clickedOnGroup(Group group) {
+
+    if (group != null && group.equals(this.chosenHotspot)) {
+      view.deselectHotspot(group);
+      this.chosenHotspot = null;
+    } else {
+      if (chosenHotspot != null) {
+        view.deselectHotspot(this.chosenHotspot);
+        this.chosenHotspot = null;
+      }
+      this.chosenHotspot = group;
+      view.paintSelectedGroup(group);
+      view.hideSearchGroupsTextview(true);
+      clickJoinGroup(group);
+    }
   }
 }

@@ -39,7 +39,6 @@ public class TransferRecordManager {
             .isReceived()) {
           String tmpFilePath = listOfApps.get(i)
               .getFilePath();
-          System.out.println("GOing to delete this filepath : " + tmpFilePath);
           applicationsManager.deleteAppFile(tmpFilePath);
         }
       }
