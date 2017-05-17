@@ -685,15 +685,14 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
     }
 
     public static Theme getThemeFromName(String themeName) {
-      if (TextUtils.isEmpty(themeName)) return null;
-
-      for (final Theme t : Theme.values()) {
-        if (themeName.equalsIgnoreCase(t.getThemeName())) {
-          return t;
+      if (!TextUtils.isEmpty(themeName)) {
+        for (final Theme t : Theme.values()) {
+          if (themeName.equalsIgnoreCase(t.getThemeName())) {
+            return t;
+          }
         }
       }
-
-      return null;
+      return Theme.Default;
     }
 
     private void bindThemeListeners(final View rootView) {
