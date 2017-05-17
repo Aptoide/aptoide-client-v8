@@ -12,8 +12,8 @@ import rx.Single;
 
 public class SocialPolicy implements Policy {
 
-  private final static long police1timeFrame = TimeUnit.MINUTES.toMillis(2);
-  private final static long police2timeFrame = TimeUnit.MINUTES.toMillis(10);
+  private final static long police1timeFrame = TimeUnit.HOURS.toMillis(1);
+  private final static long police2timeFrame = TimeUnit.DAYS.toMillis(1);
   private final static int police1Occurrences = 1;
   private final static int police2Occurrences = 3;
 

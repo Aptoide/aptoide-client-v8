@@ -7,11 +7,11 @@ package cm.aptoide.pt.dataprovider.ws.notifications;
 
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -37,17 +37,7 @@ public class PullSocialNotificationRequest
   public static PullSocialNotificationRequest of(String uniqueIdentifier, String versionName,
       String appId, OkHttpClient httpClient, Converter.Factory converterFactory) {
 
-    Random r = new Random();
-    int i1 = r.nextInt(100);
-
-    //uniqueIdentifier = uniqueIdentifier + "_" + i1;
-
-    Map<String, String> options = new HashMap<String, String>();
-
-    // language (default = ‘en’)
-    // aptoide_version, e.g. 8.1.2.0
-    // oem_id
-    // aptoide_package, e.g. cm.aptoide.pt
+    Map<String, String> options = new HashMap<>();
 
     options.put("language", AptoideUtils.SystemU.getCountryCode());
     options.put("aptoide_version", versionName);
@@ -57,8 +47,9 @@ public class PullSocialNotificationRequest
       options.put("oem_id", oemid);
     }
     options.put("aptoide_package", appId);
-    //TODO should depend of build variant
-    options.put("debug", "true");
+    if (ManagerPreferences.isDebug()) {
+      options.put("debug", "true");
+    }
 
     return new PullSocialNotificationRequest(uniqueIdentifier, options, httpClient,
         converterFactory);
@@ -66,8 +57,6 @@ public class PullSocialNotificationRequest
 
   @Override protected Observable<List<GetPullNotificationsResponse>> loadDataFromNetwork(
       Interfaces interfaces, boolean bypassCache) {
-    Observable<List<GetPullNotificationsResponse>> pushNotificationsAmazon =
-        interfaces.getPullSocialNotifications(id, options, true);
-    return pushNotificationsAmazon;
+    return interfaces.getPullSocialNotifications(id, options, true);
   }
 }
