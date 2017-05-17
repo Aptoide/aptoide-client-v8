@@ -14,21 +14,7 @@
   <color name="aptoide_tv">#00cc33</color>
 
   <!-- Transparent -->
-  <color name="transparent_green">#992E8B57</color>
-  <color name="transparent_teal">#99009688</color>
-  <color name="transparent_red">#99ED1C24</color>
-  <color name="transparent_indigo">#993F51B5</color>
-  <color name="transparent_pink">#99E91E63</color>
-  <color name="transparent_orange">#99FF9800</color>
-  <color name="transparent_brown">#99795548</color>
-  <color name="transparent_bluegrey">#99607D8B</color>
-  <color name="transparent_grey">#999E9E9E</color>
   <color name="transparent_black">#99000000</color>
-  <color name="transparent_deeppurple">#99673AB7</color>
-  <color name="transparent_amber">#99FFC107</color>
-  <color name="transparent_lightgreen">#994CAF50</color>
-  <color name="transparent_lime">#99CDDC39</color>
-  <color name="transparent_lightblue">#9903A9F4</color>
   <color name="transparent_white">#CCFFFFFF</color>
   <color name="semi_transparent_black">#55000000</color>
   <color name="light_custom_gray">#ececec</color>

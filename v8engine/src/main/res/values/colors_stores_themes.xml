@@ -2,7 +2,8 @@
 <resources>
 
   <!-- Stores themes -->
-  <color name="default_colour">#e17117</color>
+  <color name="default_color">#e17117</color>
+
   <color name="amber">#ffc107</color>
   <color name="black">#000000</color>
   <color name="blue_grey">#697c89</color>
