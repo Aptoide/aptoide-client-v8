@@ -534,7 +534,7 @@ import rx.android.schedulers.AndroidSchedulers;
     downloadProgressLayout.setVisibility(View.GONE);
   }
 
-  private void setDownloadBarVisible() {
+  protected void setDownloadBarVisible() {
     installAndLatestVersionLayout.setVisibility(View.GONE);
     downloadProgressLayout.setVisibility(View.VISIBLE);
   }
