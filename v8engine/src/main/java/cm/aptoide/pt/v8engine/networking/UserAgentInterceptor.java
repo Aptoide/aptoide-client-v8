@@ -20,8 +20,8 @@ public class UserAgentInterceptor implements Interceptor {
   private final String versionName;
 
   public UserAgentInterceptor(AndroidAccountProvider androidAccountProvider,
-      IdsRepository idsRepository, String oemid, DisplayMetrics displayMetrics,
-      String terminalInfo, String versionName) {
+      IdsRepository idsRepository, String oemid, DisplayMetrics displayMetrics, String terminalInfo,
+      String versionName) {
     this.androidAccountProvider = androidAccountProvider;
     this.idsRepository = idsRepository;
     this.oemid = oemid;
@@ -37,14 +37,16 @@ public class UserAgentInterceptor implements Interceptor {
     try {
       userAgent = getDefaultUserAgent();
     } catch (Exception e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     }
 
     Response response;
     try {
       if (!TextUtils.isEmpty(userAgent)) {
-        Request requestWithUserAgent =
-            originalRequest.newBuilder().header("User-Agent", userAgent).build();
+        Request requestWithUserAgent = originalRequest.newBuilder()
+            .header("User-Agent", userAgent)
+            .build();
         response = chain.proceed(requestWithUserAgent);
       } else {
         response = chain.proceed(originalRequest);
@@ -52,7 +54,8 @@ public class UserAgentInterceptor implements Interceptor {
       return response;
     } catch (IOException e) {
       // something bad happened if we reached here.
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
       throw e;
     }
   }

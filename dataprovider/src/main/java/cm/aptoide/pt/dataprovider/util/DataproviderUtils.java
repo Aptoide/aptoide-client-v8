@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.dataprovider.util;
@@ -38,17 +38,20 @@ public class DataproviderUtils {
 
     OkHttpClient client = new OkHttpClient();
 
-    Request click = new Request.Builder().url(url).build();
+    Request click = new Request.Builder().url(url)
+        .build();
 
-    client.newCall(click).enqueue(new Callback() {
-      @Override public void onFailure(Call call, IOException e) {
+    client.newCall(click)
+        .enqueue(new Callback() {
+          @Override public void onFailure(Call call, IOException e) {
 
-      }
+          }
 
-      @Override public void onResponse(Call call, Response response) throws IOException {
-        response.body().close();
-      }
-    });
+          @Override public void onResponse(Call call, Response response) throws IOException {
+            response.body()
+                .close();
+          }
+        });
   }
 
   public static class AdNetworksUtils {
@@ -67,8 +70,8 @@ public class DataproviderUtils {
     }
 
     @Partners public static boolean isGooglePlayServicesAvailable(Context context) {
-      return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context)
-          == ConnectionResult.SUCCESS;
+      return GoogleApiAvailability.getInstance()
+          .isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS;
     }
 
     public static void knockCpc(MinimalAdInterface minimalAd) {
@@ -89,15 +92,20 @@ public class DataproviderUtils {
     // FIXME: 29-07-2016 neuro so wrong...
     public static void knockImpression(GetAdsResponse.Ad ad) {
       if (isImpressionUrlPresent(ad)) {
-        knock(ad.getPartner().getData().getImpressionUrl());
+        knock(ad.getPartner()
+            .getData()
+            .getImpressionUrl());
       }
     }
 
     private static boolean isImpressionUrlPresent(GetAdsResponse.Ad ad) {
       return ad != null
           && ad.getPartner() != null
-          && ad.getPartner().getData() != null
-          && ad.getPartner().getData().getImpressionUrl() != null;
+          && ad.getPartner()
+          .getData() != null
+          && ad.getPartner()
+          .getData()
+          .getImpressionUrl() != null;
     }
   }
 }

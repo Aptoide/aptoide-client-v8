@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 01/08/2016.
+ * Modified on 01/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.timeline.widget;
@@ -68,12 +68,15 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
     articleTitle.setTypeface(typeFace);
     articleTitle.setText(displayable.getArticleTitle());
     setCardViewMargin(displayable, cardView);
-    ImageLoader.with(context).loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
-    ImageLoader.with(context).load(displayable.getThumbnailUrl(), thumbnail);
+    ImageLoader.with(context)
+        .loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
+    ImageLoader.with(context)
+        .load(displayable.getThumbnailUrl(), thumbnail);
 
     url.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
-      displayable.getLink().launch(context);
+      displayable.getLink()
+          .launch(context);
       Analytics.AppsTimeline.clickOnCard(ArticleDisplayable.CARD_TYPE_NAME,
           Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE);
@@ -84,8 +87,10 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(installedList -> {
           if (installedList != null && !installedList.isEmpty()) {
-            appName = installedList.get(0).getName();
-            packageName = installedList.get(0).getPackageName();
+            appName = installedList.get(0)
+                .getName();
+            packageName = installedList.get(0)
+                .getPackageName();
           } else {
             setAppNameToFirstLinkedApp(displayable);
           }
@@ -100,14 +105,16 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
           throwable.printStackTrace();
         }));
 
-    compositeSubscription.add(RxView.clicks(articleHeader).subscribe(click -> {
-      knockWithSixpackCredentials(displayable.getAbUrl());
-      displayable.getDeveloperLink().launch(context);
-      Analytics.AppsTimeline.clickOnCard(ArticleDisplayable.CARD_TYPE_NAME,
-          Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(),
-          Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
-      displayable.sendOpenArticleEvent(packageName);
-    }));
+    compositeSubscription.add(RxView.clicks(articleHeader)
+        .subscribe(click -> {
+          knockWithSixpackCredentials(displayable.getAbUrl());
+          displayable.getDeveloperLink()
+              .launch(context);
+          Analytics.AppsTimeline.clickOnCard(ArticleDisplayable.CARD_TYPE_NAME,
+              Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(),
+              Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
+          displayable.sendOpenArticleEvent(packageName);
+        }));
   }
 
   @Override String getCardTypeName() {
@@ -115,8 +122,11 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
   }
 
   private void setAppNameToFirstLinkedApp(ArticleDisplayable displayable) {
-    if (!displayable.getRelatedToAppsList().isEmpty()) {
-      appName = displayable.getRelatedToAppsList().get(0).getName();
+    if (!displayable.getRelatedToAppsList()
+        .isEmpty()) {
+      appName = displayable.getRelatedToAppsList()
+          .get(0)
+          .getName();
     }
   }
 }

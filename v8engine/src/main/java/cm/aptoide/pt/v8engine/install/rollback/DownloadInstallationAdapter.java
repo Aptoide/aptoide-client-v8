@@ -30,11 +30,15 @@ public class DownloadInstallationAdapter implements RollbackInstallation {
   }
 
   @Override public String getPackageName() {
-    return download.getFilesToDownload().get(0).getPackageName();
+    return download.getFilesToDownload()
+        .get(0)
+        .getPackageName();
   }
 
   @Override public int getVersionCode() {
-    return download.getFilesToDownload().get(0).getVersionCode();
+    return download.getFilesToDownload()
+        .get(0)
+        .getVersionCode();
   }
 
   @Override public String getVersionName() {
@@ -42,7 +46,9 @@ public class DownloadInstallationAdapter implements RollbackInstallation {
   }
 
   @Override public File getFile() {
-    return new File(download.getFilesToDownload().get(0).getFilePath());
+    return new File(download.getFilesToDownload()
+        .get(0)
+        .getFilePath());
   }
 
   @Override public String getAppName() {
@@ -54,44 +60,68 @@ public class DownloadInstallationAdapter implements RollbackInstallation {
   }
 
   @Override public String downloadLink() {
-    return download.getFilesToDownload().get(0).getLink();
+    return download.getFilesToDownload()
+        .get(0)
+        .getLink();
   }
 
   @Override public String getAltDownloadLink() {
-    return download.getFilesToDownload().get(0).getAltLink();
+    return download.getFilesToDownload()
+        .get(0)
+        .getAltLink();
   }
 
   @Override public String getMainObbName() {
-    if (download.getFilesToDownload().size() > 1
-        && download.getFilesToDownload().get(1).getFileType() == FileToDownload.OBB) {
-      return download.getFilesToDownload().get(1).getFileName();
+    if (download.getFilesToDownload()
+        .size() > 1
+        && download.getFilesToDownload()
+        .get(1)
+        .getFileType() == FileToDownload.OBB) {
+      return download.getFilesToDownload()
+          .get(1)
+          .getFileName();
     } else {
       return null;
     }
   }
 
   @Override public String getPatchObbPath() {
-    if (download.getFilesToDownload().size() > 2
-        && download.getFilesToDownload().get(2).getFileType() == FileToDownload.OBB) {
-      return download.getFilesToDownload().get(2).getLink();
+    if (download.getFilesToDownload()
+        .size() > 2
+        && download.getFilesToDownload()
+        .get(2)
+        .getFileType() == FileToDownload.OBB) {
+      return download.getFilesToDownload()
+          .get(2)
+          .getLink();
     } else {
       return null;
     }
   }
 
   @Override public String getPatchObbName() {
-    if (download.getFilesToDownload().size() > 2
-        && download.getFilesToDownload().get(2).getFileType() == FileToDownload.OBB) {
-      return download.getFilesToDownload().get(2).getFileName();
+    if (download.getFilesToDownload()
+        .size() > 2
+        && download.getFilesToDownload()
+        .get(2)
+        .getFileType() == FileToDownload.OBB) {
+      return download.getFilesToDownload()
+          .get(2)
+          .getFileName();
     } else {
       return null;
     }
   }
 
   @Override public String getMainObbPath() {
-    if (download.getFilesToDownload().size() > 1
-        && download.getFilesToDownload().get(1).getFileType() == FileToDownload.OBB) {
-      return download.getFilesToDownload().get(1).getPath();
+    if (download.getFilesToDownload()
+        .size() > 1
+        && download.getFilesToDownload()
+        .get(1)
+        .getFileType() == FileToDownload.OBB) {
+      return download.getFilesToDownload()
+          .get(1)
+          .getPath();
     } else {
       return null;
     }

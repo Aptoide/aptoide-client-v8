@@ -1,13 +1,14 @@
 package cm.aptoide.pt.database.realm;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by trinkes on 10/05/2017.
  */
 
 public class Notification extends RealmObject {
-
+  @PrimaryKey private String key;
   private String abTestingGroup;
   private String body;
   private int campaignId;
@@ -18,10 +19,13 @@ public class Notification extends RealmObject {
   private String urlTrack;
   private int type;
   private long timeStamp;
-  private boolean showed;
+  private long dismissed;
+  private String appName;
+  private String graphic;
 
   public Notification(String abTestingGroup, String body, int campaignId, String img, String lang,
-      String title, String url, String urlTrack, long timeStamp, int type) {
+      String title, String url, String urlTrack, long timeStamp, int type, long dismissed,
+      String appName, String graphic) {
     this.body = body;
     this.img = img;
     this.title = title;
@@ -32,17 +36,25 @@ public class Notification extends RealmObject {
     this.lang = lang;
     this.urlTrack = urlTrack;
     this.timeStamp = timeStamp;
+    this.dismissed = dismissed;
+    this.appName = appName;
+    this.graphic = graphic;
+    key = String.valueOf(timeStamp + type);
   }
 
   public Notification() {
   }
 
-  public boolean isShowed() {
-    return showed;
+  public String getAppName() {
+    return appName;
   }
 
-  public void setShowed(boolean showed) {
-    this.showed = showed;
+  public String getGraphic() {
+    return graphic;
+  }
+
+  public long getDismissed() {
+    return dismissed;
   }
 
   public int getType() {
@@ -83,5 +95,9 @@ public class Notification extends RealmObject {
 
   public long getTimeStamp() {
     return timeStamp;
+  }
+
+  public void setDismissed(long dismissed) {
+    this.dismissed = dismissed;
   }
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import rx.Observable;
 
 /**
- * Created by sithengineer on 07/10/16.
+ * Created on 07/10/16.
  */
 
 public abstract class SimpleAccessor<T extends RealmObject> implements Accessor<T> {
@@ -17,7 +17,8 @@ public abstract class SimpleAccessor<T extends RealmObject> implements Accessor<
   SimpleAccessor(Database db) {
     this.database = db;
 
-    Type[] types = this.getClass().getGenericInterfaces();
+    Type[] types = this.getClass()
+        .getGenericInterfaces();
     if (types != null && types.length > 0) {
       clazz = types[0].getClass();
     } else {

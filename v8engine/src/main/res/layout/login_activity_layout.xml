@@ -82,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/register"
-            style="?attr/customButtonWhite"
+            style="@style/Aptoide.Button.Ghost"
             />
 
         <Button
@@ -91,7 +91,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/login"
-            style="?attr/customButton"
+            style="@style/Aptoide.Button.Ghost"
             />
 
       </LinearLayout>

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/08/2016.
+ * Modified on 29/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.app.widget;
@@ -55,7 +55,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
 /**
- * Created by sithengineer on 30/06/16.
+ * Created on 30/06/16.
  */
 @Displayables({ AppViewRateAndCommentsDisplayable.class }) public class AppViewRateAndReviewsWidget
     extends Widget<AppViewRateAndCommentsDisplayable> {
@@ -113,7 +113,9 @@ import rx.functions.Action1;
 
   @Override public void bindView(AppViewRateAndCommentsDisplayable displayable) {
     GetApp pojo = displayable.getPojo();
-    GetAppMeta.App app = pojo.getNodes().getMeta().getData();
+    GetAppMeta.App app = pojo.getNodes()
+        .getMeta()
+        .getData();
     GetAppMeta.Stats stats = app.getStats();
 
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
@@ -125,41 +127,50 @@ import rx.functions.Action1;
         bodyInterceptor, httpClient, converterFactory);
     appName = app.getName();
     packageName = app.getPackageName();
-    storeName = app.getStore().getName();
+    storeName = app.getStore()
+        .getName();
 
-    usersToVote = stats.getRating().getTotal();
+    usersToVote = stats.getRating()
+        .getTotal();
     usersVotedTextView.setText(AptoideUtils.StringU.withSuffix(usersToVote));
 
-    float ratingAvg = stats.getRating().getAvg();
+    float ratingAvg = stats.getRating()
+        .getAvg();
     ratingValue.setText(String.format(AptoideUtils.LocaleU.DEFAULT, "%.1f", ratingAvg));
     ratingBar.setRating(ratingAvg);
 
-    Action1<Throwable> handleError = throwable -> CrashReport.getInstance().log(throwable);
+    Action1<Throwable> handleError = throwable -> CrashReport.getInstance()
+        .log(throwable);
 
     final FragmentActivity context = getContext();
     Observable<GenericDialogs.EResponse> showRateDialog =
         dialogUtils.showRateDialog(context, appName, packageName, storeName);
 
-    compositeSubscription.add(
-        RxView.clicks(rateThisButton).flatMap(__ -> showRateDialog).subscribe(__ -> {
+    compositeSubscription.add(RxView.clicks(rateThisButton)
+        .flatMap(__ -> showRateDialog)
+        .subscribe(__ -> {
         }, handleError));
-    compositeSubscription.add(
-        RxView.clicks(rateThisButtonLarge).flatMap(__ -> showRateDialog).subscribe(__ -> {
+    compositeSubscription.add(RxView.clicks(rateThisButtonLarge)
+        .flatMap(__ -> showRateDialog)
+        .subscribe(__ -> {
         }, handleError));
-    compositeSubscription.add(
-        RxView.clicks(ratingLayout).flatMap(__ -> showRateDialog).subscribe(__ -> {
+    compositeSubscription.add(RxView.clicks(ratingLayout)
+        .flatMap(__ -> showRateDialog)
+        .subscribe(__ -> {
         }, handleError));
 
     Action1<Void> commentsOnClickListener = __ -> {
       Fragment fragment = V8Engine.getFragmentProvider()
-          .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
-              app.getPackageName(), app.getStore().getAppearance().getTheme());
+          .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore()
+              .getName(), app.getPackageName(), app.getStore()
+              .getAppearance()
+              .getTheme());
       getFragmentNavigator().navigateTo(fragment);
     };
-    compositeSubscription.add(
-        RxView.clicks(readAllButton).subscribe(commentsOnClickListener, handleError));
-    compositeSubscription.add(
-        RxView.clicks(commentsLayout).subscribe(commentsOnClickListener, handleError));
+    compositeSubscription.add(RxView.clicks(readAllButton)
+        .subscribe(commentsOnClickListener, handleError));
+    compositeSubscription.add(RxView.clicks(commentsLayout)
+        .subscribe(commentsOnClickListener, handleError));
 
     LinearLayoutManagerWithSmoothScroller layoutManager =
         new LinearLayoutManagerWithSmoothScroller(context, LinearLayoutManager.HORIZONTAL, false);
@@ -182,14 +193,16 @@ import rx.functions.Action1;
             .observe(true)
             .observeOn(AndroidSchedulers.mainThread())
             .map(listReviews -> {
-              List<Review> reviews = listReviews.getDatalist().getList();
+              List<Review> reviews = listReviews.getDatalist()
+                  .getList();
               if (reviews == null || reviews.isEmpty()) {
                 loadedData(false);
                 return new TopReviewsAdapter();
               }
 
               loadedData(true);
-              final List<Review> list = listReviews.getDatalist().getList();
+              final List<Review> list = listReviews.getDatalist()
+                  .getList();
               return new TopReviewsAdapter(list.toArray(new Review[list.size()]));
             })
             .doOnNext(topReviewsAdapter -> topReviewsList.setAdapter(topReviewsAdapter))
@@ -199,7 +212,8 @@ import rx.functions.Action1;
             }, err -> {
               loadedData(false);
               topReviewsList.setAdapter(new TopReviewsAdapter());
-              CrashReport.getInstance().log(err);
+              CrashReport.getInstance()
+                  .log(err);
             });
     compositeSubscription.add(subscription);
   }
@@ -303,17 +317,21 @@ import rx.functions.Action1;
     }
 
     public void setup(Review review) {
-      String imageUrl = review.getUser().getAvatar();
+      String imageUrl = review.getUser()
+          .getAvatar();
       Context context = itemView.getContext();
       //Context context = itemView.getContext().getApplicationContext();
       imageLoadingTarget = ImageLoader.with(context)
           .loadWithCircleTransformAndPlaceHolderAvatarSize(imageUrl, userIconImageView,
               R.drawable.layer_1);
-      userName.setText(review.getUser().getName());
-      ratingBar.setRating(review.getStats().getRating());
+      userName.setText(review.getUser()
+          .getName());
+      ratingBar.setRating(review.getStats()
+          .getRating());
       commentTitle.setText(review.getTitle());
       commentText.setText(review.getBody());
-      addedDate.setText(DATE_TIME_U.getTimeDiffString(review.getAdded().getTime()));
+      addedDate.setText(DATE_TIME_U.getTimeDiffString(review.getAdded()
+          .getTime()));
     }
 
     public void cancelImageLoad() {

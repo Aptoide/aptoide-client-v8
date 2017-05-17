@@ -68,14 +68,8 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
       serverSocketTimeoutManager = new ServerSocketTimeoutManager(ss, serverSocketTimeout);
       serverSocketTimeoutManager.reserTimeout();
       host = new Host("192.168.43.1", ss.getLocalPort());
-      Print.d(TAG, "start: "
-          + Thread.currentThread().getId()
-          + ": Starting server in port "
-          + port
-          + " and ip "
-          + host.getIp()
-          + ": "
-          + this);
+      Print.d(TAG, "start: " + Thread.currentThread()
+          .getId() + ": Starting server in port " + port + " and ip " + host.getIp() + ": " + this);
       while (true) {
         Socket socket = ss.accept();
         socket.setSoTimeout(timeout);
@@ -86,14 +80,10 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
 
         executorService.execute(() -> {
           try {
-            Print.d(TAG, "start: "
-                + Thread.currentThread().getId()
-                + ": "
-                + this.getClass().getSimpleName()
-                + ": Adding new client "
-                + socket.getInetAddress().getHostAddress()
-                + ":"
-                + socket.getPort());
+            Print.d(TAG, "start: " + Thread.currentThread()
+                .getId() + ": " + this.getClass()
+                .getSimpleName() + ": Adding new client " + socket.getInetAddress()
+                .getHostAddress() + ":" + socket.getPort());
             onNewClient(socket);
             //serverSocketTimeoutManager.reserTimeout();
           } catch (IOException e) {
@@ -117,7 +107,8 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
       if (e instanceof SocketTimeoutException) {
         e.printStackTrace();
       }
-      Print.d(TAG, "start: ShareApps: Server explicitly closed " + this.getClass().getSimpleName());
+      Print.d(TAG, "start: ShareApps: Server explicitly closed " + this.getClass()
+          .getSimpleName());
       dispatcherLooper.stop();
       try {
         // Hammered. To unlock queuedServerActions.
@@ -148,7 +139,8 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
 
     if (ss != null && !ss.isClosed()) {//todo need to solve in the future this nullpointerexception
       try {
-        Print.d(TAG, "Closing socket " + ss.getClass().getSimpleName());
+        Print.d(TAG, "Closing socket " + ss.getClass()
+            .getSimpleName());
         ss.close();
       } catch (IOException e) {
         e.printStackTrace();
@@ -204,8 +196,8 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
     List<Host> hosts = new LinkedList<>();
 
     for (Socket connectedSocket : connectedSockets) {
-      hosts.add(
-          new Host(connectedSocket.getInetAddress().getHostAddress(), connectedSocket.getPort()));
+      hosts.add(new Host(connectedSocket.getInetAddress()
+          .getHostAddress(), connectedSocket.getPort()));
     }
 
     return hosts;
@@ -226,7 +218,9 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
     Iterator<Socket> iterator = connectedSockets.iterator();
     while (iterator.hasNext()) {
       Socket socket = iterator.next();
-      if (socket.getInetAddress().getHostAddress().equals(host.getIp())) {
+      if (socket.getInetAddress()
+          .getHostAddress()
+          .equals(host.getIp())) {
         connectedSockets.remove(socket);
         hostsChangedCallbackCallback.hostsChanged(getConnectedHosts());
         Print.d(TAG, "removeHost: AptoideServerSocket: Host " + host + " removed from the server.");

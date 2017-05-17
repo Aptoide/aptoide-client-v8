@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -44,14 +45,19 @@ public class ApplicationProvider {
         String obbsfilepath = checkIfHasObb(applicationInfo.packageName);
         System.out.println("obbs is : " + obbsfilepath);
         App aux = new App(applicationInfo.loadIcon(packageManager),
-            applicationInfo.loadLabel(packageManager).toString(), applicationInfo.packageName,
-            applicationInfo.sourceDir, "inside");
+            applicationInfo.loadLabel(packageManager)
+                .toString(), applicationInfo.packageName, applicationInfo.sourceDir, "inside");
         aux.setObbsFilePath(obbsfilepath);
         if (!providedAppsList.contains(aux)) {
           providedAppsList.add(aux);
         }
       }
     }
+
+    Collections.sort(providedAppsList, (o1, o2) -> o1.getAppName()
+        .toLowerCase()
+        .compareTo(o2.getAppName()
+            .toLowerCase()));
   }
 
   public String checkIfHasObb(String packageName) {
@@ -66,7 +72,8 @@ public class ApplicationProvider {
         System.out.println("appName is : " + packageName);
         for (int i = 0; i < list.length; i++) {
           System.out.println("List get name is : " + list[i].getName());
-          if (list[i].getName().equals(packageName)) {
+          if (list[i].getName()
+              .equals(packageName)) {
             hasObb = true;
             obbsFilePath = list[i].getAbsolutePath();
           }
@@ -90,7 +97,9 @@ public class ApplicationProvider {
 
   public App getApp(String packageName) {
     for (int i = 0; i < providedAppsList.size(); i++) {
-      if (providedAppsList.get(i).getPackageName().equals(packageName)) {
+      if (providedAppsList.get(i)
+          .getPackageName()
+          .equals(packageName)) {
         return providedAppsList.get(i);
       }
     }

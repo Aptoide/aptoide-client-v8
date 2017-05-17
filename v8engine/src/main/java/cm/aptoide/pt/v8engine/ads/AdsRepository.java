@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified on 04/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.ads;
@@ -11,6 +11,8 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import java.util.LinkedList;
@@ -30,24 +32,30 @@ public class AdsRepository {
   private final PartnerIdProvider partnerIdProvider;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
+  private final QManager qManager;
 
   public AdsRepository(IdsRepository idsRepository, AptoideAccountManager accountManager,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
+      OkHttpClient httpClient, Converter.Factory converterFactory, QManager qManager) {
     this.idsRepository = idsRepository;
     this.accountManager = accountManager;
     this.googlePlayServicesAvailabilityChecker =
         (context) -> DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context);
-    this.partnerIdProvider = () -> DataProvider.getConfiguration().getPartnerId();
+    this.partnerIdProvider = () -> DataProvider.getConfiguration()
+        .getPartnerId();
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
+    this.qManager = qManager;
   }
 
   public static boolean validAds(List<GetAdsResponse.Ad> ads) {
     return ads != null
         && !ads.isEmpty()
         && ads.get(0) != null
-        && ads.get(0).getPartner() != null
-        && ads.get(0).getPartner().getData() != null;
+        && ads.get(0)
+        .getPartner() != null
+        && ads.get(0)
+        .getPartner()
+        .getData() != null;
   }
 
   public static boolean validAds(GetAdsResponse getAdsResponse) {
@@ -55,11 +63,12 @@ public class AdsRepository {
   }
 
   public Observable<MinimalAd> getAdsFromAppView(String packageName, String storeName) {
-    return mapToMinimalAd(GetAdsRequest.ofAppviewOrganic(packageName, storeName,
-        idsRepository.getUniqueIdentifier(),
-        googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
-        partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
-        converterFactory).observe());
+    return mapToMinimalAd(
+        GetAdsRequest.ofAppviewOrganic(packageName, storeName, idsRepository.getUniqueIdentifier(),
+            googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
+            partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
+            converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()))
+            .observe());
   }
 
   private Observable<MinimalAd> mapToMinimalAd(
@@ -78,7 +87,8 @@ public class AdsRepository {
     return mapToMinimalAds(GetAdsRequest.ofHomepageMore(idsRepository.getUniqueIdentifier(),
         googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
         partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
-        converterFactory).observe(refresh));
+        converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()))
+        .observe(refresh));
   }
 
   private Observable<List<MinimalAd>> mapToMinimalAds(
@@ -88,13 +98,15 @@ public class AdsRepository {
         return Observable.error(new IllegalStateException("Invalid ads returned from server"));
       }
       return Observable.just(ads);
-    }).map((getAdsResponse) -> getAdsResponse.getAds()).map(ads -> {
-      List<MinimalAd> minimalAds = new LinkedList<>();
-      for (GetAdsResponse.Ad ad : ads) {
-        minimalAds.add(MinimalAd.from(ad));
-      }
-      return minimalAds;
-    });
+    })
+        .map((getAdsResponse) -> getAdsResponse.getAds())
+        .map(ads -> {
+          List<MinimalAd> minimalAds = new LinkedList<>();
+          for (GetAdsResponse.Ad ad : ads) {
+            minimalAds.add(MinimalAd.from(ad));
+          }
+          return minimalAds;
+        });
   }
 
   public Observable<List<MinimalAd>> getAdsFromAppviewSuggested(String packageName,
@@ -103,14 +115,16 @@ public class AdsRepository {
         GetAdsRequest.ofAppviewSuggested(keywords, idsRepository.getUniqueIdentifier(),
             googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()), packageName,
             partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
-            converterFactory).observe());
+            converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()))
+            .observe());
   }
 
   public Observable<MinimalAd> getAdsFromSearch(String query) {
     return mapToMinimalAd(GetAdsRequest.ofSearch(query, idsRepository.getUniqueIdentifier(),
         googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
         partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
-        converterFactory).observe());
+        converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()))
+        .observe());
   }
 
   public Observable<MinimalAd> getAdsFromSecondInstall(String packageName) {
@@ -121,7 +135,8 @@ public class AdsRepository {
             GetAdsRequest.ofSecondInstall(packageName, idsRepository.getUniqueIdentifier(),
                 googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
                 partnerIdProvider.getPartnerId(), account.isAdultContentEnabled(), httpClient,
-                converterFactory).observe()));
+                converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()))
+                .observe()));
   }
 
   public Observable<MinimalAd> getAdsFromSecondTry(String packageName) {
@@ -129,6 +144,7 @@ public class AdsRepository {
         GetAdsRequest.ofSecondTry(packageName, idsRepository.getUniqueIdentifier(),
             googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
             partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
-            converterFactory).observe());
+            converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()))
+            .observe());
   }
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/07/2016.
+ * Modified on 29/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.fragment;
@@ -107,6 +107,7 @@ public abstract class BaseLoaderFragment extends UIComponentFragment implements 
     if (loaderLayoutHandler != null) {
       loaderLayoutHandler.finishLoading(throwable);
     }
-    CrashReport.getInstance().log(throwable);
+    CrashReport.getInstance()
+        .log(throwable);
   }
 }

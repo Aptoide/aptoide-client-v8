@@ -36,12 +36,17 @@
       >
 
     <activity
-        android:name=".v8engine.view.OpenGLES20Activity"
-        android:theme="@style/Theme.Transparent">
+        android:name=".v8engine.view.entry.EntryActivity"
+        android:theme="@style/Theme.AppCompat.Translucent">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
+    </activity>
+
+    <activity
+        android:name=".v8engine.view.OpenGLES20Activity"
+        android:theme="@style/Theme.AppCompat.Translucent">
     </activity>
 
     <activity android:name=".v8engine.view.MainActivity">

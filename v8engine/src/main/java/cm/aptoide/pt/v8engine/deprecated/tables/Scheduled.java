@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/08/2016.
+ * Modified on 29/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.deprecated.tables;
@@ -10,7 +10,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.RealmObject;
 
 /**
- * Created by sithengineer on 24/08/16.
+ * Created on 24/08/16.
  */
 public class Scheduled extends BaseTable {
 

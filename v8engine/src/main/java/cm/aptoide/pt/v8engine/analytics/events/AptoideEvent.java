@@ -37,7 +37,10 @@ public class AptoideEvent implements Event {
 
   @Override public void send() {
     AnalyticsEventRequest.of(eventName, context, action, data, bodyInterceptor, httpClient,
-        converterFactory).observe().observeOn(Schedulers.io()).subscribe(baseV7Response -> {
-    }, throwable -> throwable.printStackTrace());
+        converterFactory)
+        .observe()
+        .observeOn(Schedulers.io())
+        .subscribe(baseV7Response -> {
+        }, throwable -> throwable.printStackTrace());
   }
 }

@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.database.accessors;
 
 import android.text.TextUtils;
+import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.database.realm.Update;
@@ -18,7 +19,7 @@ import io.realm.RealmObjectSchema;
 import io.realm.RealmSchema;
 
 /**
- * Created by sithengineer on 12/05/16.
+ * Created on 12/05/16.
  *
  * This code is responsible to migrate between Realm schemas.
  *
@@ -47,7 +48,8 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
 
       oldVersion = 8075;
 
-      schema.get("Scheduled").removeField("appId");
+      schema.get("Scheduled")
+          .removeField("appId");
 
       schema.get("Rollback")
           .setNullable("md5", true)
@@ -57,7 +59,9 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
       realm.delete("Download");
       realm.delete("FileToDownload");
 
-      schema.get("FileToDownload").removeField("appId").addPrimaryKey("md5");
+      schema.get("FileToDownload")
+          .removeField("appId")
+          .addPrimaryKey("md5");
 
       schema.get("Download")
           .removeField("appId")
@@ -79,7 +83,8 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
       // this leads to the removal of some Scheduled updates
 
       String previous_md5 = "";
-      for (DynamicRealmObject dynamicRealmObject : realm.where("Scheduled").findAllSorted("md5")) {
+      for (DynamicRealmObject dynamicRealmObject : realm.where("Scheduled")
+          .findAllSorted("md5")) {
 
         String current_md5 = dynamicRealmObject.getString("md5");
         if (TextUtils.equals(previous_md5, current_md5)) {
@@ -94,7 +99,8 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
       realm.where(Update.class.getSimpleName())
           //.equalTo(Update.LABEL, "").or()
           //.isNull(Update.LABEL)
-          .findAll().deleteAllFromRealm();
+          .findAll()
+          .deleteAllFromRealm();
 
       oldVersion++;
 
@@ -205,14 +211,17 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
       oldVersion++;
     }
     if (oldVersion == 8080) {
-      schema.get("Download").addField("downloadError", int.class);
+      schema.get("Download")
+          .addField("downloadError", int.class);
 
       realm.delete(PaymentConfirmation.class.getSimpleName());
       realm.delete(PaymentAuthorization.class.getSimpleName());
 
-      schema.get("PaymentConfirmation").addField("payerId", String.class, FieldAttribute.REQUIRED);
+      schema.get("PaymentConfirmation")
+          .addField("payerId", String.class, FieldAttribute.REQUIRED);
 
-      schema.get("PaymentAuthorization").addField("payerId", String.class, FieldAttribute.REQUIRED);
+      schema.get("PaymentAuthorization")
+          .addField("payerId", String.class, FieldAttribute.REQUIRED);
 
       oldVersion++;
     }
@@ -231,6 +240,26 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
           .addField("cpiUrl", String.class)
           .addField("timestamp", Long.class)
           .addField("adId", Long.class);
+
+      oldVersion++;
+    }
+
+    if (oldVersion == 8082) {
+      schema.create(Notification.class.getSimpleName())
+          .addField("key", String.class, FieldAttribute.PRIMARY_KEY)
+          .addField("abTestingGroup", String.class)
+          .addField("body", String.class)
+          .addField("campaignId", int.class)
+          .addField("img", String.class)
+          .addField("lang", String.class)
+          .addField("title", String.class)
+          .addField("url", String.class)
+          .addField("urlTrack", String.class)
+          .addField("type", int.class)
+          .addField("timeStamp", long.class)
+          .addField("dismissed", long.class)
+          .addField("appName", String.class)
+          .addField("graphic", String.class);
 
       oldVersion++;
     }

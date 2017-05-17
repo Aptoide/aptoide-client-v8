@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/08/2016.
+ * Modified on 29/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.deprecated.tables;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 /**
- * Created by sithengineer on 24/08/16.
+ * Created on 24/08/16.
  */
 public abstract class BaseTable {
 
@@ -63,7 +63,8 @@ public abstract class BaseTable {
 
       Logger.d(TAG, "Table " + tableName + " migrated with success.");
     } catch (Exception e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     } finally {
       if (cursor != null && !cursor.isClosed()) {
         cursor.close();

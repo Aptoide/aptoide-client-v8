@@ -129,7 +129,7 @@
         android:padding="6dp"
         android:text="@string/cancel"
         android:textAllCaps="true"
-        android:textColor="@color/app_view_gray"
+        android:textColor="@color/silver_dark"
         android:textSize="@dimen/text_size_medium"
         />
   </RelativeLayout>

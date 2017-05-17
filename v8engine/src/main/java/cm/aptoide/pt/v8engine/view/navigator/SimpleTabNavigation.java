@@ -21,7 +21,7 @@ public class SimpleTabNavigation implements TabNavigation {
   }
 
   @Nullable @Override public Bundle getBundle() {
-    return null;
+    return new Bundle();
   }
 
   @Override public int getTab() {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 18/08/2016.
+ * Modified on 18/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.timeline;
@@ -142,7 +142,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   }
 
   @Override public void onDestroyView() {
-    listState = getRecyclerView().getLayoutManager().onSaveInstanceState();
+    listState = getRecyclerView().getLayoutManager()
+        .onSaveInstanceState();
     super.onDestroyView();
   }
 
@@ -179,7 +180,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
         })
         .subscribe(__ -> {
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
           finishLoading(err);
         });
   }
@@ -195,8 +197,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     }
 
     if (getRecyclerView() != null) {
-      outState.putParcelable(LIST_STATE_KEY,
-          getRecyclerView().getLayoutManager().onSaveInstanceState());
+      outState.putParcelable(LIST_STATE_KEY, getRecyclerView().getLayoutManager()
+          .onSaveInstanceState());
     }
 
     super.onSaveInstanceState(outState);
@@ -204,7 +206,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
   private void restoreListState(@Nullable Bundle savedInstanceState) {
     if (listState != null) {
-      getRecyclerView().getLayoutManager().onRestoreInstanceState(listState);
+      getRecyclerView().getLayoutManager()
+          .onRestoreInstanceState(listState);
       listState = null;
     }
     if (savedInstanceState != null) {
@@ -267,8 +270,9 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
     tabNavigator.navigation()
         .filter(tabNavigation -> tabNavigation.getTab() == TabNavigation.TIMELINE)
-        .subscribe(tabNavigation -> cardIdPriority =
-            tabNavigation.getBundle().getString(AppsTimelineTabNavigation.CARD_ID_KEY));
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(tabNavigation -> cardIdPriority = tabNavigation.getBundle()
+            .getString(AppsTimelineTabNavigation.CARD_ID_KEY));
   }
 
   @NonNull private Observable<List<String>> refreshPackages() {
@@ -301,16 +305,21 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
   @NonNull private Observable<Datalist<Displayable>> getUserTimelineStats(boolean refresh,
       Datalist<Displayable> displayableDatalist, Long userId) {
-    return timelineRepository.getTimelineStats(refresh, userId).map(timelineStats -> {
-      TimeLineStatsDisplayable timeLineStatsDisplayable =
-          new TimeLineStatsDisplayable(timelineStats, userId, spannableFactory, storeTheme,
-              timelineAnalytics, userId == null, storeContext == StoreContext.home ? 0 : storeId);
-      displayableDatalist.getList().add(0, timeLineStatsDisplayable);
-      return displayableDatalist;
-    }).onErrorReturn(throwable -> {
-      CrashReport.getInstance().log(throwable);
-      return displayableDatalist;
-    });
+    return timelineRepository.getTimelineStats(refresh, userId)
+        .map(timelineStats -> {
+          TimeLineStatsDisplayable timeLineStatsDisplayable =
+              new TimeLineStatsDisplayable(timelineStats, userId, spannableFactory, storeTheme,
+                  timelineAnalytics, userId == null,
+                  storeContext == StoreContext.home ? 0 : storeId);
+          displayableDatalist.getList()
+              .add(0, timeLineStatsDisplayable);
+          return displayableDatalist;
+        })
+        .onErrorReturn(throwable -> {
+          CrashReport.getInstance()
+              .log(throwable);
+          return displayableDatalist;
+        });
   }
 
   @Override public void reload() {

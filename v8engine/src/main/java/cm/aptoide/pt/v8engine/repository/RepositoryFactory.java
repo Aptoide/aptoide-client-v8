@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.repository;
@@ -52,7 +52,7 @@ import cm.aptoide.pt.v8engine.updates.UpdateRepository;
 import okhttp3.OkHttpClient;
 
 /**
- * Created by sithengineer on 02/09/16.
+ * Created on 02/09/16.
  */
 public final class RepositoryFactory {
 
@@ -172,7 +172,8 @@ public final class RepositoryFactory {
   private static PaymentSyncScheduler getBackgroundSync(Context context) {
     return new PaymentSyncScheduler(new PaymentSyncDataConverter(),
         ((V8Engine) context.getApplicationContext()).getAndroidAccountProvider(),
-        Application.getConfiguration().getContentAuthority());
+        Application.getConfiguration()
+            .getContentAuthority());
   }
 
   public static InAppBillingRepository getInAppBillingRepository(Context context) {

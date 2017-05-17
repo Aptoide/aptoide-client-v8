@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -56,6 +56,7 @@ import cm.aptoide.pt.spotandshareandroid.SpotAndShareApplication;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
+import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.account.AccountEventsAnalytcs;
 import cm.aptoide.pt.v8engine.account.AndroidAccountDataMigration;
@@ -76,20 +77,20 @@ import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.leak.LeakTool;
-import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
-import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.UserAgentInterceptor;
+import cm.aptoide.pt.v8engine.notification.AptoideNotification;
+import cm.aptoide.pt.v8engine.notification.NotificationCenter;
+import cm.aptoide.pt.v8engine.notification.NotificationHandler;
+import cm.aptoide.pt.v8engine.notification.NotificationIdsMapper;
+import cm.aptoide.pt.v8engine.notification.NotificationPolicyFactory;
+import cm.aptoide.pt.v8engine.notification.NotificationProvider;
+import cm.aptoide.pt.v8engine.notification.NotificationSyncScheduler;
+import cm.aptoide.pt.v8engine.notification.NotificationSyncService;
+import cm.aptoide.pt.v8engine.notification.SystemNotificationShower;
 import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
-import cm.aptoide.pt.v8engine.pull.NotificationCenter;
-import cm.aptoide.pt.v8engine.pull.NotificationHandler;
-import cm.aptoide.pt.v8engine.pull.NotificationProvider;
-import cm.aptoide.pt.v8engine.pull.NotificationStatusManager;
-import cm.aptoide.pt.v8engine.pull.NotificationSyncScheduler;
-import cm.aptoide.pt.v8engine.pull.NotificationSyncService;
-import cm.aptoide.pt.v8engine.pull.SystemNotificationShower;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.AccountGroupNameProvider;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
@@ -100,6 +101,7 @@ import cm.aptoide.pt.v8engine.view.configuration.ActivityProvider;
 import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.view.configuration.implementation.ActivityProviderImpl;
 import cm.aptoide.pt.v8engine.view.configuration.implementation.FragmentProviderImpl;
+import cm.aptoide.pt.v8engine.view.entry.EntryPointChooser;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.facebook.appevents.AppEventsLogger;
@@ -132,16 +134,22 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
  */
 public abstract class V8Engine extends SpotAndShareApplication {
 
+  /**
+   * Time between pull request for campaign notifications: {@link AptoideNotification.NotificationType#CAMPAIGN}
+   */
+  public static final long PUSH_NOTIFICATION_CAMPAIGN_PERIODICITY = AlarmManager.INTERVAL_DAY;
   private static final String CACHE_FILE_NAME = "aptoide.wscache";
   private static final String TAG = V8Engine.class.getName();
-
+  @Getter private static QManager qManager;
+  @Getter private static EntryPointChooser entryPointChooser;
   @Getter private static FragmentProvider fragmentProvider;
   @Getter private static ActivityProvider activityProvider;
   @Getter private static DisplayableWidgetMapping displayableWidgetMapping;
   @Setter @Getter private static boolean autoUpdateWasCalled = false;
-  @Getter @Setter private static ShareApps shareApps;
 
+  @Getter @Setter private static ShareApps shareApps;
   private AptoideAccountManager accountManager;
+  private BaseBodyInterceptorFactory baseBodyInterceptorFactory;
   private BodyInterceptor<BaseBody> baseBodyInterceptorV7;
   private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> baseBodyInterceptorV3;
   private Preferences preferences;
@@ -162,6 +170,11 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private AndroidAccountProvider androidAccountProvider;
   private PaymentAnalytics paymentAnalytics;
   private NotificationHandler notificationHandler;
+  /**
+   * Time between pull request for social notifications: {@link AptoideNotification.NotificationType#LIKE}{@link
+   * AptoideNotification.NotificationType#COMMENT}{@link AptoideNotification.NotificationType#POPULAR}
+   */
+  private long pushNotificationSocialPeriodicity = AlarmManager.INTERVAL_HOUR;
 
   /**
    * call after this instance onCreate()
@@ -184,7 +197,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
     try {
       PRNGFixes.apply();
     } catch (Exception e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     }
 
     //
@@ -204,6 +218,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
     // hack to set the debug flag active in case of Debug
     //
 
+    qManager = new QManager(PreferenceManager.getDefaultSharedPreferences(this));
+    entryPointChooser = new EntryPointChooser(() -> qManager.isSupportedExtensionsDefined());
     fragmentProvider = createFragmentProvider();
     activityProvider = createActivityProvider();
     displayableWidgetMapping = createDisplayableWidgetMapping();
@@ -231,11 +247,13 @@ public abstract class V8Engine extends SpotAndShareApplication {
         .andThen(initAbTestManager())
         .andThen(prepareApp(V8Engine.this.getAccountManager()).onErrorComplete(err -> {
           // in case we have an error preparing the app, log that error and continue
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
           return true;
         }))
         .andThen(discoverAndSaveInstalledApps())
-        .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance().log(error));
+        .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance()
+            .log(error));
 
     //
     // app synchronous initialization
@@ -270,7 +288,9 @@ public abstract class V8Engine extends SpotAndShareApplication {
       @Override public Single<String> invalidateAccessToken() {
         final AptoideAccountManager accountManager = getAccountManager();
         return accountManager.refreshToken()
-            .andThen(accountManager.accountStatus().first().toSingle())
+            .andThen(accountManager.accountStatus()
+                .first()
+                .toSingle())
             .map(account -> account.getAccessToken());
       }
     };
@@ -278,34 +298,34 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
   private void startNotificationsSync() {
 
-    long pushNotificationInterval;
-
     if (ManagerPreferences.isDebug()
         && ManagerPreferences.getPushNotificationPullingInterval() > 0) {
-      pushNotificationInterval = ManagerPreferences.getPushNotificationPullingInterval();
-    } else {
-      pushNotificationInterval = AlarmManager.INTERVAL_HOUR;
+      pushNotificationSocialPeriodicity = ManagerPreferences.getPushNotificationPullingInterval();
     }
 
-    notificationHandler = new NotificationHandler(BuildConfig.APPLICATION_ID, getDefaultClient(),
-        WebService.getDefaultConverter(), idsRepository, BuildConfig.VERSION_NAME);
+    notificationHandler = new NotificationHandler(getConfiguration().getAppId(), getDefaultClient(),
+        WebService.getDefaultConverter(), idsRepository, getConfiguration().getVersionName());
 
     SystemNotificationShower systemNotificationShower = new SystemNotificationShower(this,
         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
     List<NotificationSyncScheduler.Schedule> scheduleList = new ArrayList<>(2);
-    // TODO: 10/05/2017 trinkes make 2 different schedules for campaigns and direct notifications
-    scheduleList.add(
-        new NotificationSyncScheduler.Schedule(NotificationSyncService.PUSH_NOTIFICATIONS_ACTION,
-            pushNotificationInterval));
+
+    scheduleList.add(new NotificationSyncScheduler.Schedule(
+        NotificationSyncService.PUSH_NOTIFICATIONS_CAMPAIGN_ACTION,
+        PUSH_NOTIFICATION_CAMPAIGN_PERIODICITY));
+    scheduleList.add(new NotificationSyncScheduler.Schedule(
+        NotificationSyncService.PUSH_NOTIFICATIONS_SOCIAL_ACTION,
+        pushNotificationSocialPeriodicity));
 
     NotificationSyncScheduler notificationSyncScheduler =
         new NotificationSyncScheduler(this, (AlarmManager) getSystemService(ALARM_SERVICE),
             NotificationSyncService.class, scheduleList);
     NotificationAccessor notificationAccessor = AccessorFactory.getAccessorFor(Notification.class);
+    NotificationProvider notificationProvider = new NotificationProvider(notificationAccessor);
     NotificationCenter notificationCenter =
-        new NotificationCenter(notificationHandler, new NotificationProvider(notificationAccessor),
+        new NotificationCenter(new NotificationIdsMapper(), notificationHandler,
             notificationSyncScheduler, systemNotificationShower, CrashReport.getInstance(),
-            new NotificationStatusManager(notificationAccessor));
+            new NotificationPolicyFactory(notificationProvider));
     notificationCenter.start();
   }
 
@@ -412,10 +432,9 @@ public abstract class V8Engine extends SpotAndShareApplication {
   public AptoideAccountManager getAccountManager() {
     if (accountManager == null) {
 
-      final AccountManagerService accountManagerService = new AccountManagerService(
-          new BaseBodyInterceptorFactory(getIdsRepository(), getPreferences(),
-              getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage()), getAccountFactory(),
-          getDefaultClient(), getLongTimeoutClient(), WebService.getDefaultConverter());
+      final AccountManagerService accountManagerService =
+          new AccountManagerService(getBaseBodyInterceptorFactory(), getAccountFactory(),
+              getDefaultClient(), getLongTimeoutClient(), WebService.getDefaultConverter());
 
       final AndroidAccountDataMigration accountDataMigration =
           new AndroidAccountDataMigration(SecurePreferencesImplementation.getInstance(this),
@@ -487,7 +506,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
               .requestScopes(new Scope("https://www.googleapis.com/auth/contacts.readonly"))
               .requestScopes(new Scope(Scopes.PROFILE))
               .requestServerAuthCode(BuildConfig.GMS_SERVER_ID)
-              .build()).build();
+              .build())
+          .build();
     }
     return googleSignInClient;
   }
@@ -515,11 +535,13 @@ public abstract class V8Engine extends SpotAndShareApplication {
         .toSingle()
         .subscribe(cleanedSize -> Logger.d(TAG,
             "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)),
-            err -> CrashReport.getInstance().log(err));
+            err -> CrashReport.getInstance()
+                .log(err));
   }
 
   private void initializeFlurry(Context context, String flurryKey) {
-    new FlurryAgent.Builder().withLogEnabled(false).build(context, flurryKey);
+    new FlurryAgent.Builder().withLogEnabled(false)
+        .build(context, flurryKey);
   }
 
   private void sendAppStartToAnalytics(SharedPreferences sPref) {
@@ -567,17 +589,20 @@ public abstract class V8Engine extends SpotAndShareApplication {
   }
 
   private Completable prepareApp(AptoideAccountManager accountManager) {
-    return accountManager.accountStatus().first().toSingle().flatMapCompletable(account -> {
-      if (SecurePreferences.isFirstRun()) {
+    return accountManager.accountStatus()
+        .first()
+        .toSingle()
+        .flatMapCompletable(account -> {
+          if (SecurePreferences.isFirstRun()) {
 
-        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+            PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 
-        return setupFirstRun(accountManager).andThen(
-            Completable.merge(accountManager.syncCurrentAccount(), createShortcut()));
-      }
+            return setupFirstRun(accountManager).andThen(
+                Completable.merge(accountManager.syncCurrentAccount(), createShortcut()));
+          }
 
-      return Completable.complete();
-    });
+          return Completable.complete();
+        });
   }
 
   // todo re-factor all this code to proper Rx
@@ -598,23 +623,23 @@ public abstract class V8Engine extends SpotAndShareApplication {
       return generateAptoideUuid().andThen(proxy.addDefaultStore(
           GetStoreMetaRequest.of(defaultStoreCredentials, getBaseBodyInterceptorV7(),
               getDefaultClient(), WebService.getDefaultConverter()), getAccountManager(),
-          defaultStoreCredentials).andThen(refreshUpdates()))
-          .doOnError(err -> CrashReport.getInstance().log(err));
+          defaultStoreCredentials)
+          .andThen(refreshUpdates()))
+          .doOnError(err -> CrashReport.getInstance()
+              .log(err));
     });
   }
 
   public BodyInterceptor<BaseBody> getBaseBodyInterceptorV7() {
     if (baseBodyInterceptorV7 == null) {
-      baseBodyInterceptorV7 = new BaseBodyInterceptorV7(getIdsRepository(), getAccountManager(),
-          getAdultContent(getSecurePreferences()), getAptoideMd5sum(), getAptoidePackage());
+      baseBodyInterceptorV7 = getBaseBodyInterceptorFactory().createV7(getAccountManager());
     }
     return baseBodyInterceptorV7;
   }
 
   public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBaseBodyInterceptorV3() {
     if (baseBodyInterceptorV3 == null) {
-      baseBodyInterceptorV3 =
-          new BaseBodyInterceptorV3(getAptoideMd5sum(), getAptoidePackage(), getIdsRepository());
+      baseBodyInterceptorV3 = getBaseBodyInterceptorFactory().createV3();
     }
     return baseBodyInterceptorV3;
   }
@@ -623,14 +648,14 @@ public abstract class V8Engine extends SpotAndShareApplication {
     if (aptoideMd5sum == null) {
       synchronized (this) {
         if (aptoideMd5sum == null) {
-          aptoideMd5sum = caculateMd5Sum();
+          aptoideMd5sum = calculateMd5Sum();
         }
       }
     }
     return aptoideMd5sum;
   }
 
-  private String caculateMd5Sum() {
+  private String calculateMd5Sum() {
     try {
       return AptoideUtils.AlgorithmU.computeMd5(
           getPackageManager().getPackageInfo(getAptoidePackage(), 0));
@@ -662,7 +687,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private Completable discoverAndSaveInstalledApps() {
     return Observable.fromCallable(() -> {
       // remove the current installed apps
-      AccessorFactory.getAccessorFor(Installed.class).removeAll();
+      AccessorFactory.getAccessorFor(Installed.class)
+          .removeAll();
 
       // get the installed apps
       List<PackageInfo> installedApps = AptoideUtils.SystemU.getAllInstalledApps();
@@ -679,17 +705,19 @@ public abstract class V8Engine extends SpotAndShareApplication {
         .map(packageInfo -> new Installed(packageInfo))
         .toList()
         .doOnNext(list -> {
-          AccessorFactory.getAccessorFor(Installed.class).insertAll(list);
+          AccessorFactory.getAccessorFor(Installed.class)
+              .insertAll(list);
         })
         .toCompletable();
   }
 
   private Completable refreshUpdates() {
-    return RepositoryFactory.getUpdateRepository(DataProvider.getContext()).sync(true);
+    return RepositoryFactory.getUpdateRepository(DataProvider.getContext())
+        .sync(true);
   }
 
   /**
-   * Use {@link #createShortcut()} using a {@link Completable}
+   * Do {@link #createShortcut()} using a {@link Completable}
    */
   @Deprecated @Partners public void createShortCut() {
     createAppShortcut();
@@ -722,13 +750,24 @@ public abstract class V8Engine extends SpotAndShareApplication {
    * of Vanilla module
    */
   protected void setupStrictMode() {
-    StrictMode.setThreadPolicy(
-        new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
+    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll()
+        .penaltyLog()
+        .build());
 
     StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedClosableObjects()
         .detectLeakedClosableObjects()
         .penaltyLog()
         .penaltyDeath()
         .build());
+  }
+
+  public BaseBodyInterceptorFactory getBaseBodyInterceptorFactory() {
+    if (baseBodyInterceptorFactory == null) {
+      baseBodyInterceptorFactory =
+          new BaseBodyInterceptorFactory(getIdsRepository(), getPreferences(),
+              getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage(), qManager);
+    }
+
+    return baseBodyInterceptorFactory;
   }
 }

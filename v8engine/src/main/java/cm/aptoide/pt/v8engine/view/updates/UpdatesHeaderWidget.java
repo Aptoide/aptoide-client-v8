@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.updates;
@@ -58,22 +58,21 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
     more.setOnClickListener((view) -> {
       ((PermissionService) getContext()).requestAccessToExternalFileSystem(() -> {
         UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
-        compositeSubscription.add(
-            updateAccessor.getAll(false)
-                .first()
-                .observeOn(Schedulers.io())
-                .map(updates -> {
+        compositeSubscription.add(updateAccessor.getAll(false)
+            .first()
+            .observeOn(Schedulers.io())
+            .map(updates -> {
 
-                  ArrayList<Download> downloadList = new ArrayList<>(updates.size());
-                  for (Update update : updates) {
-                    downloadList.add(new DownloadFactory().create(update));
-                  }
-                  return downloadList;
-                })
-                .flatMap(downloads -> displayable.getInstallManager()
-                    .startInstalls(downloads, getContext()))
-                .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
-                    throwable -> throwable.printStackTrace()));
+              ArrayList<Download> downloadList = new ArrayList<>(updates.size());
+              for (Update update : updates) {
+                downloadList.add(new DownloadFactory().create(update));
+              }
+              return downloadList;
+            })
+            .flatMap(downloads -> displayable.getInstallManager()
+                .startInstalls(downloads, getContext()))
+            .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
+                throwable -> throwable.printStackTrace()));
       }, () -> {
       });
 

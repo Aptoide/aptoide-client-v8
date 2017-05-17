@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 16/08/2016.
+ * Modified on 16/08/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -57,7 +57,8 @@ public class GenericDialogs {
       // cleaning up
       subscriber.add(Subscriptions.create(() -> dialog.dismiss()));
       dialog.show();
-    }).subscribeOn(AndroidSchedulers.mainThread());
+    })
+        .subscribeOn(AndroidSchedulers.mainThread());
   }
 
   /**

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/07/2016.
+ * Modified on 29/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.app.screenshots;
@@ -13,7 +13,7 @@ import cm.aptoide.pt.v8engine.view.fragment.UIComponentFragment;
 import java.util.ArrayList;
 
 /**
- * Created by sithengineer on 11/05/16.
+ * Created on 11/05/16.
  * <p>
  * code migrated from v7
  */
@@ -41,13 +41,15 @@ public class ScreenshotsViewerFragment extends UIComponentFragment {
   // methods
   @Override public void loadExtras(Bundle extras) {
     if (extras == null) {
-      currentItem = getActivity().getIntent().getIntExtra(BundleArgs.POSITION.name(), 0);
+      currentItem = getActivity().getIntent()
+          .getIntExtra(BundleArgs.POSITION.name(), 0);
     } else {
       currentItem = extras.getInt(BundleArgs.POSITION.name(), 0);
     }
 
     if (extras == null) {
-      uris = getActivity().getIntent().getStringArrayListExtra(BundleArgs.URIs.name());
+      uris = getActivity().getIntent()
+          .getStringArrayListExtra(BundleArgs.URIs.name());
     } else {
       uris = extras.getStringArrayList(BundleArgs.URIs.name());
     }

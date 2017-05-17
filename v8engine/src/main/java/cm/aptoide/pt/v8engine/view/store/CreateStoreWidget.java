@@ -8,7 +8,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
-import cm.aptoide.pt.v8engine.view.account.user.CreateStoreActivity;
+import cm.aptoide.pt.v8engine.view.account.store.CreateStoreFragment;
 import cm.aptoide.pt.v8engine.view.account.user.CreateStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -40,15 +40,16 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
     } else {
       button.setText(R.string.login);
     }
-    RxView.clicks(button).subscribe(aVoid -> {
-      if (accountManager.isLoggedIn()) {
-        button.setText(R.string.create_store_displayable_button);
-        Intent intent = new Intent(getContext(), CreateStoreActivity.class);
-        getContext().startActivity(intent);
-      } else {
-        button.setText(R.string.login);
-        accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.STORE);
-      }
-    });
+    RxView.clicks(button)
+        .subscribe(aVoid -> {
+          if (accountManager.isLoggedIn()) {
+            button.setText(R.string.create_store_displayable_button);
+            Intent intent = new Intent(getContext(), CreateStoreFragment.class);
+            getContext().startActivity(intent);
+          } else {
+            button.setText(R.string.login);
+            accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.STORE);
+          }
+        });
   }
 }

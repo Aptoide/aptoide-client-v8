@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+  <android.support.design.widget.AppBarLayout
+      android:id="@+id/appbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="?attr/toolbarTheme"
+        />
+
+  </android.support.design.widget.AppBarLayout>
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
+
+    <LinearLayout
+        android:id="@+id/bottom_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_default_height"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/padding_medium_small"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/padding_small"
+        android:paddingLeft="@dimen/padding_small"
+        android:paddingRight="@dimen/padding_small"
+        android:paddingStart="@dimen/padding_small"
+        >
+
+      <Button
+          android:id="@+id/logged_in_more_info_button"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_marginEnd="23dp"
+          android:layout_marginRight="23dp"
+          android:layout_weight="1"
+          android:gravity="center"
+          android:text="@string/more_info"
+          style="?attr/customButtonWhite"
+          />
+
+      <Button
+          android:id="@+id/logged_in_continue"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:text="@string/continue_option"
+          style="?attr/customButton"
+          />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_buttons"
+        android:fillViewport="true"
+        >
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
+          android:orientation="vertical"
+          >
+
+        <ImageView
+            android:id="@+id/success_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/icon_logged_in"
+            />
+
+        <TextView
+            android:id="@+id/success_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/padding_medium_small"
+            android:gravity="center_horizontal"
+            android:text="@string/create_profile_pub_pri_suc_login"
+            android:textColor="@color/default_color"
+            android:textSize="@dimen/text_size_large"
+            />
+
+        <TextView
+            android:id="@+id/success_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/padding_smaller"
+            android:paddingEnd="@dimen/padding_medium"
+            android:paddingLeft="@dimen/padding_medium"
+            android:paddingRight="@dimen/padding_medium"
+            android:paddingStart="@dimen/padding_medium"
+            android:text="@string/create_profile_pub_pri_suc_login_sub_text"
+            android:textAlignment="center"
+            android:textColor="@color/create_store_hint_color"
+            android:textSize="@dimen/text_size_medium"
+            />
+      </LinearLayout>
+    </ScrollView>
+  </RelativeLayout>
+</LinearLayout>

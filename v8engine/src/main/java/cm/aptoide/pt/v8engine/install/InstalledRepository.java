@@ -33,15 +33,12 @@ public class InstalledRepository {
   }
 
   public boolean contains(String packageName) {
-    return accessor.isInstalled(packageName).toBlocking().first();
+    return accessor.isInstalled(packageName)
+        .toBlocking()
+        .first();
   }
 
   public Observable<List<Installed>> getAllSorted() {
     return accessor.getAllSorted();
-  }
-
-  public boolean contains(String packageName, int vercode) {
-    Installed installed = get(packageName).toBlocking().first();
-    return installed != null && installed.getVersionCode() == vercode;
   }
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 28/07/2016.
+ * Modified on 28/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.updates.rollback;
@@ -17,7 +17,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import rx.Observable;
 
 /**
- * Created by sithengineer on 14/06/16.
+ * Created on 14/06/16.
  */
 public class RollbackDisplayable extends DisplayablePojo<Rollback> {
 
@@ -52,12 +52,14 @@ public class RollbackDisplayable extends DisplayablePojo<Rollback> {
   }
 
   public void openAppview(FragmentNavigator navigator) {
-    navigator.navigateTo(V8Engine.getFragmentProvider().newAppViewFragment(getPojo().getMd5()));
+    navigator.navigateTo(V8Engine.getFragmentProvider()
+        .newAppViewFragment(getPojo().getMd5()));
   }
 
   public Observable<Void> uninstall(Context context, Download appDownload) {
-    return installManager.uninstall(context,
-        appDownload.getFilesToDownload().get(0).getPackageName(), appDownload.getVersionName());
+    return installManager.uninstall(context, appDownload.getFilesToDownload()
+        .get(0)
+        .getPackageName(), appDownload.getVersionName());
   }
 
   public void downgrade(FragmentNavigator navigator) {

@@ -72,12 +72,14 @@ public abstract class WebSocketManager extends WebSocketListener implements WebS
       JSONArray jsonArray = new JSONArray(responseMessage);
       MatrixCursor matrixCursor = new MatrixCursor(matrix_columns);
       for (int i = 0; i < jsonArray.length(); i++) {
-        String suggestion = jsonArray.get(i).toString();
+        String suggestion = jsonArray.get(i)
+            .toString();
         addRow(matrixCursor, suggestion, i);
       }
       blockingQueue.add(matrixCursor);
     } catch (JSONException e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     }
   }
 
@@ -104,7 +106,11 @@ public abstract class WebSocketManager extends WebSocketListener implements WebS
   }
 
   protected void addRow(MatrixCursor matrixCursor, String string, int i) {
-    matrixCursor.newRow().add(null).add(string).add(string).add(i);
+    matrixCursor.newRow()
+        .add(null)
+        .add(string)
+        .add(string)
+        .add(i);
   }
 
   @Override public Request request() {
@@ -146,8 +152,8 @@ public abstract class WebSocketManager extends WebSocketListener implements WebS
   }
 
   public WebSocket connect(String port) {
-    request =
-        new Request.Builder().url(WEBSOCKETS_SCHEME + WEBSOCKETS_HOST + ":" + getPort()).build();
+    request = new Request.Builder().url(WEBSOCKETS_SCHEME + WEBSOCKETS_HOST + ":" + getPort())
+        .build();
     client = new OkHttpClient();
     webSocket = client.newWebSocket(request, new StoreAutoCompleteWebSocket());
 

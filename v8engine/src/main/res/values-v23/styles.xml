@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 26/07/2016.
-  -->
-
 <resources>
 
-  <style name="FragmentRateAndReviewsLabel">
+  <style name="rateAndReviews_starLabel_textView">
     <item name="android:layout_alignParentLeft">true</item>
     <item name="android:layout_centerVertical">true</item>
     <item name="android:layout_gravity">center</item>
@@ -14,6 +9,6 @@
     <item name="android:drawablePadding">6dp</item>
     <item name="android:gravity">center</item>
     <item name="android:textSize">8.3sp</item>
-    <item name="android:drawableTint">@color/app_view_gray</item>
+    <item name="android:drawableTint">@color/silver_dark</item>
   </style>
 </resources>

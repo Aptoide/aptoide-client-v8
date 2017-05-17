@@ -73,7 +73,9 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
     Iterator<AptoideMessageServerController> iterator = aptoideMessageControllers.iterator();
     while (iterator.hasNext()) {
       AptoideMessageServerController aptoideMessageServerController = iterator.next();
-      if (aptoideMessageServerController.getHost().getIp().equals(host.getIp())) {
+      if (aptoideMessageServerController.getHost()
+          .getIp()
+          .equals(host.getIp())) {
         sendToOthers(host, new HostLeftMessage(getHost(), host));
         aptoideMessageServerController.disable();
         iterator.remove();
@@ -90,7 +92,8 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
   private void innerSendToOthers(Host host, Message message, ExecutorService localExecutorService) {
     dispatchServerAction(() -> {
       for (AptoideMessageServerController aptoideMessageClientController : getAptoideMessageControllers()) {
-        if (!aptoideMessageClientController.getHost().equals(host)) {
+        if (!aptoideMessageClientController.getHost()
+            .equals(host)) {
           localExecutorService.execute(() -> {
             try {
               aptoideMessageClientController.sendWithAck(message);
@@ -124,7 +127,8 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
     sendWithAck(message.getLocalHost(),
         new SendApk(null, message.getAndroidAppInfo(), getConnectedHosts(), availablePort));
     sendToOthers(message.getLocalHost(), new ReceiveApk(getHost(), message.getAndroidAppInfo(),
-        new Host(message.getLocalHost().getIp(), availablePort)));
+        new Host(message.getLocalHost()
+            .getIp(), availablePort)));
   }
 
   private int getAvailablePort() {
@@ -137,7 +141,8 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
       // TODO: 01-02-2017 neuro optimize :)
       for (AptoideMessageServerController aptoideMessageController : aptoideMessageControllers) {
         System.out.println(aptoideMessageController.getHost());
-        if (aptoideMessageController.getHost().equals(host)) {
+        if (aptoideMessageController.getHost()
+            .equals(host)) {
           try {
             hostPresent = true;
             aptoideMessageController.sendWithAck(message);
@@ -157,7 +162,8 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
     dispatchServerAction(() -> {
       // TODO: 01-02-2017 neuro optimize :)
       for (AptoideMessageServerController aptoideMessageController : aptoideMessageControllers) {
-        if (aptoideMessageController.getHost().equals(host)) {
+        if (aptoideMessageController.getHost()
+            .equals(host)) {
           aptoideMessageController.send(message);
         }
       }

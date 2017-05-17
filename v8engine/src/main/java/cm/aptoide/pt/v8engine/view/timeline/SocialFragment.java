@@ -63,7 +63,8 @@ public class SocialFragment extends BaseLoaderToolbarFragment {
       }
     });
     setHasOptionsMenu(true);
-    socialWebview.getSettings().setJavaScriptEnabled(true);
+    socialWebview.getSettings()
+        .setJavaScriptEnabled(true);
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {

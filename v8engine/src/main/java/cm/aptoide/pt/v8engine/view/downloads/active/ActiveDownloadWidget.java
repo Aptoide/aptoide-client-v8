@@ -45,21 +45,23 @@ import rx.schedulers.Schedulers;
   @Override public void bindView(ActiveDownloadDisplayable displayable) {
     compositeSubscription.add(RxView.clicks(pauseCancelButton)
         .subscribe(click -> displayable.pauseInstall(getContext()),
-            throwable -> CrashReport.getInstance().log(throwable)));
+            throwable -> CrashReport.getInstance()
+                .log(throwable)));
 
     compositeSubscription.add(displayable.getDownloadObservable()
         .observeOn(Schedulers.computation())
         .distinctUntilChanged()
         .map(download -> download)
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe((download) -> updateUi(download),
-            throwable -> CrashReport.getInstance().log(throwable)));
+        .subscribe((download) -> updateUi(download), throwable -> CrashReport.getInstance()
+            .log(throwable)));
   }
 
   private Void updateUi(Download download) {
     appName.setText(download.getAppName());
     if (!TextUtils.isEmpty(download.getIcon())) {
-      ImageLoader.with(getContext()).load(download.getIcon(), appIcon);
+      ImageLoader.with(getContext())
+          .load(download.getIcon(), appIcon);
     }
     if (download.getOverallDownloadStatus() == Download.IN_QUEUE) {
       progressBar.setIndeterminate(true);

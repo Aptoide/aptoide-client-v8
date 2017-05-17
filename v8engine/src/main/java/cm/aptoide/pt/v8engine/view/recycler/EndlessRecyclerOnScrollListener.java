@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 18/08/2016.
+ * Modified on 18/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler;
@@ -122,7 +122,8 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
                 total += response.getTotal();
                 offset += response.getNextSize();
               }
-              v7request.getBody().setOffset(offset);
+              v7request.getBody()
+                  .setOffset(offset);
             }
 
             if (onFirstLoadListener != null && !firstCallbackCalled) {

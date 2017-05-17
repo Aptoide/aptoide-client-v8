@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified on 24/06/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -37,14 +37,15 @@ public class WSWidgetsUtils {
       boolean refresh, String accessToken, String clientUniqueId,
       boolean googlePlayServicesAvailable, String oemid, boolean mature,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, String q) {
 
     if (isKnownType(wsWidget.getType())) {
 
       String url = null;
       // Can be null in legacy ws :/
       if (wsWidget.getView() != null) {
-        url = wsWidget.getView().replace(V7.BASE_HOST, "");
+        url = wsWidget.getView()
+            .replace(V7.BASE_HOST, "");
       }
       switch (wsWidget.getType()) {
         case APPS_GROUP:
@@ -75,7 +76,7 @@ public class WSWidgetsUtils {
 
         case ADS:
           return GetAdsRequest.ofHomepage(clientUniqueId, googlePlayServicesAvailable, oemid,
-              mature, httpClient, converterFactory)
+              mature, httpClient, converterFactory, q)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))

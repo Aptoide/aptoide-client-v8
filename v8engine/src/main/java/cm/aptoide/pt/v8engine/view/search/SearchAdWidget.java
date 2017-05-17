@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified on 24/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.search;
@@ -45,13 +45,15 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
     description.setText(Html.fromHtml(minimalAd.getDescription()));
     sponsored.setTypeface(null, Typeface.BOLD);
     final FragmentActivity context = getContext();
-    sponsored.setText((context.getResources().getText(R.string.sponsored) + "").toUpperCase());
-    ImageLoader.with(context).load(minimalAd.getIconPath(), icon);
+    sponsored.setText((context.getResources()
+        .getText(R.string.sponsored) + "").toUpperCase());
+    ImageLoader.with(context)
+        .load(minimalAd.getIconPath(), icon);
 
     itemView.setOnClickListener(view -> {
       //	        AptoideUtils.FlurryAppviewOrigin.addAppviewOrigin("Suggested_Search Result");
-      getFragmentNavigator().navigateTo(
-          V8Engine.getFragmentProvider().newAppViewFragment(minimalAd));
+      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+          .newAppViewFragment(minimalAd));
     });
   }
 }

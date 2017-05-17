@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <integer name="max_username_char_length">63</integer>
+  <integer name="minimum_description_lines">4</integer>
+  <integer name="nr_small_app_bricks">2</integer>
+</resources>

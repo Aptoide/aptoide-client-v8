@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified on 04/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -89,7 +89,8 @@ import rx.Observable;
       // the resulting array, excluding the remaining "trash"
       // example: http://ws75.aptoide.com/api/7/getApp/appId=15168558
       // example: http://ws75.aptoide.com/api/7/getApp/appId=15168558/other=stuff/in=here
-      String tmp = url.substring(url.indexOf("app_id")).split("=")[1];
+      String tmp = url.substring(url.indexOf("app_id"))
+          .split("=")[1];
       int lastIdx = tmp.lastIndexOf('/');
       return Long.parseLong(tmp.substring(0, lastIdx > 0 ? lastIdx : tmp.length()));
     } catch (Exception e) {

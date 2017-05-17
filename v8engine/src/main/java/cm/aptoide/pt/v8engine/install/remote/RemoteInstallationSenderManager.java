@@ -60,7 +60,8 @@ public class RemoteInstallationSenderManager {
       @Override public void run() {
         try {
           WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-          multicastLock = wifi.createMulticastLock(context.getClass().getName());
+          multicastLock = wifi.createMulticastLock(context.getClass()
+              .getName());
           multicastLock.setReferenceCounted(true);
           multicastLock.acquire();
 

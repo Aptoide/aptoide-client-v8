@@ -193,7 +193,9 @@ public class AndroidAccountDataMigration {
       SharedPreferences sharedPreferences) {
     for (int i = 0; i < migrationKeys.length; ++i) {
       if (sharedPreferences.contains(migrationKeys[i])) {
-        sharedPreferences.edit().remove(migrationKeys[i]).commit();
+        sharedPreferences.edit()
+            .remove(migrationKeys[i])
+            .commit();
       }
     }
   }

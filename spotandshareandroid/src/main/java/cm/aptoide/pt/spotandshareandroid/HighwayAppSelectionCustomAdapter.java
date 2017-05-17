@@ -66,17 +66,21 @@ public class HighwayAppSelectionCustomAdapter extends BaseAdapter {
       viewHolder = (ViewHolder) convertView.getTag();
     }
     viewHolder.position = position;
-    viewHolder.appNameLabel.setText(appsList.get(position).getAppName());
-    viewHolder.appImageIcon.setImageDrawable(appsList.get(position).getImageIcon());
+    viewHolder.appNameLabel.setText(appsList.get(position)
+        .getAppName());
+    viewHolder.appImageIcon.setImageDrawable(appsList.get(position)
+        .getImageIcon());
 
-    if (appsList.get(position).isSelected()) {
-      System.out.println(
-          "just ordered to paint the background of  : " + appsList.get(position).getAppName());
-      viewHolder.linearLayout.setBackgroundColor(
-          context.getResources().getColor(R.color.light_grey));
+    if (appsList.get(position)
+        .isSelected()) {
+      System.out.println("just ordered to paint the background of  : " + appsList.get(position)
+          .getAppName());
+      viewHolder.linearLayout.setBackgroundColor(context.getResources()
+          .getColor(R.color.light_grey));
       //            notifyDataSetChanged();
     } else {
-      viewHolder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.white));
+      viewHolder.linearLayout.setBackgroundColor(context.getResources()
+          .getColor(R.color.white));
     }
     view.setTag(viewHolder);
 

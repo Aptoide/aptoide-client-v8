@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified on 04/08/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -79,13 +79,21 @@ public class MinimalAd extends RealmObject implements Parcelable, MinimalAdInter
     int id = 0;
     String clickUrl = null;
     if (partner != null) {
-      id = partner.getInfo().getId();
-      clickUrl = partner.getData().getClickUrl();
+      id = partner.getInfo()
+          .getId();
+      clickUrl = partner.getData()
+          .getClickUrl();
     }
-    return new MinimalAd(ad.getData().getPackageName(), id, clickUrl, ad.getInfo().getCpcUrl(),
-        ad.getInfo().getCpdUrl(), ad.getData().getId(), ad.getInfo().getAdId(),
-        ad.getInfo().getCpiUrl(), ad.getData().getName(), ad.getData().getIcon(),
-        ad.getData().getDescription());
+    return new MinimalAd(ad.getData()
+        .getPackageName(), id, clickUrl, ad.getInfo()
+        .getCpcUrl(), ad.getInfo()
+        .getCpdUrl(), ad.getData()
+        .getId(), ad.getInfo()
+        .getAdId(), ad.getInfo()
+        .getCpiUrl(), ad.getData()
+        .getName(), ad.getData()
+        .getIcon(), ad.getData()
+        .getDescription());
   }
 
   @Override public int describeContents() {

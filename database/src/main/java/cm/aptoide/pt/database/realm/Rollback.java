@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified on 04/08/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -12,7 +12,7 @@ import io.realm.annotations.PrimaryKey;
 import java.util.Calendar;
 
 /**
- * Created by sithengineer on 12/05/16.
+ * Created on 12/05/16.
  */
 
 public class Rollback extends RealmObject {
@@ -61,12 +61,18 @@ public class Rollback extends RealmObject {
     appName = app.getName();
     icon = app.getIcon();
     packageName = app.getPackageName();
-    timestamp = Calendar.getInstance().getTimeInMillis();
-    md5 = app.getFile().getMd5sum();
-    apkPath = app.getFile().getPath();
-    alternativeApkPath = app.getFile().getPathAlt();
-    versionName = app.getFile().getVername();
-    versionCode = app.getFile().getVercode();
+    timestamp = Calendar.getInstance()
+        .getTimeInMillis();
+    md5 = app.getFile()
+        .getMd5sum();
+    apkPath = app.getFile()
+        .getPath();
+    alternativeApkPath = app.getFile()
+        .getPathAlt();
+    versionName = app.getFile()
+        .getVername();
+    versionCode = app.getFile()
+        .getVercode();
 
     Obb obb = app.getObb();
     if (obb != null) {
