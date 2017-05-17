@@ -30,10 +30,11 @@ public class PaymentSyncScheduler {
     this.authority = authority;
   }
 
-  public Completable scheduleAuthorizationSync(int paymentId) {
+  public Completable scheduleAuthorizationSync(int paymentId, String authorizationType) {
     final Bundle bundle = new Bundle();
     bundle.putBoolean(AptoideSyncAdapter.EXTRA_PAYMENT_AUTHORIZATIONS, true);
     bundle.putInt(AptoideSyncAdapter.EXTRA_PAYMENT_ID, paymentId);
+    bundle.putString(AptoideSyncAdapter.EXTRA_AUTHORIZATION_TYPE, authorizationType);
     return scheduleOneOffSync(bundle);
   }
 

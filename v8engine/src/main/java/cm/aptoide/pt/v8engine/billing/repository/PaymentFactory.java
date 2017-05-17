@@ -10,7 +10,7 @@ import cm.aptoide.pt.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Payment;
 import cm.aptoide.pt.v8engine.billing.services.AptoidePayment;
-import cm.aptoide.pt.v8engine.billing.services.AuthorizedPayment;
+import cm.aptoide.pt.v8engine.billing.services.WebPayment;
 import cm.aptoide.pt.v8engine.billing.services.PayPalPayment;
 
 public class PaymentFactory {
@@ -40,11 +40,10 @@ public class PaymentFactory {
     switch (paymentService.getShortName()) {
       case PAYPAL:
         return new PayPalPayment(context, paymentService.getId(), paymentService.getName(),
-            paymentService.getDescription(), paymentRepositoryFactory, payer,
-            authorizationRepository, authorizationFactory);
+            paymentService.getDescription(), paymentRepositoryFactory, authorizationRepository);
       case BOACOMPRA:
       case BOACOMPRAGOLD:
-        return new AuthorizedPayment(paymentService.getId(), paymentService.getName(),
+        return new WebPayment(paymentService.getId(), paymentService.getName(),
             paymentService.getDescription(), paymentRepositoryFactory, payer,
             authorizationRepository, authorizationFactory);
       case DUMMY:

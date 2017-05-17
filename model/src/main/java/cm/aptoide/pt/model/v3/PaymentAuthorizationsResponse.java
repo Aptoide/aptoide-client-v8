@@ -21,5 +21,6 @@ import lombok.EqualsAndHashCode;
     @JsonProperty("url") private String url;
     @JsonProperty("successUrl") private String successUrl;
     @JsonProperty("authorizationStatus") private String authorizationStatus;
+    @JsonProperty("type") private String type;
   }
 }

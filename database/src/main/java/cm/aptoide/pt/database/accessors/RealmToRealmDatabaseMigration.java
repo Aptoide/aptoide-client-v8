@@ -242,5 +242,14 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
 
       oldVersion++;
     }
+
+    if (oldVersion == 8082) {
+
+      schema.get("PaymentAuthorization")
+          .addField("type", String.class, FieldAttribute.REQUIRED)
+          .transform(paymentAuthorization -> paymentAuthorization.set("type", "web"));
+
+      oldVersion++;
+    }
   }
 }

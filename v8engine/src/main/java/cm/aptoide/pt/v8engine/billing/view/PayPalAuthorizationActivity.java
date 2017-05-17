@@ -37,7 +37,6 @@ public class PayPalAuthorizationActivity extends AuthorizationActivity
 
     attachPresenter(new PayPalAuthorizationPresenter(this,
         ((V8Engine) getApplicationContext()).getAptoideBilling(),
-        getIntent().getIntExtra(EXTRA_PAYMENT_ID, 0),
         ProductProvider.fromIntent(((V8Engine) getApplicationContext()).getAptoideBilling(),
             getIntent())), savedInstanceState);
   }

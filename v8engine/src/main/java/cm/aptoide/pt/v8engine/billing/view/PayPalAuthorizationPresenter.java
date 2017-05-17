@@ -11,15 +11,12 @@ public class PayPalAuthorizationPresenter implements Presenter {
 
   private final PayPalAuthorizationView view;
   private final AptoideBilling billing;
-  private final int paymentId;
-
   private final ProductProvider productProvider;
 
   public PayPalAuthorizationPresenter(PayPalAuthorizationView view, AptoideBilling billing,
-      int paymentId, ProductProvider productProvider) {
+      ProductProvider productProvider) {
     this.view = view;
     this.billing = billing;
-    this.paymentId = paymentId;
     this.productProvider = productProvider;
   }
 
@@ -29,11 +26,10 @@ public class PayPalAuthorizationPresenter implements Presenter {
         .doOnNext(created -> view.showPayPalAuthorization())
         .flatMap(__ -> view.authorizationCode())
         .doOnNext(__ -> view.showLoading())
-        .flatMap(authorizationCode -> productProvider.getProduct()
-            .flatMapCompletable(product -> billing.process(paymentId, product, authorizationCode)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> view.dismiss()))
-            .toObservable())
+        .flatMapCompletable(authorizationCode -> productProvider.getProduct()
+            .flatMapCompletable(product -> billing.processPayPalPayment(product, authorizationCode))
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnCompleted(() -> view.dismiss()))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

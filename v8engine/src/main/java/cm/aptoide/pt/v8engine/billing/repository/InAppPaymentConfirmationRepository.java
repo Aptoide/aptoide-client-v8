@@ -51,7 +51,7 @@ public class InAppPaymentConfirmationRepository extends PaymentConfirmationRepos
     return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId, operatorManager,
         ((InAppProduct) product).getDeveloperPayload(), bodyInterceptorV3, httpClient,
         converterFactory)
-        .observe()
+        .observe(true)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
             return Observable.just(null);
@@ -69,7 +69,7 @@ public class InAppPaymentConfirmationRepository extends PaymentConfirmationRepos
     return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId, operatorManager,
         ((InAppProduct) product).getDeveloperPayload(), metadataId, bodyInterceptorV3,
         httpClient, converterFactory)
-        .observe()
+        .observe(true)
         .toSingle();
   }
 }

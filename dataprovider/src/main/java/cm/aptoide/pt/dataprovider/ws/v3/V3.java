@@ -163,6 +163,9 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
     @POST("productPurchaseAuthorization") @FormUrlEncoded
     Observable<PaymentAuthorizationsResponse> getPaymentAuthorization(@FieldMap BaseBody args);
 
+    @POST("productPurchaseAuthorization") @FormUrlEncoded
+    Observable<BaseV3Response> createPaymentAuthorizationWithCode(@FieldMap BaseBody args);
+
     @POST("payProduct") @FormUrlEncoded Observable<BaseV3Response> createPaymentConfirmation(
         @FieldMap BaseBody args);
 

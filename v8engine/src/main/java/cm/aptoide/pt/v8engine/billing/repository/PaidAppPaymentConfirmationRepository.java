@@ -46,7 +46,7 @@ public class PaidAppPaymentConfirmationRepository extends PaymentConfirmationRep
   @Override public Completable createPaymentConfirmation(int paymentId, Product product) {
     return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId, operatorManager,
         ((PaidAppProduct) product).getStoreName(), bodyInterceptorV3, httpClient, converterFactory)
-        .observe()
+        .observe(true)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
             return Observable.just(null);
@@ -64,7 +64,7 @@ public class PaidAppPaymentConfirmationRepository extends PaymentConfirmationRep
     return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId, operatorManager,
         ((PaidAppProduct) product).getStoreName(), metadataId, bodyInterceptorV3,
         httpClient, converterFactory)
-        .observe()
+        .observe(true)
         .toSingle();
   }
 }

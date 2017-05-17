@@ -30,17 +30,23 @@ public abstract class Authorization {
   }
 
   public boolean isPending() {
-    return Status.PENDING.equals(status);
+    return Status.PENDING.equals(status)
+        || isPendingUserConsent();
+  }
+
+  public boolean isInactive() {
+    return Status.INACTIVE.equals(status);
   }
 
   public boolean isPendingUserConsent() {
-    return Status.INACTIVE.equals(status) || Status.INITIATED.equals(status);
+    return Status.INITIATED.equals(status);
   }
 
   public boolean isFailed() {
     return Status.CANCELLED.equals(status)
         || Status.EXPIRED.equals(status)
-        || Status.SESSION_EXPIRED.equals(status);
+        || Status.SESSION_EXPIRED.equals(status)
+        || Status.UNKNOWN_ERROR.equals(status);
   }
 
   public Status getStatus() {
@@ -48,6 +54,6 @@ public abstract class Authorization {
   }
 
   public enum Status {
-    NONE, INACTIVE, ACTIVE, INITIATED, PENDING, CANCELLED, EXPIRED, SESSION_EXPIRED,
+    NONE, INACTIVE, ACTIVE, INITIATED, PENDING, CANCELLED, EXPIRED, SESSION_EXPIRED, UNKNOWN_ERROR
   }
 }

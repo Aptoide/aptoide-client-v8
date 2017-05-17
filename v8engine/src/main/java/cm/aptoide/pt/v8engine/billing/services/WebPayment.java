@@ -8,17 +8,17 @@ import cm.aptoide.pt.v8engine.billing.exception.PaymentNotAuthorizedException;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationFactory;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationRepository;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentRepositoryFactory;
-import cm.aptoide.pt.v8engine.billing.services.AptoidePayment;
 import rx.Completable;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
-public class AuthorizedPayment extends AptoidePayment {
+public class WebPayment extends AptoidePayment {
 
   private final Payer payer;
   private final AuthorizationRepository authorizationRepository;
   private final AuthorizationFactory authorizationFactory;
 
-  public AuthorizedPayment(int id, String name, String description,
+  public WebPayment(int id, String name, String description,
       PaymentRepositoryFactory paymentRepositoryFactory, Payer payer,
       AuthorizationRepository authorizationRepository, AuthorizationFactory authorizationFactory) {
     super(id, name, description, paymentRepositoryFactory);
@@ -31,28 +31,34 @@ public class AuthorizedPayment extends AptoidePayment {
     return checkAuthorization().andThen(super.process(product));
   }
 
-  public Observable<? extends Authorization> getAuthorization() {
-    return authorizationRepository.getPaymentAuthorization(getId())
-        .distinctUntilChanged(authorization -> authorization.getStatus());
+  public Observable<WebAuthorization> getAuthorization() {
+    return authorizationRepository.getPaymentAuthorization(getId(), AuthorizationFactory.WEB)
+        .distinctUntilChanged(authorization -> authorization.getStatus())
+        .cast(WebAuthorization.class);
   }
 
   protected Completable checkAuthorization() {
     return getAuthorization().takeUntil(authorization -> authorization.isAuthorized())
+        .observeOn(AndroidSchedulers.mainThread())
         .flatMapCompletable(authorization -> {
+
+          if (authorization.isInactive()) {
+            return authorizationRepository.createWebPaymentAuthorization(getId());
+          }
+
+          if (authorization.isPendingUserConsent()) {
+            return Completable.error(new PaymentNotAuthorizedException("Pending web user consent"));
+          }
 
           if (authorization.isAuthorized()) {
             return Completable.complete();
           }
 
-          if (authorization.isPendingUserConsent()) {
-            return Completable.error(
-                new PaymentNotAuthorizedException("Authorization missing user consent."));
-          }
-
           if (authorization.isFailed()) {
             return payer.getId()
                 .flatMapCompletable(payerId -> authorizationRepository.saveAuthorization(
-                    authorizationFactory.create(getId(), Authorization.Status.INACTIVE, payerId)))
+                    authorizationFactory.create(getId(), Authorization.Status.INACTIVE, payerId,
+                        AuthorizationFactory.WEB)))
                 .andThen(
                     Completable.error(new PaymentFailureException("Payment authorization failed")));
           }

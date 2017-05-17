@@ -11,6 +11,9 @@ import cm.aptoide.pt.v8engine.billing.repository.AuthorizationRepository;
 import cm.aptoide.pt.v8engine.billing.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
+import cm.aptoide.pt.v8engine.billing.services.PayPalPayment;
+import cm.aptoide.pt.v8engine.billing.services.WebAuthorization;
+import cm.aptoide.pt.v8engine.billing.services.WebPayment;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
 import rx.Completable;
@@ -47,16 +50,6 @@ public class AptoideBilling {
         .toSingle();
   }
 
-  public Completable process(int paymentId, Product product, String authorizationCode) {
-    return getPayment(paymentId, product).flatMapCompletable(
-        payment -> authorizationRepository.createPaymentAuthorization(paymentId, authorizationCode)
-            .andThen(payment.process(product)));
-  }
-
-  public Completable authorizeWeb(int paymentId) {
-    return authorizationRepository.createPaymentAuthorization(paymentId);
-  }
-
   public Single<Product> getPaidAppProduct(long appId, String storeName, boolean sponsored) {
     return productRepositoryFactory.getPaidAppProductRepository()
         .getProduct(appId, sponsored, storeName);
@@ -91,12 +84,22 @@ public class AptoideBilling {
         .getPayments(product);
   }
 
-  public Single<Payment> getPayment(int paymentId, Product product) {
-    return getPayments(product).flatMapObservable(payments -> Observable.from(payments)
-        .filter(payment -> payment.getId() == paymentId)
-        .switchIfEmpty(Observable.error(
-            new PaymentFailureException("Payment " + paymentId + "not available"))))
-        .toSingle();
+  public Observable<WebAuthorization> getWebPaymentAuthorization(int paymentId, Product product) {
+    return getWebPayment(paymentId, product).flatMapObservable(
+        payment -> payment.getAuthorization());
+  }
+
+  public Completable processWebPayment(int paymentId, Product product) {
+    return getWebPayment(paymentId, product).flatMapCompletable(
+        payment -> payment.process(product));
+  }
+
+  public Completable processPayPalPayment(Product product, String authorizationCode) {
+    return getPayments(product).flatMapObservable(payments -> Observable.from(payments))
+        .filter(payment -> payment instanceof PayPalPayment)
+        .cast(PayPalPayment.class)
+        .toSingle()
+        .flatMapCompletable(payment -> payment.process(product, authorizationCode));
   }
 
   public Observable<PaymentConfirmation> getConfirmation(Product product) {
@@ -108,5 +111,15 @@ public class AptoideBilling {
   public Single<Purchase> getPurchase(Product product) {
     return productRepositoryFactory.getProductRepository(product)
         .getPurchase(product);
+  }
+
+  private Single<WebPayment> getWebPayment(int paymentId, Product product) {
+    return getPayments(product).flatMapObservable(payments -> Observable.from(payments)
+        .filter(payment -> payment.getId() == paymentId)
+        .switchIfEmpty(Observable.error(
+            new PaymentFailureException("Payment " + paymentId + "not available"))))
+        .first()
+        .cast(WebPayment.class)
+        .toSingle();
   }
 }

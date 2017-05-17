@@ -21,6 +21,7 @@ public class PaymentAuthorization extends RealmObject {
   @PrimaryKey private int paymentId;
   @Required private String status;
   @Required private String payerId;
+  @Required private String type;
 
   private String url;
   private String redirectUrl;
@@ -29,12 +30,13 @@ public class PaymentAuthorization extends RealmObject {
   }
 
   public PaymentAuthorization(int paymentId, String url, String redirectUrl, String status,
-      String payerId) {
+      String payerId, String type) {
     this.paymentId = paymentId;
     this.url = url;
     this.redirectUrl = redirectUrl;
     this.status = status;
     this.payerId = payerId;
+    this.type = type;
   }
 
   public String getPayerId() {
@@ -55,5 +57,9 @@ public class PaymentAuthorization extends RealmObject {
 
   public String getStatus() {
     return status;
+  }
+
+  public String getType() {
+    return type;
   }
 }
