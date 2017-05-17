@@ -10,6 +10,13 @@
     <item name="android:textAllCaps">true</item>
   </style>
 
+  <style name="Aptoide.Button.Facebook">
+    <item name="android:background">@color/facebook</item>
+    <item name="android:drawableLeft">@drawable/com_facebook_button_icon_white</item>
+    <item name="android:text">@string/connect_with_facebook</item>
+    <item name="android:contentDescription">@string/com_facebook_loginview_log_in_button_long</item>
+  </style>
+
 
   <style name="Aptoide.Button.Ghost">
     <item name="android:layout_width">wrap_content</item>
