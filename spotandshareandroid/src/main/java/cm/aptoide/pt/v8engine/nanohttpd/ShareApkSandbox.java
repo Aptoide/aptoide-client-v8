@@ -56,11 +56,11 @@ public class ShareApkSandbox extends NanoHTTPD {
         : context.getString(stringId);
   }
 
-  public void start() throws IOException {
-    start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
-  }
-
   @Override public Response serve(IHTTPSession session) {
     return shareApkServer.serve(session);
+  }
+
+  public void start() throws IOException {
+    start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
   }
 }
