@@ -32,8 +32,7 @@ public class NotificationProvider {
   public Single<List<AptoideNotification>> getDismissedNotifications(
       @AptoideNotification.NotificationType Integer[] notificationsTypes, long startTime,
       long endTime) {
-    return notificationAccessor.getDismissed(notificationsTypes, startTime,
-        endTime)
+    return notificationAccessor.getDismissed(notificationsTypes, startTime, endTime)
         .first()
         .flatMap(notifications -> Observable.from(notifications)
             .map(notification -> convertToAptoideNotification(notification))

@@ -34,11 +34,11 @@
     <TextView
         android:id="@+id/description"
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="@string/wizard_sub_title_viewpager_one"
         android:layout_gravity="center"
+        android:layout_weight="1"
         android:gravity="center"
+        android:text="@string/wizard_sub_title_viewpager_one"
         style="@style/OnBoarding.SubTitle.TextView"
         />
 
