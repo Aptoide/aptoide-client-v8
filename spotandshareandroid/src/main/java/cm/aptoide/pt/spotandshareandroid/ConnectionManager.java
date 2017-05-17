@@ -53,6 +53,7 @@ public class ConnectionManager {
   private final GroupValidator groupValidator;
   private final HotspotControlCounter hotspotControlCounter;
   private final GroupParser groupParser;
+  private HotspotManager hotspotManager;
   private HotspotSSIDCodeMapper hotspotSSIDCodeMapper;
   private WifiManager wifimanager;
   private ArrayList<Group> clients;
@@ -246,7 +247,7 @@ public class ConnectionManager {
   private ConnectionManager(Context context, SharedPreferences sharedPreferences,
       WifiManager wifimanager, HotspotSSIDCodeMapper hotspotSSIDCodeMapper,
       HotspotControlCounter hotspotControlCounter, GroupParser groupParser,
-      GroupValidator groupValidator) {
+      GroupValidator groupValidator, HotspotManager hotspotManager) {
     this.context = context;
     this.wifimanager = wifimanager;
     prefs = sharedPreferences;
@@ -254,6 +255,7 @@ public class ConnectionManager {
     this.hotspotControlCounter = hotspotControlCounter;
     this.groupParser = groupParser;
     this.groupValidator = groupValidator;
+    this.hotspotManager = hotspotManager;
   }
 
   public static ConnectionManager getInstance(Context context) {
@@ -265,7 +267,7 @@ public class ConnectionManager {
       instance = new ConnectionManager(context, defaultSharedPreferences,
           (WifiManager) context.getSystemService(Context.WIFI_SERVICE), hotspotSSIDCodeMapper,
           new HotspotControlCounter(defaultSharedPreferences, hotspotSSIDCodeMapper),
-          new GroupParser(), new GroupValidator());
+          new GroupParser(), new GroupValidator(), new HotspotManager(context));
     }
     return instance;
   }
@@ -312,106 +314,20 @@ public class ConnectionManager {
   }
 
   public void resetHotspot(boolean enable) {
-    WifiManager wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    WifiConfiguration wc = DataHolder.getInstance()
-        .getWcOnJoin();
-
-    Method[] wmMethods = wifimanager.getClass()
-        .getDeclaredMethods();   //Get all declared methods in WifiManager class
-    boolean methodFound = false;
-    for (Method method : wmMethods) {
-      if (method.getName()
-          .equals("setWifiApEnabled")) {
-
-        try {
-          method.invoke(wifimanager, wc, enable);
-        } catch (IllegalAccessException e) {
-          e.printStackTrace();
-        } catch (InvocationTargetException e) {
-          e.printStackTrace();
-        }
-      }
-    }
+    hotspotManager.resetHotspot(enable);
   }
 
   public int enableHotspot(String deviceName) {
-    if (wifimanager == null) {
-      wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    }
-    if (wifimanager.isWifiEnabled()) {
-      wifimanager.setWifiEnabled(false);
-    }
-    Method[] wmMethods = wifimanager.getClass()
-        .getDeclaredMethods();   //Get all declared methods in WifiManager class
-    boolean methodFound = false;
-    for (Method method : wmMethods) {
-      if (method.getName()
-          .equals("getWifiApConfiguration")) {
-        Logger.d(TAG, "saving old ssid ");
-        try {
-          WifiConfiguration config = (WifiConfiguration) method.invoke(wifimanager);
-          DataHolder.getInstance()
-              .setWcOnJoin(config);
-        } catch (IllegalAccessException e) {
-          e.printStackTrace();
-        } catch (InvocationTargetException e) {
-          e.getCause()
-              .printStackTrace();
-          e.printStackTrace();
-        }
-      }
-      if (method.getName()
-          .equals("setWifiApEnabled")) {
-        methodFound = true;
-        WifiConfiguration netConfig = new WifiConfiguration();
-        netConfig.SSID = String.valueOf(hotspotSSIDCodeMapper.encode(RULE_VERSION))
-            + "APTXV"
-            + hotspotControlCounter.incrementAndGetStringCounter()
-            + "_"
-            + getRandomAlphanumericString(5)
-            + "_"
-            + deviceName
-            + getSpotShareID()
-            + "";
-        netConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED);
-        netConfig.preSharedKey = "passwordAptoide";
-        netConfig.status = WifiConfiguration.Status.ENABLED;
-        netConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
-        netConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
-        netConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
-        try {
-          boolean apstatus = (Boolean) method.invoke(wifimanager, netConfig, true);
-          for (Method isWifiApEnabledmethod : wmMethods) {
-            if (isWifiApEnabledmethod.getName()
-                .equals("isWifiApEnabled")) {
-              while (!(Boolean) isWifiApEnabledmethod.invoke(wifimanager)) {
-              }
-              for (Method method1 : wmMethods) {
-                if (method1.getName()
-                    .equals("getWifiApState")) {
-                  int apstate;
-                  apstate = (Integer) method1.invoke(wifimanager);
-                }
-              }
-            }
-          }
-          if (apstatus) {
-            return ConnectionManager.SUCCESS_HOTSPOT_CREATION;
-          } else {
-            return ConnectionManager.FAILED_TO_CREATE_HOTSPOT;
-          }
-        } catch (IllegalArgumentException e) {
-          e.printStackTrace();
-        } catch (IllegalAccessException e) {
-          e.printStackTrace();
-        } catch (InvocationTargetException e) {
-          e.getCause()
-              .printStackTrace();
-          e.printStackTrace();
-        }
-      }
-    }
-    return ConnectionManager.ERROR_UNKNOWN;
+    String ssid = String.valueOf(hotspotSSIDCodeMapper.encode(RULE_VERSION))
+        + "APTXV"
+        + hotspotControlCounter.incrementAndGetStringCounter()
+        + "_"
+        + getRandomAlphanumericString(5)
+        + "_"
+        + deviceName
+        + getSpotShareID()
+        + "";
+    return hotspotManager.enableHotspot(ssid);
   }
 
   private String getRandomAlphanumericString(int length) {
@@ -442,7 +358,6 @@ public class ConnectionManager {
   }
 
   public int joinHotspot(String chosenHotspot, boolean shouldReconnect) {
-
     WifiConfiguration conf = new WifiConfiguration();
     Logger.d(TAG, "chosen hotspot is : " + chosenHotspot);
     conf.SSID = "\"" + chosenHotspot + "\"";
@@ -620,30 +535,6 @@ public class ConnectionManager {
       scanner.purge();
     }
   }
-
-  //public void reconnectToGroup(final String group) {
-  //  executor.execute(new Runnable() {
-  //    @Override public void run() {
-  //      joinHotspot(group, true);
-  //    }
-  //  });
-  //}
-
-  //private boolean isGhost(Group group, ArrayList<Group> clients) {
-  //  String ssidDeviceID = ssid.split("_")[2];
-  //  for (int i = 0; i < clients.size(); i++) {
-  //    String tmp = clients.get(i);
-  //    String deviceID = tmp.split("_")[2];
-  //    if (deviceID.equals(ssidDeviceID)) {
-  //
-  //    }
-  //  }
-  //  return true;
-  //}
-  //
-  //private void removeGhost(String tmp) {
-  //
-  //}
 
   public void recoverNetworkState() {
     if (wifimanager == null) {
