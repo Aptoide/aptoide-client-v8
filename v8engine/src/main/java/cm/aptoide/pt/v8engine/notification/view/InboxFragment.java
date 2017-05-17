@@ -2,8 +2,11 @@ package cm.aptoide.pt.v8engine.notification.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +47,7 @@ public class InboxFragment extends FragmentView implements InboxView {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    setupToolbar(view);
     list = (RecyclerView) view.findViewById(R.id.fragment_inbox_list);
     adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
     list.setAdapter(adapter);
@@ -57,5 +61,17 @@ public class InboxFragment extends FragmentView implements InboxView {
 
   @Override public Observable<AptoideNotification> notificationSelection() {
     return notificationSubject;
+  }
+
+  private Toolbar setupToolbar(View view) {
+    Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    toolbar.setLogo(R.drawable.logo_toolbar);
+    toolbar.setTitle(R.string.fragment_inbox_title_text);
+    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    actionBar.setDisplayHomeAsUpEnabled(true);
+
+    return toolbar;
   }
 }

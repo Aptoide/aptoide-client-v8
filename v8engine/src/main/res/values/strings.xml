@@ -641,5 +641,6 @@
   <string name="my_account_user_store">My Store</string>
   <string name="my_account_edit_store">Edit</string>
   <string name="my_account_log_out">LOG OUT</string>
+  <string name="fragment_inbox_title_text">Notification Center</string>
 
 </resources>

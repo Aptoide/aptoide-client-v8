@@ -98,6 +98,10 @@
     <item name="android:textColor">@color/greymedium</item>
   </style>
 
+  <style name="Aptoide.TextView.Regular.S.Greyfog">
+    <item name="android:textColor">@color/greyfog</item>
+  </style>
+
   <style name="Aptoide.TextView.Regular.XS.Grey">
     <item name="android:textColor">@color/grey</item>
   </style>
