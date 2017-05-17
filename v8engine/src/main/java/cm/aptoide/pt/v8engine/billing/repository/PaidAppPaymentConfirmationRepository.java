@@ -60,9 +60,9 @@ public class PaidAppPaymentConfirmationRepository extends PaymentConfirmationRep
 
   @Override
   protected Single<BaseV3Response> createServerConfirmation(Product product, int paymentId,
-      String paymentConfirmationId) {
+      String metadataId) {
     return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId, operatorManager,
-        ((PaidAppProduct) product).getStoreName(), paymentConfirmationId, bodyInterceptorV3,
+        ((PaidAppProduct) product).getStoreName(), metadataId, bodyInterceptorV3,
         httpClient, converterFactory)
         .observe()
         .toSingle();

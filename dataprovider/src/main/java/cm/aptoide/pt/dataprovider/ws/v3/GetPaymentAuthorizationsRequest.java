@@ -11,9 +11,6 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
-/**
- * Created by marcelobenites on 15/11/16.
- */
 public class GetPaymentAuthorizationsRequest extends V3<PaymentAuthorizationsResponse> {
 
   private GetPaymentAuthorizationsRequest(BaseBody baseBody,

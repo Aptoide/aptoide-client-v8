@@ -70,7 +70,7 @@ public abstract class PaymentConfirmationRepository {
   }
 
   protected abstract Single<BaseV3Response> createServerConfirmation(Product product, int paymentId,
-      String paymentConfirmationId);
+      String metadataId);
 
   protected Completable syncPaymentConfirmation(Product product) {
     return backgroundSync.scheduleConfirmationSync(product);

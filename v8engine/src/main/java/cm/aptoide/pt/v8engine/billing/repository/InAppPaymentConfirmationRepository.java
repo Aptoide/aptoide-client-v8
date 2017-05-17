@@ -65,9 +65,9 @@ public class InAppPaymentConfirmationRepository extends PaymentConfirmationRepos
 
   @Override
   protected Single<BaseV3Response> createServerConfirmation(Product product, int paymentId,
-      String paymentConfirmationId) {
+      String metadataId) {
     return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId, operatorManager,
-        ((InAppProduct) product).getDeveloperPayload(), paymentConfirmationId, bodyInterceptorV3,
+        ((InAppProduct) product).getDeveloperPayload(), metadataId, bodyInterceptorV3,
         httpClient, converterFactory)
         .observe()
         .toSingle();
