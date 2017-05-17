@@ -31,7 +31,7 @@
       android:paddingTop="@dimen/keyline_1"
       >
 
-    <cm.aptoide.pt.v8engine.view.custom.BezelImageView
+    <ImageView
         android:id="@+id/profile_image"
         android:layout_width="@dimen/navdrawer_profile_image_size"
         android:layout_height="@dimen/navdrawer_profile_image_size"
@@ -39,7 +39,6 @@
         android:layout_marginTop="23dp"
         android:scaleType="centerCrop"
         android:src="@drawable/user_account_white"
-        app:maskDrawable="@drawable/circle_mask"
         />
 
     <TextView
