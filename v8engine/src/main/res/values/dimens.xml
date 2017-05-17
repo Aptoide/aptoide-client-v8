@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 25/07/2016.
-  -->
-
 <resources>
   <dimen name="tabsHeight">48dp</dimen>
   <dimen name="activity_horizontal_margin">0dp</dimen>
