@@ -19,13 +19,13 @@
   <TextView
       android:layout_height="wrap_content"
       android:text="@string/wizard_title_viewpager_one"
-      style="@style/onBoardingTitle"
+      style="@style/OnBoarding.Title.TextView"
       />
 
   <TextView
       android:layout_height="wrap_content"
       android:text="@string/wizard_sub_title_viewpager_one"
-      style="@style/onBoardingSubTitle"
+      style="@style/OnBoarding.SubTitle.TextView"
       />
 
 

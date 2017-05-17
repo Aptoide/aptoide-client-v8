@@ -54,7 +54,7 @@ android:fitsSystemWindows="true"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:text="@string/login_sign_up_title"
-          style="@style/onBoardingTitle"
+          style="@style/OnBoarding.Title.TextView"
           />
 
 
@@ -63,7 +63,7 @@ android:fitsSystemWindows="true"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:text="@string/wizard_sub_title_viewpager_three"
-          style="@style/onBoardingSubTitle"
+          style="@style/OnBoarding.SubTitle.TextView"
           />
 
       <ImageView
@@ -79,7 +79,7 @@ android:fitsSystemWindows="true"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:text="@string/wizard_sub_sub_title_viewpager_three"
-          style="@style/onBoardingSubTitle"
+          style="@style/OnBoarding.SubTitle.TextView"
           />
 
 

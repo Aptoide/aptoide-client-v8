@@ -1,8 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 29/08/2016.
-  -->
-
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
   <style name="Theme.AppCompat.Translucent">
@@ -315,19 +311,6 @@
     <item name="android:background">@drawable/fortumo_btn_default_holo_light</item>
   </style>
 
-
-  <!-- Base application theme. -->
-  <!--<style name="CustomToolbarTheme" parent="ThemeOverlay.AppCompat.ActionBar">-->
-  <!--<item name="android:textColorPrimary">@color/white</item>-->
-  <!--<item name="android:textColor">@color/black</item>-->
-  <!--<item name="android:textColorSecondary">@color/white</item>-->
-  <!--<item name="android:textColorPrimaryInverse">@color/white</item>-->
-  <!--</style>-->
-
-  <!--<style name="Widget.Aptoide.Button.Header" parent="Widget.AppCompat.Button.Small">-->
-  <!--<item name="android:textColor">?attr/inverseTextColor</item>-->
-  <!--</style>-->
-
   <style name="AppViewHeaderTextAppView" parent="TextAppearance.AppCompat.Medium">
     <item name="android:textColor">@color/white</item>
     <item name="android:textSize">@dimen/appview_title_text_size</item>
@@ -353,7 +336,6 @@
     <item name="android:background">?sectionListView.sectionItemBackground</item>
   </style>
 
-
   <style name="MenuDrawer"/>
 
   <style name="MenuDrawer.Widget"/>
@@ -368,40 +350,6 @@
     <item name="android:drawablePadding">16dp</item>
     <item name="android:gravity">center_vertical</item>
   </style>
-
-
-  <!--<style name="WidgetButtonCustom" parent="@android:style/Widget.Button">-->
-  <!--<item name="android:layout_width">wrap_content</item>-->
-  <!--<item name="android:layout_height">wrap_content</item>-->
-  <!--<item name="android:textAppearance">@android:style/TextAppearance.Medium</item>-->
-  <!--<item name="android:textColor">?attr/inverseTextColor</item>-->
-  <!--<item name="android:maxLines">1</item>-->
-  <!--<item name="android:ellipsize">end</item>-->
-  <!--<item name="android:singleLine">true</item>-->
-  <!--<item name="android:paddingLeft">15dp</item>-->
-  <!--<item name="android:paddingRight">15dp</item>-->
-  <!--<item name="android:textStyle">normal</item>-->
-  <!--<item name="android:gravity">center</item>-->
-  <!--</style>-->
-
-
-  <!--<style name="WidgetButtonCustomAptoide" parent="WidgetButtonCustom">-->
-  <!--<item name="android:background">@drawable/aptoide_btn_default_holo_light</item>-->
-  <!--</style>-->
-
-  <!--<style name="WidgetButtonCustomGray" parent="@android:style/Widget.Button">-->
-  <!--<item name="android:layout_width">fill_parent</item>-->
-  <!--<item name="android:layout_height">wrap_content</item>-->
-  <!--<item name="android:background">@drawable/gray_btn_default_holo_light</item>-->
-  <!--<item name="android:textAppearance">@android:style/TextAppearance.Medium</item>-->
-  <!--<item name="android:textColor">?android:attr/textColorPrimary</item>-->
-  <!--<item name="android:maxLines">1</item>-->
-  <!--<item name="android:ellipsize">end</item>-->
-  <!--<item name="android:singleLine">true</item>-->
-  <!--<item name="android:layout_margin">2dp</item>-->
-  <!--<item name="android:textStyle">normal</item>-->
-  <!--</style>-->
-
 
   <style name="WidgetButtonVisa" parent="WidgetButtonCustom">
     <item name="android:layout_width">match_parent</item>
@@ -741,7 +689,7 @@
     <item name="android:textColor">@color/grey_700</item>
   </style>
 
-  <style name="FragmentRateAndReviewsLabel">
+  <style name="rateAndReviews_starLabel_textView">
     <item name="android:layout_alignParentLeft">true</item>
     <item name="android:layout_centerVertical">true</item>
     <item name="android:layout_gravity">center</item>
@@ -760,7 +708,7 @@
     <item name="android:gravity">right</item>
   </style>
 
-  <style name="FragmentRateAndReviewsProgressBar" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
+  <style name="RateAndReviews.Custom.ProgressBar" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">10dp</item>
     <item name="android:layout_centerVertical">true</item>
@@ -806,7 +754,6 @@
   <style name="Widget.Aptoide.defaultColorText" parent="Base.TextAppearance.AppCompat.Small">
     <item name="android:textColor">?attr/colorPrimary</item>
   </style>
-
 
   <style name="TextAppearance.Aptoide.Title" parent="@style/TextAppearance.AppCompat.Title">
     <item name="android:textColor">@color/activity_payment_dark_gray</item>
@@ -859,16 +806,15 @@
   </style>
 
 
-  <style name="onBoardingTitle" parent="Aptoide.TextView.Medium.L">
+  <style name="OnBoarding.Title.TextView" parent="Aptoide.TextView.Medium.L">
     <item name="android:layout_marginBottom">16dp</item>
     <item name="android:layout_marginTop">10dp</item>
     <item name="android:textColor">@color/white</item>
-    <item name="android:textStyle">bold</item>
     <item name="android:gravity">center</item>
   </style>
 
 
-  <style name="onBoardingSubTitle" parent="Aptoide.TextView.Regular.S">
+  <style name="OnBoarding.SubTitle.TextView" parent="Aptoide.TextView.Regular.S">
     <item name="android:gravity">center</item>
     <item name="android:layout_marginLeft">10dp</item>
     <item name="android:layout_marginRight">10dp</item>

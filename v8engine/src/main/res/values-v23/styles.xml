@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <style name="FragmentRateAndReviewsLabel">
+  <style name="rateAndReviews_starLabel_textView">
     <item name="android:layout_alignParentLeft">true</item>
     <item name="android:layout_centerVertical">true</item>
     <item name="android:layout_gravity">center</item>
