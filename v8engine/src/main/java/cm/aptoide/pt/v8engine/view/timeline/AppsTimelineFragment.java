@@ -242,7 +242,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     dateCalculator = new DateCalculator();
     spannableFactory = new SpannableFactory();
     downloadFactory = new DownloadFactory();
-    linksHandlerFactory = new LinksHandlerFactory();
+    linksHandlerFactory = new LinksHandlerFactory(getContext());
     packageRepository = new PackageRepository(getContext().getPackageManager());
     spinnerProgressDisplayable = new ProgressBarDisplayable().setFullRow();
 

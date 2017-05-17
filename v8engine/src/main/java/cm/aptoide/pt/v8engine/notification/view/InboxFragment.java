@@ -9,10 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.notification.AptoideNotification;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import java.util.Collections;
 import java.util.List;
+import rx.Observable;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by pedroribeiro on 16/05/17.
@@ -22,12 +25,15 @@ public class InboxFragment extends FragmentView implements InboxView {
 
   private RecyclerView list;
   private InboxAdapter adapter;
+  private PublishSubject<AptoideNotification> notificationSubject;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     attachPresenter(new InboxPresenter(this,
-            ((V8Engine) getContext().getApplicationContext()).getNotificationCenter()),
+            ((V8Engine) getContext().getApplicationContext()).getNotificationCenter(),
+            new LinksHandlerFactory(getContext())),
         savedInstanceState);
+    notificationSubject = PublishSubject.create();
   }
 
   @Nullable @Override
@@ -39,7 +45,7 @@ public class InboxFragment extends FragmentView implements InboxView {
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     list = (RecyclerView) view.findViewById(R.id.fragment_inbox_list);
-    adapter = new InboxAdapter(Collections.emptyList());
+    adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
     list.setAdapter(adapter);
     list.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
@@ -47,5 +53,9 @@ public class InboxFragment extends FragmentView implements InboxView {
 
   @Override public void showNotifications(List<AptoideNotification> notifications) {
     adapter.updateNotifications(notifications);
+  }
+
+  @Override public Observable<AptoideNotification> notificationSelection() {
+    return notificationSubject;
   }
 }
