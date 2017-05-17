@@ -10,20 +10,27 @@ import android.view.SurfaceHolder;
  * Created by jdandrade on 14/11/2016.
  */
 public class MyGLSurfaceView extends GLSurfaceView {
-  private final MyGLRenderer myGLRenderer;
+
+  private MyGLRenderer myGLRenderer;
 
   public MyGLSurfaceView(Context context, AttributeSet attrs) {
-    this(context, attrs, 0);
-    setZOrderOnTop(true);
-    SurfaceHolder surfaceHolder = getHolder();
-    surfaceHolder.setFormat(PixelFormat.TRANSPARENT);
+    super(context, attrs);
+    setTransparent(context);
   }
 
-  public MyGLSurfaceView(Context context, AttributeSet attrs, int defStyle) {
-    super(context, attrs);
+  public MyGLSurfaceView(Context context) {
+    super(context);
+    setTransparent(context);
+  }
+
+  private void setTransparent(Context context) {
     setEGLContextClientVersion(2);
 
     myGLRenderer = new MyGLRenderer(context);
     setRenderer(myGLRenderer);
+
+    setZOrderOnTop(true);
+    SurfaceHolder surfaceHolder = getHolder();
+    surfaceHolder.setFormat(PixelFormat.TRANSPARENT);
   }
 }

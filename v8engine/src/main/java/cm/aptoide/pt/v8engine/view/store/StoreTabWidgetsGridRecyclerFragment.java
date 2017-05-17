@@ -17,6 +17,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
@@ -66,7 +67,8 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
               DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
                   V8Engine.getContext()), DataProvider.getConfiguration()
                   .getPartnerId(), accountManager.isAccountMature(), bodyInterceptor, httpClient,
-              converterFactory);
+              converterFactory, V8Engine.getQManager()
+                  .getFilters(ManagerPreferences.getHWSpecsFilter()));
         })
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getDatalist()
