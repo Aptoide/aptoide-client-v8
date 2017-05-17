@@ -9,7 +9,7 @@ import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
 /**
  * Created by neuro on 08-05-2017.
  */
-public class ServerModuleList implements ServerModule {
+public class ServerModuleList extends MimeTypeServerModule {
 
   private final List<AbstractServerModule> abstractServerModules;
 
@@ -52,7 +52,8 @@ public class ServerModuleList implements ServerModule {
       }
     }
 
-    return newDefaultErrorResponse();
+    NanoHTTPD.Response serve = super.serve(session);
+    return serve != null ? serve : newDefaultErrorResponse();
   }
 
   private NanoHTTPD.Response newDefaultErrorResponse() {
