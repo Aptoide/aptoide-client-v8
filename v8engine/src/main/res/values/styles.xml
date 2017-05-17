@@ -5,6 +5,14 @@
 
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+  <style name="Theme.AppCompat.Translucent">
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:colorBackgroundCacheHint">@null</item>
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowAnimationStyle">@android:style/Animation</item>
+  </style>
+
   <style name="Widget.Styled.ActionBar.Aptoide" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
     <item name="background">@drawable/ab_background_aptoide</item>
     <item name="logo">@drawable/ic_widget_launcher</item>
@@ -488,11 +496,11 @@
   </style>
 
   <style name="ToolbarBluegrey" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/bluegrey</item>
+    <item name="pstsIndicatorColor">@color/blue_grey</item>
   </style>
 
   <style name="ToolbarLightgreen" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/lightgreen</item>
+    <item name="pstsIndicatorColor">@color/light_green</item>
   </style>
 
   <style name="ToolbarAmber" parent="@style/Theme.AppCompat">
@@ -524,7 +532,7 @@
   </style>
 
   <style name="ToolbarDeeppurple" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/deeppurple</item>
+    <item name="pstsIndicatorColor">@color/deep_purple</item>
   </style>
 
   <style name="ToolbarBlack" parent="@style/Theme.AppCompat">
@@ -532,7 +540,7 @@
   </style>
 
   <style name="ToolbarLightblue" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/lightblue</item>
+    <item name="pstsIndicatorColor">@color/light_blue</item>
   </style>
 
   <style name="ToolbarGreyTransparent" parent="@style/Theme.AppCompat">
@@ -548,11 +556,11 @@
   </style>
 
   <style name="ToolbarBluegreyTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/bluegrey_700</item>
+    <item name="pstsIndicatorColor">@color/blue_grey_700</item>
   </style>
 
   <style name="ToolbarLightgreenTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/lightgreen_700</item>
+    <item name="pstsIndicatorColor">@color/light_green_700</item>
   </style>
 
   <style name="ToolbarAmberTransparent" parent="@style/Theme.AppCompat">
@@ -584,7 +592,7 @@
   </style>
 
   <style name="ToolbarDeeppurpleTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/deeppurple_700</item>
+    <item name="pstsIndicatorColor">@color/deep_purple_700</item>
   </style>
 
   <style name="ToolbarBlackTransparent" parent="@style/Theme.AppCompat">
@@ -592,7 +600,7 @@
   </style>
 
   <style name="ToolbarLightblueTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/lightblue_700</item>
+    <item name="pstsIndicatorColor">@color/light_blue_700</item>
   </style>
 
 
@@ -658,7 +666,7 @@
 
   <style name="WidgetButtonCustomAptoideDeepPurple" parent="WidgetButtonCustomAptoide">
     <item name="android:background">@drawable/deep_purple_btn_default_holo_light</item>
-    <item name="android:textColor">@color/deeppurple_700</item>
+    <item name="android:textColor">@color/deep_purple_700</item>
   </style>
 
   <style name="WidgetButtonCustomAmber" parent="WidgetButtonCustom">
@@ -685,7 +693,7 @@
 
   <style name="WidgetButtonCustomAptoideLightblue" parent="WidgetButtonCustomAptoide">
     <item name="android:background">@drawable/lightblue_btn_default_holo_light</item>
-    <item name="android:textColor">@color/lightblue_700</item>
+    <item name="android:textColor">@color/light_blue_700</item>
   </style>
 
   <style name="WidgetButtonCustomLightgreen" parent="WidgetButtonCustom">
@@ -694,7 +702,7 @@
 
   <style name="WidgetButtonCustomAptoideLightgreen" parent="WidgetButtonCustomAptoide">
     <item name="android:background">@drawable/light_green_btn_default_holo_light</item>
-    <item name="android:textColor">@color/lightgreen_700</item>
+    <item name="android:textColor">@color/light_green_700</item>
   </style>
 
   <style name="WidgetButtonCustomBluegrey" parent="WidgetButtonCustom">
@@ -703,7 +711,7 @@
 
   <style name="WidgetButtonCustomAptoideBluegrey" parent="WidgetButtonCustomAptoide">
     <item name="android:background">@drawable/blue_grey_btn_default_holo_light</item>
-    <item name="android:textColor">@color/bluegrey_700</item>
+    <item name="android:textColor">@color/blue_grey_700</item>
   </style>
 
   <style name="WidgetButtonCustomBrown" parent="WidgetButtonCustom">
@@ -851,33 +859,22 @@
   </style>
 
 
-  <style name="Wizard_Title">
-    <item name="android:layout_width">match_parent</item>
-    <item name="android:id">@android:id/text1</item>
+  <style name="onBoardingTitle" parent="Aptoide.TextView.Medium.L">
     <item name="android:layout_marginBottom">16dp</item>
     <item name="android:layout_marginTop">10dp</item>
-    <item name="android:fontFamily">sans-serif</item>
     <item name="android:textColor">@color/white</item>
-    <item name="android:textSize">22sp</item>
     <item name="android:textStyle">bold</item>
     <item name="android:gravity">center</item>
   </style>
 
 
-  <style name="Wizard_Sub_Title">
-    <item name="android:layout_width">match_parent</item>
-    <item name="android:id">@android:id/text2</item>
+  <style name="onBoardingSubTitle" parent="Aptoide.TextView.Regular.S">
     <item name="android:gravity">center</item>
     <item name="android:layout_marginLeft">10dp</item>
     <item name="android:layout_marginRight">10dp</item>
     <item name="android:layout_marginStart">10dp</item>
     <item name="android:layout_marginEnd">10dp</item>
     <item name="android:layout_marginBottom">10dp</item>
-    <item name="android:fontFamily">sans-serif</item>
     <item name="android:textColor">@color/white</item>
-    <item name="android:textSize">14sp</item>
-    <item name="android:lineSpacingMultiplier">1.33</item>
   </style>
-
-
 </resources>

@@ -54,13 +54,13 @@ public enum StoreThemeEnum {
 
   //Alternative name to BLUEGREY
   APTOIDE_STORE_THEME_BLUEGRAY(R.style.AptoideThemeDefaultBluegrey, R.color.transparent_bluegrey,
-      R.color.bluegrey, R.drawable.custom_categ_midnight, R.drawable.gradient_midnight,
-      R.color.bluegrey_700, R.drawable.button_border_bluegrey, R.drawable.ic_check_blue_grey,
+      R.color.blue_grey, R.drawable.custom_categ_midnight, R.drawable.gradient_midnight,
+      R.color.blue_grey_700, R.drawable.button_border_bluegrey, R.drawable.ic_check_blue_grey,
       R.drawable.ic_plus_blue_grey),
 
   APTOIDE_STORE_THEME_BLUEGREY(R.style.AptoideThemeDefaultBluegrey, R.color.transparent_bluegrey,
-      R.color.bluegrey, R.drawable.custom_categ_midnight, R.drawable.gradient_midnight,
-      R.color.bluegrey_700, R.drawable.button_border_bluegrey, R.drawable.ic_check_blue_grey,
+      R.color.blue_grey, R.drawable.custom_categ_midnight, R.drawable.gradient_midnight,
+      R.color.blue_grey_700, R.drawable.button_border_bluegrey, R.drawable.ic_check_blue_grey,
       R.drawable.ic_plus_blue_grey),
 
   APTOIDE_STORE_THEME_GREY(R.style.AptoideThemeDefaultGrey, R.color.transparent_grey, R.color.grey,
@@ -72,8 +72,8 @@ public enum StoreThemeEnum {
       R.drawable.button_border_black, R.drawable.ic_check_black, R.drawable.ic_plus_black),
 
   APTOIDE_STORE_THEME_DEEPPURPLE(R.style.AptoideThemeDefaultDeepPurple,
-      R.color.transparent_deeppurple, R.color.deeppurple, R.drawable.custom_categ_magenta,
-      R.drawable.gradient_magenta, R.color.deeppurple_700, R.drawable.button_border_deeppurple,
+      R.color.transparent_deeppurple, R.color.deep_purple, R.drawable.custom_categ_magenta,
+      R.drawable.gradient_magenta, R.color.deep_purple_700, R.drawable.button_border_deeppurple,
       R.drawable.ic_check_deep_purple, R.drawable.ic_plus_deep_purple),
 
   APTOIDE_STORE_THEME_AMBER(R.style.AptoideThemeDefaultAmber, R.color.transparent_amber,
@@ -81,8 +81,8 @@ public enum StoreThemeEnum {
       R.drawable.button_border_amber, R.drawable.ic_check_amber, R.drawable.ic_plus_amber),
 
   APTOIDE_STORE_THEME_LIGHTGREEN(R.style.AptoideThemeDefaultLightgreen,
-      R.color.transparent_lightgreen, R.color.lightgreen, R.drawable.custom_categ_springgreen,
-      R.drawable.gradient_springgreen, R.color.lightgreen_700, R.drawable.button_border_lightgreen,
+      R.color.transparent_lightgreen, R.color.light_green, R.drawable.custom_categ_springgreen,
+      R.drawable.gradient_springgreen, R.color.light_green_700, R.drawable.button_border_lightgreen,
       R.drawable.ic_check_light_green, R.drawable.ic_plus_light_green),
 
   APTOIDE_STORE_THEME_LIME(R.style.AptoideThemeDefaultLime, R.color.transparent_lime, R.color.lime,
@@ -90,8 +90,8 @@ public enum StoreThemeEnum {
       R.drawable.button_border_lime, R.drawable.ic_check_lime, R.drawable.ic_plus_lime),
 
   APTOIDE_STORE_THEME_LIGHTBLUE(R.style.AptoideThemeDefaultLightblue, R.color.transparent_lightblue,
-      R.color.lightblue, R.drawable.custom_categ_lightsky, R.drawable.gradient_lightsky,
-      R.color.lightblue_700, R.drawable.button_border_lightblue, R.drawable.ic_check_light_blue,
+      R.color.light_blue, R.drawable.custom_categ_lightsky, R.drawable.gradient_lightsky,
+      R.color.light_blue_700, R.drawable.button_border_lightblue, R.drawable.ic_check_light_blue,
       R.drawable.ic_plus_light_blue),
 
   //Translated themes to new version
@@ -118,8 +118,8 @@ public enum StoreThemeEnum {
 
   //MIDNIGHT TO BLUEGREY
   APTOIDE_STORE_THEME_MIDNIGHT(R.style.AptoideThemeDefaultBluegrey, R.color.transparent_bluegrey,
-      R.color.bluegrey, R.drawable.custom_categ_midnight, R.drawable.gradient_midnight,
-      R.color.bluegrey_700, R.drawable.button_border_bluegrey, R.drawable.ic_check_blue_grey,
+      R.color.blue_grey, R.drawable.custom_categ_midnight, R.drawable.gradient_midnight,
+      R.color.blue_grey_700, R.drawable.button_border_bluegrey, R.drawable.ic_check_blue_grey,
       R.drawable.ic_plus_blue_grey),
 
   //SILVER AND DIMGREY TO GREY
@@ -133,8 +133,8 @@ public enum StoreThemeEnum {
 
   //MAGENTA TO DEEPPURPLE
   APTOIDE_STORE_THEME_MAGENTA(R.style.AptoideThemeDefaultDeepPurple, R.color.transparent_deeppurple,
-      R.color.deeppurple, R.drawable.custom_categ_magenta, R.drawable.gradient_magenta,
-      R.color.deeppurple_700, R.drawable.button_border_deeppurple, R.drawable.ic_check_deep_purple,
+      R.color.deep_purple, R.drawable.custom_categ_magenta, R.drawable.gradient_magenta,
+      R.color.deep_purple_700, R.drawable.button_border_deeppurple, R.drawable.ic_check_deep_purple,
       R.drawable.ic_plus_deep_purple),
 
   //YELLOW AND GOLD TO AMBER
@@ -148,8 +148,8 @@ public enum StoreThemeEnum {
 
   //SPRINGGREEN TO LIGHTGREEN
   APTOIDE_STORE_THEME_SPRINGGREEN(R.style.AptoideThemeDefaultLightgreen,
-      R.color.transparent_lightgreen, R.color.lightgreen, R.drawable.custom_categ_springgreen,
-      R.drawable.gradient_springgreen, R.color.lightgreen_700, R.drawable.button_border_lightgreen,
+      R.color.transparent_lightgreen, R.color.light_green, R.drawable.custom_categ_springgreen,
+      R.drawable.gradient_springgreen, R.color.light_green_700, R.drawable.button_border_lightgreen,
       R.drawable.ic_check_light_green, R.drawable.ic_plus_light_green),
 
   //GREENAPPLE TO LIME
@@ -160,14 +160,14 @@ public enum StoreThemeEnum {
 
   //LIGHTSKY AND LIGHTSKY TO LIGHTBLUE
   APTOIDE_STORE_THEME_LIGHTSKY(R.style.AptoideThemeDefaultLightblue, R.color.transparent_lightblue,
-      R.color.lightblue, R.drawable.custom_categ_lightsky, R.drawable.gradient_lightsky,
-      R.color.lightblue_700, R.drawable.button_border_lightblue, R.drawable.ic_check_light_blue,
+      R.color.light_blue, R.drawable.custom_categ_lightsky, R.drawable.gradient_lightsky,
+      R.color.light_blue_700, R.drawable.button_border_lightblue, R.drawable.ic_check_light_blue,
       R.drawable.ic_plus_light_blue),
 
   //LIGHTSKY AND HAPPYBLUE TO LIGHTBLUE
   APTOIDE_STORE_THEME_HAPPYBLUE(R.style.AptoideThemeDefaultLightblue, R.color.transparent_lightblue,
-      R.color.lightblue, R.drawable.custom_categ_lightsky, R.drawable.gradient_lightsky,
-      R.color.lightblue_700, R.drawable.button_border_lightblue, R.drawable.ic_check_light_blue,
+      R.color.light_blue, R.drawable.custom_categ_lightsky, R.drawable.gradient_lightsky,
+      R.color.light_blue_700, R.drawable.button_border_lightblue, R.drawable.ic_check_light_blue,
       R.drawable.ic_plus_light_blue),;
 
   private final int color700tint;

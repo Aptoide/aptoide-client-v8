@@ -11,8 +11,8 @@
       android:layout_height="wrap_content"
       android:layout_centerInParent="true"
       android:text="@string/login_separator_text"
-      android:textColor="@color/medium_gray"
-      android:textSize="12sp"
+      android:textColor="@color/grey_fog_dark"
+      style="@style/Aptoide.TextView.Regular.XS"
       />
 
   <View
@@ -24,7 +24,7 @@
       android:layout_marginRight="15dp"
       android:layout_marginStart="15dp"
       android:layout_toLeftOf="@id/separator_text"
-      android:background="@color/medium_gray"
+      android:background="@color/grey_fog_dark"
       />
 
   <View
@@ -37,7 +37,7 @@
       android:layout_marginStart="15dp"
       android:layout_toEndOf="@id/separator_text"
       android:layout_toRightOf="@id/separator_text"
-      android:background="@color/medium_gray"
+      android:background="@color/grey_fog_dark"
       />
 
 </RelativeLayout>

@@ -35,7 +35,7 @@ public class GetAdsFragment extends StoreTabGridRecyclerFragment {
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     adsRepository =
         new AdsRepository(((V8Engine) getContext().getApplicationContext()).getIdsRepository(),
-            accountManager, httpClient, converterFactory);
+            accountManager, httpClient, converterFactory, V8Engine.getQManager());
   }
 
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {

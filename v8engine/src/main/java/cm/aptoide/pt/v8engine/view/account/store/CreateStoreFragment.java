@@ -146,6 +146,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
     if (storeModel != null && !TextUtils.isEmpty(storeModel.getStoreAvatarPath())) {
       loadImage(Uri.parse(storeModel.getStoreAvatarPath()));
     }
+
+    setupViewsDefaultValues(view);
   }
 
   @Override public void onDestroy() {
