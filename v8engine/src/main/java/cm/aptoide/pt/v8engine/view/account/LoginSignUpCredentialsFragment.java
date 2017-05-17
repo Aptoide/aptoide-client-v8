@@ -368,7 +368,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     loginArea = view.findViewById(R.id.login_button_area);
     signUpArea = view.findViewById(R.id.sign_up_button_area);
     termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions);
-    separator = (View) view.findViewById(R.id.separator);
+    separator = view.findViewById(R.id.separator);
 
     final Context context = getContext();
 

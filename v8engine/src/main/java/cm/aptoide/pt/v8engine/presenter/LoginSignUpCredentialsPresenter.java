@@ -67,16 +67,14 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
           Context appContext = view.getApplicationContext();
           FacebookSdk.sdkInitialize(appContext);
         })
-        .doOnNext(created -> showOrHideLogin())
-        .flatMap(resumed -> Observable.merge(googleLoginClick(), facebookLoginClick(),
-            aptoideLoginClick(), aptoideSignUpClick(), aptoideShowLoginClick(),
-            aptoideShowSignUpClick()))
+        .doOnNext(__ -> showOrHideLogin())
+        .flatMap(
+            __ -> Observable.merge(googleLoginClick(), facebookLoginClick(), aptoideLoginClick(),
+                aptoideSignUpClick(), aptoideShowLoginClick(), aptoideShowSignUpClick()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> {
-          CrashReport.getInstance()
-              .log(err);
-        });
+        }, err -> CrashReport.getInstance()
+            .log(err));
 
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
@@ -84,10 +82,8 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
             .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> {
-          CrashReport.getInstance()
-              .log(err);
-        });
+        }, err -> CrashReport.getInstance()
+            .log(err));
   }
 
   @Override public void saveState(Bundle state) {
