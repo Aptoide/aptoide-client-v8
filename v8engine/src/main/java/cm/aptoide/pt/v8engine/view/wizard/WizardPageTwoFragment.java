@@ -26,14 +26,14 @@ public class WizardPageTwoFragment extends BackButtonFragment {
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
-    final View view = inflater.inflate(R.layout.wizard_page_one, container, false);
+    final View view = inflater.inflate(R.layout.fragment_wizard_model_page, container, false);
     setText(view);
     return view;
   }
 
   private void setText(View view) {
-    ((TextView) view.findViewById(android.R.id.text1)).setText(R.string.wizard_title_viewpager_two);
-    ((TextView) view.findViewById(android.R.id.text2)).setText(
+    ((TextView) view.findViewById(R.id.title)).setText(R.string.wizard_title_viewpager_two);
+    ((TextView) view.findViewById(R.id.description)).setText(
         R.string.wizard_sub_title_viewpager_two);
     ((ImageView) view.findViewById(android.R.id.icon)).setImageResource(R.drawable.wizard_two);
   }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- varying configs for each screen width -->
+  <bool name="use_big_app_brick">false</bool>
+  <bool name="is_this_a_tablet_device">true</bool>
+</resources>

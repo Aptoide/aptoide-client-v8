@@ -183,7 +183,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="@string/five_numeric"
-              style="@style/FragmentRateAndReviewsLabel"
+              style="@style/rateAndReviews_starLabel_textView"
               />
 
           <TextView
@@ -203,7 +203,7 @@
               android:layout_toRightOf="@id/five_rate_star_label"
               android:layout_toStartOf="@id/five_rate_star_count"
               tools:progress="80"
-              style="@style/FragmentRateAndReviewsProgressBar"
+              style="@style/RateAndReviews.Custom.ProgressBar"
               />
 
         </RelativeLayout>
@@ -220,7 +220,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="@string/four_numeric"
-              style="@style/FragmentRateAndReviewsLabel"
+              style="@style/rateAndReviews_starLabel_textView"
               />
 
           <TextView
@@ -240,7 +240,7 @@
               android:layout_toRightOf="@id/four_rate_star_label"
               android:layout_toStartOf="@id/four_rate_star_count"
               tools:progress="30"
-              style="@style/FragmentRateAndReviewsProgressBar"
+              style="@style/RateAndReviews.Custom.ProgressBar"
               />
 
         </RelativeLayout>
@@ -257,7 +257,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="@string/three_numeric"
-              style="@style/FragmentRateAndReviewsLabel"
+              style="@style/rateAndReviews_starLabel_textView"
               />
 
           <TextView
@@ -277,7 +277,7 @@
               android:layout_toRightOf="@id/three_rate_star_label"
               android:layout_toStartOf="@id/three_rate_star_count"
               tools:progress="50"
-              style="@style/FragmentRateAndReviewsProgressBar"
+              style="@style/RateAndReviews.Custom.ProgressBar"
               />
 
         </RelativeLayout>
@@ -294,7 +294,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="@string/two_numeric"
-              style="@style/FragmentRateAndReviewsLabel"
+              style="@style/rateAndReviews_starLabel_textView"
               />
 
           <TextView
@@ -314,7 +314,7 @@
               android:layout_toRightOf="@id/two_rate_star_label"
               android:layout_toStartOf="@id/two_rate_star_count"
               tools:progress="1"
-              style="@style/FragmentRateAndReviewsProgressBar"
+              style="@style/RateAndReviews.Custom.ProgressBar"
               />
 
         </RelativeLayout>
@@ -331,7 +331,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="@string/one_numeric"
-              style="@style/FragmentRateAndReviewsLabel"
+              style="@style/rateAndReviews_starLabel_textView"
               />
 
           <TextView
@@ -351,7 +351,7 @@
               android:layout_toRightOf="@id/one_rate_star_label"
               android:layout_toStartOf="@id/one_rate_star_count"
               tools:progress="12"
-              style="@style/FragmentRateAndReviewsProgressBar"
+              style="@style/RateAndReviews.Custom.ProgressBar"
               />
 
         </RelativeLayout>
