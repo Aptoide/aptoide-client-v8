@@ -30,18 +30,15 @@ public class ShareAppHelper {
   private final InstalledRepository installedRepository;
   private final AptoideAccountManager accountManager;
   private final AccountNavigator accountNavigator;
-  private final ActivityStarter activityStarter;
   private final SpotAndShareAnalytics spotAndShareAnalytics;
   private final Activity activity;
 
   public ShareAppHelper(InstalledRepository installedRepository,
-      AptoideAccountManager accountManager, AccountNavigator accountNavigator,
-      ActivityStarter activityStarter, Activity activity,
+      AptoideAccountManager accountManager, AccountNavigator accountNavigator, Activity activity,
       SpotAndShareAnalytics spotAndShareAnalytics) {
     this.installedRepository = installedRepository;
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
-    this.activityStarter = activityStarter;
     this.activity = activity;
     this.spotAndShareAnalytics = spotAndShareAnalytics;
   }
@@ -83,7 +80,7 @@ public class ShareAppHelper {
             intent.setAction("APPVIEW_SHARE");
             intent.putExtra("APPVIEW_SHARE_FILEPATH", filepath);
             intent.putExtra("APPVIEW_SHARE_APPNAME", appNameToShare);
-            activityStarter.startActivity(intent);
+            activity.startActivity(intent);
           }
         }, err -> err.printStackTrace());
   }
@@ -117,7 +114,7 @@ public class ShareAppHelper {
       sharingIntent.putExtra(Intent.EXTRA_SUBJECT,
           activity.getString(R.string.install) + " \"" + appName + "\"");
       sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
-      activityStarter.startActivity(
+      activity.startActivity(
           Intent.createChooser(sharingIntent, activity.getString(R.string.share)));
     }
   }

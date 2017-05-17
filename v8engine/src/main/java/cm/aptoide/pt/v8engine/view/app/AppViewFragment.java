@@ -274,8 +274,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
     paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
-    shareAppHelper = new ShareAppHelper(installedRepository, accountManager, accountNavigator,
-        intent -> startActivity(intent), getActivity(), spotAndShareAnalytics);
+    shareAppHelper =
+        new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
+            spotAndShareAnalytics);
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
