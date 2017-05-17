@@ -44,20 +44,18 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   private final Collection<String> facebookRequiredPermissions;
   private final LoginPreferences loginAvailability;
   private final boolean navigateToHome;
-  private final boolean isPortrait;
   private boolean dismissToNavigateToMainView;
 
   public LoginSignUpCredentialsPresenter(LoginSignUpCredentialsView view,
       AptoideAccountManager accountManager, Collection<String> facebookRequiredPermissions,
       LoginPreferences loginAvailability, boolean dismissToNavigateToMainView,
-      boolean navigateToHome, boolean isPortrait) {
+      boolean navigateToHome) {
     this.view = view;
     this.accountManager = accountManager;
     this.facebookRequiredPermissions = facebookRequiredPermissions;
     this.loginAvailability = loginAvailability;
     this.dismissToNavigateToMainView = dismissToNavigateToMainView;
     this.navigateToHome = navigateToHome;
-    this.isPortrait = isPortrait;
   }
 
   @Override public void present() {
@@ -209,10 +207,6 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
     return view.showAptoideLoginAreaClick()
         .doOnNext(__ -> {
           view.showAptoideLoginArea();
-          if (!isPortrait) {
-            view.hideFacebookLogin();
-            view.hideGoogleLogin();
-          }
         });
   }
 
@@ -220,10 +214,6 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
     return view.showAptoideSignUpAreaClick()
         .doOnNext(__ -> {
           view.showAptoideSignUpArea();
-          if (!isPortrait) {
-            view.hideFacebookLogin();
-            view.hideGoogleLogin();
-          }
         });
   }
 
@@ -301,9 +291,6 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   }
 
   @Override public boolean handle() {
-    if (!isPortrait) {
-      showOrHideLogin();
-    }
     return view.tryCloseLoginBottomSheet();
   }
 }

@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.view.account;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -98,16 +97,13 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     errorMapper = new AccountErrorMapper(getContext());
     facebookRequestedPermissions = Arrays.asList("email", "user_friends");
     fragmentNavigator = getFragmentNavigator();
-    boolean isPortrait = getActivity().getResources()
-        .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
-
     presenter = new LoginSignUpCredentialsPresenter(this,
         ((V8Engine) getContext().getApplicationContext()).getAccountManager(),
         facebookRequestedPermissions,
         new LoginPreferences(getContext(), V8Engine.getConfiguration(),
             GoogleApiAvailability.getInstance()),
         getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW),
-        getArguments().getBoolean(CLEAN_BACK_STACK), isPortrait);
+        getArguments().getBoolean(CLEAN_BACK_STACK));
   }
 
   @Nullable @Override

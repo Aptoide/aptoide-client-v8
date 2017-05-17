@@ -55,7 +55,7 @@
           android:layout_height="match_parent"
           android:background="@null"
           android:text="@string/all_stores"
-          android:textColor="@color/app_view_gray"
+          android:textColor="@color/silver_dark"
           android:textSize="12sp"
           android:visibility="gone"
           />

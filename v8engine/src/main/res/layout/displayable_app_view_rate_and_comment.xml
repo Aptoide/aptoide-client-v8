@@ -120,7 +120,7 @@
           android:lines="2"
           android:paddingTop="10dp"
           android:text="@string/rate_this_app"
-          android:textColor="@color/app_view_gray"
+          android:textColor="@color/silver_dark"
           android:textSize="@dimen/text_size_medium_large"
           />
 
