@@ -270,6 +270,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
     tabNavigator.navigation()
         .filter(tabNavigation -> tabNavigation.getTab() == TabNavigation.TIMELINE)
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(tabNavigation -> cardIdPriority = tabNavigation.getBundle()
             .getString(AppsTimelineTabNavigation.CARD_ID_KEY));
   }
