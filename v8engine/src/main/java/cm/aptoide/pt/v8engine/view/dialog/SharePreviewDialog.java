@@ -410,7 +410,7 @@ public class SharePreviewDialog {
       ImageView storeAvatar, ImageView userAvatar) {
     if (accountManager.getAccount()
         .getStoreName() != null) {
-      storeName.setTextColor(ContextCompat.getColor(context, R.color.black87alpha));
+      storeName.setTextColor(ContextCompat.getColor(context, R.color.black_87_alpha));
       if (Account.Access.PUBLIC.equals(accountManager.getAccountAccess())) {
         storeAvatar.setVisibility(View.VISIBLE);
         userAvatar.setVisibility(View.VISIBLE);
