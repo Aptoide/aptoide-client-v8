@@ -10,6 +10,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.store.GetStore;
+import cm.aptoide.pt.utils.AptoideUtils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -58,10 +59,14 @@ import rx.Observable;
 
     @Getter private final WidgetsArgs widgetsArgs;
     @Getter @Setter private StoreContext context;
+    @Getter @Setter private String aptoideMd5sum;
+    @Getter @Setter private String aptoidePackage;
 
     public Body(StoreCredentials storeCredentials, WidgetsArgs widgetsArgs) {
       super(storeCredentials);
       this.widgetsArgs = widgetsArgs;
+      this.aptoideMd5sum = AptoideUtils.SystemU.getAptoideMd5sum();
+      this.aptoidePackage = AptoideUtils.SystemU.getAptoidePackage();
     }
   }
 }
