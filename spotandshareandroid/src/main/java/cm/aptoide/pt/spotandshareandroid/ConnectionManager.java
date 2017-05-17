@@ -14,22 +14,14 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
-import android.telephony.SubscriptionInfo;
-import android.telephony.SubscriptionManager;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import cm.aptoide.pt.logger.Logger;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import static android.content.Context.CONNECTIVITY_SERVICE;
 
 /**
  * Created by filipegoncalves on 31-01-2017.
@@ -430,58 +422,6 @@ public class ConnectionManager {
           Logger.d(TAG, "Not a APTXV network. Can not remove this network;");
         }
       }
-    }
-  }
-
-  public boolean isMobileDataOn() {
-    boolean isOn = false;
-    TelephonyManager mTelephonyManager =
-        (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      List<SubscriptionInfo> aux = SubscriptionManager.from(context)
-          .getActiveSubscriptionInfoList();
-      if (aux != null) {
-        for (int i = 0; i < aux.size(); i++) {
-          try {
-            Method getDataEnabled = mTelephonyManager.getClass()
-                .getMethod("getDataEnabled", int.class);
-            if ((boolean) getDataEnabled.invoke(mTelephonyManager, aux.get(i)
-                .getSimSlotIndex())) {
-              isOn = true;
-            }
-          } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-            isOn = false;
-          }
-        }
-      }
-    } else {
-      isMobileDataEnabled();
-    }
-    return isOn;
-  }
-
-  public Boolean isMobileDataEnabled() {
-    Object connectivityService = context.getSystemService(CONNECTIVITY_SERVICE);
-    ConnectivityManager cm = (ConnectivityManager) connectivityService;
-
-    try {
-      Class<?> c = Class.forName(cm.getClass()
-          .getName());
-      Method m = c.getDeclaredMethod("getMobileDataEnabled");
-      m.setAccessible(true);
-      return (Boolean) m.invoke(cm);
-    } catch (Exception e) {
-      if (e instanceof NoSuchMethodException) {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-          boolean isDataEnabled =
-              Settings.Global.getInt(context.getContentResolver(), "mobile_data", 0) == 1;
-          return isDataEnabled;
-        }
-      }
-      e.printStackTrace();
-      return false;
     }
   }
 
