@@ -3,6 +3,7 @@ package cm.aptoide.pt.spotandshareandroid;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -48,6 +49,14 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   private PermissionListener permissionListener;
   private String autoShareFilepath;
   private String autoShareAppName;
+
+  public static Intent buildIntent(Context context, String filepath, String appNameToShare) {
+    Intent intent = new Intent(context, HighwayActivity.class);
+    intent.setAction("APPVIEW_SHARE");
+    intent.putExtra("APPVIEW_SHARE_FILEPATH", filepath);
+    intent.putExtra("APPVIEW_SHARE_APPNAME", appNameToShare);
+    return intent;
+  }
 
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

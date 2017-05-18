@@ -547,8 +547,10 @@ public class SharePreviewDialog {
         (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
     TextView getApp = (TextView) view.findViewById(
         R.id.displayable_social_timeline_recommendation_get_app_button);
-    ImageLoader.with(context)
-        .load(appIconUrl, appIconV);
+    if (appIconUrl != null) {
+      ImageLoader.with(context)
+          .load(appIconUrl, appIconV);
+    }
     appNameV.setText(appName);
     appSubTitle.setText(AptoideUtils.StringU.getFormattedString(
         R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, ""));

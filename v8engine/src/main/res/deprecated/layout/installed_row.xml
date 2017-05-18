@@ -3,7 +3,6 @@
   ~ Modified by Neurophobic Animal on 25/05/2016.
   -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/installedItemFrame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -19,8 +18,8 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/reviewButtonLayout"
-        android:layout_toStartOf="@id/reviewButtonLayout"
+        android:layout_toLeftOf="@+id/shareButtonLayout"
+        android:layout_toStartOf="@id/shareButtonLayout"
         >
 
       <ImageView
@@ -85,14 +84,13 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/reviewButtonLayout"
+        android:id="@+id/shareButtonLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerInParent="true"
-        android:visibility="gone"
-        tools:visibility="visible"
+        android:visibility="visible"
         style="@style/focusableRowBackground"
         >
 
@@ -118,7 +116,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/create_review_darkgrey"
+            android:src="@drawable/share_grey"
             />
 
         <TextView
@@ -126,9 +124,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:lines="2"
-            android:text="@string/createReviewButtonText"
-            android:textSize="@dimen/text_size_small"
+            android:text="@string/spot_share_share"
+            android:textColor="@color/grey_fog_light"
+            android:textSize="12sp"
             />
       </LinearLayout>
 
