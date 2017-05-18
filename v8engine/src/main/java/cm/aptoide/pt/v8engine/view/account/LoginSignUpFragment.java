@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpPresenter;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpView;
@@ -25,6 +26,8 @@ import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
  * their own fragment and include the fragment inside the necessary login / sign up views.
  */
 public class LoginSignUpFragment extends BackButtonFragment implements LoginSignUpView {
+
+  private static final String TAG = LoginSignUpFragment.class.getName();
 
   private static final String BOTTOM_SHEET_WITH_BOTTOM_BAR = "bottom_sheet_expanded";
   private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
@@ -168,8 +171,19 @@ public class LoginSignUpFragment extends BackButtonFragment implements LoginSign
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     final View view = inflater.inflate(getLayoutId(), container, false);
-    navigator.navigateToWithoutBackSave(
-        LoginSignUpCredentialsFragment.newInstance(dismissToNavigateToMainView, navigateToHome));
+
+    LoginSignUpCredentialsFragment fragment = null;
+    try {
+      fragment = (LoginSignUpCredentialsFragment) navigator.getFragment();
+    } catch (ClassCastException ex) {
+      Logger.e(TAG, ex);
+    }
+
+    if (fragment == null) {
+      navigator.navigateToWithoutBackSave(
+          LoginSignUpCredentialsFragment.newInstance(dismissToNavigateToMainView, navigateToHome));
+    }
+
     return view;
   }
 

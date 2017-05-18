@@ -14,7 +14,6 @@ import cm.aptoide.pt.v8engine.account.LoginPreferences;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.BackButton;
-import cm.aptoide.pt.v8engine.view.account.AptoideAccountViewModel;
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
@@ -35,9 +34,6 @@ import rx.subscriptions.Subscriptions;
 public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.ClickHandler {
 
   private static final String TAG = LoginSignUpCredentialsPresenter.class.getName();
-
-  private static final String USERNAME_KEY = "username_key";
-  private static final String PASSWORD_KEY = "password_key";
 
   private final LoginSignUpCredentialsView view;
   private final AptoideAccountManager accountManager;
@@ -82,22 +78,28 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         .subscribe(__ -> {
         }, err -> CrashReport.getInstance()
             .log(err));
+
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
+        .flatMap(__ ->
+          accountManager.accountStatus())
+        .doOnNext(account -> {
+          if(account.isLoggedIn()){
+
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> CrashReport.getInstance()
+            .log(err));
   }
 
   @Override public void saveState(Bundle state) {
-    final AptoideAccountViewModel credentials = view.getCredentials();
-    state.putString(USERNAME_KEY, credentials.getUsername());
-    // TODO use a safe method to store plain text password
-    state.putString(PASSWORD_KEY, credentials.getPassword());
+    // does nothing
   }
 
   @Override public void restoreState(Bundle state) {
-    if (state != null && state.containsKey(USERNAME_KEY) && state.containsKey(PASSWORD_KEY)) {
-      final AptoideAccountViewModel credentials =
-          new AptoideAccountViewModel(state.getString(USERNAME_KEY, ""),
-              state.getString(PASSWORD_KEY, ""));
-      view.setCredentials(credentials);
-    }
+    // does nothing
   }
 
   private void showOrHideLogin() {
@@ -162,11 +164,13 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
     return view.aptoideLoginClick().<Void>flatMap(credentials -> {
       view.hideKeyboard();
       view.showLoading();
+      lockScreenRotation();
       return accountManager.login(Account.Type.APTOIDE, credentials.getUsername(),
           credentials.getPassword(), null)
           .observeOn(AndroidSchedulers.mainThread())
           .doOnCompleted(() -> {
             Logger.d(TAG, "aptoide login successful");
+            unlockScreenRotation();
             Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
                 Analytics.Account.SignUpLoginStatus.SUCCESS,
                 Analytics.Account.LoginStatusDetail.SUCCESS);
@@ -175,6 +179,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
           .doOnTerminate(() -> view.hideLoading())
           .doOnError(throwable -> {
             view.showError(throwable);
+            unlockScreenRotation();
             Analytics.Account.loginStatus(Analytics.Account.LoginMethod.APTOIDE,
                 Analytics.Account.SignUpLoginStatus.FAILED,
                 Analytics.Account.LoginStatusDetail.GENERAL_ERROR);
@@ -187,17 +192,20 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
     return view.aptoideSignUpClick().<Void>flatMap(credentials -> {
       view.hideKeyboard();
       view.showLoading();
+      lockScreenRotation();
       return accountManager.signUp(credentials.getUsername(), credentials.getPassword())
           .observeOn(AndroidSchedulers.mainThread())
           .doOnCompleted(() -> {
             Logger.d(TAG, "aptoide sign up successful");
             Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.SUCCESS);
             view.navigateToCreateProfile();
+            unlockScreenRotation();
           })
           .doOnTerminate(() -> view.hideLoading())
           .doOnError(throwable -> {
             Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.FAILED);
             view.showError(throwable);
+            unlockScreenRotation();
           })
           .toObservable();
     }).retry();
@@ -292,5 +300,13 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
 
   @Override public boolean handle() {
     return view.tryCloseLoginBottomSheet();
+  }
+
+  private void lockScreenRotation() {
+    view.lockScreenRotation();
+  }
+
+  private void unlockScreenRotation() {
+    view.unlockScreenRotation();
   }
 }
