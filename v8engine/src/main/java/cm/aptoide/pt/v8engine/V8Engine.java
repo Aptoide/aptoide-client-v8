@@ -175,6 +175,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
    * AptoideNotification.NotificationType#COMMENT}{@link AptoideNotification.NotificationType#POPULAR}
    */
   private long pushNotificationSocialPeriodicity = AlarmManager.INTERVAL_HOUR;
+  private NotificationCenter notificationCenter;
 
   /**
    * call after this instance onCreate()
@@ -296,6 +297,10 @@ public abstract class V8Engine extends SpotAndShareApplication {
     };
   }
 
+  public NotificationCenter getNotificationCenter() {
+    return notificationCenter;
+  }
+
   private void startNotificationsSync() {
 
     if (ManagerPreferences.isDebug()
@@ -322,10 +327,10 @@ public abstract class V8Engine extends SpotAndShareApplication {
             NotificationSyncService.class, scheduleList);
     NotificationAccessor notificationAccessor = AccessorFactory.getAccessorFor(Notification.class);
     NotificationProvider notificationProvider = new NotificationProvider(notificationAccessor);
-    NotificationCenter notificationCenter =
-        new NotificationCenter(new NotificationIdsMapper(), notificationHandler,
-            notificationSyncScheduler, systemNotificationShower, CrashReport.getInstance(),
-            new NotificationPolicyFactory(notificationProvider));
+    notificationCenter = new NotificationCenter(new NotificationIdsMapper(), notificationHandler,
+        notificationSyncScheduler, systemNotificationShower, CrashReport.getInstance(),
+        new NotificationPolicyFactory(notificationProvider),
+        PreferenceManager.getDefaultSharedPreferences(this));
     notificationCenter.start();
   }
 
