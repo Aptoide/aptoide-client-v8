@@ -118,10 +118,9 @@ public class ShareAppHelper {
 
     String filepath = getFilepath(packageName);
     String appNameToShare = filterAppName(appName);
-    Intent intent = new Intent(activity, HighwayActivity.class);
-    intent.setAction("APPVIEW_SHARE");
-    intent.putExtra("APPVIEW_SHARE_FILEPATH", filepath);
-    intent.putExtra("APPVIEW_SHARE_APPNAME", appNameToShare);
+
+    Intent intent = HighwayActivity.buildIntent(activity, filepath, appNameToShare);
+
     activity.startActivity(intent);
   }
 
