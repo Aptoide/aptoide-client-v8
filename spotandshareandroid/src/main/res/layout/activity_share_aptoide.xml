@@ -9,9 +9,108 @@
     >
 
 
-  <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:text="HELLO WORLD PA !"
-      />
+  <android.support.design.widget.AppBarLayout
+      android:id="@+id/shareAppsAppbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/shareAppsToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="?attr/toolbarTheme"
+        />
+  </android.support.design.widget.AppBarLayout>
+
+  <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        >
+
+
+      <ImageView
+          android:layout_width="92dp"
+          android:layout_height="88dp"
+          android:layout_marginTop="8dp"
+          android:gravity="center"
+          android:src="@drawable/layer_10"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="19dp"
+          android:layout_marginLeft="63dp"
+          android:layout_marginRight="63dp"
+          android:text="@string/spotandshare_message_share_aptoide_initial_message"
+          android:textAlignment="center"
+          style="@style/Aptoide.TextView.Regular.XS"
+          android:textColor="@color/grey_700"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="24dp"
+          android:layout_marginLeft="60dp"
+          android:layout_marginRight="60dp"
+          android:text="@string/spotandshare_message_first_share_instruction"
+          android:textAlignment="center"
+          style="@style/Aptoide.TextView.Medium.S"
+          android:textColor="@color/black_87_alpha"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginRight="65dp"
+          android:layout_marginLeft="65dp"
+          android:text="@string/spotandshare_message_second_share_instruction"
+          android:textAlignment="center"
+          style="@style/Aptoide.TextView.Medium.S"
+          android:textColor="@color/black_87_alpha"
+          />
+
+
+      <ImageView
+          android:layout_width="158dp"
+          android:layout_height="158dp"
+          android:layout_gravity="center"
+          android:src="@drawable/qr_code_spotshare"
+          />
+
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="24dp"
+          android:layout_marginRight="80dp"
+          android:layout_marginLeft="80dp"
+          android:text="@string/spotandshare_message_second_share_instruction_alternative"
+          android:textAlignment="center"
+          style="@style/Aptoide.TextView.Medium.S"
+          android:textColor="@color/black_87_alpha"
+          />
+
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="24dp"
+          android:text="@string/spotandshare_message_third_share_instruction"
+          android:textAlignment="center"
+          android:layout_marginLeft="100dp"
+          android:layout_marginRight="100dp"
+          style="@style/Aptoide.TextView.Medium.S"
+          android:textColor="@color/black_87_alpha"
+          />
+    </LinearLayout>
+  </ScrollView>
 </LinearLayout>

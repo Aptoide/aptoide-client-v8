@@ -33,4 +33,7 @@
   <color name="black">#000000</color>
   <color name="red_700">#d32f2f</color>
 
+  <color name="grey_700">#616161</color>
+
+
 </resources>
