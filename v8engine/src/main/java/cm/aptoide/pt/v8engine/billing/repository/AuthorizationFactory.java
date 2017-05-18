@@ -15,7 +15,7 @@ import java.util.List;
 public class AuthorizationFactory {
 
   public static final String WEB = "web";
-  public static final String PAYPAL = "paypal";
+  public static final String PAYPAL = "paypal_sdk";
 
   public Authorization create(int paymentId, Authorization.Status status, String payerId,
       String type) {

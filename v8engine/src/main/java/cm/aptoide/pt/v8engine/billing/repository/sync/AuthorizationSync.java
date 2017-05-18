@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.billing.repository.sync;
 
 import android.content.SyncResult;
 import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
+import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.GetPaymentAuthorizationsRequest;
@@ -16,6 +17,7 @@ import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationFactory;
 import cm.aptoide.pt.v8engine.sync.RepositorySync;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -76,17 +78,33 @@ public class AuthorizationSync extends RepositorySync {
   private void saveAndReschedulePendingAuthorizations(List<Authorization> authorizations,
       SyncResult syncResult, String payerId) {
 
+    final List<PaymentAuthorization> databaseAuthorizations = new ArrayList<>();
+
+    boolean containsPaymentId = false;
+
     for (Authorization authorization : authorizations) {
 
       if (authorization.isPending()) {
         rescheduleSync(syncResult);
       }
 
-      authorizationAccessor.save(
+      if (authorization.getPaymentId() == paymentId) {
+        containsPaymentId = true;
+      }
+
+      databaseAuthorizations.add(
           authorizationFactory.convertToDatabasePaymentAuthorization(authorization));
 
       paymentAnalytics.sendAuthorizationCompleteEvent(authorization);
     }
+
+    if (!containsPaymentId) {
+      databaseAuthorizations.add(authorizationFactory.convertToDatabasePaymentAuthorization(
+          authorizationFactory.create(paymentId, Authorization.Status.INACTIVE, payerId,
+              authorizationType)));
+    }
+
+    authorizationAccessor.insertAll(databaseAuthorizations);
   }
 
   private void saveAndRescheduleOnNetworkError(SyncResult syncResult, Throwable throwable,
@@ -98,7 +116,7 @@ public class AuthorizationSync extends RepositorySync {
       final Authorization authorization =
           authorizationFactory.create(paymentId, Authorization.Status.UNKNOWN_ERROR, payerId,
               authorizationType);
-      authorizationAccessor.save(
+      authorizationAccessor.insert(
           authorizationFactory.convertToDatabasePaymentAuthorization(authorization));
       paymentAnalytics.sendAuthorizationCompleteEvent(authorization);
     }

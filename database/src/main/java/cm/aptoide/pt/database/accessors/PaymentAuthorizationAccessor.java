@@ -9,10 +9,6 @@ import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import java.util.List;
 import rx.Observable;
 
-/**
- * Created by marcelobenites on 23/11/16.
- */
-
 public class PaymentAuthorizationAccessor extends SimpleAccessor<PaymentAuthorization> {
 
   public PaymentAuthorizationAccessor(Database db) {
@@ -25,9 +21,5 @@ public class PaymentAuthorizationAccessor extends SimpleAccessor<PaymentAuthoriz
             .equalTo(PaymentAuthorization.PAYER_ID, payerId)
             .equalTo(PaymentAuthorization.PAYMENT_ID, paymentId))
         .flatMap(query -> database.findAsList(query));
-  }
-
-  public void save(PaymentAuthorization paymentAuthorization) {
-    database.insert(paymentAuthorization);
   }
 }

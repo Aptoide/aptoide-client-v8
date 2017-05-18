@@ -97,6 +97,7 @@ public class AptoideBilling {
   public Completable processPayPalPayment(Product product, String authorizationCode) {
     return getPayments(product).flatMapObservable(payments -> Observable.from(payments))
         .filter(payment -> payment instanceof PayPalPayment)
+        .first()
         .cast(PayPalPayment.class)
         .toSingle()
         .flatMapCompletable(payment -> payment.process(product, authorizationCode));

@@ -76,11 +76,12 @@ public class AuthorizationRepository {
   }
 
   public Completable saveAuthorization(Authorization authorization) {
-    return Completable.fromAction(() -> authotizationAccessor.save(
+    return Completable.fromAction(() -> authotizationAccessor.insert(
         authorizationFactory.convertToDatabasePaymentAuthorization(authorization)));
   }
 
-  public Observable<Authorization> getPaymentAuthorization(int paymentId, String authorizationType) {
+  public Observable<Authorization> getPaymentAuthorization(int paymentId,
+      String authorizationType) {
     return payer.getId()
         .flatMapObservable(
             payerId -> authotizationAccessor.getPaymentAuthorization(payerId, paymentId))
