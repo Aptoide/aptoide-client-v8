@@ -41,7 +41,6 @@ import retrofit2.Converter;
   private TextView labelTextView;
   private TextView verNameTextView;
   private ImageView iconImageView;
-  private View installedItemFrame;
   private ViewGroup shareButtonLayout;
 
   private String appName;
@@ -61,7 +60,6 @@ import retrofit2.Converter;
     labelTextView = (TextView) itemView.findViewById(R.id.name);
     iconImageView = (ImageView) itemView.findViewById(R.id.icon);
     verNameTextView = (TextView) itemView.findViewById(R.id.app_version);
-    installedItemFrame = itemView.findViewById(R.id.installedItemFrame);
     shareButtonLayout = (ViewGroup) itemView.findViewById(R.id.shareButtonLayout);
   }
 
@@ -91,10 +89,6 @@ import retrofit2.Converter;
     final FragmentActivity context = getContext();
     ImageLoader.with(context)
         .load(pojo.getIcon(), iconImageView);
-
-    installedItemFrame.setOnClickListener(v -> {
-      // TODO: 25-05-2016 neuro apagar em principio
-    });
 
     shareButtonLayout.setVisibility(View.VISIBLE);
     compositeSubscription.add(RxView.clicks(shareButtonLayout)
