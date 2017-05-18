@@ -29,12 +29,12 @@
         android:id="@+id/create_store_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/appbar"
         android:background="@color/create_user_dark_orange"
         android:gravity="center_vertical"
         android:padding="@dimen/padding_medium_default"
         android:text="@string/create_store_header"
-        android:layout_below="@+id/appbar"
-        android:layout_alignParentStart="true"
         android:textColor="@color/white"
         style="@style/Aptoide.TextView.Medium"
         />
@@ -202,9 +202,9 @@
                 android:paddingStart="@dimen/padding_smaller"
                 android:paddingTop="@dimen/padding_very_small"
                 android:textColorHint="@color/grey_fog_dark"
-                style="@style/Aptoide.TextView.Regular.S"
                 android:visibility="gone"
                 tools:visibility="gone"
+                style="@style/Aptoide.TextView.Regular.S"
                 />
 
             <TextView
