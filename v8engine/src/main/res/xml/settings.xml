@@ -100,7 +100,7 @@
         android:title="@string/setting_notifications_sub_section_1"/>
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="notificationcampaignandsocial"
+        android:key="notification_campaign_and_social"
         android:summary="@string/setting_notifications_sub_sub_section_2"
         android:title="@string/setting_notifications_sub_section_2"/>
   </PreferenceCategory>

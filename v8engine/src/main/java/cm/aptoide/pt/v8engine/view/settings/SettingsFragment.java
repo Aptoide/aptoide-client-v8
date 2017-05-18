@@ -74,7 +74,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private static final String ADULT_CONTENT_WITH_PIN_PREFERENCE_VIEW_KEY = "matureChkBoxWithPin";
   private static final String ADULT_CONTENT_PREFERENCE_VIEW_KEY = "matureChkBox";
   private static final String CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY =
-      "notificationcampaignandsocial";
+      "notification_campaign_and_social";
 
   protected Toolbar toolbar;
   private Context context;
@@ -173,6 +173,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
         (CheckBoxPreference) findPreference(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY);
     pinPreferenceView = findPreference(ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
     removePinPreferenceView = findPreference(REMOVE_ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
+
+    //we should change this if notification center can be enabled and disabled in background
+    SocialCampaignNotifications.setChecked(notificationCenter.isEnable());
 
     setupClickHandlers();
   }
@@ -509,9 +512,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   private void handleSocialNotifications(Boolean isChecked) {
     if (isChecked) {
-      notificationCenter.start();
+      notificationCenter.enable();
     } else {
-      notificationCenter.stop();
+      notificationCenter.disable();
     }
   }
 
