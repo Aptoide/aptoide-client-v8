@@ -72,4 +72,8 @@ public interface LoginSignUpCredentialsView extends GoogleLoginView {
   void navigateToCreateProfile();
 
   Context getApplicationContext();
+
+  void lockScreenRotation();
+
+  void unlockScreenRotation();
 }

@@ -734,13 +734,13 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
           R.id.create_store_theme_check_pink), Lime("lime", R.id.create_store_theme_lime,
           R.id.create_store_theme_check_lime), Amber("amber", R.id.create_store_theme_amber,
           R.id.create_store_theme_check_amber), Brown("brown", R.id.create_store_theme_brown,
-          R.id.create_store_theme_check_brown), LightBlue("lightblue",
+          R.id.create_store_theme_check_brown), LightBlue("light-blue",
           R.id.create_store_theme_lightblue, R.id.create_store_theme_check_lightblue), Black(
           "black", R.id.create_store_theme_black, R.id.create_store_theme_check_black), BlueGrey(
-          "blue_grey", R.id.create_store_theme_blue_grey,
-          R.id.create_store_theme_check_blue_grey), DeepPurple("deeppurple",
+          "blue-grey", R.id.create_store_theme_blue_grey,
+          R.id.create_store_theme_check_blue_grey), DeepPurple("deep-purple",
           R.id.create_store_theme_deep_purple,
-          R.id.create_store_theme_check_deep_purple), LightGreen("light_green",
+          R.id.create_store_theme_check_deep_purple), LightGreen("light-green",
           R.id.create_store_theme_light_green, R.id.create_store_theme_check_light_green), Grey(
           "grey", R.id.create_store_theme_grey, R.id.create_store_theme_check_grey);
 

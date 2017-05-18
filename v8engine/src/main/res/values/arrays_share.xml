@@ -12,4 +12,9 @@
     <item name="share_spot_and_share_option">@string/share_options_share_spot_share</item>
   </string-array>
 
+  <string-array name="installed_share_options_array_with_spot_and_share">
+    <item name="share_timeline_option">@string/share_options_share_in_timeline</item>
+    <item name="share_spot_and_share_option">@string/share_options_share_spot_share</item>
+  </string-array>
+
 </resources>

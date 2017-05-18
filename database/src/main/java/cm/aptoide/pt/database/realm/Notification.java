@@ -57,6 +57,10 @@ public class Notification extends RealmObject {
     return dismissed;
   }
 
+  public void setDismissed(long dismissed) {
+    this.dismissed = dismissed;
+  }
+
   public int getType() {
     return type;
   }
@@ -95,9 +99,5 @@ public class Notification extends RealmObject {
 
   public long getTimeStamp() {
     return timeStamp;
-  }
-
-  public void setDismissed(long dismissed) {
-    this.dismissed = dismissed;
   }
 }

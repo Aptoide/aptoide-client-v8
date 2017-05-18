@@ -6,7 +6,7 @@
 
   <color name="amber">#ffc107</color>
   <color name="black">#000000</color>
-  <color name="blue_grey">#697c89</color>
+  <color name="blue_grey">#607D8B</color>
   <color name="brown">#795548</color>
   <color name="deep_purple">#673ab7</color>
   <color name="green">#4caf50</color>
@@ -21,7 +21,7 @@
   <color name="teal">#009688</color>
 
   <!-- Stores themes - 700 colors -->
-  <color name="default_colour_700">#bf6113</color>
+  <color name="default_color_700">#bf6113</color>
   <color name="amber_700">#ffa000</color>
   <color name="blue_grey_700">#455a64</color>
   <color name="brown_700">#5d4037</color>

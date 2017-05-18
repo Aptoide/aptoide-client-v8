@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.view.account;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,8 +14,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
+import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -50,6 +53,9 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
   private static final String CLEAN_BACK_STACK = "clean_back_stack";
+
+  private static final String USERNAME_KEY = "username_key";
+  private static final String PASSWORD_KEY = "password_key";
 
   private ProgressDialog progressDialog;
   private CallbackManager callbackManager;
@@ -147,7 +153,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override public void showError(Throwable throwable) {
     // FIXME: 23/2/2017 sithengineer find a better solution than this.
-    ShowMessage.asToast(getContext(), errorMapper.map(throwable));
+    ShowMessage.asSnack(separator, errorMapper.map(throwable));
   }
 
   @Override public void showFacebookLogin() {
@@ -268,7 +274,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override public void setCredentials(@NonNull AptoideAccountViewModel model) {
     aptoideEmailEditText.setText(model.getUsername());
-    aptoidePasswordEditText.setText(model.getUsername());
+    aptoidePasswordEditText.setText(model.getPassword());
   }
 
   @Override public boolean isPasswordVisible() {
@@ -387,6 +393,21 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     }
   }
 
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putString(USERNAME_KEY, aptoideEmailEditText.getText().toString());
+    outState.putString(PASSWORD_KEY, aptoidePasswordEditText.getText().toString());
+  }
+
+  @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+    super.onViewStateRestored(savedInstanceState);
+
+    if(savedInstanceState!=null) {
+      aptoideEmailEditText.setText(savedInstanceState.getString(USERNAME_KEY, ""));
+      aptoidePasswordEditText.setText(savedInstanceState.getString(PASSWORD_KEY, ""));
+    }
+  }
+
   public String getCompanyName() {
     return ((V8Engine) getActivity().getApplication()).createConfiguration()
         .getMarketName();
@@ -394,6 +415,34 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override public void onDestroyView() {
     unregisterBackClickHandler(presenter);
+    unlockScreenRotation();
     super.onDestroyView();
+  }
+
+  @Override public void lockScreenRotation() {
+    int orientation;
+    int rotation = ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay()
+        .getRotation();
+    switch (rotation) {
+      default:
+      case Surface.ROTATION_0:
+        orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        break;
+      case Surface.ROTATION_90:
+        orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+        break;
+      case Surface.ROTATION_180:
+        orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
+        break;
+      case Surface.ROTATION_270:
+        orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+        break;
+    }
+
+    getActivity().setRequestedOrientation(orientation);
+  }
+
+  @Override public void unlockScreenRotation() {
+    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
   }
 }

@@ -319,11 +319,6 @@
   <string name="permission_access_deny">access to read and write to external storage was denied</string>
   <string name="permission_account_deny">access to get accounts was denied</string>
 
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">Share apps with your friends</string>
-  <string name="spot_share_line_2">Phone to phone, without Internet</string>
-
-
   <!--??-->
   <string name="update_all">Update all</string>
   <string name="read_more">Read More</string>
