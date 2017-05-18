@@ -16,7 +16,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -49,19 +49,22 @@ import rx.functions.Action1;
 
     final Action1<Void> handleStoreClick = v -> getFragmentNavigator().navigateTo(
         V8Engine.getFragmentProvider()
-            .newStoreFragment(gridStoreDisplayable.getPojo().getName(),
-                store.getAppearance().getTheme()));
-    compositeSubscription.add(RxView.clicks(storeLayout).subscribe(handleStoreClick));
+            .newStoreFragment(gridStoreDisplayable.getPojo()
+                .getName(), store.getAppearance()
+                .getTheme()));
+    compositeSubscription.add(RxView.clicks(storeLayout)
+        .subscribe(handleStoreClick));
 
     final FragmentActivity context = getContext();
     if (store.getId() == -1 || TextUtils.isEmpty(store.getAvatar())) {
       ImageLoader.with(context)
           .loadWithShadowCircleTransform(R.drawable.ic_avatar_apps, storeAvatar,
-              StoreThemeEnum.get(store).getStoreHeaderInt());
+              StoreThemeEnum.get(store)
+                  .getStoreHeaderInt());
     } else {
       ImageLoader.with(context)
-          .loadWithShadowCircleTransform(store.getAvatar(), storeAvatar,
-              StoreThemeEnum.get(store).getStoreHeaderInt());
+          .loadWithShadowCircleTransform(store.getAvatar(), storeAvatar, StoreThemeEnum.get(store)
+              .getStoreHeaderInt());
     }
   }
 }

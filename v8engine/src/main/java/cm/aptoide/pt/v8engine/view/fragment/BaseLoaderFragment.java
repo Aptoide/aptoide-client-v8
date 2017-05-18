@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/07/2016.
+ * Modified on 29/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.fragment;
@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
+import cm.aptoide.pt.v8engine.view.LoadInterface;
 import cm.aptoide.pt.v8engine.view.swipe.LoaderLayoutHandler;
 import lombok.Getter;
 
@@ -107,6 +107,7 @@ public abstract class BaseLoaderFragment extends UIComponentFragment implements 
     if (loaderLayoutHandler != null) {
       loaderLayoutHandler.finishLoading(throwable);
     }
-    CrashReport.getInstance().log(throwable);
+    CrashReport.getInstance()
+        .log(throwable);
   }
 }

@@ -47,8 +47,8 @@ public class ReceiverDeviceAdapter
     ReceiverDevice app = getItem(position);
 
     if (convertView == null) {
-      convertView =
-          LayoutInflater.from(getContext()).inflate(R.layout.row_remote_install, parent, false);
+      convertView = LayoutInflater.from(getContext())
+          .inflate(R.layout.row_remote_install, parent, false);
     }
     TextView deviceName = (TextView) convertView.findViewById(R.id.deviceNameText);
     deviceName.setText(app.getDeviceName());

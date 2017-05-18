@@ -108,7 +108,8 @@ public class HighwayRadarScan extends View {
 
   private int converterDipToPx(Context context, float dipValue) {
 
-    DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+    DisplayMetrics metrics = context.getResources()
+        .getDisplayMetrics();
     return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
   }
 

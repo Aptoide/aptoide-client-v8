@@ -29,16 +29,14 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
   }
 
   public static OAuth2AuthenticationRequest of(String username, String password, String mode,
-      @Nullable String nameForGoogle, String aptoideClientUUID,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      @Nullable String nameForGoogle, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
 
     final BaseBody body = new BaseBody();
 
     body.put("grant_type", "password");
     body.put("client_id", "Aptoide");
     body.put("mode", "json");
-    body.put("aptoide_uid", aptoideClientUUID);
 
     if (mode != null) {
       switch (mode) {
@@ -64,14 +62,16 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
       }
     }
 
-    if (!TextUtils.isEmpty(Application.getConfiguration().getExtraId())) {
-      body.put("oem_id", Application.getConfiguration().getExtraId());
+    if (!TextUtils.isEmpty(Application.getConfiguration()
+        .getExtraId())) {
+      body.put("oem_id", Application.getConfiguration()
+          .getExtraId());
     }
 
     return new OAuth2AuthenticationRequest(body, bodyInterceptor, httpClient, converterFactory);
   }
 
-  public static OAuth2AuthenticationRequest of(String refreshToken, String aptoideClientUUID,
+  public static OAuth2AuthenticationRequest of(String refreshToken,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
 
@@ -80,10 +80,11 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
     body.put("grant_type", "refresh_token");
     body.put("client_id", "Aptoide");
     body.put("mode", "json");
-    body.put("aptoide_uid", aptoideClientUUID);
 
-    if (!TextUtils.isEmpty(Application.getConfiguration().getExtraId())) {
-      body.put("oem_id", Application.getConfiguration().getExtraId());
+    if (!TextUtils.isEmpty(Application.getConfiguration()
+        .getExtraId())) {
+      body.put("oem_id", Application.getConfiguration()
+          .getExtraId());
     }
     body.put("refresh_token", refreshToken);
 

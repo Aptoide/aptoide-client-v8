@@ -43,9 +43,11 @@ public enum WidgetLoader {
     widgetsHashMap = new HashMap<>();
     try {
       // get the current class loader
-      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+      ClassLoader classLoader = Thread.currentThread()
+          .getContextClassLoader();
       // current package name for filtering purposes
-      String packageName = getClass().getPackage().getName();
+      String packageName = getClass().getPackage()
+          .getName();
 
       List<Map.Entry<String, String>> classNames =
           MultiDexHelper.getAllClasses(V8Engine.getContext());
@@ -55,7 +57,10 @@ public enum WidgetLoader {
         try {
           // if the class doesn't belong in the current project we discard it
           // useful for speeding this method
-          if (!className.getKey().startsWith(packageName)) continue;
+          if (!className.getKey()
+              .startsWith(packageName)) {
+            continue;
+          }
 
           String dexFilePath = className.getValue();
 
@@ -78,7 +83,8 @@ public enum WidgetLoader {
             }
           }
         } catch (Exception e) {
-          CrashReport.getInstance().log(e);
+          CrashReport.getInstance()
+              .log(e);
         } finally {
           if (dexFile != null) {
             dexFile.close();
@@ -86,7 +92,8 @@ public enum WidgetLoader {
         }
       }
     } catch (Exception e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     }
 
     //		nanos -= System.nanoTime();
@@ -126,7 +133,8 @@ public enum WidgetLoader {
     try {
       // instantiate Widget passing the view as param to the constructor
       // and return it
-      resultWidget = widgetMeta.widgetClass.getDeclaredConstructor(cArg).newInstance(view);
+      resultWidget = widgetMeta.widgetClass.getDeclaredConstructor(cArg)
+          .newInstance(view);
     } catch (Exception e) {
       throw new RuntimeException("Error instantiating widget!");
     }

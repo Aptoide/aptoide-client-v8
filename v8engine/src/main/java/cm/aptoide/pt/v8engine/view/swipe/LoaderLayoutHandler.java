@@ -13,8 +13,8 @@ import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
 import cm.aptoide.pt.v8engine.spotandshare.SpotSharePreviewActivity;
+import cm.aptoide.pt.v8engine.view.LoadInterface;
 import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +76,8 @@ public class LoaderLayoutHandler {
   }
 
   public void finishLoading(Throwable throwable) {
-    CrashReport.getInstance().log(throwable);
+    CrashReport.getInstance()
+        .log(throwable);
 
     AptoideUtils.ThreadU.runOnUiThread(() -> onFinishLoading(throwable));
   }
@@ -119,10 +120,13 @@ public class LoaderLayoutHandler {
     Observable.fromCallable(() -> {
       onFinishLoading();
       return null;
-    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(o -> {
-    }, e -> {
-      CrashReport.getInstance().log(e);
-    });
+    })
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .subscribe(o -> {
+        }, e -> {
+          CrashReport.getInstance()
+              .log(e);
+        });
   }
 
   @UiThread protected void onFinishLoading() {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 06/07/2016.
+ * Modified on 06/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.search;
@@ -8,21 +8,19 @@ package cm.aptoide.pt.v8engine.view.search;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.abtesting.ABTest;
 import cm.aptoide.pt.v8engine.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.abtesting.SearchTabOptions;
-import cm.aptoide.pt.v8engine.repository.AdsRepository;
-import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.ads.AdsRepository;
+import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.v8engine.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -57,7 +55,8 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
         LinkedList<Displayable> displayables = new LinkedList<>();
 
-        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
+        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
+            .getList();
         Observable<ListSearchApps.SearchAppsApp> from = Observable.from(list);
 
         if (addSubscribedStores) {
@@ -103,13 +102,14 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     final AptoideAccountManager accountManager =
         ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    searchAbTest = ABTestManager.getInstance().get(ABTestManager.SEARCH_TAB_TEST);
+    searchAbTest = ABTestManager.getInstance()
+        .get(ABTestManager.SEARCH_TAB_TEST);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    adsRepository = new AdsRepository(
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            getContext().getApplicationContext()), accountManager, httpClient, converterFactory);
+    adsRepository =
+        new AdsRepository(((V8Engine) getContext().getApplicationContext()).getIdsRepository(),
+            accountManager, httpClient, converterFactory, V8Engine.getQManager());
     super.onCreate(savedInstanceState);
   }
 
@@ -124,6 +124,11 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
   @Override public int getContentViewId() {
     return R.layout.recycler_fragment;
+  }
+
+  @Override public void onDestroyView() {
+    endlessRecyclerOnScrollListener = null;
+    super.onDestroyView();
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -151,11 +156,6 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
             listSearchAppsSuccessRequestListener, err -> err.printStackTrace(), refresh);
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
-  }
-
-  @Override public void onDestroyView() {
-    endlessRecyclerOnScrollListener = null;
-    super.onDestroyView();
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 09/06/2016.
+ * Modified on 09/06/2016.
  */
 
 package cm.aptoide.pt.networkclient.okhttp.cache;
@@ -12,7 +12,7 @@ import okhttp3.Request;
 import okio.Buffer;
 
 /**
- * Created by sithengineer on 28/04/16.
+ * Created on 28/04/16.
  * <br><br>
  * Creates a unique SHA-1 key for each request using one of this methods, ordered
  * by preference:
@@ -28,18 +28,24 @@ public class Sha1KeyAlgorithm implements KeyAlgorithm<Request, String> {
   @Override public String getKeyFrom(Request request) {
     try {
       final Buffer bodyBuffer = new Buffer();
-      final Request clonedRequest = request.newBuilder().build();
+      final Request clonedRequest = request.newBuilder()
+          .build();
 
       String requestIdentifier;
 
-      if (clonedRequest.body() != null && clonedRequest.body().contentLength() > 0) {
+      if (clonedRequest.body() != null
+          && clonedRequest.body()
+          .contentLength() > 0) {
         // best scenario: use request body as key
-        clonedRequest.body().writeTo(bodyBuffer);
-        requestIdentifier = clonedRequest.url().toString() + bodyBuffer.readUtf8();
+        clonedRequest.body()
+            .writeTo(bodyBuffer);
+        requestIdentifier = clonedRequest.url()
+            .toString() + bodyBuffer.readUtf8();
       } else {
         // no body to use as key. use query string params if they exist or
         // in the worst case the url itself
-        requestIdentifier = clonedRequest.url().toString();
+        requestIdentifier = clonedRequest.url()
+            .toString();
       }
 
       //			final MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
@@ -52,7 +58,8 @@ public class Sha1KeyAlgorithm implements KeyAlgorithm<Request, String> {
       //			return buffer.toString();
       return AptoideUtils.AlgorithmU.computeSha1(requestIdentifier);
     } catch (IOException e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     }
 
     return null;

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 09/08/2016.
+ * Modified on 09/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.comments;
@@ -30,6 +30,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.comments.CommentAdder;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
@@ -96,8 +97,10 @@ import rx.Observable;
   }
 
   @Override public void bindView(RateAndReviewCommentDisplayable displayable) {
-    final Review review = displayable.getPojo().getReview();
-    final String appName = displayable.getPojo().getAppName();
+    final Review review = displayable.getPojo()
+        .getReview();
+    final String appName = displayable.getPojo()
+        .getAppName();
 
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
@@ -108,15 +111,19 @@ import rx.Observable;
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
     final FragmentActivity context = getContext();
     ImageLoader.with(context)
-        .loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(), userImage,
-            R.drawable.layer_1);
-    username.setText(review.getUser().getName());
-    ratingBar.setRating(review.getStats().getRating());
+        .loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser()
+            .getAvatar(), userImage, R.drawable.layer_1);
+    username.setText(review.getUser()
+        .getName());
+    ratingBar.setRating(review.getStats()
+        .getRating());
     reviewTitle.setText(review.getTitle());
     reviewText.setText(review.getBody());
-    reviewDate.setText(DATE_TIME_U.getTimeDiffString(context, review.getAdded().getTime()));
+    reviewDate.setText(DATE_TIME_U.getTimeDiffString(context, review.getAdded()
+        .getTime()));
 
-    if (DisplayMetrics.DENSITY_300 > context.getResources().getDisplayMetrics().densityDpi) {
+    if (DisplayMetrics.DENSITY_300 > context.getResources()
+        .getDisplayMetrics().densityDpi) {
       flagHelfull.setText("");
       flagNotHelfull.setText("");
     }
@@ -124,51 +131,61 @@ import rx.Observable;
     final CommentAdder commentAdder = displayable.getCommentAdder();
     final long reviewId = review.getId();
 
-    compositeSubscription.add(RxView.clicks(reply).flatMap(a -> {
-      if (accountManager.isLoggedIn()) {
-        FragmentManager fm = context.getSupportFragmentManager();
-        CommentDialogFragment commentDialogFragment =
-            CommentDialogFragment.newInstanceReview(review.getId(), appName);
-        commentDialogFragment.show(fm, "fragment_comment_dialog");
+    compositeSubscription.add(RxView.clicks(reply)
+        .flatMap(a -> {
+          if (accountManager.isLoggedIn()) {
+            FragmentManager fm = context.getSupportFragmentManager();
+            CommentDialogFragment commentDialogFragment =
+                CommentDialogFragment.newInstanceReview(review.getId(), appName);
+            commentDialogFragment.show(fm, "fragment_comment_dialog");
 
-        return commentDialogFragment.lifecycle()
-            .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-            .doOnNext(b -> {
-              ManagerPreferences.setForceServerRefreshFlag(true);
-              commentAdder.collapseComments();
-              loadCommentsForThisReview(reviewId, FULL_COMMENTS_LIMIT, commentAdder);
-            })
-            .flatMap(event -> Observable.empty());
-      } else {
-        return ShowMessage.asObservableSnack(ratingBar, R.string.you_need_to_be_logged_in,
-            R.string.login, snackView -> {
-              accountNavigator.navigateToAccountView();
-            });
-      }
-    }).subscribe(a -> { /* do nothing */ }, err -> {
-      CrashReport.getInstance().log(err);
-    }));
+            return commentDialogFragment.lifecycle()
+                .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
+                .doOnNext(b -> {
+                  ManagerPreferences.setForceServerRefreshFlag(true);
+                  commentAdder.collapseComments();
+                  loadCommentsForThisReview(reviewId, FULL_COMMENTS_LIMIT, commentAdder);
+                })
+                .flatMap(event -> Observable.empty());
+          } else {
+            return ShowMessage.asObservableSnack(ratingBar, R.string.you_need_to_be_logged_in,
+                R.string.login, snackView -> {
+                  accountNavigator.navigateToAccountView(
+                      Analytics.Account.AccountOrigins.REPLY_REVIEW);
+                });
+          }
+        })
+        .subscribe(a -> { /* do nothing */ }, err -> {
+          CrashReport.getInstance()
+              .log(err);
+        }));
 
-    compositeSubscription.add(RxView.clicks(helpfullButtonLayout).subscribe(a -> {
-      setReviewRating(review.getId(), true);
-    }));
+    compositeSubscription.add(RxView.clicks(helpfullButtonLayout)
+        .subscribe(a -> {
+          setReviewRating(review.getId(), true);
+        }));
 
-    compositeSubscription.add(RxView.clicks(notHelpfullButtonLayout).subscribe(a -> {
-      setReviewRating(review.getId(), false);
-    }));
+    compositeSubscription.add(RxView.clicks(notHelpfullButtonLayout)
+        .subscribe(a -> {
+          setReviewRating(review.getId(), false);
+        }));
 
-    compositeSubscription.add(RxView.clicks(showHideReplies).subscribe(a -> {
-      if (isCommentsCollapsed) {
-        loadCommentsForThisReview(review.getId(), FULL_COMMENTS_LIMIT,
-            displayable.getCommentAdder());
-        showHideReplies.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_up_arrow, 0);
-        isCommentsCollapsed = false;
-      } else {
-        displayable.getCommentAdder().collapseComments();
-        showHideReplies.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_down_arrow, 0);
-        isCommentsCollapsed = true;
-      }
-    }));
+    compositeSubscription.add(RxView.clicks(showHideReplies)
+        .subscribe(a -> {
+          if (isCommentsCollapsed) {
+            loadCommentsForThisReview(review.getId(), FULL_COMMENTS_LIMIT,
+                displayable.getCommentAdder());
+            showHideReplies.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_up_arrow,
+                0);
+            isCommentsCollapsed = false;
+          } else {
+            displayable.getCommentAdder()
+                .collapseComments();
+            showHideReplies.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_down_arrow,
+                0);
+            isCommentsCollapsed = true;
+          }
+        }));
 
     final Resources.Theme theme = context.getTheme();
     final Resources res = context.getResources();
@@ -194,7 +211,8 @@ import rx.Observable;
     ListCommentsRequest.of(reviewId, limit, true, bodyInterceptor, httpClient, converterFactory)
         .execute(listComments -> {
           if (listComments.isOk()) {
-            List<Comment> comments = listComments.getDatalist().getList();
+            List<Comment> comments = listComments.getDatalist()
+                .getList();
             commentAdder.addComment(comments);
           } else {
             Logger.e(TAG, "error loading comments");
@@ -218,7 +236,8 @@ import rx.Observable;
             }
 
             if (response.getError() != null) {
-              Logger.e(TAG, response.getError().getDescription());
+              Logger.e(TAG, response.getError()
+                  .getDescription());
               return;
             }
 
@@ -243,7 +262,8 @@ import rx.Observable;
     } else {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            accountNavigator.navigateToAccountView();
+            accountNavigator.navigateToAccountView(
+                Analytics.Account.AccountOrigins.REVIEW_FEEDBACK);
           });
       setHelpButtonsClickable(true);
     }

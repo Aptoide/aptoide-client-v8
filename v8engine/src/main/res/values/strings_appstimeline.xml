@@ -82,7 +82,7 @@
     servers</string>
   <string name="addressbook_3rd_msg">LEARN MORE</string>
   <string name="address_book_twitter_error">Twitter authorization error</string>
-  <string name="follow_my_store">Hello, follow my %1$s Store here</string>
+  <string name="follow_my_store">Hello, follow my %1$s Store here %2$s</string>
   <string name="store_meta_apps">Apps</string>
   <string name="store_meta_following">Following</string>
   <string name="store_meta_followers">Followers</string>

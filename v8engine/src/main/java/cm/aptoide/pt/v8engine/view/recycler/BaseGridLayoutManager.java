@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/05/2016.
+ * Modified on 04/05/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler;
@@ -39,11 +39,8 @@ public class BaseGridLayoutManager extends GridLayoutManager {
           return displayable.getSpanSize();
         } else {
           CrashReport.getInstance()
-              .log(new IllegalArgumentException("Displayable "
-                  + displayable.getClass().getSimpleName()
-                  + " at position "
-                  + position
-                  + " spanSize > getSpanCount()! "));
+              .log(new IllegalArgumentException("Displayable " + displayable.getClass()
+                  .getSimpleName() + " at position " + position + " spanSize > getSpanCount()! "));
           return getSpanCount();
         }
       }

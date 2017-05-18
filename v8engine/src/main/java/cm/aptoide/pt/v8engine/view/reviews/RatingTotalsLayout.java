@@ -21,9 +21,11 @@ public class RatingTotalsLayout {
 
   public void setup(GetAppMeta.App data) {
     GetAppMeta.Stats stats = data.getStats();
-    usersVoted.setText(AptoideUtils.StringU.withSuffix(stats.getRating().getTotal()));
-    ratingValue.setText(
-        String.format(AptoideUtils.LocaleU.DEFAULT, "%.1f", stats.getRating().getAvg()));
-    ratingBar.setRating(stats.getRating().getAvg());
+    usersVoted.setText(AptoideUtils.StringU.withSuffix(stats.getRating()
+        .getTotal()));
+    ratingValue.setText(String.format(AptoideUtils.LocaleU.DEFAULT, "%.1f", stats.getRating()
+        .getAvg()));
+    ratingBar.setRating(stats.getRating()
+        .getAvg());
   }
 }

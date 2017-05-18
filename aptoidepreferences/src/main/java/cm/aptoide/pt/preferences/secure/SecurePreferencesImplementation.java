@@ -62,8 +62,9 @@ public class SecurePreferencesImplementation implements SharedPreferences {
     final Map<String, String> decryptedMap = new HashMap<String, String>(encryptedMap.size());
     for (Map.Entry<String, ?> entry : encryptedMap.entrySet()) {
       try {
-        decryptedMap.put(secureCoderDecoder.decrypt(entry.getKey()),
-            secureCoderDecoder.decrypt(entry.getValue().toString()));
+        decryptedMap.put(secureCoderDecoder.decrypt(entry.getKey()), secureCoderDecoder.decrypt(
+            entry.getValue()
+                .toString()));
       } catch (Exception e) {
         // Ignore unencrypted key/value pairs
       }

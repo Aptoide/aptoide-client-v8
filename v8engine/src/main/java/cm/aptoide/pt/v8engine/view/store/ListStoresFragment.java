@@ -23,7 +23,8 @@ public class ListStoresFragment extends GetStoreEndlessFragment<ListStores> {
     return listStores -> {
 
       // Load sub nodes
-      List<Store> list = listStores.getDatalist().getList();
+      List<Store> list = listStores.getDatalist()
+          .getList();
 
       List<Displayable> displayables = new LinkedList<>();
       for (Store store : list) {

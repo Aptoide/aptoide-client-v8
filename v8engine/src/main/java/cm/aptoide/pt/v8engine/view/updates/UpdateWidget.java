@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 16/08/2016.
+ * Modified on 16/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.updates;
@@ -25,9 +25,9 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.repository.UpdateRepository;
+import cm.aptoide.pt.v8engine.updates.UpdateRepository;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -84,15 +84,16 @@ import rx.android.schedulers.AndroidSchedulers;
     updateVersionName.setText(updateDisplayable.getUpdateVersionName());
 
     // load row image
-    ImageLoader.with(context).load(updateDisplayable.getIcon(), icon);
+    ImageLoader.with(context)
+        .load(updateDisplayable.getIcon(), icon);
 
     final Observable<Void> handleUpdateButtonClick =
         handleUpdateButtonClick(updateDisplayable, context);
 
     compositeSubscription.add(updateDisplayable.shouldShowProgress()
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(shouldShow -> showProgress(shouldShow),
-            throwable -> CrashReport.getInstance().log(throwable)));
+        .subscribe(shouldShow -> showProgress(shouldShow), throwable -> CrashReport.getInstance()
+            .log(throwable)));
 
     final Observable<Void> showInstalledVersionName =
         showInstalledVersionName(updateDisplayable.getPackageName(),
@@ -106,7 +107,8 @@ import rx.android.schedulers.AndroidSchedulers;
     compositeSubscription.add(
         Observable.merge(handleUpdateButtonClick, showInstalledVersionName, handleLongClicks,
             handleUpdateRowClick)
-            .subscribe(__ -> {/* do nothing */}, err -> CrashReport.getInstance().log(err)));
+            .subscribe(__ -> {/* do nothing */}, err -> CrashReport.getInstance()
+                .log(err)));
   }
 
   private Observable<Void> handleUpdateButtonClick(UpdateDisplayable displayable, Context context) {
@@ -133,11 +135,12 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   @NonNull private Observable<Void> handleUpdateRowClick(UpdateDisplayable updateDisplayable) {
-    return RxView.clicks(updateRowLayout).doOnNext(v -> {
-      final Fragment fragment = V8Engine.getFragmentProvider()
-          .newAppViewFragment(updateDisplayable.getAppId(), updateDisplayable.getPackageName());
-      getFragmentNavigator().navigateTo(fragment);
-    });
+    return RxView.clicks(updateRowLayout)
+        .doOnNext(v -> {
+          final Fragment fragment = V8Engine.getFragmentProvider()
+              .newAppViewFragment(updateDisplayable.getAppId(), updateDisplayable.getPackageName());
+          getFragmentNavigator().navigateTo(fragment);
+        });
   }
 
   @NonNull
@@ -154,13 +157,15 @@ import rx.android.schedulers.AndroidSchedulers;
                       String.format("Update with package name %s was excluded", packageName)),
                       throwable -> {
                         ShowMessage.asSnack(context, R.string.unknown_error);
-                        CrashReport.getInstance().log(throwable);
+                        CrashReport.getInstance()
+                            .log(throwable);
                       }));
             }
             dialog.dismiss();
           });
 
-      builder.create().show();
+      builder.create()
+          .show();
       return null;
     });
   }

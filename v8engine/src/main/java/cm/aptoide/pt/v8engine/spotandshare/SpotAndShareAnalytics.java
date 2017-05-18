@@ -24,17 +24,22 @@ public class SpotAndShareAnalytics implements SpotAndShareAnalyticsInterface {
   public static String ACTION_SPOT_SHARE_RCV_UNSUCCESS = "Unsuccessful received";
   public static String ACTION_SPOT_SHARE_PERM_GRANTED = "Permission granted";
   public static String ACTION_SPOT_SHARE_PERM_DENIED = "Permission not granted";
+  public static String SPOT_AND_SHARE_START_CLICK_ORIGIN_TAB = "Tab";
+  public static String SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW = "AppView";
+  public static String SPOT_AND_SHARE_START_CLICK_ORIGIN_DRAWER = "Drawer";
   private static String EVENT_NAME_SPOT_SHARE = "Share_Apps_Click_On_Share_Apps";
   private static String EVENT_NAME_SPOT_SHARE_PERMISSIONS = "Spot_Share_Write_Permissions_Problem";
-
   private final Analytics analytics;
 
   public SpotAndShareAnalytics(Analytics analytics) {
     this.analytics = analytics;
   }
 
-  public void clickShareApps() {
-    trackEvent(EVENT_NAME_SPOT_SHARE, null, false);
+  public void clickShareApps(String origin) {
+    Map<String, String> map = new HashMap<>();
+    map.put("origin", origin);
+
+    trackEvent(EVENT_NAME_SPOT_SHARE, map, false);
   }
 
   private void trackEvent(String eventName, Map<String, String> attributes, boolean fabric) {

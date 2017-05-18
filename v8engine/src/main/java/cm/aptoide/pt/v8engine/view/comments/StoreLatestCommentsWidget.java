@@ -15,6 +15,7 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.comments.CommentNode;
 import cm.aptoide.pt.v8engine.comments.ComplexComment;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
@@ -64,7 +65,6 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
     converterFactory = WebService.getDefaultConverter();
 
     LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
-    layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     recyclerView.setLayoutManager(layoutManager);
     recyclerView.addItemDecoration(new HorizontalDividerItemDecoration(getContext()));
 
@@ -91,9 +91,11 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(listComments -> {
-              setAdapter(listComments.getDatalist().getList());
+              setAdapter(listComments.getDatalist()
+                  .getList());
             }, err -> {
-              CrashReport.getInstance().log(err);
+              CrashReport.getInstance()
+                  .log(err);
             }));
     return null;
   }
@@ -128,30 +130,33 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
         @NonNull final FragmentManager fragmentManager, @NonNull final View view,
         Observable<Void> reloadComments) {
 
-      return Observable.just(accountManager.isLoggedIn()).flatMap(isLoggedIn -> {
+      return Observable.just(accountManager.isLoggedIn())
+          .flatMap(isLoggedIn -> {
 
-        if (isLoggedIn) {
-          // show fragment CommentDialog
-          CommentDialogFragment commentDialogFragment =
-              CommentDialogFragment.newInstanceStoreCommentReply(storeId, comment.getId(),
-                  storeName);
+            if (isLoggedIn) {
+              // show fragment CommentDialog
+              CommentDialogFragment commentDialogFragment =
+                  CommentDialogFragment.newInstanceStoreCommentReply(storeId, comment.getId(),
+                      storeName);
 
-          return commentDialogFragment.lifecycle()
-              .doOnSubscribe(() -> commentDialogFragment.show(fragmentManager,
-                  "fragment_comment_dialog_latest"))
-              .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-              .flatMap(event -> reloadComments);
-        }
+              return commentDialogFragment.lifecycle()
+                  .doOnSubscribe(() -> commentDialogFragment.show(fragmentManager,
+                      "fragment_comment_dialog_latest"))
+                  .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
+                  .flatMap(event -> reloadComments);
+            }
 
-        return showSignInMessage(view);
-      });
+            return showSignInMessage(view);
+          });
     }
 
     private Observable<Void> showSignInMessage(@NonNull final View view) {
       return ShowMessage.asObservableSnack(view, R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            accountNavigator.navigateToAccountView();
-          }).flatMap(a -> Observable.empty());
+            accountNavigator.navigateToAccountView(
+                Analytics.Account.AccountOrigins.LATEST_COMMENTS_STORE);
+          })
+          .flatMap(a -> Observable.empty());
     }
   }
 }

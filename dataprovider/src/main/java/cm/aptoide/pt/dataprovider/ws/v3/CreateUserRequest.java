@@ -41,40 +41,41 @@ public class CreateUserRequest extends V3<BaseV3Response> {
     multipartRequestBody = body;
   }
 
-  public static CreateUserRequest of(String email, String password, String aptoideClientUUID,
+  public static CreateUserRequest of(String email, String password,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient) {
     final BaseBody body = new BaseBody();
     final String passhash = AptoideUtils.AlgorithmU.computeSha1(password);
-    addBaseParameters(email, aptoideClientUUID, body, passhash);
+    addBaseParameters(email, body, passhash);
 
     body.put("hmac", AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash, "bazaar_hmac"));
 
     return new CreateUserRequest(null, body, httpClient, bodyInterceptor);
   }
 
-  private static void addBaseParameters(String email, String aptoideClientUUID, BaseBody parameters,
-      String passhash) {
+  private static void addBaseParameters(String email, BaseBody parameters, String passhash) {
     parameters.put("mode", "json");
     parameters.put("email", email);
     parameters.put("passhash", passhash);
-    parameters.put("aptoide_uid", aptoideClientUUID);
 
-    if (!TextUtils.isEmpty(Application.getConfiguration().getExtraId())) {
-      parameters.put("oem_id", Application.getConfiguration().getExtraId());
+    if (!TextUtils.isEmpty(Application.getConfiguration()
+        .getExtraId())) {
+      parameters.put("oem_id", Application.getConfiguration()
+          .getExtraId());
     }
   }
 
   public static CreateUserRequest of(String email, String name, String password,
-      String userAvatarPath, String aptoideClientUUID, String accessToken,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient, OkHttpClient
-      longTimeoutHttpClient) {
+      String userAvatarPath, String accessToken, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, OkHttpClient longTimeoutHttpClient) {
 
     final BaseBody body = new BaseBody();
     final String passhash = AptoideUtils.AlgorithmU.computeSha1(password);
     if (!TextUtils.isEmpty(userAvatarPath)) {
 
-      if (!TextUtils.isEmpty(Application.getConfiguration().getExtraId())) {
-        body.put("oem_id", createBodyPartFromString(Application.getConfiguration().getExtraId()));
+      if (!TextUtils.isEmpty(Application.getConfiguration()
+          .getExtraId())) {
+        body.put("oem_id", createBodyPartFromString(Application.getConfiguration()
+            .getExtraId()));
       }
       HashMapNotNull<String, RequestBody> multipartBody = new HashMapNotNull<>();
       multipartBody.put("mode", createBodyPartFromString("json"));
@@ -96,7 +97,7 @@ public class CreateUserRequest extends V3<BaseV3Response> {
       body.put("name", name);
     }
 
-    addBaseParameters(email, aptoideClientUUID, body, passhash);
+    addBaseParameters(email, body, passhash);
 
     body.put("hmac",
         AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash + name + "true", "bazaar_hmac"));

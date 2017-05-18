@@ -10,10 +10,10 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.interfaces.ReloadInterface;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
 import cm.aptoide.pt.v8engine.preferences.SecurePreferences;
+import cm.aptoide.pt.v8engine.view.ReloadInterface;
 import cm.aptoide.pt.v8engine.view.dialog.EditableTextDialog;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.rx.RxAlertDialog;
@@ -80,8 +80,9 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
         })
         .subscribe());
 
-    compositeSubscription.add(
-        RxSwitch.checks(adultSwitch).filter(check -> shouldCheck()).flatMap(checked -> {
+    compositeSubscription.add(RxSwitch.checks(adultSwitch)
+        .filter(check -> shouldCheck())
+        .flatMap(checked -> {
           ignoreCheck = false;
           rollbackCheck(adultSwitch);
           if (checked) {
@@ -96,10 +97,13 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
                 .doOnTerminate(() -> reload(reloader))
                 .toObservable();
           }
-        }).retry().subscribe());
+        })
+        .retry()
+        .subscribe());
 
-    compositeSubscription.add(
-        RxSwitch.checks(adultPinSwitch).filter(check -> shouldPinCheck()).flatMap(checked -> {
+    compositeSubscription.add(RxSwitch.checks(adultPinSwitch)
+        .filter(check -> shouldPinCheck())
+        .flatMap(checked -> {
           rollbackCheck(adultPinSwitch);
           if (checked) {
             enableAdultContentPinDialog.show();
@@ -113,7 +117,9 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
                 .doOnTerminate(() -> reload(reloader))
                 .toObservable();
           }
-        }).retry().subscribe());
+        })
+        .retry()
+        .subscribe());
 
     compositeSubscription.add(adultContentConfirmationDialog.positiveClicks()
         .doOnNext(click -> adultSwitch.setEnabled(false))
@@ -142,8 +148,9 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
         .retry()
         .subscribe());
 
-    compositeSubscription.add(
-        adultContent.enabled().observeOn(AndroidSchedulers.mainThread()).doOnNext(enabled -> {
+    compositeSubscription.add(adultContent.enabled()
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(enabled -> {
 
           if (enabled != adultSwitch.isChecked()) {
             ignoreCheck = true;
@@ -154,7 +161,8 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
             ignorePinCheck = true;
             adultPinSwitch.setChecked(enabled);
           }
-        }).subscribe());
+        })
+        .subscribe());
   }
 
   private boolean shouldCheck() {

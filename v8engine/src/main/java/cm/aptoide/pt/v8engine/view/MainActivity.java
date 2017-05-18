@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.view;
 
 import android.app.SearchManager;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -29,29 +28,32 @@ import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.AutoUpdate;
+import cm.aptoide.pt.v8engine.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.notification.ContentPuller;
 import cm.aptoide.pt.v8engine.presenter.MainPresenter;
 import cm.aptoide.pt.v8engine.presenter.MainView;
-import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
-import cm.aptoide.pt.v8engine.services.ContentPuller;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.v8engine.store.StoreUtils;
+import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.util.ApkFy;
-import cm.aptoide.pt.v8engine.util.DownloadFactory;
-import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.util.StoreUtils;
-import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.downloads.scheduled.ScheduledDownloadsFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.navigator.SimpleTabNavigation;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigatorActivity;
 import cm.aptoide.pt.v8engine.view.store.StoreTabFragmentChooser;
 import cm.aptoide.pt.v8engine.view.store.home.HomeFragment;
+import cm.aptoide.pt.v8engine.view.timeline.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.v8engine.view.wizard.WizardFragment;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -99,18 +101,14 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
         savedInstanceState);
   }
 
-  @Override public void changeOrientationToPortrait() {
-    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-  }
-
   @Override public void showWizard() {
     fragmentNavigator.navigateTo(new WizardFragment());
   }
 
   @Override public void showHome() {
-    Fragment home =
-        HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
-            V8Engine.getConfiguration().getDefaultTheme());
+    Fragment home = HomeFragment.newInstance(V8Engine.getConfiguration()
+        .getDefaultStore(), StoreContext.home, V8Engine.getConfiguration()
+        .getDefaultTheme());
     fragmentNavigator.navigateToWithoutBackSave(home);
   }
 
@@ -133,16 +131,18 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
             intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.STORENAME_KEY),
             intent.getBooleanExtra(DeepLinkIntentReceiver.DeepLinksKeys.SHOW_AUTO_INSTALL_POPUP,
                 true));
+      } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.UNAME)) {
+        appViewDeepLinkUname(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.UNAME));
       }
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.SEARCH_FRAGMENT)) {
       searchDeepLink(intent.getStringExtra(SearchManager.QUERY));
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO)) {
-      newrepoDeepLink(
-          intent.getExtras().getStringArrayList(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO));
+      newrepoDeepLink(intent.getExtras()
+          .getStringArrayList(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO));
     } else if (intent.hasExtra(
         DeepLinkIntentReceiver.DeepLinksTargets.FROM_DOWNLOAD_NOTIFICATION)) {
       downloadNotificationDeepLink(intent);
-    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.FROM_TIMELINE)) {
+    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.TIMELINE_DEEPLINK)) {
       fromTimelineDeepLink(intent);
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES)) {
       newUpdatesDeepLink(intent);
@@ -159,6 +159,10 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
     return true;
   }
 
+  private void appViewDeepLinkUname(String uname) {
+    fragmentNavigator.navigateTo(AppViewFragment.newInstanceUname(uname));
+  }
+
   private void appViewDeepLink(String md5) {
     fragmentNavigator.navigateTo(AppViewFragment.newInstance(md5));
   }
@@ -166,25 +170,25 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
   private void appViewDeepLink(long appId, String packageName, boolean showPopup) {
     AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
         : AppViewFragment.OpenType.OPEN_ONLY;
-    fragmentNavigator.navigateTo(
-        V8Engine.getFragmentProvider().newAppViewFragment(appId, packageName, openType));
+    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+        .newAppViewFragment(appId, packageName, openType));
   }
 
   private void appViewDeepLink(String packageName, String storeName, boolean showPopup) {
     AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
         : AppViewFragment.OpenType.OPEN_ONLY;
-    fragmentNavigator.navigateTo(
-        V8Engine.getFragmentProvider().newAppViewFragment(packageName, storeName, openType));
+    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+        .newAppViewFragment(packageName, storeName, openType));
   }
 
   private void searchDeepLink(String query) {
-    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider().newSearchFragment(query));
+    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+        .newSearchFragment(query));
   }
 
   private void newrepoDeepLink(ArrayList<String> repos) {
     if (repos != null) {
       Observable.from(repos)
-          .map(storeUrl -> StoreUtils.split(storeUrl))
           .flatMap(storeName -> StoreUtils.isSubscribedStore(storeName)
               .first()
               .observeOn(AndroidSchedulers.mainThread())
@@ -209,39 +213,43 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
                   .flatMapCompletable(store -> openStore(store))
                   .map(success -> stores);
             } else {
-              return navigateToStores().toObservable().map(success -> stores);
+              return navigateToStores().toObservable()
+                  .map(success -> stores);
             }
           })
           .subscribe(stores -> Logger.d(TAG, "newrepoDeepLink: all stores added"), throwable -> {
             Logger.e(TAG, "newrepoDeepLink: " + throwable);
-            CrashReport.getInstance().log(throwable);
+            CrashReport.getInstance()
+                .log(throwable);
           });
       getIntent().removeExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO);
     }
   }
 
   @NonNull private Completable navigateToStores() {
-    return Completable.fromAction(() -> navigate(STORES));
+    return Completable.fromAction(() -> navigate(new SimpleTabNavigation(TabNavigation.STORES)));
   }
 
   @NonNull private Completable openStore(Store store) {
     return Completable.fromAction(() -> getFragmentNavigator().navigateTo(
-        V8Engine.getFragmentProvider().newStoreFragment(store.getStoreName(), store.getTheme())));
+        V8Engine.getFragmentProvider()
+            .newStoreFragment(store.getStoreName(), store.getTheme())));
   }
 
   private void downloadNotificationDeepLink(Intent intent) {
     Analytics.ApplicationLaunch.downloadingUpdates();
-    navigate(DOWNLOADS);
+    navigate(new SimpleTabNavigation(TabNavigation.DOWNLOADS));
   }
 
   private void fromTimelineDeepLink(Intent intent) {
     Analytics.ApplicationLaunch.timelineNotification();
-    navigate(TIMELINE);
+    String cardId = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.CARD_ID);
+    navigate(new AppsTimelineTabNavigation(cardId));
   }
 
   private void newUpdatesDeepLink(Intent intent) {
     Analytics.ApplicationLaunch.newUpdatesNotification();
-    navigate(UPDATES);
+    navigate(new SimpleTabNavigation(TabNavigation.UPDATES));
   }
 
   private void genericDeepLink(Uri uri) {
@@ -263,7 +271,8 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
             .newStoreTabGridRecyclerFragment(event,
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME),
-                V8Engine.getConfiguration().getDefaultTheme(), StoreContext.home));
+                V8Engine.getConfiguration()
+                    .getDefaultTheme(), StoreContext.home));
       } catch (UnsupportedEncodingException | IllegalArgumentException e) {
         e.printStackTrace();
       }

@@ -4,9 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
@@ -39,7 +36,8 @@ public class DownloadsAdapter extends RecyclerView.Adapter<Widget<? extends Disp
   private final List<InstallationProgress> completedDownloads;
 
   public DownloadsAdapter(InstallEventConverter installConverter,
-      DownloadEventConverter downloadConverter, InstallManager installManager, Analytics analytics) {
+      DownloadEventConverter downloadConverter, InstallManager installManager,
+      Analytics analytics) {
     this.activeDownloads = new ArrayList<>();
     this.standByDownloads = new ArrayList<>();
     this.completedDownloads = new ArrayList<>();

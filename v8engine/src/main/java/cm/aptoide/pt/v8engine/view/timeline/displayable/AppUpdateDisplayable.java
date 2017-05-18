@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 01/08/2016.
+ * Modified on 01/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.timeline.displayable;
@@ -22,15 +22,15 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadEvent;
 import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.download.DownloadInstallBaseEvent;
 import cm.aptoide.pt.v8engine.download.InstallEvent;
 import cm.aptoide.pt.v8engine.download.InstallEventConverter;
-import cm.aptoide.pt.v8engine.interfaces.ShareCardCallback;
-import cm.aptoide.pt.v8engine.repository.SocialRepository;
-import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.SocialRepository;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
-import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.v8engine.view.timeline.ShareCardCallback;
 import java.util.Date;
 import lombok.Getter;
 import rx.Observable;
@@ -105,17 +105,24 @@ public class AppUpdateDisplayable extends CardDisplayable {
     String abTestingURL = null;
 
     if (appUpdate.getAb() != null
-        && appUpdate.getAb().getConversion() != null
-        && appUpdate.getAb().getConversion().getUrl() != null) {
-      abTestingURL = appUpdate.getAb().getConversion().getUrl();
+        && appUpdate.getAb()
+        .getConversion() != null
+        && appUpdate.getAb()
+        .getConversion()
+        .getUrl() != null) {
+      abTestingURL = appUpdate.getAb()
+          .getConversion()
+          .getUrl();
     }
-    return new AppUpdateDisplayable(appUpdate, appUpdate.getIcon(),
-        appUpdate.getStore().getAvatar(), appUpdate.getStore().getName(), appUpdate.getAdded(),
-        appUpdate.getFile().getVername(), spannableFactory, appUpdate.getName(),
-        appUpdate.getPackageName(), downloadFactory.create(appUpdate, Download.ACTION_UPDATE),
-        dateCalculator, appUpdate.getId(), abTestingURL, installManager, permissionManager,
-        timelineAnalytics, socialRepository, downloadConverter, installConverter, analytics,
-        appUpdate.getStore().getAppearance().getTheme());
+    return new AppUpdateDisplayable(appUpdate, appUpdate.getIcon(), appUpdate.getStore()
+        .getAvatar(), appUpdate.getStore()
+        .getName(), appUpdate.getAdded(), appUpdate.getFile()
+        .getVername(), spannableFactory, appUpdate.getName(), appUpdate.getPackageName(),
+        downloadFactory.create(appUpdate, Download.ACTION_UPDATE), dateCalculator,
+        appUpdate.getId(), abTestingURL, installManager, permissionManager, timelineAnalytics,
+        socialRepository, downloadConverter, installConverter, analytics, appUpdate.getStore()
+        .getAppearance()
+        .getTheme());
   }
 
   public Observable<InstallationProgress> update(Context context) {
@@ -237,16 +244,17 @@ public class AppUpdateDisplayable extends CardDisplayable {
   }
 
   public Single<Integer> getErrorMessage(InstallationProgress installationProgress) {
-    return installManager.getError(installationProgress.getMd5()).flatMap(error -> {
-      switch (error) {
-        case GENERIC_ERROR:
-          return Single.just(getUpdateErrorText());
-        case NOT_ENOUGH_SPACE_ERROR:
-          return Single.just(getUpdateNoSpaceErrorText());
-        default:
-          return Single.error(new RuntimeException("Unknown error"));
-      }
-    });
+    return installManager.getError(installationProgress.getMd5())
+        .flatMap(error -> {
+          switch (error) {
+            case GENERIC_ERROR:
+              return Single.just(getUpdateErrorText());
+            case NOT_ENOUGH_SPACE_ERROR:
+              return Single.just(getUpdateNoSpaceErrorText());
+            default:
+              return Single.error(new RuntimeException("Unknown error"));
+          }
+        });
   }
 
   public @StringRes int getUpdateErrorText() {

@@ -29,7 +29,7 @@
       android:id="@+id/navigation_item_setting_scheduled_downloads"
       android:icon="?attr/icScheduledDrawable"
       android:orderInCategory="4"
-      android:title="@string/setting_schdwntitle"/>
+      android:title="@string/schdwntitle"/>
   <item
       android:id="@+id/navigation_item_excluded_updates"
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 16/08/2016.
+ * Modified on 16/08/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -57,7 +57,8 @@ public class GenericDialogs {
       // cleaning up
       subscriber.add(Subscriptions.create(() -> dialog.dismiss()));
       dialog.show();
-    }).subscribeOn(AndroidSchedulers.mainThread());
+    })
+        .subscribeOn(AndroidSchedulers.mainThread());
   }
 
   /**
@@ -204,39 +205,6 @@ public class GenericDialogs {
     return progressDialog;
   }
 
-  public static Observable<EResponse> createGenericShareDialog(Context context, String share,
-      boolean isInstalled) {
-    return Observable.create((Subscriber<? super EResponse> subscriber) -> {
-      final AlertDialog alertDialog = new AlertDialog.Builder(context).setTitle(share)
-          .setItems(isInstalled ? R.array.share_options_array_with_spot_and_share
-              : R.array.share_options_array, (dialogInterface, i) -> {
-            switch (i) {
-              case 0:
-                subscriber.onNext(EResponse.SHARE_EXTERNAL);
-                subscriber.onCompleted();
-                break;
-              case 1:
-                subscriber.onNext(EResponse.SHARE_TIMELINE);
-                subscriber.onCompleted();
-                break;
-              case 2:
-                // TODO: 01/02/2017 SHARE APP
-                subscriber.onNext(EResponse.SHARE_SPOT_AND_SHARE);
-                subscriber.onCompleted();
-                break;
-              default:
-                break;
-            }
-            subscriber.onNext(EResponse.YES);
-            subscriber.onCompleted();
-          })
-          .create();
-      // cleaning up
-      subscriber.add(Subscriptions.create(() -> alertDialog.dismiss()));
-      alertDialog.show();
-    });
-  }
-
   /**
    * Represents the action made by user on the dialog. <li>{@link #YES}</li> <li>{@link #NO}</li>
    * <li>{@link #CANCEL}</li>
@@ -253,13 +221,5 @@ public class GenericDialogs {
      * Used when user cancels the dialog by pressing back or clicking out of the dialog
      */
     CANCEL,
-
-    SHARE_APP,
-
-    SHARE_EXTERNAL,
-
-    SHARE_TIMELINE,
-
-    SHARE_SPOT_AND_SHARE
   }
 }

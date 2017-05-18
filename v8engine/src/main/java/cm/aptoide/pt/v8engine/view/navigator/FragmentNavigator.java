@@ -8,10 +8,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.view.store.home.HomeFragment;
 
 public class FragmentNavigator {
-
-  private static final String TAG = FragmentNavigator.class.getName();
 
   private final FragmentManager fragmentManager;
   private final int containerId;
@@ -30,13 +29,13 @@ public class FragmentNavigator {
       StoreContext storeContext) {
     Fragment fragment;
 
-    // TODO: 22/12/2016 sithengineer refactor this using the rules present in "StoreTabGridRecyclerFragment.java"
+    // TODO: 22/12/2016 refactor this using the rules present in "StoreTabGridRecyclerFragment.java"
     if (event.getName() == Event.Name.listComments) {
       String action = event.getAction();
       String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
 
-      fragment =
-          V8Engine.getFragmentProvider().newCommentGridRecyclerFragmentUrl(CommentType.STORE, url);
+      fragment = V8Engine.getFragmentProvider()
+          .newCommentGridRecyclerFragmentUrl(CommentType.STORE, url);
     } else {
       fragment = V8Engine.getFragmentProvider()
           .newStoreTabGridRecyclerFragment(event, title, storeTheme, tag, storeContext);
@@ -99,10 +98,20 @@ public class FragmentNavigator {
     return null;
   }
 
+  public Fragment getFragment() {
+    return fragmentManager.findFragmentById(containerId);
+  }
+
   public void navigateToWithoutBackSave(Fragment fragment) {
     fragmentManager.beginTransaction()
         .setCustomAnimations(enterAnimation, exitAnimation, enterAnimation, exitAnimation)
         .replace(containerId, fragment)
         .commit();
+  }
+
+  public void navigateToHomeCleaningBackStack() {
+    Fragment home = HomeFragment.newInstance();
+    cleanBackStack();
+    navigateToWithoutBackSave(home);
   }
 }

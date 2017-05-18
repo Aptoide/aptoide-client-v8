@@ -41,30 +41,34 @@ public class RowReviewWidget extends Widget<RowReviewDisplayable> {
     final FragmentActivity context = getContext();
 
     FullReview review = displayable.getPojo();
-    GetAppMeta.App app = review.getData().getApp();
+    GetAppMeta.App app = review.getData()
+        .getApp();
 
     if (app != null) {
       appName.setText(app.getName());
-      ImageLoader.with(context).load(app.getIcon(), appIcon);
+      ImageLoader.with(context)
+          .load(app.getIcon(), appIcon);
     } else {
       appName.setVisibility(View.INVISIBLE);
       appIcon.setVisibility(View.INVISIBLE);
     }
 
     reviewBody.setText(review.getBody());
-    reviewer.setText(
-        AptoideUtils.StringU.getFormattedString(R.string.reviewed_by, review.getUser().getName()));
+    reviewer.setText(AptoideUtils.StringU.getFormattedString(R.string.reviewed_by, review.getUser()
+        .getName()));
 
-    rating.setText(String.format(Locale.getDefault(), "%d", (long) review.getStats().getRating()));
+    rating.setText(String.format(Locale.getDefault(), "%d", (long) review.getStats()
+        .getRating()));
     ImageLoader.with(context)
-        .loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(), avatar,
-            R.drawable.layer_1);
+        .loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser()
+            .getAvatar(), avatar, R.drawable.layer_1);
 
     final FragmentNavigator navigator = getFragmentNavigator();
-    compositeSubscription.add(RxView.clicks(itemView).subscribe(aVoid -> {
-      navigator.navigateTo(V8Engine.getFragmentProvider()
-          .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
-              app.getPackageName(), review.getId()));
-    }));
+    compositeSubscription.add(RxView.clicks(itemView)
+        .subscribe(aVoid -> {
+          navigator.navigateTo(V8Engine.getFragmentProvider()
+              .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore()
+                  .getName(), app.getPackageName(), review.getId()));
+        }));
   }
 }

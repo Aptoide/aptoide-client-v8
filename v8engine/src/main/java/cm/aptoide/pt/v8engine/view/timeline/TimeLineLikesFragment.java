@@ -33,7 +33,8 @@ public class TimeLineLikesFragment extends TimeLineFollowFragment {
   public static TimeLineLikesFragment newInstance(String storeTheme, String cardUid,
       long numberOfLikes) {
     Bundle args = new Bundle();
-    args.putString(TITLE_KEY, DataProvider.getContext().getString(R.string.likes));
+    args.putString(TITLE_KEY, DataProvider.getContext()
+        .getString(R.string.likes));
     args.putString(BundleCons.STORE_THEME, storeTheme);
     args.putString(BundleKeys.CARD_UID, cardUid);
     args.putLong(BundleKeys.NUMBER_LIKES, numberOfLikes);

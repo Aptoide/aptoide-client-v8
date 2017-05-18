@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.downloads.scheduled;
@@ -16,14 +16,14 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * created by SithEngineer
+ * Created
  */
 @Displayables({ ScheduledDownloadDisplayable.class }) public class ScheduledDownloadWidget
     extends Widget<ScheduledDownloadDisplayable> {
@@ -52,7 +52,8 @@ import rx.android.schedulers.AndroidSchedulers;
         InstallerFactory.ROLLBACK);
     Scheduled scheduled = displayable.getPojo();
     final FragmentActivity context = getContext();
-    ImageLoader.with(context).load(scheduled.getIcon(), appIcon);
+    ImageLoader.with(context)
+        .load(scheduled.getIcon(), appIcon);
     appName.setText(scheduled.getName());
     appVersion.setText(scheduled.getVersionName());
 
@@ -65,9 +66,8 @@ import rx.android.schedulers.AndroidSchedulers;
 
     compositeSubscription.add(displayable.isDownloading()
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(isDownloading -> updateUi(isDownloading),
-            throwable -> CrashReport.getInstance().log(throwable)));
-
+        .subscribe(isDownloading -> updateUi(isDownloading), throwable -> CrashReport.getInstance()
+            .log(throwable)));
   }
 
   private void updateUi(boolean isDownloading) {

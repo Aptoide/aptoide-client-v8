@@ -8,14 +8,14 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.Video;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.interfaces.ShareCardCallback;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
-import cm.aptoide.pt.v8engine.repository.SocialRepository;
-import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
+import cm.aptoide.pt.v8engine.timeline.SocialRepository;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.link.Link;
 import cm.aptoide.pt.v8engine.timeline.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.v8engine.view.timeline.ShareCardCallback;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -82,18 +82,23 @@ public class VideoDisplayable extends CardDisplayable {
     String abTestingURL = null;
 
     if (video.getAb() != null
-        && video.getAb().getConversion() != null
-        && video.getAb().getConversion().getUrl() != null) {
-      abTestingURL = video.getAb().getConversion().getUrl();
+        && video.getAb()
+        .getConversion() != null
+        && video.getAb()
+        .getConversion()
+        .getUrl() != null) {
+      abTestingURL = video.getAb()
+          .getConversion()
+          .getUrl();
     }
 
     return new VideoDisplayable(video, video.getTitle(),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, video.getUrl()),
-        linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
-            video.getPublisher().getBaseUrl()), video.getPublisher().getName(),
-        video.getThumbnailUrl(), video.getPublisher().getLogoUrl(), appId, abTestingURL,
-        video.getApps(), video.getDate(), dateCalculator, spannableFactory, timelineAnalytics,
-        socialRepository, installedRepository);
+        linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, video.getPublisher()
+            .getBaseUrl()), video.getPublisher()
+        .getName(), video.getThumbnailUrl(), video.getPublisher()
+        .getLogoUrl(), appId, abTestingURL, video.getApps(), video.getDate(), dateCalculator,
+        spannableFactory, timelineAnalytics, socialRepository, installedRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -101,12 +106,14 @@ public class VideoDisplayable extends CardDisplayable {
       List<String> packageNamesList = new ArrayList<String>();
 
       for (int i = 0; i < relatedToAppsList.size(); i++) {
-        packageNamesList.add(relatedToAppsList.get(i).getPackageName());
+        packageNamesList.add(relatedToAppsList.get(i)
+            .getPackageName());
       }
 
       final String[] packageNames = packageNamesList.toArray(new String[packageNamesList.size()]);
 
-      return installedRepository.getInstalled(packageNames).observeOn(Schedulers.computation());
+      return installedRepository.getInstalled(packageNames)
+          .observeOn(Schedulers.computation());
       //appId = video.getApps().get(0).getId();
     }
     return Observable.just(null);

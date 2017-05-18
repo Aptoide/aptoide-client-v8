@@ -50,23 +50,26 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
     subtitle.setText(displayable.getTimeSinceLastUpdate(context));
     articleTitle.setText(displayable.getTitleResource());
     setCardviewMargin(displayable);
-    ImageLoader.with(context).loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
-    ImageLoader.with(context).load(displayable.getThumbnailUrl(), thumbnail);
+    ImageLoader.with(context)
+        .loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
+    ImageLoader.with(context)
+        .load(displayable.getThumbnailUrl(), thumbnail);
 
     compositeSubscription.add(RxView.clicks(url)
         .subscribe(v -> context.startActivity(
             new Intent(Intent.ACTION_VIEW, Uri.parse(displayable.getUrl()))),
-            throwable -> CrashReport.getInstance().log(throwable)));
+            throwable -> CrashReport.getInstance()
+                .log(throwable)));
   }
 
   private void setCardviewMargin(FeatureDisplayable displayable) {
     CardView.LayoutParams layoutParams =
         new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
             CardView.LayoutParams.WRAP_CONTENT);
-    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
-        getContext().getResources().getConfiguration().orientation), 0,
-        displayable.getMarginWidth(getContext(),
-            getContext().getResources().getConfiguration().orientation), 30);
+    layoutParams.setMargins(displayable.getMarginWidth(getContext(), getContext().getResources()
+        .getConfiguration().orientation), 0, displayable.getMarginWidth(getContext(),
+        getContext().getResources()
+            .getConfiguration().orientation), 30);
     cardView.setLayoutParams(layoutParams);
   }
 }

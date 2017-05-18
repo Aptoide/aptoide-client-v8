@@ -17,14 +17,13 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.installer.InstallationState;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
 import cm.aptoide.pt.v8engine.install.root.RootShell;
 import cm.aptoide.pt.v8engine.repository.DownloadRepository;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
-import cm.aptoide.pt.v8engine.repository.Repository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import java.util.Collections;
 import java.util.List;
@@ -66,7 +65,8 @@ public class InstallManager {
     installedRepository.remove(packageName, versionCode)
         .andThen(Completable.fromAction(() -> aptoideDownloadManager.removeDownload(md5)))
         .subscribe(() -> {
-        }, throwable -> CrashReport.getInstance().log(throwable));
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable));
   }
 
   public void stopInstallation(Context context, String md5) {
@@ -102,9 +102,12 @@ public class InstallManager {
           && !t1.isIndeterminate()) {
         toReturn = -1;
       } else {
-        int diff = installationProgress.getState().ordinal() - t1.getState().ordinal();
+        int diff = installationProgress.getState()
+            .ordinal() - t1.getState()
+            .ordinal();
         if (diff == 0) {
-          toReturn = installationProgress.getPackageName().compareTo(t1.getPackageName());
+          toReturn = installationProgress.getPackageName()
+              .compareTo(t1.getPackageName());
         } else {
           toReturn = diff;
         }
@@ -326,7 +329,8 @@ public class InstallManager {
   private Observable<InstallationProgress> startBackgroundInstallationAndWait(Context context,
       InstallationProgress progress) {
     return waitBackgroundInstallationResult(context, progress.getMd5()).doOnSubscribe(
-        () -> startBackgroundInstallation(context, progress.getMd5())).map(aVoid -> progress);
+        () -> startBackgroundInstallation(context, progress.getMd5()))
+        .map(aVoid -> progress);
   }
 
   private Observable<Void> waitBackgroundInstallationResult(Context context, String md5) {
@@ -408,17 +412,18 @@ public class InstallManager {
   }
 
   public Observable<InstallationType> getInstallationType(String packageName, int versionCode) {
-    return installedRepository.getInstalled(packageName).map(installed -> {
-      if (installed == null) {
-        return InstallationType.INSTALL;
-      } else if (installed.getVersionCode() == versionCode) {
-        return InstallationType.INSTALLED;
-      } else if (installed.getVersionCode() > versionCode) {
-        return InstallationType.DOWNGRADE;
-      } else {
-        return InstallationType.UPDATE;
-      }
-    });
+    return installedRepository.getInstalled(packageName)
+        .map(installed -> {
+          if (installed == null) {
+            return InstallationType.INSTALL;
+          } else if (installed.getVersionCode() == versionCode) {
+            return InstallationType.INSTALLED;
+          } else if (installed.getVersionCode() > versionCode) {
+            return InstallationType.DOWNGRADE;
+          } else {
+            return InstallationType.UPDATE;
+          }
+        });
   }
 
   public Completable onUpdateConfirmed(Installed installed) {
@@ -426,18 +431,21 @@ public class InstallManager {
   }
 
   public Single<Error> getError(String md5) {
-    return aptoideDownloadManager.getDownload(md5).first().map(download -> {
-      Error error = Error.GENERIC_ERROR;
-      switch (download.getDownloadError()) {
-        case Download.GENERIC_ERROR:
-          error = Error.GENERIC_ERROR;
-          break;
-        case Download.NOT_ENOUGH_SPACE_ERROR:
-          error = Error.NOT_ENOUGH_SPACE_ERROR;
-          break;
-      }
-      return error;
-    }).toSingle();
+    return aptoideDownloadManager.getDownload(md5)
+        .first()
+        .map(download -> {
+          Error error = Error.GENERIC_ERROR;
+          switch (download.getDownloadError()) {
+            case Download.GENERIC_ERROR:
+              error = Error.GENERIC_ERROR;
+              break;
+            case Download.NOT_ENOUGH_SPACE_ERROR:
+              error = Error.NOT_ENOUGH_SPACE_ERROR;
+              break;
+          }
+          return error;
+        })
+        .toSingle();
   }
 
   /**
@@ -447,7 +455,9 @@ public class InstallManager {
    * @return the download object to be resumed or null if doesn't exists
    */
   public Single<Download> getDownload(String md5) {
-    return downloadRepository.get(md5).first().toSingle();
+    return downloadRepository.get(md5)
+        .first()
+        .toSingle();
   }
 
   public enum InstallationType {

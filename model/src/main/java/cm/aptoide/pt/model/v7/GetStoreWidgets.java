@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 18/08/2016.
+ * Modified on 18/08/2016.
  */
 
 package cm.aptoide.pt.model.v7;
@@ -40,7 +40,11 @@ import lombok.experimental.Accessors;
     private Data data;
 
     public boolean hasActions() {
-      return (actions != null && actions.size() > 0 && actions.get(0).getEvent().getName() != null);
+      return (actions != null
+          && actions.size() > 0
+          && actions.get(0)
+          .getEvent()
+          .getName() != null);
     }
 
     @lombok.Data public static class Data {

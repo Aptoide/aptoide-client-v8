@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.updates;
@@ -16,7 +16,9 @@ import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.util.DownloadFactory;
+import cm.aptoide.pt.v8engine.download.DownloadFactory;
+import cm.aptoide.pt.v8engine.view.navigator.SimpleTabNavigation;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.ArrayList;
@@ -56,28 +58,27 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
     more.setOnClickListener((view) -> {
       ((PermissionService) getContext()).requestAccessToExternalFileSystem(() -> {
         UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
-        compositeSubscription.add(
-            updateAccessor.getAll(false)
-                .first()
-                .observeOn(Schedulers.io())
-                .map(updates -> {
+        compositeSubscription.add(updateAccessor.getAll(false)
+            .first()
+            .observeOn(Schedulers.io())
+            .map(updates -> {
 
-                  ArrayList<Download> downloadList = new ArrayList<>(updates.size());
-                  for (Update update : updates) {
-                    Download download = new DownloadFactory().create(update);
-                    displayable.setupDownloadEvent(download);
-                    downloadList.add(download);
-                  }
-                  return downloadList;
-                })
-                .flatMap(downloads -> displayable.getInstallManager()
-                    .startInstalls(downloads, getContext()))
-                .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
-                    throwable -> throwable.printStackTrace()));
+              ArrayList<Download> downloadList = new ArrayList<>(updates.size());
+              for (Update update : updates) {
+                Download download = new DownloadFactory().create(update);
+                displayable.setupDownloadEvent(download);
+                downloadList.add(download);
+              }
+              return downloadList;
+            })
+            .flatMap(downloads -> displayable.getInstallManager()
+                .startInstalls(downloads, getContext()))
+            .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
+                throwable -> throwable.printStackTrace()));
       }, () -> {
       });
 
-      tabNavigator.navigate(TabNavigator.DOWNLOADS);
+      tabNavigator.navigate(new SimpleTabNavigation(TabNavigation.DOWNLOADS));
       Analytics.Updates.updateAll();
     });
   }

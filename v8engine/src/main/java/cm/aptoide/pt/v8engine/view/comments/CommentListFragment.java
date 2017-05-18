@@ -32,14 +32,15 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.comments.CommentDialogCallbackContract;
 import cm.aptoide.pt.v8engine.comments.CommentNode;
 import cm.aptoide.pt.v8engine.comments.ComplexComment;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.interfaces.CommentDialogCallbackContract;
-import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
-import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.custom.HorizontalDividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerSwipeFragment;
@@ -198,7 +199,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         drawable = getContext().getDrawable(R.drawable.forma_1);
       } else {
-        drawable = getActivity().getResources().getDrawable(R.drawable.forma_1);
+        drawable = getActivity().getResources()
+            .getDrawable(R.drawable.forma_1);
       }
       floatingActionButton.setImageDrawable(drawable);
       floatingActionButton.setVisibility(View.VISIBLE);
@@ -229,14 +231,17 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     Action1<ListComments> listCommentsAction = (listComments -> {
       if (listComments != null
           && listComments.getDatalist() != null
-          && listComments.getDatalist().getList() != null) {
-        comments = commentOperations.flattenByDepth(
-            commentOperations.transform(listComments.getDatalist().getList()));
+          && listComments.getDatalist()
+          .getList() != null) {
+        comments = commentOperations.flattenByDepth(commentOperations.transform(
+            listComments.getDatalist()
+                .getList()));
 
         ArrayList<Displayable> displayables = new ArrayList<>(comments.size());
         for (CommentNode commentNode : comments) {
           displayables.add(new CommentDisplayable(new ComplexComment(commentNode,
-              createNewCommentFragment(elementIdAsString, commentNode.getComment().getId()))));
+              createNewCommentFragment(elementIdAsString, commentNode.getComment()
+                  .getId()))));
         }
 
         this.displayables = new ArrayList<>(displayables.size());
@@ -264,7 +269,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     if (storeCredentials == null || storeCredentials.getId() == null) {
       IllegalStateException illegalStateException =
           new IllegalStateException("Current store credentials does not have a store id");
-      CrashReport.getInstance().log(illegalStateException);
+      CrashReport.getInstance()
+          .log(illegalStateException);
       throw illegalStateException;
     }
 
@@ -274,14 +280,17 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     Action1<ListComments> listCommentsAction = (listComments -> {
       if (listComments != null
           && listComments.getDatalist() != null
-          && listComments.getDatalist().getList() != null) {
-        comments = commentOperations.flattenByDepth(
-            commentOperations.transform(listComments.getDatalist().getList()));
+          && listComments.getDatalist()
+          .getList() != null) {
+        comments = commentOperations.flattenByDepth(commentOperations.transform(
+            listComments.getDatalist()
+                .getList()));
 
         ArrayList<Displayable> displayables = new ArrayList<>(comments.size());
         for (CommentNode commentNode : comments) {
           displayables.add(new CommentDisplayable(new ComplexComment(commentNode,
-              createNewCommentFragment(storeId, commentNode.getComment().getId(), storeName))));
+              createNewCommentFragment(storeId, commentNode.getComment()
+                  .getId(), storeName))));
         }
 
         this.displayables = new ArrayList<>(displayables.size());
@@ -303,47 +312,51 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   public Observable<Void> createNewCommentFragment(final String timelineArticleId,
       final long previousCommentId) {
 
-    return Observable.just(accountManager.isLoggedIn()).flatMap(isLoggedIn -> {
+    return Observable.just(accountManager.isLoggedIn())
+        .flatMap(isLoggedIn -> {
 
-      if (isLoggedIn) {
-        // show fragment CommentDialog
-        FragmentManager fm = CommentListFragment.this.getActivity().getSupportFragmentManager();
-        CommentDialogFragment commentDialogFragment =
-            CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId,
-                previousCommentId);
-        commentDialogFragment.setCommentDialogCallbackContract(this);
+          if (isLoggedIn) {
+            // show fragment CommentDialog
+            FragmentManager fm = CommentListFragment.this.getActivity()
+                .getSupportFragmentManager();
+            CommentDialogFragment commentDialogFragment =
+                CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId,
+                    previousCommentId);
+            commentDialogFragment.setCommentDialogCallbackContract(this);
 
-        return commentDialogFragment.lifecycle()
-            .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
-            .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-            .flatMap(event -> Observable.empty());
-      }
+            return commentDialogFragment.lifecycle()
+                .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
+                .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
+                .flatMap(event -> Observable.empty());
+          }
 
-      return showSignInMessage();
-    });
+          return showSignInMessage();
+        });
   }
 
   private Observable<Void> createNewCommentFragment(long storeId, long previousCommentId,
       String storeName) {
 
-    return Observable.just(accountManager.isLoggedIn()).flatMap(isLoggedIn -> {
+    return Observable.just(accountManager.isLoggedIn())
+        .flatMap(isLoggedIn -> {
 
-      if (isLoggedIn) {
-        // show fragment CommentDialog
-        FragmentManager fm = CommentListFragment.this.getActivity().getSupportFragmentManager();
-        CommentDialogFragment commentDialogFragment =
-            CommentDialogFragment.newInstanceStoreCommentReply(storeId, previousCommentId,
-                storeName);
-        commentDialogFragment.setCommentDialogCallbackContract(this);
+          if (isLoggedIn) {
+            // show fragment CommentDialog
+            FragmentManager fm = CommentListFragment.this.getActivity()
+                .getSupportFragmentManager();
+            CommentDialogFragment commentDialogFragment =
+                CommentDialogFragment.newInstanceStoreCommentReply(storeId, previousCommentId,
+                    storeName);
+            commentDialogFragment.setCommentDialogCallbackContract(this);
 
-        return commentDialogFragment.lifecycle()
-            .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
-            .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-            .flatMap(event -> Observable.empty());
-      }
+            return commentDialogFragment.lifecycle()
+                .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
+                .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
+                .flatMap(event -> Observable.empty());
+          }
 
-      return showSignInMessage();
-    });
+          return showSignInMessage();
+        });
   }
 
   //
@@ -357,8 +370,9 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private Observable<Void> showSignInMessage() {
     return ShowMessage.asObservableSnack(this.getActivity(), R.string.you_need_to_be_logged_in,
         R.string.login, snackView -> {
-          accountNavigator.navigateToAccountView();
-        }).flatMap(a -> Observable.empty());
+          accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.COMMENT_LIST);
+        })
+        .flatMap(a -> Observable.empty());
   }
 
   private Observable<Void> reloadComments() {
@@ -374,14 +388,17 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     setupToolbar();
     setHasOptionsMenu(true);
 
-    RxView.clicks(floatingActionButton).flatMap(a -> {
-      if (commentType == CommentType.TIMELINE) {
-        return createNewCommentFragment(elementIdAsString);
-      }
-      return createNewCommentFragment(elementIdAsLong, storeName);
-    }).compose(bindUntilEvent(LifecycleEvent.DESTROY)).subscribe(a -> {
-      // no-op
-    });
+    RxView.clicks(floatingActionButton)
+        .flatMap(a -> {
+          if (commentType == CommentType.TIMELINE) {
+            return createNewCommentFragment(elementIdAsString);
+          }
+          return createNewCommentFragment(elementIdAsLong, storeName);
+        })
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+        .subscribe(a -> {
+          // no-op
+        });
   }
 
   //
@@ -394,55 +411,59 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   public Observable<Void> createNewCommentFragment(String timelineArticleId) {
 
-    return Observable.just(accountManager.isLoggedIn()).flatMap(isLoggedIn -> {
+    return Observable.just(accountManager.isLoggedIn())
+        .flatMap(isLoggedIn -> {
 
-      if (isLoggedIn) {
-        // show fragment CommentDialog
-        FragmentManager fm = CommentListFragment.this.getActivity().getSupportFragmentManager();
-        CommentDialogFragment commentDialogFragment =
-            CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId);
-        commentDialogFragment.setCommentDialogCallbackContract(this);
-        return commentDialogFragment.lifecycle()
-            .doOnSubscribe(() -> {
-              commentDialogFragment.show(fm, "fragment_comment_dialog");
-            })
-            .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-            .flatMap(event -> Observable.empty());
-      }
+          if (isLoggedIn) {
+            // show fragment CommentDialog
+            FragmentManager fm = CommentListFragment.this.getActivity()
+                .getSupportFragmentManager();
+            CommentDialogFragment commentDialogFragment =
+                CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId);
+            commentDialogFragment.setCommentDialogCallbackContract(this);
+            return commentDialogFragment.lifecycle()
+                .doOnSubscribe(() -> {
+                  commentDialogFragment.show(fm, "fragment_comment_dialog");
+                })
+                .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
+                .flatMap(event -> Observable.empty());
+          }
 
-      return showSignInMessage();
-    });
+          return showSignInMessage();
+        });
   }
 
   public Observable<Void> createNewCommentFragment(long storeCommentId, String storeName) {
 
-    return Observable.just(accountManager.isLoggedIn()).flatMap(isLoggedIn -> {
+    return Observable.just(accountManager.isLoggedIn())
+        .flatMap(isLoggedIn -> {
 
-      if (isLoggedIn) {
-        // show fragment CommentDialog
-        FragmentManager fm = CommentListFragment.this.getActivity().getSupportFragmentManager();
-        CommentDialogFragment commentDialogFragment =
-            CommentDialogFragment.newInstanceStoreComment(storeCommentId, storeName);
-        commentDialogFragment.setCommentDialogCallbackContract(this);
+          if (isLoggedIn) {
+            // show fragment CommentDialog
+            FragmentManager fm = CommentListFragment.this.getActivity()
+                .getSupportFragmentManager();
+            CommentDialogFragment commentDialogFragment =
+                CommentDialogFragment.newInstanceStoreComment(storeCommentId, storeName);
+            commentDialogFragment.setCommentDialogCallbackContract(this);
 
-        return commentDialogFragment.lifecycle()
-            .doOnSubscribe(() -> {
-              commentDialogFragment.show(fm, "fragment_comment_dialog");
-            })
-            .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-            .flatMap(event -> Observable.empty());
-      }
+            return commentDialogFragment.lifecycle()
+                .doOnSubscribe(() -> {
+                  commentDialogFragment.show(fm, "fragment_comment_dialog");
+                })
+                .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
+                .flatMap(event -> Observable.empty());
+          }
 
-      return showSignInMessage();
-    });
+          return showSignInMessage();
+        });
   }
 
   @Override public void okSelected(BaseV7Response response, long longAsId, Long previousCommentId,
       String idAsString) {
     if (response instanceof SetComment) {
-      ComplexComment complexComment =
-          getComplexComment(((SetComment) response).getData().getBody(), previousCommentId,
-              ((SetComment) response).getData().getId());
+      ComplexComment complexComment = getComplexComment(((SetComment) response).getData()
+          .getBody(), previousCommentId, ((SetComment) response).getData()
+          .getId());
 
       CommentDisplayable commentDisplayable = new CommentDisplayable(complexComment);
 
@@ -462,8 +483,11 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     ArrayList<Displayable> displayables = new ArrayList<>(comments.size() + 1);
     for (CommentNode commentNode : comments) {
       displayables.add(new CommentDisplayable(new ComplexComment(commentNode,
-          createNewCommentFragment(elementIdAsString, commentNode.getComment().getId()))));
-      if (commentNode.getComment().getId() == complexComment.getParent().getId() && !added) {
+          createNewCommentFragment(elementIdAsString, commentNode.getComment()
+              .getId()))));
+      if (commentNode.getComment()
+          .getId() == complexComment.getParent()
+          .getId() && !added) {
         displayables.add(new CommentDisplayable(complexComment));
         added = true;
       }
@@ -478,14 +502,19 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private ComplexComment getComplexComment(String inputText, Long previousCommentId, long id) {
     Comment comment = new Comment();
     Comment.User user = new Comment.User();
-    if (!TextUtils.isEmpty(accountManager.getAccount().getAvatar())) {
-      user.setAvatar(accountManager.getAccount().getAvatar());
+    if (!TextUtils.isEmpty(accountManager.getAccount()
+        .getAvatar())) {
+      user.setAvatar(accountManager.getAccount()
+          .getAvatar());
     } else {
-      if (!TextUtils.isEmpty(accountManager.getAccount().getStoreAvatar())) {
-        user.setAvatar(accountManager.getAccount().getStoreAvatar());
+      if (!TextUtils.isEmpty(accountManager.getAccount()
+          .getStoreAvatar())) {
+        user.setAvatar(accountManager.getAccount()
+            .getStoreAvatar());
       }
     }
-    user.setName(accountManager.getAccount().getNickname());
+    user.setName(accountManager.getAccount()
+        .getNickname());
     comment.setUser(user);
     comment.setBody(inputText);
     comment.setAdded(new Date());
@@ -498,11 +527,13 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
       commentNode.setLevel(2);
     }
     if (elementIdAsLong != 0) {
-      return new ComplexComment(commentNode,
-          createNewCommentFragment(elementIdAsLong, commentNode.getComment().getId(), storeName));
+      return new ComplexComment(commentNode, createNewCommentFragment(elementIdAsLong,
+          commentNode.getComment()
+              .getId(), storeName));
     } else {
-      return new ComplexComment(commentNode,
-          createNewCommentFragment(elementIdAsString, commentNode.getComment().getId()));
+      return new ComplexComment(commentNode, createNewCommentFragment(elementIdAsString,
+          commentNode.getComment()
+              .getId()));
     }
   }
 }

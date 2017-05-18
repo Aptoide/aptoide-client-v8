@@ -1,10 +1,12 @@
 package cm.aptoide.pt.v8engine.view.addressbook;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -23,7 +25,8 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.AddressBookAnalytics;
-import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
+import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepository;
+import cm.aptoide.pt.v8engine.addressbook.utils.ContactUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.presenter.AddressBookContract;
 import cm.aptoide.pt.v8engine.presenter.AddressBookPresenter;
@@ -89,10 +92,13 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     mActionsListener = new AddressBookPresenter(this,
-        new ContactsRepositoryImpl(baseBodyBodyInterceptor, httpClient, converterFactory),
+        new ContactsRepository(baseBodyBodyInterceptor, httpClient, converterFactory,
+            ((V8Engine) getContext().getApplicationContext()).getIdsRepository(), new ContactUtils(
+            (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE))),
         analytics, new AddressBookNavigationManager(getFragmentNavigator(), getTag(),
         getString(R.string.addressbook_about), getString(R.string.addressbook_data_about,
-        Application.getConfiguration().getMarketName())));
+        Application.getConfiguration()
+            .getMarketName())));
     callbackManager = CallbackManager.Factory.create();
     registerFacebookCallback();
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
@@ -111,30 +117,50 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   }
 
   @Override public void setupViews() {
-    addressbook_2nd_msg.setText(
-        getString(R.string.addressbook_2nd_msg, V8Engine.getConfiguration().getMarketName()));
+    addressbook_2nd_msg.setText(getString(R.string.addressbook_2nd_msg, V8Engine.getConfiguration()
+        .getMarketName()));
     mActionsListener.getButtonsState();
     //dismissV.setPaintFlags(dismissV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     about.setPaintFlags(about.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-    RxView.clicks(addressBookSyncButton).flatMap(click -> {
-      analytics.sendSyncAddressBookEvent();
-      PermissionManager permissionManager = new PermissionManager();
-      final PermissionService permissionService = (PermissionService) getContext();
-      return permissionManager.requestContactsAccess(permissionService);
-    }).observeOn(AndroidSchedulers.mainThread()).subscribe(permissionGranted -> {
-      if (permissionGranted) {
-        analytics.sendAllowAptoideAccessToContactsEvent();
-        mActionsListener.syncAddressBook();
-      } else {
-        analytics.sendDenyAptoideAccessToContactsEvent();
-        mActionsListener.contactsPermissionDenied();
-      }
-    });
-    RxView.clicks(facebookSyncButton).subscribe(click -> facebookLoginCallback());
-    RxView.clicks(twitterSyncButton).subscribe(click -> twitterLogin());
-    RxView.clicks(dismissV).subscribe(click -> mActionsListener.finishViewClick());
-    RxView.clicks(about).subscribe(click -> mActionsListener.aboutClick());
-    RxView.clicks(allowFriendsFindButton).subscribe(click -> mActionsListener.allowFindClick());
+
+    RxView.clicks(addressBookSyncButton)
+        .flatMap(click -> {
+          analytics.sendSyncAddressBookEvent();
+          PermissionManager permissionManager = new PermissionManager();
+          final PermissionService permissionService = (PermissionService) getContext();
+          return permissionManager.requestContactsAccess(permissionService);
+        })
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(permissionGranted -> {
+          if (permissionGranted) {
+            analytics.sendAllowAptoideAccessToContactsEvent();
+            mActionsListener.syncAddressBook();
+          } else {
+            analytics.sendDenyAptoideAccessToContactsEvent();
+            mActionsListener.contactsPermissionDenied();
+          }
+        });
+
+    RxView.clicks(facebookSyncButton)
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+        .subscribe(click -> facebookLoginCallback());
+
+    RxView.clicks(twitterSyncButton)
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+        .subscribe(click -> twitterLogin());
+
+    RxView.clicks(dismissV)
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+        .subscribe(click -> mActionsListener.finishViewClick());
+
+    RxView.clicks(about)
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+        .subscribe(click -> mActionsListener.aboutClick());
+
+    RxView.clicks(allowFriendsFindButton)
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+        .subscribe(click -> mActionsListener.allowFindClick());
   }
 
   private void facebookLoginCallback() {
@@ -186,15 +212,18 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
           }
 
           @Override public void onError(FacebookException error) {
-            Logger.e(this.getClass().getName(), error.getMessage());
+            Logger.e(this.getClass()
+                .getName(), error.getMessage());
           }
         });
   }
 
   private FacebookModel createFacebookModel(LoginResult loginResult) {
     FacebookModel facebookModel = new FacebookModel();
-    facebookModel.setId(Long.valueOf(loginResult.getAccessToken().getUserId()));
-    facebookModel.setAccessToken(loginResult.getAccessToken().getToken());
+    facebookModel.setId(Long.valueOf(loginResult.getAccessToken()
+        .getUserId()));
+    facebookModel.setAccessToken(loginResult.getAccessToken()
+        .getToken());
     return facebookModel;
   }
 

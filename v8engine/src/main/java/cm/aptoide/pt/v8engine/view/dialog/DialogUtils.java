@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 25/08/2016.
+ * Modified on 25/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.dialog;
@@ -29,6 +29,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import java.util.Locale;
@@ -67,14 +68,15 @@ public class DialogUtils {
       if (!accountManager.isLoggedIn()) {
         ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
             snackView -> {
-              accountNavigator.navigateToAccountView();
+              accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.RATE_DIALOG);
             });
         subscriber.onNext(GenericDialogs.EResponse.CANCEL);
         subscriber.onCompleted();
         return;
       }
 
-      final View view = LayoutInflater.from(activity).inflate(R.layout.dialog_rate_app, null);
+      final View view = LayoutInflater.from(activity)
+          .inflate(R.layout.dialog_rate_app, null);
 
       final TextView titleTextView = (TextView) view.findViewById(R.id.title);
       final AppCompatRatingBar reviewRatingBar =
@@ -106,8 +108,12 @@ public class DialogUtils {
 
         AptoideUtils.SystemU.hideKeyboard(activity);
 
-        final String reviewTitle = titleTextInputLayout.getEditText().getText().toString();
-        final String reviewText = reviewTextInputLayout.getEditText().getText().toString();
+        final String reviewTitle = titleTextInputLayout.getEditText()
+            .getText()
+            .toString();
+        final String reviewText = reviewTextInputLayout.getEditText()
+            .getText()
+            .toString();
         final int reviewRating = Math.round(reviewRatingBar.getRating());
 
         if (TextUtils.isEmpty(reviewTitle)) {
@@ -135,7 +141,8 @@ public class DialogUtils {
 
         // WS error listener
         final ErrorRequestListener errorRequestListener = e -> {
-          CrashReport.getInstance().log(e);
+          CrashReport.getInstance()
+              .log(e);
           ShowMessage.asSnack(activity, R.string.error_occured);
           subscriber.onNext(GenericDialogs.EResponse.CANCEL);
           subscriber.onCompleted();
@@ -148,7 +155,8 @@ public class DialogUtils {
               .execute(successRequestListener, errorRequestListener);
         } else {
           PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor,
-              httpClient, converterFactory).execute(successRequestListener, errorRequestListener);
+              httpClient, converterFactory)
+              .execute(successRequestListener, errorRequestListener);
         }
       });
 
@@ -164,13 +172,14 @@ public class DialogUtils {
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            accountNavigator.navigateToAccountView();
+            accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.RATE_DIALOG);
           });
 
       return;
     }
 
-    final View view = LayoutInflater.from(activity).inflate(R.layout.dialog_rate_app, null);
+    final View view = LayoutInflater.from(activity)
+        .inflate(R.layout.dialog_rate_app, null);
 
     final TextView titleTextView = (TextView) view.findViewById(R.id.title);
     final AppCompatRatingBar reviewRatingBar =
@@ -192,8 +201,12 @@ public class DialogUtils {
 
       AptoideUtils.SystemU.hideKeyboard(activity);
 
-      final String reviewTitle = titleTextInputLayout.getEditText().getText().toString();
-      final String reviewText = reviewTextInputLayout.getEditText().getText().toString();
+      final String reviewTitle = titleTextInputLayout.getEditText()
+          .getText()
+          .toString();
+      final String reviewText = reviewTextInputLayout.getEditText()
+          .getText()
+          .toString();
       final int reviewRating = Math.round(reviewRatingBar.getRating());
 
       if (TextUtils.isEmpty(reviewTitle)) {
@@ -218,7 +231,8 @@ public class DialogUtils {
       };
 
       final ErrorRequestListener errorRequestListener = e -> {
-        CrashReport.getInstance().log(e);
+        CrashReport.getInstance()
+            .log(e);
         ShowMessage.asSnack(activity, R.string.error_occured);
       };
 
@@ -228,7 +242,8 @@ public class DialogUtils {
             .execute(successRequestListener, errorRequestListener);
       } else {
         PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor,
-            httpClient, converterFactory).execute(successRequestListener, errorRequestListener);
+            httpClient, converterFactory)
+            .execute(successRequestListener, errorRequestListener);
       }
     });
 

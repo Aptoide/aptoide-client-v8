@@ -9,12 +9,12 @@ import cm.aptoide.pt.model.v7.timeline.SocialInstall;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.interfaces.ShareCardCallback;
-import cm.aptoide.pt.v8engine.repository.SocialRepository;
-import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.SocialRepository;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.v8engine.view.timeline.ShareCardCallback;
 import java.util.Date;
 import lombok.Getter;
 
@@ -46,8 +46,9 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
       TimelineAnalytics timelineAnalytics, SpannableFactory spannableFactory,
       SocialRepository socialRepository, DateCalculator dateCalculator) {
     super(socialInstall, likes, comments, store, socialInstall.getUser(),
-        socialInstall.getUserSharer(), socialInstall.getMy().isLiked(), socialInstall.getLikes(),
-        date, spannableFactory, dateCalculator, abTestingURL);
+        socialInstall.getUserSharer(), socialInstall.getMy()
+            .isLiked(), socialInstall.getLikes(), date, spannableFactory, dateCalculator,
+        abTestingURL);
     this.avatarResource = icon;
     this.titleResource = titleResource;
     this.user = user;
@@ -73,24 +74,32 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
     String abTestingURL = null;
 
     if (socialInstall.getAb() != null
-        && socialInstall.getAb().getConversion() != null
-        && socialInstall.getAb().getConversion().getUrl() != null) {
-      abTestingURL = socialInstall.getAb().getConversion().getUrl();
+        && socialInstall.getAb()
+        .getConversion() != null
+        && socialInstall.getAb()
+        .getConversion()
+        .getUrl() != null) {
+      abTestingURL = socialInstall.getAb()
+          .getConversion()
+          .getUrl();
     }
 
-    return new SocialInstallDisplayable(socialInstall, Application.getConfiguration().getIcon(),
-        socialInstall.getStore(),
+    return new SocialInstallDisplayable(socialInstall, Application.getConfiguration()
+        .getIcon(), socialInstall.getStore(),
         R.string.displayable_social_timeline_recommendation_atptoide_team_recommends,
-        socialInstall.getUser(), socialInstall.getApp().getId(),
-        socialInstall.getApp().getPackageName(), socialInstall.getApp().getName(),
-        socialInstall.getApp().getIcon(), abTestingURL, socialInstall.getStats().getLikes(),
-        socialInstall.getStats().getComments(), socialInstall.getDate(), timelineAnalytics,
-        spannableFactory, socialRepository, dateCalculator);
+        socialInstall.getUser(), socialInstall.getApp()
+        .getId(), socialInstall.getApp()
+        .getPackageName(), socialInstall.getApp()
+        .getName(), socialInstall.getApp()
+        .getIcon(), abTestingURL, socialInstall.getStats()
+        .getLikes(), socialInstall.getStats()
+        .getComments(), socialInstall.getDate(), timelineAnalytics, spannableFactory,
+        socialRepository, dateCalculator);
   }
 
   public String getTitle() {
-    return AptoideUtils.StringU.getFormattedString(titleResource,
-        Application.getConfiguration().getMarketName());
+    return AptoideUtils.StringU.getFormattedString(titleResource, Application.getConfiguration()
+        .getMarketName());
   }
 
   //public String getSimilarAppPackageName() {

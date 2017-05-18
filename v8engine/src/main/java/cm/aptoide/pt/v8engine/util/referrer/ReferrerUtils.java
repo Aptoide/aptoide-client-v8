@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.util.referrer;
@@ -18,27 +18,27 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
+import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.database.realm.StoredMinimalAd;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
+import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.q.QManager;
+import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.ads.AdsRepository;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
-import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.database.realm.StoredMinimalAd;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
-import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
-import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
@@ -49,6 +49,8 @@ import rx.android.schedulers.AndroidSchedulers;
 public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils {
 
   private static final String TAG = ReferrerUtils.class.getSimpleName();
+
+  private static final QManager qManager = V8Engine.getQManager();
 
   public static void extractReferrer(MinimalAd minimalAd, final int retries,
       boolean broadcastReferrer, AdsRepository adsRepository, final OkHttpClient httpClient,
@@ -92,9 +94,11 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
           RelativeLayout.LayoutParams.MATCH_PARENT));
 
       AptoideUtils.ThreadU.runOnIoThread(() -> {
-        internalClickUrl[0] = DataproviderUtils.AdNetworksUtils.parseMacros(clickUrl,
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()));
+        final IdsRepository idsRepository =
+            ((V8Engine) context.getApplicationContext()).getIdsRepository();
+        internalClickUrl[0] =
+            DataproviderUtils.AdNetworksUtils.parseMacros(clickUrl, idsRepository.getAndroidId(),
+                idsRepository.getUniqueIdentifier(), idsRepository.getAdvertisingId());
         clickUrlFuture.set(internalClickUrl[0]);
         Logger.d("ExtractReferrer", "Parsed clickUrl: " + internalClickUrl[0]);
       });
@@ -103,7 +107,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
       wv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
           LinearLayout.LayoutParams.MATCH_PARENT));
       view.addView(wv);
-      wv.getSettings().setJavaScriptEnabled(true);
+      wv.getSettings()
+          .setJavaScriptEnabled(true);
       wv.setWebViewClient(new WebViewClient() {
 
         Future<Void> future;
@@ -128,9 +133,9 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
                 //    new StoredMinimalAd(packageName, referrer, minimalAd.getCpiUrl(),
                 //        minimalAd.getAdId()), realm);
 
-                StoreMinimalAdAccessor storeMinimalAdAccessor =
+                StoredMinimalAdAccessor storedMinimalAdAccessor =
                     AccessorFactory.getAccessorFor(StoredMinimalAd.class);
-                storeMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, referrer));
+                storedMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, referrer));
               }
 
               future.cancel(false);
@@ -155,25 +160,27 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
         private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta,
             int retries, OkHttpClient httpClient, Converter.Factory converterFactory) {
           return postponeReferrerExtraction(minimalAd, delta, false, retries, httpClient,
-              converterFactory);
+              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()));
         }
 
         private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta,
             boolean success, OkHttpClient httpClient, Converter.Factory converterFactory) {
           return postponeReferrerExtraction(minimalAd, delta, success, 0, httpClient,
-              converterFactory);
+              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()));
         }
 
         private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta,
             final boolean success, final int retries, OkHttpClient httpClient,
-            Converter.Factory converterFactory) {
+            Converter.Factory converterFactory, String q) {
           Logger.d("ExtractReferrer", "Referrer postponed " + delta + " seconds.");
 
           Callable<Void> callable = () -> {
             Logger.d("ExtractReferrer", "Sending RegisterAdRefererRequest with value " + success);
 
             RegisterAdRefererRequest.of(minimalAd.getAdId(), minimalAd.getAppId(),
-                minimalAd.getClickUrl(), success, httpClient, converterFactory).execute();
+                minimalAd.getClickUrl(), success, httpClient, converterFactory,
+                qManager.getFilters(ManagerPreferences.getHWSpecsFilter()))
+                .execute();
 
             Logger.d("ExtractReferrer", "Retries left: " + retries);
 
@@ -219,7 +226,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
       windowManager.addView(view, params);
     } catch (Exception e) {
       // TODO: 09-06-2016 neuro
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     }
   }
 
@@ -245,7 +253,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
       i.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
     }
     i.putExtra("referrer", referrer);
-    DataProvider.getContext().sendBroadcast(i);
+    DataProvider.getContext()
+        .sendBroadcast(i);
     Logger.d(TAG, "Sent broadcast to " + packageName + " with referrer " + referrer);
     // TODO: 28-07-2016 Baikova referrer broadcasted.
   }

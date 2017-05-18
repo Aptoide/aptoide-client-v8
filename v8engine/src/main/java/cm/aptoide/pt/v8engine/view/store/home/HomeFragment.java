@@ -28,16 +28,17 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.spotandshare.SpotSharePreviewActivity;
+import cm.aptoide.pt.v8engine.updates.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.custom.BadgeView;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 import cm.aptoide.pt.v8engine.view.store.StorePagerAdapter;
@@ -83,6 +84,15 @@ public class HomeFragment extends StoreFragment {
     return fragment;
   }
 
+  /**
+   * @return {@link HomeFragment} instance with default store, store context and theme
+   */
+  public static HomeFragment newInstance() {
+    return newInstance(V8Engine.getConfiguration()
+        .getDefaultStore(), StoreContext.home, V8Engine.getConfiguration()
+        .getDefaultTheme());
+  }
+
   @Override public void onAttach(Activity activity) {
     super.onAttach(activity);
 
@@ -118,7 +128,8 @@ public class HomeFragment extends StoreFragment {
             return;
           }
           setVisibleUserImageAndName(account);
-        }, err -> CrashReport.getInstance().log(err));
+        }, err -> CrashReport.getInstance()
+            .log(err));
   }
 
   private void setInvisibleUserImageAndName() {
@@ -126,7 +137,8 @@ public class HomeFragment extends StoreFragment {
     userUsername.setText("");
     userEmail.setVisibility(View.GONE);
     userUsername.setVisibility(View.GONE);
-    ImageLoader.with(getContext()).load(R.drawable.user_account_white, userAvatarImage);
+    ImageLoader.with(getContext())
+        .loadWithCircleTransform(R.drawable.user_account_white, userAvatarImage);
   }
 
   private void setVisibleUserImageAndName(Account account) {
@@ -148,21 +160,6 @@ public class HomeFragment extends StoreFragment {
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     return super.onCreateView(inflater, container, savedInstanceState);
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    backClickHandler = new ClickHandler() {
-      @Override public boolean handle() {
-        if (isDrawerOpened()) {
-          closeDrawer();
-          return true;
-        }
-
-        return false;
-      }
-    };
-    registerBackClickHandler(backClickHandler);
   }
 
   @Override public void onDestroyView() {
@@ -199,15 +196,18 @@ public class HomeFragment extends StoreFragment {
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(size -> refreshUpdatesBadge(size), throwable -> {
-          CrashReport.getInstance().log(throwable);
+          CrashReport.getInstance()
+              .log(throwable);
         });
 
     tabNavigator.navigation()
-        .doOnNext(tab -> viewPager.setCurrentItem(
-            ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(getEventName(tab))))
+        .doOnNext(tabNavigation -> viewPager.setCurrentItem(
+            ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(
+                getEventName(tabNavigation.getTab()))))
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(__ -> {
-        }, err -> CrashReport.getInstance().log(err));
+        }, err -> CrashReport.getInstance()
+            .log(err));
   }
 
   @Override public int getContentViewId() {
@@ -236,24 +236,19 @@ public class HomeFragment extends StoreFragment {
     toolbar.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
   }
 
-  public void refreshUpdatesBadge(int num) {
-    // No updates present
-    if (updatesBadge == null) {
-      return;
-    }
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    backClickHandler = new ClickHandler() {
+      @Override public boolean handle() {
+        if (isDrawerOpened()) {
+          closeDrawer();
+          return true;
+        }
 
-    updatesBadge.setTextSize(11);
-
-    if (num > 0) {
-      updatesBadge.setText(NumberFormat.getIntegerInstance().format(num));
-      if (!updatesBadge.isShown()) {
-        updatesBadge.show(true);
+        return false;
       }
-    } else {
-      if (updatesBadge.isShown()) {
-        updatesBadge.hide(true);
-      }
-    }
+    };
+    registerBackClickHandler(backClickHandler);
   }
 
   private void setupNavigationView() {
@@ -265,27 +260,31 @@ public class HomeFragment extends StoreFragment {
             .findItem(R.id.shareapps)
             .setTitle(getString(R.string.spot_share) + new String(" \uD83D\uDD38"));
       } catch (Exception e) {
-        CrashReport.getInstance().log(e);
+        CrashReport.getInstance()
+            .log(e);
       }
       navigationView.setItemIconTintList(null);
       navigationView.setNavigationItemSelectedListener(menuItem -> {
 
         int itemId = menuItem.getItemId();
         if (itemId == R.id.navigation_item_my_account) {
-          accountNavigator.navigateToAccountView();
+          accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.MY_ACCOUNT);
         } else {
           final FragmentNavigator navigator = getFragmentNavigator();
           if (itemId == R.id.shareapps) {
-            spotAndShareAnalytics.clickShareApps();
             getActivityNavigator().navigateTo(SpotSharePreviewActivity.class);
           } else if (itemId == R.id.navigation_item_rollback) {
-            navigator.navigateTo(V8Engine.getFragmentProvider().newRollbackFragment());
+            navigator.navigateTo(V8Engine.getFragmentProvider()
+                .newRollbackFragment());
           } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
-            navigator.navigateTo(V8Engine.getFragmentProvider().newScheduledDownloadsFragment());
+            navigator.navigateTo(V8Engine.getFragmentProvider()
+                .newScheduledDownloadsFragment());
           } else if (itemId == R.id.navigation_item_excluded_updates) {
-            navigator.navigateTo(V8Engine.getFragmentProvider().newExcludedUpdatesFragment());
+            navigator.navigateTo(V8Engine.getFragmentProvider()
+                .newExcludedUpdatesFragment());
           } else if (itemId == R.id.navigation_item_settings) {
-            navigator.navigateTo(V8Engine.getFragmentProvider().newSettingsFragment());
+            navigator.navigateTo(V8Engine.getFragmentProvider()
+                .newSettingsFragment());
           } else if (itemId == R.id.navigation_item_facebook) {
             openFacebook();
           } else if (itemId == R.id.navigation_item_twitter) {
@@ -317,7 +316,8 @@ public class HomeFragment extends StoreFragment {
                       installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
                       APTOIDE_FACEBOOK_LINK)));
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         });
   }
 
@@ -343,13 +343,17 @@ public class HomeFragment extends StoreFragment {
             startActivity(i);
           }
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         });
   }
 
   private void startFeedbackFragment() {
-    String downloadFolderPath = Application.getContext().getCacheDir().getPath();
-    String screenshotFileName = getActivity().getClass().getSimpleName() + ".jpg";
+    String downloadFolderPath = Application.getContext()
+        .getCacheDir()
+        .getPath();
+    String screenshotFileName = getActivity().getClass()
+        .getSimpleName() + ".jpg";
     AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
     getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
         .newSendFeedbackFragment(downloadFolderPath + screenshotFileName));
@@ -364,30 +368,60 @@ public class HomeFragment extends StoreFragment {
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(installedFacebook -> {
           if (installedFacebook == null) {
-            getFragmentNavigator().navigateTo(
-                V8Engine.getFragmentProvider().newSocialFragment(socialUrl, pageTitle));
+            getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+                .newSocialFragment(socialUrl, pageTitle));
           } else {
             Intent sharingIntent = new Intent(Intent.ACTION_VIEW, uriToOpenApp);
             getContext().startActivity(sharingIntent);
           }
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         });
+  }
+
+  public void refreshUpdatesBadge(int num) {
+    // No updates present
+    if (updatesBadge == null) {
+      return;
+    }
+
+    updatesBadge.setTextSize(11);
+
+    if (num > 0) {
+      updatesBadge.setText(NumberFormat.getIntegerInstance()
+          .format(num));
+      if (!updatesBadge.isShown()) {
+        updatesBadge.show(true);
+      }
+    } else {
+      if (updatesBadge.isShown()) {
+        updatesBadge.hide(true);
+      }
+    }
   }
 
   private Event.Name getEventName(int tab) {
     switch (tab) {
-      case TabNavigator.DOWNLOADS:
+      case TabNavigation.DOWNLOADS:
         return Event.Name.myDownloads;
-      case TabNavigator.STORES:
+      case TabNavigation.STORES:
         return Event.Name.myStores;
-      case TabNavigator.TIMELINE:
+      case TabNavigation.TIMELINE:
         return Event.Name.getUserTimeline;
-      case TabNavigator.UPDATES:
+      case TabNavigation.UPDATES:
         return Event.Name.myUpdates;
       default:
         throw new IllegalArgumentException("Invalid tab.");
     }
+  }
+
+  private boolean isDrawerOpened() {
+    return drawerLayout.isDrawerOpen(Gravity.LEFT);
+  }
+
+  private void closeDrawer() {
+    drawerLayout.closeDrawers();
   }
 
   @Override public void bindViews(View view) {
@@ -401,13 +435,5 @@ public class HomeFragment extends StoreFragment {
     setHasOptionsMenu(true);
 
     Analytics.AppViewViewedFrom.addStepToList("HOME");
-  }
-
-  private boolean isDrawerOpened() {
-    return drawerLayout.isDrawerOpen(Gravity.LEFT);
-  }
-
-  private void closeDrawer() {
-    drawerLayout.closeDrawers();
   }
 }

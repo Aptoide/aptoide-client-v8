@@ -14,7 +14,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -25,11 +24,12 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.comments.ListFullReviewsSuccessRequestListener;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
+import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
@@ -57,7 +57,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     implements ItemCommentAdderView<Review, CommentsAdapter> {
 
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
-  private AptoideClientUUID aptoideClientUUID;
+  private IdsRepository idsRepository;
   private DialogUtils dialogUtils;
 
   private long appId;
@@ -120,7 +120,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
             installMenuItem.setTitle(R.string.open);
           }
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         });
   }
 
@@ -164,8 +165,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     RxView.clicks(floatingActionButton)
         .flatMap(__ -> dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName))
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(__ -> Analytics.Updates.createReview(),
-            err -> CrashReport.getInstance().log(err));
+        .subscribe(__ -> Analytics.Updates.createReview(), err -> CrashReport.getInstance()
+            .log(err));
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -198,13 +199,16 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(getApp -> {
           if (getApp.isOk()) {
-            GetAppMeta.App data = getApp.getNodes().getMeta().getData();
+            GetAppMeta.App data = getApp.getNodes()
+                .getMeta()
+                .getData();
             setupTitle(data.getName());
             setupRating(data);
           }
           finishLoading();
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         });
   }
 
@@ -242,7 +246,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    aptoideClientUUID = ((V8Engine) getContext().getApplicationContext()).getAptoideClientUUID();
+    idsRepository = ((V8Engine) getContext().getApplicationContext()).getIdsRepository();
     baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
@@ -254,9 +258,9 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @NonNull @Override
   public CommentsReadMoreDisplayable createReadMoreDisplayable(final int itemPosition,
       Review review) {
-    return new CommentsReadMoreDisplayable(review.getId(), true,
-        review.getCommentList().getDatalist().getNext(),
-        new SimpleReviewCommentAdder(itemPosition, this));
+    return new CommentsReadMoreDisplayable(review.getId(), true, review.getCommentList()
+        .getDatalist()
+        .getNext(), new SimpleReviewCommentAdder(itemPosition, this));
   }
 
   @Override protected CommentsAdapter createAdapter() {

@@ -19,7 +19,8 @@ public class GetUserLikesRequest extends V7<GetFollowers, GetUserLikesRequest.Bo
 
   public static GetUserLikesRequest of(String cardUid, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory) {
-    return new GetUserLikesRequest(new Body(cardUid), bodyInterceptor, httpClient, converterFactory);
+    return new GetUserLikesRequest(new Body(cardUid), bodyInterceptor, httpClient,
+        converterFactory);
   }
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,

@@ -18,8 +18,8 @@ public class ErrorsMapper {
   public static @StringRes int getWebServiceErrorMessageFromCode(String errorCode) {
     int error = Application.getContext()
         .getResources()
-        .getIdentifier("ws_error_" + errorCode.replace("-", "_"), "string",
-            Application.getContext().getPackageName());
+        .getIdentifier("ws_error_" + errorCode.replace("-", "_"), "string", Application.getContext()
+            .getPackageName());
 
     return error == 0 ? R.string.unknown_error : error;
   }

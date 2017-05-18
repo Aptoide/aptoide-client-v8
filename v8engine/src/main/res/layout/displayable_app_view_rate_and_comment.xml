@@ -30,7 +30,7 @@
         android:layout_alignParentRight="true"
         android:background="@drawable/button_border_grey"
         android:fontFamily="@string/font_family_medium"
-        android:text="@string/appview_read_all"
+        android:text="@string/button_appview_read_all"
         android:textAllCaps="true"
         android:textColor="@color/silver_dark"
         android:textSize="@dimen/text_size_small"
@@ -120,7 +120,7 @@
           android:lines="2"
           android:paddingTop="10dp"
           android:text="@string/rate_this_app"
-          android:textColor="@color/app_view_gray"
+          android:textColor="@color/silver_dark"
           android:textSize="@dimen/text_size_medium_large"
           />
 

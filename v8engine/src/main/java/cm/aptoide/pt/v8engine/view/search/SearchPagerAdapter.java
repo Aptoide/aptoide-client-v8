@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 06/07/2016.
+ * Modified on 06/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.search;
@@ -35,7 +35,8 @@ public class SearchPagerAdapter extends FragmentStatePagerAdapter {
 
   @Override public Fragment getItem(int position) {
     if (storeName != null) {
-      return V8Engine.getFragmentProvider().newSearchPagerTabFragment(query, storeName);
+      return V8Engine.getFragmentProvider()
+          .newSearchPagerTabFragment(query, storeName);
     } else {
       if (getCount() > 1) {
         if (position == 0) {

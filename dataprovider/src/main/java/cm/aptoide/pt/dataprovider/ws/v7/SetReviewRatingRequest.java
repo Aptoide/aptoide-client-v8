@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/07/2016.
+ * Modified on 29/07/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -15,7 +15,7 @@ import retrofit2.Converter;
 import rx.Observable;
 
 /**
- * Created by sithengineer on 29/07/16.
+ * Created on 29/07/16.
  */
 public class SetReviewRatingRequest extends V7<BaseV7Response, SetReviewRatingRequest.Body> {
 

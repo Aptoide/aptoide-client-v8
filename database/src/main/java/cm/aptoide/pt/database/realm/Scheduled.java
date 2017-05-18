@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -12,7 +12,7 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
- * Created by sithengineer on 12/05/16.
+ * Created on 12/05/16.
  */
 public class Scheduled extends RealmObject {
 
@@ -105,10 +105,14 @@ public class Scheduled extends RealmObject {
       }
     }
 
-    return new Scheduled(app.getName(), app.getFile().getVername(), app.getIcon(),
-        app.getFile().getPath(), app.getFile().getMd5sum(), app.getFile().getVercode(),
-        app.getPackageName(), app.getStore().getName(), app.getFile().getPathAlt(), mainObbName,
-        mainObbPath, mainObbMd5, patchObbName, patchObbPath, patchObbMd5, false, appAction.name());
+    return new Scheduled(app.getName(), app.getFile()
+        .getVername(), app.getIcon(), app.getFile()
+        .getPath(), app.getFile()
+        .getMd5sum(), app.getFile()
+        .getVercode(), app.getPackageName(), app.getStore()
+        .getName(), app.getFile()
+        .getPathAlt(), mainObbName, mainObbPath, mainObbMd5, patchObbName, patchObbPath,
+        patchObbMd5, false, appAction.name());
   }
 
   public String getName() {

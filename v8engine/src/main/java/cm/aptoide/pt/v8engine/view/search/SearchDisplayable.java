@@ -30,10 +30,12 @@ public class SearchDisplayable extends DisplayablePojo<ListSearchApps.SearchApps
     super(searchAppsApp);
     clickCallback = () -> {
       if (isConvert(searchAbTest, addSubscribedStores, hasMultipleFragments)) {
-        searchAbTest.convert().subscribe(success -> {
-        }, throwable -> {
-          CrashReport.getInstance().log(throwable);
-        });
+        searchAbTest.convert()
+            .subscribe(success -> {
+            }, throwable -> {
+              CrashReport.getInstance()
+                  .log(throwable);
+            });
       }
     };
   }

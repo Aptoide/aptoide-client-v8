@@ -34,7 +34,8 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
     try {
       assignViews(itemView);
     } catch (Exception e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     }
   }
 
@@ -61,7 +62,8 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
   public abstract void bindView(T displayable);
 
   public View getRootView() {
-    return getFragmentNavigator().peekLast().getView();
+    return getFragmentNavigator().peekLast()
+        .getView();
   }
 
   protected FragmentNavigator getFragmentNavigator() {

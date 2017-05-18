@@ -17,15 +17,15 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
-import cm.aptoide.pt.v8engine.download.InstallEventConverter;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.download.DownloadFactory;
+import cm.aptoide.pt.v8engine.download.InstallEventConverter;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
-import cm.aptoide.pt.v8engine.util.DownloadFactory;
+import cm.aptoide.pt.v8engine.updates.UpdateRepository;
 import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.store.StoreGridHeaderDisplayable;
@@ -87,13 +87,15 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
       updateReloadSubscription.unsubscribe();
     }
 
-    updateReloadSubscription = updateRepository.sync(true).subscribe(() -> finishLoading(), e -> {
-      if (e instanceof RepositoryItemNotFoundException) {
-        ShowMessage.asSnack(getView(), R.string.add_store);
-      }
-      CrashReport.getInstance().log(e);
-      finishLoading();
-    });
+    updateReloadSubscription = updateRepository.sync(true)
+        .subscribe(() -> finishLoading(), e -> {
+          if (e instanceof RepositoryItemNotFoundException) {
+            ShowMessage.asSnack(getView(), R.string.add_store);
+          }
+          CrashReport.getInstance()
+              .log(e);
+          finishLoading();
+        });
   }
 
   @Override public void onDestroyView() {
@@ -102,23 +104,6 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     if (updateReloadSubscription != null && !updateReloadSubscription.isUnsubscribed()) {
       updateReloadSubscription.unsubscribe();
     }
-  }
-
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    final BodyInterceptor<BaseBody> bodyInterceptor =
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    final OkHttpClient httpClient =
-        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
-    final Converter.Factory converterFactory = WebService.getDefaultConverter();
-    installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
-        InstallerFactory.ROLLBACK);
-    analytics = Analytics.getInstance();
-    downloadInstallEventConverter =
-        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory);
-    installConverter = new InstallEventConverter(bodyInterceptor, httpClient, converterFactory);
-    installedRepository = RepositoryFactory.getInstalledRepository();
-    updateRepository = RepositoryFactory.getUpdateRepository(getContext());
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -142,7 +127,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
           Logger.v(TAG, "listing updates and installed");
         }, err -> {
           Logger.e(TAG, "listing updates or installed threw an exception");
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
           finishLoading();
         });
   }
@@ -150,6 +136,23 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     //super.load(create, refresh, savedInstanceState);
     // overridden to avoid calling super, since it removes the displayables automatically
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    final BodyInterceptor<BaseBody> bodyInterceptor =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    final OkHttpClient httpClient =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    final Converter.Factory converterFactory = WebService.getDefaultConverter();
+    installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
+        InstallerFactory.ROLLBACK);
+    analytics = Analytics.getInstance();
+    downloadInstallEventConverter =
+        new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory);
+    installConverter = new InstallEventConverter(bodyInterceptor, httpClient, converterFactory);
+    installedRepository = RepositoryFactory.getInstalledRepository();
+    updateRepository = RepositoryFactory.getUpdateRepository(getContext());
   }
 
   private void setUpdates(List<Update> updateList) {
@@ -163,7 +166,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
       for (Update update : updateList) {
         updatesDisplayablesList.add(
             UpdateDisplayable.newInstance(update, installManager, new DownloadFactory(), analytics,
-                downloadInstallEventConverter, installConverter, installedRepository ));
+                downloadInstallEventConverter, installConverter, installedRepository));
       }
     }
     addDisplayables(updatesDisplayablesList, false);
@@ -226,11 +229,12 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
    */
   // TODO: 31/1/2017 sithengineer instead of Observable<Installed> use Single<Installed>
   private Observable<Installed> filterUpdates(Installed item) {
-    return updateRepository.contains(item.getPackageName(), false).flatMap(isUpdate -> {
-      if (isUpdate) {
-        return Observable.empty();
-      }
-      return Observable.just(item);
-    });
+    return updateRepository.contains(item.getPackageName(), false)
+        .flatMap(isUpdate -> {
+          if (isUpdate) {
+            return Observable.empty();
+          }
+          return Observable.just(item);
+        });
   }
 }

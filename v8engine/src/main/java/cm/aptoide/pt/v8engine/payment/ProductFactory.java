@@ -17,19 +17,27 @@ import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
 public class ProductFactory {
 
   public Product create(GetAppMeta.App app) {
-    return new PaidAppProduct(app.getPay().getProductId(), app.getIcon(), app.getName(),
-        app.getMedia().getDescription(), app.getId(), app.getStore().getName(),
-        new Price(app.getPay().getPrice(), app.getPay().getCurrency(), app.getPay().getSymbol(),
-            app.getPay().getTaxRate()));
+    return new PaidAppProduct(app.getPay()
+        .getProductId(), app.getIcon(), app.getName(), app.getMedia()
+        .getDescription(), app.getId(), app.getStore()
+        .getName(), new Price(app.getPay()
+        .getPrice(), app.getPay()
+        .getCurrency(), app.getPay()
+        .getSymbol(), app.getPay()
+        .getTaxRate()));
   }
 
   public Product create(int apiVersion, String developerPayload, String packageName,
       InAppBillingSkuDetailsResponse response) {
     final InAppBillingSkuDetailsResponse.PurchaseDataObject purchaseDataObject =
-        response.getPublisherResponse().getDetailList().get(0);
-    PaymentServiceResponse paymentServiceResponse = response.getPaymentServices().get(0);
-    return new InAppBillingProduct(response.getMetadata().getId(), response.getMetadata().getIcon(),
-        purchaseDataObject.getTitle(), purchaseDataObject.getDescription(), apiVersion,
+        response.getPublisherResponse()
+            .getDetailList()
+            .get(0);
+    PaymentServiceResponse paymentServiceResponse = response.getPaymentServices()
+        .get(0);
+    return new InAppBillingProduct(response.getMetadata()
+        .getId(), response.getMetadata()
+        .getIcon(), purchaseDataObject.getTitle(), purchaseDataObject.getDescription(), apiVersion,
         purchaseDataObject.getProductId(), packageName, developerPayload,
         purchaseDataObject.getType(),
         new Price(purchaseDataObject.getPriceAmount(), purchaseDataObject.getCurrency(),

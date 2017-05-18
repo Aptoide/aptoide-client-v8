@@ -38,13 +38,15 @@ public class ActiveDownloadViewHolder extends RecyclerViewHolder<DownloadsView.D
     ImageView pauseCancelButton = (ImageView) itemView.findViewById(R.id.pause_cancel_button);
     addSubscription(RxView.clicks(pauseCancelButton)
         .subscribe(click -> presenter.pauseInstall(itemView.getContext(), getViewModel()),
-            throwable -> CrashReport.getInstance().log(throwable)));
+            throwable -> CrashReport.getInstance()
+                .log(throwable)));
   }
 
   @Override protected void update(Context context, DownloadsView.DownloadViewModel download) {
     appName.setText(download.getAppName());
     if (!TextUtils.isEmpty(download.getIcon())) {
-      ImageLoader.with(context).load(download.getIcon(), appIcon);
+      ImageLoader.with(context)
+          .load(download.getIcon(), appIcon);
     }
     if (download.getStatus() == DownloadsView.DownloadViewModel.Status.STAND_BY) {
       progressBar.setIndeterminate(true);

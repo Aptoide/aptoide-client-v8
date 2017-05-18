@@ -31,12 +31,10 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
 
   public static GetUserTimelineRequest of(String url, Integer limit, int offset,
       List<String> packages, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, String cardId) {
 
-    GetUserTimelineRequest getAppRequest =
-        new GetUserTimelineRequest(url, new Body(limit, offset, packages), bodyInterceptor,
-            httpClient, converterFactory);
-    return getAppRequest;
+    return new GetUserTimelineRequest(url, new Body(limit, offset, packages, cardId),
+        bodyInterceptor, httpClient, converterFactory);
   }
 
   @Override protected Observable<GetUserTimeline> loadDataFromNetwork(Interfaces interfaces,
@@ -50,11 +48,13 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
     @Getter private Integer limit;
     @Getter @Setter private int offset;
     @Getter private List<String> packageNames;
+    @Getter private String cardUid;
 
-    public Body(Integer limit, Integer offset, List<String> packageNames) {
+    public Body(Integer limit, Integer offset, List<String> packageNames, String cardId) {
       this.limit = limit;
       this.offset = offset;
       this.packageNames = packageNames;
+      this.cardUid = cardId;
     }
   }
 }

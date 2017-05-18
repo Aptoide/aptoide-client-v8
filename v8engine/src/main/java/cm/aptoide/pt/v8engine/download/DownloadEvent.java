@@ -43,7 +43,8 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadEvent
     super.send();
     Throwable error = getError();
     if (error != null) {
-      CrashReport.getInstance().log(error);
+      CrashReport.getInstance()
+          .log(error);
       Logger.e(TAG, "send: " + error);
     }
   }

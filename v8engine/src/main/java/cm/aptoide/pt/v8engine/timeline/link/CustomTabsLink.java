@@ -15,6 +15,7 @@ public class CustomTabsLink implements Link {
   }
 
   @Override public void launch(Context context) {
-    CustomTabsHelper.getInstance().openInChromeCustomTab(this.url, context);
+    CustomTabsHelper.getInstance()
+        .openInChromeCustomTab(this.url, context);
   }
 }

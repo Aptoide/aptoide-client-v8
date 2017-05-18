@@ -44,9 +44,9 @@ public class ExampleUsageMultiThread {
         if (shouldRequestToSend.getAndSet(false)) {
           ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
           service.schedule(() -> {
-            aptoideMessageController.send(new RequestPermissionToSend(
-                new Host(socket.getInetAddress().getHostAddress(), socket.getLocalPort()),
-                buildAppInfo()));
+            aptoideMessageController.send(new RequestPermissionToSend(new Host(
+                socket.getInetAddress()
+                    .getHostAddress(), socket.getLocalPort()), buildAppInfo()));
 
             service.schedule(() -> {
               aptoideMessageController.send(new ExitMessage(Host.from(socket)));

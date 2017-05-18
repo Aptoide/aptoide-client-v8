@@ -40,7 +40,8 @@ public class CrashReport implements CrashLogger {
     }
 
     for (int i = 0; i < crashLoggers.size(); i++) {
-      crashLoggers.get(i).log(throwable);
+      crashLoggers.get(i)
+          .log(throwable);
     }
   }
 
@@ -51,7 +52,8 @@ public class CrashReport implements CrashLogger {
     }
 
     for (int i = 0; i < crashLoggers.size(); i++) {
-      crashLoggers.get(i).log(key, value);
+      crashLoggers.get(i)
+          .log(key, value);
     }
   }
 
@@ -66,7 +68,8 @@ public class CrashReport implements CrashLogger {
     }
 
     for (int i = 0; i < crashLoggers.size(); i++) {
-      if (clazz.isAssignableFrom(crashLoggers.get(i).getClass())) {
+      if (clazz.isAssignableFrom(crashLoggers.get(i)
+          .getClass())) {
         return crashLoggers.get(i);
       }
     }

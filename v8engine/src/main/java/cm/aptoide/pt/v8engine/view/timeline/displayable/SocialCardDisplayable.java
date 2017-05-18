@@ -65,6 +65,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
 
   public void likesPreviewClick(FragmentNavigator navigator) {
     navigator.navigateTo(V8Engine.getFragmentProvider()
-        .newTimeLineLikesFragment(this.getTimelineCard().getCardId(), numberOfLikes, "default"));
+        .newTimeLineLikesFragment(this.getTimelineCard()
+            .getCardId(), numberOfLikes, "default"));
   }
 }

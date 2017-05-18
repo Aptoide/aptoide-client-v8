@@ -46,7 +46,7 @@
         android:hint="@string/write_your_comment"
         android:lines="4"
         android:textAlignment="textStart"
-        android:textColorHint="@color/app_view_gray"
+        android:textColorHint="@color/silver_dark"
         android:textSize="@dimen/text_size_medium"
         />
 
@@ -83,7 +83,7 @@
         android:padding="6dp"
         android:text="@string/cancel"
         android:textAllCaps="true"
-        android:textColor="@color/app_view_gray"
+        android:textColor="@color/silver_dark"
         android:textSize="@dimen/text_size_medium"
         />
   </RelativeLayout>

@@ -14,7 +14,7 @@ import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
-import cm.aptoide.pt.v8engine.repository.InAppBillingRepository;
+import cm.aptoide.pt.v8engine.payment.repository.InAppBillingRepository;
 import cm.aptoide.pt.v8engine.view.payment.PaymentActivity;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -85,7 +85,8 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
           .toBlocking()
           .first();
     } catch (Exception exception) {
-      CrashReport.getInstance().log(exception);
+      CrashReport.getInstance()
+          .log(exception);
       return errorCodeFactory.create(exception.getCause());
     }
   }
@@ -110,20 +111,25 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
 
     try {
       final List<String> serializedProducts =
-          repository.getSKUs(apiVersion, packageName, itemIdList, type).flatMap(products -> {
-            try {
-              return Observable.just(serializer.serializeProducts(products));
-            } catch (IOException e) {
-              CrashReport.getInstance().log(e);
-              return Observable.error(e);
-            }
-          }).toBlocking().first();
+          repository.getSKUs(apiVersion, packageName, itemIdList, type)
+              .flatMap(products -> {
+                try {
+                  return Observable.just(serializer.serializeProducts(products));
+                } catch (IOException e) {
+                  CrashReport.getInstance()
+                      .log(e);
+                  return Observable.error(e);
+                }
+              })
+              .toBlocking()
+              .first();
 
       result.putInt(RESPONSE_CODE, RESULT_OK);
       result.putStringArrayList(DETAILS_LIST, new ArrayList<>(serializedProducts));
       return result;
     } catch (Exception exception) {
-      CrashReport.getInstance().log(exception);
+      CrashReport.getInstance()
+          .log(exception);
       result.putInt(RESPONSE_CODE, errorCodeFactory.create(exception.getCause()));
       return result;
     }
@@ -153,7 +159,8 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
 
         result.putParcelable(BUY_INTENT, pendingIntent);
       } catch (Exception exception) {
-        CrashReport.getInstance().log(exception);
+        CrashReport.getInstance()
+            .log(exception);
         result.putInt(RESPONSE_CODE, errorCodeFactory.create(exception.getCause()));
       }
     }
@@ -195,7 +202,8 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
       result.putInt(RESPONSE_CODE, RESULT_OK);
       return result;
     } catch (Exception exception) {
-      CrashReport.getInstance().log(exception);
+      CrashReport.getInstance()
+          .log(exception);
       result.putInt(RESPONSE_CODE, errorCodeFactory.create(exception.getCause()));
       return result;
     }
@@ -209,7 +217,8 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
           .toBlocking()
           .first();
     } catch (Exception exception) {
-      CrashReport.getInstance().log(exception);
+      CrashReport.getInstance()
+          .log(exception);
       return purchaseErrorCodeFactory.create(exception.getCause());
     }
   }

@@ -37,7 +37,8 @@ public class MyStoresFragment extends GetStoreWidgetsFragment {
   }
 
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
-    return super.buildDisplayables(refresh, url).map(list -> addFollowStoreDisplayable(list));
+    return super.buildDisplayables(refresh, url)
+        .map(list -> addFollowStoreDisplayable(list));
   }
 
   private List<Displayable> addFollowStoreDisplayable(List<Displayable> displayables) {
@@ -75,13 +76,15 @@ public class MyStoresFragment extends GetStoreWidgetsFragment {
     AptoideAccountManager accountManager =
         ((V8Engine) getContext().getApplicationContext()).getAccountManager();
 
-    Observable<Account> loginObservable =
-        accountManager.accountStatus().doOnNext(__ -> reloadData());
+    Observable<Account> loginObservable = accountManager.accountStatus()
+        .doOnNext(__ -> reloadData());
 
-    Observable<List<Store>> storesObservable = storeRepository.getAll().skip(1).doOnNext(__ -> {
-      Logger.d(TAG, "Store database changed, reloading...");
-      reloadData();
-    });
+    Observable<List<Store>> storesObservable = storeRepository.getAll()
+        .skip(1)
+        .doOnNext(__ -> {
+          Logger.d(TAG, "Store database changed, reloading...");
+          reloadData();
+        });
 
     //
     // until this fragment is destroyed we listen for DB changes and login state changes
@@ -91,7 +94,8 @@ public class MyStoresFragment extends GetStoreWidgetsFragment {
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(__ -> {
-        }, err -> CrashReport.getInstance().log(err));
+        }, err -> CrashReport.getInstance()
+            .log(err));
   }
 
   private void reloadData() {

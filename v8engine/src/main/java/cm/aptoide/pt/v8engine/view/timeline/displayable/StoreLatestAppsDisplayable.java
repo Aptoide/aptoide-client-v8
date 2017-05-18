@@ -4,10 +4,10 @@ import android.content.Context;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.interfaces.ShareCardCallback;
-import cm.aptoide.pt.v8engine.repository.SocialRepository;
-import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.SocialRepository;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
+import cm.aptoide.pt.v8engine.view.timeline.ShareCardCallback;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -59,14 +59,21 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
     String abTestingURL = null;
 
     if (storeLatestApps.getAb() != null
-        && storeLatestApps.getAb().getConversion() != null
-        && storeLatestApps.getAb().getConversion().getUrl() != null) {
-      abTestingURL = storeLatestApps.getAb().getConversion().getUrl();
+        && storeLatestApps.getAb()
+        .getConversion() != null
+        && storeLatestApps.getAb()
+        .getConversion()
+        .getUrl() != null) {
+      abTestingURL = storeLatestApps.getAb()
+          .getConversion()
+          .getUrl();
     }
-    return new StoreLatestAppsDisplayable(storeLatestApps, storeLatestApps.getStore().getName(),
-        storeLatestApps.getStore().getAvatar(), latestApps, abTestingURL, dateCalculator,
-        storeLatestApps.getLatestUpdate(), timelineAnalytics, socialRepository,
-        storeLatestApps.getStore().getAppearance().getTheme());
+    return new StoreLatestAppsDisplayable(storeLatestApps, storeLatestApps.getStore()
+        .getName(), storeLatestApps.getStore()
+        .getAvatar(), latestApps, abTestingURL, dateCalculator, storeLatestApps.getLatestUpdate(),
+        timelineAnalytics, socialRepository, storeLatestApps.getStore()
+        .getAppearance()
+        .getTheme());
   }
 
   public String getTimeSinceLastUpdate(Context context) {

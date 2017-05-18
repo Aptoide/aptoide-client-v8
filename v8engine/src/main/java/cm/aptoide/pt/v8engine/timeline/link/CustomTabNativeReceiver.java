@@ -27,8 +27,10 @@ public class CustomTabNativeReceiver extends BroadcastReceiver {
     if (url != null) {
       Set<String> listOfPackagesThatResolveUri = getNativeAppPackage(context, Uri.parse(url));
       String availableNativeAppPackageName = null;
-      if (listOfPackagesThatResolveUri.iterator().hasNext()) {
-        availableNativeAppPackageName = listOfPackagesThatResolveUri.iterator().next();
+      if (listOfPackagesThatResolveUri.iterator()
+          .hasNext()) {
+        availableNativeAppPackageName = listOfPackagesThatResolveUri.iterator()
+            .next();
       }
 
       if (availableNativeAppPackageName != null) {
@@ -39,7 +41,8 @@ public class CustomTabNativeReceiver extends BroadcastReceiver {
         launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(launchIntent);
       } else {
-        Toast.makeText(context, "No application to open.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "No application to open.", Toast.LENGTH_SHORT)
+            .show();
       }
     }
   }

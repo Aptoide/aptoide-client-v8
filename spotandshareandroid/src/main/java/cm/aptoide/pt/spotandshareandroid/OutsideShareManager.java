@@ -22,7 +22,8 @@ public class OutsideShareManager {
 
   public void getMultipleApps(ArrayList<Uri> appsUriList) {
     for (int i = 0; i < appsUriList.size(); i++) {
-      String way = appsUriList.get(i).getPath();
+      String way = appsUriList.get(i)
+          .getPath();
       pathsFromOutsideShare.add(way);
     }
   }

@@ -129,13 +129,15 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     // table "ExcludedAd" was deliberedly left out due to its irrelevance in the DB upgrade
 
     if (aggregateExceptions != null) {
-      CrashReport.getInstance().log(aggregateExceptions);
+      CrashReport.getInstance()
+          .log(aggregateExceptions);
     }
     Logger.w(TAG, "Migrating database finished.");
   }
 
   private void logException(Exception ex) {
-    CrashReport.getInstance().log(ex);
+    CrashReport.getInstance()
+        .log(ex);
 
     if (aggregateExceptions == null) {
       aggregateExceptions = ex;

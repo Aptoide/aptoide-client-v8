@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/07/2016.
+ * Modified on 27/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.updates;
@@ -18,11 +18,11 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadEvent;
 import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.download.DownloadInstallBaseEvent;
 import cm.aptoide.pt.v8engine.download.InstallEvent;
 import cm.aptoide.pt.v8engine.download.InstallEventConverter;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
-import cm.aptoide.pt.v8engine.util.DownloadFactory;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.Getter;
 import rx.Completable;
@@ -108,8 +108,7 @@ public class UpdateDisplayable extends Displayable {
         update.getUpdateVersionCode(), installedRepository);
   }
 
-  public Completable downloadAndInstall(Context context,
-      PermissionService permissionRequest) {
+  public Completable downloadAndInstall(Context context, PermissionService permissionRequest) {
     Analytics.Updates.update();
     PermissionManager permissionManager = new PermissionManager();
     return permissionManager.requestExternalStoragePermission(permissionRequest)
@@ -123,8 +122,10 @@ public class UpdateDisplayable extends Displayable {
           return Observable.just(true);
         })
         .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
-        .flatMap(success -> installManager.install(context, download).toObservable()
-            .doOnSubscribe(() -> setupEvents(download))).toCompletable();
+        .flatMap(success -> installManager.install(context, download)
+            .toObservable()
+            .doOnSubscribe(() -> setupEvents(download)))
+        .toCompletable();
   }
 
   private void setupEvents(Download download) {
@@ -155,7 +156,6 @@ public class UpdateDisplayable extends Displayable {
         .map(installationProgress -> installationProgress.getState()
             == InstallationProgress.InstallationStatus.INSTALLING
             || installationProgress.isIndeterminate());
-
   }
 
   public InstalledRepository getInstalledRepository() {

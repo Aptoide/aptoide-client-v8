@@ -15,7 +15,7 @@ import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
-import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentConfirmationRepository;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import java.math.BigDecimal;
 import rx.Completable;
@@ -59,7 +59,8 @@ public class PayPalPayment extends AptoidePayment {
         .first(intent -> isPaymentConfirmationIntent(intent))
         .flatMap(intent -> getIntentPaymentConfirmationId(intent, getId(), product.getId()))
         .flatMap(paymentConfirmationId -> confirmationRepository.createPaymentConfirmation(getId(),
-            paymentConfirmationId, product).toObservable())
+            paymentConfirmationId, product)
+            .toObservable())
         .toCompletable();
   }
 
@@ -81,7 +82,8 @@ public class PayPalPayment extends AptoidePayment {
       case PAYMENT_STATUS_OK:
         payPalConfirmation = intent.getParcelableExtra(PAYMENT_CONFIRMATION_EXTRA);
         if (payPalConfirmation != null) {
-          return Observable.just(payPalConfirmation.getProofOfPayment().getPaymentId());
+          return Observable.just(payPalConfirmation.getProofOfPayment()
+              .getPaymentId());
         }
         return Observable.error(
             new PaymentFailureException("PayPal payment returned invalid payment confirmation"));

@@ -41,14 +41,18 @@ public class SyncResultAdapter extends RecyclerView.Adapter<SyncResultAdapter.Vi
 
     if (contact.getStore() != null) {
       ImageLoader.with(mContext)
-          .loadWithShadowCircleTransform(contact.getStore().getAvatar(), holder.mMainIcon);
-      holder.mStoreName.setText(contact.getStore().getName());
+          .loadWithShadowCircleTransform(contact.getStore()
+              .getAvatar(), holder.mMainIcon);
+      holder.mStoreName.setText(contact.getStore()
+          .getName());
     }
 
     if (contact.getPerson() != null) {
       ImageLoader.with(mContext)
-          .loadWithShadowCircleTransform(contact.getPerson().getAvatar(), holder.mSecondaryIcon);
-      holder.mUserName.setText(contact.getPerson().getName());
+          .loadWithShadowCircleTransform(contact.getPerson()
+              .getAvatar(), holder.mSecondaryIcon);
+      holder.mUserName.setText(contact.getPerson()
+          .getName());
     }
   }
 

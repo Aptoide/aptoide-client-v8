@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 06/05/2016.
+ * Modified on 06/05/2016.
  */
 
 package cm.aptoide.pt.handlers;
@@ -9,7 +9,7 @@ import android.view.View;
 import java.lang.ref.WeakReference;
 
 /**
- * Created by sithengineer on 06/05/16.
+ * Created on 06/05/16.
  */
 public abstract class ExtendedView<T> {
 

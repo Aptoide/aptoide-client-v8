@@ -21,7 +21,6 @@ class ListFullReviewsRequestFactory {
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
-
   }
 
   public ListFullReviewsRequest newListFullReviews(String url, boolean refresh,

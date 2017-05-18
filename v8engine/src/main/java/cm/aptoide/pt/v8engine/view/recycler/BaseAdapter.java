@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
+import cm.aptoide.pt.v8engine.view.LifecycleSchim;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -37,7 +37,8 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> implements Lifecyc
   }
 
   @Override public int getItemViewType(int position) {
-    return displayables.get(position).getViewLayout();
+    return displayables.get(position)
+        .getViewLayout();
   }
 
   @Override public long getItemId(int position) {

@@ -35,8 +35,8 @@ import rx.Observable;
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
 
-    return new GetStoreDisplaysRequest(new V7Url(url).remove("getStoreDisplays").get(),
-        new Body(storeCredentials), bodyInterceptor, httpClient, converterFactory);
+    return new GetStoreDisplaysRequest(new V7Url(url).remove("getStoreDisplays")
+        .get(), new Body(storeCredentials), bodyInterceptor, httpClient, converterFactory);
   }
 
   @Override protected Observable<GetStoreDisplays> loadDataFromNetwork(Interfaces interfaces,

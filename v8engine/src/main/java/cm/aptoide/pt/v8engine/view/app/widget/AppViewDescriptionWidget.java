@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 17/08/2016.
+ * Modified on 17/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.app.widget;
@@ -20,7 +20,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 
 /**
- * Created by sithengineer on 10/05/16.
+ * Created on 10/05/16.
  */
 @Displayables({ AppViewDescriptionDisplayable.class }) public class AppViewDescriptionWidget
     extends Widget<AppViewDescriptionDisplayable> {
@@ -42,18 +42,25 @@ import com.jakewharton.rxbinding.view.RxView;
   }
 
   @Override public void bindView(AppViewDescriptionDisplayable displayable) {
-    this.app = displayable.getPojo().getNodes().getMeta().getData();
+    this.app = displayable.getPojo()
+        .getNodes()
+        .getMeta()
+        .getData();
     this.media = app.getMedia();
-    this.storeName = app.getStore().getName();
-    this.storeTheme = app.getStore().getAppearance().getTheme();
+    this.storeName = app.getStore()
+        .getName();
+    this.storeTheme = app.getStore()
+        .getAppearance()
+        .getTheme();
 
     if (!TextUtils.isEmpty(media.getDescription())) {
       descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
-      compositeSubscription.add(RxView.clicks(readMoreBtn).subscribe(click -> {
-        Fragment fragment = V8Engine.getFragmentProvider()
-            .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme);
-        getFragmentNavigator().navigateTo(fragment);
-      }));
+      compositeSubscription.add(RxView.clicks(readMoreBtn)
+          .subscribe(click -> {
+            Fragment fragment = V8Engine.getFragmentProvider()
+                .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme);
+            getFragmentNavigator().navigateTo(fragment);
+          }));
     } else {
       // only show "default" description if the app doesn't have one
       descriptionTextView.setText(R.string.description_not_available);
@@ -62,11 +69,12 @@ import com.jakewharton.rxbinding.view.RxView;
 
     if (!TextUtils.isEmpty(media.getDescription())) {
       descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
-      compositeSubscription.add(RxView.clicks(readMoreBtn).subscribe(click -> {
-        Fragment fragment = V8Engine.getFragmentProvider()
-            .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme);
-        getFragmentNavigator().navigateTo(fragment);
-      }));
+      compositeSubscription.add(RxView.clicks(readMoreBtn)
+          .subscribe(click -> {
+            Fragment fragment = V8Engine.getFragmentProvider()
+                .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme);
+            getFragmentNavigator().navigateTo(fragment);
+          }));
     } else {
       // only show "default" description if the app doesn't have one
       descriptionTextView.setText(R.string.description_not_available);

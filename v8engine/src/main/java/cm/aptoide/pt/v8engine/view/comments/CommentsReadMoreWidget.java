@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 09/08/2016.
+ * Modified on 09/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.comments;
@@ -43,11 +43,13 @@ public class CommentsReadMoreWidget extends Widget<CommentsReadMoreDisplayable> 
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     Observable<ListComments> listCommentsObservable =
         ListCommentsRequest.of(displayable.getResourceId(), displayable.getNext(), 100,
-            displayable.isReview(), baseBodyInterceptor, httpClient, converterFactory).observe();
+            displayable.isReview(), baseBodyInterceptor, httpClient, converterFactory)
+            .observe();
 
     compositeSubscription.add(RxView.clicks(readMoreButton)
         .flatMap(__ -> listCommentsObservable)
         .subscribe(listComments -> displayable.getCommentAdder()
-            .addComment(listComments.getDatalist().getList())));
+            .addComment(listComments.getDatalist()
+                .getList())));
   }
 }

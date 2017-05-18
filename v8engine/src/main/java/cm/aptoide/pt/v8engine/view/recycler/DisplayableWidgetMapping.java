@@ -177,8 +177,8 @@ public class DisplayableWidgetMapping {
 
   @Partners protected void parseMappings(@NonNull List<DisplayableWidgetMapping> mapping) {
     for (DisplayableWidgetMapping displayableWidgetMapping : mapping) {
-      viewTypeMapping.put(displayableWidgetMapping.newDisplayable().getViewLayout(),
-          displayableWidgetMapping);
+      viewTypeMapping.put(displayableWidgetMapping.newDisplayable()
+          .getViewLayout(), displayableWidgetMapping);
     }
   }
 
@@ -376,7 +376,8 @@ public class DisplayableWidgetMapping {
     try {
       return displayableClass.newInstance();
     } catch (Exception e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
       String errMsg =
           String.format("Error instantiating displayable '%s'", displayableClass.getName());
       Logger.e(TAG, errMsg, e);
@@ -398,9 +399,11 @@ public class DisplayableWidgetMapping {
     Class[] cArg = new Class[1];
     cArg[0] = View.class;
     try {
-      return widgetClass.getDeclaredConstructor(cArg).newInstance(view);
+      return widgetClass.getDeclaredConstructor(cArg)
+          .newInstance(view);
     } catch (Exception e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
       String errMsg = String.format("Error instantiating widget '%s'", widgetClass.getName());
       Logger.e(TAG, errMsg, e);
       throw new RuntimeException(errMsg);

@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 18/08/2016.
+ * Modified on 18/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.timeline;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -28,26 +29,26 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
-import cm.aptoide.pt.v8engine.download.InstallEventConverter;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.download.DownloadFactory;
+import cm.aptoide.pt.v8engine.download.InstallEventConverter;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
-import cm.aptoide.pt.v8engine.repository.PackageRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.repository.SocialRepository;
-import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
-import cm.aptoide.pt.v8engine.repository.TimelineCardFilter;
-import cm.aptoide.pt.v8engine.repository.TimelineRepository;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.v8engine.timeline.PackageRepository;
+import cm.aptoide.pt.v8engine.timeline.SocialRepository;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.TimelineCardFilter;
+import cm.aptoide.pt.v8engine.timeline.TimelineRepository;
 import cm.aptoide.pt.v8engine.timeline.link.LinksHandlerFactory;
-import cm.aptoide.pt.v8engine.util.CardToDisplayable;
-import cm.aptoide.pt.v8engine.util.CardToDisplayableConverter;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
-import cm.aptoide.pt.v8engine.util.DownloadFactory;
-import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.ProgressBarDisplayable;
@@ -55,6 +56,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.rx.RxEndlessRecyclerView;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.TimeLineStatsDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.login.TimelineLoginDisplayable;
+import cm.aptoide.pt.v8engine.view.timeline.navigation.AppsTimelineTabNavigation;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -100,6 +102,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private Parcelable listState;
   private Displayable spinnerProgressDisplayable;
   private StoreContext storeContext;
+  private TabNavigator tabNavigator;
+  private String cardIdPriority;
 
   public static AppsTimelineFragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -118,6 +122,17 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     return fragment;
   }
 
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+
+    if (activity instanceof TabNavigator) {
+      tabNavigator = (TabNavigator) activity;
+    } else {
+      throw new IllegalStateException(
+          "Activity must implement " + TabNavigator.class.getSimpleName());
+    }
+  }
+
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     if (args.containsKey(STORE_ID)) {
@@ -127,7 +142,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   }
 
   @Override public void onDestroyView() {
-    listState = getRecyclerView().getLayoutManager().onSaveInstanceState();
+    listState = getRecyclerView().getLayoutManager()
+        .onSaveInstanceState();
     super.onDestroyView();
   }
 
@@ -153,8 +169,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
         .flatMapObservable(loggedIn -> packagesObservable.observeOn(AndroidSchedulers.mainThread())
             .flatMap(packages -> Observable.merge(refreshSubject.flatMap(
                 refreshed -> clearView().flatMap(
-                    refresh -> getFreshDisplayables(refreshed, packages, loggedIn))),
-                getNextDisplayables(packages))));
+                    refresh -> getFreshDisplayables(refreshed, packages, loggedIn,
+                        cardIdPriority))), getNextDisplayables(packages))));
 
     displayableObservable.observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -164,7 +180,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
         })
         .subscribe(__ -> {
         }, err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
           finishLoading(err);
         });
   }
@@ -180,8 +197,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     }
 
     if (getRecyclerView() != null) {
-      outState.putParcelable(LIST_STATE_KEY,
-          getRecyclerView().getLayoutManager().onSaveInstanceState());
+      outState.putParcelable(LIST_STATE_KEY, getRecyclerView().getLayoutManager()
+          .onSaveInstanceState());
     }
 
     super.onSaveInstanceState(outState);
@@ -189,7 +206,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
   private void restoreListState(@Nullable Bundle savedInstanceState) {
     if (listState != null) {
-      getRecyclerView().getLayoutManager().onRestoreInstanceState(listState);
+      getRecyclerView().getLayoutManager()
+          .onRestoreInstanceState(listState);
       listState = null;
     }
     if (savedInstanceState != null) {
@@ -239,8 +257,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
     timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
         new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
-            installedRepository), bodyInterceptor, httpClient,
-        converterFactory);
+            installedRepository), bodyInterceptor, httpClient, converterFactory);
 
     cardToDisplayable =
         new CardToDisplayableConverter(socialRepository, timelineAnalytics, installManager,
@@ -251,6 +268,12 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
             installedRepository);
 
     refreshSubject = BehaviorRelay.create();
+
+    tabNavigator.navigation()
+        .filter(tabNavigation -> tabNavigation.getTab() == TabNavigation.TIMELINE)
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(tabNavigation -> cardIdPriority = tabNavigation.getBundle()
+            .getString(AppsTimelineTabNavigation.CARD_ID_KEY));
   }
 
   @NonNull private Observable<List<String>> refreshPackages() {
@@ -266,8 +289,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   }
 
   @NonNull private Observable<Datalist<Displayable>> getFreshDisplayables(boolean refresh,
-      List<String> packages, boolean loggedIn) {
-    return getDisplayableList(packages, 0, refresh).flatMap(displayableDatalist -> {
+      List<String> packages, boolean loggedIn, String cardIdPriority) {
+    return getDisplayableList(packages, 0, refresh, cardIdPriority).flatMap(displayableDatalist -> {
       Long userId =
           getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
 
@@ -283,28 +306,38 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
   @NonNull private Observable<Datalist<Displayable>> getUserTimelineStats(boolean refresh,
       Datalist<Displayable> displayableDatalist, Long userId) {
-    return timelineRepository.getTimelineStats(refresh, userId).map(timelineStats -> {
-      TimeLineStatsDisplayable timeLineStatsDisplayable =
-          new TimeLineStatsDisplayable(timelineStats, userId, spannableFactory, storeTheme,
-              timelineAnalytics, userId == null, storeContext == StoreContext.home ? 0 : storeId);
-      displayableDatalist.getList().add(0, timeLineStatsDisplayable);
-      return displayableDatalist;
-    }).onErrorReturn(throwable -> {
-      CrashReport.getInstance().log(throwable);
-      return displayableDatalist;
-    });
+    return timelineRepository.getTimelineStats(refresh, userId)
+        .map(timelineStats -> {
+          TimeLineStatsDisplayable timeLineStatsDisplayable =
+              new TimeLineStatsDisplayable(timelineStats, userId, spannableFactory, storeTheme,
+                  timelineAnalytics, userId == null,
+                  storeContext == StoreContext.home ? 0 : storeId);
+          displayableDatalist.getList()
+              .add(0, timeLineStatsDisplayable);
+          return displayableDatalist;
+        })
+        .onErrorReturn(throwable -> {
+          CrashReport.getInstance()
+              .log(throwable);
+          return displayableDatalist;
+        });
   }
 
   @Override public void reload() {
     super.reload();
     Analytics.AppsTimeline.pullToRefresh();
+    cleanCardIdPriority();
+  }
+
+  private void cleanCardIdPriority() {
+    cardIdPriority = null;
   }
 
   private Observable<Datalist<Displayable>> getNextDisplayables(List<String> packages) {
     return RxEndlessRecyclerView.loadMore(getRecyclerView(), getAdapter())
         .observeOn(AndroidSchedulers.mainThread())
         .filter(item -> onStartLoadNext())
-        .concatMap(item -> getDisplayableList(packages, getOffset(), false))
+        .concatMap(item -> getDisplayableList(packages, getOffset(), false, cardIdPriority))
         .delay(1, TimeUnit.SECONDS)
         .retryWhen(errors -> errors.delay(1, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
@@ -314,8 +347,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
   @NonNull
   private Observable<Datalist<Displayable>> getDisplayableList(List<String> packages, int offset,
-      boolean refresh) {
-    return timelineRepository.getTimelineCards(SEARCH_LIMIT, offset, packages, refresh)
+      boolean refresh, String cardId) {
+    return timelineRepository.getTimelineCards(SEARCH_LIMIT, offset, packages, refresh, cardId)
         .flatMap(datalist -> Observable.just(datalist)
             .flatMapIterable(dataList -> dataList.getList())
             .map(card -> cardToDisplayable.convert(card, dateCalculator, spannableFactory,

@@ -4,7 +4,7 @@ import android.support.v4.util.ArrayMap;
 import cm.aptoide.pt.database.realm.Rollback;
 
 /**
- * Created by sithengineer on 24/10/2016.
+ * Created on 24/10/2016.
  */
 
 public final class OldActionsMap {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.app.widget;
@@ -45,17 +45,17 @@ import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.DownloadEvent;
 import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.download.DownloadInstallBaseEvent;
 import cm.aptoide.pt.v8engine.download.InstallEvent;
 import cm.aptoide.pt.v8engine.download.InstallEventConverter;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.interfaces.Payments;
-import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
-import cm.aptoide.pt.v8engine.repository.SocialRepository;
-import cm.aptoide.pt.v8engine.util.DownloadFactory;
+import cm.aptoide.pt.v8engine.timeline.SocialRepository;
+import cm.aptoide.pt.v8engine.view.app.Payments;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.install.InstallWarningDialog;
@@ -67,7 +67,7 @@ import rx.Completable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * Created by sithengineer on 06/05/16.
+ * Created on 06/05/16.
  */
 @Displayables({ AppViewInstallDisplayable.class }) public class AppViewInstallWidget
     extends Widget<AppViewInstallDisplayable> {
@@ -157,8 +157,11 @@ import rx.android.schedulers.AndroidSchedulers;
 
     minimalAd = this.displayable.getMinimalAd();
     GetApp getApp = this.displayable.getPojo();
-    GetAppMeta.App currentApp = getApp.getNodes().getMeta().getData();
-    versionName.setText(currentApp.getFile().getVername());
+    GetAppMeta.App currentApp = getApp.getNodes()
+        .getMeta()
+        .getData();
+    versionName.setText(currentApp.getFile()
+        .getVername());
     otherVersions.setOnClickListener(v -> {
       Fragment fragment = V8Engine.getFragmentProvider()
           .newOtherVersionsFragment(currentApp.getName(), currentApp.getIcon(),
@@ -173,7 +176,8 @@ import rx.android.schedulers.AndroidSchedulers;
         .flatMapCompletable(
             installationProgress -> updateUi(displayable, installationProgress, true, getApp))
         .subscribe(viewUpdated -> {
-        }, throwable -> CrashReport.getInstance().log(throwable));
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable));
 
     //listen ui events
     displayable.getInstallState()
@@ -182,12 +186,15 @@ import rx.android.schedulers.AndroidSchedulers;
         .flatMapCompletable(
             installationProgress -> updateUi(displayable, installationProgress, false, getApp))
         .subscribe(viewUpdated -> {
-        }, throwable -> CrashReport.getInstance().log(throwable));
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable));
 
-    if (isThisTheLatestVersionAvailable(currentApp, getApp.getNodes().getVersions())) {
+    if (isThisTheLatestVersionAvailable(currentApp, getApp.getNodes()
+        .getVersions())) {
       notLatestAvailableText.setVisibility(View.GONE);
       latestAvailableLayout.setVisibility(View.VISIBLE);
-      if (isThisTheLatestTrustedVersionAvailable(currentApp, getApp.getNodes().getVersions())) {
+      if (isThisTheLatestTrustedVersionAvailable(currentApp, getApp.getNodes()
+          .getVersions())) {
         latestAvailableTrustedSeal.setVisibility(View.VISIBLE);
       }
     } else {
@@ -204,9 +211,9 @@ import rx.android.schedulers.AndroidSchedulers;
     Completable completable;
     switch (state) {
       case INSTALLING:
-        completable =
-            updateInstallingUi(installationProgress, getApp.getNodes().getMeta().getData(), isSetup,
-                displayable);
+        completable = updateInstallingUi(installationProgress, getApp.getNodes()
+            .getMeta()
+            .getData(), isSetup, displayable);
         break;
       case PAUSED:
         completable = updatePausedUi(installationProgress, displayable, getApp, isSetup);
@@ -249,7 +256,9 @@ import rx.android.schedulers.AndroidSchedulers;
         .first()
         .observeOn(AndroidSchedulers.mainThread())
         .map(installationType -> {
-          GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+          GetAppMeta.App app = getApp.getNodes()
+              .getMeta()
+              .getData();
           setDownloadBarInvisible();
           switch (installationType) {
             case INSTALL:
@@ -258,8 +267,8 @@ import rx.android.schedulers.AndroidSchedulers;
             case UPDATE:
               //update
               isUpdate = true;
-              setupActionButton(R.string.update,
-                  installOrUpgradeListener(app, getApp.getNodes().getVersions(), displayable));
+              setupActionButton(R.string.update, installOrUpgradeListener(app, getApp.getNodes()
+                  .getVersions(), displayable));
               break;
             case DOWNGRADE:
               //downgrade
@@ -292,7 +301,9 @@ import rx.android.schedulers.AndroidSchedulers;
           showProgress(installationProgress.getProgress(), installationProgress.isIndeterminate());
           actionResume.setVisibility(View.VISIBLE);
           actionPause.setVisibility(View.GONE);
-          setupDownloadControls(app.getNodes().getMeta().getData(), isSetup, installationType);
+          setupDownloadControls(app.getNodes()
+              .getMeta()
+              .getData(), isSetup, installationType);
           return installationType;
         })
         .toCompletable();
@@ -328,25 +339,27 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   private void setupInstallOrBuyButton(AppViewInstallDisplayable displayable, GetApp getApp) {
-    GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+    GetAppMeta.App app = getApp.getNodes()
+        .getMeta()
+        .getData();
 
     //check if the app is paid
-    if (app.isPaid() && !app.getPay().isPaid()) {
-      actionButton.setText(getContext().getString(R.string.buy)
-          + " ("
-          + app.getPay().getSymbol()
-          + " "
-          + app.getPay().getPrice()
-          + ")");
+    if (app.isPaid() && !app.getPay()
+        .isPaid()) {
+      actionButton.setText(getContext().getString(R.string.buy) + " (" + app.getPay()
+          .getSymbol() + " " + app.getPay()
+          .getPrice() + ")");
       actionButton.setOnClickListener(v -> buyApp(app));
       AppBoughtReceiver receiver = new AppBoughtReceiver() {
         @Override public void appBought(long appId, String path) {
           if (app.getId() == appId) {
             isUpdate = false;
-            app.getFile().setPath(path);
-            app.getPay().setPaid();
-            setupActionButton(R.string.install,
-                installOrUpgradeListener(app, getApp.getNodes().getVersions(), displayable));
+            app.getFile()
+                .setPath(path);
+            app.getPay()
+                .setPaid();
+            setupActionButton(R.string.install, installOrUpgradeListener(app, getApp.getNodes()
+                .getVersions(), displayable));
             actionButton.performClick();
           }
         }
@@ -354,8 +367,8 @@ import rx.android.schedulers.AndroidSchedulers;
       getContext().registerReceiver(receiver, new IntentFilter(AppBoughtReceiver.APP_BOUGHT));
     } else {
       isUpdate = false;
-      setupActionButton(R.string.install,
-          installOrUpgradeListener(app, getApp.getNodes().getVersions(), displayable));
+      setupActionButton(R.string.install, installOrUpgradeListener(app, getApp.getNodes()
+          .getVersions(), displayable));
       if (displayable.isShouldInstall()) {
         actionButton.postDelayed(() -> {
           if (displayable.isVisible() && displayable.isShouldInstall()) {
@@ -381,8 +394,8 @@ import rx.android.schedulers.AndroidSchedulers;
 
       permissionRequest.requestAccessToExternalFileSystem(() -> {
 
-        showMessageOKCancel(
-            getContext().getResources().getString(R.string.downgrade_warning_dialog),
+        showMessageOKCancel(getContext().getResources()
+                .getString(R.string.downgrade_warning_dialog),
             new SimpleSubscriber<GenericDialogs.EResponse>() {
 
               @Override public void onNext(GenericDialogs.EResponse eResponse) {
@@ -402,7 +415,8 @@ import rx.android.schedulers.AndroidSchedulers;
                           .observeOn(AndroidSchedulers.mainThread())
                           .subscribe(progress -> {
                             Logger.d(TAG, "Installing");
-                          }, throwable -> CrashReport.getInstance().log(throwable)));
+                          }, throwable -> CrashReport.getInstance()
+                              .log(throwable)));
                   Analytics.Rollback.downgradeDialogContinue();
                 } else {
                   Analytics.Rollback.downgradeDialogCancel();
@@ -472,34 +486,40 @@ import rx.android.schedulers.AndroidSchedulers;
       compositeSubscription.add(permissionManager.requestDownloadAccess(permissionRequest)
           .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionRequest))
           .flatMap(success -> {
-            Download download =
-                new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
-                    downloadAction);
-            return installManager.install(getContext(), download).toObservable()
+            Download download = new DownloadFactory().create(displayable.getPojo()
+                .getNodes()
+                .getMeta()
+                .getData(), downloadAction);
+            return installManager.install(getContext(), download)
+                .toObservable()
                 .doOnSubscribe(() -> setupEvents(download));
           })
           .first()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
             if (accountManager.isLoggedIn()
-                && ManagerPreferences.isShowPreviewDialog()
-                && Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
+                && ManagerPreferences.isShowPreviewDialog() && Application.getConfiguration()
+                .isCreateStoreAndSetUserPrivacyAvailable()) {
               SharePreviewDialog sharePreviewDialog =
                   new SharePreviewDialog(displayable, accountManager, true,
                       SharePreviewDialog.SharePreviewOpenMode.SHARE);
               AlertDialog.Builder alertDialog =
                   sharePreviewDialog.getPreviewDialogBuilder(getContext());
 
-              sharePreviewDialog.showShareCardPreviewDialog(
-                  displayable.getPojo().getNodes().getMeta().getData().getPackageName(), "install",
-                  context, sharePreviewDialog, alertDialog, socialRepository);
+              sharePreviewDialog.showShareCardPreviewDialog(displayable.getPojo()
+                      .getNodes()
+                      .getMeta()
+                      .getData()
+                      .getPackageName(), "install", context, sharePreviewDialog, alertDialog,
+                  socialRepository);
             }
             ShowMessage.asSnack(v, installOrUpgradeMsg);
           }, err -> {
             if (err instanceof SecurityException) {
               ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
             }
-            CrashReport.getInstance().log(err);
+            CrashReport.getInstance()
+                .log(err);
           }));
     };
 
@@ -514,20 +534,24 @@ import rx.android.schedulers.AndroidSchedulers;
             .newAppViewFragment(trustedVersion.getId(), trustedVersion.getPackageName());
       } else {
         // search for a trusted version
-        fragment = V8Engine.getFragmentProvider().newSearchFragment(app.getName(), true);
+        fragment = V8Engine.getFragmentProvider()
+            .newSearchFragment(app.getName(), true);
       }
       getFragmentNavigator().navigateTo(fragment);
     };
 
     return v -> {
-      final Malware.Rank rank = app.getFile().getMalware().getRank();
+      final Malware.Rank rank = app.getFile()
+          .getMalware()
+          .getRank();
       if (!Malware.Rank.TRUSTED.equals(rank)) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        View alertView =
-            LayoutInflater.from(context).inflate(R.layout.dialog_install_warning, null);
+        View alertView = LayoutInflater.from(context)
+            .inflate(R.layout.dialog_install_warning, null);
         builder.setView(alertView);
         new InstallWarningDialog(rank, hasTrustedVersion, context, installHandler,
-            onSearchHandler).getDialog().show();
+            onSearchHandler).getDialog()
+            .show();
       } else {
         installHandler.onClick(v);
       }
@@ -597,7 +621,8 @@ import rx.android.schedulers.AndroidSchedulers;
                 .doOnSubscribe(() -> setupEvents(download)))
             .first()
             .subscribe(downloadProgress -> Logger.d(TAG, "Installing"),
-                err -> CrashReport.getInstance().log(err)));
+                err -> CrashReport.getInstance()
+                    .log(err)));
       });
     }
   }
@@ -627,12 +652,19 @@ import rx.android.schedulers.AndroidSchedulers;
     boolean canCompare = appVersions != null
         && appVersions.getList() != null
         && appVersions.getList() != null
-        && !appVersions.getList().isEmpty();
+        && !appVersions.getList()
+        .isEmpty();
     if (canCompare) {
-      boolean isLatestVersion =
-          app.getFile().getMd5sum().equals(appVersions.getList().get(0).getFile().getMd5sum());
+      boolean isLatestVersion = app.getFile()
+          .getMd5sum()
+          .equals(appVersions.getList()
+              .get(0)
+              .getFile()
+              .getMd5sum());
       if (isLatestVersion) {
-        return app.getFile().getMalware().getRank() == Malware.Rank.TRUSTED;
+        return app.getFile()
+            .getMalware()
+            .getRank() == Malware.Rank.TRUSTED;
       }
     }
     return false;
@@ -653,25 +685,38 @@ import rx.android.schedulers.AndroidSchedulers;
     boolean canCompare = appVersions != null
         && appVersions.getList() != null
         && appVersions.getList() != null
-        && !appVersions.getList().isEmpty();
+        && !appVersions.getList()
+        .isEmpty();
     if (canCompare) {
-      return app.getFile().getMd5sum().equals(appVersions.getList().get(0).getFile().getMd5sum());
+      return app.getFile()
+          .getMd5sum()
+          .equals(appVersions.getList()
+              .get(0)
+              .getFile()
+              .getMd5sum());
     }
     return false;
   }
 
   private void findTrustedVersion(GetAppMeta.App app, ListAppVersions appVersions) {
 
-    if (app.getFile() != null && app.getFile().getMalware() != null && !Malware.Rank.TRUSTED.equals(
-        app.getFile().getMalware().getRank())) {
+    if (app.getFile() != null
+        && app.getFile()
+        .getMalware() != null
+        && !Malware.Rank.TRUSTED.equals(app.getFile()
+        .getMalware()
+        .getRank())) {
 
       for (App version : appVersions.getList()) {
         if (app.getId() != version.getId()
             && version.getFile() != null
-            && version.getFile().getMalware() != null
+            && version.getFile()
+            .getMalware() != null
             && Malware.Rank.TRUSTED.equals(version
 
-            .getFile().getMalware().getRank())) {
+            .getFile()
+            .getMalware()
+            .getRank())) {
           trustedVersion = version;
         }
       }

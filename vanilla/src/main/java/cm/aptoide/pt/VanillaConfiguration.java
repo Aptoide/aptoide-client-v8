@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified on 24/06/2016.
  */
 
 package cm.aptoide.pt;
@@ -8,15 +8,15 @@ package cm.aptoide.pt;
 import android.os.Environment;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
 
 /**
  * Created by neuro on 10-05-2016.
  */
 public class VanillaConfiguration implements AptoidePreferencesConfiguration {
 
-  private static final String PATH_SDCARD =
-      Environment.getExternalStorageDirectory().getAbsolutePath();
+  private static final String PATH_SDCARD = Environment.getExternalStorageDirectory()
+      .getAbsolutePath();
   private static final String PATH_CACHE = PATH_SDCARD + "/.aptoide/";
   private static final String PATH_CACHE_APKS = PATH_CACHE + "apks/";
   private static final String PATH_CACHE_IMAGES = PATH_CACHE + "icons/";
@@ -109,7 +109,8 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
   }
 
   @Override public int getDefaultThemeRes() {
-    return StoreThemeEnum.get(getDefaultTheme()).getThemeResource();
+    return StoreThemeEnum.get(getDefaultTheme())
+        .getThemeResource();
   }
 
   @Override public String getFeedbackEmail() {
@@ -135,5 +136,9 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
 
   @Override public boolean isCreateStoreAndSetUserPrivacyAvailable() {
     return true;
+  }
+
+  @Override public String getVersionName() {
+    return BuildConfig.VERSION_NAME;
   }
 }

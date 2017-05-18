@@ -32,7 +32,9 @@ public class MyStoreDisplayable extends Displayable {
     this.meta = meta;
     Calendar aWeekBefore = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     aWeekBefore.add(Calendar.DAY_OF_MONTH, -Calendar.DAY_OF_WEEK);
-    Date added = meta.getData().getStore().getAdded();
+    Date added = meta.getData()
+        .getStore()
+        .getAdded();
     isLongTime = added.before(aWeekBefore.getTime());
   }
 
@@ -54,10 +56,16 @@ public class MyStoreDisplayable extends Displayable {
 
   private String getStoreDescription(Context context) {
     String message;
-    if (TextUtils.isEmpty(meta.getData().getStore().getAppearance().getDescription())) {
+    if (TextUtils.isEmpty(meta.getData()
+        .getStore()
+        .getAppearance()
+        .getDescription())) {
       message = context.getString(R.string.create_store_displayable_empty_description_message);
     } else {
-      message = meta.getData().getStore().getAppearance().getDescription();
+      message = meta.getData()
+          .getStore()
+          .getAppearance()
+          .getDescription();
     }
     return message;
   }
@@ -83,8 +91,11 @@ public class MyStoreDisplayable extends Displayable {
   }
 
   public List<Store.SocialChannel> getSocialChannels() {
-    return meta.getData().getStore().getSocialChannels() == null ? Collections.EMPTY_LIST
-        : meta.getData().getStore().getSocialChannels();
+    return meta.getData()
+        .getStore()
+        .getSocialChannels() == null ? Collections.EMPTY_LIST : meta.getData()
+        .getStore()
+        .getSocialChannels();
   }
 
   @IntDef({ View.VISIBLE, View.INVISIBLE, View.GONE }) @Retention(RetentionPolicy.SOURCE)

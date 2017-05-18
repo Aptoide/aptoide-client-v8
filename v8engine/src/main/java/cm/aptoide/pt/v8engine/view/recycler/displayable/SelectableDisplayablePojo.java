@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/07/2016.
+ * Modified on 27/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 /**
- * Created by sithengineer on 27/07/16.
+ * Created on 27/07/16.
  */
 public abstract class SelectableDisplayablePojo<T> extends DisplayablePojo<T> {
 

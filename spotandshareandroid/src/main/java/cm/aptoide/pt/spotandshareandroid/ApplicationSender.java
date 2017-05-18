@@ -30,10 +30,11 @@ public class ApplicationSender {
   private BroadcastReceiver hostsReceiver =
       new BroadcastReceiver() {//todo extract to a ClientsManager class
         @Override public void onReceive(Context context, Intent intent) {
-          if (intent.getAction() != null && intent.getAction().equals("SHOW_SEND_BUTTON")) {
-            System.out.println("Ordering to show send button");
+          if (intent.getAction() != null && intent.getAction()
+              .equals("SHOW_SEND_BUTTON")) {
             hostsListener.onAvailableClients();
-          } else if (intent.getAction() != null && intent.getAction().equals("HIDE_SEND_BUTTON")) {
+          } else if (intent.getAction() != null && intent.getAction()
+              .equals("HIDE_SEND_BUTTON")) {
             hostsListener.onNoClients();
           } else if ("AUTO_SHARE_SEND".equals(intent.getAction())) {
             String autoShareFilepath = intent.getStringExtra("autoShareFilePath");
@@ -90,7 +91,8 @@ public class ApplicationSender {
     if (send == null) {
       send = new BroadcastReceiver() {
         @Override public void onReceive(Context context, Intent intent) {
-          if (intent.getAction() != null && intent.getAction().equals("SENDAPP")) {
+          if (intent.getAction() != null && intent.getAction()
+              .equals("SENDAPP")) {
             boolean isSent = intent.getBooleanExtra("isSent", false);
             boolean needReSend = intent.getBooleanExtra("needReSend", false);
             String appName = intent.getStringExtra("appName");
@@ -101,10 +103,10 @@ public class ApplicationSender {
               sendListener.onAppStartingToSend(appName, packageName, needReSend, isSent,
                   positionToReSend);
             } else {
-              System.out.println("Application Sender : : : : Sent an App");
               sendListener.onAppSent(appName, needReSend, isSent, false, positionToReSend);
             }
-          } else if (intent.getAction() != null && intent.getAction().equals("ERRORSENDING")) {
+          } else if (intent.getAction() != null && intent.getAction()
+              .equals("ERRORSENDING")) {
             sendListener.onErrorSendingApp();
           }
         }

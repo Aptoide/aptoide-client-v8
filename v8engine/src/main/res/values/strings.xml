@@ -1,28 +1,28 @@
-<!--
-  ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 17/08/2016.
-  -->
-
 <resources>
 
   <!-- NavDrawer List items -->
   <string name="my_account">My Account</string>
-  <string name="setting_schdwntitle">Scheduled Downloads</string>
+  <string name="schdwntitle">Scheduled Downloads</string>
   <string name="settings">Settings</string>
   <string name="facebook">Facebook</string>
   <string name="twitter">Twitter</string>
   <string name="backup_apps">Backup Apps</string>
+  <string name="feedback_subject">Subject</string>
+  <string name="feedback_to_write2">Write here to send us your feedback…\n\n
+        Please give us all the details you can get:
+        \n\• Steps you have done
+        \n\• Errors you are seeing</string>
+  <string name="feedback_include_logs">Include ScreenShot and Logs</string>
+  <string name="feedback_no_email">No email client installed!</string>
+  <string name="feedback_send_button">Send Feedback</string>
+  <string name="drawer_social_media_title">Let\'s stay connected</string>
 
-
-  <string name="updates_filter_summary">Checking this, you won’t be notified of beta versions.</string>
-  <string name="updates_filter_setting_title">Just show me stable app version updates</string>
-  <string name="include_system_apps_title">Include system apps</string>
-  <string name="include_system_apps_summary">Checking this, you will be notified of system apps (apps that were installed by the device\'s manufacturer) updates</string>
   <string name="aptoide_email">aptoide@aptoide.com</string>
   <string name="aptoide_url">http://www.aptoide.com/</string>
 
   <!-- Permission pop-ups messages -->
   <string name="access_to_get_accounts_rationale">You need to allow access to Get Accounts</string>
+  <string name="access_to_get_contacts_rationale">You need to allow access to Get Contacts</string>
   <string name="developer_website">Website: %s</string>
   <string name="not_available">N/A</string>
   <string name="developer_email">Email: %s</string>
@@ -63,7 +63,6 @@
   <string name="appview_other_versions"><u>Other Versions</u></string>
   <string name="appview_latest_version_text">Latest version</string>
   <string name="appview_rate_this_app">rate this app</string>
-  <string name="appview_read_all">read all <![CDATA[>]]></string>
   <string name="zero">0</string>
   <string name="working_well">Working Well</string>
   <string name="needs_license">Needs License</string>
@@ -110,6 +109,7 @@
   <string name="added_to_scheduled">Added to Menu &gt; Scheduled Downloads</string>
   <string name="pause_all_downloads">Pause Downloads</string>
   <string name="storage_access_permission_request_message">Please allow access to your phone’s storage so we can download and install this app.</string>
+  <string name="camera_access_permission_request_message">Please allow access to your phone’s camera so you can take pictures with this app.</string>
 
   <string name="remote_install_menu_title">Install on TV</string>
   <string name="install_on_tv_mobile_error">Make sure your device is connected to Wi-Fi to use this feature.</string>
@@ -154,7 +154,7 @@
   <string name="description_not_available">No available description for this app</string>
   <string name="top_stores_fragment_title">Top Stores</string>
 
-  <!--server translations hammered-->
+  <!--server translations hammered aka bundle names and tab names-->
   <string name="home_title">Home</string>
   <string name="community">Community</string>
   <string name="stores">Stores</string>
@@ -234,7 +234,7 @@
   <string name="music_video">Music &amp; Video</string>
   <string name="essential_apps">Essential Apps</string>
   <string name="summer_apps">Summer Apps</string>
-  <string name="play_it">Play-It!</string>
+  <string name="title_play_it">Play-It!</string>
 
 
   <!--home Fragment-->
@@ -248,11 +248,6 @@
   <string name="add_store">Add store</string>
   <string name="downgrade_warning_dialog">By downgrading you may lose app related data and you may be logged out of the app’s account.</string>
 
-  <string name="freed_space">%s freed</string>
-  <string name="storage_dialog_title">Clear Aptoide Storage</string>
-  <string name="clear_cache_dialog_message">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data, …</string>
-  <string name="clear_cache_summary">Deletes icons, images, apk downloaded, obb, webservice data, …</string>
-  <string name="clearcache_title">Clear Storage</string>
 
   <!-- Stores tab -->
   <string name="recommended_stores">Recommended Stores</string>
@@ -263,6 +258,7 @@
   <string name="create_store_displayable_explore_message">Enter and explore all the possibilities</string>
   <string name="create_store_displayable_explore_button">Explore</string>
   <string name="follow_store">Follow Store</string>
+  <string name="store_url" translatable="false">http://en.aptoide.com/store/%1$s</string>
 
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">Your store doesn\'t have applications yet.</string>
@@ -273,7 +269,6 @@
   <string name="version_number">Version: %1$s</string>
   <string name="app_size">Size: %1$s</string>
   <string name="comment_on_store">Comment %1$s store</string>
-  <string name="word_this">this</string>
 
   <!-- Store Meta widget -->
   <string name="edit_store">Edit</string>
@@ -287,12 +282,7 @@
   <string name="reviews_expand_button">%d Replies</string>
   <string name="out_of_space_dialog_title">Out of space</string>
   <string name="out_of_space_dialog_message">Please, free space in order to proceed.</string>
-  <string name="setting_category_autoupdate">%s Updates</string>
-  <string name="setting_category_autoupdate_title">Get %s Update notifications</string>
-  <string name="setting_category_autoupdate_message">Periodically check for %s new versions</string>
-  <string name="store_added_long_time_suggestion_message">show long term</string>
-  <string name="store_added_short_time_suggestion_message">show just created</string>
-  <string name="create_store_displayable_created_store_long_term_message">long term</string>
+  <string name="create_store_displayable_created_store_long_term_message" translatable="false">long term</string>
   <string name="create_store_displayable_explore_long_term_button">View Store</string>
   <string name="create_store_displayable_empty_description_message">Add a description for your Store. A good description helps you to get more followers and interaction.</string>
   <string name="fragment_spot_share_preview_start_button">Start</string>
@@ -329,88 +319,8 @@
   <string name="permission_access_deny">access to read and write to external storage was denied</string>
   <string name="permission_account_deny">access to get accounts was denied</string>
 
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">Share apps with your friends</string>
-  <string name="spot_share_line_2">Phone to phone, without Internet</string>
-
-  <!--Drawer-->
-  <string name="feedback_subject">Subject</string>
-  <string name="feedback_to_write2">Write here to send us your feedback…\n\n
-        Please give us all the details you can get:
-        \n\• Steps you have done
-        \n\• Errors you are seeing</string>
-  <string name="feedback_include_logs">Include ScreenShot and Logs</string>
-  <string name="feedback_no_email">No email client installed!</string>
-  <string name="feedback_send_button">Send Feedback</string>
-
-
-  <!--Settings-->
-  <string name="general_downloads_dialog_only_mobile_message">"You chose to download only on Mobile 3G/4G. Do you want to change the settings?"</string>
-  <string name="general_downloads_dialog_only_wifi_message">"You chose to download only on WiFi. Do you want to change the settings?"</string>
-  <string name="general_downloads_dialog_no_download_rule_message">No download rule is set. Do you want to change the settings?</string>
-  <string name="asksetadultpinmessage">Would you like to set a pin to unlock Adult content?</string>
-  <string name="setpin">Set Pin</string>
-  <string name="remove_mature_pin_title">Remove Adult Content pin</string>
-  <string name="remove_mature_pin_summary">Remove the Pin required to unlock adult Content</string>
-  <string name="set_mature_pin_title">Set Adult Content pin</string>
-  <string name="set_mature_pin_summary">Set a Pin that will be required to unlock adult Content</string>
-  <string name="settings_title_bar">Settings</string>
-  <string name="settings_dwn_network_rules">Mobile Network Options</string>
-  <string name="setting_sum_icon_download_rules">Allow icons being downloaded over mobile data connections</string>
-  <string name="setting_icon_download_rules">Icon Download Rules</string>
-  <string name="setting_wifi">WiFi</string>
-  <string name="setting_mobile">Mobile 3G/4G</string>
-  <string name="setting_3g">3G</string>
-  <string name="setting_4g">4G</string>
-  <string name="setting_ethernet">Ethernet</string>
-  <string name="setting_sum_general_download_rules">Download Apps, Editors\' Choice, Top Apps and Stores over allowed mobile data connections</string>
-  <string name="setting_general_download_rules">General Download Rules</string>
-  <string name="setting_general">General</string>
-  <string name="setting_hwspecstitle">Hardware Specs</string>
-  <string name="setting_hwspecssum">Hardware Info about your phone</string>
-  <string name="setting_appfiltersum">Don\'t show applications that are not compatible with this device</string>
-  <string name="setting_appfiltertitle">Filter Applications</string>
-  <string name="setting_dont_show_mature_content">Show mature content</string>
-  <string name="setting_mature_filtering">Adult Content</string>
-  <string name="setting_updates">Updates</string>
+  <!--??-->
   <string name="update_all">Update all</string>
-  <string name="whats_new">What\'s new?</string>
-  <string name="setting_updates_notification_sum">Show new updates notifications</string>
-  <string name="setting_updates_notification_title">Updates Notification</string>
-  <string name="setting_auto_update_sum">Enable applications automatic update</string>
-  <string name="setting_auto_update_title">Enable auto update</string>
-  <string name="show_all_updates">Don\'t show updates for applications with different signatures</string>
-  <string name="setting_allUpdates_filtering">Filter Updates</string>
-  <string name="setting_schdwninstallsum">Install scheduled downloads automatically when a WiFi connection is present</string>
-  <string name="setting_schdwninstalltitle">Automatic Install</string>
-  <string name="setting_clear_memory">Storage</string>
-  <string name="clearcontent_title">Remove data and configurations</string>
-  <string name="settings_maxFileCache_sum">Set a maximum size to keep your apk files</string>
-  <string name="settings_maxFileCache_title">Download File Cache (MB)</string>
-  <string name="change_theme">Change theme</string>
-  <string name="change_theme_soon">Coming soon</string>
-  <string name="theme">Themes</string>
-  <string name="root">Root</string>
-  <string name="allow_root">Allow root installation</string>
-  <string name="disable_social_timeline">Disable Social Timeline</string>
-  <string name="social_timeline_notifications_sum2">Enable Aptoide Social Timeline Notifications. You will receive the latest news on the notification bar.</string>
-  <string name="social_timeline_notifications">Timeline Notifications</string>
-  <string name="about_us">About us</string>
-  <string name="restart_aptoide">Please restart the application to change theme</string>
-  <string name="setting_sdk_version">SDK Version</string>
-  <string name="setting_screen_size">Screen Size</string>
-  <string name="setting_esgl_version">ESGL Version</string>
-  <string name="screenCode">Screen code</string>
-  <string name="cpuAbi">CPU</string>
-  <string name="about_site">Website:</string>
-  <string name="about_mail">Contact:</string>
-  <string name="clear_cache_sucess">Content successfully deleted</string>
-  <string name="clearcontent_sum">Deletes the data from the SD card.</string>
-  <string name="cache_using_X_mb">Using %s MB</string>
-  <string name="clearcache_sum">Deletes cache (icons, screenshots) from the SD card.</string>
-  <string name="clearcontent_sum_jolla">Deletes data</string>
-  <string name="clearcache_sum_jolla">Deletes cache (icons, screenshots)</string>
-  <string name="drawer_social_media_title">Let\'s stay connected</string>
   <string name="read_more">Read More</string>
   <string name="read_less">See less</string>
   <string name="flag_this_app_good">Good</string>
@@ -536,7 +446,7 @@
   <string name="having_some_trouble">Having some trouble. Can you retry later?</string>
   <string name="having_some_trouble_v2">When offline you can still share apps with friends via Spot&amp;Share</string>
   <string name="could_not_connect_internet">Could not connect to the internet</string>
-  <string name="go_to_spot_and_share">Go to Spot&amp;Share</string>
+  <string name="Share_apps_now">Share apps now</string>
 
   <!-- Vote -->
   <string name="reply">Reply</string>
@@ -548,12 +458,6 @@
 
   <string name="reviewed_by">Reviewed by - %s</string>
   <string name="installed_this">%s installed this.</string>
-
-  <!-- adult -->
-  <string name="adult_pin_wrong">Wrong pin, try again.</string>
-  <string name="request_adult_pin">Insert pin to unlock</string>
-  <string name="are_you_adult">Are you at least 21 years old?</string>
-  <string name="facebook_logout_and_login">Logout and Login with Facebook</string>
 
   <string name="schDown_nodownloadselect">No Downloads Selected</string>
   <string name="no_sch_downloads">Browsing apps using mobile data and want to download later when you’re on a wifi connection? Use Schedule downloads and change your preferences on Settings -&gt; General Download Rules - to WiFi.</string>
@@ -723,5 +627,8 @@
   <string name="all_stores">All Stores</string>
   <string name="followed_stores">Followed Stores</string>
   <string name="search_minimum_chars">Search query must have at least 2 chars.</string>
+
+  <string name="app_name">Aptoide</string>
+  <string name="access_to_open_gallery_rationale">You need to allow access to the Gallery</string>
 
 </resources>

@@ -25,11 +25,13 @@ public class CrashlyticsCrashLogger implements CrashLogger {
 
   public CrashlyticsCrashLogger(Context context, boolean isDisabled) {
 
-    Fabric.with(context,
-        new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(isDisabled).build())
-            .build(), new TwitterCore(
-            new TwitterAuthConfig(BuildConfig.TWITTER_KEY, BuildConfig.TWITTER_SECRET)));
-    Logger.d(TAG, "Setup of " + this.getClass().getSimpleName() + " complete.");
+    Fabric.with(context, new Crashlytics.Builder().core(
+        new CrashlyticsCore.Builder().disabled(isDisabled)
+            .build())
+        .build(), new TwitterCore(
+        new TwitterAuthConfig(BuildConfig.TWITTER_KEY, BuildConfig.TWITTER_SECRET)));
+    Logger.d(TAG, "Setup of " + this.getClass()
+        .getSimpleName() + " complete.");
   }
 
   /**

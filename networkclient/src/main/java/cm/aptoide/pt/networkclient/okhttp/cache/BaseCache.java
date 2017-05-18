@@ -1,7 +1,7 @@
 package cm.aptoide.pt.networkclient.okhttp.cache;
 
 /**
- * Created by sithengineer on 28/10/2016.
+ * Created on 28/10/2016.
  */
 
 public abstract class BaseCache<K, V, Tout> implements Cache<K, V> {

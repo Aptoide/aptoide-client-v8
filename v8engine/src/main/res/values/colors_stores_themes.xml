@@ -1,64 +1,40 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 18/08/2016.
-  -->
-
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
   <!-- Stores themes -->
-  <color name="default_colour">#e17117</color>
+  <color name="default_color">#e17117</color>
 
   <color name="amber">#ffc107</color>
-
   <color name="black">#000000</color>
-  <color name="bluegrey">#697c89</color>
+  <color name="blue_grey">#607D8B</color>
   <color name="brown">#795548</color>
-
-  <color name="deeppurple">#673ab7</color>
-
+  <color name="deep_purple">#673ab7</color>
   <color name="green">#4caf50</color>
   <color name="grey">#9E9E9E</color>
-
   <color name="indigo">#3f51b5</color>
-
-  <color name="lightblue">#03a9f4</color>
-  <color name="lightgreen">#8bc34a</color>
+  <color name="light_blue">#03a9f4</color>
+  <color name="light_green">#8bc34a</color>
   <color name="lime">#CDDC39</color>
-
   <color name="orange">#ff9800</color>
-
   <color name="pink">#e91e63</color>
-
   <color name="red">#f44336</color>
-
   <color name="teal">#009688</color>
 
-
   <!-- Stores themes - 700 colors -->
-  <color name="default_colour_700">#bf6113</color>
-
+  <color name="default_color_700">#bf6113</color>
   <color name="amber_700">#ffa000</color>
-
-  <color name="bluegrey_700">#455a64</color>
+  <color name="blue_grey_700">#455a64</color>
   <color name="brown_700">#5d4037</color>
-
-  <color name="deeppurple_700">#512da8</color>
-
+  <color name="deep_purple_700">#512da8</color>
   <color name="green_700">#388e3c</color>
-  <color name="grey_700">#9E9E9E</color>
-
+  <color name="grey_700">#616161</color>
   <color name="indigo_700">#303f9f</color>
-
-  <color name="lightblue_700">#0288d1</color>
-  <color name="lightgreen_700">#689f38</color>
+  <color name="light_blue_700">#0288d1</color>
+  <color name="light_green_700">#689f38</color>
   <color name="lime_700">#AFB42B</color>
-
   <color name="orange_700">#f57c00</color>
-
   <color name="pink_700">#c2185b</color>
-
   <color name="red_700">#d32f2f</color>
-
   <color name="teal_700">#00796b</color>
 
 </resources>

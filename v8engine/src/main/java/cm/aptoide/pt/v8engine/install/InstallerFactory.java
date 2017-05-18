@@ -15,10 +15,10 @@ import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.download.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
-import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
-import cm.aptoide.pt.v8engine.install.provider.RollbackFactory;
+import cm.aptoide.pt.v8engine.install.rollback.RollbackFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 
 /**

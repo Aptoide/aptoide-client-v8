@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified on 04/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;
@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -54,6 +55,13 @@ import rx.Observable;
         httpClient, converterFactory);
   }
 
+  public static GetAppRequest ofUname(String uname, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
+
+    return new GetAppRequest(BASE_HOST, new Body(uname), bodyInterceptor, httpClient,
+        converterFactory);
+  }
+
   public static GetAppRequest of(long appId, String storeName,
       BaseRequestWithStore.StoreCredentials storeCredentials, String packageName,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
@@ -81,7 +89,8 @@ import rx.Observable;
       // the resulting array, excluding the remaining "trash"
       // example: http://ws75.aptoide.com/api/7/getApp/appId=15168558
       // example: http://ws75.aptoide.com/api/7/getApp/appId=15168558/other=stuff/in=here
-      String tmp = url.substring(url.indexOf("app_id")).split("=")[1];
+      String tmp = url.substring(url.indexOf("app_id"))
+          .split("=")[1];
       int lastIdx = tmp.lastIndexOf('/');
       return Long.parseLong(tmp.substring(0, lastIdx > 0 ? lastIdx : tmp.length()));
     } catch (Exception e) {
@@ -100,6 +109,7 @@ import rx.Observable;
     @Getter private Long appId;
     @Getter private String packageName;
     @Getter private boolean refresh;
+    @Setter @JsonProperty("package_uname") private String uname;
     @Getter @JsonProperty("apk_md5sum") private String md5;
     @Getter @JsonProperty("store_name") private String storeName;
     @Getter private Node nodes;
@@ -131,6 +141,10 @@ import rx.Observable;
     public Body(Boolean refresh, String md5) {
       this.md5 = md5;
       this.refresh = refresh;
+    }
+
+    public Body(String uname) {
+      this.uname = uname;
     }
 
     public Body(long appId) {

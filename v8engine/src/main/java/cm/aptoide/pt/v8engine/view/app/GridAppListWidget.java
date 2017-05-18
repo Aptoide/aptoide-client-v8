@@ -54,15 +54,19 @@ public class GridAppListWidget extends Widget<GridAppListDisplayable> {
     name.setText(app.getName());
     name.setTypeface(null, Typeface.BOLD);
 
-    tvStoreName.setText(app.getStore().getName());
+    tvStoreName.setText(app.getStore()
+        .getName());
     tvStoreName.setTypeface(null, Typeface.BOLD);
     final FragmentActivity context = getContext();
-    compositeSubscription.add(RxView.clicks(itemView).subscribe(v -> {
-      // FIXME
-      getFragmentNavigator().navigateTo(
-          V8Engine.getFragmentProvider().newAppViewFragment(app.getId(), app.getPackageName()));
-    }, throwable -> CrashReport.getInstance().log(throwable)));
+    compositeSubscription.add(RxView.clicks(itemView)
+        .subscribe(v -> {
+          // FIXME
+          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+              .newAppViewFragment(app.getId(), app.getPackageName()));
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable)));
 
-    ImageLoader.with(context).load(app.getIcon(), icon);
+    ImageLoader.with(context)
+        .load(app.getIcon(), icon);
   }
 }

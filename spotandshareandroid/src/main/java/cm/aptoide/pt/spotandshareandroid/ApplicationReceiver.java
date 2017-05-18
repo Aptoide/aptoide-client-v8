@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Environment;
+import cm.aptoide.pt.logger.Logger;
 
 /**
  * Created by filipegoncalves on 10-02-2017.
@@ -14,6 +15,7 @@ import android.os.Environment;
 
 public class ApplicationReceiver {
 
+  private static final String TAG = ApplicationReceiver.class.getSimpleName();
   private Context context;
   private boolean isHotspot;
   private String nickname;
@@ -50,7 +52,8 @@ public class ApplicationReceiver {
     context.startService(intent);
     receive = new BroadcastReceiver() {
       @Override public void onReceive(Context context, Intent intent) {
-        if (intent.getAction() != null && intent.getAction().equals("RECEIVEAPP")) {
+        if (intent.getAction() != null && intent.getAction()
+            .equals("RECEIVEAPP")) {
           boolean finishedReceiving = intent.getBooleanExtra("FinishedReceiving", false);
           String appName = intent.getStringExtra("appName");
           if (finishedReceiving) {
@@ -61,9 +64,11 @@ public class ApplicationReceiver {
           } else {
             listener.onStartedReceiving(appName);
           }
-        } else if (intent.getAction() != null && intent.getAction().equals("ERRORRECEIVING")) {
+        } else if (intent.getAction() != null && intent.getAction()
+            .equals("ERRORRECEIVING")) {
           listener.onErrorReceiving();
-        } else if (intent.getAction() != null && intent.getAction().equals("SERVER_LEFT")) {
+        } else if (intent.getAction() != null && intent.getAction()
+            .equals("SERVER_LEFT")) {
           listener.onServerLeft();
         }
       }
@@ -75,10 +80,10 @@ public class ApplicationReceiver {
     Intent receiveIntent = null;
     if (isHotspot) {
       receiveIntent = new Intent(context, HighwayServerService.class);
-      System.out.println("Will start a server service");
+      Logger.d(TAG, "Will start a SERVER service");
     } else {
 
-      System.out.println("Will start a client service");
+      Logger.d(TAG, "Will start a CLIENT service");
 
       receiveIntent = new Intent(context, HighwayClientService.class);
       receiveIntent.putExtra("targetIP", targetIPAddress);
@@ -86,7 +91,8 @@ public class ApplicationReceiver {
     receiveIntent.putExtra("nickname", nickname);
     receiveIntent.putExtra("port", port);
     receiveIntent.putExtra("ExternalStoragePath",
-        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString());
+        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            .toString());
     receiveIntent.putExtra("isHotspot", isHotspot);
     receiveIntent.putExtra("isOutsideShare", outsideShare);
     receiveIntent.setAction("RECEIVE");

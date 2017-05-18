@@ -11,18 +11,18 @@ import rx.Observable;
 
 public class TabNavigatorActivity extends BaseActivity implements TabNavigator {
 
-  private BehaviorRelay<Integer> navigatorSubject;
+  private BehaviorRelay<TabNavigation> navigatorSubject;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     navigatorSubject = BehaviorRelay.create();
   }
 
-  @Override public void navigate(int tab) {
-    navigatorSubject.call(tab);
+  @Override public void navigate(TabNavigation tabNavigation) {
+    navigatorSubject.call(tabNavigation);
   }
 
-  @Override public Observable<Integer> navigation() {
+  @Override public Observable<TabNavigation> navigation() {
     return navigatorSubject;
   }
 }

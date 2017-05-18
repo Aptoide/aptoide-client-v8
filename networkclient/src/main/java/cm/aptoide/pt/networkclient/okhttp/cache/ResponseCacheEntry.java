@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 28/04/2016.
+ * Modified on 28/04/2016.
  */
 
 package cm.aptoide.pt.networkclient.okhttp.cache;
@@ -44,21 +44,26 @@ public @Data class ResponseCacheEntry {
 
     this.code = response.code();
     this.message = response.message();
-    this.protocol = response.protocol().toString();
-    this.headers = response.headers().toMultimap();
+    this.protocol = response.protocol()
+        .toString();
+    this.headers = response.headers()
+        .toMultimap();
 
     final ResponseBody responseBody = response.body();
-    this.bodyMediaType = responseBody.contentType().toString();
+    this.bodyMediaType = responseBody.contentType()
+        .toString();
 
     Charset charset = Charset.forName(DEFAULT_CHARSET);
-    charset = responseBody.contentType().charset(charset);
+    charset = responseBody.contentType()
+        .charset(charset);
 
     try {
       // snippet taken from https://github.com/square/okhttp/blob/master/okhttp-logging-interceptor/src/main/java/okhttp3/logging/HttpLoggingInterceptor.java
       BufferedSource source = responseBody.source();
       source.request(Long.MAX_VALUE);
       Buffer buffer = source.buffer();
-      this.body = buffer.clone().readString(charset);
+      this.body = buffer.clone()
+          .readString(charset);
     } catch (Exception e) {
       e.printStackTrace();
     }

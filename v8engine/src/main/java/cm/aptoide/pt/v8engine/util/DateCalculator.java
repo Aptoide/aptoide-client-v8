@@ -95,12 +95,13 @@ public class DateCalculator {
       getTimeDiffString(context, time);
     } else {
       if (diffTime < DateUtils.WEEK_IN_MILLIS) {
-        int diffDays = Double.valueOf(Math.ceil(diffTime / millisInADay)).intValue();
+        int diffDays = Double.valueOf(Math.ceil(diffTime / millisInADay))
+            .intValue();
         return diffDays == 1 ? mTimestampLabelYesterday : AptoideUtils.StringU.getFormattedString(
             cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_days_ago, diffDays);
       } else if (diffTime < DateUtils.WEEK_IN_MILLIS * 4) {
-        int diffDays =
-            Double.valueOf(Math.ceil(diffTime / AptoideUtils.DateTimeU.WEEK_IN_MILLIS)).intValue();
+        int diffDays = Double.valueOf(Math.ceil(diffTime / AptoideUtils.DateTimeU.WEEK_IN_MILLIS))
+            .intValue();
         return diffDays == 1 ? mTimestampLabelWeekAgo : AptoideUtils.StringU.getFormattedString(
             cm.aptoide.pt.utils.R.string.WidgetProvider_timestamp_weeks_ago, diffDays);
       } else if (diffTime < DateUtils.WEEK_IN_MILLIS * 4 * 12) {

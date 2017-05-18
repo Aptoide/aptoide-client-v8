@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 04/08/2016.
-  -->
-
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="root"
@@ -15,8 +10,8 @@
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="updatesFilterAlphaBetaKey"
-        android:summary="@string/updates_filter_summary"
-        android:title="@string/updates_filter_setting_title"/>
+        android:summary="@string/settings_updates_filter_summary"
+        android:title="@string/settings_updates_filter_setting_title"/>
 
   </PreferenceCategory>
   <PreferenceCategory
@@ -98,8 +93,8 @@
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="updatesSystemAppsKey"
-        android:summary="@string/include_system_apps_summary"
-        android:title="@string/include_system_apps_title"/>
+        android:summary="@string/settings_include_system_apps_summary"
+        android:title="@string/settings_include_system_apps_title"/>
   </PreferenceCategory>
 
   <PreferenceCategory android:title="@string/setting_schdwntitle">
@@ -111,8 +106,8 @@
   <PreferenceCategory android:title="@string/setting_clear_memory">
     <Preference
         android:key="clearcache"
-        android:summary="@string/clear_cache_summary"
-        android:title="@string/clearcache_title"/>
+        android:summary="@string/settings_clearcache_title"
+        android:title="@string/settings_clearcache_title"/>
 
     <EditTextPreference
         android:inputType="number"
@@ -122,50 +117,42 @@
         android:summary="@string/settings_maxFileCache_sum"
         android:title="@string/settings_maxFileCache_title"/>
   </PreferenceCategory>
+
   <!--<PreferenceCategory-->
   <!--android:key="changetheme"-->
-  <!--android:title="@string/change_theme">-->
-
+  <!--android:title="@string/settings_change_theme">-->
   <!--<Preference-->
   <!--android:key="soon"-->
-  <!--android:title="@string/change_theme_soon"/>-->
-  <!--&lt;!&ndash;<ListPreference&ndash;&gt;-->
-  <!--&lt;!&ndash;android:defaultValue="light"&ndash;&gt;-->
-  <!--&lt;!&ndash;android:entries="@array/theme_names"&ndash;&gt;-->
-  <!--&lt;!&ndash;android:entryValues="@array/themes"&ndash;&gt;-->
-  <!--&lt;!&ndash;android:key="theme"&ndash;&gt;-->
-  <!--&lt;!&ndash;android:title="@string/theme"/>&ndash;&gt;-->
+  <!--android:title="@string/settings_change_theme_soon"/>-->
+  <!--<ListPreference-->
+  <!--android:defaultValue="light"-->
+  <!--android:entries="@array/theme_names"-->
+  <!--android:entryValues="@array/theme"-->
+  <!--android:key="theme"-->
+  <!--android:title="@string/theme"/>-->
   <!--</PreferenceCategory>-->
 
   <!--AN-1533 - temporary solution was to remove root installation-->
   <!--<PreferenceCategory-->
-      <!--android:key="rootCategory"-->
-      <!--android:title="@string/root">-->
-    <!--<CheckBoxPreference-->
-        <!--android:key="allowRoot"-->
-        <!--android:title="@string/allow_root"/>-->
-    <!--<CheckBoxPreference-->
-        <!--android:defaultValue="false"-->
-        <!--android:key="auto_update"-->
-        <!--android:summary="@string/setting_auto_update_sum"-->
-        <!--android:title="@string/setting_auto_update_title"/>-->
+  <!--android:key="rootCategory"-->
+  <!--android:title="@string/settings_root">-->
+  <!--<CheckBoxPreference-->
+  <!--android:key="allowRoot"-->
+  <!--android:title="@string/settings_allow_root"/>-->
+  <!--<CheckBoxPreference-->
+  <!--android:defaultValue="false"-->
+  <!--android:key="auto_update"-->
+  <!--android:summary="@string/setting_auto_update_sum"-->
+  <!--android:title="@string/setting_auto_update_title"/>-->
   <!--</PreferenceCategory>-->
 
   <PreferenceCategory
       android:key="about"
-      android:title="@string/about_us">
+      android:title="@string/settings_about_us">
     <Preference
         android:key="aboutDialog"
-        android:title="@string/about_us"/>
+        android:title="@string/settings_about_us"/>
   </PreferenceCategory>
 
-  <!--
-  <PreferenceCategory android:title="@string/animations">
-      <CheckBoxPreference
-          android:defaultValue="true"
-          android:key="animationsEnabled"
-          android:title="@string/animations_enabled"/>
-  </PreferenceCategory>
-  -->
 
 </PreferenceScreen>

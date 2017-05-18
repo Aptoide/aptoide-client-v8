@@ -105,10 +105,8 @@ public abstract class AptoideClientSocket extends AptoideSocket {
       }
     }
 
-    Print.d(TAG, "start: ShareApps: Thread "
-        + Thread.currentThread().getId()
-        + " finished "
-        + getClass().getSimpleName());
+    Print.d(TAG, "start: ShareApps: Thread " + Thread.currentThread()
+        .getId() + " finished " + getClass().getSimpleName());
     return this;
   }
 

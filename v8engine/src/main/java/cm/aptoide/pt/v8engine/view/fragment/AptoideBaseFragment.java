@@ -7,7 +7,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.request.RequestFactory;
-import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.downloads.scheduled;
@@ -16,7 +16,7 @@ import lombok.Getter;
 import rx.Observable;
 
 /**
- * created by SithEngineer
+ * Created
  */
 public class ScheduledDownloadDisplayable extends SelectableDisplayablePojo<Scheduled> {
 
@@ -50,5 +50,4 @@ public class ScheduledDownloadDisplayable extends SelectableDisplayablePojo<Sche
         .map(installationProgress -> installationProgress.getState()
             == InstallationProgress.InstallationStatus.INSTALLING);
   }
-
 }

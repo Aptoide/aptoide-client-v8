@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/08/2016.
+ * Modified on 29/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.deprecated.tables;
@@ -15,7 +15,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import io.realm.RealmObject;
 
 /**
- * Created by sithengineer on 24/08/16.
+ * Created on 24/08/16.
  *
  * see method "getStartupInstalled()" in class "AptoideDatabase.java" from v7 code to understand
  * the reason why of this code
@@ -23,7 +23,8 @@ import io.realm.RealmObject;
 public final class Installed extends BaseTable {
 
   private static final String TAG = Installed.class.getSimpleName();
-  private final PackageManager pm = AptoideUtils.getContext().getPackageManager();
+  private final PackageManager pm = AptoideUtils.getContext()
+      .getPackageManager();
   /*
   public static final String NAME = "installed";
 
@@ -64,7 +65,8 @@ public final class Installed extends BaseTable {
           return new cm.aptoide.pt.database.realm.Installed(packageInfo);
         }
       } catch (PackageManager.NameNotFoundException ex) {
-        CrashReport.getInstance().log(ex);
+        CrashReport.getInstance()
+            .log(ex);
       }
     }
     return null;

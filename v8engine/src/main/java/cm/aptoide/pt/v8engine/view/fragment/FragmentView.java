@@ -47,7 +47,8 @@ public abstract class FragmentView extends LeakFragment implements View {
     if (presenter != null) {
       presenter.saveState(outState);
     } else {
-      Logger.w(this.getClass().getName(), "No presenter was attached.");
+      Logger.w(this.getClass()
+          .getName(), "No presenter was attached.");
     }
 
     super.onSaveInstanceState(outState);

@@ -35,17 +35,18 @@ public class TimeLineStatsWidget extends Widget<TimeLineStatsDisplayable> {
     followers.setText(displayable.getFollowersText(getContext()));
     following.setText(displayable.getFollowingText(getContext()));
 
-    Observable<Void> followersClick =
-        RxView.clicks(followers).doOnNext(__ -> displayable.followersClick(getFragmentNavigator()));
+    Observable<Void> followersClick = RxView.clicks(followers)
+        .doOnNext(__ -> displayable.followersClick(getFragmentNavigator()));
 
-    Observable<Void> followingClick =
-        RxView.clicks(following).doOnNext(__ -> displayable.followingClick(getFragmentNavigator()));
+    Observable<Void> followingClick = RxView.clicks(following)
+        .doOnNext(__ -> displayable.followingClick(getFragmentNavigator()));
 
     Observable<Void> followFriendsClick = RxView.clicks(followFriends)
         .doOnNext(__ -> displayable.followFriendsClick(getFragmentNavigator()));
 
     compositeSubscription.add(Observable.merge(followersClick, followingClick, followFriendsClick)
-        .doOnError((throwable) -> CrashReport.getInstance().log(throwable))
+        .doOnError((throwable) -> CrashReport.getInstance()
+            .log(throwable))
         .subscribe());
 
     if (!displayable.isShouldShowAddFriends()) {

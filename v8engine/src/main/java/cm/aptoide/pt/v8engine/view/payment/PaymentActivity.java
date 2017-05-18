@@ -28,14 +28,15 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Payer;
+import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.PurchaseIntentFactory;
 import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
+import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.presenter.PaymentPresenter;
 import cm.aptoide.pt.v8engine.presenter.PaymentSelector;
 import cm.aptoide.pt.v8engine.presenter.PaymentView;
-import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.BaseActivity;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
@@ -101,6 +102,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     intentFactory = new PurchaseIntentFactory(new ErrorCodeFactory());
     final ContextThemeWrapper dialogTheme =
         new ContextThemeWrapper(this, R.style.AptoideThemeDefault);
+
     networkErrorDialog = new AlertDialog.Builder(dialogTheme).setMessage(R.string.connection_error)
         .setPositiveButton(android.R.string.ok, null)
         .create();
@@ -113,16 +115,18 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     final AptoideAccountManager accountManager =
         ((V8Engine) getApplicationContext()).getAccountManager();
     final Payer payer = new Payer(accountManager);
+    final PaymentAnalytics paymentAnalytics =
+        ((V8Engine) getApplicationContext()).getPaymentAnalytics();
     attachPresenter(new PaymentPresenter(this,
-            new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
-                RepositoryFactory.getPaymentAuthorizationRepository(this),
-                new PaymentAuthorizationFactory(this),
-                RepositoryFactory.getPaymentRepository(this, product),
-                RepositoryFactory.getProductRepository(this, product), payer), product, accountManager,
-            new PaymentSelector(PAYPAL_PAYMENT_ID,
-                PreferenceManager.getDefaultSharedPreferences(getApplicationContext())),
-            new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator())),
-        savedInstanceState);
+        new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
+            RepositoryFactory.getPaymentAuthorizationRepository(this),
+            new PaymentAuthorizationFactory(this),
+            RepositoryFactory.getPaymentRepository(this, product),
+            RepositoryFactory.getProductRepository(this, product), payer), product, accountManager,
+        new PaymentSelector(PAYPAL_PAYMENT_ID,
+            PreferenceManager.getDefaultSharedPreferences(getApplicationContext())),
+        new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
+        paymentAnalytics), savedInstanceState);
   }
 
   @Override public Observable<PaymentViewModel> paymentSelection() {
@@ -132,7 +136,13 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
   }
 
   @Override public Observable<Void> cancellationSelection() {
-    return Observable.merge(RxView.clicks(cancelButton), RxView.clicks(overlay))
+    return RxView.clicks(cancelButton)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .unsubscribeOn(AndroidSchedulers.mainThread());
+  }
+
+  @Override public Observable<Void> tapOutsideSelection() {
+    return RxView.clicks(overlay)
         .subscribeOn(AndroidSchedulers.mainThread())
         .unsubscribeOn(AndroidSchedulers.mainThread());
   }
@@ -177,11 +187,13 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
   }
 
   @Override public void showProduct(Product product) {
-    ImageLoader.with(this).load(product.getIcon(), productIcon);
+    ImageLoader.with(this)
+        .load(product.getIcon(), productIcon);
     productName.setText(product.getTitle());
     productDescription.setText(product.getDescription());
-    productPrice.setText(
-        product.getPrice().getCurrencySymbol() + " " + product.getPrice().getAmount());
+    productPrice.setText(product.getPrice()
+        .getCurrencySymbol() + " " + product.getPrice()
+        .getAmount());
   }
 
   @Override public void hideLoading() {
@@ -201,7 +213,8 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
   }
 
   @Override public void navigateToAuthorizationView(int paymentId, Product product) {
-    startActivity(WebAuthorizationActivity.getIntent(this, paymentId, (ParcelableProduct) product));
+    startActivity(
+        PaymentAuthorizationActivity.getIntent(this, paymentId, (ParcelableProduct) product));
   }
 
   @Override public void showPaymentsNotFoundMessage() {

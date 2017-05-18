@@ -8,8 +8,8 @@ package cm.aptoide.pt.v8engine.install.installer;
 import android.content.Context;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.v8engine.install.Installer;
-import cm.aptoide.pt.v8engine.install.provider.RollbackFactory;
-import cm.aptoide.pt.v8engine.repository.RollbackRepository;
+import cm.aptoide.pt.v8engine.install.rollback.RollbackFactory;
+import cm.aptoide.pt.v8engine.install.rollback.RollbackRepository;
 import rx.Completable;
 import rx.Observable;
 
@@ -65,13 +65,13 @@ public class RollbackInstaller implements Installer {
         .andThen(defaultInstaller.downgrade(context, md5));
   }
 
-  @Override public Observable<InstallationState> getState(String packageName, int versionCode) {
-    return defaultInstaller.getState(packageName, versionCode);
-  }
-
   @Override public Completable uninstall(Context context, String packageName, String versionName) {
     return saveRollback(context, packageName, Rollback.Action.UNINSTALL, null, versionName).andThen(
         defaultInstaller.uninstall(context, packageName, versionName));
+  }
+
+  @Override public Observable<InstallationState> getState(String packageName, int versionCode) {
+    return defaultInstaller.getState(packageName, versionCode);
   }
 
   private Completable saveRollback(Context context, String packageName, Rollback.Action action,

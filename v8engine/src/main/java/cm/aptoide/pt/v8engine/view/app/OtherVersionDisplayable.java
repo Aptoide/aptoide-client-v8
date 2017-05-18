@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/08/2016.
+ * Modified on 12/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.app;
@@ -10,7 +10,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
 /**
- * Created by sithengineer on 07/07/16.
+ * Created on 07/07/16.
  */
 public class OtherVersionDisplayable extends DisplayablePojo<App> {
 

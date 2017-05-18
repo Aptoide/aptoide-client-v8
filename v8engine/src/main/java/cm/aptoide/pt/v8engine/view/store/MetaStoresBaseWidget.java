@@ -58,7 +58,8 @@ public abstract class MetaStoresBaseWidget<T extends Displayable> extends Widget
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       return getContext().getDrawable(drawable);
     } else {
-      return getContext().getResources().getDrawable(drawable);
+      return getContext().getResources()
+          .getDrawable(drawable);
     }
   }
 

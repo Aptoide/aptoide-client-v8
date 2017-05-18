@@ -111,7 +111,8 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         .flatMap(t -> {
           // FIXME: 01-08-2016 damn jackson parsing black magic error :/
           if (((BaseV7Response) t).getInfo() != null && BaseV7Response.Info.Status.QUEUED.equals(
-              ((BaseV7Response) t).getInfo().getStatus())) {
+              ((BaseV7Response) t).getInfo()
+                  .getStatus())) {
             return Observable.error(new ToRetryThrowable());
           } else {
             return Observable.just(t);
@@ -132,7 +133,8 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
                       throw new AptoideWsV7Exception(throwable).setBaseResponse(
                           (BaseV7Response) converterFactory.responseBodyConverter(
                               BaseV7Response.class, null, null)
-                              .convert(((HttpException) throwable).response().errorBody()));
+                              .convert(((HttpException) throwable).response()
+                                  .errorBody()));
                     } catch (IOException exception) {
                       throw new RuntimeException(exception);
                     }
@@ -140,20 +142,23 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
                   throw new RuntimeException(throwable);
                 }
               }
-            }).delay(500, TimeUnit.MILLISECONDS));
+            })
+            .delay(500, TimeUnit.MILLISECONDS));
   }
 
   private Observable<U> handleToken(Observable<U> observable, boolean bypassCache) {
     return observable.onErrorResumeNext(throwable -> {
       if (throwable instanceof AptoideWsV7Exception) {
-        if (INVALID_ACCESS_TOKEN_CODE.equals(
-            ((AptoideWsV7Exception) throwable).getBaseResponse().getError().getCode())) {
+        if (INVALID_ACCESS_TOKEN_CODE.equals(((AptoideWsV7Exception) throwable).getBaseResponse()
+            .getError()
+            .getCode())) {
 
           if (!accessTokenRetry) {
             accessTokenRetry = true;
-            return DataProvider.invalidateAccessToken().flatMapObservable(s -> {
-              return V7.this.observe(bypassCache);
-            });
+            return DataProvider.invalidateAccessToken()
+                .flatMapObservable(s -> {
+                  return V7.this.observe(bypassCache);
+                });
           } else {
             return Observable.error(new NetworkErrorException());
           }

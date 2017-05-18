@@ -66,10 +66,9 @@ public abstract class AptoideMessageController implements Sender<Message> {
     try {
       while (true) {
         Object o = objectInputStream.readObject();
-        Print.d(TAG, "startListening: "
-            + Thread.currentThread().getId()
-            + ": Received input object. "
-            + o.getClass().getSimpleName());
+        Print.d(TAG, "startListening: " + Thread.currentThread()
+            .getId() + ": Received input object. " + o.getClass()
+            .getSimpleName());
         Message message = (Message) o;
         handle(message);
       }
@@ -95,12 +94,13 @@ public abstract class AptoideMessageController implements Sender<Message> {
       }
     } else {
       if (canHandle(message)) {
-        Print.d(TAG,
-            "handle: Handling message " + message + ", " + message.getClass().getSimpleName());
-        messageHandlersMap.get(message.getClass()).handleMessage(message, this);
+        Print.d(TAG, "handle: Handling message " + message + ", " + message.getClass()
+            .getSimpleName());
+        messageHandlersMap.get(message.getClass())
+            .handleMessage(message, this);
       } else {
-        throw new IllegalArgumentException(
-            "Can't handle messages of type " + message.getClass().getSimpleName());
+        throw new IllegalArgumentException("Can't handle messages of type " + message.getClass()
+            .getSimpleName());
       }
     }
   }
@@ -138,30 +138,29 @@ public abstract class AptoideMessageController implements Sender<Message> {
         .getSimpleName());
 
     if (!isConnected()) {
-      Print.d(TAG, "sendWithAck: " + message.getClass().getSimpleName() + " not connected!");
+      Print.d(TAG, "sendWithAck: " + message.getClass()
+          .getSimpleName() + " not connected!");
       return false;
     }
 
     // TODO: 02-02-2017 neuro no ack waiting lol
     AckMessage ackMessage = null;
-    Print.d(TAG, "sendWithAck: "
-        + Thread.currentThread().getId()
-        + ": Sending message with ack: "
-        + message
-        + ", "
-        + message.getClass().getSimpleName());
+    Print.d(TAG, "sendWithAck: " + Thread.currentThread()
+        .getId() + ": Sending message with ack: " + message + ", " + message.getClass()
+        .getSimpleName());
     try {
       objectOutputStream.writeObject(message);
       ackMessage = ackMessages.poll(ACK_TIMEOUT, TimeUnit.MILLISECONDS);
     } catch (InterruptedException e) {
-      Print.d(TAG, "sendWithAck: " + Thread.currentThread().getId() + ": Failed to receive ack!");
+      Print.d(TAG, "sendWithAck: " + Thread.currentThread()
+          .getId() + ": Failed to receive ack!");
       e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
     }
 
-    Print.d(TAG,
-        "sendWithAck: " + Thread.currentThread().getId() + ": Received ack: " + ackMessage);
+    Print.d(TAG, "sendWithAck: " + Thread.currentThread()
+        .getId() + ": Received ack: " + ackMessage);
 
     return ackMessage != null && ackMessage.isSuccess();
   }
@@ -170,14 +169,14 @@ public abstract class AptoideMessageController implements Sender<Message> {
     Print.d(TAG, "send() called with: message = [" + message + "]");
 
     if (!isConnected()) {
-      Print.d(TAG, "send: " + message.getClass().getSimpleName() + " not connected!");
+      Print.d(TAG, "send: " + message.getClass()
+          .getSimpleName() + " not connected!");
       return;
     }
 
-    Print.d(TAG,
-        "send: " + Thread.currentThread().getId() + ": Sending message: " + message + ", " + message
-            .getClass()
-            .getSimpleName());
+    Print.d(TAG, "send: " + Thread.currentThread()
+        .getId() + ": Sending message: " + message + ", " + message.getClass()
+        .getSimpleName());
     try {
       if (objectOutputStream != null) {
         objectOutputStream.writeObject(message);

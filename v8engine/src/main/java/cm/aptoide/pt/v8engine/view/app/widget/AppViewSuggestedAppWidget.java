@@ -38,11 +38,12 @@ public class AppViewSuggestedAppWidget extends Widget<AppViewSuggestedAppDisplay
     MinimalAd pojo = displayable.getPojo();
 
     final FragmentActivity context = getContext();
-    ImageLoader.with(context).load(pojo.getIconPath(), iconImageView);
+    ImageLoader.with(context)
+        .load(pojo.getIconPath(), iconImageView);
     appNameTextView.setText(pojo.getName());
     descriptionTextView.setText(AptoideUtils.HtmlU.parse(pojo.getDescription()));
     compositeSubscription.add(RxView.clicks(layout)
-        .subscribe(__ -> getFragmentNavigator().navigateTo(
-            V8Engine.getFragmentProvider().newAppViewFragment(pojo))));
+        .subscribe(__ -> getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+            .newAppViewFragment(pojo))));
   }
 }

@@ -16,11 +16,13 @@ public class Disconnecter {
   private IntentFilter intentFilter;
   private BroadcastReceiver receiver = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
-      if (intent.getAction() != null && intent.getAction().equals("SERVER_DISCONNECT")) {
+      if (intent.getAction() != null && intent.getAction()
+          .equals("SERVER_DISCONNECT")) {
         if (listener != null) {
           listener.onServerDisconnected();
         }
-      } else if (intent.getAction() != null && intent.getAction().equals("CLIENT_DISCONNECT")) {
+      } else if (intent.getAction() != null && intent.getAction()
+          .equals("CLIENT_DISCONNECT")) {
         if (listener != null) {
           listener.onClientDisconnected();
         }

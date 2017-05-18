@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 23/08/2016.
+ * Modified on 23/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
+import cm.aptoide.pt.v8engine.view.LifecycleSchim;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;

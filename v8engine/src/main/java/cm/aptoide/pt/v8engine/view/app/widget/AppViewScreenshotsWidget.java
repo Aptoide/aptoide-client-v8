@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 22/08/2016.
+ * Modified on 22/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.app.widget;
@@ -16,7 +16,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
- * Created by sithengineer on 11/05/16.
+ * Created on 11/05/16.
  */
 @Displayables({ AppViewScreenshotsDisplayable.class }) public class AppViewScreenshotsWidget
     extends Widget<AppViewScreenshotsDisplayable> {
@@ -32,7 +32,8 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
   }
 
   @Override public void bindView(AppViewScreenshotsDisplayable displayable) {
-    final GetAppMeta.Media media = displayable.getPojo().getMedia();
+    final GetAppMeta.Media media = displayable.getPojo()
+        .getMedia();
     //		mediaList.addItemDecoration(new DividerItemDecoration(AptoideUtils.ScreenU.getPixels(6), (DividerItemDecoration.RIGHT | DividerItemDecoration
     // .BOTTOM))
     //		);

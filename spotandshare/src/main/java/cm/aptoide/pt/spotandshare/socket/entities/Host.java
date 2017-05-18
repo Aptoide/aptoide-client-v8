@@ -19,15 +19,18 @@ import lombok.experimental.Accessors;
   }
 
   public static Host from(Socket socket) {
-    return new Host(socket.getInetAddress().getHostAddress(), socket.getPort());
+    return new Host(socket.getInetAddress()
+        .getHostAddress(), socket.getPort());
   }
 
   public static Host from(ServerSocket serverSocket) {
-    return new Host(serverSocket.getInetAddress().getHostAddress(), serverSocket.getLocalPort());
+    return new Host(serverSocket.getInetAddress()
+        .getHostAddress(), serverSocket.getLocalPort());
   }
 
   public static Host fromLocalhost(Socket socket) {
-    return new Host(socket.getLocalAddress().getHostAddress(), socket.getLocalPort());
+    return new Host(socket.getLocalAddress()
+        .getHostAddress(), socket.getLocalPort());
   }
 
   @Override public int hashCode() {

@@ -34,8 +34,7 @@ public class AccountErrorMapper implements ThrowableToStringMapper {
     } else if (throwable instanceof AccountValidationException) {
       switch (((AccountValidationException) throwable).getCode()) {
         case AccountValidationException.EMPTY_EMAIL_AND_PASSWORD:
-          message =
-              context.getString(R.string.no_email_and_pass_error_message);
+          message = context.getString(R.string.no_email_and_pass_error_message);
           break;
         case AccountValidationException.EMPTY_EMAIL:
           message = context.getString(R.string.no_email_error_message);

@@ -26,12 +26,18 @@ public class DownloadEventConverter extends DownloadInstallEventConverter<Downlo
   @Override
   protected DownloadInstallAnalyticsBaseBody.Data convertSpecificFields(DownloadEvent report,
       DownloadInstallAnalyticsBaseBody.Data data) {
-    data.getApp().setMirror(report.getMirrorApk());
-    for (int i = 0; data.getObb() != null && i < data.getObb().size(); i++) {
+    data.getApp()
+        .setMirror(report.getMirrorApk());
+    for (int i = 0; data.getObb() != null && i < data.getObb()
+        .size(); i++) {
       if (i == 0) {
-        data.getObb().get(0).setMirror(report.getMirrorObbMain());
+        data.getObb()
+            .get(0)
+            .setMirror(report.getMirrorObbMain());
       } else {
-        data.getObb().get(1).setMirror(report.getMirrorObbPatch());
+        data.getObb()
+            .get(1)
+            .setMirror(report.getMirrorObbPatch());
       }
     }
     return data;

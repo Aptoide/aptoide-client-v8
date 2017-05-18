@@ -29,17 +29,22 @@ import rx.functions.Action1;
   }
 
   @Override public void bindView(FooterDisplayable displayable) {
-    final String buttonText =
-        Translator.translate(displayable.getPojo().getActions().get(0).getLabel());
+    final String buttonText = Translator.translate(displayable.getPojo()
+        .getActions()
+        .get(0)
+        .getLabel());
     button.setText(buttonText);
 
     final Action1<Void> handleButtonClick = __ -> {
-      Event event = displayable.getPojo().getActions().get(0).getEvent();
+      Event event = displayable.getPojo()
+          .getActions()
+          .get(0)
+          .getEvent();
       getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
-          .newStoreTabGridRecyclerFragment(event,
-              Translator.translate(displayable.getPojo().getTitle()), null, displayable.getTag(),
-              displayable.getStoreContext()));
+          .newStoreTabGridRecyclerFragment(event, Translator.translate(displayable.getPojo()
+              .getTitle()), null, displayable.getTag(), displayable.getStoreContext()));
     };
-    compositeSubscription.add(RxView.clicks(button).subscribe(handleButtonClick));
+    compositeSubscription.add(RxView.clicks(button)
+        .subscribe(handleButtonClick));
   }
 }

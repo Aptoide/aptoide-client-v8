@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 01/08/2016.
+ * Modified on 01/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.timeline.widget;
@@ -14,16 +14,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.AppUpdateDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Completable;
@@ -48,7 +46,7 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
   private View store;
   private CardView cardView;
   private AptoideAccountManager accountManager;
-  private AptoideClientUUID aptoideClientUUID;
+  private IdsRepository idsRepository;
 
   public AppUpdateWidget(View itemView) {
     super(itemView);
@@ -78,10 +76,8 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
     super.bindView(displayable);
     this.displayable = displayable;
     final FragmentActivity context = getContext();
-
+    idsRepository = ((V8Engine) getContext().getApplicationContext()).getIdsRepository();
     accountManager = ((V8Engine) context.getApplication()).getAccountManager();
-    aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     appName.setText(displayable.getAppTitle(context));
     appUpdate.setText(displayable.getHasUpdateText(context));
     appVersion.setText(displayable.getVersionText(context));
@@ -90,30 +86,33 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
         0);
     updateButton.setText(displayable.getUpdateAppText(context));
     updateButton.setEnabled(true);
-    ImageLoader.with(context).load(displayable.getAppIconUrl(), appIcon);
+    ImageLoader.with(context)
+        .load(displayable.getAppIconUrl(), appIcon);
     ImageLoader.with(context)
         .loadWithShadowCircleTransform(displayable.getStoreIconUrl(), storeImage);
     storeName.setText(displayable.getStoreName());
     updateDate.setText(displayable.getTimeSinceLastUpdate(context));
     errorText.setVisibility(View.GONE);
 
-    compositeSubscription.add(RxView.clicks(store).subscribe(click -> {
-      knockWithSixpackCredentials(displayable.getAbUrl());
-      Analytics.AppsTimeline.clickOnCard(AppUpdateDisplayable.CARD_TYPE_NAME,
-          displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
-          Analytics.AppsTimeline.OPEN_STORE);
+    compositeSubscription.add(RxView.clicks(store)
+        .subscribe(click -> {
+          knockWithSixpackCredentials(displayable.getAbUrl());
+          Analytics.AppsTimeline.clickOnCard(AppUpdateDisplayable.CARD_TYPE_NAME,
+              displayable.getPackageName(), Analytics.AppsTimeline.BLANK,
+              displayable.getStoreName(), Analytics.AppsTimeline.OPEN_STORE);
 
-      displayable.sendOpenStoreEvent();
-      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
-          .newStoreFragment(displayable.getStoreName(), displayable.getStoreTheme()));
-    }));
+          displayable.sendOpenStoreEvent();
+          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+              .newStoreFragment(displayable.getStoreName(), displayable.getStoreTheme()));
+        }));
 
-    compositeSubscription.add(RxView.clicks(appIcon).subscribe(click -> {
-      knockWithSixpackCredentials(displayable.getAbUrl());
-      displayable.sendOpenAppEvent();
-      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
-          .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
-    }));
+    compositeSubscription.add(RxView.clicks(appIcon)
+        .subscribe(click -> {
+          knockWithSixpackCredentials(displayable.getAbUrl());
+          displayable.sendOpenAppEvent();
+          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+              .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
+        }));
 
     compositeSubscription.add(RxView.clicks(updateButton)
         .flatMap(click -> {
@@ -126,11 +125,13 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
               .flatMap(success -> displayable.update(context));
         })
         .observeOn(AndroidSchedulers.mainThread())
-        .retryWhen(errors -> errors.observeOn(AndroidSchedulers.mainThread()).flatMap(error -> {
-          showDownloadError(displayable);
-          Logger.d(this.getClass().getSimpleName(), " stack : " + error.getMessage());
-          return Observable.just(null);
-        }))
+        .retryWhen(errors -> errors.observeOn(AndroidSchedulers.mainThread())
+            .flatMap(error -> {
+              showDownloadError(displayable);
+              Logger.d(this.getClass()
+                  .getSimpleName(), " stack : " + error.getMessage());
+              return Observable.just(null);
+            }))
         .flatMapCompletable(
             installationProgress -> updateInstallProgress(displayable, installationProgress))
         .subscribe(installationProgress -> {
@@ -167,7 +168,8 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
         return Completable.fromAction(() -> displayable.getErrorMessage(downloadProgress)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(message -> showDownloadError(displayable, message),
-                throwable -> CrashReport.getInstance().log(throwable)));
+                throwable -> CrashReport.getInstance()
+                    .log(throwable)));
       case PAUSED:
       case UNINSTALLED:
       default:

@@ -17,8 +17,10 @@ import java.util.Locale;
 
 public class ContactUtils {
 
-  public ContactUtils() {
+  private TelephonyManager telephonyManager;
 
+  public ContactUtils(TelephonyManager telephonyManager) {
+    this.telephonyManager = telephonyManager;
   }
 
   public ContactsModel getContacts(Context context) {
@@ -29,7 +31,7 @@ public class ContactUtils {
     if (cursor != null && cursor.getCount() > 0) {
       while (cursor.moveToNext()) {
         final String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-        addContactPhoneNumbers(contentResolver, cursor, contacts, id, context);
+        addContactPhoneNumbers(contentResolver, cursor, contacts, id);
         addContactEmails(contentResolver, contacts, id);
       }
     }
@@ -42,9 +44,9 @@ public class ContactUtils {
   }
 
   private void addContactPhoneNumbers(ContentResolver contentResolver, Cursor cursor,
-      ContactsModel contact, String id, Context context) {
+      ContactsModel contact, String id) {
 
-    String country = getUserCountry(context);
+    String country = getUserCountry();
 
     if (country == null) {
       return;
@@ -100,20 +102,16 @@ public class ContactUtils {
   /**
    * Get ISO 3166-1 alpha-2 country code for this device (or null if not available)
    *
-   * @param context Context reference to get the TelephonyManager instance from
-   *
    * @return country code or null
    */
-  public String getUserCountry(Context context) {
+  public String getUserCountry() {
     try {
-      final TelephonyManager tm =
-          (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-      final String simCountry = tm.getSimCountryIso();
+      final String simCountry = telephonyManager.getSimCountryIso();
       if (simCountry != null && simCountry.length() == 2) { // SIM country code is available
         return simCountry.toLowerCase(Locale.US);
-      } else if (tm.getPhoneType()
+      } else if (telephonyManager.getPhoneType()
           != TelephonyManager.PHONE_TYPE_CDMA) { // device is not 3G (would be unreliable)
-        String networkCountry = tm.getNetworkCountryIso();
+        String networkCountry = telephonyManager.getNetworkCountryIso();
         if (networkCountry != null
             && networkCountry.length() == 2) { // network country code is available
           return networkCountry.toLowerCase(Locale.US);
@@ -131,8 +129,8 @@ public class ContactUtils {
     return "+" + phoneNumber;
   }
 
-  public String getCountryCodeForRegion(Context context) {
-    String country = getUserCountry(context);
+  public String getCountryCodeForRegion() {
+    String country = getUserCountry();
 
     if (country == null) {
       return "";

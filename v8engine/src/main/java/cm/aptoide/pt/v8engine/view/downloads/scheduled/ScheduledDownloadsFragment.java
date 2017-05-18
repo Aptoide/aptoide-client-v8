@@ -26,16 +26,16 @@ import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.DownloadEvent;
 import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.download.DownloadInstallBaseEvent;
 import cm.aptoide.pt.v8engine.download.InstallEvent;
 import cm.aptoide.pt.v8engine.download.InstallEventConverter;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.download.ScheduledDownloadRepository;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.repository.ScheduledDownloadRepository;
-import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -45,7 +45,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
 
-import static cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver.SCHEDULE_DOWNLOADS;
+import static cm.aptoide.pt.v8engine.DeepLinkIntentReceiver.SCHEDULE_DOWNLOADS;
 
 public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter> {
 
@@ -115,7 +115,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
           break;
         case AskInstallAll:
           GenericDialogs.createGenericYesNoCancelMessage(getContext(),
-              getString(R.string.setting_schdwntitle), getString(R.string.schDown_install))
+              getString(R.string.schdwntitle), getString(R.string.schDown_install))
               .subscribe(userResponse -> {
                 switch (userResponse) {
                   case YES:
@@ -126,7 +126,8 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
                         .subscribe(
                             scheduledList -> downloadAndInstallScheduledList(scheduledList, true),
                             err -> {
-                              CrashReport.getInstance().log(err);
+                              CrashReport.getInstance()
+                                  .log(err);
                             });
                     break;
                   case NO:
@@ -183,7 +184,8 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
         .subscribe(scheduledDownloads -> {
           updateUi(scheduledDownloads);
         }, t -> {
-          CrashReport.getInstance().log(t);
+          CrashReport.getInstance()
+              .log(t);
           emptyData.setText(R.string.no_sch_downloads);
           emptyData.setVisibility(View.VISIBLE);
           clearDisplayables();
@@ -235,7 +237,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setTitle(R.string.setting_schdwntitle);
+    toolbar.setTitle(R.string.schdwntitle);
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {

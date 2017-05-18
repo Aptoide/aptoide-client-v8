@@ -32,7 +32,8 @@ import lombok.Getter;
     if (latestUpdate == null) {
       for (App app : apps) {
         if (latestUpdate == null || (app.getUpdated() != null
-            && app.getUpdated().getTime() > latestUpdate.getTime())) {
+            && app.getUpdated()
+            .getTime() > latestUpdate.getTime())) {
           latestUpdate = app.getUpdated();
         }
       }

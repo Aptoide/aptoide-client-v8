@@ -10,14 +10,14 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.SocialArticle;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.interfaces.ShareCardCallback;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
-import cm.aptoide.pt.v8engine.repository.SocialRepository;
-import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
+import cm.aptoide.pt.v8engine.timeline.SocialRepository;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.link.Link;
 import cm.aptoide.pt.v8engine.timeline.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.v8engine.view.timeline.ShareCardCallback;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -61,8 +61,8 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
       SpannableFactory spannableFactory, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository, InstalledRepository installedRepository) {
     super(socialArticle, numberOfLikes, numberOfComments, store, user,
-        socialArticle.getUserSharer(), socialArticle.getMy().isLiked(), socialArticle.getLikes(),
-        date, spannableFactory, dateCalculator, abUrl);
+        socialArticle.getUserSharer(), socialArticle.getMy()
+            .isLiked(), socialArticle.getLikes(), date, spannableFactory, dateCalculator, abUrl);
     this.articleTitle = articleTitle;
     this.link = link;
     this.developerLink = developerLink;
@@ -94,20 +94,27 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
     String abTestingURL = null;
 
     if (socialArticle.getAb() != null
-        && socialArticle.getAb().getConversion() != null
-        && socialArticle.getAb().getConversion().getUrl() != null) {
-      abTestingURL = socialArticle.getAb().getConversion().getUrl();
+        && socialArticle.getAb()
+        .getConversion() != null
+        && socialArticle.getAb()
+        .getConversion()
+        .getUrl() != null) {
+      abTestingURL = socialArticle.getAb()
+          .getConversion()
+          .getUrl();
     }
 
     return new SocialArticleDisplayable(socialArticle, socialArticle.getTitle(),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, socialArticle.getUrl()),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
-            socialArticle.getPublisher().getBaseUrl()), socialArticle.getPublisher().getName(),
-        socialArticle.getThumbnailUrl(), socialArticle.getPublisher().getLogoUrl(), appId,
-        abTestingURL, socialArticle.getStore(), socialArticle.getUser(),
-        socialArticle.getStats().getLikes(), socialArticle.getStats().getComments(),
-        socialArticle.getApps(), socialArticle.getDate(), dateCalculator, spannableFactory,
-        timelineAnalytics, socialRepository, installedRepository);
+            socialArticle.getPublisher()
+                .getBaseUrl()), socialArticle.getPublisher()
+        .getName(), socialArticle.getThumbnailUrl(), socialArticle.getPublisher()
+        .getLogoUrl(), appId, abTestingURL, socialArticle.getStore(), socialArticle.getUser(),
+        socialArticle.getStats()
+            .getLikes(), socialArticle.getStats()
+        .getComments(), socialArticle.getApps(), socialArticle.getDate(), dateCalculator,
+        spannableFactory, timelineAnalytics, socialRepository, installedRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -115,12 +122,14 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
       List<String> packageNamesList = new ArrayList<>();
 
       for (int i = 0; i < relatedToAppsList.size(); i++) {
-        packageNamesList.add(relatedToAppsList.get(i).getPackageName());
+        packageNamesList.add(relatedToAppsList.get(i)
+            .getPackageName());
       }
 
       final String[] packageNames = packageNamesList.toArray(new String[packageNamesList.size()]);
 
-      return installedRepository.getInstalled(packageNames).observeOn(Schedulers.computation());
+      return installedRepository.getInstalled(packageNames)
+          .observeOn(Schedulers.computation());
       //appId = video.getApps().get(0).getId();
     }
     return Observable.just(null);

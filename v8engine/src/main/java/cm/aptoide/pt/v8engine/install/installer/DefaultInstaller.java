@@ -24,12 +24,12 @@ import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.download.InstallEvent;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.download.InstallEvent;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import cm.aptoide.pt.v8engine.install.root.RootShell;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import java.io.File;
 import java.util.List;
 import lombok.AccessLevel;
@@ -43,8 +43,8 @@ import rx.schedulers.Schedulers;
  */
 public class DefaultInstaller implements Installer {
 
-  public static final String OBB_FOLDER =
-      Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/";
+  public static final String OBB_FOLDER = Environment.getExternalStorageDirectory()
+      .getAbsolutePath() + "/Android/obb/";
   public static final String ROOT_INSTALL_COMMAND = "pm install -r ";
   private static final String TAG = DefaultInstaller.class.getSimpleName();
   @Getter(AccessLevel.PACKAGE) private final PackageManager packageManager;
@@ -82,14 +82,16 @@ public class DefaultInstaller implements Installer {
           installation.setType(Installed.TYPE_UNKNOWN);
           moveInstallationFiles(installation);
         })
-        .flatMap(installation -> isInstalled(md5).first().flatMap(isInstalling -> {
-          if (isInstalling) {
-            return Observable.just(null);
-          } else {
-            return startInstallation(context, installation);
-          }
-        }))
-        .doOnError((throwable) -> CrashReport.getInstance().log(throwable))
+        .flatMap(installation -> isInstalled(md5).first()
+            .flatMap(isInstalling -> {
+              if (isInstalling) {
+                return Observable.just(null);
+              } else {
+                return startInstallation(context, installation);
+              }
+            }))
+        .doOnError((throwable) -> CrashReport.getInstance()
+            .log(throwable))
         .toCompletable();
   }
 
@@ -111,7 +113,7 @@ public class DefaultInstaller implements Installer {
     final IntentFilter intentFilter = new IntentFilter();
     intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
     intentFilter.addDataScheme("package");
-    return Observable.<Void> fromCallable(() -> {
+    return Observable.<Void>fromCallable(() -> {
       startUninstallIntent(context, packageName, uri);
       return null;
     }).flatMap(uninstallStarted -> waitPackageIntent(context, intentFilter, packageName))
@@ -119,15 +121,17 @@ public class DefaultInstaller implements Installer {
   }
 
   @Override public Observable<InstallationState> getState(String packageName, int versionCode) {
-    return installedRepository.getAsList(packageName, versionCode).map(installed -> {
-      if (installed != null) {
-        return new InstallationState(installed.getPackageName(), installed.getVersionCode(),
-            installed.getStatus(), installed.getType(), installed.getName(), installed.getIcon());
-      } else {
-        return new InstallationState(packageName, versionCode, Installed.STATUS_UNINSTALLED,
-            Installed.TYPE_UNKNOWN);
-      }
-    });
+    return installedRepository.getAsList(packageName, versionCode)
+        .map(installed -> {
+          if (installed != null) {
+            return new InstallationState(installed.getPackageName(), installed.getVersionCode(),
+                installed.getStatus(), installed.getType(), installed.getName(),
+                installed.getIcon());
+          } else {
+            return new InstallationState(packageName, versionCode, Installed.STATUS_UNINSTALLED,
+                Installed.TYPE_UNKNOWN);
+          }
+        });
   }
 
   @NonNull
@@ -140,8 +144,9 @@ public class DefaultInstaller implements Installer {
 
   private Observable<Installation> rootInstall(Installation installation) {
     if (ManagerPreferences.allowRootInstallation()) {
-      return Observable.create(new RootCommandOnSubscribe(installation.getId().hashCode(),
-          ROOT_INSTALL_COMMAND + installation.getFile().getAbsolutePath()))
+      return Observable.create(new RootCommandOnSubscribe(installation.getId()
+          .hashCode(), ROOT_INSTALL_COMMAND + installation.getFile()
+          .getAbsolutePath()))
           .subscribeOn(Schedulers.computation())
           .map(success -> installation)
           .startWith(
@@ -160,7 +165,8 @@ public class DefaultInstaller implements Installer {
       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       context.startActivity(intent);
     } catch (PackageManager.NameNotFoundException e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
       throw new InstallationException(e);
     }
   }
@@ -200,7 +206,7 @@ public class DefaultInstaller implements Installer {
     intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
     intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
     intentFilter.addDataScheme("package");
-    return Observable.<Void> fromCallable(() -> {
+    return Observable.<Void>fromCallable(() -> {
       startInstallIntent(context, installation.getFile());
       return null;
     }).subscribeOn(Schedulers.computation())
@@ -228,9 +234,8 @@ public class DefaultInstaller implements Installer {
     //read: https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en
     if (Build.VERSION.SDK_INT > 23) {
       //content://....apk for nougat
-      photoURI =
-          FileProvider.getUriForFile(context, V8Engine.getConfiguration().getAppId() + ".provider",
-              file);
+      photoURI = FileProvider.getUriForFile(context, V8Engine.getConfiguration()
+          .getAppId() + ".provider", file);
     } else {
       //file://....apk for < nougat
       photoURI = Uri.fromFile(file);
@@ -247,7 +252,9 @@ public class DefaultInstaller implements Installer {
   @NonNull private Observable<Void> waitPackageIntent(Context context, IntentFilter intentFilter,
       String packageName) {
     return Observable.create(new BroadcastRegisterOnSubscribe(context, intentFilter, null, null))
-        .first(intent -> intent.getData().toString().contains(packageName))
+        .first(intent -> intent.getData()
+            .toString()
+            .contains(packageName))
         .map(intent -> null);
   }
 
@@ -257,7 +264,8 @@ public class DefaultInstaller implements Installer {
       info = packageManager.getPackageInfo(packageName, 0);
       return (info != null && info.versionCode == versionCode);
     } catch (PackageManager.NameNotFoundException e) {
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
       return false;
     }
   }

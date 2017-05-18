@@ -35,12 +35,14 @@ import com.jakewharton.rxbinding.view.RxView;
     more.setVisibility(moreIsVisible && displayable.isMoreVisible() ? View.VISIBLE : View.GONE);
 
     if (moreIsVisible) {
-      compositeSubscription.add(RxView.clicks(more).subscribe(a -> {
-        getFragmentNavigator().navigateUsing(wsWidget.getActions().get(0).getEvent(),
-            displayable.getStoreTheme(), wsWidget.getTitle(), displayable.getTag(),
-            displayable.getStoreContext());
-        Analytics.AppViewViewedFrom.addStepToList(wsWidget.getTag());
-      }));
+      compositeSubscription.add(RxView.clicks(more)
+          .subscribe(a -> {
+            getFragmentNavigator().navigateUsing(wsWidget.getActions()
+                    .get(0)
+                    .getEvent(), displayable.getStoreTheme(), wsWidget.getTitle(), displayable.getTag(),
+                displayable.getStoreContext());
+            Analytics.AppViewViewedFrom.addStepToList(wsWidget.getTag());
+          }));
     }
   }
 }

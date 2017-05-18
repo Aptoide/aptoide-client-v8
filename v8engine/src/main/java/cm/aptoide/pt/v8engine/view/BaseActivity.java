@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/08/2016.
+ * Modified on 29/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view;
@@ -34,8 +34,10 @@ public abstract class BaseActivity extends PermissionServiceActivity {
           getResources().getConfiguration().locale.getLanguage());
     } else {
       ((CrashlyticsCrashLogger) CrashReport.getInstance()
-          .getLogger(CrashlyticsCrashLogger.class)).setLanguage(
-          getResources().getConfiguration().getLocales().get(0).getLanguage());
+          .getLogger(CrashlyticsCrashLogger.class)).setLanguage(getResources().getConfiguration()
+          .getLocales()
+          .get(0)
+          .getLanguage());
     }
 
     setUpAnalytics();

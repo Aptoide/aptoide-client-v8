@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/08/2016.
+ * Modified on 02/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.store;
@@ -23,10 +23,10 @@ import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.interfaces.DisplayableManager;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.view.Translator;
+import cm.aptoide.pt.v8engine.view.fragment.DisplayableManager;
 import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import java.util.List;
@@ -71,15 +71,21 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     Bundle args = new Bundle();
 
     if (event.getType() != null) {
-      args.putString(BundleCons.TYPE, event.getType().toString());
+      args.putString(BundleCons.TYPE, event.getType()
+          .toString());
     }
 
     if (event.getName() != null) {
-      args.putString(BundleCons.NAME, event.getName().toString());
+      args.putString(BundleCons.NAME, event.getName()
+          .toString());
     }
 
-    if (event.getData() != null && event.getData().getLayout() != null) {
-      args.putString(BundleCons.LAYOUT, event.getData().getLayout().toString());
+    if (event.getData() != null
+        && event.getData()
+        .getLayout() != null) {
+      args.putString(BundleCons.LAYOUT, event.getData()
+          .getLayout()
+          .toString());
     }
 
     if (storeContext != null) {
@@ -136,9 +142,11 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
         DisplayableManager displayableManager = this;
         displayablesObservable.compose(bindUntilEvent(LifecycleEvent.DESTROY))
             .subscribe(displayables -> {
-              displayableManager.clearDisplayables().addDisplayables(displayables, true);
+              displayableManager.clearDisplayables()
+                  .addDisplayables(displayables, true);
             }, err -> {
-              CrashReport.getInstance().log(err);
+              CrashReport.getInstance()
+                  .log(err);
               StoreTabGridRecyclerFragment.this.finishLoading(err);
             });
       }

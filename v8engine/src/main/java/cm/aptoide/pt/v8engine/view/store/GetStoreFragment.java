@@ -18,12 +18,15 @@ public class GetStoreFragment extends StoreTabWidgetsGridRecyclerFragment {
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
     Observable<GetStore> getStoreObservable;
     if (name == Event.Name.getUser) {
-      getStoreObservable = requestFactory.newGetUser(url).observe(refresh);
+      getStoreObservable = requestFactory.newGetUser(url)
+          .observe(refresh);
     } else {
-      getStoreObservable = requestFactory.newStore(url).observe(refresh);
+      getStoreObservable = requestFactory.newStore(url)
+          .observe(refresh);
     }
     return getStoreObservable.observeOn(Schedulers.io())
-        .flatMap(getStore -> loadGetStoreWidgets(getStore.getNodes().getWidgets(), refresh, url))
+        .flatMap(getStore -> loadGetStoreWidgets(getStore.getNodes()
+            .getWidgets(), refresh, url))
         .doOnNext(displayables -> {
           // We only want Adult Switch in Home Fragment.
           if (getParentFragment() != null && getParentFragment() instanceof HomeFragment) {

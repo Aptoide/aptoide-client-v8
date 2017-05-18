@@ -70,7 +70,6 @@
 
     <activity
         android:name="cm.aptoide.pt.spotandshareandroid.HighwayTransferRecordActivity"
-
         android:configChanges="orientation|keyboardHidden|screenSize">
 
     </activity>

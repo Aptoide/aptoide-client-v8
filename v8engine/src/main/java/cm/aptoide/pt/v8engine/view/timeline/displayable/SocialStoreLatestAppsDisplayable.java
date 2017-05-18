@@ -6,12 +6,12 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.SocialStoreLatestApps;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.interfaces.ShareCardCallback;
-import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
-import cm.aptoide.pt.v8engine.repository.SocialRepository;
-import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.timeline.SocialRepository;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.v8engine.view.timeline.ShareCardCallback;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.EqualsAndHashCode;
@@ -48,8 +48,9 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
       StoreCredentialsProvider storeCredentialsProvider) {
     super(socialStoreLatestApps, likes, comments, socialStoreLatestApps.getOwnerStore(),
         socialStoreLatestApps.getUser(), socialStoreLatestApps.getUserSharer(),
-        socialStoreLatestApps.getMy().isLiked(), socialStoreLatestApps.getLikes(),
-        socialStoreLatestApps.getDate(), spannableFactory, dateCalculator, abTestingUrl);
+        socialStoreLatestApps.getMy()
+            .isLiked(), socialStoreLatestApps.getLikes(), socialStoreLatestApps.getDate(),
+        spannableFactory, dateCalculator, abTestingUrl);
     this.storeName = storeName;
     //socialStoreLatestApps.getSharedStore().getId();
     this.avatarUrl = avatarUrl;
@@ -77,23 +78,31 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
     String abTestingURL = null;
 
     if (socialStoreLatestApps.getAb() != null
-        && socialStoreLatestApps.getAb().getConversion() != null
-        && socialStoreLatestApps.getAb().getConversion().getUrl() != null) {
-      abTestingURL = socialStoreLatestApps.getAb().getConversion().getUrl();
+        && socialStoreLatestApps.getAb()
+        .getConversion() != null
+        && socialStoreLatestApps.getAb()
+        .getConversion()
+        .getUrl() != null) {
+      abTestingURL = socialStoreLatestApps.getAb()
+          .getConversion()
+          .getUrl();
     }
 
     String ownerStoreName = "";
     String ownerStoreAvatar = "";
     if (socialStoreLatestApps.getOwnerStore() != null) {
-      ownerStoreName = socialStoreLatestApps.getOwnerStore().getName();
-      ownerStoreAvatar = socialStoreLatestApps.getOwnerStore().getAvatar();
+      ownerStoreName = socialStoreLatestApps.getOwnerStore()
+          .getName();
+      ownerStoreAvatar = socialStoreLatestApps.getOwnerStore()
+          .getAvatar();
     }
 
-    // TODO: 22/12/2016 socialStoreLatestApps.getLatestUpdate() 
+    // TODO: 22/12/2016 socialStoreLatestApps.getLatestUpdate()
     return new SocialStoreLatestAppsDisplayable(socialStoreLatestApps, ownerStoreName,
-        ownerStoreAvatar, latestApps, abTestingURL, socialStoreLatestApps.getStats().getLikes(),
-        socialStoreLatestApps.getStats().getComments(), dateCalculator, timelineAnalytics,
-        socialRepository, spannableFactory, storeCredentialsProvider);
+        ownerStoreAvatar, latestApps, abTestingURL, socialStoreLatestApps.getStats()
+        .getLikes(), socialStoreLatestApps.getStats()
+        .getComments(), dateCalculator, timelineAnalytics, socialRepository, spannableFactory,
+        storeCredentialsProvider);
   }
 
   @Override public int getViewLayout() {

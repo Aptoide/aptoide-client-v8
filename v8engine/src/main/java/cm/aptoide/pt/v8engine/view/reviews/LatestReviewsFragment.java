@@ -14,9 +14,9 @@ import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
-import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -92,7 +92,8 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
               StoreUtils.getStoreCredentials(storeId, storeCredentialsProvider),
               baseBodyInterceptor, httpClient, converterFactory);
       Action1<ListFullReviews> listFullReviewsAction = listTopFullReviews -> {
-        List<FullReview> reviews = listTopFullReviews.getDatalist().getList();
+        List<FullReview> reviews = listTopFullReviews.getDatalist()
+            .getList();
         displayables = new LinkedList<>();
         for (final FullReview review : reviews) {
           displayables.add(new RowReviewDisplayable(review));

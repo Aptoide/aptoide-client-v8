@@ -65,7 +65,8 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
       return true;
     } else if (itemId == R.id.menu_clear) {
       //DeprecatedDatabase.RollbackQ.deleteAll(realm);
-      AccessorFactory.getAccessorFor(Rollback.class).removeAll();
+      AccessorFactory.getAccessorFor(Rollback.class)
+          .removeAll();
       clearDisplayables();
       finishLoading();
       return true;
@@ -101,7 +102,8 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
         .subscribe(rollbacks -> {
           if (rollbacks == null || rollbacks.isEmpty()) {
             emptyData.setText(AptoideUtils.StringU.getFormattedString(R.string.no_rollbacks_msg,
-                Application.getConfiguration().getMarketName()));
+                Application.getConfiguration()
+                    .getMarketName()));
             emptyData.setVisibility(View.VISIBLE);
           } else {
             emptyData.setVisibility(View.GONE);

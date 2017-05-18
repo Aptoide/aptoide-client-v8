@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.downloadmanager;
@@ -108,8 +108,8 @@ class DownloadTask extends FileDownloadLargeFileListener {
     for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
       progress += fileToDownload.getProgress();
     }
-    download.setOverallProgress(
-        (int) Math.floor((float) progress / download.getFilesToDownload().size()));
+    download.setOverallProgress((int) Math.floor((float) progress / download.getFilesToDownload()
+        .size()));
     saveDownloadInDb(download);
     Logger.d(TAG, "Download: " + download.getMd5() + " Progress: " + download.getOverallProgress());
     return download;
@@ -123,8 +123,11 @@ class DownloadTask extends FileDownloadLargeFileListener {
     Observable.fromCallable(() -> {
       downloadAccessor.save(download);
       return null;
-    }).subscribeOn(Schedulers.io()).subscribe(__ -> {
-    }, err -> CrashReport.getInstance().log(err));
+    })
+        .subscribeOn(Schedulers.io())
+        .subscribe(__ -> {
+        }, err -> CrashReport.getInstance()
+            .log(err));
   }
 
   private void setDownloadStatus(@Download.DownloadState int status, Download download,
@@ -201,12 +204,13 @@ class DownloadTask extends FileDownloadLargeFileListener {
               return Observable.just(null);
             }
           }
-          return CheckMd5AndMoveFileToRightPlace(download).doOnNext(fileMoved -> {
+          return checkMd5AndMoveFileToRightPlace(download).doOnNext(fileMoved -> {
             if (fileMoved) {
               Logger.d(TAG, "Download md5 match");
               file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
             } else {
               Logger.e(TAG, "Download md5 is not correct");
+              downloadManager.deleteDownloadlFiles(download);
               download.setDownloadError(Download.GENERIC_ERROR);
               setDownloadStatus(Download.ERROR, download, task);
             }
@@ -265,10 +269,11 @@ class DownloadTask extends FileDownloadLargeFileListener {
   private void stopDownloadQueue(Download download) {
     //this try catch sucks
     try {
-      for (int i = download.getFilesToDownload().size() - 1; i >= 0; i--) {
-        FileToDownload fileToDownload = download.getFilesToDownload().get(i);
-        fileDownloader
-            .getStatus(fileToDownload.getDownloadId(), fileToDownload.getPath());
+      for (int i = download.getFilesToDownload()
+          .size() - 1; i >= 0; i--) {
+        FileToDownload fileToDownload = download.getFilesToDownload()
+            .get(i);
+        fileDownloader.getStatus(fileToDownload.getDownloadId(), fileToDownload.getPath());
         int taskId = fileDownloader.replaceListener(fileToDownload.getDownloadId(), null);
         if (taskId != 0) {
           fileDownloader.pause(taskId);
@@ -295,8 +300,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
         if (TextUtils.isEmpty(fileToDownload.getLink())) {
           throw new IllegalArgumentException("A link to download must be provided");
         }
-        BaseDownloadTask baseDownloadTask = fileDownloader
-            .create(fileToDownload.getLink())
+        BaseDownloadTask baseDownloadTask = fileDownloader.create(fileToDownload.getLink())
             .setAutoRetryTimes(RETRY_TIMES);
         /*
          * Aptoide - events 2 : download
@@ -311,8 +315,10 @@ class DownloadTask extends FileDownloadLargeFileListener {
          */
 
         baseDownloadTask.setTag(APTOIDE_DOWNLOAD_TASK_TAG_KEY, this);
-        if (fileToDownload.getFileName().endsWith(".temp")) {
-          fileToDownload.setFileName(fileToDownload.getFileName().replace(".temp", ""));
+        if (fileToDownload.getFileName()
+            .endsWith(".temp")) {
+          fileToDownload.setFileName(fileToDownload.getFileName()
+              .replace(".temp", ""));
         }
         fileToDownload.setDownloadId(baseDownloadTask.setListener(this)
             .setCallbackProgressTimes(AptoideDownloadManager.PROGRESS_MAX_VALUE)
@@ -334,20 +340,19 @@ class DownloadTask extends FileDownloadLargeFileListener {
     saveDownloadInDb(download);
   }
 
-  private Observable<Boolean> CheckMd5AndMoveFileToRightPlace(Download download) {
+  private Observable<Boolean> checkMd5AndMoveFileToRightPlace(Download download) {
     return Observable.fromCallable(() -> {
       for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-        fileToDownload.setFileName(fileToDownload.getFileName().replace(".temp", ""));
+        fileToDownload.setFileName(fileToDownload.getFileName()
+            .replace(".temp", ""));
         if (!TextUtils.isEmpty(fileToDownload.getMd5())) {
-          if (!TextUtils.equals(AptoideUtils.AlgorithmU.computeMd5(new File(
-                  genericPath + fileToDownload.getFileName())),
-              fileToDownload.getMd5())) {
+          if (!TextUtils.equals(AptoideUtils.AlgorithmU.computeMd5(
+              new File(genericPath + fileToDownload.getFileName())), fileToDownload.getMd5())) {
             return false;
           }
         }
         String newFilePath = getFilePathFromFileType(fileToDownload);
-        fileUtils.copyFile(genericPath, newFilePath,
-            fileToDownload.getFileName());
+        fileUtils.copyFile(genericPath, newFilePath, fileToDownload.getFileName());
         fileToDownload.setPath(newFilePath);
       }
       return true;

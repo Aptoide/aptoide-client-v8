@@ -1,18 +1,15 @@
 package cm.aptoide.accountmanager;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import java.util.List;
 
 public class AccountFactory {
 
-  private final AptoideClientUUID aptoideClientUUID;
   private final ExternalAccountFactory externalAccountFactory;
   private final AccountService accountService;
 
-  public AccountFactory(AptoideClientUUID aptoideClientUUID,
-      ExternalAccountFactory externalAccountFactory, AccountService accountService) {
-    this.aptoideClientUUID = aptoideClientUUID;
+  public AccountFactory(ExternalAccountFactory externalAccountFactory,
+      AccountService accountService) {
     this.externalAccountFactory = externalAccountFactory;
     this.accountService = accountService;
   }
@@ -24,7 +21,7 @@ public class AccountFactory {
     final Account aptoideAccount =
         new AptoideAccount(id, name, nickname, avatar, refreshToken, token, password, type, store,
             storeAvatar, adultContentEnabled, getAccessFrom(access), accessConfirmed, stores,
-            aptoideClientUUID, accountService);
+            accountService);
     switch (type) {
       case APTOIDE:
         return aptoideAccount;

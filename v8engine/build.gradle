@@ -128,6 +128,7 @@ dependencies {
   compile project(path: ':crashreports', configuration: 'release')
   compile project(path: ':imageloader', configuration: 'release')
   compile project(path: ':downloadmanager', configuration: 'release')
+  compile project(path: ':spotandshareandroid')
 
   //
   // custom libs in folders
@@ -226,8 +227,8 @@ dependencies {
   compile("com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}")
 
   // Parceler - https://github.com/johncarl81/parceler
-  //compile 'org.parceler:parceler-api:1.1.6'
-  //annotationProcessor 'org.parceler:parceler:1.1.6'
+  compile "org.parceler:parceler-api:${PARCELER_VERSION}"
+  annotationProcessor "org.parceler:parceler:${PARCELER_VERSION}"
 
   compile "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
   //noinspection GradleDependency

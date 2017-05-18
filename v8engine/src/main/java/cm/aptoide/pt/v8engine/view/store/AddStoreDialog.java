@@ -24,31 +24,29 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
-import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.util.StoreUtils;
-import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
+import cm.aptoide.pt.v8engine.search.websocket.StoreAutoCompleteWebSocket;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.v8engine.store.StoreUtils;
+import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.dialog.BaseDialog;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.search.StoreSearchActivity;
-import cm.aptoide.pt.v8engine.websocket.StoreAutoCompleteWebSocket;
 import com.jakewharton.rxbinding.view.RxView;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created with IntelliJ IDEA. User: rmateus Date: 18-10-2013 Time: 17:27 To change this template
@@ -61,12 +59,13 @@ public class AddStoreDialog extends BaseDialog {
   public static final int PRIVATE_STORE_ERROR_CODE = 22;
   private static final String TAG = AddStoreDialog.class.getName();
   private static StoreAutoCompleteWebSocket storeAutoCompleteWebSocket;
+
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
+
   private AptoideAccountManager accountManager;
   private FragmentNavigator navigator;
   private String storeName;
   private Dialog loadingDialog;
-  private CompositeSubscription mSubscriptions;
   private SearchView searchView;
   private Button addStoreButton;
   private LinearLayout topStoresButton;
@@ -112,7 +111,7 @@ public class AddStoreDialog extends BaseDialog {
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     baseBodyBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    mSubscriptions = new CompositeSubscription();
+
     if (savedInstanceState != null) {
       storeName = savedInstanceState.getString(BundleArgs.STORE_NAME.name());
     }
@@ -121,19 +120,28 @@ public class AddStoreDialog extends BaseDialog {
   @Override public void onViewCreated(final View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     bindViews(view);
-    setupSearchView(view);
+    setupSearchView();
     setupStoreSearch(searchView);
-    mSubscriptions.add(RxView.clicks(addStoreButton).subscribe(click -> {
-      addStoreAction();
-    }));
-    mSubscriptions.add(RxView.clicks(topStoresButton).subscribe(click -> topStoresAction()));
-    mSubscriptions.add(RxView.clicks(topStoreText1).subscribe(click -> topStoresAction()));
-    mSubscriptions.add(RxView.clicks(topStoreText2).subscribe(click -> topStoresAction()));
+    RxView.clicks(addStoreButton)
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(click -> {
+          addStoreAction();
+        });
+    RxView.clicks(topStoresButton)
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(click -> topStoresAction());
+
+    RxView.clicks(topStoreText1)
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(click -> topStoresAction());
+
+    RxView.clicks(topStoreText2)
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(click -> topStoresAction());
   }
 
   @Override public void onDetach() {
     super.onDetach();
-    mSubscriptions.clear();
     if (storeAutoCompleteWebSocket != null) {
       storeAutoCompleteWebSocket.disconnect();
     }
@@ -160,13 +168,15 @@ public class AddStoreDialog extends BaseDialog {
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     if (getDialog() != null) {
-      getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+      getDialog().getWindow()
+          .requestFeature(Window.FEATURE_NO_TITLE);
     }
     return inflater.inflate(R.layout.dialog_add_store, container, false);
   }
 
   private void addStoreAction() {
-    givenStoreName = searchView.getQuery().toString();
+    givenStoreName = searchView.getQuery()
+        .toString();
     if (givenStoreName.length() > 0) {
       AddStoreDialog.this.storeName = givenStoreName;
       getStore(givenStoreName);
@@ -184,7 +194,7 @@ public class AddStoreDialog extends BaseDialog {
     searchAutoComplete = (SearchView.SearchAutoComplete) view.findViewById(R.id.search_src_text);
   }
 
-  private void setupSearchView(View view) {
+  private void setupSearchView() {
     searchView.setIconifiedByDefault(false);
     image.setImageDrawable(null);
     searchAutoComplete.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -199,11 +209,11 @@ public class AddStoreDialog extends BaseDialog {
   }
 
   private void setupStoreSearch(SearchView searchView) {
-    final SearchManager searchManager =
-        (SearchManager) V8Engine.getContext().getSystemService(Context.SEARCH_SERVICE);
+    final SearchManager searchManager = (SearchManager) V8Engine.getContext()
+        .getSystemService(Context.SEARCH_SERVICE);
     ComponentName cn = new ComponentName(V8Engine.getContext(), StoreSearchActivity.class);
     searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
-    StoreAutoCompleteWebSocket storeAutoCompleteWebSocket = new StoreAutoCompleteWebSocket();
+    storeAutoCompleteWebSocket = new StoreAutoCompleteWebSocket();
 
     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
       @Override public boolean onQueryTextSubmit(String query) {
@@ -225,7 +235,8 @@ public class AddStoreDialog extends BaseDialog {
       }
 
       @Override public boolean onSuggestionClick(int position) {
-        Cursor item = (Cursor) searchView.getSuggestionsAdapter().getItem(position);
+        Cursor item = (Cursor) searchView.getSuggestionsAdapter()
+            .getItem(position);
         givenStoreName = item.getString(1);
         searchView.setQuery(givenStoreName, false);
         return true;
@@ -260,7 +271,8 @@ public class AddStoreDialog extends BaseDialog {
   }
 
   private void topStoresAction() {
-    navigator.navigateTo(V8Engine.getFragmentProvider().newFragmentTopStores());
+    navigator.navigateTo(V8Engine.getFragmentProvider()
+        .newFragmentTopStores());
     if (isAdded()) {
       dismiss();
     }
@@ -273,8 +285,6 @@ public class AddStoreDialog extends BaseDialog {
   }
 
   private void executeRequest(GetStoreMetaRequest getHomeMetaRequest) {
-    final IdsRepositoryImpl clientUuid =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     new StoreUtilsProxy(accountManager, baseBodyBodyInterceptor, storeCredentialsProvider,
         AccessorFactory.getAccessorFor(Store.class), httpClient,
         WebService.getDefaultConverter()).subscribeStore(getHomeMetaRequest, getStoreMeta1 -> {

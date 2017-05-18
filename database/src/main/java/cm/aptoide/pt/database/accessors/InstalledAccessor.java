@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.database.accessors;
@@ -15,7 +15,7 @@ import rx.Observable;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by sithengineer on 01/09/16.
+ * Created on 01/09/16.
  */
 public class InstalledAccessor extends SimpleAccessor<Installed> {
 
@@ -24,7 +24,8 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<List<Installed>> getAllInstalled() {
-    return database.getAll(Installed.class).flatMap(installs -> filterCompleted(installs));
+    return database.getAll(Installed.class)
+        .flatMap(installs -> filterCompleted(installs));
   }
 
   public Observable<List<Installed>> getAllInstalledSorted() {
@@ -141,5 +142,4 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   public Observable<Installed> get(String packageNameAndVersionCode) {
     return database.get(Installed.class, "packageAndVersionCode", packageNameAndVersionCode);
   }
-
 }

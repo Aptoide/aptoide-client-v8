@@ -43,24 +43,28 @@ public class RxAlertDialog implements DialogInterface {
 
   public Observable<DialogInterface> positiveClicks() {
     if (positiveClick != null) {
-      return positiveClick.clicks().map(click -> this);
+      return positiveClick.clicks()
+          .map(click -> this);
     }
     return Observable.empty();
   }
 
   public Observable<DialogInterface> negativeClicks() {
     if (negativeClick != null) {
-      return negativeClick.clicks().map(click -> this);
+      return negativeClick.clicks()
+          .map(click -> this);
     }
     return Observable.empty();
   }
 
   public Observable<DialogInterface> cancels() {
-    return cancelEvent.cancels().map(click -> this);
+    return cancelEvent.cancels()
+        .map(click -> this);
   }
 
   public Observable<DialogInterface> dismisses() {
-    return dismissEvent.dismisses().map(click -> this);
+    return dismissEvent.dismisses()
+        .map(click -> this);
   }
 
   public static class Builder {

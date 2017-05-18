@@ -34,8 +34,8 @@ import rx.Observable;
   public static GetHomeMetaRequest ofAction(String url, StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
-    return new GetHomeMetaRequest(new Body(storeCredentials),
-        new V7Url(url).remove("home/getMeta").get(), bodyInterceptor, httpClient, converterFactory);
+    return new GetHomeMetaRequest(new Body(storeCredentials), new V7Url(url).remove("home/getMeta")
+        .get(), bodyInterceptor, httpClient, converterFactory);
   }
 
   @Override protected Observable<GetHomeMeta> loadDataFromNetwork(Interfaces interfaces,

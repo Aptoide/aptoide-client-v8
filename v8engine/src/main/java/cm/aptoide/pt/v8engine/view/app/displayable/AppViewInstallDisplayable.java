@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 25/08/2016.
+ * Modified on 25/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.app.displayable;
@@ -11,16 +11,15 @@ import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.repository.InstalledRepository;
-import cm.aptoide.pt.v8engine.repository.RollbackRepository;
-import cm.aptoide.pt.v8engine.util.DownloadFactory;
+import cm.aptoide.pt.v8engine.download.DownloadFactory;
+import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Observable;
 import rx.Single;
 
 /**
- * Created by sithengineer on 06/05/16.
+ * Created on 06/05/16.
  */
 public class AppViewInstallDisplayable extends AppViewDisplayable {
 
@@ -43,9 +42,20 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
       DownloadFactory downloadFactory) {
     super(getApp);
     this.installManager = installManager;
-    this.md5 = getApp.getNodes().getMeta().getData().getFile().getMd5sum();
-    this.packageName = getApp.getNodes().getMeta().getData().getPackageName();
-    this.versionCode = getApp.getNodes().getMeta().getData().getFile().getVercode();
+    this.md5 = getApp.getNodes()
+        .getMeta()
+        .getData()
+        .getFile()
+        .getMd5sum();
+    this.packageName = getApp.getNodes()
+        .getMeta()
+        .getData()
+        .getPackageName();
+    this.versionCode = getApp.getNodes()
+        .getMeta()
+        .getData()
+        .getFile()
+        .getVercode();
     this.minimalAd = minimalAd;
     this.shouldInstall = shouldInstall;
     this.downloadFactory = downloadFactory;
@@ -91,5 +101,4 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   public Single<InstallManager.Error> getError() {
     return installManager.getError(md5);
   }
-
 }

@@ -140,7 +140,9 @@ import static org.junit.Assert.fail;
     dbHelper.onUpgrade(db, newVersion - 1, newVersion);
 
     // main thread ID for asserting purposes
-    final long mainThreadId = Looper.getMainLooper().getThread().getId();
+    final long mainThreadId = Looper.getMainLooper()
+        .getThread()
+        .getId();
 
     // evaluate
     for (int i = 0; i < nr_values; i++) {
@@ -148,17 +150,21 @@ import static org.junit.Assert.fail;
       String currentMd5 = md5s[finalI];
 
       TestSubscriber<Scheduled> testSubscriber = TestSubscriber.create();
-      accessor.get(currentMd5).first().subscribe(testSubscriber);
+      accessor.get(currentMd5)
+          .first()
+          .subscribe(testSubscriber);
       testSubscriber.awaitTerminalEvent();
       testSubscriber.assertCompleted();
-      Scheduled scheduled = testSubscriber.getOnNextEvents().get(0);
+      Scheduled scheduled = testSubscriber.getOnNextEvents()
+          .get(0);
 
       if (scheduled == null) {
         fail("Scheduled download is null");
         return;
       }
 
-      assertNotEquals(mainThreadId, Thread.currentThread().getId());
+      assertNotEquals(mainThreadId, Thread.currentThread()
+          .getId());
 
       // assert data fields
       assertEquals(scheduled.getName(), insertedValues[finalI].get(ScheduledTable.name.getName()));
@@ -199,7 +205,8 @@ import static org.junit.Assert.fail;
     final String[] packageNames = new String[nr_values];
     final UpdateAccessor accessor = AccessorFactory.getAccessorFor(Update.class);
 
-    PackageManager pm = AptoideUtils.getContext().getPackageManager();
+    PackageManager pm = AptoideUtils.getContext()
+        .getPackageManager();
     List<PackageInfo> packageInfoList = pm.getInstalledPackages(PackageManager.GET_ACTIVITIES);
 
     db.beginTransaction();
@@ -232,7 +239,9 @@ import static org.junit.Assert.fail;
     dbHelper.onUpgrade(db, newVersion - 1, newVersion);
 
     // main thread ID for asserting purposes
-    final long mainThreadId = Looper.getMainLooper().getThread().getId();
+    final long mainThreadId = Looper.getMainLooper()
+        .getThread()
+        .getId();
 
     // evaluate
     for (int i = 0; i < nr_values; i++) {
@@ -240,17 +249,21 @@ import static org.junit.Assert.fail;
       String currentPackageName = packageNames[finalI];
 
       TestSubscriber<Update> testSubscriber = TestSubscriber.create();
-      accessor.get(currentPackageName).first().subscribe(testSubscriber);
+      accessor.get(currentPackageName)
+          .first()
+          .subscribe(testSubscriber);
       testSubscriber.awaitTerminalEvent();
       testSubscriber.assertCompleted();
-      Update excluded = testSubscriber.getOnNextEvents().get(0);
+      Update excluded = testSubscriber.getOnNextEvents()
+          .get(0);
 
       if (excluded == null) {
         fail("Installed download is null");
         return;
       }
 
-      assertNotEquals(mainThreadId, Thread.currentThread().getId());
+      assertNotEquals(mainThreadId, Thread.currentThread()
+          .getId());
 
       // assert data fields
       assertEquals(excluded.getPackageName(),

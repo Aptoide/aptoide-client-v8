@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.v8engine.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import java.io.InputStream;
 import java.util.Properties;
@@ -47,7 +47,8 @@ public class ApkFy {
     String appId = null;
     try {
       final String sourceDir = context.getPackageManager()
-          .getPackageInfo(V8Engine.getConfiguration().getAppId(), 0).applicationInfo.sourceDir;
+          .getPackageInfo(V8Engine.getConfiguration()
+              .getAppId(), 0).applicationInfo.sourceDir;
       final ZipFile myZipFile = new ZipFile(sourceDir);
       final ZipEntry entry = myZipFile.getEntry("META-INF/aob");
       if (entry != null) {
@@ -63,10 +64,12 @@ public class ApkFy {
       }
     } catch (Exception e) {
       if (appId != null) {
-        CrashReport.getInstance().log("APKFY_APP_ID", appId);
+        CrashReport.getInstance()
+            .log("APKFY_APP_ID", appId);
       }
       Logger.d(TAG, e.getMessage());
-      CrashReport.getInstance().log(e);
+      CrashReport.getInstance()
+          .log(e);
     }
     return null;
   }

@@ -58,10 +58,12 @@ public class AptoideFileServerSocket<T> extends AptoideServerSocket {
 
     try {
       for (String filePath : getFilePaths()) {
-        System.out.println(Thread.currentThread().getId() + ": Started sending " + filePath);
+        System.out.println(Thread.currentThread()
+            .getId() + ": Started sending " + filePath);
         in = new FileInputStream(filePath);
         copy(in, socket.getOutputStream(), progressAccumulator);
-        System.out.println(Thread.currentThread().getId() + ": Finished sending " + filePath);
+        System.out.println(Thread.currentThread()
+            .getId() + ": Finished sending " + filePath);
         in.close();
       }
     } catch (FileNotFoundException e) {

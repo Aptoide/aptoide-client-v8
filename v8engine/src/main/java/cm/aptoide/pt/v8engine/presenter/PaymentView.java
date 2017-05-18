@@ -19,6 +19,8 @@ public interface PaymentView extends View {
 
   Observable<Void> cancellationSelection();
 
+  Observable<Void> tapOutsideSelection();
+
   Observable<Void> buySelection();
 
   void showLoading();

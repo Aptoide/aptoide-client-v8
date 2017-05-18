@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/08/2016.
+ * Modified on 24/08/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -11,7 +11,7 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
- * Created by sithengineer on 12/05/16.
+ * Created on 12/05/16.
  */
 
 public class Update extends RealmObject {
@@ -67,13 +67,22 @@ public class Update extends RealmObject {
     //		versionCode = app.getFile().getVercode();
     //		signature = app.get;
     //		timestamp = app.getModified();
-    md5 = app.getFile().getMd5sum();
-    apkPath = app.getFile().getPath();
-    fileSize = app.getFile().getFilesize();
-    updateVersionName = app.getFile().getVername();
-    alternativeApkPath = app.getFile().getPathAlt();
-    updateVersionCode = app.getFile().getVercode();
-    trustedBadge = app.getFile().getMalware().getRank().name();
+    md5 = app.getFile()
+        .getMd5sum();
+    apkPath = app.getFile()
+        .getPath();
+    fileSize = app.getFile()
+        .getFilesize();
+    updateVersionName = app.getFile()
+        .getVername();
+    alternativeApkPath = app.getFile()
+        .getPathAlt();
+    updateVersionCode = app.getFile()
+        .getVercode();
+    trustedBadge = app.getFile()
+        .getMalware()
+        .getRank()
+        .name();
 
     Obb obb = app.getObb();
     if (obb != null) {

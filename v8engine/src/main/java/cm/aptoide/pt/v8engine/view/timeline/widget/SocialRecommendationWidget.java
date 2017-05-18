@@ -50,16 +50,20 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
     final FragmentActivity context = getContext();
     if (displayable.getStore() != null) {
       storeName.setVisibility(View.VISIBLE);
-      storeName.setText(displayable.getStore().getName());
+      storeName.setText(displayable.getStore()
+          .getName());
       storeAvatar.setVisibility(View.VISIBLE);
       ImageLoader.with(context)
-          .loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
+          .loadWithShadowCircleTransform(displayable.getStore()
+              .getAvatar(), storeAvatar);
       if (displayable.getUser() != null) {
         userName.setVisibility(View.VISIBLE);
-        userName.setText(displayable.getUser().getName());
+        userName.setText(displayable.getUser()
+            .getName());
         userAvatar.setVisibility(View.VISIBLE);
         ImageLoader.with(context)
-            .loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
+            .loadWithShadowCircleTransform(displayable.getUser()
+                .getAvatar(), userAvatar);
       } else {
         userName.setVisibility(View.GONE);
         userAvatar.setVisibility(View.GONE);
@@ -69,16 +73,19 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
       userAvatar.setVisibility(View.GONE);
       if (displayable.getUser() != null) {
         storeName.setVisibility(View.VISIBLE);
-        storeName.setText(displayable.getUser().getName());
+        storeName.setText(displayable.getUser()
+            .getName());
         storeAvatar.setVisibility(View.VISIBLE);
         ImageLoader.with(context)
-            .loadWithShadowCircleTransform(displayable.getUser().getAvatar(), storeAvatar);
+            .loadWithShadowCircleTransform(displayable.getUser()
+                .getAvatar(), storeAvatar);
       }
     }
 
     setCardViewMargin(displayable, cardView);
 
-    ImageLoader.with(context).load(displayable.getAppIcon(), appIcon);
+    ImageLoader.with(context)
+        .load(displayable.getAppIcon(), appIcon);
 
     appName.setText(displayable.getAppName());
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/08/2016.
+ * Modified on 12/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.app.widget;
@@ -19,6 +19,7 @@ import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewFlagThisDisplayable;
@@ -31,7 +32,7 @@ import okhttp3.OkHttpClient;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * Created by sithengineer on 30/06/16.
+ * Created on 30/06/16.
  */
 @Displayables({ AppViewFlagThisDisplayable.class }) public class AppViewFlagThisWidget
     extends Widget<AppViewFlagThisDisplayable> {
@@ -89,9 +90,12 @@ import rx.android.schedulers.AndroidSchedulers;
     accountNavigator =
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
     GetApp pojo = displayable.getPojo();
-    GetAppMeta.App app = pojo.getNodes().getMeta().getData();
+    GetAppMeta.App app = pojo.getNodes()
+        .getMeta()
+        .getData();
 
-    if (app.getFile().isGoodApp()) {
+    if (app.getFile()
+        .isGoodApp()) {
       goodAppLayoutWrapper.setVisibility(View.VISIBLE);
       flagsLayoutWrapper.setVisibility(View.GONE);
     } else {
@@ -103,18 +107,22 @@ import rx.android.schedulers.AndroidSchedulers;
 
   private void bindFlagViews(GetAppMeta.App app) {
     try {
-      GetAppMeta.GetAppMetaFile.Flags flags = app.getFile().getFlags();
-      if (flags != null && flags.getVotes() != null && !flags.getVotes().isEmpty()) {
+      GetAppMeta.GetAppMetaFile.Flags flags = app.getFile()
+          .getFlags();
+      if (flags != null && flags.getVotes() != null && !flags.getVotes()
+          .isEmpty()) {
         for (final GetAppMeta.GetAppMetaFile.Flags.Vote vote : flags.getVotes()) {
           applyCount(vote.getType(), vote.getCount());
         }
       }
     } catch (NullPointerException ex) {
-      CrashReport.getInstance().log(ex);
+      CrashReport.getInstance()
+          .log(ex);
     }
 
-    View.OnClickListener buttonListener =
-        handleButtonClick(app.getStore().getName(), app.getFile().getMd5sum());
+    View.OnClickListener buttonListener = handleButtonClick(app.getStore()
+        .getName(), app.getFile()
+        .getMd5sum());
     workingWellLayout.setOnClickListener(buttonListener);
     needsLicenseLayout.setOnClickListener(buttonListener);
     fakeAppLayout.setOnClickListener(buttonListener);
@@ -125,23 +133,23 @@ import rx.android.schedulers.AndroidSchedulers;
     String countAsString = Integer.toString(count);
     switch (type) {
       case GOOD:
-        workingWellText.setText(
-            NumberFormat.getIntegerInstance().format(Double.parseDouble(countAsString)));
+        workingWellText.setText(NumberFormat.getIntegerInstance()
+            .format(Double.parseDouble(countAsString)));
         break;
 
       case VIRUS:
-        virusText.setText(
-            NumberFormat.getIntegerInstance().format(Double.parseDouble(countAsString)));
+        virusText.setText(NumberFormat.getIntegerInstance()
+            .format(Double.parseDouble(countAsString)));
         break;
 
       case FAKE:
-        fakeAppText.setText(
-            NumberFormat.getIntegerInstance().format(Double.parseDouble(countAsString)));
+        fakeAppText.setText(NumberFormat.getIntegerInstance()
+            .format(Double.parseDouble(countAsString)));
         break;
 
       case LICENSE:
-        needsLicenceText.setText(
-            NumberFormat.getIntegerInstance().format(Double.parseDouble(countAsString)));
+        needsLicenceText.setText(NumberFormat.getIntegerInstance()
+            .format(Double.parseDouble(countAsString)));
         break;
 
       case FREEZE:
@@ -157,7 +165,7 @@ import rx.android.schedulers.AndroidSchedulers;
     return v -> {
       if (!accountManager.isLoggedIn()) {
         ShowMessage.asSnack(v, R.string.you_need_to_be_logged_in, R.string.login, snackView -> {
-          accountNavigator.navigateToAccountView();
+          accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.APP_VIEW_FLAG);
         });
         return;
       }
@@ -166,8 +174,8 @@ import rx.android.schedulers.AndroidSchedulers;
 
       final GetAppMeta.GetAppMetaFile.Flags.Vote.Type type = viewIdTypeMap.get(v.getId());
 
-      compositeSubscription.add(AddApkFlagRequest.of(storeName, md5, type.name().toLowerCase(),
-          accountManager.getAccessToken(), baseBodyInterceptorV3, httpClient)
+      compositeSubscription.add(AddApkFlagRequest.of(storeName, md5, type.name()
+          .toLowerCase(), accountManager.getAccessToken(), baseBodyInterceptorV3, httpClient)
           .observe(true)
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(response -> {
@@ -177,31 +185,31 @@ import rx.android.schedulers.AndroidSchedulers;
                 case GOOD:
                   voteSubmitted = true;
                   workingWellText.setText(NumberFormat.getIntegerInstance()
-                      .format(Double.parseDouble(
-                          String.valueOf(new BigDecimal(workingWellText.getText().toString())))
-                          + 1));
+                      .format(Double.parseDouble(String.valueOf(new BigDecimal(
+                          workingWellText.getText()
+                              .toString()))) + 1));
                   break;
 
                 case LICENSE:
                   voteSubmitted = true;
                   needsLicenceText.setText(NumberFormat.getIntegerInstance()
-                      .format(Double.parseDouble(
-                          String.valueOf(new BigDecimal(needsLicenceText.getText().toString())))
-                          + 1));
+                      .format(Double.parseDouble(String.valueOf(new BigDecimal(
+                          needsLicenceText.getText()
+                              .toString()))) + 1));
                   break;
 
                 case FAKE:
                   voteSubmitted = true;
                   fakeAppText.setText(NumberFormat.getIntegerInstance()
-                      .format(Double.parseDouble(
-                          String.valueOf(new BigDecimal(fakeAppText.getText().toString()))) + 1));
+                      .format(Double.parseDouble(String.valueOf(new BigDecimal(fakeAppText.getText()
+                          .toString()))) + 1));
                   break;
 
                 case VIRUS:
                   voteSubmitted = true;
                   virusText.setText(NumberFormat.getIntegerInstance()
-                      .format(Double.parseDouble(
-                          String.valueOf(new BigDecimal(virusText.getText().toString()))) + 1));
+                      .format(Double.parseDouble(String.valueOf(new BigDecimal(virusText.getText()
+                          .toString()))) + 1));
                   break;
 
                 case FREEZE:
@@ -227,7 +235,8 @@ import rx.android.schedulers.AndroidSchedulers;
             setAllButtonsUnPressed(v);
             ShowMessage.asSnack(getRootView(), R.string.unknown_error);
           }, error -> {
-            CrashReport.getInstance().log(error);
+            CrashReport.getInstance()
+                .log(error);
             setAllButtonsUnPressed(v);
             ShowMessage.asSnack(getRootView(), R.string.unknown_error);
           }));

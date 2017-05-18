@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.database.schedulers;
@@ -12,7 +12,7 @@ import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * Created by sithengineer on 31/08/16.
+ * Created on 31/08/16.
  *
  * <p>
  * {@link Scheduler} for Realm interactions. Most of this code was inspired in code from {@link

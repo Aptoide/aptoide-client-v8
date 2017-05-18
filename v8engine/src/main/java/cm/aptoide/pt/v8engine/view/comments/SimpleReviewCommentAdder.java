@@ -16,12 +16,15 @@ public class SimpleReviewCommentAdder extends CommentAdder {
   }
 
   @Override public void addComment(List<Comment> comments) {
-    int nextReviewPosition = commentAdderView.getAdapter().getItemPosition(itemIndex + 1);
-    nextReviewPosition = nextReviewPosition == -1 ? commentAdderView.getAdapter().getItemCount()
-        : nextReviewPosition;
-    commentAdderView.getAdapter().removeDisplayable(nextReviewPosition - 1);
+    int nextReviewPosition = commentAdderView.getAdapter()
+        .getItemPosition(itemIndex + 1);
+    nextReviewPosition = nextReviewPosition == -1 ? commentAdderView.getAdapter()
+        .getItemCount() : nextReviewPosition;
+    commentAdderView.getAdapter()
+        .removeDisplayable(nextReviewPosition - 1);
     List<Displayable> displayableList = new ArrayList<>();
     commentAdderView.createDisplayableComments(comments, displayableList);
-    commentAdderView.getAdapter().addDisplayables(nextReviewPosition - 1, displayableList);
+    commentAdderView.getAdapter()
+        .addDisplayables(nextReviewPosition - 1, displayableList);
   }
 }

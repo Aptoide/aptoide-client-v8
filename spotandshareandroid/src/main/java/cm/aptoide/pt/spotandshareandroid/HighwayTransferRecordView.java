@@ -12,7 +12,6 @@ public interface HighwayTransferRecordView {
 
   void setUpClearHistoryListener();
 
-
   void showNewCard(HighwayTransferRecordItem item);
 
   void updateItemStatus(int positionToUpdate, boolean isSent,

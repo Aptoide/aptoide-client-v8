@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget;
@@ -24,7 +24,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import rx.functions.Action1;
 
 /**
- * Created by sithengineer on 02/05/16.
+ * Created on 02/05/16.
  */
 @Displayables({ GridDisplayDisplayable.class }) public class GridDisplayWidget
     extends Widget<GridDisplayDisplayable> {
@@ -44,7 +44,8 @@ import rx.functions.Action1;
   @Override public void bindView(GridDisplayDisplayable displayable) {
     GetStoreDisplays.EventImage pojo = displayable.getPojo();
     final FragmentActivity context = getContext();
-    ImageLoader.with(context).load(pojo.getGraphic(), imageView);
+    ImageLoader.with(context)
+        .load(pojo.getGraphic(), imageView);
 
     final Action1<Void> imageClickHandler = v -> {
       Event event = pojo.getEvent();
@@ -56,15 +57,16 @@ import rx.functions.Action1;
       } else {
         switch (name) {
           case facebook:
-            compositeSubscription.add(displayable.getInstalledRepository().getInstalled(HomeFragment
-                .FACEBOOK_PACKAGE_NAME)
+            compositeSubscription.add(displayable.getInstalledRepository()
+                .getInstalled(HomeFragment.FACEBOOK_PACKAGE_NAME)
                 .first()
                 .subscribe(installedFacebook -> {
                   sendActionEvent(AptoideUtils.SocialLinksU.getFacebookPageURL(
                       installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
                       event.getAction()));
                 }, err -> {
-                  CrashReport.getInstance().log(err);
+                  CrashReport.getInstance()
+                      .log(err);
                 }));
             break;
           case twitch:
@@ -76,7 +78,8 @@ import rx.functions.Action1;
       }
     };
     compositeSubscription.add(RxView.clicks(imageView)
-        .subscribe(imageClickHandler, throwable -> CrashReport.getInstance().log(throwable)));
+        .subscribe(imageClickHandler, throwable -> CrashReport.getInstance()
+            .log(throwable)));
   }
 
   private void sendActionEvent(String eventActionUrl) {
@@ -84,7 +87,8 @@ import rx.functions.Action1;
     if (eventActionUrl != null) {
       i = new Intent(Intent.ACTION_VIEW);
       i.setData(Uri.parse(eventActionUrl));
-      itemView.getContext().startActivity(i);
+      itemView.getContext()
+          .startActivity(i);
     }
   }
 }

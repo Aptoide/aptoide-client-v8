@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpPresenter;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpView;
@@ -26,6 +27,8 @@ import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
  */
 public class LoginSignUpFragment extends BackButtonFragment implements LoginSignUpView {
 
+  private static final String TAG = LoginSignUpFragment.class.getName();
+
   private static final String BOTTOM_SHEET_WITH_BOTTOM_BAR = "bottom_sheet_expanded";
   private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
   private static final String NAVIGATE_TO_HOME = "clean_back_stack";
@@ -37,9 +40,6 @@ public class LoginSignUpFragment extends BackButtonFragment implements LoginSign
   private boolean withBottomBar;
   private boolean dismissToNavigateToMainView;
   private boolean navigateToHome;
-  private String accountType;
-  private String authType;
-  private boolean isNewAccount;
   private FragmentNavigator navigator;
   private ClickHandler backClickHandler;
   private LoginBottomSheet loginBottomSheet;
@@ -82,16 +82,14 @@ public class LoginSignUpFragment extends BackButtonFragment implements LoginSign
     withBottomBar = args.getBoolean(BOTTOM_SHEET_WITH_BOTTOM_BAR);
     dismissToNavigateToMainView = args.getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);
     navigateToHome = args.getBoolean(NAVIGATE_TO_HOME);
-    accountType = args.getString(ACCOUNT_TYPE, "");
-    authType = args.getString(AUTH_TYPE, "");
-    isNewAccount = args.getBoolean(IS_NEW_ACCOUNT);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     backClickHandler = new ClickHandler() {
       @Override public boolean handle() {
-        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+        if (bottomSheetBehavior != null
+            && bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
           bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
           return true;
         }
@@ -104,43 +102,55 @@ public class LoginSignUpFragment extends BackButtonFragment implements LoginSign
   }
 
   @Override public void onDestroyView() {
-    bottomSheetBehavior.setBottomSheetCallback(null);
-    bottomSheetBehavior = null;
+    if (bottomSheetBehavior != null) {
+      bottomSheetBehavior.setBottomSheetCallback(null);
+      bottomSheetBehavior = null;
+    }
     unregisterBackClickHandler(backClickHandler);
     super.onDestroyView();
   }
 
   private void bindViews(View view) {
-    bottomSheetBehavior = BottomSheetBehavior.from(view.findViewById(R.id.login_signup_layout));
-
-    // pass some of this logic to the presenter
-    final View mainContent = view.findViewById(R.id.main_content);
-    final int originalBottomPadding = withBottomBar ? mainContent.getPaddingBottom() : 0;
-    if (withBottomBar) {
-      view.findViewById(R.id.appbar).setVisibility(View.GONE);
-    } else {
-      view.findViewById(R.id.appbar).setVisibility(View.VISIBLE);
-      setupToolbar(view, getString(R.string.my_account));
+    try {
+      bottomSheetBehavior = BottomSheetBehavior.from(view.findViewById(R.id.login_signup_layout));
+    } catch (IllegalArgumentException ex) {
+      // this happens because in landscape the R.id.login_signup_layout is not
+      // a child of CoordinatorLayout
     }
-    mainContent.setPadding(0, 0, 0, originalBottomPadding);
-    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-    bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-      @Override public void onStateChanged(@NonNull View bottomSheet, int newState) {
-        switch (newState) {
-          case BottomSheetBehavior.STATE_COLLAPSED:
-            loginBottomSheet.collapse();
-            mainContent.setPadding(0, 0, 0, originalBottomPadding);
-            break;
-          case BottomSheetBehavior.STATE_EXPANDED:
-            loginBottomSheet.expand();
-            mainContent.setPadding(0, 0, 0, 0);
-            break;
-        }
-      }
 
-      @Override public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+    if (bottomSheetBehavior != null) {
+      // pass some of this logic to the presenter
+      final View mainContent = view.findViewById(R.id.main_content);
+      final int originalBottomPadding = withBottomBar ? mainContent.getPaddingBottom() : 0;
+      if (withBottomBar) {
+        view.findViewById(R.id.appbar)
+            .setVisibility(View.GONE);
+      } else {
+        view.findViewById(R.id.appbar)
+            .setVisibility(View.VISIBLE);
+        setupToolbar(view, getString(R.string.my_account));
       }
-    });
+      mainContent.setPadding(0, 0, 0, originalBottomPadding);
+
+      bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+      bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        @Override public void onStateChanged(@NonNull View bottomSheet, int newState) {
+          switch (newState) {
+            case BottomSheetBehavior.STATE_COLLAPSED:
+              loginBottomSheet.collapse();
+              mainContent.setPadding(0, 0, 0, originalBottomPadding);
+              break;
+            case BottomSheetBehavior.STATE_EXPANDED:
+              loginBottomSheet.expand();
+              mainContent.setPadding(0, 0, 0, 0);
+              break;
+          }
+        }
+
+        @Override public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+        }
+      });
+    }
   }
 
   protected Toolbar setupToolbar(View view, String title) {
@@ -161,8 +171,19 @@ public class LoginSignUpFragment extends BackButtonFragment implements LoginSign
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     final View view = inflater.inflate(getLayoutId(), container, false);
-    navigator.navigateToWithoutBackSave(
-        LoginSignUpCredentialsFragment.newInstance(dismissToNavigateToMainView, navigateToHome));
+
+    LoginSignUpCredentialsFragment fragment = null;
+    try {
+      fragment = (LoginSignUpCredentialsFragment) navigator.getFragment();
+    } catch (ClassCastException ex) {
+      Logger.e(TAG, ex);
+    }
+
+    if (fragment == null) {
+      navigator.navigateToWithoutBackSave(
+          LoginSignUpCredentialsFragment.newInstance(dismissToNavigateToMainView, navigateToHome));
+    }
+
     return view;
   }
 

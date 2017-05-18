@@ -60,7 +60,8 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
     final FragmentActivity context = getContext();
     subtitle.setText(displayable.getTimeSinceLastUpdate(context));
     setCardViewMargin(displayable, cardView);
-    ImageLoader.with(context).loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
+    ImageLoader.with(context)
+        .loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
 
     appsContaner.removeAllViews();
     apps.clear();
@@ -69,34 +70,37 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
     for (StoreLatestAppsDisplayable.LatestApp latestApp : displayable.getLatestApps()) {
       latestAppView = inflater.inflate(R.layout.social_timeline_latest_app, appsContaner, false);
       latestAppIcon = (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app);
-      ImageLoader.with(context).load(latestApp.getIconUrl(), latestAppIcon);
+      ImageLoader.with(context)
+          .load(latestApp.getIconUrl(), latestAppIcon);
       appsContaner.addView(latestAppView);
       apps.put(latestAppView, latestApp.getAppId());
       appsPackages.put(latestApp.getAppId(), latestApp.getPackageName());
     }
 
     for (View app : apps.keySet()) {
-      compositeSubscription.add(RxView.clicks(app).subscribe(click -> {
-        knockWithSixpackCredentials(displayable.getAbUrl());
-        String packageName = appsPackages.get(apps.get(app));
-        Analytics.AppsTimeline.clickOnCard(StoreLatestAppsDisplayable.CARD_TYPE_NAME, packageName,
-            Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
-            Analytics.AppsTimeline.OPEN_APP_VIEW);
-        displayable.sendOpenAppEvent(packageName);
-        getFragmentNavigator().navigateTo(
-            V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app), packageName));
-      }));
+      compositeSubscription.add(RxView.clicks(app)
+          .subscribe(click -> {
+            knockWithSixpackCredentials(displayable.getAbUrl());
+            String packageName = appsPackages.get(apps.get(app));
+            Analytics.AppsTimeline.clickOnCard(StoreLatestAppsDisplayable.CARD_TYPE_NAME,
+                packageName, Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
+                Analytics.AppsTimeline.OPEN_APP_VIEW);
+            displayable.sendOpenAppEvent(packageName);
+            getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+                .newAppViewFragment(apps.get(app), packageName));
+          }));
     }
 
-    compositeSubscription.add(RxView.clicks(store).subscribe(click -> {
-      knockWithSixpackCredentials(displayable.getAbUrl());
-      Analytics.AppsTimeline.clickOnCard(StoreLatestAppsDisplayable.CARD_TYPE_NAME,
-          Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
-          Analytics.AppsTimeline.OPEN_STORE);
-      displayable.sendOpenStoreEvent();
-      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
-          .newStoreFragment(displayable.getStoreName(), displayable.getStoreTheme()));
-    }));
+    compositeSubscription.add(RxView.clicks(store)
+        .subscribe(click -> {
+          knockWithSixpackCredentials(displayable.getAbUrl());
+          Analytics.AppsTimeline.clickOnCard(StoreLatestAppsDisplayable.CARD_TYPE_NAME,
+              Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
+              displayable.getStoreName(), Analytics.AppsTimeline.OPEN_STORE);
+          displayable.sendOpenStoreEvent();
+          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+              .newStoreFragment(displayable.getStoreName(), displayable.getStoreTheme()));
+        }));
   }
 
   @Override String getCardTypeName() {

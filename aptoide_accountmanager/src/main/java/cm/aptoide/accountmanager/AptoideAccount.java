@@ -5,7 +5,6 @@
 
 package cm.aptoide.accountmanager;
 
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import java.util.List;
 import rx.Completable;
 
@@ -24,7 +23,6 @@ public final class AptoideAccount implements Account {
   private final boolean accessConfirmed;
   private final String password;
   private final List<Store> subscribedStores;
-  private final AptoideClientUUID aptoideClientUUID;
   private final AccountService accountService;
 
   private String token;
@@ -32,8 +30,7 @@ public final class AptoideAccount implements Account {
   public AptoideAccount(String id, String email, String nickname, String avatar,
       String refreshToken, String token, String password, Type type, String store,
       String storeAvatar, boolean adultContentEnabled, Access access, boolean accessConfirmed,
-      List<Store> subscribedStores, AptoideClientUUID aptoideClientUUID,
-      AccountService accountService) {
+      List<Store> subscribedStores, AccountService accountService) {
     this.id = id;
     this.email = email;
     this.nickname = nickname;
@@ -48,7 +45,6 @@ public final class AptoideAccount implements Account {
     this.access = access;
     this.accessConfirmed = accessConfirmed;
     this.subscribedStores = subscribedStores;
-    this.aptoideClientUUID = aptoideClientUUID;
     this.accountService = accountService;
   }
 
@@ -130,7 +126,9 @@ public final class AptoideAccount implements Account {
   }
 
   private boolean isEmpty(String string) {
-    return string == null || string.trim().length() == 0;
+    return string == null
+        || string.trim()
+        .length() == 0;
   }
 
   @Override public String toString() {
@@ -169,8 +167,6 @@ public final class AptoideAccount implements Account {
         + '\''
         + ", subscribedStores="
         + subscribedStores
-        + ", aptoideClientUUID="
-        + aptoideClientUUID
         + ", accountService="
         + accountService
         + ", token='"

@@ -7,7 +7,7 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.util.Log;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.websocket.WebSocketManager;
+import cm.aptoide.pt.v8engine.search.websocket.WebSocketManager;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -55,7 +55,8 @@ public abstract class SearchRecentSuggestionsProviderWrapper
               .add("1");
         }
       } catch (InterruptedException e) {
-        CrashReport.getInstance().log(e);
+        CrashReport.getInstance()
+            .log(e);
       } finally {
         c.close();
       }

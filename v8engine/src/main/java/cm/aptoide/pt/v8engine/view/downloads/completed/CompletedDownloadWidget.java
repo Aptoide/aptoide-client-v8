@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/07/2016.
+ * Modified on 27/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.downloads.completed;
@@ -54,7 +54,8 @@ import rx.schedulers.Schedulers;
     InstallationProgress installation = displayable.getInstallation();
     appName.setText(installation.getAppName());
     if (!TextUtils.isEmpty(installation.getIcon())) {
-      ImageLoader.with(context).load(installation.getIcon(), appIcon);
+      ImageLoader.with(context)
+          .load(installation.getIcon(), appIcon);
     }
 
     //save original colors
@@ -87,7 +88,8 @@ import rx.schedulers.Schedulers;
 
     compositeSubscription.add(RxView.clicks(cancelDownloadButton)
         .subscribe(click -> displayable.removeDownload(context), err -> {
-          CrashReport.getInstance().log(err);
+          CrashReport.getInstance()
+              .log(err);
         }));
 
     compositeSubscription.add(displayable.downloadStatus()
@@ -102,7 +104,8 @@ import rx.schedulers.Schedulers;
           } else {
             resumeDownloadButton.setVisibility(View.GONE);
           }
-        }, throwable -> CrashReport.getInstance().log(throwable)));
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable)));
   }
 
   private void updateStatus(InstallationProgress installation,
@@ -113,7 +116,8 @@ import rx.schedulers.Schedulers;
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         statusTextColor = context.getColor(R.color.red_700);
       } else {
-        statusTextColor = context.getResources().getColor(R.color.red_700);
+        statusTextColor = context.getResources()
+            .getColor(R.color.red_700);
       }
       status.setTextColor(statusTextColor);
     } else {
@@ -121,7 +125,7 @@ import rx.schedulers.Schedulers;
     }
     compositeSubscription.add(displayable.getStatusName()
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(statusName -> status.setText(statusName),
-            throwable -> CrashReport.getInstance().log(throwable)));
+        .subscribe(statusName -> status.setText(statusName), throwable -> CrashReport.getInstance()
+            .log(throwable)));
   }
 }
