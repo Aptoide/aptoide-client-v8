@@ -31,7 +31,13 @@ public class MyAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> view.moreNotificationsClick()
-            .doOnNext(__ -> navigator.navigateToInboxView()))
+            .doOnNext(__ -> navigator.navigateToInboxView(view.inboxFragmentBundleCreator(true))))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(click -> view.editStoreClick()
+            .doOnNext(__ -> navigator.navigateToEditStoreView()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }

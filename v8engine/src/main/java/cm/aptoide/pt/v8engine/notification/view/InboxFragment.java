@@ -28,13 +28,15 @@ public class InboxFragment extends FragmentView implements InboxView {
 
   private RecyclerView list;
   private InboxAdapter adapter;
+
   private PublishSubject<AptoideNotification> notificationSubject;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     attachPresenter(new InboxPresenter(this,
         ((V8Engine) getContext().getApplicationContext()).getNotificationCenter(),
-        new LinksHandlerFactory(getContext())), savedInstanceState);
+        new LinksHandlerFactory(getContext()), this.getArguments()
+        .getInt("numberOfNotifications")), savedInstanceState);
     notificationSubject = PublishSubject.create();
   }
 
@@ -45,10 +47,15 @@ public class InboxFragment extends FragmentView implements InboxView {
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    setupToolbar(view);
     list = (RecyclerView) view.findViewById(R.id.fragment_inbox_list);
     adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
+    super.onViewCreated(view, savedInstanceState);
+    if (this.getArguments()
+        .getBoolean("showToolbar")) {
+      setupToolbar(view);
+    } else {
+      setupToolbar(view).setVisibility(View.GONE);
+    }
     list.setAdapter(adapter);
     list.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
@@ -65,7 +72,7 @@ public class InboxFragment extends FragmentView implements InboxView {
   private Toolbar setupToolbar(View view) {
     Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     toolbar.setLogo(R.drawable.logo_toolbar);
-    toolbar.setTitle(R.string.fragment_inbox_title_text);
+    toolbar.setTitle(R.string.notification_center_title);
     ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
     ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
