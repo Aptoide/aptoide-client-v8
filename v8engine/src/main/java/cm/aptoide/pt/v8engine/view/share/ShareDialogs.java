@@ -16,15 +16,17 @@ public class ShareDialogs {
     return Observable.create((Subscriber<? super ShareResponse> subscriber) -> {
       final AlertDialog alertDialog = new AlertDialog.Builder(context).setTitle(title)
           .setItems(R.array.share_options_array, (dialogInterface, i) -> {
-            switch (i) {
-              case 0:
-                subscriber.onNext(ShareResponse.SHARE_EXTERNAL);
-                subscriber.onCompleted();
-                break;
-              case 1:
-                subscriber.onNext(ShareResponse.SHARE_TIMELINE);
-                subscriber.onCompleted();
-                break;
+            if (!subscriber.isUnsubscribed()) {
+              switch (i) {
+                case 0:
+                  subscriber.onNext(ShareResponse.SHARE_EXTERNAL);
+                  subscriber.onCompleted();
+                  break;
+                case 1:
+                  subscriber.onNext(ShareResponse.SHARE_TIMELINE);
+                  subscriber.onCompleted();
+                  break;
+              }
             }
           })
           .create();
@@ -39,19 +41,21 @@ public class ShareDialogs {
     return Observable.create((Subscriber<? super ShareResponse> subscriber) -> {
       final AlertDialog alertDialog = new AlertDialog.Builder(context).setTitle(title)
           .setItems(R.array.share_options_array_with_spot_and_share, (dialogInterface, i) -> {
-            switch (i) {
-              case 0:
-                subscriber.onNext(ShareResponse.SHARE_EXTERNAL);
-                subscriber.onCompleted();
-                break;
-              case 1:
-                subscriber.onNext(ShareResponse.SHARE_TIMELINE);
-                subscriber.onCompleted();
-                break;
-              case 2:
-                subscriber.onNext(ShareResponse.SHARE_SPOT_AND_SHARE);
-                subscriber.onCompleted();
-                break;
+            if (!subscriber.isUnsubscribed()) {
+              switch (i) {
+                case 0:
+                  subscriber.onNext(ShareResponse.SHARE_EXTERNAL);
+                  subscriber.onCompleted();
+                  break;
+                case 1:
+                  subscriber.onNext(ShareResponse.SHARE_TIMELINE);
+                  subscriber.onCompleted();
+                  break;
+                case 2:
+                  subscriber.onNext(ShareResponse.SHARE_SPOT_AND_SHARE);
+                  subscriber.onCompleted();
+                  break;
+              }
             }
           })
           .create();
@@ -67,17 +71,19 @@ public class ShareDialogs {
       final AlertDialog alertDialog = new AlertDialog.Builder(context).setTitle(title)
           .setItems(R.array.installed_share_options_array_with_spot_and_share,
               (dialogInterface, i) -> {
-            switch (i) {
-              case 0:
-                subscriber.onNext(ShareResponse.SHARE_TIMELINE);
-                subscriber.onCompleted();
-                break;
-              case 1:
-                subscriber.onNext(ShareResponse.SHARE_SPOT_AND_SHARE);
-                subscriber.onCompleted();
-                break;
-            }
-          })
+                if (!subscriber.isUnsubscribed()) {
+                  switch (i) {
+                    case 0:
+                      subscriber.onNext(ShareResponse.SHARE_TIMELINE);
+                      subscriber.onCompleted();
+                      break;
+                    case 1:
+                      subscriber.onNext(ShareResponse.SHARE_SPOT_AND_SHARE);
+                      subscriber.onCompleted();
+                      break;
+                  }
+                }
+              })
           .create();
       // cleaning up
       subscriber.add(Subscriptions.create(() -> alertDialog.dismiss()));
