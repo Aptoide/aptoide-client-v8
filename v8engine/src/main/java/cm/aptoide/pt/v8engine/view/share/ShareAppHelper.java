@@ -62,7 +62,7 @@ public class ShareAppHelper {
       } else if (ShareDialogs.ShareResponse.SHARE_TIMELINE == eResponse) {
         caseAppsTimelineShare(appName, packageName, iconPath);
       } else if (ShareDialogs.ShareResponse.SHARE_SPOT_AND_SHARE == eResponse) {
-        caseSpotandShareShare(appName, packageName);
+        caseSpotAndShareShare(appName, packageName);
       }
     }, CrashReport.getInstance()::log);
   }
@@ -74,7 +74,7 @@ public class ShareAppHelper {
           if (ShareDialogs.ShareResponse.SHARE_TIMELINE == shareResponse) {
             caseAppsTimelineShare(appName, packageName, iconPath);
           } else if (ShareDialogs.ShareResponse.SHARE_SPOT_AND_SHARE == shareResponse) {
-            caseSpotandShareShare(appName, packageName);
+            caseSpotAndShareShare(appName, packageName);
           }
         }, CrashReport.getInstance()::log);
   }
@@ -112,7 +112,7 @@ public class ShareAppHelper {
     }
   }
 
-  private void caseSpotandShareShare(String appName, String packageName) {
+  private void caseSpotAndShareShare(String appName, String packageName) {
     spotAndShareAnalytics.clickShareApps(
         SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW);
 
