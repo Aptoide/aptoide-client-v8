@@ -33,9 +33,8 @@ public class InboxFragment extends FragmentView implements InboxView {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     attachPresenter(new InboxPresenter(this,
-            ((V8Engine) getContext().getApplicationContext()).getNotificationCenter(),
-            new LinksHandlerFactory(getContext())),
-        savedInstanceState);
+        ((V8Engine) getContext().getApplicationContext()).getNotificationCenter(),
+        new LinksHandlerFactory(getContext())), savedInstanceState);
     notificationSubject = PublishSubject.create();
   }
 

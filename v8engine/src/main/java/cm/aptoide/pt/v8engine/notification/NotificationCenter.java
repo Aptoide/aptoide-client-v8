@@ -97,10 +97,11 @@ public class NotificationCenter {
         .map(aptoideNotifications -> aptoideNotifications.size() < occurrences);
   }
 
-  public Observable<List<AptoideNotification>> getInboxNotifications() {
+  public Observable<List<AptoideNotification>> getInboxNotifications(int entries) {
     return notificationAccessor.getAllSorted(Sort.DESCENDING)
         .flatMap(notifications -> Observable.from(notifications)
             .map(notification -> notificationProvider.convertToAptoideNotification(notification))
+            .take(entries)
             .toList());
   }
 }

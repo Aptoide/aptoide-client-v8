@@ -13,6 +13,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class InboxPresenter implements Presenter {
 
+  private final static int NUMBER_OF_NOTIFICATIONS = 50;
   private final InboxView view;
   private final NotificationCenter notificationCenter;
   private final LinksHandlerFactory linkFactory;
@@ -27,7 +28,7 @@ public class InboxPresenter implements Presenter {
   @Override public void present() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> notificationCenter.getInboxNotifications())
+        .flatMap(__ -> notificationCenter.getInboxNotifications(NUMBER_OF_NOTIFICATIONS))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(notifications -> view.showNotifications(notifications))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
