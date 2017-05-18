@@ -10,7 +10,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
+import android.view.View;
+import android.widget.ProgressBar;
 import cm.aptoide.pt.v8engine.BuildConfig;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentCancellationException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentException;
@@ -29,9 +33,32 @@ public class PayPalAuthorizationActivity extends AuthorizationActivity
   private com.paypal.android.sdk.payments.PayPalPayment payment;
   private PayPalConfiguration configuration;
   private PublishSubject<String> authorizationSubject;
+  private ProgressBar progressBar;
+  private AlertDialog unknownErrorDialog;
+  private AlertDialog networkErrorDialog;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_paypal_authorization);
+
+    progressBar = (ProgressBar) findViewById(R.id.activity_paypal_authorization_preogress_bar);
+
+    networkErrorDialog = new AlertDialog.Builder(this).setMessage(R.string.connection_error)
+        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+          finish();
+        })
+        .create();
+    unknownErrorDialog = new AlertDialog.Builder(this).setMessage(R.string.having_some_trouble)
+        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+          finish();
+        })
+        .create();
+
+    unknownErrorDialog = new AlertDialog.Builder(this).setMessage(R.string.having_some_trouble)
+        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+          finish();
+        })
+        .create();
 
     authorizationSubject = PublishSubject.create();
 
@@ -48,25 +75,29 @@ public class PayPalAuthorizationActivity extends AuthorizationActivity
             .clientId(BuildConfig.PAYPAL_KEY)
             .merchantName(V8Engine.getConfiguration()
                 .getMarketName())
-            .merchantPrivacyPolicyUri(Uri.parse("https://www.example.com/privacy"))
-            .merchantUserAgreementUri(Uri.parse("https://www.example.com/legal"))),
+            .merchantPrivacyPolicyUri(Uri.parse(BuildConfig.PAYPAL_PRIVACY_POLICY_URL))
+            .merchantUserAgreementUri(Uri.parse(BuildConfig.PAYPAL_USER_AGREEMENT_URL))),
         PAY_APP_REQUEST_CODE);
   }
 
   @Override public void showLoading() {
-
+    progressBar.setVisibility(View.VISIBLE);
   }
 
   @Override public void hideLoading() {
-
+    progressBar.setVisibility(View.GONE);
   }
 
   @Override public void showNetworkError() {
-    finish();
+    if (!networkErrorDialog.isShowing() && !unknownErrorDialog.isShowing()) {
+      networkErrorDialog.show();
+    }
   }
 
   @Override public void showUnknownError() {
-    finish();
+    if (!networkErrorDialog.isShowing() && !unknownErrorDialog.isShowing()) {
+      unknownErrorDialog.show();
+    }
   }
 
   @Override public void dismiss() {

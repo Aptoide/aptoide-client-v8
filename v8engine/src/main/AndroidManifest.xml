@@ -59,11 +59,11 @@
 
     <activity
         android:name=".billing.view.PaymentActivity"
-        android:theme="@style/AppBaseTheme.Payment"/>
+        android:theme="@style/AppBaseTheme.Transparent.WhiteGreen"/>
 
     <activity
         android:name=".billing.view.PayPalAuthorizationActivity"
-        android:theme="@style/AppBaseTheme.Payment"/>
+        android:theme="@style/AppBaseTheme.Transparent"/>
 
     <activity android:name=".billing.view.WebAuthorizationActivity"/>
     <activity android:name=".view.account.LoginActivity"/>
