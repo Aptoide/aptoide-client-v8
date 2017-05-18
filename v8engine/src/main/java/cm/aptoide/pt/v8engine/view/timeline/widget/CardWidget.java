@@ -191,8 +191,7 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
         account.getAccess())) {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
           R.string.create_store_create, snackView -> {
-            Fragment fragment =
-                CreateStoreFragment.newInstance();
+            Fragment fragment = CreateStoreFragment.newInstance();
             getFragmentNavigator().navigateTo(fragment);
 
             //Intent intent = new Intent(getContext(), CreateStoreActivity.class);

@@ -4,7 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -19,15 +18,17 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.view.timeline.displayable.AggregatedSocialInstallDisplayable;
+import cm.aptoide.pt.v8engine.view.timeline.displayable.AggregatedSocialArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.timeline.displayable.SocialArticleDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by jdandrade on 11/05/2017.
  */
 
-public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialInstallDisplayable> {
+public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialArticleDisplayable> {
   private final LayoutInflater inflater;
   private final AptoideAccountManager accountManager;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
@@ -37,13 +38,15 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
   private ImageView headerAvatar2;
   private TextView headerNames;
   private TextView headerTime;
-  private ImageView appIcon;
-  private TextView appName;
-  private RatingBar ratingBar;
-  private Button getAppButton;
+  private TextView articleTitle;
+  private ImageView thumbnail;
+  private View url;
   private CardView cardView;
+  private TextView relatedTo;
+  private String appName;
+  private RatingBar ratingBar;
 
-  public AggregatedSocialInstallWidget(View itemView) {
+  public AggregatedSocialArticleWidget(View itemView) {
     super(itemView);
     inflater = LayoutInflater.from(itemView.getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
@@ -59,17 +62,15 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
     headerAvatar2 = (ImageView) itemView.findViewById(R.id.card_header_avatar_2);
     headerNames = (TextView) itemView.findViewById(R.id.card_title);
     headerTime = (TextView) itemView.findViewById(R.id.card_date);
-    appIcon =
-        (ImageView) itemView.findViewById(R.id.displayable_social_timeline_recommendation_icon);
-    appName = (TextView) itemView.findViewById(
-        R.id.displayable_social_timeline_recommendation_similar_apps);
-    ratingBar = (RatingBar) itemView.findViewById(R.id.rating_bar);
-    getAppButton = (Button) itemView.findViewById(
-        R.id.displayable_social_timeline_recommendation_get_app_button);
+    articleTitle = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_title);
+    thumbnail = (ImageView) itemView.findViewById(R.id.featured_graphic);
+    url = itemView.findViewById(R.id.partial_social_timeline_thumbnail);
     cardView = (CardView) itemView.findViewById(R.id.card);
+    relatedTo = (TextView) itemView.findViewById(R.id.app_name);
+    ratingBar = (RatingBar) itemView.findViewById(R.id.ratingbar);
   }
 
-  @Override public void bindView(AggregatedSocialInstallDisplayable displayable) {
+  @Override public void bindView(AggregatedSocialArticleDisplayable displayable) {
     super.bindView(displayable);
 
     ImageLoader.with(getContext())
@@ -84,33 +85,36 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
             .getAvatar(), headerAvatar2);
     headerNames.setText(displayable.getCardHeaderNames());
     headerTime.setText(displayable.getTimeSinceLastUpdate(getContext()));
+
+    articleTitle.setText(displayable.getTitle());
+
     ImageLoader.with(getContext())
-        .load(displayable.getAppIcon(), appIcon);
-    appName.setText(displayable.getAppName());
-    ratingBar.setRating(displayable.getAppRatingAverage());
+        .load(displayable.getThumbnailUrl(), thumbnail);
+    thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+    url.setOnClickListener(v -> {
+      knockWithSixpackCredentials(displayable.getAbTestingURL());
+      displayable.getLink()
+          .launch(getContext());
+      Analytics.AppsTimeline.clickOnCard(SocialArticleDisplayable.CARD_TYPE_NAME,
+          Analytics.AppsTimeline.BLANK, displayable.getTitle(), displayable.getTitle(),
+          Analytics.AppsTimeline.OPEN_ARTICLE);
+      displayable.sendOpenArticleEvent();
+    });
+
+    ratingBar.setVisibility(View.INVISIBLE);
+
     setCardViewMargin(displayable, cardView);
+
     showSeeMoreAction(displayable);
     showSubCards(displayable);
-
-    RxView.clicks(getAppButton)
-        .subscribe(view -> {
-          knockWithSixpackCredentials(displayable.getAbTestingURL());
-
-          Analytics.AppsTimeline.clickOnCard(AggregatedSocialInstallDisplayable.CARD_TYPE_NAME,
-              displayable.getPackageName(), Analytics.AppsTimeline.BLANK,
-              Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.OPEN_APP_VIEW);
-          displayable.sendOpenAppEvent();
-          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
-              .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
-        }, throwable -> CrashReport.getInstance()
-            .log(throwable));
   }
 
   @Override String getCardTypeName() {
-    return AggregatedSocialInstallDisplayable.CARD_TYPE_NAME;
+    return AggregatedSocialArticleDisplayable.CARD_TYPE_NAME;
   }
 
-  private void showSubCards(AggregatedSocialInstallDisplayable displayable) {
+  private void showSubCards(AggregatedSocialArticleDisplayable displayable) {
     subCardsContainer.removeAllViews();
     int i = 1;
     for (MinimalCard minimalCard : displayable.getMinimalCardList()) {
@@ -153,6 +157,28 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
       cardHeaderTimestamp.setText(
           displayable.getTimeSinceLastUpdate(getContext(), minimalCard.getDate()));
 
+      compositeSubscription.add(displayable.getRelatedToApplication()
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(installeds -> {
+            if (installeds != null && !installeds.isEmpty()) {
+              appName = installeds.get(0)
+                  .getName();
+            } else {
+              setAppNameToFirstLinkedApp(displayable);
+            }
+            if (appName != null) {
+              relatedTo.setTextSize(11);
+              relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
+            }
+          }, throwable -> {
+            setAppNameToFirstLinkedApp(displayable);
+            if (appName != null) {
+              relatedTo.setTextSize(11);
+              relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
+            }
+            throwable.printStackTrace();
+          }));
+
       compositeSubscription.add(accountManager.accountStatus()
           .subscribe());
       like.setVisibility(View.VISIBLE);
@@ -177,7 +203,16 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
     }
   }
 
-  private void showSeeMoreAction(AggregatedSocialInstallDisplayable displayable) {
+  private void setAppNameToFirstLinkedApp(AggregatedSocialArticleDisplayable displayable) {
+    if (!displayable.getRelatedToAppsList()
+        .isEmpty()) {
+      appName = displayable.getRelatedToAppsList()
+          .get(0)
+          .getName();
+    }
+  }
+
+  private void showSeeMoreAction(AggregatedSocialArticleDisplayable displayable) {
     if (displayable.getMinimalCardList()
         .size() > 2) {
       seeMore.setVisibility(View.VISIBLE);

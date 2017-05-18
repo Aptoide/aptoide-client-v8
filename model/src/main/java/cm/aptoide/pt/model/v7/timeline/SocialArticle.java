@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @EqualsAndHashCode(exclude = { "publisher" }, callSuper = false) public class SocialArticle
-    extends SocialCard implements TimelineCard {
+    extends SocialCard {
 
   @Getter private final Publisher publisher;
   @Getter private final Comment.User user;

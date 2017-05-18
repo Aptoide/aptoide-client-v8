@@ -1,17 +1,18 @@
 package cm.aptoide.pt.model.v7.timeline;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 
 /**
  * Created by jdandrade on 11/05/2017.
  */
 
-class AggregatedSocialInstallTimelineItem extends SocialInstallTimelineItem {
+@EqualsAndHashCode class AggregatedSocialInstallTimelineItem implements TimelineItem<TimelineCard> {
   private final AggregatedSocialInstall aggregatedSocialInstall;
 
-  public AggregatedSocialInstallTimelineItem(
+  @JsonCreator public AggregatedSocialInstallTimelineItem(
       @JsonProperty("data") AggregatedSocialInstall aggregatedSocialInstall) {
-    super(aggregatedSocialInstall);
     this.aggregatedSocialInstall = aggregatedSocialInstall;
   }
 

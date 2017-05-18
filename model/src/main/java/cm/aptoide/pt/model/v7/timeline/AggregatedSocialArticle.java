@@ -10,41 +10,47 @@ import java.util.List;
 import lombok.Getter;
 
 /**
- * Created by jdandrade on 11/05/2017.
+ * Created by jdandrade on 17/05/2017.
  */
 
-public class AggregatedSocialInstall implements TimelineCard {
+public class AggregatedSocialArticle implements TimelineCard {
 
   private final List<MinimalCard> minimalCardList;
   private final List<UserSharerTimeline> sharers;
-  @Getter private final String cardId;
-  @Getter private final App app;
-  @Getter private final Ab ab;
-  @Getter private final Store store;
+  @Getter private final Publisher publisher;
   @Getter private final Comment.User user;
   @Getter private final Comment.User userSharer;
+  @Getter private final Store store;
+  @Getter private final String cardId;
+  @Getter private final String title;
+  @Getter private final String thumbnailUrl;
+  @Getter private final String url;
   @Getter private final Date date;
+  @Getter private final List<App> apps;
+  @Getter private final Ab ab;
 
-  public AggregatedSocialInstall(@JsonProperty("uid") String cardId,
-      @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab,
+  public AggregatedSocialArticle(@JsonProperty("uid") String cardId,
+      @JsonProperty("title") String title, @JsonProperty("thumbnail") String thumbnailUrl,
+      @JsonProperty("publisher") Publisher publisher,
       @JsonProperty("user_sharer") Comment.User userSharer, @JsonProperty("user") Comment.User user,
+      @JsonProperty("store") Store store, @JsonProperty("url") String url,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
-      @JsonProperty("store") Store store,
+      @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab,
       @JsonProperty("cards_shared") List<MinimalCard> minimalCardList,
       @JsonProperty("sharers") List<UserSharerTimeline> sharers) {
     this.minimalCardList = minimalCardList;
     this.sharers = sharers;
-    this.cardId = cardId;
-    this.ab = ab;
-    this.store = store;
+    this.publisher = publisher;
     this.user = user;
     this.userSharer = userSharer;
+    this.store = store;
+    this.cardId = cardId;
+    this.title = title;
+    this.thumbnailUrl = thumbnailUrl;
+    this.url = url;
     this.date = date;
-    if (!apps.isEmpty()) {
-      this.app = apps.get(0);
-    } else {
-      this.app = null;
-    }
+    this.apps = apps;
+    this.ab = ab;
   }
 
   public List<MinimalCard> getMinimalCardList() {
