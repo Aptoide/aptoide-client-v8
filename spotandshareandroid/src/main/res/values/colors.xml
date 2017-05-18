@@ -26,4 +26,7 @@
   <color name="aptoide_lite">#00b0c5</color>
   <color name="aptoide_tv">#00cc33</color>
 
+  <color name="orange">#ff9800</color>
+  <color name="orange_700">#f57c00</color>
+
 </resources>
