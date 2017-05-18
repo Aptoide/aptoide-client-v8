@@ -826,6 +826,19 @@ public class AptoideUtils {
       return context.getPackageManager().getInstalledPackages(PackageManager.GET_SIGNATURES);
     }
 
+    /**
+     * Check if app with given packageName is installed
+     */
+    public static boolean isAppInstalled(String packagename) {
+      List<PackageInfo> installedApps = AptoideUtils.SystemU.getAllInstalledApps();
+      for (PackageInfo packageInfo : installedApps) {
+        if (packageInfo.packageName.equals(packagename)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     public static String getApkLabel(PackageInfo packageInfo) {
       return packageInfo.applicationInfo.loadLabel(context.getPackageManager()).toString();
     }

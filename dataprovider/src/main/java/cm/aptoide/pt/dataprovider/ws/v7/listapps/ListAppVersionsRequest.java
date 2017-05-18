@@ -97,7 +97,6 @@ import rx.Observable;
     @Setter @Getter private int offset;
     private Integer packageId;
     private String packageName;
-    private String q = Api.Q;
     private List<Long> storeIds;
     private List<String> storeNames;
     @Getter private HashMapNotNull<String, List<String>> storesAuthMap;
