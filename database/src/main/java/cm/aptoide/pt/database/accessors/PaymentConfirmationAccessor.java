@@ -30,4 +30,8 @@ public class PaymentConfirmationAccessor extends SimpleAccessor<PaymentConfirmat
   public void save(PaymentConfirmation confirmation) {
     database.insert(confirmation);
   }
+
+  public void remove(int productId) {
+    database.delete(PaymentConfirmation.class, PaymentConfirmation.PRODUCT_ID, productId);
+  }
 }

@@ -9,12 +9,14 @@ import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.Payment;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Purchase;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppProduct;
+import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -64,7 +66,7 @@ public class PaidAppProductRepository extends ProductRepository {
           .isPaid()) {
         return Single.just(purchaseFactory.create(app));
       }
-      return Single.error(new RepositoryItemNotFoundException(
+      return Single.error(new RepositoryIllegalArgumentException(
           "Purchase not found for product " + ((PaidAppProduct) product).getAppId()));
     });
   }
@@ -86,8 +88,8 @@ public class PaidAppProductRepository extends ProductRepository {
           if (response != null && response.isOk() && response.isPaid()) {
             return Observable.just(response);
           } else {
-            return Observable.error(new RepositoryItemNotFoundException(
-                "No paid app found for app id " + appId + " in store " + storeName));
+            return Observable.error(
+                new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
           }
         })
         .first()

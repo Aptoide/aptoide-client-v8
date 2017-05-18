@@ -219,7 +219,12 @@ public class PaymentPresenter implements Presenter {
     } else if (confirmation.isCompleted()) {
       view.showLoading();
       return aptoideBilling.getPurchase(product)
-          .toObservable();
+          .observeOn(AndroidSchedulers.mainThread())
+          .toObservable()
+          .onErrorResumeNext(throwable -> {
+            hideLoadingAndShowError(throwable);
+            return Observable.empty();
+          });
     }
     return Observable.empty();
   }

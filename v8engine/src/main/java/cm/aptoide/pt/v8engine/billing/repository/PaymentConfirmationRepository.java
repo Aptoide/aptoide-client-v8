@@ -75,4 +75,8 @@ public abstract class PaymentConfirmationRepository {
   protected Completable syncPaymentConfirmation(Product product) {
     return backgroundSync.scheduleConfirmationSync(product);
   }
+
+  public Completable remove(int productId) {
+    return Completable.fromAction(() -> confirmationAccessor.remove(productId));
+  }
 }

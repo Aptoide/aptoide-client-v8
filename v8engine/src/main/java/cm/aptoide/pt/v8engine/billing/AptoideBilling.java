@@ -14,6 +14,7 @@ import cm.aptoide.pt.v8engine.billing.repository.ProductRepositoryFactory;
 import cm.aptoide.pt.v8engine.billing.services.PayPalPayment;
 import cm.aptoide.pt.v8engine.billing.services.WebAuthorization;
 import cm.aptoide.pt.v8engine.billing.services.WebPayment;
+import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
 import rx.Completable;
@@ -111,7 +112,15 @@ public class AptoideBilling {
 
   public Single<Purchase> getPurchase(Product product) {
     return productRepositoryFactory.getProductRepository(product)
-        .getPurchase(product);
+        .getPurchase(product)
+        .onErrorResumeNext(throwable -> {
+          if (throwable instanceof RepositoryIllegalArgumentException) {
+            return paymentRepositoryFactory.getPaymentConfirmationRepository(product)
+                .remove(product.getId())
+                .andThen(Single.error(throwable));
+          }
+          return Single.error(throwable);
+        });
   }
 
   private Single<WebPayment> getWebPayment(int paymentId, Product product) {
