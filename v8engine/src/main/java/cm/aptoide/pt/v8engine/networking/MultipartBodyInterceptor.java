@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.account;
+package cm.aptoide.pt.v8engine.networking;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -12,29 +12,18 @@ import okhttp3.RequestBody;
 import rx.Single;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by marcelobenites on 13/03/17.
- */
-
-public class StoreMultipartBodyInterceptor
+public class MultipartBodyInterceptor
     implements BodyInterceptor<HashMapNotNull<String, RequestBody>> {
 
   private final IdsRepository idsRepository;
   private final AptoideAccountManager accountManager;
   private final RequestBodyFactory requestBodyFactory;
-  private final String storeTheme;
-  private final String storeDescription;
-  private final ObjectMapper serializer;
 
-  public StoreMultipartBodyInterceptor(IdsRepository idsRepository,
-      AptoideAccountManager accountManager, RequestBodyFactory requestBodyFactory,
-      String storeTheme, String storeDescription, ObjectMapper serializer) {
+  public MultipartBodyInterceptor(IdsRepository idsRepository,
+      AptoideAccountManager accountManager, RequestBodyFactory requestBodyFactory) {
     this.idsRepository = idsRepository;
     this.accountManager = accountManager;
     this.requestBodyFactory = requestBodyFactory;
-    this.storeTheme = storeTheme;
-    this.storeDescription = storeDescription;
-    this.serializer = serializer;
   }
 
   @Override public Single<HashMapNotNull<String, RequestBody>> intercept(
@@ -43,14 +32,6 @@ public class StoreMultipartBodyInterceptor
         .first()
         .toSingle()
         .flatMap(account -> {
-          try {
-            body.put("store_properties", requestBodyFactory.createBodyPartFromString(
-                serializer.writeValueAsString(
-                    new SimpleSetStoreRequest.StoreProperties(storeTheme, storeDescription))));
-          } catch (JsonProcessingException e) {
-            Single.error(e);
-          }
-
           if (account.isLoggedIn()) {
             body.put("access_token",
                 requestBodyFactory.createBodyPartFromString(account.getAccessToken()));

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -67,8 +67,6 @@ import cm.aptoide.pt.v8engine.account.BaseBodyInterceptorFactory;
 import cm.aptoide.pt.v8engine.account.DatabaseStoreDataPersist;
 import cm.aptoide.pt.v8engine.account.NoTokenBodyInterceptor;
 import cm.aptoide.pt.v8engine.account.SocialAccountFactory;
-import cm.aptoide.pt.v8engine.account.StoreAuthBodyInterceptor;
-import cm.aptoide.pt.v8engine.account.StoreMultipartBodyInterceptor;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.billing.AccountPayer;
 import cm.aptoide.pt.v8engine.billing.AptoideBilling;
@@ -106,6 +104,8 @@ import cm.aptoide.pt.v8engine.leak.LeakTool;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
+import cm.aptoide.pt.v8engine.networking.MultipartBodyInterceptor;
+import cm.aptoide.pt.v8engine.networking.OAuthBodyInterceptor;
 import cm.aptoide.pt.v8engine.networking.UserAgentInterceptor;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
@@ -182,7 +182,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private AccountFactory accountFactory;
   private AndroidAccountProvider androidAccountProvider;
   private PaymentAnalytics paymentAnalytics;
-  private StoreAuthBodyInterceptor storeAuthBodyInterceptor;
+  private OAuthBodyInterceptor oAuthBodyInterceptor;
   private ObjectMapper nonNullObjectMapper;
   private RequestBodyFactory requestBodyFactory;
   private PaymentSyncScheduler paymentSyncScheduler;
@@ -193,6 +193,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private AptoideBilling aptoideBilling;
   private PurchaseIntentMapper purchaseIntentMapper;
   private PaymentThrowableCodeMapper paymentThrowableCodeMapper;
+  private MultipartBodyInterceptor multipartBodyInterceptor;
 
   /**
    * call after this instance onCreate()
@@ -731,19 +732,22 @@ public abstract class V8Engine extends SpotAndShareApplication {
     return baseBodyInterceptorV3;
   }
 
-  public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getStoreAuthBodyInterceptor() {
-    if (storeAuthBodyInterceptor == null) {
-      storeAuthBodyInterceptor =
-          new StoreAuthBodyInterceptor(getIdsRepository(), getAptoideMd5sum(), getAptoidePackage(),
-              getAccountManager());
+  public BodyInterceptor<HashMapNotNull<String, RequestBody>> getMultipartBodyInterceptor() {
+    if (multipartBodyInterceptor == null) {
+      multipartBodyInterceptor =
+          new MultipartBodyInterceptor(getIdsRepository(), getAccountManager(),
+              getRequestBodyFactory());
     }
-    return storeAuthBodyInterceptor;
+    return multipartBodyInterceptor;
   }
 
-  public BodyInterceptor<HashMapNotNull<String, RequestBody>> getStoreMultipartBodyInterceptor(
-      String storeTheme, String storeDescription) {
-    return new StoreMultipartBodyInterceptor(getIdsRepository(), getAccountManager(),
-        getRequestBodyFactory(), storeTheme, storeDescription, getNonNullObjectMapper());
+  public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getOAuthBodyInterceptor() {
+    if (oAuthBodyInterceptor == null) {
+      oAuthBodyInterceptor =
+          new OAuthBodyInterceptor(getIdsRepository(), getAptoideMd5sum(), getAptoidePackage(),
+              getAccountManager());
+    }
+    return oAuthBodyInterceptor;
   }
 
   public RequestBodyFactory getRequestBodyFactory() {
@@ -765,14 +769,14 @@ public abstract class V8Engine extends SpotAndShareApplication {
     if (aptoideMd5sum == null) {
       synchronized (this) {
         if (aptoideMd5sum == null) {
-          aptoideMd5sum = caculateMd5Sum();
+          aptoideMd5sum = calculateMd5Sum();
         }
       }
     }
     return aptoideMd5sum;
   }
 
-  private String caculateMd5Sum() {
+  private String calculateMd5Sum() {
     try {
       return AptoideUtils.AlgorithmU.computeMd5(
           getPackageManager().getPackageInfo(getAptoidePackage(), 0));
@@ -834,7 +838,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   }
 
   /**
-   * Use {@link #createShortcut()} using a {@link Completable}
+   * Do {@link #createShortcut()} using a {@link Completable}
    */
   @Deprecated @Partners public void createShortCut() {
     createAppShortcut();

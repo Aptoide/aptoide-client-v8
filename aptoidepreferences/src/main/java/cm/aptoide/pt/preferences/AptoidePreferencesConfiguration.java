@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified on 24/06/2016.
  */
 
 package cm.aptoide.pt.preferences;
@@ -78,6 +78,8 @@ public interface AptoidePreferencesConfiguration {
    * @return true to show create store and user timeline privacy configurations
    */
   boolean isCreateStoreAndSetUserPrivacyAvailable();
+
+  String getVersionName();
 
   enum SocialLogin {
     FACEBOOK, GOOGLE

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 03/08/2016.
+ * Modified on 03/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v3;
@@ -43,7 +43,7 @@ import retrofit2.http.PartMap;
 import rx.Observable;
 
 /**
- * Created by sithengineer on 21/07/16.
+ * Created on 21/07/16.
  */
 public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
@@ -192,7 +192,5 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
     @POST("changeUserSettings") @FormUrlEncoded Observable<BaseV3Response> changeUserSettings(
         @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("changeUserRepoSubscription") @FormUrlEncoded
-    Observable<BaseV3Response> changeUserRepoSubscription(@FieldMap BaseBody args);
   }
 }

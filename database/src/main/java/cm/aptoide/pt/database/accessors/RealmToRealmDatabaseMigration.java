@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.database.accessors;
@@ -18,7 +18,7 @@ import io.realm.RealmObjectSchema;
 import io.realm.RealmSchema;
 
 /**
- * Created by sithengineer on 12/05/16.
+ * Created on 12/05/16.
  *
  * This code is responsible to migrate between Realm schemas.
  *

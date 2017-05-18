@@ -10,7 +10,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
 /**
- * Created by sithengineer on 11/05/16.
+ * Created on 11/05/16.
  */
 public class AppViewScreenshotsDisplayable extends DisplayablePojo<GetAppMeta.App> {
 

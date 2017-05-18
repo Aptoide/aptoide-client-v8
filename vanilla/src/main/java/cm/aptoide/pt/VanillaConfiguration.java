@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
+ * Modified on 24/06/2016.
  */
 
 package cm.aptoide.pt;
@@ -136,5 +136,9 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
 
   @Override public boolean isCreateStoreAndSetUserPrivacyAvailable() {
     return true;
+  }
+
+  @Override public String getVersionName() {
+    return BuildConfig.VERSION_NAME;
   }
 }

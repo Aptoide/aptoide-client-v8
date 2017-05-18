@@ -330,7 +330,7 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @Multipart @POST("store/set") Observable<BaseV7Response> editStore(
-        @Part MultipartBody.Part store_avatar, @PartMap HashMapNotNull<String, RequestBody> body);
+        @Part MultipartBody.Part multipartBody, @PartMap HashMapNotNull<String, RequestBody> body);
 
     @POST("user/getTimelineStats") Observable<TimelineStats> getTimelineStats(
         @retrofit2.http.Body GetTimelineStatsRequest.Body body,

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 23/08/2016.
+ * Modified on 23/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view;
@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 /**
- * created by SithEngineer
+ * Created
  * <p>
  * Used to mock common components lifecycle
  * </p>

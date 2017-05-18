@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 28/07/2016.
+ * Modified on 28/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 import cm.aptoide.pt.v8engine.R;
 
 /**
- * Created by sithengineer on 27/06/16.
+ * Created on 27/06/16.
  */
 public class FooterRowDisplayable extends DisplayablePojo<String> {
 

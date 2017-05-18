@@ -15,21 +15,21 @@ public class CheckUserCredentialsRequest extends V3<CheckUserCredentialsJson> {
 
   private final boolean createStore;
 
-  public CheckUserCredentialsRequest(BaseBody baseBody, boolean createStore,
+  private CheckUserCredentialsRequest(BaseBody baseBody, boolean createStore,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
     super(baseBody, httpClient, converterFactory, bodyInterceptor);
     this.createStore = createStore;
   }
 
-  public static CheckUserCredentialsRequest of(String store,
+  public static CheckUserCredentialsRequest of(String storeName,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
 
     final BaseBody body = new BaseBody();
     body.put("mode", "json");
     body.put("createRepo", "1");
-    body.put("repo", store);
+    body.put("repo", storeName);
     body.put("authMode", "aptoide");
     body.put("oauthCreateRepo", "true");
 
