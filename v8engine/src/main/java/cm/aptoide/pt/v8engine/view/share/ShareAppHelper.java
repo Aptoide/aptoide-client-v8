@@ -13,6 +13,7 @@ import cm.aptoide.pt.spotandshareandroid.HighwayActivity;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
@@ -63,7 +64,7 @@ public class ShareAppHelper {
       } else if (ShareDialogs.ShareResponse.SHARE_SPOT_AND_SHARE == eResponse) {
         caseSpotandShareShare(appName, packageName);
       }
-    }, err -> err.printStackTrace());
+    }, CrashReport.getInstance()::log);
   }
 
   public void shareApp(String appName, String packageName, String iconPath) {
@@ -75,7 +76,7 @@ public class ShareAppHelper {
           } else if (ShareDialogs.ShareResponse.SHARE_SPOT_AND_SHARE == shareResponse) {
             caseSpotandShareShare(appName, packageName);
           }
-        }, err -> err.printStackTrace());
+        }, CrashReport.getInstance()::log);
   }
 
   @Partners private void caseDefaultShare(String appName, String wUrl) {
