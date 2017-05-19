@@ -319,7 +319,7 @@ public class ConnectionManager {
         + deviceName
         + getSpotShareID()
         + "";
-    return hotspotManager.enableHotspot(ssid);
+    return hotspotManager.enablePrivateHotspot(ssid);
   }
 
   private String getRandomAlphanumericString(int length) {
