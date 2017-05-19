@@ -17,6 +17,14 @@
     <item name="android:contentDescription">@string/com_facebook_loginview_log_in_button_long</item>
   </style>
 
+  <!--
+  <style name="Aptoide.Button.Inverse" parent="Widget.AppCompat.Button.Colored">
+    <item name="android:textColor">@color/default_color</item>
+    <item name="android:colorAccent">@color/grey_fog_light</item>
+    <item name="android:colorButtonNormal">@color/white</item>
+  </style>
+  -->
+
   <style name="Aptoide.Button.Google">
     <item name="android:background">@color/google</item>
     <item name="android:drawableLeft">@drawable/google_plus_ic</item>

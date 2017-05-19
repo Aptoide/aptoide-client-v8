@@ -28,7 +28,7 @@
     <LinearLayout
         android:id="@+id/bottom_buttons"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/button_default_height"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/padding_medium_small"
         android:gravity="center"
@@ -42,22 +42,20 @@
       <Button
           android:id="@+id/logged_in_more_info_button"
           android:layout_width="0dp"
-          android:layout_height="match_parent"
           android:layout_marginEnd="23dp"
           android:layout_marginRight="23dp"
           android:layout_weight="1"
           android:gravity="center"
           android:text="@string/more_info"
-          style="?attr/customButtonWhite"
+          style="@style/Aptoide.Button"
           />
 
       <Button
           android:id="@+id/logged_in_continue"
           android:layout_width="0dp"
-          android:layout_height="match_parent"
           android:layout_weight="1"
           android:text="@string/continue_option"
-          style="?attr/customButton"
+          style="@style/Aptoide.Button"
           />
 
     </LinearLayout>
@@ -93,7 +91,7 @@
             android:gravity="center_horizontal"
             android:text="@string/create_profile_pub_pri_suc_login"
             android:textColor="@color/default_color"
-            android:textSize="@dimen/text_size_large"
+            style="@style/Aptoide.TextView.Medium.L"
             />
 
         <TextView
@@ -108,8 +106,7 @@
             android:paddingStart="@dimen/padding_medium"
             android:text="@string/create_profile_pub_pri_suc_login_sub_text"
             android:textAlignment="center"
-            android:textColor="@color/create_store_hint_color"
-            android:textSize="@dimen/text_size_medium"
+            style="@style/Aptoide.TextView.Regular.S"
             />
       </LinearLayout>
     </ScrollView>
