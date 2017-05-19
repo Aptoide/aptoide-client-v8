@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import java.util.List;
 
 /**
@@ -26,23 +27,36 @@ public class NotificationSyncScheduler {
   }
 
   void schedule() {
-
     for (final Schedule schedule : scheduleList) {
-      alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, schedule.getInterval(),
-          getPendingIntent(schedule));
+      if (!isAlarmActive(schedule)) {
+        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, schedule.getInterval(),
+            getPendingIntent(schedule));
+      }
     }
+  }
+
+  private boolean isAlarmActive(Schedule schedule) {
+    return PendingIntent.getService(context, 0, buildIntent(schedule), PendingIntent.FLAG_NO_CREATE)
+        != null;
   }
 
   void stop() {
     for (final Schedule schedule : scheduleList) {
-      alarmManager.cancel(getPendingIntent(schedule));
+      PendingIntent pendingIntent = getPendingIntent(schedule);
+      alarmManager.cancel(pendingIntent);
+      pendingIntent.cancel();
     }
   }
 
   private PendingIntent getPendingIntent(Schedule schedule) {
+    Intent intent = buildIntent(schedule);
+    return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+  }
+
+  @NonNull private Intent buildIntent(Schedule schedule) {
     Intent intent = new Intent(context, serviceClass);
     intent.setAction(schedule.getAction());
-    return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    return intent;
   }
 
   public static class Schedule {
