@@ -66,7 +66,7 @@ public class PullingContentReceiver extends BroadcastReceiver {
   }
 
   private void startSync() {
-    notificationCenter.start();
+    notificationCenter.startIfEnabled();
   }
 
   private Completable notificationDismissed(int notificationId) {
