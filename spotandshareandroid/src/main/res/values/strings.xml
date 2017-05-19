@@ -116,5 +116,7 @@
   <string name="spotandshare_message_share_apk_welcome_install_when_completed">Install Aptoide as soon as the download is completed, and start using Spot&amp;Share with your friend.</string>
   <string name="spotandshare_message_share_apk_welcome_ask_your_friend">Ask your friend to guide you\nduring installation :)</string>
 
+  <string name="spotandshare_message_create_hotspot_error">Unable to create the hotspot</string>
+
 </resources>
 
