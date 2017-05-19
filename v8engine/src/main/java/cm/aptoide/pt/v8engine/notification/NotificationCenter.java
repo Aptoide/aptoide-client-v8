@@ -38,25 +38,31 @@ public class NotificationCenter {
     sharedPreferences.edit()
         .putBoolean(NOTIFICATION_CENTER_ENABLE, true)
         .apply();
-    start();
   }
 
   public void disable() {
     sharedPreferences.edit()
         .putBoolean(NOTIFICATION_CENTER_ENABLE, false)
         .apply();
-    stop();
+  }
+
+  public void startIfEnabled() {
+    if (isEnable()) {
+      start();
+    }
   }
 
   public void start() {
-    if (isEnable()) {
       notificationSyncScheduler.schedule();
       notificationProviderSubscription = getNewNotifications().flatMapCompletable(
           aptoideNotification -> notificationShower.showNotification(aptoideNotification,
               notificationIdsMapper.getNotificationId(aptoideNotification.getType())))
           .subscribe(aptoideNotification -> {
           }, throwable -> crashReport.log(throwable));
-    }
+  }
+
+  public void forceSync() {
+    notificationSyncScheduler.forceSync();
   }
 
   private Observable<AptoideNotification> getNewNotifications() {
