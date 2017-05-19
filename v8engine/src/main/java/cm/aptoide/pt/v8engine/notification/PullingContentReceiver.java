@@ -11,6 +11,7 @@ import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import rx.Completable;
 
@@ -29,6 +30,7 @@ public class PullingContentReceiver extends BroadcastReceiver {
   private CrashReport crashReport;
   private NotificationAccessor notificationAccessor;
   private NotificationIdsMapper notificationIdsMapper;
+  private NotificationCenter notificationCenter;
 
   @Override public void onReceive(Context context, Intent intent) {
     Logger.d(TAG,
@@ -36,12 +38,12 @@ public class PullingContentReceiver extends BroadcastReceiver {
     notificationAccessor = AccessorFactory.getAccessorFor(Notification.class);
     crashReport = CrashReport.getInstance();
     notificationIdsMapper = new NotificationIdsMapper();
+    notificationCenter = ((V8Engine) context.getApplicationContext()).getNotificationCenter();
     String action = intent.getAction();
     if (action != null) {
       switch (action) {
         case Intent.ACTION_BOOT_COMPLETED:
-          //This action is here in order to make sure the v8engine runs on boot. This allows us to
-          // start pulling notification V8Engine#startNotificationsSync
+          startSync();
           break;
         case NOTIFICATION_PRESSED_ACTION:
           pushNotificationPressed(context, intent);
@@ -61,6 +63,10 @@ public class PullingContentReceiver extends BroadcastReceiver {
           break;
       }
     }
+  }
+
+  private void startSync() {
+    notificationCenter.start();
   }
 
   private Completable notificationDismissed(int notificationId) {
