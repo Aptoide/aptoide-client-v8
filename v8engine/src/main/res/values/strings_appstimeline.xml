@@ -5,9 +5,7 @@
   <string name="fragment_social_timeline_general_error">Having some trouble. Can you retry later?</string>
   <string name="displayable_social_timeline_store_latest_apps_headline">This store has new Apps</string>
   <string name="displayable_social_timeline_app_update_name">App %1$s</string>
-  <string name="displayable_social_timeline_app_has_update">has an %1$s</string>
   <string name="displayable_social_timeline_article_get_app_button">Get app %1$s</string>
-  <string name="displayable_social_timeline_app_update">update</string>
   <string name="displayable_social_timeline_app_update_version">Version %1$s</string>
   <string name="displayable_social_timeline_app_update_button">Update %1$s</string>
   <string name="displayable_social_timeline_app_update_updated">Updated</string>

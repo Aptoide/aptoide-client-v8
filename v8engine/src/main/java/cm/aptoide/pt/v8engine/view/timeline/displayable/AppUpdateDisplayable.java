@@ -182,19 +182,6 @@ public class AppUpdateDisplayable extends CardDisplayable {
     return dateCalculator.getTimeSinceDate(context, dateUpdated);
   }
 
-  public Spannable getHasUpdateText(Context context) {
-    final String update = context.getString(R.string.displayable_social_timeline_app_update);
-    return spannableFactory.createStyleSpan(
-        context.getString(R.string.displayable_social_timeline_app_has_update, update),
-        Typeface.BOLD, update);
-  }
-
-  public Spannable getVersionText(Context context) {
-    return spannableFactory.createStyleSpan(
-        context.getString(R.string.displayable_social_timeline_app_update_version, appVersionName),
-        Typeface.BOLD, appVersionName);
-  }
-
   public Spannable getUpdateAppText(Context context) {
     String application = context.getString(R.string.appstimeline_update_app);
     return spannableFactory.createStyleSpan(

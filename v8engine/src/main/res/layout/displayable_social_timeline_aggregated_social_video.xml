@@ -13,7 +13,7 @@
       android:orientation="vertical"
       >
 
-    <include layout="@layout/apps_timeline_card_header"/>
+    <include layout="@layout/apps_timeline_multiple_heads_card_header"/>
 
     <TextView
         android:id="@+id/social_shared_by"
@@ -31,24 +31,46 @@
 
     <include layout="@layout/partial_social_timeline_video_thumbnail"/>
 
+    <LinearLayout
+        android:id="@+id/timeline_sub_minimal_card_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/timeline_aggregated_see_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+        android:textAllCaps="true"
+        android:visibility="gone"
+        tools:text="@string/see_more"
+        tools:visibility="visible"
+        style="@style/Aptoide.TextView.Regular.XS.GreyFog"
+        />
+
     <View
-        android:id="@+id/divider"
+        android:id="@+id/partial_social_timeline_thumbnail_divider2"
         android:layout_width="match_parent"
         android:layout_height="0.7dp"
         android:layout_marginEnd="12dp"
         android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
+        android:layout_marginRight="15dp"
         android:layout_marginStart="12dp"
         android:background="@color/timeline_separator"
         android:visibility="visible"
         />
 
-    <include layout="@layout/social_info_bar_timeline"/>
-
-    <include layout="@layout/social_last_comment_bar"/>
-
-    <include layout="@layout/social_bar_timeline"/>
+    <include
+        layout="@layout/social_bar_timeline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        />
 
   </LinearLayout>
 </android.support.v7.widget.CardView>
-
