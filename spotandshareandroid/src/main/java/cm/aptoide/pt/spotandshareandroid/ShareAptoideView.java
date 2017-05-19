@@ -6,4 +6,7 @@ package cm.aptoide.pt.spotandshareandroid;
 
 public interface ShareAptoideView {
 
+  void buildBackDialog();
+
+  void showUnsuccessHotspotCreation();
 }

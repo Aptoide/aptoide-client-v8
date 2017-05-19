@@ -117,6 +117,7 @@
   <string name="spotandshare_message_share_apk_welcome_ask_your_friend">Ask your friend to guide you\nduring installation :)</string>
 
   <string name="spotandshare_message_create_hotspot_error">Unable to create the hotspot</string>
+  <string name="spotandshare_button_retry_enable_hotspot">Retry</string>
 
 </resources>
 

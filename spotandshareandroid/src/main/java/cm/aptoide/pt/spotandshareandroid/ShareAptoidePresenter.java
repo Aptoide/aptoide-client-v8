@@ -6,17 +6,17 @@ package cm.aptoide.pt.spotandshareandroid;
 
 public class ShareAptoidePresenter implements Presenter {
 
-  private ShareAptoideView shareAptoideView;
+  private ShareAptoideView view;
   private ShareAptoideManager shareAptoideManager;
 
   public ShareAptoidePresenter(ShareAptoideView shareAptoideView,
       ShareAptoideManager shareAptoideManager) {
-    this.shareAptoideView = shareAptoideView;
+    this.view = shareAptoideView;
     this.shareAptoideManager = shareAptoideManager;
   }
 
   @Override public void onCreate() {
-    shareAptoideManager.enableHotspot();
+    enableHotspot();
   }
 
   @Override public void onResume() {
@@ -37,5 +37,21 @@ public class ShareAptoidePresenter implements Presenter {
 
   @Override public void onStart() {
 
+  }
+
+  public void pressedBack() {
+    view.buildBackDialog();
+  }
+
+  public void pressedRetryOpenHotspot() {
+    enableHotspot();
+  }
+
+  private void enableHotspot() {
+    shareAptoideManager.enableHotspot(result -> {
+      if (!result) {
+        view.showUnsuccessHotspotCreation();
+      }
+    });
   }
 }
