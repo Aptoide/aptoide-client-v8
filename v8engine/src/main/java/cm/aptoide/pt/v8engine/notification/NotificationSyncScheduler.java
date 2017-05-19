@@ -35,6 +35,12 @@ public class NotificationSyncScheduler {
     }
   }
 
+  public void forceSync() {
+    for (Schedule schedule : scheduleList) {
+      context.startService(buildIntent(schedule));
+    }
+  }
+
   private boolean isAlarmActive(Schedule schedule) {
     return PendingIntent.getService(context, 0, buildIntent(schedule), PendingIntent.FLAG_NO_CREATE)
         != null;
