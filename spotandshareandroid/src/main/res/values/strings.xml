@@ -110,5 +110,13 @@
 
   <string name="spotandshare_button_invite_friends">Invite nearby friends to use Spot&amp;Share</string>
 
+
+  <!-- Share Apk Welcome -->
+  <string name="share_apk_welcome_page_title">Install Aptoide on your device</string>
+  <string name="share_apk_welcome_download_aptoide_message">DOWNLOAD APTOIDE</string>
+  <string name="share_apk_welcome_install_when_completed_message">Install Aptoide as soon as the download is completed, and
+            start using Spot&amp;Share with your friend.</string>
+  <string name="share_apk_welcome_ask_your_friend_message">Ask your friend to guide you\nduring installation :)</string>
+
 </resources>
 

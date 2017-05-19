@@ -96,5 +96,6 @@
   <string name="x_shared">%s shared</string>
   <string name="x_installed_and_recommended">%1$s installed</string>
   <string name="x_posted">%s posted</string>
+  <string name="popular_app_among_friends">Popular app among friends</string>
 
 </resources>

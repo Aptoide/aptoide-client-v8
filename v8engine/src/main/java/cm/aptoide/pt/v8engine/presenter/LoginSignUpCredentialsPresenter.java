@@ -81,10 +81,9 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
 
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
-        .flatMap(__ ->
-          accountManager.accountStatus())
+        .flatMap(__ -> accountManager.accountStatus())
         .doOnNext(account -> {
-          if(account.isLoggedIn()){
+          if (account.isLoggedIn()) {
 
           }
         })

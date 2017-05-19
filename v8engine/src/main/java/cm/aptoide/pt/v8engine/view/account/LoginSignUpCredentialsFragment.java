@@ -112,11 +112,28 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         getArguments().getBoolean(CLEAN_BACK_STACK));
   }
 
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putString(USERNAME_KEY, aptoideEmailEditText.getText()
+        .toString());
+    outState.putString(PASSWORD_KEY, aptoidePasswordEditText.getText()
+        .toString());
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
     return inflater.inflate(R.layout.fragment_login_sign_up_credentials, container, false);
+  }
+
+  @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+    super.onViewStateRestored(savedInstanceState);
+
+    if (savedInstanceState != null) {
+      aptoideEmailEditText.setText(savedInstanceState.getString(USERNAME_KEY, ""));
+      aptoidePasswordEditText.setText(savedInstanceState.getString(PASSWORD_KEY, ""));
+    }
   }
 
   @Override public Observable<Void> showAptoideLoginAreaClick() {
@@ -290,6 +307,34 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     return getActivity().getApplicationContext();
   }
 
+  @Override public void lockScreenRotation() {
+    int orientation;
+    int rotation =
+        ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay()
+            .getRotation();
+    switch (rotation) {
+      default:
+      case Surface.ROTATION_0:
+        orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        break;
+      case Surface.ROTATION_90:
+        orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+        break;
+      case Surface.ROTATION_180:
+        orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
+        break;
+      case Surface.ROTATION_270:
+        orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+        break;
+    }
+
+    getActivity().setRequestedOrientation(orientation);
+  }
+
+  @Override public void unlockScreenRotation() {
+    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+  }
+
   private Analytics.Account.StartupClickOrigin getStartupClickOrigin() {
     if (loginArea.getVisibility() == View.VISIBLE) {
       return Analytics.Account.StartupClickOrigin.LOGIN_UP;
@@ -393,21 +438,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     }
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putString(USERNAME_KEY, aptoideEmailEditText.getText().toString());
-    outState.putString(PASSWORD_KEY, aptoidePasswordEditText.getText().toString());
-  }
-
-  @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-    super.onViewStateRestored(savedInstanceState);
-
-    if(savedInstanceState!=null) {
-      aptoideEmailEditText.setText(savedInstanceState.getString(USERNAME_KEY, ""));
-      aptoidePasswordEditText.setText(savedInstanceState.getString(PASSWORD_KEY, ""));
-    }
-  }
-
   public String getCompanyName() {
     return ((V8Engine) getActivity().getApplication()).createConfiguration()
         .getMarketName();
@@ -417,32 +447,5 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     unregisterBackClickHandler(presenter);
     unlockScreenRotation();
     super.onDestroyView();
-  }
-
-  @Override public void lockScreenRotation() {
-    int orientation;
-    int rotation = ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay()
-        .getRotation();
-    switch (rotation) {
-      default:
-      case Surface.ROTATION_0:
-        orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-        break;
-      case Surface.ROTATION_90:
-        orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-        break;
-      case Surface.ROTATION_180:
-        orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
-        break;
-      case Surface.ROTATION_270:
-        orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
-        break;
-    }
-
-    getActivity().setRequestedOrientation(orientation);
-  }
-
-  @Override public void unlockScreenRotation() {
-    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
   }
 }

@@ -98,7 +98,7 @@ public class FragmentNavigator {
     return null;
   }
 
-  public Fragment getFragment(){
+  public Fragment getFragment() {
     return fragmentManager.findFragmentById(containerId);
   }
 
