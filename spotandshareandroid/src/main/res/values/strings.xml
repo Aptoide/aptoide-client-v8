@@ -96,7 +96,6 @@
   <string name="locationDialog">We will not be able to join groups if location is off</string>
   <string name="turn_on">turn on</string>
 
-
   <string name="spotandshare_message_share_aptoide_initial_message">Your friend doesn\'t use Aptoide and doesn\'t have Spot&amp;Share? No problem! \n Follow these 3 steps:</string>
   <string name="spotandshare_message_first_share_instruction">  1. Ask your friend to connect via Wi-Fi to %1$s hotspot</string>
   <string name="spotandshare_message_second_share_instruction"> 2. Then ask him to scan this QR code</string>
@@ -109,6 +108,13 @@
   <string name="spotandshare_button_wait">Wait</string>
 
   <string name="spotandshare_button_invite_friends">Invite nearby friends to use Spot&amp;Share</string>
+
+
+  <!-- Share Apk HTML -->
+  <string name="spotandshare_title_share_apk_welcome_page">Install Aptoide on your device</string>
+  <string name="spotandshare_message_share_apk_welcome_download_aptoide">DOWNLOAD APTOIDE</string>
+  <string name="spotandshare_message_share_apk_welcome_install_when_completed">Install Aptoide as soon as the download is completed, and start using Spot&amp;Share with your friend.</string>
+  <string name="spotandshare_message_share_apk_welcome_ask_your_friend">Ask your friend to guide you\nduring installation :)</string>
 
 </resources>
 
