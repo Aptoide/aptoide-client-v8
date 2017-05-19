@@ -10,10 +10,12 @@ public class ShareAptoideManager {
 
   public static final String SSID = "Aptoide_Share";
   private HotspotManager hotspotManager;
+  private ConnectionManager connectionManager;
   private EnabledHotspotListener listener;
 
-  public ShareAptoideManager(HotspotManager hotspotManager) {
+  public ShareAptoideManager(HotspotManager hotspotManager, ConnectionManager connectionManager) {
     this.hotspotManager = hotspotManager;
+    this.connectionManager = connectionManager;
   }
 
   public void enableHotspot(EnabledHotspotListener listener) {
@@ -22,7 +24,10 @@ public class ShareAptoideManager {
   }
 
   public void stop() {
+    this.hotspotManager.resetHotspot(false);
+    this.connectionManager.recoverNetworkState();
     this.hotspotManager.stop();
+    this.connectionManager.stop();
     this.listener = null;
   }
 

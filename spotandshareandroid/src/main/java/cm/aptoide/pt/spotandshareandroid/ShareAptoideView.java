@@ -9,4 +9,6 @@ public interface ShareAptoideView {
   void buildBackDialog();
 
   void showUnsuccessHotspotCreation();
+
+  void dismiss();
 }

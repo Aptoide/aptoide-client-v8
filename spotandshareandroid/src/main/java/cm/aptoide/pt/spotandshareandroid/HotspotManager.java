@@ -33,10 +33,27 @@ public class HotspotManager {
     boolean methodFound = false;
     for (Method method : wmMethods) {
       if (method.getName()
+          .equals("setWifiApConfiguration")) {
+
+        try {
+          Method setConfigMethod = wifimanager.getClass()
+              .getMethod("setWifiApConfiguration", WifiConfiguration.class);
+          Logger.d(TAG, "Re-seting the wifiAp configuration to what it was before !!! ");
+          setConfigMethod.invoke(wifimanager, wc);
+        } catch (NoSuchMethodException e) {
+          e.printStackTrace();
+        } catch (IllegalAccessException e) {
+          e.printStackTrace();
+        } catch (InvocationTargetException e) {
+          e.printStackTrace();
+        }
+      }
+      if (method.getName()
           .equals("setWifiApEnabled")) {
 
         try {
-          method.invoke(wifimanager, wc, enable);
+          Logger.d(TAG, "Desligar o hostpot ");
+          method.invoke(wifimanager, wc, false);
         } catch (IllegalAccessException e) {
           e.printStackTrace();
         } catch (InvocationTargetException e) {

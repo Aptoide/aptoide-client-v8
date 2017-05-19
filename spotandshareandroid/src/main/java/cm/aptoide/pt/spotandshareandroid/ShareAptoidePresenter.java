@@ -54,4 +54,9 @@ public class ShareAptoidePresenter implements Presenter {
       }
     });
   }
+
+  public void pressedExitOnDialog() {
+    shareAptoideManager.stop();
+    view.dismiss();
+  }
 }

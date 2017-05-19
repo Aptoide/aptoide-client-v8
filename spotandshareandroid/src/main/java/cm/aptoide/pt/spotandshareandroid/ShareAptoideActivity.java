@@ -1,7 +1,9 @@
 package cm.aptoide.pt.spotandshareandroid;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
@@ -20,7 +22,8 @@ public class ShareAptoideActivity extends ActivityView implements ShareAptoideVi
     bindViews();
 
     presenter = new ShareAptoidePresenter(this,
-        new ShareAptoideManager(new HotspotManager(getApplicationContext())));
+        new ShareAptoideManager(new HotspotManager(getApplicationContext()),
+            ConnectionManager.getInstance(this.getApplicationContext())));
     attachPresenter(presenter);
   }
 
@@ -49,11 +52,33 @@ public class ShareAptoideActivity extends ActivityView implements ShareAptoideVi
   }
 
   @Override public void buildBackDialog() {
-
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setTitle(this.getResources()
+        .getString(R.string.spotandshare_title_exit_share_aptoide_activity))
+        .setMessage(this.getResources()
+            .getString(R.string.spotandshare_message_warning_leaving_while_sharing_aptoide))
+        .setPositiveButton(this.getResources()
+            .getString(R.string.spotandshare_button_wait), new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int id) {
+            //wait
+          }
+        })
+        .setNegativeButton(this.getResources()
+            .getString(R.string.spotandshare_button_exit), new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int id) {
+            presenter.pressedExitOnDialog();
+          }
+        });
+    builder.create()
+        .show();
   }
 
   @Override public void showUnsuccessHotspotCreation() {
     buildSnackBar();
+  }
+
+  @Override public void dismiss() {
+    this.finish();
   }
 
   private void buildSnackBar() {
@@ -61,5 +86,9 @@ public class ShareAptoideActivity extends ActivityView implements ShareAptoideVi
         getResources().getString(R.string.spotandshare_message_create_hotspot_error),
         getResources().getString(R.string.spotandshare_button_retry_enable_hotspot),
         click -> presenter.pressedRetryOpenHotspot(), Snackbar.LENGTH_LONG);
+  }
+
+  @Override public void onBackPressed() {
+    presenter.pressedBack();
   }
 }
