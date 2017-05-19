@@ -37,7 +37,9 @@ public class NotificationSyncScheduler {
 
   public void forceSync() {
     for (Schedule schedule : scheduleList) {
-      context.startService(buildIntent(schedule));
+      if (isAlarmActive(schedule)) {
+        context.startService(buildIntent(schedule));
+      }
     }
   }
 
