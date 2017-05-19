@@ -80,7 +80,7 @@
 
   <string name="groupCreatorLeft">Your friend that created the group left</string>
 
-  <string name="hotspotCreationErrorNougat">Please, ask your friends to create a group</string>
+  <string name="spotandshare_message_create_group_error_for_nougat">Your phone doesn\'t allow you to create a group. Please, ask your friend to create one</string>
 
   <string name="searching_groups">Searching for groups to join</string>
 
