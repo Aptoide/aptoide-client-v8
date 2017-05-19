@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.nanohttpd;
+package cm.aptoide.pt.nanohttpd;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
