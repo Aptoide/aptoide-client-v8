@@ -130,6 +130,21 @@ public class HotspotManager {
     boolean methodFound = false;
     for (Method method : wmMethods) {
       if (method.getName()
+          .equals("getWifiApConfiguration")) {
+        Logger.d(TAG, "saving old ssid ");
+        try {
+          WifiConfiguration config = (WifiConfiguration) method.invoke(wifimanager);
+          DataHolder.getInstance()
+              .setWcOnJoin(config);
+        } catch (IllegalAccessException e) {
+          e.printStackTrace();
+        } catch (InvocationTargetException e) {
+          e.getCause()
+              .printStackTrace();
+          e.printStackTrace();
+        }
+      }
+      if (method.getName()
           .equals("setWifiApEnabled")) {
         methodFound = true;
         WifiConfiguration netConfig = new WifiConfiguration();
@@ -171,5 +186,10 @@ public class HotspotManager {
       }
     }
     return ConnectionManager.ERROR_UNKNOWN;
+  }
+
+  public void stop() {
+    this.wifimanager = null;
+    this.context = null;
   }
 }
