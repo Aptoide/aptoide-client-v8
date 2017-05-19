@@ -1,5 +1,9 @@
 package cm.aptoide.pt.spotandshareandroid;
 
+import cm.aptoide.pt.nanohttpd.ShareApkSandbox;
+import cm.aptoide.pt.preferences.Application;
+import java.io.IOException;
+
 /**
  * Created by filipe on 17-05-2017.
  */
@@ -8,6 +12,7 @@ public class ShareAptoidePresenter implements Presenter {
 
   private ShareAptoideView view;
   private ShareAptoideManager shareAptoideManager;
+  private ShareApkSandbox shareApkSandbox;
 
   public ShareAptoidePresenter(ShareAptoideView shareAptoideView,
       ShareAptoideManager shareAptoideManager) {
@@ -17,6 +22,12 @@ public class ShareAptoidePresenter implements Presenter {
 
   @Override public void onCreate() {
     enableHotspot();
+    shareApkSandbox = new ShareApkSandbox(Application.getContext());
+    try {
+      shareApkSandbox.start();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override public void onResume() {
@@ -28,7 +39,7 @@ public class ShareAptoidePresenter implements Presenter {
   }
 
   @Override public void onDestroy() {
-
+    shareApkSandbox.stop();
   }
 
   @Override public void onStop() {
