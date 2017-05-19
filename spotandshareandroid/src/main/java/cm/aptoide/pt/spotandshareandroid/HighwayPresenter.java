@@ -251,6 +251,7 @@ public class HighwayPresenter implements Presenter {
   }
 
   public void clickShareAptoide() {
-    view.openShareAptoide();
+    subscription = groupNameProvider.getName()
+        .subscribe(deviceName -> view.openShareAptoide(deviceName), Throwable::printStackTrace);
   }
 }

@@ -12,9 +12,8 @@
       </solid>
 
       <corners
-          android:topLeftRadius="40dp"
-          android:bottomLeftRadius="40dp">
-      </corners>
+          android:bottomLeftRadius="40dp"
+          android:topLeftRadius="40dp"/>
     </shape>
   </item>
 </layer-list>

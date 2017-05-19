@@ -28,10 +28,15 @@
 
     <Button
         android:id="@+id/share_aptoide_apk_button"
-        android:layout_width="100dp"
+        android:layout_width="180dp"
         android:layout_height="50dp"
         android:layout_gravity="right"
         android:layout_marginTop="50dp"
+        android:paddingLeft="16dp"
+        android:drawableLeft="@drawable/supervisor_account_material"
+        android:text="@string/spotandshare_button_invite_friends"
+        android:textColor="@color/white"
+        style="@style/Aptoide.Spot.Button.Ghost.Spotandshare"
         >
 
     </Button>

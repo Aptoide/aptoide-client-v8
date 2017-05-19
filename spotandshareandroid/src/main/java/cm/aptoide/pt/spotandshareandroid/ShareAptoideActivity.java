@@ -7,18 +7,23 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import cm.aptoide.pt.utils.design.ShowMessage;
 
 public class ShareAptoideActivity extends ActivityView implements ShareAptoideView {
 
   private Toolbar mToolbar;
+  private static final String SHARE_APTOIDE_LINK = "http://192.168.43.1:38080";
   private LinearLayout shareAptoideLinearLayout;
+  private TextView shareAptoideFirstInstruction;
+  private TextView shareAptoideLink;
+  private String Ssid;
   private ShareAptoidePresenter presenter;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_share_aptoide);
-
+    Ssid = getIntent().getStringExtra(HighwayActivity.HOTSPOT_NAME);
     bindViews();
 
     presenter = new ShareAptoidePresenter(this,
@@ -30,7 +35,11 @@ public class ShareAptoideActivity extends ActivityView implements ShareAptoideVi
   private void bindViews() {
     mToolbar = (Toolbar) findViewById(R.id.shareAppsToolbar);
     shareAptoideLinearLayout = (LinearLayout) findViewById(R.id.share_aptoide_layout);
+    shareAptoideFirstInstruction = (TextView) findViewById(R.id.share_aptoide_first_instruction);
+    shareAptoideLink = (TextView) findViewById(R.id.share_aptoide_link);
+
     setUpToolbar();
+    setUpShareTextViews();
   }
 
   private void setUpToolbar() {
@@ -41,6 +50,14 @@ public class ShareAptoideActivity extends ActivityView implements ShareAptoideVi
       getSupportActionBar().setDisplayShowTitleEnabled(true);
       getSupportActionBar().setTitle(getResources().getString(R.string.spot_share));
     }
+  }
+
+  private void setUpShareTextViews() {
+    shareAptoideFirstInstruction.setText(
+        getResources().getString(R.string.spotandshare_message_first_share_instruction, Ssid));
+    shareAptoideLink.setText(
+        getResources().getString(R.string.spotandshare_message_second_share_instruction_alternative,
+            SHARE_APTOIDE_LINK));
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

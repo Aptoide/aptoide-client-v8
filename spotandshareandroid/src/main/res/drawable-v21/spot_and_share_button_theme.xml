@@ -13,5 +13,5 @@
           android:topLeftRadius="40dp"/>
     </shape>
   </item>
-  <item android:drawable="@drawable/btn_ghost_theme_normal"/>
+  <item android:drawable="@drawable/btn_ghost_theme_normal_spotandshare"/>
 </ripple>

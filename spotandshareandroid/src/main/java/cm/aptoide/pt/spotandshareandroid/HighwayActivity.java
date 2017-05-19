@@ -36,6 +36,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   private static final int PERMISSION_REQUEST_CODE = 6531;
   private static final int WRITE_SETTINGS_REQUEST_CODE = 5;
   private static final int LOCATION_REQUEST_CODE = 789;
+  public static final String HOTSPOT_NAME = "HOTSPOT_NAME";
   public LinearLayout createGroupButton;
   public HighwayRadarTextView radarTextView;
   public LinearLayout progressBarLayout;
@@ -443,8 +444,9 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     radarTextView.deselectHotspot(group);
   }
 
-  @Override public void openShareAptoide() {
+  @Override public void openShareAptoide(String Ssid) {
     Intent intent = new Intent(HighwayActivity.this, ShareAptoideActivity.class);
+    intent.putExtra(HOTSPOT_NAME, Ssid);
     startActivity(intent);
     //finish();
   }
