@@ -4,6 +4,7 @@ import android.support.annotation.UiThread;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.model.v7.timeline.AggregatedSocialArticle;
 import cm.aptoide.pt.model.v7.timeline.AggregatedSocialInstall;
+import cm.aptoide.pt.model.v7.timeline.AggregatedSocialStoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.Feature;
@@ -31,6 +32,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.AggregatedSocialArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.AggregatedSocialInstallDisplayable;
+import cm.aptoide.pt.v8engine.view.timeline.displayable.AggregatedSocialStoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.AppUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.PopularAppDisplayable;
@@ -241,6 +243,14 @@ public class CardToDisplayableConverter implements CardToDisplayable {
         (card, dateCalculator, spannableFactory, downloadFactory, linksHandlerFactory) -> AggregatedSocialArticleDisplayable.from(
             (AggregatedSocialArticle) card, dateCalculator, spannableFactory, linksHandlerFactory,
             timelineAnalytics, socialRepository));
+
+    //
+    // AggregatedSocialStore
+    //
+    converters.put(AggregatedSocialStoreLatestApps.class,
+        ((card, dateCalculator, spannableFactory, downloadFactory, linksHandlerFactory) -> AggregatedSocialStoreLatestAppsDisplayable.from(
+            (AggregatedSocialStoreLatestApps) card, dateCalculator, spannableFactory,
+            timelineAnalytics, socialRepository, storeCredentialsProvider)));
   }
 
   @UiThread @Override public Displayable convert(TimelineCard card, DateCalculator dateCalculator,

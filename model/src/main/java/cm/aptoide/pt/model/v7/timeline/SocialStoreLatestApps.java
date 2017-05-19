@@ -61,7 +61,7 @@ public class SocialStoreLatestApps extends SocialCard implements TimelineCard {
   //  return latestUpdate;
   //}
 
-  private static class Stores {
+  protected static class Stores {
     @Getter private final Store user;
     @Getter private final Store card;
 
