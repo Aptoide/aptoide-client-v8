@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/share_aptoide_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -51,11 +52,12 @@
           android:layout_marginRight="63dp"
           android:text="@string/spotandshare_message_share_aptoide_initial_message"
           android:textAlignment="center"
-          style="@style/Aptoide.TextView.Regular.XS"
           android:textColor="@color/grey_700"
+          style="@style/Aptoide.TextView.Regular.XS"
           />
 
       <TextView
+          android:id="@+id/share_aptoide_first_instruction"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginBottom="24dp"
@@ -63,19 +65,19 @@
           android:layout_marginRight="60dp"
           android:text="@string/spotandshare_message_first_share_instruction"
           android:textAlignment="center"
-          style="@style/Aptoide.TextView.Medium.S"
           android:textColor="@color/black_87_alpha"
+          style="@style/Aptoide.TextView.Medium.S"
           />
 
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginRight="65dp"
           android:layout_marginLeft="65dp"
+          android:layout_marginRight="65dp"
           android:text="@string/spotandshare_message_second_share_instruction"
           android:textAlignment="center"
-          style="@style/Aptoide.TextView.Medium.S"
           android:textColor="@color/black_87_alpha"
+          style="@style/Aptoide.TextView.Medium.S"
           />
 
 
@@ -88,15 +90,16 @@
 
 
       <TextView
+          android:id="@+id/share_aptoide_link"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginBottom="24dp"
-          android:layout_marginRight="80dp"
           android:layout_marginLeft="80dp"
+          android:layout_marginRight="80dp"
           android:text="@string/spotandshare_message_second_share_instruction_alternative"
           android:textAlignment="center"
-          style="@style/Aptoide.TextView.Medium.S"
           android:textColor="@color/black_87_alpha"
+          style="@style/Aptoide.TextView.Medium.S"
           />
 
 
@@ -104,12 +107,12 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginBottom="24dp"
-          android:text="@string/spotandshare_message_third_share_instruction"
-          android:textAlignment="center"
           android:layout_marginLeft="100dp"
           android:layout_marginRight="100dp"
-          style="@style/Aptoide.TextView.Medium.S"
+          android:text="@string/spotandshare_message_third_share_instruction"
+          android:textAlignment="center"
           android:textColor="@color/black_87_alpha"
+          style="@style/Aptoide.TextView.Medium.S"
           />
     </LinearLayout>
   </ScrollView>
