@@ -513,8 +513,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private void handleSocialNotifications(Boolean isChecked) {
     if (isChecked) {
       notificationCenter.enable();
+      notificationCenter.start();
     } else {
       notificationCenter.disable();
+      notificationCenter.stop();
     }
   }
 
