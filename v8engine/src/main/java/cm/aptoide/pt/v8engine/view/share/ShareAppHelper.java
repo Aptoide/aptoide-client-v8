@@ -48,7 +48,8 @@ public class ShareAppHelper {
     return installedRepository.contains(packageName);
   }
 
-  public void shareApp(String appName, String packageName, String wUrl, String iconPath) {
+  public void shareApp(String appName, String packageName, String wUrl, String iconPath,
+      String origin) {
 
     String title = activity.getString(R.string.share);
 
@@ -62,19 +63,19 @@ public class ShareAppHelper {
       } else if (ShareDialogs.ShareResponse.SHARE_TIMELINE == eResponse) {
         caseAppsTimelineShare(appName, packageName, iconPath);
       } else if (ShareDialogs.ShareResponse.SHARE_SPOT_AND_SHARE == eResponse) {
-        caseSpotAndShareShare(appName, packageName);
+        caseSpotAndShareShare(appName, packageName, origin);
       }
     }, CrashReport.getInstance()::log);
   }
 
-  public void shareApp(String appName, String packageName, String iconPath) {
+  public void shareApp(String appName, String packageName, String iconPath, String origin) {
     ShareDialogs.createInstalledShareWithSpotandShareDialog(activity,
         activity.getString(R.string.share))
         .subscribe(shareResponse -> {
           if (ShareDialogs.ShareResponse.SHARE_TIMELINE == shareResponse) {
             caseAppsTimelineShare(appName, packageName, iconPath);
           } else if (ShareDialogs.ShareResponse.SHARE_SPOT_AND_SHARE == shareResponse) {
-            caseSpotAndShareShare(appName, packageName);
+            caseSpotAndShareShare(appName, packageName, origin);
           }
         }, CrashReport.getInstance()::log);
   }
@@ -112,9 +113,8 @@ public class ShareAppHelper {
     }
   }
 
-  private void caseSpotAndShareShare(String appName, String packageName) {
-    spotAndShareAnalytics.clickShareApps(
-        SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW);
+  private void caseSpotAndShareShare(String appName, String packageName, String origin) {
+    spotAndShareAnalytics.clickShareApps(origin);
 
     String filepath = getFilepath(packageName);
     String appNameToShare = filterAppName(appName);
