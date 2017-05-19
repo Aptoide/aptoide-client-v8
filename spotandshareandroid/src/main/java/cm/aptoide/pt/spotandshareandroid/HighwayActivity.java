@@ -523,7 +523,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   private void showNougatErrorToast() {
     Toast.makeText(this, this.getResources()
-        .getString(R.string.hotspotCreationErrorNougat), Toast.LENGTH_SHORT)
+        .getString(R.string.spotandshare_message_create_group_error_for_nougat), Toast.LENGTH_SHORT)
         .show();
   }
 
