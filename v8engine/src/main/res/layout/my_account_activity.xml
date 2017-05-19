@@ -78,7 +78,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/my_account_my_profile"
+                android:text="@string/myaccount_my_profile_title"
                 style="@style/Aptoide.TextView.Regular.M.Grey"
                 />
 
@@ -99,7 +99,7 @@
               android:layout_alignParentRight="true"
               android:layout_marginRight="16dp"
               android:layout_marginStart="16dp"
-              android:text="@string/my_account_edit_store"
+              android:text="@string/my_account_edit_store_button"
               style="@style/Aptoide.Button.Ghost.S"
               />
 
@@ -147,7 +147,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="@string/my_account_user_store"
+                android:text="@string/my_account_user_store_title"
                 style="@style/Aptoide.TextView.Regular.M.Grey"
                 />
 
@@ -168,7 +168,7 @@
               android:layout_alignParentRight="true"
               android:layout_marginRight="16dp"
               android:layout_marginStart="16dp"
-              android:text="@string/my_account_edit_store"
+              android:text="@string/my_account_edit_store_button"
               style="@style/Aptoide.Button.Ghost.S"
               />
 
@@ -177,13 +177,12 @@
         <Button
             android:id="@+id/button_logout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
-            android:text="@string/my_account_log_out"
+            android:text="@string/my_account_log_out_button"
             style="@style/Aptoide.Button"
             />
       </LinearLayout>

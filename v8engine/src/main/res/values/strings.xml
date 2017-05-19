@@ -637,11 +637,10 @@
   <string name="access_to_open_gallery_rationale">You need to allow access to the Gallery</string>
 
   <!-- My account -->
-  <string name="my_account_my_profile">My Profile</string>
-  <string name="my_account_user_store">My Store</string>
-  <string name="my_account_edit_store">Edit</string>
-  <string name="my_account_log_out">LOG OUT</string>
-  <string name="notification_center_title">Notification Center</string>
+  <string name="myaccount_my_profile_title">My Profile</string>
+  <string name="my_account_user_store_title">My Store</string>
+  <string name="my_account_edit_store_button">Edit</string>
+  <string name="my_account_log_out_button">LOG OUT</string>
   <string name="my_account_header_title">Notifications</string>
 
 </resources>

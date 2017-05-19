@@ -140,7 +140,6 @@ public class MyAccountFragment extends FragmentView implements MyAccountView {
         new MyAccountNavigator(getFragmentNavigator())), savedInstanceState);
   }
 
-
   private void setupAccountLayout() {
 
     if (!TextUtils.isEmpty(accountManager.getAccount()
