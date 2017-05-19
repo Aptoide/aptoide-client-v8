@@ -4,6 +4,7 @@ import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.notification.NotificationCenter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -13,13 +14,17 @@ public class MyAccountPresenter implements Presenter {
   private final AptoideAccountManager accountManager;
   private final CrashReport crashReport;
   private final MyAccountNavigator navigator;
+  private final NotificationCenter notificationCenter;
+  private final int NUMBER_OF_NOTIFICATIONS = 3;
 
   public MyAccountPresenter(MyAccountView view, AptoideAccountManager accountManager,
-      CrashReport crashReport, MyAccountNavigator navigator) {
+      CrashReport crashReport, MyAccountNavigator navigator,
+      NotificationCenter notificationCenter) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
     this.navigator = navigator;
+    this.notificationCenter = notificationCenter;
   }
 
   @Override public void present() {
@@ -31,13 +36,20 @@ public class MyAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> view.moreNotificationsClick()
-            .doOnNext(__ -> navigator.navigateToInboxView(view.inboxFragmentBundleCreator(true))))
+            .doOnNext(__ -> navigator.navigateToInboxView()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(click -> view.editStoreClick()
             .doOnNext(__ -> navigator.navigateToEditStoreView()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> notificationCenter.getInboxNotifications(NUMBER_OF_NOTIFICATIONS))
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(notifications -> view.showNotifications(notifications))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }

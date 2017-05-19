@@ -2,19 +2,16 @@ package cm.aptoide.pt.v8engine.notification.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.notification.AptoideNotification;
-import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.view.fragment.BaseToolbarFragment;
 import java.util.Collections;
 import java.util.List;
 import rx.Observable;
@@ -24,38 +21,36 @@ import rx.subjects.PublishSubject;
  * Created by pedroribeiro on 16/05/17.
  */
 
-public class InboxFragment extends FragmentView implements InboxView {
+public class InboxFragment extends BaseToolbarFragment implements InboxView {
 
   private RecyclerView list;
   private InboxAdapter adapter;
 
   private PublishSubject<AptoideNotification> notificationSubject;
 
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int itemId = item.getItemId();
+
+    if (itemId == android.R.id.home) {
+      getActivity().onBackPressed();
+      return true;
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     attachPresenter(new InboxPresenter(this,
         ((V8Engine) getContext().getApplicationContext()).getNotificationCenter(),
-        new LinksHandlerFactory(getContext()), this.getArguments()
-        .getInt("numberOfNotifications")), savedInstanceState);
+        new LinksHandlerFactory(getContext())), savedInstanceState);
     notificationSubject = PublishSubject.create();
-  }
-
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_inbox, container, false);
+    adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    list = (RecyclerView) view.findViewById(R.id.fragment_inbox_list);
-    adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
     super.onViewCreated(view, savedInstanceState);
-    if (this.getArguments()
-        .getBoolean("showToolbar")) {
-      setupToolbar(view);
-    } else {
-      setupToolbar(view).setVisibility(View.GONE);
-    }
+    list = (RecyclerView) view.findViewById(R.id.fragment_inbox_list);
     list.setAdapter(adapter);
     list.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
@@ -69,15 +64,21 @@ public class InboxFragment extends FragmentView implements InboxView {
     return notificationSubject;
   }
 
-  private Toolbar setupToolbar(View view) {
-    Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-    toolbar.setLogo(R.drawable.logo_toolbar);
-    toolbar.setTitle(R.string.notification_center_title);
-    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+  @Override public int getContentViewId() {
+    return R.layout.fragment_inbox;
+  }
 
-    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-    actionBar.setDisplayHomeAsUpEnabled(true);
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
+  }
 
-    return toolbar;
+  @Override protected void setupToolbarDetails(Toolbar toolbar) {
+    super.setupToolbarDetails(toolbar);
+    toolbar.setTitle(getString(R.string.myaccount_header_title));
+  }
+
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+    setHasOptionsMenu(true);
   }
 }

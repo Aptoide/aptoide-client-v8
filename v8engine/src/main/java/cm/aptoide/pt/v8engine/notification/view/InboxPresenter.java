@@ -16,20 +16,19 @@ public class InboxPresenter implements Presenter {
   private final InboxView view;
   private final NotificationCenter notificationCenter;
   private final LinksHandlerFactory linkFactory;
-  private int numberOfNotifications;
+  private int NUMBER_OF_NOTIFICATIONS = 50;
 
   public InboxPresenter(InboxView view, NotificationCenter notificationCenter,
-      LinksHandlerFactory linkFactory, int numberOfNotifications) {
+      LinksHandlerFactory linkFactory) {
     this.view = view;
     this.notificationCenter = notificationCenter;
     this.linkFactory = linkFactory;
-    this.numberOfNotifications = numberOfNotifications;
   }
 
   @Override public void present() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> notificationCenter.getInboxNotifications(numberOfNotifications))
+        .flatMap(__ -> notificationCenter.getInboxNotifications(NUMBER_OF_NOTIFICATIONS))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(notifications -> view.showNotifications(notifications))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

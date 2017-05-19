@@ -8,14 +8,14 @@ package cm.aptoide.pt.v8engine.view.account;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -25,18 +25,22 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.notification.view.InboxFragment;
+import cm.aptoide.pt.v8engine.notification.AptoideNotification;
+import cm.aptoide.pt.v8engine.notification.view.InboxAdapter;
 import cm.aptoide.pt.v8engine.presenter.MyAccountNavigator;
 import cm.aptoide.pt.v8engine.presenter.MyAccountPresenter;
 import cm.aptoide.pt.v8engine.presenter.MyAccountView;
-import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.view.fragment.BaseToolbarFragment;
 import com.jakewharton.rxbinding.view.RxView;
+import java.util.Collections;
+import java.util.List;
 import rx.Observable;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by trinkes on 5/2/16.
  */
-public class MyAccountFragment extends FragmentView implements MyAccountView {
+public class MyAccountFragment extends BaseToolbarFragment implements MyAccountView {
 
   private AptoideAccountManager accountManager;
 
@@ -54,39 +58,90 @@ public class MyAccountFragment extends FragmentView implements MyAccountView {
   private RelativeLayout header;
   private TextView headerText;
   private Button moreNotificationsButton;
-  private int MYACCOUNT_NOTIFICATIONS = 3;
-  private int NOTIFICATION_CENTER_NOTIFICATIONS = 350;
+
+  private PublishSubject<AptoideNotification> notificationSubject;
+  private InboxAdapter adapter;
+  private RecyclerView list;
 
   public static Fragment newInstance() {
     return new MyAccountFragment();
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    accountManager = ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
-    Fragment inboxFragment = new InboxFragment();
-    Bundle bundle = new Bundle();
-    bundle.putBoolean("showToolbar", false);
-    bundle.putInt("numberOfNotifications", MYACCOUNT_NOTIFICATIONS);
-    inboxFragment.setArguments(bundle);
-    getFragmentChildNavigator(R.id.fragment_my_account_notifications_container).navigateTo(
-        inboxFragment);
-  }
-
   @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int itemId = item.getItemId();
+
+    if (itemId == android.R.id.home) {
+      getActivity().onBackPressed();
+      return true;
+    }
+
     return super.onOptionsItemSelected(item);
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater layoutInflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    super.onCreateView(layoutInflater, container, savedInstanceState);
-    View view = layoutInflater.inflate(getLayoutId(), null);
-    bindViews(view);
-    return view;
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.menu_empty, menu);
   }
 
-  private void bindViews(View view) {
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
+    accountManager = ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
+    notificationSubject = PublishSubject.create();
+    adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    setupAccountLayout();
+    attachPresenter(new MyAccountPresenter(this, accountManager, CrashReport.getInstance(),
+            new MyAccountNavigator(getFragmentNavigator()),
+            ((V8Engine) getContext().getApplicationContext()).getNotificationCenter()),
+        savedInstanceState);
+    list = (RecyclerView) view.findViewById(R.id.fragment_my_account_notification_list);
+    list.setAdapter(adapter);
+    list.setLayoutManager(
+        new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+  }
+
+  @Override public int getContentViewId() {
+    return R.layout.my_account_activity;
+  }
+
+  public Observable<Void> signOutClick() {
+    return RxView.clicks(logoutButton);
+  }
+
+  @Override public Observable<Void> moreNotificationsClick() {
+    return RxView.clicks(moreNotificationsButton);
+  }
+
+  @Override public void showNotifications(List<AptoideNotification> notifications) {
+    adapter.updateNotifications(notifications);
+  }
+
+  @Override public Observable<Void> editStoreClick() {
+    return RxView.clicks(userStoreEditButton);
+  }
+
+  @Override public void navigateToHome() {
+    getFragmentNavigator().navigateToHomeCleaningBackStack();
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+  }
+
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
+  }
+
+  @Override protected void setupToolbarDetails(Toolbar toolbar) {
+    super.setupToolbarDetails(toolbar);
+    toolbar.setTitle(getString(R.string.my_account));
+  }
+
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
     logoutButton = (Button) view.findViewById(R.id.button_logout);
     usernameTextView = (TextView) view.findViewById(R.id.my_account_username);
     storeNameTextView = (TextView) view.findViewById(R.id.my_account_store_name);
@@ -103,44 +158,9 @@ public class MyAccountFragment extends FragmentView implements MyAccountView {
         .findViewById(R.id.more);
   }
 
-  public int getLayoutId() {
-    return R.layout.my_account_activity;
-  }
-
-  public Observable<Void> signOutClick() {
-    return RxView.clicks(logoutButton);
-  }
-
-  @Override public Observable<Void> moreNotificationsClick() {
-    return RxView.clicks(moreNotificationsButton);
-  }
-
-  @Override public Observable<Void> editStoreClick() {
-    return RxView.clicks(userStoreEditButton);
-  }
-
-  @Override public void navigateToHome() {
-    getFragmentNavigator().navigateToHomeCleaningBackStack();
-  }
-
-  @Override public Bundle inboxFragmentBundleCreator(boolean showToolbar) {
-    Bundle bundle = new Bundle();
-    bundle.putBoolean("showToolbar", showToolbar);
-    bundle.putInt("numberOfNotifications", NOTIFICATION_CENTER_NOTIFICATIONS);
-    return bundle;
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-
-    setupAccountLayout();
-
-    setupToolbar(view, getString(R.string.my_account));
-    attachPresenter(new MyAccountPresenter(this, accountManager, CrashReport.getInstance(),
-        new MyAccountNavigator(getFragmentNavigator())), savedInstanceState);
-  }
-
   private void setupAccountLayout() {
+
+    userProfileEditButton.setVisibility(View.GONE);
 
     if (!TextUtils.isEmpty(accountManager.getAccount()
         .getNickname())) {
@@ -170,20 +190,7 @@ public class MyAccountFragment extends FragmentView implements MyAccountView {
       separator.setVisibility(View.GONE);
       storeLayout.setVisibility(View.GONE);
     }
-    headerText.setText(getString(R.string.my_account_header_title));
-  }
-
-  private Toolbar setupToolbar(View view, String title) {
-    setHasOptionsMenu(true);
-    Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-    toolbar.setLogo(R.drawable.logo_toolbar);
-
-    toolbar.setTitle(title);
-    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-    actionBar.setDisplayHomeAsUpEnabled(true);
-    actionBar.setHomeButtonEnabled(true);
-    return toolbar;
+    headerText.setText(getString(R.string.myaccount_header_title));
+    logoutButton.setAllCaps(true);
   }
 }

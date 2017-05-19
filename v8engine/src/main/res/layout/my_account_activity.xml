@@ -99,7 +99,7 @@
               android:layout_alignParentRight="true"
               android:layout_marginRight="16dp"
               android:layout_marginStart="16dp"
-              android:text="@string/my_account_edit_store_button"
+              android:text="@string/myaccount_edit_store_button"
               style="@style/Aptoide.Button.Ghost.S"
               />
 
@@ -147,7 +147,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="@string/my_account_user_store_title"
+                android:text="@string/myaccount_user_store_title"
                 style="@style/Aptoide.TextView.Regular.M.Grey"
                 />
 
@@ -168,7 +168,7 @@
               android:layout_alignParentRight="true"
               android:layout_marginRight="16dp"
               android:layout_marginStart="16dp"
-              android:text="@string/my_account_edit_store_button"
+              android:text="@string/myaccount_edit_store_button"
               style="@style/Aptoide.Button.Ghost.S"
               />
 
@@ -182,7 +182,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
-            android:text="@string/my_account_log_out_button"
+            android:text="@string/myaccount_log_out_button"
             style="@style/Aptoide.Button"
             />
       </LinearLayout>
@@ -203,12 +203,11 @@
 
     </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/fragment_my_account_notifications_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        >
-    </FrameLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_my_account_notification_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
   </LinearLayout>
 
 </ScrollView>

@@ -7,7 +7,7 @@ import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
  * Created by marcelobenites on 11/04/17.
  */
 
-public class BackButtonFragment extends FragmentView implements BackButton {
+public abstract class BackButtonFragment extends FragmentView implements BackButton {
 
   private BackButton backButton;
 
