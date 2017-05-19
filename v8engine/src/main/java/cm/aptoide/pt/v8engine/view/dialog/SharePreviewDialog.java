@@ -562,7 +562,9 @@ public class SharePreviewDialog {
         R.id.displayable_social_timeline_recommendation_get_app_button);
     RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
 
-    if (appIconUrl != null) {ImageLoader.with(context).load(appIconUrl, appIconV);
+    if (appIconUrl != null) {
+      ImageLoader.with(context)
+          .load(appIconUrl, appIcon);
     }
     appNameT.setText(appName);
     ratingBar.setRating(rating);
