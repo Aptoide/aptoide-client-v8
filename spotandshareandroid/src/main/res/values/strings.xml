@@ -96,12 +96,25 @@
   <string name="locationDialog">We will not be able to join groups if location is off</string>
   <string name="turn_on">turn on</string>
 
-  <!-- Share Apk Welcome -->
-  <string name="share_apk_welcome_page_title">Install Aptoide on your device</string>
-  <string name="share_apk_welcome_download_aptoide_message">DOWNLOAD APTOIDE</string>
-  <string name="share_apk_welcome_install_when_completed_message">Install Aptoide as soon as the download is completed, and
-            start using Spot&amp;Share with your friend.</string>
-  <string name="share_apk_welcome_ask_your_friend_message">Ask your friend to guide you\nduring installation :)</string>
+  <string name="spotandshare_message_share_aptoide_initial_message">Your friend doesn\'t use Aptoide and doesn\'t have Spot&amp;Share? No problem! \n Follow these 3 steps:</string>
+  <string name="spotandshare_message_first_share_instruction">  1. Ask your friend to connect via Wi-Fi to %1$s hotspot</string>
+  <string name="spotandshare_message_second_share_instruction"> 2. Then ask him to scan this QR code</string>
+  <string name="spotandshare_message_second_share_instruction_alternative"> or open this link on his browser %1$s </string>
+  <string name="spotandshare_message_third_share_instruction">3. Finally ask him to start the transfer on his phone!</string>
+
+  <string name="spotandshare_title_exit_share_aptoide_activity">Transfer in progress</string>
+  <string name="spotandshare_message_warning_leaving_while_sharing_aptoide">By leaving this screen you will stop Aptoide\'s transfer. Make sure the transfer is finished before leaving the screen.</string>
+  <string name="spotandshare_button_exit">Exit</string>
+  <string name="spotandshare_button_wait">Wait</string>
+
+  <string name="spotandshare_button_invite_friends">Invite nearby friends to use Spot&amp;Share</string>
+
+
+  <!-- Share Apk HTML -->
+  <string name="spotandshare_title_share_apk_welcome_page">Install Aptoide on your device</string>
+  <string name="spotandshare_message_share_apk_welcome_download_aptoide">DOWNLOAD APTOIDE</string>
+  <string name="spotandshare_message_share_apk_welcome_install_when_completed">Install Aptoide as soon as the download is completed, and start using Spot&amp;Share with your friend.</string>
+  <string name="spotandshare_message_share_apk_welcome_ask_your_friend">Ask your friend to guide you\nduring installation :)</string>
 
 </resources>
 
