@@ -97,8 +97,8 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
         converterFactory);
 
     attachPresenter(
-        new MainPresenter(this, new ApkFy(this, getIntent()), autoUpdate, new ContentPuller(this)),
-        savedInstanceState);
+        new MainPresenter(this, new ApkFy(this, getIntent()), autoUpdate, new ContentPuller(this),
+            ((V8Engine) getApplicationContext()).getNotificationCenter()), savedInstanceState);
   }
 
   @Override public void showWizard() {

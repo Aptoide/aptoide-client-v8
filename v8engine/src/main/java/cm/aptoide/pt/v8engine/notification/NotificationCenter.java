@@ -59,6 +59,10 @@ public class NotificationCenter {
     }
   }
 
+  public void forceSync() {
+    notificationSyncScheduler.forceSync();
+  }
+
   private Observable<AptoideNotification> getNewNotifications() {
     return notificationHandler.getHandlerNotifications()
         .flatMap(aptideNotification -> notificationPolicyFactory.getPolicy(aptideNotification)
