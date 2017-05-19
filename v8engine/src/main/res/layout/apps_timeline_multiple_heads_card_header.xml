@@ -53,7 +53,7 @@
           android:layout_width="18dp"
           android:layout_height="18dp"
           android:gravity="center"
-          android:text="5+"
+          tools:text="5+"
           style="@style/Aptoide.TextView.Regular.XXS"
           />
 
@@ -105,7 +105,7 @@
         android:layout_marginTop="10dp"
         android:ellipsize="end"
         android:lines="1"
-        android:text="@string/x_shared"
+        android:text="@string/timeline_short_shared"
         style="@style/Aptoide.TextView.Regular.XS.Grey"
         />
 

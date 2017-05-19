@@ -45,6 +45,8 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
   private TextView relatedTo;
   private String appName;
   private RatingBar ratingBar;
+  private TextView additionalNumberOfSharesLabel;
+  private ImageView additionalNumberOfSharesCircularMask;
 
   public AggregatedSocialArticleWidget(View itemView) {
     super(itemView);
@@ -68,6 +70,10 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
     cardView = (CardView) itemView.findViewById(R.id.card);
     relatedTo = (TextView) itemView.findViewById(R.id.app_name);
     ratingBar = (RatingBar) itemView.findViewById(R.id.ratingbar);
+    additionalNumberOfSharesCircularMask =
+        (ImageView) itemView.findViewById(R.id.card_header_avatar_plus);
+    additionalNumberOfSharesLabel =
+        (TextView) itemView.findViewById(R.id.timeline_header_aditional_number_of_shares_circular);
   }
 
   @Override public void bindView(AggregatedSocialArticleDisplayable displayable) {
@@ -106,12 +112,32 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
 
     setCardViewMargin(displayable, cardView);
 
+    setAdditionalNumberOfSharersLabel(displayable);
     showSeeMoreAction(displayable);
     showSubCards(displayable);
   }
 
   @Override String getCardTypeName() {
     return AggregatedSocialArticleDisplayable.CARD_TYPE_NAME;
+  }
+
+  private void setAdditionalNumberOfSharersLabel(AggregatedSocialArticleDisplayable displayable) {
+    int numberOfSharers = displayable.getSharers()
+        .size();
+
+    if (numberOfSharers <= 2) {
+      additionalNumberOfSharesLabel.setVisibility(View.INVISIBLE);
+      additionalNumberOfSharesCircularMask.setVisibility(View.INVISIBLE);
+      return;
+    } else {
+      additionalNumberOfSharesLabel.setVisibility(View.VISIBLE);
+      additionalNumberOfSharesCircularMask.setVisibility(View.VISIBLE);
+      numberOfSharers -= 2;
+    }
+
+    additionalNumberOfSharesLabel.setText(
+        String.format(getContext().getString(R.string.timeline_short_plus),
+            String.valueOf(numberOfSharers)));
   }
 
   private void showSubCards(AggregatedSocialArticleDisplayable displayable) {

@@ -269,10 +269,11 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     refreshSubject = BehaviorRelay.create();
 
     tabNavigator.navigation()
-        .filter(tabNavigation -> tabNavigation.getTab() == TabNavigation.TIMELINE)
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .filter(tabNavigation -> tabNavigation.getTab() == TabNavigation.TIMELINE)
         .subscribe(tabNavigation -> cardIdPriority = tabNavigation.getBundle()
-            .getString(AppsTimelineTabNavigation.CARD_ID_KEY));
+            .getString(AppsTimelineTabNavigation.CARD_ID_KEY), err -> CrashReport.getInstance()
+            .log(err));
   }
 
   @NonNull private Observable<List<String>> refreshPackages() {
