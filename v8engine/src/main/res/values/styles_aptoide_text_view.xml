@@ -61,12 +61,6 @@
   <style name="Aptoide.TextView.Medium.S">
     <item name="android:textSize">14sp</item>
     <item name="android:lineSpacingMultiplier">2</item>
-    <item name="android:textAllCaps">true</item>
-  </style>
-
-  <style name="Aptoide.TextView.Medium.XXS">
-    <item name="android:textSize">10sp</item>
-    <item name="android:lineSpacingMultiplier">1.2</item>
   </style>
 
   <!-- Colors-->
