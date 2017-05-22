@@ -53,8 +53,8 @@
       <Button
           android:id="@+id/logged_in_continue"
           android:layout_width="0dp"
-          android:layout_marginStart="11dp"
           android:layout_marginLeft="11dp"
+          android:layout_marginStart="11dp"
           android:layout_weight="1"
           android:text="@string/continue_option"
           style="@style/Aptoide.Button"
