@@ -14,7 +14,6 @@ import java.lang.reflect.Method;
 public class HotspotManager {
 
   private static final String TAG = HotspotManager.class.getSimpleName();
-  ;
   private Context context;
   private WifiManager wifimanager;
 
@@ -175,6 +174,10 @@ public class HotspotManager {
             if (isWifiApEnabledmethod.getName()
                 .equals("isWifiApEnabled")) {
               while (!(Boolean) isWifiApEnabledmethod.invoke(wifimanager)) {
+                // NPE when stop is called before completion.
+                if (wifimanager == null) {
+                  return ConnectionManager.FAILED_TO_CREATE_HOTSPOT;
+                }
               }
               for (Method method1 : wmMethods) {
                 if (method1.getName()
