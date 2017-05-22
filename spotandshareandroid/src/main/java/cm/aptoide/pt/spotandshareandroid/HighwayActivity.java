@@ -447,7 +447,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     Intent intent = new Intent(HighwayActivity.this, ShareAptoideActivity.class);
     intent.putExtra(HOTSPOT_NAME, Ssid);
     startActivity(intent);
-    //finish();
+    finish();
   }
 
   @Override public void showShareAptoideApk() {
