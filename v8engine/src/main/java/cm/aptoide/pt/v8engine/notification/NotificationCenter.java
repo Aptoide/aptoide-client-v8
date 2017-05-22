@@ -2,53 +2,82 @@ package cm.aptoide.pt.v8engine.notification;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
+import android.content.SharedPreferences;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import io.realm.Sort;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Observable;
-import rx.Single;
+import rx.Subscription;
 
 /**
  * Created by trinkes on 09/05/2017.
  */
 
 public class NotificationCenter {
+
+  public static final String NOTIFICATION_CENTER_ENABLE = "notification_campaign_and_social";
   private final CrashReport crashReport;
   private final NotificationIdsMapper notificationIdsMapper;
   private final NotificationAccessor notificationAccessor;
   private NotificationHandler notificationHandler;
-  private NotificationProvider notificationProvider;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SystemNotificationShower notificationShower;
+  private NotificationPolicyFactory notificationPolicyFactory;
+  private SharedPreferences sharedPreferences;
+  private Subscription notificationProviderSubscription;
 
   public NotificationCenter(NotificationIdsMapper notificationIdsMapper,
-      NotificationHandler notificationHandler, NotificationProvider notificationProvider,
-      NotificationSyncScheduler notificationSyncScheduler,
+      NotificationHandler notificationHandler, NotificationProvider notificationProvider, NotificationSyncScheduler notificationSyncScheduler,
       SystemNotificationShower notificationShower, CrashReport crashReport,
-      NotificationAccessor notificationAccessor) {
+      NotificationPolicyFactory notificationPolicyFactory,
+      NotificationAccessor notificationAccessor, SharedPreferences sharedPreferences) {
     this.notificationIdsMapper = notificationIdsMapper;
     this.notificationHandler = notificationHandler;
-    this.notificationProvider = notificationProvider;
     this.notificationSyncScheduler = notificationSyncScheduler;
     this.notificationShower = notificationShower;
     this.crashReport = crashReport;
+    this.notificationPolicyFactory = notificationPolicyFactory;
+    this.sharedPreferences = sharedPreferences;
     this.notificationAccessor = notificationAccessor;
   }
 
+  public void enable() {
+    sharedPreferences.edit()
+        .putBoolean(NOTIFICATION_CENTER_ENABLE, true)
+        .apply();
+  }
+
+  public void disable() {
+    sharedPreferences.edit()
+        .putBoolean(NOTIFICATION_CENTER_ENABLE, false)
+        .apply();
+  }
+
+  public void startIfEnabled() {
+    if (isEnable()) {
+      start();
+    }
+  }
+
   public void start() {
-    notificationSyncScheduler.schedule();
-    getNewNotifications().flatMapCompletable(
-        aptoideNotification -> notificationShower.showNotification(aptoideNotification,
-            notificationIdsMapper.getNotificationId(aptoideNotification.getType())))
-        .subscribe(aptoideNotification -> {
-        }, throwable -> crashReport.log(throwable));
+      notificationSyncScheduler.schedule();
+      notificationProviderSubscription = getNewNotifications().flatMapCompletable(
+          aptoideNotification -> notificationShower.showNotification(aptoideNotification,
+              notificationIdsMapper.getNotificationId(aptoideNotification.getType())))
+          .subscribe(aptoideNotification -> {
+          }, throwable -> crashReport.log(throwable));
+  }
+
+  public void forceSync() {
+    notificationSyncScheduler.forceSync();
   }
 
   private Observable<AptoideNotification> getNewNotifications() {
     return notificationHandler.getHandlerNotifications()
-        .flatMap(aptideNotification -> shouldShowNotification(aptideNotification).flatMapObservable(
-            shouldShow -> {
+        .flatMap(aptideNotification -> notificationPolicyFactory.getPolicy(aptideNotification)
+            .shouldShow()
+            .flatMapObservable(shouldShow -> {
               if (shouldShow) {
                 return Observable.just(aptideNotification);
               } else {
@@ -61,40 +90,15 @@ public class NotificationCenter {
         });
   }
 
-  private Single<Boolean> shouldShowNotification(AptoideNotification aptoideNotificationToShow) {
-    switch (aptoideNotificationToShow.getType()) {
-      case AptoideNotification.CAMPAIGN:
-        return Single.just(true);
-      case AptoideNotification.COMMENT:
-      case AptoideNotification.LIKE:
-        return shouldShowByRules(
-            new Integer[] { AptoideNotification.COMMENT, AptoideNotification.LIKE });
-      case AptoideNotification.POPULAR:
-        return shouldShowByRules(new Integer[] { AptoideNotification.POPULAR });
-      default:
-        return Single.just(false);
+  public void stop() {
+    if (!notificationProviderSubscription.isUnsubscribed()) {
+      notificationProviderSubscription.unsubscribe();
     }
+    notificationSyncScheduler.stop();
   }
 
-  private Single<Boolean> shouldShowByRules(Integer[] notificationsTypes) {
-    long now = System.currentTimeMillis();
-
-    long police1timeFrame = TimeUnit.MINUTES.toMillis(2);
-    long police2timeFrame = TimeUnit.MINUTES.toMillis(10);
-    long police1startTime = now - police1timeFrame;
-    long police2startTime = now - police2timeFrame;
-    int police1Occurrences = 1;
-    int police2Occurrences = 3;
-    return Single.zip(createPolicy(notificationsTypes, now, police1startTime, police1Occurrences),
-        createPolicy(notificationsTypes, now, police2startTime, police2Occurrences),
-        (passRule1, passRule2) -> passRule1 && passRule2);
-  }
-
-  @NonNull
-  private Single<Boolean> createPolicy(Integer[] notificationsTypes, long endTime, long startTime,
-      int occurrences) {
-    return notificationProvider.getDismissedNotifications(notificationsTypes, startTime, endTime)
-        .map(aptoideNotifications -> aptoideNotifications.size() < occurrences);
+  public boolean isEnable() {
+    return sharedPreferences.getBoolean(NOTIFICATION_CENTER_ENABLE, true);
   }
 
   public Observable<List<AptoideNotification>> getInboxNotifications(int entries) {

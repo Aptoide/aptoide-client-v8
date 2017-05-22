@@ -29,12 +29,14 @@
         android:id="@+id/create_store_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/appbar"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/appbar"
         android:background="@color/create_user_dark_orange"
         android:gravity="center_vertical"
         android:padding="@dimen/padding_medium_default"
         android:text="@string/create_store_header"
         android:textColor="@color/white"
+        style="@style/Aptoide.TextView.Medium"
         />
 
 
@@ -63,7 +65,7 @@
           android:layout_weight="1"
           android:gravity="center"
           android:text="@string/skip"
-          style="?attr/customButtonWhite"
+          style="@style/Aptoide.Button"
           />
 
       <Button
@@ -75,7 +77,7 @@
           android:layout_weight="1"
           android:gravity="center"
           android:text="@string/create_store_create"
-          style="?attr/customButton"
+          style="@style/Aptoide.Button"
           />
 
     </LinearLayout>
@@ -135,8 +137,8 @@
               android:maxLines="2"
               android:text="@string/create_store_choose_image"
               android:textAlignment="center"
-              android:textColor="@color/create_store_title_color"
               android:textStyle="bold"
+              style="@style/Aptoide.TextView.Medium"
               />
 
         </RelativeLayout>
@@ -162,8 +164,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/create_store_name"
-                android:textColor="@color/create_store_title_color"
-                android:textSize="@dimen/text_size_medium"
+                style="@style/Aptoide.TextView.Medium.S"
                 />
 
             <EditText
@@ -179,9 +180,8 @@
                 android:paddingRight="@dimen/padding_smaller"
                 android:paddingStart="@dimen/padding_smaller"
                 android:paddingTop="@dimen/padding_very_small"
-                android:textColor="@color/black"
-                android:textColorHint="@color/grey"
-                android:textSize="@dimen/text_size_medium_small"
+                android:textColorHint="@color/grey_fog_dark"
+                style="@style/Aptoide.TextView.Regular.S"
                 />
 
             <EditText
@@ -201,11 +201,10 @@
                 android:paddingRight="@dimen/padding_smaller"
                 android:paddingStart="@dimen/padding_smaller"
                 android:paddingTop="@dimen/padding_very_small"
-                android:textColor="@color/black"
-                android:textColorHint="@color/grey"
-                android:textSize="@dimen/text_size_medium_small"
+                android:textColorHint="@color/grey_fog_dark"
                 android:visibility="gone"
                 tools:visibility="gone"
+                style="@style/Aptoide.TextView.Regular.S"
                 />
 
             <TextView
@@ -213,8 +212,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_medium_default"
                 android:text="@string/create_store_theme"
-                android:textColor="@color/create_store_title_color"
-                android:textSize="@dimen/text_size_medium"
+                style="@style/Aptoide.TextView.Medium.S"
                 />
 
             <View

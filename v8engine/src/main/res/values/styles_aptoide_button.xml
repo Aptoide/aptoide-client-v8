@@ -4,21 +4,40 @@
   <style name="Aptoide.Button" parent="Widget.AppCompat.Button">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">52dp</item>
-    <item name="android:textColor">@android:color/white</item>
+    <item name="android:textColor">@color/white</item>
     <item name="android:fontFamily">sans-serif-medium</item>
     <item name="android:textSize">14sp</item>
     <item name="android:textAllCaps">true</item>
   </style>
 
-
-  <style name="Aptoide.Button.Ghost">
-    <item name="android:background">@drawable/btn_ghost_theme</item>
-    <item name="android:textColor">@color/orange</item>
+  <style name="Aptoide.Button.Facebook">
+    <item name="android:background">@color/facebook</item>
+    <item name="android:drawableLeft">@drawable/com_facebook_button_icon_white</item>
+    <item name="android:text">@string/connect_with_facebook</item>
+    <item name="android:contentDescription">@string/com_facebook_loginview_log_in_button_long</item>
   </style>
 
+  <style name="Aptoide.Button.Google">
+    <item name="android:background">@color/google</item>
+    <item name="android:drawableLeft">@drawable/google_plus_ic</item>
+    <item name="android:text">@string/connect_with_google</item>
+    <item name="android:contentDescription">@string/google</item>
+  </style>
+
+  <style name="Aptoide.Button.Ghost">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">52dp</item>
+    <item name="android:fontFamily">sans-serif-medium</item>
+    <item name="android:textSize">14sp</item>
+    <item name="android:textAllCaps">true</item>
+    <item name="android:background">@drawable/btn_ghost_theme</item>
+    <item name="android:textColor">@color/orange_700</item>
+  </style>
+
+  <!-- ?? -->
   <style name="Aptoide.Button.Ghost.ThinBlackAlpha">
     <item name="android:background">@drawable/btn_ghost_theme_blackalpha</item>
-    <item name="android:textColor">@color/black87alpha</item>
+    <item name="android:textColor">@color/black_87_alpha</item>
   </style>
 
   <style name="Aptoide.Button.S">

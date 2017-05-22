@@ -46,24 +46,18 @@ android:fitsSystemWindows="true"
           />
 
       <TextView
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:paddingEnd="10dp"
-          android:paddingLeft="10dp"
-          android:paddingRight="10dp"
-          android:paddingStart="10dp"
-          android:text="@string/wizard_title_viewpager_three"
-          style="@style/Wizard_Title"
+          android:text="@string/login_sign_up_title"
+          style="@style/OnBoarding.Title.TextView"
           />
 
 
       <TextView
+          android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:paddingEnd="10dp"
-          android:paddingLeft="10dp"
-          android:paddingRight="10dp"
-          android:paddingStart="10dp"
           android:text="@string/wizard_sub_title_viewpager_three"
-          style="@style/Wizard_Sub_Title"
+          style="@style/OnBoarding.SubTitle.TextView"
           />
 
       <ImageView
@@ -75,13 +69,14 @@ android:fitsSystemWindows="true"
           />
 
       <TextView
+          android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:paddingEnd="10dp"
           android:paddingLeft="10dp"
           android:paddingRight="10dp"
           android:paddingStart="10dp"
           android:text="@string/wizard_sub_sub_title_viewpager_three"
-          style="@style/Wizard_Sub_Title"
+          style="@style/OnBoarding.SubTitle.TextView"
           />
 
     </LinearLayout>

@@ -39,7 +39,7 @@
   <string name="wizard_sub_title_viewpager_two">Customize your store <b>to share apps \n with friends</b> and the <b>Aptoide Community.</b></string>
 
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three">Be a part</string>
+  <string name="login_sign_up_title">Be a part</string>
   <string name="wizard_sub_title_viewpager_three"><b>Find people</b> who share your app interests. \n<b>Rate and share.</b></string>
   <string name="wizard_sub_sub_title_viewpager_three">Join us!</string>
 

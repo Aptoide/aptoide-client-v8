@@ -319,11 +319,6 @@
   <string name="permission_access_deny">access to read and write to external storage was denied</string>
   <string name="permission_account_deny">access to get accounts was denied</string>
 
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">Share apps with your friends</string>
-  <string name="spot_share_line_2">Phone to phone, without Internet</string>
-
-
   <!--??-->
   <string name="update_all">Update all</string>
   <string name="read_more">Read More</string>
@@ -335,6 +330,7 @@
   <string name="flag_this_app_fake">Fake</string>
   <string name="flag_this_app_freeze">Freeze</string>
   <string name="flag_this_app_virus">Virus</string>
+  <string name="button_appview_read_all">read all <![CDATA[>]]></string>
   <string name="appview_recommended_for_you_title">Recommended for you</string>
   <string name="appview_additional_information_title">Additional Information</string>
   <string name="appview_comment_reply_button_text">Reply</string>
@@ -635,5 +631,12 @@
 
   <string name="app_name">Aptoide</string>
   <string name="access_to_open_gallery_rationale">You need to allow access to the Gallery</string>
+
+  <!-- My account -->
+  <string name="my_account_my_profile">My Profile</string>
+  <string name="my_account_user_store">My Store</string>
+  <string name="my_account_edit_store">Edit</string>
+  <string name="my_account_log_out">LOG OUT</string>
+  <string name="fragment_inbox_title_text">Notification Center</string>
 
 </resources>

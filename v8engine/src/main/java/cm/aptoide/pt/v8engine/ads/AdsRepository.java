@@ -11,6 +11,8 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import java.util.LinkedList;
@@ -30,9 +32,10 @@ public class AdsRepository {
   private final PartnerIdProvider partnerIdProvider;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
+  private final QManager qManager;
 
   public AdsRepository(IdsRepository idsRepository, AptoideAccountManager accountManager,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
+      OkHttpClient httpClient, Converter.Factory converterFactory, QManager qManager) {
     this.idsRepository = idsRepository;
     this.accountManager = accountManager;
     this.googlePlayServicesAvailabilityChecker =
@@ -41,6 +44,7 @@ public class AdsRepository {
         .getPartnerId();
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
+    this.qManager = qManager;
   }
 
   public static boolean validAds(List<GetAdsResponse.Ad> ads) {
@@ -63,7 +67,7 @@ public class AdsRepository {
         GetAdsRequest.ofAppviewOrganic(packageName, storeName, idsRepository.getUniqueIdentifier(),
             googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
             partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
-            converterFactory)
+            converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()))
             .observe());
   }
 
@@ -83,7 +87,7 @@ public class AdsRepository {
     return mapToMinimalAds(GetAdsRequest.ofHomepageMore(idsRepository.getUniqueIdentifier(),
         googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
         partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
-        converterFactory)
+        converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()))
         .observe(refresh));
   }
 
@@ -111,7 +115,7 @@ public class AdsRepository {
         GetAdsRequest.ofAppviewSuggested(keywords, idsRepository.getUniqueIdentifier(),
             googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()), packageName,
             partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
-            converterFactory)
+            converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()))
             .observe());
   }
 
@@ -119,7 +123,7 @@ public class AdsRepository {
     return mapToMinimalAd(GetAdsRequest.ofSearch(query, idsRepository.getUniqueIdentifier(),
         googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
         partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
-        converterFactory)
+        converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()))
         .observe());
   }
 
@@ -131,7 +135,7 @@ public class AdsRepository {
             GetAdsRequest.ofSecondInstall(packageName, idsRepository.getUniqueIdentifier(),
                 googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
                 partnerIdProvider.getPartnerId(), account.isAdultContentEnabled(), httpClient,
-                converterFactory)
+                converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()))
                 .observe()));
   }
 
@@ -140,7 +144,7 @@ public class AdsRepository {
         GetAdsRequest.ofSecondTry(packageName, idsRepository.getUniqueIdentifier(),
             googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
             partnerIdProvider.getPartnerId(), accountManager.isAccountMature(), httpClient,
-            converterFactory)
+            converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()))
             .observe());
   }
 }

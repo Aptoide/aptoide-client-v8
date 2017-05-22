@@ -67,10 +67,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_buttons"
+        android:fillViewport="true"
         >
       <LinearLayout
           android:layout_width="match_parent"
-          android:layout_height="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
           android:orientation="vertical"
           >
 
@@ -79,7 +81,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/padding_extra_large"
             android:src="@drawable/icon_logged_in"
             />
 

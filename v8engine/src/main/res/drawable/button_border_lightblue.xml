@@ -2,7 +2,7 @@
   <item android:color="@color/white" android:state_pressed="true">
     <shape>
       <solid
-          android:color="@color/lightblue"/>
+          android:color="@color/light_blue"/>
       <stroke
           android:color="@color/white"
           android:width="1dp"/>
@@ -15,11 +15,11 @@
           android:top="5dp"/>
     </shape>
   </item>
-  <item android:color="@color/lightblue">
+  <item android:color="@color/light_blue">
     <shape>
       <solid android:color="@color/white"/>
       <stroke
-          android:color="@color/lightblue"
+          android:color="@color/light_blue"
           android:width="1dp"/>
       <corners
           android:radius="4dp"/>

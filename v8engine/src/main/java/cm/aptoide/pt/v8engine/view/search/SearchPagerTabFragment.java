@@ -109,7 +109,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     converterFactory = WebService.getDefaultConverter();
     adsRepository =
         new AdsRepository(((V8Engine) getContext().getApplicationContext()).getIdsRepository(),
-            accountManager, httpClient, converterFactory);
+            accountManager, httpClient, converterFactory, V8Engine.getQManager());
     super.onCreate(savedInstanceState);
   }
 

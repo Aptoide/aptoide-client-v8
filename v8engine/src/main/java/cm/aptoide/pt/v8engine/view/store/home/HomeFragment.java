@@ -139,7 +139,7 @@ public class HomeFragment extends StoreFragment {
     userEmail.setVisibility(View.GONE);
     userUsername.setVisibility(View.GONE);
     ImageLoader.with(getContext())
-        .load(R.drawable.user_account_white, userAvatarImage);
+        .loadWithCircleTransform(R.drawable.user_account_white, userAvatarImage);
   }
 
   private void setVisibleUserImageAndName(Account account) {

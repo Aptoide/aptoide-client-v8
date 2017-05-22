@@ -61,21 +61,15 @@
   <style name="Aptoide.TextView.Medium.S">
     <item name="android:textSize">14sp</item>
     <item name="android:lineSpacingMultiplier">2</item>
-    <item name="android:textAllCaps">true</item>
-  </style>
-
-  <style name="Aptoide.TextView.Medium.XXS">
-    <item name="android:textSize">10sp</item>
-    <item name="android:lineSpacingMultiplier">1.2</item>
   </style>
 
   <!-- Colors-->
   <style name="Aptoide.TextView.Regular.XS.GreyFog">
-    <item name="android:textColor">@color/greydarkfog</item>
+    <item name="android:textColor">@color/grey_fog_dark</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.XXS.GreyFog">
-    <item name="android:textColor">@color/greydarkfog</item>
+    <item name="android:textColor">@color/grey_fog_dark</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.L.Grey">
@@ -87,7 +81,7 @@
   </style>
 
   <style name="Aptoide.TextView.Regular.M.BlackAlpha">
-    <item name="android:textColor">@color/black87alpha</item>
+    <item name="android:textColor">@color/black_87_alpha</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.S.Grey">
@@ -107,11 +101,11 @@
   </style>
 
   <style name="Aptoide.TextView.Regular.XS.BlackAlpha">
-    <item name="android:textColor">@color/black87alpha</item>
+    <item name="android:textColor">@color/black_87_alpha</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.S.BlackAlpha">
-    <item name="android:textColor">@color/black87alpha</item>
+    <item name="android:textColor">@color/black_87_alpha</item>
   </style>
 
   <style name="Aptoide.TextView.Medium.L.Black">

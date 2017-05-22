@@ -3,7 +3,7 @@
   <solid android:color="@color/facebook"/>
 
   <gradient
-      android:endColor="@color/bluegrey"
+      android:endColor="@color/blue_grey"
       android:startColor="@color/default_color"
       />
   <corners

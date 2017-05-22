@@ -33,10 +33,8 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
       List<String> packages, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, String cardId) {
 
-    GetUserTimelineRequest getAppRequest =
-        new GetUserTimelineRequest(url, new Body(limit, offset, packages, cardId), bodyInterceptor,
-            httpClient, converterFactory);
-    return getAppRequest;
+    return new GetUserTimelineRequest(url, new Body(limit, offset, packages, cardId),
+        bodyInterceptor, httpClient, converterFactory);
   }
 
   @Override protected Observable<GetUserTimeline> loadDataFromNetwork(Interfaces interfaces,

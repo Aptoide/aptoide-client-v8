@@ -63,9 +63,9 @@
         android:id="@+id/push_notification_graphic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:src="@drawable/error2"
-        android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        tools:src="@drawable/error2"
         />
 
   </LinearLayout>

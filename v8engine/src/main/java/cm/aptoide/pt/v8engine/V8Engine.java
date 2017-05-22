@@ -57,6 +57,7 @@ import cm.aptoide.pt.spotandshareandroid.SpotAndShareApplication;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
+import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.account.AccountEventsAnalytcs;
 import cm.aptoide.pt.v8engine.account.AndroidAccountDataMigration;
@@ -77,13 +78,13 @@ import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.leak.LeakTool;
-import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
-import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.UserAgentInterceptor;
+import cm.aptoide.pt.v8engine.notification.AptoideNotification;
 import cm.aptoide.pt.v8engine.notification.NotificationCenter;
 import cm.aptoide.pt.v8engine.notification.NotificationHandler;
 import cm.aptoide.pt.v8engine.notification.NotificationIdsMapper;
+import cm.aptoide.pt.v8engine.notification.NotificationPolicyFactory;
 import cm.aptoide.pt.v8engine.notification.NotificationProvider;
 import cm.aptoide.pt.v8engine.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.v8engine.notification.NotificationSyncService;
@@ -101,6 +102,7 @@ import cm.aptoide.pt.v8engine.view.configuration.ActivityProvider;
 import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.view.configuration.implementation.ActivityProviderImpl;
 import cm.aptoide.pt.v8engine.view.configuration.implementation.FragmentProviderImpl;
+import cm.aptoide.pt.v8engine.view.entry.EntryPointChooser;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.facebook.appevents.AppEventsLogger;
@@ -133,16 +135,22 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
  */
 public abstract class V8Engine extends SpotAndShareApplication {
 
+  /**
+   * Time between pull request for campaign notifications: {@link AptoideNotification.NotificationType#CAMPAIGN}
+   */
+  public static final long PUSH_NOTIFICATION_CAMPAIGN_PERIODICITY = AlarmManager.INTERVAL_DAY;
   private static final String CACHE_FILE_NAME = "aptoide.wscache";
   private static final String TAG = V8Engine.class.getName();
-
+  @Getter private static QManager qManager;
+  @Getter private static EntryPointChooser entryPointChooser;
   @Getter private static FragmentProvider fragmentProvider;
   @Getter private static ActivityProvider activityProvider;
   @Getter private static DisplayableWidgetMapping displayableWidgetMapping;
   @Setter @Getter private static boolean autoUpdateWasCalled = false;
-  @Getter @Setter private static ShareApps shareApps;
 
+  @Getter @Setter private static ShareApps shareApps;
   private AptoideAccountManager accountManager;
+  private BaseBodyInterceptorFactory baseBodyInterceptorFactory;
   private BodyInterceptor<BaseBody> baseBodyInterceptorV7;
   private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> baseBodyInterceptorV3;
   private Preferences preferences;
@@ -163,6 +171,11 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private AndroidAccountProvider androidAccountProvider;
   private PaymentAnalytics paymentAnalytics;
   private NotificationHandler notificationHandler;
+  /**
+   * Time between pull request for social notifications: {@link AptoideNotification.NotificationType#LIKE}{@link
+   * AptoideNotification.NotificationType#COMMENT}{@link AptoideNotification.NotificationType#POPULAR}
+   */
+  private long pushNotificationSocialPeriodicity = AlarmManager.INTERVAL_HOUR;
   private NotificationCenter notificationCenter;
 
   /**
@@ -207,6 +220,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
     // hack to set the debug flag active in case of Debug
     //
 
+    qManager = new QManager(PreferenceManager.getDefaultSharedPreferences(this));
+    entryPointChooser = new EntryPointChooser(() -> qManager.isSupportedExtensionsDefined());
     fragmentProvider = createFragmentProvider();
     activityProvider = createActivityProvider();
     displayableWidgetMapping = createDisplayableWidgetMapping();
@@ -425,10 +440,9 @@ public abstract class V8Engine extends SpotAndShareApplication {
   public AptoideAccountManager getAccountManager() {
     if (accountManager == null) {
 
-      final AccountManagerService accountManagerService = new AccountManagerService(
-          new BaseBodyInterceptorFactory(getIdsRepository(), getPreferences(),
-              getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage()), getAccountFactory(),
-          getDefaultClient(), getLongTimeoutClient(), WebService.getDefaultConverter());
+      final AccountManagerService accountManagerService =
+          new AccountManagerService(getBaseBodyInterceptorFactory(), getAccountFactory(),
+              getDefaultClient(), getLongTimeoutClient(), WebService.getDefaultConverter());
 
       final AndroidAccountDataMigration accountDataMigration =
           new AndroidAccountDataMigration(SecurePreferencesImplementation.getInstance(this),
@@ -626,16 +640,14 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
   public BodyInterceptor<BaseBody> getBaseBodyInterceptorV7() {
     if (baseBodyInterceptorV7 == null) {
-      baseBodyInterceptorV7 = new BaseBodyInterceptorV7(getIdsRepository(), getAccountManager(),
-          getAdultContent(getSecurePreferences()), getAptoideMd5sum(), getAptoidePackage());
+      baseBodyInterceptorV7 = getBaseBodyInterceptorFactory().createV7(getAccountManager());
     }
     return baseBodyInterceptorV7;
   }
 
   public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBaseBodyInterceptorV3() {
     if (baseBodyInterceptorV3 == null) {
-      baseBodyInterceptorV3 =
-          new BaseBodyInterceptorV3(getAptoideMd5sum(), getAptoidePackage(), getIdsRepository());
+      baseBodyInterceptorV3 = getBaseBodyInterceptorFactory().createV3();
     }
     return baseBodyInterceptorV3;
   }
@@ -755,5 +767,15 @@ public abstract class V8Engine extends SpotAndShareApplication {
         .penaltyLog()
         .penaltyDeath()
         .build());
+  }
+
+  public BaseBodyInterceptorFactory getBaseBodyInterceptorFactory() {
+    if (baseBodyInterceptorFactory == null) {
+      baseBodyInterceptorFactory =
+          new BaseBodyInterceptorFactory(getIdsRepository(), getPreferences(),
+              getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage(), qManager);
+    }
+
+    return baseBodyInterceptorFactory;
   }
 }

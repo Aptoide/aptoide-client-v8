@@ -355,11 +355,11 @@
   </style>
 
   <style name="AptoideThemeDefaultBluegrey" parent="AppBaseTheme">
-    <item name="colorPrimary">@color/bluegrey</item>
-    <item name="colorPrimaryDark">@color/bluegrey_700</item>
-    <item name="colorAccent">@color/bluegrey_700</item>
-    <item name="colorButtonNormal">@color/bluegrey</item>
-    <item name="customColor">@color/bluegrey</item>
+    <item name="colorPrimary">@color/blue_grey</item>
+    <item name="colorPrimaryDark">@color/blue_grey_700</item>
+    <item name="colorAccent">@color/blue_grey_700</item>
+    <item name="colorButtonNormal">@color/blue_grey</item>
+    <item name="customColor">@color/blue_grey</item>
 
     <item name="customButton">@style/WidgetButtonCustomBluegrey</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideBluegrey</item>
@@ -369,11 +369,11 @@
   </style>
 
   <style name="AptoideThemeDefaultBluegreyDark" parent="AppBaseThemeDark">
-    <item name="colorPrimary">@color/bluegrey</item>
-    <item name="colorPrimaryDark">@color/bluegrey_700</item>
-    <item name="colorAccent">@color/bluegrey_700</item>
-    <item name="colorButtonNormal">@color/bluegrey</item>
-    <item name="customColor">@color/bluegrey</item>
+    <item name="colorPrimary">@color/blue_grey</item>
+    <item name="colorPrimaryDark">@color/blue_grey_700</item>
+    <item name="colorAccent">@color/blue_grey_700</item>
+    <item name="colorButtonNormal">@color/blue_grey</item>
+    <item name="customColor">@color/blue_grey</item>
 
     <item name="customButton">@style/WidgetButtonCustomBluegrey</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideBluegrey</item>
@@ -392,11 +392,11 @@
 
 
   <style name="AptoideThemeDefaultLightgreen" parent="AppBaseTheme">
-    <item name="colorPrimary">@color/lightgreen</item>
-    <item name="colorPrimaryDark">@color/lightgreen_700</item>
-    <item name="colorAccent">@color/lightgreen_700</item>
-    <item name="colorButtonNormal">@color/lightgreen</item>
-    <item name="customColor">@color/lightgreen</item>
+    <item name="colorPrimary">@color/light_green</item>
+    <item name="colorPrimaryDark">@color/light_green_700</item>
+    <item name="colorAccent">@color/light_green_700</item>
+    <item name="colorButtonNormal">@color/light_green</item>
+    <item name="customColor">@color/light_green</item>
 
     <item name="customButton">@style/WidgetButtonCustomLightgreen</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLightgreen</item>
@@ -405,11 +405,11 @@
   </style>
 
   <style name="AptoideThemeDefaultLightgreenDark" parent="AppBaseThemeDark">
-    <item name="colorPrimary">@color/lightgreen</item>
-    <item name="colorPrimaryDark">@color/lightgreen_700</item>
-    <item name="colorAccent">@color/lightgreen_700</item>
-    <item name="colorButtonNormal">@color/lightgreen</item>
-    <item name="customColor">@color/lightgreen</item>
+    <item name="colorPrimary">@color/light_green</item>
+    <item name="colorPrimaryDark">@color/light_green_700</item>
+    <item name="colorAccent">@color/light_green_700</item>
+    <item name="colorButtonNormal">@color/light_green</item>
+    <item name="customColor">@color/light_green</item>
 
     <item name="customButton">@style/WidgetButtonCustomLightgreen</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLightgreen</item>
@@ -426,11 +426,11 @@
 
 
   <style name="AptoideThemeDefaultLightblue" parent="AppBaseTheme">
-    <item name="colorPrimary">@color/lightblue</item>
-    <item name="colorPrimaryDark">@color/lightblue_700</item>
-    <item name="colorAccent">@color/lightblue_700</item>
-    <item name="colorButtonNormal">@color/lightblue</item>
-    <item name="customColor">@color/lightblue</item>
+    <item name="colorPrimary">@color/light_blue</item>
+    <item name="colorPrimaryDark">@color/light_blue_700</item>
+    <item name="colorAccent">@color/light_blue_700</item>
+    <item name="colorButtonNormal">@color/light_blue</item>
+    <item name="customColor">@color/light_blue</item>
 
     <item name="customButton">@style/WidgetButtonCustomLightblue</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLightblue</item>
@@ -439,11 +439,11 @@
   </style>
 
   <style name="AptoideThemeDefaultLightblueDark" parent="AppBaseThemeDark">
-    <item name="colorPrimary">@color/lightblue</item>
-    <item name="colorPrimaryDark">@color/lightblue_700</item>
-    <item name="colorAccent">@color/lightblue_700</item>
-    <item name="colorButtonNormal">@color/lightblue</item>
-    <item name="customColor">@color/lightblue</item>
+    <item name="colorPrimary">@color/light_blue</item>
+    <item name="colorPrimaryDark">@color/light_blue_700</item>
+    <item name="colorAccent">@color/light_blue_700</item>
+    <item name="colorButtonNormal">@color/light_blue</item>
+    <item name="customColor">@color/light_blue</item>
 
     <item name="customButton">@style/WidgetButtonCustomLightblue</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLightblue</item>
@@ -705,11 +705,11 @@
 
 
   <style name="AptoideThemeDefaultDeepPurple" parent="AppBaseTheme">
-    <item name="colorPrimary">@color/deeppurple</item>
-    <item name="colorPrimaryDark">@color/deeppurple_700</item>
-    <item name="colorAccent">@color/deeppurple_700</item>
-    <item name="colorButtonNormal">@color/deeppurple</item>
-    <item name="customColor">@color/deeppurple</item>
+    <item name="colorPrimary">@color/deep_purple</item>
+    <item name="colorPrimaryDark">@color/deep_purple_700</item>
+    <item name="colorAccent">@color/deep_purple_700</item>
+    <item name="colorButtonNormal">@color/deep_purple</item>
+    <item name="customColor">@color/deep_purple</item>
 
     <item name="customButton">@style/WidgetButtonCustomDeepPurple</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideDeepPurple</item>
@@ -718,11 +718,11 @@
   </style>
 
   <style name="AptoideThemeDefaultDeepPurpleDark" parent="AppBaseThemeDark">
-    <item name="colorPrimary">@color/deeppurple</item>
-    <item name="colorPrimaryDark">@color/deeppurple_700</item>
-    <item name="colorAccent">@color/deeppurple_700</item>
-    <item name="colorButtonNormal">@color/deeppurple</item>
-    <item name="customColor">@color/deeppurple</item>
+    <item name="colorPrimary">@color/deep_purple</item>
+    <item name="colorPrimaryDark">@color/deep_purple_700</item>
+    <item name="colorAccent">@color/deep_purple_700</item>
+    <item name="colorButtonNormal">@color/deep_purple</item>
+    <item name="customColor">@color/deep_purple</item>
 
     <item name="customButton">@style/WidgetButtonCustomDeepPurple</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideDeepPurple</item>

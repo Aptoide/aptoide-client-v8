@@ -11,7 +11,6 @@ import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
-import cm.aptoide.pt.dataprovider.ws.notifications.GetPullNotificationsResponse;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.BaseV3Response;
@@ -28,7 +27,6 @@ import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import java.io.IOException;
-import java.util.Map;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
@@ -36,14 +34,11 @@ import retrofit2.Converter;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
-import retrofit2.http.Path;
-import retrofit2.http.QueryMap;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -65,13 +60,6 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
   protected V3(BaseBody baseBody, OkHttpClient httpClient, Converter.Factory converterFactory,
       BodyInterceptor<BaseBody> bodyInterceptor) {
     super(Interfaces.class, httpClient, converterFactory, BASE_HOST);
-    this.map = baseBody;
-    this.bodyInterceptor = bodyInterceptor;
-  }
-
-  protected V3(String url, BaseBody baseBody, OkHttpClient httpClient,
-      Converter.Factory converterFactory, BodyInterceptor<BaseBody> bodyInterceptor) {
-    super(Interfaces.class, httpClient, converterFactory, url);
     this.map = baseBody;
     this.bodyInterceptor = bodyInterceptor;
   }
@@ -148,19 +136,6 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
   }
 
   interface Interfaces {
-
-    @GET("{id}/campaigns") Observable<GetPullNotificationsResponse> getPushNotificationsAmazon(
-        @Path("id") String id, @QueryMap Map<String, String> options,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @GET("{id}/direct")
-    Observable<GetPullNotificationsResponse> getPushNotificationsLikeCommentsAmazon(
-        @Path("id") String id, @QueryMap Map<String, String> options,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("getPushNotifications") @FormUrlEncoded
-    Observable<GetPullNotificationsResponse> getPushNotifications(@FieldMap BaseBody arg,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("addApkFlag") @FormUrlEncoded Observable<GenericResponseV2> addApkFlag(
         @FieldMap BaseBody arg, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);

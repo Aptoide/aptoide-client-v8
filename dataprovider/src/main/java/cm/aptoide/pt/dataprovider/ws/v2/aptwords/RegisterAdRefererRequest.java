@@ -6,7 +6,6 @@
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
 import android.os.Build;
-import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import lombok.Data;
 import okhttp3.OkHttpClient;
@@ -18,14 +17,16 @@ import rx.Observable;
  */
 public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.DefaultResponse> {
 
+  private final String q;
   private long adId;
   private long appId;
   private String tracker;
   private String success;
 
   private RegisterAdRefererRequest(long adId, long appId, String clickUrl, boolean success,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
+      OkHttpClient httpClient, Converter.Factory converterFactory, String q) {
     super(httpClient, converterFactory);
+    this.q = q;
     this.adId = adId;
     this.appId = appId;
     this.success = (success ? "1" : "0");
@@ -34,9 +35,9 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
   }
 
   public static RegisterAdRefererRequest of(long adId, long appId, String clickUrl, boolean success,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
+      OkHttpClient httpClient, Converter.Factory converterFactory, String q) {
     return new RegisterAdRefererRequest(adId, appId, clickUrl, success, httpClient,
-        converterFactory);
+        converterFactory, q);
   }
 
   private void extractAndSetTracker(String clickUrl) {
@@ -63,7 +64,7 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
     map.put("success", success);
     map.put("adid", Long.toString(adId));
     map.put("appid", Long.toString(appId));
-    map.put("q", Api.Q);
+    map.put("q", q);
     map.put("androidversion", Build.VERSION.RELEASE);
     map.put("tracker", tracker);
 

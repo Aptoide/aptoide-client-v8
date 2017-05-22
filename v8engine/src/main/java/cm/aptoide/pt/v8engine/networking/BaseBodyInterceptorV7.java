@@ -2,30 +2,26 @@ package cm.aptoide.pt.v8engine.networking;
 
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.q.QManager;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import rx.Single;
 import rx.schedulers.Schedulers;
 
-public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
+public class BaseBodyInterceptorV7 extends BaseBodyInterceptor<BaseBody> {
 
-  private final IdsRepository idsRepository;
   private final AptoideAccountManager accountManager;
   private final AdultContent adultContent;
-  private final String aptoideMd5sum;
-  private final String aptoidePackage;
 
-  public BaseBodyInterceptorV7(IdsRepository idsRepository, AptoideAccountManager accountManager,
-      AdultContent adultContent, String aptoideMd5sum, String aptoidePackage) {
-    this.idsRepository = idsRepository;
+  public BaseBodyInterceptorV7(String aptoideMd5sum, String aptoidePackage,
+      IdsRepository idsRepository, AptoideAccountManager accountManager, AdultContent adultContent,
+      QManager qManager) {
+    super(aptoideMd5sum, aptoidePackage, idsRepository, qManager);
     this.accountManager = accountManager;
     this.adultContent = adultContent;
-    this.aptoideMd5sum = aptoideMd5sum;
-    this.aptoidePackage = aptoidePackage;
   }
 
   public Single<BaseBody> intercept(BaseBody body) {
@@ -41,11 +37,10 @@ public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
       body.setAptoideId(idsRepository.getUniqueIdentifier());
       body.setAptoideVercode(AptoideUtils.Core.getVerCode());
       body.setCdn("pool");
-      body.setLang(Api.LANG);
+      body.setLang(AptoideUtils.SystemU.getCountryCode());
       body.setMature(adultContentEnabled);
-      if (ManagerPreferences.getHWSpecsFilter()) {
-        body.setQ(Api.Q);
-      }
+      body.setQ(V8Engine.getQManager()
+          .getFilters(ManagerPreferences.getHWSpecsFilter()));
       if (ManagerPreferences.isDebug()) {
         String forceCountry = ManagerPreferences.getForceCountry();
         if (!TextUtils.isEmpty(forceCountry)) {
