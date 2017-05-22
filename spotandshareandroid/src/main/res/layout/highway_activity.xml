@@ -32,10 +32,11 @@
         android:layout_height="50dp"
         android:layout_gravity="right"
         android:layout_marginTop="50dp"
-        android:paddingLeft="16dp"
         android:drawableLeft="@drawable/supervisor_account_material"
+        android:paddingLeft="16dp"
         android:text="@string/spotandshare_button_invite_friends"
         android:textColor="@color/white"
+        android:visibility="gone"
         style="@style/Aptoide.Spot.Button.Ghost.Spotandshare"
         >
 

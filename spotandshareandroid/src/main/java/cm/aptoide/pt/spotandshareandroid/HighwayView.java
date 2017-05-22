@@ -42,6 +42,8 @@ public interface HighwayView {
 
   void openShareAptoide(String Ssid);
 
+  void showShareAptoideApk();
+
   //    void setCreateGroupListener(View.OnClickListener listener );
   //
   //    void setJoinGroupListener(View.OnClickListener listener);

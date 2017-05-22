@@ -86,11 +86,11 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
       autoShareFilepath = intent.getStringExtra("APPVIEW_SHARE_FILEPATH");
       presenter = new HighwayPresenter(this, groupNameProvider,
           new DeactivateHotspotTask(connectionManager), connectionManager, analytics, groupManager,
-          this, autoShareAppName, autoShareFilepath);
+          this, autoShareAppName, autoShareFilepath, false);
     } else {
       presenter = new HighwayPresenter(this, groupNameProvider,
           new DeactivateHotspotTask(connectionManager), connectionManager, analytics, groupManager,
-          this);
+          this, true);
     }
 
     attachPresenter(presenter);
@@ -449,6 +449,10 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     intent.putExtra(HOTSPOT_NAME, Ssid);
     startActivity(intent);
     //finish();
+  }
+
+  @Override public void showShareAptoideApk() {
+    shareAptoideApkButton.setVisibility(View.VISIBLE);
   }
 
   @Override public boolean checkPermissions() {
