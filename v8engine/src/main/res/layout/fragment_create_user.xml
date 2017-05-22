@@ -50,14 +50,34 @@
           android:layout_weight="1"
           />
 
-      <Button
-          android:id="@+id/create_user_create_profile"
-          android:layout_width="0dp"
-          android:layout_height="match_parent"
-          android:layout_weight="1"
-          android:text="@string/create_user_create_button"
-          style="?attr/customButton"
-          />
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          >
+
+        <Button
+            android:id="@+id/create_user_cancel_button"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_default_height"
+            android:layout_marginEnd="@dimen/padding_smaller"
+            android:layout_marginRight="@dimen/padding_smaller"
+            android:layout_weight="1"
+            android:gravity="center"
+            style="@style/Aptoide.Button"
+            />
+
+        <Button
+            android:id="@+id/create_user_create_profile"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_default_height"
+            android:layout_marginLeft="@dimen/padding_smaller"
+            android:layout_marginStart="@dimen/padding_smaller"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/create_user_create_button"
+            style="@style/Aptoide.Button"
+            />
+      </LinearLayout>
 
     </LinearLayout>
 

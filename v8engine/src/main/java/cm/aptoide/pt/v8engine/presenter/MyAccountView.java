@@ -18,5 +18,7 @@ public interface MyAccountView extends View {
 
   Observable<GetStore> getStore();
 
+  Observable<Void> editUserProfileClick();
+
   void navigateToHome();
 }

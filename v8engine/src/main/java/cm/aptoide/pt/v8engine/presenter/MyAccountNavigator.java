@@ -1,8 +1,10 @@
 package cm.aptoide.pt.v8engine.presenter;
 
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.notification.view.InboxFragment;
 import cm.aptoide.pt.v8engine.view.account.store.CreateStoreFragment;
+import cm.aptoide.pt.v8engine.view.account.user.CreateUserFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 
 /**
@@ -26,5 +28,11 @@ public class MyAccountNavigator {
         store.getAppearance()
             .getTheme(), store.getAppearance()
             .getDescription(), store.getAvatar(), CreateStoreFragment.STORE_FROM_DEFAULT_VALUE));
+  }
+
+  public void navigateToEditProfileView(Account account) {
+    fragmentNavigator.navigateTo(
+        CreateUserFragment.newInstance(account.getAvatar(), account.getNickname(),
+            CreateUserFragment.FROM_MY_ACCOUNT));
   }
 }

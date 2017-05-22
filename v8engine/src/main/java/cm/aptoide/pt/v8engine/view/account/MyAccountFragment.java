@@ -170,6 +170,10 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
         .observe();
   }
 
+  @Override public Observable<Void> editUserProfileClick() {
+    return RxView.clicks(userProfileEditButton);
+  }
+
   @Override public void navigateToHome() {
     getFragmentNavigator().navigateToHomeCleaningBackStack();
   }

@@ -2,14 +2,12 @@ package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.notification.NotificationCenter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class MyAccountPresenter implements Presenter {
 
@@ -20,7 +18,6 @@ public class MyAccountPresenter implements Presenter {
   private final NotificationCenter notificationCenter;
   private final LinksHandlerFactory linkFactory;
   private final int NUMBER_OF_NOTIFICATIONS = 3;
-  private Store store;
 
   public MyAccountPresenter(MyAccountView view, AptoideAccountManager accountManager,
       CrashReport crashReport, MyAccountNavigator navigator, NotificationCenter notificationCenter,
@@ -49,16 +46,11 @@ public class MyAccountPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(click -> view.editStoreClick()
             .flatMap(response -> view.getStore())
-            .observeOn(Schedulers.io())
-            .map(getStore -> {
-              store = getStore.getNodes()
-                  .getMeta()
-                  .getData();
-              return store;
-            })
-            .doOnNext(__ -> navigator.navigateToEditStoreView(store)))
+            .map(getStore -> getStore.getNodes()
+                .getMeta()
+                .getData()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+        .subscribe(store -> navigator.navigateToEditStoreView(store));
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> notificationCenter.getInboxNotifications(NUMBER_OF_NOTIFICATIONS))
@@ -72,6 +64,12 @@ public class MyAccountPresenter implements Presenter {
         .map(notification -> linkFactory.get(LinksHandlerFactory.NOTIFICATION_LINK,
             notification.getUrl()))
         .doOnNext(link -> link.launch())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(click -> view.editUserProfileClick()
+            .doOnNext(__ -> navigator.navigateToEditProfileView(accountManager.getAccount())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }
