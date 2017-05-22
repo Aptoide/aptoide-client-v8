@@ -86,8 +86,12 @@ public class ShareAptoideActivity extends ActivityView implements ShareAptoideVi
             presenter.pressedExitOnDialog();
           }
         });
-    builder.create()
-        .show();
+    AlertDialog alertDialog = builder.create();
+    alertDialog.setOnShowListener(
+        dialogInterface -> alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+            .setTextColor(getResources().getColor(R.color.grey_fog_dark)));
+    alertDialog.show();
+
   }
 
   @Override public void showUnsuccessHotspotCreation() {
