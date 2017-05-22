@@ -31,7 +31,7 @@
         android:layout_width="180dp"
         android:layout_height="50dp"
         android:layout_gravity="right"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:drawableLeft="@drawable/supervisor_account_material"
         android:drawablePadding="5dp"
         android:paddingLeft="16dp"
@@ -63,18 +63,18 @@
           android:id="@+id/hotspotTextView"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:layout_margin="5dp"
+          android:layout_margin="20dp"
           />
 
       <TextView
           android:id="@+id/searching_groups"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:layout_margin="18dp"
+          android:layout_margin="10dp"
           android:color="@color/medium_gray"
           android:gravity="bottom|center"
           android:text="@string/searching_groups"
-          android:textSize="20dp"
+          android:textSize="16sp"
           />
 
       <ProgressBar
