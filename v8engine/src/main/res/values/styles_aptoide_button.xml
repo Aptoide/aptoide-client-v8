@@ -11,22 +11,16 @@
   </style>
 
   <style name="Aptoide.Button.Facebook">
-    <item name="android:background">@color/facebook</item>
+    <item name="android:colorButtonNormal">@color/facebook</item>
+    <item name="android:colorControlHighlight">@color/facebook_highlight</item>
     <item name="android:drawableLeft">@drawable/com_facebook_button_icon_white</item>
     <item name="android:text">@string/connect_with_facebook</item>
     <item name="android:contentDescription">@string/com_facebook_loginview_log_in_button_long</item>
   </style>
 
-  <!--
-  <style name="Aptoide.Button.Inverse" parent="Widget.AppCompat.Button.Colored">
-    <item name="android:textColor">@color/default_color</item>
-    <item name="android:colorAccent">@color/grey_fog_light</item>
-    <item name="android:colorButtonNormal">@color/white</item>
-  </style>
-  -->
-
   <style name="Aptoide.Button.Google">
-    <item name="android:background">@color/google</item>
+    <item name="android:colorButtonNormal">@color/google</item>
+    <item name="android:colorControlHighlight">@color/google_highlight</item>
     <item name="android:drawableLeft">@drawable/google_plus_ic</item>
     <item name="android:text">@string/connect_with_google</item>
     <item name="android:contentDescription">@string/google</item>

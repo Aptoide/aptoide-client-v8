@@ -90,7 +90,6 @@
             android:layout_marginTop="@dimen/padding_medium_small"
             android:gravity="center_horizontal"
             android:text="@string/create_profile_pub_pri"
-            android:textColor="@color/default_color"
             style="@style/Aptoide.TextView.Medium.L"
             />
 

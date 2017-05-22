@@ -29,7 +29,9 @@
   <color name="displayable_rate_and_review_background">#f2f2f2</color>
   <color name="link">#2070DE</color>
   <color name="facebook">#3b5998</color>
+  <color name="facebook_highlight">#8b9dc3</color>
   <color name="google">#cc4a41</color>
+  <color name="google_highlight">#cc4a41</color>
   <color name="default_progress_bar_color">#FF33B5E5</color>
   <color name="background_holo_light">#fff3f3f3</color>
   <color name="appview_rating_text">#FAB000</color>
