@@ -118,6 +118,22 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
         new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
   }
 
+  @Override public void onDestroy() {
+    super.onDestroy();
+    logoutButton = null;
+    usernameTextView = null;
+    storeNameTextView = null;
+    userProfileEditButton = null;
+    userStoreEditButton = null;
+    storeLayout = null;
+    userAvatar = null;
+    storeAvatar = null;
+    separator = null;
+    header = null;
+    headerText = null;
+    moreNotificationsButton = null;
+  }
+
   @Override public int getContentViewId() {
     return R.layout.my_account_activity;
   }
@@ -152,10 +168,6 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     getFragmentNavigator().navigateToHomeCleaningBackStack();
   }
 
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-  }
-
   @Override protected boolean displayHomeUpAsEnabled() {
     return true;
   }
@@ -184,8 +196,6 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   }
 
   private void setupAccountLayout() {
-
-    userProfileEditButton.setVisibility(View.GONE);
 
     if (!TextUtils.isEmpty(accountManager.getAccount()
         .getNickname())) {
