@@ -47,7 +47,7 @@
           android:layout_weight="1"
           android:text="@string/create_profile_pub_pri_make_priv"
           android:textSize="8sp"
-          style="@style/Aptoide.Button"
+          style="@style/Aptoide.Button.Ghost"
           />
 
       <Button
