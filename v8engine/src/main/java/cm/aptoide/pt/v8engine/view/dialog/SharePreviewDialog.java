@@ -344,8 +344,20 @@ public class SharePreviewDialog {
     } else if (displayable instanceof AggregatedSocialArticleDisplayable) {
       AggregatedSocialArticleDisplayable aggregatedSocialArticleDisplayable =
           ((AggregatedSocialArticleDisplayable) displayable);
+      view = factory.inflate(R.layout.displayable_social_timeline_social_article_preview, null);
 
-      aggregatedSocialArticleDisplayable.getAbTestingURL();
+      TextView articleTitle =
+          (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
+      ImageView thumbnail = (ImageView) view.findViewById(R.id.featured_graphic);
+      TextView relatedTo = (TextView) view.findViewById(R.id.app_name);
+      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingbar);
+      ratingBar.setVisibility(View.INVISIBLE);
+      articleTitle.setMaxLines(1);
+      articleTitle.setText((aggregatedSocialArticleDisplayable).getTitle());
+      relatedTo.setVisibility(View.GONE);
+
+      ImageLoader.with(context)
+          .load((aggregatedSocialArticleDisplayable).getThumbnailUrl(), thumbnail);
     } else {
       throw new IllegalStateException(
           "The Displayable " + displayable + " is not being handled " + "in SharePreviewDialog");
