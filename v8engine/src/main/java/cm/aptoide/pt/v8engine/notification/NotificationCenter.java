@@ -1,12 +1,8 @@
 package cm.aptoide.pt.v8engine.notification;
 
-import android.support.annotation.NonNull;
-import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import io.realm.Sort;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.Subscription;
 
@@ -19,27 +15,27 @@ public class NotificationCenter {
   public static final String NOTIFICATION_CENTER_ENABLE = "notification_campaign_and_social";
   private final CrashReport crashReport;
   private final NotificationIdsMapper notificationIdsMapper;
-  private final NotificationAccessor notificationAccessor;
   private NotificationHandler notificationHandler;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SystemNotificationShower notificationShower;
   private NotificationPolicyFactory notificationPolicyFactory;
   private SharedPreferences sharedPreferences;
   private Subscription notificationProviderSubscription;
+  private NotificationProvider notificationProvider;
 
   public NotificationCenter(NotificationIdsMapper notificationIdsMapper,
-      NotificationHandler notificationHandler, NotificationProvider notificationProvider, NotificationSyncScheduler notificationSyncScheduler,
+      NotificationHandler notificationHandler, NotificationProvider notificationProvider,
+      NotificationSyncScheduler notificationSyncScheduler,
       SystemNotificationShower notificationShower, CrashReport crashReport,
-      NotificationPolicyFactory notificationPolicyFactory,
-      NotificationAccessor notificationAccessor, SharedPreferences sharedPreferences) {
+      NotificationPolicyFactory notificationPolicyFactory, SharedPreferences sharedPreferences) {
     this.notificationIdsMapper = notificationIdsMapper;
     this.notificationHandler = notificationHandler;
     this.notificationSyncScheduler = notificationSyncScheduler;
     this.notificationShower = notificationShower;
+    this.notificationProvider = notificationProvider;
     this.crashReport = crashReport;
     this.notificationPolicyFactory = notificationPolicyFactory;
     this.sharedPreferences = sharedPreferences;
-    this.notificationAccessor = notificationAccessor;
   }
 
   public void enable() {
@@ -61,12 +57,12 @@ public class NotificationCenter {
   }
 
   public void start() {
-      notificationSyncScheduler.schedule();
-      notificationProviderSubscription = getNewNotifications().flatMapCompletable(
-          aptoideNotification -> notificationShower.showNotification(aptoideNotification,
-              notificationIdsMapper.getNotificationId(aptoideNotification.getType())))
-          .subscribe(aptoideNotification -> {
-          }, throwable -> crashReport.log(throwable));
+    notificationSyncScheduler.schedule();
+    notificationProviderSubscription = getNewNotifications().flatMapCompletable(
+        aptoideNotification -> notificationShower.showNotification(aptoideNotification,
+            notificationIdsMapper.getNotificationId(aptoideNotification.getType())))
+        .subscribe(aptoideNotification -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   public void forceSync() {
@@ -102,10 +98,6 @@ public class NotificationCenter {
   }
 
   public Observable<List<AptoideNotification>> getInboxNotifications(int entries) {
-    return notificationAccessor.getAllSorted(Sort.DESCENDING)
-        .flatMap(notifications -> Observable.from(notifications)
-            .map(notification -> notificationProvider.convertToAptoideNotification(notification))
-            .take(entries)
-            .toList());
+    return notificationProvider.getNotifications(entries);
   }
 }

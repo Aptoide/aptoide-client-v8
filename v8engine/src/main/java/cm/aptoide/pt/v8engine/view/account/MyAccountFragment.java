@@ -21,7 +21,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.model.v7.store.GetStore;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
@@ -34,6 +41,8 @@ import cm.aptoide.pt.v8engine.view.fragment.BaseToolbarFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Collections;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -62,9 +71,16 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   private PublishSubject<AptoideNotification> notificationSubject;
   private InboxAdapter adapter;
   private RecyclerView list;
+  private Converter.Factory converterFactory;
+  private OkHttpClient httpClient;
+  private BodyInterceptor<BaseBody> bodyInterceptor;
 
   public static Fragment newInstance() {
     return new MyAccountFragment();
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.menu_empty, menu);
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -78,16 +94,15 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     return super.onOptionsItemSelected(item);
   }
 
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.menu_empty, menu);
-  }
-
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
     accountManager = ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
     notificationSubject = PublishSubject.create();
     adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
+    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -117,10 +132,20 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
 
   @Override public void showNotifications(List<AptoideNotification> notifications) {
     adapter.updateNotifications(notifications);
+    if (notifications.isEmpty()) {
+      header.setVisibility(View.GONE);
+    }
   }
 
   @Override public Observable<Void> editStoreClick() {
     return RxView.clicks(userStoreEditButton);
+  }
+
+  @Override public Observable<GetStore> getStore() {
+    return GetStoreRequest.of(new BaseRequestWithStore.StoreCredentials(accountManager.getAccount()
+            .getStoreName(), null, null), StoreContext.meta, bodyInterceptor, httpClient,
+        converterFactory)
+        .observe();
   }
 
   @Override public void navigateToHome() {

@@ -2,11 +2,13 @@ package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.notification.NotificationCenter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MyAccountPresenter implements Presenter {
 
@@ -16,6 +18,7 @@ public class MyAccountPresenter implements Presenter {
   private final MyAccountNavigator navigator;
   private final NotificationCenter notificationCenter;
   private final int NUMBER_OF_NOTIFICATIONS = 3;
+  private Store store;
 
   public MyAccountPresenter(MyAccountView view, AptoideAccountManager accountManager,
       CrashReport crashReport, MyAccountNavigator navigator,
@@ -42,7 +45,15 @@ public class MyAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(click -> view.editStoreClick()
-            .doOnNext(__ -> navigator.navigateToEditStoreView()))
+            .flatMap(response -> view.getStore())
+            .observeOn(Schedulers.io())
+            .map(getStore -> {
+              store = getStore.getNodes()
+                  .getMeta()
+                  .getData();
+              return store;
+            })
+            .doOnNext(__ -> navigator.navigateToEditStoreView(store)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
     view.getLifecycle()

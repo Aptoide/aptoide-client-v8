@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.notification;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.realm.Notification;
+import io.realm.Sort;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -40,7 +41,7 @@ public class NotificationProvider {
         .toSingle();
   }
 
-  public AptoideNotification convertToAptoideNotification(Notification notification) {
+  private AptoideNotification convertToAptoideNotification(Notification notification) {
     return new AptoideNotification(notification.getAbTestingGroup(), notification.getBody(),
         notification.getCampaignId(), notification.getImg(), notification.getLang(),
         notification.getTitle(), notification.getUrl(), notification.getUrlTrack(),
@@ -54,5 +55,13 @@ public class NotificationProvider {
         .toList()
         .doOnNext(notifications -> notificationAccessor.insertAll(notifications))
         .toCompletable();
+  }
+
+  public Observable<List<AptoideNotification>> getNotifications(int entries) {
+    return notificationAccessor.getAllSorted(Sort.DESCENDING)
+        .flatMap(notifications -> Observable.from(notifications)
+            .map(notification -> convertToAptoideNotification(notification))
+            .take(entries)
+            .toList());
   }
 }
