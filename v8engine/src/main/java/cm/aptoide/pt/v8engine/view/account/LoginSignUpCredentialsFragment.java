@@ -170,7 +170,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override public void showError(Throwable throwable) {
     // FIXME: 23/2/2017 sithengineer find a better solution than this.
-    ShowMessage.asSnack(separator, errorMapper.map(throwable));
+    ShowMessage.asToast(getContext(), errorMapper.map(throwable));
   }
 
   @Override public void showFacebookLogin() {
