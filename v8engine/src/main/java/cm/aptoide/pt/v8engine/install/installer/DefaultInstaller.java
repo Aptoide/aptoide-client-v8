@@ -28,8 +28,8 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.InstallEvent;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.Installer;
+import cm.aptoide.pt.v8engine.install.Root;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
-import cm.aptoide.pt.v8engine.install.root.RootShell;
 import java.io.File;
 import java.util.List;
 import lombok.AccessLevel;
@@ -51,17 +51,18 @@ public class DefaultInstaller implements Installer {
   private final InstallationProvider installationProvider;
   private FileUtils fileUtils;
   private Analytics analytics;
+  private Root root;
   private InstalledRepository installedRepository;
 
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
       FileUtils fileUtils, Analytics analytics, boolean debug,
-      InstalledRepository installedRepository) {
+      InstalledRepository installedRepository, Root root) {
     this.packageManager = packageManager;
     this.installationProvider = installationProvider;
     this.fileUtils = fileUtils;
     this.analytics = analytics;
     this.installedRepository = installedRepository;
-    RootShell.debugMode = debug;
+    this.root = root;
   }
 
   @Override public Observable<Boolean> isInstalled(String md5) {
@@ -72,8 +73,13 @@ public class DefaultInstaller implements Installer {
   }
 
   @Override public Completable install(Context context, String md5) {
-    Analytics.RootInstall.installationType(ManagerPreferences.allowRootInstallation(),
-        RootShell.isRootAvailable());
+
+    // TODO: 22/05/2017 trinkes chain this code with the next one. This code shouldn't break the chain
+    root.isRootAvailable()
+        .subscribe(isRoot -> {
+          Analytics.RootInstall.installationType(ManagerPreferences.allowRootInstallation(),
+              isRoot);
+        });
     return installationProvider.getInstallation(md5)
         .first()
         .observeOn(Schedulers.computation())

@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.preferences;
 import android.content.SharedPreferences;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 import rx.Subscriber;
 import rx.subscriptions.Subscriptions;
 
@@ -73,5 +74,9 @@ public class Preferences {
     return Completable.fromAction(() -> preferences.edit()
         .remove(key)
         .commit());
+  }
+
+  public Single<Boolean> contains(String key) {
+    return Single.just(preferences.contains(key));
   }
 }

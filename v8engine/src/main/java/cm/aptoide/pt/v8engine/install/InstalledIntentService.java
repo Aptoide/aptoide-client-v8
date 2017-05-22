@@ -25,7 +25,6 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.InstallEvent;
 import cm.aptoide.pt.v8engine.install.rollback.RollbackRepository;
-import cm.aptoide.pt.v8engine.install.root.RootShell;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.updates.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
@@ -48,6 +47,7 @@ public class InstalledIntentService extends IntentService {
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private InstallManager installManager;
+  private Root root;
 
   public InstalledIntentService() {
     super("InstalledIntentService");
@@ -71,6 +71,7 @@ public class InstalledIntentService extends IntentService {
         ((V8Engine) getApplicationContext()).getDownloadManager();
     Installer installer = new InstallerFactory().create(this, InstallerFactory.ROLLBACK);
     installManager = new InstallManager(downloadManager, installer);
+    root = new Root(((V8Engine) getApplicationContext()).getSecurePreferences());
   }
 
   @Override protected void onHandleIntent(Intent intent) {
@@ -179,7 +180,9 @@ public class InstalledIntentService extends IntentService {
       InstallEvent event =
           (InstallEvent) analytics.get(packageName + packageInfo.versionCode, InstallEvent.class);
       if (event != null) {
-        event.setPhoneRooted(RootShell.isRootAvailable());
+        event.setPhoneRooted(root.isRootAvailable()
+            .toBlocking()
+            .value());
         event.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.SUCC);
         analytics.sendEvent(event);
         return;
