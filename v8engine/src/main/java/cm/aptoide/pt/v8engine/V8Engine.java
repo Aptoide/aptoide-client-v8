@@ -300,13 +300,11 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
   @NonNull public NotificationCenter getNotificationCenter() {
     if (notificationCenter == null) {
-      long pushNotificationInterval;
+      long pushNotificationInterval = pushNotificationSocialPeriodicity;
 
       if (ManagerPreferences.isDebug()
           && ManagerPreferences.getPushNotificationPullingInterval() > 0) {
         pushNotificationInterval = ManagerPreferences.getPushNotificationPullingInterval();
-      } else {
-        pushNotificationInterval = AlarmManager.INTERVAL_HOUR;
       }
 
       SystemNotificationShower systemNotificationShower = new SystemNotificationShower(this,

@@ -239,7 +239,7 @@ public class ImageLoader {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context.getApplicationContext())
-          .load(AptoideUtils.IconSizeU.generateStringNotification(url))
+          .load(url)
           .asBitmap()
           .into(notificationTarget);
     } else {
