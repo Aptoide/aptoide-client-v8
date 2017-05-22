@@ -100,7 +100,7 @@ public class ConfirmationSync extends RepositorySync {
 
   private void saveAndReschedulePendingConfirmation(PaymentConfirmation paymentConfirmation,
       SyncResult syncResult, String payerId) {
-    confirmationAccessor.save(
+    confirmationAccessor.insert(
         confirmationFactory.convertToDatabasePaymentConfirmation(paymentConfirmation));
 
     if (paymentConfirmation.isPending()) {
@@ -116,7 +116,7 @@ public class ConfirmationSync extends RepositorySync {
       analytics.sendPurchaseNetworkRetryEvent(product);
       rescheduleSync(syncResult);
     } else {
-      confirmationAccessor.save(confirmationFactory.convertToDatabasePaymentConfirmation(
+      confirmationAccessor.insert(confirmationFactory.convertToDatabasePaymentConfirmation(
           confirmationFactory.create(product.getId(), "", PaymentConfirmation.Status.NEW,
               payerId)));
     }

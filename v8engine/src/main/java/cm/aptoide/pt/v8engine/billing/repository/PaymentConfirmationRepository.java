@@ -54,19 +54,12 @@ public abstract class PaymentConfirmationRepository {
             payerId -> createServerConfirmation(product, paymentId, metadataId).flatMapCompletable(
                 response -> {
                   if (response != null && response.isOk()) {
-                    confirmationAccessor.save(
-                        confirmationFactory.convertToDatabasePaymentConfirmation(
-                            confirmationFactory.create(product.getId(), metadataId,
-                                PaymentConfirmation.Status.COMPLETED, payerId)));
                     return Completable.complete();
                   }
-                  confirmationAccessor.save(
-                      confirmationFactory.convertToDatabasePaymentConfirmation(
-                          confirmationFactory.create(product.getId(), "",
-                              PaymentConfirmation.Status.NEW, payerId)));
                   return Completable.error(
                       new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-                }));
+                }))
+        .andThen(syncPaymentConfirmation(product));
   }
 
   protected abstract Single<BaseV3Response> createServerConfirmation(Product product, int paymentId,

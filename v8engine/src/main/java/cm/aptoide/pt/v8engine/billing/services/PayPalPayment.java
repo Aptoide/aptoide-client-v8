@@ -12,6 +12,7 @@ import cm.aptoide.pt.v8engine.billing.exception.PaymentNotAuthorizedException;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationFactory;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationRepository;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentRepositoryFactory;
+import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import rx.Completable;
 
@@ -51,7 +52,14 @@ public class PayPalPayment implements Payment {
     return checkAuthorization().andThen(
         paymentRepositoryFactory.getPaymentConfirmationRepository(product)
             .createPaymentConfirmation(product, getId(),
-                PayPalConfiguration.getClientMetadataId(context)));
+                PayPalConfiguration.getClientMetadataId(context))
+            .onErrorResumeNext(throwable -> {
+              if (throwable instanceof RepositoryIllegalArgumentException) {
+                return authorizationRepository.remove(getId())
+                    .andThen(Completable.error(throwable));
+              }
+              return Completable.error(throwable);
+            }));
   }
 
   public Completable process(Product product, String authorizationCode) {

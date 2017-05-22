@@ -94,4 +94,8 @@ public class AuthorizationRepository {
   private Completable syncAuthorization(int paymentId, String authorizationType) {
     return backgroundSync.scheduleAuthorizationSync(paymentId, authorizationType);
   }
+
+  public Completable remove(int paymentId) {
+    return Completable.fromAction(() -> authotizationAccessor.remove(paymentId));
+  }
 }

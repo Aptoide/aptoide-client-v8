@@ -27,10 +27,6 @@ public class PaymentConfirmationAccessor extends SimpleAccessor<PaymentConfirmat
         .flatMap(query -> database.findAsList(query));
   }
 
-  public void save(PaymentConfirmation confirmation) {
-    database.insert(confirmation);
-  }
-
   public void remove(int productId) {
     database.delete(PaymentConfirmation.class, PaymentConfirmation.PRODUCT_ID, productId);
   }
