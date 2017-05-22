@@ -49,13 +49,14 @@ public abstract class CardDisplayable extends Displayable {
   /**
    * Shares the card and generates a corresponding Social card.
    *
+   * @param cardId
    * @param shareCardCallback Listens to the result of the share operation. Pass null if you want
    * to
-   * ignore it.
    */
-  public abstract void share(boolean privacyResult, ShareCardCallback shareCardCallback);
+  public abstract void share(String cardId, boolean privacyResult,
+      ShareCardCallback shareCardCallback);
 
-  public abstract void share(ShareCardCallback shareCardCallback);
+  public abstract void share(String cardId, ShareCardCallback shareCardCallback);
 
   public abstract void like(Context context, String cardType, int rating);
 

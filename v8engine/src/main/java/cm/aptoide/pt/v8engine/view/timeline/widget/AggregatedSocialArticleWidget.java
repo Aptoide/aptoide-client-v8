@@ -18,6 +18,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.AggregatedSocialArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.SocialArticleDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
@@ -158,6 +159,7 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
       TextView cardHeaderTimestamp = (TextView) subCardView.findViewById(R.id.card_date);
       LinearLayout like = (LinearLayout) subCardView.findViewById(R.id.social_like);
       TextView comment = (TextView) subCardView.findViewById(R.id.social_comment);
+      TextView shareSubCardButton = (TextView) subCardView.findViewById(R.id.social_share);
       ImageLoader.with(getContext())
           .loadWithShadowCircleTransform(minimalCard.getSharers()
               .get(0)
@@ -204,6 +206,11 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
             }
             throwable.printStackTrace();
           }));
+
+      compositeSubscription.add(RxView.clicks(shareSubCardButton)
+          .subscribe(click -> shareCard(displayable, minimalCard.getCardId(), null,
+              SharePreviewDialog.SharePreviewOpenMode.SHARE), err -> CrashReport.getInstance()
+              .log(err)));
 
       compositeSubscription.add(accountManager.accountStatus()
           .subscribe());

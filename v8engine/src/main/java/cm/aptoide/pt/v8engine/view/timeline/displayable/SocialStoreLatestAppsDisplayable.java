@@ -133,11 +133,12 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
         sharedStore.getName());
   }
 
-  @Override public void share(boolean privacyResult, ShareCardCallback shareCardCallback) {
+  @Override
+  public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
     socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback);
   }
 
-  @Override public void share(ShareCardCallback shareCardCallback) {
+  @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
     socialRepository.share(getTimelineCard().getCardId(), shareCardCallback);
   }
 

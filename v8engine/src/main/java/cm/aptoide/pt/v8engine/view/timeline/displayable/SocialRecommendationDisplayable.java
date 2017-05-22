@@ -117,12 +117,13 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
     return R.layout.displayable_social_timeline_social_recommendation;
   }
 
-  @Override public void share(boolean privacyResult, ShareCardCallback shareCardCallback) {
+  @Override
+  public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
     socialRepository.share(getTimelineCard().getCardId(), appStoreId, privacyResult,
         shareCardCallback);
   }
 
-  @Override public void share(ShareCardCallback shareCardCallback) {
+  @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
     socialRepository.share(getTimelineCard().getCardId(), appStoreId, shareCardCallback);
   }
 

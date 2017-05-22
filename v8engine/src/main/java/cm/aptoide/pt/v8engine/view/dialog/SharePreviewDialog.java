@@ -26,6 +26,7 @@ import cm.aptoide.pt.v8engine.view.app.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.timeline.LikeButtonView;
+import cm.aptoide.pt.v8engine.view.timeline.displayable.AggregatedSocialArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.AppUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.PopularAppDisplayable;
@@ -340,6 +341,11 @@ public class SharePreviewDialog {
       getApp.setText(spannableFactory.createColorSpan(
           context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
           ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
+    } else if (displayable instanceof AggregatedSocialArticleDisplayable) {
+      AggregatedSocialArticleDisplayable aggregatedSocialArticleDisplayable =
+          ((AggregatedSocialArticleDisplayable) displayable);
+
+      aggregatedSocialArticleDisplayable.getAbTestingURL();
     } else {
       throw new IllegalStateException(
           "The Displayable " + displayable + " is not being handled " + "in SharePreviewDialog");

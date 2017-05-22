@@ -118,8 +118,8 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));
     compositeSubscription.add(RxView.clicks(shareButton)
-        .subscribe(
-            click -> shareCard(displayable, null, SharePreviewDialog.SharePreviewOpenMode.SHARE),
+        .subscribe(click -> shareCard(displayable, displayable.getTimelineCard()
+                .getCardId(), null, SharePreviewDialog.SharePreviewOpenMode.SHARE),
             err -> CrashReport.getInstance()
                 .log(err)));
   }
@@ -131,10 +131,11 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   protected void shareCardWithoutPreview(T displayable, ShareCardCallback callback,
       SharePreviewDialog.SharePreviewOpenMode openMode) {
     if (!hasSocialPermissions(Analytics.Account.AccountOrigins.SHARE_CARD)) return;
-    displayable.share(callback);
+    displayable.share(displayable.getTimelineCard()
+        .getCardId(), callback);
   }
 
-  private void shareCard(T displayable, ShareCardCallback callback,
+  protected void shareCard(T displayable, String cardId, ShareCardCallback callback,
       SharePreviewDialog.SharePreviewOpenMode openMode) {
     if (!hasSocialPermissions(Analytics.Account.AccountOrigins.SHARE_CARD)) return;
 
@@ -145,7 +146,7 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
       if (!accountManager.isAccountAccessConfirmed()) {
         alertDialog.setPositiveButton(R.string.share, (dialogInterface, i) -> {
-          displayable.share(sharePreviewDialog.getPrivacyResult(), callback);
+          displayable.share(cardId, sharePreviewDialog.getPrivacyResult(), callback);
           subscriber.onNext(GenericDialogs.EResponse.YES);
           subscriber.onCompleted();
         })
@@ -155,7 +156,7 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
             });
       } else {
         alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
-          displayable.share(callback);
+          displayable.share(cardId, callback);
           subscriber.onNext(GenericDialogs.EResponse.YES);
           subscriber.onCompleted();
         })
