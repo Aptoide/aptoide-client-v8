@@ -12,8 +12,8 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 
 public class ShareAptoideActivity extends ActivityView implements ShareAptoideView {
 
-  private Toolbar mToolbar;
   private static final String SHARE_APTOIDE_LINK = "http://192.168.43.1:38080";
+  private Toolbar mToolbar;
   private LinearLayout shareAptoideLinearLayout;
   private TextView shareAptoideFirstInstruction;
   private TextView shareAptoideLink;
@@ -91,7 +91,6 @@ public class ShareAptoideActivity extends ActivityView implements ShareAptoideVi
         dialogInterface -> alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
             .setTextColor(getResources().getColor(R.color.grey_fog_dark)));
     alertDialog.show();
-
   }
 
   @Override public void showUnsuccessHotspotCreation() {

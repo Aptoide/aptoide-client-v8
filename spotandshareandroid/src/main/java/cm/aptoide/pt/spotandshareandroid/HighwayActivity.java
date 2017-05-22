@@ -32,10 +32,10 @@ import java.util.List;
  */
 public class HighwayActivity extends ActivityView implements HighwayView, PermissionManager {
 
+  public static final String HOTSPOT_NAME = "HOTSPOT_NAME";
   private static final int PERMISSION_REQUEST_CODE = 6531;
   private static final int WRITE_SETTINGS_REQUEST_CODE = 5;
   private static final int LOCATION_REQUEST_CODE = 789;
-  public static final String HOTSPOT_NAME = "HOTSPOT_NAME";
   public LinearLayout createGroupButton;
   public HighwayRadarTextView radarTextView;
   public LinearLayout progressBarLayout;

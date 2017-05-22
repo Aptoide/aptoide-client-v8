@@ -89,10 +89,10 @@
             android:id="@+id/share_aptoide_first_instruction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_margin="10dp"
             android:text="@string/spotandshare_message_first_share_instruction"
             android:textAlignment="center"
-            android:layout_gravity="center_vertical"
             android:textColor="@color/black_87_alpha"
             style="@style/Aptoide.TextView.Medium.S"
             />
@@ -124,8 +124,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
             android:orientation="vertical"
             >
 
@@ -180,12 +180,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:text="@string/spotandshare_message_third_share_instruction"
             android:textAlignment="center"
-            android:layout_gravity="center_vertical"
             android:textColor="@color/black_87_alpha"
             style="@style/Aptoide.TextView.Medium.S"
             />

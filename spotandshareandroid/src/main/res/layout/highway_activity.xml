@@ -34,11 +34,11 @@
         android:layout_marginTop="20dp"
         android:drawableLeft="@drawable/supervisor_account_material"
         android:drawablePadding="5dp"
+        android:ellipsize="end"
+        android:maxLines="2"
         android:paddingLeft="16dp"
         android:text="@string/spotandshare_button_invite_friends"
         android:textColor="@color/white"
-        android:ellipsize="end"
-        android:maxLines="2"
         style="@style/Aptoide.Spot.Button.Ghost.Spotandshare"
         >
 
