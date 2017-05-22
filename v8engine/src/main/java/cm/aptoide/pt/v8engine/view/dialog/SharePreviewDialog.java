@@ -27,6 +27,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.timeline.LikeButtonView;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.AggregatedSocialArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.timeline.displayable.AggregatedSocialVideoDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.AppUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.PopularAppDisplayable;
@@ -358,6 +359,23 @@ public class SharePreviewDialog {
 
       ImageLoader.with(context)
           .load((aggregatedSocialArticleDisplayable).getThumbnailUrl(), thumbnail);
+    } else if (displayable instanceof AggregatedSocialVideoDisplayable) {
+      AggregatedSocialVideoDisplayable aggregatedSocialVideoDisplayable =
+          ((AggregatedSocialVideoDisplayable) displayable);
+      view = factory.inflate(R.layout.displayable_social_timeline_social_video_preview, null);
+      TextView articleTitle =
+          (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
+      ImageView thumbnail = (ImageView) view.findViewById(R.id.featured_graphic);
+      TextView relatedTo = (TextView) view.findViewById(R.id.app_name);
+      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingbar);
+      ratingBar.setVisibility(View.INVISIBLE);
+      articleTitle.setMaxLines(1);
+      articleTitle.setText(aggregatedSocialVideoDisplayable.getTitle());
+
+      relatedTo.setVisibility(View.GONE);
+
+      ImageLoader.with(context)
+          .load(aggregatedSocialVideoDisplayable.getThumbnailUrl(), thumbnail);
     } else {
       throw new IllegalStateException(
           "The Displayable " + displayable + " is not being handled " + "in SharePreviewDialog");
