@@ -32,6 +32,7 @@ import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.notification.AptoideNotification;
 import cm.aptoide.pt.v8engine.notification.view.InboxAdapter;
 import cm.aptoide.pt.v8engine.presenter.MyAccountNavigator;
@@ -110,7 +111,8 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     setupAccountLayout();
     attachPresenter(new MyAccountPresenter(this, accountManager, CrashReport.getInstance(),
             new MyAccountNavigator(getFragmentNavigator()),
-            ((V8Engine) getContext().getApplicationContext()).getNotificationCenter()),
+            ((V8Engine) getContext().getApplicationContext()).getNotificationCenter(),
+            new LinksHandlerFactory(getContext())),
         savedInstanceState);
     list = (RecyclerView) view.findViewById(R.id.fragment_my_account_notification_list);
     list.setAdapter(adapter);
@@ -144,6 +146,10 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
 
   @Override public Observable<Void> moreNotificationsClick() {
     return RxView.clicks(moreNotificationsButton);
+  }
+
+  @Override public Observable<AptoideNotification> notificationSelection() {
+    return notificationSubject;
   }
 
   @Override public void showNotifications(List<AptoideNotification> notifications) {

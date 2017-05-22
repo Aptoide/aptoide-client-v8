@@ -5,6 +5,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.notification.NotificationCenter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -17,17 +18,19 @@ public class MyAccountPresenter implements Presenter {
   private final CrashReport crashReport;
   private final MyAccountNavigator navigator;
   private final NotificationCenter notificationCenter;
+  private final LinksHandlerFactory linkFactory;
   private final int NUMBER_OF_NOTIFICATIONS = 3;
   private Store store;
 
   public MyAccountPresenter(MyAccountView view, AptoideAccountManager accountManager,
-      CrashReport crashReport, MyAccountNavigator navigator,
-      NotificationCenter notificationCenter) {
+      CrashReport crashReport, MyAccountNavigator navigator, NotificationCenter notificationCenter,
+      LinksHandlerFactory linkFactory) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
     this.navigator = navigator;
     this.notificationCenter = notificationCenter;
+    this.linkFactory = linkFactory;
   }
 
   @Override public void present() {
@@ -61,6 +64,14 @@ public class MyAccountPresenter implements Presenter {
         .flatMap(__ -> notificationCenter.getInboxNotifications(NUMBER_OF_NOTIFICATIONS))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(notifications -> view.showNotifications(notifications))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.notificationSelection())
+        .map(notification -> linkFactory.get(LinksHandlerFactory.NOTIFICATION_LINK,
+            notification.getUrl()))
+        .doOnNext(link -> link.launch())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }
