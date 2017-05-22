@@ -100,7 +100,7 @@
   <string name="spotandshare_message_share_aptoide_follow_steps_order">Follow these 3 steps:</string>
   <string name="spotandshare_message_first_share_instruction">Ask your friend to connect via Wi-Fi to %1$s hotspot</string>
   <string name="spotandshare_message_second_share_instruction">Scan this QR code</string>
-  <string name="spotandshare_message_second_share_instruction_alternative"> or open this link \n%1$s </string>
+  <string name="spotandshare_message_second_share_instruction_alternative">or open this link \n%1$s</string>
   <string name="spotandshare_message_third_share_instruction">Finally ask him to start the transfer on his phone</string>
 
   <string name="spotandshare_title_exit_share_aptoide_activity">Transfer in progress</string>
