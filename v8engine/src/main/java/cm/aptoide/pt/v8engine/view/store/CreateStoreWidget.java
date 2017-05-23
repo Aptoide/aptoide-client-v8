@@ -1,17 +1,18 @@
 package cm.aptoide.pt.v8engine.view.store;
 
-import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.account.store.CreateStoreFragment;
 import cm.aptoide.pt.v8engine.view.account.user.CreateStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by trinkes on 02/12/2016.
@@ -40,16 +41,19 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
     } else {
       button.setText(R.string.login);
     }
+
     RxView.clicks(button)
-        .subscribe(aVoid -> {
-          if (accountManager.isLoggedIn()) {
+        .flatMap(__ -> accountManager.accountStatus())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(account -> {
+          if (account.isLoggedIn()) {
             button.setText(R.string.create_store_displayable_button);
-            Intent intent = new Intent(getContext(), CreateStoreFragment.class);
-            getContext().startActivity(intent);
+            getFragmentNavigator().navigateTo(CreateStoreFragment.newInstance());
           } else {
             button.setText(R.string.login);
             accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.STORE);
           }
-        });
+        }, err -> CrashReport.getInstance()
+            .log(err));
   }
 }
