@@ -5,9 +5,11 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import cm.aptoide.pt.nanohttpd.servers.modular.modules.ShareApkServer;
+import cm.aptoide.pt.spotandshareandroid.R;
 import fi.iki.elonen.NanoHTTPD;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * Created by neuro on 09-05-2017.
@@ -19,7 +21,23 @@ public class ShareApkSandbox extends NanoHTTPD {
   public ShareApkSandbox(Context context) {
     super(38080);
 
-    shareApkServer = new ShareApkServer(new File(getPathAndroid(context)), getFileName(context));
+    shareApkServer = new ShareApkServer(new File(getPathAndroid(context)), getFileName(context),
+        createTokens(context));
+  }
+
+  private static HashMap<String, String> createTokens(Context context) {
+    HashMap<String, String> tokensMap = new HashMap<>();
+
+    tokensMap.put("{{spotandshare_title_share_apk_welcome_page}}",
+        context.getString(R.string.spotandshare_title_share_apk_welcome_page));
+    tokensMap.put("{{spotandshare_message_share_apk_welcome_download_aptoide}}",
+        context.getString(R.string.spotandshare_message_share_apk_welcome_download_aptoide));
+    tokensMap.put("{{spotandshare_message_share_apk_welcome_install_when_completed}}",
+        context.getString(R.string.spotandshare_message_share_apk_welcome_install_when_completed));
+    tokensMap.put("{{spotandshare_message_share_apk_welcome_ask_your_friend}}",
+        context.getString(R.string.spotandshare_message_share_apk_welcome_ask_your_friend));
+
+    return tokensMap;
   }
 
   private static String getPathAndroid(Context context) {

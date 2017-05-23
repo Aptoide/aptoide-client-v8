@@ -1,5 +1,6 @@
-package cm.aptoide.pt.nanohttpd.servers.modular.asset;
+package cm.aptoide.pt.nanohttpd.servers.modular.asset.html;
 
+import cm.aptoide.pt.nanohttpd.servers.modular.asset.AbstractAssetServer;
 import fi.iki.elonen.NanoHTTPD;
 
 import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
