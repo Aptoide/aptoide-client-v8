@@ -8,12 +8,9 @@ package cm.aptoide.pt.v8engine.billing.services;
 import android.content.Context;
 import cm.aptoide.pt.v8engine.billing.Payment;
 import cm.aptoide.pt.v8engine.billing.Product;
-import cm.aptoide.pt.v8engine.billing.exception.PaymentNotAuthorizedException;
-import cm.aptoide.pt.v8engine.billing.repository.AuthorizationFactory;
+import cm.aptoide.pt.v8engine.billing.exception.PaymentLocalProcessingRequiredException;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationRepository;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentRepositoryFactory;
-import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
-import com.paypal.android.sdk.payments.PayPalConfiguration;
 import rx.Completable;
 
 public class PayPalPayment implements Payment {
@@ -49,38 +46,21 @@ public class PayPalPayment implements Payment {
   }
 
   @Override public Completable process(Product product) {
-    return checkAuthorization().andThen(
-        paymentRepositoryFactory.getPaymentConfirmationRepository(product)
-            .createPaymentConfirmation(product, getId(),
-                PayPalConfiguration.getClientMetadataId(context))
-            .onErrorResumeNext(throwable -> {
-              if (throwable instanceof RepositoryIllegalArgumentException) {
-                return authorizationRepository.remove(getId())
-                    .andThen(Completable.error(throwable));
-              }
-              return Completable.error(throwable);
-            }));
-  }
-
-  public Completable process(Product product, String authorizationCode) {
-    return authorizationRepository.createPayPalPaymentAuthorization(getId(), authorizationCode)
-        .andThen(process(product));
-  }
-
-  private Completable checkAuthorization() {
-    return authorizationRepository.getPaymentAuthorization(getId(), AuthorizationFactory.PAYPAL)
-        .distinctUntilChanged(authorization -> authorization.getStatus())
-        .cast(PayPalAuthorization.class)
-        .takeUntil(authorization -> authorization.isAuthorized())
-        .flatMapCompletable(authorization -> {
-
-          if (authorization.isAuthorized()) {
+    return paymentRepositoryFactory.getPaymentConfirmationRepository(product)
+        .getPaymentConfirmation(product)
+        .first()
+        .toSingle()
+        .flatMapCompletable(confirmation -> {
+          if (confirmation.isCompleted()) {
             return Completable.complete();
           }
+          return Completable.error(new PaymentLocalProcessingRequiredException(
+              "PayPal SDK local processing of the payment required"));
+        });
+  }
 
-          return Completable.error(
-              new PaymentNotAuthorizedException("Pending PayPal SDK user consent"));
-        })
-        .toCompletable();
+  public Completable process(Product product, String paymentConfirmationId) {
+    return paymentRepositoryFactory.getPaymentConfirmationRepository(product)
+        .createPaymentConfirmation(product, getId(), paymentConfirmationId);
   }
 }

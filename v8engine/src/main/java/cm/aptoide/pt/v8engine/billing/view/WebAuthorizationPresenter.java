@@ -9,7 +9,6 @@ import android.os.Bundle;
 import cm.aptoide.pt.v8engine.billing.AptoideBilling;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.Product;
-import cm.aptoide.pt.v8engine.billing.repository.AuthorizationFactory;
 import cm.aptoide.pt.v8engine.billing.repository.sync.PaymentSyncScheduler;
 import cm.aptoide.pt.v8engine.billing.services.WebPayment;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
@@ -62,8 +61,7 @@ public class WebAuthorizationPresenter implements Presenter {
             .doOnNext(product -> analytics.sendBackToStoreButtonPressedEvent(product)))
         // Optimization to accelerate authorization sync once user interacts with the UI, should
         // be removed once we have a better sync implementation
-        .flatMapCompletable(analyticsSent -> syncScheduler.scheduleAuthorizationSync(paymentId,
-            AuthorizationFactory.WEB))
+        .flatMapCompletable(analyticsSent -> syncScheduler.scheduleAuthorizationSync(paymentId))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnError(throwable -> view.showErrorAndDismiss())
         .onErrorReturn(null)

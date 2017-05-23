@@ -15,7 +15,7 @@ import cm.aptoide.pt.v8engine.billing.services.PayPalPayment;
 
 public class PaymentFactory {
 
-  public static final String PAYPAL = "paypal_future";
+  public static final String PAYPAL = "paypal";
   public static final String BOACOMPRA = "boacompra";
   public static final String BOACOMPRAGOLD = "boacompragold";
   public static final String DUMMY = "dummy";

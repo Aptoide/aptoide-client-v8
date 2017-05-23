@@ -34,8 +34,6 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
       "cm.aptoide.pt.v8engine.repository.sync.EXTRA_PAYMENT_AUTHORIZATIONS";
   public static final String EXTRA_PAYMENT_CONFIRMATIONS =
       "cm.aptoide.pt.v8engine.repository.sync.EXTRA_PAYMENT_CONFIRMATIONS";
-  public static final String EXTRA_AUTHORIZATION_TYPE =
-      "cm.aptoide.pt.v8engine.repository.sync.AUTHORIZATION_TYPE";
 
   private final ProductBundleMapper productConverter;
   private final NetworkOperatorManager operatorManager;
@@ -82,10 +80,8 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
           syncResult);
     } else if (authorizations) {
       final int paymentId = extras.getInt(EXTRA_PAYMENT_ID);
-      final String authorizationType = extras.getString(EXTRA_AUTHORIZATION_TYPE);
       new AuthorizationSync(paymentId, authorizationAcessor, authorizationConverter, payer,
-          bodyInterceptorV3, httpClient, converterFactory, paymentAnalytics,
-          authorizationType).sync(syncResult);
+          bodyInterceptorV3, httpClient, converterFactory, paymentAnalytics).sync(syncResult);
     }
   }
 }

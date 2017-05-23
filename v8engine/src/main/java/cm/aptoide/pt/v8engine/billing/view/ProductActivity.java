@@ -3,7 +3,7 @@ package cm.aptoide.pt.v8engine.billing.view;
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.view.BackButtonActivity;
 
-public abstract class AuthorizationActivity extends BackButtonActivity {
+public abstract class ProductActivity extends BackButtonActivity {
 
   protected static final String EXTRA_PAYMENT_ID =
       "cm.aptoide.pt.v8engine.view.payment.intent.extra.PAYMENT_ID";

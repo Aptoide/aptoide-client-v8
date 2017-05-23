@@ -32,7 +32,7 @@ public class WebPayment extends AptoidePayment {
   }
 
   public Observable<WebAuthorization> getAuthorization() {
-    return authorizationRepository.getPaymentAuthorization(getId(), AuthorizationFactory.WEB)
+    return authorizationRepository.getPaymentAuthorization(getId())
         .distinctUntilChanged(authorization -> authorization.getStatus())
         .cast(WebAuthorization.class);
   }
@@ -57,8 +57,7 @@ public class WebPayment extends AptoidePayment {
           if (authorization.isFailed()) {
             return payer.getId()
                 .flatMapCompletable(payerId -> authorizationRepository.saveAuthorization(
-                    authorizationFactory.create(getId(), Authorization.Status.INACTIVE, payerId,
-                        AuthorizationFactory.WEB)))
+                    authorizationFactory.create(getId(), Authorization.Status.INACTIVE, payerId)))
                 .andThen(
                     Completable.error(new PaymentFailureException("Payment authorization failed")));
           }

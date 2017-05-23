@@ -18,15 +18,16 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentCancellationException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentException;
-import com.paypal.android.sdk.payments.PayPalAuthorization;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalFuturePaymentActivity;
+import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
+import com.paypal.android.sdk.payments.PaymentConfirmation;
+import java.math.BigDecimal;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
-public class PayPalAuthorizationActivity extends AuthorizationActivity
-    implements PayPalAuthorizationView {
+public class PayPalPaymentActivity extends ProductActivity implements PayPalPaymentView {
 
   private static final int PAY_APP_REQUEST_CODE = 12;
 
@@ -62,21 +63,28 @@ public class PayPalAuthorizationActivity extends AuthorizationActivity
 
     authorizationSubject = PublishSubject.create();
 
-    attachPresenter(new PayPalAuthorizationPresenter(this,
-        ((V8Engine) getApplicationContext()).getAptoideBilling(),
-        ProductProvider.fromIntent(((V8Engine) getApplicationContext()).getAptoideBilling(),
-            getIntent())), savedInstanceState);
+    attachPresenter(
+        new PayPalPaymentPresenter(this, ((V8Engine) getApplicationContext()).getAptoideBilling(),
+            ProductProvider.fromIntent(((V8Engine) getApplicationContext()).getAptoideBilling(),
+                getIntent())), savedInstanceState);
   }
 
-  @Override public void showPayPalAuthorization() {
-    startActivityForResult(new Intent(this, PayPalFuturePaymentActivity.class).putExtra(
-        PayPalService.EXTRA_PAYPAL_CONFIGURATION,
-        new PayPalConfiguration().environment(BuildConfig.PAYPAL_ENVIRONMENT)
-            .clientId(BuildConfig.PAYPAL_KEY)
-            .merchantName(V8Engine.getConfiguration()
-                .getMarketName())
-            .merchantPrivacyPolicyUri(Uri.parse(BuildConfig.PAYPAL_PRIVACY_POLICY_URL))
-            .merchantUserAgreementUri(Uri.parse(BuildConfig.PAYPAL_USER_AGREEMENT_URL))),
+  @Override
+  public void showPayPal(String paymentCurrency, String paymentDescription, double paymentAmount) {
+
+    final PayPalPayment payment =
+        new PayPalPayment(new BigDecimal(paymentAmount), paymentCurrency, paymentDescription,
+            PayPalPayment.PAYMENT_INTENT_SALE);
+
+    startActivityForResult(
+        new Intent(this, com.paypal.android.sdk.payments.PaymentActivity.class).putExtra(
+            PayPalService.EXTRA_PAYPAL_CONFIGURATION,
+            new PayPalConfiguration().environment(BuildConfig.PAYPAL_ENVIRONMENT)
+                .clientId(BuildConfig.PAYPAL_KEY)
+                .merchantName(V8Engine.getConfiguration().getMarketName())
+                .merchantPrivacyPolicyUri(Uri.parse(BuildConfig.PAYPAL_PRIVACY_POLICY_URL))
+                .merchantUserAgreementUri(Uri.parse(BuildConfig.PAYPAL_USER_AGREEMENT_URL)))
+            .putExtra(com.paypal.android.sdk.payments.PaymentActivity.EXTRA_PAYMENT, payment),
         PAY_APP_REQUEST_CODE);
   }
 
@@ -104,7 +112,7 @@ public class PayPalAuthorizationActivity extends AuthorizationActivity
     finish();
   }
 
-  @Override public Observable<String> authorizationCode() {
+  @Override public Observable<String> paymentConfirmationId() {
     return authorizationSubject;
   }
 
@@ -112,16 +120,16 @@ public class PayPalAuthorizationActivity extends AuthorizationActivity
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == PAY_APP_REQUEST_CODE) {
       if (resultCode == Activity.RESULT_OK) {
-        final PayPalAuthorization payPalAuthorization =
-            data.getParcelableExtra(PayPalFuturePaymentActivity.EXTRA_RESULT_AUTHORIZATION);
-        if (payPalAuthorization != null) {
-          authorizationSubject.onNext(payPalAuthorization.getAuthorizationCode());
+        final PaymentConfirmation confirmation = data.getParcelableExtra(
+            com.paypal.android.sdk.payments.PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+        if (confirmation != null) {
+          authorizationSubject.onNext(confirmation.getProofOfPayment().getPaymentId());
         }
       } else if (resultCode == Activity.RESULT_CANCELED) {
         authorizationSubject.onError(
-            new PaymentCancellationException("User cancelled PayPal authorization."));
+            new PaymentCancellationException("User cancelled PayPal local processing."));
       } else if (resultCode == PayPalFuturePaymentActivity.RESULT_EXTRAS_INVALID) {
-        authorizationSubject.onError(new PaymentException("Unknown PayPal authorization error"));
+        authorizationSubject.onError(new PaymentException("Unknown PayPal local processing error"));
       }
     }
   }

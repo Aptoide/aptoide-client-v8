@@ -46,11 +46,11 @@ public class CreatePaymentConfirmationRequest extends V3<BaseV3Response> {
   }
 
   public static CreatePaymentConfirmationRequest ofInApp(int productId, int paymentId,
-      NetworkOperatorManager operatorManager, String developerPayload, String metadataId,
+      NetworkOperatorManager operatorManager, String developerPayload, String paymentConfirmationId,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
     final BaseBody args = getBaseBody(productId, paymentId, operatorManager);
-    args.put("correlationID", metadataId);
+    args.put("paykey", paymentConfirmationId);
     args.put("developerPayload", developerPayload);
     return new CreatePaymentConfirmationRequest(args, bodyInterceptor, httpClient,
         converterFactory);
@@ -67,11 +67,11 @@ public class CreatePaymentConfirmationRequest extends V3<BaseV3Response> {
   }
 
   public static CreatePaymentConfirmationRequest ofPaidApp(int productId, int paymentId,
-      NetworkOperatorManager operatorManager, String store, String metadataId,
+      NetworkOperatorManager operatorManager, String store, String paymentConfirmationId,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
     final BaseBody args = getBaseBody(productId, paymentId, operatorManager);
-    args.put("correlationID", metadataId);
+    args.put("paykey", paymentConfirmationId);
     args.put("repo", store);
     return new CreatePaymentConfirmationRequest(args, bodyInterceptor, httpClient,
         converterFactory);

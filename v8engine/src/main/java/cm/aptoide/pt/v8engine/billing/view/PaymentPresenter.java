@@ -13,6 +13,7 @@ import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.Purchase;
+import cm.aptoide.pt.v8engine.billing.exception.PaymentLocalProcessingRequiredException;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentNotAuthorizedException;
 import cm.aptoide.pt.v8engine.presenter.PaymentSelector;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
@@ -40,7 +41,7 @@ public class PaymentPresenter implements Presenter {
   private final AptoideAccountManager accountManager;
   private final PaymentSelector paymentSelector;
   private final AccountNavigator accountNavigator;
-  private final AuthorizationNavigator authorizationNavigator;
+  private final PaymentNavigator paymentNavigator;
   private final ProductProvider productProvider;
 
   private boolean processingLogin;
@@ -49,14 +50,14 @@ public class PaymentPresenter implements Presenter {
 
   public PaymentPresenter(PaymentView view, AptoideBilling aptoideBilling,
       AptoideAccountManager accountManager, PaymentSelector paymentSelector,
-      AccountNavigator accountNavigator, AuthorizationNavigator authorizationNavigator,
+      AccountNavigator accountNavigator, PaymentNavigator paymentNavigator,
       PaymentAnalytics paymentAnalytics, ProductProvider productProvider) {
     this.view = view;
     this.aptoideBilling = aptoideBilling;
     this.accountManager = accountManager;
     this.paymentSelector = paymentSelector;
     this.accountNavigator = accountNavigator;
-    this.authorizationNavigator = authorizationNavigator;
+    this.paymentNavigator = paymentNavigator;
     this.payments = new ArrayList<>();
     this.paymentAnalytics = paymentAnalytics;
     this.productProvider = productProvider;
@@ -119,8 +120,7 @@ public class PaymentPresenter implements Presenter {
   private Observable<Void> paymentSelection() {
     return view.paymentSelection()
         .flatMap(paymentViewModel -> getPayment(paymentViewModel).flatMapCompletable(
-            payment -> paymentSelector.selectPayment(payment))
-            .toObservable());
+            payment -> paymentSelector.selectPayment(payment)).toObservable());
   }
 
   private Observable<Void> cancellationSelection(Product product) {
@@ -129,8 +129,7 @@ public class PaymentPresenter implements Presenter {
                 cancelled -> sendCancellationAnalytics(product).andThen(Observable.just(cancelled))),
         view.tapOutsideSelection()
             .flatMap(tappedOutside -> sendTapOutsideAnalytics(product).andThen(
-                Observable.just(tappedOutside))))
-        .doOnNext(cancelled -> view.dismiss());
+                Observable.just(tappedOutside)))).doOnNext(cancelled -> view.dismiss());
   }
 
   private Completable sendTapOutsideAnalytics(Product product) {
@@ -151,7 +150,7 @@ public class PaymentPresenter implements Presenter {
         .flatMap(selected -> paymentSelector.selectedPayment(getCurrentPayments())
             .flatMapCompletable(selectedPayment -> {
               paymentAnalytics.sendPaymentBuyButtonPressedEvent(product, selectedPayment);
-              return processOrNavigateToAuthorization(selectedPayment, product);
+              return processOrNavigate(selectedPayment, product);
             })
             .toObservable());
   }
@@ -247,15 +246,22 @@ public class PaymentPresenter implements Presenter {
     return payments;
   }
 
-  private Completable processOrNavigateToAuthorization(Payment payment, Product product) {
+  private Completable processOrNavigate(Payment payment, Product product) {
     return payment.process(product)
         .observeOn(AndroidSchedulers.mainThread())
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof PaymentNotAuthorizedException) {
-            authorizationNavigator.navigateToAuthorizationView(payment, product);
+            paymentNavigator.navigateToAuthorizationView(payment, product);
             view.hideLoading();
             return Completable.complete();
           }
+
+          if (throwable instanceof PaymentLocalProcessingRequiredException) {
+            paymentNavigator.navigateToLocalPaymentView(payment, product);
+            view.hideLoading();
+            return Completable.complete();
+          }
+
           return Completable.error(throwable);
         });
   }
@@ -271,8 +277,7 @@ public class PaymentPresenter implements Presenter {
 
   private Completable showPayments(List<Payment> payments, Payment selectedPayment) {
     return convertToViewModel(payments, selectedPayment).doOnSuccess(
-        paymentViewModels -> view.showPayments(paymentViewModels))
-        .toCompletable();
+        paymentViewModels -> view.showPayments(paymentViewModels)).toCompletable();
   }
 
   private Single<List<PaymentView.PaymentViewModel>> convertToViewModel(List<Payment> payments,

@@ -216,8 +216,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
     try {
       PRNGFixes.apply();
     } catch (Exception e) {
-      CrashReport.getInstance()
-          .log(e);
+      CrashReport.getInstance().log(e);
     }
 
     //
@@ -264,13 +263,11 @@ public abstract class V8Engine extends SpotAndShareApplication {
         .andThen(initAbTestManager())
         .andThen(prepareApp(V8Engine.this.getAccountManager()).onErrorComplete(err -> {
           // in case we have an error preparing the app, log that error and continue
-          CrashReport.getInstance()
-              .log(err);
+          CrashReport.getInstance().log(err);
           return true;
         }))
         .andThen(discoverAndSaveInstalledApps())
-        .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance()
-            .log(error));
+        .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance().log(error));
 
     //
     // app synchronous initialization
@@ -303,9 +300,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
       @Override public Single<String> invalidateAccessToken() {
         final AptoideAccountManager accountManager = getAccountManager();
         return accountManager.refreshToken()
-            .andThen(accountManager.accountStatus()
-                .first()
-                .toSingle())
+            .andThen(accountManager.accountStatus().first().toSingle())
             .map(account -> account.getAccessToken());
       }
     };
@@ -485,8 +480,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
               .requestScopes(new Scope("https://www.googleapis.com/auth/contacts.readonly"))
               .requestScopes(new Scope(Scopes.PROFILE))
               .requestServerAuthCode(BuildConfig.GMS_SERVER_ID)
-              .build())
-          .build();
+              .build()).build();
     }
     return googleSignInClient;
   }
@@ -522,9 +516,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
       final AuthorizationRepository authorizationRepository =
           new AuthorizationRepository(AccessorFactory.getAccessorFor(PaymentAuthorization.class),
-              getPaymentSyncScheduler(), getAuthorizationFactory(), getAccountManager(),
-              getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
-              getAccountPayer());
+              getPaymentSyncScheduler(), getAuthorizationFactory(), getBaseBodyInterceptorV3(),
+              getDefaultClient(), WebService.getDefaultConverter(), getAccountPayer());
 
       final ProductFactory productFactory = new ProductFactory();
 
@@ -620,13 +613,11 @@ public abstract class V8Engine extends SpotAndShareApplication {
         .toSingle()
         .subscribe(cleanedSize -> Logger.d(TAG,
             "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)),
-            err -> CrashReport.getInstance()
-                .log(err));
+            err -> CrashReport.getInstance().log(err));
   }
 
   private void initializeFlurry(Context context, String flurryKey) {
-    new FlurryAgent.Builder().withLogEnabled(false)
-        .build(context, flurryKey);
+    new FlurryAgent.Builder().withLogEnabled(false).build(context, flurryKey);
   }
 
   private void sendAppStartToAnalytics(SharedPreferences sPref) {
@@ -674,20 +665,17 @@ public abstract class V8Engine extends SpotAndShareApplication {
   }
 
   private Completable prepareApp(AptoideAccountManager accountManager) {
-    return accountManager.accountStatus()
-        .first()
-        .toSingle()
-        .flatMapCompletable(account -> {
-          if (SecurePreferences.isFirstRun()) {
+    return accountManager.accountStatus().first().toSingle().flatMapCompletable(account -> {
+      if (SecurePreferences.isFirstRun()) {
 
-            PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 
-            return setupFirstRun(accountManager).andThen(
-                Completable.merge(accountManager.syncCurrentAccount(), createShortcut()));
-          }
+        return setupFirstRun(accountManager).andThen(
+            Completable.merge(accountManager.syncCurrentAccount(), createShortcut()));
+      }
 
-          return Completable.complete();
-        });
+      return Completable.complete();
+    });
   }
 
   // todo re-factor all this code to proper Rx
@@ -708,10 +696,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
       return generateAptoideUuid().andThen(proxy.addDefaultStore(
           GetStoreMetaRequest.of(defaultStoreCredentials, getBaseBodyInterceptorV7(),
               getDefaultClient(), WebService.getDefaultConverter()), getAccountManager(),
-          defaultStoreCredentials)
-          .andThen(refreshUpdates()))
-          .doOnError(err -> CrashReport.getInstance()
-              .log(err));
+          defaultStoreCredentials).andThen(refreshUpdates()))
+          .doOnError(err -> CrashReport.getInstance().log(err));
     });
   }
 
@@ -808,8 +794,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private Completable discoverAndSaveInstalledApps() {
     return Observable.fromCallable(() -> {
       // remove the current installed apps
-      AccessorFactory.getAccessorFor(Installed.class)
-          .removeAll();
+      AccessorFactory.getAccessorFor(Installed.class).removeAll();
 
       // get the installed apps
       List<PackageInfo> installedApps = AptoideUtils.SystemU.getAllInstalledApps();
@@ -826,15 +811,13 @@ public abstract class V8Engine extends SpotAndShareApplication {
         .map(packageInfo -> new Installed(packageInfo))
         .toList()
         .doOnNext(list -> {
-          AccessorFactory.getAccessorFor(Installed.class)
-              .insertAll(list);
+          AccessorFactory.getAccessorFor(Installed.class).insertAll(list);
         })
         .toCompletable();
   }
 
   private Completable refreshUpdates() {
-    return RepositoryFactory.getUpdateRepository(DataProvider.getContext())
-        .sync(true);
+    return RepositoryFactory.getUpdateRepository(DataProvider.getContext()).sync(true);
   }
 
   /**
@@ -871,9 +854,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
    * of Vanilla module
    */
   protected void setupStrictMode() {
-    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll()
-        .penaltyLog()
-        .build());
+    StrictMode.setThreadPolicy(
+        new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
 
     StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedClosableObjects()
         .detectLeakedClosableObjects()

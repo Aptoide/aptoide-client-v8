@@ -33,13 +33,11 @@ public class AuthorizationSync extends RepositorySync {
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final PaymentAnalytics paymentAnalytics;
-  private final String authorizationType;
 
   public AuthorizationSync(int paymentId, PaymentAuthorizationAccessor authorizationAccessor,
       AuthorizationFactory authorizationFactory, Payer payer,
       BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
-      Converter.Factory converterFactory, PaymentAnalytics paymentAnalytics,
-      String authorizationType) {
+      Converter.Factory converterFactory, PaymentAnalytics paymentAnalytics) {
     this.paymentId = paymentId;
     this.authorizationAccessor = authorizationAccessor;
     this.authorizationFactory = authorizationFactory;
@@ -48,7 +46,6 @@ public class AuthorizationSync extends RepositorySync {
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.paymentAnalytics = paymentAnalytics;
-    this.authorizationType = authorizationType;
   }
 
   @Override public void sync(SyncResult syncResult) {
@@ -72,7 +69,7 @@ public class AuthorizationSync extends RepositorySync {
         .observe()
         .toSingle()
         .map(response -> authorizationFactory.convertToPaymentAuthorizations(response, payerId,
-            paymentId, authorizationType));
+            paymentId));
   }
 
   private void saveAndReschedulePendingAuthorizations(List<Authorization> authorizations,
@@ -100,8 +97,7 @@ public class AuthorizationSync extends RepositorySync {
 
     if (!containsPaymentId) {
       databaseAuthorizations.add(authorizationFactory.convertToDatabasePaymentAuthorization(
-          authorizationFactory.create(paymentId, Authorization.Status.INACTIVE, payerId,
-              authorizationType)));
+          authorizationFactory.create(paymentId, Authorization.Status.INACTIVE, payerId)));
     }
 
     authorizationAccessor.insertAll(databaseAuthorizations);
@@ -114,8 +110,7 @@ public class AuthorizationSync extends RepositorySync {
       rescheduleSync(syncResult);
     } else {
       final Authorization authorization =
-          authorizationFactory.create(paymentId, Authorization.Status.UNKNOWN_ERROR, payerId,
-              authorizationType);
+          authorizationFactory.create(paymentId, Authorization.Status.UNKNOWN_ERROR, payerId);
       authorizationAccessor.insert(
           authorizationFactory.convertToDatabasePaymentAuthorization(authorization));
       paymentAnalytics.sendAuthorizationCompleteEvent(authorization);

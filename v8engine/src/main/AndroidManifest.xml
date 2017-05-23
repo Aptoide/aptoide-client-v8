@@ -62,7 +62,7 @@
         android:theme="@style/AppBaseTheme.Transparent.WhiteGreen"/>
 
     <activity
-        android:name=".billing.view.PayPalAuthorizationActivity"
+        android:name=".billing.view.PayPalPaymentActivity"
         android:theme="@style/AppBaseTheme.Transparent"/>
 
     <activity android:name=".billing.view.WebAuthorizationActivity"/>

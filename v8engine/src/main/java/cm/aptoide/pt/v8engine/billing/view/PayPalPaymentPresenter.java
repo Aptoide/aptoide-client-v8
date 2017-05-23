@@ -7,13 +7,13 @@ import cm.aptoide.pt.v8engine.presenter.View;
 import java.io.IOException;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class PayPalAuthorizationPresenter implements Presenter {
+public class PayPalPaymentPresenter implements Presenter {
 
-  private final PayPalAuthorizationView view;
+  private final PayPalPaymentView view;
   private final AptoideBilling billing;
   private final ProductProvider productProvider;
 
-  public PayPalAuthorizationPresenter(PayPalAuthorizationView view, AptoideBilling billing,
+  public PayPalPaymentPresenter(PayPalPaymentView view, AptoideBilling billing,
       ProductProvider productProvider) {
     this.view = view;
     this.billing = billing;
@@ -23,13 +23,16 @@ public class PayPalAuthorizationPresenter implements Presenter {
   @Override public void present() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(created -> view.showPayPalAuthorization())
-        .flatMap(__ -> view.authorizationCode())
-        .doOnNext(__ -> view.showLoading())
-        .flatMapCompletable(authorizationCode -> productProvider.getProduct()
-            .flatMapCompletable(product -> billing.processPayPalPayment(product, authorizationCode))
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnCompleted(() -> view.dismiss()))
+        .flatMap(created -> productProvider.getProduct()
+            .doOnSuccess(product -> view.showPayPal(product.getPrice().getCurrency(),
+                product.getDescription(), product.getPrice().getAmount()))
+            .flatMapObservable(__ -> view.paymentConfirmationId())
+            .doOnNext(__ -> view.showLoading())
+            .flatMapCompletable(paymentConformationId -> productProvider.getProduct()
+                .flatMapCompletable(
+                    product -> billing.processPayPalPayment(product, paymentConformationId))
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnCompleted(() -> view.dismiss())))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

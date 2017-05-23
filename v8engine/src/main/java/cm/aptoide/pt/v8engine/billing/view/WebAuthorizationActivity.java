@@ -20,7 +20,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 
-public class WebAuthorizationActivity extends AuthorizationActivity
+public class WebAuthorizationActivity extends ProductActivity
     implements WebAuthorizationView {
 
   private WebView webView;

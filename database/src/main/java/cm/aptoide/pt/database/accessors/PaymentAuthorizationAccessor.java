@@ -23,8 +23,4 @@ public class PaymentAuthorizationAccessor extends SimpleAccessor<PaymentAuthoriz
             .equalTo(PaymentAuthorization.PAYMENT_ID, paymentId))
         .flatMap(query -> database.findAsList(query));
   }
-
-  public void remove(int paymentId) {
-    database.delete(PaymentAuthorization.class, PaymentAuthorization.PAYMENT_ID, paymentId);
-  }
 }

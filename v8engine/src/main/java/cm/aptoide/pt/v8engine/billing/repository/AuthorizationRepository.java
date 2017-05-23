@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.billing.repository;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
@@ -25,7 +24,6 @@ public class AuthorizationRepository {
   private final PaymentAuthorizationAccessor authotizationAccessor;
   private final PaymentSyncScheduler backgroundSync;
   private final AuthorizationFactory authorizationFactory;
-  private final AptoideAccountManager accountManager;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
@@ -33,12 +31,11 @@ public class AuthorizationRepository {
 
   public AuthorizationRepository(PaymentAuthorizationAccessor authorizationAccessor,
       PaymentSyncScheduler backgroundSync, AuthorizationFactory authorizationFactory,
-      AptoideAccountManager accountManager, BodyInterceptor<BaseBody> bodyInterceptorV3,
-      OkHttpClient httpClient, Converter.Factory converterFactory, Payer payer) {
+      BodyInterceptor<BaseBody> bodyInterceptorV3, OkHttpClient httpClient,
+      Converter.Factory converterFactory, Payer payer) {
     this.authotizationAccessor = authorizationAccessor;
     this.backgroundSync = backgroundSync;
     this.authorizationFactory = authorizationFactory;
-    this.accountManager = accountManager;
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
@@ -47,32 +44,13 @@ public class AuthorizationRepository {
 
   public Completable createWebPaymentAuthorization(int paymentId) {
     return CreatePaymentAuthorizationRequest.of(paymentId, bodyInterceptorV3, httpClient,
-        converterFactory)
-        .observe(true)
-        .flatMap(response -> {
-          if (response != null && response.isOk()) {
-            return Observable.just(null);
-          }
-          return Observable.<Void>error(
-              new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-        })
-        .toCompletable()
-        .andThen(syncAuthorization(paymentId, AuthorizationFactory.WEB));
-  }
-
-  public Completable createPayPalPaymentAuthorization(int paymentId, String authorizationCode) {
-    return CreatePaymentAuthorizationRequest.of(paymentId, authorizationCode, bodyInterceptorV3,
-        httpClient, converterFactory)
-        .observe(true)
-        .flatMap(response -> {
-          if (response != null && response.isOk()) {
-            return Observable.just(null);
-          }
-          return Observable.<Void>error(
-              new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-        })
-        .toCompletable()
-        .andThen(syncAuthorization(paymentId, AuthorizationFactory.PAYPAL));
+        converterFactory).observe(true).flatMap(response -> {
+      if (response != null && response.isOk()) {
+        return Observable.just(null);
+      }
+      return Observable.<Void>error(
+          new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+    }).toCompletable().andThen(syncAuthorization(paymentId));
   }
 
   public Completable saveAuthorization(Authorization authorization) {
@@ -80,22 +58,17 @@ public class AuthorizationRepository {
         authorizationFactory.convertToDatabasePaymentAuthorization(authorization)));
   }
 
-  public Observable<Authorization> getPaymentAuthorization(int paymentId,
-      String authorizationType) {
+  public Observable<Authorization> getPaymentAuthorization(int paymentId) {
     return payer.getId()
         .flatMapObservable(
             payerId -> authotizationAccessor.getPaymentAuthorization(payerId, paymentId))
         .flatMap(authorizations -> Observable.from(authorizations)
             .map(paymentAuthorization -> authorizationFactory.convertToPaymentAuthorization(
                 paymentAuthorization))
-            .switchIfEmpty(syncAuthorization(paymentId, authorizationType).toObservable()));
+            .switchIfEmpty(syncAuthorization(paymentId).toObservable()));
   }
 
-  private Completable syncAuthorization(int paymentId, String authorizationType) {
-    return backgroundSync.scheduleAuthorizationSync(paymentId, authorizationType);
-  }
-
-  public Completable remove(int paymentId) {
-    return Completable.fromAction(() -> authotizationAccessor.remove(paymentId));
+  private Completable syncAuthorization(int paymentId) {
+    return backgroundSync.scheduleAuthorizationSync(paymentId);
   }
 }

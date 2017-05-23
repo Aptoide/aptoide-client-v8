@@ -95,13 +95,13 @@ public class AptoideBilling {
         payment -> payment.process(product));
   }
 
-  public Completable processPayPalPayment(Product product, String authorizationCode) {
+  public Completable processPayPalPayment(Product product, String paymentConfirmationId) {
     return getPayments(product).flatMapObservable(payments -> Observable.from(payments))
         .filter(payment -> payment instanceof PayPalPayment)
         .first()
         .cast(PayPalPayment.class)
         .toSingle()
-        .flatMapCompletable(payment -> payment.process(product, authorizationCode));
+        .flatMapCompletable(payment -> payment.process(product, paymentConfirmationId));
   }
 
   public Observable<PaymentConfirmation> getConfirmation(Product product) {

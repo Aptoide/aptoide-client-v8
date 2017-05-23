@@ -3,15 +3,15 @@ package cm.aptoide.pt.v8engine.billing.view;
 import cm.aptoide.pt.v8engine.presenter.View;
 import rx.Observable;
 
-interface PayPalAuthorizationView extends View {
+interface PayPalPaymentView extends View {
 
-  void showPayPalAuthorization();
+  void showPayPal(String currency, String description, double amount);
 
   void showLoading();
 
   void hideLoading();
 
-  Observable<String> authorizationCode();
+  Observable<String> paymentConfirmationId();
 
   void showNetworkError();
 

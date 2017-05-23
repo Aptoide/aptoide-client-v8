@@ -40,8 +40,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class PaymentActivity extends BaseActivity implements PaymentView {
 
-  private static final String SELECTED_PAYMENT_ID = "selected_payment_id";
-  private static final int PAYPAL_PAYMENT_ID = 17;
+  private static final int DEFAULT_PAYMENT_ID = 1;
 
   private View overlay;
   private View body;
@@ -116,10 +115,10 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
 
     attachPresenter(
         new PaymentPresenter(this, ((V8Engine) getApplicationContext()).getAptoideBilling(),
-            accountManager, new PaymentSelector(PAYPAL_PAYMENT_ID,
+            accountManager, new PaymentSelector(DEFAULT_PAYMENT_ID,
             PreferenceManager.getDefaultSharedPreferences(getApplicationContext())),
             new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
-            new AuthorizationNavigator(getActivityNavigator()), paymentAnalytics,
+            new PaymentNavigator(getActivityNavigator()), paymentAnalytics,
             ProductProvider.fromIntent(((V8Engine) getApplicationContext()).getAptoideBilling(),
                 getIntent())), savedInstanceState);
   }
