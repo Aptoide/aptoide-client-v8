@@ -15,6 +15,7 @@ public abstract class AbstractAssetServer extends AbstractServerModule {
     super(accepts);
   }
 
+  // TODO: 23-05-2017 neuro add cache to this
   String loadTextAsset(String assetPath) {
 
     InputStream inputStream;
