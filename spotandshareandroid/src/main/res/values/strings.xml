@@ -119,6 +119,9 @@
 
   <string name="spotandshare_message_create_hotspot_error">Unable to create the hotspot</string>
   <string name="spotandshare_button_retry_enable_hotspot">Retry</string>
+  <string name="spotandshare_button_number_one" translatable="false">1</string>
+  <string name="spotandshare_button_number_two" translatable="false">2</string>
+  <string name="spotandshare_button_number_three" translatable="false">3</string>
 
 </resources>
 
