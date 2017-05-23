@@ -390,7 +390,15 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
             __ -> SimpleSetStoreRequest.of(storeModel.getStoreId(), storeModel.getStoreThemeName(),
                 storeModel.getStoreDescription(), bodyInterceptorV7, httpClient, converterFactory)
                 .observe())
-        .flatMap(__ -> syncAccountAndNavigateHome())
+        .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnCompleted(() -> navigateToHome())
+            .onErrorResumeNext(err -> {
+              CrashReport.getInstance()
+                  .log(err);
+              return Completable.fromAction(() -> navigateToHome());
+            })
+            .toObservable())
         .observeOn(AndroidSchedulers.mainThread())
         .onErrorResumeNext(err -> {
           CrashReport.getInstance()
@@ -414,7 +422,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
                 storeModel.getStoreDescription(), true, storeModel.getStoreId(),
                 createStoreInterceptor(storeModel), httpClient, converterFactory)
                 .observe())
-        .flatMap(__ -> syncAccountAndNavigateHome())
+        .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
+            .toObservable())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnCompleted(() -> navigateToHome())
         .onErrorResumeNext(err -> {
@@ -453,7 +462,9 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
             onCreateSuccess(storeModel, createStoreType);
           } else {
             ShowMessage.asLongObservableSnack(getActivity(), R.string.create_store_store_created)
-                .flatMap(__ -> syncAccountAndNavigateHome())
+                .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
+                    .andThen(sendCreateAnalytics())
+                    .toObservable())
                 .subscribe(__ -> {
                 }, err -> CrashReport.getInstance()
                     .log(err));
@@ -531,7 +542,13 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
 
   private void navigateToHome() {
     dismissWaitDialog();
-    getFragmentNavigator().navigateToHomeCleaningBackStack();
+
+    if(isCreateStore()){
+      getFragmentNavigator().navigateToHomeCleaningBackStack();
+      return;
+    }
+
+    getFragmentNavigator().back();
   }
 
   private void onCreateSuccess(@NonNull final CreateStoreModel storeModel,
@@ -548,7 +565,10 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
           .observe()
           .timeout(90, TimeUnit.SECONDS)
           .observeOn(AndroidSchedulers.mainThread())
-          .flatMap(__ -> syncAccountAndNavigateHome())
+          .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
+              .andThen(sendCreateAnalytics())
+              .toObservable())
+          .doOnNext(__ -> navigateToHome())
           .subscribe(__ -> {
           }, err -> {
             dismissWaitDialog();
@@ -604,7 +624,10 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
       SimpleSetStoreRequest.of(storeModel.getStoreName(), storeModel.getStoreThemeName(),
           bodyInterceptorV7, httpClient, converterFactory)
           .observe()
-          .flatMap(__ -> syncAccountAndNavigateHome())
+          .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
+              .andThen(sendCreateAnalytics())
+              .toObservable())
+          .doOnNext(__ -> navigateToHome())
           .subscribe(__ -> {
           }, err -> {
             waitDialog.dismiss();
@@ -617,18 +640,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
     }
   }
 
-  @NonNull private Observable<Object> syncAccountAndNavigateHome() {
-    return Completable.fromAction(() -> dismissWaitDialog())
-        .andThen(accountManager.syncCurrentAccount())
-        .andThen(sendCreateAnalytics())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnCompleted(() -> navigateToHome())
-        .onErrorResumeNext(err -> {
-          CrashReport.getInstance()
-              .log(err);
-          return Completable.fromAction(() -> navigateToHome());
-        })
-        .toObservable();
+  @NonNull private Completable dismissDialogAsync() {
+    return Completable.fromAction(() -> dismissWaitDialog());
   }
 
   @NonNull private StoreBodyInterceptor createStoreInterceptor(CreateStoreModel storeModel) {
