@@ -59,10 +59,11 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 // create presenter and separate logic code from view
 public class CreateStoreFragment extends PictureLoaderFragment implements CreateStoreView {
 
-  public static final String ERROR_CODE_2 = "WOP-2";
-  public static final String ERROR_CODE_3 = "WOP-3";
-  public static final String ERROR_API_1 = "API-1";
   public static final String STORE_FROM_DEFAULT_VALUE = "store";
+  private static final String ERROR_API_1 = "API-1";
+  private static final String ERROR_CODE_2 = "WOP-2";
+  private static final String ERROR_CODE_3 = "WOP-3";
+  // todo create model to pass this items
   private static final String STORE_FROM = "from";
   private static final String STORE_ID = "storeId";
   private static final String STORE_AVATAR = "storeAvatar";
