@@ -138,7 +138,6 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
         userName.setText(userNickname);
       }
       cancelUserProfile.setVisibility(View.VISIBLE);
-      cancelUserProfile.setText(getString(R.string.cancel));
     }
   }
 
