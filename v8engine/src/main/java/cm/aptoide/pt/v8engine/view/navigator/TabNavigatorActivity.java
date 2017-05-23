@@ -14,8 +14,8 @@ public class TabNavigatorActivity extends BaseActivity implements TabNavigator {
   private BehaviorRelay<TabNavigation> navigatorSubject;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
     navigatorSubject = BehaviorRelay.create();
+    super.onCreate(savedInstanceState);
   }
 
   @Override public void navigate(TabNavigation tabNavigation) {
