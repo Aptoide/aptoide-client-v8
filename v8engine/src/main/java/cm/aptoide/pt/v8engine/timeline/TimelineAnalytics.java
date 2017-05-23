@@ -5,7 +5,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.events.AptoideEvent;
 import cm.aptoide.pt.v8engine.analytics.events.FacebookEvent;
-import cm.aptoide.pt.v8engine.analytics.events.LocalyticsEvent;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +43,6 @@ public class TimelineAnalytics {
 
   public void sendFollowFriendsEvent() {
     analytics.sendEvent(new FacebookEvent(facebook, FOLLOW_FRIENDS));
-    analytics.sendEvent(new LocalyticsEvent(FOLLOW_FRIENDS));
   }
 
   public void sendOpenAppEvent(String cardType, String source, String packageName) {

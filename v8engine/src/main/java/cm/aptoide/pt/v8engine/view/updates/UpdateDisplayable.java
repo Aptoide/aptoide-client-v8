@@ -103,7 +103,6 @@ public class UpdateDisplayable extends Displayable {
 
   public Observable<Progress<Download>> downloadAndInstall(Context context,
       PermissionService permissionRequest) {
-    Analytics.Updates.update();
     PermissionManager permissionManager = new PermissionManager();
     return permissionManager.requestExternalStoragePermission(permissionRequest)
         .flatMap(sucess -> {

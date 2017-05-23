@@ -29,7 +29,6 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.abtesting.ABTest;
 import cm.aptoide.pt.v8engine.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.abtesting.SearchTabOptions;
-import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
@@ -137,8 +136,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
     if (hasSubscribedResults || hasEverywhereResults) {
       super.setupViewPager();
     } else {
-      Analytics.Search.noSearchResults(query);
-
       noSearchLayout.setVisibility(View.VISIBLE);
       buttonsLayout.setVisibility(View.INVISIBLE);
       noSearchLayoutSearchButton.setOnClickListener(v -> {
@@ -246,8 +243,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
   }
 
   @Partners protected void executeSearchRequests(String storeName, boolean create) {
-    Analytics.Search.searchTerm(query);
-
     if (storeName != null) {
       shouldFinishLoading = true;
       ListSearchAppsRequest of =
