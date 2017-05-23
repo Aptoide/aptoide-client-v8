@@ -36,22 +36,23 @@
 
 
       <ImageView
-          android:layout_width="92dp"
-          android:layout_height="88dp"
+          android:layout_width="114dp"
+          android:layout_height="112dp"
           android:layout_marginTop="8dp"
+          android:layout_marginBottom="11dp"
           android:gravity="center"
-          android:src="@drawable/layer_10"
+          android:src="@drawable/spotandshare_share_aptoide"
           />
 
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginBottom="10dp"
-          android:layout_marginLeft="10dp"
-          android:layout_marginRight="10dp"
+          android:layout_marginLeft="43dp"
+          android:layout_marginRight="43dp"
           android:text="@string/spotandshare_message_share_aptoide_initial_message"
           android:textAlignment="center"
-          android:textColor="@color/grey_700"
+          android:textColor="@color/orange_700"
           style="@style/Aptoide.TextView.Regular.XS"
           />
 
