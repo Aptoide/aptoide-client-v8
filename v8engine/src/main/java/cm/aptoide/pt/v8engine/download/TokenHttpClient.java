@@ -15,6 +15,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEvent;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
@@ -86,7 +87,10 @@ public class TokenHttpClient {
             }
             return response;
           }
-        });
+        })
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .writeTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS);
   }
 
   private void addMirrorToDownloadEvent(String v, String packageName, int fileType,

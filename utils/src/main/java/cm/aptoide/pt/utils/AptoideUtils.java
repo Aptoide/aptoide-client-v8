@@ -728,6 +728,25 @@ public class AptoideUtils {
     private static final String TAG = "SystemU";
     public static String JOLLA_ALIEN_DEVICE = "alien_jolla_bionic";
 
+    private static String aptoideMd5sum;
+
+    public static String getAptoideMd5sum() {
+      if (aptoideMd5sum == null) {
+        aptoideMd5sum = caculateMd5Sum();
+      }
+      return aptoideMd5sum;
+    }
+
+    private static String caculateMd5Sum() {
+      try {
+        return AptoideUtils.AlgorithmU.computeMd5(
+            context.getPackageManager().getPackageInfo(context.getPackageName(), 0));
+      } catch (PackageManager.NameNotFoundException e) {
+        e.printStackTrace();
+      }
+      return null;
+    }
+
     public static String getProduct() {
       return Build.PRODUCT.replace(";", " ");
     }
