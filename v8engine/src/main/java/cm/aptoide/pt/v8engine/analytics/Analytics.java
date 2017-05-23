@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.analytics;
 
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,7 +24,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.zip.ZipFile;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -41,8 +39,6 @@ public class Analytics {
 
   // Constantes globais a todos os eventos.
   public static final String ACTION = "Action";
-  public static final String IS_LOCALYTICS_ENABLE_KEY = "IS_LOCALYTICS_ENABLE_KEY";
-  public static final String IS_LOCALYTICS_FIRST_SESSION = "IS_LOCALYTICS_FIRST_SESSION";
   private static final String METHOD = "Method";
   private static final String TAG = Analytics.class.getSimpleName();
   private static final boolean ACTIVATE_FLURRY = true;
@@ -944,28 +940,6 @@ public class Analytics {
       }
 
       track(HOME_PAGE_EDITORS_CHOICE, map, FLURRY);
-    }
-  }
-
-  public static class LocalyticsSessionControl {
-
-    public static void firstSession(SharedPreferences sPref) {
-      SharedPreferences.Editor edit = sPref.edit();
-      edit.putBoolean(IS_LOCALYTICS_FIRST_SESSION, false);
-      Logger.d(TAG, "contains" + sPref.contains(IS_LOCALYTICS_ENABLE_KEY));
-      if (!sPref.contains(IS_LOCALYTICS_ENABLE_KEY)) {
-        Random random = new Random();
-        int i = random.nextInt(10);
-        Logger.d(TAG, "firstSession: " + i);
-        edit.putBoolean(IS_LOCALYTICS_FIRST_SESSION, true);
-        edit.putBoolean(IS_LOCALYTICS_ENABLE_KEY, i == 0);
-      }
-      edit.apply();
-      Logger.d(TAG, "firstSession: IS_LOCALYTICS_FIRST_SESSION: " + sPref.getBoolean(
-          IS_LOCALYTICS_FIRST_SESSION, false));
-      Logger.d(TAG,
-          "firstSession: IS_LOCALYTICS_ENABLE_KEY: " + sPref.getBoolean(IS_LOCALYTICS_ENABLE_KEY,
-              false));
     }
   }
 
