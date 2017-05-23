@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.updates.installed;
 
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
 /**
@@ -14,11 +15,14 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class InstalledAppDisplayable extends DisplayablePojo<Installed> {
 
+  private TimelineAnalytics timelineAnalytics;
+
   public InstalledAppDisplayable() {
   }
 
-  public InstalledAppDisplayable(Installed pojo) {
+  public InstalledAppDisplayable(Installed pojo, TimelineAnalytics timelineAnalytics) {
     super(pojo);
+    this.timelineAnalytics = timelineAnalytics;
   }
 
   @Override protected Configs getConfig() {
@@ -27,5 +31,9 @@ public class InstalledAppDisplayable extends DisplayablePojo<Installed> {
 
   @Override public int getViewLayout() {
     return R.layout.installed_row;
+  }
+
+  public TimelineAnalytics getTimelineAnalytics() {
+    return timelineAnalytics;
   }
 }

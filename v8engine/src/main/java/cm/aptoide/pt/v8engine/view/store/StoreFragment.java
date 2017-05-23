@@ -242,7 +242,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
         StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
         if (Event.Name.getUserTimeline.equals(adapter.getEventName(position))) {
           Analytics.AppsTimeline.openTimeline();
-          timelineAnalytics.sendTimelineTabClick();
+          timelineAnalytics.sendTimelineTabOpened();
         }
       }
     });

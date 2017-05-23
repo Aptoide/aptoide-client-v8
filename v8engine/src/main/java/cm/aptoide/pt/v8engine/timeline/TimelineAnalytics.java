@@ -237,7 +237,7 @@ public class TimelineAnalytics extends AptoideAnalytics {
     return bundle;
   }
 
-  public void sendTimelineTabClick() {
+  public void sendTimelineTabOpened() {
     analytics.sendEvent(new FacebookEvent(facebook, TIMELINE_OPENED));
   }
 
