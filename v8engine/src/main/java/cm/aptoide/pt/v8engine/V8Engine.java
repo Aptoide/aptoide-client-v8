@@ -58,12 +58,12 @@ import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.abtesting.ABTestManager;
-import cm.aptoide.pt.v8engine.account.AccountEventsAnalytics;
 import cm.aptoide.pt.v8engine.account.AndroidAccountDataMigration;
 import cm.aptoide.pt.v8engine.account.AndroidAccountManagerDataPersist;
 import cm.aptoide.pt.v8engine.account.AndroidAccountProvider;
 import cm.aptoide.pt.v8engine.account.BaseBodyInterceptorFactory;
 import cm.aptoide.pt.v8engine.account.DatabaseStoreDataPersist;
+import cm.aptoide.pt.v8engine.account.LogAccountAnalytics;
 import cm.aptoide.pt.v8engine.account.SocialAccountFactory;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.ConsoleLogger;
@@ -455,7 +455,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
               accountDataMigration, getAndroidAccountProvider(), Schedulers.io());
 
       accountManager = new AptoideAccountManager.Builder().setAccountDataPersist(accountDataPersist)
-          .setAccountAnalytics(new AccountEventsAnalytics())
+          .setAccountAnalytics(new LogAccountAnalytics())
           .setAccountManagerService(accountManagerService)
           .build();
     }
