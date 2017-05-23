@@ -71,6 +71,7 @@ public class ShareAptoideActivity extends ActivityView implements ShareAptoideVi
     return createSpan(text, new ForegroundColorSpan(color), spanTexts);
   }
 
+  //// FIXME: 23-05-2017 : Use SpannableFactory class after spotandshare module removal
   private Spannable createSpan(String text, ParcelableSpan span, String[] spanTexts) {
     final Spannable result = new SpannableString(text);
     for (String spanText : spanTexts) {
