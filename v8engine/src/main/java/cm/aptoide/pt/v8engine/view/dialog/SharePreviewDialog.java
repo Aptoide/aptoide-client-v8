@@ -17,6 +17,7 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -27,6 +28,8 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.timeline.LikeButtonView;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.AggregatedSocialArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.timeline.displayable.AggregatedSocialInstallDisplayable;
+import cm.aptoide.pt.v8engine.view.timeline.displayable.AggregatedSocialStoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.AggregatedSocialVideoDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.AppUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.ArticleDisplayable;
@@ -376,6 +379,63 @@ public class SharePreviewDialog {
 
       ImageLoader.with(context)
           .load(aggregatedSocialVideoDisplayable.getThumbnailUrl(), thumbnail);
+    } else if (displayable instanceof AggregatedSocialInstallDisplayable) {
+      AggregatedSocialInstallDisplayable aggregatedSocialInstallDisplayable =
+          ((AggregatedSocialInstallDisplayable) displayable);
+      view = factory.inflate(R.layout.displayable_social_timeline_social_install_preview, null);
+
+      ImageView appIcon =
+          (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
+      TextView appName = (TextView) view.findViewById(
+          R.id.displayable_social_timeline_recommendation_similar_apps);
+      TextView getApp = (TextView) view.findViewById(
+          R.id.displayable_social_timeline_recommendation_get_app_button);
+      RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
+      ImageLoader.with(context)
+          .load(aggregatedSocialInstallDisplayable.getAppIcon(), appIcon);
+      appName.setText(aggregatedSocialInstallDisplayable.getAppName());
+      ratingBar.setRating(aggregatedSocialInstallDisplayable.getAppRatingAverage());
+      SpannableFactory spannableFactory = new SpannableFactory();
+
+      getApp.setText(spannableFactory.createColorSpan(
+          context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
+          ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
+    } else if (displayable instanceof AggregatedSocialStoreLatestAppsDisplayable) {
+      AggregatedSocialStoreLatestAppsDisplayable aggregatedSocialStoreLatestAppsDisplayable =
+          ((AggregatedSocialStoreLatestAppsDisplayable) displayable);
+
+      view = factory.inflate(R.layout.displayable_social_timeline_social_store_latest_apps_preview,
+          null);
+      TextView sharedStoreName = (TextView) view.findViewById(R.id.store_name);
+      ImageView sharedStoreAvatar = (ImageView) view.findViewById(R.id.social_shared_store_avatar);
+      TextView sharedStoreTitleName = (TextView) view.findViewById(R.id.social_shared_store_name);
+
+      LinearLayout latestAppsContainer = (LinearLayout) view.findViewById(
+          R.id.displayable_social_timeline_store_latest_apps_container);
+
+      Map<View, Long> apps = new HashMap<>();
+      Map<Long, String> appsPackages = new HashMap<>();
+
+      sharedStoreTitleName.setText(aggregatedSocialStoreLatestAppsDisplayable.getSharedStore()
+          .getName());
+      sharedStoreName.setText(aggregatedSocialStoreLatestAppsDisplayable.getSharedStore()
+          .getName());
+      ImageLoader.with(context)
+          .loadWithShadowCircleTransform(aggregatedSocialStoreLatestAppsDisplayable.getSharedStore()
+              .getAvatar(), sharedStoreAvatar);
+      View latestAppView;
+      ImageView latestAppIcon;
+      for (App latestApp : aggregatedSocialStoreLatestAppsDisplayable.getLatestApps()) {
+        latestAppView =
+            factory.inflate(R.layout.social_timeline_latest_app, latestAppsContainer, false);
+        latestAppIcon =
+            (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app_icon);
+        ImageLoader.with(context)
+            .load(latestApp.getIcon(), latestAppIcon);
+        latestAppsContainer.addView(latestAppView);
+        apps.put(latestAppView, latestApp.getId());
+        appsPackages.put(latestApp.getId(), latestApp.getPackageName());
+      }
     } else {
       throw new IllegalStateException(
           "The Displayable " + displayable + " is not being handled " + "in SharePreviewDialog");

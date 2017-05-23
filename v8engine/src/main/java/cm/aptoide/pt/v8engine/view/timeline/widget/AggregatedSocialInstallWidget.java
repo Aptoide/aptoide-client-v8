@@ -19,6 +19,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.timeline.LikeButtonView;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.AggregatedSocialInstallDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
@@ -131,6 +132,7 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
       TextView cardHeaderTimestamp = (TextView) subCardView.findViewById(R.id.card_date);
       LikeButtonView likeSubCardButton =
           (LikeButtonView) subCardView.findViewById(R.id.social_like_button);
+      TextView shareSubCardButton = (TextView) subCardView.findViewById(R.id.social_share);
       LinearLayout likeLayout = (LinearLayout) subCardView.findViewById(R.id.social_like);
       TextView comment = (TextView) subCardView.findViewById(R.id.social_comment);
       ImageLoader.with(getContext())
@@ -157,6 +159,11 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
 
       cardHeaderTimestamp.setText(
           displayable.getTimeSinceLastUpdate(getContext(), minimalCard.getDate()));
+
+      compositeSubscription.add(RxView.clicks(shareSubCardButton)
+          .subscribe(click -> shareCard(displayable, minimalCard.getCardId(), null,
+              SharePreviewDialog.SharePreviewOpenMode.SHARE), err -> CrashReport.getInstance()
+              .log(err)));
 
       compositeSubscription.add(RxView.clicks(seeMore)
           .subscribe(click -> {
