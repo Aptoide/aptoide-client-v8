@@ -47,9 +47,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="16dp"
+        android:text="@string/see_more"
         android:textAllCaps="true"
         android:visibility="gone"
-        tools:text="@string/see_more"
         tools:visibility="visible"
         style="@style/Aptoide.TextView.Regular.XS.GreyFog"
         />

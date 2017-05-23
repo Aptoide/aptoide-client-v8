@@ -116,7 +116,7 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
 
     setAdditionalNumberOfSharersLabel(displayable);
     showSeeMoreAction(displayable);
-    showSubCards(displayable);
+    showSubCards(displayable, 2);
   }
 
   @Override String getCardTypeName() {
@@ -142,11 +142,12 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
             String.valueOf(numberOfSharers)));
   }
 
-  private void showSubCards(AggregatedSocialArticleDisplayable displayable) {
+  private void showSubCards(AggregatedSocialArticleDisplayable displayable,
+      int numberOfCardsToShow) {
     subCardsContainer.removeAllViews();
     int i = 1;
     for (MinimalCard minimalCard : displayable.getMinimalCardList()) {
-      if (i > 2) {
+      if (i > numberOfCardsToShow) {
         break;
       }
       View subCardView =
@@ -237,6 +238,13 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
           .subscribe());
       likeLayout.setVisibility(View.VISIBLE);
       comment.setVisibility(View.VISIBLE);
+
+      compositeSubscription.add(RxView.clicks(seeMore)
+          .subscribe(click -> {
+            showSubCards(displayable, 10);
+            seeMore.setVisibility(View.GONE);
+          }, throwable -> CrashReport.getInstance()
+              .log(throwable)));
 
       compositeSubscription.add(RxView.clicks(comment)
           .flatMap(aVoid -> Observable.fromCallable(() -> {

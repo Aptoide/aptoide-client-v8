@@ -92,7 +92,7 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
     ratingBar.setRating(displayable.getAppRatingAverage());
     setCardViewMargin(displayable, cardView);
     showSeeMoreAction(displayable);
-    showSubCards(displayable);
+    showSubCards(displayable, 2);
 
     RxView.clicks(getAppButton)
         .subscribe(view -> {
@@ -112,11 +112,12 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
     return AggregatedSocialInstallDisplayable.CARD_TYPE_NAME;
   }
 
-  private void showSubCards(AggregatedSocialInstallDisplayable displayable) {
+  private void showSubCards(AggregatedSocialInstallDisplayable displayable,
+      int numberOfSubCardsToShow) {
     subCardsContainer.removeAllViews();
     int i = 1;
     for (MinimalCard minimalCard : displayable.getMinimalCardList()) {
-      if (i > 2) {
+      if (i > numberOfSubCardsToShow) {
         break;
       }
       View subCardView =
@@ -156,6 +157,13 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
 
       cardHeaderTimestamp.setText(
           displayable.getTimeSinceLastUpdate(getContext(), minimalCard.getDate()));
+
+      compositeSubscription.add(RxView.clicks(seeMore)
+          .subscribe(click -> {
+            showSubCards(displayable, 10);
+            seeMore.setVisibility(View.GONE);
+          }, throwable -> CrashReport.getInstance()
+              .log(throwable)));
 
       compositeSubscription.add(RxView.clicks(likeLayout)
           .subscribe(click -> {

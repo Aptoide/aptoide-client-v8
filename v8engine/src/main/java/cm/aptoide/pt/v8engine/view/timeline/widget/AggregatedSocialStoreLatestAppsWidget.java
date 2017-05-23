@@ -226,18 +226,19 @@ public class AggregatedSocialStoreLatestAppsWidget
 
     setCardViewMargin(displayable, cardView);
     showSeeMoreAction(displayable);
-    showSubCards(displayable);
+    showSubCards(displayable, 2);
   }
 
   @Override String getCardTypeName() {
     return AggregatedSocialInstallDisplayable.CARD_TYPE_NAME;
   }
 
-  private void showSubCards(AggregatedSocialStoreLatestAppsDisplayable displayable) {
+  private void showSubCards(AggregatedSocialStoreLatestAppsDisplayable displayable,
+      int numberOfSubCardsToShow) {
     subCardsContainer.removeAllViews();
     int i = 1;
     for (MinimalCard minimalCard : displayable.getMinimalCards()) {
-      if (i > 2) {
+      if (i > numberOfSubCardsToShow) {
         break;
       }
       View subCardView =
@@ -294,6 +295,13 @@ public class AggregatedSocialStoreLatestAppsWidget
           .subscribe(account -> likeCard(displayable, minimalCard.getCardId(), 1),
               err -> CrashReport.getInstance()
                   .log(err)));
+
+      compositeSubscription.add(RxView.clicks(seeMore)
+          .subscribe(click -> {
+            showSubCards(displayable, 10);
+            seeMore.setVisibility(View.GONE);
+          }, throwable -> CrashReport.getInstance()
+              .log(throwable)));
 
       compositeSubscription.add(accountManager.accountStatus()
           .subscribe());

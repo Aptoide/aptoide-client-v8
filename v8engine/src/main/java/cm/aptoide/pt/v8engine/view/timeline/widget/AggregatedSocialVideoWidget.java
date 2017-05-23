@@ -121,18 +121,19 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
     setCardViewMargin(displayable, cardView);
 
     showSeeMoreAction(displayable);
-    showSubCards(displayable);
+    showSubCards(displayable, 2);
   }
 
   @Override String getCardTypeName() {
     return AggregatedSocialVideoDisplayable.CARD_TYPE_NAME;
   }
 
-  private void showSubCards(AggregatedSocialVideoDisplayable displayable) {
+  private void showSubCards(AggregatedSocialVideoDisplayable displayable,
+      int numberOfSubCardsToShow) {
     subCardsContainer.removeAllViews();
     int i = 1;
     for (MinimalCard minimalCard : displayable.getMinimalCards()) {
-      if (i > 2) {
+      if (i > numberOfSubCardsToShow) {
         break;
       }
       View subCardView =
@@ -211,6 +212,13 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
             }
             throwable.printStackTrace();
           }));
+
+      compositeSubscription.add(RxView.clicks(seeMore)
+          .subscribe(click -> {
+            showSubCards(displayable, 10);
+            seeMore.setVisibility(View.GONE);
+          }, throwable -> CrashReport.getInstance()
+              .log(throwable)));
 
       compositeSubscription.add(accountManager.accountStatus()
           .subscribe());
