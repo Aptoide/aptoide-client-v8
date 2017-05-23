@@ -5,6 +5,10 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.ParcelableSpan;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -55,9 +59,35 @@ public class ShareAptoideActivity extends ActivityView implements ShareAptoideVi
   private void setUpShareTextViews() {
     shareAptoideFirstInstruction.setText(
         getResources().getString(R.string.spotandshare_message_first_share_instruction, Ssid));
-    shareAptoideLink.setText(
+    //String thirdInstructionText =
+    //    getResources().getString(R.string.spotandshare_message_second_share_instruction_alternative,
+    //        SHARE_APTOIDE_LINK);
+
+    //SpannableString content = new SpannableString(thirdInstructionText);
+    //content.setSpan();
+
+    Spannable spannable = createColorSpan(
         getResources().getString(R.string.spotandshare_message_second_share_instruction_alternative,
-            SHARE_APTOIDE_LINK));
+            SHARE_APTOIDE_LINK), getResources().getColor(R.color.orange_700), SHARE_APTOIDE_LINK);
+    shareAptoideLink.setText(spannable);
+  }
+
+  public Spannable createColorSpan(String text, int color, String... spanTexts) {
+    return createSpan(text, new ForegroundColorSpan(color), spanTexts);
+  }
+
+  private Spannable createSpan(String text, ParcelableSpan span, String[] spanTexts) {
+    final Spannable result = new SpannableString(text);
+    for (String spanText : spanTexts) {
+      int spanTextStart = text.indexOf(spanText);
+      if (spanTextStart >= 0
+          && spanTextStart < text.length()
+          && spanText.length() <= text.length()) {
+        result.setSpan(span, spanTextStart, (spanTextStart + spanText.length()),
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+      }
+    }
+    return result;
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
