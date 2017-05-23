@@ -216,13 +216,15 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
   }
 
   public String getCardHeaderNames() {
-    StringBuilder cardHeaderNames = new StringBuilder();
-    for (UserSharerTimeline user : getSharers()) {
-      cardHeaderNames.append(user.getStore()
+    StringBuilder headerNamesStringBuilder = new StringBuilder();
+    List<UserSharerTimeline> firstSharers = getSharers().subList(0, 2);
+    for (UserSharerTimeline user : firstSharers) {
+      headerNamesStringBuilder.append(user.getStore()
           .getName())
-          .append(" ");
+          .append(", ");
     }
-    return cardHeaderNames.toString();
+    headerNamesStringBuilder.setLength(headerNamesStringBuilder.length() - 2);
+    return headerNamesStringBuilder.toString();
   }
 
   public String getTimeSinceLastUpdate(Context context) {

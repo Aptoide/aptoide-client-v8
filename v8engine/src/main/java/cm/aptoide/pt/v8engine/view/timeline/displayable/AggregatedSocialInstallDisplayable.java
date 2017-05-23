@@ -168,11 +168,14 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
   }
 
   public String getCardHeaderNames() {
-    String cardHeaderNames = "";
-    for (UserSharerTimeline user : getSharers()) {
-      cardHeaderNames += user.getStore()
-          .getName() + " ";
+    StringBuilder headerNamesStringBuilder = new StringBuilder();
+    List<UserSharerTimeline> firstSharers = getSharers().subList(0, 2);
+    for (UserSharerTimeline user : firstSharers) {
+      headerNamesStringBuilder.append(user.getStore()
+          .getName())
+          .append(", ");
     }
-    return cardHeaderNames;
+    headerNamesStringBuilder.setLength(headerNamesStringBuilder.length() - 2);
+    return headerNamesStringBuilder.toString();
   }
 }
