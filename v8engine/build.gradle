@@ -27,10 +27,7 @@ android {
     buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
     resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID + "\""
     buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
-    buildConfigField "String", "PAYPAL_PRIVACY_POLICY_URL",
-        "\"" + project.PAYPAL_PRIVACY_POLICY_URL + "\""
-    buildConfigField "String", "PAYPAL_USER_AGREEMENT_URL",
-        "\"" + project.PAYPAL_USER_AGREEMENT_URL + "\""
+    buildConfigField "int", "DEFAULT_PAYMENT_ID", project.DEFAULT_PAYMENT_ID
     buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
     buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
         "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""

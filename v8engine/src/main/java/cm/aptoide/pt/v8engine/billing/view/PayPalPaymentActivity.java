@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.billing.view;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -81,9 +80,7 @@ public class PayPalPaymentActivity extends ProductActivity implements PayPalPaym
             PayPalService.EXTRA_PAYPAL_CONFIGURATION,
             new PayPalConfiguration().environment(BuildConfig.PAYPAL_ENVIRONMENT)
                 .clientId(BuildConfig.PAYPAL_KEY)
-                .merchantName(V8Engine.getConfiguration().getMarketName())
-                .merchantPrivacyPolicyUri(Uri.parse(BuildConfig.PAYPAL_PRIVACY_POLICY_URL))
-                .merchantUserAgreementUri(Uri.parse(BuildConfig.PAYPAL_USER_AGREEMENT_URL)))
+                .merchantName(V8Engine.getConfiguration().getMarketName()))
             .putExtra(com.paypal.android.sdk.payments.PaymentActivity.EXTRA_PAYMENT, payment),
         PAY_APP_REQUEST_CODE);
   }

@@ -23,6 +23,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
@@ -39,8 +40,6 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class PaymentActivity extends BaseActivity implements PaymentView {
-
-  private static final int DEFAULT_PAYMENT_ID = 1;
 
   private View overlay;
   private View body;
@@ -115,7 +114,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
 
     attachPresenter(
         new PaymentPresenter(this, ((V8Engine) getApplicationContext()).getAptoideBilling(),
-            accountManager, new PaymentSelector(DEFAULT_PAYMENT_ID,
+            accountManager, new PaymentSelector(BuildConfig.DEFAULT_PAYMENT_ID,
             PreferenceManager.getDefaultSharedPreferences(getApplicationContext())),
             new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
             new PaymentNavigator(getActivityNavigator()), paymentAnalytics,
