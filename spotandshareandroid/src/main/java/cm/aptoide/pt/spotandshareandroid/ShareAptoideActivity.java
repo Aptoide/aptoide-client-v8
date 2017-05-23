@@ -32,7 +32,7 @@ public class ShareAptoideActivity extends ActivityView implements ShareAptoideVi
 
     presenter = new ShareAptoidePresenter(this,
         new ShareAptoideManager(new HotspotManager(getApplicationContext()),
-            ConnectionManager.getInstance(this.getApplicationContext())));
+            ConnectionManager.getInstance(this.getApplicationContext()), Ssid));
     attachPresenter(presenter);
   }
 
@@ -58,8 +58,7 @@ public class ShareAptoideActivity extends ActivityView implements ShareAptoideVi
 
   private void setUpShareTextViews() {
     shareAptoideFirstInstruction.setText(
-        getResources().getString(R.string.spotandshare_message_first_share_instruction,
-            ShareAptoideManager.SSID));
+        getResources().getString(R.string.spotandshare_message_first_share_instruction, Ssid));
 
     Spannable spannable = createColorSpan(
         getResources().getString(R.string.spotandshare_message_second_share_instruction_alternative,

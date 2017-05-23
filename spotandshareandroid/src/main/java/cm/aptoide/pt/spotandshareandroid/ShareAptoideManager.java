@@ -8,14 +8,16 @@ import android.os.AsyncTask;
 
 public class ShareAptoideManager {
 
-  public static final String SSID = "Aptoide_Share";
   private HotspotManager hotspotManager;
   private ConnectionManager connectionManager;
+  private String ssid;
   private EnabledHotspotListener listener;
 
-  public ShareAptoideManager(HotspotManager hotspotManager, ConnectionManager connectionManager) {
+  public ShareAptoideManager(HotspotManager hotspotManager, ConnectionManager connectionManager,
+      String ssid) {
     this.hotspotManager = hotspotManager;
     this.connectionManager = connectionManager;
+    this.ssid = ssid;
   }
 
   public void enableHotspot(EnabledHotspotListener listener) {
@@ -38,7 +40,7 @@ public class ShareAptoideManager {
   private class EnableHotspotTask extends AsyncTask<Void, Void, Integer> {
 
     @Override protected Integer doInBackground(Void... params) {
-      return hotspotManager.enableOpenHotspot(SSID);
+      return hotspotManager.enableOpenHotspot(ssid);
     }
 
     @Override protected void onPreExecute() {
