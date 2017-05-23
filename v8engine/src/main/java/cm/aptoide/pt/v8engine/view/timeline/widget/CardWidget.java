@@ -203,10 +203,10 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     return true;
   }
 
-  private boolean likeCard(T displayable, String cardId, int rating) {
-    if (!hasSocialPermissions(Analytics.Account.AccountOrigins.LIKE_CARD)) {
-      displayable.like(getContext(), cardId, getCardTypeName().toUpperCase(), rating);
-    }
+  protected boolean likeCard(T displayable, String cardId, int rating) {
+    if (!hasSocialPermissions(Analytics.Account.AccountOrigins.LIKE_CARD)) return false;
+    displayable.like(getContext(), cardId, getCardTypeName().toUpperCase(), rating);
+
     return true;
   }
 

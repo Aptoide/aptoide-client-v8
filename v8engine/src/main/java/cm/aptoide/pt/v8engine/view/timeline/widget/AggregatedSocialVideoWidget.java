@@ -20,6 +20,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.view.timeline.LikeButtonView;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.AggregatedSocialVideoDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
@@ -143,7 +144,9 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
       TextView minimalCardHeaderSecondaryName =
           (TextView) subCardView.findViewById(R.id.card_subtitle);
       TextView cardHeaderTimestamp = (TextView) subCardView.findViewById(R.id.card_date);
-      LinearLayout like = (LinearLayout) subCardView.findViewById(R.id.social_like);
+      LikeButtonView likeSubCardButton =
+          (LikeButtonView) subCardView.findViewById(R.id.social_like_button);
+      LinearLayout likeLayout = (LinearLayout) subCardView.findViewById(R.id.social_like);
       TextView comment = (TextView) subCardView.findViewById(R.id.social_comment);
       ImageLoader.with(getContext())
           .loadWithShadowCircleTransform(minimalCard.getSharers()
@@ -170,6 +173,23 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
       cardHeaderTimestamp.setText(
           displayable.getTimeSinceLastUpdate(getContext(), minimalCard.getDate()));
 
+      compositeSubscription.add(RxView.clicks(likeLayout)
+          .subscribe(click -> {
+            if (!hasSocialPermissions(Analytics.Account.AccountOrigins.LIKE_CARD)) return;
+            likeSubCardButton.performClick();
+          }, throwable -> CrashReport.getInstance()
+              .log(throwable)));
+
+      compositeSubscription.add(RxView.clicks(likeSubCardButton)
+          .flatMap(__ -> accountManager.accountStatus()
+              .first()
+              .toSingle()
+              .toObservable())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(account -> likeCard(displayable, minimalCard.getCardId(), 1),
+              err -> CrashReport.getInstance()
+                  .log(err)));
+
       compositeSubscription.add(displayable.getRelatedToApplication()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(installeds -> {
@@ -194,7 +214,7 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
 
       compositeSubscription.add(accountManager.accountStatus()
           .subscribe());
-      like.setVisibility(View.VISIBLE);
+      likeLayout.setVisibility(View.VISIBLE);
       comment.setVisibility(View.VISIBLE);
 
       compositeSubscription.add(RxView.clicks(comment)

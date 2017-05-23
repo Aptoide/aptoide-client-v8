@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.timeline.displayable;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import cm.aptoide.pt.model.v7.listapp.App;
@@ -131,25 +130,6 @@ public class RecommendationDisplayable extends CardDisplayable {
         .getMarketName());
   }
 
-  public Spannable getSimilarAppsText(Context context) {
-    StringBuilder similarAppsText = new StringBuilder(
-        context.getString(R.string.displayable_social_timeline_recommendation_similar_to,
-            similarAppsNames.get(0)));
-    for (int i = 1; i < similarAppsNames.size() - 1; i++) {
-      similarAppsText.append(", ");
-      similarAppsText.append(similarAppsNames.get(i));
-    }
-    if (similarAppsNames.size() > 1) {
-      similarAppsText.append(" ");
-      similarAppsText.append(
-          context.getString(R.string.displayable_social_timeline_recommendation_similar_and));
-      similarAppsText.append(" ");
-      similarAppsText.append(similarAppsNames.get(similarAppsNames.size() - 1));
-    }
-    return spannableFactory.createStyleSpan(similarAppsText.toString(), Typeface.BOLD,
-        similarAppsNames.toArray(new String[similarAppsNames.size()]));
-  }
-
   public Spannable getAppText(Context context) {
     return spannableFactory.createColorSpan(
         context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
@@ -174,14 +154,14 @@ public class RecommendationDisplayable extends CardDisplayable {
   }
 
   public String getSimilarAppPackageName() {
-    if (similarPackageNames.size() != 0) {
+    if (similarPackageNames != null && similarPackageNames.size() != 0) {
       return similarPackageNames.get(0);
     }
     return "";
   }
 
   public String getSimilarAppName() {
-    if (similarAppsNames.size() != 0) {
+    if (similarPackageNames != null && similarAppsNames.size() != 0) {
       return similarAppsNames.get(0);
     }
     return "";

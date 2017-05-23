@@ -19,6 +19,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
+import cm.aptoide.pt.v8engine.view.timeline.LikeButtonView;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.AggregatedSocialArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.SocialArticleDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
@@ -157,9 +158,12 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
       TextView minimalCardHeaderSecondaryName =
           (TextView) subCardView.findViewById(R.id.card_subtitle);
       TextView cardHeaderTimestamp = (TextView) subCardView.findViewById(R.id.card_date);
-      LinearLayout like = (LinearLayout) subCardView.findViewById(R.id.social_like);
       TextView comment = (TextView) subCardView.findViewById(R.id.social_comment);
       TextView shareSubCardButton = (TextView) subCardView.findViewById(R.id.social_share);
+      LikeButtonView likeSubCardButton =
+          (LikeButtonView) subCardView.findViewById(R.id.social_like_button);
+      LinearLayout likeLayout = (LinearLayout) subCardView.findViewById(R.id.social_like);
+
       ImageLoader.with(getContext())
           .loadWithShadowCircleTransform(minimalCard.getSharers()
               .get(0)
@@ -207,6 +211,23 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
             throwable.printStackTrace();
           }));
 
+      compositeSubscription.add(RxView.clicks(likeLayout)
+          .subscribe(click -> {
+            if (!hasSocialPermissions(Analytics.Account.AccountOrigins.LIKE_CARD)) return;
+            likeSubCardButton.performClick();
+          }, throwable -> CrashReport.getInstance()
+              .log(throwable)));
+
+      compositeSubscription.add(RxView.clicks(likeSubCardButton)
+          .flatMap(__ -> accountManager.accountStatus()
+              .first()
+              .toSingle()
+              .toObservable())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(account -> likeCard(displayable, minimalCard.getCardId(), 1),
+              err -> CrashReport.getInstance()
+                  .log(err)));
+
       compositeSubscription.add(RxView.clicks(shareSubCardButton)
           .subscribe(click -> shareCard(displayable, minimalCard.getCardId(), null,
               SharePreviewDialog.SharePreviewOpenMode.SHARE), err -> CrashReport.getInstance()
@@ -214,7 +235,7 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
 
       compositeSubscription.add(accountManager.accountStatus()
           .subscribe());
-      like.setVisibility(View.VISIBLE);
+      likeLayout.setVisibility(View.VISIBLE);
       comment.setVisibility(View.VISIBLE);
 
       compositeSubscription.add(RxView.clicks(comment)
