@@ -319,7 +319,7 @@ import rx.android.schedulers.AndroidSchedulers;
     analytics.save(download.getPackageName() + download.getVersionCode(), installEvent);
   }
 
-  private void showRootInstallWarningPopup(Context context) {
+  protected void showRootInstallWarningPopup(Context context) {
     if (installManager.showWarning()) {
       compositeSubscription.add(GenericDialogs.createGenericYesNoCancelMessage(context, null,
           AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
