@@ -17,9 +17,6 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Base64;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
@@ -260,17 +257,7 @@ public class DeepLinkIntentReceiver extends Activity {
     //} else {
     //  startFromSearch(packageName);
     //}
-
-    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    installedAccessor.get(packageName).subscribe(installed -> {
-      if (installed != null) {
-        startFromAppView(packageName);
-      } else {
-        startFromSearch(packageName);
-      }
-    }, err -> {
-      CrashReport.getInstance().log(err);
-    });
+    startFromAppView(packageName);
   }
 
   public void aptoidevoiceSearch(String param) {
