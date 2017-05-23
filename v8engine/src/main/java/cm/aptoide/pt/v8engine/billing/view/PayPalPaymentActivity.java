@@ -40,7 +40,7 @@ public class PayPalPaymentActivity extends ProductActivity implements PayPalPaym
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_paypal_authorization);
+    setContentView(R.layout.activity_paypal_payment);
 
     progressBar = (ProgressBar) findViewById(R.id.activity_paypal_authorization_preogress_bar);
 

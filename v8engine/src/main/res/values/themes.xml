@@ -120,16 +120,19 @@
   <style name="AptoideThemeDefault" parent="AppBaseTheme">
   </style>
 
-  <style name="AppBaseTheme.Transparent">
+  <style name="AppBaseTheme.NoTitle">
+    <item name="android:windowNoTitle">true</item>
+  </style>
+
+  <style name="AppBaseTheme.NoTitle.Transparent">
     <item name="android:windowIsTranslucent">true</item>
     <item name="android:windowBackground">@android:color/transparent</item>
     <item name="android:windowContentOverlay">@null</item>
-    <item name="android:windowNoTitle">true</item>
     <item name="android:windowIsFloating">false</item>
     <item name="android:backgroundDimEnabled">false</item>
   </style>
 
-  <style name="AppBaseTheme.Transparent.WhiteGreen">
+  <style name="AppBaseTheme.NoTitle.Transparent.WhiteGreen">
     <item name="colorButtonNormal">@color/white</item>
     <item name="colorAccent">@color/activity_payment_green</item>
   </style>
