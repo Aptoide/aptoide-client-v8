@@ -58,13 +58,8 @@ public class ShareAptoideActivity extends ActivityView implements ShareAptoideVi
 
   private void setUpShareTextViews() {
     shareAptoideFirstInstruction.setText(
-        getResources().getString(R.string.spotandshare_message_first_share_instruction, Ssid));
-    //String thirdInstructionText =
-    //    getResources().getString(R.string.spotandshare_message_second_share_instruction_alternative,
-    //        SHARE_APTOIDE_LINK);
-
-    //SpannableString content = new SpannableString(thirdInstructionText);
-    //content.setSpan();
+        getResources().getString(R.string.spotandshare_message_first_share_instruction,
+            ShareAptoideManager.SSID));
 
     Spannable spannable = createColorSpan(
         getResources().getString(R.string.spotandshare_message_second_share_instruction_alternative,
