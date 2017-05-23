@@ -90,7 +90,7 @@ android:fitsSystemWindows="true"
       android:elevation="16dp"
       android:visibility="visible"
       app:behavior_hideable="false"
-      app:behavior_peekHeight="250dp"
+      app:behavior_peekHeight="290dp"
       app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
       />
 

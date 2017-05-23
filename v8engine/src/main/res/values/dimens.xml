@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+  <!--ui guidelines: buttons height-->
+  <dimen name="button_height">52dp</dimen>
+  <dimen name="button_small_height">44dp</dimen>
+
+
   <dimen name="tabsHeight">48dp</dimen>
   <dimen name="activity_horizontal_margin">0dp</dimen>
   <dimen name="activity_vertical_margin">16dp</dimen>
@@ -84,4 +90,6 @@
   <integer name="min_avatar_width">600</integer>
   <integer name="max_avatar_width">10240</integer>
   <integer name="max_avatar_Size">5242880</integer>
+
+
 </resources>

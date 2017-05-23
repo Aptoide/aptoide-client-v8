@@ -12,4 +12,10 @@
   <color name="blue_grey_87_alpha">#de607d8b</color>
   <color name="white">#FFF</color>
 
+  <!-- social buttons colors -->
+  <color name="facebook">#415dae</color>
+  <color name="facebook_highlight">#2f477a</color>
+  <color name="google">#cc4a41</color>
+  <color name="google_highlight">#cc4a41</color>
+
 </resources>
