@@ -249,7 +249,7 @@ public class AptoideAccountManager {
     public AptoideAccountManager build() {
 
       if (accountAnalytics == null) {
-        throw new IllegalArgumentException("AccountAnalytics is mandatory.");
+        accountAnalytics = new LogAnalytics();
       }
 
       if (accountDataPersist == null) {
