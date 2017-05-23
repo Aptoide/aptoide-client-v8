@@ -254,7 +254,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
   @Partners protected void executeSearchRequests(String storeName, boolean create) {
     Analytics.Search.searchTerm(query);
     //TODO (pedro): Don't have search source (which tab)
-    searchAnalytics.search(query, null);
+    searchAnalytics.search(query);
 
     if (storeName != null) {
       shouldFinishLoading = true;

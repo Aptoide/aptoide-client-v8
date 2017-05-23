@@ -140,7 +140,7 @@ import rx.functions.Action1;
     }
 
     final Action1<Void> clickToOpenAppView =
-        v -> handleClickToOpenAppView(clickCallback, searchAppsApp);
+        v -> handleClickToOpenAppView(clickCallback, searchAppsApp, displayable.getQuery());
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(clickToOpenAppView));
   }
@@ -189,12 +189,12 @@ import rx.functions.Action1;
   }
 
   private void handleClickToOpenAppView(Action0 clickCallback,
-      ListSearchApps.SearchAppsApp searchAppsApp) {
+      ListSearchApps.SearchAppsApp searchAppsApp, String query) {
     if (clickCallback != null) {
       clickCallback.call();
     }
-    //TODO (pedro): Don't have query or source(followed or all stores)
-    searchAnalytics.searchAppClick(null, null, searchAppsApp.getPackageName());
+
+    searchAnalytics.searchAppClick(query, searchAppsApp.getPackageName());
     getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
         .newAppViewFragment(searchAppsApp.getId(), searchAppsApp.getPackageName(),
             searchAppsApp.getStore()

@@ -26,10 +26,9 @@ public class SearchAnalytics extends AptoideAnalytics {
     this.facebook = facebook;
   }
 
-  public void search(String query, String searchSource) {
+  public void search(String query) {
     Map<String, Object> map = new HashMap<>();
     map.put(QUERY, query);
-    map.put(SOURCE, searchSource);
     analytics.sendEvent(new FacebookEvent(facebook, SEARCH, createComplexBundleData(map)));
   }
 
@@ -37,9 +36,8 @@ public class SearchAnalytics extends AptoideAnalytics {
     analytics.sendEvent(new FacebookEvent(facebook, NO_RESULTS, createBundleData(SOURCE, query)));
   }
 
-  public void searchAppClick(String resultList, String query, String packageName) {
+  public void searchAppClick(String query, String packageName) {
     Map<String, Object> map = new HashMap<>();
-    map.put("result_list", resultList);
     map.put(QUERY, query);
     map.put("package_name", packageName);
     analytics.sendEvent(new FacebookEvent(facebook, APP_CLICK, createComplexBundleData(map)));
