@@ -201,9 +201,6 @@
     <item name="android:layout_marginLeft">5dp</item>
   </style>
 
-  <!--
-  <style name="WidgetButtonCustom" parent="@android:style/Widget.Button">
-    -->
   <style name="WidgetButtonCustom" parent="@style/Widget.Aptoide.Button">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>
@@ -268,9 +265,7 @@
 
   <style name="Toolbar" parent="@style/Theme.AppCompat"></style>
 
-  <style name="ToolbarDark" parent="@style/Theme.AppCompat">
-    <!--<item name="pstsIndicatorColor">@color/aptoide_orange</item>-->
-  </style>
+  <style name="ToolbarDark" parent="@style/Theme.AppCompat"></style>
 
   <style name="customRowStyle">
     <item name="android:foreground">@drawable/highlight_overlay</item>
@@ -327,18 +322,16 @@
     <item name="android:textSize">?sectionListView.sectionTextViewTextSize</item>
   </style>
 
-  <style name="TextViewAppLabel">
-
-  </style>
+  <style name="TextViewAppLabel"></style>
 
   <style name="RollBackSectionItemStyle">
     <item name="android:padding">?sectionListView.sectionItemPadding</item>
     <item name="android:background">?sectionListView.sectionItemBackground</item>
   </style>
 
-  <style name="MenuDrawer"/>
+  <style name="MenuDrawer"></style>
 
-  <style name="MenuDrawer.Widget"/>
+  <style name="MenuDrawer.Widget"></style>
 
   <style name="MenuDrawer.Widget.Title">
     <item name="android:textAppearance">?android:attr/textAppearance</item>

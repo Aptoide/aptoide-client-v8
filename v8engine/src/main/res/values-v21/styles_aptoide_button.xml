@@ -1,34 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
-  <style name="Aptoide.Button" parent="Widget.AppCompat.Button.Colored">
+  <style name="Aptoide.Button" parent="Widget.AppCompat.Button">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">@dimen/button_height</item>
     <item name="android:textColor">@color/white</item>
     <item name="android:fontFamily">sans-serif-medium</item>
     <item name="android:textSize">14sp</item>
     <item name="android:textAllCaps">true</item>
-    <item name="colorAccent">@color/orange_700</item>
-    <item name="android:colorAccent">@color/orange_700</item>
     <item name="android:colorButtonNormal">@color/orange_700</item>
     <item name="android:colorControlHighlight">@color/orange</item>
   </style>
 
-  <style name="Aptoide.Button.Facebook">
-    <item name="android:colorAccent">@color/facebook</item>
-    <item name="android:colorControlHighlight">@color/facebook_highlight</item>
+  <style name="Aptoide.Button.Colored" parent="Widget.AppCompat.Button.Colored">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">@dimen/button_height</item>
+    <item name="android:textColor">@color/white</item>
+    <item name="android:fontFamily">sans-serif-medium</item>
+    <item name="android:textSize">14sp</item>
+    <item name="android:textAllCaps">true</item>
+    <item name="android:colorAccent">@color/orange_700</item>
+    <item name="android:colorControlHighlight">@color/orange</item>
+  </style>
+
+  <style name="Aptoide.Button.Colored.Facebook">
     <item name="android:drawableLeft">@drawable/com_facebook_button_icon_white</item>
     <item name="android:text">@string/connect_with_facebook</item>
     <item name="android:contentDescription">@string/com_facebook_loginview_log_in_button_long</item>
+    <item name="android:colorAccent">@color/facebook</item>
+    <item name="android:colorControlHighlight">@color/facebook_highlight</item>
   </style>
 
-
-  <style name="Aptoide.Button.Google">
-    <item name="android:colorAccent">@color/google</item>
-    <item name="android:colorControlHighlight">@color/google_highlight</item>
+  <style name="Aptoide.Button.Colored.Google">
     <item name="android:drawableLeft">@drawable/google_plus_ic</item>
     <item name="android:text">@string/connect_with_google</item>
     <item name="android:contentDescription">@string/google</item>
+    <item name="android:colorAccent">@color/google</item>
+    <item name="android:colorControlHighlight">@color/google_highlight</item>
   </style>
-
 </resources>

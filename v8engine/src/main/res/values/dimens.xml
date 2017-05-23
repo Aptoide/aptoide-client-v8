@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <!--ui guidelines: buttons height-->
-  <dimen name="button_height">52dp</dimen>
-  <dimen name="button_small_height">44dp</dimen>
-
-
   <dimen name="tabsHeight">48dp</dimen>
   <dimen name="activity_horizontal_margin">0dp</dimen>
   <dimen name="activity_vertical_margin">16dp</dimen>
@@ -85,11 +80,8 @@
   <dimen name="padding_login_button">8dp</dimen>
   <dimen name="login_field_height">38dp</dimen>
   <dimen name="button_big_height">40dp</dimen>
-  <integer name="min_avatar_height">600</integer>
-  <integer name="max_avatar_height">10240</integer>
-  <integer name="min_avatar_width">600</integer>
-  <integer name="max_avatar_width">10240</integer>
-  <integer name="max_avatar_Size">5242880</integer>
 
-
+  <!-- UI Guidelines dimensions -->
+  <dimen name="button_height">52dp</dimen>
+  <dimen name="button_small_height">44dp</dimen>
 </resources>

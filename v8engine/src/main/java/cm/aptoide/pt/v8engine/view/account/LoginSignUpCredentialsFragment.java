@@ -12,6 +12,7 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatButton;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -62,8 +63,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   private PublishRelay<FacebookAccountViewModel> facebookLoginSubject;
   private LoginManager facebookLoginManager;
   private AlertDialog facebookEmailRequiredDialog;
-  private Button googleLoginButton;
-  private View facebookLoginButton;
+  private AppCompatButton googleLoginButton;
+  private AppCompatButton facebookLoginButton;
   private Button hideShowAptoidePasswordButton;
   private View loginArea;
   private View signUpArea;
@@ -385,7 +386,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   private void bindViews(View view) {
     forgotPasswordButton = (TextView) view.findViewById(R.id.forgot_password);
 
-    googleLoginButton = (Button) view.findViewById(R.id.google_login_button);
+    googleLoginButton = (AppCompatButton) view.findViewById(R.id.google_login_button);
 
     buttonLogin = (Button) view.findViewById(R.id.button_login);
     buttonSignUp = (Button) view.findViewById(R.id.button_sign_up);
@@ -395,7 +396,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     aptoidePasswordEditText = (EditText) view.findViewById(R.id.password);
     hideShowAptoidePasswordButton = (Button) view.findViewById(R.id.btn_show_hide_pass);
 
-    facebookLoginButton = view.findViewById(R.id.fb_login_button);
+    facebookLoginButton = (AppCompatButton) view.findViewById(R.id.fb_login_button);
     RxView.clicks(facebookLoginButton)
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(

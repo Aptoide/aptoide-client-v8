@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 25/08/2016.
-  -->
-
 <resources>
 
   <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
@@ -762,6 +757,11 @@
 
     <item name="android:windowBackground">@color/transparent_black</item>
     <item name="toolbarTheme">@style/ToolbarBlack</item>
+  </style>
+
+  <style name="AppBaseTheme.Facebook">
+    <item name="colorButtonNormal">@color/facebook</item>
+    <item name="colorAccent">@color/facebook</item>
   </style>
 
 </resources>
