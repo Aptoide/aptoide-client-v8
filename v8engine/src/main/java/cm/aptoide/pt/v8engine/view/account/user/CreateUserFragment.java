@@ -45,6 +45,9 @@ import rx.android.schedulers.AndroidSchedulers;
 public class CreateUserFragment extends PictureLoaderFragment implements CreateUserView {
 
   public static final String FROM_MY_ACCOUNT = "My Account";
+  public static final String USER_NAME = "userName";
+  public static final String USER_AVATAR = "userAvatar";
+  public static final String FROM = "from";
   private static final String TAG = CreateUserFragment.class.getName();
   private static final String USER_IMAGE_PATH = "user_image_path";
   private ThrowableToStringMapper errorMapper;
@@ -72,9 +75,9 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
       String from) {
     CreateUserFragment createUserFragment = newInstance();
     Bundle args = new Bundle();
-    args.putString("userName", userName);
-    args.putString("userAvatar", userPicturePath);
-    args.putString("from", from);
+    args.putString(USER_NAME, userName);
+    args.putString(USER_AVATAR, userPicturePath);
+    args.putString(FROM, from);
     createUserFragment.setArguments(args);
     return createUserFragment;
   }
@@ -104,7 +107,7 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
         loadImage(Uri.parse(uri));
       }
     }
-    setupViewsDefaultValues(view);
+    setupViewsDefaultValues();
   }
 
   @Override public void onDestroy() {
@@ -121,12 +124,12 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
 
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
-    userPicturePath = args.getString("userAvatar");
-    userNickname = args.getString("userName");
-    from = args.getString("from");
+    userPicturePath = args.getString(USER_AVATAR);
+    userNickname = args.getString(USER_NAME);
+    from = args.getString(FROM);
   }
 
-  private void setupViewsDefaultValues(View view) {
+  private void setupViewsDefaultValues() {
     if (isEditProfile()) {
       createUserButton.setText(getString(R.string.edit_profile_edit_button));
       getToolbar().setTitle(getString(R.string.edit_profile_title));

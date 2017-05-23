@@ -31,17 +31,20 @@ public class MyAccountPresenter implements Presenter {
   }
 
   @Override public void present() {
+    //todo(pribeiro): error handling
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> signOutClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+        .subscribe(signOutClick -> {
+        }, throwable -> crashReport.log(throwable));
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> view.moreNotificationsClick()
-            .doOnNext(__ -> navigator.navigateToInboxView()))
+            .doOnNext(clicked -> navigator.navigateToInboxView()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+        .subscribe(moreClick -> {
+        }, throwable -> crashReport.log(throwable));
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(click -> view.editStoreClick()
@@ -50,28 +53,33 @@ public class MyAccountPresenter implements Presenter {
                 .getMeta()
                 .getData()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(store -> navigator.navigateToEditStoreView(store));
+        .subscribe(store -> navigator.navigateToEditStoreView(store),
+            throwable -> crashReport.log(throwable));
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> notificationCenter.getInboxNotifications(NUMBER_OF_NOTIFICATIONS))
+        .flatMap(viewCreated -> notificationCenter.getInboxNotifications(NUMBER_OF_NOTIFICATIONS))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(notifications -> view.showNotifications(notifications))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+        .subscribe(notifications -> {
+        }, throwable -> crashReport.log(throwable));
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.notificationSelection())
+        .flatMap(viewCreated -> view.notificationSelection())
         .map(notification -> linkFactory.get(LinksHandlerFactory.NOTIFICATION_LINK,
             notification.getUrl()))
         .doOnNext(link -> link.launch())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+        .subscribe(notificationUrl -> {
+        }, throwable -> crashReport.log(throwable));
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(click -> view.editUserProfileClick()
-            .doOnNext(__ -> navigator.navigateToEditProfileView(accountManager.getAccount())))
+        .flatMap(viewCreated -> view.editUserProfileClick()
+            .flatMap(click -> accountManager.accountStatus())
+            .doOnNext(account -> navigator.navigateToEditProfileView(account)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+        .subscribe(account -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   @Override public void saveState(Bundle state) {

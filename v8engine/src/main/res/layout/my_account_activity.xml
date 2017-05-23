@@ -70,7 +70,10 @@
               android:layout_width="wrap_content"
               android:layout_height="74dp"
               android:layout_marginTop="16dp"
+              android:layout_toEndOf="@+id/my_account_edit_user_profile"
+              android:layout_toLeftOf="@+id/my_account_edit_user_profile"
               android:layout_toRightOf="@id/my_account_user_avatar"
+              android:layout_toStartOf="@id/my_account_user_avatar"
               android:gravity="center_vertical"
               android:orientation="vertical"
               >
@@ -87,6 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:maxLines="1"
                 android:text="Username"
                 style="@style/Aptoide.TextView.Regular.S.GreyMedium"
                 />
@@ -138,7 +142,10 @@
               android:layout_width="wrap_content"
               android:layout_height="74dp"
               android:layout_marginTop="16dp"
+              android:layout_toEndOf="@+id/my_account_edit_user_store"
+              android:layout_toLeftOf="@+id/my_account_edit_user_store"
               android:layout_toRightOf="@id/my_account_store_avatar"
+              android:layout_toStartOf="@id/my_account_store_avatar"
               android:gravity="center_vertical"
               android:orientation="vertical"
               >
@@ -156,7 +163,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Username"
+                android:maxLines="1"
+                android:text="Usernae"
                 style="@style/Aptoide.TextView.Regular.S.GreyMedium"
                 />
 

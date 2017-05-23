@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.notification.view;
 
 import android.os.Bundle;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.notification.NotificationCenter;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
@@ -16,13 +17,15 @@ public class InboxPresenter implements Presenter {
   private final InboxView view;
   private final NotificationCenter notificationCenter;
   private final LinksHandlerFactory linkFactory;
+  private CrashReport crashReport;
   private int NUMBER_OF_NOTIFICATIONS = 50;
 
   public InboxPresenter(InboxView view, NotificationCenter notificationCenter,
-      LinksHandlerFactory linkFactory) {
+      LinksHandlerFactory linkFactory, CrashReport crashReport) {
     this.view = view;
     this.notificationCenter = notificationCenter;
     this.linkFactory = linkFactory;
+    this.crashReport = crashReport;
   }
 
   @Override public void present() {
@@ -32,7 +35,8 @@ public class InboxPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(notifications -> view.showNotifications(notifications))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+        .subscribe(notifications -> {
+        }, throwable -> crashReport.log(throwable));
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.notificationSelection())
@@ -40,7 +44,8 @@ public class InboxPresenter implements Presenter {
             notification.getUrl()))
         .doOnNext(link -> link.launch())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+        .subscribe(notificationUrl -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   @Override public void saveState(Bundle state) {

@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
@@ -52,8 +53,8 @@ import rx.subjects.PublishSubject;
  */
 public class MyAccountFragment extends BaseToolbarFragment implements MyAccountView {
 
+  private static final float STROKE_SIZE = 0.04f;
   private AptoideAccountManager accountManager;
-
   private Button logoutButton;
   private TextView usernameTextView;
   private TextView storeNameTextView;
@@ -63,7 +64,6 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   private Button userStoreEditButton;
   private View separator;
   private RelativeLayout storeLayout;
-  private float strokeSize = 0.04f;
   private String userAvatarUrl = null;
   private RelativeLayout header;
   private TextView headerText;
@@ -75,6 +75,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   private Converter.Factory converterFactory;
   private OkHttpClient httpClient;
   private BodyInterceptor<BaseBody> bodyInterceptor;
+  private CrashReport crashReport;
 
   public static Fragment newInstance() {
     return new MyAccountFragment();
@@ -104,20 +105,21 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
+    crashReport = CrashReport.getInstance();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    setupAccountLayout();
-    attachPresenter(new MyAccountPresenter(this, accountManager, CrashReport.getInstance(),
-            new MyAccountNavigator(getFragmentNavigator()),
-            ((V8Engine) getContext().getApplicationContext()).getNotificationCenter(),
-            new LinksHandlerFactory(getContext())),
-        savedInstanceState);
+    accountManager.accountStatus()
+        .first()
+        .subscribe(account -> setupAccountLayout(account), throwable -> crashReport.log(throwable));
+    attachPresenter(new MyAccountPresenter(this, accountManager, crashReport,
+        new MyAccountNavigator(getFragmentNavigator()),
+        ((V8Engine) getContext().getApplicationContext()).getNotificationCenter(),
+        new LinksHandlerFactory(getContext())), savedInstanceState);
     list = (RecyclerView) view.findViewById(R.id.fragment_my_account_notification_list);
     list.setAdapter(adapter);
-    list.setLayoutManager(
-        new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+    list.setLayoutManager(new LinearLayoutManager(getContext()));
   }
 
   @Override public void onDestroy() {
@@ -164,10 +166,12 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
   }
 
   @Override public Observable<GetStore> getStore() {
-    return GetStoreRequest.of(new BaseRequestWithStore.StoreCredentials(accountManager.getAccount()
-            .getStoreName(), null, null), StoreContext.meta, bodyInterceptor, httpClient,
-        converterFactory)
-        .observe();
+    return accountManager.accountStatus()
+        .first()
+        .flatMap(account -> GetStoreRequest.of(
+            new BaseRequestWithStore.StoreCredentials(account.getStoreName(), null, null),
+            StoreContext.meta, bodyInterceptor, httpClient, converterFactory)
+            .observe());
   }
 
   @Override public Observable<Void> editUserProfileClick() {
@@ -205,32 +209,25 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
         .findViewById(R.id.more);
   }
 
-  private void setupAccountLayout() {
+  private void setupAccountLayout(Account account) {
 
-    if (!TextUtils.isEmpty(accountManager.getAccount()
-        .getNickname())) {
-      usernameTextView.setText(accountManager.getAccount()
-          .getNickname());
+    if (!TextUtils.isEmpty(account.getNickname())) {
+      usernameTextView.setText(account.getNickname());
     } else {
-      usernameTextView.setText(accountManager.getAccountEmail());
+      usernameTextView.setText(account.getEmail());
     }
 
-    if (!TextUtils.isEmpty(accountManager.getAccount()
-        .getAvatar())) {
-      userAvatarUrl = accountManager.getAccount()
-          .getAvatar();
+    if (!TextUtils.isEmpty(account.getAvatar())) {
+      userAvatarUrl = account.getAvatar();
       userAvatarUrl = userAvatarUrl.replace("50", "150");
       ImageLoader.with(getContext())
-          .loadWithShadowCircleTransform(userAvatarUrl, userAvatar, strokeSize);
+          .loadWithShadowCircleTransform(userAvatarUrl, userAvatar, STROKE_SIZE);
     }
 
-    if (!TextUtils.isEmpty(accountManager.getAccount()
-        .getStoreName())) {
-      storeNameTextView.setText(accountManager.getAccount()
-          .getStoreName());
+    if (!TextUtils.isEmpty(account.getStoreName())) {
+      storeNameTextView.setText(account.getStoreName());
       ImageLoader.with(getContext())
-          .loadWithShadowCircleTransform(accountManager.getAccount()
-              .getStoreAvatar(), storeAvatar, strokeSize);
+          .loadWithShadowCircleTransform(account.getStoreAvatar(), storeAvatar, STROKE_SIZE);
     } else {
       separator.setVisibility(View.GONE);
       storeLayout.setVisibility(View.GONE);

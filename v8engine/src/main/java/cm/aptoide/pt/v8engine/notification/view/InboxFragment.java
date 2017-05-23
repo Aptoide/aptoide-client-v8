@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.notification.AptoideNotification;
 import cm.aptoide.pt.v8engine.view.fragment.BaseToolbarFragment;
@@ -43,7 +44,7 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
     super.onCreate(savedInstanceState);
     attachPresenter(new InboxPresenter(this,
         ((V8Engine) getContext().getApplicationContext()).getNotificationCenter(),
-        new LinksHandlerFactory(getContext())), savedInstanceState);
+        new LinksHandlerFactory(getContext()), CrashReport.getInstance()), savedInstanceState);
     notificationSubject = PublishSubject.create();
     adapter = new InboxAdapter(Collections.emptyList(), notificationSubject);
   }
@@ -52,8 +53,7 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
     super.onViewCreated(view, savedInstanceState);
     list = (RecyclerView) view.findViewById(R.id.fragment_inbox_list);
     list.setAdapter(adapter);
-    list.setLayoutManager(
-        new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+    list.setLayoutManager(new LinearLayoutManager(getContext()));
   }
 
   @Override public void showNotifications(List<AptoideNotification> notifications) {
