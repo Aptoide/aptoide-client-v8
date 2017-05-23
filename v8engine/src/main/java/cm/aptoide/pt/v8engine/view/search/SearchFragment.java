@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 05/08/2016.
+ * Modified on 05/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.search;
@@ -181,7 +181,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     viewPager.setCurrentItem(0);
     subscribedButton.setBackgroundResource(R.drawable.search_button_background);
     subscribedButton.setTextColor(getResources().getColor(R.color.white));
-    everywhereButton.setTextColor(getResources().getColor(R.color.app_view_gray));
+    everywhereButton.setTextColor(getResources().getColor(R.color.silver_dark));
     everywhereButton.setBackgroundResource(0);
   }
 
@@ -190,7 +190,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     viewPager.setCurrentItem(1, smoothScroll);
     everywhereButton.setBackgroundResource(R.drawable.search_button_background);
     everywhereButton.setTextColor(getResources().getColor(R.color.white));
-    subscribedButton.setTextColor(getResources().getColor(R.color.app_view_gray));
+    subscribedButton.setTextColor(getResources().getColor(R.color.silver_dark));
     subscribedButton.setBackgroundResource(0);
     return null;
   }

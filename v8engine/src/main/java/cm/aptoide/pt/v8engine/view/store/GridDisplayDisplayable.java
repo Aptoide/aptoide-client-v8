@@ -12,7 +12,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import lombok.Getter;
 
 /**
- * Created by sithengineer on 02/05/16.
+ * Created on 02/05/16.
  */
 public class GridDisplayDisplayable extends DisplayablePojo<GetStoreDisplays.EventImage> {
 

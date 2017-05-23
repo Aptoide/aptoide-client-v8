@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 25/08/2016.
+ * Modified on 25/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.app.displayable;
@@ -32,7 +32,7 @@ import lombok.Setter;
 import rx.Observable;
 
 /**
- * Created by sithengineer on 06/05/16.
+ * Created on 06/05/16.
  */
 public class AppViewInstallDisplayable extends AppViewDisplayable {
 

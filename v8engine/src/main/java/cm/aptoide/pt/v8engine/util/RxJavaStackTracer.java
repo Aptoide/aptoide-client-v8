@@ -7,7 +7,7 @@ import rx.exceptions.Exceptions;
 import rx.plugins.RxJavaObservableExecutionHook;
 
 /**
- * Created by sithengineer on 25/09/16.
+ * Created on 25/09/16.
  *
  * https://github.com/ReactiveX/RxJava/issues/3521
  *

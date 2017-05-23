@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget;
@@ -27,7 +27,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import rx.functions.Action1;
 
 /**
- * Created by sithengineer on 02/05/16.
+ * Created on 02/05/16.
  */
 @Displayables({ GridDisplayDisplayable.class }) public class GridDisplayWidget
     extends Widget<GridDisplayDisplayable> {

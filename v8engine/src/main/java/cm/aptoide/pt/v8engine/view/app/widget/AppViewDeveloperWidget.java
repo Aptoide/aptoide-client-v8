@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 16/08/2016.
+ * Modified on 16/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.app.widget;
@@ -19,7 +19,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
- * Created by sithengineer on 04/05/16.
+ * Created on 04/05/16.
  */
 @Displayables({ AppViewDeveloperDisplayable.class }) public class AppViewDeveloperWidget
     extends Widget<AppViewDeveloperDisplayable> {

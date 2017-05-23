@@ -6,7 +6,7 @@ import java.util.List;
 import rx.Observable;
 
 /**
- * Created by sithengineer on 07/10/16.
+ * Created on 07/10/16.
  */
 
 public abstract class SimpleAccessor<T extends RealmObject> implements Accessor<T> {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 01/09/2016.
+ * Modified on 01/09/2016.
  */
 
 package cm.aptoide.pt.database.accessors;

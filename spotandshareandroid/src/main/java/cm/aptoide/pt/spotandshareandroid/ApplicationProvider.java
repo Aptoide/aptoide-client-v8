@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -42,7 +43,6 @@ public class ApplicationProvider {
       if ((applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0
           && applicationInfo.packageName != null) {
         String obbsfilepath = checkIfHasObb(applicationInfo.packageName);
-        System.out.println("obbs is : " + obbsfilepath);
         App aux = new App(applicationInfo.loadIcon(packageManager),
             applicationInfo.loadLabel(packageManager)
                 .toString(), applicationInfo.packageName, applicationInfo.sourceDir, "inside");
@@ -52,6 +52,11 @@ public class ApplicationProvider {
         }
       }
     }
+
+    Collections.sort(providedAppsList, (o1, o2) -> o1.getAppName()
+        .toLowerCase()
+        .compareTo(o2.getAppName()
+            .toLowerCase()));
   }
 
   public String checkIfHasObb(String packageName) {
@@ -61,11 +66,8 @@ public class ApplicationProvider {
     File obbFolder = new File(obbPath);
     File[] list = obbFolder.listFiles();
     if (list != null) {
-      System.out.println("list lenght is : " + list.length);
       if (list.length > 0) {
-        System.out.println("appName is : " + packageName);
         for (int i = 0; i < list.length; i++) {
-          System.out.println("List get name is : " + list[i].getName());
           if (list[i].getName()
               .equals(packageName)) {
             hasObb = true;

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 05/07/2016.
+ * Modified on 05/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.util;
@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.util;
 import android.support.design.widget.AppBarLayout;
 
 /**
- * Created by sithengineer on 05/07/16.
+ * Created on 05/07/16.
  */
 public abstract class AppBarStateChangeListener implements AppBarLayout.OnOffsetChangedListener {
 

@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/06/2016.
+ * Modified on 02/06/2016.
  */
 
 package cm.aptoide.pt.v8engine.util;
 
 /**
- * Created by sithengineer on 01/06/16.
+ * Created on 01/06/16.
  */
 public class SettingsConstants {
 

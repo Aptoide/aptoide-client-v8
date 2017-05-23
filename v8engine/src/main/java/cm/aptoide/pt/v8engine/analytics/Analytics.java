@@ -1120,7 +1120,7 @@ public class Analytics {
             map.put("bundle category", source);
           }
         }
-        Logger.d("teste", "appViewOpenFrom: " + map);
+        Logger.d(TAG, "appViewOpenFrom: " + map);
 
         if (map.containsKey("Source") && !containsUnwantedValues(map.get("Source"))) {
           track(APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY, map, FLURRY);

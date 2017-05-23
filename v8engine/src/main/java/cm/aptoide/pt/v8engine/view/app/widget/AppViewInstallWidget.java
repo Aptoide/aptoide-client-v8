@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.app.widget;
@@ -69,7 +69,7 @@ import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * Created by sithengineer on 06/05/16.
+ * Created on 06/05/16.
  */
 @Displayables({ AppViewInstallDisplayable.class }) public class AppViewInstallWidget
     extends Widget<AppViewInstallDisplayable> {

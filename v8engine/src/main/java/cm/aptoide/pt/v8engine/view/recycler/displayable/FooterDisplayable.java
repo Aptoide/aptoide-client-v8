@@ -11,7 +11,7 @@ import cm.aptoide.pt.v8engine.R;
 import lombok.Getter;
 
 /**
- * Created by sithengineer on 29/04/16.
+ * Created on 29/04/16.
  */
 public class FooterDisplayable extends DisplayablePojo<GetStoreWidgets.WSWidget> {
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.app;
@@ -8,8 +8,6 @@ package cm.aptoide.pt.v8engine.view.app;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -21,7 +19,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -60,7 +57,6 @@ import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.spotandshareandroid.HighwayActivity;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
@@ -99,12 +95,12 @@ import cm.aptoide.pt.v8engine.view.app.displayable.AppViewScreenshotsDisplayable
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.dialog.DialogBadgeV7;
-import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.view.install.remote.RemoteInstallDialog;
 import cm.aptoide.pt.v8engine.view.payment.PaymentActivity;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.share.ShareAppHelper;
 import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -119,7 +115,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 
 /**
- * Created by sithengineer on 04/05/16.
+ * Created on 04/05/16.
  */
 public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     implements Scrollable, AppMenuOptions, Payments {
@@ -186,6 +182,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private StoredMinimalAdAccessor storedMinimalAdAccessor;
   private PaymentAnalytics paymentAnalytics;
   private SpotAndShareAnalytics spotAndShareAnalytics;
+  private ShareAppHelper shareAppHelper;
   private TimelineAnalytics timelineAnalytics;
   private AppViewAnalytics appViewAnalytics;
 
@@ -281,11 +278,15 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     converterFactory = WebService.getDefaultConverter();
     adsRepository =
         new AdsRepository(((V8Engine) getContext().getApplicationContext()).getIdsRepository(),
-            accountManager, httpClient, converterFactory);
+            accountManager, httpClient, converterFactory, V8Engine.getQManager());
     installedRepository = RepositoryFactory.getInstalledRepository();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
+    paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
+    shareAppHelper =
+        new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
+            spotAndShareAnalytics);
     appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
   }
@@ -484,6 +485,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       handleAdsLogic(minimalAd);
       return Observable.just(getApp);
     }
+  }
+
+  private void storeMinimalAdd(MinimalAd minimalAd) {
+    storedMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, null));
   }
 
   @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
@@ -729,10 +734,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         .getW();
   }
 
-  private void storeMinimalAdd(MinimalAd minimalAd) {
-    storedMinimalAdAccessor.insert(StoredMinimalAd.from(minimalAd, null));
-  }
-
   private boolean isMediaAvailable(GetAppMeta.Media media) {
     if (media != null) {
       List<GetAppMeta.Media.Screenshot> screenshots = media.getScreenshots();
@@ -748,14 +749,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     int i = item.getItemId();
 
     if (i == R.id.menu_share) {
-      if (getApp != null) {
+      shareAppHelper.shareApp(appName, packageName, wUrl, (app == null ? null : app.getIcon()),
+          SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW);
         appViewAnalytics.sendAppShareEvent();
-        shareApp(appName, packageName, getApp.getNodes()
-            .getMeta()
-            .getData()
-            .getFile()
-            .getVercode(), wUrl);
-      }
       return true;
     } else if (i == R.id.menu_schedule) {
       appViewAnalytics.sendScheduleDownloadEvent();
@@ -788,87 +784,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     }
 
     return super.onOptionsItemSelected(item);
-  }
-
-  //
-  // Scrollable interface
-  //
-
-  private void shareApp(String appName, String packageName, int vercode, String wUrl) {
-    GenericDialogs.createGenericShareDialog(getContext(), getString(R.string.share),
-        installedRepository.contains(packageName, vercode))
-        .subscribe(eResponse -> {
-          if (GenericDialogs.EResponse.SHARE_EXTERNAL == eResponse) {
-
-            shareDefault(appName, packageName, wUrl);
-          } else if (GenericDialogs.EResponse.SHARE_TIMELINE == eResponse) {
-            if (!accountManager.isLoggedIn()) {
-              ShowMessage.asSnack(getActivity(), R.string.you_need_to_be_logged_in, R.string.login,
-                  snackView -> accountNavigator.navigateToAccountView(
-                      Analytics.Account.AccountOrigins.APP_VIEW_SHARE));
-              return;
-            }
-            if (Application.getConfiguration()
-                .isCreateStoreAndSetUserPrivacyAvailable()) {
-              SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(accountManager, false,
-                  SharePreviewDialog.SharePreviewOpenMode.SHARE);
-              AlertDialog.Builder alertDialog =
-                  sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(),
-                      appName, app.getIcon());
-              SocialRepository socialRepository =
-                  new SocialRepository(accountManager, bodyInterceptor, converterFactory,
-                      httpClient, timelineAnalytics);
-
-              sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
-                  sharePreviewDialog, alertDialog, socialRepository);
-            }
-          } else if (GenericDialogs.EResponse.SHARE_SPOT_AND_SHARE == eResponse) {
-
-            spotAndShareAnalytics.clickShareApps(
-                SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW);
-
-            String filepath = getFilepath(packageName);
-            String appNameToShare = filterAppName(appName);
-            Intent intent = new Intent(this.getActivity(), HighwayActivity.class);
-            intent.setAction("APPVIEW_SHARE");
-            intent.putExtra("APPVIEW_SHARE_FILEPATH", filepath);
-            intent.putExtra("APPVIEW_SHARE_APPNAME", appNameToShare);
-            startActivity(intent);
-          }
-        }, err -> err.printStackTrace());
-  }
-
-  @Partners protected void shareDefault(String appName, String packageName, String wUrl) {
-    if (wUrl != null) {
-      Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-      sharingIntent.setType("text/plain");
-      sharingIntent.putExtra(Intent.EXTRA_SUBJECT,
-          getString(R.string.install) + " \"" + appName + "\"");
-      sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
-      startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
-    }
-  }
-
-  private String getFilepath(String packageName) {
-    PackageManager packageManager = getContext().getPackageManager();
-    PackageInfo packageInfo = null;
-    try {
-      packageInfo = packageManager.getPackageInfo(packageName, 0);
-      return packageInfo.applicationInfo.sourceDir;
-    } catch (PackageManager.NameNotFoundException e) {
-      e.printStackTrace();
-      throw new IllegalArgumentException("Required packageName not installed! " + packageName);
-    }
-  }
-
-  private String filterAppName(String appName) {
-    if (!TextUtils.isEmpty(appName) && appName.length() > 17) {
-      appName = appName.substring(0, 17);
-    }
-    if (!TextUtils.isEmpty(appName) && appName.contains("_")) {
-      appName = appName.replace("_", " ");
-    }
-    return appName;
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {

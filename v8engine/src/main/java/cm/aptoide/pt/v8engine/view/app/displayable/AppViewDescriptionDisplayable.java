@@ -10,7 +10,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
 
 /**
- * Created by sithengineer on 10/05/16.
+ * Created on 10/05/16.
  */
 public class AppViewDescriptionDisplayable extends AppViewDisplayable {
 

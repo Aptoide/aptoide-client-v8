@@ -10,7 +10,7 @@ import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
 
 /**
- * Created by sithengineer on 12/05/16.
+ * Created on 12/05/16.
  */
 public class ExcludedAd extends RealmObject {
 

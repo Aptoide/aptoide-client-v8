@@ -99,7 +99,7 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
           .getAvatar();
     }
 
-    // TODO: 22/12/2016 socialStoreLatestApps.getLatestUpdate() 
+    // TODO: 22/12/2016 socialStoreLatestApps.getLatestUpdate()
     return new SocialStoreLatestAppsDisplayable(socialStoreLatestApps, ownerStoreName,
         ownerStoreAvatar, latestApps, abTestingURL, socialStoreLatestApps.getStats()
         .getLikes(), socialStoreLatestApps.getStats()

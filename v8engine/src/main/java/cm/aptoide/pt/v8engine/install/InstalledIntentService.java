@@ -61,7 +61,7 @@ public class InstalledIntentService extends IntentService {
     converterFactory = WebService.getDefaultConverter();
     adsRepository =
         new AdsRepository(((V8Engine) getApplicationContext()).getIdsRepository(), accountManager,
-            httpClient, converterFactory);
+            httpClient, converterFactory, V8Engine.getQManager());
     repository = RepositoryFactory.getRollbackRepository();
     installedRepository = RepositoryFactory.getInstalledRepository();
     updatesRepository = RepositoryFactory.getUpdateRepository(this);

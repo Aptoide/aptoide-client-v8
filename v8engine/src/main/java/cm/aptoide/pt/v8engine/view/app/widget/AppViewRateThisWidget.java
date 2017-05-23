@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 15/07/2016.
+ * Modified on 15/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.app.widget;
@@ -22,7 +22,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.Locale;
 
 /**
- * Created by sithengineer on 04/05/16.
+ * Created on 04/05/16.
  */
 @Deprecated @Displayables({ AppViewRateThisDisplayable.class }) public class AppViewRateThisWidget
     extends Widget<AppViewRateThisDisplayable> {

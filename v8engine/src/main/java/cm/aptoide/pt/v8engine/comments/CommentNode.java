@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * created by SithEngineer
+ * Created
  */
 public class CommentNode {
   private final List<CommentNode> childComments;

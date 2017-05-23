@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/08/2016.
+ * Modified on 12/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.app.widget;
@@ -32,7 +32,7 @@ import okhttp3.OkHttpClient;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * Created by sithengineer on 30/06/16.
+ * Created on 30/06/16.
  */
 @Displayables({ AppViewFlagThisDisplayable.class }) public class AppViewFlagThisWidget
     extends Widget<AppViewFlagThisDisplayable> {

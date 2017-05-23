@@ -74,33 +74,6 @@
         />
 
     <activity
-        android:name=".view.account.user.CreateUserActivity"
-        android:configChanges="orientation|screenSize"
-        android:screenOrientation="nosensor"
-        android:windowSoftInputMode="stateHidden"
-        />
-
-    <activity
-        android:name=".view.account.user.CreateStoreActivity"
-        android:configChanges="orientation|screenSize"
-        android:exported="true"
-        android:screenOrientation="nosensor"
-        android:windowSoftInputMode="stateHidden"
-        />
-
-    <activity
-        android:name=".view.account.user.ProfileStepOneActivity"
-        android:screenOrientation="nosensor"
-        android:windowSoftInputMode="stateHidden"
-        />
-
-    <activity
-        android:name=".view.account.user.ProfileStepTwoActivity"
-        android:screenOrientation="nosensor"
-        android:windowSoftInputMode="stateHidden"
-        />
-
-    <activity
         android:name=".DeepLinkIntentReceiver"
         android:exported="true">
       <intent-filter>
@@ -228,9 +201,10 @@
       </intent-filter>
     </receiver>
 
-    <service android:name=".pull.PullingContentService"/>
+    <service android:name=".notification.PullingContentService"/>
+    <service android:name=".notification.NotificationSyncService"/>
 
-    <receiver android:name=".pull.PullingContentReceiver">
+    <receiver android:name=".notification.PullingContentReceiver">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED"/>
         <action android:name="android.intent.action.QUICKBOOT_POWERON"/>

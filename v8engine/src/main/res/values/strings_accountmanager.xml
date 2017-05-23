@@ -39,7 +39,7 @@
   <string name="wizard_sub_title_viewpager_two">Customize your store <b>to share apps \n with friends</b> and the <b>Aptoide Community.</b></string>
 
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three">Be a part</string>
+  <string name="login_sign_up_title">Be a part</string>
   <string name="wizard_sub_title_viewpager_three"><b>Find people</b> who share your app interests. \n<b>Rate and share.</b></string>
   <string name="wizard_sub_sub_title_viewpager_three">Join us!</string>
 
@@ -105,5 +105,13 @@
   <string name="image_requirements_error_max_file_size">- Maximum size is higher than 5 MB\n</string>
   <string name="image_requirements_error_open_image">- Error opening the image\n</string>
   <string name="image_requirements_error_popup_title">Image</string>
+
+
+  <!-- My account -->
+  <string name="myaccount_my_profile_title">My Profile</string>
+  <string name="myaccount_user_store_title">My Store</string>
+  <string name="myaccount_edit_store_button">Edit</string>
+  <string name="myaccount_log_out_button">Log Out</string>
+  <string name="myaccount_header_title">Notifications</string>
 
 </resources>

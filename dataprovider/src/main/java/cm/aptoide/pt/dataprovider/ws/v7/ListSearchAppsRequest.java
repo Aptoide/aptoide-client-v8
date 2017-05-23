@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 05/08/2016.
+ * Modified on 05/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v7;

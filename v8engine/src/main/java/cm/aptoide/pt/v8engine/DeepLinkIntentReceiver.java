@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine;
@@ -250,6 +250,12 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       parseAptoideInstallUri(uri.substring("aptoideinstall://".length()));
     } else if (uri.startsWith("aptoide://")) {
       Uri parse = Uri.parse(uri);
+      if ("getUserTimeline".equals(parse.getQueryParameter("name"))) {
+        String cardId = parse.getQueryParameter("cardId");
+        startFromAppsTimeline(cardId);
+        finish();
+        return;
+      }
       switch (sURIMatcher.match(parse)) {
         case DEEPLINK_ID:
           startGenericDeepLink(parse);
@@ -350,6 +356,14 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     i.putExtra(DeepLinksKeys.APP_ID_KEY, id);
     i.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
     i.putExtra(DeepLinksKeys.SHOW_AUTO_INSTALL_POPUP, showPopup);
+
+    startActivity(i);
+  }
+
+  public void startFromAppsTimeline(String cardId) {
+    Intent i = new Intent(this, startClass);
+    i.putExtra(DeepLinksTargets.TIMELINE_DEEPLINK, true);
+    i.putExtra(DeepLinksKeys.CARD_ID, cardId);
 
     startActivity(i);
   }
@@ -501,13 +515,13 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
 
     public static final String NEW_REPO = "newrepo";
     public static final String FROM_DOWNLOAD_NOTIFICATION = "fromDownloadNotification";
-    public static final String FROM_TIMELINE = "fromTimeline";
     public static final String NEW_UPDATES = "new_updates";
     public static final String FROM_AD = "fromAd";
     public static final String APP_VIEW_FRAGMENT = "appViewFragment";
     public static final String SEARCH_FRAGMENT = "searchFragment";
     public static final String GENERIC_DEEPLINK = "generic_deeplink";
     public static final String SCHEDULE_DEEPLINK = "schedule_downloads";
+    public static final String TIMELINE_DEEPLINK = "apps_timeline";
   }
 
   public static class DeepLinksKeys {
@@ -519,6 +533,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     public static final String STORENAME_KEY = "storeName";
     public static final String SHOW_AUTO_INSTALL_POPUP = "show_auto_install_popup";
     public static final String URI = "uri";
+    public static final String CARD_ID = "cardId";
     public static final String OPEN_MODE = "openMode";
 
     //deep link query parameters

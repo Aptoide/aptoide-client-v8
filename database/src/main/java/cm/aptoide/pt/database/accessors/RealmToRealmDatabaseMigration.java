@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.database.accessors;
 
 import android.text.TextUtils;
+import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.database.realm.Update;
@@ -18,7 +19,7 @@ import io.realm.RealmObjectSchema;
 import io.realm.RealmSchema;
 
 /**
- * Created by sithengineer on 12/05/16.
+ * Created on 12/05/16.
  *
  * This code is responsible to migrate between Realm schemas.
  *
@@ -239,6 +240,26 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
           .addField("cpiUrl", String.class)
           .addField("timestamp", Long.class)
           .addField("adId", Long.class);
+
+      oldVersion++;
+    }
+
+    if (oldVersion == 8082) {
+      schema.create(Notification.class.getSimpleName())
+          .addField("key", String.class, FieldAttribute.PRIMARY_KEY)
+          .addField("abTestingGroup", String.class)
+          .addField("body", String.class)
+          .addField("campaignId", int.class)
+          .addField("img", String.class)
+          .addField("lang", String.class)
+          .addField("title", String.class)
+          .addField("url", String.class)
+          .addField("urlTrack", String.class)
+          .addField("type", int.class)
+          .addField("timeStamp", long.class)
+          .addField("dismissed", long.class)
+          .addField("appName", String.class)
+          .addField("graphic", String.class);
 
       oldVersion++;
     }

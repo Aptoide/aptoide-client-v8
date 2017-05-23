@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.updates;
@@ -17,6 +17,8 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
+import cm.aptoide.pt.v8engine.view.navigator.SimpleTabNavigation;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
 import cm.aptoide.pt.v8engine.updates.UpdatesAnalytics;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -80,7 +82,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
       }, () -> {
       });
 
-      tabNavigator.navigate(TabNavigator.DOWNLOADS);
+      tabNavigator.navigate(new SimpleTabNavigation(TabNavigation.DOWNLOADS));
       Analytics.Updates.updateAll();
     });
   }

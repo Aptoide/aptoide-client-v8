@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
@@ -20,6 +21,8 @@ import java.util.UUID;
  * Created by neuro on 11-07-2016.
  */
 public class IdsRepository {
+
+  private static final String TAG = IdsRepository.class.getSimpleName();
 
   private static final String APTOIDE_CLIENT_UUID = "aptoide_client_uuid";
   private static final String ADVERTISING_ID_CLIENT = "advertisingIdClient";
@@ -44,6 +47,7 @@ public class IdsRepository {
     String aptoideId = sharedPreferences.getString(APTOIDE_CLIENT_UUID, null);
     if (!TextUtils.isEmpty(aptoideId)) {
       // if we already have the aptoide client uuid, return it
+      Logger.v(TAG, "getUniqueIdentifier: in sharedPreferences: " + aptoideId);
       return aptoideId;
     }
     // else, we generate a aptoide client uuid and save it locally for further use
@@ -54,12 +58,18 @@ public class IdsRepository {
     // if preferred UUID is null or empty use android id
     if (TextUtils.isEmpty(aptoideId)) {
       aptoideId = getAndroidId();
+      if (!TextUtils.isEmpty(aptoideId)) {
+        Logger.v(TAG, "getUniqueIdentifier: getAndroidId: " + aptoideId);
+      }
+    } else {
+      Logger.v(TAG, "getUniqueIdentifier: getGoogleAdvertisingId: " + aptoideId);
     }
 
     // if android id is null or empty use random generated UUID
     if (TextUtils.isEmpty(aptoideId)) {
       aptoideId = UUID.randomUUID()
           .toString();
+      Logger.v(TAG, "getUniqueIdentifier: randomUUID: " + aptoideId);
     }
 
     sharedPreferences.edit()

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified on 04/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v3;
@@ -13,7 +13,7 @@ import retrofit2.Converter;
 import rx.Observable;
 
 /**
- * Created by sithengineer on 21/07/16.
+ * Created on 21/07/16.
  */
 public class AddApkFlagRequest extends V3<GenericResponseV2> {
 

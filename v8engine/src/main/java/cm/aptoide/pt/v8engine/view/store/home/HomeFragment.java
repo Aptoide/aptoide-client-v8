@@ -41,6 +41,7 @@ import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.custom.BadgeView;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 import cm.aptoide.pt.v8engine.view.store.StorePagerAdapter;
@@ -84,6 +85,15 @@ public class HomeFragment extends StoreFragment {
     HomeFragment fragment = new HomeFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  /**
+   * @return {@link HomeFragment} instance with default store, store context and theme
+   */
+  public static HomeFragment newInstance() {
+    return newInstance(V8Engine.getConfiguration()
+        .getDefaultStore(), StoreContext.home, V8Engine.getConfiguration()
+        .getDefaultTheme());
   }
 
   @Override public void onAttach(Activity activity) {
@@ -131,7 +141,7 @@ public class HomeFragment extends StoreFragment {
     userEmail.setVisibility(View.GONE);
     userUsername.setVisibility(View.GONE);
     ImageLoader.with(getContext())
-        .load(R.drawable.user_account_white, userAvatarImage);
+        .loadWithCircleTransform(R.drawable.user_account_white, userAvatarImage);
   }
 
   private void setVisibleUserImageAndName(Account account) {
@@ -195,8 +205,9 @@ public class HomeFragment extends StoreFragment {
         });
 
     tabNavigator.navigation()
-        .doOnNext(tab -> viewPager.setCurrentItem(
-            ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(getEventName(tab))))
+        .doOnNext(tabNavigation -> viewPager.setCurrentItem(
+            ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(
+                getEventName(tabNavigation.getTab()))))
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(__ -> {
         }, err -> CrashReport.getInstance()
@@ -230,6 +241,21 @@ public class HomeFragment extends StoreFragment {
       drawerLayout.openDrawer(GravityCompat.START);
       drawerAnalytics.drawerOpen();
     });
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    backClickHandler = new ClickHandler() {
+      @Override public boolean handle() {
+        if (isDrawerOpened()) {
+          closeDrawer();
+          return true;
+        }
+
+        return false;
+      }
+    };
+    registerBackClickHandler(backClickHandler);
   }
 
   private void setupNavigationView() {
@@ -391,32 +417,17 @@ public class HomeFragment extends StoreFragment {
 
   private Event.Name getEventName(int tab) {
     switch (tab) {
-      case TabNavigator.DOWNLOADS:
+      case TabNavigation.DOWNLOADS:
         return Event.Name.myDownloads;
-      case TabNavigator.STORES:
+      case TabNavigation.STORES:
         return Event.Name.myStores;
-      case TabNavigator.TIMELINE:
+      case TabNavigation.TIMELINE:
         return Event.Name.getUserTimeline;
-      case TabNavigator.UPDATES:
+      case TabNavigation.UPDATES:
         return Event.Name.myUpdates;
       default:
         throw new IllegalArgumentException("Invalid tab.");
     }
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    backClickHandler = new ClickHandler() {
-      @Override public boolean handle() {
-        if (isDrawerOpened()) {
-          closeDrawer();
-          return true;
-        }
-
-        return false;
-      }
-    };
-    registerBackClickHandler(backClickHandler);
   }
 
   private boolean isDrawerOpened() {

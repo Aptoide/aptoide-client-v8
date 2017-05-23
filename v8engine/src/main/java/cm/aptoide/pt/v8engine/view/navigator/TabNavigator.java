@@ -7,12 +7,7 @@ import rx.Observable;
  */
 public interface TabNavigator {
 
-  int DOWNLOADS = 1;
-  int UPDATES = 2;
-  int TIMELINE = 3;
-  int STORES = 4;
+  void navigate(TabNavigation tabNavigation);
 
-  void navigate(int tab);
-
-  Observable<Integer> navigation();
+  Observable<TabNavigation> navigation();
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.deprecated.tables;
@@ -18,7 +18,7 @@ import io.realm.Realm;
 import io.realm.RealmObject;
 
 /**
- * Created by sithengineer on 24/08/16.
+ * Created on 24/08/16.
  */
 public class Updates extends BaseTable {
 
