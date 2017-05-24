@@ -6,7 +6,7 @@ import rx.Observable;
 public interface ManageStoreView extends View {
   Observable<Void> selectStoreImageClick();
 
-  Observable<Void> createStoreClick();
+  Observable<Void> saveDataClick();
 
-  Observable<Void> skipToHomeClick();
+  Observable<Void> cancelClick();
 }

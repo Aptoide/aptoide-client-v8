@@ -25,10 +25,7 @@ public class ManageStorePresenter implements Presenter {
   }
 
   public Completable handleSaveClick(ManageStoreModel storeModel){
-    if(storeModel.storeExists()) {
-      return new EditStoreUseCase(storeModel).execute().toCompletable();
-    }
-    return new CreateStoreUseCase(storeModel).execute().toCompletable();
+    return new UpdateStoreUseCase(storeModel).execute().toCompletable();
   }
 
   public Completable handleCancelClick(){

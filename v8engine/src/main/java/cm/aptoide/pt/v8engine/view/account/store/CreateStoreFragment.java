@@ -244,11 +244,11 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
     return RxView.clicks(storeAvatarLayout);
   }
 
-  @Override public Observable<Void> createStoreClick() {
+  @Override public Observable<Void> saveDataClick() {
     return RxView.clicks(createStoreBtn);
   }
 
-  @Override public Observable<Void> skipToHomeClick() {
+  @Override public Observable<Void> cancelClick() {
     return RxView.clicks(skipBtn);
   }
 
@@ -259,14 +259,14 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
         .subscribe(__ -> chooseAvatarSource(), err -> CrashReport.getInstance()
             .log(err));
 
-    skipToHomeClick().flatMap(__ -> sendSkipAnalytics().doOnCompleted(() -> navigateToHome())
+    cancelClick().flatMap(__ -> sendSkipAnalytics().doOnCompleted(() -> navigateToHome())
         .toObservable())
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> CrashReport.getInstance()
             .log(err));
 
-    createStoreClick().flatMap(aVoid -> Observable.fromCallable(() -> {
+    saveDataClick().flatMap(aVoid -> Observable.fromCallable(() -> {
       AptoideUtils.SystemU.hideKeyboard(getActivity());
       return null;
     })
