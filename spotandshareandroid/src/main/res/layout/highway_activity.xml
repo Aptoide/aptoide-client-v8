@@ -26,6 +26,24 @@
       android:weightSum="1"
       >
 
+    <TextView
+        android:id="@+id/share_aptoide_apk_button"
+        android:layout_width="180dp"
+        android:layout_height="50dp"
+        android:layout_gravity="right"
+        android:layout_marginTop="20dp"
+        android:drawableLeft="@drawable/supervisor_account_material"
+        android:drawablePadding="5dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:paddingLeft="16dp"
+        android:text="@string/spotandshare_button_invite_friends"
+        android:textColor="@color/white"
+        style="@style/Aptoide.Spot.Button.Ghost.Spotandshare"
+        >
+
+    </TextView>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -45,25 +63,18 @@
           android:id="@+id/hotspotTextView"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:layout_margin="5dp"
+          android:layout_margin="20dp"
           />
-
-      <!--<cm.aptoide.lite.HighwayRadarLowElement-->
-      <!--android:layout_width="match_parent"-->
-      <!--android:layout_height="match_parent"-->
-      <!--android:layout_margin="5dp"-->
-      <!--android:visibility="gone"-->
-      <!--android:id="@+id/hotspotLowTextView"/>-->
 
       <TextView
           android:id="@+id/searching_groups"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:layout_margin="18dp"
+          android:layout_margin="10dp"
           android:color="@color/medium_gray"
           android:gravity="bottom|center"
           android:text="@string/searching_groups"
-          android:textSize="20dp"
+          android:textSize="16sp"
           />
 
       <ProgressBar

@@ -14,22 +14,14 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
-import android.telephony.SubscriptionInfo;
-import android.telephony.SubscriptionManager;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import cm.aptoide.pt.logger.Logger;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import static android.content.Context.CONNECTIVITY_SERVICE;
 
 /**
  * Created by filipegoncalves on 31-01-2017.
@@ -53,6 +45,7 @@ public class ConnectionManager {
   private final GroupValidator groupValidator;
   private final HotspotControlCounter hotspotControlCounter;
   private final GroupParser groupParser;
+  private HotspotManager hotspotManager;
   private HotspotSSIDCodeMapper hotspotSSIDCodeMapper;
   private WifiManager wifimanager;
   private ArrayList<Group> clients;
@@ -246,7 +239,7 @@ public class ConnectionManager {
   private ConnectionManager(Context context, SharedPreferences sharedPreferences,
       WifiManager wifimanager, HotspotSSIDCodeMapper hotspotSSIDCodeMapper,
       HotspotControlCounter hotspotControlCounter, GroupParser groupParser,
-      GroupValidator groupValidator) {
+      GroupValidator groupValidator, HotspotManager hotspotManager) {
     this.context = context;
     this.wifimanager = wifimanager;
     prefs = sharedPreferences;
@@ -254,6 +247,7 @@ public class ConnectionManager {
     this.hotspotControlCounter = hotspotControlCounter;
     this.groupParser = groupParser;
     this.groupValidator = groupValidator;
+    this.hotspotManager = hotspotManager;
   }
 
   public static ConnectionManager getInstance(Context context) {
@@ -265,7 +259,7 @@ public class ConnectionManager {
       instance = new ConnectionManager(context, defaultSharedPreferences,
           (WifiManager) context.getSystemService(Context.WIFI_SERVICE), hotspotSSIDCodeMapper,
           new HotspotControlCounter(defaultSharedPreferences, hotspotSSIDCodeMapper),
-          new GroupParser(), new GroupValidator());
+          new GroupParser(), new GroupValidator(), new HotspotManager(context));
     }
     return instance;
   }
@@ -312,106 +306,20 @@ public class ConnectionManager {
   }
 
   public void resetHotspot(boolean enable) {
-    WifiManager wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    WifiConfiguration wc = DataHolder.getInstance()
-        .getWcOnJoin();
-
-    Method[] wmMethods = wifimanager.getClass()
-        .getDeclaredMethods();   //Get all declared methods in WifiManager class
-    boolean methodFound = false;
-    for (Method method : wmMethods) {
-      if (method.getName()
-          .equals("setWifiApEnabled")) {
-
-        try {
-          method.invoke(wifimanager, wc, enable);
-        } catch (IllegalAccessException e) {
-          e.printStackTrace();
-        } catch (InvocationTargetException e) {
-          e.printStackTrace();
-        }
-      }
-    }
+    hotspotManager.resetHotspot(enable);
   }
 
   public int enableHotspot(String deviceName) {
-    if (wifimanager == null) {
-      wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-    }
-    if (wifimanager.isWifiEnabled()) {
-      wifimanager.setWifiEnabled(false);
-    }
-    Method[] wmMethods = wifimanager.getClass()
-        .getDeclaredMethods();   //Get all declared methods in WifiManager class
-    boolean methodFound = false;
-    for (Method method : wmMethods) {
-      if (method.getName()
-          .equals("getWifiApConfiguration")) {
-        Logger.d(TAG, "saving old ssid ");
-        try {
-          WifiConfiguration config = (WifiConfiguration) method.invoke(wifimanager);
-          DataHolder.getInstance()
-              .setWcOnJoin(config);
-        } catch (IllegalAccessException e) {
-          e.printStackTrace();
-        } catch (InvocationTargetException e) {
-          e.getCause()
-              .printStackTrace();
-          e.printStackTrace();
-        }
-      }
-      if (method.getName()
-          .equals("setWifiApEnabled")) {
-        methodFound = true;
-        WifiConfiguration netConfig = new WifiConfiguration();
-        netConfig.SSID = String.valueOf(hotspotSSIDCodeMapper.encode(RULE_VERSION))
-            + "APTXV"
-            + hotspotControlCounter.incrementAndGetStringCounter()
-            + "_"
-            + getRandomAlphanumericString(5)
-            + "_"
-            + deviceName
-            + getSpotShareID()
-            + "";
-        netConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED);
-        netConfig.preSharedKey = "passwordAptoide";
-        netConfig.status = WifiConfiguration.Status.ENABLED;
-        netConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
-        netConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
-        netConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
-        try {
-          boolean apstatus = (Boolean) method.invoke(wifimanager, netConfig, true);
-          for (Method isWifiApEnabledmethod : wmMethods) {
-            if (isWifiApEnabledmethod.getName()
-                .equals("isWifiApEnabled")) {
-              while (!(Boolean) isWifiApEnabledmethod.invoke(wifimanager)) {
-              }
-              for (Method method1 : wmMethods) {
-                if (method1.getName()
-                    .equals("getWifiApState")) {
-                  int apstate;
-                  apstate = (Integer) method1.invoke(wifimanager);
-                }
-              }
-            }
-          }
-          if (apstatus) {
-            return ConnectionManager.SUCCESS_HOTSPOT_CREATION;
-          } else {
-            return ConnectionManager.FAILED_TO_CREATE_HOTSPOT;
-          }
-        } catch (IllegalArgumentException e) {
-          e.printStackTrace();
-        } catch (IllegalAccessException e) {
-          e.printStackTrace();
-        } catch (InvocationTargetException e) {
-          e.getCause()
-              .printStackTrace();
-          e.printStackTrace();
-        }
-      }
-    }
-    return ConnectionManager.ERROR_UNKNOWN;
+    String ssid = String.valueOf(hotspotSSIDCodeMapper.encode(RULE_VERSION))
+        + "APTXV"
+        + hotspotControlCounter.incrementAndGetStringCounter()
+        + "_"
+        + getRandomAlphanumericString(5)
+        + "_"
+        + deviceName
+        + getSpotShareID()
+        + "";
+    return hotspotManager.enablePrivateHotspot(ssid);
   }
 
   private String getRandomAlphanumericString(int length) {
@@ -442,7 +350,6 @@ public class ConnectionManager {
   }
 
   public int joinHotspot(String chosenHotspot, boolean shouldReconnect) {
-
     WifiConfiguration conf = new WifiConfiguration();
     Logger.d(TAG, "chosen hotspot is : " + chosenHotspot);
     conf.SSID = "\"" + chosenHotspot + "\"";
@@ -518,58 +425,6 @@ public class ConnectionManager {
     }
   }
 
-  public boolean isMobileDataOn() {
-    boolean isOn = false;
-    TelephonyManager mTelephonyManager =
-        (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      List<SubscriptionInfo> aux = SubscriptionManager.from(context)
-          .getActiveSubscriptionInfoList();
-      if (aux != null) {
-        for (int i = 0; i < aux.size(); i++) {
-          try {
-            Method getDataEnabled = mTelephonyManager.getClass()
-                .getMethod("getDataEnabled", int.class);
-            if ((boolean) getDataEnabled.invoke(mTelephonyManager, aux.get(i)
-                .getSimSlotIndex())) {
-              isOn = true;
-            }
-          } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-            isOn = false;
-          }
-        }
-      }
-    } else {
-      isMobileDataEnabled();
-    }
-    return isOn;
-  }
-
-  public Boolean isMobileDataEnabled() {
-    Object connectivityService = context.getSystemService(CONNECTIVITY_SERVICE);
-    ConnectivityManager cm = (ConnectivityManager) connectivityService;
-
-    try {
-      Class<?> c = Class.forName(cm.getClass()
-          .getName());
-      Method m = c.getDeclaredMethod("getMobileDataEnabled");
-      m.setAccessible(true);
-      return (Boolean) m.invoke(cm);
-    } catch (Exception e) {
-      if (e instanceof NoSuchMethodException) {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-          boolean isDataEnabled =
-              Settings.Global.getInt(context.getContentResolver(), "mobile_data", 0) == 1;
-          return isDataEnabled;
-        }
-      }
-      e.printStackTrace();
-      return false;
-    }
-  }
-
   public String getIPAddress() {
     return intToIp(wifimanager.getDhcpInfo().serverAddress);
   }
@@ -620,30 +475,6 @@ public class ConnectionManager {
       scanner.purge();
     }
   }
-
-  //public void reconnectToGroup(final String group) {
-  //  executor.execute(new Runnable() {
-  //    @Override public void run() {
-  //      joinHotspot(group, true);
-  //    }
-  //  });
-  //}
-
-  //private boolean isGhost(Group group, ArrayList<Group> clients) {
-  //  String ssidDeviceID = ssid.split("_")[2];
-  //  for (int i = 0; i < clients.size(); i++) {
-  //    String tmp = clients.get(i);
-  //    String deviceID = tmp.split("_")[2];
-  //    if (deviceID.equals(ssidDeviceID)) {
-  //
-  //    }
-  //  }
-  //  return true;
-  //}
-  //
-  //private void removeGhost(String tmp) {
-  //
-  //}
 
   public void recoverNetworkState() {
     if (wifimanager == null) {

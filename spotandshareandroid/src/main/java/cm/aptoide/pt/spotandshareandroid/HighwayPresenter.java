@@ -25,11 +25,12 @@ public class HighwayPresenter implements Presenter {
   private String autoShareAppName;
   private String autoShareFilepath;
   private Group chosenHotspot;
+  private boolean showShareAptoideApk;
 
   public HighwayPresenter(HighwayView view, GroupNameProvider groupNameProvider,
       DeactivateHotspotTask deactivateHotspotTask, ConnectionManager connectionManager,
       SpotAndShareAnalyticsInterface analytics, GroupManager groupManager,
-      PermissionManager permissionManager) {
+      PermissionManager permissionManager, boolean showShareAptoideApk) {
     this.view = view;
     this.groupNameProvider = groupNameProvider;
     this.deactivateHotspotTask = deactivateHotspotTask;
@@ -37,19 +38,25 @@ public class HighwayPresenter implements Presenter {
     this.analytics = analytics;
     this.groupManager = groupManager;
     this.permissionManager = permissionManager;
+    this.showShareAptoideApk = showShareAptoideApk;
   }
 
   public HighwayPresenter(HighwayView view, GroupNameProvider groupNameProvider,
       DeactivateHotspotTask deactivateHotspotTask, ConnectionManager connectionManager,
       SpotAndShareAnalyticsInterface analytics, GroupManager groupManager,
-      PermissionManager permissionManager, String autoShareAppName, String autoShareFilepath) {
+      PermissionManager permissionManager, String autoShareAppName, String autoShareFilepath,
+      boolean showShareAptoideApk) {
     this(view, groupNameProvider, deactivateHotspotTask, connectionManager, analytics, groupManager,
-        permissionManager);
+        permissionManager, showShareAptoideApk);
     this.autoShareAppName = autoShareAppName;
     this.autoShareFilepath = autoShareFilepath;
   }
 
   @Override public void onCreate() {
+
+    if (showShareAptoideApk) {
+      view.showShareAptoideApk();
+    }
 
     permissionManager.registerListener(new PermissionListener() {
       @Override public void onPermissionGranted() {
@@ -248,5 +255,10 @@ public class HighwayPresenter implements Presenter {
       view.hideSearchGroupsTextview(true);
       clickJoinGroup(group);
     }
+  }
+
+  public void clickShareAptoide() {
+    subscription = groupNameProvider.getName()
+        .subscribe(deviceName -> view.openShareAptoide(deviceName), Throwable::printStackTrace);
   }
 }
