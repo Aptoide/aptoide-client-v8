@@ -34,7 +34,7 @@
         tools:visibility="visible"
         >
 
-      <cm.aptoide.pt.v8engine.view.timeline.LikeButtonView
+      <cm.aptoide.pt.v8engine.timeline.view.LikeButtonView
           android:id="@+id/social_like_button"
           android:layout_width="20dp"
           android:layout_height="20dp"

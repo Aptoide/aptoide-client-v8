@@ -11,7 +11,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.ShareInstallCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
-import cm.aptoide.pt.v8engine.view.timeline.ShareCardCallback;
+import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
