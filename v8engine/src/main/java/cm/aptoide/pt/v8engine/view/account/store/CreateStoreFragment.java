@@ -428,6 +428,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
                     .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
                         .andThen(sendCreateAnalytics())
                         .toObservable())
+                    .doOnNext(__ -> navigateToHome())
                     .subscribe(__ -> {
                     }, err -> CrashReport.getInstance()
                         .log(err));
