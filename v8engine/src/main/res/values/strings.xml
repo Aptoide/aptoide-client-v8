@@ -79,8 +79,6 @@
   <!-- Preferences -->
 
   <!-- "Other <app name> versions on different Stores" -->
-  <string name="other_versions_partial_title_1">Other</string>
-  <string name="other_versions_partial_title_2">versions on different Stores</string>
   <string name="social_facebook_screen_title">Facebook</string>
   <string name="social_twitter_screen_title">Twitter</string>
   <string name="top_comments">Top Comments</string>
