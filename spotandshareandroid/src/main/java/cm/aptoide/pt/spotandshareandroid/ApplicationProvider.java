@@ -45,7 +45,7 @@ public class ApplicationProvider {
         String obbsfilepath = checkIfHasObb(applicationInfo.packageName);
         App aux = new App(applicationInfo.loadIcon(packageManager),
             applicationInfo.loadLabel(packageManager)
-                .toString(), applicationInfo.packageName, applicationInfo.sourceDir, "inside");
+                .toString(), applicationInfo.packageName, applicationInfo.sourceDir);
         aux.setObbsFilePath(obbsfilepath);
         if (!providedAppsList.contains(aux)) {
           providedAppsList.add(aux);

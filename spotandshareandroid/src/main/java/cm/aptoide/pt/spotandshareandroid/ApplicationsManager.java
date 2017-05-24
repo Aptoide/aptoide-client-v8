@@ -123,9 +123,8 @@ public class ApplicationsManager {
     String appName = item.getAppName();
     String packageName = item.getPackageName();
     Drawable imageIcon = item.getIcon();
-    String origin = item.getFromOutside();
     List<App> list = new ArrayList<App>();
-    App tmpItem = new App(imageIcon, appName, packageName, filePathToReSend, origin);
+    App tmpItem = new App(imageIcon, appName, packageName, filePathToReSend);
     String obbsFilePath = checkIfHasObb(packageName);
     //add obb path
     tmpItem.setObbsFilePath(obbsFilePath);
@@ -165,7 +164,6 @@ public class ApplicationsManager {
       String versionName = packageInfo.versionName;
       HighwayTransferRecordItem tmp =
           new HighwayTransferRecordItem(icon, name, packageName, filePath, true, versionName);
-      tmp.setFromOutside("inside");
 
       return tmp;
     } else {
@@ -173,7 +171,6 @@ public class ApplicationsManager {
       HighwayTransferRecordItem tmp = new HighwayTransferRecordItem(context.getResources()
           .getDrawable(R.drawable.sym_def_app_icon), appName, "ErrorPackName",
           "Could not read the original filepath", true, "No version available");
-      tmp.setFromOutside("inside");
       return tmp;
     }
   }
@@ -187,8 +184,7 @@ public class ApplicationsManager {
       Drawable icon = packageInfo.applicationInfo.loadIcon(packageManager);
       String name = (String) packageInfo.applicationInfo.loadLabel(packageManager);
       String packageName = packageInfo.applicationInfo.packageName;
-      App app = new App(icon, name, packageName, filepath,
-          "inside");//// TODO: 17-04-2017 filipe finish removing outside share code
+      App app = new App(icon, name, packageName, filepath);
       return app;
     } else {
       throw new IllegalArgumentException();
@@ -218,8 +214,6 @@ public class ApplicationsManager {
 
           tmp.setNeedReSend(needReSend);
           tmp.setSent(isSent);
-          tmp.setFromOutside("inside");
-
           return tmp;
         }
       }
