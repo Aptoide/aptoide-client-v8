@@ -29,6 +29,7 @@ import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.CardDisplayable;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.account.store.CreateStoreFragment;
+import cm.aptoide.pt.v8engine.view.account.store.ManageStoreModel;
 import cm.aptoide.pt.v8engine.view.comments.CommentDialogFragment;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -144,6 +145,22 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   protected void shareCard(T displayable, String cardId, ShareCardCallback callback,
       SharePreviewDialog.SharePreviewOpenMode openMode) {
     if (!hasSocialPermissions(Analytics.Account.AccountOrigins.SHARE_CARD)) return;
+    if (!accountManager.isLoggedIn()) {
+      ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
+          snackView -> accountNavigator.navigateToAccountView(
+              Analytics.Account.AccountOrigins.SHARE_CARD));
+      return;
+    }
+
+    if (TextUtils.isEmpty(account.getStoreName()) && !Account.Access.PUBLIC.equals(
+        account.getAccess())) {
+      ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
+          R.string.create_store_create, snackView -> {
+            getFragmentNavigator().navigateTo(
+                CreateStoreFragment.newInstance(new ManageStoreModel(false)));
+          });
+      return;
+    }
 
     SharePreviewDialog sharePreviewDialog =
         new SharePreviewDialog(displayable, accountManager, true, openMode,
@@ -202,7 +219,7 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
         account.getAccess())) {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
           R.string.create_store_create, snackView -> {
-            Fragment fragment = CreateStoreFragment.newInstance();
+            Fragment fragment = CreateStoreFragment.newInstance(new ManageStoreModel(false));
             getFragmentNavigator().navigateTo(fragment);
 
             //Intent intent = new Intent(getContext(), CreateStoreActivity.class);

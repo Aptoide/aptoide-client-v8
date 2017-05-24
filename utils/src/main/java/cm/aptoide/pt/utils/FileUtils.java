@@ -237,28 +237,4 @@ public class FileUtils {
     }
     return deleteFolder(files);
   }
-
-  public String getMediaStoragePath(Uri contentUri, Context context) {
-    if (contentUri == null) {
-      throw new NullPointerException("content Uri is null");
-    }
-
-    Cursor cursor = null;
-    try {
-      String[] projection = { MediaStore.Images.Media.DATA };
-      cursor = context.getContentResolver()
-          .query(contentUri, projection, null, null, null);
-      int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-      cursor.moveToFirst();
-      return cursor.getString(column_index);
-    } catch (NullPointerException ex) {
-      Logger.e(TAG, ex);
-    } finally {
-      if (cursor != null) {
-        cursor.close();
-      }
-    }
-    // default situation
-    return contentUri.getPath();
-  }
 }

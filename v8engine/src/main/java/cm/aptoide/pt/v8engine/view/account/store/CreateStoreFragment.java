@@ -28,7 +28,6 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -38,7 +37,6 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.StoreBodyInterceptor;
-import cm.aptoide.pt.v8engine.presenter.CreateStoreView;
 import cm.aptoide.pt.v8engine.view.account.PictureLoaderFragment;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,22 +55,14 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 // TODO
 // create presenter and separate logic code from view
-public class CreateStoreFragment extends PictureLoaderFragment implements CreateStoreView {
+public class CreateStoreFragment extends PictureLoaderFragment implements ManageStoreView {
 
   public static final String ERROR_CODE_2 = "WOP-2";
   public static final String ERROR_CODE_3 = "WOP-3";
   public static final String ERROR_API_1 = "API-1";
-  public static final String STORE_FROM_DEFAULT_VALUE = "store";
-  private static final String STORE_FROM = "from";
-  private static final String STORE_ID = "storeId";
-  private static final String STORE_AVATAR = "storeAvatar";
-  private static final String STORE_THEME = "storeTheme";
-  private static final String STORE_DESCRIPTION = "storeDescription";
   private static final String STORE_MODEL = "store_model";
   private ProgressDialog waitDialog;
-
   private View storeAvatarLayout;
-
   private ImageView storeAvatar;
   private TextView storeHeader;
   private TextView chooseNameTitle;
@@ -80,16 +70,14 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
   private EditText storeDescription;
   private Button createStoreBtn;
   private Button skipBtn;
-
   private StoreThemeSelector storeThemeSelector;
-
   private AptoideAccountManager accountManager;
   private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3;
   private BodyInterceptor<BaseBody> bodyInterceptorV7;
   private RequestBodyFactory requestBodyFactory;
-  private ObjectMapper serializer;
+
   private IdsRepository idsRepository;
-  private CreateStoreModel storeModel;
+  private ManageStoreModel storeModel;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
 
@@ -97,19 +85,10 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
     super(false, true);
   }
 
-  public static CreateStoreFragment newInstance() {
-    return newInstance(-1, "", "", "", "");
-  }
-
-  public static CreateStoreFragment newInstance(long storeId, String storeTheme,
-      String storeDescription, String storeAvatar, String storeFrom) {
+  public static CreateStoreFragment newInstance(ManageStoreModel storeModel) {
     CreateStoreFragment fragment = new CreateStoreFragment();
     Bundle args = new Bundle();
-    args.putLong(STORE_ID, storeId);
-    args.putString(STORE_THEME, storeTheme);
-    args.putString(STORE_DESCRIPTION, storeDescription);
-    args.putString(STORE_AVATAR, storeAvatar);
-    args.putString(STORE_FROM, storeFrom);
+    args.putParcelable(STORE_MODEL, Parcels.wrap(storeModel));
     fragment.setArguments(args);
     return fragment;
   }
@@ -124,10 +103,6 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
     requestBodyFactory = new RequestBodyFactory();
     httpClient = engine.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-
-    serializer = new ObjectMapper();
-    serializer.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
     waitDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity(),
         getApplicationContext().getString(R.string.please_wait_upload));
   }
@@ -136,16 +111,14 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
     super.onViewCreated(view, savedInstanceState);
 
     if (savedInstanceState != null && savedInstanceState.containsKey(STORE_MODEL)) {
-      CreateStoreModel createStoreModel =
-          Parcels.unwrap(savedInstanceState.getParcelable(STORE_MODEL));
-      if (createStoreModel != null) {
-        storeModel = createStoreModel;
-      }
+      storeModel = Parcels.unwrap(savedInstanceState.getParcelable(STORE_MODEL));
     }
 
-    if (storeModel != null && !TextUtils.isEmpty(storeModel.getStoreAvatarPath())) {
-      loadImage(Uri.parse(storeModel.getStoreAvatarPath()));
+    if (storeModel == null) {
+      storeModel = new ManageStoreModel(true);
     }
+
+    loadImage(storeModel.getStoreAvatarPath());
 
     setupViewsDefaultValues(view);
   }
@@ -157,18 +130,10 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
 
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
-    String storeFrom = args.containsKey(STORE_FROM) ? args.getString(STORE_FROM) : "";
-    long storeId = args.getLong(STORE_ID, -1);
-    String storeRemoteUrl = args.containsKey(STORE_AVATAR) ? args.getString(STORE_AVATAR) : "";
-    String storeTheme = args.containsKey(STORE_THEME) ? args.getString(STORE_THEME) : "";
-    String storeDescription =
-        args.containsKey(STORE_DESCRIPTION) ? args.getString(STORE_DESCRIPTION) : "";
-
-    storeModel =
-        new CreateStoreModel(storeId, storeFrom, storeRemoteUrl, storeTheme, storeDescription);
+    storeModel = Parcels.unwrap(args.getParcelable(STORE_MODEL));
     storeThemeSelector = new StoreThemeSelector(storeModel);
 
-    if (TextUtils.isEmpty(storeTheme)) {
+    if (TextUtils.isEmpty(storeModel.getStoreThemeName())) {
       storeModel.setStoreThemeName(StoreThemeSelector.Theme.Default.getThemeName());
     }
   }
@@ -195,7 +160,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
   }
 
   private void loadImage(String imagePath) {
-    if (imagePath != null && !TextUtils.isEmpty(imagePath)) {
+    if (!TextUtils.isEmpty(imagePath)) {
       ImageLoader.with(getActivity())
           .loadWithCircleTransform(imagePath, storeAvatar, false);
     }
@@ -228,7 +193,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
   }
 
   private String getActivityTitle() {
-    if (isCreateStore()) {
+    if (!storeModel.storeExists()) {
       return getString(R.string.create_store_title);
     } else {
       return getString(R.string.edit_store_title);
@@ -244,7 +209,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
    * that's being edited
    */
   private void setupViewsDefaultValues(View view) {
-    if (isCreateStore()) {
+    if (!storeModel.storeExists()) {
       String appName = getString(R.string.app_name);
       storeHeader.setText(
           AptoideUtils.StringU.getFormattedString(R.string.create_store_header, appName));
@@ -257,9 +222,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
       storeName.setVisibility(View.GONE);
       storeDescription.setVisibility(View.VISIBLE);
       storeDescription.setText(storeModel.getStoreDescription());
-      if (storeModel.getStoreRemoteUrl() != null) {
-        loadImage(storeModel.getStoreRemoteUrl());
-      }
+      loadImage(storeModel.getStoreAvatarPath());
       createStoreBtn.setText(R.string.save_edit_store);
       skipBtn.setText(R.string.cancel);
     }
@@ -269,10 +232,6 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
     StoreThemeSelector.Theme theme = StoreThemeSelector.getThemeFromName(storeThemeName);
     final ImageView tick = theme.getTick(view);
     storeThemeSelector.addTickTo(tick);
-  }
-
-  private boolean isCreateStore() {
-    return !STORE_FROM_DEFAULT_VALUE.equalsIgnoreCase(storeModel.getStoreFrom());
   }
 
   private Completable sendSkipAnalytics() {
@@ -320,25 +279,25 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
           final String storeDescription = this.storeDescription.getText()
               .toString()
               .trim();
-          return Observable.just(new CreateStoreModel(storeModel, storeName, storeDescription));
+          return Observable.just(ManageStoreModel.from(storeModel, storeName, storeDescription));
         })
         .flatMap(storeModel -> {
           final CreateStoreType createStoreType = validateData(storeModel);
           switch (createStoreType) {
             default:
-            case None:
+            case NONE:
               return dismissWaitAndShowErrorMessage(R.string.nothing_inserted_store);
 
-            case All:
-            case UserAndTheme:
-            case Theme:
-              return createStoreType1(storeModel, createStoreType);
+            case CREATE_STORE_MULTIPART:
+            case CREATE_STORE_USER_AND_THEME:
+            case CREATE_STORE_THEME:
+              return createStore(storeModel, createStoreType);
 
-            case Edit:
-              return createStoreType2(storeModel);
+            case EDIT_STORE_MULTIPART:
+              return editStoreWithMultipartRequest(storeModel);
 
-            case Edit2:
-              return createStoreType3(storeModel);
+            case EDIT_STORE:
+              return editStore(storeModel);
           }
         }))
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
@@ -379,7 +338,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
   /**
    * This will not use a multipart request.
    */
-  private Observable<Void> createStoreType3(CreateStoreModel storeModel) {
+  private Observable<Void> editStore(ManageStoreModel storeModel) {
 
     return Observable.fromCallable(() -> {
       storeModel.prepareToSendRequest();
@@ -390,7 +349,15 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
             __ -> SimpleSetStoreRequest.of(storeModel.getStoreId(), storeModel.getStoreThemeName(),
                 storeModel.getStoreDescription(), bodyInterceptorV7, httpClient, converterFactory)
                 .observe())
-        .flatMap(__ -> syncAccountAndNavigateHome())
+        .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnCompleted(() -> navigateToHome())
+            .onErrorResumeNext(err -> {
+              CrashReport.getInstance()
+                  .log(err);
+              return Completable.fromAction(() -> navigateToHome());
+            })
+            .toObservable())
         .observeOn(AndroidSchedulers.mainThread())
         .onErrorResumeNext(err -> {
           CrashReport.getInstance()
@@ -401,20 +368,22 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
         .map(__ -> null);
   }
 
-  private Observable<Void> createStoreType2(CreateStoreModel storeModel) {
+  private Observable<Void> editStoreWithMultipartRequest(ManageStoreModel storeModel) {
 
     return Observable.fromCallable(() -> {
       storeModel.prepareToSendRequest();
       showWaitDialog();
       return null;
     })
-        .flatMap(
-            __ -> SetStoreRequest.of(accountManager.getAccessToken(), storeModel.getStoreName(),
-                storeModel.getStoreThemeName(), storeModel.getStoreAvatarPath(),
-                storeModel.getStoreDescription(), true, storeModel.getStoreId(),
-                createStoreInterceptor(storeModel), httpClient, converterFactory)
-                .observe())
-        .flatMap(__ -> syncAccountAndNavigateHome())
+        .flatMap(__ -> accountManager.accountStatus()
+            .first())
+        .flatMap(account -> SetStoreRequest.of(account.getAccessToken(), storeModel.getStoreName(),
+            storeModel.getStoreThemeName(), storeModel.getStoreAvatarPath(),
+            storeModel.getStoreDescription(), true, storeModel.getStoreId(),
+            createStoreInterceptor(storeModel), httpClient, converterFactory)
+            .observe())
+        .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
+            .toObservable())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnCompleted(() -> navigateToHome())
         .onErrorResumeNext(err -> {
@@ -437,32 +406,38 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
         .map(__ -> null);
   }
 
-  private Observable<Void> createStoreType1(@NonNull final CreateStoreModel storeModel,
+  private Observable<Void> createStore(@NonNull final ManageStoreModel storeModel,
       @NonNull final CreateStoreType createStoreType) {
     showWaitDialog();
 
-    return CheckUserCredentialsRequest.of(storeModel.getStoreName(),
-        accountManager.getAccessToken(), bodyInterceptorV3, httpClient, converterFactory)
-        .observe()
-        .observeOn(AndroidSchedulers.mainThread())
-        .map(answer -> {
-          dismissWaitDialog();
-          if (answer.hasErrors()) {
-            handleStoreCreationErrors(answer);
-          } else if (!(createStoreType == CreateStoreType.Theme)) {
-            onCreateSuccess(storeModel, createStoreType);
-          } else {
-            ShowMessage.asLongObservableSnack(getActivity(), R.string.create_store_store_created)
-                .flatMap(__ -> syncAccountAndNavigateHome())
-                .subscribe(__ -> {
-                }, err -> CrashReport.getInstance()
-                    .log(err));
-          }
+    return accountManager.accountStatus()
+        .first()
+        .flatMap(account -> CheckUserCredentialsRequest.of(storeModel.getStoreName(),
+            account.getAccessToken(), bodyInterceptorV3, httpClient, converterFactory)
+            .observe()
+            .observeOn(AndroidSchedulers.mainThread())
+            .map(answer -> {
+              dismissWaitDialog();
+              if (answer.hasErrors()) {
+                handleStoreCreationErrors(answer);
+              } else if (!(createStoreType == CreateStoreType.CREATE_STORE_THEME)) {
+                updateStoreDataAfterCreateStore(storeModel, createStoreType);
+              } else {
+                ShowMessage.asLongObservableSnack(getActivity(),
+                    R.string.create_store_store_created)
+                    .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
+                        .andThen(sendCreateAnalytics())
+                        .toObservable())
+                    .doOnNext(__ -> navigateToHome())
+                    .subscribe(__ -> {
+                    }, err -> CrashReport.getInstance()
+                        .log(err));
+              }
 
-          return null;
-        })
-        .onErrorResumeNext(err -> dismissWaitAndShowErrorMessage(err))
-        .map(__ -> null);
+              return null;
+            })
+            .onErrorResumeNext(err -> dismissWaitAndShowErrorMessage(err))
+            .map(__ -> null));
   }
 
   private void handleStoreCreationErrors(CheckUserCredentialsJson answer) {
@@ -505,50 +480,61 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
    * This method validates the user data inserted when the create store button is pressed and
    * returns a code for the corresponding create store remote request.
    */
-
-  private CreateStoreType validateData(@NonNull final CreateStoreModel storeModel) {
-    if (STORE_FROM_DEFAULT_VALUE.equals(storeModel.getStoreFrom())) {
+  private CreateStoreType validateData(@NonNull final ManageStoreModel storeModel) {
+    if (storeModel.storeExists()) {
       if (storeModel.hasStoreDescription() || storeModel.hasThemeName()) {
-        if (storeModel.hasStoreAvatar()) {
-          return CreateStoreType.Edit;
+        if (storeModel.hasNewAvatar()) {
+          return CreateStoreType.EDIT_STORE_MULTIPART;
         } else {
-          return CreateStoreType.Edit2;
+          return CreateStoreType.EDIT_STORE;
         }
       }
     } else {
       if (storeModel.hasStoreName()) {
-        if (storeModel.hasStoreAvatar()) {
-          return CreateStoreType.All;
+        if (storeModel.hasNewAvatar()) {
+          return CreateStoreType.CREATE_STORE_MULTIPART;
         } else if (storeModel.hasThemeName()) {
-          return CreateStoreType.UserAndTheme;
+          return CreateStoreType.CREATE_STORE_USER_AND_THEME;
         } else {
-          return CreateStoreType.Theme;
+          return CreateStoreType.CREATE_STORE_THEME;
         }
       }
     }
-    return CreateStoreType.None;
+    return CreateStoreType.NONE;
   }
 
   private void navigateToHome() {
     dismissWaitDialog();
-    getFragmentNavigator().navigateToHomeCleaningBackStack();
+
+    if (storeModel.isGoToHome()) {
+      getFragmentNavigator().navigateToHomeCleaningBackStack();
+      return;
+    }
+
+    getFragmentNavigator().back();
   }
 
-  private void onCreateSuccess(@NonNull final CreateStoreModel storeModel,
+  private void updateStoreDataAfterCreateStore(@NonNull final ManageStoreModel storeModel,
       @NonNull final CreateStoreType createStoreType) {
     ShowMessage.asSnack(this, R.string.create_store_store_created);
-    if (createStoreType == CreateStoreType.All) {
+    storeModel.prepareToSendRequest();
+    if (createStoreType == CreateStoreType.CREATE_STORE_MULTIPART) {
       /*
        * Multipart
        */
-      storeModel.prepareToSendRequest();
-      SetStoreRequest.of(accountManager.getAccessToken(), storeModel.getStoreName(),
-          storeModel.getStoreThemeName(), storeModel.getStoreAvatarPath(),
-          createStoreInterceptor(storeModel), httpClient, converterFactory)
-          .observe()
-          .timeout(90, TimeUnit.SECONDS)
+      accountManager.accountStatus()
+          .first()
+          .flatMap(
+              account -> SetStoreRequest.of(account.getAccessToken(), storeModel.getStoreName(),
+                  storeModel.getStoreThemeName(), storeModel.getStoreAvatarPath(),
+                  createStoreInterceptor(storeModel), httpClient, converterFactory)
+                  .observe()
+                  .timeout(90, TimeUnit.SECONDS))
           .observeOn(AndroidSchedulers.mainThread())
-          .flatMap(__ -> syncAccountAndNavigateHome())
+          .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
+              .andThen(sendCreateAnalytics())
+              .toObservable())
+          .doOnNext(__ -> navigateToHome())
           .subscribe(__ -> {
           }, err -> {
             dismissWaitDialog();
@@ -594,44 +580,37 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
                   });
             }
           });
-    } else if (createStoreType == CreateStoreType.UserAndTheme
-        || createStoreType == CreateStoreType.Theme) {
-      /*
-       * not multipart
-       */
-      storeModel.prepareToSendRequest();
-
-      SimpleSetStoreRequest.of(storeModel.getStoreName(), storeModel.getStoreThemeName(),
-          bodyInterceptorV7, httpClient, converterFactory)
-          .observe()
-          .flatMap(__ -> syncAccountAndNavigateHome())
-          .subscribe(__ -> {
-          }, err -> {
-            waitDialog.dismiss();
-            @StringRes int reason =
-                ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage());
-            ShowMessage.asSnack(createStoreBtn, reason);
-            CrashReport.getInstance()
-                .log(err);
-          });
+      return;
     }
-  }
 
-  @NonNull private Observable<Object> syncAccountAndNavigateHome() {
-    return Completable.fromAction(() -> dismissWaitDialog())
-        .andThen(accountManager.syncCurrentAccount())
-        .andThen(sendCreateAnalytics())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnCompleted(() -> navigateToHome())
-        .onErrorResumeNext(err -> {
+    /*
+     * not multipart
+     */
+    SimpleSetStoreRequest.of(storeModel.getStoreId(), storeModel.getStoreThemeName(),
+        storeModel.getStoreDescription(), bodyInterceptorV7, httpClient, converterFactory)
+        .observe()
+        .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
+            .andThen(sendCreateAnalytics())
+            .toObservable())
+        .doOnNext(__ -> navigateToHome())
+        .subscribe(__ -> {
+        }, err -> {
+          @StringRes int reason = ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage());
+          dismissWaitAndShowErrorMessage(reason);
           CrashReport.getInstance()
               .log(err);
-          return Completable.fromAction(() -> navigateToHome());
-        })
-        .toObservable();
+        });
   }
 
-  @NonNull private StoreBodyInterceptor createStoreInterceptor(CreateStoreModel storeModel) {
+  @NonNull private Completable dismissDialogAsync() {
+    return Completable.fromAction(() -> dismissWaitDialog());
+  }
+
+  @NonNull private StoreBodyInterceptor createStoreInterceptor(ManageStoreModel storeModel) {
+
+    ObjectMapper serializer = new ObjectMapper();
+    serializer.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
     return new StoreBodyInterceptor(idsRepository.getUniqueIdentifier(), accountManager,
         requestBodyFactory, storeModel.getStoreThemeName(), storeModel.getStoreDescription(),
         serializer);
@@ -650,7 +629,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
     }
 
     try {
-      final String filePath = new FileUtils().getMediaStoragePath(avatarUrl, applicationContext);
+      final String filePath = getMediaStoragePath(avatarUrl, applicationContext);
       storeModel.setStoreAvatarPath(filePath);
       checkAvatarRequirements(filePath, avatarUrl);
     } catch (NullPointerException ex) {
@@ -660,10 +639,11 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
   }
 
   /**
-   * 1: all (Multipart)  2: user and theme 3:user 4/5:edit
+   * 1: All data (Multipart)  2: User and Theme 3: User 4: Edit Multipart, 5: Edit
    */
   private enum CreateStoreType {
-    None(0), All(1), UserAndTheme(2), Theme(3), Edit(4), Edit2(5);
+    NONE(0), CREATE_STORE_MULTIPART(1), CREATE_STORE_USER_AND_THEME(2), CREATE_STORE_THEME(
+        3), EDIT_STORE_MULTIPART(4), EDIT_STORE(5);
 
     private final int value;
 
@@ -678,9 +658,9 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Create
 
   private static class StoreThemeSelector {
 
-    private final CreateStoreModel storeModel;
+    private final ManageStoreModel storeModel;
 
-    public StoreThemeSelector(CreateStoreModel storeModel) {
+    public StoreThemeSelector(ManageStoreModel storeModel) {
       this.storeModel = storeModel;
     }
 
