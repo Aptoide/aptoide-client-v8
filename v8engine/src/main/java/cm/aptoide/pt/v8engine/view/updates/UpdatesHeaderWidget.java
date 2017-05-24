@@ -15,11 +15,14 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.navigator.SimpleTabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
+import cm.aptoide.pt.v8engine.updates.UpdatesAnalytics;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.facebook.appevents.AppEventsLogger;
 import java.util.ArrayList;
 import rx.schedulers.Schedulers;
 
@@ -32,9 +35,12 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
   private TextView title;
   private Button more;
   private TabNavigator tabNavigator;
+  private UpdatesAnalytics updatesAnalytics;
 
   public UpdatesHeaderWidget(View itemView) {
     super(itemView);
+    updatesAnalytics = new UpdatesAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
   }
 
   @Override protected void assignViews(View itemView) {
@@ -55,6 +61,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
     more.setVisibility(View.VISIBLE);
 
     more.setOnClickListener((view) -> {
+      updatesAnalytics.updates("Update All");
       ((PermissionService) getContext()).requestAccessToExternalFileSystem(() -> {
         UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
         compositeSubscription.add(updateAccessor.getAll(false)

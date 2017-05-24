@@ -96,7 +96,7 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
           Analytics.AppsTimeline.clickOnCard(AppUpdateDisplayable.CARD_TYPE_NAME,
               displayable.getPackageName(), Analytics.AppsTimeline.BLANK,
               displayable.getStoreName(), Analytics.AppsTimeline.OPEN_STORE);
-
+          displayable.sendAppUpdateCardClickEvent(Analytics.AppsTimeline.OPEN_STORE, socialAction);
           displayable.sendOpenStoreEvent();
           getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
               .newStoreFragment(displayable.getStoreName(), displayable.getStoreTheme()));
@@ -105,6 +105,11 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
     compositeSubscription.add(RxView.clicks(appIcon)
         .subscribe(click -> {
           knockWithSixpackCredentials(displayable.getAbUrl());
+          Analytics.AppsTimeline.clickOnCard(AppUpdateDisplayable.CARD_TYPE_NAME,
+              displayable.getPackageName(), Analytics.AppsTimeline.BLANK,
+              displayable.getStoreName(), Analytics.AppsTimeline.OPEN_APP_VIEW);
+          displayable.sendAppUpdateCardClickEvent(Analytics.AppsTimeline.OPEN_APP_VIEW,
+              socialAction);
           displayable.sendOpenAppEvent();
           getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
               .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
@@ -116,6 +121,7 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
           Analytics.AppsTimeline.clickOnCard(AppUpdateDisplayable.CARD_TYPE_NAME,
               displayable.getPackageName(), Analytics.AppsTimeline.BLANK,
               displayable.getStoreName(), Analytics.AppsTimeline.UPDATE_APP);
+          displayable.sendAppUpdateCardClickEvent(Analytics.AppsTimeline.UPDATE_APP, socialAction);
           displayable.sendUpdateAppEvent();
           return displayable.requestPermission(context)
               .flatMap(success -> displayable.update(context));

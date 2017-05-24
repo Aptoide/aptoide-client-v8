@@ -43,7 +43,11 @@ public class AppViewSuggestedAppWidget extends Widget<AppViewSuggestedAppDisplay
     appNameTextView.setText(pojo.getName());
     descriptionTextView.setText(AptoideUtils.HtmlU.parse(pojo.getDescription()));
     compositeSubscription.add(RxView.clicks(layout)
-        .subscribe(__ -> getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
-            .newAppViewFragment(pojo))));
+        .subscribe(__ -> {
+          displayable.getAppViewAnalytics()
+              .sendOpenRecommendedAppEvent();
+          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+              .newAppViewFragment(pojo));
+        }));
   }
 }

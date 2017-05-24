@@ -5,6 +5,8 @@ import android.content.res.Configuration;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.TimelineSocialActionData;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.timeline.ShareCardCallback;
 
@@ -14,13 +16,22 @@ import cm.aptoide.pt.v8engine.view.timeline.ShareCardCallback;
 
 public abstract class CardDisplayable extends Displayable {
 
+  public static final String SHARE = "Share";
+  public static final String LIKE = "Like";
   private TimelineCard timelineCard;
+  private TimelineAnalytics timelineAnalytics;
+  private TimelineSocialActionData timelineSocialActionData;
 
   CardDisplayable() {
   }
 
   CardDisplayable(TimelineCard timelineCard) {
     this.timelineCard = timelineCard;
+  }
+
+  CardDisplayable(TimelineCard timelineCard, TimelineAnalytics timelineAnalytics) {
+    this.timelineCard = timelineCard;
+    this.timelineAnalytics = timelineAnalytics;
   }
 
   public TimelineCard getTimelineCard() {
@@ -61,4 +72,18 @@ public abstract class CardDisplayable extends Displayable {
   public abstract void like(Context context, String cardType, int rating);
 
   public abstract void like(Context context, String cardId, String cardType, int rating);
+
+  public void sendSocialActionEvent(String actionValue) {
+    timelineAnalytics.sendSocialCardPreviewActionEvent(actionValue);
+  }
+
+  public TimelineAnalytics getTimelineAnalytics() {
+    return timelineAnalytics;
+  }
+
+  public TimelineSocialActionData getTimelineSocialActionObject(String cardType, String action,
+      String socialAction, String packageName, String publisher, String title) {
+    return new TimelineSocialActionData(cardType, action, socialAction, packageName, publisher,
+        title);
+  }
 }

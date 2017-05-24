@@ -98,6 +98,7 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
           displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_APP_VIEW);
       displayable.sendOpenAppEvent();
+      displayable.sendSocialInstallClickEvent(Analytics.AppsTimeline.OPEN_APP_VIEW, socialAction);
       getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     });

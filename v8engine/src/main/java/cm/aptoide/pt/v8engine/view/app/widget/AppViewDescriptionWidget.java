@@ -57,20 +57,8 @@ import com.jakewharton.rxbinding.view.RxView;
       descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
       compositeSubscription.add(RxView.clicks(readMoreBtn)
           .subscribe(click -> {
-            Fragment fragment = V8Engine.getFragmentProvider()
-                .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme);
-            getFragmentNavigator().navigateTo(fragment);
-          }));
-    } else {
-      // only show "default" description if the app doesn't have one
-      descriptionTextView.setText(R.string.description_not_available);
-      readMoreBtn.setVisibility(View.GONE);
-    }
-
-    if (!TextUtils.isEmpty(media.getDescription())) {
-      descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
-      compositeSubscription.add(RxView.clicks(readMoreBtn)
-          .subscribe(click -> {
+            displayable.getAppViewAnalytics()
+                .sendReadMoreEvent();
             Fragment fragment = V8Engine.getFragmentProvider()
                 .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme);
             getFragmentNavigator().navigateTo(fragment);

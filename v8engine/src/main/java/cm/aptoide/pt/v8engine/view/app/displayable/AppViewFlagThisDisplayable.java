@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.app.displayable;
 
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
 
 /**
  * Created on 30/06/16.
@@ -16,8 +17,8 @@ public class AppViewFlagThisDisplayable extends AppViewDisplayable {
   public AppViewFlagThisDisplayable() {
   }
 
-  public AppViewFlagThisDisplayable(GetApp getApp) {
-    super(getApp);
+  public AppViewFlagThisDisplayable(GetApp getApp, AppViewAnalytics appViewAnalytics) {
+    super(getApp, appViewAnalytics);
   }
 
   @Override protected Configs getConfig() {
