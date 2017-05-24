@@ -10,6 +10,7 @@ import org.parceler.Parcel;
   String storeAvatarPath;
   String storeThemeName;
   boolean goToHome;
+  boolean newAvatar;
 
   public ManageStoreModel() {
     this.storeId = -1;
@@ -18,7 +19,7 @@ import org.parceler.Parcel;
     this.storeAvatarPath = "";
     this.storeThemeName = "";
     this.goToHome = true;
-    //this.storeRemoteUrl = "";
+    this.newAvatar = false;
   }
 
   public ManageStoreModel(boolean goToHome) {
@@ -28,6 +29,7 @@ import org.parceler.Parcel;
     this.storeAvatarPath = "";
     this.storeThemeName = "";
     this.goToHome = goToHome;
+    this.newAvatar = false;
   }
 
   public ManageStoreModel(long storeId, boolean goToHome, //String storeRemoteUrl,
@@ -38,6 +40,7 @@ import org.parceler.Parcel;
     this.storeAvatarPath = storeAvatarPath;
     this.storeThemeName = storeThemeName;
     this.goToHome = goToHome;
+    this.newAvatar = false;
   }
 
   public ManageStoreModel(long storeId, String storeAvatarPath, boolean goToHome,
@@ -48,6 +51,7 @@ import org.parceler.Parcel;
     this.storeAvatarPath = storeAvatarPath;
     this.storeThemeName = storeThemeName;
     this.goToHome = goToHome;
+    this.newAvatar = false;
   }
 
   public static ManageStoreModel from(ManageStoreModel otherStoreModel, String storeName,
@@ -63,9 +67,16 @@ import org.parceler.Parcel;
       storeDescription = otherStoreModel.getStoreDescription();
     }
 
-    return new ManageStoreModel(otherStoreModel.getStoreId(), otherStoreModel.isGoToHome(),
-        /*otherStoreModel.getStoreRemoteUrl(), */ otherStoreModel.getStoreThemeName(), storeName,
-        storeDescription, otherStoreModel.getStoreAvatarPath());
+    ManageStoreModel newStoreModel =
+        new ManageStoreModel(otherStoreModel.getStoreId(), otherStoreModel.isGoToHome(),
+            otherStoreModel.getStoreThemeName(), storeName, storeDescription,
+            otherStoreModel.getStoreAvatarPath());
+
+    if (otherStoreModel.hasNewAvatar()) {
+      newStoreModel.setStoreAvatarPath(otherStoreModel.getStoreAvatarPath());
+    }
+
+    return newStoreModel;
   }
 
   public String getStoreName() {
@@ -86,6 +97,7 @@ import org.parceler.Parcel;
 
   public void setStoreAvatarPath(String storeAvatarPath) {
     this.storeAvatarPath = storeAvatarPath;
+    this.newAvatar = true;
   }
 
   public long getStoreId() {
@@ -102,6 +114,10 @@ import org.parceler.Parcel;
 
   public boolean isGoToHome() {
     return goToHome;
+  }
+
+  public boolean hasNewAvatar() {
+    return newAvatar;
   }
 
   /**

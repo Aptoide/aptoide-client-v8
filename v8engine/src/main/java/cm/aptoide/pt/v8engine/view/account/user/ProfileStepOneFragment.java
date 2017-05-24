@@ -130,7 +130,7 @@ public class ProfileStepOneFragment extends BaseToolbarFragment {
 
   private void navigateToCreateStore() {
     waitDialog.dismiss();
-    fragmentNavigator.navigateTo(CreateStoreFragment.newInstance(new ManageStoreModel(false)));
+    fragmentNavigator.navigateTo(CreateStoreFragment.newInstance(new ManageStoreModel(true)));
   }
 
   private void showErrorMessage() {

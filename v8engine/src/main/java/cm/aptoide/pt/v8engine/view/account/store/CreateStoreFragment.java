@@ -160,7 +160,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
   }
 
   private void loadImage(String imagePath) {
-    if (TextUtils.isEmpty(imagePath)) {
+    if (!TextUtils.isEmpty(imagePath)) {
       ImageLoader.with(getActivity())
           .loadWithCircleTransform(imagePath, storeAvatar, false);
     }
@@ -482,7 +482,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
   private CreateStoreType validateData(@NonNull final ManageStoreModel storeModel) {
     if (storeModel.storeExists()) {
       if (storeModel.hasStoreDescription() || storeModel.hasThemeName()) {
-        if (storeModel.hasStoreAvatar()) {
+        if (storeModel.hasNewAvatar()) {
           return CreateStoreType.EDIT_STORE_MULTIPART;
         } else {
           return CreateStoreType.EDIT_STORE;
@@ -490,7 +490,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
       }
     } else {
       if (storeModel.hasStoreName()) {
-        if (storeModel.hasStoreAvatar()) {
+        if (storeModel.hasNewAvatar()) {
           return CreateStoreType.CREATE_STORE_MULTIPART;
         } else if (storeModel.hasThemeName()) {
           return CreateStoreType.CREATE_STORE_USER_AND_THEME;
@@ -516,16 +516,19 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
   private void updateStoreDataAfterCreateStore(@NonNull final ManageStoreModel storeModel,
       @NonNull final CreateStoreType createStoreType) {
     ShowMessage.asSnack(this, R.string.create_store_store_created);
+    storeModel.prepareToSendRequest();
     if (createStoreType == CreateStoreType.CREATE_STORE_MULTIPART) {
       /*
        * Multipart
        */
-      storeModel.prepareToSendRequest();
-      SetStoreRequest.of(accountManager.getAccessToken(), storeModel.getStoreName(),
-          storeModel.getStoreThemeName(), storeModel.getStoreAvatarPath(),
-          createStoreInterceptor(storeModel), httpClient, converterFactory)
-          .observe()
-          .timeout(90, TimeUnit.SECONDS)
+      accountManager.accountStatus()
+          .first()
+          .flatMap(
+              account -> SetStoreRequest.of(account.getAccessToken(), storeModel.getStoreName(),
+                  storeModel.getStoreThemeName(), storeModel.getStoreAvatarPath(),
+                  createStoreInterceptor(storeModel), httpClient, converterFactory)
+                  .observe()
+                  .timeout(90, TimeUnit.SECONDS))
           .observeOn(AndroidSchedulers.mainThread())
           .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
               .andThen(sendCreateAnalytics())
@@ -576,30 +579,26 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
                   });
             }
           });
-    } else if (createStoreType == CreateStoreType.CREATE_STORE_USER_AND_THEME
-        || createStoreType == CreateStoreType.CREATE_STORE_THEME) {
-      /*
-       * not multipart
-       */
-      storeModel.prepareToSendRequest();
-
-      SimpleSetStoreRequest.of(storeModel.getStoreName(), storeModel.getStoreThemeName(),
-          bodyInterceptorV7, httpClient, converterFactory)
-          .observe()
-          .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
-              .andThen(sendCreateAnalytics())
-              .toObservable())
-          .doOnNext(__ -> navigateToHome())
-          .subscribe(__ -> {
-          }, err -> {
-            waitDialog.dismiss();
-            @StringRes int reason =
-                ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage());
-            ShowMessage.asSnack(createStoreBtn, reason);
-            CrashReport.getInstance()
-                .log(err);
-          });
+      return;
     }
+
+    /*
+     * not multipart
+     */
+    SimpleSetStoreRequest.of(storeModel.getStoreId(), storeModel.getStoreThemeName(),
+        storeModel.getStoreDescription(), bodyInterceptorV7, httpClient, converterFactory)
+        .observe()
+        .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
+            .andThen(sendCreateAnalytics())
+            .toObservable())
+        .doOnNext(__ -> navigateToHome())
+        .subscribe(__ -> {
+        }, err -> {
+          @StringRes int reason = ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage());
+          dismissWaitAndShowErrorMessage(reason);
+          CrashReport.getInstance()
+              .log(err);
+        });
   }
 
   @NonNull private Completable dismissDialogAsync() {
