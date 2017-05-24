@@ -222,7 +222,9 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
       floatingActionButton.setVisibility(View.VISIBLE);
     }
     if (showCommentInputDialogOnFirstRun) {
-      createNewCommentFragment(elementIdAsString).subscribe();
+      createNewCommentFragment(elementIdAsString).subscribe(__ -> {
+      }, throwable -> CrashReport.getInstance()
+          .log(throwable));
     }
   }
 
