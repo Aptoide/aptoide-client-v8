@@ -132,7 +132,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private final String key_packageName = "packageName";
   private final String key_uname = "uname";
   private final String key_md5sum = "md5sum";
-  //private static final String TAG = AppViewFragment.class.getPublisherName();
+  //private static final String TAG = AppViewFragment.class.getName();
   //
   // vars
   //

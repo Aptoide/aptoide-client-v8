@@ -80,10 +80,6 @@ public class ArticleDisplayable extends CardDisplayable {
       SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
     long appId = 0;
-    //if (article.getApps() != null && article.getApps().size() > 0) {
-    //  appName = article.getApps().get(0).getPublisherName();
-    //  appId = article.getApps().get(0).getId();
-    //}
 
     String abTestingURL = null;
 
@@ -123,7 +119,6 @@ public class ArticleDisplayable extends CardDisplayable {
         return installedAccessor.get(packageNames)
             .observeOn(Schedulers.computation());
       }
-      //appId = video.getApps().get(0).getId();
     }
     return Observable.just(null);
   }

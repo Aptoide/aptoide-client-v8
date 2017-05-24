@@ -16,9 +16,9 @@ import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
-import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -88,10 +88,6 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
       LinksHandlerFactory linksHandlerFactory, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository) {
     long appId = 0;
-    //if (article.getApps() != null && article.getApps().size() > 0) {
-    //  appName = article.getApps().get(0).getPublisherName();
-    //  appId = article.getApps().get(0).getId();
-    //}
 
     String abTestingURL = null;
 
@@ -135,7 +131,6 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
         return installedAccessor.get(packageNames)
             .observeOn(Schedulers.computation());
       }
-      //appId = video.getApps().get(0).getId();
     }
     return Observable.just(null);
   }
@@ -186,13 +181,15 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
 
   @Override
   public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback, getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getTitle(),
-        getArticleTitle()));
+    socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getTitle(),
+            getArticleTitle()));
   }
 
   @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), shareCardCallback, getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getTitle(),
-        getArticleTitle()));
+    socialRepository.share(getTimelineCard().getCardId(), shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getTitle(),
+            getArticleTitle()));
   }
 
   @Override public void like(Context context, String cardType, int rating) {
