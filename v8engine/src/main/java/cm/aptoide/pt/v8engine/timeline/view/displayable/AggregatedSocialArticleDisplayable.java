@@ -14,19 +14,21 @@ import cm.aptoide.pt.model.v7.timeline.AggregatedSocialArticle;
 import cm.aptoide.pt.model.v7.timeline.MinimalCard;
 import cm.aptoide.pt.model.v7.timeline.UserSharerTimeline;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.link.Link;
+import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
-import cm.aptoide.pt.v8engine.timeline.link.Link;
-import cm.aptoide.pt.v8engine.timeline.link.LinksHandlerFactory;
+import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
-import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import rx.Observable;
 import rx.schedulers.Schedulers;
+
+import static cm.aptoide.pt.v8engine.analytics.Analytics.AppsTimeline.BLANK;
 
 /**
  * Created by jdandrade on 17/05/2017.
@@ -37,6 +39,7 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
   private Link link;
   private Link developerLink;
   private String title;
+  private String publisherName;
   private String thumbnailUrl;
   private String avatarUrl;
   private String abTestingURL;
@@ -55,14 +58,15 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
   }
 
   public AggregatedSocialArticleDisplayable(AggregatedSocialArticle card, String title, Link link,
-      Link developerLink, String name, String thumbnailUrl, String avatarUrl, String abTestingURL,
-      Store store, Comment.User user, List<App> relatedToAppsList, Date date,
+      Link developerLink, String publisherName, String thumbnailUrl, String avatarUrl,
+      String abTestingURL, Store store, Comment.User user, List<App> relatedToAppsList, Date date,
       DateCalculator dateCalculator, SpannableFactory spannableFactory,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
     super(card);
     this.link = link;
     this.developerLink = developerLink;
     this.title = title;
+    this.publisherName = publisherName;
     this.thumbnailUrl = thumbnailUrl;
     this.avatarUrl = avatarUrl;
     this.abTestingURL = abTestingURL;
@@ -200,19 +204,27 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
 
   @Override
   public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback);
+    socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, publisherName,
+            getTitle()));
   }
 
   @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), shareCardCallback);
+    socialRepository.share(getTimelineCard().getCardId(), shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, publisherName,
+            getTitle()));
   }
 
   @Override public void like(Context context, String cardType, int rating) {
-    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating);
+    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, BLANK, publisherName,
+            getTitle()));
   }
 
   @Override public void like(Context context, String cardId, String cardType, int rating) {
-    socialRepository.like(cardId, cardType, "", rating);
+    socialRepository.like(cardId, cardType, "", rating,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, BLANK, publisherName,
+            getTitle()));
   }
 
   public String getCardHeaderNames() {

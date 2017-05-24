@@ -26,17 +26,20 @@ public class SocialRepository {
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final Converter.Factory converterFactory;
   private final OkHttpClient httpClient;
+  private final TimelineAnalytics timelineAnalytics;
 
   public SocialRepository(AptoideAccountManager accountManager,
       BodyInterceptor<BaseBody> bodyInterceptor, Converter.Factory converterFactory,
-      OkHttpClient httpClient) {
+      OkHttpClient httpClient, TimelineAnalytics timelineAnalytics) {
     this.accountManager = accountManager;
     this.bodyInterceptor = bodyInterceptor;
     this.converterFactory = converterFactory;
     this.httpClient = httpClient;
+    this.timelineAnalytics = timelineAnalytics;
   }
 
-  public void share(String cardId, boolean privacy, ShareCardCallback shareCardCallback) {
+  public void share(String cardId, boolean privacy, ShareCardCallback shareCardCallback, TimelineSocialActionData timelineSocialActionData) {
+    //todo(pribeiro): check if timelineSocialActionData is null
     ShareCardRequest.of(cardId, bodyInterceptor, httpClient, converterFactory)
         .observe()
         .toSingle()
@@ -52,10 +55,15 @@ public class SocialRepository {
               new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
         })
         .subscribe(() -> {
+          timelineAnalytics.sendSocialActionEvent(timelineSocialActionData);
         }, throwable -> throwable.printStackTrace());
   }
 
-  public void share(String cardId, ShareCardCallback shareCardCallback) {
+  private AptoideAccount.Access getAccountAccess(boolean privateAccess) {
+    return privateAccess ? Account.Access.PRIVATE : Account.Access.PUBLIC;
+  }
+
+  public void share(String cardId, ShareCardCallback shareCardCallback, TimelineSocialActionData timelineSocialActionData) {
     ShareCardRequest.of(cardId, bodyInterceptor, httpClient, converterFactory)
         .observe()
         .toSingle()
@@ -75,7 +83,7 @@ public class SocialRepository {
   }
 
   public void share(String cardId, long storeId, boolean privacy,
-      ShareCardCallback shareCardCallback) {
+      ShareCardCallback shareCardCallback, TimelineSocialActionData timelineSocialActionData) {
     ShareCardRequest.of(cardId, storeId, httpClient, converterFactory, bodyInterceptor)
         .observe()
         .toSingle()
@@ -94,7 +102,7 @@ public class SocialRepository {
         }, throwable -> throwable.printStackTrace());
   }
 
-  public void share(String cardId, long storeId, ShareCardCallback shareCardCallback) {
+  public void share(String cardId, long storeId, ShareCardCallback shareCardCallback, TimelineSocialActionData timelineSocialActionData) {
     ShareCardRequest.of(cardId, storeId, httpClient, converterFactory, bodyInterceptor)
         .observe()
         .toSingle()
@@ -110,16 +118,21 @@ public class SocialRepository {
               new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
         })
         .subscribe(() -> {
+          timelineAnalytics.sendSocialActionEvent(timelineSocialActionData);
         }, throwable -> throwable.printStackTrace());
   }
 
-  public void like(String timelineCardId, String cardType, String ownerHash, int rating) {
+  public void like(String timelineCardId, String cardType, String ownerHash, int rating,
+      TimelineSocialActionData timelineSocialActionData) {
     LikeCardRequest.of(timelineCardId, cardType, ownerHash, rating, bodyInterceptor, httpClient,
         converterFactory)
         .observe()
         .observeOn(Schedulers.io())
-        .subscribe(baseV7Response -> Logger.d(this.getClass()
-            .getSimpleName(), baseV7Response.toString()), throwable -> throwable.printStackTrace());
+        .subscribe(baseV7Response -> {
+          Logger.d(this.getClass()
+              .getSimpleName(), baseV7Response.toString());
+          timelineAnalytics.sendSocialActionEvent(timelineSocialActionData);
+        }, throwable -> throwable.printStackTrace());
   }
 
   public void share(String packageName, Long storeId, String shareType, boolean privacy) {
@@ -139,6 +152,7 @@ public class SocialRepository {
   }
 
   public void share(String packageName, Long storeId, String shareType) {
+    //todo(pribeiro): check if timelineSocialActionData is null
     ShareInstallCardRequest.of(packageName, storeId, shareType, bodyInterceptor, httpClient,
         converterFactory)
         .observe()
@@ -152,10 +166,6 @@ public class SocialRepository {
         })
         .subscribe(() -> {
         }, throwable -> throwable.printStackTrace());
-  }
-
-  private AptoideAccount.Access getAccountAccess(boolean privateAccess) {
-    return privateAccess ? Account.Access.PRIVATE : Account.Access.PUBLIC;
   }
 }
 

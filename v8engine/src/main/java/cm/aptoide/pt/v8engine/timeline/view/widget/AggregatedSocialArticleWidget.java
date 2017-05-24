@@ -18,10 +18,10 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialArticleDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -103,7 +103,7 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
     url.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbTestingURL());
       displayable.getLink()
-          .launch(getContext());
+          .launch();
       Analytics.AppsTimeline.clickOnCard(SocialArticleDisplayable.CARD_TYPE_NAME,
           Analytics.AppsTimeline.BLANK, displayable.getTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE);

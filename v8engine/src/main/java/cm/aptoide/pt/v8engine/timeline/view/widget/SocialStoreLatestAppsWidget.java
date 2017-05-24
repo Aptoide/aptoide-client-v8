@@ -175,6 +175,8 @@ public class SocialStoreLatestAppsWidget
             Analytics.AppsTimeline.clickOnCard(getCardTypeName(), packageName,
                 Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
                 Analytics.AppsTimeline.OPEN_APP_VIEW);
+            displayable.sendSocialLatestAppsClickEvent(Analytics.AppsTimeline.OPEN_APP_VIEW,
+                packageName, socialAction, displayable.getStoreName());
             displayable.sendStoreOpenAppEvent(packageName);
             getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
                 .newAppViewFragment(apps.get(app), packageName));
@@ -187,6 +189,8 @@ public class SocialStoreLatestAppsWidget
           Analytics.AppsTimeline.clickOnCard(getCardTypeName(), Analytics.AppsTimeline.BLANK,
               Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
               Analytics.AppsTimeline.OPEN_STORE);
+          displayable.sendSocialLatestAppsClickEvent(Analytics.AppsTimeline.OPEN_STORE,
+              Analytics.AppsTimeline.BLANK, socialAction, displayable.getStoreName());
           displayable.sendOpenStoreEvent();
           getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
               .newStoreFragment(displayable.getStoreName(), displayable.getSharedStore()
@@ -200,6 +204,9 @@ public class SocialStoreLatestAppsWidget
           Analytics.AppsTimeline.clickOnCard(getCardTypeName(), Analytics.AppsTimeline.BLANK,
               Analytics.AppsTimeline.BLANK, displayable.getSharedStore()
                   .getName(), Analytics.AppsTimeline.OPEN_STORE);
+          displayable.sendSocialLatestAppsClickEvent(Analytics.AppsTimeline.OPEN_STORE,
+              Analytics.AppsTimeline.BLANK, socialAction, displayable.getSharedStore()
+                  .getName());
           displayable.sendOpenSharedStoreEvent();
           getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
               .newStoreFragment(displayable.getSharedStore()

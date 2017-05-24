@@ -18,6 +18,7 @@ import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import rx.Observable;
@@ -33,15 +34,17 @@ public class ShareAppHelper {
   private final AccountNavigator accountNavigator;
   private final SpotAndShareAnalytics spotAndShareAnalytics;
   private final Activity activity;
+  private TimelineAnalytics timelineAnalytics;
 
   public ShareAppHelper(InstalledRepository installedRepository,
       AptoideAccountManager accountManager, AccountNavigator accountNavigator, Activity activity,
-      SpotAndShareAnalytics spotAndShareAnalytics) {
+      SpotAndShareAnalytics spotAndShareAnalytics, TimelineAnalytics timelineAnalytics) {
     this.installedRepository = installedRepository;
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.activity = activity;
     this.spotAndShareAnalytics = spotAndShareAnalytics;
+    this.timelineAnalytics = timelineAnalytics;
   }
 
   private boolean isInstalled(String packageName) {
@@ -107,7 +110,8 @@ public class ShareAppHelper {
       AlertDialog.Builder alertDialog =
           sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(activity, appName,
               iconPath, averageRating);
-      SocialRepository socialRepository = RepositoryFactory.getSocialRepository(activity);
+      SocialRepository socialRepository =
+          RepositoryFactory.getSocialRepository(activity, timelineAnalytics);
 
       sharePreviewDialog.showShareCardPreviewDialog(packageName, null, "app", activity,
           sharePreviewDialog, alertDialog, socialRepository);

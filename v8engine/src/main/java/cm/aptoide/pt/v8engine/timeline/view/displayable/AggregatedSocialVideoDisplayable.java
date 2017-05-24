@@ -13,19 +13,21 @@ import cm.aptoide.pt.model.v7.timeline.AggregatedSocialVideo;
 import cm.aptoide.pt.model.v7.timeline.MinimalCard;
 import cm.aptoide.pt.model.v7.timeline.UserSharerTimeline;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.link.Link;
+import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
-import cm.aptoide.pt.v8engine.timeline.link.Link;
-import cm.aptoide.pt.v8engine.timeline.link.LinksHandlerFactory;
+import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
-import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import rx.Observable;
 import rx.schedulers.Schedulers;
+
+import static cm.aptoide.pt.v8engine.analytics.Analytics.AppsTimeline.BLANK;
 
 /**
  * Created by jdandrade on 19/05/2017.
@@ -38,7 +40,7 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
   private String title;
   private Link link;
   private Link developerLink;
-  private String name;
+  private String publisherName;
   private String thumbnailUrl;
   private String logoUrl;
   private long appId;
@@ -56,7 +58,7 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
   }
 
   public AggregatedSocialVideoDisplayable(AggregatedSocialVideo card, String title, Link link,
-      Link developerLink, String name, String thumbnailUrl, String logoUrl, long appId,
+      Link developerLink, String publisherName, String thumbnailUrl, String logoUrl, long appId,
       String abTestingURL, Comment.User user, List<App> relatedToApps, Date date,
       DateCalculator dateCalculator, SpannableFactory spannableFactory,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
@@ -64,7 +66,7 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
     this.title = title;
     this.link = link;
     this.developerLink = developerLink;
-    this.name = name;
+    this.publisherName = publisherName;
     this.thumbnailUrl = thumbnailUrl;
     this.logoUrl = logoUrl;
     this.appId = appId;
@@ -191,8 +193,8 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
     return developerLink;
   }
 
-  public String getName() {
-    return name;
+  public String getPublisherName() {
+    return publisherName;
   }
 
   public String getThumbnailUrl() {
@@ -225,19 +227,27 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
 
   @Override
   public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback);
+    socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getPublisherName(),
+            BLANK));
   }
 
   @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), shareCardCallback);
+    socialRepository.share(getTimelineCard().getCardId(), shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getPublisherName(),
+            BLANK));
   }
 
   @Override public void like(Context context, String cardType, int rating) {
-    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating);
+    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, BLANK, getPublisherName(),
+            BLANK));
   }
 
   @Override public void like(Context context, String cardId, String cardType, int rating) {
-    socialRepository.like(cardId, cardType, "", rating);
+    socialRepository.like(cardId, cardType, "", rating,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, BLANK, getPublisherName(),
+            BLANK));
   }
 
   @Override public int getViewLayout() {

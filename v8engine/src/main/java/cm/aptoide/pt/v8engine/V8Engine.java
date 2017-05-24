@@ -18,6 +18,7 @@ import android.os.Build;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.SparseArray;
 import cm.aptoide.accountmanager.AccountDataPersist;
@@ -278,7 +279,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
       db.close();
     }
 
-    startNotificationsSync();
+    getNotificationCenter().start();
 
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
@@ -297,41 +298,37 @@ public abstract class V8Engine extends SpotAndShareApplication {
     };
   }
 
-  public NotificationCenter getNotificationCenter() {
-    return notificationCenter;
-  }
+  @NonNull public NotificationCenter getNotificationCenter() {
+    if (notificationCenter == null) {
+      long pushNotificationInterval = pushNotificationSocialPeriodicity;
 
-  private void startNotificationsSync() {
+      if (ManagerPreferences.isDebug()
+          && ManagerPreferences.getPushNotificationPullingInterval() > 0) {
+        pushNotificationInterval = ManagerPreferences.getPushNotificationPullingInterval();
+      }
 
-    if (ManagerPreferences.isDebug()
-        && ManagerPreferences.getPushNotificationPullingInterval() > 0) {
-      pushNotificationSocialPeriodicity = ManagerPreferences.getPushNotificationPullingInterval();
+      SystemNotificationShower systemNotificationShower = new SystemNotificationShower(this,
+          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
+      List<NotificationSyncScheduler.Schedule> scheduleList = new ArrayList<>(2);
+
+      scheduleList.add(new NotificationSyncScheduler.Schedule(
+          NotificationSyncService.PUSH_NOTIFICATIONS_CAMPAIGN_ACTION, AlarmManager.INTERVAL_DAY));
+      scheduleList.add(new NotificationSyncScheduler.Schedule(
+          NotificationSyncService.PUSH_NOTIFICATIONS_SOCIAL_ACTION, pushNotificationInterval));
+
+      NotificationSyncScheduler notificationSyncScheduler =
+          new NotificationSyncScheduler(this, (AlarmManager) getSystemService(ALARM_SERVICE),
+              NotificationSyncService.class, scheduleList);
+      NotificationAccessor notificationAccessor =
+          AccessorFactory.getAccessorFor(Notification.class);
+      NotificationProvider notificationProvider = new NotificationProvider(notificationAccessor);
+      notificationCenter =
+          new NotificationCenter(new NotificationIdsMapper(), getNotificationHandler(),
+              notificationProvider, notificationSyncScheduler, systemNotificationShower,
+              CrashReport.getInstance(), new NotificationPolicyFactory(notificationProvider),
+              PreferenceManager.getDefaultSharedPreferences(this));
     }
-
-    notificationHandler = new NotificationHandler(getConfiguration().getAppId(), getDefaultClient(),
-        WebService.getDefaultConverter(), idsRepository, getConfiguration().getVersionName());
-
-    SystemNotificationShower systemNotificationShower = new SystemNotificationShower(this,
-        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
-    List<NotificationSyncScheduler.Schedule> scheduleList = new ArrayList<>(2);
-
-    scheduleList.add(new NotificationSyncScheduler.Schedule(
-        NotificationSyncService.PUSH_NOTIFICATIONS_CAMPAIGN_ACTION,
-        PUSH_NOTIFICATION_CAMPAIGN_PERIODICITY));
-    scheduleList.add(new NotificationSyncScheduler.Schedule(
-        NotificationSyncService.PUSH_NOTIFICATIONS_SOCIAL_ACTION,
-        pushNotificationSocialPeriodicity));
-
-    NotificationSyncScheduler notificationSyncScheduler =
-        new NotificationSyncScheduler(this, (AlarmManager) getSystemService(ALARM_SERVICE),
-            NotificationSyncService.class, scheduleList);
-    NotificationAccessor notificationAccessor = AccessorFactory.getAccessorFor(Notification.class);
-    NotificationProvider notificationProvider = new NotificationProvider(notificationAccessor);
-    notificationCenter = new NotificationCenter(new NotificationIdsMapper(), notificationHandler,
-        notificationSyncScheduler, systemNotificationShower, CrashReport.getInstance(),
-        new NotificationPolicyFactory(notificationProvider),
-        PreferenceManager.getDefaultSharedPreferences(this));
-    notificationCenter.startIfEnabled();
+    return notificationCenter;
   }
 
   public GroupNameProvider getGroupNameProvider() {
@@ -340,6 +337,11 @@ public abstract class V8Engine extends SpotAndShareApplication {
   }
 
   public NotificationHandler getNotificationHandler() {
+    if (notificationHandler == null) {
+      notificationHandler =
+          new NotificationHandler(getConfiguration().getAppId(), getDefaultClient(),
+              WebService.getDefaultConverter(), idsRepository, getConfiguration().getVersionName());
+    }
     return notificationHandler;
   }
 

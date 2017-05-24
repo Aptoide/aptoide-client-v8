@@ -99,13 +99,14 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
         .subscribe(view -> {
           knockWithSixpackCredentials(displayable.getAbUrl());
 
-          Analytics.AppsTimeline.clickOnCard(SocialInstallDisplayable.CARD_TYPE_NAME,
-              displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getTitle(),
-              Analytics.AppsTimeline.OPEN_APP_VIEW);
-          displayable.sendOpenAppEvent();
-          getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
-              .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
-        }, throwable -> CrashReport.getInstance()
+      Analytics.AppsTimeline.clickOnCard(SocialInstallDisplayable.CARD_TYPE_NAME,
+          displayable.getPackageName(), Analytics.AppsTimeline.BLANK, displayable.getTitle(),
+          Analytics.AppsTimeline.OPEN_APP_VIEW);
+      displayable.sendOpenAppEvent();
+      displayable.sendSocialInstallClickEvent(Analytics.AppsTimeline.OPEN_APP_VIEW, socialAction);
+      getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
+          .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
+    }, throwable -> CrashReport.getInstance()
             .log(throwable));
   }
 

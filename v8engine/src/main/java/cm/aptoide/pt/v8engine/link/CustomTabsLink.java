@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.timeline.link;
+package cm.aptoide.pt.v8engine.link;
 
 import android.content.Context;
 import lombok.Getter;
@@ -8,13 +8,15 @@ import lombok.Getter;
  */
 public class CustomTabsLink implements Link {
 
+  private final Context context;
   @Getter private String url;
 
-  public CustomTabsLink(String url) {
+  public CustomTabsLink(String url, Context context) {
     this.url = url;
+    this.context = context;
   }
 
-  @Override public void launch(Context context) {
+  @Override public void launch() {
     CustomTabsHelper.getInstance()
         .openInChromeCustomTab(this.url, context);
   }

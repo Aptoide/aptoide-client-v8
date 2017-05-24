@@ -23,14 +23,15 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
+import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
+import cm.aptoide.pt.v8engine.timeline.view.displayable.CardDisplayable;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.account.store.CreateStoreFragment;
 import cm.aptoide.pt.v8engine.view.comments.CommentDialogFragment;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
-import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.CardDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import java.io.IOException;
 import okhttp3.Call;
@@ -49,6 +50,7 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
 
+  protected String socialAction = "(blank)";
   TextView shareButton;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
@@ -93,9 +95,10 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
 
     compositeSubscription.add(RxView.clicks(likeButton)
         .subscribe(click -> {
-          shareCardWithoutPreview(displayable, (String cardId) -> {
-            likeCard(displayable, cardId, 1);
-          }, SharePreviewDialog.SharePreviewOpenMode.LIKE);
+          shareCard(displayable, displayable.getTimelineCard()
+                  .getCardId(), (String cardId) -> likeCard(displayable, cardId, 1),
+              SharePreviewDialog.SharePreviewOpenMode.LIKE);
+          socialAction = "Like";
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));
 
@@ -115,13 +118,16 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
                     .subscribe();
               }, SharePreviewDialog.SharePreviewOpenMode.COMMENT));
           commentDialogFragment.show(fm, "fragment_comment_dialog");
+          socialAction = "Comment";
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));
     compositeSubscription.add(RxView.clicks(shareButton)
-        .subscribe(click -> shareCard(displayable, displayable.getTimelineCard()
-                .getCardId(), null, SharePreviewDialog.SharePreviewOpenMode.SHARE),
-            err -> CrashReport.getInstance()
-                .log(err)));
+        .subscribe(click -> {
+          shareCard(displayable, displayable.getTimelineCard()
+              .getCardId(), null, SharePreviewDialog.SharePreviewOpenMode.SHARE);
+          socialAction = "Share";
+        }, err -> CrashReport.getInstance()
+            .log(err)));
   }
 
   private void updateAccount(Account account) {
@@ -140,7 +146,8 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     if (!hasSocialPermissions(Analytics.Account.AccountOrigins.SHARE_CARD)) return;
 
     SharePreviewDialog sharePreviewDialog =
-        new SharePreviewDialog(displayable, accountManager, true, openMode);
+        new SharePreviewDialog(displayable, accountManager, true, openMode,
+            displayable.getTimelineAnalytics());
     AlertDialog.Builder alertDialog = sharePreviewDialog.getPreviewDialogBuilder(getContext());
 
     Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
@@ -172,10 +179,13 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
           switch (eResponse) {
             case YES:
               ShowMessage.asSnack(getContext(), R.string.social_timeline_share_dialog_title);
+              displayable.sendSocialActionEvent(
+                  TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
               break;
             case NO:
               break;
             case CANCEL:
+              displayable.sendSocialActionEvent(TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
               break;
           }
         });

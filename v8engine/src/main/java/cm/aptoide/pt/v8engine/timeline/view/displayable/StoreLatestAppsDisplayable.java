@@ -17,6 +17,8 @@ import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import static cm.aptoide.pt.v8engine.analytics.Analytics.AppsTimeline.BLANK;
+
 /**
  * Created by marcelobenites on 6/17/16.
  */
@@ -41,7 +43,7 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
       String avatarUrl, List<LatestApp> latestApps, String abUrl, SpannableFactory spannableFactory,
       DateCalculator dateCalculator, Date date, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository, String storeTheme) {
-    super(storeLatestApps);
+    super(storeLatestApps, timelineAnalytics);
     this.storeName = storeName;
     this.avatarUrl = avatarUrl;
     this.latestApps = latestApps;
@@ -101,21 +103,29 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
         packageName, storeName);
   }
 
+  public void sendStoreLatestAppsClickEvent(String action, String socialAction,
+      String packageName) {
+    timelineAnalytics.sendStoreLatestAppsClickEvent(CARD_TYPE_NAME, packageName, action,
+        socialAction, getStoreName());
+  }
+
   @Override
   public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback);
+    socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback, getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getStoreName(), BLANK));
   }
 
   @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), shareCardCallback);
+    socialRepository.share(getTimelineCard().getCardId(), shareCardCallback, getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getStoreName(), BLANK));
   }
 
   @Override public void like(Context context, String cardType, int rating) {
-    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating);
+    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, BLANK, getStoreName(), BLANK));
   }
 
   @Override public void like(Context context, String cardId, String cardType, int rating) {
-    socialRepository.like(cardId, cardType, "", rating);
+    socialRepository.like(cardId, cardType, "", rating,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, BLANK, getStoreName(), BLANK));
   }
 
   public Spannable getStyledTitle(Context context) {

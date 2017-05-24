@@ -20,9 +20,9 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialVideoDisplayable;
+import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -115,7 +115,7 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
           Analytics.AppsTimeline.clickOnCard(getCardTypeName(), Analytics.AppsTimeline.BLANK,
               displayable.getTitle(), displayable.getTitle(), Analytics.AppsTimeline.OPEN_VIDEO);
           displayable.getLink()
-              .launch(getContext());
+              .launch();
           displayable.sendOpenVideoEvent();
         }));
 

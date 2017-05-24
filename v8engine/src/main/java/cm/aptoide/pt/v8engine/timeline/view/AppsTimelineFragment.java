@@ -36,6 +36,7 @@ import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.download.InstallEventConverter;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.timeline.PackageRepository;
@@ -43,7 +44,6 @@ import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.TimelineCardFilter;
 import cm.aptoide.pt.v8engine.timeline.TimelineRepository;
-import cm.aptoide.pt.v8engine.timeline.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerSwipeFragment;
@@ -242,13 +242,14 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     dateCalculator = new DateCalculator();
     spannableFactory = new SpannableFactory();
     downloadFactory = new DownloadFactory();
-    linksHandlerFactory = new LinksHandlerFactory();
+    linksHandlerFactory = new LinksHandlerFactory(getContext());
     packageRepository = new PackageRepository(getContext().getPackageManager());
     spinnerProgressDisplayable = new ProgressBarDisplayable().setFullRow();
 
     final PermissionManager permissionManager = new PermissionManager();
     final SocialRepository socialRepository =
-        new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient);
+        new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
+            timelineAnalytics);
     final StoreCredentialsProvider storeCredentialsProvider = new StoreCredentialsProviderImpl();
     final InstallManager installManager =
         ((V8Engine) getContext().getApplicationContext()).getInstallManager(

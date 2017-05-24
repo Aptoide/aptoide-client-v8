@@ -67,7 +67,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
         from.forEach(searchAppsApp -> {
           mapPackages.put(searchAppsApp.getPackageName(), null);
           displayables.add(new SearchDisplayable(searchAppsApp, searchAbTest, addSubscribedStores,
-              hasMultipleFragments));
+              hasMultipleFragments, query));
         });
 
         addDisplayables(displayables);
@@ -128,6 +128,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
   @Override public void onDestroyView() {
     endlessRecyclerOnScrollListener = null;
+    clearDisplayables();
     super.onDestroyView();
   }
 

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.timeline.link;
+package cm.aptoide.pt.v8engine.link;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

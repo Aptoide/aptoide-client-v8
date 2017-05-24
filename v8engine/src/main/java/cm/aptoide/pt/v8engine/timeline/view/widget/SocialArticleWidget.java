@@ -103,11 +103,12 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
     url.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
       displayable.getLink()
-          .launch(context);
+          .launch();
       Analytics.AppsTimeline.clickOnCard(SocialArticleDisplayable.CARD_TYPE_NAME,
           Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE);
       displayable.sendOpenArticleEvent();
+      displayable.sendSocialArticleClickEvent(Analytics.AppsTimeline.OPEN_ARTICLE, socialAction);
     });
 
     compositeSubscription.add(displayable.getRelatedToApplication()
@@ -136,11 +137,13 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
         .subscribe(click -> {
           knockWithSixpackCredentials(displayable.getAbUrl());
           displayable.getDeveloperLink()
-              .launch(context);
+              .launch();
           Analytics.AppsTimeline.clickOnCard(SocialArticleDisplayable.CARD_TYPE_NAME,
               Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(),
               Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
           displayable.sendOpenBlogEvent();
+          displayable.sendSocialArticleClickEvent(Analytics.AppsTimeline.OPEN_ARTICLE_HEADER,
+              socialAction);
         }));
   }
 
