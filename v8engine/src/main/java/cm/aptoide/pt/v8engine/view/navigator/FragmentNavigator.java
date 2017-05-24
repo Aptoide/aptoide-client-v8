@@ -114,4 +114,8 @@ public class FragmentNavigator {
     cleanBackStack();
     navigateToWithoutBackSave(home);
   }
+
+  public void back() {
+    fragmentManager.popBackStack();
+  }
 }
