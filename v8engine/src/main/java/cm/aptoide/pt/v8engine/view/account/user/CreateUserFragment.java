@@ -19,14 +19,12 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.presenter.CreateUserView;
 import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
 import cm.aptoide.pt.v8engine.view.account.AccountErrorMapper;
 import cm.aptoide.pt.v8engine.view.account.PictureLoaderFragment;
@@ -42,7 +40,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
 // TODO
 // create presenter and separate logic code from view
-public class CreateUserFragment extends PictureLoaderFragment implements CreateUserView {
+public class CreateUserFragment extends PictureLoaderFragment implements ManageUserView {
 
   private static final String TAG = CreateUserFragment.class.getName();
   private static final String USER_IMAGE_PATH = "user_image_path";
@@ -272,7 +270,7 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
     }
 
     if (avatarUrl != null && !TextUtils.isEmpty(avatarUrl.toString())) {
-      userPicturePath = new FileUtils().getMediaStoragePath(avatarUrl, applicationContext);
+      userPicturePath = getMediaStoragePath(avatarUrl, applicationContext);
       checkAvatarRequirements(userPicturePath, avatarUrl);
     } else {
       Logger.w(TAG, "URI for content is null or empty");
