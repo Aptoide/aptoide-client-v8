@@ -97,6 +97,8 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
       Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, displayable.getPackageName(),
           Analytics.AppsTimeline.BLANK, displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_APP_VIEW);
+      displayable.sendSocialRecommendationClickEvent(Analytics.AppsTimeline.OPEN_APP_VIEW,
+          socialAction);
       getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     });

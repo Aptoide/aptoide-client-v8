@@ -81,7 +81,7 @@ public class CardToDisplayableConverter implements CardToDisplayable {
           SpannableFactory spannableFactory, DownloadFactory downloadFactory,
           LinksHandlerFactory linksHandlerFactory) {
         return SocialRecommendationDisplayable.from((SocialRecommendation) card, spannableFactory,
-            socialRepository, dateCalculator);
+            socialRepository, dateCalculator, timelineAnalytics);
       }
     });
 

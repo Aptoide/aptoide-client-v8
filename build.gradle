@@ -20,7 +20,6 @@ allprojects {
   repositories {
     jcenter()
     maven { url 'https://maven.fabric.io/public' }
-    maven { url 'http://maven.localytics.com/public' }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url "https://jitpack.io" }
   }
@@ -104,9 +103,6 @@ ext {
   PAYPAL_SDK = '2.15.0'
 
   SUPER_USER_LIB_VERSION = '1.0.0.+'
-
-  // Localytics Android SDK
-  LOCALYTICS_VERSION = '4.1.0'
 
   // Flurry Android SDK
   FLURRY_VERSION = '6.4.2'

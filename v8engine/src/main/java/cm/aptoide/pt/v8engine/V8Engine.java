@@ -59,12 +59,12 @@ import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.abtesting.ABTestManager;
-import cm.aptoide.pt.v8engine.account.AccountEventsAnalytcs;
 import cm.aptoide.pt.v8engine.account.AndroidAccountDataMigration;
 import cm.aptoide.pt.v8engine.account.AndroidAccountManagerDataPersist;
 import cm.aptoide.pt.v8engine.account.AndroidAccountProvider;
 import cm.aptoide.pt.v8engine.account.BaseBodyInterceptorFactory;
 import cm.aptoide.pt.v8engine.account.DatabaseStoreDataPersist;
+import cm.aptoide.pt.v8engine.account.LogAccountAnalytics;
 import cm.aptoide.pt.v8engine.account.SocialAccountFactory;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.ConsoleLogger;
@@ -456,11 +456,10 @@ public abstract class V8Engine extends SpotAndShareApplication {
                   new DatabaseStoreDataPersist.DatabaseStoreMapper()), getAccountFactory(),
               accountDataMigration, getAndroidAccountProvider(), Schedulers.io());
 
-      accountManager =
-          new AptoideAccountManager.Builder().setAccountAnalytics(new AccountEventsAnalytcs())
-              .setAccountDataPersist(accountDataPersist)
-              .setAccountManagerService(accountManagerService)
-              .build();
+      accountManager = new AptoideAccountManager.Builder().setAccountDataPersist(accountDataPersist)
+          .setAccountAnalytics(new LogAccountAnalytics())
+          .setAccountManagerService(accountManagerService)
+          .build();
     }
     return accountManager;
   }
@@ -552,7 +551,6 @@ public abstract class V8Engine extends SpotAndShareApplication {
   }
 
   private void sendAppStartToAnalytics(SharedPreferences sPref) {
-    Analytics.LocalyticsSessionControl.firstSession(sPref);
     Analytics.Lifecycle.Application.onCreate(this);
   }
 

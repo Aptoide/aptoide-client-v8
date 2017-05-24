@@ -26,6 +26,8 @@ import lombok.Getter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
+import static cm.aptoide.pt.v8engine.analytics.Analytics.AppsTimeline.BLANK;
+
 /**
  * Created by jdandrade on 23/11/2016.
  */
@@ -167,24 +169,34 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
         packageName);
   }
 
+  public void sendSocialArticleClickEvent(String action, String socialAction) {
+    timelineAnalytics.sendSocialArticleClickEvent(CARD_TYPE_NAME, getArticleTitle(), getTitle(),
+        action, socialAction);
+  }
+
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_social_article;
   }
 
   @Override
   public void share(Context context, boolean privacyResult, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);
+    socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getTitle(),
+            getArticleTitle()));
   }
 
   @Override public void share(Context context, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard(), context, shareCardCallback);
+    socialRepository.share(getTimelineCard(), context, shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getTitle(), BLANK));
   }
 
   @Override public void like(Context context, String cardType, int rating) {
-    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating);
+    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, BLANK, getTitle(), BLANK));
   }
 
   @Override public void like(Context context, String cardId, String cardType, int rating) {
-    socialRepository.like(cardId, cardType, "", rating);
+    socialRepository.like(cardId, cardType, "", rating,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, BLANK, getTitle(), BLANK));
   }
 }

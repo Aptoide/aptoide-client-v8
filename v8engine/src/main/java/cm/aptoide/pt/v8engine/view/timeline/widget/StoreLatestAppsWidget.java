@@ -86,6 +86,8 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
                 packageName, Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
                 Analytics.AppsTimeline.OPEN_APP_VIEW);
             displayable.sendOpenAppEvent(packageName);
+            displayable.sendStoreLatestAppsClickEvent(Analytics.AppsTimeline.OPEN_APP_VIEW,
+                socialAction, packageName);
             getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
                 .newAppViewFragment(apps.get(app), packageName));
           }));
@@ -98,6 +100,8 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
               Analytics.AppsTimeline.BLANK, Analytics.AppsTimeline.BLANK,
               displayable.getStoreName(), Analytics.AppsTimeline.OPEN_STORE);
           displayable.sendOpenStoreEvent();
+          displayable.sendStoreLatestAppsClickEvent(Analytics.AppsTimeline.OPEN_STORE, socialAction,
+              Analytics.AppsTimeline.BLANK);
           getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
               .newStoreFragment(displayable.getStoreName(), displayable.getStoreTheme()));
         }));

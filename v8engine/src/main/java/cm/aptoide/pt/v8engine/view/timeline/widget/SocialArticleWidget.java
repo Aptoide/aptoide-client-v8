@@ -115,6 +115,7 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
           Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE);
       displayable.sendOpenArticleEvent();
+      displayable.sendSocialArticleClickEvent(Analytics.AppsTimeline.OPEN_ARTICLE, socialAction);
     });
 
     compositeSubscription.add(displayable.getRelatedToApplication()
@@ -148,6 +149,8 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
               Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(),
               Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
           displayable.sendOpenBlogEvent();
+          displayable.sendSocialArticleClickEvent(Analytics.AppsTimeline.OPEN_ARTICLE_HEADER,
+              socialAction);
         }));
   }
 

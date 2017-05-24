@@ -114,7 +114,7 @@
   <PreferenceCategory android:title="@string/setting_clear_memory">
     <Preference
         android:key="clearcache"
-        android:summary="@string/settings_clearcache_title"
+        android:summary="@string/settings_clear_cache_summary"
         android:title="@string/settings_clearcache_title"/>
 
     <EditTextPreference
