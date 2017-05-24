@@ -322,7 +322,6 @@ public class Analytics {
           AppEventsLogger.updateUserProperties(bundle,
               response -> Logger.d("Facebook Analytics: ", response.toString()));
         }
-
       }
 
       public static void onStart(android.app.Activity activity) {
@@ -779,7 +778,6 @@ public class Analytics {
       track("Open Apps Timeline", FLURRY);
     }
   }
-
 
   public static class Dimensions {
 
