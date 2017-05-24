@@ -100,4 +100,9 @@ public class NotificationCenter {
   public Observable<List<AptoideNotification>> getInboxNotifications(int entries) {
     return notificationProvider.getNotifications(entries);
   }
+
+  public Observable<Boolean> haveNotifications() {
+    return notificationProvider.getNotifications(1)
+        .map(list -> !list.isEmpty());
+  }
 }

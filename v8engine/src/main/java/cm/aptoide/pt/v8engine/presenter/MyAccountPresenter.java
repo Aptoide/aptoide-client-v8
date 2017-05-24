@@ -57,6 +57,14 @@ public class MyAccountPresenter implements Presenter {
             throwable -> crashReport.log(throwable));
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(viewCreated -> notificationCenter.haveNotifications())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(hasNotifications -> view.showHeader(hasNotifications))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(notification -> {
+        }, throwable -> crashReport.log(throwable));
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> notificationCenter.getInboxNotifications(NUMBER_OF_NOTIFICATIONS))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(notifications -> view.showNotifications(notifications))

@@ -46,6 +46,7 @@ import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -112,6 +113,7 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     super.onViewCreated(view, savedInstanceState);
     accountManager.accountStatus()
         .first()
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(account -> setupAccountLayout(account), throwable -> crashReport.log(throwable));
     attachPresenter(new MyAccountPresenter(this, accountManager, crashReport,
         new MyAccountNavigator(getFragmentNavigator()),
@@ -156,9 +158,6 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
 
   @Override public void showNotifications(List<AptoideNotification> notifications) {
     adapter.updateNotifications(notifications);
-    if (notifications.isEmpty()) {
-      header.setVisibility(View.GONE);
-    }
   }
 
   @Override public Observable<Void> editStoreClick() {
@@ -180,6 +179,14 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
 
   @Override public void navigateToHome() {
     getFragmentNavigator().navigateToHomeCleaningBackStack();
+  }
+
+  @Override public void showHeader(Boolean hasNotifications) {
+    if (hasNotifications) {
+      header.setVisibility(View.VISIBLE);
+    } else {
+      header.setVisibility(View.INVISIBLE);
+    }
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {

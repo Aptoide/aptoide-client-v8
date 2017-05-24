@@ -21,4 +21,6 @@ public interface MyAccountView extends View {
   Observable<Void> editUserProfileClick();
 
   void navigateToHome();
+
+  void showHeader(Boolean hasNotifications);
 }

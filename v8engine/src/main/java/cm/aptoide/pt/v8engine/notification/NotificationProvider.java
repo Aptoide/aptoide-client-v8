@@ -59,8 +59,9 @@ public class NotificationProvider {
 
   public Observable<List<AptoideNotification>> getNotifications(int entries) {
     return notificationAccessor.getAllSorted(Sort.DESCENDING)
-        .flatMap(notifications -> Observable.from(notifications.subList(0, entries - 1))
+        .flatMap(notifications -> Observable.from(notifications)
             .map(notification -> convertToAptoideNotification(notification))
+            .take(entries)
             .toList());
   }
 }
