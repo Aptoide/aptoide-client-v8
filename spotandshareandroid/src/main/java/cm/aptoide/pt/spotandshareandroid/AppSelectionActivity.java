@@ -12,14 +12,14 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import java.util.List;
 
-public class HighwayAppSelectionActivity extends ActivityView implements HighwayAppSelectionView {
+public class AppSelectionActivity extends ActivityView implements AppSelectionView {
 
   private boolean isHotspot;
-  private HighwayAppSelectionCustomAdapter adapter;
+  private AppSelectionCustomAdapter adapter;
   private FloatingActionButton sendButton;
   private GridView gridView;
   private ProgressBar progressBar;
-  private HighwayAppSelectionPresenter presenter;
+  private AppSelectionPresenter presenter;
   private ApplicationProvider applicationProvider;
   private ApplicationSender applicationSender;
   private Toolbar mToolbar;
@@ -41,8 +41,7 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
     applicationProvider = new ApplicationProvider(this);
     applicationSender = ApplicationSender.getInstance(this, isHotspot);
 
-    presenter =
-        new HighwayAppSelectionPresenter(applicationProvider, applicationSender, this, isHotspot);
+    presenter = new AppSelectionPresenter(applicationProvider, applicationSender, this, isHotspot);
     attachPresenter(presenter);
   }
 
@@ -91,7 +90,7 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
   }
 
   @Override public void showNoAppsSelectedToast() {
-    Toast.makeText(HighwayAppSelectionActivity.this, HighwayAppSelectionActivity.this.getResources()
+    Toast.makeText(AppSelectionActivity.this, AppSelectionActivity.this.getResources()
         .getString(R.string.noSelectedAppsToSend), Toast.LENGTH_SHORT)
         .show();
   }
@@ -103,9 +102,9 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
 
   @Override public void generateAdapter(boolean isHotspot, List<AppViewModel> itemList) {
     if (isHotspot) {
-      adapter = new HighwayAppSelectionCustomAdapter(this, gridView.getContext(), itemList, true);
+      adapter = new AppSelectionCustomAdapter(this, gridView.getContext(), itemList, true);
     } else {
-      adapter = new HighwayAppSelectionCustomAdapter(this, gridView.getContext(), itemList, false);
+      adapter = new AppSelectionCustomAdapter(this, gridView.getContext(), itemList, false);
     }
 
     gridView.setDrawSelectorOnTop(false);

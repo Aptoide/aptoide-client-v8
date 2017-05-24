@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by filipegoncalves on 07-02-2017.
  */
-public interface HighwayAppSelectionView {
+public interface AppSelectionView {
 
   void setUpSendListener();
 

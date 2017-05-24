@@ -7,17 +7,17 @@ import android.widget.ImageView;
 /**
  * Created by filipegoncalves on 29-07-2016.
  */
-public class HighwayCustomImageView extends ImageView {
+public class CustomImageView extends ImageView {
 
-  public HighwayCustomImageView(Context context) {
+  public CustomImageView(Context context) {
     super(context);
   }
 
-  public HighwayCustomImageView(Context context, AttributeSet attrs) {
+  public CustomImageView(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
-  public HighwayCustomImageView(Context context, AttributeSet attrs, int defStyle) {
+  public CustomImageView(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
   }
 

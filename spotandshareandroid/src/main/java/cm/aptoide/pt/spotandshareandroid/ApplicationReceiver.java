@@ -79,13 +79,13 @@ public class ApplicationReceiver {
   public Intent generateIntentToStartReceiving() {
     Intent receiveIntent = null;
     if (isHotspot) {
-      receiveIntent = new Intent(context, HighwayServerService.class);
+      receiveIntent = new Intent(context, ServerService.class);
       Logger.d(TAG, "Will start a SERVER service");
     } else {
 
       Logger.d(TAG, "Will start a CLIENT service");
 
-      receiveIntent = new Intent(context, HighwayClientService.class);
+      receiveIntent = new Intent(context, ClientService.class);
       receiveIntent.putExtra("targetIP", targetIPAddress);
     }
     receiveIntent.putExtra("nickname", nickname);

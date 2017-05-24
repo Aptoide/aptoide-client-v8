@@ -118,9 +118,9 @@ public class ApplicationSender {
   public Intent generateIntentToSend(List<App> selectedApps) {
     Intent sendIntent = null;
     if (isHotspot) {
-      sendIntent = new Intent(context, HighwayServerService.class);
+      sendIntent = new Intent(context, ServerService.class);
     } else {
-      sendIntent = new Intent(context, HighwayClientService.class);
+      sendIntent = new Intent(context, ClientService.class);
       sendIntent.putExtra("targetIP", targetIPAddress);
     }
     sendIntent.putExtra("port", port);

@@ -53,13 +53,13 @@
         >
 
 
-      <cm.aptoide.pt.spotandshareandroid.HighwayRadarScan
+      <cm.aptoide.pt.spotandshareandroid.RadarScan
           android:id="@+id/radar"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           />
 
-      <cm.aptoide.pt.spotandshareandroid.HighwayRadarTextView
+      <cm.aptoide.pt.spotandshareandroid.RadarTextView
           android:id="@+id/hotspotTextView"
           android:layout_width="match_parent"
           android:layout_height="match_parent"

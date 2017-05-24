@@ -17,7 +17,7 @@ import android.view.View;
 /**
  * Created by filipegoncalves on 24-08-2016.
  */
-public class HighwayRadarScan extends View {
+public class RadarScan extends View {
 
   private static final int DEFAULT_WIDTH = 300;
   private static final int DEFAULT_HEIGHT = 300;
@@ -48,19 +48,19 @@ public class HighwayRadarScan extends View {
     }
   };
 
-  public HighwayRadarScan(Context context) {
+  public RadarScan(Context context) {
     super(context);
 
     init(null, context);
   }
 
-  public HighwayRadarScan(Context context, AttributeSet attributeSet) {
+  public RadarScan(Context context, AttributeSet attributeSet) {
     super(context, attributeSet);
 
     init(attributeSet, context);
   }
 
-  public HighwayRadarScan(Context context, AttributeSet attributeSet, int defStyleAttr) {
+  public RadarScan(Context context, AttributeSet attributeSet, int defStyleAttr) {
     super(context, attributeSet, defStyleAttr);
 
     init(attributeSet, context);
@@ -73,13 +73,11 @@ public class HighwayRadarScan extends View {
     tailColor = Color.parseColor("#efefef");
     enableAnimation = true;
     if (attributeSet != null) {
-      TypedArray ta = context.obtainStyledAttributes(attributeSet, R.styleable.HighwayRadarScan);
-      circleColor =
-          ta.getColor(R.styleable.HighwayRadarScan_circleColor, Color.parseColor("#cecece"));
-      radarColor =
-          ta.getColor(R.styleable.HighwayRadarScan_radarColor, Color.parseColor("#fafafa"));
-      tailColor = ta.getColor(R.styleable.HighwayRadarScan_tailColor, Color.parseColor("#efefef"));
-      enableAnimation = ta.getBoolean(R.styleable.HighwayRadarScan_enableAnimation, true);
+      TypedArray ta = context.obtainStyledAttributes(attributeSet, R.styleable.RadarScan);
+      circleColor = ta.getColor(R.styleable.RadarScan_circleColor, Color.parseColor("#cecece"));
+      radarColor = ta.getColor(R.styleable.RadarScan_radarColor, Color.parseColor("#fafafa"));
+      tailColor = ta.getColor(R.styleable.RadarScan_tailColor, Color.parseColor("#efefef"));
+      enableAnimation = ta.getBoolean(R.styleable.RadarScan_enableAnimation, true);
       ta.recycle();
     }
 

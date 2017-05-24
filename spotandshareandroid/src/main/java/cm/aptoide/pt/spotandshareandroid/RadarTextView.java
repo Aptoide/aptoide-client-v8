@@ -17,7 +17,7 @@ import java.util.Random;
 /**
  * Created by filipegoncalves on 30-08-2016.
  */
-public class HighwayRadarTextView extends FrameLayout
+public class RadarTextView extends FrameLayout
     implements ViewTreeObserver.OnGlobalLayoutListener {
 
   private static final int idX = 0;
@@ -28,23 +28,23 @@ public class HighwayRadarTextView extends FrameLayout
   private Random random;
   private int width;
   private int height;
-  private int mode = HighwayRadarRippleView.MODE_OUT;
+  private int mode = RadarRippleView.MODE_OUT;
   private int fontColor = Color.parseColor("#000000");
   private int rippleViewDefaultColor = Color.parseColor("#aeaeae");
   private HotspotClickListener hotspotListener;
-  private List<HighwayRadarRippleView> listOfHotspot;
+  private List<RadarRippleView> listOfHotspot;
 
-  public HighwayRadarTextView(Context context) {
+  public RadarTextView(Context context) {
     super(context);
     init(null, context);
   }
 
-  public HighwayRadarTextView(Context context, AttributeSet attrs) {
+  public RadarTextView(Context context, AttributeSet attrs) {
     super(context, attrs);
     init(attrs, context);
   }
 
-  public HighwayRadarTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+  public RadarTextView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     init(attrs, context);
   }
@@ -86,10 +86,10 @@ public class HighwayRadarTextView extends FrameLayout
         listX.add(i * xItem);
         listY.add(i * yItem + (yItem >> 2));
       }
-      LinkedList<HighwayRadarRippleView> listTxtTop = new LinkedList<>();
-      LinkedList<HighwayRadarRippleView> listTxtBottom = new LinkedList<>();
+      LinkedList<RadarRippleView> listTxtTop = new LinkedList<>();
+      LinkedList<RadarRippleView> listTxtBottom = new LinkedList<>();
 
-      listOfHotspot = new ArrayList<HighwayRadarRippleView>();
+      listOfHotspot = new ArrayList<RadarRippleView>();
 
       for (int i = 0; i < size; i++) {
         final Group group = vetorKeywords.get(i);
@@ -97,11 +97,11 @@ public class HighwayRadarTextView extends FrameLayout
         int xy[] = randomXY(random, listX, listY, xItem);
         int txtSize = textSize;
 
-        final HighwayRadarRippleView txt = new HighwayRadarRippleView(getContext());
-        if (mode == HighwayRadarRippleView.MODE_IN) {
-          txt.setMode(HighwayRadarRippleView.MODE_IN);
+        final RadarRippleView txt = new RadarRippleView(getContext());
+        if (mode == RadarRippleView.MODE_IN) {
+          txt.setMode(RadarRippleView.MODE_IN);
         } else {
-          txt.setMode(HighwayRadarRippleView.MODE_OUT);
+          txt.setMode(RadarRippleView.MODE_OUT);
         }
         final String hotspotName = group.getDeviceName();
         txt.setText(hotspotName);
@@ -169,12 +169,12 @@ public class HighwayRadarTextView extends FrameLayout
     }
   }
 
-  private void attach2Screen(LinkedList<HighwayRadarRippleView> listTxt, int xCenter, int yCenter,
+  private void attach2Screen(LinkedList<RadarRippleView> listTxt, int xCenter, int yCenter,
       int yItem) {
     int size = listTxt.size();
     sortXYList(listTxt, size);
     for (int i = 0; i < size; i++) {
-      HighwayRadarRippleView txt = listTxt.get(i);
+      RadarRippleView txt = listTxt.get(i);
       int[] iXY = (int[]) txt.getTag();
       int yDistance = iXY[idY] - yCenter;
       int yMove = Math.abs(yDistance);
@@ -213,14 +213,14 @@ public class HighwayRadarTextView extends FrameLayout
     }
   }
 
-  private void sortXYList(LinkedList<HighwayRadarRippleView> listTxt, int endIdx) {
+  private void sortXYList(LinkedList<RadarRippleView> listTxt, int endIdx) {
     for (int i = 0; i < endIdx; i++) {
       for (int k = i + 1; k < endIdx; k++) {
         if (((int[]) listTxt.get(k)
             .getTag())[idDist] < ((int[]) listTxt.get(i)
             .getTag())[idDist]) {
-          HighwayRadarRippleView iTmp = listTxt.get(i);
-          HighwayRadarRippleView kTmp = listTxt.get(k);
+          RadarRippleView iTmp = listTxt.get(i);
+          RadarRippleView kTmp = listTxt.get(k);
           listTxt.set(i, kTmp);
           listTxt.set(k, iTmp);
         }

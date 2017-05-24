@@ -8,18 +8,18 @@ import java.util.List;
  * Created by filipegoncalves on 07-02-2017.
  */
 
-public class HighwayAppSelectionPresenter implements Presenter {
+public class AppSelectionPresenter implements Presenter {
 
-  public static final String TAG = HighwayAppSelectionPresenter.class.getSimpleName();
+  public static final String TAG = AppSelectionPresenter.class.getSimpleName();
   private ApplicationProvider applicationProvider;
   private ApplicationSender applicationSender;
-  private HighwayAppSelectionView view;
+  private AppSelectionView view;
   private boolean isHotspot;
   private List<AppViewModel> viewModelApps;
   private List<App> selectedApps;
 
-  public HighwayAppSelectionPresenter(ApplicationProvider applicationProvider,
-      ApplicationSender applicationSender, HighwayAppSelectionView view, boolean isHotspot) {
+  public AppSelectionPresenter(ApplicationProvider applicationProvider,
+      ApplicationSender applicationSender, AppSelectionView view, boolean isHotspot) {
     this.applicationProvider = applicationProvider;
     this.applicationSender = applicationSender;
     this.view = view;
@@ -61,7 +61,7 @@ public class HighwayAppSelectionPresenter implements Presenter {
   }
 
   private void setAppSelectionListener() {
-    view.setAppSelectionListener(new HighwayAppSelectionView.AppSelectionListener() {
+    view.setAppSelectionListener(new AppSelectionView.AppSelectionListener() {
       @Override public void onAppSelected(AppViewModel item) {
         App app = applicationProvider.getApp(item.getPackageName());
         if (item.isSelected()) {

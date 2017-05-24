@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Created by filipegoncalves on 31-01-2017.
  */
 
-public interface HighwayView {
+public interface RadarView {
 
   void showConnections();
 
@@ -43,17 +43,4 @@ public interface HighwayView {
   void openShareAptoide(String Ssid);
 
   void showShareAptoideApk();
-
-  //    void setCreateGroupListener(View.OnClickListener listener );
-  //
-  //    void setJoinGroupListener(View.OnClickListener listener);
-  //
-  //    void showConnectionNotSelectedError();
-  //
-  //    void setConnectionSelectedListener(SimpleListener listener);
-  //
-  //    void setUnknownError();
-  //
-  //    void showConnectionError();
-  //
 }

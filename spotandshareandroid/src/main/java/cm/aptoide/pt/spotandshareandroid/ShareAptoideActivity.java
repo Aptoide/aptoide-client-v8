@@ -27,7 +27,7 @@ public class ShareAptoideActivity extends ActivityView implements ShareAptoideVi
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_share_aptoide);
-    Ssid = getIntent().getStringExtra(HighwayActivity.HOTSPOT_NAME);
+    Ssid = getIntent().getStringExtra(RadarActivity.HOTSPOT_NAME);
     bindViews();
 
     presenter = new ShareAptoidePresenter(this,

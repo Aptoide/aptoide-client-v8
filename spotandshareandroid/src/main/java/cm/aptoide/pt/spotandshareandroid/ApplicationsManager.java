@@ -118,7 +118,7 @@ public class ApplicationsManager {
     }
   }
 
-  public App convertTransferRecordItemToApp(HighwayTransferRecordItem item) {
+  public App convertTransferRecordItemToApp(TransferRecordItem item) {
     String filePathToReSend = item.getFilePath();
     String appName = item.getAppName();
     String packageName = item.getPackageName();
@@ -151,7 +151,7 @@ public class ApplicationsManager {
     return obbsFilePath;
   }
 
-  public HighwayTransferRecordItem readApkArchive(String appName, String filePath) {
+  public TransferRecordItem readApkArchive(String appName, String filePath) {
 
     PackageManager packageManager = context.getPackageManager();
     PackageInfo packageInfo = packageManager.getPackageArchiveInfo(filePath, 0);
@@ -162,13 +162,13 @@ public class ApplicationsManager {
       String name = (String) packageInfo.applicationInfo.loadLabel(packageManager);
       String packageName = packageInfo.applicationInfo.packageName;
       String versionName = packageInfo.versionName;
-      HighwayTransferRecordItem tmp =
-          new HighwayTransferRecordItem(icon, name, packageName, filePath, true, versionName);
+      TransferRecordItem tmp =
+          new TransferRecordItem(icon, name, packageName, filePath, true, versionName);
 
       return tmp;
     } else {
       Logger.d(TAG, "Inside the error part of the receiving app bigger version");
-      HighwayTransferRecordItem tmp = new HighwayTransferRecordItem(context.getResources()
+      TransferRecordItem tmp = new TransferRecordItem(context.getResources()
           .getDrawable(R.drawable.sym_def_app_icon), appName, "ErrorPackName",
           "Could not read the original filepath", true, "No version available");
       return tmp;
@@ -191,7 +191,7 @@ public class ApplicationsManager {
     }
   }
 
-  @Nullable public HighwayTransferRecordItem startedSending(String nameOfTheApp, String packageName,
+  @Nullable public TransferRecordItem startedSending(String nameOfTheApp, String packageName,
       boolean needReSend, boolean isSent) {
     PackageManager packageManager = context.getPackageManager();
     List<PackageInfo> packages = packageManager.getInstalledPackages(PackageManager.GET_META_DATA);
@@ -207,8 +207,7 @@ public class ApplicationsManager {
             .toString()
             .equals(nameOfTheApp) && applicationInfo.packageName.equals(
             packageName)) {//compare with the packageName
-          HighwayTransferRecordItem tmp =
-              new HighwayTransferRecordItem(applicationInfo.loadIcon(packageManager),
+          TransferRecordItem tmp = new TransferRecordItem(applicationInfo.loadIcon(packageManager),
                   applicationInfo.loadLabel(packageManager)
                       .toString(), packageName, applicationInfo.sourceDir, false, pack.versionName);
 

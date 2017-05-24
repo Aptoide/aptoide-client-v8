@@ -12,15 +12,15 @@ public class TransferRecordPresenter implements Presenter {
 
   private final ConnectionManager connectionManager;
   private final Disconnecter disconnecter;
-  private HighwayTransferRecordView view;
-  private List<HighwayTransferRecordItem> listOfApps;
+  private TransferRecordView view;
+  private List<TransferRecordItem> listOfApps;
   private ApplicationReceiver applicationReceiver;
   private ApplicationSender applicationSender;
   private TransferRecordManager transferRecordManager;
   private boolean isHotspot;
   private SpotAndShareAnalyticsInterface analytics;
 
-  public TransferRecordPresenter(HighwayTransferRecordView view,
+  public TransferRecordPresenter(TransferRecordView view,
       ApplicationReceiver applicationReceiver, ApplicationSender applicationSender,
       TransferRecordManager transferRecordManager, boolean isHotspot, Disconnecter disconnecter,
       ConnectionManager connectionManager, SpotAndShareAnalyticsInterface anaylitics) {
@@ -47,7 +47,7 @@ public class TransferRecordPresenter implements Presenter {
       }
 
       @Override public void onReceivedApp(String appName, String filePath, boolean needReSend) {
-        HighwayTransferRecordItem item = transferRecordManager.readApkArchive(appName, filePath);
+        TransferRecordItem item = transferRecordManager.readApkArchive(appName, filePath);
         if (!listOfApps.contains(item)) {
           listOfApps.add(item);
         }
@@ -84,7 +84,7 @@ public class TransferRecordPresenter implements Presenter {
       @Override public void onAppStartingToSend(String appName, String packageName, boolean isSent,
           boolean needReSend, int positionToReSend) {
         if (positionToReSend == 100000) {
-          HighwayTransferRecordItem tmp =
+          TransferRecordItem tmp =
               transferRecordManager.startedSending(appName, packageName, needReSend, isSent);
           if (!listOfApps.contains(tmp)) {
             listOfApps.add(tmp);
@@ -206,8 +206,8 @@ public class TransferRecordPresenter implements Presenter {
   }
 
   private void setTransferRecordListener() {
-    view.setAdapterListeners(new HighwayTransferRecordView.TransferRecordListener() {
-      @Override public void onInstallApp(HighwayTransferRecordItem item) {
+    view.setAdapterListeners(new TransferRecordView.TransferRecordListener() {
+      @Override public void onInstallApp(TransferRecordItem item) {
 
         String appName = item.getAppName();
         String filePath = item.getFilePath();
@@ -219,12 +219,12 @@ public class TransferRecordPresenter implements Presenter {
         }
       }
 
-      @Override public void onDeleteApp(HighwayTransferRecordItem item) {
+      @Override public void onDeleteApp(TransferRecordItem item) {
 
         view.showDialogToDelete(item);
       }
 
-      @Override public void onReSendApp(HighwayTransferRecordItem item,
+      @Override public void onReSendApp(TransferRecordItem item,
           int position) {//// TODO: extrair o item para um App e , extrair o send files do chat activity p aplicationSEnder
 
         App app = transferRecordManager.convertTransferRecordItemToApp(item);
@@ -258,14 +258,14 @@ public class TransferRecordPresenter implements Presenter {
 
   public void deleteAllApps() {
     transferRecordManager.deleteAllApps(new TransferRecordManager.DeleteAppsListener() {
-      @Override public void onDeleteAllApps(List<HighwayTransferRecordItem> toRemoveList) {
+      @Override public void onDeleteAllApps(List<TransferRecordItem> toRemoveList) {
         view.refreshAdapter(toRemoveList);
         view.hideReceivedAppMenu();
       }
     }, listOfApps);
   }
 
-  public void deleteAppFile(HighwayTransferRecordItem item) {
+  public void deleteAppFile(TransferRecordItem item) {
     String filePath = item.getFilePath();
     transferRecordManager.deleteAppFile(filePath);
     item.setDeleted(true);
