@@ -9,7 +9,15 @@ import android.os.Parcelable;
  */
 public class App implements Parcelable {
 
+  public static final Creator<App> CREATOR = new Creator<App>() {
+    @Override public App createFromParcel(Parcel in) {
+      return new App(in);
+    }
 
+    @Override public App[] newArray(int size) {
+      return new App[size];
+    }
+  };
   private transient Drawable imageIcon;
   private String appName;
   private String filePath;
@@ -30,16 +38,6 @@ public class App implements Parcelable {
     packageName = in.readString();
     obbsFilePath = in.readString();
   }
-
-  public static final Creator<App> CREATOR = new Creator<App>() {
-    @Override public App createFromParcel(Parcel in) {
-      return new App(in);
-    }
-
-    @Override public App[] newArray(int size) {
-      return new App[size];
-    }
-  };
 
   public Drawable getImageIcon() {
     return imageIcon;
