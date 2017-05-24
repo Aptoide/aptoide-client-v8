@@ -640,6 +640,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     GetAppMeta.Media media = app.getMedia();
 
     final boolean shouldInstall = openType == OpenType.OPEN_AND_INSTALL;
+    if (openType == OpenType.OPEN_AND_INSTALL) {
+      openType = null;
+    }
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
             installedRepository, timelineAnalytics, appViewAnalytics);
