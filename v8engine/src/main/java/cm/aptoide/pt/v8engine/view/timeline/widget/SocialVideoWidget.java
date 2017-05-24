@@ -123,6 +123,7 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
           displayable.getLink()
               .launch(context);
           displayable.sendOpenVideoEvent(packageName);
+          displayable.sendSocialVideoClickEvent(Analytics.AppsTimeline.OPEN_VIDEO, socialAction);
         }));
 
     compositeSubscription.add(displayable.getRelatedToApplication()
@@ -155,6 +156,8 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
           Analytics.AppsTimeline.clickOnCard(getCardTypeName(), Analytics.AppsTimeline.BLANK,
               displayable.getVideoTitle(), displayable.getTitle(),
               Analytics.AppsTimeline.OPEN_VIDEO_HEADER);
+          displayable.sendSocialVideoClickEvent(Analytics.AppsTimeline.OPEN_VIDEO_HEADER,
+              socialAction);
           displayable.sendOpenChannelEvent(packageName);
         }));
   }

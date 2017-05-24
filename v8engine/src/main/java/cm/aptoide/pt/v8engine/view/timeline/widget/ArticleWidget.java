@@ -80,6 +80,8 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
       Analytics.AppsTimeline.clickOnCard(ArticleDisplayable.CARD_TYPE_NAME,
           Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE);
+      displayable.sendArticleWidgetCardClickEvent(Analytics.AppsTimeline.OPEN_ARTICLE,
+          socialAction);
       displayable.sendOpenArticleEvent(packageName);
     });
 
@@ -113,6 +115,8 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
           Analytics.AppsTimeline.clickOnCard(ArticleDisplayable.CARD_TYPE_NAME,
               Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(),
               Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
+          displayable.sendArticleWidgetCardClickEvent(Analytics.AppsTimeline.OPEN_ARTICLE_HEADER,
+              socialAction);
           displayable.sendOpenArticleEvent(packageName);
         }));
   }

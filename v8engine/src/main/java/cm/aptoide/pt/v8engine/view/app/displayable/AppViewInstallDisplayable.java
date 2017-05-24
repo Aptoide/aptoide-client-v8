@@ -19,9 +19,11 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
 import cm.aptoide.pt.v8engine.install.rollback.RollbackRepository;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import lombok.AccessLevel;
@@ -71,14 +73,16 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   private Button installButton;
   private WidgetState widgetState;
   private GetAppMeta.App currentApp;
+  private TimelineAnalytics timelineAnalytics;
 
   public AppViewInstallDisplayable() {
     super();
   }
 
   public AppViewInstallDisplayable(InstallManager installManager, GetApp getApp,
-      MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository) {
-    super(getApp);
+      MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository,
+      TimelineAnalytics timelineAnalytics, AppViewAnalytics appViewAnalytics) {
+    super(getApp, appViewAnalytics);
     this.installManager = installManager;
     this.md5 = getApp.getNodes()
         .getMeta()
@@ -96,13 +100,15 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     this.shouldInstall = shouldInstall;
     this.rollbackRepository = RepositoryFactory.getRollbackRepository();
     this.installedRepository = installedRepository;
+    this.timelineAnalytics = timelineAnalytics;
     widgetState = new WidgetState(ACTION_NO_STATE);
   }
 
   public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager,
-      MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository) {
+      MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository,
+      TimelineAnalytics timelineAnalytics, AppViewAnalytics appViewAnalytics) {
     return new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall,
-        installedRepository);
+        installedRepository, timelineAnalytics, appViewAnalytics);
   }
 
   public void startInstallationProcess() {
@@ -192,6 +198,10 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
           }
           return widgetState;
         });
+  }
+
+  public TimelineAnalytics getTimelineAnalytics() {
+    return timelineAnalytics;
   }
 
   @IntDef({

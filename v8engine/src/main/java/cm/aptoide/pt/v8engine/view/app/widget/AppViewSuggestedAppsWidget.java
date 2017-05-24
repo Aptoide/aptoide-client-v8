@@ -33,7 +33,8 @@ import java.util.List;
 
     List<Displayable> displayables = new LinkedList<>();
     for (MinimalAd minimalAd : ads) {
-      displayables.add(new AppViewSuggestedAppDisplayable(minimalAd));
+      displayables.add(
+          new AppViewSuggestedAppDisplayable(minimalAd, displayable.getAppViewAnalytics()));
     }
 
     BaseAdapter adapter = new BaseAdapter(displayables) {

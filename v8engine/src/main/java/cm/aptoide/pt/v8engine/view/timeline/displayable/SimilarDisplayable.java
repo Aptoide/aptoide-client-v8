@@ -56,7 +56,7 @@ public class SimilarDisplayable extends CardDisplayable {
       List<String> similarAppsNames, List<String> similarAppsPackageNames, Date date,
       Date timestamp, DateCalculator dateCalculator, SpannableFactory spannableFactory,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
-    super(similar);
+    super(similar, timelineAnalytics);
     this.avatarResource = avatarResource;
     this.titleResource = titleResource;
     this.appId = appId;
@@ -172,18 +172,18 @@ public class SimilarDisplayable extends CardDisplayable {
 
   @Override
   public void share(Context context, boolean privacyResult, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);
+    socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback, null);
   }
 
   @Override public void share(Context context, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard(), context, shareCardCallback);
+    socialRepository.share(getTimelineCard(), context, shareCardCallback, null);
   }
 
   @Override public void like(Context context, String cardType, int rating) {
-    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating);
+    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating, null);
   }
 
   @Override public void like(Context context, String cardId, String cardType, int rating) {
-    socialRepository.like(cardId, cardType, "", rating);
+    socialRepository.like(cardId, cardType, "", rating, null);
   }
 }

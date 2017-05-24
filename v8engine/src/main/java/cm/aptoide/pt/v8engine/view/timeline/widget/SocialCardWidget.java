@@ -95,6 +95,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
 
     if (comments != null) {
       compositeSubscription.add(RxView.clicks(comments)
+          .doOnNext(__ -> socialAction = "Comment") // For analytics purposes
           .flatMap(aVoid -> showComments(displayable))
           .subscribe(aVoid -> knockWithSixpackCredentials(displayable.getAbUrl()), showError()));
 
@@ -137,6 +138,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
                 }
               }
             }
+            socialAction = "Like";
           }, err -> CrashReport.getInstance()
               .log(err)));
 
@@ -181,6 +183,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
                     .getAppearance()
                     .getTheme());
               }
+              socialAction = "Go to Owner Timeline";
             }));
   }
 
