@@ -6,7 +6,9 @@
 package cm.aptoide.pt.v8engine.view.account;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -132,6 +134,30 @@ import java.util.Locale;
           .log(new IOException("Failed to create directory"));
     }
     return Uri.fromFile(new File(storageDir.getPath() + File.separator + fileName));
+  }
+
+  protected String getMediaStoragePath(Uri contentUri, Context context) {
+    if (contentUri == null) {
+      throw new NullPointerException("content Uri is null");
+    }
+
+    Cursor cursor = null;
+    try {
+      String[] projection = { MediaStore.Images.Media.DATA };
+      cursor = context.getContentResolver()
+          .query(contentUri, projection, null, null, null);
+      int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+      cursor.moveToFirst();
+      return cursor.getString(column_index);
+    } catch (NullPointerException ex) {
+      Logger.e(TAG, ex);
+    } finally {
+      if (cursor != null) {
+        cursor.close();
+      }
+    }
+    // default situation
+    return contentUri.getPath();
   }
 
   protected void checkAvatarRequirements(String avatarPath, Uri avatarUrl) {

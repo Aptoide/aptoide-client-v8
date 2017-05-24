@@ -25,6 +25,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.account.store.CreateStoreFragment;
+import cm.aptoide.pt.v8engine.view.account.store.ManageStoreModel;
 import cm.aptoide.pt.v8engine.view.comments.CommentDialogFragment;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -141,7 +142,7 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
         account.getAccess())) {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
           R.string.create_store_create, snackView -> {
-            getFragmentNavigator().navigateTo(CreateStoreFragment.newInstance());
+            getFragmentNavigator().navigateTo(CreateStoreFragment.newInstance(new ManageStoreModel(false)));
           });
       return;
     }

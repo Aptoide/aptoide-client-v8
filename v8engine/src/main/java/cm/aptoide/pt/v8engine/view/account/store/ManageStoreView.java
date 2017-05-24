@@ -1,8 +1,9 @@
-package cm.aptoide.pt.v8engine.presenter;
+package cm.aptoide.pt.v8engine.view.account.store;
 
+import cm.aptoide.pt.v8engine.presenter.View;
 import rx.Observable;
 
-public interface CreateStoreView extends View {
+public interface ManageStoreView extends View {
   Observable<Void> selectStoreImageClick();
 
   Observable<Void> createStoreClick();
