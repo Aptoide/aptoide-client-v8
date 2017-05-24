@@ -20,48 +20,49 @@
 
   <style name="Aptoide.TextView.Regular.XXL">
     <item name="android:textSize">34sp</item>
-    <item name="android:lineSpacingExtra">16sp</item>
+    <item name="android:lineSpacingExtra">2dp</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.XL">
     <item name="android:textSize">24sp</item>
-    <item name="android:lineSpacingExtra">8sp</item>
+    <item name="android:lineSpacingExtra">4dp</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.L">
     <item name="android:textSize">20sp</item>
-    <item name="android:lineSpacingExtra">8sp</item>
+    <item name="android:lineSpacingExtra">4dp</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.M">
     <item name="android:textSize">16sp</item>
-    <item name="android:lineSpacingExtra">8sp</item>
+    <item name="android:lineSpacingExtra">4dp</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.S">
     <item name="android:textSize">14sp</item>
-    <item name="android:lineSpacingExtra">6sp</item>
+    <item name="android:lineSpacingExtra">3dp</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.XS">
     <item name="android:textSize">12sp</item>
-    <item name="android:lineSpacingExtra">4sp</item>
+    <item name="android:lineSpacingExtra">2dp</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.XXS">
     <item name="android:textSize">10sp</item>
-    <item name="android:lineSpacingExtra">6sp</item>
+    <item name="android:lineSpacingExtra">1dp</item>
   </style>
 
   <style name="Aptoide.TextView.Medium.L">
     <item name="android:textSize">20sp</item>
-    <item name="android:lineSpacingExtra">8sp</item>
+    <item name="android:lineSpacingExtra">4dp</item>
   </style>
 
   <style name="Aptoide.TextView.Medium.S">
     <item name="android:textSize">14sp</item>
-    <item name="android:lineSpacingExtra">10sp</item>
+    <item name="android:lineSpacingExtra">5dp</item>
   </style>
+
 
   <!-- Colors-->
   <style name="Aptoide.TextView.Regular.XS.GreyFog">
