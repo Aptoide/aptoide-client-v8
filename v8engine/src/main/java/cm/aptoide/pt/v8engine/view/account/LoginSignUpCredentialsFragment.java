@@ -149,7 +149,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     loginArea.setVisibility(View.GONE);
     signUpArea.setVisibility(View.VISIBLE);
     separator.setVisibility(View.GONE);
-    termsAndConditions.setVisibility(View.GONE);
+    termsAndConditions.setVisibility(View.VISIBLE);
   }
 
   @Override public void showAptoideLoginArea() {

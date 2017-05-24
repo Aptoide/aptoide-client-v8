@@ -9,6 +9,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.account.store.CreateStoreFragment;
+import cm.aptoide.pt.v8engine.view.account.store.ManageStoreModel;
 import cm.aptoide.pt.v8engine.view.account.user.CreateStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -48,7 +49,7 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
         .subscribe(account -> {
           if (account.isLoggedIn()) {
             button.setText(R.string.create_store_displayable_button);
-            getFragmentNavigator().navigateTo(CreateStoreFragment.newInstance());
+            getFragmentNavigator().navigateTo(CreateStoreFragment.newInstance(new ManageStoreModel(false)));
           } else {
             button.setText(R.string.login);
             accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.STORE);
