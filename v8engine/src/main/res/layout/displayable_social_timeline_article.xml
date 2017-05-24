@@ -43,10 +43,9 @@
           android:layout_marginRight="48dp"
           android:layout_marginStart="72dp"
           android:layout_marginTop="14.7dp"
-          android:ellipsize="end"
           android:lines="1"
           tools:text="Hamata6 Store"
-          style="@style/Widget.Aptoide.Card.Title"
+          style="@style/Aptoide.TextView.Regular.S.Grey"
           />
 
       <TextView
@@ -58,10 +57,9 @@
           android:layout_marginLeft="72dp"
           android:layout_marginRight="48dp"
           android:layout_marginStart="72dp"
-          android:ellipsize="end"
           android:lines="1"
           tools:text="Há duas horas"
-          style="@style/Widget.Aptoide.Card.Subtitle"
+          style="@style/Aptoide.TextView.Regular.XS.Grey"
           />
 
       <ImageView

@@ -151,6 +151,9 @@ public interface FragmentProvider {
 
   Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url);
 
+  Fragment newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType commentType,
+      String elementId);
+
   Fragment newAddressBookFragment();
 
   Fragment newSyncSuccessFragment(List<Contact> contacts, String tag);

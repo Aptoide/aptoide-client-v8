@@ -749,7 +749,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     if (i == R.id.menu_share) {
       shareAppHelper.shareApp(appName, packageName, wUrl, (app == null ? null : app.getIcon()),
-          SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW);
+          app.getStats()
+              .getRating()
+              .getAvg(),SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW);
         appViewAnalytics.sendAppShareEvent();
       return true;
     } else if (i == R.id.menu_schedule) {

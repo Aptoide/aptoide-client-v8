@@ -143,6 +143,31 @@ public class ImageLoader {
     return null;
   }
 
+  /**
+   * Loads image url with a circular shape transformation and a circle shadow around and a
+   * placeholder.
+   *
+   * @param url image to load
+   * @param imageView view where image is inflated
+   * @param placeHolderDrawableId placeholder
+   *
+   * @return
+   */
+  public Target<GlideDrawable> loadWithShadowCircleTransformAndPlaceHolder(String url,
+      ImageView imageView, @DrawableRes int placeHolderDrawableId) {
+    Context context = weakContext.get();
+    if (context != null) {
+      return Glide.with(context)
+          .load(url)
+          .transform(new ShadowCircleTransformation(context, imageView))
+          .placeholder(placeHolderDrawableId)
+          .into(imageView);
+    } else {
+      Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
+    }
+    return null;
+  }
+
   public Target<GlideDrawable> loadWithCircleTransform(@DrawableRes int drawableId,
       ImageView imageView) {
     Context context = weakContext.get();
