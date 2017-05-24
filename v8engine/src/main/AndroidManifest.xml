@@ -204,9 +204,10 @@
       </intent-filter>
     </receiver>
 
-    <service android:name=".pull.PullingContentService"/>
+    <service android:name=".notification.PullingContentService"/>
+    <service android:name=".notification.NotificationSyncService"/>
 
-    <receiver android:name=".pull.PullingContentReceiver">
+    <receiver android:name=".notification.PullingContentReceiver">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED"/>
         <action android:name="android.intent.action.QUICKBOOT_POWERON"/>

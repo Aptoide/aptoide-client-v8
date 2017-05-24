@@ -98,6 +98,10 @@ public class FragmentNavigator {
     return null;
   }
 
+  public Fragment getFragment() {
+    return fragmentManager.findFragmentById(containerId);
+  }
+
   public void navigateToWithoutBackSave(Fragment fragment) {
     fragmentManager.beginTransaction()
         .setCustomAnimations(enterAnimation, exitAnimation, enterAnimation, exitAnimation)

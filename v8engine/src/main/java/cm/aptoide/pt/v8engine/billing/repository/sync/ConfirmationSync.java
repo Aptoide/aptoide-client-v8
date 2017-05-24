@@ -20,13 +20,13 @@ import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.product.InAppProduct;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentConfirmationFactory;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
-import cm.aptoide.pt.v8engine.sync.RepositorySync;
+import cm.aptoide.pt.v8engine.sync.ScheduledSync;
 import java.io.IOException;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Single;
 
-public class ConfirmationSync extends RepositorySync {
+public class ConfirmationSync extends ScheduledSync {
 
   private final Product product;
   private final NetworkOperatorManager operatorManager;

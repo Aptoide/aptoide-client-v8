@@ -29,7 +29,6 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.abtesting.ABTest;
 import cm.aptoide.pt.v8engine.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.abtesting.SearchTabOptions;
-import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
@@ -137,8 +136,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
     if (hasSubscribedResults || hasEverywhereResults) {
       super.setupViewPager();
     } else {
-      Analytics.Search.noSearchResults(query);
-
       noSearchLayout.setVisibility(View.VISIBLE);
       buttonsLayout.setVisibility(View.INVISIBLE);
       noSearchLayoutSearchButton.setOnClickListener(v -> {
@@ -175,7 +172,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     viewPager.setCurrentItem(0);
     subscribedButton.setBackgroundResource(R.drawable.search_button_background);
     subscribedButton.setTextColor(getResources().getColor(R.color.white));
-    everywhereButton.setTextColor(getResources().getColor(R.color.app_view_gray));
+    everywhereButton.setTextColor(getResources().getColor(R.color.silver_dark));
     everywhereButton.setBackgroundResource(0);
   }
 
@@ -184,7 +181,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     viewPager.setCurrentItem(1, smoothScroll);
     everywhereButton.setBackgroundResource(R.drawable.search_button_background);
     everywhereButton.setTextColor(getResources().getColor(R.color.white));
-    subscribedButton.setTextColor(getResources().getColor(R.color.app_view_gray));
+    subscribedButton.setTextColor(getResources().getColor(R.color.silver_dark));
     subscribedButton.setBackgroundResource(0);
     return null;
   }
@@ -246,8 +243,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
   }
 
   @Partners protected void executeSearchRequests(String storeName, boolean create) {
-    Analytics.Search.searchTerm(query);
-
     if (storeName != null) {
       shouldFinishLoading = true;
       ListSearchAppsRequest of =

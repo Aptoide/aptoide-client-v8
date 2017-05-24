@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -80,7 +79,6 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
     @Getter @Setter private int offset;
     private String lang;
     private boolean mature;
-    private String q = Api.Q;
     @Getter private boolean refresh;
 
     private Order order;

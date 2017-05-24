@@ -2,8 +2,7 @@ package cm.aptoide.pt.v8engine.networking;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
-import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
-import cm.aptoide.pt.v8engine.networking.IdsRepository;
+import cm.aptoide.pt.utils.q.QManager;
 import rx.Single;
 
 public class OAuthBodyInterceptor extends BaseBodyInterceptorV3 {
@@ -11,8 +10,8 @@ public class OAuthBodyInterceptor extends BaseBodyInterceptorV3 {
   private final AptoideAccountManager accountManager;
 
   public OAuthBodyInterceptor(IdsRepository idsRepository, String aptoideMd5sum,
-      String aptoidePackage, AptoideAccountManager accountManager) {
-    super(idsRepository, aptoideMd5sum, aptoidePackage, accountManager);
+      String aptoidePackage, AptoideAccountManager accountManager, QManager qManager) {
+    super(idsRepository, aptoideMd5sum, aptoidePackage, accountManager, qManager);
     this.accountManager = accountManager;
   }
 

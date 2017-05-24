@@ -27,7 +27,9 @@ import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.ads.AdsRepository;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
@@ -50,7 +52,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
   public static void extractReferrer(MinimalAd minimalAd, final int retries,
       boolean broadcastReferrer, AdsRepository adsRepository, final OkHttpClient httpClient,
-      final Converter.Factory converterFactory) {
+      final Converter.Factory converterFactory, final QManager qManager) {
     String packageName = minimalAd.getPackageName();
     long networkId = minimalAd.getNetworkId();
     String clickUrl = minimalAd.getClickUrl();
@@ -135,7 +137,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
               }
 
               future.cancel(false);
-              postponeReferrerExtraction(minimalAd, 0, true, httpClient, converterFactory);
+              postponeReferrerExtraction(minimalAd, 0, true, httpClient, converterFactory, qManager);
             }
           }
 
@@ -149,32 +151,37 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
           if (future == null) {
             future = postponeReferrerExtraction(minimalAd, TIME_OUT, retries, httpClient,
-                converterFactory);
+                converterFactory, qManager);
           }
         }
 
         private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta,
-            int retries, OkHttpClient httpClient, Converter.Factory converterFactory) {
+            int retries, OkHttpClient httpClient, Converter.Factory converterFactory,
+            QManager qManager) {
           return postponeReferrerExtraction(minimalAd, delta, false, retries, httpClient,
-              converterFactory);
+              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()),
+              qManager);
         }
 
         private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta,
-            boolean success, OkHttpClient httpClient, Converter.Factory converterFactory) {
+            boolean success, OkHttpClient httpClient, Converter.Factory converterFactory,
+            QManager qManager) {
           return postponeReferrerExtraction(minimalAd, delta, success, 0, httpClient,
-              converterFactory);
+              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()),
+              qManager);
         }
 
         private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta,
             final boolean success, final int retries, OkHttpClient httpClient,
-            Converter.Factory converterFactory) {
+            Converter.Factory converterFactory, String q, QManager qManager) {
           Logger.d("ExtractReferrer", "Referrer postponed " + delta + " seconds.");
 
           Callable<Void> callable = () -> {
             Logger.d("ExtractReferrer", "Sending RegisterAdRefererRequest with value " + success);
 
             RegisterAdRefererRequest.of(minimalAd.getAdId(), minimalAd.getAppId(),
-                minimalAd.getClickUrl(), success, httpClient, converterFactory)
+                minimalAd.getClickUrl(), success, httpClient, converterFactory,
+                qManager.getFilters(ManagerPreferences.getHWSpecsFilter()))
                 .execute();
 
             Logger.d("ExtractReferrer", "Retries left: " + retries);
@@ -191,7 +198,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
                       .filter(minimalAd1 -> minimalAd != null)
                       .subscribe(
                           minimalAd1 -> extractReferrer(minimalAd1, retries - 1, broadcastReferrer,
-                              adsRepository, httpClient, converterFactory),
+                              adsRepository, httpClient, converterFactory, qManager),
                           throwable -> clearExcludedNetworks(packageName));
                 } else {
                   // A lista de excluded networks deve ser limpa a cada "ronda"

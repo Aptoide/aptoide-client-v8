@@ -25,7 +25,6 @@ public class HostsCallbackManager implements HostsChangedCallback {
   }
 
   @Override public void hostsChanged(List<Host> hostList) {
-    System.out.println("hostsChanged() called with: " + "hostList = [" + hostList + "]");
     Intent i = new Intent();
 
     if (hostList.size() == 2 && autoShareFilepath != null) {
@@ -34,7 +33,6 @@ public class HostsCallbackManager implements HostsChangedCallback {
       context.sendBroadcast(i);
       autoShareFilepath = null;
     } else if (hostList.size() >= 2) {
-      System.out.println("sending broadcast of show_send_button");
       i.setAction("SHOW_SEND_BUTTON");
       context.sendBroadcast(i);
     } else {

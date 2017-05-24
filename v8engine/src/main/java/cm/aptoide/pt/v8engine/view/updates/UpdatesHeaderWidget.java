@@ -15,8 +15,9 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
+import cm.aptoide.pt.v8engine.view.navigator.SimpleTabNavigation;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.ArrayList;
@@ -74,8 +75,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
       }, () -> {
       });
 
-      tabNavigator.navigate(TabNavigator.DOWNLOADS);
-      Analytics.Updates.updateAll();
+      tabNavigator.navigate(new SimpleTabNavigation(TabNavigation.DOWNLOADS));
     });
   }
 }

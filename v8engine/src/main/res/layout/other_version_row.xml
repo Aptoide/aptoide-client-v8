@@ -72,7 +72,7 @@
         android:gravity="center_vertical"
         android:lines="1"
         android:maxLines="1"
-        android:textColor="@color/app_view_gray"
+        android:textColor="@color/silver_dark"
         android:textSize="@dimen/text_size_medium_small"
         tools:text="1 month ago"
         />
@@ -84,7 +84,7 @@
         android:gravity="center_vertical"
         android:lines="1"
         android:maxLines="1"
-        android:textColor="@color/app_view_gray"
+        android:textColor="@color/silver_dark"
         android:textSize="@dimen/text_size_medium_small"
         tools:text="11K downloads"
         />
@@ -138,7 +138,7 @@
         android:gravity="center"
         android:lines="1"
         android:maxLines="1"
-        android:textColor="@color/app_view_gray"
+        android:textColor="@color/silver_dark"
         android:textSize="@dimen/text_size_small"
         tools:text="2534 Followers"
         />

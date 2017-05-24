@@ -140,7 +140,7 @@
               android:layout_marginStart="2dp"
               android:maxLines="1"
               android:text=" / "
-              android:textColor="@color/app_view_gray"
+              android:textColor="@color/silver_dark"
               android:textSize="@dimen/text_size_small"
               />
 
@@ -152,7 +152,7 @@
               android:layout_marginLeft="2dp"
               android:layout_marginStart="2dp"
               android:maxLines="1"
-              android:textColor="@color/app_view_gray"
+              android:textColor="@color/silver_dark"
               android:textSize="@dimen/text_size_small"
               />
 

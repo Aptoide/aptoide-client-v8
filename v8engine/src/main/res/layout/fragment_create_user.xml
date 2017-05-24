@@ -31,7 +31,7 @@
     <LinearLayout
         android:id="@+id/bottom_buttons"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/button_default_height"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/padding_medium_small"
         android:layout_marginEnd="@dimen/padding_medium_default"
@@ -53,10 +53,9 @@
       <Button
           android:id="@+id/create_user_create_profile"
           android:layout_width="0dp"
-          android:layout_height="match_parent"
           android:layout_weight="1"
           android:text="@string/create_user_create_button"
-          style="?attr/customButton"
+          style="@style/Aptoide.Button"
           />
 
     </LinearLayout>
@@ -84,6 +83,7 @@
             android:padding="@dimen/padding_medium_default"
             android:text="@string/create_user_header"
             android:textColor="@color/white"
+            style="@style/Aptoide.TextView.Medium"
             />
 
 
@@ -126,9 +126,7 @@
               android:layout_toEndOf="@id/create_user_image"
               android:layout_toRightOf="@id/create_user_image"
               android:text="@string/create_user_take_picture"
-              android:textColor="@color/create_store_title_color"
-              android:textSize="@dimen/text_size_medium"
-              android:textStyle="bold"
+              style="@style/Aptoide.TextView.Medium"
               />
 
         </RelativeLayout>
@@ -149,8 +147,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:text="@string/create_user_choose_username"
-              android:textColor="@color/create_store_title_color"
-              android:textSize="@dimen/text_size_medium"
+              style="@style/Aptoide.TextView.Regular.S"
               />
 
           <EditText
@@ -167,9 +164,7 @@
               android:paddingRight="@dimen/padding_smaller"
               android:paddingStart="@dimen/padding_smaller"
               android:paddingTop="@dimen/padding_very_small"
-              android:textColor="@color/black"
-              android:textColorHint="@color/grey"
-              android:textSize="@dimen/text_size_medium_small"
+              style="@style/Aptoide.TextView.Regular.S"
               />
 
           <TextView
@@ -177,8 +172,7 @@
               android:layout_height="wrap_content"
               android:layout_marginTop="@dimen/padding_very_small"
               android:text="@string/create_user_hint"
-              android:textColor="@color/create_store_hint_color"
-              android:textSize="9.8sp"
+              style="@style/Aptoide.TextView.Regular.XS"
               />
 
         </LinearLayout>

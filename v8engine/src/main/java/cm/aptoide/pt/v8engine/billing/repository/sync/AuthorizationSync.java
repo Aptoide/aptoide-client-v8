@@ -15,7 +15,7 @@ import cm.aptoide.pt.v8engine.billing.Authorization;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.billing.repository.AuthorizationFactory;
-import cm.aptoide.pt.v8engine.sync.RepositorySync;
+import cm.aptoide.pt.v8engine.sync.ScheduledSync;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Single;
 
-public class AuthorizationSync extends RepositorySync {
+public class AuthorizationSync extends ScheduledSync {
 
   private final int paymentId;
   private final PaymentAuthorizationAccessor authorizationAccessor;

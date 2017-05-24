@@ -25,6 +25,7 @@ import cm.aptoide.pt.v8engine.download.ScheduledDownloadRepository;
 import cm.aptoide.pt.v8engine.install.rollback.RollbackRepository;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.updates.UpdateRepository;
 import okhttp3.OkHttpClient;
 
@@ -94,5 +95,11 @@ public final class RepositoryFactory {
   private static BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBaseBodyInterceptorV3(
       Context context) {
     return ((V8Engine) context.getApplicationContext()).getBaseBodyInterceptorV3();
+  }
+
+  public static SocialRepository getSocialRepository(Context context) {
+    return new SocialRepository(getAccountManager(context),
+        ((V8Engine) context.getApplicationContext()).getBaseBodyInterceptorV7(),
+        WebService.getDefaultConverter(), getHttpClient(context));
   }
 }

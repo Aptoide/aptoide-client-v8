@@ -1,6 +1,5 @@
 package cm.aptoide.pt.spotandshareandroid;
 
-import cm.aptoide.pt.spotandshare.socket.entities.Host;
 import cm.aptoide.pt.spotandshareandroid.analytics.SpotAndShareAnalyticsInterface;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,6 @@ public class TransferRecordPresenter implements Presenter {
   private final Disconnecter disconnecter;
   private HighwayTransferRecordView view;
   private List<HighwayTransferRecordItem> listOfApps;
-  private List<Host> connectedClients;
   private ApplicationReceiver applicationReceiver;
   private ApplicationSender applicationSender;
   private TransferRecordManager transferRecordManager;
@@ -145,9 +143,7 @@ public class TransferRecordPresenter implements Presenter {
       }
 
       @Override public void onAvailableClients() {
-        System.out.println("inside onAvailableClients");
         if (!view.getTransparencySend()) {
-          System.out.println("ordered to change transparency");
           view.setTransparencySend(false);
           view.setTextViewMessage(true);
         }

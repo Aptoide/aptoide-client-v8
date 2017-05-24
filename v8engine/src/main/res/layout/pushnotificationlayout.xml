@@ -1,28 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:padding="10dp"
     >
-
   <ImageView
-      android:id="@+id/PushNotificationImageView"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_horizontal"
-      android:scaleType="centerCrop"
+      android:id="@+id/icon"
+      android:layout_width="45dp"
+      android:layout_height="45dp"
+      tools:src="@mipmap/ic_launcher"
       />
 
-
-  <RelativeLayout
+  <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_gravity="bottom"
-      android:background="@color/transparent_black"
-      android:padding="10dp"
+      android:orientation="vertical"
       >
-
     <TextView
-        android:id="@+id/text1"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
@@ -30,38 +26,48 @@
         android:layout_marginRight="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
-        android:layout_toEndOf="@+id/icon"
-        android:layout_toRightOf="@+id/icon"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"
+        android:textColor="@color/black"
+        tools:text="teste"
         />
 
     <TextView
         android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/text1"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="5dp"
         android:layout_marginEnd="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginStart="10dp"
-        android:layout_toEndOf="@+id/icon"
-        android:layout_toRightOf="@+id/icon"
         android:autoLink="all"
         android:scrollbars="vertical"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/white"
-        android:textStyle="italic"
+        android:textColor="@color/dark_gray"
+        tools:text="description"
+        />
+
+    <TextView
+        android:id="@+id/app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginStart="10dp"
+        android:textColor="@color/dark_gray"
+        tools:text="app name"
         />
 
     <ImageView
-        android:id="@+id/icon"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_centerVertical="true"
+        android:id="@+id/push_notification_graphic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        tools:src="@drawable/error2"
         />
-  </RelativeLayout>
 
-</FrameLayout>
+  </LinearLayout>
+</LinearLayout>
+

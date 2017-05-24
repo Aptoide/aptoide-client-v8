@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
-import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithApp;
@@ -13,6 +12,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.Data;
@@ -71,12 +71,11 @@ import rx.Observable;
     private Integer apkId;
     private String apkMd5sum;
     private Integer appId;
-    private String lang = Api.LANG;
+    private String lang = AptoideUtils.SystemU.getCountryCode();
     @Setter @Getter private Integer limit;
     @Setter @Getter private int offset;
     private Integer packageId;
     private String packageName;
-    private String q = Api.Q;
     private List<Long> storeIds;
     private List<String> storeNames;
     @Getter private HashMapNotNull<String, List<String>> storesAuthMap;

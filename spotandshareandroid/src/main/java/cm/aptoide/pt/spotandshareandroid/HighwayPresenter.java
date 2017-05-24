@@ -4,7 +4,6 @@ package cm.aptoide.pt.spotandshareandroid;
  * Created by filipegoncalves on 31-01-2017.
  */
 
-import android.os.Build;
 import cm.aptoide.pt.spotandshareandroid.analytics.SpotAndShareAnalyticsInterface;
 import java.util.ArrayList;
 import rx.Subscription;
@@ -25,11 +24,13 @@ public class HighwayPresenter implements Presenter {
   private Subscription subscription;
   private String autoShareAppName;
   private String autoShareFilepath;
+  private Group chosenHotspot;
+  private boolean showShareAptoideApk;
 
   public HighwayPresenter(HighwayView view, GroupNameProvider groupNameProvider,
       DeactivateHotspotTask deactivateHotspotTask, ConnectionManager connectionManager,
       SpotAndShareAnalyticsInterface analytics, GroupManager groupManager,
-      PermissionManager permissionManager) {
+      PermissionManager permissionManager, boolean showShareAptoideApk) {
     this.view = view;
     this.groupNameProvider = groupNameProvider;
     this.deactivateHotspotTask = deactivateHotspotTask;
@@ -37,19 +38,25 @@ public class HighwayPresenter implements Presenter {
     this.analytics = analytics;
     this.groupManager = groupManager;
     this.permissionManager = permissionManager;
+    this.showShareAptoideApk = showShareAptoideApk;
   }
 
   public HighwayPresenter(HighwayView view, GroupNameProvider groupNameProvider,
       DeactivateHotspotTask deactivateHotspotTask, ConnectionManager connectionManager,
       SpotAndShareAnalyticsInterface analytics, GroupManager groupManager,
-      PermissionManager permissionManager, String autoShareAppName, String autoShareFilepath) {
+      PermissionManager permissionManager, String autoShareAppName, String autoShareFilepath,
+      boolean showShareAptoideApk) {
     this(view, groupNameProvider, deactivateHotspotTask, connectionManager, analytics, groupManager,
-        permissionManager);
+        permissionManager, showShareAptoideApk);
     this.autoShareAppName = autoShareAppName;
     this.autoShareFilepath = autoShareFilepath;
   }
 
   @Override public void onCreate() {
+
+    if (showShareAptoideApk) {
+      view.showShareAptoideApk();
+    }
 
     permissionManager.registerListener(new PermissionListener() {
       @Override public void onPermissionGranted() {
@@ -113,7 +120,7 @@ public class HighwayPresenter implements Presenter {
               } else {
                 connectionManager.cleanNetworks();
                 view.showConnections();
-                view.setUpListeners();
+                view.setupViews();
                 view.enableButtons(true);
               }
             }
@@ -138,7 +145,6 @@ public class HighwayPresenter implements Presenter {
           @Override public void onStateChanged(boolean enabled) {
             if (enabled) {
               view.hideButtonsProgressBar();
-              System.out.println("Inside presenter on Success for join group");
               analytics.joinGroupSuccess();
               view.enableButtons(true);
               String ipAddress = connectionManager.getIPAddress();
@@ -148,6 +154,9 @@ public class HighwayPresenter implements Presenter {
               view.enableButtons(true);
               view.hideSearchGroupsTextview(false);
               view.showJoinGroupResult(ConnectionManager.ERROR_UNKNOWN);
+              if (chosenHotspot != null) {
+                view.deselectHotspot(chosenHotspot);
+              }
             }
           }
         });
@@ -191,11 +200,7 @@ public class HighwayPresenter implements Presenter {
       }
     }, new ConnectionManager.ClientsConnectedListener() {
       @Override public void onNewClientsConnected(ArrayList<Group> clients) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-          view.refreshRadarLowerVersions(clients);
-        } else {
-          view.refreshRadar(clients);
-        }
+        view.refreshRadar(clients);
       }
     });
   }
@@ -233,5 +238,27 @@ public class HighwayPresenter implements Presenter {
       }
     });
     //});
+  }
+
+  public void clickedOnGroup(Group group) {
+
+    if (group != null && group.equals(this.chosenHotspot)) {
+      view.deselectHotspot(group);
+      this.chosenHotspot = null;
+    } else {
+      if (chosenHotspot != null) {
+        view.deselectHotspot(this.chosenHotspot);
+        this.chosenHotspot = null;
+      }
+      this.chosenHotspot = group;
+      view.paintSelectedGroup(group);
+      view.hideSearchGroupsTextview(true);
+      clickJoinGroup(group);
+    }
+  }
+
+  public void clickShareAptoide() {
+    subscription = groupNameProvider.getName()
+        .subscribe(deviceName -> view.openShareAptoide(deviceName), Throwable::printStackTrace);
   }
 }

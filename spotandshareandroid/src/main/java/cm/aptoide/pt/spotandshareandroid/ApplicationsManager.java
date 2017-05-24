@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.FileUtils;
 import java.io.File;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import java.util.List;
 
 public class ApplicationsManager {
 
+  public static final String TAG = ApplicationsManager.class.getSimpleName();
   private Context context;
   private BroadcastReceiver installNotificationReceiver;
   private IntentFilter intentFilter;
@@ -93,7 +95,6 @@ public class ApplicationsManager {
     Intent intent = new Intent(Intent.ACTION_VIEW);
 
     Uri photoURI = null;
-    // https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en
     if (Build.VERSION.SDK_INT > 23) {
       //content://....apk for nougat
       photoURI = FileProvider.getUriForFile(context, "cm.aptoide.pt.provider", file);
@@ -123,8 +124,6 @@ public class ApplicationsManager {
     String packageName = item.getPackageName();
     Drawable imageIcon = item.getIcon();
     String origin = item.getFromOutside();
-    System.out.println(
-        "TransferRecordAdapter : here is the filePathToResend :  " + filePathToReSend);
     List<App> list = new ArrayList<App>();
     App tmpItem = new App(imageIcon, appName, packageName, filePathToReSend, origin);
     String obbsFilePath = checkIfHasObb(packageName);
@@ -140,11 +139,8 @@ public class ApplicationsManager {
     File obbFolder = new File(obbPath);
     File[] list = obbFolder.listFiles();
     if (list != null) {
-      System.out.println("list lenght is : " + list.length);
       if (list.length > 0) {
-        System.out.println("appName is : " + appName);
         for (int i = 0; i < list.length; i++) {
-          System.out.println("List get name is : " + list[i].getName());
           if (list[i].getName()
               .equals(appName)) {
             hasObb = true;
@@ -173,7 +169,7 @@ public class ApplicationsManager {
 
       return tmp;
     } else {
-      System.out.println("Inside the error part of the receiving app bigger version");
+      Logger.d(TAG, "Inside the error part of the receiving app bigger version");
       HighwayTransferRecordItem tmp = new HighwayTransferRecordItem(context.getResources()
           .getDrawable(R.drawable.sym_def_app_icon), appName, "ErrorPackName",
           "Could not read the original filepath", true, "No version available");

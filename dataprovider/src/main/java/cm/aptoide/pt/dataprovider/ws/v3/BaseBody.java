@@ -24,4 +24,8 @@ public class BaseBody extends HashMapNotNull<String, Object> {
   public void setAptoideUid(String aptoideUid) {
     put("aptoide_uid", aptoideUid);
   }
+
+  public void setQ(String q) {
+    put("q", q);
+  }
 }

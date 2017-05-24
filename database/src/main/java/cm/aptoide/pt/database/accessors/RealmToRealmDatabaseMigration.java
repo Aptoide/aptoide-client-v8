@@ -6,6 +6,7 @@
 package cm.aptoide.pt.database.accessors;
 
 import android.text.TextUtils;
+import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.database.realm.Update;
@@ -243,5 +244,24 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
       oldVersion++;
     }
 
+    if (oldVersion == 8082) {
+      schema.create(Notification.class.getSimpleName())
+          .addField("key", String.class, FieldAttribute.PRIMARY_KEY)
+          .addField("abTestingGroup", String.class)
+          .addField("body", String.class)
+          .addField("campaignId", int.class)
+          .addField("img", String.class)
+          .addField("lang", String.class)
+          .addField("title", String.class)
+          .addField("url", String.class)
+          .addField("urlTrack", String.class)
+          .addField("type", int.class)
+          .addField("timeStamp", long.class)
+          .addField("dismissed", long.class)
+          .addField("appName", String.class)
+          .addField("graphic", String.class);
+
+      oldVersion++;
+    }
   }
 }

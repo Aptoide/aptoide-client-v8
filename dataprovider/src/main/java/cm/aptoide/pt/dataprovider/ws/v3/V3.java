@@ -16,7 +16,6 @@ import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import cm.aptoide.pt.model.v3.BaseV3Response;
 import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
 import cm.aptoide.pt.model.v3.ErrorResponse;
-import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
 import cm.aptoide.pt.model.v3.InAppBillingAvailableResponse;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
@@ -134,10 +133,6 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
   }
 
   interface Interfaces {
-
-    @POST("getPushNotifications") @FormUrlEncoded
-    Observable<GetPushNotificationsResponse> getPushNotifications(@FieldMap BaseBody arg,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("addApkFlag") @FormUrlEncoded Observable<GenericResponseV2> addApkFlag(
         @FieldMap BaseBody arg, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);

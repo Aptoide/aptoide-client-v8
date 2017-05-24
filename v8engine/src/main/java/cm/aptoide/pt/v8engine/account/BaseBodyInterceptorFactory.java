@@ -4,6 +4,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.BasebBodyInterceptorFactory;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
@@ -18,24 +19,28 @@ public class BaseBodyInterceptorFactory implements BasebBodyInterceptorFactory {
   private final SecurePreferences securePreferences;
   private final String aptoideMd5sum;
   private final String aptoidePackage;
+  private final QManager qManager;
 
   public BaseBodyInterceptorFactory(IdsRepository idsRepository, Preferences preferences,
-      SecurePreferences securePreferences, String aptoideMd5sum, String aptoidePackage) {
+      SecurePreferences securePreferences, String aptoideMd5sum, String aptoidePackage,
+      QManager qManager) {
     this.idsRepository = idsRepository;
     this.preferences = preferences;
     this.securePreferences = securePreferences;
     this.aptoideMd5sum = aptoideMd5sum;
     this.aptoidePackage = aptoidePackage;
+    this.qManager = qManager;
   }
 
   @Override public BodyInterceptor<BaseBody> createV7(AptoideAccountManager accountManager) {
     return new BaseBodyInterceptorV7(idsRepository, accountManager,
         new AdultContent(accountManager, preferences, securePreferences), aptoideMd5sum,
-        aptoidePackage);
+        aptoidePackage, qManager);
   }
 
   @Override public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> createV3(
       AptoideAccountManager accountManager) {
-    return new BaseBodyInterceptorV3(idsRepository, aptoideMd5sum, aptoidePackage, accountManager);
+    return new BaseBodyInterceptorV3(idsRepository, aptoideMd5sum, aptoidePackage, accountManager,
+        qManager);
   }
 }
