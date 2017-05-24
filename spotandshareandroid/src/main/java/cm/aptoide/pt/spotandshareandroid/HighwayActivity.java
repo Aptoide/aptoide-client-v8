@@ -32,6 +32,7 @@ import java.util.List;
  */
 public class HighwayActivity extends ActivityView implements HighwayView, PermissionManager {
 
+  public static final String HOTSPOT_NAME = "HOTSPOT_NAME";
   private static final int PERMISSION_REQUEST_CODE = 6531;
   private static final int WRITE_SETTINGS_REQUEST_CODE = 5;
   private static final int LOCATION_REQUEST_CODE = 789;
@@ -42,6 +43,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   private TextView searchGroupsTextview;
   private Toolbar mToolbar;
   private ProgressBar buttonsProgressBar;//progress bar for when user click the buttons
+  private TextView shareAptoideApkButton;
 
   private HighwayPresenter presenter;
   private SpotAndShareAnalyticsInterface analytics;
@@ -83,11 +85,11 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
       autoShareFilepath = intent.getStringExtra("APPVIEW_SHARE_FILEPATH");
       presenter = new HighwayPresenter(this, groupNameProvider,
           new DeactivateHotspotTask(connectionManager), connectionManager, analytics, groupManager,
-          this, autoShareAppName, autoShareFilepath);
+          this, autoShareAppName, autoShareFilepath, false);
     } else {
       presenter = new HighwayPresenter(this, groupNameProvider,
           new DeactivateHotspotTask(connectionManager), connectionManager, analytics, groupManager,
-          this);
+          this, true);
     }
 
     attachPresenter(presenter);
@@ -104,6 +106,8 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
     buttonsProgressBar = (ProgressBar) findViewById(R.id.buttonsProgressBar);
     createGroupButton = (LinearLayout) findViewById(R.id.createGroup);
+
+    shareAptoideApkButton = (TextView) findViewById(R.id.share_aptoide_apk_button);
   }
 
   private void setUpToolbar() {
@@ -306,6 +310,12 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         }
       }
     });
+
+    shareAptoideApkButton.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        presenter.clickShareAptoide();
+      }
+    });
   }
 
   @Override public void showJoinGroupResult(int result) {
@@ -431,6 +441,17 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   @Override public void deselectHotspot(Group group) {
     radarTextView.deselectHotspot(group);
+  }
+
+  @Override public void openShareAptoide(String Ssid) {
+    Intent intent = new Intent(HighwayActivity.this, ShareAptoideActivity.class);
+    intent.putExtra(HOTSPOT_NAME, Ssid);
+    startActivity(intent);
+    finish();
+  }
+
+  @Override public void showShareAptoideApk() {
+    shareAptoideApkButton.setVisibility(View.VISIBLE);
   }
 
   @Override public boolean checkPermissions() {

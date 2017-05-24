@@ -83,7 +83,6 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
       });
 
       tabNavigator.navigate(new SimpleTabNavigation(TabNavigation.DOWNLOADS));
-      Analytics.Updates.updateAll();
     });
   }
 }

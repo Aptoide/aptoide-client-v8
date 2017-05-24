@@ -142,7 +142,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
     if (hasSubscribedResults || hasEverywhereResults) {
       super.setupViewPager();
     } else {
-      Analytics.Search.noSearchResults(query);
       searchAnalytics.searchNoResults(query);
 
       noSearchLayout.setVisibility(View.VISIBLE);
@@ -252,7 +251,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
   }
 
   @Partners protected void executeSearchRequests(String storeName, boolean create) {
-    Analytics.Search.searchTerm(query);
     //TODO (pedro): Don't have search source (which tab)
     searchAnalytics.search(query);
 

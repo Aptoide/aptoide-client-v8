@@ -29,7 +29,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
@@ -397,9 +396,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Partners @CallSuper @Override public void setupToolbar() {
     super.setupToolbar();
-    // FIXME: 17/1/2017 sithengineer is this the right place to have this event ?? why ??
-    Logger.d(TAG, "LOCALYTICS TESTING - STORES ACTION ENTER " + storeName);
-    Analytics.Stores.enter(storeName == null ? String.valueOf(userId) : storeName);
   }
 
   protected boolean displayHomeUpAsEnabled() {

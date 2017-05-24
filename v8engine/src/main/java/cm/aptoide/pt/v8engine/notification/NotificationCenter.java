@@ -53,12 +53,12 @@ public class NotificationCenter {
   }
 
   public void start() {
-      notificationSyncScheduler.schedule();
-      notificationProviderSubscription = getNewNotifications().flatMapCompletable(
-          aptoideNotification -> notificationShower.showNotification(aptoideNotification,
-              notificationIdsMapper.getNotificationId(aptoideNotification.getType())))
-          .subscribe(aptoideNotification -> {
-          }, throwable -> crashReport.log(throwable));
+    notificationSyncScheduler.schedule();
+    notificationProviderSubscription = getNewNotifications().flatMapCompletable(
+        aptoideNotification -> notificationShower.showNotification(aptoideNotification,
+            notificationIdsMapper.getNotificationId(aptoideNotification.getType())))
+        .subscribe(aptoideNotification -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   public void forceSync() {

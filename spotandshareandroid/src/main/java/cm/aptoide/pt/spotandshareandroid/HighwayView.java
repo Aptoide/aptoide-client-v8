@@ -40,6 +40,10 @@ public interface HighwayView {
 
   void deselectHotspot(Group group);
 
+  void openShareAptoide(String Ssid);
+
+  void showShareAptoideApk();
+
   //    void setCreateGroupListener(View.OnClickListener listener );
   //
   //    void setJoinGroupListener(View.OnClickListener listener);

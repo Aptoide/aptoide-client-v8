@@ -578,7 +578,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private void handleAdsLogic(MinimalAd minimalAd) {
     storeMinimalAdd(minimalAd);
     DataproviderUtils.AdNetworksUtils.knockCpc(minimalAd);
-    Analytics.LTV.cpi(minimalAd.getPackageName());
     AptoideUtils.ThreadU.runOnUiThread(
         () -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, false, adsRepository,
             httpClient, converterFactory));
@@ -990,10 +989,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           .load(badgeResId, badge);
       badgeText.setText(badgeMessageId);
 
-      Analytics.ViewedApplication.view(app.getPackageName(), app.getFile()
-          .getMalware()
-          .getRank()
-          .name());
       Analytics.AppViewViewedFrom.appViewOpenFrom(app.getPackageName(), app.getDeveloper()
           .getName(), app.getFile()
           .getMalware()
