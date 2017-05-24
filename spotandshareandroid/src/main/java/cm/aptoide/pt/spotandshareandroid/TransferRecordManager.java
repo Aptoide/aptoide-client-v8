@@ -16,18 +16,16 @@ public class TransferRecordManager {
     this.applicationsManager = applicationsManager;
   }
 
-  public void deleteAllApps(DeleteAppsListener listener,
-      List<HighwayTransferRecordItem> listOfApps) {
-    List<HighwayTransferRecordItem> toRemoveList = findAppsToRemove(listOfApps);
+  public void deleteAllApps(DeleteAppsListener listener, List<TransferRecordItem> listOfApps) {
+    List<TransferRecordItem> toRemoveList = findAppsToRemove(listOfApps);
     if (toRemoveList != null) {
       listOfApps.removeAll(toRemoveList);
       listener.onDeleteAllApps(toRemoveList);
     }
   }
 
-  private List<HighwayTransferRecordItem> findAppsToRemove(
-      List<HighwayTransferRecordItem> listOfApps) {
-    List<HighwayTransferRecordItem> toRemoveList = new ArrayList<>();
+  private List<TransferRecordItem> findAppsToRemove(List<TransferRecordItem> listOfApps) {
+    List<TransferRecordItem> toRemoveList = new ArrayList<>();
     for (int i = 0; i < listOfApps.size(); i++) {
       if (listOfApps.get(i)
           .isSent() || listOfApps.get(i)
@@ -55,13 +53,13 @@ public class TransferRecordManager {
     applicationsManager.installApp(filePath);
   }
 
-  public App convertTransferRecordItemToApp(HighwayTransferRecordItem item) {
+  public App convertTransferRecordItemToApp(TransferRecordItem item) {
     App app = applicationsManager.convertTransferRecordItemToApp(item);
     return app;
   }
 
-  public HighwayTransferRecordItem readApkArchive(String appName, String filePath) {
-    HighwayTransferRecordItem item = applicationsManager.readApkArchive(appName, filePath);
+  public TransferRecordItem readApkArchive(String appName, String filePath) {
+    TransferRecordItem item = applicationsManager.readApkArchive(appName, filePath);
     return item;
   }
 
@@ -70,9 +68,9 @@ public class TransferRecordManager {
     return app;
   }
 
-  @Nullable public HighwayTransferRecordItem startedSending(String appName, String packageName,
+  @Nullable public TransferRecordItem startedSending(String appName, String packageName,
       boolean needReSend, boolean isSent) {
-    HighwayTransferRecordItem item =
+    TransferRecordItem item =
         applicationsManager.startedSending(appName, packageName, needReSend, isSent);
     if (item != null) {
       return item;
@@ -87,6 +85,6 @@ public class TransferRecordManager {
 
   public interface DeleteAppsListener {
 
-    void onDeleteAllApps(List<HighwayTransferRecordItem> toRemoveList);
+    void onDeleteAllApps(List<TransferRecordItem> toRemoveList);
   }
 }

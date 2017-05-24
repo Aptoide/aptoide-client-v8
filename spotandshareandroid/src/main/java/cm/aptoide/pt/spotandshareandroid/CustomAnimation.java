@@ -6,7 +6,7 @@ import android.view.animation.Transformation;
 /**
  * Created by filipegoncalves on 24-08-2016.
  */
-public class HighwayCustomAnimation extends Animation {
+public class CustomAnimation extends Animation {
 
   private myCustomListener customListener = null;
 

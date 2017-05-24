@@ -15,22 +15,21 @@ import java.util.List;
 /**
  * Created by filipegoncalves on 12-08-2016.
  */
-public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
+public class TransferRecordCustomAdapter extends BaseAdapter {
 
   private Context context;
   private ViewHolder viewHolder;
-  private List<HighwayTransferRecordItem> listOfItems;
+  private List<TransferRecordItem> listOfItems;
   private MyOnClickListenerToInstall myOnClickListenerToInstall;
   private MyOnClickListenerToDelete myOnClickListenerToDelete;
-  private HighwayTransferRecordView.TransferRecordListener listener;
+  private TransferRecordView.TransferRecordListener listener;
 
-  public HighwayTransferRecordCustomAdapter(Context context,
-      List<HighwayTransferRecordItem> listOfItems) {
+  public TransferRecordCustomAdapter(Context context, List<TransferRecordItem> listOfItems) {
     this.context = context;
     this.listOfItems = listOfItems;
   }
 
-  public void setListener(HighwayTransferRecordView.TransferRecordListener listener) {
+  public void setListener(TransferRecordView.TransferRecordListener listener) {
     this.listener = listener;
   }
 
@@ -38,7 +37,7 @@ public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
     return listOfItems.size();
   }
 
-  @Override public HighwayTransferRecordItem getItem(int position) {
+  @Override public TransferRecordItem getItem(int position) {
 
     return listOfItems.get(position);
   }
@@ -163,13 +162,13 @@ public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
     }
   }
 
-  public void clearListOfItems(List<HighwayTransferRecordItem> list) {
+  public void clearListOfItems(List<TransferRecordItem> list) {
     if (listOfItems != null && list != null) {
       listOfItems.removeAll(list);
     }
   }
 
-  public void addTransferedItem(HighwayTransferRecordItem item) {
+  public void addTransferedItem(TransferRecordItem item) {
     listOfItems.add(item);
     notifyDataSetChanged();
   }

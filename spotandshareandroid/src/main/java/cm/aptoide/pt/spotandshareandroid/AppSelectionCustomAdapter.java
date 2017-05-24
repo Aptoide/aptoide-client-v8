@@ -13,21 +13,21 @@ import java.util.List;
 /**
  * Created by filipegoncalves on 28-07-2016.
  */
-public class HighwayAppSelectionCustomAdapter extends BaseAdapter {
+public class AppSelectionCustomAdapter extends BaseAdapter {
 
   private Context context;
   private List<AppViewModel> appsList;
   private ViewHolder viewHolder;
   private View view;
-  private HighwayAppSelectionView.AppSelectionListener listener;
+  private AppSelectionView.AppSelectionListener listener;
 
-  public HighwayAppSelectionCustomAdapter(HighwayAppSelectionView appSelectionView, Context context,
+  public AppSelectionCustomAdapter(AppSelectionView appSelectionView, Context context,
       List<AppViewModel> appsList, boolean isHotspot) {
     this.context = context;
     this.appsList = appsList;
   }
 
-  public void setListener(HighwayAppSelectionView.AppSelectionListener listener) {
+  public void setListener(AppSelectionView.AppSelectionListener listener) {
     this.listener = listener;
   }
 

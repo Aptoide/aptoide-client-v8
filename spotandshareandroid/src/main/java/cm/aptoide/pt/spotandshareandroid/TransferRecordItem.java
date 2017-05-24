@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable;
 /**
  * Created by Filipe on 04-09-2016.
  */
-public class HighwayTransferRecordItem {
+public class TransferRecordItem {
 
   private Drawable icon;
   private String appName;
@@ -19,7 +19,7 @@ public class HighwayTransferRecordItem {
 
   private String fromOutside;
 
-  public HighwayTransferRecordItem(Drawable icon, String appName, String packageName,
+  public TransferRecordItem(Drawable icon, String appName, String packageName,
       String filePath, boolean received, String versionName) {
     this.icon = icon;
     this.appName = appName;

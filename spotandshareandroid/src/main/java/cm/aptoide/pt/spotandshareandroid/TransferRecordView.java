@@ -6,13 +6,13 @@ import java.util.List;
  * Created by filipegoncalves on 09-02-2017.
  */
 
-public interface HighwayTransferRecordView {
+public interface TransferRecordView {
 
   void setUpSendButtonListener();
 
   void setUpClearHistoryListener();
 
-  void showNewCard(HighwayTransferRecordItem item);
+  void showNewCard(TransferRecordItem item);
 
   void updateItemStatus(int positionToUpdate, boolean isSent,
       boolean needReSend);//could change to the packageName
@@ -23,7 +23,7 @@ public interface HighwayTransferRecordView {
 
   void showDeleteHistoryDialog();
 
-  void refreshAdapter(List<HighwayTransferRecordItem> toRemoveList);
+  void refreshAdapter(List<TransferRecordItem> toRemoveList);
 
   void hideReceivedAppMenu();
 
@@ -31,13 +31,13 @@ public interface HighwayTransferRecordView {
 
   void showDialogToInstall(String appName, String filePath, String packageName);
 
-  void showDialogToDelete(HighwayTransferRecordItem item);
+  void showDialogToDelete(TransferRecordItem item);
 
   void setAdapterListeners(TransferRecordListener listener);
 
   void notifyChanged();
 
-  void generateAdapter(List<HighwayTransferRecordItem> list);
+  void generateAdapter(List<TransferRecordItem> list);
 
   void showGeneralErrorToast();
 
@@ -62,10 +62,10 @@ public interface HighwayTransferRecordView {
   void setInitialApConfig();
 
   interface TransferRecordListener {
-    void onInstallApp(HighwayTransferRecordItem item);
+    void onInstallApp(TransferRecordItem item);
 
-    void onDeleteApp(HighwayTransferRecordItem item);
+    void onDeleteApp(TransferRecordItem item);
 
-    void onReSendApp(HighwayTransferRecordItem item, int position);
+    void onReSendApp(TransferRecordItem item, int position);
   }
 }

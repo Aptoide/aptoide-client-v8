@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import cm.aptoide.pt.spotandshareandroid.HighwayActivity;
+import cm.aptoide.pt.spotandshareandroid.RadarActivity;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.presenter.SpotSharePreviewPresenter;
@@ -98,7 +98,7 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
   }
 
   @Override public void navigateToSpotShareView() {
-    startActivity(new Intent(getContext(), HighwayActivity.class));
+    startActivity(new Intent(getContext(), RadarActivity.class));
   }
 
   @Override public void showToolbar(String title) {

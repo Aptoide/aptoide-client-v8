@@ -21,12 +21,11 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HighwayTransferRecordActivity extends ActivityView
-    implements HighwayTransferRecordView {
+public class TransferRecordActivity extends ActivityView implements TransferRecordView {
 
-  public static final String TAG = HighwayTransferRecordActivity.class.getSimpleName();
+  public static final String TAG = TransferRecordActivity.class.getSimpleName();
   private static final int SELECT_APPS_REQUEST_CODE = 53110;
-  private static List<HighwayTransferRecordItem> listOfItems = new ArrayList<>();
+  private static List<TransferRecordItem> listOfItems = new ArrayList<>();
   private boolean isHotspot;
   private String targetIPAddress;
   private String nickname;
@@ -34,7 +33,7 @@ public class HighwayTransferRecordActivity extends ActivityView
   private LinearLayout send;
   private LinearLayout clearHistory;
   private TextView welcomeText;
-  private HighwayTransferRecordCustomAdapter adapter;
+  private TransferRecordCustomAdapter adapter;
   private TextView textView;
   private ListView receivedAppListView;
   private WifiManager wifimanager;
@@ -136,7 +135,7 @@ public class HighwayTransferRecordActivity extends ActivityView
     receivedAppListView.setVisibility(View.VISIBLE);
 
     if (adapter == null) {
-      adapter = new HighwayTransferRecordCustomAdapter(this, listOfItems);
+      adapter = new TransferRecordCustomAdapter(this, listOfItems);
       receivedAppListView.setAdapter(adapter);
     } else {
       adapter.notifyDataSetChanged();
@@ -197,13 +196,13 @@ public class HighwayTransferRecordActivity extends ActivityView
   }
 
   private void sendServerShutdownMessage() {
-    Intent shutdown = new Intent(this, HighwayServerService.class);
+    Intent shutdown = new Intent(this, ServerService.class);
     shutdown.setAction("SHUTDOWN_SERVER");
     startService(shutdown);
   }
 
   private void sendDisconnectMessage() {
-    Intent disconnect = new Intent(this, HighwayClientService.class);
+    Intent disconnect = new Intent(this, ClientService.class);
     disconnect.setAction("DISCONNECT");
     startService(disconnect);
   }
@@ -231,7 +230,7 @@ public class HighwayTransferRecordActivity extends ActivityView
     });
   }
 
-  @Override public void showNewCard(HighwayTransferRecordItem item) {
+  @Override public void showNewCard(TransferRecordItem item) {
     if (receivedAppListView.getVisibility() != View.VISIBLE
         && textView.getVisibility() == View.VISIBLE) {
       receivedAppListView.setVisibility(View.VISIBLE);
@@ -254,14 +253,14 @@ public class HighwayTransferRecordActivity extends ActivityView
   }
 
   @Override public void openAppSelectionView() {
-    Intent appSelection = new Intent().setClass(HighwayTransferRecordActivity.this,
-        HighwayAppSelectionActivity.class);
+    Intent appSelection =
+        new Intent().setClass(TransferRecordActivity.this, AppSelectionActivity.class);
     appSelection.putExtra("isAHotspot", isHotspot);
     startActivityForResult(appSelection, SELECT_APPS_REQUEST_CODE);
   }
 
   @Override public void showNoRecordsToDeleteToast() {
-    Toast.makeText(this, HighwayTransferRecordActivity.this.getResources()
+    Toast.makeText(this, TransferRecordActivity.this.getResources()
         .getString(R.string.noRecordsDelete), Toast.LENGTH_SHORT)
         .show();
   }
@@ -271,7 +270,7 @@ public class HighwayTransferRecordActivity extends ActivityView
     d.show();
   }
 
-  @Override public void refreshAdapter(List<HighwayTransferRecordItem> toRemoveList) {
+  @Override public void refreshAdapter(List<TransferRecordItem> toRemoveList) {
     if (adapter != null) {
       adapter.clearListOfItems(toRemoveList);
       adapter.notifyDataSetChanged();
@@ -293,7 +292,7 @@ public class HighwayTransferRecordActivity extends ActivityView
     dialog.show();
   }
 
-  @Override public void showDialogToDelete(HighwayTransferRecordItem item) {
+  @Override public void showDialogToDelete(TransferRecordItem item) {
     Dialog dialog = createDialogToDelete(item);
     dialog.show();
   }
@@ -308,9 +307,9 @@ public class HighwayTransferRecordActivity extends ActivityView
     }
   }
 
-  @Override public void generateAdapter(List<HighwayTransferRecordItem> list) {
+  @Override public void generateAdapter(List<TransferRecordItem> list) {
     if (adapter == null) {
-      adapter = new HighwayTransferRecordCustomAdapter(this, listOfItems);
+      adapter = new TransferRecordCustomAdapter(this, listOfItems);
       receivedAppListView.setAdapter(adapter);
     }
   }
@@ -482,7 +481,7 @@ public class HighwayTransferRecordActivity extends ActivityView
     return builder.create();
   }
 
-  private Dialog createDialogToDelete(final HighwayTransferRecordItem item) {
+  private Dialog createDialogToDelete(final TransferRecordItem item) {
 
     String message =
         String.format(getResources().getString(R.string.alertDeleteApp), item.getAppName());

@@ -20,7 +20,7 @@
       android:allowBackup="true"
       android:supportsRtl="true">
     <activity
-        android:name=".HighwayActivity"
+        android:name=".RadarActivity"
         android:screenOrientation="portrait">
       <intent-filter>
         <action android:name="android.intent.action.VIEW"/>
@@ -42,7 +42,7 @@
         <data android:mimeType="application/vnd.android.package-archive"/>
       </intent-filter>
     </activity>
-    <activity android:name=".HighwayAppSelectionActivity"/>
+    <activity android:name=".AppSelectionActivity"/>
 
     <service
         android:name=".HighwayClientComm"
@@ -54,16 +54,16 @@
     <!-- android:exported="true" /> -->
 
     <service
-        android:name=".HighwayClientService"
+        android:name=".ClientService"
         android:enabled="true"
         android:exported="true"/>
     <service
-        android:name=".HighwayServerService"
+        android:name=".ServerService"
         android:enabled="true"
         android:exported="true"/>
 
     <activity
-        android:name=".HighwayTransferRecordActivity"
+        android:name=".TransferRecordActivity"
         android:configChanges="orientation|keyboardHidden|screenSize">
     </activity>
     <activity android:name=".ShareAptoideActivity">

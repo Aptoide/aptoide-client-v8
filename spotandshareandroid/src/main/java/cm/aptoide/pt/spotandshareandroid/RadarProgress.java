@@ -15,22 +15,22 @@ import android.view.animation.LinearInterpolator;
 /**
  * Created by filipegoncalves on 24-08-2016.
  */
-public class HighwayRadarProgress extends View {
+public class RadarProgress extends View {
 
   private RectF rect = new RectF(0, 0, 200, 200);
   private float initialAngle = 0.0f;
   private int raio;
   private Paint paint;
 
-  public HighwayRadarProgress(Context context) {
+  public RadarProgress(Context context) {
     super(context);
   }
 
-  public HighwayRadarProgress(Context context, AttributeSet attrs) {
+  public RadarProgress(Context context, AttributeSet attrs) {
     this(context, attrs, 0);
   }
 
-  public HighwayRadarProgress(Context context, AttributeSet attrs, int defStyleAttr) {
+  public RadarProgress(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
 
     paint = new Paint();
@@ -79,11 +79,11 @@ public class HighwayRadarProgress extends View {
   }
 
   private void startRotation(long duration) {
-    HighwayCustomAnimation animation = new HighwayCustomAnimation();
+    CustomAnimation animation = new CustomAnimation();
     animation.setDuration(duration);
     animation.setRepeatCount(Animation.INFINITE);
     animation.setInterpolator(new LinearInterpolator());
-    animation.setMyCustomListener(new HighwayCustomAnimation.myCustomListener() {
+    animation.setMyCustomListener(new CustomAnimation.myCustomListener() {
       @Override public void applyTans(float time)// time p a interpolacao
       {
         initialAngle = 360 * time;

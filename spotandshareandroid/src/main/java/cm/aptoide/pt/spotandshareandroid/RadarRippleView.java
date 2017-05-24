@@ -13,7 +13,7 @@ import android.widget.TextView;
 /**
  * Created by filipegoncalves on 30-08-2016.
  */
-public class HighwayRadarRippleView extends TextView {
+public class RadarRippleView extends TextView {
 
   public static final int MODE_IN = 1;
   public static final int MODE_OUT = 2;
@@ -40,21 +40,21 @@ public class HighwayRadarRippleView extends TextView {
     }
   };
 
-  public HighwayRadarRippleView(Context context) {
+  public RadarRippleView(Context context) {
     super(context);
 
     initPaint();
     initAnimation();
   }
 
-  public HighwayRadarRippleView(Context context, AttributeSet attrs) {
+  public RadarRippleView(Context context, AttributeSet attrs) {
     super(context, attrs);
 
     initPaint();
     initAnimation();
   }
 
-  public HighwayRadarRippleView(Context context, AttributeSet attrs, int defStyleAttr) {
+  public RadarRippleView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
 
     initPaint();
