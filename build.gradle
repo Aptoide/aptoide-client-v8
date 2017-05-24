@@ -2,19 +2,14 @@ buildscript {
   repositories {
     jcenter()
     mavenLocal()
-    dependencies {
-      classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
-    }
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:2.3.1'
-    classpath 'com.novoda:gradle-android-command-plugin:1.5.0'
-    classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-
-    classpath 'me.tatarka:gradle-retrolambda:3.3.0'
+    classpath 'com.android.tools.build:gradle:2.3.2'
     classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
-
+    classpath 'me.tatarka:gradle-retrolambda:3.3.0'
+    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
     classpath 'io.realm:realm-gradle-plugin:1.2.0'
+    //classpath 'com.novoda:gradle-android-command-plugin:1.5.0'
   }
 
   // Exclude the version that the android plugin depends on.
@@ -25,7 +20,6 @@ allprojects {
   repositories {
     jcenter()
     maven { url 'https://maven.fabric.io/public' }
-    maven { url 'http://maven.localytics.com/public' }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url "https://jitpack.io" }
   }
@@ -110,9 +104,6 @@ ext {
 
   SUPER_USER_LIB_VERSION = '1.0.0.+'
 
-  // Localytics Android SDK
-  LOCALYTICS_VERSION = '4.1.0'
-
   // Flurry Android SDK
   FLURRY_VERSION = '6.4.2'
 
@@ -125,6 +116,7 @@ ext {
   CONSTRAINT_LAYOUT_VERSION = '1.0.0'
 
   LEAK_CANARY_VERSION = '1.5'
+  PARCELER_VERSION = '1.1.6'
 }
 
 // see 'Multi-module reports' in https://developer.android.com/studio/test/command-line.html

@@ -40,6 +40,8 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.TimelineSocialActionData;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.custom.HorizontalDividerItemDecoration;
@@ -47,6 +49,7 @@ import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
@@ -56,6 +59,8 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 import rx.functions.Action1;
+
+import static cm.aptoide.pt.v8engine.analytics.Analytics.AppsTimeline.BLANK;
 
 // TODO: 21/12/2016 sithengineer refactor and split in multiple classes to list comments
 // for each type: store and timeline card
@@ -94,6 +99,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private StoreCredentialsProvider storeCredentialsProvider;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private BodyInterceptor<BaseBody> bodyInterceptor;
+  private TimelineAnalytics timelineAnalytics;
 
   public static Fragment newInstance(CommentType commentType, String timelineArticleId) {
     Bundle args = new Bundle();
@@ -120,6 +127,10 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
+    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
+        httpClient, converterFactory);
     super.onCreate(savedInstanceState);
   }
 
@@ -216,6 +227,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   void refreshData() {
     if (commentType == CommentType.TIMELINE) {
+      timelineAnalytics.sendSocialActionEvent(
+          new TimelineSocialActionData(BLANK, BLANK, "Comment", BLANK, BLANK, BLANK));
       caseListSocialTimelineComments(true);
     } else {
       caseListStoreComments(url,

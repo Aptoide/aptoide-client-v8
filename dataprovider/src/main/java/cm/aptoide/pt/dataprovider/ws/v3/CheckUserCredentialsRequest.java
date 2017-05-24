@@ -15,7 +15,7 @@ public class CheckUserCredentialsRequest extends V3<CheckUserCredentialsJson> {
 
   private final boolean createStore;
 
-  public CheckUserCredentialsRequest(BaseBody baseBody, boolean createStore,
+  private CheckUserCredentialsRequest(BaseBody baseBody, boolean createStore,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
     super(baseBody, httpClient, converterFactory, bodyInterceptor);

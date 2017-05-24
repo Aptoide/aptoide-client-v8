@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 25/07/2016.
-  -->
-
 <resources>
+
+  <!--ui guidelines: buttons height-->
+  <dimen name="button_height">52dp</dimen>
+  <dimen name="button_small_height">44dp</dimen>
+
+
   <dimen name="tabsHeight">48dp</dimen>
   <dimen name="activity_horizontal_margin">0dp</dimen>
   <dimen name="activity_vertical_margin">16dp</dimen>
@@ -12,6 +13,7 @@
   <dimen name="recycler_margin">5dp</dimen>
 
 
+  <dimen name="text_size_huge">22.0sp</dimen>
   <dimen name="text_size_large">18.0sp</dimen>
   <dimen name="text_size_medium_large">16.0sp</dimen>
   <dimen name="text_size_medium">14.0sp</dimen>
@@ -66,10 +68,28 @@
   <dimen name="fab_margin">20dp</dimen>
   <dimen format="float" name="appstimeline_card_icon" type="dimen">17.7dp</dimen>
   <dimen name="bottom_skip_bar_height">48dp</dimen>
-
+  <dimen name="profile_step_one_top_image_margin">100dp</dimen>
+  <dimen name="profile_step_one_middle_margin">20dp</dimen>
+  <dimen name="padding_smaller">12dp</dimen>
+  <dimen name="padding_small">16dp</dimen>
+  <dimen name="padding_medium">32dp</dimen>
+  <dimen name="padding_medium_large">48dp</dimen>
+  <dimen name="padding_very_small">8dp</dimen>
+  <dimen name="button_default_height">46dp</dimen>
+  <dimen name="padding_large">70dp</dimen>
+  <dimen name="padding_medium_small">20dp</dimen>
+  <dimen name="padding_medium_default">24dp</dimen>
+  <dimen name="select_picture_camera_icon_size">34dp</dimen>
+  <dimen name="profile_picture_large_size">120dp</dimen>
+  <dimen name="padding_extra_large">120dp</dimen>
+  <dimen name="padding_login_button">8dp</dimen>
+  <dimen name="login_field_height">38dp</dimen>
+  <dimen name="button_big_height">40dp</dimen>
   <integer name="min_avatar_height">600</integer>
   <integer name="max_avatar_height">10240</integer>
   <integer name="min_avatar_width">600</integer>
   <integer name="max_avatar_width">10240</integer>
   <integer name="max_avatar_Size">5242880</integer>
+
+
 </resources>

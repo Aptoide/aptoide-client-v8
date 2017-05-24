@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 27/07/2016.
+ * Modified on 27/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.updates;
@@ -103,7 +103,6 @@ public class UpdateDisplayable extends Displayable {
 
   public Observable<Progress<Download>> downloadAndInstall(Context context,
       PermissionService permissionRequest) {
-    Analytics.Updates.update();
     PermissionManager permissionManager = new PermissionManager();
     return permissionManager.requestExternalStoragePermission(permissionRequest)
         .flatMap(sucess -> {

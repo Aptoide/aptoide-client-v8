@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 01/08/2016.
+ * Modified on 01/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.timeline.widget;
@@ -92,8 +92,9 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
           Analytics.AppsTimeline.BLANK, displayable.getVideoTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_VIDEO);
       displayable.getLink()
-          .launch(context);
+          .launch();
       displayable.sendOpenVideoEvent(packageName);
+      displayable.sendVideoClickEvent(Analytics.AppsTimeline.OPEN_VIDEO, socialAction);
     });
 
     compositeSubscription.add(displayable.getRelatedToApplication()
@@ -122,11 +123,12 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
         .subscribe(click -> {
           knockWithSixpackCredentials(displayable.getAbUrl());
           displayable.getBaseLink()
-              .launch(context);
+              .launch();
           Analytics.AppsTimeline.clickOnCard(VideoDisplayable.CARD_TYPE_NAME,
               Analytics.AppsTimeline.BLANK, displayable.getVideoTitle(), displayable.getTitle(),
               Analytics.AppsTimeline.OPEN_VIDEO_HEADER);
           displayable.sendOpenChannelEvent(packageName);
+          displayable.sendVideoClickEvent(Analytics.AppsTimeline.OPEN_VIDEO_HEADER, socialAction);
         }));
   }
 

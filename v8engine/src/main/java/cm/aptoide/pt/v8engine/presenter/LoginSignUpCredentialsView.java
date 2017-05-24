@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.v8engine.presenter;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.v8engine.view.account.AptoideAccountViewModel;
 import cm.aptoide.pt.v8engine.view.account.FacebookAccountViewModel;
 import rx.Observable;
@@ -59,7 +61,19 @@ public interface LoginSignUpCredentialsView extends GoogleLoginView {
 
   Observable<AptoideAccountViewModel> aptoideSignUpClick();
 
+  boolean tryCloseLoginBottomSheet();
+
+  @NonNull AptoideAccountViewModel getCredentials();
+
+  void setCredentials(@NonNull AptoideAccountViewModel model);
+
   boolean isPasswordVisible();
 
   void navigateToCreateProfile();
+
+  Context getApplicationContext();
+
+  void lockScreenRotation();
+
+  void unlockScreenRotation();
 }

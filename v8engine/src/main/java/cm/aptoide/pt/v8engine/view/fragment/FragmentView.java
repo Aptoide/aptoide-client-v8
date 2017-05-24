@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
@@ -52,6 +54,14 @@ public abstract class FragmentView extends LeakFragment implements View {
     }
 
     super.onSaveInstanceState(outState);
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override public void onPrepareOptionsMenu(Menu menu) {
+    super.onPrepareOptionsMenu(menu);
   }
 
   /**

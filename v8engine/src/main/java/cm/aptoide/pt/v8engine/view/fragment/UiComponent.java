@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 23/08/2016.
+ * Modified on 23/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.fragment;
@@ -11,7 +11,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 /**
- * Created by sithengineer on 12/05/16.
+ * Created on 12/05/16.
  * <p>
  * User interface component (activity or fragment) basic methods to bind a {@link View} to this
  * component, load extras from a {@link Bundle} and setup

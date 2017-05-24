@@ -122,6 +122,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
     mActionsListener.getButtonsState();
     //dismissV.setPaintFlags(dismissV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     about.setPaintFlags(about.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
     RxView.clicks(addressBookSyncButton)
         .flatMap(click -> {
           analytics.sendSyncAddressBookEvent();
@@ -129,6 +130,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
           final PermissionService permissionService = (PermissionService) getContext();
           return permissionManager.requestContactsAccess(permissionService);
         })
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(permissionGranted -> {
           if (permissionGranted) {
@@ -139,15 +141,25 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
             mActionsListener.contactsPermissionDenied();
           }
         });
+
     RxView.clicks(facebookSyncButton)
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(click -> facebookLoginCallback());
+
     RxView.clicks(twitterSyncButton)
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(click -> twitterLogin());
+
     RxView.clicks(dismissV)
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(click -> mActionsListener.finishViewClick());
+
     RxView.clicks(about)
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(click -> mActionsListener.aboutClick());
+
     RxView.clicks(allowFriendsFindButton)
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(click -> mActionsListener.allowFindClick());
   }
 

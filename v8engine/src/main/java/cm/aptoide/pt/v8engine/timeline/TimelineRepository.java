@@ -43,9 +43,9 @@ public class TimelineRepository {
   }
 
   public Observable<Datalist<TimelineCard>> getTimelineCards(Integer limit, int offset,
-      List<String> packageNames, boolean refresh) {
+      List<String> packageNames, boolean refresh, String cardId) {
     return GetUserTimelineRequest.of(action, limit, offset, packageNames, bodyInterceptor,
-        httpClient, converterFactory)
+        httpClient, converterFactory, cardId)
         .observe(refresh)
         .flatMap(response -> {
           if (response.isOk()) {

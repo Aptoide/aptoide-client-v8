@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.view;
 
 import android.app.SearchManager;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -37,9 +36,9 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.notification.ContentPuller;
 import cm.aptoide.pt.v8engine.presenter.MainPresenter;
 import cm.aptoide.pt.v8engine.presenter.MainView;
-import cm.aptoide.pt.v8engine.pull.ContentPuller;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
@@ -49,9 +48,12 @@ import cm.aptoide.pt.v8engine.util.ApkFy;
 import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.downloads.scheduled.ScheduledDownloadsFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.navigator.SimpleTabNavigation;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigatorActivity;
 import cm.aptoide.pt.v8engine.view.store.StoreTabFragmentChooser;
 import cm.aptoide.pt.v8engine.view.store.home.HomeFragment;
+import cm.aptoide.pt.v8engine.view.timeline.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.v8engine.view.wizard.WizardFragment;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -95,12 +97,8 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
         converterFactory);
 
     attachPresenter(
-        new MainPresenter(this, new ApkFy(this, getIntent()), autoUpdate, new ContentPuller(this)),
-        savedInstanceState);
-  }
-
-  @Override public void changeOrientationToPortrait() {
-    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        new MainPresenter(this, new ApkFy(this, getIntent()), autoUpdate, new ContentPuller(this),
+            ((V8Engine) getApplicationContext()).getNotificationCenter()), savedInstanceState);
   }
 
   @Override public void showWizard() {
@@ -144,7 +142,7 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
     } else if (intent.hasExtra(
         DeepLinkIntentReceiver.DeepLinksTargets.FROM_DOWNLOAD_NOTIFICATION)) {
       downloadNotificationDeepLink(intent);
-    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.FROM_TIMELINE)) {
+    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.TIMELINE_DEEPLINK)) {
       fromTimelineDeepLink(intent);
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES)) {
       newUpdatesDeepLink(intent);
@@ -229,7 +227,7 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
   }
 
   @NonNull private Completable navigateToStores() {
-    return Completable.fromAction(() -> navigate(STORES));
+    return Completable.fromAction(() -> navigate(new SimpleTabNavigation(TabNavigation.STORES)));
   }
 
   @NonNull private Completable openStore(Store store) {
@@ -240,17 +238,18 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
 
   private void downloadNotificationDeepLink(Intent intent) {
     Analytics.ApplicationLaunch.downloadingUpdates();
-    navigate(DOWNLOADS);
+    navigate(new SimpleTabNavigation(TabNavigation.DOWNLOADS));
   }
 
   private void fromTimelineDeepLink(Intent intent) {
     Analytics.ApplicationLaunch.timelineNotification();
-    navigate(TIMELINE);
+    String cardId = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.CARD_ID);
+    navigate(new AppsTimelineTabNavigation(cardId));
   }
 
   private void newUpdatesDeepLink(Intent intent) {
     Analytics.ApplicationLaunch.newUpdatesNotification();
-    navigate(UPDATES);
+    navigate(new SimpleTabNavigation(TabNavigation.UPDATES));
   }
 
   private void genericDeepLink(Uri uri) {

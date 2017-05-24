@@ -7,17 +7,20 @@ package cm.aptoide.pt.v8engine.view.app.displayable;
 
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
 
 /**
- * Created by sithengineer on 10/05/16.
+ * Created on 10/05/16.
  */
 public class AppViewDescriptionDisplayable extends AppViewDisplayable {
+
+  private AppViewAnalytics appViewAnalytics;
 
   public AppViewDescriptionDisplayable() {
   }
 
-  public AppViewDescriptionDisplayable(GetApp getApp) {
-    super(getApp);
+  public AppViewDescriptionDisplayable(GetApp getApp, AppViewAnalytics appViewAnalytics) {
+    super(getApp, appViewAnalytics);
   }
 
   @Override protected Configs getConfig() {

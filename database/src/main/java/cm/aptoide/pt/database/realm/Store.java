@@ -10,7 +10,7 @@ import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
 
 /**
- * Created by sithengineer on 12/05/16.
+ * Created on 12/05/16.
  *
  * TODO create mapper POJO <> this
  */

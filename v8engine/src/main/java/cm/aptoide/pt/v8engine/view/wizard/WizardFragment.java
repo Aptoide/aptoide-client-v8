@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.view.wizard;
 
 import android.content.Context;
-import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -34,6 +34,8 @@ import rx.android.schedulers.AndroidSchedulers;
 // TODO: 16/2/2017 sithengineer add MVP to this view
 public class WizardFragment extends BackButtonFragment {
 
+  private static final String PAGE_INDEX = "page_index";
+
   private CrashReport crashReport;
   private WizardPagerAdapter viewPagerAdapter;
   private ViewPager viewPager;
@@ -45,6 +47,7 @@ public class WizardFragment extends BackButtonFragment {
 
   private AptoideAccountManager accountManager;
   private LoginBottomSheet loginBottomSheet;
+  private boolean isInPortraitMode;
 
   @Override public void onAttach(Context context) {
     super.onAttach(context);
@@ -59,7 +62,15 @@ public class WizardFragment extends BackButtonFragment {
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_wizard, container, false);
+    View view = inflater.inflate(R.layout.fragment_wizard, container, false);
+    viewPager = (ViewPager) view.findViewById(R.id.view_pager);
+    skipOrNextLayout = view.findViewById(R.id.skip_next_layout);
+    radioGroup = (RadioGroup) view.findViewById(R.id.view_pager_radio_group);
+    skipText = view.findViewById(R.id.skip_text);
+    nextIcon = view.findViewById(R.id.next_icon);
+    isInPortraitMode = getActivity().getResources()
+        .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+    return view;
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,25 +79,13 @@ public class WizardFragment extends BackButtonFragment {
     crashReport = CrashReport.getInstance();
   }
 
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putInt(PAGE_INDEX, viewPager.getCurrentItem());
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    viewPager = (ViewPager) view.findViewById(R.id.view_pager);
-    skipOrNextLayout = view.findViewById(R.id.skip_next_layout);
-    radioGroup = (RadioGroup) view.findViewById(R.id.view_pager_radio_group);
-    skipText = view.findViewById(R.id.skip_text);
-    nextIcon = view.findViewById(R.id.next_icon);
-    createViewsAndButtons(getContext());
-
-    loginBottomSheet.state()
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(state -> {
-          if (LoginBottomSheet.State.EXPANDED.equals(state)) {
-            skipOrNextLayout.setVisibility(View.GONE);
-          } else if (LoginBottomSheet.State.COLLAPSED.equals(state)) {
-            skipOrNextLayout.setVisibility(View.VISIBLE);
-          }
-        }, err -> crashReport.log(err));
 
     viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
       @Override
@@ -103,6 +102,24 @@ public class WizardFragment extends BackButtonFragment {
       @Override public void onPageScrollStateChanged(int state) {
       }
     });
+
+    int firstPosition = 0;
+    // restore state
+    if (savedInstanceState != null) {
+      firstPosition = savedInstanceState.getInt(PAGE_INDEX, 0);
+    }
+    createViewsAndButtons(getContext(), firstPosition);
+
+    loginBottomSheet.state()
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(state -> {
+          if (isInPortraitMode && LoginBottomSheet.State.EXPANDED.equals(state)) {
+            skipOrNextLayout.setVisibility(View.GONE);
+          } else if (LoginBottomSheet.State.COLLAPSED.equals(state)) {
+            skipOrNextLayout.setVisibility(View.VISIBLE);
+          }
+        }, err -> crashReport.log(err));
   }
 
   @Override public void onDestroyView() {
@@ -123,7 +140,7 @@ public class WizardFragment extends BackButtonFragment {
     }
   }
 
-  private void createViewsAndButtons(Context context) {
+  private void createViewsAndButtons(Context context, int firstPosition) {
     accountManager.accountStatus()
         .first()
         .toSingle()
@@ -132,9 +149,10 @@ public class WizardFragment extends BackButtonFragment {
         .subscribe(account -> {
           viewPagerAdapter = new WizardPagerAdapter(getChildFragmentManager(), account);
           viewPager.setAdapter(viewPagerAdapter);
-          viewPager.setCurrentItem(0);
 
           createRadioButtons(context);
+          viewPager.setCurrentItem(firstPosition);
+          handleSelectedPage(firstPosition);
           setupHandlers();
         }, err -> crashReport.log(err));
   }
@@ -179,7 +197,6 @@ public class WizardFragment extends BackButtonFragment {
   private void handleSkipClick() {
     final FragmentActivity activity = getActivity();
     activity.onBackPressed();
-    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
   }
 
   /**

@@ -18,7 +18,7 @@ import cm.aptoide.pt.v8engine.payment.Authorization;
 import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.payment.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
-import cm.aptoide.pt.v8engine.sync.RepositorySync;
+import cm.aptoide.pt.v8engine.sync.ScheduledSync;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ import rx.Single;
 /**
  * Created by marcelobenites on 22/11/16.
  */
-public class PaymentAuthorizationSync extends RepositorySync {
+public class PaymentAuthorizationSync extends ScheduledSync {
 
   private final List<String> paymentIds;
   private final PaymentAuthorizationAccessor authorizationAccessor;

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 07/07/2016.
+ * Modified on 07/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.settings;
@@ -45,6 +45,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
+import cm.aptoide.pt.v8engine.notification.NotificationCenter;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
 import cm.aptoide.pt.v8engine.preferences.SecurePreferences;
@@ -72,6 +73,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private static final String REMOVE_ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY = "removeMaturepin";
   private static final String ADULT_CONTENT_WITH_PIN_PREFERENCE_VIEW_KEY = "matureChkBoxWithPin";
   private static final String ADULT_CONTENT_PREFERENCE_VIEW_KEY = "matureChkBox";
+  private static final String CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY =
+      "notification_campaign_and_social";
 
   protected Toolbar toolbar;
   private Context context;
@@ -89,7 +92,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private Preference removePinPreferenceView;
   private CheckBoxPreference adultContentPreferenceView;
   private CheckBoxPreference adultContentWithPinPreferenceView;
+  private CheckBoxPreference SocialCampaignNotifications;
   private boolean trackAnalytics;
+  private NotificationCenter notificationCenter;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -127,6 +132,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
         .setView(R.layout.dialog_requestpin)
         .setEditText(R.id.pininput)
         .build();
+
+    notificationCenter = ((V8Engine) getContext().getApplicationContext()).getNotificationCenter();
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -162,8 +169,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
         (CheckBoxPreference) findPreference(ADULT_CONTENT_PREFERENCE_VIEW_KEY);
     adultContentWithPinPreferenceView =
         (CheckBoxPreference) findPreference(ADULT_CONTENT_WITH_PIN_PREFERENCE_VIEW_KEY);
+    SocialCampaignNotifications =
+        (CheckBoxPreference) findPreference(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY);
     pinPreferenceView = findPreference(ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
     removePinPreferenceView = findPreference(REMOVE_ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
+
+    //we should change this if notification center can be enabled and disabled in background
+    SocialCampaignNotifications.setChecked(notificationCenter.isEnable());
 
     setupClickHandlers();
   }
@@ -209,6 +221,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_message,
             Application.getConfiguration()
                 .getMarketName()));
+
+    subscriptions.add(RxPreference.checks(SocialCampaignNotifications)
+        .subscribe(isChecked -> handleSocialNotifications(isChecked)));
 
     subscriptions.add(adultContent.enabled()
         .observeOn(AndroidSchedulers.mainThread())
@@ -493,6 +508,16 @@ public class SettingsFragment extends PreferenceFragmentCompat
     //  }
     //  return true;
     //});
+  }
+
+  private void handleSocialNotifications(Boolean isChecked) {
+    if (isChecked) {
+      notificationCenter.enable();
+      notificationCenter.start();
+    } else {
+      notificationCenter.disable();
+      notificationCenter.stop();
+    }
   }
 
   private void rollbackCheck(CheckBoxPreference preference) {

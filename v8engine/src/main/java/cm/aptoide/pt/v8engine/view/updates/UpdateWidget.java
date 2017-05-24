@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 16/08/2016.
+ * Modified on 16/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.updates;
@@ -30,11 +30,14 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.updates.UpdateRepository;
+import cm.aptoide.pt.v8engine.updates.UpdatesAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
 import rx.Scheduler;
@@ -59,9 +62,12 @@ import rx.android.schedulers.AndroidSchedulers;
   private ProgressBar progressBar;
 
   private UpdateRepository updateRepository;
+  private UpdatesAnalytics updatesAnalytics;
 
   public UpdateWidget(View itemView) {
     super(itemView);
+    updatesAnalytics = new UpdatesAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
   }
 
   @Override protected void assignViews(View itemView) {
@@ -117,6 +123,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
   private Observable<Void> handleUpdateButtonClick(UpdateDisplayable displayable, Context context) {
     return RxView.clicks(updateButtonLayout)
+        .doOnNext(__ -> updatesAnalytics.updates("Update"))
         .flatMap(click -> displayable.downloadAndInstall(context, (PermissionService) context))
         .retry()
         .map(__ -> null);
@@ -148,6 +155,7 @@ import rx.android.schedulers.AndroidSchedulers;
   @NonNull private Observable<Void> handleUpdateRowClick(UpdateDisplayable updateDisplayable) {
     return RxView.clicks(updateRowLayout)
         .doOnNext(v -> {
+          updatesAnalytics.updates("Open App View");
           final Fragment fragment = V8Engine.getFragmentProvider()
               .newAppViewFragment(updateDisplayable.getAppId(), updateDisplayable.getPackageName());
           getFragmentNavigator().navigateTo(fragment);

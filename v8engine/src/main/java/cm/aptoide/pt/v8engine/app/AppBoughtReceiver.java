@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 05/08/2016.
+ * Modified on 05/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.app;
@@ -11,7 +11,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 /**
- * Created by sithengineer on 05/08/16.
+ * Created on 05/08/16.
  */
 public abstract class AppBoughtReceiver extends BroadcastReceiver {
 

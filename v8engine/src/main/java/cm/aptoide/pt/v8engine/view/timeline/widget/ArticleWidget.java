@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 01/08/2016.
+ * Modified on 01/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.timeline.widget;
@@ -76,10 +76,12 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
     url.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
       displayable.getLink()
-          .launch(context);
+          .launch();
       Analytics.AppsTimeline.clickOnCard(ArticleDisplayable.CARD_TYPE_NAME,
           Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE);
+      displayable.sendArticleWidgetCardClickEvent(Analytics.AppsTimeline.OPEN_ARTICLE,
+          socialAction);
       displayable.sendOpenArticleEvent(packageName);
     });
 
@@ -109,10 +111,12 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
         .subscribe(click -> {
           knockWithSixpackCredentials(displayable.getAbUrl());
           displayable.getDeveloperLink()
-              .launch(context);
+              .launch();
           Analytics.AppsTimeline.clickOnCard(ArticleDisplayable.CARD_TYPE_NAME,
               Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(),
               Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
+          displayable.sendArticleWidgetCardClickEvent(Analytics.AppsTimeline.OPEN_ARTICLE_HEADER,
+              socialAction);
           displayable.sendOpenArticleEvent(packageName);
         }));
   }

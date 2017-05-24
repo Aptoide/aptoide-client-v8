@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified on 04/08/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -238,16 +238,27 @@ public class FileUtils {
     return deleteFolder(files);
   }
 
-  public String getPath(Uri contentUri, Context context) {
+  public String getMediaStoragePath(Uri contentUri, Context context) {
+    if (contentUri == null) {
+      throw new NullPointerException("content Uri is null");
+    }
+
+    Cursor cursor = null;
     try {
-      String[] proj = { MediaStore.Images.Media.DATA };
-      Cursor cursor = context.getContentResolver()
-          .query(contentUri, proj, null, null, null);
+      String[] projection = { MediaStore.Images.Media.DATA };
+      cursor = context.getContentResolver()
+          .query(contentUri, projection, null, null, null);
       int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
       cursor.moveToFirst();
       return cursor.getString(column_index);
-    } catch (Exception e) {
-      return contentUri.getPath();
+    } catch (NullPointerException ex) {
+      Logger.e(TAG, ex);
+    } finally {
+      if (cursor != null) {
+        cursor.close();
+      }
     }
+    // default situation
+    return contentUri.getPath();
   }
 }

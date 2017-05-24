@@ -12,7 +12,7 @@ public interface HighwayView {
 
   void enableButtons(boolean enable);
 
-  void setUpListeners();
+  void setupViews();
 
   void showJoinGroupResult(int result);
 
@@ -28,8 +28,6 @@ public interface HighwayView {
 
   void refreshRadar(ArrayList<Group> clients);
 
-  void refreshRadarLowerVersions(ArrayList<Group> clients);
-
   void showRecoveringWifiStateToast();
 
   void dismiss();
@@ -37,6 +35,14 @@ public interface HighwayView {
   void hideSearchGroupsTextview(boolean hide);
 
   void openChatFromAppViewShare(String deviceName, String appFilepath);
+
+  void paintSelectedGroup(Group group);
+
+  void deselectHotspot(Group group);
+
+  void openShareAptoide(String Ssid);
+
+  void showShareAptoideApk();
 
   //    void setCreateGroupListener(View.OnClickListener listener );
   //

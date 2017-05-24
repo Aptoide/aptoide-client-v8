@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/08/2016.
+ * Modified on 29/08/2016.
  */
 
 package cm.aptoide.pt.preferences.managed;
@@ -50,6 +50,21 @@ public class ManagerPreferences {
     Preferences.get()
         .edit()
         .putInt(ManagedKeys.LAST_PUSH_NOTIFICATION_ID, notificationId)
+        .apply();
+  }
+
+  public static long getPushNotificationPullingInterval() {
+    return Preferences.get()
+        .getLong(ManagedKeys.PUSH_NOTIFICATION_PULL_INTERVAL, -1);
+  }
+
+  /**
+   * @param intervalTime time in ms
+   */
+  public static void setPushNotificationPullingInterval(long intervalTime) {
+    Preferences.get()
+        .edit()
+        .putLong(ManagedKeys.PUSH_NOTIFICATION_PULL_INTERVAL, intervalTime)
         .apply();
   }
 

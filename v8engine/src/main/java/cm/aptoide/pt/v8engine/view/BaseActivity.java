@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 29/08/2016.
+ * Modified on 29/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view;
@@ -44,8 +44,6 @@ public abstract class BaseActivity extends PermissionServiceActivity {
   }
 
   private void setUpAnalytics() {
-    Analytics.Dimensions.setPartnerDimension(Analytics.Dimensions.PARTNER);
-    Analytics.Dimensions.setVerticalDimension(Analytics.Dimensions.VERTICAL);
     Analytics.Dimensions.setGmsPresent(
         DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(this));
   }
@@ -64,7 +62,6 @@ public abstract class BaseActivity extends PermissionServiceActivity {
   @Override protected void onPause() {
     super.onPause();
     _resumed = false;
-    Analytics.Lifecycle.Activity.onPause(this);
   }
 
   @Override protected void onStop() {
@@ -74,6 +71,5 @@ public abstract class BaseActivity extends PermissionServiceActivity {
 
   @Override protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
-    Analytics.Lifecycle.Activity.onNewIntent(this, intent);
   }
 }

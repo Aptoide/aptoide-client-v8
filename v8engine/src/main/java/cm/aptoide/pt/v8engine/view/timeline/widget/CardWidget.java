@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.view.timeline.widget;
 
-import android.content.Intent;
 import android.support.annotation.CallSuper;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -23,8 +22,9 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
-import cm.aptoide.pt.v8engine.view.account.user.CreateStoreActivity;
+import cm.aptoide.pt.v8engine.view.account.store.CreateStoreFragment;
 import cm.aptoide.pt.v8engine.view.comments.CommentDialogFragment;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -47,10 +47,8 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by jdandrade on 29/11/2016.
  */
+abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
 
-public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
-
-  private static final String TAG = CardWidget.class.getName();
   TextView shareButton;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
@@ -58,8 +56,8 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   private LinearLayout like;
   private LikeButtonView likeButton;
   private TextView comment;
-  private AlertDialog alertDialog;
   private Account account;
+  protected String socialAction = "(blank)";
 
   CardWidget(View itemView) {
     super(itemView);
@@ -70,13 +68,6 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     like = (LinearLayout) itemView.findViewById(R.id.social_like);
     comment = (TextView) itemView.findViewById(R.id.social_comment);
     likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
-  }
-
-  @Override public void unbindView() {
-    if (alertDialog != null && alertDialog.isShowing()) {
-      alertDialog.dismiss();
-    }
-    super.unbindView();
   }
 
   @CallSuper @Override public void bindView(T displayable) {
@@ -103,6 +94,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
           shareCard(displayable, (String cardId) -> likeCard(displayable, cardId, 1),
               SharePreviewDialog.SharePreviewOpenMode.LIKE);
           likeButton.setHeartState(false);
+          socialAction = "Like";
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));
 
@@ -120,14 +112,16 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
                     .subscribe();
               }, SharePreviewDialog.SharePreviewOpenMode.COMMENT));
           commentDialogFragment.show(fm, "fragment_comment_dialog");
+          socialAction = "Comment";
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));
 
     compositeSubscription.add(RxView.clicks(shareButton)
-        .subscribe(
-            click -> shareCard(displayable, null, SharePreviewDialog.SharePreviewOpenMode.SHARE),
-            err -> CrashReport.getInstance()
-                .log(err)));
+        .subscribe(click -> {
+          shareCard(displayable, null, SharePreviewDialog.SharePreviewOpenMode.SHARE);
+          socialAction = "Share";
+        }, err -> CrashReport.getInstance()
+            .log(err)));
   }
 
   private void updateAccount(Account account) {
@@ -147,14 +141,14 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
         account.getAccess())) {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
           R.string.create_store_create, snackView -> {
-            Intent intent = new Intent(getContext(), CreateStoreActivity.class);
-            getContext().startActivity(intent);
+            getFragmentNavigator().navigateTo(CreateStoreFragment.newInstance());
           });
       return;
     }
 
     SharePreviewDialog sharePreviewDialog =
-        new SharePreviewDialog(displayable, accountManager, true, openMode);
+        new SharePreviewDialog(displayable, accountManager, true, openMode,
+            displayable.getTimelineAnalytics());
     AlertDialog.Builder alertDialog = sharePreviewDialog.getPreviewDialogBuilder(getContext());
 
     Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
@@ -186,10 +180,13 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
           switch (eResponse) {
             case YES:
               ShowMessage.asSnack(getContext(), R.string.social_timeline_share_dialog_title);
+              displayable.sendSocialActionEvent(
+                  TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
               break;
             case NO:
               break;
             case CANCEL:
+              displayable.sendSocialActionEvent(TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
               break;
           }
         });

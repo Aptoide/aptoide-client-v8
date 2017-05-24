@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 24/08/2016.
+ * Modified on 24/08/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -11,7 +11,7 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
- * Created by sithengineer on 12/05/16.
+ * Created on 12/05/16.
  */
 
 public class Update extends RealmObject {

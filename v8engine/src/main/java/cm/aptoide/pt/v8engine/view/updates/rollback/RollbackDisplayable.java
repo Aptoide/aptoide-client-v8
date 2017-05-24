@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 28/07/2016.
+ * Modified on 28/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.updates.rollback;
@@ -17,7 +17,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import rx.Observable;
 
 /**
- * Created by sithengineer on 14/06/16.
+ * Created on 14/06/16.
  */
 public class RollbackDisplayable extends DisplayablePojo<Rollback> {
 

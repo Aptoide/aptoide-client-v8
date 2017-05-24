@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 25/08/2016.
+ * Modified on 25/08/2016.
  */
 
 package cm.aptoide.pt.utils.design;
@@ -38,8 +38,9 @@ public class ShowMessage {
   public static final int DISMISSED = 1;
   private static final String TAG = ShowMessage.class.getSimpleName();
 
-  public static void asSnack(View view, String msg, String actionMsg, View.OnClickListener action) {
-    asSnackInternal(view, msg, actionMsg, action).show();
+  public static void asSnack(View view, String msg, String actionMsg, View.OnClickListener action,
+      int duration) {
+    asSnackInternal(view, msg, actionMsg, action, duration).show();
   }
 
   //
@@ -47,8 +48,8 @@ public class ShowMessage {
   //
 
   @NonNull private static Snackbar asSnackInternal(View view, String msg, String actionMsg,
-      View.OnClickListener action) {
-    return Snackbar.make(view, msg, Snackbar.LENGTH_SHORT)
+      View.OnClickListener action, int duration) {
+    return Snackbar.make(view, msg, duration)
         .setAction(actionMsg, action);
   }
 
@@ -57,7 +58,8 @@ public class ShowMessage {
    */
   @NonNull public static Observable<Integer> asObservableSnack(View view, String msg,
       String actionMsg, View.OnClickListener action) {
-    return asSnackObservableInternal(asSnackInternal(view, msg, actionMsg, action));
+    return asSnackObservableInternal(
+        asSnackInternal(view, msg, actionMsg, action, Snackbar.LENGTH_SHORT));
   }
 
   private static Observable<Integer> asSnackObservableInternal(Snackbar snackbar) {

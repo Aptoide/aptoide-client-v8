@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
+ * Modified on 02/09/2016.
  */
 
 package cm.aptoide.pt.v8engine.util.referrer;
@@ -27,7 +27,9 @@ import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.ads.AdsRepository;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
@@ -47,6 +49,8 @@ import rx.android.schedulers.AndroidSchedulers;
 public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils {
 
   private static final String TAG = ReferrerUtils.class.getSimpleName();
+
+  private static final QManager qManager = V8Engine.getQManager();
 
   public static void extractReferrer(MinimalAd minimalAd, final int retries,
       boolean broadcastReferrer, AdsRepository adsRepository, final OkHttpClient httpClient,
@@ -156,25 +160,26 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
         private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta,
             int retries, OkHttpClient httpClient, Converter.Factory converterFactory) {
           return postponeReferrerExtraction(minimalAd, delta, false, retries, httpClient,
-              converterFactory);
+              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()));
         }
 
         private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta,
             boolean success, OkHttpClient httpClient, Converter.Factory converterFactory) {
           return postponeReferrerExtraction(minimalAd, delta, success, 0, httpClient,
-              converterFactory);
+              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()));
         }
 
         private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta,
             final boolean success, final int retries, OkHttpClient httpClient,
-            Converter.Factory converterFactory) {
+            Converter.Factory converterFactory, String q) {
           Logger.d("ExtractReferrer", "Referrer postponed " + delta + " seconds.");
 
           Callable<Void> callable = () -> {
             Logger.d("ExtractReferrer", "Sending RegisterAdRefererRequest with value " + success);
 
             RegisterAdRefererRequest.of(minimalAd.getAdId(), minimalAd.getAppId(),
-                minimalAd.getClickUrl(), success, httpClient, converterFactory)
+                minimalAd.getClickUrl(), success, httpClient, converterFactory,
+                qManager.getFilters(ManagerPreferences.getHWSpecsFilter()))
                 .execute();
 
             Logger.d("ExtractReferrer", "Retries left: " + retries);

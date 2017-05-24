@@ -21,6 +21,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -54,13 +55,16 @@ public class SharePreviewDialog {
   private final SharePreviewOpenMode openMode;
   @Nullable private Displayable displayable;
   private boolean privacyResult;
+  private TimelineAnalytics timelineAnalytics;
 
   public SharePreviewDialog(Displayable cardDisplayable, AptoideAccountManager accountManager,
-      boolean dontShowMeAgainOption, SharePreviewOpenMode openMode) {
+      boolean dontShowMeAgainOption, SharePreviewOpenMode openMode,
+      TimelineAnalytics timelineAnalytics) {
     this.displayable = cardDisplayable;
     this.accountManager = accountManager;
     this.dontShowMeAgainOption = dontShowMeAgainOption;
     this.openMode = openMode;
+    this.timelineAnalytics = timelineAnalytics;
   }
 
   public SharePreviewDialog(AptoideAccountManager accountManager, boolean dontShowMeAgainOption,
@@ -547,8 +551,10 @@ public class SharePreviewDialog {
         (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
     TextView getApp = (TextView) view.findViewById(
         R.id.displayable_social_timeline_recommendation_get_app_button);
-    ImageLoader.with(context)
-        .load(appIconUrl, appIconV);
+    if (appIconUrl != null) {
+      ImageLoader.with(context)
+          .load(appIconUrl, appIconV);
+    }
     appNameV.setText(appName);
     appSubTitle.setText(AptoideUtils.StringU.getFormattedString(
         R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, ""));
@@ -636,10 +642,14 @@ public class SharePreviewDialog {
           switch (eResponse) {
             case YES:
               ShowMessage.asSnack((Activity) context, R.string.social_timeline_share_dialog_title);
+              timelineAnalytics.sendSocialCardPreviewActionEvent(
+                  TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
               break;
             case NO:
               break;
             case CANCEL:
+              timelineAnalytics.sendSocialCardPreviewActionEvent(
+                  TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
               break;
           }
         });

@@ -63,7 +63,7 @@
       />
 
   <View
-      android:id="@+id/partial_social_timeline_thumbnail_divider"
+      android:id="@+id/divider"
       android:layout_width="match_parent"
       android:layout_height="0.7dp"
       android:layout_below="@id/partial_social_timeline_thumbnail_related_to"
@@ -79,7 +79,7 @@
       android:id="@+id/partial_social_timeline_thumbnail_get_app_button"
       android:layout_width="match_parent"
       android:layout_height="30dp"
-      android:layout_below="@id/partial_social_timeline_thumbnail_divider"
+      android:layout_below="@id/divider"
       android:layout_marginBottom="16dp"
       android:layout_marginEnd="16dp"
       android:layout_marginLeft="96dp"

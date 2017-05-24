@@ -83,4 +83,6 @@ dependencies {
   compile "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
   // And ProGuard rules for RxJava!
   compile "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
+
+  compile("org.nanohttpd:nanohttpd:2.3.0")
 }

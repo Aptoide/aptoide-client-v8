@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 17/08/2016.
+ * Modified on 17/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.recycler;
@@ -12,7 +12,7 @@ import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 
 /**
- * Created by sithengineer on 17/08/16.
+ * Created on 17/08/16.
  * <p>
  * from {@see http://stackoverflow.com/questions/31235183/recyclerview-how-to-smooth-scroll-to-top-of-item-on-a-certain-position/32819067}
  */

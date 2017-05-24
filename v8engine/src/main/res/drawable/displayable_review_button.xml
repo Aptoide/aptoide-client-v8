@@ -8,7 +8,7 @@
   <item android:color="@color/white" android:state_pressed="true">
     <shape>
       <solid
-          android:color="@color/app_view_gray"/>
+          android:color="@color/silver_dark"/>
       <stroke
           android:color="@color/reviews_helpful_stroke_button"
           android:width="1dp"/>
@@ -21,7 +21,7 @@
           android:top="5dp"/>
     </shape>
   </item>
-  <item android:color="@color/app_view_gray">
+  <item android:color="@color/silver_dark">
     <shape>
       <solid android:color="@color/white"/>
       <stroke

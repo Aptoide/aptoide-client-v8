@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 02/06/2016.
+ * Modified on 02/06/2016.
  */
 
 package cm.aptoide.pt.utils;
@@ -17,7 +17,7 @@ import cm.aptoide.pt.logger.Logger;
 import java.security.MessageDigest;
 
 /**
- * Created by sithengineer on 01/06/16.
+ * Created on 01/06/16.
  * <p>
  * Code extracted from https://www.airpair.com/android/posts/adding-tampering-detection-to-your-android-app
  */

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 03/08/2016.
+ * Modified on 03/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.v3;
@@ -16,7 +16,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.BaseV3Response;
 import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
 import cm.aptoide.pt.model.v3.ErrorResponse;
-import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
 import cm.aptoide.pt.model.v3.InAppBillingAvailableResponse;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
@@ -44,7 +43,7 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * Created by sithengineer on 21/07/16.
+ * Created on 21/07/16.
  */
 public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
@@ -137,10 +136,6 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
   }
 
   interface Interfaces {
-
-    @POST("getPushNotifications") @FormUrlEncoded
-    Observable<GetPushNotificationsResponse> getPushNotifications(@FieldMap BaseBody arg,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("addApkFlag") @FormUrlEncoded Observable<GenericResponseV2> addApkFlag(
         @FieldMap BaseBody arg, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);

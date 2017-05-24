@@ -1,24 +1,28 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified on 04/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.app.displayable;
 
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
 /**
- * Created by sithengineer on 04/05/16.
+ * Created on 04/05/16.
  */
 public class AppViewSuggestedAppDisplayable extends DisplayablePojo<MinimalAd> {
+
+  private AppViewAnalytics appViewAnalytics;
 
   public AppViewSuggestedAppDisplayable() {
   }
 
-  public AppViewSuggestedAppDisplayable(MinimalAd minimalAd) {
+  public AppViewSuggestedAppDisplayable(MinimalAd minimalAd, AppViewAnalytics appViewAnalytics) {
     super(minimalAd);
+    this.appViewAnalytics = appViewAnalytics;
   }
 
   @Override protected Configs getConfig() {
@@ -27,5 +31,9 @@ public class AppViewSuggestedAppDisplayable extends DisplayablePojo<MinimalAd> {
 
   @Override public int getViewLayout() {
     return R.layout.displayable_app_view_suggested_app;
+  }
+
+  public AppViewAnalytics getAppViewAnalytics() {
+    return appViewAnalytics;
   }
 }

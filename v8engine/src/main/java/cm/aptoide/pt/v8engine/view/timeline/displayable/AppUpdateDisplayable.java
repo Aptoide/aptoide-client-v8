@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 01/08/2016.
+ * Modified on 01/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.timeline.displayable;
@@ -28,12 +28,15 @@ import cm.aptoide.pt.v8engine.download.InstallEvent;
 import cm.aptoide.pt.v8engine.download.InstallEventConverter;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.TimelineSocialActionData;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.timeline.ShareCardCallback;
 import java.util.Date;
 import lombok.Getter;
 import rx.Observable;
+
+import static cm.aptoide.pt.v8engine.analytics.Analytics.AppsTimeline.BLANK;
 
 /**
  * Created by marcelobenites on 6/17/16.
@@ -62,6 +65,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
   private DownloadEventConverter downloadConverter;
   private InstallEventConverter installConverter;
   private Analytics analytics;
+  private TimelineSocialActionData timelineSocialActionData;
 
   public AppUpdateDisplayable() {
   }
@@ -73,7 +77,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
       DownloadEventConverter downloadConverter, InstallEventConverter installConverter,
       Analytics analytics, String storeTheme) {
-    super(appUpdate);
+    super(appUpdate, timelineAnalytics);
     this.appIconUrl = appIconUrl;
     this.storeIconUrl = storeIconUrl;
     this.storeName = storeName;
@@ -238,21 +242,34 @@ public class AppUpdateDisplayable extends CardDisplayable {
         getPackageName(), getStoreName());
   }
 
+  public void sendAppUpdateCardClickEvent(String action, String socialAction) {
+    timelineAnalytics.sendAppUpdateCardClickEvent(CARD_TYPE_NAME, action, socialAction,
+        getPackageName(), getStoreName());
+  }
+
   @Override
   public void share(Context context, boolean privacyResult, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback);
+    socialRepository.share(getTimelineCard(), context, privacyResult, shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(),
+            getStoreName(), BLANK));
   }
 
   @Override public void share(Context context, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard(), context, shareCardCallback);
+    socialRepository.share(getTimelineCard(), context, shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(),
+            getStoreName(), BLANK));
   }
 
   @Override public void like(Context context, String cardType, int rating) {
-    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating);
+    socialRepository.like(getTimelineCard().getCardId(), cardType, "", rating,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, getPackageName(), getStoreName(),
+            BLANK));
   }
 
   @Override public void like(Context context, String cardId, String cardType, int rating) {
-    socialRepository.like(cardId, cardType, "", rating);
+    socialRepository.like(cardId, cardType, "", rating,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, getPackageName(), getStoreName(),
+            BLANK));
   }
 
   public String getErrorMessage(Context context, int error) {

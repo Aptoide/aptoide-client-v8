@@ -11,7 +11,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
- * Created by sithengineer on 15/06/16.
+ * Created on 15/06/16.
  */
 @Displayables({ ExcludedUpdateDisplayable.class }) public class ExcludedUpdateWidget
     extends Widget<ExcludedUpdateDisplayable> {

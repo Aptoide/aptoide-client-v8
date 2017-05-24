@@ -3,7 +3,7 @@ package cm.aptoide.pt.table;
 import java.util.HashMap;
 
 /**
- * Created by sithengineer on 14/10/2016.
+ * Created on 14/10/2016.
  */
 
 public class TableBag {

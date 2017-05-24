@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+  <android.support.design.widget.AppBarLayout
+      android:id="@+id/appbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="?attr/toolbarTheme"
+        />
+
+  </android.support.design.widget.AppBarLayout>
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
+
+    <LinearLayout
+        android:id="@+id/bottom_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/padding_medium_small"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/padding_small"
+        android:paddingLeft="@dimen/padding_small"
+        android:paddingRight="@dimen/padding_small"
+        android:paddingStart="@dimen/padding_small"
+        >
+
+      <Button
+          android:id="@+id/logged_in_private_button"
+          android:layout_width="0dp"
+          android:layout_marginEnd="11dp"
+          android:layout_marginRight="11dp"
+          android:layout_weight="1"
+          android:text="@string/create_profile_pub_pri_make_priv"
+          android:textSize="8sp"
+          style="@style/Aptoide.Button.Ghost"
+          />
+
+      <Button
+          android:id="@+id/logged_in_continue"
+          android:layout_width="0dp"
+          android:layout_marginLeft="11dp"
+          android:layout_marginStart="11dp"
+          android:layout_weight="1"
+          android:text="@string/continue_option"
+          style="@style/Aptoide.Button"
+          />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_buttons"
+        android:fillViewport="true"
+        android:padding="@dimen/padding_very_small"
+        >
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center"
+          android:orientation="vertical"
+          >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/icon_timeline"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_medium_small"
+            android:gravity="center_horizontal"
+            android:text="@string/create_profile_pub_pri"
+            android:textColor="@color/default_color"
+            style="@style/Aptoide.TextView.Medium.L"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_smaller"
+            android:gravity="center_horizontal"
+            android:text="@string/create_profile_pub_pri_sub_text_1"
+            style="@style/Aptoide.TextView.Regular.S"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_smaller"
+            android:gravity="center_horizontal"
+            android:text="@string/create_profile_pub_pri_sub_text_2"
+            style="@style/Aptoide.TextView.Regular.S"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_smaller"
+            android:gravity="center_horizontal"
+            android:text="@string/create_profile_pub_pri_sub_text_3"
+            style="@style/Aptoide.TextView.Regular.S"
+            />
+
+      </LinearLayout>
+
+    </ScrollView>
+
+  </RelativeLayout>
+
+</LinearLayout>

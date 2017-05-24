@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 12/08/2016.
+ * Modified on 12/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.app.widget;
@@ -32,7 +32,7 @@ import okhttp3.OkHttpClient;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * Created by sithengineer on 30/06/16.
+ * Created on 30/06/16.
  */
 @Displayables({ AppViewFlagThisDisplayable.class }) public class AppViewFlagThisWidget
     extends Widget<AppViewFlagThisDisplayable> {
@@ -101,11 +101,12 @@ import rx.android.schedulers.AndroidSchedulers;
     } else {
       goodAppLayoutWrapper.setVisibility(View.GONE);
       flagsLayoutWrapper.setVisibility(View.VISIBLE);
-      bindFlagViews(app);
+      bindFlagViews(app, displayable);
     }
   }
 
-  private void bindFlagViews(GetAppMeta.App app) {
+  private void bindFlagViews(GetAppMeta.App app,
+      AppViewFlagThisDisplayable appViewFlagThisDisplayable) {
     try {
       GetAppMeta.GetAppMetaFile.Flags flags = app.getFile()
           .getFlags();
@@ -122,7 +123,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
     View.OnClickListener buttonListener = handleButtonClick(app.getStore()
         .getName(), app.getFile()
-        .getMd5sum());
+        .getMd5sum(), appViewFlagThisDisplayable);
     workingWellLayout.setOnClickListener(buttonListener);
     needsLicenseLayout.setOnClickListener(buttonListener);
     fakeAppLayout.setOnClickListener(buttonListener);
@@ -161,7 +162,8 @@ import rx.android.schedulers.AndroidSchedulers;
     }
   }
 
-  private View.OnClickListener handleButtonClick(final String storeName, final String md5) {
+  private View.OnClickListener handleButtonClick(final String storeName, final String md5,
+      AppViewFlagThisDisplayable appViewFlagThisDisplayable) {
     return v -> {
       if (!accountManager.isLoggedIn()) {
         ShowMessage.asSnack(v, R.string.you_need_to_be_logged_in, R.string.login, snackView -> {
@@ -173,7 +175,8 @@ import rx.android.schedulers.AndroidSchedulers;
       setButtonPressed(v);
 
       final GetAppMeta.GetAppMetaFile.Flags.Vote.Type type = viewIdTypeMap.get(v.getId());
-
+      appViewFlagThisDisplayable.getAppViewAnalytics()
+          .sendFlagAppEvent(type.toString());
       compositeSubscription.add(AddApkFlagRequest.of(storeName, md5, type.name()
           .toLowerCase(), accountManager.getAccessToken(), baseBodyInterceptorV3, httpClient)
           .observe(true)

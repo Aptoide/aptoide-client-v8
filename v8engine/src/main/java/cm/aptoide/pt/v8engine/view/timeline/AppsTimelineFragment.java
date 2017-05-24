@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 18/08/2016.
+ * Modified on 18/08/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.timeline;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -35,6 +36,7 @@ import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.download.InstallEventConverter;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.timeline.PackageRepository;
@@ -42,10 +44,11 @@ import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.TimelineCardFilter;
 import cm.aptoide.pt.v8engine.timeline.TimelineRepository;
-import cm.aptoide.pt.v8engine.timeline.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.ProgressBarDisplayable;
@@ -53,6 +56,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.rx.RxEndlessRecyclerView;
 import cm.aptoide.pt.v8engine.view.timeline.displayable.TimeLineStatsDisplayable;
 import cm.aptoide.pt.v8engine.view.timeline.login.TimelineLoginDisplayable;
+import cm.aptoide.pt.v8engine.view.timeline.navigation.AppsTimelineTabNavigation;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -98,6 +102,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private Parcelable listState;
   private Displayable spinnerProgressDisplayable;
   private StoreContext storeContext;
+  private TabNavigator tabNavigator;
+  private String cardIdPriority;
 
   public static AppsTimelineFragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -114,6 +120,17 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     args.putSerializable(STORE_CONTEXT, storeContext);
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+
+    if (activity instanceof TabNavigator) {
+      tabNavigator = (TabNavigator) activity;
+    } else {
+      throw new IllegalStateException(
+          "Activity must implement " + TabNavigator.class.getSimpleName());
+    }
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -152,8 +169,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
         .flatMapObservable(loggedIn -> packagesObservable.observeOn(AndroidSchedulers.mainThread())
             .flatMap(packages -> Observable.merge(refreshSubject.flatMap(
                 refreshed -> clearView().flatMap(
-                    refresh -> getFreshDisplayables(refreshed, packages, loggedIn))),
-                getNextDisplayables(packages))));
+                    refresh -> getFreshDisplayables(refreshed, packages, loggedIn,
+                        cardIdPriority))), getNextDisplayables(packages))));
 
     displayableObservable.observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -225,13 +242,14 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     dateCalculator = new DateCalculator();
     spannableFactory = new SpannableFactory();
     downloadFactory = new DownloadFactory();
-    linksHandlerFactory = new LinksHandlerFactory();
+    linksHandlerFactory = new LinksHandlerFactory(getContext());
     packageRepository = new PackageRepository(getContext().getPackageManager());
     spinnerProgressDisplayable = new ProgressBarDisplayable().setFullRow();
 
     final PermissionManager permissionManager = new PermissionManager();
     final SocialRepository socialRepository =
-        new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient);
+        new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
+            timelineAnalytics);
     final StoreCredentialsProvider storeCredentialsProvider = new StoreCredentialsProviderImpl();
     final InstallManager installManager =
         ((V8Engine) getContext().getApplicationContext()).getInstallManager(
@@ -250,6 +268,12 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
             new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory));
 
     refreshSubject = BehaviorRelay.create();
+
+    tabNavigator.navigation()
+        .filter(tabNavigation -> tabNavigation.getTab() == TabNavigation.TIMELINE)
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(tabNavigation -> cardIdPriority = tabNavigation.getBundle()
+            .getString(AppsTimelineTabNavigation.CARD_ID_KEY));
   }
 
   @NonNull private Observable<List<String>> refreshPackages() {
@@ -265,8 +289,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   }
 
   @NonNull private Observable<Datalist<Displayable>> getFreshDisplayables(boolean refresh,
-      List<String> packages, boolean loggedIn) {
-    return getDisplayableList(packages, 0, refresh).flatMap(displayableDatalist -> {
+      List<String> packages, boolean loggedIn, String cardIdPriority) {
+    return getDisplayableList(packages, 0, refresh, cardIdPriority).flatMap(displayableDatalist -> {
       Long userId =
           getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
 
@@ -302,13 +326,18 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   @Override public void reload() {
     super.reload();
     Analytics.AppsTimeline.pullToRefresh();
+    cleanCardIdPriority();
+  }
+
+  private void cleanCardIdPriority() {
+    cardIdPriority = null;
   }
 
   private Observable<Datalist<Displayable>> getNextDisplayables(List<String> packages) {
     return RxEndlessRecyclerView.loadMore(getRecyclerView(), getAdapter())
         .observeOn(AndroidSchedulers.mainThread())
         .filter(item -> onStartLoadNext())
-        .concatMap(item -> getDisplayableList(packages, getOffset(), false))
+        .concatMap(item -> getDisplayableList(packages, getOffset(), false, cardIdPriority))
         .delay(1, TimeUnit.SECONDS)
         .retryWhen(errors -> errors.delay(1, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
@@ -318,8 +347,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
   @NonNull
   private Observable<Datalist<Displayable>> getDisplayableList(List<String> packages, int offset,
-      boolean refresh) {
-    return timelineRepository.getTimelineCards(SEARCH_LIMIT, offset, packages, refresh)
+      boolean refresh, String cardId) {
+    return timelineRepository.getTimelineCards(SEARCH_LIMIT, offset, packages, refresh, cardId)
         .flatMap(datalist -> Observable.just(datalist)
             .flatMapIterable(dataList -> dataList.getList())
             .map(card -> cardToDisplayable.convert(card, dateCalculator, spannableFactory,

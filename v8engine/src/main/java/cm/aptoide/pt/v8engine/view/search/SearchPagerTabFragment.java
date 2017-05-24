@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 06/07/2016.
+ * Modified on 06/07/2016.
  */
 
 package cm.aptoide.pt.v8engine.view.search;
@@ -67,7 +67,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
         from.forEach(searchAppsApp -> {
           mapPackages.put(searchAppsApp.getPackageName(), null);
           displayables.add(new SearchDisplayable(searchAppsApp, searchAbTest, addSubscribedStores,
-              hasMultipleFragments));
+              hasMultipleFragments, query));
         });
 
         addDisplayables(displayables);
@@ -109,7 +109,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     converterFactory = WebService.getDefaultConverter();
     adsRepository =
         new AdsRepository(((V8Engine) getContext().getApplicationContext()).getIdsRepository(),
-            accountManager, httpClient, converterFactory);
+            accountManager, httpClient, converterFactory, V8Engine.getQManager());
     super.onCreate(savedInstanceState);
   }
 
@@ -128,6 +128,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
   @Override public void onDestroyView() {
     endlessRecyclerOnScrollListener = null;
+    clearDisplayables();
     super.onDestroyView();
   }
 

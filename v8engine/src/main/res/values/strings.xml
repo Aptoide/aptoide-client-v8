@@ -1,8 +1,3 @@
-<!--
-  ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 17/08/2016.
-  -->
-
 <resources>
 
   <!-- NavDrawer List items -->
@@ -27,6 +22,7 @@
 
   <!-- Permission pop-ups messages -->
   <string name="access_to_get_accounts_rationale">You need to allow access to Get Accounts</string>
+  <string name="access_to_get_contacts_rationale">You need to allow access to Get Contacts</string>
   <string name="developer_website">Website: %s</string>
   <string name="not_available">N/A</string>
   <string name="developer_email">Email: %s</string>
@@ -83,8 +79,6 @@
   <!-- Preferences -->
 
   <!-- "Other <app name> versions on different Stores" -->
-  <string name="other_versions_partial_title_1">Other</string>
-  <string name="other_versions_partial_title_2">versions on different Stores</string>
   <string name="social_facebook_screen_title">Facebook</string>
   <string name="social_twitter_screen_title">Twitter</string>
   <string name="top_comments">Top Comments</string>
@@ -113,6 +107,7 @@
   <string name="added_to_scheduled">Added to Menu &gt; Scheduled Downloads</string>
   <string name="pause_all_downloads">Pause Downloads</string>
   <string name="storage_access_permission_request_message">Please allow access to your phone’s storage so we can download and install this app.</string>
+  <string name="camera_access_permission_request_message">Please allow access to your phone’s camera so you can take pictures with this app.</string>
 
   <string name="remote_install_menu_title">Install on TV</string>
   <string name="install_on_tv_mobile_error">Make sure your device is connected to Wi-Fi to use this feature.</string>
@@ -322,11 +317,6 @@
   <string name="permission_access_deny">access to read and write to external storage was denied</string>
   <string name="permission_account_deny">access to get accounts was denied</string>
 
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">Share apps with your friends</string>
-  <string name="spot_share_line_2">Phone to phone, without Internet</string>
-
-
   <!--??-->
   <string name="update_all">Update all</string>
   <string name="read_more">Read More</string>
@@ -338,6 +328,7 @@
   <string name="flag_this_app_fake">Fake</string>
   <string name="flag_this_app_freeze">Freeze</string>
   <string name="flag_this_app_virus">Virus</string>
+  <string name="button_appview_read_all">read all <![CDATA[>]]></string>
   <string name="appview_recommended_for_you_title">Recommended for you</string>
   <string name="appview_additional_information_title">Additional Information</string>
   <string name="appview_comment_reply_button_text">Reply</string>
@@ -635,5 +626,18 @@
   <string name="all_stores">All Stores</string>
   <string name="followed_stores">Followed Stores</string>
   <string name="search_minimum_chars">Search query must have at least 2 chars.</string>
+
+  <string name="app_name">Aptoide</string>
+  <string name="access_to_open_gallery_rationale">You need to allow access to the Gallery</string>
+
+  <!-- My account -->
+  <string name="my_account_my_profile">My Profile</string>
+  <string name="my_account_user_store">My Store</string>
+  <string name="my_account_edit_store">Edit</string>
+  <string name="my_account_log_out">LOG OUT</string>
+  <string name="fragment_inbox_title_text">Notification Center</string>
+  <string name="edit_profile_edit_button">Edit</string>
+  <string name="edit_profile_title">Edit Your Profile</string>
+  <string name="user_edited">User Edited</string>
 
 </resources>

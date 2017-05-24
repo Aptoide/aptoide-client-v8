@@ -20,10 +20,10 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.download.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.download.InstallEventConverter;
+import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
-import cm.aptoide.pt.v8engine.timeline.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -81,7 +81,7 @@ public class CardToDisplayableConverter implements CardToDisplayable {
           SpannableFactory spannableFactory, DownloadFactory downloadFactory,
           LinksHandlerFactory linksHandlerFactory) {
         return SocialRecommendationDisplayable.from((SocialRecommendation) card, spannableFactory,
-            socialRepository, dateCalculator);
+            socialRepository, dateCalculator, timelineAnalytics);
       }
     });
 

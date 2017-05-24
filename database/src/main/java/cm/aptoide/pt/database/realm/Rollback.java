@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
+ * Modified on 04/08/2016.
  */
 
 package cm.aptoide.pt.database.realm;
@@ -12,7 +12,7 @@ import io.realm.annotations.PrimaryKey;
 import java.util.Calendar;
 
 /**
- * Created by sithengineer on 12/05/16.
+ * Created on 12/05/16.
  */
 
 public class Rollback extends RealmObject {
