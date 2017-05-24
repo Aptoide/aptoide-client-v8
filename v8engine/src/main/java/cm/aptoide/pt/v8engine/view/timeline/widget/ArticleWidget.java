@@ -76,7 +76,7 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
     url.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
       displayable.getLink()
-          .launch(context);
+          .launch();
       Analytics.AppsTimeline.clickOnCard(ArticleDisplayable.CARD_TYPE_NAME,
           Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE);
@@ -111,7 +111,7 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
         .subscribe(click -> {
           knockWithSixpackCredentials(displayable.getAbUrl());
           displayable.getDeveloperLink()
-              .launch(context);
+              .launch();
           Analytics.AppsTimeline.clickOnCard(ArticleDisplayable.CARD_TYPE_NAME,
               Analytics.AppsTimeline.BLANK, displayable.getArticleTitle(), displayable.getTitle(),
               Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);

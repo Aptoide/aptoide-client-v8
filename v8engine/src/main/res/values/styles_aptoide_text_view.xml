@@ -89,6 +89,18 @@
     <item name="android:textColor">@color/grey</item>
   </style>
 
+  <style name="Aptoide.TextView.Regular.S.Grey700">
+    <item name="android:textColor">@color/grey_700</item>
+  </style>
+
+  <style name="Aptoide.TextView.Regular.S.GreyMedium">
+    <item name="android:textColor">@color/grey_medium</item>
+  </style>
+
+  <style name="Aptoide.TextView.Regular.S.Greyfog">
+    <item name="android:textColor">@color/grey_fog_normal</item>
+  </style>
+
   <style name="Aptoide.TextView.Regular.XS.Grey">
     <item name="android:textColor">@color/grey</item>
   </style>

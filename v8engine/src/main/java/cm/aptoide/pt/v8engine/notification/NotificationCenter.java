@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.notification;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import java.util.List;
 import rx.Observable;
 import rx.Subscription;
 
@@ -20,15 +21,18 @@ public class NotificationCenter {
   private NotificationPolicyFactory notificationPolicyFactory;
   private SharedPreferences sharedPreferences;
   private Subscription notificationProviderSubscription;
+  private NotificationProvider notificationProvider;
 
   public NotificationCenter(NotificationIdsMapper notificationIdsMapper,
-      NotificationHandler notificationHandler, NotificationSyncScheduler notificationSyncScheduler,
+      NotificationHandler notificationHandler, NotificationProvider notificationProvider,
+      NotificationSyncScheduler notificationSyncScheduler,
       SystemNotificationShower notificationShower, CrashReport crashReport,
       NotificationPolicyFactory notificationPolicyFactory, SharedPreferences sharedPreferences) {
     this.notificationIdsMapper = notificationIdsMapper;
     this.notificationHandler = notificationHandler;
     this.notificationSyncScheduler = notificationSyncScheduler;
     this.notificationShower = notificationShower;
+    this.notificationProvider = notificationProvider;
     this.crashReport = crashReport;
     this.notificationPolicyFactory = notificationPolicyFactory;
     this.sharedPreferences = sharedPreferences;
@@ -91,5 +95,14 @@ public class NotificationCenter {
 
   public boolean isEnable() {
     return sharedPreferences.getBoolean(NOTIFICATION_CENTER_ENABLE, true);
+  }
+
+  public Observable<List<AptoideNotification>> getInboxNotifications(int entries) {
+    return notificationProvider.getNotifications(entries);
+  }
+
+  public Observable<Boolean> haveNotifications() {
+    return notificationProvider.getNotifications(1)
+        .map(list -> !list.isEmpty());
   }
 }
