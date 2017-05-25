@@ -241,5 +241,6 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     }
     headerText.setText(getString(R.string.myaccount_header_title));
     logoutButton.setAllCaps(true);
+    userProfileEditButton.setVisibility(View.GONE);
   }
 }
