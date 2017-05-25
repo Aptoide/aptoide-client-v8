@@ -98,11 +98,11 @@ import cm.aptoide.pt.v8engine.spotandshare.AccountGroupNameProvider;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
-import cm.aptoide.pt.v8engine.view.MainActivity;
 import cm.aptoide.pt.v8engine.view.configuration.ActivityProvider;
 import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.view.configuration.implementation.ActivityProviderImpl;
 import cm.aptoide.pt.v8engine.view.configuration.implementation.FragmentProviderImpl;
+import cm.aptoide.pt.v8engine.view.entry.EntryActivity;
 import cm.aptoide.pt.v8engine.view.entry.EntryPointChooser;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
@@ -730,7 +730,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   }
 
   private void createAppShortcut() {
-    Intent shortcutIntent = new Intent(this, MainActivity.class);
+    Intent shortcutIntent = new Intent(this, EntryActivity.class);
     shortcutIntent.setAction(Intent.ACTION_MAIN);
     Intent intent = new Intent();
     intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
