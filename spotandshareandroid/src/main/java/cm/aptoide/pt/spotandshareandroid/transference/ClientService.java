@@ -1,10 +1,8 @@
-package cm.aptoide.pt.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid.transference;
 
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.net.wifi.WifiConfiguration;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -15,6 +13,7 @@ import android.support.v7.app.NotificationCompat;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.spotandshare.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.spotandshare.socket.entities.FileInfo;
+import cm.aptoide.pt.spotandshare.socket.exception.ServerLeftException;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileLifecycleProvider;
 import cm.aptoide.pt.spotandshare.socket.interfaces.FileServerLifecycle;
@@ -23,43 +22,46 @@ import cm.aptoide.pt.spotandshare.socket.interfaces.SocketBinder;
 import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
-import cm.aptoide.pt.spotandshare.socket.message.server.AptoideMessageServerSocket;
-import cm.aptoide.pt.spotandshareandroid.view.TransferRecordActivity;
+import cm.aptoide.pt.spotandshareandroid.App;
+import cm.aptoide.pt.spotandshareandroid.ProgressFilter;
+import cm.aptoide.pt.spotandshareandroid.R;
+import cm.aptoide.pt.spotandshareandroid.Utils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServerService extends Service {
+/**
+ * Created by filipegoncalves on 10-02-2017.
+ */
+
+public class ClientService extends Service {
 
   public static final int INSTALL_APP_NOTIFICATION_REQUEST_CODE = 147;
-  public static final String TAG = ServerService.class.getSimpleName();
+  public static final String TAG = ClientService.class.getSimpleName();
   private final int PROGRESS_SPLIT_SIZE = 10;
   private final SocketBinder socketBinder = Utils.Socket.newDefaultSocketBinder();
+  private int port;
+  private ArrayList<App> listOfApps;
   private NotificationManagerCompat mNotifyManager;
   private FileLifecycleProvider<AndroidAppInfo> fileLifecycleProvider;
-  private List<App> listOfApps;
-  private AptoideMessageServerSocket aptoideMessageServerSocket;
   private AptoideMessageClientSocket aptoideMessageClientSocket;
+  private boolean serverLeftOnError;
   private OnError<IOException> onError = e -> {
-    System.err.println("OnError lacks implementation!");
+    serverLeftOnError = true;
+    Intent i = new Intent();
+    i.setAction("SERVER_LEFT");
+    sendBroadcast(i);
 
     if (mNotifyManager != null) {
       mNotifyManager.cancelAll();
     }
-
-    setInitialApConfig();//to not interfere with recovering wifi state
-
-    Intent i = new Intent();
-    i.setAction("SERVER_DISCONNECT");
-    sendBroadcast(i);
   };
 
   @Override public void onCreate() {
     super.onCreate();
+
     if (mNotifyManager == null) {
       mNotifyManager = NotificationManagerCompat.from(getApplicationContext());
     }
@@ -72,24 +74,25 @@ public class ServerService extends Service {
           private AndroidAppInfo androidAppInfo;
 
           @Override public void onStartSending(AndroidAppInfo androidAppInfo) {
-
+            Logger.d(TAG, " Started sending ");
             this.androidAppInfo = androidAppInfo;
             progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
 
-            createSendNotification();
-
             Intent i = new Intent();
             i.putExtra("isSent", false);
-            i.putExtra("needReSend", false);
+            i.putExtra("needReSend",
+                false);//add field with pos to resend and change its value only if it is != 100000 (onstartcommand)
             i.putExtra("appName", androidAppInfo.getAppName());
             i.putExtra("packageName", androidAppInfo.getPackageName());
             i.putExtra("positionToReSend", 100000);
             i.setAction("SENDAPP");
             sendBroadcast(i);
+
+            createSendNotification();
           }
 
           @Override public void onFinishSending(AndroidAppInfo androidAppInfo) {
-            Logger.d(TAG, "Server : finished sending " + androidAppInfo);
+            Logger.d(TAG, " Finished sending " + androidAppInfo);
 
             finishSendNotification(androidAppInfo);
 
@@ -104,19 +107,22 @@ public class ServerService extends Service {
           }
 
           @Override public void onError(IOException e) {
-            Logger.d(TAG, "Fell on error Server !! ");
             e.printStackTrace();
 
-            if (mNotifyManager != null && androidAppInfo != null) {
-              mNotifyManager.cancel(androidAppInfo.getPackageName()
-                  .hashCode());
+            if (!serverLeftOnError) {
+              if (mNotifyManager != null && androidAppInfo != null) {
+                mNotifyManager.cancel(androidAppInfo.getPackageName()
+                    .hashCode());
+              }
+
+              Intent i = new Intent();
+              i.setAction("ERRORSENDING");
+              sendBroadcast(i);
             }
-            Intent i = new Intent();
-            i.setAction("ERRORSENDING");
-            sendBroadcast(i);
           }
 
           @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
+
             if (progressFilter.shouldUpdate(progress)) {
               int actualProgress = Math.round(progress * 100);
               showSendProgress(androidAppInfo.getAppName(), actualProgress, androidAppInfo);
@@ -132,10 +138,11 @@ public class ServerService extends Service {
           private AndroidAppInfo androidAppInfo;
 
           @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
+            Logger.d(TAG, " Started receiving ");
             this.androidAppInfo = androidAppInfo;
-
             progressFilter = new ProgressFilter(PROGRESS_SPLIT_SIZE);
 
+            //show notification
             createReceiveNotification(androidAppInfo.getAppName());
 
             Intent i = new Intent();
@@ -146,6 +153,7 @@ public class ServerService extends Service {
           }
 
           @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
+            Logger.d(TAG, " Finished receiving " + androidAppInfo);
 
             finishReceiveNotification(androidAppInfo.getApk()
                 .getFilePath(), androidAppInfo.getPackageName(), androidAppInfo);
@@ -162,29 +170,27 @@ public class ServerService extends Service {
           }
 
           @Override public void onError(IOException e) {
+            Logger.d(TAG, "Fell on error  Client !! ");
 
-            if (mNotifyManager != null && androidAppInfo != null) {
-              mNotifyManager.cancel(androidAppInfo.getPackageName()
-                  .hashCode());
+            if (!serverLeftOnError) {
+              if (mNotifyManager != null && androidAppInfo != null) {
+                mNotifyManager.cancel(androidAppInfo.getPackageName()
+                    .hashCode());
+              }
+
+              Intent i = new Intent();
+              if (e instanceof ServerLeftException) {
+                i.setAction("SERVER_LEFT");
+              } else {
+                i.setAction("ERRORRECEIVING");
+              }
+              sendBroadcast(i);
             }
-
-            // Não ta facil perceber pk é k isto cai aqui quando só há um cliente, martelo ftw :/
-            if (aptoideMessageServerSocket.getAptoideMessageControllers()
-                .size() <= 1) {
-              return;
-            }
-
-            e.printStackTrace();
-
-            Intent i = new Intent();
-            i.setAction("ERRORRECEIVING");
-            sendBroadcast(i);
           }
 
           @Override public void onProgressChanged(AndroidAppInfo androidAppInfo, float progress) {
-
             if (progressFilter.shouldUpdate(progress)) {
-              int actualProgress = Math.round(progress * 100);
+              int actualProgress = Math.round(progress * PROGRESS_SPLIT_SIZE);
               showReceiveProgress(androidAppInfo.getAppName(), actualProgress, androidAppInfo);
             }
           }
@@ -194,27 +200,15 @@ public class ServerService extends Service {
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
+
     if (intent != null) {
 
       if (intent.getAction() != null && intent.getAction()
           .equals("RECEIVE")) {
+        String serverIP = intent.getStringExtra("targetIP");
+        port = intent.getIntExtra("port", 0);
+
         final String externalStoragepath = intent.getStringExtra("ExternalStoragePath");
-
-        Logger.d(TAG, "Going to start serving");
-        HostsCallbackManager hostsCallbackManager;
-        if (intent.getExtras()
-            .containsKey("autoShareFilePath")) {
-          String autoShareFilePath = intent.getStringExtra("autoShareFilePath");
-          hostsCallbackManager =
-              new HostsCallbackManager(this.getApplicationContext(), autoShareFilePath);
-        } else {
-          hostsCallbackManager = new HostsCallbackManager(this.getApplicationContext());
-        }
-
-        aptoideMessageServerSocket =
-            new AptoideMessageServerSocket(55555, Integer.MAX_VALUE, Integer.MAX_VALUE);
-        aptoideMessageServerSocket.setHostsChangedCallbackCallback(hostsCallbackManager);
-        aptoideMessageServerSocket.startAsync();
 
         StorageCapacity storageCapacity = new StorageCapacity() {
           @Override public boolean hasCapacity(long bytes) {
@@ -227,16 +221,19 @@ public class ServerService extends Service {
 
         // TODO: 07-04-2017 asdsadefeqf neuro Filipe onError sff lol
         aptoideMessageClientSocket =
-            new AptoideMessageClientSocket("192.168.43.1", 55555, externalStoragepath,
+            new AptoideMessageClientSocket(serverIP, "192.168.43.1", port, externalStoragepath,
                 storageCapacity, fileLifecycleProvider, socketBinder, onError, Integer.MAX_VALUE);
+        aptoideMessageClientSocket.setSocketBinder(socketBinder);
         aptoideMessageClientSocket.startAsync();
+
+        Logger.d(TAG, " Connected ! ");
       } else if (intent.getAction() != null && intent.getAction()
           .equals("SEND")) {
         Bundle b = intent.getBundleExtra("bundle");
 
         listOfApps = b.getParcelableArrayList("listOfAppsToInstall");
-
         for (int i = 0; i < listOfApps.size(); i++) {
+
           String filePath = listOfApps.get(i)
               .getFilePath();
           String appName = listOfApps.get(i)
@@ -246,42 +243,34 @@ public class ServerService extends Service {
           String obbsFilePath = listOfApps.get(i)
               .getObbsFilePath();
 
-          File apk = new File(filePath);
-
-          File mainObb = null;
-          File patchObb = null;
-
           List<FileInfo> fileInfoList = getFileInfo(filePath, obbsFilePath);
 
           final AndroidAppInfo appInfo = new AndroidAppInfo(appName, packageName, fileInfoList);
 
-          AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
-            @Override public void run() {
-              aptoideMessageClientSocket.send(
-                  new RequestPermissionToSend(aptoideMessageClientSocket.getLocalhost(), appInfo));
-            }
-          });
+          AptoideUtils.ThreadU.runOnIoThread(() -> aptoideMessageClientSocket.send(
+              new RequestPermissionToSend(aptoideMessageClientSocket.getLocalhost(), appInfo)));
         }
       } else if (intent.getAction() != null && intent.getAction()
-          .equals("SHUTDOWN_SERVER")) {
-        if (aptoideMessageServerSocket != null) {
-          aptoideMessageClientSocket.disable();
-          aptoideMessageServerSocket.shutdown(new Runnable() {
-            @Override public void run() {
-              if (mNotifyManager != null) {
-                mNotifyManager.cancelAll();
-              }
-
-              setInitialApConfig();//to not interfere with recovering wifi state
-
-              Intent i = new Intent();
-              i.setAction("SERVER_DISCONNECT");
-              sendBroadcast(i);
+          .equals("DISCONNECT")) {
+        Logger.d(TAG, "Requested to disconnect !");
+        AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
+          @Override public void run() {
+            if (aptoideMessageClientSocket != null) {
+              aptoideMessageClientSocket.exit();
             }
-          });
-        }
+
+            if (mNotifyManager != null) {
+              mNotifyManager.cancelAll();
+            }
+
+            Intent i = new Intent();
+            i.setAction("CLIENT_DISCONNECT");
+            sendBroadcast(i);
+          }
+        });
       }
     }
+
     return START_STICKY;
   }
 
@@ -290,7 +279,6 @@ public class ServerService extends Service {
   }
 
   private void createReceiveNotification(String receivingAppName) {
-
     NotificationCompat.Builder mBuilderReceive = new NotificationCompat.Builder(this);
     mBuilderReceive.setContentTitle(this.getResources()
         .getString(R.string.spot_share) + " - " + this.getResources()
@@ -306,6 +294,7 @@ public class ServerService extends Service {
 
   private void finishReceiveNotification(String receivedApkFilePath, String packageName,
       AndroidAppInfo androidAppInfo) {
+
     NotificationCompat.Builder mBuilderReceive = new NotificationCompat.Builder(this);
     mBuilderReceive.setContentTitle(this.getResources()
         .getString(R.string.spot_share) + " - " + this.getResources()
@@ -371,13 +360,13 @@ public class ServerService extends Service {
   }
 
   private void finishSendNotification(AndroidAppInfo androidAppInfo) {
-
     NotificationCompat.Builder mBuilderSend = new NotificationCompat.Builder(this);
     mBuilderSend.setContentTitle(this.getResources()
         .getString(R.string.spot_share) + " - " + this.getResources()
         .getString(R.string.send))
         .setContentText(this.getResources()
             .getString(R.string.transfCompleted))
+        // Removes the progress bar
         .setSmallIcon(android.R.drawable.stat_sys_download_done)
         .setProgress(0, 0, false)
         .setAutoCancel(true);
@@ -412,9 +401,11 @@ public class ServerService extends Service {
 
   public List<FileInfo> getFileInfo(String filePath, String obbsFilePath) {
     List<FileInfo> fileInfoList = new ArrayList<>();
+    //getApk
     File apk = new File(filePath);
     FileInfo apkFileInfo = new FileInfo(apk);
     fileInfoList.add(apkFileInfo);
+    //getObbs
 
     if (!obbsFilePath.equals("noObbs")) {
       File obbFolder = new File(obbsFilePath);
@@ -429,47 +420,5 @@ public class ServerService extends Service {
     }
 
     return fileInfoList;
-  }
-
-  /**
-   * @deprecated Duplicated! {@link TransferRecordActivity#setInitialApConfig()}
-   */
-  @Deprecated public void setInitialApConfig() {
-    WifiManager wifimanager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
-
-    Method[] methods = wifimanager.getClass()
-        .getDeclaredMethods();
-    WifiConfiguration wc = DataHolder.getInstance()
-        .getWcOnJoin();
-    for (Method m : methods) {
-      if (m.getName()
-          .equals("setWifiApConfiguration")) {
-
-        try {
-          Method setConfigMethod = wifimanager.getClass()
-              .getMethod("setWifiApConfiguration", WifiConfiguration.class);
-          Logger.d(TAG, "Re-seting the wifiAp configuration to what it was before !!! ");
-          setConfigMethod.invoke(wifimanager, wc);
-        } catch (NoSuchMethodException e) {
-          e.printStackTrace();
-        } catch (IllegalAccessException e) {
-          e.printStackTrace();
-        } catch (InvocationTargetException e) {
-          e.printStackTrace();
-        }
-      }
-      if (m.getName()
-          .equals("setWifiApEnabled")) {
-
-        try {
-          Logger.d(TAG, "Desligar o hostpot ");
-          m.invoke(wifimanager, wc, false);
-        } catch (IllegalAccessException e) {
-          e.printStackTrace();
-        } catch (InvocationTargetException e) {
-          e.printStackTrace();
-        }
-      }
-    }
   }
 }
