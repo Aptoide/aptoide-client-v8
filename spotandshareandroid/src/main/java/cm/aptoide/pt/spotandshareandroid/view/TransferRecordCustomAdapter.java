@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.spotandshareandroid.R;
 import cm.aptoide.pt.spotandshareandroid.TransferRecordItem;
-import cm.aptoide.pt.spotandshareandroid.TransferRecordView;
+import cm.aptoide.pt.spotandshareandroid.presenter.TransferRecordView;
 import java.util.List;
 
 /**

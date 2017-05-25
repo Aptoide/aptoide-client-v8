@@ -1,9 +1,17 @@
-package cm.aptoide.pt.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid.presenter;
 
 /**
  * Created by filipegoncalves on 31-01-2017.
  */
 
+import cm.aptoide.pt.spotandshareandroid.ConnectionManager;
+import cm.aptoide.pt.spotandshareandroid.DeactivateHotspotTask;
+import cm.aptoide.pt.spotandshareandroid.Group;
+import cm.aptoide.pt.spotandshareandroid.GroupManager;
+import cm.aptoide.pt.spotandshareandroid.GroupNameProvider;
+import cm.aptoide.pt.spotandshareandroid.PermissionListener;
+import cm.aptoide.pt.spotandshareandroid.PermissionManager;
+import cm.aptoide.pt.spotandshareandroid.SimpleListener;
 import cm.aptoide.pt.spotandshareandroid.analytics.SpotAndShareAnalyticsInterface;
 import java.util.ArrayList;
 import rx.Subscription;
@@ -44,8 +52,7 @@ public class RadarPresenter implements Presenter {
       PermissionManager permissionManager, String autoShareAppName, String autoShareFilepath,
       boolean showShareAptoideApk) {
     this(radarView, groupNameProvider, deactivateHotspotTask, connectionManager, analytics,
-        groupManager,
-        permissionManager, showShareAptoideApk);
+        groupManager, permissionManager, showShareAptoideApk);
     this.autoShareAppName = autoShareAppName;
     this.autoShareFilepath = autoShareFilepath;
   }

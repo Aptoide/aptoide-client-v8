@@ -52,7 +52,7 @@ public class Disconnecter {
     }
   }
 
-  interface DisconnectListener {
+  public interface DisconnectListener {
     void onServerDisconnected();
 
     void onClientDisconnected();

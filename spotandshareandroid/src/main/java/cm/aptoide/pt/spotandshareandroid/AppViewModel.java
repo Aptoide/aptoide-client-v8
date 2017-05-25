@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable;
  */
 
 public class AppViewModel {
-  //todo semelhante ao HIghwayGRidViewAppItem, mas so com as cenas importantes
 
   private Drawable imageIcon;
   private String appName;
