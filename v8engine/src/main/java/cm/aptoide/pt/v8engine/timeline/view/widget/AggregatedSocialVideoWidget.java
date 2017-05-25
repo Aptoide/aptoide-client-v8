@@ -225,8 +225,7 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
 
       compositeSubscription.add(RxView.clicks(comment)
           .flatMap(aVoid -> Observable.fromCallable(() -> {
-            final String elementId = displayable.getTimelineCard()
-                .getCardId();
+            final String elementId = minimalCard.getCardId();
             Fragment fragment = V8Engine.getFragmentProvider()
                 .newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType.TIMELINE,
                     elementId);
