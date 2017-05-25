@@ -59,7 +59,7 @@
           android:layout_height="match_parent"
           />
 
-      <cm.aptoide.pt.spotandshareandroid.RadarTextView
+      <cm.aptoide.pt.spotandshareandroid.view.radar.RadarTextView
           android:id="@+id/hotspotTextView"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
