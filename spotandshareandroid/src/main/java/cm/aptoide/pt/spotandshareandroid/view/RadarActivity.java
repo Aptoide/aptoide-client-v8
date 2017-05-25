@@ -32,7 +32,6 @@ import cm.aptoide.pt.spotandshareandroid.GroupNameProvider;
 import cm.aptoide.pt.spotandshareandroid.PermissionListener;
 import cm.aptoide.pt.spotandshareandroid.PermissionManager;
 import cm.aptoide.pt.spotandshareandroid.R;
-import cm.aptoide.pt.spotandshareandroid.RadarTextView;
 import cm.aptoide.pt.spotandshareandroid.ShareApps;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShareApplication;
 import cm.aptoide.pt.spotandshareandroid.analytics.SpotAndShareAnalyticsInterface;
@@ -40,6 +39,7 @@ import cm.aptoide.pt.spotandshareandroid.presenter.ActivityView;
 import cm.aptoide.pt.spotandshareandroid.presenter.RadarPresenter;
 import cm.aptoide.pt.spotandshareandroid.presenter.RadarView;
 import cm.aptoide.pt.spotandshareandroid.view.radar.RadarScan;
+import cm.aptoide.pt.spotandshareandroid.view.radar.RadarTextView;
 import java.util.ArrayList;
 import java.util.List;
 

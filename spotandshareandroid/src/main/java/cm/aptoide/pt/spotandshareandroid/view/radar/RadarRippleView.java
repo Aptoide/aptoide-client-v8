@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid.view.radar;
 
 import android.animation.ObjectAnimator;
 import android.animation.TypeEvaluator;
@@ -30,8 +30,6 @@ public class RadarRippleView extends TextView {
   private int raio;
   private Paint paint;
   private ObjectAnimator objectAnimator;
-  private String keyword;
-  private String hotspotName;
   private TypeEvaluator mProgressEvaluator = new TypeEvaluator() {
 
     @Override public Object evaluate(float fraction, Object startValue, Object endValue) {

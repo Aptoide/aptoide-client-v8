@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid.view.radar;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -9,7 +9,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
-import cm.aptoide.pt.spotandshareandroid.view.radar.RadarRippleView;
+import cm.aptoide.pt.spotandshareandroid.Group;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid.view.radar;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
+import cm.aptoide.pt.spotandshareandroid.CustomAnimation;
 
 /**
  * Created by filipegoncalves on 24-08-2016.
@@ -84,7 +85,7 @@ public class RadarProgress extends View {
     animation.setRepeatCount(Animation.INFINITE);
     animation.setInterpolator(new LinearInterpolator());
     animation.setMyCustomListener(new CustomAnimation.myCustomListener() {
-      @Override public void applyTans(float time)// time p a interpolacao
+      @Override public void applyTans(float time)
       {
         initialAngle = 360 * time;
         invalidate();
