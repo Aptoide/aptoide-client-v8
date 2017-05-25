@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.timeline.view.widget;
 
-import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -100,14 +99,6 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
         .load(displayable.getThumbnailUrl(), thumbnail);
     thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
     play_button.setVisibility(View.VISIBLE);
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      mediaLayout.setForeground(getContext().getResources()
-          .getDrawable(R.color.overlay_black, getContext().getTheme()));
-    } else {
-      mediaLayout.setForeground(getContext().getResources()
-          .getDrawable(R.color.overlay_black));
-    }
 
     compositeSubscription.add(RxView.clicks(mediaLayout)
         .subscribe(v -> {
@@ -234,8 +225,7 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
 
       compositeSubscription.add(RxView.clicks(comment)
           .flatMap(aVoid -> Observable.fromCallable(() -> {
-            final String elementId = displayable.getTimelineCard()
-                .getCardId();
+            final String elementId = minimalCard.getCardId();
             Fragment fragment = V8Engine.getFragmentProvider()
                 .newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType.TIMELINE,
                     elementId);

@@ -15,7 +15,6 @@
   <string name="password_validation_text">Password must be at least 8 characters and should have
         at least one letter and one number or special characters (!@#$%*)</string>
   <string name="logged_as">You are logged as:</string>
-  <string name="sign_out">Sign Out</string>
   <string name="default_account_type">cm.aptoide.pt</string>
 
   <string name="facebook_grant_permission_button">Grant permission</string>
