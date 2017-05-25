@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
@@ -60,6 +61,7 @@ public class CreateUserFragment extends PictureLoaderFragment implements ManageU
   private ProgressDialog waitDialog;
   private String from;
   private Button cancelUserProfile;
+  private TextView header;
 
   public CreateUserFragment() {
     super(true, false);
@@ -129,7 +131,7 @@ public class CreateUserFragment extends PictureLoaderFragment implements ManageU
 
   private void setupViewsDefaultValues() {
     if (isEditProfile()) {
-      createUserButton.setText(getString(R.string.edit_profile_edit_button));
+      createUserButton.setText(getString(R.string.edit_profile_save_button));
       getToolbar().setTitle(getString(R.string.edit_profile_title));
       if (userPicturePath != null) {
         userPicturePath = userPicturePath.replace("50", "150");
@@ -139,6 +141,7 @@ public class CreateUserFragment extends PictureLoaderFragment implements ManageU
         userName.setText(userNickname);
       }
       cancelUserProfile.setVisibility(View.VISIBLE);
+      header.setText(getString(R.string.edit_profile_header_message));
     }
   }
 
@@ -219,6 +222,7 @@ public class CreateUserFragment extends PictureLoaderFragment implements ManageU
     createUserButton = (Button) view.findViewById(R.id.create_user_create_profile);
     cancelUserProfile = (Button) view.findViewById(R.id.create_user_cancel_button);
     userPicture = (ImageView) view.findViewById(R.id.create_user_image);
+    header = (TextView) view.findViewById(R.id.create_user_header_textview);
   }
 
   private void navigateToMyAccount() {

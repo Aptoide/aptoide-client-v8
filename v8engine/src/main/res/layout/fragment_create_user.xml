@@ -64,7 +64,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/cancel"
-            style="@style/Aptoide.Button"
+            style="@style/Aptoide.Button.Ghost"
             />
 
         <Button
