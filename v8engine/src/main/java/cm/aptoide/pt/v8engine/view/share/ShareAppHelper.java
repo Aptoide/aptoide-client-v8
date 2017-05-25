@@ -106,7 +106,7 @@ public class ShareAppHelper {
     if (Application.getConfiguration()
         .isCreateStoreAndSetUserPrivacyAvailable()) {
       SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(accountManager, false,
-          SharePreviewDialog.SharePreviewOpenMode.SHARE);
+          SharePreviewDialog.SharePreviewOpenMode.SHARE, timelineAnalytics);
       AlertDialog.Builder alertDialog =
           sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(activity, appName,
               iconPath, averageRating);
