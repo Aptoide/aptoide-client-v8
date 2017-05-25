@@ -54,11 +54,11 @@
     <!-- android:exported="true" /> -->
 
     <service
-        android:name=".ClientService"
+        android:name=".transference.ClientService"
         android:enabled="true"
         android:exported="true"/>
     <service
-        android:name=".ServerService"
+        android:name=".transference.ServerService"
         android:enabled="true"
         android:exported="true"/>
 

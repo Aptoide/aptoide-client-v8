@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid.group;
 
 /**
  * Created by filipegoncalves on 02-02-2017.
