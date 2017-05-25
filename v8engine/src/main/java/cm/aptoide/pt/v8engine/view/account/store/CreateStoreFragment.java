@@ -511,7 +511,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
       return;
     }
 
-    getFragmentNavigator().back();
+    getFragmentNavigator().popBackStack();
   }
 
   private void updateStoreDataAfterCreateStore(@NonNull final ManageStoreModel storeModel,
