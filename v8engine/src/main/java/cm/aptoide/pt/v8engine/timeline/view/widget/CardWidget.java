@@ -89,37 +89,47 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
 
     compositeSubscription.add(RxView.clicks(like)
         .subscribe(click -> {
-          if (!hasSocialPermissions(Analytics.Account.AccountOrigins.LIKE_CARD)) return;
-          likeButton.performClick();
+          if (hasSocialPermissions(Analytics.Account.AccountOrigins.LIKE_CARD)) {
+            likeButton.performClick();
+          }
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));
 
     compositeSubscription.add(RxView.clicks(likeButton)
         .subscribe(click -> {
-          shareCard(displayable, displayable.getTimelineCard()
-                  .getCardId(), (String cardId) -> likeCard(displayable, cardId, 1),
-              SharePreviewDialog.SharePreviewOpenMode.LIKE);
+          shareCardWithoutPreview(displayable, (String cardId) -> {
+            likeCard(displayable, cardId, 1);
+            showSuccessShareSnackBar();
+          });
           socialAction = "Like";
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));
 
     compositeSubscription.add(RxView.clicks(comment)
         .subscribe(click -> {
-          if (!hasSocialPermissions(Analytics.Account.AccountOrigins.SHARE_CARD)) return;
-
-          FragmentManager fm = getContext().getSupportFragmentManager();
-          CommentDialogFragment commentDialogFragment =
-              CommentDialogFragment.newInstanceTimelineArticleComment(displayable.getTimelineCard()
-                  .getCardId());
-          commentDialogFragment.setCommentBeforeSubmissionCallbackContract(
-              (inputText) -> shareCardWithoutPreview(displayable, cardId -> {
-                PostCommentForTimelineArticle.of(cardId, inputText, bodyInterceptor, httpClient,
-                    converterFactory)
-                    .observe()
-                    .subscribe();
-              }, SharePreviewDialog.SharePreviewOpenMode.COMMENT));
-          commentDialogFragment.show(fm, "fragment_comment_dialog");
-          socialAction = "Comment";
+          if (hasSocialPermissions(Analytics.Account.AccountOrigins.SHARE_CARD)) {
+            FragmentManager fm = getContext().getSupportFragmentManager();
+            CommentDialogFragment commentDialogFragment =
+                CommentDialogFragment.newInstanceTimelineArticleComment(
+                    displayable.getTimelineCard()
+                        .getCardId());
+            commentDialogFragment.setCommentBeforeSubmissionCallbackContract(
+                (inputText) -> shareCardWithoutPreview(displayable,
+                    cardId -> PostCommentForTimelineArticle.of(cardId, inputText, bodyInterceptor,
+                        httpClient, converterFactory)
+                        .observe()
+                        .subscribe(setComment -> {
+                          if (!setComment.getData()
+                              .getBody()
+                              .isEmpty() || !("".equals(setComment.getData()
+                              .getBody()))) {
+                            showSuccessShareSnackBar();
+                          }
+                        }, throwable -> CrashReport.getInstance()
+                            .log(throwable))));
+            commentDialogFragment.show(fm, "fragment_comment_dialog");
+            socialAction = "Comment";
+          }
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));
     compositeSubscription.add(RxView.clicks(shareButton)
@@ -131,15 +141,19 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
             .log(err)));
   }
 
+  private void showSuccessShareSnackBar() {
+    ShowMessage.asSnack(getContext(), R.string.social_timeline_share_dialog_title);
+  }
+
   private void updateAccount(Account account) {
     this.account = account;
   }
 
-  protected void shareCardWithoutPreview(T displayable, ShareCardCallback callback,
-      SharePreviewDialog.SharePreviewOpenMode openMode) {
-    if (!hasSocialPermissions(Analytics.Account.AccountOrigins.SHARE_CARD)) return;
-    displayable.share(displayable.getTimelineCard()
-        .getCardId(), callback);
+  protected void shareCardWithoutPreview(T displayable, ShareCardCallback callback) {
+    if (hasSocialPermissions(Analytics.Account.AccountOrigins.SHARE_CARD)) {
+      displayable.share(displayable.getTimelineCard()
+          .getCardId(), callback);
+    }
   }
 
   protected void shareCard(T displayable, String cardId, ShareCardCallback callback,
@@ -195,7 +209,7 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
         .subscribe(eResponse -> {
           switch (eResponse) {
             case YES:
-              ShowMessage.asSnack(getContext(), R.string.social_timeline_share_dialog_title);
+              showSuccessShareSnackBar();
               displayable.sendSocialActionEvent(
                   TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
               break;
@@ -221,9 +235,6 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
           R.string.create_store_create, snackView -> {
             Fragment fragment = CreateStoreFragment.newInstance(new ManageStoreModel(false));
             getFragmentNavigator().navigateTo(fragment);
-
-            //Intent intent = new Intent(getContext(), CreateStoreActivity.class);
-            //getContext().startActivity(intent);
           });
       return false;
     }
