@@ -69,12 +69,14 @@
       <Button
           android:id="@+id/create_store_action"
           android:layout_width="0dp"
+          android:layout_height="@dimen/button_height"
           android:layout_marginLeft="@dimen/padding_smaller"
           android:layout_marginStart="@dimen/padding_smaller"
           android:layout_weight="1"
           android:gravity="center"
           android:text="@string/create_store_create"
-          style="@style/Aptoide.Button"
+          android:theme="@style/Aptoide.Button"
+          style="@style/Widget.AppCompat.Button"
           />
 
     </LinearLayout>
