@@ -97,6 +97,8 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 
   private boolean shouldLoadMore() {
     return !loading
+        && mRecyclerViewHelper != null
+        && mRecyclerViewHelper.recyclerView.isAttachedToWindow()
         && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)
         && hasMoreElements();
   }
