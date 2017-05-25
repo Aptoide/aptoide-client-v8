@@ -4,6 +4,7 @@
   <attr format="reference" name="customButton"/>
   <attr format="reference" name="customButtonWhite"/>
   <attr format="reference" name="customButtonThinLine"/>
+  <attr format="reference" name="customButtomDarkGrayThinLine"/>
 
   <attr format="reference" name="toolbarTheme"/>
 

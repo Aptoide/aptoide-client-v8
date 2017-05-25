@@ -14,7 +14,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
 import cm.aptoide.pt.v8engine.view.store.GetStoreWidgetsFragment;
 import cm.aptoide.pt.v8engine.view.store.GridStoreDisplayable;
-import cm.aptoide.pt.v8engine.view.timeline.displayable.FollowStoreDisplayable;
+import cm.aptoide.pt.v8engine.timeline.view.displayable.FollowStoreDisplayable;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
 import rx.Observable;

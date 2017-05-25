@@ -22,11 +22,11 @@
 
   <ImageView
       android:id="@+id/card_user_avatar"
-      android:layout_width="27dp"
-      android:layout_height="27dp"
-      android:layout_marginLeft="27.7dp"
-      android:layout_marginStart="27.7dp"
-      android:layout_marginTop="14dp"
+      android:layout_width="18dp"
+      android:layout_height="18dp"
+      android:layout_marginLeft="35.7dp"
+      android:layout_marginStart="35.7dp"
+      android:layout_marginTop="36dp"
       android:background="@drawable/grey_circular_placeholder"
       tools:ignore="contentDescription"
       />
@@ -49,7 +49,7 @@
         android:ellipsize="end"
         android:lines="1"
         tools:text="Hamata6 Store"
-        style="@style/Widget.Aptoide.Card.Title"
+        style="@style/Aptoide.TextView.Regular.S.Grey"
         />
 
     <TextView
@@ -63,9 +63,8 @@
         android:layout_marginStart="72dp"
         android:ellipsize="end"
         android:lines="1"
-        android:textSize="11sp"
         tools:text="Hamata6 Store"
-        style="@style/Widget.Aptoide.Card.Title"
+        style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
         />
 
     <TextView
@@ -80,19 +79,17 @@
         android:ellipsize="end"
         android:lines="1"
         tools:text="Há duas horas"
-        style="@style/Widget.Aptoide.Card.Subtitle"
+        style="@style/Aptoide.TextView.Regular.XS.Grey"
         />
   </RelativeLayout>
 
   <ImageView
-      android:layout_width="70dp"
-      android:layout_height="70dp"
-      android:layout_alignParentEnd="true"
-      android:layout_alignParentRight="true"
-      android:layout_marginEnd="-3dp"
-      android:layout_marginRight="-3dp"
-      android:layout_marginTop="-2dp"
-      android:src="@drawable/social_icon"
+      android:layout_width="15dp"
+      android:layout_height="15dp"
+      android:layout_alignEnd="@+id/card_custom_view_line_separator"
+      android:layout_alignRight="@+id/card_custom_view_line_separator"
+      android:layout_marginTop="@dimen/appstimeline_card_icon"
+      android:src="@drawable/timeline_share"
       />
 
   <View

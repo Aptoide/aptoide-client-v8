@@ -34,6 +34,7 @@
   <color name="red_700">#d32f2f</color>
 
   <color name="grey_700">#616161</color>
+  <color name="grey_fog_light">#e9e9e9</color>
 
 
 </resources>

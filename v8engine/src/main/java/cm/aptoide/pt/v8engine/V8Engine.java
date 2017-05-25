@@ -19,6 +19,7 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.SparseArray;
 import cm.aptoide.accountmanager.AccountDataPersist;
@@ -175,7 +176,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
    * Time between pull request for social notifications: {@link AptoideNotification.NotificationType#LIKE}{@link
    * AptoideNotification.NotificationType#COMMENT}{@link AptoideNotification.NotificationType#POPULAR}
    */
-  private long pushNotificationSocialPeriodicity = AlarmManager.INTERVAL_HOUR;
+  private long pushNotificationSocialPeriodicity = DateUtils.MINUTE_IN_MILLIS * 10;
   private NotificationCenter notificationCenter;
 
   /**

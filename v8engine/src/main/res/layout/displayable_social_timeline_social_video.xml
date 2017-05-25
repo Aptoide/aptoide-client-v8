@@ -11,7 +11,6 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-
       >
 
     <include layout="@layout/apps_timeline_card_header"/>
@@ -30,133 +29,23 @@
         tools:visibility="visible"
         />
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/partial_social_timeline_thumbnail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="60dp"
-        android:clickable="true"
-        >
-
-      <!--
-          android:layout_width="120dp"
-      -->
-
-      <FrameLayout
-          android:id="@+id/media_layout"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_below="@+id/partial_social_timeline_thumbnail_title"
-          android:layout_marginBottom="12dp"
-          android:layout_marginEnd="12dp"
-          android:layout_marginLeft="12dp"
-          android:layout_marginRight="15dp"
-          android:layout_marginStart="12dp"
-          android:clickable="true"
-          android:gravity="center"
-          style="@style/focusableBackground"
-          >
-
-        <ImageView
-            android:id="@+id/partial_social_timeline_thumbnail_image"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:scaleType="centerCrop"
-            tools:ignore="contentDescription"
-            tools:src="@drawable/placeholder_16_9"
-            />
-
-        <ImageView
-            android:id="@+id/play_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/btn_movie_play_normal"
-            android:visibility="visible"
-            />
-
-      </FrameLayout>
-
-      <!--
-          android:layout_toEndOf="@id/partial_social_timeline_thumbnail_image"
-          android:layout_toRightOf="@id/partial_social_timeline_thumbnail_image"
-          android:layout_alignTop="@id/partial_social_timeline_thumbnail_image"
-      -->
-      <TextView
-          android:id="@+id/partial_social_timeline_thumbnail_title"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="12dp"
-          android:layout_marginEnd="12dp"
-          android:layout_marginLeft="12dp"
-          android:layout_marginRight="15dp"
-          android:layout_marginStart="12dp"
-          android:layout_marginTop="12dp"
-          android:ellipsize="end"
-          android:maxLines="3"
-          android:typeface="serif"
-          tools:text="Best backup apps: save all your Android's innards"
-          style="@style/Widget.Aptoide.Card.Thumbnail"
-          />
-
-      <View
-          android:layout_width="match_parent"
-          android:layout_height="0.7dp"
-          android:layout_below="@id/media_layout"
-          android:layout_marginEnd="12dp"
-          android:layout_marginLeft="12dp"
-          android:layout_marginRight="12dp"
-          android:layout_marginStart="12dp"
-          android:background="@color/timeline_separator"
-          android:visibility="gone"
-          />
-
-      <TextView
-          android:id="@+id/partial_social_timeline_thumbnail_related_to"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_below="@+id/media_layout"
-          android:layout_marginBottom="24dp"
-          android:layout_marginLeft="12dp"
-          android:layout_marginRight="15dp"
-          android:layout_marginTop="12dp"
-          android:ellipsize="end"
-          android:maxLines="1"
-          android:textSize="11sp"
-          tools:text="Related to APPz"
-          />
-
-      <Button
-          android:id="@+id/partial_social_timeline_thumbnail_get_app_button"
-          android:layout_width="match_parent"
-          android:layout_height="30dp"
-          android:layout_below="@id/partial_social_timeline_thumbnail_related_to"
-          android:layout_marginBottom="16dp"
-          android:layout_marginEnd="16dp"
-          android:layout_marginLeft="96dp"
-          android:layout_marginRight="16dp"
-          android:layout_marginStart="96dp"
-          android:layout_marginTop="12dp"
-          android:gravity="center_vertical"
-          android:visibility="gone"
-          tools:text="Get app Game of War"
-          tools:visibility="visible"
-          style="@style/Widget.Aptoide.Card.Button"
-          />
-    </RelativeLayout>
+    <include layout="@layout/partial_social_timeline_video_thumbnail"/>
 
     <View
+        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="0.7dp"
-        android:layout_marginBottom="5dp"
         android:layout_marginEnd="12dp"
         android:layout_marginLeft="12dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginRight="12dp"
         android:layout_marginStart="12dp"
         android:background="@color/timeline_separator"
         android:visibility="visible"
         />
+
+    <include layout="@layout/social_info_bar_timeline"/>
+
+    <include layout="@layout/social_last_comment_bar"/>
 
     <include layout="@layout/social_bar_timeline"/>
 
