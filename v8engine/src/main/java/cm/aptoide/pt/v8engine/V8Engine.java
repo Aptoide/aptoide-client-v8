@@ -341,7 +341,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
     if (notificationHandler == null) {
       notificationHandler =
           new NotificationHandler(getConfiguration().getAppId(), getDefaultClient(),
-              WebService.getDefaultConverter(), idsRepository, getConfiguration().getVersionName());
+              WebService.getDefaultConverter(), idsRepository, getConfiguration().getVersionName(),
+              getAccountManager());
     }
     return notificationHandler;
   }

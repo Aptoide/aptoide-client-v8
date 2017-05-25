@@ -1,6 +1,8 @@
 package cm.aptoide.pt.v8engine.notification;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.ws.notifications.GetPullNotificationsResponse;
 import cm.aptoide.pt.dataprovider.ws.notifications.PullCampaignNotificationsRequest;
 import cm.aptoide.pt.dataprovider.ws.notifications.PullSocialNotificationRequest;
@@ -24,21 +26,27 @@ public class NotificationHandler implements NotificationNetworkService {
   private Converter.Factory converterFactory;
   private IdsRepository idsRepository;
   private String versionName;
+  private AptoideAccountManager accountManager;
 
   public NotificationHandler(String applicationId, OkHttpClient httpClient,
-      Converter.Factory converterFactory, IdsRepository idsRepository, String versionName) {
+      Converter.Factory converterFactory, IdsRepository idsRepository, String versionName,
+      AptoideAccountManager accountManager) {
     this.applicationId = applicationId;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.idsRepository = idsRepository;
     this.versionName = versionName;
+    this.accountManager = accountManager;
     handler = PublishRelay.create();
   }
 
   @Override public Single<List<AptoideNotification>> getSocialNotifications() {
-    return PullSocialNotificationRequest.of(idsRepository.getUniqueIdentifier(), versionName,
-        applicationId, httpClient, converterFactory)
-        .observe()
+    return accountManager.accountStatus()
+        .flatMap(account -> PullSocialNotificationRequest.of(idsRepository.getUniqueIdentifier(),
+            versionName, applicationId, httpClient, converterFactory,
+            DataProvider.getConfiguration()
+                .getExtraId(), account.getAccessToken())
+            .observe())
         .map(response -> convertSocialNotifications(response))
         .flatMap(notifications -> handle(notifications))
         .toSingle();

@@ -16,6 +16,7 @@ import retrofit2.Converter;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 import rx.Observable;
 
@@ -59,7 +60,7 @@ public abstract class Notifications<U> extends WebService<Notifications.Interfac
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @GET("{id}/direct") Observable<List<GetPullNotificationsResponse>> getPullSocialNotifications(
-        @Path("id") String id, @QueryMap Map<String, String> options,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Path("id") String id,
+        @Query("select") List<Integer> types, @QueryMap Map<String, String> options);
   }
 }
