@@ -122,7 +122,7 @@ public class ApplicationReceiver {
     }
   }
 
-  interface ReceiveAppListener {
+  public interface ReceiveAppListener {
 
     void onStartedReceiving(String appName);
 

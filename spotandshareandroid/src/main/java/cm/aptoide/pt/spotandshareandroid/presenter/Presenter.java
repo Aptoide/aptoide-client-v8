@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid.presenter;
 
 /**
  * Created by filipegoncalves on 31-01-2017.

@@ -1,6 +1,10 @@
-package cm.aptoide.pt.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid.presenter;
 
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.spotandshareandroid.App;
+import cm.aptoide.pt.spotandshareandroid.AppViewModel;
+import cm.aptoide.pt.spotandshareandroid.ApplicationProvider;
+import cm.aptoide.pt.spotandshareandroid.ApplicationSender;
 import java.util.ArrayList;
 import java.util.List;
 
