@@ -6,13 +6,13 @@ package cm.aptoide.pt.spotandshareandroid.presenter;
 
 import cm.aptoide.pt.spotandshareandroid.ConnectionManager;
 import cm.aptoide.pt.spotandshareandroid.DeactivateHotspotTask;
-import cm.aptoide.pt.spotandshareandroid.Group;
-import cm.aptoide.pt.spotandshareandroid.GroupManager;
-import cm.aptoide.pt.spotandshareandroid.GroupNameProvider;
 import cm.aptoide.pt.spotandshareandroid.PermissionListener;
 import cm.aptoide.pt.spotandshareandroid.PermissionManager;
 import cm.aptoide.pt.spotandshareandroid.SimpleListener;
 import cm.aptoide.pt.spotandshareandroid.analytics.SpotAndShareAnalyticsInterface;
+import cm.aptoide.pt.spotandshareandroid.group.Group;
+import cm.aptoide.pt.spotandshareandroid.group.GroupManager;
+import cm.aptoide.pt.spotandshareandroid.group.GroupNameProvider;
 import java.util.ArrayList;
 import rx.Subscription;
 

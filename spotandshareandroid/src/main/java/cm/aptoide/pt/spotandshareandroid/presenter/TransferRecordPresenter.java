@@ -1,13 +1,13 @@
 package cm.aptoide.pt.spotandshareandroid.presenter;
 
 import cm.aptoide.pt.spotandshareandroid.App;
-import cm.aptoide.pt.spotandshareandroid.ApplicationReceiver;
-import cm.aptoide.pt.spotandshareandroid.ApplicationSender;
 import cm.aptoide.pt.spotandshareandroid.ConnectionManager;
 import cm.aptoide.pt.spotandshareandroid.Disconnecter;
-import cm.aptoide.pt.spotandshareandroid.TransferRecordItem;
-import cm.aptoide.pt.spotandshareandroid.TransferRecordManager;
 import cm.aptoide.pt.spotandshareandroid.analytics.SpotAndShareAnalyticsInterface;
+import cm.aptoide.pt.spotandshareandroid.transference.ApplicationReceiver;
+import cm.aptoide.pt.spotandshareandroid.transference.ApplicationSender;
+import cm.aptoide.pt.spotandshareandroid.transference.TransferRecordItem;
+import cm.aptoide.pt.spotandshareandroid.transference.TransferRecordManager;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -12,11 +12,11 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import cm.aptoide.pt.spotandshareandroid.AppViewModel;
 import cm.aptoide.pt.spotandshareandroid.ApplicationProvider;
-import cm.aptoide.pt.spotandshareandroid.ApplicationSender;
 import cm.aptoide.pt.spotandshareandroid.R;
 import cm.aptoide.pt.spotandshareandroid.presenter.ActivityView;
 import cm.aptoide.pt.spotandshareandroid.presenter.AppSelectionPresenter;
 import cm.aptoide.pt.spotandshareandroid.presenter.AppSelectionView;
+import cm.aptoide.pt.spotandshareandroid.transference.ApplicationSender;
 import java.util.List;
 
 public class AppSelectionActivity extends ActivityView implements AppSelectionView {

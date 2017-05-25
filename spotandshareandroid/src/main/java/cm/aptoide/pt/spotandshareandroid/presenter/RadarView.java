@@ -1,6 +1,6 @@
 package cm.aptoide.pt.spotandshareandroid.presenter;
 
-import cm.aptoide.pt.spotandshareandroid.Group;
+import cm.aptoide.pt.spotandshareandroid.group.Group;
 import java.util.ArrayList;
 
 /**
