@@ -41,6 +41,7 @@ import lombok.EqualsAndHashCode;
   //errors
   public static final int GENERIC_ERROR = 1;
   public static final int NOT_ENOUGH_SPACE_ERROR = 2;
+  public static final int FILE_NOT_FOUND = 3;
   public static String TAG = Download.class.getSimpleName();
   RealmList<FileToDownload> filesToDownload;
   @DownloadState int overallDownloadStatus = 0;
@@ -64,7 +65,7 @@ import lombok.EqualsAndHashCode;
     return downloadError;
   }
 
-  public void setDownloadError(int downloadError) {
+  public void setDownloadError(@DownloadError int downloadError) {
     this.downloadError = downloadError;
   }
 
@@ -228,7 +229,8 @@ import lombok.EqualsAndHashCode;
 
   }
 
-  @Retention(RetentionPolicy.SOURCE) @IntDef({ GENERIC_ERROR, NOT_ENOUGH_SPACE_ERROR })
+  @Retention(RetentionPolicy.SOURCE)
+  @IntDef({ GENERIC_ERROR, NOT_ENOUGH_SPACE_ERROR, FILE_NOT_FOUND })
   public @interface DownloadError {
   }
 }
