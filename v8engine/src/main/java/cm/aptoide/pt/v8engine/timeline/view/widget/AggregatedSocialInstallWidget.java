@@ -19,9 +19,9 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialInstallDisplayable;
+import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -196,8 +196,7 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
 
       compositeSubscription.add(RxView.clicks(comment)
           .flatMap(aVoid -> Observable.fromCallable(() -> {
-            final String elementId = displayable.getTimelineCard()
-                .getCardId();
+            final String elementId = minimalCard.getCardId();
             Fragment fragment = V8Engine.getFragmentProvider()
                 .newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType.TIMELINE,
                     elementId);
