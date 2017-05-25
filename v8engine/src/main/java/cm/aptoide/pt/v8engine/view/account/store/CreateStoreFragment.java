@@ -524,6 +524,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
        */
       accountManager.accountStatus()
           .first()
+          .doOnNext(__ -> showWaitDialog())
           .flatMap(
               account -> SetStoreRequest.of(account.getAccessToken(), storeModel.getStoreName(),
                   storeModel.getStoreThemeName(), storeModel.getStoreAvatarPath(),
@@ -531,8 +532,9 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
                   .observe()
                   .timeout(90, TimeUnit.SECONDS))
           .observeOn(AndroidSchedulers.mainThread())
-          .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
+          .flatMap(__ -> accountManager.syncCurrentAccount()
               .andThen(sendCreateAnalytics())
+              .andThen(dismissDialogAsync())
               .observeOn(AndroidSchedulers.mainThread())
               .doOnCompleted(() -> navigateToHome())
               .toObservable())
