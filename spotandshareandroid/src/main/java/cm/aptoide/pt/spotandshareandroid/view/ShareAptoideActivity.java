@@ -15,10 +15,10 @@ import android.widget.TextView;
 import cm.aptoide.pt.spotandshareandroid.ConnectionManager;
 import cm.aptoide.pt.spotandshareandroid.HotspotManager;
 import cm.aptoide.pt.spotandshareandroid.R;
-import cm.aptoide.pt.spotandshareandroid.ShareAptoideManager;
 import cm.aptoide.pt.spotandshareandroid.presenter.ActivityView;
 import cm.aptoide.pt.spotandshareandroid.presenter.ShareAptoidePresenter;
 import cm.aptoide.pt.spotandshareandroid.presenter.ShareAptoideView;
+import cm.aptoide.pt.spotandshareandroid.shareaptoide.ShareAptoideManager;
 import cm.aptoide.pt.utils.design.ShowMessage;
 
 public class ShareAptoideActivity extends ActivityView implements ShareAptoideView {

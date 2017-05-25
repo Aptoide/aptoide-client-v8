@@ -2,7 +2,7 @@ package cm.aptoide.pt.spotandshareandroid.presenter;
 
 import cm.aptoide.pt.nanohttpd.ShareApkSandbox;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.spotandshareandroid.ShareAptoideManager;
+import cm.aptoide.pt.spotandshareandroid.shareaptoide.ShareAptoideManager;
 import java.io.IOException;
 
 /**

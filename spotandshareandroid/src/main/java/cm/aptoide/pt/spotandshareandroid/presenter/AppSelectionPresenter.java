@@ -4,7 +4,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.spotandshareandroid.App;
 import cm.aptoide.pt.spotandshareandroid.AppViewModel;
 import cm.aptoide.pt.spotandshareandroid.ApplicationProvider;
-import cm.aptoide.pt.spotandshareandroid.ApplicationSender;
+import cm.aptoide.pt.spotandshareandroid.transference.ApplicationSender;
 import java.util.ArrayList;
 import java.util.List;
 

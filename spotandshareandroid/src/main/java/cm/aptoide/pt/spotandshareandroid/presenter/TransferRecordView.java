@@ -1,6 +1,6 @@
 package cm.aptoide.pt.spotandshareandroid.presenter;
 
-import cm.aptoide.pt.spotandshareandroid.TransferRecordItem;
+import cm.aptoide.pt.spotandshareandroid.transference.TransferRecordItem;
 import java.util.List;
 
 /**

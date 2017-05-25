@@ -11,7 +11,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
-import cm.aptoide.pt.spotandshareandroid.CustomAnimation;
 import cm.aptoide.pt.spotandshareandroid.R;
 
 /**

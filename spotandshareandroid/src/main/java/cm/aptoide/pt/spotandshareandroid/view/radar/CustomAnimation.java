@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid.view.radar;
 
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
