@@ -383,9 +383,9 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
             createStoreInterceptor(storeModel), httpClient, converterFactory)
             .observe())
         .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnCompleted(() -> navigateToHome())
             .toObservable())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnCompleted(() -> navigateToHome())
         .onErrorResumeNext(err -> {
           @StringRes int errorMessage;
           if (((AptoideWsV7Exception) err).getBaseResponse()
@@ -533,8 +533,9 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
           .observeOn(AndroidSchedulers.mainThread())
           .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
               .andThen(sendCreateAnalytics())
+              .observeOn(AndroidSchedulers.mainThread())
+              .doOnCompleted(() -> navigateToHome())
               .toObservable())
-          .doOnNext(__ -> navigateToHome())
           .subscribe(__ -> {
           }, err -> {
             dismissWaitDialog();
@@ -586,20 +587,23 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
     /*
      * not multipart
      */
-    SimpleSetStoreRequest.of(storeModel.getStoreId(), storeModel.getStoreThemeName(),
-        storeModel.getStoreDescription(), bodyInterceptorV7, httpClient, converterFactory)
+    SimpleSetStoreRequest.of(storeModel.getStoreName(), storeModel.getStoreThemeName(),
+        bodyInterceptorV7, httpClient, converterFactory)
         .observe()
         .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
             .andThen(sendCreateAnalytics())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnCompleted(() -> navigateToHome())
             .toObservable())
-        .doOnNext(__ -> navigateToHome())
-        .subscribe(__ -> {
-        }, err -> {
-          @StringRes int reason = ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage());
-          dismissWaitAndShowErrorMessage(reason);
+        .onErrorResumeNext(err -> {
           CrashReport.getInstance()
               .log(err);
-        });
+          @StringRes int reason = ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage());
+          return dismissWaitAndShowErrorMessage(reason);
+        })
+        .subscribe(__ -> {
+        }, err -> CrashReport.getInstance()
+            .log(err));
   }
 
   @NonNull private Completable dismissDialogAsync() {
