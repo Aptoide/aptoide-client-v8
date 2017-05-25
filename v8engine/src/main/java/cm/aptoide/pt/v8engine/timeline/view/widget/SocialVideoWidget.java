@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.timeline.view.widget;
 
-import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
@@ -97,14 +96,6 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
         .load(displayable.getThumbnailUrl(), thumbnail);
     thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
     play_button.setVisibility(View.VISIBLE);
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      mediaLayout.setForeground(context.getResources()
-          .getDrawable(R.color.overlay_black, context.getTheme()));
-    } else {
-      mediaLayout.setForeground(context.getResources()
-          .getDrawable(R.color.overlay_black));
-    }
 
     compositeSubscription.add(RxView.clicks(mediaLayout)
         .subscribe(v -> {
