@@ -21,18 +21,8 @@ import rx.schedulers.Schedulers;
 public class AptoideDownloadManager {
 
   public static final String FILE_MD5_EXTRA = "APTOIDE_APPID_EXTRA";
-  public static final String DOWNLOADMANAGER_ACTION_PAUSE =
-      "cm.aptoide.downloadmanager.action.pause"; // click on pause button
-
-  public static final String DOWNLOADMANAGER_ACTION_OPEN = "cm.aptoide.downloadmanager.action.open";
-  // open downloads tabs
-  public static final String DOWNLOADMANAGER_ACTION_START_DOWNLOAD =
-      "cm.aptoide.downloadmanager.action.start.download";
-  public static final String DOWNLOADMANAGER_ACTION_NOTIFICATION =
-      "cm.aptoide.downloadmanager.action.notification"; //open app view
   static public final int PROGRESS_MAX_VALUE = 100;
   private static final String TAG = AptoideDownloadManager.class.getSimpleName();
-  private static final int VALUE_TO_CONVERT_MB_TO_BYTES = 1024 * 1024;
 
   private final String downloadsStoragePath;
   private final String apkPath;
@@ -236,33 +226,18 @@ public class AptoideDownloadManager {
         });
   }
 
-  /**
-   * check if there is any download in progress
-   *
-   * @return true if there is at least 1 download in progress, false otherwise
-   */
-  public boolean isDownloading() {
-    return isDownloading;
-  }
-
   public void setDownloading(boolean downloading) {
     isDownloading = downloading;
   }
 
-  public void removeDownload(String md5) {
-    Observable.fromCallable(() -> pauseDownload(md5))
-        .flatMap(paused -> downloadAccessor.get(md5))
+  public Completable removeDownload(String md5) {
+    return downloadAccessor.get(md5)
         .first(download -> download.getOverallDownloadStatus() == Download.PAUSED)
-        .subscribe(download -> {
+        .doOnNext(download -> {
           deleteDownloadlFiles(download);
           deleteDownloadFromDb(download.getMd5());
-        }, throwable -> {
-          if (throwable instanceof NullPointerException) {
-            Logger.d(TAG, "Download item was null, are you pressing on remove button too fast?");
-          } else {
-            throwable.printStackTrace();
-          }
-        });
+        })
+        .toCompletable();
   }
 
   public void deleteDownloadlFiles(Download download) {
@@ -291,19 +266,6 @@ public class AptoideDownloadManager {
           }
           return download;
         });
-  }
-
-  public Void pauseDownload(String md5) {
-    internalPause(md5).subscribe(download -> {
-      Logger.d(TAG, "Download with " + md5 + " paused");
-    }, throwable -> {
-      if (throwable instanceof DownloadNotFoundException) {
-        Logger.d(TAG, "there are no download to pause with the md5: " + md5);
-      } else {
-        throwable.printStackTrace();
-      }
-    });
-    return null;
   }
 
   private void deleteDownloadFromDb(String md5) {

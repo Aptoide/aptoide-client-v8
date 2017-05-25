@@ -31,6 +31,8 @@ import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import rx.Completable;
 import rx.Observable;
 import rx.subscriptions.CompositeSubscription;
 
@@ -45,6 +47,7 @@ public class InstallService extends Service {
   public static final String ACTION_OPEN_DOWNLOAD_MANAGER = "OPEN_DOWNLOAD_MANAGER";
   public static final String ACTION_OPEN_APP_VIEW = "OPEN_APP_VIEW";
   public static final String ACTION_STOP_INSTALL = "STOP_INSTALL";
+  public static final String ACTION_STOP_INSTALL_AND_REMOVE = "STOP_INSTALL_AND_REMOVE";
   public static final String ACTION_STOP_ALL_INSTALLS = "STOP_ALL_INSTALLS";
   public static final String ACTION_START_INSTALL = "START_INSTALL";
   public static final String ACTION_INSTALL_FINISHED = "INSTALL_FINISHED";
@@ -96,6 +99,11 @@ public class InstallService extends Service {
         openDownloadManager();
       } else if (ACTION_STOP_ALL_INSTALLS.equals(intent.getAction())) {
         stopAllDownloads();
+      } else if (ACTION_STOP_INSTALL_AND_REMOVE.equals(intent.getAction())) {
+        stopDownloadAndRemove(md5).andThen(
+            Completable.fromAction(() -> removeNotificationAndStop()))
+            .subscribe(() -> {
+            }, throwable -> removeNotificationAndStop());
       }
     } else {
       subscriptions.add(
@@ -112,6 +120,12 @@ public class InstallService extends Service {
 
   @Nullable @Override public IBinder onBind(Intent intent) {
     return null;
+  }
+
+  private Completable stopDownloadAndRemove(String md5) {
+    return downloadManager.pauseDownloadSync(md5)
+        .delay(500, TimeUnit.MILLISECONDS)
+        .andThen(downloadManager.removeDownload(md5));
   }
 
   private Observable<Boolean> stopDownload(String md5) {
