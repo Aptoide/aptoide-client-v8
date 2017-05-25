@@ -14,7 +14,7 @@
       android:orientation="vertical"
       >
 
-    <cm.aptoide.pt.spotandshareandroid.CustomImageView
+    <ImageView
         android:id="@+id/highwayGridViewItemIcon"
         android:layout_width="72dp"
         android:layout_height="72dp"
