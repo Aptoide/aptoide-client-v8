@@ -1,7 +1,8 @@
-package cm.aptoide.pt.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid.group;
 
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import cm.aptoide.pt.spotandshareandroid.ConnectionManager;
 
 /**
  * Created by filipegoncalves on 02-02-2017.

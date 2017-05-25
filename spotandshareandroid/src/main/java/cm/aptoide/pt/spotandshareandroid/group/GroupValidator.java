@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid.group;
 
 import java.util.ArrayList;
 import java.util.HashMap;
