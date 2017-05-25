@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid.view;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -12,6 +12,13 @@ import android.text.style.ForegroundColorSpan;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cm.aptoide.pt.spotandshareandroid.ActivityView;
+import cm.aptoide.pt.spotandshareandroid.ConnectionManager;
+import cm.aptoide.pt.spotandshareandroid.HotspotManager;
+import cm.aptoide.pt.spotandshareandroid.R;
+import cm.aptoide.pt.spotandshareandroid.ShareAptoideManager;
+import cm.aptoide.pt.spotandshareandroid.ShareAptoidePresenter;
+import cm.aptoide.pt.spotandshareandroid.ShareAptoideView;
 import cm.aptoide.pt.utils.design.ShowMessage;
 
 public class ShareAptoideActivity extends ActivityView implements ShareAptoideView {

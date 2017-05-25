@@ -17,8 +17,6 @@ public class TransferRecordItem {
   private boolean needReSend;
   private boolean isSent;
 
-  private String fromOutside;
-
   public TransferRecordItem(Drawable icon, String appName, String packageName,
       String filePath, boolean received, String versionName) {
     this.icon = icon;
@@ -30,7 +28,6 @@ public class TransferRecordItem {
     deleted = false;
     needReSend = false;
     isSent = false;
-    fromOutside = "";
   }
 
   public Drawable getIcon() {
@@ -85,11 +82,4 @@ public class TransferRecordItem {
     isSent = sent;
   }
 
-  public String getFromOutside() {
-    return fromOutside;
-  }
-
-  public void setFromOutside(String fromOutside) {
-    this.fromOutside = fromOutside;
-  }
 }

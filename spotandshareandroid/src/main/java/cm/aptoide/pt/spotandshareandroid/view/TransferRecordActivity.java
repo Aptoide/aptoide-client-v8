@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid.view;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -15,6 +15,21 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.spotandshareandroid.ActivityView;
+import cm.aptoide.pt.spotandshareandroid.ApplicationReceiver;
+import cm.aptoide.pt.spotandshareandroid.ApplicationSender;
+import cm.aptoide.pt.spotandshareandroid.ApplicationsManager;
+import cm.aptoide.pt.spotandshareandroid.ClientService;
+import cm.aptoide.pt.spotandshareandroid.ConnectionManager;
+import cm.aptoide.pt.spotandshareandroid.DataHolder;
+import cm.aptoide.pt.spotandshareandroid.Disconnecter;
+import cm.aptoide.pt.spotandshareandroid.R;
+import cm.aptoide.pt.spotandshareandroid.ServerService;
+import cm.aptoide.pt.spotandshareandroid.ShareApps;
+import cm.aptoide.pt.spotandshareandroid.TransferRecordItem;
+import cm.aptoide.pt.spotandshareandroid.TransferRecordManager;
+import cm.aptoide.pt.spotandshareandroid.TransferRecordPresenter;
+import cm.aptoide.pt.spotandshareandroid.TransferRecordView;
 import cm.aptoide.pt.spotandshareandroid.analytics.SpotAndShareAnalyticsInterface;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

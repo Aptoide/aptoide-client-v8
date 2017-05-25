@@ -2,8 +2,6 @@ package cm.aptoide.pt.spotandshareandroid;
 
 import android.net.Network;
 import android.net.wifi.WifiConfiguration;
-import cm.aptoide.pt.spotandshare.socket.entities.Host;
-import java.util.List;
 
 /**
  * Singleton without controller.
@@ -15,7 +13,6 @@ public class DataHolder {
   private static DataHolder holder;
   public Network network;
   private WifiConfiguration wcOnJoin;
-  private List<Host> connectedClients;
 
   public static DataHolder getInstance() {
     if (holder == null) {

@@ -66,7 +66,7 @@
     <activity android:name=".view.account.LoginActivity"/>
     <activity android:name=".spotandshare.SpotSharePreviewActivity"/>
 
-    <activity android:name="cm.aptoide.pt.spotandshareandroid.RadarActivity"/>
+    <activity android:name="cm.aptoide.pt.spotandshareandroid.view.RadarActivity"/>
 
     <activity
         android:name="com.facebook.FacebookActivity"

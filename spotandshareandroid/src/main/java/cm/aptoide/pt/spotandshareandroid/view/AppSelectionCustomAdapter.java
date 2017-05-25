@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid.view;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cm.aptoide.pt.spotandshareandroid.AppSelectionView;
+import cm.aptoide.pt.spotandshareandroid.AppViewModel;
+import cm.aptoide.pt.spotandshareandroid.R;
 import java.util.List;
 
 /**

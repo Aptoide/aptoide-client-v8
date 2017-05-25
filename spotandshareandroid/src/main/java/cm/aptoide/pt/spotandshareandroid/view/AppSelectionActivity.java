@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid.view;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -10,6 +10,13 @@ import android.view.View;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import cm.aptoide.pt.spotandshareandroid.ActivityView;
+import cm.aptoide.pt.spotandshareandroid.AppSelectionPresenter;
+import cm.aptoide.pt.spotandshareandroid.AppSelectionView;
+import cm.aptoide.pt.spotandshareandroid.AppViewModel;
+import cm.aptoide.pt.spotandshareandroid.ApplicationProvider;
+import cm.aptoide.pt.spotandshareandroid.ApplicationSender;
+import cm.aptoide.pt.spotandshareandroid.R;
 import java.util.List;
 
 public class AppSelectionActivity extends ActivityView implements AppSelectionView {
