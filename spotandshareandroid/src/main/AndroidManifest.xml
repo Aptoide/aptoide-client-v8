@@ -20,7 +20,7 @@
       android:allowBackup="true"
       android:supportsRtl="true">
     <activity
-        android:name=".RadarActivity"
+        android:name=".view.RadarActivity"
         android:screenOrientation="portrait">
       <intent-filter>
         <action android:name="android.intent.action.VIEW"/>
@@ -42,7 +42,7 @@
         <data android:mimeType="application/vnd.android.package-archive"/>
       </intent-filter>
     </activity>
-    <activity android:name=".AppSelectionActivity"/>
+    <activity android:name=".view.AppSelectionActivity"/>
 
     <service
         android:name=".HighwayClientComm"
@@ -63,10 +63,10 @@
         android:exported="true"/>
 
     <activity
-        android:name=".TransferRecordActivity"
+        android:name=".view.TransferRecordActivity"
         android:configChanges="orientation|keyboardHidden|screenSize">
     </activity>
-    <activity android:name=".ShareAptoideActivity">
+    <activity android:name=".view.ShareAptoideActivity">
     </activity>
   </application>
 

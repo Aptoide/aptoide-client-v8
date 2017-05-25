@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid.view;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cm.aptoide.pt.spotandshareandroid.R;
+import cm.aptoide.pt.spotandshareandroid.TransferRecordItem;
+import cm.aptoide.pt.spotandshareandroid.TransferRecordView;
 import java.util.List;
 
 /**
@@ -64,7 +67,7 @@ public class TransferRecordCustomAdapter extends BaseAdapter {
             (LinearLayout) convertView.findViewById(R.id.transfRecRecvRowDeletedMessage);
         viewHolder.deleteFile = (Button) convertView.findViewById(R.id.transfRecRowDelete);
         viewHolder.installButton = (Button) convertView.findViewById(R.id.transfRecRowInstall);
-      } else {//type=1 - enviado
+      } else {
         convertView =
             layoutInflater.inflate(R.layout.highway_transf_record_sent_row, parent, false);
 
@@ -103,31 +106,14 @@ public class TransferRecordCustomAdapter extends BaseAdapter {
         viewHolder.transfRecRecvRowDeletedMessage.setVisibility(View.GONE);
       }
     } else {
-
+      viewHolder.reSendButton.setVisibility(View.GONE);
+      viewHolder.senderInfo.setTextColor(context.getResources()
+          .getColor(R.color.grey));
       if (listOfItems.get(position)
-          .isNeedReSend()) {
-        viewHolder.reSendButton.setVisibility(View.VISIBLE);
-        ReSendListener reSendListener = new ReSendListener(position);
-        viewHolder.reSendButton.setOnClickListener(reSendListener);
-        if (listOfItems.get(position)
-            .getFromOutside()
-            .equals("outside")) {
-          viewHolder.senderInfo.setText(R.string.reSendOutside);
-        } else {
-          viewHolder.senderInfo.setText(R.string.reSendError);
-        }
-        viewHolder.senderInfo.setTextColor(context.getResources()
-            .getColor(R.color.errorRed));
+          .isSent()) {
+        viewHolder.senderInfo.setText(R.string.youSent);
       } else {
-        viewHolder.reSendButton.setVisibility(View.GONE);
-        viewHolder.senderInfo.setTextColor(context.getResources()
-            .getColor(R.color.grey));
-        if (listOfItems.get(position)
-            .isSent()) {
-          viewHolder.senderInfo.setText(R.string.youSent);
-        } else {
-          viewHolder.senderInfo.setText(R.string.youAreSending);
-        }
+        viewHolder.senderInfo.setText(R.string.youAreSending);
       }
     }
     viewHolder.appNameLabel.setText(listOfItems.get(position)
@@ -136,9 +122,6 @@ public class TransferRecordCustomAdapter extends BaseAdapter {
         .getIcon());
     viewHolder.appVersionLabel.setText(listOfItems.get(position)
         .getVersionName());
-
-    //        convertView.setTag(viewHolder);
-
     return convertView;
   }
 
@@ -188,8 +171,8 @@ public class TransferRecordCustomAdapter extends BaseAdapter {
     TextView appNameLabel;
     TextView appVersionLabel;
     Button installButton;
-    LinearLayout rowImageLayout;//layout c a
-    RelativeLayout appInfoLayout;//layout com o nome da app e versao
+    LinearLayout rowImageLayout;
+    RelativeLayout appInfoLayout;
     Button deleteFile;
     Button reSendButton;
     RelativeLayout transfRecRecvRowIcons;
@@ -222,21 +205,6 @@ public class TransferRecordCustomAdapter extends BaseAdapter {
 
       if (listener != null) {
         listener.onDeleteApp(getItem(position));
-      }
-    }
-  }
-
-  class ReSendListener implements View.OnClickListener {
-    private final int position;
-
-    public ReSendListener(int position) {
-      this.position = position;
-    }
-
-    public void onClick(View v) {
-
-      if (listener != null) {
-        listener.onReSendApp(getItem(position), position);
       }
     }
   }
