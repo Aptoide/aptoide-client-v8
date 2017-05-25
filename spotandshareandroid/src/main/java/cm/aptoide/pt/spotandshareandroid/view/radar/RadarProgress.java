@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import cm.aptoide.pt.spotandshareandroid.CustomAnimation;
+import cm.aptoide.pt.spotandshareandroid.R;
 
 /**
  * Created by filipegoncalves on 24-08-2016.

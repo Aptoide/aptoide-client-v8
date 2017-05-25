@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import cm.aptoide.pt.spotandshareandroid.Group;
+import cm.aptoide.pt.spotandshareandroid.R;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
