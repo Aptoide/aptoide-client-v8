@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import cm.aptoide.pt.spotandshareandroid.RadarActivity;
+import cm.aptoide.pt.spotandshareandroid.view.RadarActivity;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.presenter.SpotSharePreviewPresenter;

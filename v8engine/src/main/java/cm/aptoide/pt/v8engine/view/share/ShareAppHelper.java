@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.spotandshareandroid.RadarActivity;
+import cm.aptoide.pt.spotandshareandroid.view.RadarActivity;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;

@@ -24,6 +24,7 @@ import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSock
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
 import cm.aptoide.pt.spotandshare.socket.message.server.AptoideMessageServerSocket;
+import cm.aptoide.pt.spotandshareandroid.view.TransferRecordActivity;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
 import java.io.IOException;
