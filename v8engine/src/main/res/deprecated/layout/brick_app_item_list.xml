@@ -5,6 +5,7 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/brick_app_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -37,7 +38,7 @@
         android:layout_centerVertical="true"
         android:paddingEnd="1.5dp"
         android:paddingRight="1.5dp"
-        android:text="Little Commander worl world II"
+        tools:text="Little Commander worl world II"
         android:textColor="?attr/inverseTextColor"
         />
 
