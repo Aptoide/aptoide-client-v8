@@ -43,18 +43,20 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
       button.setText(R.string.login);
     }
 
-    RxView.clicks(button)
-        .flatMap(__ -> accountManager.accountStatus())
+    compositeSubscription.add(RxView.clicks(button)
+        .flatMap(__ -> accountManager.accountStatus()
+            .first())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(account -> {
           if (account.isLoggedIn()) {
             button.setText(R.string.create_store_displayable_button);
-            getFragmentNavigator().navigateTo(CreateStoreFragment.newInstance(new ManageStoreModel(false)));
+            getFragmentNavigator().navigateTo(
+                CreateStoreFragment.newInstance(new ManageStoreModel(false)));
           } else {
             button.setText(R.string.login);
             accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.STORE);
           }
         }, err -> CrashReport.getInstance()
-            .log(err));
+            .log(err)));
   }
 }

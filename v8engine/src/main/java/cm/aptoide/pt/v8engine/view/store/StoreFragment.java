@@ -192,7 +192,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override public void onDestroyView() {
-    
+
     // reset to default theme in the toolbar
     // TODO re-do this ThemeUtils methods and avoid loading resources using
     // execution-time generated ids for the desired resource
