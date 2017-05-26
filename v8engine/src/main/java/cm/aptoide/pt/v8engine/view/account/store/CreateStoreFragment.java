@@ -118,7 +118,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
       storeModel = new ManageStoreModel(true);
     }
 
-    loadImage(storeModel.getStoreAvatarPath());
+    loadImage(Uri.parse(storeModel.getStoreAvatarPath()));
 
     setupViewsDefaultValues(view);
   }
@@ -144,10 +144,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
   }
 
   @Override public void loadImage(Uri imagePath) {
-    if (imagePath != null && !TextUtils.isEmpty(imagePath.toString())) {
-      ImageLoader.with(getActivity())
-          .loadWithCircleTransform(imagePath, storeAvatar, false);
-    }
+    ImageLoader.with(getActivity())
+        .loadWithCircleTransform(imagePath, storeAvatar, false);
   }
 
   @Override public void showIconPropertiesError(String errors) {
@@ -157,13 +155,6 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
         .subscribe(__ -> {
         }, err -> CrashReport.getInstance()
             .log(err));
-  }
-
-  private void loadImage(String imagePath) {
-    if (!TextUtils.isEmpty(imagePath)) {
-      ImageLoader.with(getActivity())
-          .loadWithCircleTransform(imagePath, storeAvatar, false);
-    }
   }
 
   @Override public void setupViews() {
@@ -222,7 +213,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
       storeName.setVisibility(View.GONE);
       storeDescription.setVisibility(View.VISIBLE);
       storeDescription.setText(storeModel.getStoreDescription());
-      loadImage(storeModel.getStoreAvatarPath());
+      loadImage(Uri.parse(storeModel.getStoreAvatarPath()));
       createStoreBtn.setText(R.string.save_edit_store);
       skipBtn.setText(R.string.cancel);
     }
@@ -532,7 +523,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
                   .observe()
                   .timeout(90, TimeUnit.SECONDS))
           .observeOn(AndroidSchedulers.mainThread())
-          .flatMap(__ -> accountManager.syncCurrentAccount()
+          .flatMap(__ ->accountManager.syncCurrentAccount()
               .andThen(sendCreateAnalytics())
               .andThen(dismissDialogAsync())
               .observeOn(AndroidSchedulers.mainThread())
