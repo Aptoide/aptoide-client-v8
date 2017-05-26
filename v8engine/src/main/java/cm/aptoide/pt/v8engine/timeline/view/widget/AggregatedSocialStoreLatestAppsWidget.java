@@ -281,6 +281,13 @@ public class AggregatedSocialStoreLatestAppsWidget
       cardHeaderTimestamp.setText(
           displayable.getTimeSinceLastUpdate(getContext(), minimalCard.getDate()));
 
+      if (minimalCard.getMy()
+          .isLiked()) {
+        likeSubCardButton.setHeartState(true);
+      } else {
+        likeSubCardButton.setHeartState(false);
+      }
+
       compositeSubscription.add(RxView.clicks(shareSubCardButton)
           .subscribe(click -> shareCard(displayable, minimalCard.getCardId(), null,
               SharePreviewDialog.SharePreviewOpenMode.SHARE), err -> CrashReport.getInstance()

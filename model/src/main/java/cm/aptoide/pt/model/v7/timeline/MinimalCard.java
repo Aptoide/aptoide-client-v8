@@ -17,13 +17,15 @@ public class MinimalCard {
   private SocialCardStats stats;
   private UserSharerTimeline owner;
   private List<UserSharerTimeline> sharers;
+  private My my;
 
   public MinimalCard(@JsonProperty("card_id") String cardId,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("owner") UserSharerTimeline owner,
       @JsonProperty("sharers") List<UserSharerTimeline> sharers,
-      @JsonProperty("stats") SocialCardStats stats) {
+      @JsonProperty("stats") SocialCardStats stats, @JsonProperty("my") My my) {
     this.cardId = cardId;
+    this.my = my;
     this.date = date;
     this.owner = owner;
     this.sharers = sharers;
@@ -68,5 +70,13 @@ public class MinimalCard {
 
   public void setSharers(List<UserSharerTimeline> sharers) {
     this.sharers = sharers;
+  }
+
+  public My getMy() {
+    return my;
+  }
+
+  public void setMy(My my) {
+    this.my = my;
   }
 }

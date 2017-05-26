@@ -211,6 +211,13 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
             throwable.printStackTrace();
           }));
 
+      if (minimalCard.getMy()
+          .isLiked()) {
+        likeSubCardButton.setHeartState(true);
+      } else {
+        likeSubCardButton.setHeartState(false);
+      }
+
       compositeSubscription.add(RxView.clicks(seeMore)
           .subscribe(click -> {
             showSubCards(displayable, 10);
