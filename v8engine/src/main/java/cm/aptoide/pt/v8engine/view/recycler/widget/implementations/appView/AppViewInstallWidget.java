@@ -319,7 +319,7 @@ import rx.android.schedulers.AndroidSchedulers;
     analytics.save(download.getPackageName() + download.getVersionCode(), installEvent);
   }
 
-  protected void showRootInstallWarningPopup(Context context) {
+  private void showRootInstallWarningPopup(Context context) {
     if (installManager.showWarning()) {
       compositeSubscription.add(GenericDialogs.createGenericYesNoCancelMessage(context, null,
           AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
@@ -366,6 +366,7 @@ import rx.android.schedulers.AndroidSchedulers;
             Download download =
                 new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
                     downloadAction);
+            showVideoAdIfAvailable();
             return installManager.install(getContext(), download)
                 .doOnSubscribe(() -> setupEvents(download));
           })
@@ -422,6 +423,10 @@ import rx.android.schedulers.AndroidSchedulers;
         installHandler.onClick(v);
       }
     };
+  }
+
+  protected void showVideoAdIfAvailable() {
+
   }
 
   private void downloadStatusUpdate(@NonNull Progress<Download> progress, GetAppMeta.App app,
@@ -534,7 +539,7 @@ import rx.android.schedulers.AndroidSchedulers;
     downloadProgressLayout.setVisibility(View.GONE);
   }
 
-  protected void setDownloadBarVisible() {
+  private void setDownloadBarVisible() {
     installAndLatestVersionLayout.setVisibility(View.GONE);
     downloadProgressLayout.setVisibility(View.VISIBLE);
   }
