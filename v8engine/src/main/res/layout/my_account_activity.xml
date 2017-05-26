@@ -101,8 +101,8 @@
               android:id="@+id/my_account_edit_user_profile"
               android:layout_alignBottom="@+id/my_account_userinfo"
               android:layout_alignParentRight="true"
+              android:layout_marginEnd="16dp"
               android:layout_marginRight="16dp"
-              android:layout_marginStart="16dp"
               android:text="@string/myaccount_edit_store_button"
               style="@style/Aptoide.Button.Ghost.S"
               />
@@ -174,8 +174,8 @@
               android:id="@+id/my_account_edit_user_store"
               android:layout_alignBottom="@+id/my_account_storeinfo"
               android:layout_alignParentRight="true"
+              android:layout_marginEnd="16dp"
               android:layout_marginRight="16dp"
-              android:layout_marginStart="16dp"
               android:text="@string/myaccount_edit_store_button"
               style="@style/Aptoide.Button.Ghost.S"
               />
