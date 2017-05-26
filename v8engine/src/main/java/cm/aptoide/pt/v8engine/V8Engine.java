@@ -313,7 +313,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
       List<NotificationSyncScheduler.Schedule> scheduleList = new ArrayList<>(2);
 
       scheduleList.add(new NotificationSyncScheduler.Schedule(
-          NotificationSyncService.PUSH_NOTIFICATIONS_CAMPAIGN_ACTION, PUSH_NOTIFICATION_CAMPAIGN_PERIODICITY));
+          NotificationSyncService.PUSH_NOTIFICATIONS_CAMPAIGN_ACTION,
+          PUSH_NOTIFICATION_CAMPAIGN_PERIODICITY));
       scheduleList.add(new NotificationSyncScheduler.Schedule(
           NotificationSyncService.PUSH_NOTIFICATIONS_SOCIAL_ACTION, pushNotificationInterval));
 
