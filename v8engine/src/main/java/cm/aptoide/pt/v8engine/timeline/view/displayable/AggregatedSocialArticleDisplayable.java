@@ -7,9 +7,7 @@ import android.text.Spannable;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.AggregatedSocialArticle;
 import cm.aptoide.pt.model.v7.timeline.MinimalCard;
 import cm.aptoide.pt.model.v7.timeline.UserSharerTimeline;
@@ -43,7 +41,6 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
   private String thumbnailUrl;
   private String avatarUrl;
   private String abTestingURL;
-  private Comment.User user;
   private String packageName;
   private List<App> relatedToAppsList;
   private Date date;
@@ -59,9 +56,9 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
 
   public AggregatedSocialArticleDisplayable(AggregatedSocialArticle card, String title, Link link,
       Link developerLink, String publisherName, String thumbnailUrl, String avatarUrl,
-      String abTestingURL, Store store, Comment.User user, List<App> relatedToAppsList, Date date,
-      DateCalculator dateCalculator, SpannableFactory spannableFactory,
-      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
+      String abTestingURL, List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
+      SpannableFactory spannableFactory, TimelineAnalytics timelineAnalytics,
+      SocialRepository socialRepository) {
     super(card, timelineAnalytics);
     this.link = link;
     this.developerLink = developerLink;
@@ -70,7 +67,6 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
     this.thumbnailUrl = thumbnailUrl;
     this.avatarUrl = avatarUrl;
     this.abTestingURL = abTestingURL;
-    this.user = user;
     this.relatedToAppsList = relatedToAppsList;
     this.date = date;
     this.dateCalculator = dateCalculator;
@@ -101,8 +97,8 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, card.getPublisher()
             .getBaseUrl()), card.getPublisher()
         .getName(), card.getThumbnailUrl(), card.getPublisher()
-        .getLogoUrl(), abTestingURL, card.getStore(), card.getUser(), card.getApps(),
-        card.getDate(), dateCalculator, spannableFactory, timelineAnalytics, socialRepository);
+        .getLogoUrl(), abTestingURL, card.getApps(), card.getDate(), dateCalculator,
+        spannableFactory, timelineAnalytics, socialRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -159,10 +155,6 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
 
   public String getAbTestingURL() {
     return abTestingURL;
-  }
-
-  public Comment.User getUser() {
-    return user;
   }
 
   public String getPackageName() {

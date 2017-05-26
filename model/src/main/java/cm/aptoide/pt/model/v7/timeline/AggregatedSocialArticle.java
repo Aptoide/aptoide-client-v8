@@ -1,6 +1,5 @@
 package cm.aptoide.pt.model.v7.timeline;
 
-import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -18,9 +17,6 @@ public class AggregatedSocialArticle implements TimelineCard {
   private final List<MinimalCard> minimalCardList;
   private final List<UserSharerTimeline> sharers;
   @Getter private final Publisher publisher;
-  @Getter private final Comment.User user;
-  @Getter private final Comment.User userSharer;
-  @Getter private final Store store;
   @Getter private final String cardId;
   @Getter private final String title;
   @Getter private final String thumbnailUrl;
@@ -31,9 +27,8 @@ public class AggregatedSocialArticle implements TimelineCard {
 
   public AggregatedSocialArticle(@JsonProperty("uid") String cardId,
       @JsonProperty("title") String title, @JsonProperty("thumbnail") String thumbnailUrl,
-      @JsonProperty("publisher") Publisher publisher,
-      @JsonProperty("user_sharer") Comment.User userSharer, @JsonProperty("user") Comment.User user,
-      @JsonProperty("store") Store store, @JsonProperty("url") String url,
+      @JsonProperty("publisher") Publisher publisher, @JsonProperty("store") Store store,
+      @JsonProperty("url") String url,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab,
       @JsonProperty("cards_shared") List<MinimalCard> minimalCardList,
@@ -41,9 +36,6 @@ public class AggregatedSocialArticle implements TimelineCard {
     this.minimalCardList = minimalCardList;
     this.sharers = sharers;
     this.publisher = publisher;
-    this.user = user;
-    this.userSharer = userSharer;
-    this.store = store;
     this.cardId = cardId;
     this.title = title;
     this.thumbnailUrl = thumbnailUrl;
