@@ -15,9 +15,9 @@ import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
-import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -63,7 +63,7 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
     super(socialVideo, numberOfLikes, numberOfComments, socialVideo.getStore(),
         socialVideo.getUser(), socialVideo.getUserSharer(), socialVideo.getMy()
             .isLiked(), socialVideo.getLikes(), socialVideo.getComments(), date, spannableFactory,
-        dateCalculator, abUrl);
+        dateCalculator, abUrl, timelineAnalytics);
     this.videoTitle = videoTitle;
     this.link = link;
     this.baseLink = baseLink;
@@ -180,11 +180,13 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
 
   @Override
   public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback, getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getTitle(), BLANK));
+    socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getTitle(), BLANK));
   }
 
   @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), shareCardCallback, getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getTitle(), BLANK));
+    socialRepository.share(getTimelineCard().getCardId(), shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getTitle(), BLANK));
   }
 
   @Override public void like(Context context, String cardType, int rating) {

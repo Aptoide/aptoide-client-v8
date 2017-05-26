@@ -50,7 +50,7 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
       SocialRepository socialRepository, SpannableFactory spannableFactory,
       StoreCredentialsProvider storeCredentialsProvider, Comment.User user, Comment.User userSharer,
       List<MinimalCard> minimalCards, List<UserSharerTimeline> sharers) {
-    super(card);
+    super(card, timelineAnalytics);
     this.latestApps = apps;
     this.abTestingUrl = abTestingURL;
     this.ownerStore = ownerStore;

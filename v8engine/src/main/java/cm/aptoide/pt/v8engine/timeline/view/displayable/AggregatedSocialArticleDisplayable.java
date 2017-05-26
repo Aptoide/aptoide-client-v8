@@ -62,7 +62,7 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
       String abTestingURL, Store store, Comment.User user, List<App> relatedToAppsList, Date date,
       DateCalculator dateCalculator, SpannableFactory spannableFactory,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
-    super(card);
+    super(card, timelineAnalytics);
     this.link = link;
     this.developerLink = developerLink;
     this.title = title;
@@ -140,11 +140,6 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
         ContextCompat.getColor(context, R.color.black_87_alpha), title);
   }
 
-  public void sendOpenBlogEvent() {
-    timelineAnalytics.sendOpenBlogEvent(CARD_TYPE_NAME, getTitle(), getDeveloperLink().getUrl(),
-        packageName);
-  }
-
   public void sendOpenArticleEvent() {
     timelineAnalytics.sendOpenArticleEvent(CARD_TYPE_NAME, getTitle(), getLink().getUrl(),
         packageName);
@@ -154,20 +149,12 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
     return link;
   }
 
-  public Link getDeveloperLink() {
-    return developerLink;
-  }
-
   public String getTitle() {
     return title;
   }
 
   public String getThumbnailUrl() {
     return thumbnailUrl;
-  }
-
-  public String getAvatarUrl() {
-    return avatarUrl;
   }
 
   public String getAbTestingURL() {
@@ -204,13 +191,13 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
 
   @Override
   public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback,
+    socialRepository.share(cardId, privacyResult, shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, publisherName,
             getTitle()));
   }
 
   @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), shareCardCallback,
+    socialRepository.share(cardId, shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, publisherName,
             getTitle()));
   }

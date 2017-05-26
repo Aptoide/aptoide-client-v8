@@ -62,7 +62,7 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
       String abTestingURL, Comment.User user, List<App> relatedToApps, Date date,
       DateCalculator dateCalculator, SpannableFactory spannableFactory,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
-    super(card);
+    super(card, timelineAnalytics);
     this.title = title;
     this.link = link;
     this.developerLink = developerLink;

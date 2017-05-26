@@ -43,24 +43,24 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
   public AggregatedSocialInstallDisplayable() {
   }
 
-  public AggregatedSocialInstallDisplayable(AggregatedSocialInstall aggregatedSocialInstall,
-      int icon, Store store, int titleResource, Comment.User user, long appId, String packageName,
-      String appName, String appIcon, String abTestingURL, Date date,
-      TimelineAnalytics timelineAnalytics, SpannableFactory spannableFactory,
-      SocialRepository socialRepository, DateCalculator dateCalculator) {
-    super(aggregatedSocialInstall);
-    this.minimalCardList = aggregatedSocialInstall.getMinimalCardList();
-    this.sharers = aggregatedSocialInstall.getSharers();
+  public AggregatedSocialInstallDisplayable(AggregatedSocialInstall card, int icon, Store store,
+      int titleResource, Comment.User user, long appId, String packageName, String appName,
+      String appIcon, String abTestingURL, Date date, TimelineAnalytics timelineAnalytics,
+      SpannableFactory spannableFactory, SocialRepository socialRepository,
+      DateCalculator dateCalculator) {
+    super(card, timelineAnalytics);
+    this.minimalCardList = card.getMinimalCardList();
+    this.sharers = card.getSharers();
     this.socialRepository = socialRepository;
     this.timelineAnalytics = timelineAnalytics;
-    this.appStoreId = aggregatedSocialInstall.getApp()
+    this.appStoreId = card.getApp()
         .getStore()
         .getId();
     this.dateCalculator = dateCalculator;
     this.date = date;
     this.appIcon = appIcon;
     this.appName = appName;
-    this.appRatingAverage = aggregatedSocialInstall.getApp()
+    this.appRatingAverage = card.getApp()
         .getStats()
         .getRating()
         .getAvg();

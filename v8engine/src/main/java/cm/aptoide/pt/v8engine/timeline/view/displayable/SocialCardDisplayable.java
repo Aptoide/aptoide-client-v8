@@ -10,6 +10,7 @@ import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -40,8 +41,9 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
   SocialCardDisplayable(TimelineCard timelineCard, long numberOfLikes, long numberOfComments,
       Store store, Comment.User user, Comment.User userSharer, boolean liked,
       List<UserTimeline> userLikes, List<SocialCard.CardComment> comments, Date date,
-      SpannableFactory spannableFactory, DateCalculator dateCalculator, String abUrl) {
-    super(timelineCard);
+      SpannableFactory spannableFactory, DateCalculator dateCalculator, String abUrl,
+      TimelineAnalytics timelineAnalytics) {
+    super(timelineCard, timelineAnalytics);
     this.date = date;
     this.liked = liked;
     this.dateCalculator = dateCalculator;
