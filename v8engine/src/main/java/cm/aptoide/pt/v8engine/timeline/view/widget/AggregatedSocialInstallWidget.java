@@ -45,6 +45,8 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
   private RatingBar ratingBar;
   private Button getAppButton;
   private CardView cardView;
+  private TextView additionalNumberOfSharesLabel;
+  private ImageView additionalNumberOfSharesCircularMask;
 
   public AggregatedSocialInstallWidget(View itemView) {
     super(itemView);
@@ -70,6 +72,10 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
     getAppButton = (Button) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_get_app_button);
     cardView = (CardView) itemView.findViewById(R.id.card);
+    additionalNumberOfSharesCircularMask =
+        (ImageView) itemView.findViewById(R.id.card_header_avatar_plus);
+    additionalNumberOfSharesLabel =
+        (TextView) itemView.findViewById(R.id.timeline_header_aditional_number_of_shares_circular);
   }
 
   @Override public void bindView(AggregatedSocialInstallDisplayable displayable) {
@@ -91,6 +97,7 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
         .load(displayable.getAppIcon(), appIcon);
     appName.setText(displayable.getAppName());
     ratingBar.setRating(displayable.getAppRatingAverage());
+    setAdditionalNumberOfSharersLabel(displayable);
     setCardViewMargin(displayable, cardView);
     showSeeMoreAction(displayable);
     showSubCards(displayable, 2);
@@ -111,6 +118,25 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
 
   @Override String getCardTypeName() {
     return AggregatedSocialInstallDisplayable.CARD_TYPE_NAME;
+  }
+
+  private void setAdditionalNumberOfSharersLabel(AggregatedSocialInstallDisplayable displayable) {
+    int numberOfSharers = displayable.getSharers()
+        .size();
+
+    if (numberOfSharers <= 2) {
+      additionalNumberOfSharesLabel.setVisibility(View.INVISIBLE);
+      additionalNumberOfSharesCircularMask.setVisibility(View.INVISIBLE);
+      return;
+    } else {
+      additionalNumberOfSharesLabel.setVisibility(View.VISIBLE);
+      additionalNumberOfSharesCircularMask.setVisibility(View.VISIBLE);
+      numberOfSharers -= 2;
+    }
+
+    additionalNumberOfSharesLabel.setText(
+        String.format(getContext().getString(R.string.timeline_short_plus),
+            String.valueOf(numberOfSharers)));
   }
 
   private void showSubCards(AggregatedSocialInstallDisplayable displayable,

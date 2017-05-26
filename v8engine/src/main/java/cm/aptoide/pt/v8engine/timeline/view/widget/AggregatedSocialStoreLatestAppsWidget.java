@@ -30,10 +30,10 @@ import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
-import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialInstallDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialStoreLatestAppsDisplayable;
+import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.HashMap;
 import java.util.Map;
@@ -69,6 +69,8 @@ public class AggregatedSocialStoreLatestAppsWidget
   private StoreRepository storeRepository;
   private StoreUtilsProxy storeUtilsProxy;
   private TextView sharedStoreNameBodyTitle;
+  private TextView additionalNumberOfSharesLabel;
+  private ImageView additionalNumberOfSharesCircularMask;
 
   public AggregatedSocialStoreLatestAppsWidget(View itemView) {
     super(itemView);
@@ -105,6 +107,10 @@ public class AggregatedSocialStoreLatestAppsWidget
     sharedStoreSubscribersNumber =
         (TextView) itemView.findViewById(R.id.social_number_of_followers_text);
     sharedStoreAppsNumber = (TextView) itemView.findViewById(R.id.social_number_of_apps_text);
+    additionalNumberOfSharesCircularMask =
+        (ImageView) itemView.findViewById(R.id.card_header_avatar_plus);
+    additionalNumberOfSharesLabel =
+        (TextView) itemView.findViewById(R.id.timeline_header_aditional_number_of_shares_circular);
   }
 
   @Override public void bindView(AggregatedSocialStoreLatestAppsDisplayable displayable) {
@@ -225,6 +231,7 @@ public class AggregatedSocialStoreLatestAppsWidget
           }
         }, (throwable) -> throwable.printStackTrace()));
 
+    setAdditionalNumberOfSharersLabel(displayable);
     setCardViewMargin(displayable, cardView);
     showSeeMoreAction(displayable);
     showSubCards(displayable, 2);
@@ -232,6 +239,26 @@ public class AggregatedSocialStoreLatestAppsWidget
 
   @Override String getCardTypeName() {
     return AggregatedSocialInstallDisplayable.CARD_TYPE_NAME;
+  }
+
+  private void setAdditionalNumberOfSharersLabel(
+      AggregatedSocialStoreLatestAppsDisplayable displayable) {
+    int numberOfSharers = displayable.getSharers()
+        .size();
+
+    if (numberOfSharers <= 2) {
+      additionalNumberOfSharesLabel.setVisibility(View.INVISIBLE);
+      additionalNumberOfSharesCircularMask.setVisibility(View.INVISIBLE);
+      return;
+    } else {
+      additionalNumberOfSharesLabel.setVisibility(View.VISIBLE);
+      additionalNumberOfSharesCircularMask.setVisibility(View.VISIBLE);
+      numberOfSharers -= 2;
+    }
+
+    additionalNumberOfSharesLabel.setText(
+        String.format(getContext().getString(R.string.timeline_short_plus),
+            String.valueOf(numberOfSharers)));
   }
 
   private void showSubCards(AggregatedSocialStoreLatestAppsDisplayable displayable,
