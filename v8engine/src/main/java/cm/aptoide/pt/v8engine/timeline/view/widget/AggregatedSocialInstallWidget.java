@@ -45,6 +45,8 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
   private RatingBar ratingBar;
   private Button getAppButton;
   private CardView cardView;
+  private TextView additionalNumberOfSharesLabel;
+  private ImageView additionalNumberOfSharesCircularMask;
 
   public AggregatedSocialInstallWidget(View itemView) {
     super(itemView);
@@ -159,6 +161,13 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
 
       cardHeaderTimestamp.setText(
           displayable.getTimeSinceLastUpdate(getContext(), minimalCard.getDate()));
+
+      if (minimalCard.getMy()
+          .isLiked()) {
+        likeSubCardButton.setHeartState(true);
+      } else {
+        likeSubCardButton.setHeartState(false);
+      }
 
       compositeSubscription.add(RxView.clicks(shareSubCardButton)
           .subscribe(click -> shareCard(displayable, minimalCard.getCardId(), null,
