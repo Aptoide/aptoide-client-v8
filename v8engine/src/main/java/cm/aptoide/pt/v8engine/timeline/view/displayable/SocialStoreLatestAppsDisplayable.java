@@ -54,9 +54,9 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
         socialStoreLatestApps.getUser(), socialStoreLatestApps.getUserSharer(),
         socialStoreLatestApps.getMy()
             .isLiked(), socialStoreLatestApps.getLikes(), socialStoreLatestApps.getComments(),
-        socialStoreLatestApps.getDate(), spannableFactory, dateCalculator, abTestingUrl);
+        socialStoreLatestApps.getDate(), spannableFactory, dateCalculator, abTestingUrl,
+        timelineAnalytics);
     this.storeName = storeName;
-    //socialStoreLatestApps.getSharedStore().getId();
     this.avatarUrl = avatarUrl;
     this.latestApps = latestApps;
     this.abTestingUrl = abTestingUrl;

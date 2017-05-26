@@ -40,8 +40,8 @@ public class PopularAppDisplayable extends CardDisplayable {
   }
 
   public PopularAppDisplayable(PopularApp card, DateCalculator dateCalculator,
-      SocialRepository socialRepository) {
-    super(card);
+      SocialRepository socialRepository, TimelineAnalytics timelineAnalytics) {
+    super(card, timelineAnalytics);
     this.date = card.getDate();
     this.friends = card.getUsers();
     this.numberOfFriends = card.getUsers()
@@ -81,7 +81,7 @@ public class PopularAppDisplayable extends CardDisplayable {
 
   public static Displayable from(PopularApp card, DateCalculator dateCalculator,
       SocialRepository socialRepository, TimelineAnalytics timelineAnalytics) {
-    return new PopularAppDisplayable(card, dateCalculator, socialRepository);
+    return new PopularAppDisplayable(card, dateCalculator, socialRepository, timelineAnalytics);
   }
 
   @Override public int getViewLayout() {

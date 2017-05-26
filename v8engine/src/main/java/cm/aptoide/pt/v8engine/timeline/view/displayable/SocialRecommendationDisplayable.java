@@ -11,10 +11,10 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
-import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import lombok.Getter;
 
 import static cm.aptoide.pt.v8engine.analytics.Analytics.AppsTimeline.BLANK;
@@ -52,7 +52,7 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
         socialRecommendation.getUser(), socialRecommendation.getUserSharer(),
         socialRecommendation.getMy()
             .isLiked(), socialRecommendation.getLikes(), socialRecommendation.getComments(),
-        socialRecommendation.getDate(), spannableFactory, dateCalculator, abUrl);
+        socialRecommendation.getDate(), spannableFactory, dateCalculator, abUrl, timelineAnalytics);
     this.avatarResource = avatarResource;
     this.titleResource = titleResource;
     this.user = user;
@@ -131,13 +131,15 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
   @Override
   public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
     socialRepository.share(getTimelineCard().getCardId(), appStoreId, privacyResult,
-        shareCardCallback, getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(), getTitle(),
+        shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(), getTitle(),
             BLANK));
   }
 
   @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), appStoreId, shareCardCallback, getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(), getTitle(),
-        BLANK));
+    socialRepository.share(getTimelineCard().getCardId(), appStoreId, shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(), getTitle(),
+            BLANK));
   }
 
   @Override public void like(Context context, String cardType, int rating) {
