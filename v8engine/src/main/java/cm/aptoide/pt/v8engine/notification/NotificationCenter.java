@@ -65,10 +65,6 @@ public class NotificationCenter {
         }, throwable -> crashReport.log(throwable));
   }
 
-  public void forceSync() {
-    notificationSyncScheduler.forceSync();
-  }
-
   private Observable<AptoideNotification> getNewNotifications() {
     return notificationHandler.getHandlerNotifications()
         .flatMap(aptideNotification -> notificationPolicyFactory.getPolicy(aptideNotification)
