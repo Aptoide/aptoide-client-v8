@@ -1,19 +1,15 @@
 package cm.aptoide.pt.v8engine.timeline.view.displayable;
 
 import android.content.Context;
-import cm.aptoide.pt.model.v7.Comment;
-import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.AggregatedSocialInstall;
 import cm.aptoide.pt.model.v7.timeline.MinimalCard;
 import cm.aptoide.pt.model.v7.timeline.UserSharerTimeline;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.Date;
 import java.util.List;
 
@@ -43,10 +39,9 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
   public AggregatedSocialInstallDisplayable() {
   }
 
-  public AggregatedSocialInstallDisplayable(AggregatedSocialInstall card, int icon, Store store,
-      int titleResource, Comment.User user, long appId, String packageName, String appName,
-      String appIcon, String abTestingURL, Date date, TimelineAnalytics timelineAnalytics,
-      SpannableFactory spannableFactory, SocialRepository socialRepository,
+  public AggregatedSocialInstallDisplayable(AggregatedSocialInstall card, long appId,
+      String packageName, String appName, String appIcon, String abTestingURL, Date date,
+      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
       DateCalculator dateCalculator) {
     super(card, timelineAnalytics);
     this.minimalCardList = card.getMinimalCardList();
@@ -70,8 +65,8 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
   }
 
   public static Displayable from(AggregatedSocialInstall aggregatedSocialInstall,
-      TimelineAnalytics timelineAnalytics, SpannableFactory spannableFactory,
-      SocialRepository socialRepository, DateCalculator dateCalculator) {
+      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
+      DateCalculator dateCalculator) {
 
     String abTestingURL = null;
 
@@ -87,15 +82,12 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
     }
 
     return new AggregatedSocialInstallDisplayable(aggregatedSocialInstall,
-        Application.getConfiguration()
-            .getIcon(), aggregatedSocialInstall.getStore(),
-        R.string.displayable_social_timeline_recommendation_atptoide_team_recommends,
-        aggregatedSocialInstall.getUser(), aggregatedSocialInstall.getApp()
-        .getId(), aggregatedSocialInstall.getApp()
+        aggregatedSocialInstall.getApp()
+            .getId(), aggregatedSocialInstall.getApp()
         .getPackageName(), aggregatedSocialInstall.getApp()
         .getName(), aggregatedSocialInstall.getApp()
         .getIcon(), abTestingURL, aggregatedSocialInstall.getDate(), timelineAnalytics,
-        spannableFactory, socialRepository, dateCalculator);
+        socialRepository, dateCalculator);
   }
 
   @Override
