@@ -65,7 +65,7 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
     super(socialArticle, numberOfLikes, numberOfComments, store, user,
         socialArticle.getUserSharer(), socialArticle.getMy()
             .isLiked(), socialArticle.getLikes(), socialArticle.getComments(), date,
-        spannableFactory, dateCalculator, abUrl);
+        spannableFactory, dateCalculator, abUrl, timelineAnalytics);
     this.articleTitle = articleTitle;
     this.link = link;
     this.developerLink = developerLink;
