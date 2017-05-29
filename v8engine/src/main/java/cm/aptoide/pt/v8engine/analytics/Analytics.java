@@ -1203,4 +1203,59 @@ public class Analytics {
       track(FIRST_INSTALL_START_DOWNLOAD, map, FLURRY);
     }
   }
+
+  public static class VideoAdSDK {
+    static final String ON_VIDEO_AD_END = "ON_VIDEO_AD_END";
+    static final String ON_VIDEO_AD_START = "ON_VIDEO_AD_START";
+    static final String ON_VIDEO_AD_UNAVAILABLE = "ON_VIDEO_AD_UNAVAILABLE";
+    static final String ON_VIDEO_AD_PLAYABLE_CHANGED = "ON_VIDEO_AD_PLAYABLE_CHANGED";
+    static final String SDKNAME = "sdkName";
+    static final String SDKVERSION = "sdkVersion";
+    static final String WASSUCCESSFULVIEW = "wasSuccessfulView";
+    static final String WASCALLTOACTIONCLICKED = "wasCallToActionClicked";
+    static final String REASON = "reason";
+    static final String ISADPLAYABLE = "isAdPlayable";
+
+    public static void onVideoAdEnd(String sdkName, String sdkVersion, boolean wasSuccessfulView,
+        boolean wasCallToActionClicked) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(SDKNAME, sdkName);
+      map.put(SDKVERSION, sdkVersion);
+      map.put(WASSUCCESSFULVIEW, String.valueOf(wasSuccessfulView));
+      map.put(WASCALLTOACTIONCLICKED, String.valueOf(wasCallToActionClicked));
+      logFacebookEvents(ON_VIDEO_AD_END, map);
+      track(ON_VIDEO_AD_END, map, LOCALYTICS);
+      track(ON_VIDEO_AD_END, map, FLURRY);
+    }
+
+    public static void onVideoAdStart(String sdkName, String sdkVersion) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(SDKNAME, sdkName);
+      map.put(SDKVERSION, sdkVersion);
+      logFacebookEvents(ON_VIDEO_AD_START, map);
+      track(ON_VIDEO_AD_START, map, LOCALYTICS);
+      track(ON_VIDEO_AD_START, map, FLURRY);
+    }
+
+    public static void onVideoAdUnavailable(String sdkName, String sdkVersion, String reason) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(SDKNAME, sdkName);
+      map.put(SDKVERSION, sdkVersion);
+      map.put(REASON, reason);
+      logFacebookEvents(ON_VIDEO_AD_UNAVAILABLE, map);
+      track(ON_VIDEO_AD_UNAVAILABLE, map, LOCALYTICS);
+      track(ON_VIDEO_AD_UNAVAILABLE, map, FLURRY);
+    }
+
+    public static void onVideoAdPlayableChanged(String sdkName, String sdkVersion,
+        boolean isAdPlayable) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(SDKNAME, sdkName);
+      map.put(SDKVERSION, sdkVersion);
+      map.put(ISADPLAYABLE, String.valueOf(isAdPlayable));
+      logFacebookEvents(ON_VIDEO_AD_PLAYABLE_CHANGED, map);
+      track(ON_VIDEO_AD_PLAYABLE_CHANGED, map, LOCALYTICS);
+      track(ON_VIDEO_AD_PLAYABLE_CHANGED, map, FLURRY);
+    }
+  }
 }
