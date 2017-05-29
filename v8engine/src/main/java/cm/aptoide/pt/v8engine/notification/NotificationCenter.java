@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.notification;
 
-import android.content.SharedPreferences;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import java.util.List;
 import rx.Observable;
@@ -12,14 +11,12 @@ import rx.Subscription;
 
 public class NotificationCenter {
 
-  public static final String NOTIFICATION_CENTER_ENABLE = "notification_campaign_and_social";
   private final CrashReport crashReport;
   private final NotificationIdsMapper notificationIdsMapper;
   private NotificationHandler notificationHandler;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SystemNotificationShower notificationShower;
   private NotificationPolicyFactory notificationPolicyFactory;
-  private SharedPreferences sharedPreferences;
   private Subscription notificationProviderSubscription;
   private NotificationProvider notificationProvider;
 
@@ -27,7 +24,7 @@ public class NotificationCenter {
       NotificationHandler notificationHandler, NotificationProvider notificationProvider,
       NotificationSyncScheduler notificationSyncScheduler,
       SystemNotificationShower notificationShower, CrashReport crashReport,
-      NotificationPolicyFactory notificationPolicyFactory, SharedPreferences sharedPreferences) {
+      NotificationPolicyFactory notificationPolicyFactory) {
     this.notificationIdsMapper = notificationIdsMapper;
     this.notificationHandler = notificationHandler;
     this.notificationSyncScheduler = notificationSyncScheduler;
@@ -35,25 +32,6 @@ public class NotificationCenter {
     this.notificationProvider = notificationProvider;
     this.crashReport = crashReport;
     this.notificationPolicyFactory = notificationPolicyFactory;
-    this.sharedPreferences = sharedPreferences;
-  }
-
-  public void enable() {
-    sharedPreferences.edit()
-        .putBoolean(NOTIFICATION_CENTER_ENABLE, true)
-        .apply();
-  }
-
-  public void disable() {
-    sharedPreferences.edit()
-        .putBoolean(NOTIFICATION_CENTER_ENABLE, false)
-        .apply();
-  }
-
-  public void startIfEnabled() {
-    if (isEnable()) {
-      start();
-    }
   }
 
   public void start() {
@@ -87,10 +65,6 @@ public class NotificationCenter {
       notificationProviderSubscription.unsubscribe();
     }
     notificationSyncScheduler.stop();
-  }
-
-  public boolean isEnable() {
-    return sharedPreferences.getBoolean(NOTIFICATION_CENTER_ENABLE, true);
   }
 
   public Observable<List<AptoideNotification>> getInboxNotifications(int entries) {

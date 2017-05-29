@@ -129,6 +129,7 @@ import rx.Observable;
 import rx.Single;
 import rx.schedulers.Schedulers;
 
+import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY;
 import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
 /**
@@ -281,7 +282,12 @@ public abstract class V8Engine extends SpotAndShareApplication {
       db.close();
     }
 
-    getNotificationCenter().start();
+    getPreferences().getBoolean(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY, true)
+        .first()
+        .filter(isEnable -> isEnable)
+        .subscribe(isEnable -> getNotificationCenter().start(),
+            throwable -> CrashReport.getInstance()
+                .log(throwable));
 
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
@@ -311,26 +317,31 @@ public abstract class V8Engine extends SpotAndShareApplication {
       notificationCenter =
           new NotificationCenter(new NotificationIdsMapper(), getNotificationHandler(),
               notificationProvider, getNotificationSyncScheduler(), systemNotificationShower,
-              CrashReport.getInstance(), new NotificationPolicyFactory(notificationProvider),
-              PreferenceManager.getDefaultSharedPreferences(this));
+              CrashReport.getInstance(), new NotificationPolicyFactory(notificationProvider));
     }
     return notificationCenter;
   }
 
   @NonNull public NotificationSyncScheduler getNotificationSyncScheduler() {
     if (notificationSyncScheduler == null) {
-      long pushNotificationInterval = pushNotificationSocialPeriodicity;
 
-      if (ManagerPreferences.isDebug() && ManagerPreferences.getPushNotificationPullingInterval() > 0) {
+      long pushNotificationInterval;
+      if (ManagerPreferences.isDebug()
+          && ManagerPreferences.getPushNotificationPullingInterval() > 0) {
         pushNotificationInterval = ManagerPreferences.getPushNotificationPullingInterval();
+      } else {
+        pushNotificationInterval = pushNotificationSocialPeriodicity;
       }
       List<NotificationSyncScheduler.Schedule> scheduleList = new ArrayList<>(2);
 
-      scheduleList.add(new NotificationSyncScheduler.Schedule(NotificationSyncService.PUSH_NOTIFICATIONS_CAMPAIGN_ACTION,
+      scheduleList.add(new NotificationSyncScheduler.Schedule(
+          NotificationSyncService.PUSH_NOTIFICATIONS_CAMPAIGN_ACTION,
           PUSH_NOTIFICATION_CAMPAIGN_PERIODICITY));
-      scheduleList.add(new NotificationSyncScheduler.Schedule(NotificationSyncService.PUSH_NOTIFICATIONS_SOCIAL_ACTION, pushNotificationInterval));
-      notificationSyncScheduler = new NotificationSyncScheduler(this, (AlarmManager) getSystemService(ALARM_SERVICE),
-          NotificationSyncService.class, scheduleList);
+      scheduleList.add(new NotificationSyncScheduler.Schedule(
+          NotificationSyncService.PUSH_NOTIFICATIONS_SOCIAL_ACTION, pushNotificationInterval));
+      notificationSyncScheduler =
+          new NotificationSyncScheduler(this, (AlarmManager) getSystemService(ALARM_SERVICE),
+              NotificationSyncService.class, scheduleList);
     }
     return notificationSyncScheduler;
   }
