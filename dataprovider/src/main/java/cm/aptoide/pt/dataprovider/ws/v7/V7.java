@@ -353,6 +353,9 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
     @POST("user/set") Observable<BaseV7Response> setUser(
         @retrofit2.http.Body SetUserRequest.Body body);
 
+    @Multipart @POST("user/set") Observable<BaseV7Response> editUser(
+        @Part MultipartBody.Part user_avatar, @PartMap HashMapNotNull<String, RequestBody> body);
+
     @POST("user/connections/add") Observable<GetFollowers> setConnections(
         @retrofit2.http.Body SyncAddressBookRequest.Body body);
 

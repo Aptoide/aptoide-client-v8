@@ -181,6 +181,13 @@ public class AptoideAccountManager {
                 account.getPassword(), account.getType())));
   }
 
+  public Completable updateAccount(String userName) {
+    return singleAccountStatus().flatMapCompletable(
+        account -> accountManagerService.updateAccountWithUserName(userName, this)
+            .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
+                account.getPassword(), account.getType())));
+  }
+
   public Completable updateAccount(Account.Access access) {
     return singleAccountStatus().flatMapCompletable(
         account -> accountManagerService.updateAccount(access.name(), this)

@@ -183,9 +183,7 @@ public class CreateUserFragment extends PictureLoaderFragment implements ManageU
       hideKeyboardAndShowProgressDialog();
       validateUserAvatar();
     })
-        .flatMap(__ -> accountManager.updateAccount(userName.getText()
-            .toString()
-            .trim(), userPicturePath)
+        .flatMap(__ -> chooseUpdateMethod()
             .timeout(90, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .andThen(Completable.merge(dismissProgressDialogCompletable, sendAnalytics))
@@ -357,6 +355,18 @@ public class CreateUserFragment extends PictureLoaderFragment implements ManageU
       checkAvatarRequirements(userPicturePath, avatarUrl);
     } else {
       Logger.w(TAG, "URI for content is null or empty");
+    }
+  }
+
+  private Completable chooseUpdateMethod() {
+    if (userPicturePath != null) {
+      return accountManager.updateAccount(userName.getText()
+          .toString()
+          .trim(), userPicturePath);
+    } else {
+      return accountManager.updateAccount(userName.getText()
+          .toString()
+          .trim());
     }
   }
 }

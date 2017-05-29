@@ -109,6 +109,21 @@ public class AccountManagerService {
         });
   }
 
+  public Completable updateAccountWithUserName(String userName,
+      AptoideAccountManager accountManager) {
+    return SetUserRequest.ofWithName(userName, interceptorFactory.createV7(accountManager),
+        httpClient, converterFactory)
+        .observe(true)
+        .toSingle()
+        .flatMapCompletable(response -> {
+          if (response.isOk()) {
+            return Completable.complete();
+          } else {
+            return Completable.error(new Exception(V7.getErrorMessage(response)));
+          }
+        });
+  }
+
   public Completable unsubscribeStore(String storeName, String storeUserName, String storePassword,
       AptoideAccountManager accountManager) {
     return changeSubscription(storeName, storeUserName, storePassword, accountManager,
