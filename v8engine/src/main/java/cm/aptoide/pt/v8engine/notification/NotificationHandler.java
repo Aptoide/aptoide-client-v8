@@ -42,6 +42,7 @@ public class NotificationHandler implements NotificationNetworkService {
 
   @Override public Single<List<AptoideNotification>> getSocialNotifications() {
     return accountManager.accountStatus()
+        .first()
         .flatMap(account -> PullSocialNotificationRequest.of(idsRepository.getUniqueIdentifier(),
             versionName, applicationId, httpClient, converterFactory,
             DataProvider.getConfiguration()
