@@ -1,0 +1,3 @@
+[submodule "Partners-v8"]
+	path = Partners-v8
+	url = https://github.com/Aptoide/Partners-v8.git
