@@ -1,252 +1,119 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="updates_filter_summary">การตรวจสอบสิ่งนี คุณไม่ต้องแจ้งเวอร์ชั่นเบต้า</string>
-    <string name="updates_filter_setting_title">แสดงแอปเสถียรเวอร์ชั่นที่อัพเดตแล้ว</string>
-    <string name="unsubscribe">ยกเลิกการตอบรับ</string>
-    <string name="developer_website">เว็ปไซต์: %s</string>
-    <string name="not_available">ไม่มีข้อมูล</string>
-    <string name="developer_email">อีเมล: %s</string>
-    <string name="developer_privacy_policy">นโยบายความเป็นส่วนตัว: %s</string>
-
-
-    <string name="open">เปิด</string>
-    <string name="button_header_more">เพิ่มเติม</string>
-    <string name="search">ค้นหา</string>
-
-    <string name="update">อัปเดต</string>
-    <string name="uninstall">ถอดการติดตั้ง</string>
-    <string name="downgrade">ลดระดับ</string>
-    <string name="menu_select_all">เลือกทั้งหมด</string>
-    <string name="menu_select_none">ไม่เลือกทั้งหมด</string>
-    <string name="clear">ล้าง</string>
-
-    <string name="excluded_updates">ยกเว้นการอัปเดต</string>
-    <string name="no_excluded_updates_msg">"แอปเวอร์ชั่นล่าสุดไม่สามารถทำงานได้บนอุปกรณ์ของคุณ หรือคุณสมบัติการทำงานบางอย่างหายไป?  ปิดกั้นการอัพเดต  ไปที่แท็ปอัพเดต และกดค้างที่แอปที่คุณต้องการหยุดอัพเดต"</string>
-
-    <string name="restore_updates">กู้คืนการอัปเดต</string>
-    <string name="rollback">ย้อนกลับ</string>
-    <string name="menu_card_timeline_clear">ล้าง</string>
-    <string name="fragment_social_timeline_no_connection">ไม่มีการเชื่อมต่อเครือข่าย</string>
-    <string name="fragment_social_timeline_general_error">พบว่ามีปัญหาบางอย่างเกิดขึ้น คุณสามารถลองใหม่ได้อีกครั้งภายหลัง?</string>
-
-    <string name="displayable_social_timeline_app_update">อัปเดต</string>
-    <string name="appview_rate_this_app">ให้คะแนนแอปนี้</string>
-    <string name="needs_license">ต้องการการอนุญาต</string>
-    <string name="virus">ไวรัส</string>
-    <string name="additional_information">ข้อมูลเพิ่มเติม</string>
-    <string name="displayable_social_timeline_app_update_updated">อัปเดตแล้ว</string>
-    <string name="displayable_social_timeline_recommendation_similar_and">และ</string>
-    <string name="social_facebook_screen_title">เฟสบุ๊ค</string>
-    <string name="social_twitter_screen_title">ทวิตเตอร์</string>
-    <string name="title">หัวข้อ</string>
-    <string name="feedback_not_valid">โปรดระบุหัวข้อที่ถูกต้อง!</string>
-    <string name="ignore_update">เพิกเฉยการอัพเดต</string>
-    <string name="added_to_scheduled">เพิ่มเมนู &gt; ตารางการดาวน์โหลด</string>
-    <string name="dark">มืด</string>
-    <string name="light">สว่าง</string>
-
-    <string name="aptoide_email">aptoide@aptoide.com</string>
-    <string name="aptoide_url">http://www.aptoide.com/</string>
-
-    <string name="access_to_get_accounts_rationale">คุณจำเป็นต้องอนุญาตการเข้าสู่ Get Accounts</string>
-    <string name="appview_follow_store_button_text">ติดตามร้านค้า?</string>
-    <string name="appview_followers_count_text">%1$s ผู้ติดตาม</string>
-    <string name="other_versions_downloads_count_text">%1$s ดาวน์โหลด</string>
-
-    <string name="open_apps_manager">เปิดการจัดการแอป</string>
-
-    <string name="fragment_social_timeline_aptoide_team">ทีมAptoide</string>
-    <string name="displayable_social_timeline_store_latest_apps_headline">ร้านค้านี้มีแอปใหม่</string>
-    <string name="displayable_social_timeline_app_update_name">แอป%1$s</string>
-    <string name="displayable_social_timeline_app_has_update">มี%1$s</string>
-    <string name="displayable_social_timeline_article_get_app_button">รับแอป %1$s</string>
-    <string name="displayable_social_timeline_app_update_version">เวอร์ชั่น %1$s</string>
-    <string name="displayable_social_timeline_app_update_button">อัพเดต %1$s</string>
-    <string name="appview_other_versions"><u>เวอร์ชั่นอื่น</u></string>
-    <string name="appview_latest_version_text">เวอร์ชั่นล่าสุด</string>
-    <string name="appview_read_all">อ่านทั้งหมด &gt;</string>
-    <string name="zero">0</string>
-    <string name="working_well">ทำงานปกติ</string>
-    <string name="fake_app">แอปปลอม</string>
-    <string name="displayable_social_timeline_app_update_updating">กำลังอัพเดต</string>
-    <string name="displayable_social_timeline_app_update_error">การอัพเดตผิดพลาด</string>
-
-    <string name="other_versions_partial_title_1">อื่นๆ</string>
-    <string name="other_versions_partial_title_2">เวอร์ชั่นในร้านค้าอื่น</string>
-    <string name="displayable_social_timeline_recommendation_similar_to">ขึ้นกับ %1$s</string>
-    <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">%s แนะนำ</string>
-    <string name="top_comments">ความคิดเห็นที่นิยม</string>
-    <string name="rate">เรต</string>
-    <string name="rate_app">เรต %s</string>
-    <string name="tap_a_star">กดที่ดาวเพื่อให้เรต</string>
-    <string name="other_versions_on_different_stores">เวอร์ชั่นอื่นในร้านค้าอื่น</string>
-    <string name="review_optional">รีวิว (ตัวเลือก)</string>
-    <string name="thank_you_for_your_opinion">ขอบคุณสำหรับความคิดเห็นของคุณ!</string>
-    <string name="five_numeric">5</string>
-    <string name="four_numeric">4</string>
-    <string name="three_numeric">3</string>
-    <string name="two_numeric">2</string>
-    <string name="one_numeric">1</string>
-    <string name="just_reviews">เพียงรีวิว</string>
-    <string name="downgrading_msg">กำลังดาวน์เกรด</string>
-    <string name="updating_msg">กำลังอัพเดต</string>
-    <string name="installing_msg">กำลังติดตั้ง</string>
-    <string name="needs_permission_to_fs">จำเป็นต้องอนุญาตให้ใช้ File System ภายนอก</string>
-
-    <string name="pause_all_downloads">หยุดดาวน์โหลด</string>
-    <string name="all_stores">ร้านค้าทั้งหมด</string>
-    <string name="followed_stores">ติดตามร้านค้า</string>
-    <string name="storage_access_permission_request_message">โปรดอนุญาตให้เข้าในส่วนจัดเก็บของโทรศัพท์ พวกเราสามารถดาวน์โหลดและติดตั้งแอปนี้</string>
-
-    <string name="wizard_sub_title_viewpager_one"><b>แอปวีดีโอและข่าวสารที่ดีที่สุด</b> ในที่ที่เดียว
-ค้นพบแอปผ่าน<b>เพื่อนของคุณ</b></string>
-    <string name="you_need_to_be_logged_in">คุณจำเป็นต้องเข้าสู่ระบบ</string>
-    <string name="follow">ติดตาม</string>
-    <string name="followed">ติดตาม</string>
-    
-    <string name="dialog_install_warning_proceed_button">ดำเนินการ</string>
-    <string name="dialog_install_warning_search_for_trusted_app_button">ค้นหา</string>
-    <string name="dialog_install_warning_trusted_app_button">แอปที่น่าเชือ่ถือ</string>
-    <string name="dialog_install_warning_trusted_version_button">เวอร์ชั่นที่น่าเชื่อถือ</string>
-    <string name="dialog_install_warning_get_trusted_version_button">รับ</string>
-<string name="wizard_title_viewpager_three">เป็นส่วนหนึ่ง<b>เข้าร่วมคอมมิวนิตี้</b></string>
-    <string name="wizard_title_viewpager_two">มีร้านค้าของคุณ<b>แอปไทม์ไลน์</b></string>
-    <string name="wizard_skip"><b>ข้าม</b></string>
-    <string name="no_rollbacks_msg">ดาวน์เกรดแอปใดๆไปเวอร์ชั่นก่อนหน้านี้อย่างรวดเร็ว และแก้ไขปัญหาการเข้ากันไม่ได้ เก็บล็อกของการติดตั้ง
- แอปของคุณทั้งหมด(ผ่านทาง%s)รวมถึงเวอร์ชั่นและวันที่ติดตั้ง</string>
-
-    <string name="wizard_sub_title_viewpager_two">ตั้งค่าร้านของคุณ<b> แชร์แอป
-ให้กับเพื่อน</b> และ<b>คอมมิวนิตี้Aptoide</b></string>
-
-    <string name="dialog_install_warning_careful_text">ระวัง ถ้าคุณเลือกเพื่อติดตั้งแอปนี้ มันอาจจะทำให้มีไวรัสหรือมัลแวร์</string>
-    <string name="dialog_install_warning_credibility_text">ก่อนการดำเนินการ ตรวจสอบร้านค้า
-ที่น่าเชื่อถือและความคิดเห็นของผู้ใช้งานอื่น Aptoideแนะนำให้คุณติดตั้งแอป %1$s ที่มีความน่าเชื่อถือ</string>
-    <string name="appview_good_app_guaranteed">รับประกันแอปดี!</string>
-    <string name="appview_good_app_description">แอปพลิเคชั่นนี้ผ่านการทดสอบความปลอดภัยด้านไวรัส มัลแวร์ และสิ่งโจมตีอื่นๆ 
-และไม่มีสิ่งคุกคามใดใด!</string>
-
-    <string name="unfollow_yes_no">คุณต้องการไม่ติดตามใช่หรือไม่?</string>
-    <string name="unfollow">ไม่ติดตาม</string>
-    <string name="unfollowing_store_message">ไม่ติดตาม%s</string>
-    <string name="store_followed">ร้าน%sติดตาม</string>
-
-    <string name="be_the_first_to_rate_this_app">เป็นคนแรกในการให้คะแนนแอปนี้</string>
-    <string name="rate_this_app">ให้คะแนนแอปนี้</string>
-
-    <string name="flag_results">ผลธง</string>
-    <string name="helpful">ช่วยเหลือ</string>
-    <string name="not_helpful">ไม่ช่วยเหลือ</string>
-    <string name="description_not_available">ไม่มีคำอธิบายสำหรับแอปนี้</string>
-    <string name="top_stores_fragment_title">ร้านค้ายอดนิยม</string>
-
-    <string name="home_title">หน้าแรก</string>
-    <string name="community">คอมมิวนิตี้</string>
-    <string name="stores">ร้าน</string>
-    <string name="updates">อัพเดต</string>
-    <string name="social_timeline">โซเชียลไทม์ไลน์</string>
-    <string name="downloads">ดาวน์โหลด</string>
-    <string name="latest_reviews">การรีวิวล่าสุด</string>
-    <string name="latest_comments">ความคิดเห็นล่าสุด</string>
-    <string name="action">แอคชั่น</string>
-    <string name="adventure">ผจญภัย</string>
-    <string name="all">ทั้งหมด</string>
-    <string name="applications">แอปพลิเคชั่น</string>
-    <string name="arcade">อาร์เขต</string>
-    <string name="arcade_action">อาร์เขตและแอคชั่น</string>
-    <string name="board">บอร์ด</string>
-    <string name="books_reference">หนังสือและอ้างอิง</string>
-    <string name="brain_puzzle">ลับสมอง</string>
-    <string name="business">ธุรกิจ</string>
-    <string name="card">ไพ่</string>
-    <string name="cards_casino">ไพ่และคาสิโน</string>
-    <string name="casino">คาสิโน</string>
-    <string name="casual">ลำลอง</string>
-    <string name="comics">การ์ตูน</string>
-    <string name="communication">การสื่อสาร</string>
-    <string name="demo">ตัวอย่าง</string>
-    <string name="education">การศึกษา</string>
-    <string name="educational">การศึกษา</string>
-    <string name="entertainment">บันเทิง</string>
-    <string name="family">ครอบครัว</string>
-    <string name="finance">การเงิน</string>
-    <string name="games">เกมส์</string>
-    <string name="health">สุขภาพ</string>
-    <string name="health_fitness">สุขภาพและฟิตเนส</string>
-    <string name="highlighted">ไฮไลท์</string>
-    <string name="local_top_apps">แอปยอดนิยมท้องถิ่น</string>
-    <string name="lifestyle">ไลฟ์สไตล์</string>
-    <string name="media_video">มีเดียและวิดีโอ</string>
-    <string name="medical">การแพทย์</string>
-    <string name="multimedia">มัลติมีเดีย</string>
-    <string name="music">ดนตรี</string>
-    <string name="music_audio">ดนตรีและเสียง</string>
-    <string name="news_magazines">ข่าวและนิตยาสาร</string>
-    <string name="news_weather">ข่าวและสภาพอากาศ</string>
-    <string name="personalization">เฉพาะตัว</string>
-    <string name="photography">ภาพถ่าย</string>
-    <string name="productivity">ผลผลิต</string>
-    <string name="puzzle">ลับสมอง</string>
-    <string name="racing">การแข่งขัน</string>
-    <string name="reference">อ้างอิง</string>
-    <string name="role_playing">บมบาทสมมติ</string>
-    <string name="simulation">จำลอง</string>
-    <string name="social">สังคม</string>
-    <string name="software_libraries">ห้องสมุดซอฟแวร์</string>
-    <string name="sports">กีฬา</string>
-    <string name="sports_games">เกมส์กีฬา</string>
-    <string name="strategy">กลยุทธ์</string>
-    <string name="themes">ธีม</string>
-    <string name="tools">เครื่องมือ</string>
-    <string name="top_apps">แอปยอดนิยม</string>
-    <string name="top_games">เกมส์ยอดนิยม</string>
-    <string name="transport">ขนส่ง</string>
-    <string name="transportation">การขนส่ง</string>
-    <string name="travel">ท่องเที่ยว</string>
-    <string name="travel_local">ท่องเที่ยวและท้องถิ่น</string>
-    <string name="trending">เทรน</string>
-    <string name="trivia">ไทเวีย</string>
-    <string name="word">คำ</string>
-    <string name="libraries_demo">ห้องสมุดและตัวอย่าง</string>
-    <string name="shopping">ช็อปปิ้ง</string>
-    <string name="weather">อากาศ</string>
-    <string name="latest_applications">แอปล่าสุด</string>
-    <string name="top_apps_in_store">แอปยอดนิยมในร้านนี้</string>
-    <string name="apps_for_kids">แอปสำหรับเด็ก</string>
-    <string name="aptoide_publishers">ผู้เผยแพร่%s</string>
-    <string name="music_video">ดนตรีและวิดีโอ</string>
-    <string name="essential_apps">แอปจำเป็น</string>
-    <string name="summer_apps">แอปซัมเมอร์</string>
-    <string name="play_it">เล่นมัน!</string>
-
-<string name="subscribers">ผู้ตอบรับ</string>
-  <string name="apps">แอป</string>
-
-  <string name="apps_timeline"><b> ไทม์ไลน์แอป</b></string>
-  <string name="displayable_social_timeline_article_related_to">เกี่ยวข้องกับ %1$s</string>
-  <string name="appstimeline_update_app">แอป</string>
-  <string name="customtabs_open_native_app">เปิดในแอป</string>
-
-
-  <string name="fragment_download_no_connection">ไ่มมีแอปดาวโหลด</string>
-  <string name="fragment_download_no_connection_subtitle">แอปใหม่จะปรากฎที่นี่เร็วๆนี้ และคุณสามารถเริ่มดาวโหลดได้!</string>
-  <string name="newer_version_available">มีเวอร์ชั่นใหม่กว่ามาแล้ว</string>
-
-  <string name="add_store">เพิ่มร้านค้า</string>
-
-<string name="downgrade_warning_dialog">ในการดาวน์เกรด คุณอาจจะสูญเสียข้อมูลที่เกี่ยวข้องกับแอป และคุณอาจจะออกจารระบบของบัญชีแอปได้</string>
-
-  <string name="displayable_social_timeline_similar_to">คล้ายกับ %1$s</string>
-
-<string name="login">เข้าสู่ระบบ</string>
-  <string name="spot_share">สปอต&amp;แชร์</string>
+<?xml version="1.0" encoding="utf-8"?>
+<!--Generated by crowdin.com-->
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 17/08/2016.
+  -->
+<resources>
+  <!-- NavDrawer List items -->
   <string name="my_account">บัญชีของฉัน</string>
-  <string name="setting_schdwntitle">ตารางการดาวน์โหลด</string>
+  <string name="setting_schdwntitle">ดาวน์โหลดตาราง</string>
   <string name="settings">การตั้งค่า</string>
   <string name="facebook">เฟสบุ๊ค</string>
   <string name="twitter">ทวิตเตอร์</string>
   <string name="backup_apps">สำรองแอป</string>
-
+  <string name="dark">มืด</string>
+  <string name="light">สว่าง</string>
+  <string name="updates_filter_summary">การตรวจสอบสิ่งนี คุณไม่ต้องแจ้งเวอร์ชั่นเบต้า</string>
+  <string name="updates_filter_setting_title">แสดงแอปเสถียรเวอร์ชั่นที่อัพเดตแล้ว</string>
   <string name="include_system_apps_title">รวมระบบแอป</string>
   <string name="include_system_apps_summary">การตรวจนี้ คุณจะได้รับแจ้งของแอประบบ (แอปถูกติดตั้งโดยผู้ผลิตอุปกรณ์) อัพเดต</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
+  <string name="aptoide_url">http://www.aptoide.com/</string>
+  <!-- Permission pop-ups messages -->
+  <string name="access_to_get_accounts_rationale">คุณจำเป็นต้องอนุญาตการเข้าสู่ Get Accounts</string>
+  <string name="unsubscribe">ยกเลิกการตอบรับ</string>
+  <string name="developer_website">เว็ปไซต์: %s</string>
+  <string name="not_available">N/A</string>
+  <string name="developer_email">อีเมล์: %s</string>
+  <string name="developer_privacy_policy">นโยบายความเป็นส่วนตัว: %s</string>
+  <string name="open">เปิด</string>
+  <string name="button_header_more">เพิ่มเติม</string>
+  <string name="search">ค้นหา</string>
+  <string name="update">อัพเดต</string>
+  <string name="uninstall">ถอนการติดตั้ง</string>
+  <string name="downgrade">ลดระดับ</string>
+  <string name="appview_followers_count_text">%1$s ผู้ติดตาม</string>
+  <string name="other_versions_downloads_count_text">%1$s ดาวน์โหลด</string>
+  <!-- Common (menu) -->
+  <string name="menu_select_all">เลือกทั้งหมด</string>
+  <string name="menu_select_none">ไม่เลือกทั้งหมด</string>
+  <string name="clear">ล้าง</string>
+  <!-- Excluded Updates Fragment -->
+  <string name="excluded_updates">ยกเว้นการอัปเดต</string>
+  <string name="no_excluded_updates_msg">แอปเวอร์ชั่นล่าสุดไม่สามารถทำงานได้บนอุปกรณ์ของคุณ หรือคุณสมบัติการทำงานบางอย่างหายไป?  ปิดกั้นการอัพเดต  ไปที่แท็ปอัพเดต และกดค้างที่แอปที่คุณต้องการหยุดอัพเดต</string>
+  <!-- Excluded Updates Fragment (menu) -->
+  <string name="restore_updates">กู้คืนการอัปเดต</string>
+  <string name="open_apps_manager">เปิดการจัดการแอป</string>
+  <!-- Rollback Fragment -->
+  <string name="rollback">ย้อนกลับ</string>
+  <string name="no_rollbacks_msg">ดาวน์เกรดแอปใดๆไปเวอร์ชั่นก่อนหน้านี้อย่างรวดเร็ว และแก้ไขปัญหาการเข้ากันไม่ได้ เก็บล็อกของการติดตั้ง
+ แอปของคุณทั้งหมด(ผ่านทาง%s)รวมถึงเวอร์ชั่นและวันที่ติดตั้ง</string>
+  <!-- Timeline Fragment -->
+  <string name="menu_card_timeline_clear">ล้าง</string>
+  <string name="fragment_social_timeline_aptoide_team">ทีมAptoide</string>
+  <string name="fragment_social_timeline_no_connection">ไม่มีการเชื่อมต่อเครือข่าย</string>
+  <string name="fragment_social_timeline_general_error">มีปัญหาบางอย่าง คุณสามารถลองใหม่ภายหลัง?</string>
+  <string name="displayable_social_timeline_store_latest_apps_headline">ร้านค้านี้มีแอปใหม่</string>
+  <string name="displayable_social_timeline_app_update_name">แอป%1$s</string>
+  <string name="displayable_social_timeline_app_has_update">มี%1$s</string>
+  <string name="displayable_social_timeline_article_get_app_button">รับแอป %1$s</string>
+  <string name="displayable_social_timeline_app_update">อัปเดต</string>
+  <string name="displayable_social_timeline_app_update_version">เวอร์ชั่น %1$s</string>
+  <string name="displayable_social_timeline_app_update_button">อัพเดต %1$s</string>
+  <string name="appview_other_versions"><u>เวอร์ชั่นอื่น</u></string>
+  <string name="appview_latest_version_text">เวอร์ชั่นล่าสุด</string>
+  <string name="appview_rate_this_app">ให้คะแนนแอปนี้</string>
+  <string name="appview_read_all">อ่านทั้งหมด <![CDATA[>]]></string>
+  <string name="zero">0</string>
+  <string name="working_well">ทำงานปกติ</string>
+  <string name="needs_license">จำเป็นต้องมีใบอนุญาต</string>
+  <string name="fake_app">แอปปลอม</string>
+  <string name="virus">ไวรัส</string>
+  <string name="additional_information">ไม่มีข้อมูลเพิ่มเติม</string>
+  <string name="displayable_social_timeline_app_update_updated">อัพเดต</string>
+  <string name="displayable_social_timeline_app_update_updating">กำลังอัพเดต</string>
+  <string name="displayable_social_timeline_app_update_error">การอัพเดตผิดพลาด</string>
+  <!-- need translation -->
+  <string name="appview_good_app_guaranteed">รับประกันแอปดี!</string>
+  <string name="appview_good_app_description">แอปพลิเคชั่นนี้ผ่านการทดสอบความปลอดภัยด้านไวรัส มัลแวร์ และสิ่งโจมตีอื่นๆ
+และไม่มีสิ่งคุกคามใดใด!</string>
+  <!-- -->
+  <!-- Preferences -->
+  <!-- "Other <app name> versions on different Stores" -->
+  <string name="other_versions_partial_title_1">อื่นๆ</string>
+  <string name="other_versions_partial_title_2">เวอร์ชั่นในร้านค้าอื่น</string>
+  <string name="displayable_social_timeline_recommendation_similar_to">ขึ้นกับ %1$s</string>
+  <string name="displayable_social_timeline_recommendation_similar_and">และ</string>
+  <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">%s แนะนำ</string>
+  <string name="social_facebook_screen_title">เฟสบุ๊ค</string>
+  <string name="social_twitter_screen_title">ทวิตเตอร์</string>
+  <string name="top_comments">ความคิดเห็นที่นิยม</string>
+  <string name="rate">คะแนน</string>
+  <string name="rate_app">คะแนน %s</string>
+  <string name="title">หัวเรื่อง</string>
+  <string name="tap_a_star">กดที่ดาวเพื่อให้เรต</string>
+  <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
+  <string name="other_versions_on_different_stores">เวอร์ชั่นอื่นในร้านค้าอื่น</string>
+  <string name="review_optional">รีวิว (ถ้ามี)</string>
+  <string name="feedback_not_valid">โปรดระบุหัวข้อที่ถูกต้อง!</string>
+  <string name="thank_you_for_your_opinion">ขอบคุณสำหรับความคิดเห็นของคุณ!</string>
+  <string name="ignore_update">เพิกเฉยการอัพเดต</string>
+  <string name="five_numeric">5</string>
+  <string name="four_numeric">4</string>
+  <string name="three_numeric">3</string>
+  <string name="two_numeric">2</string>
+  <string name="one_numeric">1</string>
+  <string name="just_reviews">เพียงรีวิว</string>
+  <string name="downgrading_msg">กำลังดาวน์เกรด</string>
+  <string name="updating_msg">กำลังอัพเดต</string>
+  <string name="installing_msg">กำลังติดตั้ง</string>
+  <string name="needs_permission_to_fs">จำเป็นต้องอนุญาตให้ใช้ File System ภายนอก</string>
+  <string name="added_to_scheduled">เพิ่มเมนู &gt; ตารางการดาวน์โหลด</string>
+  <string name="pause_all_downloads">หยุดดาวน์โหลด</string>
+  <string name="all_stores">ร้านค้าทั้งหมด</string>
+  <string name="followed_stores">ติดตามร้านค้า</string>
+  <string name="storage_access_permission_request_message">โปรดอนุญาตให้เข้าในส่วนจัดเก็บของโทรศัพท์ พวกเราสามารถดาวน์โหลดและติดตั้งแอปนี้</string>
   <string name="remote_install_menu_title">ติดตั้งบนทีวี</string>
   <string name="install_on_tv_mobile_error">แน่ใจว่าอุปกรณ์ของคุณถูกเชื่อมต่อกับไวไฟเพื่อใช้การทำงานนี้</string>
   <string name="remote_install_title">เลือกอุปกรณ์เป้าหมาย</string>
@@ -261,18 +128,145 @@
   <string name="remote_install_tip">โปรดแน่ใจว่าคุณเชื่อมต่อเครือข่ายกับทีวีแอนดรอยด์</string>
   <string name="remote_install_retry">ลองใหม่</string>
   <string name="remote_install_help">ช่วยเหลือ</string>
+  <!-- WIZARD -->
+  <string name="wizard_skip"><b>ข้าม</b></string>
+  <!-- WIZARD PAGE 1 -->
   <string name="wizard_title_viewpager_one">ตอนนี้ที่ไทม์ไลน์!</string>
-  <string name="wizard_sub_title_viewpager_three"><b>ค้นหาคน</b> ผู้ที่แชร์แอปที่คุณสนใจ
-<b>ให้คะแนนและแชร์</b></string>
+  <string name="wizard_sub_title_viewpager_one"><b>แอปวีดีโอและข่าวสารที่ดีที่สุด</b> ในที่ที่เดียว \n ค้นพบแอปผ่าน<b>เพื่อนของคุณ</b></string>
+  <!-- WIZARD PAGE 2 -->
+  <string name="wizard_title_viewpager_two">มีร้านค้าของคุณ</string>
+  <string name="wizard_sub_title_viewpager_two">ตั้งค่าร้านของคุณ<b> แชร์แอป \n ให้กับเพื่อน</b> และ<b>คอมมิวนิตี้Aptoide</b></string>
+  <!-- WIZARD PAGE 3 -->
+  <string name="wizard_title_viewpager_three">เป็นส่วนหนึ่ง</string>
+  <string name="wizard_sub_title_viewpager_three"><b>ค้นหาคน</b> ผู้ที่แชร์แอปที่คุณสนใจ \n <b>ให้คะแนนและแชร์</b></string>
   <string name="wizard_sub_sub_title_viewpager_three">เข้าร่วมกับเรา!</string>
-
+  <string name="you_need_to_be_logged_in">คุณจำเป็นต้องเข้าสู่ระบบ</string>
+  <string name="follow">ติดตาม</string>
+  <!--need translation-->
+  <string name="followed">ติดตาม</string>
+  <string name="unfollow_yes_no">คุณต้องการไม่ติดตามใช่หรือไม่?</string>
+  <string name="unfollow">ไม่ติดตาม</string>
+  <string name="unfollowing_store_message">ไม่ติดตาม%s</string>
+  <string name="store_followed">ร้าน%sติดตาม</string>
+  <string name="subscribers">ผู้ตอบรับ</string>
+  <string name="apps">แอป</string>
+  <!---->
+  <string name="be_the_first_to_rate_this_app">เป็นคนแรกในการให้คะแนนแอปนี้</string>
+  <string name="rate_this_app">ให้คะแนนแอปนี้</string>
+  <string name="dialog_install_warning_proceed_button">ดำเนินการต่อ</string>
+  <string name="dialog_install_warning_search_for_trusted_app_button">ค้นหา</string>
+  <string name="dialog_install_warning_trusted_app_button">แอปน่าเชื่อถือ</string>
+  <string name="dialog_install_warning_careful_text">ระวัง ถ้าคุณเลือกเพื่อติดตั้งแอปนี้ มันอาจจะทำให้มีไวรัสหรือมัลแวร์</string>
+  <string name="dialog_install_warning_credibility_text">ก่อนการดำเนินการ ตรวจสอบร้านค้า
+ที่น่าเชื่อถือและความคิดเห็นของผู้ใช้งานอื่น Aptoideแนะนำให้คุณติดตั้งแอป %1$s ที่มีความน่าเชื่อถือ</string>
+  <string name="dialog_install_warning_trusted_version_button">เวอร์ชั่นที่น่าเชื่อถือ</string>
+  <string name="dialog_install_warning_get_trusted_version_button">รับ</string>
+  <string name="flag_results">ผลธง</string>
+  <string name="helpful">ช่วยเหลือ</string>
+  <string name="not_helpful">ไม่ช่วยเหลือ</string>
+  <string name="description_not_available">ไม่มีคำอธิบายสำหรับแอปนี้</string>
+  <string name="top_stores_fragment_title">ร้านค้ายอดนิยม</string>
+  <!--server translations hammered-->
+  <string name="home_title">หน้าแรก</string>
+  <string name="community">คอมมิวนิตี้</string>
+  <string name="stores">ร้านค้า</string>
+  <string name="updates">อัพเดต</string>
+  <string name="social_timeline">โซเชียลไทม์ไลน์</string>
+  <string name="downloads">ดาวน์โหลด</string>
+  <string name="apps_timeline"><b> ไทม์ไลน์แอป</b></string>
   <string name="timeline"><b>ไทม์ไลน์</b></string>
+  <string name="latest_reviews">การรีวิวล่าสุด</string>
+  <string name="latest_comments">ความคิดเห็นล่าสุด</string>
+  <string name="action">แอคชั่น</string>
+  <string name="adventure">การผจญภัย</string>
+  <string name="all">ทั้งฟมด</string>
+  <string name="applications">แอปพลิเคชั่น</string>
+  <string name="arcade">เกมส์</string>
+  <string name="arcade_action">เกมส์ &amp; แอคชั่น</string>
+  <string name="board">บอร์ด</string>
+  <string name="books_reference">หนังสือ&amp;อ้างอิง</string>
+  <string name="brain_puzzle">ลับสมอง</string>
+  <string name="business">ธุรกิจ</string>
+  <string name="card">การ์ด</string>
+  <string name="cards_casino">ไพ่และคาสิโน</string>
+  <string name="casino">คาสิโน</string>
+  <string name="casual">ลำลอง</string>
+  <string name="comics">การ์ตูน</string>
+  <string name="communication">การติดต่อสื่อสาร</string>
+  <string name="demo">สาธิต</string>
+  <string name="education">การศึกษา</string>
+  <string name="educational">การศึกษา</string>
+  <string name="entertainment">ความบันเทิง</string>
+  <string name="family">ครอบครัว</string>
+  <string name="finance">การเงิน</string>
+  <string name="games">เกมส์</string>
+  <string name="health">สุขภาพ</string>
+  <string name="health_fitness">สุขภาพ&amp;ฟิตเนส</string>
+  <string name="highlighted">ไฮไลท์</string>
+  <string name="local_top_apps">แอปยอดนิยมท้องถิ่น</string>
+  <string name="lifestyle">ไลฟสไตล์</string>
+  <string name="media_video">มีเดีย&amp; วีดีโอ</string>
+  <string name="medical">การแพทย์</string>
+  <string name="multimedia">มัลติมีเดีย</string>
+  <string name="music">ดนตรี</string>
+  <string name="music_audio">ดนตรี &amp;เสียง</string>
+  <string name="news_magazines">ข่าวสาร &amp; แมกกาซีน</string>
+  <string name="news_weather">ข่าวสาร &amp; ภาพอากาศ</string>
+  <string name="personalization">ตั้งค่าส่วนบุคคล</string>
+  <string name="photography">ภาพถ่าย</string>
+  <string name="productivity">ผลงาน</string>
+  <string name="puzzle">เกมสฺ์ปริศนา</string>
+  <string name="racing">เรตติ้ง</string>
+  <string name="reference">อ้างอิง</string>
+  <string name="role_playing">บทบาทสมมคิ</string>
+  <string name="simulation">การจำลอง</string>
+  <string name="social">สังคม</string>
+  <string name="software_libraries">ห้องสมุดซอฟแวร์</string>
+  <string name="sports">กีฬา</string>
+  <string name="sports_games">เกมส์กีฬา</string>
+  <string name="strategy">กลยุทธ์</string>
+  <string name="themes">ธีม</string>
+  <string name="tools">เครื่องมือ</string>
+  <string name="top_apps">แอปยอดนิยม</string>
+  <string name="top_games">เกมส์ยอดนิยม</string>
+  <string name="transport">การเดินทาง</string>
+  <string name="transportation">การขนส่ง</string>
+  <string name="travel">ท่องเที่ยว</string>
+  <string name="travel_local">การท่องเที่ยว&amp; ท้องถิ่น</string>
+  <string name="trending">เทรน</string>
+  <string name="trivia">ทรีเวีย</string>
+  <string name="word">เวิร์ด</string>
+  <string name="libraries_demo">ห้องสมุด&amp; ตัวอย่าง</string>
+  <string name="shopping">ช็อปปิ้ง</string>
+  <string name="weather">สภาพอากาศ</string>
+  <string name="latest_applications">แอปล่าสุด</string>
+  <string name="top_apps_in_store">แอปยอดนิยมในร้านนี้</string>
+  <string name="apps_for_kids">แอปสำหรับเด็ก</string>
+  <string name="aptoide_publishers">ผู้เผยแพร่%s</string>
+  <string name="music_video">ดนตรีและวิดีโอ</string>
+  <string name="essential_apps">แอปจำเป็น</string>
+  <string name="summer_apps">แอปซัมเมอร์</string>
+  <string name="play_it">เล่นมัน!</string>
+  <!--home Fragment-->
+  <string name="featured_stores">ฟีจเจอร์ร้านค้า</string>
+  <!--AppsTimeline new string-->
+  <string name="displayable_social_timeline_article_related_to">เกี่ยวข้องกับ %1$s</string>
+  <string name="appstimeline_update_app">แอป</string>
+  <!--custom tabs-->
+  <string name="customtabs_open_native_app">เปิดในแอป</string>
+  <!--Download fragment-->
+  <string name="fragment_download_no_connection">ไ่มมีแอปดาวโหลด</string>
+  <string name="fragment_download_no_connection_subtitle">แอปใหม่จะปรากฎที่นี่เร็วๆนี้ และคุณสามารถเริ่มดาวโหลดได้!</string>
+  <string name="newer_version_available">มีเวอร์ชั่นใหม่กว่ามาแล้ว</string>
+  <string name="add_store">เพิ่มร้านค้า</string>
+  <string name="downgrade_warning_dialog">ในการดาวน์เกรด คุณอาจจะสูญเสียข้อมูลที่เกี่ยวข้องกับแอป และคุณอาจจะออกจารระบบของบัญชีแอปได้</string>
+  <string name="displayable_social_timeline_similar_to">คล้ายกับ %1$s</string>
   <string name="freed_space">%sฟรีด</string>
   <string name="storage_dialog_title">เคลียร์คลังAptoide</string>
   <string name="clear_cache_dialog_message">คุณแน่ใจว่าคุณต้องการลบไอคอน รูปภาพ apk ดาวน์โหลด obb เว็ปเซอร์วิส ดาต้า ทั้งหมด…</string>
   <string name="clear_cache_summary">ลบไอคอน รูปภาพ apk ที่ดาวน์โหลด obb ข้อมูลบริการเว็ป…</string>
   <string name="clearcache_title">เคลียร์คลัง</string>
-
+  <!-- Stores tab -->
   <string name="recommended_stores">แนะนำร้านค้า</string>
   <string name="create_store_displayable_message">สร้างร้านค้าของคุณตอนนี้และเริ่มแชร์แอปของคุณ!</string>
   <string name="create_store_displayable_button">สร้างร้านค้า</string>
@@ -281,18 +275,20 @@
   <string name="create_store_displayable_explore_message">ใส่และสำรวจความเป็นไปได้ทั้งหมด</string>
   <string name="create_store_displayable_explore_button">สำรวจ</string>
   <string name="follow_store">ติดตามร้านค้า</string>
-
+  <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">ร้านค้าของคุณยังไม่มีแอปพลิเคชั่น</string>
   <string name="install_app_outter_pt2">และอัพโหลดแอปเพื่อแชร์ให้กับโลก!</string>
-  <string name="install_app_inner">" ติดตั้ง%1$s "</string>
-  <string name="open_app_inner">" เปิด%1$s "</string>
+  <string name="install_app_inner"> ติดตั้ง%1$s </string>
+  <string name="open_app_inner"> เปิด%1$s </string>
   <string name="downloads_count">ดาวน์โหลด: %1$s</string>
   <string name="version_number">เวอร์ชั่น: %1$s</string>
   <string name="app_size">ขนาด: %1$s</string>
   <string name="comment_on_store">ความคิดเห็นร้านค้า %1$s</string>
   <string name="word_this">นี่</string>
-
+  <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">สิ่งที่ผู้ติดตามของคุณจะเห็น:</string>
+  <string name="social_timeline_you_will_share_comment">ผู้ติดตามจะเห็นความคิดเห็นของคุณ:</string>
+  <string name="social_timeline_you_will_share_like">ผู้ติดตามของคุณจะเห็นสิ่งที่คุณชอบ:</string>
   <string name="social_timeline_share_title">แชร์การ์ดก่อน</string>
   <string name="social_timeline_share_title_checkbox">ทำโปรไฟล์ผู้ใช้ส่วนตัวในไทม์ไลน์แอป แสดง/แชร์เพียงข้อมูลร้านค้าของฉัน</string>
   <string name="social_timeline_share_title_checkbox_fb">ติดตามโปรไฟล์ผู้ใช้ของฉันสาธารณะบนไทม์ไลน์แอป</string>
@@ -302,7 +298,7 @@
   <string name="social_timeline_share_dialog_opt_out_text_1">สร้างโปร์ไฟลืที่ถูกซ่อนของคุณ เพื่อนของคุณไม่สามารถพบและติดตามคุณบนไทม์ไลน์แอปได้</string>
   <string name="social_timeline_share_dialog_opt_out_text_2">เข้าสู่<b>www.aptoide.com</b> เข้าระบบสู่บัญชีของคุณและไปยัง<b>การตั้งค่า</b> เพื่อเปลี่ยนความเป็นส่วนตัว</string>
   <string name="social_timeline_share_dialog_installed_and_recommended">ติดตั้งและแนะนำ</string>
-  <string name="social_timeline_share_bar_login">เพื่อนคุณติดตั้งอะไร?</string>
+  <string name="social_timeline_share_bar_login">เพื่อนของคุณกำลังติดตั้งอะไร?</string>
   <string name="social_timeline_share_bar_following">ติดตามร้านค้าเพิ่มเตอมและเชื่อมต่อเพื่อนของคุณ</string>
   <string name="social_timeline_share_bar_followers">ปรับปรุงร้านค้าของคุณเพื่อให้มีผู้ติดตามเพิ่มขึ้น</string>
   <string name="social_timeline_followers_fragment_title">%d ผู้ติดตาม</string>
@@ -313,23 +309,22 @@
   <string name="social_timeline_shared_by">แชร์โดย%1$s</string>
   <string name="social_timeline_who_liked">ใครชอบ</string>
   <string name="social_timeline_users_private">%dเป็นส่วนตัว</string>
-
+  <!-- Store Meta widget -->
   <string name="edit_store">แก้ไข</string>
-
+  <!-- Comments on store -->
   <string name="comment_store">ความคิดเห็นร้านค้า</string>
   <string name="comment_store_title">ความคิดเห็นร้านค้านี้</string>
   <string name="be_the_first_to_send_feedback_about_this_store">เป็นคนแรกที่ส่งฟี๊ดแบ็คเกี่ยวกับร้านค้านี้</string>
-
-
+  <!-- Followers and following -->
   <string name="timeline_followers">ผู้ติดตาม%d</string>
   <string name="timeline_followed">ติดตาม%d</string>
   <string name="timeline_stats_followers">ผู้ติดตาม</string>
   <string name="timeline_login_message">เพื่อนของคุณกำลังติดตั้งอะไร?</string>
   <string name="private_followers_message">%dผู้ติดตามส่วนตัว</string>
   <string name="private_following_message">คุณกำลังติดตามผู้ใช้งาน/ร้านค้าส่วนตัว %d</string>
-
+  <!-- Payments -->
   <string name="reviews_expand_button">%dตอบกลับ</string>
-  <string name="out_of_space_dialog_title">ไม่มีที่ว่า</string>
+  <string name="out_of_space_dialog_title">ไม่มีพื้นที่ว่าง</string>
   <string name="out_of_space_dialog_message">โปรดเตรียมที่ว่างเพื่อดำเนินการ</string>
   <string name="setting_category_autoupdate">%sอัพเดต</string>
   <string name="setting_category_autoupdate_title">รับ%sการแจ้งเตือนอัพเดต</string>
@@ -340,8 +335,9 @@
   <string name="create_store_displayable_explore_long_term_button">ดูร้านค้า</string>
   <string name="create_store_displayable_empty_description_message">เพิ่มคำบรรยายสำหรับร้านค้าของคุณ คำบรรยายที่ดีช่วยให้คุณได้ผู้ติดตามเพิ่มและมีกิจกรรม</string>
   <string name="fragment_spot_share_preview_start_button">เริ่ม</string>
-
+  <!-- 02/2017 strings for login / sign up -->
   <string name="join_company">เข้าร่วม %s</string>
+  <string name="login">ลงชื่อเข้าใช้งาน</string>
   <string name="login_company">เข้าสู่ระบบ %s</string>
   <string name="connect_with_facebook">เชื่อมต่อกับเฟสบุ๊ค</string>
   <string name="connect_with_google">เชื่อต่อกับกูเกิ้ล</string>
@@ -354,36 +350,35 @@
   <string name="facebook_login_cancelled">ยกเลิกการเข้าสู่ระบบเฟสบุ๊ค</string>
   <string name="google_login_cancelled">การเข้าสู่ระบบกูเกิ้ลล้มเหลว</string>
   <string name="login_separator_text">หรือเชื่อมต่อโดยการใช้อีเมลล์ของคุณ</string>
-
+  <!-- Add stores dialog -->
   <string name="add_store_dialog_title">คุณสามารถพบคอนเท็นต์ที่ปรับได้โดยเฉพาะเพื่อสร้างร้านค้าที่แตกต่าง</string>
   <string name="add_store_dialog_top_stores">ค้นพบร้านค้ายอดนิยม</string>
   <string name="add_store_dialog_top_stores_small_text">และเนื้อหาสุดพิเศษ!</string>
-
+  <!-- Login -->
   <string name="activity_login_title">เข้าสู่ระบบ</string>
   <string name="activity_login_forgot_password_button">ลืมรหัสผ่าน?</string>
   <string name="activity_login_button">เข้าสู่ระบบ</string>
   <string name="activity_login_sign_up_button">สมัคร</string>
   <string name="view_credentials_username_hint">อีเมลล์</string>
   <string name="view_credentials_password_hint">รหัสผ่าน</string>
-
   <string name="permission_access_deny">เข้าสู่เพื่ออ่านและเขียนคลังภายนอกที่ถูกปฏิเสธ</string>
   <string name="permission_account_deny">เข้าสู่บัญชีที่ถูกปฏิเสธ</string>
-
+  <!-- Address book -->
   <string name="addressbook_increase_network_message">เพิ่มเครือข่ายของคุณ</string>
   <string name="addressbook_connect_with_friends_message">เชื่อมต่อกับเพื่อน</string>
   <string name="addressbook_sync">ซิงค์สมุดที่อยู่</string>
   <string name="not_now">ไม่ใช่ตอนนี้</string>
   <string name="follow_friends">ติดตามเพื่อน</string>
   <string name="addressbook_data_about"><b> %1$s ใช้ข้อมูลของคุณอย่างไรa</b>
- 
+
 
 %1$s จะค้นหาสมุดที่อยู่สำหรับเพื่อและครอบครัวของคุณ ซึ่งถูกใช้บนร้านค้าแอปของเรา พวกเราจะ
-ส่งเพียงข้อมูลปรับปรุงประสบการณ์ %1$sของคุณโดยการเชื่อมต่อคุณกับคนเพิ่มเติม 
+ส่งเพียงข้อมูลปรับปรุงประสบการณ์ %1$sของคุณโดยการเชื่อมต่อคุณกับคนเพิ่มเติม
 ซึ่งสามารถแชร์เนื้อหาแอปที่เกี่ยวข้องกับคุณ
 
 
 เพื่อป้องกันความเป็นส่วนตัวของคุณ ไม่มีข้อมูลส่วนที่ชัดเจน
-ที่ถูกส่งไปยังเซิฟเวอร์ %1$s ลายเซ็นต์ที่ไม่แสดงตัวตนจะถูกสร้างด้วยข้อมูลของคุณ 
+ที่ถูกส่งไปยังเซิฟเวอร์ %1$s ลายเซ็นต์ที่ไม่แสดงตัวตนจะถูกสร้างด้วยข้อมูลของคุณ
 และอันตรายนั้นไม่สามารถกลับไปสู่ข้อมูลการติดต่อเดิมได้
  </string>
   <string name="addressbook_success">สำเร็จ!</string>
@@ -397,7 +392,10 @@
   <string name="addressbook_thanks_for_connecting">ขอบคุณสำหรับการเชื่อมต่อ</string>
   <string name="addressbook_success_connected_friends">พวกเราเชื่อมต่อกับคุณได้สำเร็จด้วยเพื่อน%1$s คน ซึ่งใช้%2$s</string>
   <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">พวกเราไม่พบผู้ติดต่อใๆที่กำลังใช้%1$s</string>
-  <string name="addressbook_3rd_msg">เรียนรู้เพิ่มเตอม</string>
+  <string name="addressbook_2nd_msg">\"%1$s จะค้นหาสมุดที่อยู่สำหรับเพื่อนและครอบครัว
+ซึ่งใช้ร้านค้าแอปของพวกเรา เพื่อป้องกันความเป็นส่วนตัวของคุณ ไม่มีข้อมูลส่วนตัวที่ถูกส่งออกไปจาก  %1$s
+ บริการ\"</string>
+  <string name="addressbook_3rd_msg">เรียนรู้เพิม่เติม</string>
   <string name="address_book_twitter_error">ข้อผิดพลาดในการมีสิทธิ์ทวิตเตอร์</string>
   <string name="follow_my_store">สวัสดีติดตามร้านค้าฉัน%1$s ได้ที่นี่</string>
   <string name="store_meta_apps">แอป
@@ -408,12 +406,7 @@
 %s</string>
   <string name="addressbook_about">เกี่ยวกับสมุดที่อยู่</string>
   <string name="addressbook_we_werent_able_to_connect_you">พวกเราไม่สามารถเชื่อมต่อคุณได้</string>
-
-
+  <!-- Spot and Share-->
   <string name="spot_share_line_1">แชร์แอปกับเพื่อนของคุณ</string>
   <string name="spot_share_line_2">โทรศัพท์กับโทรศัพท์ โดยไม่ใช้อินเตอร์เน็ต</string>
-
-<string name="addressbook_2nd_msg">"%1$s จะค้นหาสมุดที่อยู่สำหรับเพื่อนและครอบครัว
-ซึ่งใช้ร้านค้าแอปของพวกเรา เพื่อป้องกันความเป็นส่วนตัวของคุณ ไม่มีข้อมูลส่วนตัวที่ถูกส่งออกไปจาก  %1$s
- บริการ"</string>
-  </resources>
+</resources>

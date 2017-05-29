@@ -1,238 +1,117 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="updates_filter_summary">အမွန္ျခစ္ျခစ္ထားပါ၊ စမ္းသပ္ဗား႐ွင္းတို႔ကို ျမင္ႏိုင္မည္မဟုတ္ပါ.</string>
-    <string name="updates_filter_setting_title">စိတ္ခ်ရတဲ့ ဗား႐ွင္းသစ္ျမွင့္ႏိုင္မွာေတြကိုသာ ျပပါ။</string>
-    <string name="unsubscribe">စာရင္းဖ်က္မည္</string>
-    <string name="developer_website">Website: %s</string>
-    <string name="not_available">မရွိပါ</string>
-    <string name="developer_email">Email: %s</string>
-    <string name="developer_privacy_policy">အခ်က္အလက္လုံၿခဳံမႈ စည္းမ်ဥ္းစည္းကမ္း : %s</string>
-
-
-    <string name="open">ဖြင့္သည္</string>
-    <string name="button_header_more">ေနာက္ထပ္</string>
-    <string name="search">ရွာမည္</string>
-
-    <string name="update">အဆင့္ျမွင့္တင္ျခင္း</string>
-    <string name="uninstall">Install လုပ္ထားသည္ကို ဖ်က္မည္</string>
-    <string name="downgrade">အဆင့္ေလ်ာ့ခ်ျခင္း</string>
-    <string name="menu_select_all">အားလံုးကိုေရြးမည္</string>
-    <string name="menu_select_none">တစ္ခုမွမေရြးပါ</string>
-    <string name="clear">ဖ်က္မည္</string>
-
-    <string name="excluded_updates">အဆင့္မျမွင့္လိုသည့္ app မ်ား</string>
-    <string name="no_excluded_updates_msg">App တစ်ခု၏ဗားရှင်းအသစ်သည် သင့်စက်ပစ္စည်းပေါ်တွင် အလုပ်မလုပ်ပါ သို့မဟုတ် အရည်အသွေးအချို့ လိုအပ်နေပါသည်? Apps များအား အဆင့်မြှင့်တင်ခြင်းမှ ပိတ်ပင်ပါ. အဆင့်မြှင့်မှုများခလုတ်သို့သွား၍ သင်ရပ်လိုသော app အပေါ်တွင် ကြာကြာနှိပ်ထားပါ.</string>
-
-    <string name="restore_updates">"အဆင့္ျမွင့္တင္ထားသည္မ်ားကို  ျမွင့္တင္ၿပီးသည့္အတိုင္းထားမည္"</string>
-    <string name="rollback">အဆင့္ေလွ်ာ့ခ်လိုသည့္ app မ်ား</string>
-    <string name="menu_card_timeline_clear">ဖ်က္မည္</string>
-    <string name="fragment_social_timeline_no_connection">ကွန်ရက်ဆက်သွယ်မှု မရှိပါ</string>
-    <string name="fragment_social_timeline_general_error">အခက္ခဲမ်ားရွိေနပါသည္. ေနာက္တစ္ၾကိမ္ လုပ္ေဆာင္ပါ?</string>
-
-    <string name="displayable_social_timeline_app_update">အဆင့္ျမွင့္တင္ျခင္း</string>
-    <string name="appview_rate_this_app">ဒီ app ကုိအဆင့္သတ္မွတ္ေပးမည္</string>
-    <string name="needs_license">လုိင္စင္ လုိအပ္သည္</string>
-    <string name="virus">Virus</string>
-    <string name="additional_information">ထပ္မံျဖည့္စြက္အေၾကာင္းအရာ</string>
-    <string name="displayable_social_timeline_app_update_updated">Update ျဖစ္ျပီးပါျပီ</string>
-    <string name="displayable_social_timeline_recommendation_similar_and">နွင့္</string>
-    <string name="social_facebook_screen_title">Facebook</string>
-    <string name="social_twitter_screen_title">Twitter</string>
-    <string name="title">ေခါင္းစဥ္</string>
-    <string name="feedback_not_valid">မွန္ကန္ေသာ အေၾကာင္းအရာကို ထည့္ေပးပါ!</string>
-    <string name="ignore_update">ျမွင့္တင္မႈမလုပ္ပါ</string>
-    <string name="added_to_scheduled">Menu &gt; ေဒါင္းလုဒ္စာရင္း ထဲသို႔ ထည့္ေပးျပီးပါျပီ</string>
-    <string name="wizard_skip"><b>ကျော်ပါ</b></string>
-    <string name="dialog_install_warning_proceed_button">ေ႐ွ႕ဆက္မည္</string>
-    <string name="dialog_install_warning_search_for_trusted_app_button">႐ွာေဖြႏိုင္ရန္</string>
-    <string name="dialog_install_warning_trusted_app_button">ယုံၾကည္ရသည့္ App</string>
-    <string name="dialog_install_warning_careful_text">"ယခု app  ကိုထည့္မည္ဆိုပါက သတိထားပါ. ျပင္ဆင္ထားႏိုင္သည္၊ ဗိုင္းရပ္စ္ သို႔မဟုတ္ ေမးလ္ဝဲ ႐ွိေနႏိုင္သည္."</string>
-    <string name="dialog_install_warning_credibility_text">ေ႐ွ႕မဆက္မီ စတိုး၏စိတ္ခ်ရမႈႏွင့္ မွတ္ခ်က္တို႔ကိုၾကည့္ပါ. Aptoide အေနျဖင့္ %1$s ယုံၾကည္ရသည့္ app မ်ားကိုသာ ထည့္ရန္ အၿမဲတိုက္တြန္းပါသည္.</string>
-    <string name="dialog_install_warning_trusted_version_button">ယုံၾကည္ရသည့္ဗားရွင္း</string>
-    <string name="dialog_install_warning_get_trusted_version_button">ရယူမည္</string>
-<string name="dark">ရင့်သော</string>
-    <string name="light">ဖျော့သော</string>
-
-    <string name="aptoide_email">aptoide@aptoide.com</string>
-    <string name="aptoide_url">http://www.aptoide.com/</string>
-
-    <string name="access_to_get_accounts_rationale">အကောင့်များရယူရန် ဝင်ရောက်ခွင့်ကို ခွင့်ပြုရန် လိုအပ်ပါသည်</string>
-    <string name="appview_follow_store_button_text">Follow လုပ်မလား?</string>
-    <string name="appview_followers_count_text">%1$s Follow လုပ်ထားသူများ</string>
-    <string name="other_versions_downloads_count_text">%1$s ဒေါင်းလုပ်များ</string>
-
-    <string name="open_apps_manager">Apps မန်နေဂျာအား ဖွင့်ပါ</string>
-
-    <string name="no_rollbacks_msg">မည္သည့္ app ကိုမဆို ၿပီးခဲ့ေသာ ဗားရွင္းသို႔ လ်င္ျမန္စြာ ျပန္လည္၍ အဆင့္ခ်ၿပီး မကိုက္ညီမွု ျပႆနာမ်ားအား ေျဖရွင္းပါ. (%s မွတဆင့္) သင္ထည့္သြင္းထားေသာ apps မ်ားအားလုံး၏ ဗားရွင္းႏွင့္ ထည့္သြင္းေသာေန႔စြဲ အပါအ၀င္ မွတ္တမ္းတစ္ခုအား သိမ္းထားပါ.</string>
-
-    <string name="fragment_social_timeline_aptoide_team">Aptoide အဖွဲ့</string>
-    <string name="displayable_social_timeline_store_latest_apps_headline">ဤစတိုးတွင် Apps အသစ်များ ရှိသည်</string>
-    <string name="displayable_social_timeline_app_update_name">App %1$s</string>
-    <string name="displayable_social_timeline_app_has_update">တစ်ခုရှိသည် %1$s</string>
-    <string name="displayable_social_timeline_article_get_app_button">App အားရယူပါ %1$s</string>
-    <string name="displayable_social_timeline_app_update_version">ဗားရွင္း %1$s</string>
-    <string name="displayable_social_timeline_app_update_button">အဆင့်မြှင့်တင်မှု %1$s</string>
-    <string name="appview_other_versions"><u>အခြား ဗားရှင်းများ</u></string>
-    <string name="appview_latest_version_text">နောက်ဆုံး ဗားရှင်း</string>
-    <string name="appview_read_all">အားလုံး ဖတ်မည် &gt;</string>
-    <string name="zero">၀</string>
-    <string name="working_well">ကောင်းစွာ အလုပ်လုပ်သည်</string>
-    <string name="fake_app">App အတု</string>
-    <string name="displayable_social_timeline_app_update_updating">အဆင့်မြှင့်တင်ခြင်း</string>
-    <string name="displayable_social_timeline_app_update_error">အဆင့်မြှင့်တင်မှု အမှား</string>
-
-    <string name="other_versions_partial_title_1">အခြား</string>
-    <string name="other_versions_partial_title_2">မတူညီသော စတိုးများရှိ ဗားရှင်းများ</string>
-    <string name="displayable_social_timeline_recommendation_similar_to">%1$s အေပၚ အေျခခံထားေသာ</string>
-    <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">%s မှရည်ညွှန်းသည်</string>
-    <string name="top_comments">ထိပ်တန်း ထင်မြင်ချက်များ</string>
-    <string name="rate">အဆင့်သတ်မှတ်ပါ</string>
-    <string name="rate_app">%s ကို အဆင့်သတ်မှတ်ပါ</string>
-    <string name="tap_a_star">အဆင့်သတ်မှတ်ရန် ကြယ်တစ်ပွင့်အား နှိပ်ပါ</string>
-    <string name="other_versions_on_different_stores">မတူညီသော စတိုးများရှိ အခြားဗားရှင်းများ</string>
-    <string name="review_optional">သုံးသပ်ချက် (ရွေးချယ်စရာ)</string>
-    <string name="thank_you_for_your_opinion">သင့်ထင်မြင်ချက်အတွက် ကျေးဇူးတင်ပါသည်!</string>
-    <string name="five_numeric">၅</string>
-    <string name="four_numeric">၄</string>
-    <string name="three_numeric">၃</string>
-    <string name="two_numeric">၂</string>
-    <string name="one_numeric">၁</string>
-    <string name="just_reviews">သုံးသပ်ချက်များသာ</string>
-    <string name="downgrading_msg">အဆင့်ချခြင်း</string>
-    <string name="updating_msg">အဆင့်မြှင့်တင်ခြင်း</string>
-    <string name="installing_msg">ထည့်သွင်းခြင်း</string>
-    <string name="needs_permission_to_fs">ပြင်ပဖိုင်စနစ်အား အသုံးပြုရန် ခွင့်ပြုချက်လိုအပ်ပါသည်</string>
-
-    <string name="pause_all_downloads">ဒေါင်းလုပ်များအား ရပ်ထားပါ</string>
-    <string name="all_stores">စတိုးများအားလုံး</string>
-    <string name="followed_stores">Follow လုပ်ထားသော စတိုးများ</string>
-    <string name="storage_access_permission_request_message">ဤ app အား ကျွန်ုပ်တို့ ဒေါင်းလုပ်လုပ်၍ ထည့်သွင်းနိုင်ရန် သင့်ဖုန်း၏ သိမ်းဆည်းမှုအား ၀င်ရောက်ရန် ကျေးဇူးပြု၍ ခွင့်ပြုပါ.</string>
-
-    <string name="wizard_sub_title_viewpager_one"><b>လုံခြုံမှုရှိ</b> ပြီး <b>ပျော်စရာကောင်းသော</b> ခရီးတစ်ခုအား စတင်လိုက်ပါ.</string>
-    <string name="wizard_title_viewpager_two"><b>Apps တိုင္းမ္လိုင္း</b></string>
-    <string name="wizard_sub_title_viewpager_two"><b>နောက်ဆုံး apps များအား</b>ရယူပါ, <b>ဆက်စပ်မှုရှိသော စတိုးများအား</b>ရှာဖွေပြီး <b>စိတ်ကြိုက်ပြုလုပ်ထားသော ပါ၀င်မှုအား</b>ရယူပါ</string>
-
-    <string name="wizard_title_viewpager_three"><b>လူမှုအဖွဲ့အစည်းတွင် ပါ၀င်ပါ</b></string>
-    <string name="you_need_to_be_logged_in">သင် အကောင့်၀င်ထားရန် လိုအပ်ပါသည်</string>
-    <string name="follow">Follow လုပ်ပါ</string>
-    <string name="followed">Follow လုပ်ထားသော</string>
-    
-    <string name="appview_good_app_guaranteed">ကောင်းသော app အဖြစ် အာမခံသည်!</string>
-    <string name="appview_good_app_description">ဤ application သည္ ဗိုင္းရပ္စ္၊ ေမးလ္ဝဲႏွင့္ အျခား မသမာေသာ တုိက္ခိုက္မႈမ်ားကို စစ္ေဆးသည့္ လံုၿခံဳေရးစစ္ေဆးမႈကို ျဖတ္ေက်ာ္ခဲ့ၿပီး မည္သည့္အႏၲရာယ္မွ် မပါဝင္ပါ!</string>
-
-    <string name="unfollow_yes_no">Follow မလုပ်လိုသည်မှာ သေချာပါသလား?</string>
-    <string name="unfollow">Follow မလုပ်ပါ</string>
-    <string name="unfollowing_store_message">Follow မလုပ်ခြင်း %s</string>
-    <string name="store_followed">Follow လုပ်ထားသော %s စတိုး</string>
-
-    <string name="be_the_first_to_rate_this_app">ဤ app အား ပထမဆုံး အဆင့်သတ်မှတ်သူ ဖြစ်လိုက်ပါ</string>
-    <string name="rate_this_app">ဤ app အား အဆင့်သတ်မှတ်ပါ</string>
-
-    <string name="flag_results">Flag ပြခြင်း ရလဒ်များ</string>
-    <string name="helpful">အကူအညီဖြစ်သော</string>
-    <string name="not_helpful">အကူအညီမဖြစ်သော</string>
-    <string name="description_not_available">ဤ app အတွက် ရရှိနိုင်သော ဖော်ပြချက် မရှိပါ</string>
-    <string name="top_stores_fragment_title">ထိပ်တန်း စတိုးများ</string>
-
-    <string name="home_title">ပင္မ</string>
-    <string name="community">လူမှုအဖြဲ႕အစည္း</string>
-    <string name="stores">စတိုးစာရင္း</string>
-    <string name="updates">အဆင့္ျမွင့္တင္ျခင္းမ်ား</string>
-    <string name="social_timeline">လူမႈအသိုင္းအဝိုင္းအေျခအေန</string>
-    <string name="downloads">ေဒါင္းလုတ္စာရင္း</string>
-    <string name="latest_reviews">ေနာက္ဆံုးျပန္လည္စစ္ေဆးမႈ</string>
-    <string name="latest_comments">ေနာက္ဆံုးမွတ္ခ်က္</string>
-    <string name="action">အက္႐ွင္</string>
-    <string name="adventure">စြန္႔စားခန္း</string>
-    <string name="all">အားလုံး</string>
-    <string name="applications">Application မ်ား</string>
-    <string name="arcade">အေႂကြေစ့ထည့္ကစားရေသာ ဂိမ္းခုံ</string>
-    <string name="arcade_action">အေၾကြေစ့ကစားရေသာဂိမ္းခံုႏွင့္ အက္ရွင္</string>
-    <string name="board">ဘုတ္</string>
-    <string name="books_reference">စာအုပ္ႏွင့္ ရည္ညႊန္းခ်က္</string>
-    <string name="brain_puzzle">ဥာဏ္စမ္းပေဟဠိ</string>
-    <string name="business">စီးပြားေရး</string>
-    <string name="card">ဖဲခ်ပ္</string>
-    <string name="cards_casino">ဖဲခ်ပ္ႏွင့္ ကာစီႏို</string>
-    <string name="casino">ကာစီနို</string>
-    <string name="casual">ပံုမွန္</string>
-    <string name="comics">႐ုပ္ျပ</string>
-    <string name="communication">ဆက္သြယ္ေရး</string>
-    <string name="demo">အစမ္း</string>
-    <string name="education">ပညာေရး</string>
-    <string name="educational">ပညာေရးပိုင္းဆိုင္ရာ</string>
-    <string name="entertainment">ေဖ်ာ္ေျဖေရး</string>
-    <string name="family">မိသားစု</string>
-    <string name="finance">ေငြေရးေၾကးေရး</string>
-    <string name="games">ဂိမ္း</string>
-    <string name="health">က်န္းမာေရး</string>
-    <string name="health_fitness">က်န္းမာႀကံ့ခိုင္ေရး</string>
-    <string name="highlighted">ထင္ရွားေအာင္ ျပဳလုပ္ထားေသာ</string>
-    <string name="local_top_apps">ေဒသႀကိဳက္ App မ်ား</string>
-    <string name="lifestyle">လူေနမႈပံုစံ</string>
-    <string name="media_video">မီဒီယာနှင့္ ဗီဒီယို</string>
-    <string name="medical">ေဆးဘက္ဆိုင္ရာ</string>
-    <string name="multimedia">မီဒီယာေပါင္းစုံ</string>
-    <string name="music">ဂီတ</string>
-    <string name="music_audio">ဂီတ &amp; အသံ</string>
-    <string name="news_magazines">သတင္းႏွင့္ မဂၢဇင္း</string>
-    <string name="news_weather">သတင္းႏွင့္ ရာသီဥတု</string>
-    <string name="personalization">စိတ္ႀကိဳက္ျပဳျပင္ေျပာင္းလဲျခင္း</string>
-    <string name="photography">ဓာတ္ပုံပိုင္းဆိုင္ရာ</string>
-    <string name="productivity">ထုတ္လုပ္မႈ</string>
-    <string name="puzzle">ပေဟဠိ</string>
-    <string name="racing">ၿပိဳင္ပြဲ</string>
-    <string name="reference">ရည္ညႊန္းခ်က္</string>
-    <string name="role_playing">တူေအာင္သ႐ုပ္ေဆာင္ျခင္း</string>
-    <string name="simulation">သြင္တူျပဳျခင္း</string>
-    <string name="social">လူမႈေရး</string>
-    <string name="software_libraries">ေဆာ့ဖ္ဝဲ စာၾကည့္တိုက္</string>
-    <string name="sports">အားကစား</string>
-    <string name="sports_games">အားကစားဂိမ္း</string>
-    <string name="strategy">နည္းဗ်ဴဟာ</string>
-    <string name="themes">အသြင္အျပင္</string>
-    <string name="tools">ကိရိယာ</string>
-    <string name="top_apps">ထိပ္တန္း App မ်ား</string>
-    <string name="top_games">ထိပ္တန္းဂိမ္း</string>
-    <string name="transport">သယ္ယူပို႔ေဆာင္ေရး</string>
-    <string name="transportation">သယ္ယူပို႔ေဆာင္ေရး</string>
-    <string name="travel">ခရီးသြားျခင္း</string>
-    <string name="travel_local">ခရီးသြားျခင္းႏွင့္ ေဒသဆိုင္ရာ</string>
-    <string name="trending">လတ္တေလာ လူႀကိဳက္မ်ားေနေသာ</string>
-    <string name="trivia">အေသးအဖြဲ</string>
-    <string name="word">စကားလုံး</string>
-    <string name="libraries_demo">စာၾကည့္တိုက္ႏွင့္ အစမ္း</string>
-    <string name="shopping">ေစ်းဝယ္ထြက္ရန္</string>
-    <string name="weather">ရာသီဥတု</string>
-    <string name="latest_applications">ေနာက္ဆံုးထြက္ Apps မ်ား</string>
-    <string name="top_apps_in_store">ယခုစတိုးရွိ ထိပ္တန္း App မ်ား</string>
-    <string name="apps_for_kids">ကေလးမ်ားအတြက္ Apps</string>
-    <string name="aptoide_publishers">%s စီစဥ္သူမ်ား</string>
-    <string name="music_video">ဂီတ &amp; ဗီဒီယို</string>
-    <string name="essential_apps">မရွိမျဖစ္ Appsမ်ား</string>
-    <string name="summer_apps">ေႏြရာသီ Apps</string>
-    <string name="play_it">Play-It!</string>
-
-<string name="subscribers">ပံုမွန္မွာယူသူမ်ား</string>
-  <string name="apps">Apps မ်ား</string>
-
-  <string name="apps_timeline"><b>Apps တိုင္းမ္လိုင္း</b></string>
-  <string name="displayable_social_timeline_article_related_to">%1$s ႏွင့္ သက္ဆိုင္ေသာ</string>
-  <string name="appstimeline_update_app">app</string>
-  <string name="customtabs_open_native_app">App တြင္ဖြင့္ပါ</string>
-
-
-  <string name="fragment_download_no_connection">ေဒါင္းလုပ္ျပဳလုပ္ထားေသာ apps မ်ား မရွိပါ</string>
-  <string name="fragment_download_no_connection_subtitle">သင္စတင္၍ ေဒါင္းလုပ္ျပဳလုပ္သည္ႏွင့္ apps အသစ္မ်ားသည္ ဤေနရာတြင္ ေပၚလာပါလိမ့္မည္!</string>
-  <string name="newer_version_available">ပို၍သစ္ေသာ ဗားရွင္း ရရွိပါၿပီ</string>
-
-  <string name="add_store">App စတိုး</string>
-
-<string name="downgrade_warning_dialog">အဆင့္ခ်ျခင္းျဖင့္ သင္သည္သက္ဆိုင္ရာ app အခ်က္အလက္အား ဆံုး႐ွံုးႏိုင္ၿပီး app အေကာင့္မွလည္း အေကာင့္ထြက္သြားႏိုင္ပါသည္.</string>
-
-  <string name="displayable_social_timeline_similar_to">%1$s ႏွင့္တူညီေသာ</string>
-
-<string name="include_system_apps_title">စနစ္သံုး Apps မ်ား ထည့္သြင္းပါ</string>
+<?xml version="1.0" encoding="utf-8"?>
+<!--Generated by crowdin.com-->
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 17/08/2016.
+  -->
+<resources>
+  <!-- NavDrawer List items -->
+  <string name="my_account">ကျွန်ုပ်၏ အကောင့်</string>
+  <string name="setting_schdwntitle">အစီအစဉ်ပြုလုပ်ထားသော ဒေါင်းလုပ်များ</string>
+  <string name="settings">ခ်ိန္ညႇိမႈမ်ား</string>
+  <string name="facebook">ေဖ့စ္ဘြတ္</string>
+  <string name="twitter">တြစ္တာ</string>
+  <string name="backup_apps">App မ်ားအား backup လုပ္ပါ</string>
+  <string name="dark">ရင့်သော</string>
+  <string name="light">ဖျော့သော</string>
+  <string name="updates_filter_summary">အမွန္ျခစ္ျခစ္ထားပါ၊ စမ္းသပ္ဗား႐ွင္းတို႔ကို ျမင္ႏိုင္မည္မဟုတ္ပါ.</string>
+  <string name="updates_filter_setting_title">စိတ္ခ်ရတဲ့ ဗား႐ွင္းသစ္ျမွင့္ႏိုင္မွာေတြကိုသာ ျပပါ။</string>
+  <string name="include_system_apps_title">စနစ္သံုး Apps မ်ား ထည့္သြင္းပါ</string>
   <string name="include_system_apps_summary">ေရြးခ်ယ္ျခင္းျဖင့္ စနစ္သံုး Apps ျပဳျပင္ေျပာင္းလဲမႈမ်ား (စက္ပစၥည္းထုတ္လုပ္သူမွ ထည့္သြင္းထားေသာ Apps မ်ား) ကို သင့္အား အသိေပးပါလိမ့္မည္</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
+  <string name="aptoide_url">http://www.aptoide.com/</string>
+  <!-- Permission pop-ups messages -->
+  <string name="access_to_get_accounts_rationale">အကောင့်များရယူရန် ဝင်ရောက်ခွင့်ကို ခွင့်ပြုရန် လိုအပ်ပါသည်</string>
+  <string name="unsubscribe">စာရင္းဖ်က္မည္</string>
+  <string name="developer_website">၀ဘ္ဆိုက္ - %s</string>
+  <string name="not_available">မရွိပါ</string>
+  <string name="developer_email">အီးေမးလ္ - %s</string>
+  <string name="developer_privacy_policy">ကိုယ္ေရးလံုၿခံဳမႈ မူ၀ါဒ - %s</string>
+  <string name="open">ဖွင့်ပါ</string>
+  <string name="button_header_more">ေနာက္ထပ္</string>
+  <string name="search">ရှာဖွေပါ</string>
+  <string name="update">အဆင့်မြှင့်တင်မှု</string>
+  <string name="uninstall">ျပန္ထုတ္မည္</string>
+  <string name="downgrade">အဆင့္ေလ်ာ့ခ်ျခင္း</string>
+  <string name="appview_followers_count_text">%1$s Follow လုပ်ထားသူများ</string>
+  <string name="other_versions_downloads_count_text">%1$s ဒေါင်းလုပ်များ</string>
+  <!-- Common (menu) -->
+  <string name="menu_select_all">အားလံုးကိုေရြးမည္</string>
+  <string name="menu_select_none">တစ္ခုမွမေရြးပါ</string>
+  <string name="clear">ဖ်က္မည္</string>
+  <!-- Excluded Updates Fragment -->
+  <string name="excluded_updates">အဆင့္မျမွင့္လိုသည့္ app မ်ား</string>
+  <string name="no_excluded_updates_msg">App တစ်ခု၏ဗားရှင်းအသစ်သည် သင့်စက်ပစ္စည်းပေါ်တွင် အလုပ်မလုပ်ပါ သို့မဟုတ် အရည်အသွေးအချို့ လိုအပ်နေပါသည်? Apps များအား အဆင့်မြှင့်တင်ခြင်းမှ ပိတ်ပင်ပါ. အဆင့်မြှင့်မှုများခလုတ်သို့သွား၍ သင်ရပ်လိုသော app အပေါ်တွင် ကြာကြာနှိပ်ထားပါ.</string>
+  <!-- Excluded Updates Fragment (menu) -->
+  <string name="restore_updates">အဆင့္ျမွင့္တင္ထားသည္မ်ားကို  ျမွင့္တင္ၿပီးသည့္အတိုင္းထားမည္</string>
+  <string name="open_apps_manager">Apps မန်နေဂျာအား ဖွင့်ပါ</string>
+  <!-- Rollback Fragment -->
+  <string name="rollback">အဆင့္ေလွ်ာ့ခ်လိုသည့္ app မ်ား</string>
+  <string name="no_rollbacks_msg">မည္သည့္ app ကိုမဆို ၿပီးခဲ့ေသာ ဗားရွင္းသို႔ လ်င္ျမန္စြာ ျပန္လည္၍ အဆင့္ခ်ၿပီး မကိုက္ညီမွု ျပႆနာမ်ားအား ေျဖရွင္းပါ. (%s မွတဆင့္) သင္ထည့္သြင္းထားေသာ apps မ်ားအားလုံး၏ ဗားရွင္းႏွင့္ ထည့္သြင္းေသာေန႔စြဲ အပါအ၀င္ မွတ္တမ္းတစ္ခုအား သိမ္းထားပါ.</string>
+  <!-- Timeline Fragment -->
+  <string name="menu_card_timeline_clear">ဖ်က္မည္</string>
+  <string name="fragment_social_timeline_aptoide_team">Aptoide အဖွဲ့</string>
+  <string name="fragment_social_timeline_no_connection">ကွန်ရက်ဆက်သွယ်မှု မရှိပါ</string>
+  <string name="fragment_social_timeline_general_error">အခက္ခဲမ်ားရွိေနပါသည္. ေနာက္မွျပန္လုပ္ႏိုင္မလား?</string>
+  <string name="displayable_social_timeline_store_latest_apps_headline">ဤစတိုးတွင် Apps အသစ်များ ရှိသည်</string>
+  <string name="displayable_social_timeline_app_update_name">အပ္စ္ %1$s</string>
+  <string name="displayable_social_timeline_app_has_update">တစ်ခုရှိသည် %1$s</string>
+  <string name="displayable_social_timeline_article_get_app_button">App အားရယူပါ %1$s</string>
+  <string name="displayable_social_timeline_app_update">အဆင့္ျမွင့္တင္ျခင္း</string>
+  <string name="displayable_social_timeline_app_update_version">ဗားရွင္း %1$s</string>
+  <string name="displayable_social_timeline_app_update_button">အဆင့်မြှင့်တင်မှု %1$s</string>
+  <string name="appview_other_versions"><u>အခြား ဗားရှင်းများ</u></string>
+  <string name="appview_latest_version_text">နောက်ဆုံး ဗားရှင်း</string>
+  <string name="appview_rate_this_app">ဒီ app ကုိအဆင့္သတ္မွတ္ေပးမည္</string>
+  <string name="appview_read_all">အားလံုးဖတ္မည္ <![CDATA[>]]>;</string>
+  <string name="zero">၀</string>
+  <string name="working_well">ကောင်းစွာ အလုပ်လုပ်သည်</string>
+  <string name="needs_license">လိုင္စင္ လိုအပ္ပါသည္</string>
+  <string name="fake_app">App အတု</string>
+  <string name="virus">ဗိုင္းရပ္စ္</string>
+  <string name="additional_information">ထပ်တိုးသတင်းအချက်အလက်</string>
+  <string name="displayable_social_timeline_app_update_updated">အပ္ဒိတ္လုပ္ၿပီးပါၿပီ</string>
+  <string name="displayable_social_timeline_app_update_updating">အဆင့်မြှင့်တင်ခြင်း</string>
+  <string name="displayable_social_timeline_app_update_error">အဆင့်မြှင့်တင်မှု အမှား</string>
+  <!-- need translation -->
+  <string name="appview_good_app_guaranteed">ေကာင္းမြန္ေသာအပ္စ္ျဖစ္ေၾကာင္း အာမခံသည္။</string>
+  <string name="appview_good_app_description">ဤ application သည္ ဗိုင္းရပ္စ္၊ ေမးလ္ဝဲႏွင့္ အျခား မသမာေသာ တုိက္ခိုက္မႈမ်ားကို စစ္ေဆးသည့္ လံုၿခံဳေရးစစ္ေဆးမႈကို ျဖတ္ေက်ာ္ခဲ့ၿပီး မည္သည့္အႏၲရာယ္မွ် မပါဝင္ပါ!</string>
+  <!-- -->
+  <!-- Preferences -->
+  <!-- "Other <app name> versions on different Stores" -->
+  <string name="other_versions_partial_title_1">အျခား</string>
+  <string name="other_versions_partial_title_2">မတူညီသော စတိုးများရှိ ဗားရှင်းများ</string>
+  <string name="displayable_social_timeline_recommendation_similar_to">%1$s အေပၚ အေျခခံထားေသာ</string>
+  <string name="displayable_social_timeline_recommendation_similar_and">ႏွင့္</string>
+  <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">%s မှရည်ညွှန်းသည်</string>
+  <string name="social_facebook_screen_title">ေဖ့စ္ဘြတ္</string>
+  <string name="social_twitter_screen_title">တြစ္တာ</string>
+  <string name="top_comments">ထိပ်တန်း ထင်မြင်ချက်များ</string>
+  <string name="rate">အဆင့္သတ္မွတ္ပါ</string>
+  <string name="rate_app">%s အား အဆင့္သတ္မွတ္ပါ</string>
+  <string name="title">ခေါင်းစဉ်</string>
+  <string name="tap_a_star">အဆင့်သတ်မှတ်ရန် ကြယ်တစ်ပွင့်အား နှိပ်ပါ</string>
+  <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
+  <string name="other_versions_on_different_stores">မတူညီသော စတိုးများရှိ အခြားဗားရှင်းများ</string>
+  <string name="review_optional">သံုးသပ္ခ်က္ (ေရြးခ်ယ္စရာ)</string>
+  <string name="feedback_not_valid">မွန္ကန္ေသာ အေၾကာင္းအရာကို ထည့္ေပးပါ!</string>
+  <string name="thank_you_for_your_opinion">သင့်ထင်မြင်ချက်အတွက် ကျေးဇူးတင်ပါသည်!</string>
+  <string name="ignore_update">အပ္ဒိတ္ မလုပ္ေသးပါ</string>
+  <string name="five_numeric">၅</string>
+  <string name="four_numeric">၄</string>
+  <string name="three_numeric">၃</string>
+  <string name="two_numeric">၂</string>
+  <string name="one_numeric">၁</string>
+  <string name="just_reviews">သုံးသပ်ချက်များသာ</string>
+  <string name="downgrading_msg">အဆင့်ချခြင်း</string>
+  <string name="updating_msg">အပ္ဒိတ္လုပ္ေနပါသည္</string>
+  <string name="installing_msg">ထည့်သွင်းခြင်း</string>
+  <string name="needs_permission_to_fs">ပြင်ပဖိုင်စနစ်အား အသုံးပြုရန် ခွင့်ပြုချက်လိုအပ်ပါသည်</string>
+  <string name="added_to_scheduled">Menu &gt; ေဒါင္းလုဒ္စာရင္း ထဲသို႔ ထည့္ေပးျပီးပါျပီ</string>
+  <string name="pause_all_downloads">ဒေါင်းလုပ်များအား ရပ်ထားပါ</string>
+  <string name="all_stores">စတိုးမ်ားအားလံုး</string>
+  <string name="followed_stores">Follow လုပ်ထားသော စတိုးများ</string>
+  <string name="storage_access_permission_request_message">ဤ app အား ကျွန်ုပ်တို့ ဒေါင်းလုပ်လုပ်၍ ထည့်သွင်းနိုင်ရန် သင့်ဖုန်း၏ သိမ်းဆည်းမှုအား ၀င်ရောက်ရန် ကျေးဇူးပြု၍ ခွင့်ပြုပါ.</string>
   <string name="remote_install_menu_title">တီဗြီတြင္ ထည့္သြင္းပါ</string>
   <string name="install_on_tv_mobile_error">ဤလုပ္ေဆာင္ခ်က္အား အသံုးျပဳရန္ သင့္စက္ပစၥည္းအား ဝိုင္ဖိုင္ျဖင့္ ေသခ်ာခ်ိတ္ဆက္ထားပါ.</string>
   <string name="remote_install_title">ဦးတည္ စက္ပစၥည္းအား ေရြးခ်ယ္ပါ</string>
@@ -247,30 +126,166 @@ http://aptoi.de/tv</string>
   <string name="remote_install_tip">သင့္ AndroidTV အား ကြန္ရက္ႏွင့္ဆက္သြယ္ထားေၾကာင္း ေသခ်ာေအာင္ ျပဳလုပ္ေပးပါ</string>
   <string name="remote_install_retry">ျပန္ႀကိဳးစားပါ</string>
   <string name="remote_install_help">အကူအညီ</string>
+  <!-- WIZARD -->
+  <string name="wizard_skip"><b>ကျော်ပါ</b></string>
+  <!-- WIZARD PAGE 1 -->
+  <string name="wizard_title_viewpager_one">အခု Timeline တစ္ခုႏွင့္အတူ</string>
+  <string name="wizard_sub_title_viewpager_one"><b>လုံခြုံမှုရှိ</b> ပြီး <b>ပျော်စရာကောင်းသော</b> ခရီးတစ်ခုအား စတင်လိုက်ပါ.</string>
+  <!-- WIZARD PAGE 2 -->
+  <string name="wizard_title_viewpager_two">သင့္ကိုယ္ပိုင္စတိုးကို ရယူပါ</string>
+  <string name="wizard_sub_title_viewpager_two"><b>နောက်ဆုံး apps များအား</b>ရယူပါ, <b>ဆက်စပ်မှုရှိသော စတိုးများအား</b>ရှာဖွေပြီး <b>စိတ်ကြိုက်ပြုလုပ်ထားသော ပါ၀င်မှုအား</b>ရယူပါ</string>
+  <!-- WIZARD PAGE 3 -->
+  <string name="wizard_title_viewpager_three"><b>လူမှုအဖွဲ့အစည်းတွင် ပါ၀င်ပါ</b></string>
+  <string name="wizard_sub_title_viewpager_three">သင္ စိတ္၀င္စားေသာ အပ္စ္ကို ေ၀မွ်သူမ်ား <b>ရွာေဖြပါ</b>။ \n<b> အဆင့္သတ္မွတ္ၿပီး ေ၀မွ်ပါ။</b></string>
+  <string name="wizard_sub_sub_title_viewpager_three">ကၽြႏု္ပ္တို႔နဲ႔ ခ်ိတ္ဆက္ပါ။</string>
+  <string name="you_need_to_be_logged_in">သင် အကောင့်၀င်ထားရန် လိုအပ်ပါသည်</string>
+  <string name="follow">Follow လုပ္ပါ</string>
+  <!--need translation-->
+  <string name="followed">Follow လုပ်ထားသော</string>
+  <string name="unfollow_yes_no">Follow မလုပ်လိုသည်မှာ သေချာပါသလား?</string>
+  <string name="unfollow">Follow မလုပ်ပါ</string>
+  <string name="unfollowing_store_message">Follow မလုပ်ခြင်း %s</string>
+  <string name="store_followed">Follow လုပ်ထားသော %s စတိုး</string>
+  <string name="subscribers">ပံုမွန္မွာယူသူမ်ား</string>
+  <string name="apps">App မ်ား</string>
+  <!---->
+  <string name="be_the_first_to_rate_this_app">ဤ app အား ပထမဆုံး အဆင့်သတ်မှတ်သူ ဖြစ်လိုက်ပါ</string>
+  <string name="rate_this_app">ဤ app ကို အဆင့်သတ်မှတ္မည္</string>
+  <string name="dialog_install_warning_proceed_button">ဆက်လက်လုပ်ဆောင်ပါ</string>
+  <string name="dialog_install_warning_search_for_trusted_app_button">႐ွာေဖြႏိုင္ရန္</string>
+  <string name="dialog_install_warning_trusted_app_button">ယုံၾကည္ရသည့္ App</string>
+  <string name="dialog_install_warning_careful_text">ယခု app  ကိုထည့္မည္ဆိုပါက သတိထားပါ. ျပင္ဆင္ထားႏိုင္သည္၊ ဗိုင္းရပ္စ္ သို႔မဟုတ္ ေမးလ္ဝဲ ႐ွိေနႏိုင္သည္.</string>
+  <string name="dialog_install_warning_credibility_text">ေ႐ွ႕မဆက္မီ စတိုး၏စိတ္ခ်ရမႈႏွင့္ မွတ္ခ်က္တို႔ကိုၾကည့္ပါ. Aptoide အေနျဖင့္ %1$s ယုံၾကည္ရသည့္ app မ်ားကိုသာ ထည့္ရန္ အၿမဲတိုက္တြန္းပါသည္.</string>
+  <string name="dialog_install_warning_trusted_version_button">ယုံၾကည္ရသည့္ဗားရွင္း</string>
+  <string name="dialog_install_warning_get_trusted_version_button">ရယူမည္</string>
+  <string name="flag_results">Flag ပြခြင်း ရလဒ်များ</string>
+  <string name="helpful">အသံုး၀င္ေသာ</string>
+  <string name="not_helpful">အသံုးမ၀င္ေသာ</string>
+  <string name="description_not_available">ဤ app အတွက် ရရှိနိုင်သော ဖော်ပြချက် မရှိပါ</string>
+  <string name="top_stores_fragment_title">ထိပ္တန္း စတိုးမ်ား</string>
+  <!--server translations hammered-->
+  <string name="home_title">ပင်မ</string>
+  <string name="community">အသိုက္အ၀န္း</string>
+  <string name="stores">စတိုးမ်ား</string>
+  <string name="updates">အပ္ဒိတ္မ်ား</string>
+  <string name="social_timeline">လူမှုအသိုင်းအဝိုင်း အချိန်လိုင်း</string>
+  <string name="downloads"> ေဒါင္းလုပ္မ်ား</string>
+  <string name="apps_timeline"><b>Apps တိုင္းမ္လိုင္း</b></string>
+  <string name="timeline"><b>အခ်ိန္လိုင္း</b></string>
+  <string name="latest_reviews">ေနာက္ဆံုးေသာ ျပန္လည္ဆန္းစစ္ခ်က္မ်ား</string>
+  <string name="latest_comments">ေနာက္ဆံုးမွတ္ခ်က္မ်ား</string>
+  <string name="action">အက်ရှင်</string>
+  <string name="adventure">စွန့်စားခန်း</string>
+  <string name="all">အားလံုး</string>
+  <string name="applications">applications များ</string>
+  <string name="arcade">အကြွေစေ့ထည့်ကစားရသော ဂိမ်းခုံ</string>
+  <string name="arcade_action">အကြွေစေ့ထည့်ကစားရသော ဂိမ်းခုံနှင့် အက်ရှင်</string>
+  <string name="board">ကတ်ပြား</string>
+  <string name="books_reference">စာအုပ်များနှင့် ရည်ညွှန်းချက်</string>
+  <string name="brain_puzzle">ဦးနှောက် &amp; ပဟေဠိ</string>
+  <string name="business">စီးပွားရေး</string>
+  <string name="card">ကတ်</string>
+  <string name="cards_casino">ဖဲခ်ပ္ႏွင့္ ကာစီႏို</string>
+  <string name="casino">ကာစီနို</string>
+  <string name="casual">ပုံမှန်</string>
+  <string name="comics">ရုပ်ပြများ</string>
+  <string name="communication">ဆက်သွယ်ရေး</string>
+  <string name="demo">အစမ်း</string>
+  <string name="education">သင်ကြားမှု</string>
+  <string name="educational">ပညာရေးဆိုင်ရာ</string>
+  <string name="entertainment">ဖျော်ဖြေရေး</string>
+  <string name="family">မိသားစု</string>
+  <string name="finance">ငွေရေးကြေးရေး</string>
+  <string name="games">ဂိမ္းမ်ား</string>
+  <string name="health">ကျန်းမာရေး</string>
+  <string name="health_fitness">ကျန်းမာရေးနှင့် ကြံ့ခိုင်ရေး</string>
+  <string name="highlighted">အသားေပးေဖာ္ျပထားေသာ</string>
+  <string name="local_top_apps">ေဒသႀကိဳက္ App မ်ား</string>
+  <string name="lifestyle">လူနေမှုပုံစံ</string>
+  <string name="media_video">မီဒီယာနှင့် ဗွီဒီယို</string>
+  <string name="medical">ဆေးဖက်ဆိုင်ရာ</string>
+  <string name="multimedia">မီဒီယာအမျိုးမျိုး</string>
+  <string name="music">ဂီတ</string>
+  <string name="music_audio">ဂီတနှင့် အသံ</string>
+  <string name="news_magazines">သတင်းများနှင့် magazines များ</string>
+  <string name="news_weather">သတင်းများ &amp; ရာသီဥတု</string>
+  <string name="personalization">စိတ်ကြိုက်ပြုပြင်ခြင်း</string>
+  <string name="photography">ဓာတ်ပုံဆိုင်ရာ</string>
+  <string name="productivity">ထုတ်လုပ်နိုင်စွမ်း</string>
+  <string name="puzzle">ပဟေဠိ</string>
+  <string name="racing">ပြိုင်ပွဲ</string>
+  <string name="reference">ရည်ညွှန်းချက်</string>
+  <string name="role_playing">တကိုယ်တော်</string>
+  <string name="simulation">သွင်တူပြု</string>
+  <string name="social">လူမှုရေး</string>
+  <string name="software_libraries">ဆော့ဝဲ စာကြည့်တိုက်များ</string>
+  <string name="sports">အားကစားမ်ား</string>
+  <string name="sports_games">အားကစားဂိမ်းများ</string>
+  <string name="strategy">နည်းဗျူဟာ</string>
+  <string name="themes">အသြင္အျပင္မ်ား</string>
+  <string name="tools">ကိရိယာများ</string>
+  <string name="top_apps">ထိပ်တန်း Apps များ</string>
+  <string name="top_games">ထိပ္တန္းဂိမ္း</string>
+  <string name="transport">သယ်ယူပို့ဆောင်ရေး</string>
+  <string name="transportation">သယ္ယူပို႔ေဆာင္ေရး</string>
+  <string name="travel">ခရီးသွားခြင်း</string>
+  <string name="travel_local">ခရီးသွားခြင်းနှင့် ဒေသဆိုင်ရာ</string>
+  <string name="trending">လတ္တေလာ လူႀကိဳက္မ်ားေနေသာ</string>
+  <string name="trivia">ဉာဏ်စမ်း</string>
+  <string name="word">စကားလုံး</string>
+  <string name="libraries_demo">စာကြည့်တိုက်များ &amp; အစမ်း</string>
+  <string name="shopping">ဈေး၀ယ်ခြင်း</string>
+  <string name="weather">ရာသီဥတု</string>
+  <string name="latest_applications"> ေနာက္ဆံုးထြက္ App မ်ား</string>
+  <string name="top_apps_in_store">ယခုစတိုးရွိ ထိပ္တန္း App မ်ား</string>
+  <string name="apps_for_kids">ကေလးမ်ားအတြက္ Apps</string>
+  <string name="aptoide_publishers">%s စီစဥ္သူမ်ား</string>
+  <string name="music_video">ဂီတ &amp; ဗီဒီယို</string>
+  <string name="essential_apps">မရွိမျဖစ္ Appsမ်ား</string>
+  <string name="summer_apps">ေႏြရာသီ Apps</string>
+  <string name="play_it">၄င္းကို ဖြင့္ပါ။</string>
+  <!--home Fragment-->
+  <string name="featured_stores">အသားေပးထားေသာ စတိုးမ်ား</string>
+  <!--AppsTimeline new string-->
+  <string name="displayable_social_timeline_article_related_to">%1$s ႏွင့္ သက္ဆိုင္ေသာ</string>
+  <string name="appstimeline_update_app">အပ္စ္</string>
+  <!--custom tabs-->
+  <string name="customtabs_open_native_app">App တြင္ဖြင့္ပါ</string>
+  <!--Download fragment-->
+  <string name="fragment_download_no_connection">ေဒါင္းလုပ္ျပဳလုပ္ထားေသာ apps မ်ား မရွိပါ</string>
+  <string name="fragment_download_no_connection_subtitle">သင္စတင္၍ ေဒါင္းလုပ္ျပဳလုပ္သည္ႏွင့္ apps အသစ္မ်ားသည္ ဤေနရာတြင္ ေပၚလာပါလိမ့္မည္!</string>
+  <string name="newer_version_available">ပို၍သစ္ေသာ ဗားရွင္း ရရွိပါၿပီ</string>
+  <string name="add_store">App စတိုး</string>
+  <string name="downgrade_warning_dialog">အဆင့္ခ်ျခင္းျဖင့္ သင္သည္သက္ဆိုင္ရာ app အခ်က္အလက္အား ဆံုး႐ွံုးႏိုင္ၿပီး app အေကာင့္မွလည္း အေကာင့္ထြက္သြားႏိုင္ပါသည္.</string>
+  <string name="displayable_social_timeline_similar_to">%1$s ႏွင့္တူညီေသာ</string>
   <string name="freed_space">%s လြတ္ပါသည္</string>
   <string name="storage_dialog_title">Aptoide သိုေလွာင္မႈအား ရွင္းလင္းပါ</string>
   <string name="clear_cache_dialog_message">အိုင္ကြန္မ်ား၊ ပံုမ်ား၊ ေဒါင္းလုပ္ဆြဲထားေသာ apk, obb, ဝဘ္ဝန္ေဆာင္မႈ အခ်က္အလက္မ်ား အားလံုးကို ပယ္ဖ်က္လိုသည္မွာ ေသခ်ာပါသလား …</string>
   <string name="clear_cache_summary">အိုင္ကြန္မ်ား။ ပံုမ်ား၊ ေဒါင္းလုပ္ဆြဲထားေသာ apk, obb ႏွင့္ ဝဘ္ဝန္ေဆာင္မႈ အခ်က္အလက္မ်ားအား ဖ်က္ပါ …</string>
   <string name="clearcache_title">သိုေလွာင္္မႈအား ရွင္းလင္းပါ</string>
-
+  <!-- Stores tab -->
   <string name="recommended_stores">ညႊန္းဆိုလိုေသာ စတိုးမ်ား</string>
   <string name="create_store_displayable_message">သင့္စတုိးအား ယခုပင္ ဖန္တီးၿပီး သင့္ Apps မ်ားအား စတင္မွ်ေဝပါ!</string>
-  <string name="create_store_displayable_button">စတိုးအား ဖန္တီးပါ</string>
+  <string name="create_store_displayable_button">စတိုးပြုလုပ်ပါ</string>
   <string name="my_store_created_displayable_message">သင့္ Android App စတိုး</string>
-  <string name="create_store_displayable_explore_message">"ျဖစ္ႏိုင္ေခ်မ်ားအားလံုး ထည့္သြင္း၍  ခ်ဲ႕ထြင္ပါ"</string>
+  <string name="create_store_displayable_created_store_short_term_message">သင့့္စတိုးအား ဖန္တီးလိုက္ၿပီ ျဖစ္ပါသည္!</string>
+  <string name="create_store_displayable_explore_message">ျဖစ္ႏိုင္ေခ်မ်ားအားလံုး ထည့္သြင္း၍  ခ်ဲ႕ထြင္ပါ</string>
   <string name="create_store_displayable_explore_button">ခ်ဲ႕ထြင္ပါ</string>
-
+  <string name="follow_store">စတိုးအား follow လုပ္ပါ</string>
+  <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">သင့္စတုိးတြင္ applications မ်ား မရွိေသးပါ.</string>
   <string name="install_app_outter_pt2">ၿပီးေနာက္ Apps မ်ားတင္ၿပီး ယင္းတုိ႕အား တကမာၻလံုးႏွင့္ မွ်ေဝပါ!</string>
-  <string name="install_app_inner">" %1$s အား ထည့္သြင္းပါ "</string>
-  <string name="open_app_inner">" %1$s အား ဖြင့္ပါ "</string>
+  <string name="install_app_inner"> %1$s အား ထည့္သြင္းပါ </string>
+  <string name="open_app_inner"> %1$s အား ဖြင့္ပါ </string>
   <string name="downloads_count">ေဒါင္းလုပ္မ်ား - %1$s</string>
   <string name="version_number">ဗားရွင္းမ်ား - %1$s</string>
   <string name="app_size">အရြယ္အစားမ်ား - %1$s</string>
   <string name="comment_on_store">%1$s စတိုးအား မွတ္ခ်က္ေပးပါ</string>
   <string name="word_this">ယင္း</string>
-
+  <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">သင့္ followers မ်ား ျမင္ရမည္မွာ :</string>
+  <string name="social_timeline_you_will_share_comment">သင့္ကို ေစာင့္ၾကည့္ေနသူမ်ားသည္ သင္၏မွတ္ခ်က္ကို ျမင္ရလိမ့္မည္:</string>
+  <string name="social_timeline_you_will_share_like">သင့္ကို ေစာင့္ၾကည့္ေနသူမ်ားသည္ သင္ ႀကိဳက္ႏွစ္သက္ထားေသာအရာမ်ားကို ျမင္ရလိမ့္မည္:</string>
   <string name="social_timeline_share_title">ကတ္အႀကိဳျမင္ကြင္းအား မွ်ေဝပါ</string>
   <string name="social_timeline_share_title_checkbox">ကၽြႏ္ုပ္၏ အသံုးျပဳသူ ပ႐ိုဖိုင္အား Apps Timeline တြင္ သီးသန္႕ျဖစ္ေအာင္ ျပဳလုပ္ပါ. ကၽြႏ္ုပ္၏ စတုိးအေၾကာင္းကိုသာ ျပပါ/မွ်ေဝပါ.</string>
   <string name="social_timeline_share_title_checkbox_fb">ကၽြႏ္ုပ္၏ အသံုးျပဳသူ ပ႐ိုဖိုင္အား Apps Timeline တြင္ အမ်ားျမင္ႏိုင္ရန္ ခြင့္ျပဳပါ</string>
@@ -280,7 +295,7 @@ http://aptoi.de/tv</string>
   <string name="social_timeline_share_dialog_opt_out_text_1">သင့္ပ႐ိုဖိုင္အား ဝွက္ထားျခင္းျဖင့္ သင့္သူငယ္ခ်င္းမွ သင့္အား Apps Timeline တြင္ ရွာေတြ႕ျခင္းႏွင့္ follow လုပ္ႏိုင္ျခင္း မရွိပါ.</string>
   <string name="social_timeline_share_dialog_opt_out_text_2"><b>www.aptoide.com</b>သို႕ သြားေရာက္ပါ၊ ကိုယ္ေရးလံုၿခံဳမႈ သတ္မွတ္ခ်က္မ်ားအား ေျပာင္းလဲရန္အတြက္ သင့္အေကာင့္အားဝင္ၿပီး <b>Settings</b> သို႕သြားပါ.</string>
   <string name="social_timeline_share_dialog_installed_and_recommended">ထည့္သြင္းထားၿပီး ညႊန္းဆိုထားေသာ</string>
-  <string name="social_timeline_share_bar_login">သင့့္သူငယ္ခ်င္းေတြ ဘာေတြထည့္သြင္းထားသလဲ?</string>
+  <string name="social_timeline_share_bar_login">သင့္သူငယ္ခ်င္းေတြက ဘာေတြ ထည့္သြင္းထားၾကသလဲ?</string>
   <string name="social_timeline_share_bar_following">စတုိးမ်ားကို ပို၍ follow လုပ္ၿပီး သင့္သူငယ္ခ်င္းႏွင့္ ဆက္သြယ္ပါ.</string>
   <string name="social_timeline_share_bar_followers">Followers မ်ားပို၍ ရရွိေစရန္ သင့္စတိုးအား ျမႇင့္တင္ပါ.</string>
   <string name="social_timeline_followers_fragment_title">%d follower(မ်ား)</string>
@@ -291,37 +306,23 @@ http://aptoi.de/tv</string>
   <string name="social_timeline_shared_by">%1$s မွ မွ်ေဝထားေသာ</string>
   <string name="social_timeline_who_liked">ဘယ္သူေတြႀကိဳက္ၾကသလဲ</string>
   <string name="social_timeline_users_private">%d မ်ားသည္ သီးသန္႕ျဖစ္ပါသည္</string>
-
-  <string name="edit_store">ျပင္ဆင္ပါ</string>
-
+  <!-- Store Meta widget -->
+  <string name="edit_store">ပြုပြင်ပါ</string>
+  <!-- Comments on store -->
   <string name="comment_store">စတိုးအား မွတ္ခ်က္ေပးပါ</string>
   <string name="comment_store_title">ဤစတိုးရွိ မွတ္ခ်က္မ်ား</string>
   <string name="be_the_first_to_send_feedback_about_this_store">ဤစတိုးအေၾကာင္း ပထမဆံုး တံု႕ျပန္ခ်က္ေပးသူ ျဖစ္လိုက္ပါ</string>
-
-
+  <!-- Followers and following -->
   <string name="timeline_followers">Followers မ်ား %d</string>
-  <string name="timeline_followed">Following %d</string>
-  <string name="timeline_stats_followers">Followers မ်ား</string>
+  <string name="timeline_followed">%d ကို ေစာင့္ၾကည့္ေနသည္</string>
+  <string name="timeline_stats_followers">Follow လုပ္ထားသူမ်ား</string>
   <string name="timeline_login_message">သင့္သူငယ္ခ်င္းေတြက ဘာေတြ ထည့္သြင္းထားၾကသလဲ?</string>
   <string name="private_followers_message">%d followers မ်ားသည္ သီးသန္႕ ျဖစ္ပါသည္</string>
   <string name="private_following_message">%d သီးသန္႕ အသံုးျပဳသူမ်ား/စတိုးမ်ားအား သင္ follow လုပ္ထားပါသည္</string>
-
+  <!-- Payments -->
   <string name="reviews_expand_button">%d တံု႕ျပန္မႈမ်ား</string>
   <string name="out_of_space_dialog_title">ေနရာမက်န္ေတာ့ပါ</string>
   <string name="out_of_space_dialog_message">ဆက္လက္လုပ္ေဆာင္ရန္ ေနရာရွင္းေပးပါ.</string>
-
-<string name="password">စကားဝွက္</string>
-  <string name="login">အေကာင့္ဝင္ပါ</string>
-  <string name="my_account">ကၽြႏ္ု၏ အေကာင့္</string>
-  <string name="spot_share">ေနရာႏွင့္ မွ်ေ၀မႈ</string>
-  <string name="setting_schdwntitle">စီစဥ္ထားေသာ ေဒါင္းလုပ္မ်ား</string>
-  <string name="settings">ခ်ိန္ညႇိမႈမ်ား</string>
-  <string name="facebook">Facebook</string>
-  <string name="twitter">Twitter</string>
-  <string name="backup_apps">App မ်ားအား backup လုပ္ပါ</string>
-
-  <string name="timeline"><b>အခ်ိန္လိုင္း</b></string>
-  <string name="create_store_displayable_created_store_short_term_message">သင့့္စတိုးအား ဖန္တီးလိုက္ၿပီ ျဖစ္ပါသည္!</string>
   <string name="setting_category_autoupdate">%s အပ္ဒိတ္မ်ား</string>
   <string name="setting_category_autoupdate_title">%s အပ္ဒိတ္ အသိေပးခ်က္မ်ားကို ရယူပါ</string>
   <string name="setting_category_autoupdate_message">%s ဗားရွင္းအသစ္မ်ားကို အခါအားေလ်ာ္စြာ စစ္ေဆးပါ</string>
@@ -330,7 +331,36 @@ http://aptoi.de/tv</string>
   <string name="create_store_displayable_created_store_long_term_message">စာလံုး အရွည္</string>
   <string name="create_store_displayable_explore_long_term_button">စတိုးအား ၾကည့္႐ႈပါ</string>
   <string name="create_store_displayable_empty_description_message">သင့္စတိုးအတြက္ ေဖာ္ျပခ်က္တစ္ခုကို ထည့္သြင္းပါ. ေဖာ္ျပခ်က္ေကာင္းတစ္ခုသည္ follow လုပ္သူမ်ားႏွင့္ ျပန္လွန္တံု႕ျပန္မႈမ်ား ပို၍ရရန္ အကူအညီ ျဖစ္ေစပါသည္.</string>
-
+  <string name="fragment_spot_share_preview_start_button">စပါ</string>
+  <!-- 02/2017 strings for login / sign up -->
+  <string name="join_company">%s တြင္ ပါ၀င္ပါ</string>
+  <string name="login">အကောင့်၀င်ပါ</string>
+  <string name="login_company">%s တြင္ အေကာင့္၀င္ပါ</string>
+  <string name="connect_with_facebook">Facebook ျဖင့္ ဆက္သြယ္ပါ</string>
+  <string name="connect_with_google">Google ျဖင့္ ဆက္သြယ္ပါ</string>
+  <string name="accept_terms_signup">Aptoide ႏွင့္ ပူးေပါင္းျခင္းျဖင့္ Aptoide ၏ စည္းကမ္းခ်က္မ်ားႏွင့္ အေျခအေနမ်ား အပါအ၀င္ ထုတ္လုပ္သူမ်ားအတြက္ ပါ၀င္မႈ မူ၀ါဒကို သေဘာတူျခင္း ျဖစ္ပါသည္.</string>
+  <string name="recover_password">သင့္စကား၀ွက္အား ျပန္လည္ရယူပါ</string>
+  <string name="email">အီးေမးလ္</string>
+  <string name="password">လျှို့ဝှက်စကားလုံး</string>
+  <string name="create_password">စကား၀ွက္ ဖန္တီးပါ</string>
+  <string name="store_suspended_message">စတိုး ဆိုင္းငံံ့ထားေသာ</string>
+  <string name="facebook_login_cancelled">ေဖ့စ္ဘြတ္ျဖင့္ အေကာင့္၀င္ျခင္းကို ပယ္ဖ်က္သည္</string>
+  <string name="google_login_cancelled">ဂူးဂဲလ္ျဖင့္ အေကာင့္၀င္ျခင္း က်ရႈံးသည္</string>
+  <string name="login_separator_text">(သို႔) သင့္အီးေမးလ္ျဖင့္ ခ်ိတ္ဆက္ပါ</string>
+  <!-- Add stores dialog -->
+  <string name="add_store_dialog_title">မတူညီေသာ စတိုးမ်ားတြင္ သင့္အတြက္ သင့္ေလ်ာ္သည့္ သီးသန္႕ ပါ၀င္မႈကို ေတြ႕ရွိႏိုင္ပါသည္</string>
+  <string name="add_store_dialog_top_stores">ထိပ္တန္း စတိုးမ်ားကို ရွာေဖြပါ</string>
+  <string name="add_store_dialog_top_stores_small_text">ႏွင့္ သီးသန္႕ ပါ၀င္မႈမ်ားကို ရွာေဖြပါ!</string>
+  <!-- Login -->
+  <string name="activity_login_title">အေကာင့္၀င္ပါ</string>
+  <string name="activity_login_forgot_password_button">လျှို့ဝှက်စကားလုံး မေ့နေပါသလား?</string>
+  <string name="activity_login_button">အေကာင့္၀င္ပါ</string>
+  <string name="activity_login_sign_up_button">အေကာင့္အသစ္ဖြင့္ပါ</string>
+  <string name="view_credentials_username_hint">အီးေမးလ္</string>
+  <string name="view_credentials_password_hint">စကား၀ွက္</string>
+  <string name="permission_access_deny">ျပင္ပသိုေလွာင္မႈအား ဖတ္ရန္ႏွင့္ ေရးရန္ ခြင့္ျပဳမႈကို ျငင္းဆိုထားပါသည္</string>
+  <string name="permission_account_deny">အေကာင့္မ်ားအား ရရွိရန္ ခြင့္ျပဳမႈကို ျငင္းဆိုထားပါသည္</string>
+  <!-- Address book -->
   <string name="addressbook_increase_network_message">သင့္ကြန္ရက္အား ျမႇင့္တင္ပါ.</string>
   <string name="addressbook_connect_with_friends_message">သူငယ္ခ်င္းမ်ားႏွင့္ ဆက္သြယ္ပါ.</string>
   <string name="addressbook_sync">လိပ္စာစာအုပ္ကို ခ်ိန္ကိုက္ပါ</string>
@@ -344,51 +374,27 @@ http://aptoi.de/tv</string>
 
 သင့္ကိုယ္ေရးလံုၿခံဳမႈကို ကာကြယ္ရန္အတြက္ မည္သည့္ ထင္ရွားေသာ ကိုယ္ေရးအခ်က္အလက္ကိုမွ် %1$s ဆာဗာမ်ားထံ ေပးပို႕မည္ မဟုတ္ပါ. သင့္အခ်က္အလက္ျဖင့္ အမည္မသိႏိုင္ေသာ လက္မွတ္ (hash) တစ္ခုအား ဖန္တီးမည္ျဖစ္ၿပီး အဆိုပါ hash အား မူလအဆက္အသြယ္ အခ်က္အလက္အျဖစ္သို႕ ျပန္ေျပာင္းႏိုင္မည္ မဟုတ္ပါ.
  </string>
-  <string name="addressbook_success">ေအာင္ျမင္ပါသည္!</string>
+  <string name="addressbook_success">အောင်မြင်ပါသည်!</string>
   <string name="addressbook_allow_friends_find">သင့္အား ရွာေဖြရန္ သူငယ္ခ်င္းမ်ားကို ခြင့္ျပဳပါ</string>
-  <string name="google">Google</string>
+  <string name="google">ဂူးဂဲလ္</string>
   <string name="done">ၿပီးပါၿပီ</string>
   <string name="addressbook_share_phone">သင့္သူငယ္ခ်င္မ်ားမွ သင့္အား %s ေပၚတြင္ လြယ္ကူစြာ ရွာေဖြႏိုင္ရန္ သင့္ဖုန္းနံပါတ္အား မွ်ေ၀ပါ</string>
-  <string name="addressbook_phone_number">ဖုန္းနံပါတ္</string>
+  <string name="addressbook_phone_number">ဖုန်းနံပါတ်</string>
   <string name="addressbook_insuccess_connection">သင့္လိပ္စာစာအုပ္ႏွင့္ ကၽြႏ္ုပ္တုိ႕ ဆက္သြယ္၍ မရပါ!</string>
   <string name="addressbook_invite_friends">သင္ႏွင့္ ပူးေပါင္းရန္ သူငယ္ခ်င္းမ်ားအား ဖိတ္ေခၚပါ!</string>
   <string name="addressbook_thanks_for_connecting">ဆက္သြယ္ျခင္းအတြက္ ေက်းဇူးတင္ပါသည္</string>
   <string name="addressbook_success_connected_friends">%2$s အသံုးျပဳေသာ %1$s သူငယ္ခ်င္းမ်ားႏွင့္ သင့့္အား ေအာင္ျမင္စြာ ဆက္သြယ္ၿပီးပါၿပီ</string>
-  <string name="addressbook_2nd_msg">ကၽြႏ္ုပ္တုိ႕၏ App Store ကို အသံုးျပဳေသာ သူငယ္ခ်င္းမ်ားႏွင့္ မိသားစုအား ရွာရန္ %1$s သည္ သင့္လိပ္စာစာအုပ္ကို ေလ့လာမည္ ျဖစ္ပါသည္. သင့္ကိုယ္ေရး လံုၿခံုမႈကို ကာကြယ္ရန္အတြက္ မည္သည့္ ကိုယ္ေရး အခ်က္အလက္ကိုမွ် %1$s ဆာဗာမ်ားသို႕ ေပးပို႕မည္ မဟုတ္ပါ</string>
-  <string name="addressbook_3rd_msg">ပို၍ ေလ့လာပါ</string>
-
-  <string name="join_company">%s တြင္ ပါ၀င္ပါ</string>
-  <string name="login_company">%s တြင္ အေကာင့္၀င္ပါ</string>
-  <string name="connect_with_facebook">Facebook ျဖင့္ ဆက္သြယ္ပါ</string>
-  <string name="connect_with_google">Google ျဖင့္ ဆက္သြယ္ပါ</string>
-  <string name="accept_terms_signup">Aptoide ႏွင့္ ပူးေပါင္းျခင္းျဖင့္ Aptoide ၏ စည္းကမ္းခ်က္မ်ားႏွင့္ အေျခအေနမ်ား အပါအ၀င္ ထုတ္လုပ္သူမ်ားအတြက္ ပါ၀င္မႈ မူ၀ါဒကို သေဘာတူျခင္း ျဖစ္ပါသည္.</string>
-  <string name="recover_password">သင့္စကား၀ွက္အား ျပန္လည္ရယူပါ</string>
-  <string name="email">အီးေမးလ္</string>
-  <string name="create_password">စကား၀ွက္ ဖန္တီးပါ</string>
-  <string name="store_suspended_message">စတိုး ဆိုင္းငံံ့ထားေသာ</string>
-
-  <string name="add_store_dialog_title">မတူညီေသာ စတိုးမ်ားတြင္ သင့္အတြက္ သင့္ေလ်ာ္သည့္ သီးသန္႕ ပါ၀င္မႈကို ေတြ႕ရွိႏိုင္ပါသည္</string>
-  <string name="add_store_dialog_top_stores">ထိပ္တန္း စတိုးမ်ားကို ရွာေဖြပါ</string>
-  <string name="add_store_dialog_top_stores_small_text">ႏွင့္ သီးသန္႕ ပါ၀င္မႈမ်ားကို ရွာေဖြပါ!</string>
-
-<string name="follow_store">စတိုးအား follow လုပ္ပါ</string>
-
-  <string name="fragment_spot_share_preview_start_button">စတင္ပါ</string>
-
-  <string name="activity_login_title">အေကာင့္၀င္ပါ</string>
-  <string name="activity_login_forgot_password_button">စကား၀ွက္ ေမ့ေနပါသလား?</string>
-  <string name="activity_login_button">အေကာင့္၀င္ပါ</string>
-  <string name="activity_login_sign_up_button">အေကာင့္အသစ္ဖြင့္ပါ</string>
-  <string name="view_credentials_username_hint">အီးေမးလ္</string>
-  <string name="view_credentials_password_hint">စကား၀ွက္</string>
-
-  <string name="permission_access_deny">ျပင္ပသိုေလွာင္မႈအား ဖတ္ရန္ႏွင့္ ေရးရန္ ခြင့္ျပဳမႈကို ျငင္းဆိုထားပါသည္</string>
-  <string name="permission_account_deny">အေကာင့္မ်ားအား ရရွိရန္ ခြင့္ျပဳမႈကို ျငင္းဆိုထားပါသည္</string>
-
   <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">%1$s အား အသံုးျပဳေနေသာ မည္သည့္ အဆက္အသြယ္ကိုမွ် ရွာမေတြ႕ပါ</string>
+  <string name="addressbook_2nd_msg">ကၽြႏ္ုပ္တုိ႕၏ App Store ကို အသံုးျပဳေသာ သူငယ္ခ်င္းမ်ားႏွင့္ မိသားစုအား ရွာရန္ %1$s သည္ သင့္လိပ္စာစာအုပ္ကို ေလ့လာမည္ ျဖစ္ပါသည္. သင့္ကိုယ္ေရး လံုၿခံုမႈကို ကာကြယ္ရန္အတြက္ မည္သည့္ ကိုယ္ေရး အခ်က္အလက္ကိုမွ် %1$s ဆာဗာမ်ားသို႕ ေပးပို႕မည္ မဟုတ္ပါ</string>
+  <string name="addressbook_3rd_msg">ပို၍ လေ့လာပါ</string>
   <string name="address_book_twitter_error">Twitter ခြင့္ျပဳျခင္း အမွား</string>
   <string name="follow_my_store">ဟယ္လို ဤေနရာတြင္ ကၽြႏ္ုပ္၏ %1$s စတိုးအား follow လုပ္ပါ</string>
+  <string name="store_meta_apps">အပ္စ္မ်ား\n%s</string>
+  <string name="store_meta_following">ေစာင့္ၾကည့္ေနသည္\n%s</string>
+  <string name="store_meta_followers">ေစာင့္ၾကည္သူမ်ား\n%s</string>
   <string name="addressbook_about">လိပ္စာ စာအုပ္အေၾကာင္း</string>
   <string name="addressbook_we_werent_able_to_connect_you">ကၽြႏ္ုပ္တုိ႕ သင့္အား ဆက္သြယ္၍ မရပါ</string>
-
+  <!-- Spot and Share-->
+  <string name="spot_share_line_1">အပ္စ္မ်ားကို သင့္သူငယ္ခ်င္းမ်ားထံ ေ၀မွ်ပါ</string>
+  <string name="spot_share_line_2">ဖုန္းတစ္လံုးမွ အျခားဖုန္းတစ္လံုးသို႔ အင္တာနက္ မပါဘဲႏွင့္</string>
 </resources>

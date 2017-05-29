@@ -1,253 +1,119 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="updates_filter_summary">Sa pagtsetsek nito, ikaw ay hindi aabisuhan ng mga beta na bersyon.</string>
-    <string name="updates_filter_setting_title">Ipakita lamang sa akin ang matatag na mga app bersyon updeyt</string>
-    <string name="unsubscribe">Tanggalin sa pagka-subskrayb</string>
-    <string name="developer_website">Ang website: %s</string>
-    <string name="not_available">N/A</string>
-    <string name="developer_email">Ang Email: %s</string>
-    <string name="developer_privacy_policy">Polisiya ng Pagka-Pribado: %s</string>
-
-
-    <string name="open">Buksan</string>
-    <string name="button_header_more">Mas marami</string>
-    <string name="search">Maghanap</string>
-
-    <string name="update">Update</string>
-    <string name="uninstall">Alisin sa pagka-install</string>
-    <string name="downgrade">I-downgrade</string>
-    <string name="menu_select_all">Piliin Lahat</string>
-    <string name="menu_select_none">Piliin ang Wala</string>
-    <string name="clear">Linisin</string>
-
-    <string name="excluded_updates">Mga Hindi Isinamang mga Update</string>
-    <string name="no_excluded_updates_msg">Ang bagong bersyon ng app ay hindi gumagana sa iyong aparato o ang ibang tampok ay
- nawawala? I-block ang mga app sa pag-uupdate. Pumunta sa tab ng mga Update at pindutin ng mahaba ang app na gusto mong ihinto ang pag-uupdate.</string>
-
-    <string name="restore_updates">Ibalik ang mga Update</string>
-    <string name="rollback">I-rollback</string>
-    <string name="menu_card_timeline_clear">Linisin</string>
-    <string name="fragment_social_timeline_no_connection">walang koneksyon ng network</string>
-    <string name="fragment_social_timeline_general_error">Mukhang nagkakaproblema. Maaari bang subukan mong muli maya-maya?</string>
-
-    <string name="displayable_social_timeline_app_update">Update</string>
-    <string name="appview_rate_this_app">Markahan ang app na ito</string>
-    <string name="needs_license">Kailangan ng Lisensya</string>
-    <string name="virus">Virus</string>
-    <string name="additional_information">Karagdagang impormasyon</string>
-    <string name="displayable_social_timeline_app_update_updated">Na-update</string>
-    <string name="displayable_social_timeline_recommendation_similar_and">at</string>
-    <string name="social_facebook_screen_title">Facebook</string>
-    <string name="social_twitter_screen_title">Twitter</string>
-    <string name="title">TITULO</string>
-    <string name="feedback_not_valid">Maglagay ng katanggap-tanggap na Paksa!</string>
-    <string name="ignore_update">Balewalain ang update</string>
-    <string name="added_to_scheduled">Nadagdag sa Menu &gt; Mga Nakaskedyul na Downloads</string>
-    <string name="dialog_install_warning_proceed_button">Magpatuloy</string>
-    <string name="dialog_install_warning_search_for_trusted_app_button">Maghanap ng</string>
-    <string name="dialog_install_warning_trusted_app_button">Mapagkakatiwalaang App</string>
-    <string name="dialog_install_warning_careful_text">Maging maingat kung iyong pipiliin na iinstala ang app na ito. Ito ay baka sakaling napakialaman, mayroong mga virus o malware.</string>
-    <string name="dialog_install_warning_trusted_version_button">Mapagkakatiwalaang Bersyon</string>
-    <string name="dialog_install_warning_get_trusted_version_button">Kumuha</string>
-<string name="wizard_skip"><b>LAKTAWAN</b></string>
-    <string name="dark">Matingkad</string>
-    <string name="light">Magaan</string>
-
-    <string name="aptoide_email">aptoide@aptoide.com</string>
-    <string name="aptoide_url">http://www.aptoide.com/</string>
-
-    <string name="access_to_get_accounts_rationale">Kailangan mong pahintulutan ang akses sa Pagkuha ng Accounts (Get Accounts)</string>
-    <string name="appview_follow_store_button_text">Susunod?</string>
-    <string name="appview_followers_count_text">%1$s Mga Tagasunod</string>
-    <string name="other_versions_downloads_count_text">%1$s mga download</string>
-
-    <string name="open_apps_manager">Buksan ang Apps Manager</string>
-
-    <string name="no_rollbacks_msg">Mabilis na ibaba (downgrade) ang anumang app sa isang nakaraang bersyon at lutasin ang mga isyu ng hindi-pagkakaayon.
-Magpanatili ng isang log ng lahat ng iyong nainstalang app (sa pamamagitan ng %s) kasama ang bersyon at petsa ng pagka-instala.</string>
-
-    <string name="fragment_social_timeline_aptoide_team">Koponan ng Aptoide</string>
-    <string name="displayable_social_timeline_store_latest_apps_headline">Ang store na ito ay mayroong bagong Apps</string>
-    <string name="displayable_social_timeline_app_update_name">App na %1$s</string>
-    <string name="displayable_social_timeline_app_has_update">"mayroong  %1$s"</string>
-    <string name="displayable_social_timeline_article_get_app_button">Kumuha ng app %1$s</string>
-    <string name="displayable_social_timeline_app_update_version">Bersyon %1$s</string>
-    <string name="displayable_social_timeline_app_update_button">Update %1$s</string>
-    <string name="appview_other_versions"><u>Iba pang Mga Bersyon</u></string>
-    <string name="appview_latest_version_text">Pinakabagong bersyon</string>
-    <string name="appview_read_all">basahin lahat &gt;</string>
-    <string name="zero">0</string>
-    <string name="working_well">Gumagana ng Maayos</string>
-    <string name="fake_app">Pekeng App</string>
-    <string name="displayable_social_timeline_app_update_updating">Nag-uupdate</string>
-    <string name="displayable_social_timeline_app_update_error">I-update ang Kamalian</string>
-
-    <string name="other_versions_partial_title_1">Iba pa</string>
-    <string name="other_versions_partial_title_2">mga bersyon sa magkakaibang Mga Store</string>
-    <string name="displayable_social_timeline_recommendation_similar_to">Ibinatay sa %1$s</string>
-    <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">Ang %s ay nagrerekomenda</string>
-    <string name="top_comments">Mga Nangungunang Komento</string>
-    <string name="rate">Grado</string>
-    <string name="rate_app">Grado %s</string>
-    <string name="tap_a_star">Tapikin ang isang bituin upang makapag-grado</string>
-    <string name="other_versions_on_different_stores">Iba pang mga bersyon sa magkakaibang mga store</string>
-    <string name="review_optional">Rebyu (opsyonal)</string>
-    <string name="thank_you_for_your_opinion">Salamat sa iyong opinyon!</string>
-    <string name="five_numeric">5</string>
-    <string name="four_numeric">4</string>
-    <string name="three_numeric">3</string>
-    <string name="two_numeric">2</string>
-    <string name="one_numeric">1</string>
-    <string name="just_reviews">Mga Makatwirang Rebyu</string>
-    <string name="downgrading_msg">Ibinababa (downgrading)</string>
-    <string name="updating_msg">Ina-update</string>
-    <string name="installing_msg">Ini-instala</string>
-    <string name="needs_permission_to_fs">Kailangan ng permiso upang gamitin ang panlabas na Sistema ng File (external File System)</string>
-
-    <string name="pause_all_downloads">Sandaling Patigilin ang mga Download</string>
-    <string name="all_stores">Lahat ng mga Store</string>
-    <string name="followed_stores">Mga Nasundang Store</string>
-    <string name="storage_access_permission_request_message">Paki-pahintulutan ang akses sa imbakan ng iyong telepono para mai-download at mainstala namin ang app na ito.</string>
-
-    <string name="wizard_sub_title_viewpager_one"><b>Pinakamagandang mga app bidyo at balita</b> sa iisang lugar.
-Tuklasin ang mga apps sa pamamagitan ng iyong <b>mga kaibigan</b></string>
-    <string name="wizard_title_viewpager_two">Magkaroon ng iyong sariling Store<b>Mga App Timeline</b></string>
-    <string name="wizard_sub_title_viewpager_two">Ipasadya ang iyong store <b>upang makapagbahagi ng app
- sa mga kaibigan</b> at sa <b>Komunidad ng Aptoide.</b></string>
-
-    <string name="wizard_title_viewpager_three">Maging bahagi<b>Sumali sa komunidad</b></string>
-    <string name="you_need_to_be_logged_in">Kailangan na ikaw ay naka-log in</string>
-    <string name="follow">Sundan</string>
-    <string name="followed">Sinusundan</string>
-    
-    <string name="dialog_install_warning_credibility_text">Bago magpatuloy, i-tsek ang
- kredibilidad ng Store at iba pang mga komento ng user. Ang Aptoide ay palaging nagrerekomenda na iinstala mo lamang ang %1$s Mapapagkatiwalaang mga app.</string>
-    <string name="appview_good_app_guaranteed">Magandang App ay Garantisado!</string>
-    <string name="appview_good_app_description">Ang mga aplikasyong ito ay pumasa sa pang-seguridad na test para sa virus, malware at iba pang mga malisyosong pag-atake at hindi naglalaman ng anumang mga banta!</string>
-
-    <string name="unfollow_yes_no">Sigurado kang gusto mong hindi na sumunod?</string>
-    <string name="unfollow">Hindi na susunod</string>
-    <string name="unfollowing_store_message">Hindi na sumusunod %s</string>
-    <string name="store_followed">Store %s sinundan</string>
-
-    <string name="be_the_first_to_rate_this_app">Maging ang una sa pag-grado sa app na ito</string>
-    <string name="rate_this_app">Graduhan ang app na ito</string>
-
-    <string name="flag_results">Mga resulta ng bandera</string>
-    <string name="helpful">Nakakatulong</string>
-    <string name="not_helpful">Hindi Nakakatulong</string>
-    <string name="description_not_available">Walang magagamit na deskripsyon para sa app na ito</string>
-    <string name="top_stores_fragment_title">Mga Nangungunang Store</string>
-
-    <string name="home_title">Tahanan</string>
-    <string name="community">Komunidad</string>
-    <string name="stores">Mga Store</string>
-    <string name="updates">Mga update</string>
-    <string name="social_timeline">Ang Social Timeline</string>
-    <string name="downloads">Mga nai-download</string>
-    <string name="latest_reviews">Mga Pinakabagong Rebyu</string>
-    <string name="latest_comments">Mga Pinakabagong Komento</string>
-    <string name="action">Aksyon</string>
-    <string name="adventure">Abentura</string>
-    <string name="all">Lahat</string>
-    <string name="applications">Mga aplikasyon</string>
-    <string name="arcade">Arkada</string>
-    <string name="arcade_action">Arkada at Aksyon</string>
-    <string name="board">Ang Board</string>
-    <string name="books_reference">Mga Libro at Reperensiya</string>
-    <string name="brain_puzzle">Utak at Palaisipan</string>
-    <string name="business">Negosyo</string>
-    <string name="card">Kard</string>
-    <string name="cards_casino">Mga Kard at Kasino</string>
-    <string name="casino">Kasino</string>
-    <string name="casual">Kaswal</string>
-    <string name="comics">Komiks</string>
-    <string name="communication">Komunikasyon</string>
-    <string name="demo">Demo</string>
-    <string name="education">Edukasyon</string>
-    <string name="educational">Pang-edukasyon</string>
-    <string name="entertainment">Libangan</string>
-    <string name="family">Pamilya</string>
-    <string name="finance">Pananalapi</string>
-    <string name="games">Mga Laro</string>
-    <string name="health">Kalusugan</string>
-    <string name="health_fitness">Kalusugan at Kalakasan ng Pangangatawan</string>
-    <string name="highlighted">Naka-highlight</string>
-    <string name="local_top_apps">Mga Lokal na Nangungunang App</string>
-    <string name="lifestyle">Estilo ng Pamumuhay</string>
-    <string name="media_video">Media at Bidyo</string>
-    <string name="medical">Medikal</string>
-    <string name="multimedia">Maramihang-media</string>
-    <string name="music">Musika</string>
-    <string name="music_audio">Musika at Odyo</string>
-    <string name="news_magazines">Balita at mga Magasin</string>
-    <string name="news_weather">Balita at Lagay ng panahon</string>
-    <string name="personalization">Personalisasyon</string>
-    <string name="photography">Potograpya</string>
-    <string name="productivity">Produktibo</string>
-    <string name="puzzle">Palaisipan</string>
-    <string name="racing">Karera</string>
-    <string name="reference">Reperensiya</string>
-    <string name="role_playing">Dula-dulaan</string>
-    <string name="simulation">Simulasyon</string>
-    <string name="social">Sosyal</string>
-    <string name="software_libraries">Mga Software na Librerya</string>
-    <string name="sports">Isports</string>
-    <string name="sports_games">Mga Isports na Laro</string>
-    <string name="strategy">Estratehiya</string>
-    <string name="themes">Mga Tema</string>
-    <string name="tools">Mga Kagamitan</string>
-    <string name="top_apps">Mga Nangungunang App</string>
-    <string name="top_games">Mga Nangungunang Laro</string>
-    <string name="transport">Transportasyon</string>
-    <string name="transportation">Mga transportasyon</string>
-    <string name="travel">Paglalakbay</string>
-    <string name="travel_local">Paglalakbay at Lokal</string>
-    <string name="trending">Nauuso</string>
-    <string name="trivia">Tribya</string>
-    <string name="word">Salita</string>
-    <string name="libraries_demo">Mga Librerya at Demo</string>
-    <string name="shopping">Pamimili</string>
-    <string name="weather">Lagay ng Panahon</string>
-    <string name="latest_applications">Mga Pinakabagong App</string>
-    <string name="top_apps_in_store">Mga Nangungunang App sa Store na Ito</string>
-    <string name="apps_for_kids">Mga App para sa mga Bata</string>
-    <string name="aptoide_publishers">Mga %s na Tagapaglathala</string>
-    <string name="music_video">Musika at Bidyo</string>
-    <string name="essential_apps">Mga Kinakailangang App</string>
-    <string name="summer_apps">Mga App ng Tag-init</string>
-    <string name="play_it">Laruin-Siya!</string>
-
-<string name="subscribers">Mga subskrayber</string>
-  <string name="apps">Mga App</string>
-
-  <string name="apps_timeline"><b>Mga App Timeline</b></string>
-  <string name="displayable_social_timeline_article_related_to">Kaugnay sa %1$s</string>
-  <string name="appstimeline_update_app">ang app</string>
-  <string name="customtabs_open_native_app">Buksan sa App</string>
-
-
-  <string name="fragment_download_no_connection">Walang mga app ang na-download</string>
-  <string name="fragment_download_no_connection_subtitle">Ang mga bagong app ay lalabas dito sa oras na ikaw ay magsimulang i-download sila!</string>
-  <string name="newer_version_available">May mas bagong bersyon ang magagamit</string>
-
-  <string name="add_store">Idagdag ang store</string>
-
-<string name="downgrade_warning_dialog">Sa pagbababa (downgrading) maaaring mawala sa yo ang mga kaugnay ng app na datos at maaari kang ma-log out sa account ng app.</string>
-
-  <string name="displayable_social_timeline_similar_to">katulad ng %1$s</string>
-
-<string name="password">Password</string>
-  <string name="login">Mag-login</string>
-  <string name="my_account">Aking Account</string>
-  <string name="spot_share">Mamataan &amp; Ibahagi</string>
-  <string name="setting_schdwntitle">Naka-iskedyul na mga Download</string>
-  <string name="settings">Mga Setting</string>
+<?xml version="1.0" encoding="utf-8"?>
+<!--Generated by crowdin.com-->
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 17/08/2016.
+  -->
+<resources>
+  <!-- NavDrawer List items -->
+  <string name="my_account">Aking account</string>
+  <string name="setting_schdwntitle">Mga Na-iskedyul na Download</string>
+  <string name="settings">Mga seting</string>
   <string name="facebook">Facebook</string>
   <string name="twitter">Twitter</string>
   <string name="backup_apps">Mga Backup Apps</string>
-
+  <string name="dark">Matingkad</string>
+  <string name="light">Magaan</string>
+  <string name="updates_filter_summary">Sa pagtsetsek nito, ikaw ay hindi aabisuhan ng mga beta na bersyon.</string>
+  <string name="updates_filter_setting_title">Ipakita lamang sa akin ang matatag na mga app bersyon updeyt</string>
   <string name="include_system_apps_title">Kabilang ang sistemang apps</string>
   <string name="include_system_apps_summary">Sa pagtsetsek nito, ikaw ay maaabisuhan sa mga update ng sistemang apps (apps na ininstala ng tagagawa ng aparato)</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
+  <string name="aptoide_url">http://www.aptoide.com/</string>
+  <!-- Permission pop-ups messages -->
+  <string name="access_to_get_accounts_rationale">Kailangan mong pahintulutan ang akses sa Pagkuha ng Accounts (Get Accounts)</string>
+  <string name="unsubscribe">Tanggalin sa pagka-subskrayb</string>
+  <string name="developer_website">Ang website: %s</string>
+  <string name="not_available">Hindi Naaangkop (N/A)</string>
+  <string name="developer_email">Ang Email: %s</string>
+  <string name="developer_privacy_policy">Polisiya ng Pagka-Pribado: %s</string>
+  <string name="open">Bukas</string>
+  <string name="button_header_more">mas marami pa</string>
+  <string name="search">Maghanap</string>
+  <string name="update">Updeyt</string>
+  <string name="uninstall">Tanggalin sa pagka-instala</string>
+  <string name="downgrade">I-downgrade</string>
+  <string name="appview_followers_count_text">%1$s Mga Tagasunod</string>
+  <string name="other_versions_downloads_count_text">%1$s mga download</string>
+  <!-- Common (menu) -->
+  <string name="menu_select_all">Piliin Lahat</string>
+  <string name="menu_select_none">Piliin ang Wala</string>
+  <string name="clear">Linisin</string>
+  <!-- Excluded Updates Fragment -->
+  <string name="excluded_updates">Mga Hindi Isinamang mga Update</string>
+  <string name="no_excluded_updates_msg">Ang bagong bersyon ng app ay hindi gumagana sa iyong aparato o ang ibang tampok ay
+ nawawala? I-block ang mga app sa pag-uupdate. Pumunta sa tab ng mga Update at pindutin ng mahaba ang app na gusto mong ihinto ang pag-uupdate.</string>
+  <!-- Excluded Updates Fragment (menu) -->
+  <string name="restore_updates">Ibalik ang mga Update</string>
+  <string name="open_apps_manager">Buksan ang Apps Manager</string>
+  <!-- Rollback Fragment -->
+  <string name="rollback">I-rollback</string>
+  <string name="no_rollbacks_msg">Mabilis na ibaba (downgrade) ang anumang app sa isang nakaraang bersyon at lutasin ang mga isyu ng hindi-pagkakaayon.
+Magpanatili ng isang log ng lahat ng iyong nainstalang app (sa pamamagitan ng %s) kasama ang bersyon at petsa ng pagka-instala.</string>
+  <!-- Timeline Fragment -->
+  <string name="menu_card_timeline_clear">Linisin</string>
+  <string name="fragment_social_timeline_aptoide_team">Koponan ng Aptoide</string>
+  <string name="fragment_social_timeline_no_connection">Walang koneksyon ng network</string>
+  <string name="fragment_social_timeline_general_error">Mukhang nagkakaproblema. Maaari bang subukan mong muli maya-maya?</string>
+  <string name="displayable_social_timeline_store_latest_apps_headline">Ang store na ito ay mayroong bagong Apps</string>
+  <string name="displayable_social_timeline_app_update_name">App na %1$s</string>
+  <string name="displayable_social_timeline_app_has_update">mayroong  %1$s</string>
+  <string name="displayable_social_timeline_article_get_app_button">Kumuha ng app %1$s</string>
+  <string name="displayable_social_timeline_app_update">Update</string>
+  <string name="displayable_social_timeline_app_update_version">Bersyon %1$s</string>
+  <string name="displayable_social_timeline_app_update_button">Update %1$s</string>
+  <string name="appview_other_versions"><u>Iba pang Mga Bersyon</u></string>
+  <string name="appview_latest_version_text">Pinakabagong bersyon</string>
+  <string name="appview_rate_this_app">Markahan ang app na ito</string>
+  <string name="appview_read_all">read all <![CDATA[>]]></string>
+  <string name="zero">0</string>
+  <string name="working_well">Gumagana ng Maayos</string>
+  <string name="needs_license">Kailangan ng Lisensya</string>
+  <string name="fake_app">Pekeng App</string>
+  <string name="virus">Virus</string>
+  <string name="additional_information">Karagdagang Impormasyon</string>
+  <string name="displayable_social_timeline_app_update_updated">Na-update</string>
+  <string name="displayable_social_timeline_app_update_updating">Ina-update</string>
+  <string name="displayable_social_timeline_app_update_error">I-update ang Kamalian</string>
+  <!-- need translation -->
+  <string name="appview_good_app_guaranteed">Magandang App ay Garantisado!</string>
+  <string name="appview_good_app_description">Ang mga aplikasyong ito ay pumasa sa pang-seguridad na test para sa virus, malware at iba pang mga malisyosong pag-atake at hindi naglalaman ng anumang mga banta!</string>
+  <!-- -->
+  <!-- Preferences -->
+  <!-- "Other <app name> versions on different Stores" -->
+  <string name="other_versions_partial_title_1">Iba pa</string>
+  <string name="other_versions_partial_title_2">mga bersyon sa magkakaibang Mga Store</string>
+  <string name="displayable_social_timeline_recommendation_similar_to">Ibinatay sa %1$s</string>
+  <string name="displayable_social_timeline_recommendation_similar_and">at</string>
+  <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">Ang %s ay nagrerekomenda</string>
+  <string name="social_facebook_screen_title">Facebook</string>
+  <string name="social_twitter_screen_title">Twitter</string>
+  <string name="top_comments">Mga Nangungunang Komento</string>
+  <string name="rate">Grado</string>
+  <string name="rate_app">Grado %s</string>
+  <string name="title">TITULO</string>
+  <string name="tap_a_star">Tapikin ang isang bituin upang makapag-grado</string>
+  <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
+  <string name="other_versions_on_different_stores">Iba pang mga bersyon sa magkakaibang mga store</string>
+  <string name="review_optional">Rebyu (opsyonal)</string>
+  <string name="feedback_not_valid">Maglagay ng katanggap-tanggap na Paksa!</string>
+  <string name="thank_you_for_your_opinion">Salamat sa iyong opinyon!</string>
+  <string name="ignore_update">Balewalain ang update</string>
+  <string name="five_numeric">5</string>
+  <string name="four_numeric">4</string>
+  <string name="three_numeric">3</string>
+  <string name="two_numeric">2</string>
+  <string name="one_numeric">1</string>
+  <string name="just_reviews">Mga Makatwirang Rebyu</string>
+  <string name="downgrading_msg">Ibinababa (downgrading)</string>
+  <string name="updating_msg">Ina-update</string>
+  <string name="installing_msg">Ini-instala</string>
+  <string name="needs_permission_to_fs">Kailangan ng permiso upang gamitin ang panlabas na Sistema ng File (external File System)</string>
+  <string name="added_to_scheduled">Nadagdag sa Menu &gt; Mga Nakaskedyul na Downloads</string>
+  <string name="pause_all_downloads">Sandaling Patigilin ang mga Download</string>
+  <string name="all_stores">Lahat ng mga Store</string>
+  <string name="followed_stores">Mga Nasundang Store</string>
+  <string name="storage_access_permission_request_message">Paki-pahintulutan ang akses sa imbakan ng iyong telepono para mai-download at mainstala namin ang app na ito.</string>
   <string name="remote_install_menu_title">I-instala sa Telebisyon</string>
   <string name="install_on_tv_mobile_error">Siguraduhin na ang iyong aparato ay nakakonekta sa Wi-Fi upang magamit ang tampok na ito.</string>
   <string name="remote_install_title">Mamili ng target na aparato</string>
@@ -260,20 +126,150 @@ Tuklasin ang mga apps sa pamamagitan ng iyong <b>mga kaibigan</b></string>
   <string name="remote_install_nowifi_tip">Pakiusap na paganahin at kumonekta sa isang Wi-Fi network</string>
   <string name="remote_install_empty_list">Naghahanap…</string>
   <string name="remote_install_tip">Paki-siguro na mayroon kang AndroidTV na nakakonekta sa network</string>
-  <string name="remote_install_retry">Subukang muli</string>
+  <string name="remote_install_retry">Muling subukan</string>
   <string name="remote_install_help">Tulong</string>
+  <!-- WIZARD -->
+  <string name="wizard_skip"><b>LAKTAWAN</b></string>
+  <!-- WIZARD PAGE 1 -->
   <string name="wizard_title_viewpager_one">Ngayon ay may Timeline na!</string>
+  <string name="wizard_sub_title_viewpager_one"><b>Pinakamagandang mga app bidyo at balita</b> sa iisang lugar.
+Tuklasin ang mga apps sa pamamagitan ng iyong <b>mga kaibigan</b></string>
+  <!-- WIZARD PAGE 2 -->
+  <string name="wizard_title_viewpager_two">Magkaroon ng iyong sariling Store</string>
+  <string name="wizard_sub_title_viewpager_two">Ipasadya ang iyong store <b>upang makapagbahagi ng app
+ sa mga kaibigan</b> at sa <b>Komunidad ng Aptoide.</b></string>
+  <!-- WIZARD PAGE 3 -->
+  <string name="wizard_title_viewpager_three">Maging bahagi<b>Sumali sa komunidad</b></string>
   <string name="wizard_sub_title_viewpager_three"><b>Mahanap ang mga tao</b> na mayroon din ng iyong mga kinawiwilihang app. 
 <b>Graduhan at ibahagi.</b></string>
   <string name="wizard_sub_sub_title_viewpager_three">Samahan kami!</string>
-
+  <string name="you_need_to_be_logged_in">Kailangan na ikaw ay naka-log in</string>
+  <string name="follow">Sundan</string>
+  <!--need translation-->
+  <string name="followed">Sinusundan</string>
+  <string name="unfollow_yes_no">Sigurado kang gusto mong hindi na sumunod?</string>
+  <string name="unfollow">Hindi na susunod</string>
+  <string name="unfollowing_store_message">Hindi na sumusunod %s</string>
+  <string name="store_followed">Store %s sinundan</string>
+  <string name="subscribers">Mga subskrayber</string>
+  <string name="apps">Mga App</string>
+  <!---->
+  <string name="be_the_first_to_rate_this_app">Maging ang una sa pag-grado sa app na ito</string>
+  <string name="rate_this_app">Markahan ang app na ito</string>
+  <string name="dialog_install_warning_proceed_button">Magpatuloy</string>
+  <string name="dialog_install_warning_search_for_trusted_app_button">Maghanap ng</string>
+  <string name="dialog_install_warning_trusted_app_button">Pinagkakatiwalaang App</string>
+  <string name="dialog_install_warning_careful_text">Maging maingat kung iyong pipiliin na iinstala ang app na ito. Ito ay baka sakaling napakialaman, mayroong mga virus o malware.</string>
+  <string name="dialog_install_warning_credibility_text">Bago magpatuloy, i-tsek ang
+ kredibilidad ng Store at iba pang mga komento ng user. Ang Aptoide ay palaging nagrerekomenda na iinstala mo lamang ang %1$s Mapapagkatiwalaang mga app.</string>
+  <string name="dialog_install_warning_trusted_version_button">Mapagkakatiwalaang Bersyon</string>
+  <string name="dialog_install_warning_get_trusted_version_button">Kumuha</string>
+  <string name="flag_results">Mga resulta ng bandera</string>
+  <string name="helpful">Nakakatulong</string>
+  <string name="not_helpful">Hindi Nakakatulong</string>
+  <string name="description_not_available">Walang magagamit na deskripsyon para sa app na ito</string>
+  <string name="top_stores_fragment_title">Nangungunang Mga Store</string>
+  <!--server translations hammered-->
+  <string name="home_title">Tahanan</string>
+  <string name="community">Komunidad</string>
+  <string name="stores">Mga Store</string>
+  <string name="updates">Mga update</string>
+  <string name="social_timeline">Ang Social Timeline</string>
+  <string name="downloads">Mga Download</string>
+  <string name="apps_timeline"><b>Mga App Timeline</b></string>
   <string name="timeline"><b>Timeline</b></string>
+  <string name="latest_reviews">Pinakabagong Mga Rebyu</string>
+  <string name="latest_comments">Mga Pinakabagong Komento</string>
+  <string name="action">Aksyon</string>
+  <string name="adventure">Abentura</string>
+  <string name="all">Lahat</string>
+  <string name="applications">Mga Aplikasyon</string>
+  <string name="arcade">Arkada</string>
+  <string name="arcade_action">Arkada at Aksyon</string>
+  <string name="board">Ang Board</string>
+  <string name="books_reference">Mga Libro &amp; Reperensiya</string>
+  <string name="brain_puzzle">Utak at Palaisipan</string>
+  <string name="business">Negosyo</string>
+  <string name="card">Kard</string>
+  <string name="cards_casino">Mga Kard at Kasino</string>
+  <string name="casino">Kasino</string>
+  <string name="casual">Kaswal</string>
+  <string name="comics">Komiks</string>
+  <string name="communication">Komunikasyon</string>
+  <string name="demo">Demo</string>
+  <string name="education">Edukasyon</string>
+  <string name="educational">Pang-edukasyon</string>
+  <string name="entertainment">Libangan</string>
+  <string name="family">Pamilya</string>
+  <string name="finance">Pananalapi</string>
+  <string name="games">Mga Laro</string>
+  <string name="health">Kalusugan</string>
+  <string name="health_fitness">Kalusugan &amp; Lakas ng Katawan</string>
+  <string name="highlighted">Tampok</string>
+  <string name="local_top_apps">Mga Lokal na Nangungunang App</string>
+  <string name="lifestyle">Estilo ng Pamumuhay</string>
+  <string name="media_video">Midya &amp; Bidyo</string>
+  <string name="medical">Medikal</string>
+  <string name="multimedia">Multimidya</string>
+  <string name="music">Musika</string>
+  <string name="music_audio">Musika &amp; Awdyo</string>
+  <string name="news_magazines">Balita &amp; Mga Magasin</string>
+  <string name="news_weather">Balita &amp; Lagay ng Panahon</string>
+  <string name="personalization">Personalisasyon</string>
+  <string name="photography">Potograpya</string>
+  <string name="productivity">Pagka-produktibo</string>
+  <string name="puzzle">Palaisipan</string>
+  <string name="racing">Karera</string>
+  <string name="reference">Reperensiya</string>
+  <string name="role_playing">Dula-dulaan</string>
+  <string name="simulation">Simulasyon</string>
+  <string name="social">Sosyal</string>
+  <string name="software_libraries">Mga Software na Librerya</string>
+  <string name="sports">Isports</string>
+  <string name="sports_games">Mga Isports na Laro</string>
+  <string name="strategy">Estratehiya</string>
+  <string name="themes">Mga Tema</string>
+  <string name="tools">Mga Kagamitan</string>
+  <string name="top_apps">Mga Nangungunang App</string>
+  <string name="top_games">Mga Nangungunang Laro</string>
+  <string name="transport">Transportasyon</string>
+  <string name="transportation">Mga transportasyon</string>
+  <string name="travel">Paglalakbay</string>
+  <string name="travel_local">Paglalakbay &amp; Lokal</string>
+  <string name="trending">Nauuso</string>
+  <string name="trivia">Tribya</string>
+  <string name="word">Salita</string>
+  <string name="libraries_demo">Mga Librerya &amp; Demo</string>
+  <string name="shopping">Pamimili</string>
+  <string name="weather">Lagay ng Panahon</string>
+  <string name="latest_applications">Mga Pinakabagong App</string>
+  <string name="top_apps_in_store">Mga Nangungunang App sa Store na Ito</string>
+  <string name="apps_for_kids">Mga App para sa mga Bata</string>
+  <string name="aptoide_publishers">Mga %s na Tagapaglathala</string>
+  <string name="music_video">Musika at Bidyo</string>
+  <string name="essential_apps">Mga Kinakailangang App</string>
+  <string name="summer_apps">Mga App ng Tag-init</string>
+  <string name="play_it">Laruin-Siya!</string>
+  <!--home Fragment-->
+  <string name="featured_stores">Mga Tampok na Store</string>
+  <!--AppsTimeline new string-->
+  <string name="displayable_social_timeline_article_related_to">Kaugnay sa %1$s</string>
+  <string name="appstimeline_update_app">ang app</string>
+  <!--custom tabs-->
+  <string name="customtabs_open_native_app">Buksan sa App</string>
+  <!--Download fragment-->
+  <string name="fragment_download_no_connection">Walang mga app ang na-download</string>
+  <string name="fragment_download_no_connection_subtitle">Ang mga bagong app ay lalabas dito sa oras na ikaw ay magsimulang i-download sila!</string>
+  <string name="newer_version_available">May mas bagong bersyon ang magagamit</string>
+  <string name="add_store">Idagdag ang store</string>
+  <string name="downgrade_warning_dialog">Sa pagbababa (downgrading) maaaring mawala sa yo ang mga kaugnay ng app na datos at maaari kang ma-log out sa account ng app.</string>
+  <string name="displayable_social_timeline_similar_to">katulad ng %1$s</string>
   <string name="freed_space">%s pinalaya</string>
   <string name="storage_dialog_title">I-clear ang Aptoide na Imbakan (Aptoid Storage)</string>
   <string name="clear_cache_dialog_message">Sigurado ka ba na gusto mong alisin ang lahat ng mga icon, imahe, na-download na apk, obb, datos ng webservice, …</string>
   <string name="clear_cache_summary">Inaalis ang mga icon, imahe, na-download na apk, obb, datos ng webservice, …</string>
   <string name="clearcache_title">I-clear ang Imbakan (Storage)</string>
-
+  <!-- Stores tab -->
   <string name="recommended_stores">Mga Nirerekomendang Store</string>
   <string name="create_store_displayable_message">Lumikha ng iyong Store ngayon at simulan ang pamamahagi ng iyong apps!</string>
   <string name="create_store_displayable_button">LUMIKHA NG STORE</string>
@@ -282,18 +278,20 @@ Tuklasin ang mga apps sa pamamagitan ng iyong <b>mga kaibigan</b></string>
   <string name="create_store_displayable_explore_message">Pumasok at galugarin ang lahat ng mga posibilidad</string>
   <string name="create_store_displayable_explore_button">Galugarin</string>
   <string name="follow_store">Sundan ang Store</string>
-
+  <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">Ang iyong store ay wala pang mga aplikasyon.</string>
   <string name="install_app_outter_pt2">at mag-upload ng mga apps para maibahagi sila sa mundo!</string>
-  <string name="install_app_inner">" I-instala %1$s "</string>
-  <string name="open_app_inner">" Buksan %1$s "</string>
+  <string name="install_app_inner"> I-instala %1$s </string>
+  <string name="open_app_inner"> Buksan %1$s </string>
   <string name="downloads_count">Mga Download: %1$s</string>
   <string name="version_number">Bersyon: %1$s</string>
   <string name="app_size">Laki: %1$s</string>
   <string name="comment_on_store">Komento %1$s store</string>
   <string name="word_this">ito</string>
-
+  <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">Ang makikita ng iyong mga tagasunod:</string>
+  <string name="social_timeline_you_will_share_comment">Ang iyong mga tagasunod ay makikita ang iyong Komento:</string>
+  <string name="social_timeline_you_will_share_like">Ang iyong mga tagasunod ay makikita ang iyong Like:</string>
   <string name="social_timeline_share_title">Ibahagi ang prebyu ng kard</string>
   <string name="social_timeline_share_title_checkbox">Gawing pribado ang aking user profile sa Apps Timeline. Ipakita/ibahagi lamang ang impormasyon ng aking store.</string>
   <string name="social_timeline_share_title_checkbox_fb">Pahintulutan na maging publiko ang aking user profile sa Apps Timeline</string>
@@ -314,21 +312,20 @@ Tuklasin ang mga apps sa pamamagitan ng iyong <b>mga kaibigan</b></string>
   <string name="social_timeline_shared_by">ibinahagi ni %1$s</string>
   <string name="social_timeline_who_liked">Sino ang nag-like</string>
   <string name="social_timeline_users_private">%d ay pribado</string>
-
+  <!-- Store Meta widget -->
   <string name="edit_store">I-edit</string>
-
+  <!-- Comments on store -->
   <string name="comment_store">Komento sa Store</string>
   <string name="comment_store_title">Mga komento sa Store na ito</string>
   <string name="be_the_first_to_send_feedback_about_this_store">Maging una sa pagpapadala ng katugunan tungkol sa store na ito</string>
-
-
+  <!-- Followers and following -->
   <string name="timeline_followers">Mga Tagasunod %d</string>
   <string name="timeline_followed">Sinusundan %d</string>
-  <string name="timeline_stats_followers">Mga Tagasunod</string>
+  <string name="timeline_stats_followers">Mga Tagasubaybay</string>
   <string name="timeline_login_message">Ano ang iniinstala ng iyong mga kaibigan?</string>
   <string name="private_followers_message">%d mga tagasunod ay pribado</string>
   <string name="private_following_message">Sinusundan mo ang %d pribadong mga user/store</string>
-
+  <!-- Payments -->
   <string name="reviews_expand_button">%d Mga Tugon</string>
   <string name="out_of_space_dialog_title">Naubusan ng espasyo</string>
   <string name="out_of_space_dialog_message">Pakiusap, magpalaya ng espasyo upang makapagpatuloy.</string>
@@ -341,34 +338,35 @@ Tuklasin ang mga apps sa pamamagitan ng iyong <b>mga kaibigan</b></string>
   <string name="create_store_displayable_explore_long_term_button">Tingnan ang Store</string>
   <string name="create_store_displayable_empty_description_message">Magdagdag ng isang deskripsyon para sa iyong Store. Ang isang magandang deskripsyon ay tinutulungan kang makakuha ng mas maraming mga tagasunod at interaksyon.</string>
   <string name="fragment_spot_share_preview_start_button">Magsimula</string>
-
+  <!-- 02/2017 strings for login / sign up -->
   <string name="join_company">Sumama %s</string>
+  <string name="login">Mag-login</string>
   <string name="login_company">Mag-login %s</string>
   <string name="connect_with_facebook">Kumonekta sa Facebook</string>
   <string name="connect_with_google">Kumonekta sa Google</string>
   <string name="accept_terms_signup">Sa pagsali sa Aptoide ikaw ay sumasang-ayon sa Mga Termino at Kondisyon ng Aptoide at Polisiya ng Nilalaman para sa mga Developer.</string>
   <string name="recover_password">Kuning muli ang iyong password</string>
   <string name="email">Email</string>
+  <string name="password">Password</string>
   <string name="create_password">Lumikha ng Password</string>
   <string name="store_suspended_message">Store ay suspendido</string>
   <string name="facebook_login_cancelled">Facebook login ay nakansela</string>
   <string name="google_login_cancelled">Google login ay nabigo</string>
   <string name="login_separator_text">O kumonekta gamit ang iyong email</string>
-
+  <!-- Add stores dialog -->
   <string name="add_store_dialog_title">Maaari kang makahanap ng eksklusibong pinasadyang nilalaman na ginawa para lamang sa yo sa iba-ibang mga store</string>
   <string name="add_store_dialog_top_stores">TUKLASIN ANG MGA NANGUNGUNANG STORE</string>
   <string name="add_store_dialog_top_stores_small_text">at makahanap ng eksklusibong nilalaman!</string>
-
+  <!-- Login -->
   <string name="activity_login_title">Mag-login</string>
-  <string name="activity_login_forgot_password_button">Nakalimutan ang password?</string>
+  <string name="activity_login_forgot_password_button">Nakalimutan ang pasword?</string>
   <string name="activity_login_button">Mag-login</string>
-  <string name="activity_login_sign_up_button">Mag-Sign Up</string>
+  <string name="activity_login_sign_up_button">Mag-sign up</string>
   <string name="view_credentials_username_hint">Email</string>
   <string name="view_credentials_password_hint">Password</string>
-
   <string name="permission_access_deny">akses sa pagbabasa at pagsusulat sa panlabas na imbakan (internal storage) ay hindi pinayagan</string>
   <string name="permission_account_deny">akses upang makakuha ng mga account ay hindi pinayagan</string>
-
+  <!-- Address book -->
   <string name="addressbook_increase_network_message">Dagdagan ang iyong network.</string>
   <string name="addressbook_connect_with_friends_message">Kumonekta sa mga kaibigan.</string>
   <string name="addressbook_sync">I-sync ang Libro ng Address</string>
@@ -408,9 +406,7 @@ at ang hash na iyon ay hindi maaaring ibalik sa orihinal na impormasyon ng conta
 %s</string>
   <string name="addressbook_about">Tungkol sa Libro ng Address (Address Book)</string>
   <string name="addressbook_we_werent_able_to_connect_you">Hindi namin nagawang ikonekta ka</string>
-
-
+  <!-- Spot and Share-->
   <string name="spot_share_line_1">Magbahagi ng apps sa iyong mga kaibigan</string>
   <string name="spot_share_line_2">Telepono sa telepono, walang Internet</string>
-
 </resources>

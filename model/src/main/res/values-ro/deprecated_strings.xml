@@ -1,96 +1,95 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="error_MARG_1">Magazin lipsă</string>
-    <string name="error_MARG_2">Informații aplicație lipsă</string>
-    <string name="error_MARG_3">Versiune aplicație lipsă</string>
-    <string name="error_MARG_4">Autentificare lipsă</string>
-    <string name="error_MARG_5">Aplicație lipsă</string>
-    <string name="error_MARG_6">Date MD5 lipsă</string>
-    <string name="error_MARG_7">Parametru pachet lipsă</string>
-    <string name="error_MARG_8">Parametru hmac lipsă</string>
-    <string name="error_MARG_9">Parametru limită lipsă</string>
-    <string name="error_MARG_10">Parametru compensare lipsă</string>
-    <string name="error_MARG_11">Parametru limbă lipsă</string>
-    <string name="error_MARG_100">Nume aplicație lipsă</string>
-    <string name="error_MARG_101">Descriere lipsă</string>
-    <string name="error_MARG_102">Categorie lipsă</string>
-    <string name="error_MARG_103">Evaluare lipsă</string>
-    <string name="error_MARG_104">Semnalizare lipsă</string>
-    <string name="error_MARG_105">Comentariu lipsă</string>
-    <string name="error_MARG_106">Vot lipsă</string>
-    <string name="error_MARG_107">Text lipsă</string>
-    <string name="error_MARG_108">Parametru apreciere lipsă</string>
-    <string name="error_MARG_109">Parametru e-mail lipsă</string>
-    <string name="error_MARG_110">Parametru passhash lipsă</string>
-    <string name="error_MARG_111">Parametru nume lipsă</string>
-    <string name="error_MARG_112">Parametru agent utilizator lipsă</string>
-    <string name="error_MARG_113">Parametru hash lipsă</string>
-    <string name="error_MARG_200">Eroare de autentificare</string>
-    <string name="error_MARG_201">Combinație nume utilizator/parolă nevalidă</string>
-    <string name="error_MARG_202">Token sau utilizator/parolă nevalid</string>
-
-    <string name="error_IARG_1">Magazin nevalid</string>
-    <string name="error_IARG_2">Autentificare nevalidă</string>
-    <string name="error_IARG_3">Identificator nevalid</string>
-    <string name="error_IARG_4">Date MD5 nevalide</string>
-    <string name="error_IARG_5">Format hmac nevalid</string>
-    <string name="error_IARG_6">Limbă nevalidă</string>
-    <string name="error_IARG_100">Numărul minim de caractere permis într-un comentariu este 10</string>
-    <string name="error_IARG_101">Numărul minim de caractere permis într-un comentariu-replică este 10</string>
-    <string name="error_IARG_102">Argument nevalid</string>
-    <string name="error_IARG_103">Categorie nevalidă</string>
-    <string name="error_IARG_104">Evaluare nevalidă</string>
-    <string name="error_IARG_105">Site-ul nu este un URL valid</string>
-    <string name="error_IARG_106">Adresa de e-mail nu este validă</string>
-    <string name="error_IARG_107">Semnalizare nevalidă</string>
-    <string name="error_IARG_108">Comentariu nevalid</string>
-    <string name="error_IARG_109">Vot nevalid</string>
-    <string name="error_IARG_110">Comentariu replică nevalid</string>
-    <string name="error_IARG_200">Token de autentificare nevalid</string>
-    <string name="error_IARG_201">Mod de autentificare nevalid</string>
-    <string name="error_IARG_300">Categorie personalizată nevalidă</string>
-    <string name="error_IARG_301">Categorie nevalidă</string>
-    <string name="error_IARG_302">Aplicația menționată există deja în această categorie</string>
-
-    <string name="error_AUTH_1">Acreditări de autentificare nevalide!</string>
-    <string name="error_AUTH_2">Acreditări nevalide!</string>
-    <string name="error_AUTH_3">Contul dvs. a fost anulat. Pentru întrebări contactați echipa de asistență Aptoide.</string>
-    <string name="error_AUTH_4">Autentificarea HMAC a eșuat</string>
-    <string name="error_AUTH_100">Nu am putut să te autentificăm cu Google. Te rugăm să verifici contul tău Google (este posibil să fie necesară validarea adresei tale de e-mail).</string>
-    <string name="error_AUTH_101">Nu am putut să te autentificăm cu Google. Te rugăm să încerci din nou.</string>
-    <string name="error_AUTH_102">Nu am putut să te autentificăm cu Facebook. Te rugăm să verifici contul tău de Facebook (este posibil să fie necesară validarea adresei tale de e-mail).</string>
-    <string name="error_AUTH_103">Nu am putut să te autentificăm cu Facebook. Te rugăm să încerci din nou.</string>
-
-    <string name="error_WOP_6">Pentru a adăuga un comentariu trebuie să îți introduci numele (va fi vizibil)</string>
-    <string name="error_WOP_7">Eroare la adăugarea comentariului</string>
-    <string name="error_WOP_8">Eroare la votarea comentariului</string>
-    <string name="error_WOP_9">Adresa de e-mail folosită există deja în sistem</string>
-    <string name="error_WOP_10">E-mailul indicat nu există încă în sistem</string>
-    <string name="error_WOP_11">Magazinul nu a putut fi creat. Te rugăm să încerci din nou.</string>
-
-    <string name="error_REPO_1">Magazinul nu există.</string>
-    <string name="error_REPO_2">Magazinul a fost închis.</string>
-    <string name="error_REPO_3">Magazinul nu aparține acestui utilizator.</string>
-    <string name="error_REPO_4_no_store">Contul tău nu are niciun magazin creat. Trebuie să creezi unul pentru a face o recenzie.</string>
-    <string name="error_REPO_7">Acest utilizator are deja un magazin valid.</string>
-
-    <string name="error_APK_1">Nu putem deschide această aplicație cu informațiile și versiunea date</string>
-    <string name="error_APK_4">Nu putem deschide această aplicație</string>
-    <string name="error_APK_Description">Descriere indisponibilă</string>
-
-    <string name="error_SYS_1">A apărut o eroare necunoscută, te rugăm să încerci din nou</string>
-    <string name="error_SYS_2">Nu s-au găsit date, te rugăm să încerci din nou mai târziu</string>
-    <string name="error_SYS_3">Sistemul este acum în întreținere, te rugăm să încerci din nou mai târziu</string>
-    <string name="error_SYS_4">Apelul nu este suportat de versiunea API curentă</string>
-    <string name="error_SYS_Billing">Sistemul de facturare In-App nu este compatibil cu acest dispozitiv.</string>
-
-    <string name="error_410">Ne pare rău, Aplicația solicitată nu a fost găsită pe server.</string>
-
-    <string name="please_wait">Te rugăm să aștepți…</string>
-    <string name="simple_error_occured">A apărut o eroare. </string>
-    <string name="yes">Da</string>
-    <string name="no">Nu</string>
-    <string name="feedback_subject">Subiect</string>
-    <string name="feedback_to_write2">Scrie-ne aici pentru a ne trimite comentariile tale...
+<?xml version="1.0" encoding="utf-8"?>
+<!--Generated by crowdin.com-->
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 19/07/2016.
+  -->
+<resources>
+  <!-- Error Messages -->
+  <string name="error_MARG_1">Magazin lipsă</string>
+  <string name="error_MARG_2">Informațiile aplicației lipsesc</string>
+  <string name="error_MARG_3">Lipsește versiunea aplicației</string>
+  <string name="error_MARG_4">Autentificare lipsă</string>
+  <string name="error_MARG_5">Aplicație lipsă</string>
+  <string name="error_MARG_6">Date MD5 lipsă</string>
+  <string name="error_MARG_7">Parametru pachet lipsă</string>
+  <string name="error_MARG_8">Parametru hmac lipsă</string>
+  <string name="error_MARG_9">Parametru limită lipsă</string>
+  <string name="error_MARG_10">Parametru compensare lipsă</string>
+  <string name="error_MARG_11">Parametru limbă lipsă</string>
+  <string name="error_MARG_100">Numele aplicației lipsește</string>
+  <string name="error_MARG_101">Descriere lipsă</string>
+  <string name="error_MARG_102">Categorie lipsă</string>
+  <string name="error_MARG_103">Evaluare lipsă</string>
+  <string name="error_MARG_104">Semnalizare lipsă</string>
+  <string name="error_MARG_105">Comentariu lipsă</string>
+  <string name="error_MARG_106">Vot lipsă</string>
+  <string name="error_MARG_107">Text lipsă</string>
+  <string name="error_MARG_108">Parametru apreciere lipsă</string>
+  <string name="error_MARG_109">Parametru e-mail lipsă</string>
+  <string name="error_MARG_110">Parametru passhash lipsă</string>
+  <string name="error_MARG_111">Parametru nume lipsă</string>
+  <string name="error_MARG_112">Parametru agent utilizator lipsă</string>
+  <string name="error_MARG_113">Parametru hash lipsă</string>
+  <string name="error_MARG_200">Eroare de autentificare</string>
+  <string name="error_MARG_201">Combinație nevalidă de nume utilizator și parolă</string>
+  <string name="error_MARG_202">Token de validare sau user/parolă nevalid</string>
+  <string name="error_IARG_1">Magazin nevalid</string>
+  <string name="error_IARG_2">Autentificare nevalidă</string>
+  <string name="error_IARG_3">Identificator nevalid</string>
+  <string name="error_IARG_4">Date MD5 nevalide</string>
+  <string name="error_IARG_5">Format hmac nevalid</string>
+  <string name="error_IARG_6">Limbă nevalidă</string>
+  <string name="error_IARG_100">Numărul minim de caractere permis într-un comentariu este de 10</string>
+  <string name="error_IARG_101">Numărul minim de caractere permis într-un comentariu-replică este de 10</string>
+  <string name="error_IARG_102">Argument nevalid</string>
+  <string name="error_IARG_103">Categorie nevalidă</string>
+  <string name="error_IARG_104">Evaluare nevalidă</string>
+  <string name="error_IARG_105">Site-ul nu este un URL valid</string>
+  <string name="error_IARG_106">Adresa de e-mail nu este validă</string>
+  <string name="error_IARG_107">Semnalizare nevalidă</string>
+  <string name="error_IARG_108">Comentariu nevalid</string>
+  <string name="error_IARG_109">Vot nevalid</string>
+  <string name="error_IARG_110">Comentariu replică nevalid</string>
+  <string name="error_IARG_200">Token de autentificare nevalid</string>
+  <string name="error_IARG_201">Mod de autentificare nevalid</string>
+  <string name="error_IARG_300">Categorie personalizată nevalidă</string>
+  <string name="error_IARG_301">Categorie nevalidă</string>
+  <string name="error_IARG_302">Aplicația menționată există deja în această categorie</string>
+  <string name="error_AUTH_1">Acreditări de autentificare nevalide!</string>
+  <string name="error_AUTH_2">Acreditări nevalide!</string>
+  <string name="error_AUTH_3">Contul dvs. a fost anulat. Pentru întrebări contactați echipa de asistență Aptoide.</string>
+  <string name="error_AUTH_4">Autentificarea HMAC a eșuat</string>
+  <string name="error_AUTH_100">Nu am putut să vă autentificăm cu Google. Vă rugăm să vă verificați contul Google (e posibil să trebuiască să vă validați adresa de e-mail).</string>
+  <string name="error_AUTH_101">Nu am putut să vă autentificăm cu Google. Vă rugăm să încercați din nou.</string>
+  <string name="error_AUTH_102">Nu am putut să vă autentificăm cu Facebook. Vă rugăm să vă verificați contul Facebook (e posibil să trebuiască să vă validați adresa de e-mail).</string>
+  <string name="error_AUTH_103">Nu am putut să vă autentificăm cu Facebook. Vă rugăm să încercați din nou.</string>
+  <string name="error_WOP_6">Pentru a adăuga un comentariu trebuie să vă introduceți numele (va fi vizibil)</string>
+  <string name="error_WOP_7">Eroare la adăugarea comentariului</string>
+  <string name="error_WOP_8">Eroare la votarea comentariului</string>
+  <string name="error_WOP_9">Adresa de e-mail folosită există deja în sistem</string>
+  <string name="error_WOP_10">E-mailul indicat nu există încă în sistem</string>
+  <string name="error_WOP_11">Magazinul nu a putut fi creat. Vă rugăm să încercați din nou.</string>
+  <string name="error_REPO_1">Magazinul nu există.</string>
+  <string name="error_REPO_2">Magazinul a fost închis.</string>
+  <string name="error_REPO_3">Magazinul nu aparține acestui utilizator.</string>
+  <string name="error_REPO_4_no_store">Contul tău nu are niciun magazin creat. Trebuie să creezi unul pentru a face o recenzie.</string>
+  <string name="error_REPO_7">Acest utilizator are deja un magazin valid.</string>
+  <string name="error_APK_1">Nu putem deschide această aplicație cu informațiile și versiunea date</string>
+  <string name="error_APK_4">Nu putem deschide această aplicație</string>
+  <string name="error_APK_Description">Descriere indisponibilă</string>
+  <string name="error_SYS_1">A apărut o eroare necunoscută, vă rugăm să încercați din nou</string>
+  <string name="error_SYS_2">Nu s-au găsit date, vă rugăm încercați din nou mai târziu</string>
+  <string name="error_SYS_3">Sistemul este acum în întreținere, vă rugăm să încercați din nou mai târziu</string>
+  <string name="error_SYS_4">Apelul nu este suportat de versiunea API curentă</string>
+  <string name="error_SYS_Billing">Sistemul de facturare In-App nu este compatibil cu acest dispozitiv.</string>
+  <string name="error_410">Ne pare rău, Aplicația solicitată nu a fost găsită pe server.</string>
+  <string name="please_wait">Te rugăm să aștepți…</string>
+  <string name="simple_error_occured">A apărut o eroare. </string>
+  <string name="yes">Da</string>
+  <string name="no">Nu</string>
+  <string name="feedback_subject">Subiect</string>
+  <string name="feedback_to_write2">Scrie-ne aici pentru a ne trimite comentariile tale...
 
 
 Te rugăm să ne oferi cât mai multe detalii:
@@ -98,415 +97,399 @@ Te rugăm să ne oferi cât mai multe detalii:
 Pașii pe care i-ai urmat
 
 Erorile pe care le vezi</string>
-    <string name="feedback_include_logs">Include Captură ecran și Jurnale</string>
-    <string name="feedback_no_email">Nu este instalat niciun client de e-mail!</string>
-    <string name="store_already_added">Magazin adăugat deja!</string>
-    <string name="subscribe_store">Abonare la Magazin</string>
-    <string name="permissions">Vezi permisiuni</string>
-    <string name="permissions_na">Permisiuni: N/A</string>
-    <string name="additional_permissions">Permisiuni suplimentare</string>
-    <string name="no_permissions_required">Nu se cer permisiuni pentru această aplicație.</string>
-    <string name="restore">Instalează</string>
-
-    <string name="timeout">Conexiune la rețea oprită</string>
-    <string name="ip_blacklisted">IP pus pe lista neagră</string>
-    <string name="connection_error">Fără conexiune la rețea</string>
-    <string name="apk_not_found">Apk nu a fost găsit</string>
-    <string name="invalid_apk">Apk nevalid</string>
-    <string name="remote_in_nospace">Nu există suficient spațiu pe dispozitivul tău.</string>
-    <string name="server_error">Eroare server</string>
-    <string name="paidapp_not_found">Eroare la descărcarea aplicației. Te rugăm să încerci din nou sau să contactezi echipa tehnică de asistență.</string>
-    <string name="sd_error">Nu s-a putut scrie pe cardul SD.</string>
-    <string name="sd_error_jolla">Nu s-a putut descărca corespunzător</string>
-    <string name="starting_download">Începe descărcarea</string>
-    <string name="installing">%s se instalează…</string>
-    <string name="finished_install">%s a fost instalat.</string>
-    <string name="aptoide_downloading">%s se descarcă</string>
-    <string name="remaining_time">rămas</string>
-    <string name="data_usage_constraint">Descărcare nepermisă în Setări &gt; Reguli generale de descărcare</string>
-    <string name="download_pending">În așteptare</string>
-
-    <string name="download_retry">Încearcă din nou</string>
-    <string name="error503">Ufff... Mi se pare mie sau toată lumea instalează aplicații în același timp?</string>
-    <string name="having_some_trouble">Avem niște probleme. Poți încerca din nou, mai târziu?</string>
-
-    <string name="reply">Răspuns</string>
-    <string name="vote_down">Vot negativ</string>
-    <string name="vote_up">Vot pozitiv</string>
-    <string name="casting_vote">Se adaugă vot…</string>
-    <string name="vote_submitted">Votul tău a fost trimis cu succes</string>
-    <string name="votes">%s voturi</string>
-
-    <string name="reviewed_by">Recenzie de - %s</string>
-    <string name="installed_this">%s a instalat asta.</string>
-
-    <string name="adult_pin_wrong">Pin greșit, încearcă din nou.</string>
-    <string name="request_adult_pin">Introdu codul pin pentru a debloca</string>
-    <string name="are_you_adult">Ai cel puțin 21 de ani?</string>
-    <string name="facebook_logout_and_login">Deconectare și Conectare cu Facebook</string>
-
-    <string name="schDown_nodownloadselect">Nu ai selectat descărcări</string>
-    <string name="schDown_installselected">Instalează selectate</string>
-    <string name="schDown_removeselected">Elimină selectate</string>
-    <string name="schDown_invertselection">Inversează selecție</string>
-
-    <string name="schDwnBtn">Programează descărcare</string>
-    <string name="schDown_install">Vrei să instalezi toate descărcările programate?</string>
-    <string name="dont_show_again">Nu afișa acest dialog din nou</string>
-
-    <string name="see_more">Vezi mai mult</string>
-    <string name="see_less">Vezi mai puțin</string>
-    <string name="get_latest">Obține ultima versiune</string>
-
-    <string name="installed_tab">Instalat</string>
-    <string name="updates_tab">Actualizări</string>
-
-    <string name="feedback_send_button">Trimite feedback</string>
-
-    <string name="menu_context_reparse">Reîncărcare</string>
-    <string name="menu_context_remove">Elimină</string>
-
-    <string name="search_other_stores">Sau caută altele…</string>
-    <string name="see_top_stores">Vezi magazine populare</string>
-    <string name="store_name">Nume magazin</string>
-    <string name="insert_store_name">Introdu nume magazin:</string>
-    <string name="subscribe_pvt_store">Abonare la magazin privat</string>
-
-    <string name="no_excluded_updates">Nu există actualizări excluse</string>
-    <string name="no_excluded_updates_selected">Nu ai selectat actualizări excluse</string>
-    <string name="exclude_update">Ignoră actualizare</string>
-    <string name="install_update">Instalează actualizare</string>
-
-    <string name="cancel">Anulează</string>
-    <string name="no_payments_available">Nu există plăți disponibile.</string>
-    <string name="failed_auth_code">Autorizarea contului a eșuat. Te rugăm să încerci din nou.</string>
-    <string name="error_occured_paying">A apărut o eroare. Plata nu a fost finalizată.</string>
-    <string name="account">Cont</string>
-    <string name="confirm_carrier_payment">"Vrei să cumperi \'{title}\' pentru {value}? Vei fi taxat de la
+  <string name="feedback_include_logs">Include Captură ecran și Jurnale</string>
+  <string name="feedback_no_email">Nu a fost instalat niciun client e-mail!</string>
+  <string name="store_already_added">Magazin adăugat deja!</string>
+  <string name="subscribe_store">Abonare la Magazin</string>
+  <!-- App permission -->
+  <string name="permissions">Vezi permisiuni</string>
+  <string name="permissions_na">Permisiuni: N/A</string>
+  <string name="additional_permissions">Permisiuni suplimentare</string>
+  <string name="no_permissions_required">Nu se cer permisiuni pentru această aplicație.</string>
+  <string name="restore">Instalează</string>
+  <!-- DownloadManager -->
+  <string name="timeout">Conexiune la rețea oprită</string>
+  <string name="ip_blacklisted">IP pe lista neagră</string>
+  <string name="connection_error">Fără conexiune la rețea</string>
+  <string name="apk_not_found">Apk nu a fost găsit</string>
+  <string name="invalid_apk">Apk nevalid</string>
+  <string name="remote_in_nospace">Nu există suficient spațiu pe dispozitivul tău.</string>
+  <string name="server_error">Eroare server</string>
+  <string name="paidapp_not_found">Eroare la descărcarea aplicației. Te rugăm să încerci din nou sau să contactezi echipa tehnică de asistență.</string>
+  <string name="sd_error">Nu s-a putut scrie pe cardul SD.</string>
+  <string name="sd_error_jolla">Nu s-a putut descărca corespunzător</string>
+  <string name="starting_download">Începe descărcarea</string>
+  <string name="installing">%s se instalează…</string>
+  <string name="finished_install">%s a fost instalat.</string>
+  <string name="aptoide_downloading">%s se descarcă</string>
+  <string name="remaining_time">rămas</string>
+  <string name="data_usage_constraint">Descărcare nepermisă în Setări &gt; Reguli generale de descărcare</string>
+  <string name="download_pending">În așteptare</string>
+  <!-- layouts -->
+  <string name="download_retry">Încearcă din nou</string>
+  <string name="error503">Ufff... Mi se pare mie sau toată lumea instalează aplicații în același timp?</string>
+  <string name="having_some_trouble">Am întâmpinat niște probleme. Poți încerca din nou mai târziu?</string>
+  <!-- Vote -->
+  <string name="reply">Răspunde</string>
+  <string name="vote_down">Vot negativ</string>
+  <string name="vote_up">Vot pozitiv</string>
+  <string name="casting_vote">Trimitere vot…</string>
+  <string name="vote_submitted">Votul tău a fost trimis cu succes</string>
+  <string name="votes">%s voturi</string>
+  <string name="reviewed_by">Recenzie de - %s</string>
+  <string name="installed_this">%s a instalat asta.</string>
+  <!-- adult -->
+  <string name="adult_pin_wrong">Pin greșit, încearcă din nou.</string>
+  <string name="request_adult_pin">Introdu codul pin pentru a debloca</string>
+  <string name="are_you_adult">Ai cel puțin 21 de ani?</string>
+  <string name="facebook_logout_and_login">Deconectare și Conectare cu Facebook</string>
+  <string name="schDown_nodownloadselect">Nu ai selectat descărcări</string>
+  <string name="no_sch_downloads">Vrei să navighezi prin aplicații folosind date mobile și să descarci mai târziu când vei avea acces la o conexiune WiFi? Folosește Descărcări programate și modifică preferințele tale din Setări    -&gt; Reguli generale de descărcare - în WiFi.</string>
+  <string name="schDown_installselected">Instalează selectate</string>
+  <string name="schDown_removeselected">Elimină selectate</string>
+  <string name="schDown_invertselection">Inversează selecție</string>
+  <string name="schDwnBtn">Programează descărcare</string>
+  <string name="schDown_install">Vrei să instalezi toate descărcările programate?</string>
+  <string name="hidden_adult">Unele aplicații sunt ascunse pentru că este activ filtrul pentru conținut destinat adulților. Vrei să ai acces la lista cu aceste aplicații?</string>
+  <string name="dont_show_again">Nu afișa acest dialog din nou</string>
+  <!-- App View -->
+  <string name="rollback_empty">Reinstalează rapid o versiune anterioară a aplicației și rezolvă problemele de incompatibilitate. Păstrează un jurnal al tuturor aplicațiilor instalate (via Aptoide), incluzând versiunea și data instalării.</string>
+  <string name="see_more">Vezi mai multe</string>
+  <string name="see_less">Vezi mai puțin</string>
+  <string name="get_latest">Obține ultima versiune</string>
+  <!-- Tab names -->
+  <string name="installed_tab">Instalat</string>
+  <string name="updates_tab">Actualizări</string>
+  <string name="feedback_send_button">Trimite feedback</string>
+  <string name="menu_context_reparse">Reîncărcare</string>
+  <string name="menu_context_remove">Elimină</string>
+  <!-- Stores -->
+  <string name="search_other_stores">Sau caută altele…</string>
+  <string name="see_top_stores">Vezi magazine populare</string>
+  <string name="unsubscribe">Dezabonează-te</string>
+  <string name="store_name">Nume magazin</string>
+  <string name="insert_store_name">Introdu nume magazin:</string>
+  <string name="subscribe_pvt_store">Abonare la magazin privat</string>
+  <!-- Network -->
+  <string name="no_excluded_updates">Nu există actualizări excluse</string>
+  <string name="no_excluded_updates_selected">Nu ai selectat actualizări excluse</string>
+  <string name="exclude_update">Ignoră actualizare</string>
+  <string name="install_update">Instalează actualizare</string>
+  <!-- Payments -->
+  <string name="cancel">Anulează</string>
+  <string name="no_payments_available">Nu există plăți disponibile.</string>
+  <string name="failed_auth_code">Autorizarea contului a eșuat. Te rugăm să încerci din nou.</string>
+  <string name="error_occured_paying">A apărut o eroare. Plata nu a fost finalizată.</string>
+  <string name="error_occured_retry_later">A apărut o eroare. Aptoide va reîncerca automat mai târziu.</string>
+  <string name="account">Cont</string>
+  <string name="confirm_carrier_payment">\"Vrei să cumperi \'{title}\' pentru {value}? Vei fi taxat de la
 de către operatorul tău.
- "</string>
-    <string name="buy">Cumpără</string>
-    <string name="billing_result">"Rezultatul tranzacției este: "</string>
-
-    <string name="change_payment">Înapoi</string>
-    <string name="rollback_installed">Instalat</string>
-    <string name="rollback_uninstalled">Dezinstalat</string>
-    <string name="rollback_updated">Actualizat</string>
-    <string name="rollback_downgraded">Versiune anterioară instalată</string>
-    <string name="install">Instalează</string>
-    <string name="cannot_uninstall_self">Programul de instalare nu a fost dezinstalat.</string>
-    <string name="at_time">la %s</string>
-    <string name="root_access_dialog">Se pare că ai acces la rădăcină. Vrei să permiți instalarea automată a aplicației după descărcare?</string>
-    <string name="downgrade_requires_uninstall">Instalarea versiunii anterioare necesită dezinstalarea Aplicației</string>
-
-    <string name="order_popup_title3">Conținut pentru adulți</string>
-    <string name="invite_friends">Invită prieteni</string>
-    <string name="timeline_is_empty_send_email">Vom trimite un e-mail celor pe care îi selectezi</string>
-    <string name="facebook_timeline_friends_invited">Prietenii au fost invitați!</string>
-    <string name="select_friends_to_invite">Selectează prieteni pentru a-i invita!</string>
-    <string name="facebook_friends_list_using_timeline">folosesc deja Cronologia Socială Aptoide</string>
-    <string name="and">și</string>
-    <string name="more_friends">mai mult</string>
-    <string name="more_reviews">Recenzii</string>
-    <string name="more_editors_choice">Mai multe selecții ale editorilor</string>
-    <string name="more_versions">Mai multe versiuni</string>
-    <string name="facebook_friends_list_using_timeline_empty">Cronologia Socială îți permite să distribui aplicațiile tale prietenilor de pe Facebook. Vrei să te alături rețelei?</string>
-    <string name="X_download_number">%s nu funcționează.</string>
-    <string name="timeline_not_compatible">Ooohhh... Această caracteristică nu este compatibilă cu versiunea ta de Android</string>
-    <string name="sponsored">Sponsorizat</string>
-    <string name="friends_installs">Instalări ale prietenilor tăi</string>
-    <string name="recommended_for_you">Recomandat pentru tine</string>
-    <string name="highlighted_apps">Evidențiat</string>
-    <string name="button_more">Mai multe</string>
-    <string name="unhide_post">ARATĂ</string>
-    <string name="hide_post">ASCUNDE</string>
-    <string name="like">Îmi place</string>
-    <string name="comment">Comentează</string>
-    <string name="hide_post_info">Prietenii tăi nu vor vedea această postare</string>
-    <string name="timeline_like">Îmi place</string>
-    <string name="likes">Aprecieri</string>
-    <string name="unlike">Nu îmi place</string>
-    <string name="timeline_empty_no_friends_send_email">Se pare că prietenii tăi nu s-au autentificat încă în Aptoide cu contul lor de Facebook. Trimite-le un e-mail pentru a se autentifica cu contul lor de Facebook</string>
-    <string name="timeline_empty_send_email_to_friends">Trimite e-mail prietenilor tăi</string>
-    <string name="aptoide_timeline">Cronologie Aptoide</string>
-    <string name="timeline_email_invitation">Te-a invitat să te alături Cronologiei sale Sociale Aptoide. Conectează-te!</string>
-    <string name="timeline_email_how_to_join">Cum poți să te alături Cronologiei Sociale?</string>
-    <string name="timeline_email_step1">1- Descarcă ultima versiune Aptoide:</string>
-    <string name="timeline_email_step2">2- Mergi la fila \"Cronologie Socială\" și alătură-te rețelei</string>
-    <string name="timeline_ad">Aplicație sugerată de Facebook</string>
-    <string name="facebook_start_timeline">Alătură-te Cronologiei Sociale</string>
-    <string name="facebook_join_friends">Vrei să li te alături în Cronologia Socială?</string>
-    <string name="timeline_is_empty_no_friends">Cronologia ta este goală. Probabil pentru că nu ai încă prieteni pe Aptoide sau ei nu au nicio postare.</string>
-    <string name="timeline_is_empty_start_invite">Să începem prin a invita câțiva prieteni:</string>
-
-    <string name="review_get_app">Descarcă aplicația</string>
-    <string name="review_final_verdict">Verdict final</string>
-    <string name="review_speed">Viteză</string>
-    <string name="review_usability">Grad de utilizare</string>
-    <string name="review_addictive">Creează dependență</string>
-    <string name="review_stability">Stabilitate</string>
-    <string name="review_by">Recenzie de:
+ \"</string>
+  <string name="buy">Cumpără</string>
+  <string name="billing_result">Rezultatul tranzacției este: </string>
+  <string name="change_payment">Înapoi</string>
+  <string name="rollback_installed">Instalat</string>
+  <string name="rollback_uninstalled">Dezinstalat</string>
+  <string name="rollback_updated">Actualizat</string>
+  <string name="rollback_updated_at">Actualizat la %1$s</string>
+  <string name="rollback_downgraded">Versiune anterioară instalată</string>
+  <string name="install">Instalează</string>
+  <string name="cannot_uninstall_self">Programul de instalare nu a fost dezinstalat.</string>
+  <string name="at_time">la %s</string>
+  <string name="root_access_dialog">Se pare că ai acces la rădăcină. Vrei să permiți instalarea automată a aplicației după descărcare?</string>
+  <string name="downgrade_requires_uninstall">Instalarea versiunii anterioare necesită dezinstalarea Aplicației</string>
+  <string name="order_popup_title3">Conținut pentru adulți</string>
+  <string name="friends_to_invite">Toți ceilalți prieteni de pe Facebook în Aptoide</string>
+  <string name="invite_friends">Invită prieteni</string>
+  <string name="timeline_is_empty_send_email">Vom trimite un e-mail celor pe care îi selectezi</string>
+  <string name="facebook_timeline_friends_invited">Prietenii au fost invitați!</string>
+  <string name="select_friends_to_invite">Selectează prieteni pentru a-i invita!</string>
+  <string name="facebook_friends_list_using_timeline">folosesc deja Cronologia Socială Aptoide</string>
+  <string name="and">și</string>
+  <string name="more_friends">mai mult</string>
+  <string name="more_reviews">Recenzii</string>
+  <string name="more_editors_choice">Mai multe selecții ale editorilor</string>
+  <string name="more_versions">Mai multe versiuni</string>
+  <string name="facebook_friends_list_using_timeline_empty">Cronologia Socială îți permite să distribui aplicațiile tale prietenilor de pe Facebook. Vrei să te alături rețelei?</string>
+  <string name="X_download_number">%s nu funcționează.</string>
+  <string name="timeline_not_compatible">Ooohhh... Această caracteristică nu este compatibilă cu versiunea ta de Android</string>
+  <string name="sponsored">Sponsorizat</string>
+  <string name="friends_installs">Instalări ale prietenilor tăi</string>
+  <string name="recommended_for_you">Recomandate pentru tine</string>
+  <string name="highlighted_apps">Evidențiate</string>
+  <string name="button_more">Mai multe</string>
+  <string name="unhide_post">ARATĂ</string>
+  <string name="hide_post">ASCUNDE</string>
+  <string name="like">Îmi place</string>
+  <string name="comment">Comentariu</string>
+  <string name="hide_post_info">Prietenii tăi nu vor vedea această postare</string>
+  <string name="timeline_like">Îmi place</string>
+  <string name="likes">Aprecieri</string>
+  <string name="unlike">Nu îmi place</string>
+  <string name="timeline_empty_no_friends_send_email">Se pare că prietenii tăi nu s-au autentificat încă în Aptoide cu contul lor de Facebook. Trimite-le un e-mail pentru a se autentifica cu contul lor de Facebook</string>
+  <string name="timeline_empty_send_email_to_friends">Trimite e-mail prietenilor tăi</string>
+  <string name="aptoide_timeline">Cronologie Aptoide</string>
+  <string name="timeline_email_invitation">Te-a invitat să te alături Cronologiei sale Sociale Aptoide. Conectează-te!</string>
+  <string name="timeline_email_how_to_join">Cum poți să te alături Cronologiei Sociale?</string>
+  <string name="timeline_email_step1">1- Descarcă ultima versiune Aptoide:</string>
+  <string name="timeline_email_step2">2- Mergi la fila \"Cronologie Socială\" și alătură-te rețelei</string>
+  <string name="timeline_ad">Aplicație sugerată de Facebook</string>
+  <string name="facebook_start_timeline">Alătură-te Cronologiei Sociale</string>
+  <string name="facebook_join_friends">Vrei să li te alături în Cronologia Socială?</string>
+  <string name="timeline_is_empty_no_friends">Cronologia ta este goală. Probabil pentru că nu ai încă prieteni pe Aptoide sau ei nu au nicio postare.</string>
+  <string name="timeline_is_empty_start_invite">Să începem prin a invita câțiva prieteni:</string>
+  <!-- Review Activity-->
+  <string name="review_get_app">Descarcă aplicația</string>
+  <string name="review_final_verdict">Verdict final</string>
+  <string name="review_speed">Viteză</string>
+  <string name="review_usability">Grad de utilizare</string>
+  <string name="review_addictive">Creează dependență</string>
+  <string name="review_stability">Stabilitate</string>
+  <string name="review_by">Recenzie de:
 %s</string>
-    <string name="review_title">Recenzii</string>
-    <string name="review_good">Bună</string>
-    <string name="review_bad">Nefavorabilă</string>
-    <string name="review_finish">Finalizare</string>
-    <string name="review_final_score">Scor</string>
-    <string name="make_review_title">Scrie o recenzie</string>
-    <string name="size">Dimensiune</string>
-    <string name="set_sliders">Setează cursoare</string>
-    <string name="write_one_pro">Scrie cel puțin un lucru favorabil</string>
-    <string name="write_one_con">Scrie cel puțin un lucru nefavorabil</string>
-    <string name="write_your_final_verdict">Scrie verdictul tău final</string>
-    <string name="review_success">Recenzie trimisă cu succes!</string>
-    <string name="store_privacy">Confidențialitate magazin</string>
-    <string name="public_key">public</string>
-    <string name="private_key">privat</string>
-    <string name="store_username">Nume utilizator</string>
-    <string name="store_password">Parolă</string>
-    <string name="upload_app">Încarcă aplicație</string>
-    <string name="asksetadultpinmessage">Vrei să setezi un pin pentru a debloca accesul la conținutul pentru adulți?</string>
-    <string name="setpin">Setează pin</string>
-    <string name="remove_mature_pin_title">Eliminare pin pentru conținutul pentru adulți</string>
-    <string name="remove_mature_pin_summary">Elimină pinul necesar pentru deblocarea conținutului pentru adulți</string>
-    <string name="set_mature_pin_title">Setare pin pentru conținutul pentru adulți</string>
-    <string name="set_mature_pin_summary">Setează pin necesar pentru deblocarea conținutului pentru adulți</string>
-    <string name="settings_title_bar">Setări</string>
-    <string name="settings_dwn_network_rules">Opțiuni rețea mobilă</string>
-    <string name="setting_sum_icon_download_rules">Permite descărcarea pictogramelor prin conexiuni de date mobile</string>
-    <string name="setting_icon_download_rules">Reguli pentru descărcarea pictogramelor</string>
-    <string name="setting_mobile">Mobil 3G/4G</string>
-    <string name="setting_3g">3G</string>
-    <string name="setting_4g">4G</string>
-    <string name="setting_ethernet">Ethernet</string>
-    <string name="setting_sum_general_download_rules">Descarcă Aplicații, Selecții ale editorilor, Aplicații populare și Magazine prin conexiunile mobile de date permise</string>
-    <string name="setting_general_download_rules">Reguli generale de descărcare</string>
-    <string name="setting_hwspecstitle">Specificații hardware</string>
-    <string name="setting_hwspecssum">Informații hardware despre telefonul tău</string>
-    <string name="setting_appfiltersum">Nu afișa aplicațiile care nu sunt compatibile cu acest dispozitiv</string>
-    <string name="setting_appfiltertitle">Filtrează aplicații</string>
-    <string name="setting_dont_show_mature_content">Afișează conținut pentru adulți</string>
-    <string name="setting_mature_filtering">Conținut pentru adulți</string>
-    <string name="setting_updates">Actualizări</string>
-    <string name="update_all">Actualizează toate</string>
-    <string name="whats_new">Ce este nou?</string>
-    <string name="setting_updates_notification_sum">Afișează notificările referitoare la actualizări noi</string>
-    <string name="setting_updates_notification_title">Notificări actualizări</string>
-    <string name="setting_auto_update_sum">Permite actualizări automate ale aplicației</string>
-    <string name="setting_auto_update_title">Permite actualizări automate</string>
-    <string name="show_all_updates">Nu afișa actualizări pentru aplicații cu semnături diferite</string>
-    <string name="setting_allUpdates_filtering">Actualizări filtru</string>
-    <string name="setting_schdwninstalltitle">Instalare automată</string>
-    <string name="setting_clear_memory">Stocare</string>
-    <string name="clearcontent_title">Eliminare date și configurații</string>
-    <string name="settings_maxFileCache_sum">Setează o dimensiune maximă pentru a păstra fișierele apk</string>
-    <string name="settings_maxFileCache_title">Arhivă cache de descărcări (MB)</string>
-    <string name="change_theme">Schimbare temă</string>
-    <string name="theme">Teme</string>
-    <string name="root">Rădăcină</string>
-    <string name="allow_root">Permite instalare în rădăcină</string>
-    <string name="disable_social_timeline">Dezactivare Cronologie Socială</string>
-    <string name="social_timeline_notifications">Notificări Cronologie</string>
-    <string name="about_us">Despre noi</string>
-    <string name="restart_aptoide">Te rugăm să repornești aplicația pentru a schimba tema</string>
-    <string name="setting_sdk_version">Versiune SDK</string>
-    <string name="setting_screen_size">Dimensiune ecran</string>
-    <string name="setting_esgl_version">Versiune ESGL</string>
-    <string name="screenCode">Cod ecran</string>
-    <string name="cpuAbi">Procesor</string>
-    <string name="about_site">Website:</string>
-    <string name="about_mail">Contact:</string>
-    <string name="clear_cache_sucess">Conținut șters cu success</string>
-    <string name="clearcontent_sum">Șterge datele de pe cardul SD.</string>
-    <string name="cache_using_X_mb">Folosire %s MB</string>
-    <string name="clearcache_sum">Șterge cache-ul (pictograme, capturi de ecran) de pe cardul SD.</string>
-    <string name="clearcontent_sum_jolla">Șterge date</string>
-    <string name="clearcache_sum_jolla">Șterge cache-ul (pictograme, capturi de ecran)</string>
-    <string name="drawer_social_media_title">Să rămânem conectați</string>
-    <string name="read_more">Citește mai mult</string>
-    <string name="read_less">Vezi mai puțin</string>
-    <string name="flag_this_app_good">Bună</string>
-    <string name="flag_this_app_button_text">Semnalizează această aplicație</string>
-    <string name="appview_rating_card_text">Evaluare</string>
-    <string name="flag_this_app_need_licence">Necesită licență</string>
-    <string name="flag_this_app_fake">Falsă</string>
-    <string name="flag_this_app_freeze">Îngheață</string>
-    <string name="flag_this_app_virus">Virus</string>
-    <string name="appview_recommended_for_you_title">Recomandate pentru tine</string>
-    <string name="appview_additional_information_title">Informații suplimentare</string>
-    <string name="appview_comment_reply_button_text">Răspuns</string>
-    <string name="appview_header_trusted_text">De încredere</string>
-    <string name="appview_subscribed_store_button_text">Abonat</string>
-    <string name="appview_rate_this_app_text">Evaluează această aplicație</string>
-    <string name="appview_other_versions_in_others_stores">Alte variante în alte magazine</string>
-    <string name="appview_rate_Success">Aplicație evaluată</string>
-    <string name="ignoreUpdateText">Ignoră actualizare</string>
-    <string name="noIgnoreUpdateText">Noua versiune a unei aplicații nu funcționează pe dispozitivul tău sau îi lipsesc anumite funcții? Blochează aplicațiile pentru a nu se mai actualiza. Mergi la Actualizări și apasă îndelung pe aplicația care dorești să nu se mai actualizeze.</string>
-    <string name="active">Activ</string>
-    <string name="completed">Finalizat</string>
-    <string name="_downloads"> descărcări</string>
-    <string name="no_description">Fără descriere</string>
-    <string name="description">Descriere</string>
-    <string name="version">Versiune</string>
-    <string name="version_placeholder">Versiune: %s</string>
-
-    <string name="results_subscribed">Abonări la magazine</string>
-    <string name="results_in_store">Rezultate căutare în magazinul %s</string>
-    <string name="other_stores">Magazine la care nu ești abonat</string>
-    <string name="comments">Comentarii</string>
-    <string name="reviews">Recenzii</string>
-    <string name="store">Magazin</string>
-    <string name="title_caps">TITLU</string>
-
-    <string name="unsubscribe_yes_no">Ești sigur că vrei să te dezabonezi?</string>
-    <string name="unsubscribed_">"Dezabonat "</string>
-    <string name="error_occured_uploading">Mai întâi trebuie să încarci această aplicație.</string>
-
-    <string name="update_self_title">Actualizare disponibilă</string>
-    <string name="update_self_msg">Este disponibilă o versiune nouă a %s 
-Vrei să o actualizezi?</string>
-    <string name="retrieving_update">Se recuperează actualizarea…</string>
-
-    <string name="menu_search_item_go_to_store">Mergi la magazin</string>
-    <string name="srch_hint">Căutare aplicații…</string>
-
-    <string name="app_trusted">%s este De încredere</string>
-    <string name="app_warning">Avertizare: %s</string>
-    <string name="scanned_with_av">Scanat cu antivirus:</string>
-    <string name="compared_with_another_marketplace">Comparat cu un alt Bazar Android:</string>
-    <string name="application_signature_analysis">Semnătura aplicației comparată cu semnătura developerului:</string>
-    <string name="application_signature_matched">Semnătura aplicației se potrivește cu semnătura developerului.</string>
-    <string name="application_signature_not_matched">Semnătura aplicației nu se potrivește cu semnătura developerului. Este posibil ca aplicația să fie falsificată.</string>
-    <string name="warning">Avertisment</string>
-    <string name="trusted_app">Aplicație De încredere</string>
-    <string name="unknown">Necunoscut</string>
-
-    <string name="reason_third_party">Am verificat semnătura aplicației și se potrivește cu Google Play Store, astfel că siguranța este garantată și te poți bucura de aplicație.</string>
-    <string name="reason_scanned">Scanat cu AptoideGuard și cu 2 antiviruși diferiți (Zoner 1,8 și Sophos 3.0).</string>
-    <string name="reason_signature">Semnătura criptografică garantează că poți instala fișierul în siguranță și că acesta nu a fost falsificat în niciun fel.</string>
-    <string name="reason_failed">Semnătura aplicației nu se potrivește cu semnătura developerului. Se poate ca aplicația să fi fost compromisă.</string>
-    <string name="reply_to">Răspuns pentru %s</string>
-    <string name="comment_submitted">Comentariul tău a fost trimis cu succes</string>
-    <string name="write_your_comment">Scrie comentariul tău</string>
-    <string name="write_a_comment">Scrie un comentariu</string>
-    <string name="no_comment_be_the_first">Niciun comentariu încă. Fii primul!</string>
-
-    <string name="installapp_alrt">Vrei să instalezi:
-
-%s?</string>
-
-    <string name="suggested_app">Aplicație sugerată</string>
-
-    <string name="abTest1_label_1">Descarcă aplicația</string>
-    <string name="abTest1_label_2">Instalează</string>
-    <string name="abTest1_label_3">Instalează</string>
-
-
-    <string name="notification_timeline_new_likes">Ai %s aprecieri noi. Verifică Cronologia Socială!</string>
-    <string name="notification_timeline_new_comments">Ai %s comentarii noi. Verifică Cronologia Socială!</string>
-    <string name="notification_timeline_activity">Ai %1$s comentarii și %2$s aprecieri noi. Verifică Cronologia Socială!</string>
-    <string name="notification_social_timeline">Cronologie Socială Aptoide. Verifică acum!</string>
-    <string name="notification_timeline_posts">Prietenii tăi au instalat aplicații noi!</string>
-
-    <string name="has_updates">%s are actualizări noi disponibile!</string>
-    <string name="new_updates">Există %s actualizări noi disponibile!</string>
-    <string name="one_new_update">Există %s actualizare nouă disponibilă!</string>
-    <string name="updates_tab_adapter_uninstalled">Dezinstalat</string>
-    <string name="updatesTabAdapterUninstall">Dezinstalează</string>
-    <string name="flag_good">Bună</string>
-    <string name="flag_license">Necesită licență</string>
-    <string name="flag_fake">Fals</string>
-    <string name="flag_freeze">Îngheață</string>
-    <string name="flag_virus">Virus</string>
-    <string name="flag_this_app">Semnalizează această aplicație</string>
-    <string name="flag_added">Semnalizare adăugată</string>
-    <string name="skip">Ignoră</string>
-    <string name="wizard_title_01">Bine ai venit la Aptoide</string>
-    <string name="wizard_description_01">Creează un cont gratuit și înregistrează-te pentru a începe să construiești propriul tău Magazin personalizat de aplicații.
-
-Navighează în funcție de temă și descoperă aplicații noi minunate.</string>
-    <string name="wizard_title_02">Securitate îmbunătățită</string>
-    <string name="wizard_description_02">Caută insigne De încredere și aplicații de descărcat sigure.
-
-Probleme de incompatibilitate? Caută versiuni anterioare ale aplicației.</string>
-    <string name="wizard_title_03">Noi membri ai familei noastre</string>
-    <string name="wizard_subtitle_03_1">Aptoide Lite</string>
-    <string name="wizard_description_03_1">pentru dispozitive vechi și conexiune la internet lentă</string>
-    <string name="wizard_subtitle_03_2">Aptoide TV</string>
-    <string name="wizard_description_03_2">Magazin de aplicații optimizat pentru dispozitive de decodare și smart TV</string>
-    <string name="wizard_reviews_title">Recenzii</string>
-    <string name="wizard_reviews">Acum poți crea recenzii ale aplicațiilor cu Aptoide!</string>
-    <string name="wizard_new_and_improved">Performanță îmbunătățită!</string>
-    <string name="wizard_new_and_improved_bullet_1">Economisește baterie</string>
-    <string name="wizard_new_and_improved_bullet_2">Redu utilizarea CPU și lățimea de bandă</string>
-    <string name="wizard_new_and_improved_bullet_3">Încarcă mai puține resurse</string>
-    <string name="wizard_new_and_improved_bullet_4">Curăță interfața cu utilizatorul</string>
-    <string name="wizard_new_homepage">Aspect nou pagină de pornire</string>
-    <string name="wizard_new_top">Filă Top nouă</string>
-    <string name="subscribe_apps_official_store">Abonează-te la aplicații din Magazinul oficial de aplicații Aptoide</string>
-    <string name="wizard_next">Următor</string>
-    <string name="wizard_prev">Anterior</string>
-    <string name="share">Distribuie</string>
-    <string name="share_on_timeline">Distribuie în cronologie</string>
-
-    <string name="search_for_apps">Caută aplicații…</string>
-    <string name="empty_search">Niciun rezultat, scrie un nume de aplicație</string>
-    <string name="manually_reviewed">Aplicație sigură: această aplicație a trecut testul de siguranță pentru viruși, software rău intenționat și alte atacuri malițioase și nu conține nicio amenințare</string>
-
-    <string name="no_apps_found">Nu a fost găsită nicio aplicație cu filtrul actual</string>
-    <string name="no_search_results_message">Nu există rezultate pentru căutarea ta.
-Te rugăm să încerci alte cuvinte cheie.</string>
-
-    <string name="developer">Developer</string>
-    <string name="website">Website: %s</string>
-    <string name="email">E-mail: %s</string>
-    <string name="privacy_policy">Politică de confidențialitate: %s</string>
-    <string name="dialog_version_size">Versiune: %1$s | Dimensiune: %2$s</string>
-    <string name="na">N/A</string>
-    <string name="no_pass_error_message">Introdu o parolă pentru a te înregistra.</string>
-  <string name="no_email_error_message">Introdu o adresă de e-mail pentru a te înregistra.</string>
-  <string name="no_sch_downloads">"Vrei să navighezi prin aplicații folosind date mobile și să descarci mai târziu când vei avea acces la o conexiune WiFi? Folosește Descărcări programate și modifică preferințele tale din Setări    -&gt; Reguli generale de descărcare - în WiFi."</string>
+  <string name="review_title">Recenzii</string>
+  <string name="review_good">Bună</string>
+  <string name="review_bad">Nefavorabilă</string>
+  <string name="review_finish">Finalizare</string>
+  <string name="review_final_score">Scor</string>
+  <string name="make_review_title">Scrie o recenzie</string>
+  <string name="size">Dimensiune</string>
+  <string name="set_sliders">Setează cursoare</string>
+  <string name="write_one_pro">Scrie cel puțin un lucru favorabil</string>
+  <string name="write_one_con">Scrie cel puțin un lucru nefavorabil</string>
+  <string name="write_your_final_verdict">Scrie verdictul tău final</string>
+  <string name="review_success">Recenzie trimisă cu succes!</string>
+  <string name="store_privacy">Confidențialitate magazin</string>
+  <string name="public_key">public</string>
+  <string name="private_key">privat</string>
+  <string name="store_username">Nume de utilizator</string>
+  <string name="store_password">Parolă</string>
+  <string name="upload_app_backup_apps_installed">Inițial va trebui să încarci această aplicație în magazinul tău. Poți folosi Aptoide Backup Apps.</string>
+  <string name="upload_app_backup_apps_not_installed">Inițial trebuie să încarci această aplicație în magazinul tău. Te rugăm să instalezi și să folosești Aptoide Backup Apps.</string>
+  <string name="upload_app">Încarcă aplicație</string>
   <string name="create_review">Creează recenzie</string>
-
+  <!-- Settings-->
+  <string name="asksetadultpinmessage">Vrei să setezi un pin pentru a debloca accesul la conținutul pentru adulți?</string>
+  <string name="setpin">Setează pin</string>
+  <string name="remove_mature_pin_title">Eliminare pin pentru conținutul pentru adulți</string>
+  <string name="remove_mature_pin_summary">Elimină pinul necesar pentru deblocarea conținutului pentru adulți</string>
+  <string name="set_mature_pin_title">Setare pin pentru conținutul pentru adulți</string>
+  <string name="set_mature_pin_summary">Setează pin necesar pentru deblocarea conținutului pentru adulți</string>
+  <string name="settings_title_bar">Setări</string>
+  <string name="settings_dwn_network_rules">Opțiuni rețea mobilă</string>
+  <string name="setting_sum_icon_download_rules">Permite descărcarea pictogramelor prin conexiuni de date mobile</string>
+  <string name="setting_icon_download_rules">Reguli pentru descărcarea pictogramelor</string>
   <string name="setting_wifi">Wi-Fi</string>
+  <string name="setting_mobile">Mobil 3G/4G</string>
+  <string name="setting_3g">3G</string>
+  <string name="setting_4g">4G</string>
+  <string name="setting_ethernet">Ethernet</string>
+  <string name="setting_sum_general_download_rules">Descarcă Aplicații, Selecții ale editorilor, Aplicații populare și Magazine prin conexiunile mobile de date permise</string>
+  <string name="setting_general_download_rules">Reguli generale de descărcare</string>
+  <string name="setting_general">General</string>
+  <string name="setting_hwspecstitle">Specificații hardware</string>
+  <string name="setting_hwspecssum">Informații hardware despre telefonul tău</string>
+  <string name="setting_appfiltersum">Nu afișa aplicațiile care nu sunt compatibile cu acest dispozitiv</string>
+  <string name="setting_appfiltertitle">Filtrează aplicații</string>
+  <string name="setting_dont_show_mature_content">Afișează conținut pentru adulți</string>
+  <string name="setting_mature_filtering">Conținut pentru adulți</string>
+  <string name="setting_updates">Actualizări</string>
+  <string name="update_all">Actualizează toate</string>
+  <string name="whats_new">Ce este nou?</string>
+  <string name="setting_updates_notification_sum">Afișează notificările referitoare la actualizări noi</string>
+  <string name="setting_updates_notification_title">Notificări actualizări</string>
+  <string name="setting_auto_update_sum">Permite actualizări automate ale aplicației</string>
+  <string name="setting_auto_update_title">Permite actualizări automate</string>
+  <string name="show_all_updates">Nu afișa actualizări pentru aplicații cu semnături diferite</string>
+  <string name="setting_allUpdates_filtering">Actualizări filtru</string>
   <string name="setting_schdwninstallsum">Instalează automat descărcările programate când este prezentă o conexiune WiFi</string>
+  <string name="setting_schdwninstalltitle">Instalare automată</string>
+  <string name="setting_clear_memory">Stocare</string>
+  <string name="clearcontent_title">Eliminare date și configurații</string>
+  <string name="settings_maxFileCache_sum">Setează o dimensiune maximă pentru a păstra fișierele apk</string>
+  <string name="settings_maxFileCache_title">Arhivă cache de descărcări (MB)</string>
+  <string name="change_theme">Schimbă tema</string>
+  <string name="change_theme_soon">În curând</string>
+  <string name="theme">Teme</string>
+  <string name="root">Rădăcină</string>
+  <string name="allow_root">Permite instalare în rădăcină</string>
+  <string name="disable_social_timeline">Dezactivare Cronologie Socială</string>
+  <string name="social_timeline_notifications_sum2">Activează notificările Cronologiei sociale Aptoide. Vei primi noutăți în bara de notificări.</string>
+  <string name="social_timeline_notifications">Notificări Cronologie</string>
+  <string name="about_us">Despre noi</string>
+  <string name="restart_aptoide">Te rugăm să repornești aplicația pentru a schimba tema</string>
+  <string name="setting_sdk_version">Versiune SDK</string>
+  <string name="setting_screen_size">Dimensiune ecran</string>
+  <string name="setting_esgl_version">Versiune ESGL</string>
+  <string name="screenCode">Cod ecran</string>
+  <string name="cpuAbi">Procesor</string>
+  <string name="about_site">Site Web:</string>
+  <string name="about_mail">Contact:</string>
+  <string name="clear_cache_sucess">Conținut șters cu success</string>
+  <string name="clearcontent_sum">Șterge datele de pe cardul SD.</string>
+  <string name="cache_using_X_mb">Folosiți %s MB</string>
+  <string name="clearcache_sum">Șterge cache-ul (pictograme, capturi de ecran) de pe cardul SD.</string>
+  <string name="clearcontent_sum_jolla">Șterge date</string>
+  <string name="clearcache_sum_jolla">Șterge cache-ul (pictograme, capturi de ecran)</string>
+  <string name="drawer_social_media_title">Să rămânem conectați</string>
+  <string name="read_more">Citește mai mult</string>
+  <string name="read_less">Vezi mai puține</string>
+  <string name="flag_this_app_good">Bună</string>
+  <string name="flag_this_app_button_text">Semnalizează această aplicație</string>
+  <string name="appview_rating_card_text">Evaluare</string>
+  <string name="flag_this_app_need_licence">Necesită licență</string>
+  <string name="flag_this_app_fake">Fals</string>
+  <string name="flag_this_app_freeze">Blochează</string>
+  <string name="flag_this_app_virus">Virus</string>
+  <string name="appview_recommended_for_you_title">Recomandate pentru tine</string>
+  <string name="appview_additional_information_title">Informații suplimentare</string>
+  <string name="appview_comment_reply_button_text">Răspunde</string>
+  <string name="appview_header_trusted_text">De încredere</string>
   <string name="appview_subscribe_store_button_text">Te abonezi?</string>
+  <string name="appview_subscribed_store_button_text">Abonat</string>
+  <string name="appview_rate_this_app_text">Evaluează această aplicație</string>
+  <string name="appview_other_versions_in_others_stores">Alte variante în alte magazine</string>
+  <string name="appview_rate_Success">Aplicație evaluată</string>
+  <string name="ignoreUpdateText">Ignoră actualizare</string>
+  <string name="ignored">Ignorat</string>
+  <string name="noIgnoreUpdateText">Noua versiune a unei aplicații nu funcționează pe dispozitivul tău sau îi lipsesc anumite funcții? Blochează aplicațiile pentru a nu se mai actualiza. Mergi la Actualizări și apasă îndelung pe aplicația care dorești să nu se mai actualizeze.</string>
   <string name="createReviewButtonText">Creează
 recenzie</string>
   <string name="navigation_drawer_signup_login">Înregistrare sau Autentificare</string>
-  <string name="no_email_and_pass_error_message">Introdu o adresă de e-mail și o parolă pentru a te înregistra.</string>
-  <string name="website_copied">Website copiat pe clipboard</string>
-  <string name="email_copied">E-mail copiat pe clipboard</string>
-  <string name="privacy_copied">Link de confidențialitate copiat pe clipboard</string>
-  <string name="unsubscribe">Dezabonează-te</string>
-  <string name="hidden_adult">Unele aplicații sunt ascunse pentru că este activ filtrul pentru conținut destinat adulților. Vrei să ai acces la lista cu aceste aplicații?</string>
-  <string name="rollback_empty">Reinstalează rapid o versiune anterioară a aplicației și rezolvă problemele de incompatibilitate. Păstrează un jurnal al tuturor aplicațiilor instalate (via Aptoide), incluzând versiunea și data instalării.</string>
-
-  <string name="error_occured_retry_later">A apărut o eroare. Aptoide va reîncerca automat mai târziu.</string>
-  <string name="rollback_updated_at">Actualizat la %1$s</string>
-  <string name="friends_to_invite">Toți ceilalți prieteni de pe Facebook în Aptoide</string>
-  <string name="upload_app_backup_apps_installed">Inițial va trebui să încarci această aplicație în magazinul tău. Poți folosi Aptoide Backup Apps.</string>
-  <string name="upload_app_backup_apps_not_installed">Inițial trebuie să încarci această aplicație în magazinul tău. Te rugăm să instalezi și să folosești Aptoide Backup Apps.</string>
-  <string name="change_theme_soon">În curând</string>
-  <string name="social_timeline_notifications_sum2">Activează notificările Cronologiei sociale Aptoide. Vei primi noutăți în bara de notificări.</string>
-  <string name="ignored">Ignorat</string>
+  <string name="active">Activ</string>
+  <string name="completed">Finalizat</string>
+  <string name="stand_by">În așteptare</string>
+  <string name="_downloads"> descărcări</string>
+  <string name="no_description">Fără descriere</string>
+  <string name="description">Descriere</string>
+  <string name="version">Versiune</string>
+  <string name="version_placeholder">Versiune: %s</string>
+  <!-- Headers -->
+  <string name="results_subscribed">Abonări la magazine</string>
+  <string name="results_in_store">Rezultate căutare în magazinul %s</string>
+  <string name="other_stores">Magazine la care nu ești abonat</string>
+  <string name="comments">Comentarii</string>
+  <string name="reviews">Recenzii</string>
+  <string name="store">Magazin</string>
+  <string name="title_caps">TITLU</string>
+  <string name="unsubscribe_yes_no">Ești sigur că vrei să te dezabonezi?</string>
+  <string name="unsubscribed_">"Dezabonat "</string>
+  <string name="error_occured_uploading">Mai întâi trebuie să încarci această aplicație.</string>
+  <!-- Auto Update -->
+  <string name="update_self_title">Actualizare disponibilă</string>
+  <string name="update_self_msg">Este disponibilă o versiune nouă a %s \nDoriți să actualizați?</string>
+  <string name="retrieving_update">Recuperăm actualizarea…</string>
+  <string name="menu_search_item_go_to_store">Mergi la magazin</string>
+  <string name="srch_hint">Caută aplicații…</string>
+  <!-- Badges -->
+  <string name="app_trusted">%s este De încredere</string>
+  <string name="app_warning">Avertizare: %s</string>
+  <string name="scanned_with_av">Scanat cu Anti-Virus:</string>
+  <string name="compared_with_another_marketplace">Comparat cu un alt Bazar Android:</string>
+  <string name="application_signature_analysis">Semnătura aplicației comparată cu semnătura developerului:</string>
+  <string name="application_signature_matched">Semnătura aplicației este identică cu semnătura asociată dezvoltatorului aplicației.</string>
+  <string name="application_signature_not_matched">Semnătura aplicației nu este identică cu semnătura asociată dezvoltatorului aplicației. Este posibil ca aplicația să fi fost falsificată.</string>
   <string name="application_signature_blacklisted">Semnătură aplicației nu este o semnătură De încredere pe platforma Aptoide Anti-Malware pentru că a fost folosită pentru a semna o altă aplicație, ce nu este identică cu semnătura corespunzătoare developerului legitim.</string>
   <string name="scanned_manually_by_aptoide_team">Scanat manual de echipa Aptoide:</string>
   <string name="scanned_verified_by_tester">Aplicația a fost revizuită manual de un tester din echipa Aptoide care asigură securitatea aplicației.</string>
-  <string name="critical">Critic</string>
-
+  <string name="warning">Avertizare</string>
+  <string name="trusted_app">Aplicații De încredere</string>
+  <string name="unknown">Necunoscută</string>
+  <string name="critical">Critică</string>
+  <!-- New Badges V7 -->
+  <string name="reason_third_party">Am verificat semnătura aplicației și se potrivește cu Google Play Store, astfel că siguranța este garantată și te poți bucura de aplicație.</string>
+  <string name="reason_scanned">Scanat cu AptoideGuard și cu 2 antiviruși diferiți (Zoner 1,8 și Sophos 3.0).</string>
+  <string name="reason_signature">Semnătura criptografică garantează că poți instala fișierul în siguranță și că acesta nu a fost falsificat în niciun fel.</string>
   <string name="reason_manual">Această aplicație a fost revizuită manual de un expert din echipa Aptoide și a fost semnalizată ca fiind Bună.</string>
-
+  <string name="reason_failed">Semnătura aplicației nu se potrivește cu semnătura developerului. Se poate ca aplicația să fi fost compromisă.</string>
   <string name="reason_unknown">Nu există suficiente informații despre această aplicație pe platforma Aptoide Anti-Malware.</string>
+  <!-- Comments -->
+  <string name="reply_to">Răspunde lui %s</string>
+  <string name="comment_submitted">Comentariul tău a fost trimis cu succes</string>
+  <string name="write_your_comment">Scrieți comentariul dvs</string>
+  <string name="write_a_comment">Scrie un comentariu</string>
+  <string name="no_comment_be_the_first">Niciun comentariu încă. Fii primul!</string>
+  <!-- Dialogs -->
+  <string name="installapp_alrt">Vrei să instalezi:
 
-
+%s?</string>
+  <string name="suggested_app">Aplicație sugerată</string>
+  <!-- ABTesting -->
+  <string name="abTest1_label_1">Descarcă aplicația</string>
+  <string name="abTest1_label_2">Instalează</string>
+  <string name="abTest1_label_3">Instalează</string>
+  <!-- push notifications-->
+  <string name="notification_timeline_new_likes">Ai %s aprecieri noi. Verifică Cronologia Socială!</string>
+  <string name="notification_timeline_new_comments">Ai %s comentarii noi. Verifică Cronologia Socială!</string>
+  <string name="notification_timeline_activity">Ai %1$s comentarii și %2$s aprecieri noi. Verifică Cronologia Socială!</string>
+  <string name="notification_social_timeline">Cronologie Socială Aptoide. Verifică acum!</string>
+  <string name="notification_timeline_posts">Prietenii tăi au instalat aplicații noi!</string>
+  <!-- Updates -->
   <string name="no_updates_available_retoric">Totul este actualizat!</string>
   <string name="no_new_updates_available">Nu există actualizări noi disponibile!</string>
-  <string name="unsubscribing_store_message">Dezabonare %s</string>
+  <string name="has_updates">%s are actualizări noi disponibile!</string>
+  <string name="new_updates">Există %s actualizări noi disponibile!</string>
+  <string name="one_new_update">Există %s actualizare nouă disponibilă!</string>
+  <string name="updates_tab_adapter_uninstalled">Dezinstalat</string>
+  <string name="updatesTabAdapterUninstall">Dezinstalare</string>
+  <string name="flag_good">Bună</string>
+  <string name="flag_license">Necesită licență</string>
+  <string name="flag_fake">Fals</string>
+  <string name="flag_freeze">Blochează</string>
+  <string name="flag_virus">Virus</string>
+  <string name="flag_this_app">Semnalizează această aplicație</string>
+  <string name="flag_added">Semnalizare adăugată</string>
+  <string name="skip">Ignoră</string>
+  <string name="wizard_title_01">Bine ai venit la Aptoide</string>
+  <string name="wizard_description_01">Creează un cont gratuit și înregistrează-te pentru a începe să construiești propriul tău Magazin personalizat de aplicații.
 
+Navighează în funcție de temă și descoperă aplicații noi minunate.</string>
+  <string name="wizard_title_02">Securitate îmbunătățită</string>
+  <string name="wizard_description_02">Caută insigne De încredere și aplicații de descărcat sigure.
+
+Probleme de incompatibilitate? Caută versiuni anterioare ale aplicației.</string>
+  <string name="wizard_title_03">Noi membri ai familei noastre</string>
+  <string name="wizard_subtitle_03_1">Aptoide Lite</string>
+  <string name="wizard_description_03_1">pentru dispozitive vechi și conexiune la internet lentă</string>
+  <string name="wizard_subtitle_03_2">Aptoide TV</string>
+  <string name="wizard_description_03_2">Magazin de aplicații optimizat pentru dispozitive de decodare și smart TV</string>
+  <string name="wizard_reviews_title">Recenzii</string>
+  <string name="wizard_reviews">Acum poți crea recenzii ale aplicațiilor cu Aptoide!</string>
+  <string name="wizard_new_and_improved">Performanță îmbunătățită!</string>
+  <string name="wizard_new_and_improved_bullet_1">Economisește baterie</string>
+  <string name="wizard_new_and_improved_bullet_2">Redu utilizarea CPU și lățimea de bandă</string>
+  <string name="wizard_new_and_improved_bullet_3">Încarcă mai puține resurse</string>
+  <string name="wizard_new_and_improved_bullet_4">Curăță interfața cu utilizatorul</string>
+  <string name="wizard_new_homepage">Aspect nou pagină de pornire</string>
+  <string name="wizard_new_top">Filă Top nouă</string>
+  <string name="subscribe_apps_official_store">Abonează-te la aplicații din Magazinul oficial de aplicații Aptoide</string>
+  <string name="wizard_next">Următoare</string>
+  <string name="wizard_prev">Anterioară</string>
+  <string name="share">Distribuie</string>
+  <string name="share_on_timeline">Distribuie în cronologie</string>
+  <!-- Search Widget-->
+  <string name="search_for_apps">Caută aplicații…</string>
+  <string name="empty_search">Niciun rezultat, scrie un nume de aplicație</string>
+  <string name="manually_reviewed">Aplicație sigură: această aplicație a trecut testul de siguranță pentru viruși, software rău intenționat și alte atacuri malițioase și nu conține nicio amenințare</string>
+  <string name="no_apps_found">Nu a fost găsită nicio aplicație cu filtrul actual</string>
+  <string name="no_search_results_message">Nu există rezultate pentru căutarea ta.
+Te rugăm să încerci alte cuvinte cheie.</string>
+  <!-- AppView developer area-->
+  <string name="developer">Dezvoltator</string>
+  <string name="website">Website: %s</string>
+  <string name="email">E-mail: %s</string>
+  <string name="privacy_policy">Politică de confidențialitate: %s</string>
+  <string name="dialog_version_size">Versiune: %1$s | Dimensiune: %2$s</string>
+  <string name="na">N/A</string>
+  <string name="no_email_and_pass_error_message">Introdu o adresă de e-mail și o parolă pentru a te înregistra.</string>
+  <string name="no_pass_error_message">Introdu o parolă pentru a te înregistra.</string>
+  <string name="no_email_error_message">Introdu o adresă de e-mail pentru a te înregistra.</string>
+  <string name="website_copied">Website copiat pe clipboard</string>
+  <string name="email_copied">E-mail copiat pe clipboard</string>
+  <string name="privacy_copied">Link de confidențialitate copiat pe clipboard</string>
+  <string name="unsubscribing_store_message">Dezabonare %s</string>
+  <!-- Search Fragment -->
   <string name="all_stores">Toate magazinele</string>
   <string name="followed_stores">Magazine urmărite</string>
   <string name="search_minimum_chars">Interogarea de căutare trebuie să aibă cel puțin 2 caractere.</string>
-<string name="stand_by">În așteptare</string>
-  <string name="setting_general">General</string>
-  </resources>
+</resources>
