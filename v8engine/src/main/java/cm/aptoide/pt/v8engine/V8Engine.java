@@ -89,6 +89,7 @@ import cm.aptoide.pt.v8engine.notification.NotificationPolicyFactory;
 import cm.aptoide.pt.v8engine.notification.NotificationProvider;
 import cm.aptoide.pt.v8engine.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.v8engine.notification.NotificationSyncService;
+import cm.aptoide.pt.v8engine.notification.NotificationsCleaner;
 import cm.aptoide.pt.v8engine.notification.SystemNotificationShower;
 import cm.aptoide.pt.v8engine.payment.PaymentAnalytics;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
@@ -317,7 +318,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
       notificationCenter =
           new NotificationCenter(new NotificationIdsMapper(), getNotificationHandler(),
               notificationProvider, getNotificationSyncScheduler(), systemNotificationShower,
-              CrashReport.getInstance(), new NotificationPolicyFactory(notificationProvider));
+              CrashReport.getInstance(), new NotificationPolicyFactory(notificationProvider),
+              new NotificationsCleaner(notificationAccessor), getAccountManager());
     }
     return notificationCenter;
   }

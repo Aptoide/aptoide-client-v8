@@ -1,9 +1,10 @@
 package cm.aptoide.pt.v8engine.notification;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import java.util.List;
 import rx.Observable;
-import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by trinkes on 09/05/2017.
@@ -17,14 +18,17 @@ public class NotificationCenter {
   private NotificationSyncScheduler notificationSyncScheduler;
   private SystemNotificationShower notificationShower;
   private NotificationPolicyFactory notificationPolicyFactory;
-  private Subscription notificationProviderSubscription;
+  private NotificationsCleaner notificationsCleaner;
+  private CompositeSubscription subscriptions;
   private NotificationProvider notificationProvider;
+  private AptoideAccountManager accountManager;
 
   public NotificationCenter(NotificationIdsMapper notificationIdsMapper,
       NotificationHandler notificationHandler, NotificationProvider notificationProvider,
       NotificationSyncScheduler notificationSyncScheduler,
       SystemNotificationShower notificationShower, CrashReport crashReport,
-      NotificationPolicyFactory notificationPolicyFactory) {
+      NotificationPolicyFactory notificationPolicyFactory,
+      NotificationsCleaner notificationsCleaner, AptoideAccountManager accountManager) {
     this.notificationIdsMapper = notificationIdsMapper;
     this.notificationHandler = notificationHandler;
     this.notificationSyncScheduler = notificationSyncScheduler;
@@ -32,15 +36,24 @@ public class NotificationCenter {
     this.notificationProvider = notificationProvider;
     this.crashReport = crashReport;
     this.notificationPolicyFactory = notificationPolicyFactory;
+    this.notificationsCleaner = notificationsCleaner;
+    this.accountManager = accountManager;
+    subscriptions = new CompositeSubscription();
   }
 
   public void start() {
     notificationSyncScheduler.schedule();
-    notificationProviderSubscription = getNewNotifications().flatMapCompletable(
+    subscriptions.add(getNewNotifications().flatMapCompletable(
         aptoideNotification -> notificationShower.showNotification(aptoideNotification,
             notificationIdsMapper.getNotificationId(aptoideNotification.getType())))
         .subscribe(aptoideNotification -> {
-        }, throwable -> crashReport.log(throwable));
+        }, throwable -> crashReport.log(throwable)));
+
+    subscriptions.add(accountManager.accountStatus()
+        .filter(account -> account.isLoggedIn())
+        .flatMapCompletable(account -> notificationsCleaner.cleanNotifications(account.getId()))
+        .subscribe(notificationsCleaned -> {
+        }, throwable -> crashReport.log(throwable)));
   }
 
   private Observable<AptoideNotification> getNewNotifications() {
@@ -61,8 +74,8 @@ public class NotificationCenter {
   }
 
   public void stop() {
-    if (!notificationProviderSubscription.isUnsubscribed()) {
-      notificationProviderSubscription.unsubscribe();
+    if (!subscriptions.isUnsubscribed()) {
+      subscriptions.clear();
     }
     notificationSyncScheduler.stop();
   }
