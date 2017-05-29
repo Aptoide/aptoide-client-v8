@@ -47,19 +47,21 @@ public class NotificationHandler implements NotificationNetworkService {
             versionName, applicationId, httpClient, converterFactory,
             DataProvider.getConfiguration()
                 .getExtraId(), account.getAccessToken())
-            .observe())
-        .map(response -> convertSocialNotifications(response))
+            .observe()
+            .map(response -> convertSocialNotifications(response, account.getId())))
         .flatMap(notifications -> handle(notifications))
         .toSingle();
   }
 
   @Override public Single<List<AptoideNotification>> getCampaignNotifications() {
-    return PullCampaignNotificationsRequest.of(idsRepository.getUniqueIdentifier(), versionName,
-        applicationId, httpClient, converterFactory)
-        .observe()
-        .map(response -> convertCampaignNotifications(response))
+    return accountManager.accountStatus()
         .first()
-        .flatMap(notifications -> handle(notifications))
+        .flatMap(account -> PullCampaignNotificationsRequest.of(idsRepository.getUniqueIdentifier(),
+            versionName, applicationId, httpClient, converterFactory)
+            .observe()
+            .map(response -> convertCampaignNotifications(response, account.getId()))
+            .first()
+            .flatMap(notifications -> handle(notifications)))
         .toSingle();
   }
 
@@ -75,7 +77,7 @@ public class NotificationHandler implements NotificationNetworkService {
   }
 
   private List<AptoideNotification> convertSocialNotifications(
-      List<GetPullNotificationsResponse> response) {
+      List<GetPullNotificationsResponse> response, String id) {
     List<AptoideNotification> aptoideNotifications = new LinkedList<>();
     for (final GetPullNotificationsResponse notification : response) {
       String appName = null;
@@ -90,13 +92,13 @@ public class NotificationHandler implements NotificationNetworkService {
       aptoideNotifications.add(
           new AptoideNotification(notification.getBody(), notification.getImg(),
               notification.getTitle(), notification.getUrl(), notification.getType(), appName,
-              graphic, -1));
+              graphic, -1, id));
     }
     return aptoideNotifications;
   }
 
   private List<AptoideNotification> convertCampaignNotifications(
-      List<GetPullNotificationsResponse> response) {
+      List<GetPullNotificationsResponse> response, String id) {
     List<AptoideNotification> aptoideNotifications = new LinkedList<>();
     for (final GetPullNotificationsResponse notification : response) {
       String appName = null;
@@ -112,7 +114,7 @@ public class NotificationHandler implements NotificationNetworkService {
           new AptoideNotification(notification.getAbTestingGroup(), notification.getBody(),
               notification.getCampaignId(), notification.getImg(), notification.getLang(),
               notification.getTitle(), notification.getUrl(), notification.getUrlTrack(), appName,
-              graphic));
+              graphic, id));
     }
     return aptoideNotifications;
   }

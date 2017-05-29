@@ -27,7 +27,8 @@ public class NotificationProvider {
         aptoideNotification.getLang(), aptoideNotification.getTitle(), aptoideNotification.getUrl(),
         aptoideNotification.getUrlTrack(), aptoideNotification.getTimeStamp(),
         aptoideNotification.getType(), aptoideNotification.getDismissed(),
-        aptoideNotification.getAppName(), aptoideNotification.getGraphic());
+        aptoideNotification.getAppName(), aptoideNotification.getGraphic(),
+        aptoideNotification.getOwnerId());
   }
 
   public Single<List<AptoideNotification>> getDismissedNotifications(
@@ -46,7 +47,7 @@ public class NotificationProvider {
         notification.getCampaignId(), notification.getImg(), notification.getLang(),
         notification.getTitle(), notification.getUrl(), notification.getUrlTrack(),
         notification.getTimeStamp(), notification.getType(), notification.getDismissed(),
-        notification.getAppName(), notification.getGraphic());
+        notification.getAppName(), notification.getGraphic(), notification.getOwnerId());
   }
 
   public Completable save(List<AptoideNotification> aptideNotifications) {
