@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @EqualsAndHashCode(exclude = { "publisher" }, callSuper = false) public class SocialArticle
-    extends SocialCard implements TimelineCard {
+    extends SocialCard {
 
   @Getter private final Publisher publisher;
   @Getter private final Comment.User user;
@@ -35,9 +35,10 @@ import lombok.Getter;
       @JsonProperty("stats") SocialCardStats stats, @JsonProperty("store") Store store,
       @JsonProperty("my") My my, @JsonProperty("url") String url,
       @JsonProperty("likes") List<UserTimeline> likes,
+      @JsonProperty("comments") List<CardComment> comments,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab) {
-    super(likes, my);
+    super(likes, comments, my);
     this.stats = stats;
     this.publisher = publisher;
     this.cardId = cardId;

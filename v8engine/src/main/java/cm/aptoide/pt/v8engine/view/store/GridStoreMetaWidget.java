@@ -32,6 +32,7 @@ import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.account.store.CreateStoreFragment;
+import cm.aptoide.pt.v8engine.view.account.store.ManageStoreModel;
 import com.jakewharton.rxbinding.view.RxView;
 import java.text.NumberFormat;
 import java.util.List;
@@ -171,7 +172,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         compositeSubscription.add(RxView.clicks(editStoreButton)
             .subscribe(click -> editStore(store.getId(), store.getAppearance()
                 .getTheme(), store.getAppearance()
-                .getDescription(), store.getAvatar())));
+                .getDescription(), store.getName(), store.getAvatar())));
       } else {
         editStoreButton.setVisibility(View.GONE);
       }
@@ -285,11 +286,10 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     };
   }
 
-  private void editStore(long storeId, String storeTheme, String storeDescription,
+  private void editStore(long storeId, String storeTheme, String storeDescription, String storeName,
       String storeAvatar) {
-    Fragment fragment =
-        CreateStoreFragment.newInstance(storeId, storeTheme, storeDescription, storeAvatar,
-            CreateStoreFragment.STORE_FROM_DEFAULT_VALUE);
+    Fragment fragment = CreateStoreFragment.newInstance(
+        new ManageStoreModel(storeId, storeAvatar, false, storeTheme, storeName, storeDescription));
     getFragmentNavigator().navigateTo(fragment);
   }
 

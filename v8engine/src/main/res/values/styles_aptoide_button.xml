@@ -1,7 +1,7 @@
 <resources>
 
 
-  <style name="Aptoide.Button" parent="Widget.AppCompat.Button.Colored">
+  <style name="Aptoide.Button" parent="Widget.AppCompat.Button">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">@dimen/button_height</item>
     <item name="android:textColor">@color/white</item>
@@ -40,7 +40,7 @@
 
 
   <style name="Aptoide.Button.Facebook">
-    <item name="colorAccent">@color/facebook</item>
+    <item name="colorButtonNormal">@color/facebook</item>
     <item name="colorControlHighlight">@color/facebook_highlight</item>
     <item name="android:drawableLeft">@drawable/com_facebook_button_icon_white</item>
     <item name="android:text">@string/connect_with_facebook</item>
@@ -49,7 +49,7 @@
 
 
   <style name="Aptoide.Button.Google">
-    <item name="colorAccent">@color/google</item>
+    <item name="colorButtonNormal">@color/google</item>
     <item name="colorControlHighlight">@color/google_highlight</item>
     <item name="android:drawableLeft">@drawable/google_plus_ic</item>
     <item name="android:text">@string/connect_with_google</item>

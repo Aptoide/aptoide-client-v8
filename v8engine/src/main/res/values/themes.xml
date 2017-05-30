@@ -52,6 +52,7 @@
     <item name="customButton">@style/WidgetButtonCustomAptoide</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideWhite</item>
     <item name="customButtonThinLine">@style/WidgetButtonCustomAptoideThinLine</item>
+    <item name="customButtomDarkGrayThinLine">@style/WidgetButtonCustomDarkGrayThinLine</item>
     <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleAptoide</item>
     <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
     <item name="customRowForegroundHomeLayout">@style/customRowStyleHomeLayout</item>

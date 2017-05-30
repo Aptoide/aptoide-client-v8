@@ -20,14 +20,16 @@ import rx.functions.Action0;
 public class SearchDisplayable extends DisplayablePojo<ListSearchApps.SearchAppsApp> {
 
   @Getter private Action0 clickCallback;
+  private String query;
 
   public SearchDisplayable() {
   }
 
   public SearchDisplayable(ListSearchApps.SearchAppsApp searchAppsApp,
       ABTest<SearchTabOptions> searchAbTest, boolean addSubscribedStores,
-      boolean hasMultipleFragments) {
+      boolean hasMultipleFragments, String query) {
     super(searchAppsApp);
+    this.query = query;
     clickCallback = () -> {
       if (isConvert(searchAbTest, addSubscribedStores, hasMultipleFragments)) {
         searchAbTest.convert()
@@ -52,5 +54,9 @@ public class SearchDisplayable extends DisplayablePojo<ListSearchApps.SearchApps
       boolean hasMultipleFragments) {
     return hasMultipleFragments && (addSubscribedStores == (searchAbTest.alternative()
         == SearchTabOptions.FOLLOWED_STORES));
+  }
+
+  public String getQuery() {
+    return query;
   }
 }

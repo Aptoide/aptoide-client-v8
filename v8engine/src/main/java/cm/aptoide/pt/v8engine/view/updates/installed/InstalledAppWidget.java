@@ -79,7 +79,8 @@ import retrofit2.Converter;
     dialogUtils = new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
         converterFactory);
     shareAppHelper = new ShareAppHelper(RepositoryFactory.getInstalledRepository(), accountManager,
-        accountNavigator, getContext(), new SpotAndShareAnalytics(Analytics.getInstance()));
+        accountNavigator, getContext(), new SpotAndShareAnalytics(Analytics.getInstance()),
+        displayable.getTimelineAnalytics());
     appName = pojo.getName();
     packageName = pojo.getPackageName();
 

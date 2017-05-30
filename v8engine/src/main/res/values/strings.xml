@@ -636,5 +636,8 @@
   <string name="my_account_edit_store">Edit</string>
   <string name="my_account_log_out">LOG OUT</string>
   <string name="fragment_inbox_title_text">Notification Center</string>
+  <string name="edit_profile_save_button">Save</string>
+  <string name="edit_profile_title">Edit Your Profile</string>
+  <string name="user_edited">User Edited</string>
 
 </resources>

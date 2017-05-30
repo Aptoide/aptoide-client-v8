@@ -15,7 +15,6 @@
   <string name="password_validation_text">Password must be at least 8 characters and should have
         at least one letter and one number or special characters (!@#$%*)</string>
   <string name="logged_as">You are logged as:</string>
-  <string name="sign_out">Sign Out</string>
   <string name="default_account_type">cm.aptoide.pt</string>
 
   <string name="facebook_grant_permission_button">Grant permission</string>
@@ -49,6 +48,7 @@
   <!--Create user fragment-->
   <string name="create_user_title">Create a User Profile</string>
   <string name="create_user_header"><b>Create your User Profile</b> so that you\'re able to rate, comment and share apps with your friends</string>
+  <string name="edit_profile_header_message">Edit your profile with a beautiful image</string>
   <string name="create_user_take_picture">Take a picture for your profile</string>
   <string name="create_user_random_photo">Or use random photo</string>
   <string name="create_user_choose_username">Choose your username</string>
