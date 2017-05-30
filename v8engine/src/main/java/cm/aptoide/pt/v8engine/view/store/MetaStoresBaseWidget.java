@@ -34,23 +34,25 @@ public abstract class MetaStoresBaseWidget<T extends Displayable> extends Widget
     ImageButton imageButton;
     for (int i = 0; i < 1 && i < socialChannels.size(); i++) {
       Store.SocialChannel socialChannel = socialChannels.get(i);
-      layoutInflater.inflate(R.layout.social_button_layout, socialChannelsLayout);
-      imageButton = ((ImageButton) socialChannelsLayout.getChildAt(i));
-      switch (socialChannel.getType()) {
-        case FACEBOOK:
-          imageButton.setImageDrawable(getDrawable(R.drawable.facebook_logo));
-          break;
-        case TWITTER:
-          imageButton.setImageDrawable(getDrawable(R.drawable.twitter_logo));
-          break;
-        case YOUTUBE:
-          imageButton.setImageDrawable(getDrawable(R.drawable.youtube_logo));
-          break;
-        case TWITCH:
-          imageButton.setImageDrawable(getDrawable(R.drawable.twitch_logo));
-          break;
+      if (socialChannel.getType() != null) {
+        layoutInflater.inflate(R.layout.social_button_layout, socialChannelsLayout);
+        imageButton = ((ImageButton) socialChannelsLayout.getChildAt(i));
+        switch (socialChannel.getType()) {
+          case FACEBOOK:
+            imageButton.setImageDrawable(getDrawable(R.drawable.facebook_logo));
+            break;
+          case TWITTER:
+            imageButton.setImageDrawable(getDrawable(R.drawable.twitter_logo));
+            break;
+          case YOUTUBE:
+            imageButton.setImageDrawable(getDrawable(R.drawable.youtube_logo));
+            break;
+          case TWITCH:
+            imageButton.setImageDrawable(getDrawable(R.drawable.twitch_logo));
+            break;
+        }
+        imageButton.setOnClickListener(view -> sendEvent(socialChannel.getUrl()));
       }
-      imageButton.setOnClickListener(view -> sendEvent(socialChannel.getUrl()));
     }
   }
 
