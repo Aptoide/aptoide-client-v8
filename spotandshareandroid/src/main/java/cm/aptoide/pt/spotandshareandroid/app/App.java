@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshareandroid.transference;
+package cm.aptoide.pt.spotandshareandroid.app;
 
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;

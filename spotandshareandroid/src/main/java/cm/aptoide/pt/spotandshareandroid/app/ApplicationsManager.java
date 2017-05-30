@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshareandroid.transference;
+package cm.aptoide.pt.spotandshareandroid.app;
 
 import android.R;
 import android.content.BroadcastReceiver;
@@ -15,6 +15,7 @@ import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.spotandshareandroid.transference.TransferRecordItem;
 import cm.aptoide.pt.utils.FileUtils;
 import java.io.File;
 import java.util.ArrayList;

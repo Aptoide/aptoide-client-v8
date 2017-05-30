@@ -27,6 +27,7 @@ import cm.aptoide.pt.spotandshare.socket.message.server.AptoideMessageServerSock
 import cm.aptoide.pt.spotandshareandroid.DataHolder;
 import cm.aptoide.pt.spotandshareandroid.R;
 import cm.aptoide.pt.spotandshareandroid.Utils;
+import cm.aptoide.pt.spotandshareandroid.app.App;
 import cm.aptoide.pt.spotandshareandroid.connection.HostsCallbackManager;
 import cm.aptoide.pt.spotandshareandroid.view.TransferRecordActivity;
 import cm.aptoide.pt.utils.AptoideUtils;
