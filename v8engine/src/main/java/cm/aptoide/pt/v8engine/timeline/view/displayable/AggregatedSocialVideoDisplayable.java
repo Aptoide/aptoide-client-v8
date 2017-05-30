@@ -7,7 +7,6 @@ import android.text.Spannable;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.AggregatedSocialVideo;
 import cm.aptoide.pt.model.v7.timeline.MinimalCard;
@@ -42,11 +41,10 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
   private Link developerLink;
   private String publisherName;
   private String thumbnailUrl;
-  private String logoUrl;
+  private String channelLogoUrl;
   private long appId;
   private String packageName;
   private String abTestingURL;
-  private Comment.User user;
   private List<App> relatedToApps;
   private Date date;
   private DateCalculator dateCalculator;
@@ -58,20 +56,19 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
   }
 
   public AggregatedSocialVideoDisplayable(AggregatedSocialVideo card, String title, Link link,
-      Link developerLink, String publisherName, String thumbnailUrl, String logoUrl, long appId,
-      String abTestingURL, Comment.User user, List<App> relatedToApps, Date date,
+      Link developerLink, String publisherName, String thumbnailUrl, String channelLogoUrl,
+      long appId, String abTestingURL, List<App> relatedToApps, Date date,
       DateCalculator dateCalculator, SpannableFactory spannableFactory,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
-    super(card);
+    super(card, timelineAnalytics);
     this.title = title;
     this.link = link;
     this.developerLink = developerLink;
     this.publisherName = publisherName;
     this.thumbnailUrl = thumbnailUrl;
-    this.logoUrl = logoUrl;
+    this.channelLogoUrl = channelLogoUrl;
     this.appId = appId;
     this.abTestingURL = abTestingURL;
-    this.user = user;
     this.relatedToApps = relatedToApps;
     this.date = date;
     this.dateCalculator = dateCalculator;
@@ -104,8 +101,8 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, card.getPublisher()
             .getBaseUrl()), card.getPublisher()
         .getName(), card.getThumbnailUrl(), card.getPublisher()
-        .getLogoUrl(), appId, abTestingURL, card.getUser(), card.getApps(), card.getDate(),
-        dateCalculator, spannableFactory, timelineAnalytics, socialRepository);
+        .getLogoUrl(), appId, abTestingURL, card.getApps(), card.getDate(), dateCalculator,
+        spannableFactory, timelineAnalytics, socialRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -201,8 +198,8 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
     return thumbnailUrl;
   }
 
-  public String getLogoUrl() {
-    return logoUrl;
+  public String getChannelLogoUrl() {
+    return channelLogoUrl;
   }
 
   public long getAppId() {
@@ -211,10 +208,6 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
 
   public String getAbTestingURL() {
     return abTestingURL;
-  }
-
-  public Comment.User getUser() {
-    return user;
   }
 
   public List<App> getRelatedToApps() {

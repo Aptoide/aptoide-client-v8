@@ -97,17 +97,6 @@
           style="@style/Widget.Aptoide.Button.Colored"
           />
 
-      <ImageView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_centerVertical="true"
-          android:layout_marginLeft="10dp"
-          android:layout_marginStart="10dp"
-          android:layout_toEndOf="@id/fragment_spot_share_preview_start_button"
-          android:layout_toRightOf="@id/fragment_spot_share_preview_start_button"
-          android:src="@drawable/beta_icon"
-          />
-
     </RelativeLayout>
 
   </android.support.constraint.ConstraintLayout>

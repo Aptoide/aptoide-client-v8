@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.timeline.view.widget;
 
-import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -50,6 +49,8 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
   private TextView relatedTo;
   private String appName;
   private RatingBar ratingBar;
+  private TextView additionalNumberOfSharesLabel;
+  private ImageView additionalNumberOfSharesCircularMask;
 
   public AggregatedSocialVideoWidget(View itemView) {
     super(itemView);
@@ -75,6 +76,10 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
     cardView = (CardView) itemView.findViewById(R.id.card);
     relatedTo = (TextView) itemView.findViewById(R.id.app_name);
     ratingBar = (RatingBar) itemView.findViewById(R.id.ratingbar);
+    additionalNumberOfSharesCircularMask =
+        (ImageView) itemView.findViewById(R.id.card_header_avatar_plus);
+    additionalNumberOfSharesLabel =
+        (TextView) itemView.findViewById(R.id.timeline_header_aditional_number_of_shares_circular);
   }
 
   @Override public void bindView(AggregatedSocialVideoDisplayable displayable) {
@@ -101,14 +106,6 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
     thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
     play_button.setVisibility(View.VISIBLE);
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      mediaLayout.setForeground(getContext().getResources()
-          .getDrawable(R.color.overlay_black, getContext().getTheme()));
-    } else {
-      mediaLayout.setForeground(getContext().getResources()
-          .getDrawable(R.color.overlay_black));
-    }
-
     compositeSubscription.add(RxView.clicks(mediaLayout)
         .subscribe(v -> {
           knockWithSixpackCredentials(displayable.getAbTestingURL());
@@ -119,14 +116,33 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
           displayable.sendOpenVideoEvent();
         }));
 
+    setAdditionalNumberOfSharersLabel(displayable);
     setCardViewMargin(displayable, cardView);
-
     showSeeMoreAction(displayable);
     showSubCards(displayable, 2);
   }
 
   @Override String getCardTypeName() {
     return AggregatedSocialVideoDisplayable.CARD_TYPE_NAME;
+  }
+
+  private void setAdditionalNumberOfSharersLabel(AggregatedSocialVideoDisplayable displayable) {
+    int numberOfSharers = displayable.getSharers()
+        .size();
+
+    if (numberOfSharers <= 2) {
+      additionalNumberOfSharesLabel.setVisibility(View.INVISIBLE);
+      additionalNumberOfSharesCircularMask.setVisibility(View.INVISIBLE);
+      return;
+    } else {
+      additionalNumberOfSharesLabel.setVisibility(View.VISIBLE);
+      additionalNumberOfSharesCircularMask.setVisibility(View.VISIBLE);
+      numberOfSharers -= 2;
+    }
+
+    additionalNumberOfSharesLabel.setText(
+        String.format(getContext().getString(R.string.timeline_short_plus),
+            String.valueOf(numberOfSharers)));
   }
 
   private void showSubCards(AggregatedSocialVideoDisplayable displayable,
@@ -220,6 +236,13 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
             throwable.printStackTrace();
           }));
 
+      if (minimalCard.getMy()
+          .isLiked()) {
+        likeSubCardButton.setHeartState(true);
+      } else {
+        likeSubCardButton.setHeartState(false);
+      }
+
       compositeSubscription.add(RxView.clicks(seeMore)
           .subscribe(click -> {
             showSubCards(displayable, 10);
@@ -234,8 +257,7 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
 
       compositeSubscription.add(RxView.clicks(comment)
           .flatMap(aVoid -> Observable.fromCallable(() -> {
-            final String elementId = displayable.getTimelineCard()
-                .getCardId();
+            final String elementId = minimalCard.getCardId();
             Fragment fragment = V8Engine.getFragmentProvider()
                 .newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType.TIMELINE,
                     elementId);

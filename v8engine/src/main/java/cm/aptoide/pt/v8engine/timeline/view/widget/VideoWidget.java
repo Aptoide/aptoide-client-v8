@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.timeline.view.widget;
 
-import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
@@ -73,14 +72,6 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
         .load(displayable.getThumbnailUrl(), thumbnail);
     thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
     play_button.setVisibility(View.VISIBLE);
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      media_layout.setForeground(context.getResources()
-          .getDrawable(R.color.overlay_black, context.getTheme()));
-    } else {
-      media_layout.setForeground(context.getResources()
-          .getDrawable(R.color.overlay_black));
-    }
 
     media_layout.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());

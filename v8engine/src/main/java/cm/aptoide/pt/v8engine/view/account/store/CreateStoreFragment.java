@@ -118,7 +118,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
       storeModel = new ManageStoreModel(true);
     }
 
-    loadImage(storeModel.getStoreAvatarPath());
+    loadImage(Uri.parse(storeModel.getStoreAvatarPath()));
 
     setupViewsDefaultValues(view);
   }
@@ -144,10 +144,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
   }
 
   @Override public void loadImage(Uri imagePath) {
-    if (imagePath != null && !TextUtils.isEmpty(imagePath.toString())) {
-      ImageLoader.with(getActivity())
-          .loadWithCircleTransform(imagePath, storeAvatar, false);
-    }
+    ImageLoader.with(getActivity())
+        .loadWithCircleTransform(imagePath, storeAvatar, false);
   }
 
   @Override public void showIconPropertiesError(String errors) {
@@ -157,13 +155,6 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
         .subscribe(__ -> {
         }, err -> CrashReport.getInstance()
             .log(err));
-  }
-
-  private void loadImage(String imagePath) {
-    if (!TextUtils.isEmpty(imagePath)) {
-      ImageLoader.with(getActivity())
-          .loadWithCircleTransform(imagePath, storeAvatar, false);
-    }
   }
 
   @Override public void setupViews() {
@@ -222,7 +213,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
       storeName.setVisibility(View.GONE);
       storeDescription.setVisibility(View.VISIBLE);
       storeDescription.setText(storeModel.getStoreDescription());
-      loadImage(storeModel.getStoreAvatarPath());
+      loadImage(Uri.parse(storeModel.getStoreAvatarPath()));
       createStoreBtn.setText(R.string.save_edit_store);
       skipBtn.setText(R.string.cancel);
     }
@@ -383,9 +374,9 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
             createStoreInterceptor(storeModel), httpClient, converterFactory)
             .observe())
         .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnCompleted(() -> navigateToHome())
             .toObservable())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnCompleted(() -> navigateToHome())
         .onErrorResumeNext(err -> {
           @StringRes int errorMessage;
           if (((AptoideWsV7Exception) err).getBaseResponse()
@@ -511,7 +502,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
       return;
     }
 
-    getFragmentNavigator().back();
+    getFragmentNavigator().popBackStack();
   }
 
   private void updateStoreDataAfterCreateStore(@NonNull final ManageStoreModel storeModel,
@@ -524,6 +515,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
        */
       accountManager.accountStatus()
           .first()
+          .doOnNext(__ -> showWaitDialog())
           .flatMap(
               account -> SetStoreRequest.of(account.getAccessToken(), storeModel.getStoreName(),
                   storeModel.getStoreThemeName(), storeModel.getStoreAvatarPath(),
@@ -531,10 +523,12 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
                   .observe()
                   .timeout(90, TimeUnit.SECONDS))
           .observeOn(AndroidSchedulers.mainThread())
-          .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
+          .flatMap(__ ->accountManager.syncCurrentAccount()
               .andThen(sendCreateAnalytics())
+              .andThen(dismissDialogAsync())
+              .observeOn(AndroidSchedulers.mainThread())
+              .doOnCompleted(() -> navigateToHome())
               .toObservable())
-          .doOnNext(__ -> navigateToHome())
           .subscribe(__ -> {
           }, err -> {
             dismissWaitDialog();
@@ -586,20 +580,23 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
     /*
      * not multipart
      */
-    SimpleSetStoreRequest.of(storeModel.getStoreId(), storeModel.getStoreThemeName(),
-        storeModel.getStoreDescription(), bodyInterceptorV7, httpClient, converterFactory)
+    SimpleSetStoreRequest.of(storeModel.getStoreName(), storeModel.getStoreThemeName(),
+        bodyInterceptorV7, httpClient, converterFactory)
         .observe()
         .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
             .andThen(sendCreateAnalytics())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnCompleted(() -> navigateToHome())
             .toObservable())
-        .doOnNext(__ -> navigateToHome())
-        .subscribe(__ -> {
-        }, err -> {
-          @StringRes int reason = ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage());
-          dismissWaitAndShowErrorMessage(reason);
+        .onErrorResumeNext(err -> {
           CrashReport.getInstance()
               .log(err);
-        });
+          @StringRes int reason = ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage());
+          return dismissWaitAndShowErrorMessage(reason);
+        })
+        .subscribe(__ -> {
+        }, err -> CrashReport.getInstance()
+            .log(err));
   }
 
   @NonNull private Completable dismissDialogAsync() {

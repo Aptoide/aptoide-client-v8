@@ -24,10 +24,10 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
-import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialCardDisplayable;
+import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
+import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -174,20 +174,38 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     final long numberOfLikes = displayable.getNumberOfLikes();
     if (numberOfLikes > 0) {
       if (numberOfLikes > 1) {
-        numberLikes.setVisibility(View.VISIBLE);
-        numberLikes.setText(String.format("%s %s", String.valueOf(numberOfLikes),
-            getContext().getString(R.string.likes)
-                .toLowerCase()));
-        numberLikesOneLike.setVisibility(View.INVISIBLE);
+        showNumberOfLikes(numberOfLikes);
       } else if (displayable.getUserLikes() != null
           && displayable.getUserLikes()
           .size() != 0) {
-        numberLikes.setVisibility(View.INVISIBLE);
-        numberLikesOneLike.setVisibility(View.VISIBLE);
-        numberLikesOneLike.setText(displayable.getBlackHighlightedLike(getContext(),
-            displayable.getUserLikes()
-                .get(0)
-                .getName()));
+        if (displayable.getUserLikes()
+            .get(0)
+            .getName() != null) {
+          numberLikesOneLike.setText(displayable.getBlackHighlightedLike(getContext(),
+              displayable.getUserLikes()
+                  .get(0)
+                  .getName()));
+          numberLikes.setVisibility(View.INVISIBLE);
+          numberLikesOneLike.setVisibility(View.VISIBLE);
+        } else {
+          if (displayable.getUserLikes()
+              .get(0)
+              .getStore() != null
+              && displayable.getUserLikes()
+              .get(0)
+              .getStore()
+              .getName() != null) {
+            numberLikesOneLike.setText(displayable.getBlackHighlightedLike(getContext(),
+                displayable.getUserLikes()
+                    .get(0)
+                    .getStore()
+                    .getName()));
+            numberLikes.setVisibility(View.INVISIBLE);
+            numberLikesOneLike.setVisibility(View.VISIBLE);
+          } else {
+            showNumberOfLikes(numberOfLikes);
+          }
+        }
       }
     } else {
       numberLikes.setVisibility(View.INVISIBLE);
@@ -237,6 +255,14 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
               }
               socialAction = "Go to Owner Timeline";
             }));
+  }
+
+  private void showNumberOfLikes(long numberOfLikes) {
+    numberLikes.setVisibility(View.VISIBLE);
+    numberLikes.setText(String.format("%s %s", String.valueOf(numberOfLikes),
+        getContext().getString(R.string.likes)
+            .toLowerCase()));
+    numberLikesOneLike.setVisibility(View.INVISIBLE);
   }
 
   private Observable<Void> showComments(T displayable) {

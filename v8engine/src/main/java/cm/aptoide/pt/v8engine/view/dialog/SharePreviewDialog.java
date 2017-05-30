@@ -24,9 +24,6 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
-import cm.aptoide.pt.v8engine.view.app.displayable.AppViewInstallDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialArticleDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialInstallDisplayable;
@@ -44,6 +41,9 @@ import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialStoreLatestAppsDis
 import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialVideoDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.VideoDisplayable;
+import cm.aptoide.pt.v8engine.view.app.displayable.AppViewInstallDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.HashMap;
 import java.util.Map;
 import rx.Observable;
@@ -74,10 +74,11 @@ public class SharePreviewDialog {
   }
 
   public SharePreviewDialog(AptoideAccountManager accountManager, boolean dontShowMeAgainOption,
-      SharePreviewOpenMode openMode) {
+      SharePreviewOpenMode openMode, TimelineAnalytics timelineAnalytics) {
     this.accountManager = accountManager;
     this.dontShowMeAgainOption = dontShowMeAgainOption;
     this.openMode = openMode;
+    this.timelineAnalytics = timelineAnalytics;
   }
 
   public AlertDialog.Builder getPreviewDialogBuilder(Context context) {

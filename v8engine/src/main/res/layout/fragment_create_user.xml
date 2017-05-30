@@ -58,25 +58,25 @@
         <Button
             android:id="@+id/create_user_cancel_button"
             android:layout_width="0dp"
-            android:layout_height="@dimen/button_default_height"
             android:layout_marginEnd="@dimen/padding_smaller"
             android:layout_marginRight="@dimen/padding_smaller"
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/cancel"
-            style="@style/Aptoide.Button"
+            style="@style/Aptoide.Button.Ghost"
             />
 
         <Button
             android:id="@+id/create_user_create_profile"
             android:layout_width="0dp"
-            android:layout_height="@dimen/button_default_height"
+            android:layout_height="@dimen/button_height"
             android:layout_marginLeft="@dimen/padding_smaller"
             android:layout_marginStart="@dimen/padding_smaller"
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/create_user_create_button"
-            style="@style/Aptoide.Button"
+            android:theme="@style/Aptoide.Button"
+            style="@style/Widget.AppCompat.Button"
             />
       </LinearLayout>
 

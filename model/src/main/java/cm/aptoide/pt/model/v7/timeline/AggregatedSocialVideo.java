@@ -1,6 +1,5 @@
 package cm.aptoide.pt.model.v7.timeline;
 
-import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -19,8 +18,6 @@ public class AggregatedSocialVideo implements TimelineCard {
   private final String title;
   private final String thumbnailUrl;
   private final Publisher publisher;
-  private final Comment.User user;
-  private final Comment.User userSharer;
   private final String url;
   private final Store store;
   private final Date date;
@@ -30,8 +27,7 @@ public class AggregatedSocialVideo implements TimelineCard {
 
   @JsonCreator public AggregatedSocialVideo(@JsonProperty("uid") String cardId,
       @JsonProperty("title") String title, @JsonProperty("thumbnail") String thumbnailUrl,
-      @JsonProperty("publisher") Publisher publisher, @JsonProperty("user") Comment.User user,
-      @JsonProperty("user_sharer") Comment.User userSharer, @JsonProperty("url") String url,
+      @JsonProperty("publisher") Publisher publisher, @JsonProperty("url") String url,
       @JsonProperty("store") Store store,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab,
@@ -41,8 +37,6 @@ public class AggregatedSocialVideo implements TimelineCard {
     this.title = title;
     this.thumbnailUrl = thumbnailUrl;
     this.publisher = publisher;
-    this.user = user;
-    this.userSharer = userSharer;
     this.url = url;
     this.store = store;
     this.date = date;
@@ -70,14 +64,6 @@ public class AggregatedSocialVideo implements TimelineCard {
 
   public Publisher getPublisher() {
     return publisher;
-  }
-
-  public Comment.User getUser() {
-    return user;
-  }
-
-  public Comment.User getUserSharer() {
-    return userSharer;
   }
 
   public String getUrl() {

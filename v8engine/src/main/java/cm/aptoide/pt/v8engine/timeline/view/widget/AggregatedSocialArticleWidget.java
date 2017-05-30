@@ -212,6 +212,13 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
             throwable.printStackTrace();
           }));
 
+      if (minimalCard.getMy()
+          .isLiked()) {
+        likeSubCardButton.setHeartState(true);
+      } else {
+        likeSubCardButton.setHeartState(false);
+      }
+
       compositeSubscription.add(RxView.clicks(likeLayout)
           .subscribe(click -> {
             if (!hasSocialPermissions(Analytics.Account.AccountOrigins.LIKE_CARD)) return;
@@ -248,8 +255,7 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
 
       compositeSubscription.add(RxView.clicks(comment)
           .flatMap(aVoid -> Observable.fromCallable(() -> {
-            final String elementId = displayable.getTimelineCard()
-                .getCardId();
+            final String elementId = minimalCard.getCardId();
             Fragment fragment = V8Engine.getFragmentProvider()
                 .newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType.TIMELINE,
                     elementId);

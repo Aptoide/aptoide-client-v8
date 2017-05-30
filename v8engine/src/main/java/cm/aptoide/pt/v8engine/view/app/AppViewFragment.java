@@ -462,6 +462,49 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }
 
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int i = item.getItemId();
+
+    if (i == R.id.menu_share) {
+      shareAppHelper.shareApp(appName, packageName, wUrl, (app == null ? null : app.getIcon()),
+          app.getStats()
+              .getRating()
+              .getAvg(), SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW);
+      appViewAnalytics.sendAppShareEvent();
+      return true;
+    } else if (i == R.id.menu_schedule) {
+      appViewAnalytics.sendScheduleDownloadEvent();
+      scheduled = Scheduled.from(app, appAction);
+
+      ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(Scheduled.class);
+      scheduledAccessor.insert(scheduled);
+
+      String str = this.getString(R.string.added_to_scheduled);
+      ShowMessage.asSnack(this.getView(), str);
+      return true;
+    } else if (i == R.id.menu_uninstall && unInstallAction != null) {
+      unInstallAction.call();
+      return true;
+    } else if (i == R.id.menu_remote_install) {
+      appViewAnalytics.sendRemoteInstallEvent();
+      if (AptoideUtils.SystemU.getConnectionType()
+          .equals("mobile")) {
+        GenericDialogs.createGenericOkMessage(getContext(),
+            getContext().getString(R.string.remote_install_menu_title),
+            getContext().getString(R.string.install_on_tv_mobile_error))
+            .subscribe(__ -> {
+            }, err -> CrashReport.getInstance()
+                .log(err));
+      } else {
+        DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
+        newFragment.show(getActivity().getSupportFragmentManager(),
+            RemoteInstallDialog.class.getSimpleName());
+      }
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
   private Observable<GetApp> manageOrganicAds(GetApp getApp) {
     String packageName = getApp.getNodes()
         .getMeta()
@@ -640,6 +683,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     GetAppMeta.Media media = app.getMedia();
 
     final boolean shouldInstall = openType == OpenType.OPEN_AND_INSTALL;
+    if (openType == OpenType.OPEN_AND_INSTALL) {
+      openType = null;
+    }
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
             installedRepository, timelineAnalytics, appViewAnalytics);
@@ -742,49 +788,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       return hasScreenShots || hasVideos;
     }
     return false;
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int i = item.getItemId();
-
-    if (i == R.id.menu_share) {
-      shareAppHelper.shareApp(appName, packageName, wUrl, (app == null ? null : app.getIcon()),
-          app.getStats()
-              .getRating()
-              .getAvg(),SpotAndShareAnalytics.SPOT_AND_SHARE_START_CLICK_ORIGIN_APPVIEW);
-        appViewAnalytics.sendAppShareEvent();
-      return true;
-    } else if (i == R.id.menu_schedule) {
-      appViewAnalytics.sendScheduleDownloadEvent();
-      scheduled = Scheduled.from(app, appAction);
-
-      ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(Scheduled.class);
-      scheduledAccessor.insert(scheduled);
-
-      String str = this.getString(R.string.added_to_scheduled);
-      ShowMessage.asSnack(this.getView(), str);
-      return true;
-    } else if (i == R.id.menu_uninstall && unInstallAction != null) {
-      unInstallAction.call();
-      return true;
-    } else if (i == R.id.menu_remote_install) {
-      appViewAnalytics.sendRemoteInstallEvent();
-      if (AptoideUtils.SystemU.getConnectionType()
-          .equals("mobile")) {
-        GenericDialogs.createGenericOkMessage(getContext(),
-            getContext().getString(R.string.remote_install_menu_title),
-            getContext().getString(R.string.install_on_tv_mobile_error))
-            .subscribe(__ -> {
-            }, err -> CrashReport.getInstance()
-                .log(err));
-      } else {
-        DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
-        newFragment.show(getActivity().getSupportFragmentManager(),
-            RemoteInstallDialog.class.getSimpleName());
-      }
-    }
-
-    return super.onOptionsItemSelected(item);
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {

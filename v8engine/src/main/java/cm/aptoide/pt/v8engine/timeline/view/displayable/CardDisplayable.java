@@ -7,8 +7,8 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.TimelineSocialActionData;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 
 /**
  * Created by jdandrade on 29/11/2016.
@@ -23,10 +23,6 @@ public abstract class CardDisplayable extends Displayable {
   private TimelineSocialActionData timelineSocialActionData;
 
   CardDisplayable() {
-  }
-
-  CardDisplayable(TimelineCard timelineCard) {
-    this.timelineCard = timelineCard;
   }
 
   CardDisplayable(TimelineCard timelineCard, TimelineAnalytics timelineAnalytics) {

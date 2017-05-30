@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.timeline.view.displayable;
 
 import android.content.Context;
-import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.AggregatedSocialStoreLatestApps;
@@ -30,12 +29,9 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
   private String abTestingUrl;
   private Store ownerStore;
   private Store sharedStore;
-  private Comment.User user;
-  private Comment.User userSharer;
   private Date date;
   private List<MinimalCard> minimalCards;
   private List<UserSharerTimeline> sharers;
-  private SpannableFactory spannableFactory;
   private DateCalculator dateCalculator;
   private TimelineAnalytics timelineAnalytics;
   private SocialRepository socialRepository;
@@ -48,16 +44,13 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
       Store ownerStore, Store sharedStore, List<App> apps, String abTestingURL,
       DateCalculator dateCalculator, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository, SpannableFactory spannableFactory,
-      StoreCredentialsProvider storeCredentialsProvider, Comment.User user, Comment.User userSharer,
-      List<MinimalCard> minimalCards, List<UserSharerTimeline> sharers) {
-    super(card);
+      StoreCredentialsProvider storeCredentialsProvider, List<MinimalCard> minimalCards,
+      List<UserSharerTimeline> sharers) {
+    super(card, timelineAnalytics);
     this.latestApps = apps;
     this.abTestingUrl = abTestingURL;
     this.ownerStore = ownerStore;
     this.sharedStore = sharedStore;
-    this.user = user;
-    this.userSharer = userSharer;
-    this.spannableFactory = spannableFactory;
     this.dateCalculator = dateCalculator;
     this.timelineAnalytics = timelineAnalytics;
     this.socialRepository = socialRepository;
@@ -87,8 +80,8 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
 
     return new AggregatedSocialStoreLatestAppsDisplayable(card, card.getOwnerStore(),
         card.getSharedStore(), card.getApps(), abTestingURL, dateCalculator, timelineAnalytics,
-        socialRepository, spannableFactory, storeCredentialsProvider, card.getUser(),
-        card.getUserSharer(), card.getMinimalCardList(), card.getSharers());
+        socialRepository, spannableFactory, storeCredentialsProvider, card.getMinimalCardList(),
+        card.getSharers());
   }
 
   public List<MinimalCard> getMinimalCards() {
@@ -116,14 +109,6 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
 
   public String getAbTestingURL() {
     return abTestingUrl;
-  }
-
-  public Comment.User getUser() {
-    return user;
-  }
-
-  public Comment.User getUserSharer() {
-    return userSharer;
   }
 
   public List<App> getLatestApps() {
