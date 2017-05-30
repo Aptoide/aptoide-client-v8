@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid.connection;
 
 import android.content.SharedPreferences;
 import lombok.Getter;

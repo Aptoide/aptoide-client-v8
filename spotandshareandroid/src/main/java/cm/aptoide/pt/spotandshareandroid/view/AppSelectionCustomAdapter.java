@@ -8,9 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import cm.aptoide.pt.spotandshareandroid.AppViewModel;
 import cm.aptoide.pt.spotandshareandroid.R;
 import cm.aptoide.pt.spotandshareandroid.presenter.AppSelectionView;
+import cm.aptoide.pt.spotandshareandroid.transference.AppViewModel;
 import java.util.List;
 
 /**

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.spotandshareandroid;
 
+import cm.aptoide.pt.spotandshareandroid.connection.HotspotSSIDCodeMapper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

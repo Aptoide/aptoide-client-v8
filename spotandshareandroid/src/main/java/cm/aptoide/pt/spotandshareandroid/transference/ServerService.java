@@ -24,12 +24,10 @@ import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSock
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
 import cm.aptoide.pt.spotandshare.socket.message.server.AptoideMessageServerSocket;
-import cm.aptoide.pt.spotandshareandroid.App;
 import cm.aptoide.pt.spotandshareandroid.DataHolder;
-import cm.aptoide.pt.spotandshareandroid.HostsCallbackManager;
-import cm.aptoide.pt.spotandshareandroid.ProgressFilter;
 import cm.aptoide.pt.spotandshareandroid.R;
 import cm.aptoide.pt.spotandshareandroid.Utils;
+import cm.aptoide.pt.spotandshareandroid.connection.HostsCallbackManager;
 import cm.aptoide.pt.spotandshareandroid.view.TransferRecordActivity;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;

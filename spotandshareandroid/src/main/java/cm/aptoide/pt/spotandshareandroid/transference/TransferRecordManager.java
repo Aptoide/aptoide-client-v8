@@ -1,8 +1,6 @@
 package cm.aptoide.pt.spotandshareandroid.transference;
 
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.spotandshareandroid.App;
-import cm.aptoide.pt.spotandshareandroid.ApplicationsManager;
 import java.util.ArrayList;
 import java.util.List;
 
