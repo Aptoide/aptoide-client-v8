@@ -321,4 +321,17 @@ public final class Database {
         .deleteAllFromRealm();
     realm.commitTransaction();
   }
+
+  public <E extends RealmObject> void deleteAllExcluding(Class<E> classType, String classField,
+      List<String> fieldsIn) {
+    @Cleanup Realm realm = get();
+    realm.beginTransaction();
+    RealmQuery<E> query = realm.where(classType);
+    for (String field : fieldsIn) {
+      query.notEqualTo(classField, field);
+    }
+    query.findAll()
+        .deleteAllFromRealm();
+    realm.commitTransaction();
+  }
 }
