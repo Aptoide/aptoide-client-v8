@@ -1,8 +1,8 @@
 package cm.aptoide.pt.spotandshareandroid.shareaptoide;
 
 import android.os.AsyncTask;
-import cm.aptoide.pt.spotandshareandroid.ConnectionManager;
-import cm.aptoide.pt.spotandshareandroid.HotspotManager;
+import cm.aptoide.pt.spotandshareandroid.connection.ConnectionManager;
+import cm.aptoide.pt.spotandshareandroid.connection.HotspotManager;
 
 /**
  * Created by filipe on 17-05-2017.

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid.connection;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,6 +16,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.spotandshareandroid.DataHolder;
 import cm.aptoide.pt.spotandshareandroid.group.Group;
 import cm.aptoide.pt.spotandshareandroid.group.GroupParser;
 import cm.aptoide.pt.spotandshareandroid.group.GroupValidator;

@@ -1,6 +1,7 @@
-package cm.aptoide.pt.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid.connection;
 
 import android.os.AsyncTask;
+import cm.aptoide.pt.spotandshareandroid.SimpleListener;
 
 /**
  * Created by filipegoncalves on 31-01-2017.

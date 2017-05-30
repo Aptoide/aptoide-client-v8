@@ -1,9 +1,10 @@
-package cm.aptoide.pt.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid.connection;
 
 import android.content.Context;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.spotandshareandroid.DataHolder;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 

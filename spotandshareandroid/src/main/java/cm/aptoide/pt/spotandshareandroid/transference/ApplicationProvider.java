@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid.transference;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;

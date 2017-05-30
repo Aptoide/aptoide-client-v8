@@ -1,4 +1,4 @@
-package cm.aptoide.pt.spotandshareandroid;
+package cm.aptoide.pt.spotandshareandroid.transference;
 
 /**
  * Created by neuro on 06-03-2017.

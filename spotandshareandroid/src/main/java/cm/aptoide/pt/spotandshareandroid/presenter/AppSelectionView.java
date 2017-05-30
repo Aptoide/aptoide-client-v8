@@ -1,6 +1,6 @@
 package cm.aptoide.pt.spotandshareandroid.presenter;
 
-import cm.aptoide.pt.spotandshareandroid.AppViewModel;
+import cm.aptoide.pt.spotandshareandroid.transference.AppViewModel;
 import java.util.List;
 
 /**
