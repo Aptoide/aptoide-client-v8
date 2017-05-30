@@ -313,7 +313,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
       List<NotificationSyncScheduler.Schedule> scheduleList = new ArrayList<>(2);
 
       scheduleList.add(new NotificationSyncScheduler.Schedule(
-          NotificationSyncService.PUSH_NOTIFICATIONS_CAMPAIGN_ACTION, AlarmManager.INTERVAL_DAY));
+          NotificationSyncService.PUSH_NOTIFICATIONS_CAMPAIGN_ACTION,
+          PUSH_NOTIFICATION_CAMPAIGN_PERIODICITY));
       scheduleList.add(new NotificationSyncScheduler.Schedule(
           NotificationSyncService.PUSH_NOTIFICATIONS_SOCIAL_ACTION, pushNotificationInterval));
 
@@ -341,7 +342,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
     if (notificationHandler == null) {
       notificationHandler =
           new NotificationHandler(getConfiguration().getAppId(), getDefaultClient(),
-              WebService.getDefaultConverter(), idsRepository, getConfiguration().getVersionName());
+              WebService.getDefaultConverter(), idsRepository, getConfiguration().getVersionName(),
+              getAccountManager());
     }
     return notificationHandler;
   }
