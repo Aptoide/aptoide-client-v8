@@ -2,17 +2,17 @@ package cm.aptoide.accountmanager;
 
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
 import cm.aptoide.pt.dataprovider.ws.v3.ChangeUserSettingsRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.CreateUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.OAuth2AuthenticationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.GetMySubscribedStoresRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.GetUserMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
-import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
 import cm.aptoide.pt.model.v3.OAuth;
+import cm.aptoide.pt.model.v7.GetUserMeta;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -21,6 +21,7 @@ import rx.Single;
 
 public class AccountManagerService {
 
+  public static final boolean REFRESH = true;
   private final BasebBodyInterceptorFactory interceptorFactory;
   private final AccountFactory accountFactory;
   private final OkHttpClient httpClient;
@@ -166,36 +167,37 @@ public class AccountManagerService {
 
   public Single<Account> getAccount(String accessToken, String refreshToken,
       String encryptedPassword, String type, AptoideAccountManager accountManager) {
-    return Single.zip(getServerAccount(accessToken),
+    return Single.zip(getServerAccount(accountManager, accessToken),
         getSubscribedStores(accessToken, accountManager),
         (response, stores) -> mapServerAccountToAccount(response, refreshToken, accessToken,
             encryptedPassword, type, stores));
   }
 
-  private Single<CheckUserCredentialsJson> getServerAccount(String accessToken) {
-    return CheckUserCredentialsRequest.of(accessToken, interceptorFactory.createV3(), httpClient,
-        converterFactory)
+  private Single<GetUserMeta> getServerAccount(AptoideAccountManager accountManager,
+      String accessToken) {
+    return GetUserMetaRequest.of(REFRESH, accessToken, "",
+        interceptorFactory.createV7(accountManager), httpClient, converterFactory)
         .observe()
         .toSingle()
         .flatMap(response -> {
-          if (response.getStatus()
-              .equals("OK")) {
+          if (response.isOk()) {
             return Single.just(response);
+          } else {
+            return Single.error(new Exception(V7.getErrorMessage(response)));
           }
-          return Single.error(new IllegalStateException("Failed to get user account"));
         });
   }
 
-  private Account mapServerAccountToAccount(CheckUserCredentialsJson serverUser,
-      String refreshToken, String accessToken, String encryptedPassword, String type,
-      List<Store> subscribedStores) {
+  private Account mapServerAccountToAccount(GetUserMeta user, String refreshToken,
+      String accessToken, String encryptedPassword, String type, List<Store> subscribedStores) {
+    GetUserMeta.Data serverUser = user.getData();
+    String storeName = serverUser.getStore() == null ? "" : serverUser.getStore()
+        .getName();
     return accountFactory.createAccount(serverUser.getAccess(), subscribedStores,
-        String.valueOf(serverUser.getId()), serverUser.getEmail(), serverUser.getUsername(),
-        serverUser.getAvatar(), refreshToken, accessToken, encryptedPassword,
-        Account.Type.valueOf(type), serverUser.getRepo(), serverUser.getRavatarHd(),
-        serverUser.getSettings()
-            .getMatureswitch()
-            .equals("active"), serverUser.isAccessConfirmed());
+        String.valueOf(serverUser.getId()), serverUser.getIdentity()
+            .getEmail(), serverUser.getName(), serverUser.getAvatar(), refreshToken, accessToken,
+        encryptedPassword, Account.Type.valueOf(type), storeName, serverUser.getAvatar(), false,
+        true);
   }
 
   public Completable updateAccount(boolean adultContentEnabled, String accessToken) {

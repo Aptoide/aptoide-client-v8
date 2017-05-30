@@ -55,10 +55,10 @@ public class SetUserRequest extends V7<BaseV7Response, SetUserRequest.Body> {
 
   @Data public static class UserProperties {
 
-    private String userName;
+    private String name;
 
-    public UserProperties(String userName) {
-      this.userName = userName;
+    public UserProperties(String name) {
+      this.name = name;
     }
   }
 }

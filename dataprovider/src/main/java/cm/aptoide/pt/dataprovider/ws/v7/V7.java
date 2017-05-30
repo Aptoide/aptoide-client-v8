@@ -26,6 +26,7 @@ import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.model.v7.GetMySubscribedStoresResponse;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.model.v7.GetUserMeta;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.ListFullReviews;
@@ -52,6 +53,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import retrofit2.Converter;
 import retrofit2.adapter.rxjava.HttpException;
+import retrofit2.http.Body;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -371,6 +373,8 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
     Observable<GetMySubscribedStoresResponse> getMySubscribedStores(
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
         @retrofit2.http.Body GetMySubscribedStoresRequest.Body body);
+
+    @POST("user/getMeta") Observable<GetUserMeta> getUserMeta(@Body GetUserMetaRequest.Body body);
   }
 }
 
