@@ -8,6 +8,7 @@ import io.realm.annotations.PrimaryKey;
  */
 
 public class Notification extends RealmObject {
+  public final static String OWNER_ID_KEY = "ownerId";
   @PrimaryKey private String key;
   private String abTestingGroup;
   private String body;
