@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Parcelable;
+import cm.aptoide.pt.spotandshareandroid.app.App;
 import java.util.ArrayList;
 import java.util.List;
 

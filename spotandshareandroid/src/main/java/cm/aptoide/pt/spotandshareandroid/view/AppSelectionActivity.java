@@ -11,11 +11,11 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import cm.aptoide.pt.spotandshareandroid.R;
+import cm.aptoide.pt.spotandshareandroid.app.AppViewModel;
+import cm.aptoide.pt.spotandshareandroid.app.ApplicationProvider;
 import cm.aptoide.pt.spotandshareandroid.presenter.ActivityView;
 import cm.aptoide.pt.spotandshareandroid.presenter.AppSelectionPresenter;
 import cm.aptoide.pt.spotandshareandroid.presenter.AppSelectionView;
-import cm.aptoide.pt.spotandshareandroid.transference.AppViewModel;
-import cm.aptoide.pt.spotandshareandroid.transference.ApplicationProvider;
 import cm.aptoide.pt.spotandshareandroid.transference.ApplicationSender;
 import java.util.List;
 
