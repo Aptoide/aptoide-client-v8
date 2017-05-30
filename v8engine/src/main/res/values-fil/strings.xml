@@ -65,7 +65,7 @@ Magpanatili ng isang log ng lahat ng iyong nainstalang app (sa pamamagitan ng %s
   <string name="appview_other_versions"><u>Iba pang Mga Bersyon</u></string>
   <string name="appview_latest_version_text">Pinakabagong bersyon</string>
   <string name="appview_rate_this_app">Markahan ang app na ito</string>
-  <string name="appview_read_all">read all <![CDATA[>]]></string>
+  <string name="appview_read_all">basahin lahat <![CDATA[>]]></string>
   <string name="zero">0</string>
   <string name="working_well">Gumagana ng Maayos</string>
   <string name="needs_license">Kailangan ng Lisensya</string>
