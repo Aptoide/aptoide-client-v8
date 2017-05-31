@@ -11,7 +11,7 @@ import okhttp3.RequestBody;
 import retrofit2.Converter;
 import rx.Observable;
 
-public class SetStoreRequest extends V7<BaseV7Response, HashMapNotNull<String, RequestBody>> {
+public class SetStoreImageRequest extends V7<BaseV7Response, HashMapNotNull<String, RequestBody>> {
 
   private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
       + "://"
@@ -20,37 +20,22 @@ public class SetStoreRequest extends V7<BaseV7Response, HashMapNotNull<String, R
 
   private final MultipartBody.Part multipartBody;
 
-  private SetStoreRequest(HashMapNotNull<String, RequestBody> body, MultipartBody.Part file,
+  private SetStoreImageRequest(HashMapNotNull<String, RequestBody> body, MultipartBody.Part file,
       BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
     super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
     multipartBody = file;
   }
 
-  public static SetStoreRequest of(String accessToken, String storeName, String storeTheme,
-      String storeAvatarPath, BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-
-    final RequestBodyFactory requestBodyFactory = new RequestBodyFactory();
-    final HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
-
-    body.put("store_name", requestBodyFactory.createBodyPartFromString(storeName));
-
-    return new SetStoreRequest(body,
-        requestBodyFactory.createBodyPartFromFile("store_avatar", new File(storeAvatarPath)),
-        bodyInterceptor, httpClient, converterFactory);
-  }
-
-  public static SetStoreRequest of(String accessToken, String storeName, String storeTheme,
-      String storeAvatarPath, String storeDescription, Boolean editStore, long storeId,
+  public static SetStoreImageRequest of(String storeAvatarPath, String storeName,
       BodyInterceptor<HashMapNotNull<String, RequestBody>> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
     final RequestBodyFactory requestBodyFactory = new RequestBodyFactory();
     final HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
 
-    body.put("store_id", requestBodyFactory.createBodyPartFromLong(storeId));
+    body.put("store_name", requestBodyFactory.createBodyPartFromString(storeName));
 
-    return new SetStoreRequest(body,
+    return new SetStoreImageRequest(body,
         requestBodyFactory.createBodyPartFromFile("store_avatar", new File(storeAvatarPath)),
         bodyInterceptor, httpClient, converterFactory);
   }

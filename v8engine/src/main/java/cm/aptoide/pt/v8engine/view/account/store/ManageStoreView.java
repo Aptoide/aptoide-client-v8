@@ -20,4 +20,8 @@ public interface ManageStoreView extends View {
   void showError(@StringRes int errorMessage);
 
   void showGenericError();
+
+  void showWaitProgressBar();
+
+  void dismissWaitProgressBar();
 }

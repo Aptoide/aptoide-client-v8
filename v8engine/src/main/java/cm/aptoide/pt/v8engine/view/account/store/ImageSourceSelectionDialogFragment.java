@@ -69,7 +69,7 @@ public class ImageSourceSelectionDialogFragment extends RxDialogFragment {
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     Dialog dialog = super.onCreateDialog(savedInstanceState);
-    dialog.setTitle(R.string.upload_dialog_title);
+    dialog.requestWindowFeature(STYLE_NO_TITLE);
     return dialog;
   }
 

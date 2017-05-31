@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.account.store;
 
+import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,7 +29,6 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.StoreBodyInterceptor;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.view.account.ImageLoaderFragment;
@@ -42,6 +42,8 @@ import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
 import retrofit2.Converter;
 import rx.Observable;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class ManageStoreFragment extends ImageLoaderFragment
     implements ManageStoreView, ImageSourceSelectionDialogFragment.ImageSourceSelectionHandler {
@@ -59,6 +61,7 @@ public class ManageStoreFragment extends ImageLoaderFragment
   private Button cancelChangesButton;
   private EditText storeName;
   private EditText storeDescription;
+  private ProgressDialog waitDialog;
 
   private RecyclerView themeSelectorView;
   private ThemeSelectorViewAdapter themeSelectorAdapter;
@@ -111,16 +114,21 @@ public class ManageStoreFragment extends ImageLoaderFragment
     ShowMessage.asSnack(this, R.string.having_some_trouble);
   }
 
-  private ManageStoreViewModel updateAndGetStoreModel() {
-    currentModel = ManageStoreViewModel.from(currentModel, storeName.getText()
-        .toString(), storeDescription.getText()
-        .toString());
-    currentModel.setStoreThemeName(themeSelectorAdapter.getSelectedThemeName());
-    return currentModel;
+  @Override public void showWaitProgressBar() {
+    if (waitDialog != null && !waitDialog.isShowing()) {
+      waitDialog.show();
+    }
   }
 
-  @Override public int getContentViewId() {
-    return R.layout.fragment_manage_store;
+  @Override public void dismissWaitProgressBar() {
+    if (waitDialog != null && waitDialog.isShowing()) {
+      waitDialog.dismiss();
+    }
+  }
+
+  @Override public void onDestroyView() {
+    dismissWaitProgressBar();
+    super.onDestroyView();
   }
 
   @Override public void setupViews() {
@@ -150,7 +158,7 @@ public class ManageStoreFragment extends ImageLoaderFragment
     setupViewsDefaultDataUsingStore(currentModel);
 
     final V8Engine engine = (V8Engine) getActivity().getApplicationContext();
-    attachPresenter(buildPresenter(engine, currentModel, goToHome), null);
+    attachPresenter(buildPresenter(engine, goToHome), null);
   }
 
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
@@ -169,6 +177,21 @@ public class ManageStoreFragment extends ImageLoaderFragment
     cancelChangesButton = (Button) view.findViewById(R.id.create_store_skip);
     saveDataButton = (Button) view.findViewById(R.id.create_store_action);
     themeSelectorView = (RecyclerView) view.findViewById(R.id.theme_selector);
+
+    waitDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity(),
+        getApplicationContext().getString(R.string.please_wait_upload));
+  }
+
+  private ManageStoreViewModel updateAndGetStoreModel() {
+    currentModel = ManageStoreViewModel.from(currentModel, storeName.getText()
+        .toString(), storeDescription.getText()
+        .toString());
+    currentModel.setStoreThemeName(themeSelectorAdapter.getSelectedThemeName());
+    return currentModel;
+  }
+
+  @Override public int getContentViewId() {
+    return R.layout.fragment_manage_store;
   }
 
   @Override public void loadExtras(@Nullable Bundle args) {
@@ -183,34 +206,32 @@ public class ManageStoreFragment extends ImageLoaderFragment
     }
   }
 
-  @NonNull private ManageStorePresenter buildPresenter(@NonNull V8Engine engine,
-      @NonNull ManageStoreViewModel storeModel, boolean goToHome) {
+  @NonNull private ManageStorePresenter buildPresenter(@NonNull V8Engine engine, boolean goToHome) {
     AptoideAccountManager accountManager = engine.getAccountManager();
     BodyInterceptor<BaseBody> bodyInterceptorV3 = engine.getBaseBodyInterceptorV3();
-    IdsRepository idsRepository = engine.getIdsRepository();
+    BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorV7 =
+        engine.getBaseBodyInterceptorV7();
+    //IdsRepository idsRepository = engine.getIdsRepository();
     RequestBodyFactory requestBodyFactory = new RequestBodyFactory();
     OkHttpClient httpClient = engine.getDefaultClient();
     Converter.Factory converterFactory = WebService.getDefaultConverter();
 
     final StoreBodyInterceptor storeBodyInterceptor =
-        buildStoreInterceptor(storeModel, accountManager, idsRepository, requestBodyFactory);
+        buildStoreInterceptor(accountManager, requestBodyFactory);
 
     StoreManagerFactory storeManagerFactory =
         new StoreManagerFactory(accountManager, httpClient, converterFactory, storeBodyInterceptor,
-            bodyInterceptorV3);
+            bodyInterceptorV3, bodyInterceptorV7);
     return new ManageStorePresenter(this, goToHome, storeManagerFactory.create());
   }
 
-  @NonNull private StoreBodyInterceptor buildStoreInterceptor(ManageStoreViewModel storeModel,
-      AptoideAccountManager accountManager, IdsRepository idsRepository,
+  @NonNull private StoreBodyInterceptor buildStoreInterceptor(AptoideAccountManager accountManager,
       RequestBodyFactory requestBodyFactory) {
 
     ObjectMapper serializer = new ObjectMapper();
     serializer.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-    return new StoreBodyInterceptor(idsRepository.getUniqueIdentifier(), accountManager,
-        requestBodyFactory, storeModel.getStoreThemeName(), storeModel.getStoreDescription(),
-        serializer);
+    return new StoreBodyInterceptor(accountManager, requestBodyFactory);
   }
 
   private void setupViewsDefaultDataUsingStore(ManageStoreViewModel storeModel) {
@@ -228,9 +249,8 @@ public class ManageStoreFragment extends ImageLoaderFragment
       storeDescription.setVisibility(View.VISIBLE);
       storeDescription.setText(storeModel.getStoreDescription());
       final String storeImagePath = storeModel.getStoreImagePath();
-      if (TextUtils.isEmpty(storeImagePath)) {
-        ImageLoader.with(getActivity())
-            .loadUsingCircleTransform(storeImagePath, storeImage);
+      if (!TextUtils.isEmpty(storeImagePath)) {
+        loadImage(Uri.parse(storeImagePath));
       }
       saveDataButton.setText(R.string.save_edit_store);
       cancelChangesButton.setText(R.string.cancel);
@@ -262,7 +282,6 @@ public class ManageStoreFragment extends ImageLoaderFragment
   @Override public void loadImage(Uri imagePath) {
     ImageLoader.with(getActivity())
         .loadUsingCircleTransform(imagePath, storeImage);
-    currentModel.setStoreImagePath(imagePath.toString());
   }
 
   @Override public void showIconPropertiesError(String errors) {
@@ -272,6 +291,10 @@ public class ManageStoreFragment extends ImageLoaderFragment
         .subscribe(__ -> {
         }, err -> CrashReport.getInstance()
             .log(err));
+  }
+
+  @Override protected void setImageRealPath(String filePath) {
+    currentModel.setStoreImagePath(filePath);
   }
 
   public void loadImageFromGallery() {

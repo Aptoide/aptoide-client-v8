@@ -192,8 +192,8 @@ public abstract class ImageLoaderFragment extends BaseToolbarFragment {
   protected String imageHasErrors(String imagePath) {
     if (!TextUtils.isEmpty(imagePath)) {
       List<ImageErrors> imageErrors = checkIconSizeProperties(imagePath, getResources());
-      if (!imageErrors.isEmpty()) {
-        showIconPropertiesError(buildImageErrorMessage(imageErrors));
+      if (imageErrors!=null && !imageErrors.isEmpty()) {
+        return buildImageErrorMessage(imageErrors);
       }
       return null;
     }
@@ -251,19 +251,26 @@ public abstract class ImageLoaderFragment extends BaseToolbarFragment {
       return;
     }
 
-    try {
-      String filePath = getMediaStoragePath(imageUri, applicationContext);
-      String imageError = imageHasErrors(filePath);
-      if (TextUtils.isEmpty(imageError)) {
-        loadImage(imageUri);
-      } else {
-        showIconPropertiesError(imageError);
+    if(imageUri!=null) {
+      try {
+        String filePath = getMediaStoragePath(imageUri, applicationContext);
+        String imageError = imageHasErrors(filePath);
+        if (TextUtils.isEmpty(imageError)) {
+          loadImage(imageUri);
+          setImageRealPath(filePath);
+        } else {
+          showIconPropertiesError(imageError);
+        }
+      } catch (NullPointerException ex) {
+        CrashReport.getInstance()
+            .log(ex);
       }
-    } catch (NullPointerException ex) {
-      CrashReport.getInstance()
-          .log(ex);
+    }else {
+      Logger.w(TAG, "onActivityResult called with null image URI");
     }
   }
+
+  protected abstract void setImageRealPath(String filePath);
 
   private enum ImageErrors {
     ERROR_DECODING, MIN_HEIGHT, MAX_HEIGHT, MIN_WIDTH, MAX_WIDTH, MAX_IMAGE_SIZE

@@ -336,4 +336,8 @@ public class CreateUserFragment extends ImageLoaderFragment implements ManageUse
   private boolean isAvatarSelected() {
     return !TextUtils.isEmpty(userPicturePath);
   }
+
+  @Override protected void setImageRealPath(String filePath) {
+
+  }
 }

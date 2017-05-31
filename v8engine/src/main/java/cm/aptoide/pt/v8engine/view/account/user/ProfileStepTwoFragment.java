@@ -134,6 +134,6 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment {
       fragmentNavigator.navigateToHomeCleaningBackStack();
       return;
     }
-    fragmentNavigator.navigateTo(ManageStoreFragment.newInstance(new ManageStoreViewModel(), true));
+    fragmentNavigator.navigateToWithoutBackSave(ManageStoreFragment.newInstance(new ManageStoreViewModel(), true));
   }
 }

@@ -1,17 +1,16 @@
 package cm.aptoide.pt.v8engine.view.account.store;
 
-import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.SetStoreImageRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
-import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.account.ErrorsMapper;
+import cm.aptoide.pt.model.v3.ErrorResponse;
 import cm.aptoide.pt.v8engine.networking.StoreBodyInterceptor;
+import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
@@ -26,46 +25,44 @@ public class StoreManager {
   private final AptoideAccountManager accountManager;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
-  private final StoreBodyInterceptor bodyInterceptor;
+  private final StoreBodyInterceptor storeBodyInterceptor;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
+  private final BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorV7;
 
   StoreManager(AptoideAccountManager accountManager, OkHttpClient httpClient,
-      Converter.Factory converterFactory, StoreBodyInterceptor bodyInterceptor,
-      BodyInterceptor<BaseBody> bodyInterceptorV3) {
+      Converter.Factory converterFactory, StoreBodyInterceptor storeBodyInterceptor,
+      BodyInterceptor<BaseBody> bodyInterceptorV3, BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorV7) {
 
     this.accountManager = accountManager;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
-    this.bodyInterceptor = bodyInterceptor;
+    this.storeBodyInterceptor = storeBodyInterceptor;
     this.bodyInterceptorV3 = bodyInterceptorV3;
+    this.bodyInterceptorV7 = bodyInterceptorV7;
   }
 
-  public Completable createOrUpdate(long storeId, String storeName, String storeDescription,
+  public Completable createOrUpdate(String storeName, String storeDescription,
       String storeImage, boolean hasNewAvatar, String storeThemeName, boolean storeExists) {
     return Completable.defer(() -> {
       if (storeExists) {
-        return updateStore(storeId, storeName, storeDescription, storeImage, hasNewAvatar,
-            storeThemeName);
+        return updateStore(storeName, storeDescription, storeImage, hasNewAvatar, storeThemeName);
       }
-      return createStore(storeId, storeName, storeDescription, storeImage, hasNewAvatar,
-          storeThemeName);
+      return createStore(storeName, storeDescription, storeImage, hasNewAvatar, storeThemeName);
     })
         .onErrorResumeNext(err -> {
-          if(err instanceof StoreCreationError || err instanceof NetworkError) {
+          if (err instanceof StoreCreationError || err instanceof NetworkError) {
             return Completable.error(err);
           }
-          if(err instanceof AptoideWsV7Exception) {
-            @StringRes int errorMessage;
+          if (err instanceof AptoideWsV7Exception) {
             if (((AptoideWsV7Exception) err).getBaseResponse()
                 .getErrors()
                 .get(0)
                 .getCode()
                 .equals(ERROR_API_1)) {
-              errorMessage = R.string.ws_error_API_1;
+              return Completable.error(new NetworkError());
             } else {
-              errorMessage = ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage());
+              return Completable.error(new NetworkError(err.getMessage()));
             }
-            return Completable.error(new NetworkError(errorMessage));
           }
 
           // it's an unknown error
@@ -81,8 +78,8 @@ public class StoreManager {
    * a store image, or a SetStore without image. This is the edit store use case {@link
    * #updateStore}.
    */
-  private Completable createStore(long storeId, String storeName, String storeDescription,
-      String storeImage, boolean hasNewAvatar, String storeThemeName) {
+  private Completable createStore(String storeName, String storeDescription, String storeImage,
+      boolean hasNewAvatar, String storeThemeName) {
     return accountManager.accountStatus()
         .first()
         .toSingle()
@@ -91,21 +88,19 @@ public class StoreManager {
             .observe()
             .toSingle()
             .flatMap(data -> {
-              if (data.getErrors()
-                  .get(0).code.equals(ERROR_CODE_2)) {
-                Single.error(new StoreCreationError(R.string.ws_error_WOP_2));
-              } else if (data.getErrors()
-                  .get(0).code.equals(ERROR_CODE_3)) {
-                Single.error(new StoreCreationError(ErrorsMapper.getWebServiceErrorMessageFromCode(
-                    data.getErrors()
-                        .get(0).code)));
+              final List<ErrorResponse> errors = data.getErrors();
+              if (errors != null && !errors.isEmpty() && errors.get(0).code.equals(ERROR_CODE_2)) {
+                return Single.error(new StoreCreationError());
+              } else if (errors != null && errors.size() > 0 && errors.get(0).code.equals(
+                  ERROR_CODE_3)) {
+                return Single.error(new StoreCreationErrorWithCode(errors.get(0).code));
               }
 
               return Single.just(data);
             }))
-        .flatMapCompletable(__ -> {
+        .flatMapCompletable(data -> {
           if (needToUploadMoreStoreData(storeDescription, storeImage, hasNewAvatar)) {
-            return updateStore(storeId, storeName, storeDescription, storeImage, hasNewAvatar,
+            return updateStore(storeName, storeDescription, storeImage, hasNewAvatar,
                 storeThemeName);
           }
           return Completable.complete();
@@ -121,59 +116,74 @@ public class StoreManager {
    * If we have more data we either use a SetStore with multi-part request if we have
    * a store image, or a SetStore without image.
    */
-  private Completable updateStore(long storeId, String storeName, String storeDescription,
-      String storeImage, boolean hasNewAvatar, String storeThemeName) {
-    return Completable.defer(() -> {
-      if (hasNewAvatar) {
-        return updateStoreWithAvatar(storeId, storeName, storeDescription, storeImage,
-            storeThemeName);
-      }
-      return updateStoreWithoutAvatar(storeId, storeDescription, storeThemeName);
-    });
+  private Completable updateStore(String storeName, String storeDescription, String storeImage,
+      boolean hasNewAvatar, String storeThemeName) {
+    return updateStoreWithoutAvatar(storeName, storeDescription, storeThemeName).andThen(
+        Completable.defer(() -> {
+          if (hasNewAvatar) {
+            return updateStoreWithAvatar(storeName, storeImage);
+          }
+
+          return Completable.complete();
+        }));
   }
 
-  private Completable updateStoreWithoutAvatar(long storeId, String storeDescription,
+  private Completable updateStoreWithoutAvatar(String storeName, String storeDescription,
       String storeThemeName) {
-    return SimpleSetStoreRequest.of(storeId, storeThemeName, storeDescription, bodyInterceptor,
+    return SimpleSetStoreRequest.of(storeName, storeThemeName, storeDescription,
+        bodyInterceptorV7,
         httpClient, converterFactory)
         .observe()
         .toCompletable();
   }
 
-  private Completable updateStoreWithAvatar(long storeId, String storeName, String storeDescription,
-      String storeImage, String storeThemeName) {
+  private Completable updateStoreWithAvatar(String storeName, String storeImage) {
     return accountManager.accountStatus()
         .first()
         .toSingle()
-        .flatMap(account -> SetStoreRequest.of(account.getAccessToken(), storeName, storeThemeName,
-            storeImage, storeDescription, true, storeId, bodyInterceptor, httpClient,
-            converterFactory)
-            .observe()
-            .toSingle())
+        .flatMap(
+            account -> SetStoreImageRequest.of(storeImage, storeName, storeBodyInterceptor, httpClient,
+                converterFactory)
+                .observe()
+                .toSingle())
         .toCompletable();
   }
 
-  static class StoreCreationError extends Exception {
-    @StringRes private final int error;
+  static class StoreCreationErrorWithCode extends Exception {
+    private final String errorCode;
 
-    StoreCreationError(int error) {
-      this.error = error;
+    StoreCreationErrorWithCode(String errorCode) {
+      this.errorCode = errorCode;
     }
 
-    @StringRes public int getError() {
-      return error;
+    public String getErrorCode() {
+      return errorCode;
     }
   }
 
-  static class NetworkError extends Exception {
-    @StringRes private final int error;
+  static class StoreCreationError extends Exception {
+  }
 
-    NetworkError(int error) {
+  static class NetworkError extends Exception {
+    private final boolean apiError;
+    private final String error;
+
+    NetworkError() {
+      this.apiError = true;
+      this.error = null;
+    }
+
+    NetworkError(String error) {
+      this.apiError = false;
       this.error = error;
     }
 
-    @StringRes public int getError() {
+    public String getError() {
       return error;
+    }
+
+    public boolean isApiError() {
+      return apiError;
     }
   }
 }
