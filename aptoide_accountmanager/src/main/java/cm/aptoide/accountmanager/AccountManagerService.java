@@ -208,13 +208,13 @@ public class AccountManagerService {
 
   private Account mapServerAccountToAccount(GetUserMeta user, String refreshToken,
       String accessToken, String encryptedPassword, String type, List<Store> subscribedStores) {
-    GetUserMeta.Data serverUser = user.getData();
-    String storeName = serverUser.getStore() == null ? "" : serverUser.getStore()
+    GetUserMeta.Data userData = user.getData();
+    String storeName = userData.getStore() == null ? "" : userData.getStore()
         .getName();
-    return accountFactory.createAccount(serverUser.getAccess(), subscribedStores,
-        String.valueOf(serverUser.getId()), serverUser.getIdentity()
-            .getEmail(), serverUser.getName(), serverUser.getAvatar(), refreshToken, accessToken,
-        encryptedPassword, Account.Type.valueOf(type), storeName, serverUser.getStore()
+    return accountFactory.createAccount(userData.getAccess(), subscribedStores,
+        String.valueOf(userData.getId()), userData.getIdentity()
+            .getEmail(), userData.getName(), userData.getAvatar(), refreshToken, accessToken,
+        encryptedPassword, Account.Type.valueOf(type), storeName, userData.getStore()
             .getAvatar(), false,
         true);
   }
