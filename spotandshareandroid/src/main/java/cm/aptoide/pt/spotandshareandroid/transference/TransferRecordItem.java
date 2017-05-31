@@ -17,8 +17,8 @@ public class TransferRecordItem {
   private boolean needReSend;
   private boolean isSent;
 
-  public TransferRecordItem(Drawable icon, String appName, String packageName,
-      String filePath, boolean received, String versionName) {
+  public TransferRecordItem(Drawable icon, String appName, String packageName, String filePath,
+      boolean received, String versionName) {
     this.icon = icon;
     this.appName = appName;
     this.packageName = packageName;
@@ -81,5 +81,4 @@ public class TransferRecordItem {
   public void setSent(boolean sent) {
     isSent = sent;
   }
-
 }

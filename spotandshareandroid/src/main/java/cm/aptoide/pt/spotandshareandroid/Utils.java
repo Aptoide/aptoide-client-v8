@@ -9,7 +9,6 @@ import java.io.IOException;
  */
 public class Utils {
 
-
   public static class Socket {
 
     public static SocketBinder newDefaultSocketBinder() {

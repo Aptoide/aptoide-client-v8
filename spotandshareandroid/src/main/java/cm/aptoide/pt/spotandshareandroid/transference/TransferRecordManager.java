@@ -77,8 +77,9 @@ public class TransferRecordManager {
     return app;
   }
 
-  @Nullable public TransferRecordItem startedSending(String appName, String packageName,
-      boolean needReSend, boolean isSent) {
+  @Nullable
+  public TransferRecordItem startedSending(String appName, String packageName, boolean needReSend,
+      boolean isSent) {
     TransferRecordItem item =
         applicationsManager.startedSending(appName, packageName, needReSend, isSent);
     if (item != null) {

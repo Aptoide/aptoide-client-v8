@@ -19,8 +19,7 @@ import java.util.Random;
 /**
  * Created by filipegoncalves on 30-08-2016.
  */
-public class RadarTextView extends FrameLayout
-    implements ViewTreeObserver.OnGlobalLayoutListener {
+public class RadarTextView extends FrameLayout implements ViewTreeObserver.OnGlobalLayoutListener {
 
   private static final int idX = 0;
   private static final int idY = 1;

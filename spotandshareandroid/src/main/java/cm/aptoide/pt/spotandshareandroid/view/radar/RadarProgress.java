@@ -85,8 +85,7 @@ public class RadarProgress extends View {
     animation.setRepeatCount(Animation.INFINITE);
     animation.setInterpolator(new LinearInterpolator());
     animation.setMyCustomListener(new CustomAnimation.myCustomListener() {
-      @Override public void applyTans(float time)
-      {
+      @Override public void applyTans(float time) {
         initialAngle = 360 * time;
         invalidate();
       }

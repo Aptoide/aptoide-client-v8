@@ -99,13 +99,14 @@ public class RadarActivity extends ActivityView implements RadarView, Permission
       enableButtons(false);
       autoShareAppName = intent.getStringExtra("APPVIEW_SHARE_APPNAME");
       autoShareFilepath = intent.getStringExtra("APPVIEW_SHARE_FILEPATH");
-      presenter = new RadarPresenter(this, groupNameProvider,
-          new DeactivateHotspotTask(connectionManager), connectionManager, analytics, groupManager,
-          this, autoShareAppName, autoShareFilepath, false);
+      presenter =
+          new RadarPresenter(this, groupNameProvider, new DeactivateHotspotTask(connectionManager),
+              connectionManager, analytics, groupManager, this, autoShareAppName, autoShareFilepath,
+              false);
     } else {
-      presenter = new RadarPresenter(this, groupNameProvider,
-          new DeactivateHotspotTask(connectionManager), connectionManager, analytics, groupManager,
-          this, true);
+      presenter =
+          new RadarPresenter(this, groupNameProvider, new DeactivateHotspotTask(connectionManager),
+              connectionManager, analytics, groupManager, this, true);
     }
 
     attachPresenter(presenter);

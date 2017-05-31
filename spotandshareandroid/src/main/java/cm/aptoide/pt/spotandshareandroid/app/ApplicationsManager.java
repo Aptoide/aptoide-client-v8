@@ -209,8 +209,8 @@ public class ApplicationsManager {
             .equals(nameOfTheApp) && applicationInfo.packageName.equals(
             packageName)) {//compare with the packageName
           TransferRecordItem tmp = new TransferRecordItem(applicationInfo.loadIcon(packageManager),
-                  applicationInfo.loadLabel(packageManager)
-                      .toString(), packageName, applicationInfo.sourceDir, false, pack.versionName);
+              applicationInfo.loadLabel(packageManager)
+                  .toString(), packageName, applicationInfo.sourceDir, false, pack.versionName);
 
           tmp.setNeedReSend(needReSend);
           tmp.setSent(isSent);
