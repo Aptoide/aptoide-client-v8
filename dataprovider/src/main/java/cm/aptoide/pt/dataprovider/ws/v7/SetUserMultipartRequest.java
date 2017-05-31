@@ -39,8 +39,6 @@ public class SetUserMultipartRequest
     final RequestBodyFactory requestBodyFactory = new RequestBodyFactory();
     final HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
 
-    body.put("user_username", requestBodyFactory.createBodyPartFromString(username));
-
     return new SetUserMultipartRequest(
         requestBodyFactory.createBodyPartFromFile("user_avatar", new File(userAvatar)), body,
         httpClient, converterFactory, bodyInterceptor);

@@ -195,7 +195,8 @@ public class AptoideAccountManager {
                 account.getPassword(), account.getType())));
   }
 
-  public Completable updateAccount(String nickname, String avatarPath) {
+  public Completable updateAccount(String nickname, String avatarPath,
+      AptoideAccountManager accountManager) {
     return singleAccountStatus().flatMapCompletable(account -> {
       if (TextUtils.isEmpty(nickname) && TextUtils.isEmpty(avatarPath)) {
         return Completable.error(
@@ -204,9 +205,8 @@ public class AptoideAccountManager {
         return Completable.error(
             new AccountValidationException(AccountValidationException.EMPTY_NAME));
       }
-      return accountManagerService.updateAccount(account.getEmail(), nickname,
-          account.getPassword(), TextUtils.isEmpty(avatarPath) ? "" : avatarPath,
-          account.getAccessToken())
+      return accountManagerService.updateAccount(nickname,
+          TextUtils.isEmpty(avatarPath) ? "" : avatarPath, accountManager)
           .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
               account.getPassword(), account.getType()));
     });

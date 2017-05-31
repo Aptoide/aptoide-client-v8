@@ -4,13 +4,19 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.BasebBodyInterceptorFactory;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
+import cm.aptoide.pt.v8engine.networking.UserBodyInterceptor;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
 import cm.aptoide.pt.v8engine.preferences.SecurePreferences;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import okhttp3.RequestBody;
 
 public class BaseBodyInterceptorFactory implements BasebBodyInterceptorFactory {
 
@@ -32,12 +38,20 @@ public class BaseBodyInterceptorFactory implements BasebBodyInterceptorFactory {
     this.qManager = qManager;
   }
 
-  @Override public BodyInterceptor<BaseBody> createV7(AptoideAccountManager accountManager) {
+  @Override
+  public BodyInterceptor<BaseBody> createV7(AptoideAccountManager accountManager, String cdn) {
     return new BaseBodyInterceptorV7(aptoideMd5sum, aptoidePackage, idsRepository, accountManager,
-        new AdultContent(accountManager, preferences, securePreferences), qManager);
+        new AdultContent(accountManager, preferences, securePreferences), qManager, cdn);
   }
 
   @Override public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> createV3() {
     return new BaseBodyInterceptorV3(aptoideMd5sum, aptoidePackage, idsRepository, qManager);
+  }
+
+  public BodyInterceptor<HashMapNotNull<String, RequestBody>> createUserMultipartBodyInterceptor(
+      AptoideAccountManager accountManager, String userName) {
+    ObjectMapper serializer = new ObjectMapper();
+    serializer.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    return new UserBodyInterceptor(accountManager, new RequestBodyFactory(), userName, serializer);
   }
 }

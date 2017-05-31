@@ -638,7 +638,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
   public BodyInterceptor<BaseBody> getBaseBodyInterceptorV7() {
     if (baseBodyInterceptorV7 == null) {
-      baseBodyInterceptorV7 = getBaseBodyInterceptorFactory().createV7(getAccountManager());
+      baseBodyInterceptorV7 = getBaseBodyInterceptorFactory().createV7(getAccountManager(), "pool");
     }
     return baseBodyInterceptorV7;
   }

@@ -15,13 +15,15 @@ public class BaseBodyInterceptorV7 extends BaseBodyInterceptor<BaseBody> {
 
   private final AptoideAccountManager accountManager;
   private final AdultContent adultContent;
+  private final String cdn;
 
   public BaseBodyInterceptorV7(String aptoideMd5sum, String aptoidePackage,
       IdsRepository idsRepository, AptoideAccountManager accountManager, AdultContent adultContent,
-      QManager qManager) {
+      QManager qManager, String cdn) {
     super(aptoideMd5sum, aptoidePackage, idsRepository, qManager);
     this.accountManager = accountManager;
     this.adultContent = adultContent;
+    this.cdn = cdn;
   }
 
   public Single<BaseBody> intercept(BaseBody body) {
@@ -36,7 +38,7 @@ public class BaseBodyInterceptorV7 extends BaseBodyInterceptor<BaseBody> {
 
       body.setAptoideId(idsRepository.getUniqueIdentifier());
       body.setAptoideVercode(AptoideUtils.Core.getVerCode());
-      body.setCdn("pool");
+      body.setCdn(cdn);
       body.setLang(AptoideUtils.SystemU.getCountryCode());
       body.setMature(adultContentEnabled);
       body.setQ(V8Engine.getQManager()

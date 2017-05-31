@@ -8,6 +8,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.GetMySubscribedStoresRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserMetaRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.SetUserMultipartRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
@@ -96,8 +97,25 @@ public class AccountManagerService {
         });
   }
 
+  public Completable updateAccount(String nickname, String avatarPath,
+      AptoideAccountManager accountManager) {
+    return SetUserMultipartRequest.of(nickname, avatarPath,
+        interceptorFactory.createUserMultipartBodyInterceptor(accountManager, nickname), httpClient,
+        converterFactory)
+        .observe(true)
+        .toSingle()
+        .flatMapCompletable(response -> {
+          if (response.isOk()) {
+            return Completable.complete();
+          } else {
+            return Completable.error(new Exception(V7.getErrorMessage(response)));
+          }
+        });
+  }
+
   public Completable updateAccount(String accessLevel, AptoideAccountManager accountManager) {
-    return SetUserRequest.of(accessLevel, interceptorFactory.createV7(accountManager), httpClient,
+    return SetUserRequest.of(accessLevel, interceptorFactory.createV7(accountManager, "pool"),
+        httpClient,
         converterFactory)
         .observe(true)
         .toSingle()
@@ -112,7 +130,7 @@ public class AccountManagerService {
 
   public Completable updateAccountWithUserName(String userName,
       AptoideAccountManager accountManager) {
-    return SetUserRequest.ofWithName(userName, interceptorFactory.createV7(accountManager),
+    return SetUserRequest.ofWithName(userName, interceptorFactory.createV7(accountManager, "pool"),
         httpClient, converterFactory)
         .observe(true)
         .toSingle()
@@ -141,7 +159,7 @@ public class AccountManagerService {
       String storePassword, AptoideAccountManager accountManager,
       ChangeStoreSubscriptionResponse.StoreSubscriptionState subscription) {
     return ChangeStoreSubscriptionRequest.of(storeName, subscription, storeUserName, storePassword,
-        interceptorFactory.createV7(accountManager), httpClient, converterFactory)
+        interceptorFactory.createV7(accountManager, "pool"), httpClient, converterFactory)
         .observe()
         .toSingle()
         .toCompletable();
@@ -150,7 +168,7 @@ public class AccountManagerService {
   private Single<List<Store>> getSubscribedStores(String accessToken,
       AptoideAccountManager accountManager) {
     return new GetMySubscribedStoresRequest(accessToken,
-        interceptorFactory.createV7(accountManager), httpClient, converterFactory).observe()
+        interceptorFactory.createV7(accountManager, "pool"), httpClient, converterFactory).observe()
         .map(getUserRepoSubscription -> getUserRepoSubscription.getDatalist()
             .getList())
         .flatMapIterable(list -> list)
@@ -176,7 +194,7 @@ public class AccountManagerService {
   private Single<GetUserMeta> getServerAccount(AptoideAccountManager accountManager,
       String accessToken) {
     return GetUserMetaRequest.of(REFRESH, accessToken, "",
-        interceptorFactory.createV7(accountManager), httpClient, converterFactory)
+        interceptorFactory.createV7(accountManager, "web"), httpClient, converterFactory)
         .observe()
         .toSingle()
         .flatMap(response -> {
