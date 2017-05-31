@@ -31,24 +31,18 @@ import com.jakewharton.rxbinding.view.RxView;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import org.parceler.Parcel;
+import org.parceler.Parcels;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 
-// TODO
-// create presenter and separate logic code from view
-public class CreateUserFragment extends ImageLoaderFragment implements ManageUserView {
+public class ManageUserFragment extends ImageLoaderFragment implements ManageUserView {
 
-  public static final String FROM_MY_ACCOUNT = "My Account";
-  public static final String USER_NAME = "userName";
-  public static final String USER_AVATAR = "userAvatar";
-  public static final String FROM = "from";
-  private static final String TAG = CreateUserFragment.class.getName();
-  private static final String USER_IMAGE_PATH = "user_image_path";
+  public static final String EXTRA_USER_MODEL = "user_model";
+
   private ThrowableToStringMapper errorMapper;
-  private String userPicturePath;
-  private String userNickname;
   private ImageView userPicture;
   private RelativeLayout userPictureLayout;
   private EditText userName;
@@ -56,23 +50,19 @@ public class CreateUserFragment extends ImageLoaderFragment implements ManageUse
   private AptoideAccountManager accountManager;
   private ProgressDialog uploadWaitDialog;
   private ProgressDialog waitDialog;
-  private String from;
   private Button cancelUserProfile;
   private TextView header;
+  private ViewModel viewModel;
 
-  public static CreateUserFragment newInstance() {
-    return new CreateUserFragment();
-  }
-
-  public static CreateUserFragment newInstance(String userPicturePath, String userName,
-      String from) {
-    CreateUserFragment createUserFragment = newInstance();
+  public static ManageUserFragment newInstance(String userName, String userImage,
+      boolean editUser) {
     Bundle args = new Bundle();
-    args.putString(USER_NAME, userName);
-    args.putString(USER_AVATAR, userPicturePath);
-    args.putString(FROM, from);
-    createUserFragment.setArguments(args);
-    return createUserFragment;
+    args.putParcelable(EXTRA_USER_MODEL,
+        Parcels.wrap(new ViewModel(userName, userImage, editUser)));
+
+    ManageUserFragment manageUserFragment = new ManageUserFragment();
+    manageUserFragment.setArguments(args);
+    return manageUserFragment;
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,11 +84,8 @@ public class CreateUserFragment extends ImageLoaderFragment implements ManageUse
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    if (savedInstanceState != null && savedInstanceState.containsKey(USER_IMAGE_PATH)) {
-      String uri = savedInstanceState.getString(USER_IMAGE_PATH);
-      if (!TextUtils.isEmpty(uri)) {
-        loadImage(Uri.parse(uri));
-      }
+    if (viewModel != null && !TextUtils.isEmpty(viewModel.getImage())) {
+      loadImage(Uri.parse(viewModel.getImage()));
     }
     setupViewsDefaultValues();
   }
@@ -117,34 +104,29 @@ public class CreateUserFragment extends ImageLoaderFragment implements ManageUse
 
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
-    userPicturePath = args.getString(USER_AVATAR);
-    userNickname = args.getString(USER_NAME);
-    from = args.getString(FROM);
+    viewModel = Parcels.unwrap(args.getParcelable(EXTRA_USER_MODEL));
   }
 
   private void setupViewsDefaultValues() {
-    if (isEditProfile()) {
+    if (viewModel.isEditProfile()) {
       createUserButton.setText(getString(R.string.edit_profile_save_button));
       getToolbar().setTitle(getString(R.string.edit_profile_title));
-      if (userPicturePath != null) {
-        userPicturePath = userPicturePath.replace("50", "150");
-        loadImage(Uri.parse(userPicturePath));
+      String image = viewModel.getImage();
+      if (image != null) {
+        image = image.replace("50", "150");
+        loadImage(Uri.parse(image));
       }
-      if (userNickname != null) {
-        userName.setText(userNickname);
+      if (viewModel.getName() != null) {
+        userName.setText(viewModel.getName());
       }
       cancelUserProfile.setVisibility(View.VISIBLE);
       header.setText(getString(R.string.edit_profile_header_message));
     }
   }
 
-  private boolean isEditProfile() {
-    return from != null;
-  }
-
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putString(USER_IMAGE_PATH, userPicturePath);
+    outState.putParcelable(EXTRA_USER_MODEL, Parcels.wrap(viewModel));
   }
 
   @Override public int getContentViewId() {
@@ -163,6 +145,10 @@ public class CreateUserFragment extends ImageLoaderFragment implements ManageUse
         .subscribe();
   }
 
+  @Override protected void setImageRealPath(String filePath) {
+    viewModel = new ViewModel(viewModel.getName(), filePath, viewModel.isEditProfile());
+  }
+
   @Override public void setupViews() {
     super.setupViews();
 
@@ -173,7 +159,7 @@ public class CreateUserFragment extends ImageLoaderFragment implements ManageUse
         Completable.fromAction(() -> dismissProgressDialog());
 
     final Completable sendAnalytics = Completable.fromAction(
-        () -> Analytics.Account.createdUserProfile(!TextUtils.isEmpty(userPicturePath)));
+        () -> Analytics.Account.createdUserProfile(!TextUtils.isEmpty(viewModel.getImage())));
 
     createUserButtonClick().doOnNext(__ -> {
       hideKeyboardAndShowProgressDialog();
@@ -181,7 +167,7 @@ public class CreateUserFragment extends ImageLoaderFragment implements ManageUse
     })
         .flatMap(__ -> accountManager.updateAccount(userName.getText()
             .toString()
-            .trim(), userPicturePath)
+            .trim(), viewModel.getImage())
             .timeout(90, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .andThen(Completable.merge(dismissProgressDialogCompletable, sendAnalytics))
@@ -223,8 +209,10 @@ public class CreateUserFragment extends ImageLoaderFragment implements ManageUse
   }
 
   private void validateUserAvatar() {
-    if (userPicturePath != null) {
-      userPicturePath = userPicturePath.contains("http") ? "" : userPicturePath;
+    String image = viewModel.getImage();
+    if (image != null) {
+      image = image.contains("http") ? "" : viewModel.getImage();
+      viewModel = new ViewModel(viewModel.getName(), image, viewModel.isEditProfile());
     }
   }
 
@@ -275,7 +263,7 @@ public class CreateUserFragment extends ImageLoaderFragment implements ManageUse
   }
 
   public Completable showLoggedInOrMyAccount() {
-    if (from != null) {
+    if (viewModel.isEditProfile()) {
       Single<Integer> showUserEdit =
           ShowMessage.asObservableSnack(createUserButton, R.string.user_edited)
               .filter(vis -> vis == ShowMessage.DISMISSED)
@@ -334,10 +322,30 @@ public class CreateUserFragment extends ImageLoaderFragment implements ManageUse
   }
 
   private boolean isAvatarSelected() {
-    return !TextUtils.isEmpty(userPicturePath);
+    return !TextUtils.isEmpty(viewModel.getImage());
   }
 
-  @Override protected void setImageRealPath(String filePath) {
+  @Parcel private static class ViewModel {
+    private final String name;
+    private final String image;
+    private final boolean editProfile;
 
+    private ViewModel(String name, String image, boolean editProfile) {
+      this.name = name;
+      this.image = image;
+      this.editProfile = editProfile;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public String getImage() {
+      return image;
+    }
+
+    public boolean isEditProfile() {
+      return editProfile;
+    }
   }
 }

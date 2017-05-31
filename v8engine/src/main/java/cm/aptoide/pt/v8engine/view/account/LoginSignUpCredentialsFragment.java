@@ -32,7 +32,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
-import cm.aptoide.pt.v8engine.view.account.user.CreateUserFragment;
+import cm.aptoide.pt.v8engine.view.account.user.ManageUserFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.store.home.HomeFragment;
 import com.facebook.CallbackManager;
@@ -300,7 +300,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override public void navigateToCreateProfile() {
     getFragmentNavigator().cleanBackStack();
-    getFragmentNavigator().navigateTo(CreateUserFragment.newInstance());
+    getFragmentNavigator().navigateTo(ManageUserFragment.newInstance());
   }
 
   @Override public Context getApplicationContext() {
