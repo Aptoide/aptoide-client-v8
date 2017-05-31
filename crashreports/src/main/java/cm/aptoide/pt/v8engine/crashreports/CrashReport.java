@@ -12,11 +12,11 @@ public class CrashReport implements CrashLogger {
   //
 
   private static CrashReport singleton = new CrashReport();
-  // TODO: 12/1/2017 sithengineer should we protect this list from concurrent modifications?
+  // TODO: 12/1/2017 should we protect this list from concurrent modifications?
   private ArrayList<CrashLogger> crashLoggers;
 
   private CrashReport() {
-    // TODO: 12/1/2017 sithengineer is lazy initialization necessary here?
+    // TODO: 12/1/2017 is lazy initialization necessary here?
     crashLoggers = new ArrayList<>();
   }
 

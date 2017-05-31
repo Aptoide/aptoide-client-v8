@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +24,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
@@ -99,6 +101,14 @@ public class ManageStoreFragment extends ImageLoaderFragment
 
   @Override public void navigateBack() {
     getFragmentNavigator().popBackStack();
+  }
+
+  @Override public void showError(@StringRes int errorMessage) {
+    ShowMessage.asSnack(this, errorMessage);
+  }
+
+  @Override public void showGenericError() {
+    ShowMessage.asSnack(this, R.string.having_some_trouble);
   }
 
   private ManageStoreViewModel updateAndGetStoreModel() {

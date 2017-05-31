@@ -1,18 +1,27 @@
 package cm.aptoide.pt.v8engine.view.account.store;
 
+import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
+import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import cm.aptoide.pt.v8engine.networking.StoreBodyInterceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
+import rx.Single;
 
 public class StoreManager {
+
+  public static final String ERROR_CODE_2 = "WOP-2";
+  public static final String ERROR_CODE_3 = "WOP-3";
+  public static final String ERROR_API_1 = "API-1";
 
   private final AptoideAccountManager accountManager;
   private final OkHttpClient httpClient;
@@ -40,7 +49,28 @@ public class StoreManager {
       }
       return createStore(storeId, storeName, storeDescription, storeImage, hasNewAvatar,
           storeThemeName);
-    });
+    })
+        .onErrorResumeNext(err -> {
+          if(err instanceof StoreCreationError || err instanceof NetworkError) {
+            return Completable.error(err);
+          }
+          if(err instanceof AptoideWsV7Exception) {
+            @StringRes int errorMessage;
+            if (((AptoideWsV7Exception) err).getBaseResponse()
+                .getErrors()
+                .get(0)
+                .getCode()
+                .equals(ERROR_API_1)) {
+              errorMessage = R.string.ws_error_API_1;
+            } else {
+              errorMessage = ErrorsMapper.getWebServiceErrorMessageFromCode(err.getMessage());
+            }
+            return Completable.error(new NetworkError(errorMessage));
+          }
+
+          // it's an unknown error
+          return Completable.error(err);
+        });
   }
 
   /**
@@ -59,7 +89,20 @@ public class StoreManager {
         .flatMap(account -> CheckUserCredentialsRequest.of(storeName, account.getAccessToken(),
             bodyInterceptorV3, httpClient, converterFactory)
             .observe()
-            .toSingle())
+            .toSingle()
+            .flatMap(data -> {
+              if (data.getErrors()
+                  .get(0).code.equals(ERROR_CODE_2)) {
+                Single.error(new StoreCreationError(R.string.ws_error_WOP_2));
+              } else if (data.getErrors()
+                  .get(0).code.equals(ERROR_CODE_3)) {
+                Single.error(new StoreCreationError(ErrorsMapper.getWebServiceErrorMessageFromCode(
+                    data.getErrors()
+                        .get(0).code)));
+              }
+
+              return Single.just(data);
+            }))
         .flatMapCompletable(__ -> {
           if (needToUploadMoreStoreData(storeDescription, storeImage, hasNewAvatar)) {
             return updateStore(storeId, storeName, storeDescription, storeImage, hasNewAvatar,
@@ -108,5 +151,29 @@ public class StoreManager {
             .observe()
             .toSingle())
         .toCompletable();
+  }
+
+  static class StoreCreationError extends Exception {
+    @StringRes private final int error;
+
+    StoreCreationError(int error) {
+      this.error = error;
+    }
+
+    @StringRes public int getError() {
+      return error;
+    }
+  }
+
+  static class NetworkError extends Exception {
+    @StringRes private final int error;
+
+    NetworkError(int error) {
+      this.error = error;
+    }
+
+    @StringRes public int getError() {
+      return error;
+    }
   }
 }

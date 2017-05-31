@@ -21,7 +21,6 @@ public class ManageStorePresenter implements Presenter {
   }
 
   @Override public void present() {
-
     Observable<Void> handleSaveDataClick = view.saveDataClick()
         .flatMap(storeModel -> handleSaveClick(storeModel).toObservable());
 
@@ -51,8 +50,15 @@ public class ManageStorePresenter implements Presenter {
         storeModel.getStoreDescription(), storeModel.getStoreImagePath(), storeModel.hasNewAvatar(),
         storeModel.getStoreThemeName(), storeModel.storeExists())
         .onErrorResumeNext(err -> {
-          // todo
-          // handle errors here
+
+          if(err instanceof StoreManager.NetworkError){
+            view.showError(((StoreManager.StoreCreationError) err).getError());
+          } else if (err instanceof StoreManager.StoreCreationError) {
+            view.showError(((StoreManager.StoreCreationError)err).getError());
+          } else {
+            view.showGenericError();
+          }
+
           CrashReport.getInstance()
               .log(err);
           return Completable.complete();

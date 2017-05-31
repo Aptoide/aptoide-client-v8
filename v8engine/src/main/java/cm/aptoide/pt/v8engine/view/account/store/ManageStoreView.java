@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.account.store;
 
+import android.support.annotation.StringRes;
 import cm.aptoide.pt.v8engine.presenter.View;
 import rx.Observable;
 
@@ -15,4 +16,8 @@ public interface ManageStoreView extends View {
   void navigateHome();
 
   void navigateBack();
+
+  void showError(@StringRes int errorMessage);
+
+  void showGenericError();
 }
