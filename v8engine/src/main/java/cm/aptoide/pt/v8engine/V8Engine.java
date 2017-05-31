@@ -183,7 +183,7 @@ public abstract class V8Engine extends DataProvider {
     Analytics.LocalyticsSessionControl.firstSession(sPref);
     Analytics.Lifecycle.Application.onCreate(this);
     Logger.setDBG(ManagerPreferences.isDebug() || cm.aptoide.pt.utils.BuildConfig.DEBUG);
-    new FlurryAgent.Builder().withLogEnabled(false).build(this, BuildConfig.FLURRY_KEY);
+    new FlurryAgent.Builder().withLogEnabled(false).build(this, "4KW7MPHSSG2Y7ZXHD36T");
 
     if (SecurePreferences.isFirstRun()) {
       createShortCut();
