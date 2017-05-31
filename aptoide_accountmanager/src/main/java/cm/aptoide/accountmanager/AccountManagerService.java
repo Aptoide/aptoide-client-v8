@@ -214,7 +214,8 @@ public class AccountManagerService {
     return accountFactory.createAccount(serverUser.getAccess(), subscribedStores,
         String.valueOf(serverUser.getId()), serverUser.getIdentity()
             .getEmail(), serverUser.getName(), serverUser.getAvatar(), refreshToken, accessToken,
-        encryptedPassword, Account.Type.valueOf(type), storeName, serverUser.getAvatar(), false,
+        encryptedPassword, Account.Type.valueOf(type), storeName, serverUser.getStore()
+            .getAvatar(), false,
         true);
   }
 
