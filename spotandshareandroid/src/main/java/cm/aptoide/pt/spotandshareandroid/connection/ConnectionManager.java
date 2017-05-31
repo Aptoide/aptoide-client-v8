@@ -17,6 +17,7 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.spotandshareandroid.DataHolder;
+import cm.aptoide.pt.spotandshareandroid.NetworkHolder;
 import cm.aptoide.pt.spotandshareandroid.group.Group;
 import cm.aptoide.pt.spotandshareandroid.group.GroupParser;
 import cm.aptoide.pt.spotandshareandroid.group.GroupValidator;
@@ -31,7 +32,7 @@ import java.util.TimerTask;
  * Created by filipegoncalves on 31-01-2017.
  */
 
-public class ConnectionManager {
+public class ConnectionManager implements NetworkHolder {
 
   public final static int ERROR_ON_RECONNECT = 0;
   public final static int ERROR_INVALID_GROUP = 1;
@@ -59,6 +60,7 @@ public class ConnectionManager {
   private ClientsConnectedListener clientsConnectedListener;
   private Timer scanner;
   private String chosenHotspot;
+  private Network network;
   private BroadcastReceiver activateButtonsReceiver = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
       if (wifimanager == null) {
@@ -191,7 +193,6 @@ public class ConnectionManager {
           }
         }
       } else {
-        //se build < 21
         NetworkInfo[] netInf = conMgr.getAllNetworkInfo();
         for (NetworkInfo inf : netInf) {
           if (inf.getState() == NetworkInfo.State.CONNECTED
@@ -499,6 +500,10 @@ public class ConnectionManager {
       wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
     }
     wifimanager.setWifiEnabled(enable);
+  }
+
+  @Override public Network getNetwork() {
+    return network;
   }
 
   public interface WifiStateListener {
