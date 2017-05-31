@@ -21,21 +21,11 @@ import lombok.Data;
     private Identity identity;
     private Store store;
     private String access;
-    private Properties properties;
   }
 
   @lombok.Data public static class Identity {
     private String username;
     private String email;
     private String phone;
-  }
-
-  @lombok.Data public static class Properties {
-    private Access access;
-    private boolean matureswitch;
-  }
-
-  @lombok.Data public static class Access {
-    private boolean confirmed;
   }
 }
