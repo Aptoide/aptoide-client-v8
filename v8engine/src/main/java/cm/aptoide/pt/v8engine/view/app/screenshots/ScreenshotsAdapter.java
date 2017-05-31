@@ -14,6 +14,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +31,14 @@ public class ScreenshotsAdapter
   private final List<GetAppMeta.Media.Screenshot> screenshots;
   private final ArrayList<String> imageUris;
   private final FragmentNavigator navigator;
+  private final AppViewAnalytics appViewAnalytics;
 
-  public ScreenshotsAdapter(GetAppMeta.Media media, FragmentNavigator navigator) {
+  public ScreenshotsAdapter(GetAppMeta.Media media, FragmentNavigator navigator,
+      AppViewAnalytics appViewAnalytics) {
     this.videos = media.getVideos();
     this.screenshots = media.getScreenshots();
     this.navigator = navigator;
+    this.appViewAnalytics = appViewAnalytics;
 
     imageUris = new ArrayList<>(screenshots.size());
     for (GetAppMeta.Media.Screenshot screenshot : screenshots) {
@@ -46,7 +50,7 @@ public class ScreenshotsAdapter
     View inflate = LayoutInflater.from(parent.getContext())
         .inflate(R.layout.row_item_screenshots_gallery, parent, false);
 
-    return new ScreenshotsViewHolder(inflate, navigator);
+    return new ScreenshotsViewHolder(inflate, navigator, appViewAnalytics);
   }
 
   @Override public void onBindViewHolder(ScreenshotsViewHolder holder, int position) {
@@ -76,14 +80,17 @@ public class ScreenshotsAdapter
   static class ScreenshotsViewHolder extends RecyclerView.ViewHolder {
 
     private final FragmentNavigator navigator;
+    private final AppViewAnalytics appViewAnalytics;
     private ImageView screenshot;
     private ImageView play_button;
     private FrameLayout media_layout;
 
-    ScreenshotsViewHolder(View itemView, FragmentNavigator navigator) {
+    ScreenshotsViewHolder(View itemView, FragmentNavigator navigator,
+        AppViewAnalytics appViewAnalytics) {
       super(itemView);
       assignViews(itemView);
       this.navigator = navigator;
+      this.appViewAnalytics = appViewAnalytics;
     }
 
     protected void assignViews(View itemView) {
@@ -110,6 +117,7 @@ public class ScreenshotsAdapter
       play_button.setVisibility(View.VISIBLE);
 
       itemView.setOnClickListener(v -> {
+        appViewAnalytics.sendOpenVideoEvent();
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.getUrl()));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
@@ -129,6 +137,7 @@ public class ScreenshotsAdapter
               getPlaceholder(item.getOrientation()), screenshot);
 
       itemView.setOnClickListener(v -> {
+        appViewAnalytics.sendOpenScreenshotEvent();
         // TODO improve this call
         navigator.navigateTo(V8Engine.getFragmentProvider()
             .newScreenshotsViewerFragment(imagesUris, position));

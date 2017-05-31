@@ -149,10 +149,7 @@ public class UpdateRepository {
   }
 
   public Completable remove(Update update) {
-    return Completable.fromCallable(() -> {
-      updateAccessor.remove(update.getPackageName());
-      return null;
-    });
+    return Completable.fromAction(() -> updateAccessor.remove(update.getPackageName()));
   }
 
   public void remove(String packageName) {

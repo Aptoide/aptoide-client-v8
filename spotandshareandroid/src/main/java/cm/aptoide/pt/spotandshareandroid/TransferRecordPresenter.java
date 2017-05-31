@@ -273,7 +273,7 @@ public class TransferRecordPresenter implements Presenter {
   }
 
   public void installApp(String filePath, String packageName) {
-    transferRecordManager.installApp(filePath, packageName);
+    transferRecordManager.installAppAsync(filePath, packageName);
   }
 
   public void listenToDisconnect() {

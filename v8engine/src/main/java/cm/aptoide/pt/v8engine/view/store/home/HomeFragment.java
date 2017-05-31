@@ -27,10 +27,10 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.DrawerAnalytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.spotandshare.SpotSharePreviewActivity;
 import cm.aptoide.pt.v8engine.updates.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
@@ -42,6 +42,7 @@ import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 import cm.aptoide.pt.v8engine.view.store.StorePagerAdapter;
+import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
 import rx.android.schedulers.AndroidSchedulers;
@@ -70,8 +71,8 @@ public class HomeFragment extends StoreFragment {
   private TextView userUsername;
   private ImageView userAvatarImage;
   private InstalledRepository installedRepository;
+  private DrawerAnalytics drawerAnalytics;
   private ClickHandler backClickHandler;
-  private SpotAndShareAnalytics spotAndShareAnalytics;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -153,7 +154,8 @@ public class HomeFragment extends StoreFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
+    drawerAnalytics = new DrawerAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
   }
 
   @Nullable @Override
@@ -233,7 +235,10 @@ public class HomeFragment extends StoreFragment {
   @Override public void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setTitle("");
     toolbar.setNavigationIcon(R.drawable.ic_drawer);
-    toolbar.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+    toolbar.setNavigationOnClickListener(v -> {
+      drawerLayout.openDrawer(GravityCompat.START);
+      drawerAnalytics.drawerOpen();
+    });
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -268,30 +273,40 @@ public class HomeFragment extends StoreFragment {
 
         int itemId = menuItem.getItemId();
         if (itemId == R.id.navigation_item_my_account) {
+          drawerAnalytics.drawerInteract("My Account");
           accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.MY_ACCOUNT);
         } else {
           final FragmentNavigator navigator = getFragmentNavigator();
           if (itemId == R.id.shareapps) {
+            drawerAnalytics.drawerInteract("Spot&Share");
             getActivityNavigator().navigateTo(SpotSharePreviewActivity.class);
           } else if (itemId == R.id.navigation_item_rollback) {
+            drawerAnalytics.drawerInteract("Rollback");
             navigator.navigateTo(V8Engine.getFragmentProvider()
                 .newRollbackFragment());
           } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
+            drawerAnalytics.drawerInteract("Scheduled Downloads");
             navigator.navigateTo(V8Engine.getFragmentProvider()
                 .newScheduledDownloadsFragment());
           } else if (itemId == R.id.navigation_item_excluded_updates) {
+            drawerAnalytics.drawerInteract("Excluded Updates");
             navigator.navigateTo(V8Engine.getFragmentProvider()
                 .newExcludedUpdatesFragment());
           } else if (itemId == R.id.navigation_item_settings) {
+            drawerAnalytics.drawerInteract("Settings");
             navigator.navigateTo(V8Engine.getFragmentProvider()
                 .newSettingsFragment());
           } else if (itemId == R.id.navigation_item_facebook) {
+            drawerAnalytics.drawerInteract("Facebook");
             openFacebook();
           } else if (itemId == R.id.navigation_item_twitter) {
+            drawerAnalytics.drawerInteract("Twitter");
             openTwitter();
           } else if (itemId == R.id.navigation_item_backup_apps) {
+            drawerAnalytics.drawerInteract("Backup Apps");
             openBackupApps();
           } else if (itemId == R.id.send_feedback) {
+            drawerAnalytics.drawerInteract("Send Feedback");
             startFeedbackFragment();
           }
         }

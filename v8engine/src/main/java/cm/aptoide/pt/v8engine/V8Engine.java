@@ -18,6 +18,8 @@ import android.os.Build;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.SparseArray;
 import cm.aptoide.accountmanager.AccountDataPersist;
@@ -58,12 +60,12 @@ import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.abtesting.ABTestManager;
-import cm.aptoide.pt.v8engine.account.AccountEventsAnalytcs;
 import cm.aptoide.pt.v8engine.account.AndroidAccountDataMigration;
 import cm.aptoide.pt.v8engine.account.AndroidAccountManagerDataPersist;
 import cm.aptoide.pt.v8engine.account.AndroidAccountProvider;
 import cm.aptoide.pt.v8engine.account.BaseBodyInterceptorFactory;
 import cm.aptoide.pt.v8engine.account.DatabaseStoreDataPersist;
+import cm.aptoide.pt.v8engine.account.LogAccountAnalytics;
 import cm.aptoide.pt.v8engine.account.SocialAccountFactory;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.ConsoleLogger;
@@ -96,11 +98,11 @@ import cm.aptoide.pt.v8engine.spotandshare.AccountGroupNameProvider;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
-import cm.aptoide.pt.v8engine.view.MainActivity;
 import cm.aptoide.pt.v8engine.view.configuration.ActivityProvider;
 import cm.aptoide.pt.v8engine.view.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.view.configuration.implementation.ActivityProviderImpl;
 import cm.aptoide.pt.v8engine.view.configuration.implementation.FragmentProviderImpl;
+import cm.aptoide.pt.v8engine.view.entry.EntryActivity;
 import cm.aptoide.pt.v8engine.view.entry.EntryPointChooser;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
@@ -174,7 +176,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
    * Time between pull request for social notifications: {@link AptoideNotification.NotificationType#LIKE}{@link
    * AptoideNotification.NotificationType#COMMENT}{@link AptoideNotification.NotificationType#POPULAR}
    */
-  private long pushNotificationSocialPeriodicity = AlarmManager.INTERVAL_HOUR;
+  private long pushNotificationSocialPeriodicity = DateUtils.MINUTE_IN_MILLIS * 10;
   private NotificationCenter notificationCenter;
 
   /**
@@ -278,7 +280,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
       db.close();
     }
 
-    startNotificationsSync();
+    getNotificationCenter().start();
 
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
@@ -297,41 +299,37 @@ public abstract class V8Engine extends SpotAndShareApplication {
     };
   }
 
-  public NotificationCenter getNotificationCenter() {
-    return notificationCenter;
-  }
+  @NonNull public NotificationCenter getNotificationCenter() {
+    if (notificationCenter == null) {
+      long pushNotificationInterval = pushNotificationSocialPeriodicity;
 
-  private void startNotificationsSync() {
+      if (ManagerPreferences.isDebug()
+          && ManagerPreferences.getPushNotificationPullingInterval() > 0) {
+        pushNotificationInterval = ManagerPreferences.getPushNotificationPullingInterval();
+      }
 
-    if (ManagerPreferences.isDebug()
-        && ManagerPreferences.getPushNotificationPullingInterval() > 0) {
-      pushNotificationSocialPeriodicity = ManagerPreferences.getPushNotificationPullingInterval();
+      SystemNotificationShower systemNotificationShower = new SystemNotificationShower(this,
+          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
+      List<NotificationSyncScheduler.Schedule> scheduleList = new ArrayList<>(2);
+
+      scheduleList.add(new NotificationSyncScheduler.Schedule(
+          NotificationSyncService.PUSH_NOTIFICATIONS_CAMPAIGN_ACTION, AlarmManager.INTERVAL_DAY));
+      scheduleList.add(new NotificationSyncScheduler.Schedule(
+          NotificationSyncService.PUSH_NOTIFICATIONS_SOCIAL_ACTION, pushNotificationInterval));
+
+      NotificationSyncScheduler notificationSyncScheduler =
+          new NotificationSyncScheduler(this, (AlarmManager) getSystemService(ALARM_SERVICE),
+              NotificationSyncService.class, scheduleList);
+      NotificationAccessor notificationAccessor =
+          AccessorFactory.getAccessorFor(Notification.class);
+      NotificationProvider notificationProvider = new NotificationProvider(notificationAccessor);
+      notificationCenter =
+          new NotificationCenter(new NotificationIdsMapper(), getNotificationHandler(),
+              notificationProvider, notificationSyncScheduler, systemNotificationShower,
+              CrashReport.getInstance(), new NotificationPolicyFactory(notificationProvider),
+              PreferenceManager.getDefaultSharedPreferences(this));
     }
-
-    notificationHandler = new NotificationHandler(getConfiguration().getAppId(), getDefaultClient(),
-        WebService.getDefaultConverter(), idsRepository, getConfiguration().getVersionName());
-
-    SystemNotificationShower systemNotificationShower = new SystemNotificationShower(this,
-        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
-    List<NotificationSyncScheduler.Schedule> scheduleList = new ArrayList<>(2);
-
-    scheduleList.add(new NotificationSyncScheduler.Schedule(
-        NotificationSyncService.PUSH_NOTIFICATIONS_CAMPAIGN_ACTION,
-        PUSH_NOTIFICATION_CAMPAIGN_PERIODICITY));
-    scheduleList.add(new NotificationSyncScheduler.Schedule(
-        NotificationSyncService.PUSH_NOTIFICATIONS_SOCIAL_ACTION,
-        pushNotificationSocialPeriodicity));
-
-    NotificationSyncScheduler notificationSyncScheduler =
-        new NotificationSyncScheduler(this, (AlarmManager) getSystemService(ALARM_SERVICE),
-            NotificationSyncService.class, scheduleList);
-    NotificationAccessor notificationAccessor = AccessorFactory.getAccessorFor(Notification.class);
-    NotificationProvider notificationProvider = new NotificationProvider(notificationAccessor);
-    notificationCenter = new NotificationCenter(new NotificationIdsMapper(), notificationHandler,
-        notificationSyncScheduler, systemNotificationShower, CrashReport.getInstance(),
-        new NotificationPolicyFactory(notificationProvider),
-        PreferenceManager.getDefaultSharedPreferences(this));
-    notificationCenter.startIfEnabled();
+    return notificationCenter;
   }
 
   public GroupNameProvider getGroupNameProvider() {
@@ -340,6 +338,11 @@ public abstract class V8Engine extends SpotAndShareApplication {
   }
 
   public NotificationHandler getNotificationHandler() {
+    if (notificationHandler == null) {
+      notificationHandler =
+          new NotificationHandler(getConfiguration().getAppId(), getDefaultClient(),
+              WebService.getDefaultConverter(), idsRepository, getConfiguration().getVersionName());
+    }
     return notificationHandler;
   }
 
@@ -454,11 +457,10 @@ public abstract class V8Engine extends SpotAndShareApplication {
                   new DatabaseStoreDataPersist.DatabaseStoreMapper()), getAccountFactory(),
               accountDataMigration, getAndroidAccountProvider(), Schedulers.io());
 
-      accountManager =
-          new AptoideAccountManager.Builder().setAccountAnalytics(new AccountEventsAnalytcs())
-              .setAccountDataPersist(accountDataPersist)
-              .setAccountManagerService(accountManagerService)
-              .build();
+      accountManager = new AptoideAccountManager.Builder().setAccountDataPersist(accountDataPersist)
+          .setAccountAnalytics(new LogAccountAnalytics())
+          .setAccountManagerService(accountManagerService)
+          .build();
     }
     return accountManager;
   }
@@ -550,7 +552,6 @@ public abstract class V8Engine extends SpotAndShareApplication {
   }
 
   private void sendAppStartToAnalytics(SharedPreferences sPref) {
-    Analytics.LocalyticsSessionControl.firstSession(sPref);
     Analytics.Lifecycle.Application.onCreate(this);
   }
 
@@ -728,7 +729,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
   }
 
   private void createAppShortcut() {
-    Intent shortcutIntent = new Intent(this, MainActivity.class);
+    Intent shortcutIntent = new Intent(this, EntryActivity.class);
     shortcutIntent.setAction(Intent.ACTION_MAIN);
     Intent intent = new Intent();
     intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);

@@ -7,6 +7,11 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 import cm.aptoide.pt.v8engine.presenter.InviteFriendsContract;
+import cm.aptoide.pt.v8engine.timeline.view.AppsTimelineFragment;
+import cm.aptoide.pt.v8engine.timeline.view.SocialFragment;
+import cm.aptoide.pt.v8engine.timeline.view.TimeLineLikesFragment;
+import cm.aptoide.pt.v8engine.timeline.view.follow.TimeLineFollowersFragment;
+import cm.aptoide.pt.v8engine.timeline.view.follow.TimeLineFollowingFragment;
 import cm.aptoide.pt.v8engine.view.addressbook.AddressBookFragment;
 import cm.aptoide.pt.v8engine.view.addressbook.InviteFriendsFragment;
 import cm.aptoide.pt.v8engine.view.addressbook.PhoneInputFragment;
@@ -40,11 +45,6 @@ import cm.aptoide.pt.v8engine.view.store.home.HomeFragment;
 import cm.aptoide.pt.v8engine.view.store.my.MyStoresFragment;
 import cm.aptoide.pt.v8engine.view.store.my.MyStoresSubscribedFragment;
 import cm.aptoide.pt.v8engine.view.store.recommended.RecommendedStoresFragment;
-import cm.aptoide.pt.v8engine.view.timeline.AppsTimelineFragment;
-import cm.aptoide.pt.v8engine.view.timeline.SocialFragment;
-import cm.aptoide.pt.v8engine.view.timeline.TimeLineLikesFragment;
-import cm.aptoide.pt.v8engine.view.timeline.follow.TimeLineFollowersFragment;
-import cm.aptoide.pt.v8engine.view.timeline.follow.TimeLineFollowingFragment;
 import cm.aptoide.pt.v8engine.view.updates.UpdatesFragment;
 import cm.aptoide.pt.v8engine.view.updates.excluded.ExcludedUpdatesFragment;
 import cm.aptoide.pt.v8engine.view.updates.rollback.RollbackFragment;
@@ -301,6 +301,12 @@ public class FragmentProviderImpl implements FragmentProvider {
 
   @Override public Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url) {
     return CommentListFragment.newInstanceUrl(commentType, url);
+  }
+
+  @Override
+  public Fragment newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType commentType,
+      String elementId) {
+    return CommentListFragment.newInstanceWithCommentDialogOpen(commentType, elementId);
   }
 
   @Override public Fragment newAddressBookFragment() {

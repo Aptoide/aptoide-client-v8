@@ -11,12 +11,17 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = AppUpdateTimelineItem.class, name = "APP_UPDATE"),
     @JsonSubTypes.Type(value = RecommendationTimelineItem.class, name = "RECOMMENDATION"),
     @JsonSubTypes.Type(value = VideoTimelineItem.class, name = "VIDEO"),
-    @JsonSubTypes.Type(value = SimilarTimelineItem.class, name = "SIMILAR"),
+    @JsonSubTypes.Type(value = RecommendationTimelineItem.class, name = "SIMILAR"),
     @JsonSubTypes.Type(value = SocialArticleTimelineItem.class, name = "SOCIAL_ARTICLE"),
     @JsonSubTypes.Type(value = SocialVideoTimelineItem.class, name = "SOCIAL_VIDEO"),
     @JsonSubTypes.Type(value = SocialStoreLatestAppsTimelineItem.class, name = "SOCIAL_STORE"),
     @JsonSubTypes.Type(value = SocialInstallTimelineItem.class, name = "SOCIAL_INSTALL"),
-    @JsonSubTypes.Type(value = SocialRecommendationTimelineItem.class, name = "SOCIAL_APP")
+    @JsonSubTypes.Type(value = SocialRecommendationTimelineItem.class, name = "SOCIAL_APP"),
+    @JsonSubTypes.Type(value = PopularAppTimelineItem.class, name = "POPULAR_APP"),
+    @JsonSubTypes.Type(value = AggregatedSocialInstallTimelineItem.class, name = "AGGREGATED_SOCIAL_INSTALL"),
+    @JsonSubTypes.Type(value = AggregatedSocialArticleTimelineItem.class, name = "AGGREGATED_SOCIAL_ARTICLE"),
+    @JsonSubTypes.Type(value = AggregatedSocialVideoTimelineItem.class, name = "AGGREGATED_SOCIAL_VIDEO"),
+    @JsonSubTypes.Type(value = AggregatedSocialStoreLatestAppsTimelineItem.class, name = "AGGREGATED_SOCIAL_STORE")
 }) public interface TimelineItem<T> {
 
   T getData();

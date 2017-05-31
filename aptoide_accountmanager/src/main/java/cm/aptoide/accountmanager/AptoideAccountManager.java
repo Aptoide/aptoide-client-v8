@@ -167,7 +167,7 @@ public class AptoideAccountManager {
     return getAccount().getAccess();
   }
 
-  public Completable syncCurrentAccount() {
+  @Deprecated public Completable syncCurrentAccount() {
     return singleAccountStatus().flatMapCompletable(
         account -> syncAccount(account.getAccessToken(), account.getRefreshToken(),
             account.getPassword(), account.getType()));
@@ -199,7 +199,9 @@ public class AptoideAccountManager {
       }
       return accountManagerService.updateAccount(account.getEmail(), nickname,
           account.getPassword(), TextUtils.isEmpty(avatarPath) ? "" : avatarPath,
-          account.getAccessToken());
+          account.getAccessToken())
+          .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
+              account.getPassword(), account.getType()));
     });
   }
 

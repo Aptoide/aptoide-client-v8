@@ -16,6 +16,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.account.store.CreateStoreFragment;
+import cm.aptoide.pt.v8engine.view.account.store.ManageStoreModel;
 import cm.aptoide.pt.v8engine.view.fragment.BaseToolbarFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import com.jakewharton.rxbinding.view.RxView;
@@ -129,7 +130,7 @@ public class ProfileStepOneFragment extends BaseToolbarFragment {
 
   private void navigateToCreateStore() {
     waitDialog.dismiss();
-    fragmentNavigator.navigateTo(CreateStoreFragment.newInstance());
+    fragmentNavigator.navigateTo(CreateStoreFragment.newInstance(new ManageStoreModel(true)));
   }
 
   private void showErrorMessage() {

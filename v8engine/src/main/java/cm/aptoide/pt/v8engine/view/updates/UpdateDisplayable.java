@@ -109,7 +109,6 @@ public class UpdateDisplayable extends Displayable {
   }
 
   public Completable downloadAndInstall(Context context, PermissionService permissionRequest) {
-    Analytics.Updates.update();
     PermissionManager permissionManager = new PermissionManager();
     return permissionManager.requestExternalStoragePermission(permissionRequest)
         .flatMap(sucess -> {

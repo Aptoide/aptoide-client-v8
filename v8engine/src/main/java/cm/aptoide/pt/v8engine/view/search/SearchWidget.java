@@ -16,9 +16,12 @@ import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.search.SearchAnalytics;
 import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxMenuItem;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Date;
@@ -41,8 +44,12 @@ import rx.functions.Action1;
   private ImageView icTrustedImageView;
   private View bottomView;
 
+  private SearchAnalytics searchAnalytics;
+
   public SearchWidget(View itemView) {
     super(itemView);
+    searchAnalytics = new SearchAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
   }
 
   @Override protected void assignViews(View itemView) {
@@ -133,7 +140,7 @@ import rx.functions.Action1;
     }
 
     final Action1<Void> clickToOpenAppView =
-        v -> handleClickToOpenAppView(clickCallback, searchAppsApp);
+        v -> handleClickToOpenAppView(clickCallback, searchAppsApp, displayable.getQuery());
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(clickToOpenAppView));
   }
@@ -182,10 +189,12 @@ import rx.functions.Action1;
   }
 
   private void handleClickToOpenAppView(Action0 clickCallback,
-      ListSearchApps.SearchAppsApp searchAppsApp) {
+      ListSearchApps.SearchAppsApp searchAppsApp, String query) {
     if (clickCallback != null) {
       clickCallback.call();
     }
+
+    searchAnalytics.searchAppClick(query, searchAppsApp.getPackageName());
     getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
         .newAppViewFragment(searchAppsApp.getId(), searchAppsApp.getPackageName(),
             searchAppsApp.getStore()

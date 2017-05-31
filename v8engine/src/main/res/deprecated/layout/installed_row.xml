@@ -125,7 +125,7 @@
             android:layout_gravity="center_horizontal"
             android:gravity="center"
             android:text="@string/spot_share_share"
-            android:textColor="@color/grey_fog_light"
+            android:textColor="@color/grey_fog_dark"
             android:textSize="12sp"
             />
       </LinearLayout>

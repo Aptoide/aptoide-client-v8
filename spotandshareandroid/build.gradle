@@ -69,4 +69,5 @@ dependencies {
   provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
 
   testCompile 'junit:junit:4.12'
+  compile project(path: ':utilsdesign')
 }

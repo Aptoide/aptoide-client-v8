@@ -14,19 +14,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.presenter.CreateUserView;
 import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
 import cm.aptoide.pt.v8engine.view.account.AccountErrorMapper;
 import cm.aptoide.pt.v8engine.view.account.PictureLoaderFragment;
@@ -42,13 +41,17 @@ import rx.android.schedulers.AndroidSchedulers;
 
 // TODO
 // create presenter and separate logic code from view
-public class CreateUserFragment extends PictureLoaderFragment implements CreateUserView {
+public class CreateUserFragment extends PictureLoaderFragment implements ManageUserView {
 
+  public static final String FROM_MY_ACCOUNT = "My Account";
+  public static final String USER_NAME = "userName";
+  public static final String USER_AVATAR = "userAvatar";
+  public static final String FROM = "from";
   private static final String TAG = CreateUserFragment.class.getName();
   private static final String USER_IMAGE_PATH = "user_image_path";
-
   private ThrowableToStringMapper errorMapper;
   private String userPicturePath;
+  private String userNickname;
   private ImageView userPicture;
   private RelativeLayout userPictureLayout;
   private EditText userName;
@@ -56,6 +59,9 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
   private AptoideAccountManager accountManager;
   private ProgressDialog uploadWaitDialog;
   private ProgressDialog waitDialog;
+  private String from;
+  private Button cancelUserProfile;
+  private TextView header;
 
   public CreateUserFragment() {
     super(true, false);
@@ -63,6 +69,17 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
 
   public static CreateUserFragment newInstance() {
     return new CreateUserFragment();
+  }
+
+  public static CreateUserFragment newInstance(String userPicturePath, String userName,
+      String from) {
+    CreateUserFragment createUserFragment = newInstance();
+    Bundle args = new Bundle();
+    args.putString(USER_NAME, userName);
+    args.putString(USER_AVATAR, userPicturePath);
+    args.putString(FROM, from);
+    createUserFragment.setArguments(args);
+    return createUserFragment;
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,6 +107,7 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
         loadImage(Uri.parse(uri));
       }
     }
+    setupViewsDefaultValues();
   }
 
   @Override public void onDestroy() {
@@ -102,6 +120,33 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
     if (uploadWaitDialog != null && uploadWaitDialog.isShowing()) {
       uploadWaitDialog.dismiss();
     }
+  }
+
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    userPicturePath = args.getString(USER_AVATAR);
+    userNickname = args.getString(USER_NAME);
+    from = args.getString(FROM);
+  }
+
+  private void setupViewsDefaultValues() {
+    if (isEditProfile()) {
+      createUserButton.setText(getString(R.string.edit_profile_save_button));
+      getToolbar().setTitle(getString(R.string.edit_profile_title));
+      if (userPicturePath != null) {
+        userPicturePath = userPicturePath.replace("50", "150");
+        loadImage(Uri.parse(userPicturePath));
+      }
+      if (userNickname != null) {
+        userName.setText(userNickname);
+      }
+      cancelUserProfile.setVisibility(View.VISIBLE);
+      header.setText(getString(R.string.edit_profile_header_message));
+    }
+  }
+
+  private boolean isEditProfile() {
+    return from != null;
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -137,14 +182,17 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
     final Completable sendAnalytics = Completable.fromAction(
         () -> Analytics.Account.createdUserProfile(!TextUtils.isEmpty(userPicturePath)));
 
-    createUserButtonClick().doOnNext(__ -> hideKeyboardAndShowProgressDialog())
+    createUserButtonClick().doOnNext(__ -> {
+      hideKeyboardAndShowProgressDialog();
+      validateUserAvatar();
+    })
         .flatMap(__ -> accountManager.updateAccount(userName.getText()
             .toString()
             .trim(), userPicturePath)
             .timeout(90, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .andThen(Completable.merge(dismissProgressDialogCompletable, sendAnalytics))
-            .andThen(showSuccessMessageAndNavigateToLoggedInView())
+            .andThen(showLoggedInOrMyAccount())
             .onErrorResumeNext(err -> {
               CrashReport.getInstance()
                   .log(err);
@@ -156,6 +204,10 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
         .subscribe(__ -> {
         }, err -> CrashReport.getInstance()
             .log(err));
+
+    cancelButtonClick().doOnNext(__ -> navigateToMyAccount())
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+        .subscribe();
   }
 
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
@@ -168,7 +220,19 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
     userPictureLayout = (RelativeLayout) view.findViewById(R.id.create_user_image_action);
     userName = (EditText) view.findViewById(R.id.create_user_username_inserted);
     createUserButton = (Button) view.findViewById(R.id.create_user_create_profile);
+    cancelUserProfile = (Button) view.findViewById(R.id.create_user_cancel_button);
     userPicture = (ImageView) view.findViewById(R.id.create_user_image);
+    header = (TextView) view.findViewById(R.id.create_user_header_textview);
+  }
+
+  private void navigateToMyAccount() {
+    getFragmentNavigator().popBackStack();
+  }
+
+  private void validateUserAvatar() {
+    if (userPicturePath != null) {
+      userPicturePath = userPicturePath.contains("http") ? "" : userPicturePath;
+    }
   }
 
   @Override public Observable<Void> createUserButtonClick() {
@@ -177,6 +241,10 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
 
   @Override public Observable<Void> selectUserImageClick() {
     return RxView.clicks(userPictureLayout);
+  }
+
+  @Override public Observable<Void> cancelButtonClick() {
+    return RxView.clicks(cancelUserProfile);
   }
 
   private void hideKeyboardAndShowProgressDialog() {
@@ -210,6 +278,19 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
       uploadWaitDialog.dismiss();
     } else {
       waitDialog.dismiss();
+    }
+  }
+
+  public Completable showLoggedInOrMyAccount() {
+    if (from != null) {
+      Single<Integer> showUserEdit =
+          ShowMessage.asObservableSnack(createUserButton, R.string.user_edited)
+              .filter(vis -> vis == ShowMessage.DISMISSED)
+              .first()
+              .toSingle();
+      return showUserEdit.flatMapCompletable(__ -> navigateToMyAccountCompletable());
+    } else {
+      return showSuccessMessageAndNavigateToLoggedInView();
     }
   }
 
@@ -251,6 +332,10 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
     fragmentNavigator.navigateTo(ProfileStepOneFragment.newInstance());
   }
 
+  private Completable navigateToMyAccountCompletable() {
+    return Completable.fromAction(() -> navigateToMyAccount());
+  }
+
   public void navigateToHome() {
     getFragmentNavigator().navigateToHomeCleaningBackStack();
   }
@@ -272,7 +357,7 @@ public class CreateUserFragment extends PictureLoaderFragment implements CreateU
     }
 
     if (avatarUrl != null && !TextUtils.isEmpty(avatarUrl.toString())) {
-      userPicturePath = new FileUtils().getMediaStoragePath(avatarUrl, applicationContext);
+      userPicturePath = getMediaStoragePath(avatarUrl, applicationContext);
       checkAvatarRequirements(userPicturePath, avatarUrl);
     } else {
       Logger.w(TAG, "URI for content is null or empty");

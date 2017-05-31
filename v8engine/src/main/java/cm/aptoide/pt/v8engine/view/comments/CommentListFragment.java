@@ -40,6 +40,8 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.TimelineSocialActionData;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.custom.HorizontalDividerItemDecoration;
@@ -47,6 +49,7 @@ import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
@@ -56,6 +59,8 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 import rx.functions.Action1;
+
+import static cm.aptoide.pt.v8engine.analytics.Analytics.AppsTimeline.BLANK;
 
 // TODO: 21/12/2016 sithengineer refactor and split in multiple classes to list comments
 // for each type: store and timeline card
@@ -69,6 +74,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private static final String ELEMENT_ID_AS_STRING = "element_id_as_string";
   private static final String ELEMENT_ID_AS_LONG = "element_id_as_long";
   private static final String URL_VAL = "url_val";
+  private static final String SHOW_INPUT_DIALOG_FIRST_RUN = "show_input_dialog_first_run";
   // control setComment retry
   protected long lastTotal;
   //
@@ -94,11 +100,15 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private StoreCredentialsProvider storeCredentialsProvider;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private boolean showCommentInputDialogOnFirstRun;
+  private BodyInterceptor<BaseBody> bodyInterceptor;
+  private TimelineAnalytics timelineAnalytics;
 
   public static Fragment newInstance(CommentType commentType, String timelineArticleId) {
     Bundle args = new Bundle();
     args.putString(ELEMENT_ID_AS_STRING, timelineArticleId);
     args.putString(COMMENT_TYPE, commentType.name());
+    args.putBoolean(SHOW_INPUT_DIALOG_FIRST_RUN, false);
 
     CommentListFragment fragment = new CommentListFragment();
     fragment.setArguments(args);
@@ -109,7 +119,19 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     Bundle args = new Bundle();
     args.putString(URL_VAL, url);
     args.putString(COMMENT_TYPE, commentType.name());
+    args.putBoolean(SHOW_INPUT_DIALOG_FIRST_RUN, false);
 
+    CommentListFragment fragment = new CommentListFragment();
+    fragment.setArguments(args);
+    return fragment;
+  }
+
+  public static Fragment newInstanceWithCommentDialogOpen(CommentType commentType,
+      String elementId) {
+    Bundle args = new Bundle();
+    args.putString(ELEMENT_ID_AS_STRING, elementId);
+    args.putString(COMMENT_TYPE, commentType.name());
+    args.putBoolean(SHOW_INPUT_DIALOG_FIRST_RUN, true);
     CommentListFragment fragment = new CommentListFragment();
     fragment.setArguments(args);
     return fragment;
@@ -120,6 +142,10 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
+    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
+        httpClient, converterFactory);
     super.onCreate(savedInstanceState);
   }
 
@@ -170,6 +196,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     elementIdAsLong = args.getLong(ELEMENT_ID_AS_LONG);
     url = args.getString(URL_VAL);
     commentType = CommentType.valueOf(args.getString(COMMENT_TYPE));
+    showCommentInputDialogOnFirstRun = args.getBoolean(SHOW_INPUT_DIALOG_FIRST_RUN);
 
     // extracting store data from the URL...
     if (commentType == CommentType.STORE) {
@@ -205,6 +232,11 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
       floatingActionButton.setImageDrawable(drawable);
       floatingActionButton.setVisibility(View.VISIBLE);
     }
+    if (showCommentInputDialogOnFirstRun) {
+      createNewCommentFragment(elementIdAsString).subscribe(__ -> {
+      }, throwable -> CrashReport.getInstance()
+          .log(throwable));
+    }
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -216,6 +248,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   void refreshData() {
     if (commentType == CommentType.TIMELINE) {
+      timelineAnalytics.sendSocialActionEvent(
+          new TimelineSocialActionData(BLANK, BLANK, "Comment", BLANK, BLANK, BLANK));
       caseListSocialTimelineComments(true);
     } else {
       caseListStoreComments(url,

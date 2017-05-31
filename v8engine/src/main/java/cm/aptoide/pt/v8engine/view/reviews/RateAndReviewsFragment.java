@@ -21,7 +21,6 @@ import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.comments.ListFullReviewsSuccessRequestListener;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
@@ -165,7 +164,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     RxView.clicks(floatingActionButton)
         .flatMap(__ -> dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName))
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(__ -> Analytics.Updates.createReview(), err -> CrashReport.getInstance()
+        .subscribe(__ -> {
+        }, err -> CrashReport.getInstance()
             .log(err));
   }
 

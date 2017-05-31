@@ -45,6 +45,14 @@ public class ShadowCircleTransformation extends BitmapTransformation {
     spaceBetween = .95f;
   }
 
+  public ShadowCircleTransformation(Context context, View view, float strokeSize) {
+    super(context);
+    view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+    this.strokeSize = strokeSize;
+    shadowColor = Color.WHITE;
+    spaceBetween = .95f;
+  }
+
   @Override
   protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
     return circleCrop(pool, toTransform);
