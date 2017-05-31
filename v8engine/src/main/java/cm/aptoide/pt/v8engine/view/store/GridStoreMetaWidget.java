@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -287,9 +286,9 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
 
   private void editStore(long storeId, String storeTheme, String storeDescription, String storeName,
       String storeAvatar) {
-    Fragment fragment = ManageStoreFragment.newInstance(
-        new ManageStoreViewModel(storeId, storeAvatar, storeTheme, storeName, storeDescription), false);
-    getFragmentNavigator().navigateTo(fragment);
+    ManageStoreViewModel viewModel =
+        new ManageStoreViewModel(storeId, storeAvatar, storeTheme, storeName, storeDescription);
+    getFragmentNavigator().navigateTo(ManageStoreFragment.newInstance(viewModel, false));
   }
 
   private void setSecondaryInfoVisibility(boolean userVisibility) {

@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.timeline.view.widget;
 
 import android.support.annotation.CallSuper;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -233,8 +232,8 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
         account.getAccess())) {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
           R.string.create_store_create, snackView -> {
-            Fragment fragment = ManageStoreFragment.newInstance(new ManageStoreViewModel(), false);
-            getFragmentNavigator().navigateTo(fragment);
+            getFragmentNavigator().navigateTo(
+                ManageStoreFragment.newInstance(new ManageStoreViewModel(), false));
           });
       return false;
     }
