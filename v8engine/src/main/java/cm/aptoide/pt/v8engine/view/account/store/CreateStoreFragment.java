@@ -1,9 +1,6 @@
 package cm.aptoide.pt.v8engine.view.account.store;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -37,7 +34,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.StoreBodyInterceptor;
-import cm.aptoide.pt.v8engine.view.account.PictureLoaderFragment;
+import cm.aptoide.pt.v8engine.view.account.ImageLoaderFragment;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jakewharton.rxbinding.view.RxView;
@@ -55,7 +52,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 // TODO
 // create presenter and separate logic code from view
-public class CreateStoreFragment extends PictureLoaderFragment implements ManageStoreView {
+@Deprecated public class CreateStoreFragment extends ImageLoaderFragment implements ManageStoreView {
 
   public static final String ERROR_CODE_2 = "WOP-2";
   public static final String ERROR_CODE_3 = "WOP-3";
@@ -221,7 +218,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
       storeName.setVisibility(View.GONE);
       storeDescription.setVisibility(View.VISIBLE);
       storeDescription.setText(storeModel.getStoreDescription());
-      loadImage(Uri.parse(storeModel.getStoreAvatarPath()));
+      loadImage(Uri.parse(storeModel.getStoreImagePath()));
       createStoreBtn.setText(R.string.save_edit_store);
       skipBtn.setText(R.string.cancel);
     }
@@ -257,11 +254,19 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
 
   }
 
+  @Override public void navigateHome() {
+
+  }
+
+  @Override public void navigateBack() {
+
+  }
+
   private void setupListeners() {
 
     selectStoreImageClick().compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .retry()
-        .subscribe(__ -> chooseAvatarSource(), err -> CrashReport.getInstance()
+        .subscribe(__ -> chooseImageSource(), err -> CrashReport.getInstance()
             .log(err));
 
     cancelClick().flatMap(__ -> sendSkipAnalytics().doOnCompleted(() -> navigateToHome())
@@ -284,7 +289,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
           final String storeDescription = this.storeDescription.getText()
               .toString()
               .trim();
-          return Observable.just(ManageStoreViewModel.from(storeModel, storeName, storeDescription));
+          return Observable.just(
+              ManageStoreViewModel.from(storeModel, storeName, storeDescription));
         })
         .flatMap(storeModel -> {
           final CreateStoreType createStoreType = validateData(storeModel);
@@ -619,28 +625,6 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
     return new StoreBodyInterceptor(idsRepository.getUniqueIdentifier(), accountManager,
         requestBodyFactory, storeModel.getStoreThemeName(), storeModel.getStoreDescription(),
         serializer);
-  }
-
-  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    Uri avatarUrl = null;
-    final Context applicationContext = getActivity().getApplicationContext();
-
-    if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-      avatarUrl = getFileUriFromFileName(photoFileName);
-    }
-
-    if (requestCode == GALLERY_CODE && resultCode == Activity.RESULT_OK) {
-      avatarUrl = data.getData();
-    }
-
-    try {
-      final String filePath = getMediaStoragePath(avatarUrl, applicationContext);
-      storeModel.setStoreImagePath(filePath);
-      checkAvatarRequirements(filePath, avatarUrl);
-    } catch (NullPointerException ex) {
-      CrashReport.getInstance()
-          .log(ex);
-    }
   }
 
   /**

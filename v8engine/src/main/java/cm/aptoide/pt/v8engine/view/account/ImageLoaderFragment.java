@@ -5,10 +5,14 @@
 
 package cm.aptoide.pt.v8engine.view.account;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -17,7 +21,6 @@ import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.fragment.BaseToolbarFragment;
@@ -26,30 +29,31 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
 /**
  * Created by pedroribeiro on 02/12/16.
  */
-public abstract class PictureLoaderFragment extends BaseToolbarFragment {
+public abstract class ImageLoaderFragment extends BaseToolbarFragment {
 
   public static final int GALLERY_CODE = 1046;
   public static final int REQUEST_IMAGE_CAPTURE = 1;
-  private static final String FILE_NAME = "file_name";
-  private static final String TAG = PictureLoaderFragment.class.getName();
+  private static final String EXTRA_FILE_NAME = "file_name";
+  private static final String TAG = ImageLoaderFragment.class.getName();
   private static final SimpleDateFormat DATE_FORMAT =
       new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
-  protected String photoFileName;
+  protected String fileName;
 
-  public void chooseAvatarSource() {
+  public void chooseImageSource() {
     final Dialog dialog = new Dialog(getActivity());
     dialog.setContentView(R.layout.dialog_choose_avatar_source);
 
     RxView.clicks(dialog.findViewById(R.id.button_camera))
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(click -> {
-          PictureLoaderFragment.this.requestAccessToCamera(() -> {
+          ImageLoaderFragment.this.requestAccessToCamera(() -> {
             dispatchTakePictureIntent();
           }, () -> {
             Logger.e(TAG, "User denied access to camera");
@@ -60,7 +64,7 @@ public abstract class PictureLoaderFragment extends BaseToolbarFragment {
     RxView.clicks(dialog.findViewById(R.id.button_gallery))
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(click -> {
-          PictureLoaderFragment.this.requestAccessToExternalFileSystem(false,
+          ImageLoaderFragment.this.requestAccessToExternalFileSystem(false,
               R.string.access_to_open_gallery_rationale, () -> {
                 dispatchOpenGalleryIntent();
               }, () -> {
@@ -77,23 +81,23 @@ public abstract class PictureLoaderFragment extends BaseToolbarFragment {
   }
 
   public void dispatchTakePictureIntent() {
-    photoFileName = getPhotoFileName();
+    fileName = getFileName();
     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-      prepareTakePictureIntent(takePictureIntent, photoFileName);
+      prepareTakePictureIntent(takePictureIntent, fileName);
       startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
     }
   }
 
-  private void prepareTakePictureIntent(Intent takePictureIntent, String photoFileName) {
+  private void prepareTakePictureIntent(Intent takePictureIntent, String imageFileName) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       Uri uriForFile = FileProvider.getUriForFile(getActivity(), Application.getConfiguration()
-          .getAppId() + ".provider", new File(getFileUriFromFileName(photoFileName).getPath()));
+          .getAppId() + ".provider", new File(getFileUriFromFileName(imageFileName).getPath()));
       takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriForFile);
     } else {
-      takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, getFileUriFromFileName(photoFileName));
+      takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, getFileUriFromFileName(imageFileName));
     }
-    takePictureIntent.putExtra(FILE_NAME, photoFileName);
+    takePictureIntent.putExtra(EXTRA_FILE_NAME, imageFileName);
   }
 
   public void dispatchOpenGalleryIntent() {
@@ -103,8 +107,8 @@ public abstract class PictureLoaderFragment extends BaseToolbarFragment {
     }
   }
 
-  private String getPhotoFileName() {
-    return String.format("aptoide_photo_%s.jpg", getTimestampString());
+  private String getFileName() {
+    return String.format("aptoide_image_%s.jpg", getTimestampString());
   }
 
   private String getTimestampString() {
@@ -145,31 +149,65 @@ public abstract class PictureLoaderFragment extends BaseToolbarFragment {
     return contentUri.getPath();
   }
 
-  protected void checkAvatarRequirements(String avatarPath, Uri avatarUrl) {
-    if (!TextUtils.isEmpty(avatarPath)) {
-      List<AptoideUtils.IconSizeU.ImageErrors> imageErrors =
-          AptoideUtils.IconSizeU.checkIconSizeProperties(avatarPath,
-              getResources().getInteger(R.integer.min_avatar_height),
-              getResources().getInteger(R.integer.max_avatar_height),
-              getResources().getInteger(R.integer.min_avatar_width),
-              getResources().getInteger(R.integer.max_avatar_width),
-              getResources().getInteger(R.integer.max_avatar_Size));
-      if (imageErrors.isEmpty()) {
-        loadImage(avatarUrl);
-      } else {
-        showIconPropertiesError(getErrorsMessage(imageErrors));
+  private ImageInfo getImageInfo(String imagePath) {
+    ImageInfo imageInfo = null;
+    Bitmap image = BitmapFactory.decodeFile(imagePath);
+    if (image != null) {
+      imageInfo = new ImageInfo(image.getWidth(), image.getHeight(), new File(imagePath).length());
+    }
+    return imageInfo;
+  }
+
+  private List<ImageErrors> checkIconSizeProperties(String imagePath, Resources resources) {
+    final int minHeight = resources.getInteger(R.integer.min_avatar_height);
+    final int maxHeight = resources.getInteger(R.integer.max_avatar_height);
+    final int minWidth = resources.getInteger(R.integer.min_avatar_width);
+    final int maxWidth = resources.getInteger(R.integer.max_avatar_width);
+    final int maxImageSize = resources.getInteger(R.integer.max_avatar_Size);
+
+    ImageInfo imageInfo = getImageInfo(imagePath);
+    List<ImageErrors> errors = new LinkedList<>();
+    if (imageInfo == null) {
+      errors.add(ImageErrors.ERROR_DECODING);
+    } else {
+      if (imageInfo.getHeight() < minHeight) {
+        errors.add(ImageErrors.MIN_HEIGHT);
+      }
+      if (imageInfo.getWidth() < minWidth) {
+        errors.add(ImageErrors.MIN_WIDTH);
+      }
+      if (imageInfo.getHeight() > maxHeight) {
+        errors.add(ImageErrors.MAX_HEIGHT);
+      }
+      if (imageInfo.getWidth() > maxWidth) {
+        errors.add(ImageErrors.MAX_WIDTH);
+      }
+      if (imageInfo.getSize() > maxImageSize) {
+        errors.add(ImageErrors.MAX_IMAGE_SIZE);
       }
     }
+    return errors;
+  }
+
+  protected String imageHasErrors(String imagePath) {
+    if (!TextUtils.isEmpty(imagePath)) {
+      List<ImageErrors> imageErrors = checkIconSizeProperties(imagePath, getResources());
+      if (!imageErrors.isEmpty()) {
+        showIconPropertiesError(buildImageErrorMessage(imageErrors));
+      }
+      return null;
+    }
+    return getString(R.string.image_requirements_error_open_image);
   }
 
   public abstract void loadImage(Uri imagePath);
 
   public abstract void showIconPropertiesError(String errors);
 
-  private String getErrorsMessage(List<AptoideUtils.IconSizeU.ImageErrors> imageErrors) {
+  private String buildImageErrorMessage(List<ImageErrors> imageErrors) {
     StringBuilder message = new StringBuilder();
     message.append(getString(R.string.image_requirements_popup_message));
-    for (AptoideUtils.IconSizeU.ImageErrors imageSizeError : imageErrors) {
+    for (ImageErrors imageSizeError : imageErrors) {
       switch (imageSizeError) {
         case MIN_HEIGHT:
           message.append(getString(R.string.image_requirements_error_min_height));
@@ -198,5 +236,60 @@ public abstract class PictureLoaderFragment extends BaseToolbarFragment {
     }
 
     return message.toString();
+  }
+
+  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    Uri imageUri;
+    final Context applicationContext = getActivity().getApplicationContext();
+
+    if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+      imageUri = getFileUriFromFileName(fileName);
+    } else if (requestCode == GALLERY_CODE && resultCode == Activity.RESULT_OK) {
+      imageUri = data.getData();
+    } else {
+      Logger.e(TAG, "URI for content is null or empty");
+      return;
+    }
+
+    try {
+      String filePath = getMediaStoragePath(imageUri, applicationContext);
+      String imageError = imageHasErrors(filePath);
+      if (TextUtils.isEmpty(imageError)) {
+        loadImage(imageUri);
+      } else {
+        showIconPropertiesError(imageError);
+      }
+    } catch (NullPointerException ex) {
+      CrashReport.getInstance()
+          .log(ex);
+    }
+  }
+
+  private enum ImageErrors {
+    ERROR_DECODING, MIN_HEIGHT, MAX_HEIGHT, MIN_WIDTH, MAX_WIDTH, MAX_IMAGE_SIZE
+  }
+
+  private static class ImageInfo {
+    private final int height;
+    private final int width;
+    private final long size;
+
+    private ImageInfo(int height, int width, long size) {
+      this.height = height;
+      this.width = width;
+      this.size = size;
+    }
+
+    public int getHeight() {
+      return height;
+    }
+
+    public int getWidth() {
+      return width;
+    }
+
+    public long getSize() {
+      return size;
+    }
   }
 }

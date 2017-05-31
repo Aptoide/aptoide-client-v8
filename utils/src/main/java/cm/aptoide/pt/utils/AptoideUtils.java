@@ -19,7 +19,6 @@ import android.content.pm.PermissionInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -78,7 +77,6 @@ import java.util.UnknownFormatConversionException;
 import java.util.regex.Pattern;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Observable;
@@ -1523,53 +1521,6 @@ public class AptoideUtils {
       }
 
       return originalUrl;
-    }
-
-    public static List<ImageErrors> checkIconSizeProperties(String avatarPath, int minHeight,
-        int maxHeight, int minWidth, int maxWidth, int maxImageSize) {
-      ImageInfo imageInfo = getImageInfo(avatarPath);
-      List<ImageErrors> errors = new LinkedList<>();
-      if (imageInfo == null) {
-        errors.add(ImageErrors.ERROR_DECODING);
-      } else {
-        if (imageInfo.getHeight() < minHeight) {
-          errors.add(ImageErrors.MIN_HEIGHT);
-        }
-        if (imageInfo.getWidth() < minWidth) {
-          errors.add(ImageErrors.MIN_WIDTH);
-        }
-        if (imageInfo.getHeight() > maxHeight) {
-          errors.add(ImageErrors.MAX_HEIGHT);
-        }
-        if (imageInfo.getWidth() > maxWidth) {
-          errors.add(ImageErrors.MAX_WIDTH);
-        }
-        if (imageInfo.getSize() > maxImageSize) {
-          errors.add(ImageErrors.MAX_IMAGE_SIZE);
-        }
-      }
-      return errors;
-    }
-
-    static ImageInfo getImageInfo(String imagePath) {
-      ImageInfo imageInfo = null;
-      Bitmap image = BitmapFactory.decodeFile(imagePath);
-      if (image != null) {
-        imageInfo = new ImageInfo();
-        imageInfo.setWidth(image.getWidth());
-        imageInfo.setHeight(image.getHeight());
-        imageInfo.setSize(new File(imagePath).length());
-      }
-      return imageInfo;
-    }
-
-    public enum ImageErrors {
-      ERROR_DECODING, MIN_HEIGHT, MAX_HEIGHT, MIN_WIDTH, MAX_WIDTH, MAX_IMAGE_SIZE
-    }
-
-    @Data static class ImageInfo {
-      int height, width;
-      long size;
     }
   }
 

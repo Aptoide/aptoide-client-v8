@@ -8,6 +8,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,7 +29,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.StoreBodyInterceptor;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
-import cm.aptoide.pt.v8engine.view.account.PictureLoaderFragment;
+import cm.aptoide.pt.v8engine.view.account.ImageLoaderFragment;
 import cm.aptoide.pt.v8engine.view.custom.DividerItemDecoration;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,7 +41,7 @@ import org.parceler.Parcels;
 import retrofit2.Converter;
 import rx.Observable;
 
-public class ManageStoreFragment extends PictureLoaderFragment
+public class ManageStoreFragment extends ImageLoaderFragment
     implements ManageStoreView, ImageSourceSelectionDialogFragment.ImageSourceSelectionHandler {
 
   private static final String TAG = ManageStoreFragment.class.getName();
@@ -92,9 +93,18 @@ public class ManageStoreFragment extends PictureLoaderFragment
     dialogFragment.show(getChildFragmentManager(), "imageSourceChooser");
   }
 
+  @Override public void navigateHome() {
+    getFragmentNavigator().navigateToHomeCleaningBackStack();
+  }
+
+  @Override public void navigateBack() {
+    getFragmentNavigator().popBackStack();
+  }
+
   private ManageStoreViewModel updateAndGetStoreModel() {
-    currentModel =
-        ManageStoreViewModel.from(currentModel, storeName.toString(), storeDescription.toString());
+    currentModel = ManageStoreViewModel.from(currentModel, storeName.getText()
+        .toString(), storeDescription.getText()
+        .toString());
     currentModel.setStoreThemeName(themeSelectorAdapter.getSelectedThemeName());
     return currentModel;
   }
@@ -133,16 +143,13 @@ public class ManageStoreFragment extends PictureLoaderFragment
     attachPresenter(buildPresenter(engine, currentModel, goToHome), null);
   }
 
-  @Override protected boolean hasToolbar() {
-    return true;
-  }
-
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
     super.setupToolbarDetails(toolbar);
     toolbar.setTitle(getViewTitle(currentModel));
   }
 
   @Override public void bindViews(@Nullable View view) {
+    super.bindViews(view);
     header = (TextView) view.findViewById(R.id.create_store_header);
     chooseStoreNameTitle = (TextView) view.findViewById(R.id.create_store_choose_name_title);
     selectStoreImageButton = view.findViewById(R.id.create_store_image_action);
@@ -155,8 +162,8 @@ public class ManageStoreFragment extends PictureLoaderFragment
   }
 
   @Override public void loadExtras(@Nullable Bundle args) {
+    super.loadExtras(args);
     if (args != null) {
-      super.loadExtras(args);
       try {
         currentModel = Parcels.unwrap(args.getParcelable(EXTRA_STORE_MODEL));
       } catch (NullPointerException ex) {
@@ -210,7 +217,11 @@ public class ManageStoreFragment extends PictureLoaderFragment
       storeName.setVisibility(View.GONE);
       storeDescription.setVisibility(View.VISIBLE);
       storeDescription.setText(storeModel.getStoreDescription());
-      loadImage(Uri.parse(storeModel.getStoreImagePath()));
+      final String storeImagePath = storeModel.getStoreImagePath();
+      if (TextUtils.isEmpty(storeImagePath)) {
+        ImageLoader.with(getActivity())
+            .loadUsingCircleTransform(storeImagePath, storeImage);
+      }
       saveDataButton.setText(R.string.save_edit_store);
       cancelChangesButton.setText(R.string.cancel);
     }

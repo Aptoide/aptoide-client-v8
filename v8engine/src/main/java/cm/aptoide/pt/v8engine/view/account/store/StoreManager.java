@@ -12,7 +12,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
 
-class StoreManager {
+public class StoreManager {
 
   private final AptoideAccountManager accountManager;
   private final OkHttpClient httpClient;
@@ -20,7 +20,7 @@ class StoreManager {
   private final StoreBodyInterceptor bodyInterceptor;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
 
-  public StoreManager(AptoideAccountManager accountManager, OkHttpClient httpClient,
+  StoreManager(AptoideAccountManager accountManager, OkHttpClient httpClient,
       Converter.Factory converterFactory, StoreBodyInterceptor bodyInterceptor,
       BodyInterceptor<BaseBody> bodyInterceptorV3) {
 
@@ -33,7 +33,7 @@ class StoreManager {
 
   public Completable createOrUpdate(long storeId, String storeName, String storeDescription,
       String storeImage, boolean hasNewAvatar, String storeThemeName, boolean storeExists) {
-    return Completable.fromCallable(() -> {
+    return Completable.defer(() -> {
       if (storeExists) {
         return updateStore(storeId, storeName, storeDescription, storeImage, hasNewAvatar,
             storeThemeName);
@@ -43,6 +43,14 @@ class StoreManager {
     });
   }
 
+  /**
+   * To create a store we need to call WS CheckUserCredentials so we can associate a
+   * user to a newly created store.
+   *
+   * Then, if we have more data we either use a SetStore with multi-part request if we have
+   * a store image, or a SetStore without image. This is the edit store use case {@link
+   * #updateStore}.
+   */
   private Completable createStore(long storeId, String storeName, String storeDescription,
       String storeImage, boolean hasNewAvatar, String storeThemeName) {
     return accountManager.accountStatus()
@@ -66,13 +74,19 @@ class StoreManager {
     return !TextUtils.isEmpty(storeDescription) || (hasNewAvatar && !TextUtils.isEmpty(storeImage));
   }
 
+  /**
+   * If we have more data we either use a SetStore with multi-part request if we have
+   * a store image, or a SetStore without image.
+   */
   private Completable updateStore(long storeId, String storeName, String storeDescription,
       String storeImage, boolean hasNewAvatar, String storeThemeName) {
-    if (hasNewAvatar) {
-      return updateStoreWithAvatar(storeId, storeName, storeDescription, storeImage,
-          storeThemeName);
-    }
-    return updateStoreWithoutAvatar(storeId, storeDescription, storeThemeName);
+    return Completable.defer(() -> {
+      if (hasNewAvatar) {
+        return updateStoreWithAvatar(storeId, storeName, storeDescription, storeImage,
+            storeThemeName);
+      }
+      return updateStoreWithoutAvatar(storeId, storeDescription, storeThemeName);
+    });
   }
 
   private Completable updateStoreWithoutAvatar(long storeId, String storeDescription,

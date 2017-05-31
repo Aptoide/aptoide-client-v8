@@ -1,6 +1,8 @@
 package cm.aptoide.pt.v8engine.view.account.store;
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,6 +65,12 @@ public class ImageSourceSelectionDialogFragment extends RxDialogFragment {
   @Override public void onDestroy() {
     sourceSelectionHandler = null;
     super.onDestroy();
+  }
+
+  @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
+    Dialog dialog = super.onCreateDialog(savedInstanceState);
+    dialog.setTitle(R.string.upload_dialog_title);
+    return dialog;
   }
 
   @Nullable @Override

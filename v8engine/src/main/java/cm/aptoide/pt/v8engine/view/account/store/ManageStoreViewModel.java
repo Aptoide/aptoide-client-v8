@@ -43,9 +43,16 @@ import org.parceler.Parcel;
       storeDescription = otherStoreModel.getStoreDescription();
     }
 
-    return new ManageStoreViewModel(otherStoreModel.getStoreId(),
-        otherStoreModel.getStoreThemeName(), storeName, storeDescription,
-        otherStoreModel.getStoreImagePath());
+    ManageStoreViewModel newModel =
+        new ManageStoreViewModel(otherStoreModel.getStoreId(), otherStoreModel.getStoreThemeName(),
+            storeName, storeDescription, otherStoreModel.getStoreImagePath());
+
+    // if previous model had a new image, set it in new model
+    if (otherStoreModel.hasNewAvatar()) {
+      newModel.setStoreImagePath(otherStoreModel.getStoreImagePath());
+    }
+
+    return newModel;
   }
 
   public String getStoreName() {

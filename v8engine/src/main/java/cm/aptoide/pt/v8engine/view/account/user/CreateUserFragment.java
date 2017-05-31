@@ -1,9 +1,7 @@
 package cm.aptoide.pt.v8engine.view.account.user;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,7 +15,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -28,7 +25,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
 import cm.aptoide.pt.v8engine.view.account.AccountErrorMapper;
-import cm.aptoide.pt.v8engine.view.account.PictureLoaderFragment;
+import cm.aptoide.pt.v8engine.view.account.ImageLoaderFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import com.jakewharton.rxbinding.view.RxView;
 import java.net.SocketTimeoutException;
@@ -41,7 +38,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
 // TODO
 // create presenter and separate logic code from view
-public class CreateUserFragment extends PictureLoaderFragment implements ManageUserView {
+public class CreateUserFragment extends ImageLoaderFragment implements ManageUserView {
 
   public static final String FROM_MY_ACCOUNT = "My Account";
   public static final String USER_NAME = "userName";
@@ -170,7 +167,7 @@ public class CreateUserFragment extends PictureLoaderFragment implements ManageU
     super.setupViews();
 
     selectUserImageClick().compose(bindUntilEvent(LifecycleEvent.DESTROY))
-        .subscribe(__ -> chooseAvatarSource());
+        .subscribe(__ -> chooseImageSource());
 
     final Completable dismissProgressDialogCompletable =
         Completable.fromAction(() -> dismissProgressDialog());
@@ -338,25 +335,5 @@ public class CreateUserFragment extends PictureLoaderFragment implements ManageU
 
   private boolean isAvatarSelected() {
     return !TextUtils.isEmpty(userPicturePath);
-  }
-
-  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    Uri avatarUrl = null;
-    final Context applicationContext = getActivity().getApplicationContext();
-
-    if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-      avatarUrl = getFileUriFromFileName(photoFileName);
-    }
-
-    if (requestCode == GALLERY_CODE && resultCode == Activity.RESULT_OK && data != null) {
-      avatarUrl = data.getData();
-    }
-
-    if (avatarUrl != null && !TextUtils.isEmpty(avatarUrl.toString())) {
-      userPicturePath = getMediaStoragePath(avatarUrl, applicationContext);
-      checkAvatarRequirements(userPicturePath, avatarUrl);
-    } else {
-      Logger.w(TAG, "URI for content is null or empty");
-    }
   }
 }

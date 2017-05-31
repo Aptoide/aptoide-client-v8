@@ -46,7 +46,7 @@ public class ThemeSelectorViewAdapter
   }
 
   public Observable<StoreTheme> storeThemeSelection() {
-    return storeThemePublishRelay;
+    return storeThemePublishRelay.doOnNext(storeTheme -> selectTheme(storeTheme.getThemeName()));
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

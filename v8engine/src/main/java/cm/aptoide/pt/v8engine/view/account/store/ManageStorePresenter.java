@@ -3,7 +3,9 @@ package cm.aptoide.pt.v8engine.view.account.store;
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
+import cm.aptoide.pt.v8engine.presenter.View;
 import rx.Completable;
+import rx.Observable;
 
 public class ManageStorePresenter implements Presenter {
 
@@ -20,6 +22,20 @@ public class ManageStorePresenter implements Presenter {
 
   @Override public void present() {
 
+    Observable<Void> handleSaveDataClick = view.saveDataClick()
+        .flatMap(storeModel -> handleSaveClick(storeModel).toObservable());
+
+    Observable<Void> handleCancelClick = view.cancelClick()
+        .flatMap(__ -> handleCancelClick().toObservable());
+
+    Observable<Void> handleLoadStoreImageClick = view.selectStoreImageClick()
+        .flatMap(__ -> handleSelectStoreImageClick().toObservable());
+
+    view.getLifecycle()
+        .filter(event -> event == View.LifecycleEvent.RESUME)
+        .flatMap(__ -> Observable.merge(handleSaveDataClick, handleCancelClick,
+            handleLoadStoreImageClick))
+        .subscribe();
   }
 
   @Override public void saveState(Bundle state) {
@@ -30,7 +46,7 @@ public class ManageStorePresenter implements Presenter {
     // does nothing
   }
 
-  public Completable handleSaveClick(ManageStoreViewModel storeModel) {
+  private Completable handleSaveClick(ManageStoreViewModel storeModel) {
     return storeManager.createOrUpdate(storeModel.getStoreId(), storeModel.getStoreName(),
         storeModel.getStoreDescription(), storeModel.getStoreImagePath(), storeModel.hasNewAvatar(),
         storeModel.getStoreThemeName(), storeModel.storeExists())
@@ -43,7 +59,17 @@ public class ManageStorePresenter implements Presenter {
         });
   }
 
-  public Completable handleCancelClick() {
-    return Completable.complete();
+  private Completable handleSelectStoreImageClick() {
+    return Completable.fromAction(() -> view.showLoadImageDialog());
+  }
+
+  private Completable handleCancelClick() {
+    return Completable.fromAction(() -> {
+      if (goBackToHome) {
+        view.navigateHome();
+        return;
+      }
+      view.navigateBack();
+    });
   }
 }
