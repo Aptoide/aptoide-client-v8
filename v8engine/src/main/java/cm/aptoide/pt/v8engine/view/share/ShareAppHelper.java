@@ -52,7 +52,7 @@ public class ShareAppHelper {
   }
 
   public void shareApp(String appName, String packageName, String wUrl, String iconPath,
-      String origin) {
+      float averageRating, String origin) {
 
     String title = activity.getString(R.string.share);
 
@@ -64,7 +64,7 @@ public class ShareAppHelper {
       if (ShareDialogs.ShareResponse.SHARE_EXTERNAL == eResponse) {
         caseDefaultShare(appName, wUrl);
       } else if (ShareDialogs.ShareResponse.SHARE_TIMELINE == eResponse) {
-        caseAppsTimelineShare(appName, packageName, iconPath);
+        caseAppsTimelineShare(appName, packageName, iconPath, averageRating);
       } else if (ShareDialogs.ShareResponse.SHARE_SPOT_AND_SHARE == eResponse) {
         caseSpotAndShareShare(appName, packageName, origin);
       }
@@ -76,7 +76,7 @@ public class ShareAppHelper {
         activity.getString(R.string.share))
         .subscribe(shareResponse -> {
           if (ShareDialogs.ShareResponse.SHARE_TIMELINE == shareResponse) {
-            caseAppsTimelineShare(appName, packageName, iconPath);
+            caseAppsTimelineShare(appName, packageName, iconPath, 0);
           } else if (ShareDialogs.ShareResponse.SHARE_SPOT_AND_SHARE == shareResponse) {
             caseSpotAndShareShare(appName, packageName, origin);
           }
@@ -95,7 +95,8 @@ public class ShareAppHelper {
     }
   }
 
-  private void caseAppsTimelineShare(String appName, String packageName, String iconPath) {
+  private void caseAppsTimelineShare(String appName, String packageName, String iconPath,
+      float averageRating) {
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> accountNavigator.navigateToAccountView(
@@ -105,14 +106,14 @@ public class ShareAppHelper {
     if (Application.getConfiguration()
         .isCreateStoreAndSetUserPrivacyAvailable()) {
       SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(accountManager, false,
-          SharePreviewDialog.SharePreviewOpenMode.SHARE);
+          SharePreviewDialog.SharePreviewOpenMode.SHARE, timelineAnalytics);
       AlertDialog.Builder alertDialog =
           sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(activity, appName,
-              iconPath);
+              iconPath, averageRating);
       SocialRepository socialRepository =
           RepositoryFactory.getSocialRepository(activity, timelineAnalytics);
 
-      sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", activity,
+      sharePreviewDialog.showShareCardPreviewDialog(packageName, null, "app", activity,
           sharePreviewDialog, alertDialog, socialRepository);
     }
   }

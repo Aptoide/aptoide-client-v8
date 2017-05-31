@@ -53,7 +53,7 @@ import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigatorActivity;
 import cm.aptoide.pt.v8engine.view.store.StoreTabFragmentChooser;
 import cm.aptoide.pt.v8engine.view.store.home.HomeFragment;
-import cm.aptoide.pt.v8engine.view.timeline.navigation.AppsTimelineTabNavigation;
+import cm.aptoide.pt.v8engine.timeline.view.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.v8engine.view.wizard.WizardFragment;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;

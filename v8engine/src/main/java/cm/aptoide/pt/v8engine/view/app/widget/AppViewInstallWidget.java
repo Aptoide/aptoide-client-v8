@@ -411,11 +411,15 @@ import rx.android.schedulers.AndroidSchedulers;
                   sharePreviewDialog.getPreviewDialogBuilder(getContext());
 
               sharePreviewDialog.showShareCardPreviewDialog(displayable.getPojo()
-                      .getNodes()
-                      .getMeta()
-                      .getData()
-                      .getPackageName(), "install", context, sharePreviewDialog, alertDialog,
-                  socialRepository);
+                  .getNodes()
+                  .getMeta()
+                  .getData()
+                  .getPackageName(), displayable.getPojo()
+                  .getNodes()
+                  .getMeta()
+                  .getData()
+                  .getStore()
+                  .getId(), "install", context, sharePreviewDialog, alertDialog, socialRepository);
             }
             ShowMessage.asSnack(v, installOrUpgradeMsg);
           }, err -> {

@@ -44,10 +44,10 @@ import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.view.AppsTimelineFragment;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.fragment.BasePagerToolbarFragment;
-import cm.aptoide.pt.v8engine.view.timeline.AppsTimelineFragment;
 import com.astuetz.PagerSlidingTabStrip;
 import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -192,9 +192,14 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override public void onDestroyView() {
-    if (storeTheme != null && !storeContext.equals(StoreContext.meta)) {
-      ThemeUtils.setAptoideTheme(getActivity());
-    }
+
+    // reset to default theme in the toolbar
+    // TODO re-do this ThemeUtils methods and avoid loading resources using
+    // execution-time generated ids for the desired resource
+    ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(V8Engine.getConfiguration()
+        .getDefaultTheme()));
+    ThemeUtils.setAptoideTheme(getActivity());
+
     if (pagerSlidingTabStrip != null) {
       pagerSlidingTabStrip.setOnTabReselectedListener(null);
       pagerSlidingTabStrip = null;

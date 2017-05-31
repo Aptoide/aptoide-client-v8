@@ -212,7 +212,7 @@
     </receiver>
 
 
-    <receiver android:name=".timeline.link.CustomTabNativeReceiver"/>
+    <receiver android:name=".link.CustomTabNativeReceiver"/>
 
     <receiver
         android:name=".download.ScheduleDownloadsNetworkReceiver"

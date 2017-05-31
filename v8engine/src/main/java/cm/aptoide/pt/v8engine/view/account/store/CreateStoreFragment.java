@@ -145,10 +145,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
   }
 
   @Override public void loadImage(Uri imagePath) {
-    if (imagePath != null && !TextUtils.isEmpty(imagePath.toString())) {
-      ImageLoader.with(getActivity())
-          .loadWithCircleTransform(imagePath, storeAvatar, false);
-    }
+    ImageLoader.with(getActivity())
+        .loadWithCircleTransform(imagePath, storeAvatar, false);
   }
 
   @Override public void showIconPropertiesError(String errors) {
@@ -223,7 +221,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
       storeName.setVisibility(View.GONE);
       storeDescription.setVisibility(View.VISIBLE);
       storeDescription.setText(storeModel.getStoreDescription());
-      loadImage(storeModel.getStoreImagePath());
+      loadImage(Uri.parse(storeModel.getStoreAvatarPath()));
       createStoreBtn.setText(R.string.save_edit_store);
       skipBtn.setText(R.string.cancel);
     }

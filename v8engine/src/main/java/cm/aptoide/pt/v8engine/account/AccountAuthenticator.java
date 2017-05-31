@@ -17,8 +17,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.view.MainActivity;
-import cm.aptoide.pt.v8engine.view.account.LoginSignUpFragment;
+import cm.aptoide.pt.v8engine.view.account.LoginActivity;
 
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 
@@ -171,9 +170,7 @@ class AccountAuthenticator extends AbstractAccountAuthenticator {
 
   private Intent createAuthActivityIntent(AccountAuthenticatorResponse response, String accountType,
       String authTokenType, Bundle options) {
-    Intent intent = new Intent(Application.getContext(), MainActivity.class);
-    intent.putExtra(MainActivity.FRAGMENT, LoginSignUpFragment.class.getName());
-    // FIXME: 14/2/2017 sithengineer add this funtionality in main Activity
+    Intent intent = new Intent(Application.getContext(), LoginActivity.class);
     intent.putExtra(ARG_ACCOUNT_TYPE, accountType);
     intent.putExtra(ARG_AUTH_TYPE, authTokenType);
     intent.putExtra(ARG_IS_ADDING_NEW_ACCOUNT, true);

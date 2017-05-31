@@ -100,38 +100,46 @@ import cm.aptoide.pt.v8engine.view.store.recommended.RecommendedStoreDisplayable
 import cm.aptoide.pt.v8engine.view.store.recommended.RecommendedStoreWidget;
 import cm.aptoide.pt.v8engine.view.store.subscribed.SubscribedStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.store.subscribed.SubscribedStoreWidget;
-import cm.aptoide.pt.v8engine.view.timeline.FeatureDisplayable;
-import cm.aptoide.pt.v8engine.view.timeline.displayable.AppUpdateDisplayable;
-import cm.aptoide.pt.v8engine.view.timeline.displayable.ArticleDisplayable;
-import cm.aptoide.pt.v8engine.view.timeline.displayable.FollowStoreDisplayable;
-import cm.aptoide.pt.v8engine.view.timeline.displayable.FollowUserDisplayable;
-import cm.aptoide.pt.v8engine.view.timeline.displayable.RecommendationDisplayable;
-import cm.aptoide.pt.v8engine.view.timeline.displayable.SimilarDisplayable;
-import cm.aptoide.pt.v8engine.view.timeline.displayable.SocialArticleDisplayable;
-import cm.aptoide.pt.v8engine.view.timeline.displayable.SocialInstallDisplayable;
-import cm.aptoide.pt.v8engine.view.timeline.displayable.SocialRecommendationDisplayable;
-import cm.aptoide.pt.v8engine.view.timeline.displayable.SocialStoreLatestAppsDisplayable;
-import cm.aptoide.pt.v8engine.view.timeline.displayable.SocialVideoDisplayable;
-import cm.aptoide.pt.v8engine.view.timeline.displayable.StoreLatestAppsDisplayable;
-import cm.aptoide.pt.v8engine.view.timeline.displayable.TimeLineStatsDisplayable;
-import cm.aptoide.pt.v8engine.view.timeline.displayable.TimeLineStatsWidget;
-import cm.aptoide.pt.v8engine.view.timeline.displayable.VideoDisplayable;
-import cm.aptoide.pt.v8engine.view.timeline.follow.FollowStoreWidget;
-import cm.aptoide.pt.v8engine.view.timeline.follow.FollowUserWidget;
-import cm.aptoide.pt.v8engine.view.timeline.login.TimelineLoginDisplayable;
-import cm.aptoide.pt.v8engine.view.timeline.login.TimelineLoginWidget;
-import cm.aptoide.pt.v8engine.view.timeline.widget.AppUpdateWidget;
-import cm.aptoide.pt.v8engine.view.timeline.widget.ArticleWidget;
-import cm.aptoide.pt.v8engine.view.timeline.widget.FeatureWidget;
-import cm.aptoide.pt.v8engine.view.timeline.widget.RecommendationWidget;
-import cm.aptoide.pt.v8engine.view.timeline.widget.SimilarWidget;
-import cm.aptoide.pt.v8engine.view.timeline.widget.SocialArticleWidget;
-import cm.aptoide.pt.v8engine.view.timeline.widget.SocialInstallWidget;
-import cm.aptoide.pt.v8engine.view.timeline.widget.SocialRecommendationWidget;
-import cm.aptoide.pt.v8engine.view.timeline.widget.SocialStoreLatestAppsWidget;
-import cm.aptoide.pt.v8engine.view.timeline.widget.SocialVideoWidget;
-import cm.aptoide.pt.v8engine.view.timeline.widget.StoreLatestAppsWidget;
-import cm.aptoide.pt.v8engine.view.timeline.widget.VideoWidget;
+import cm.aptoide.pt.v8engine.timeline.view.FeatureDisplayable;
+import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialArticleDisplayable;
+import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialInstallDisplayable;
+import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialStoreLatestAppsDisplayable;
+import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialVideoDisplayable;
+import cm.aptoide.pt.v8engine.timeline.view.displayable.AppUpdateDisplayable;
+import cm.aptoide.pt.v8engine.timeline.view.displayable.ArticleDisplayable;
+import cm.aptoide.pt.v8engine.timeline.view.displayable.FollowStoreDisplayable;
+import cm.aptoide.pt.v8engine.timeline.view.displayable.FollowUserDisplayable;
+import cm.aptoide.pt.v8engine.timeline.view.displayable.PopularAppDisplayable;
+import cm.aptoide.pt.v8engine.timeline.view.displayable.RecommendationDisplayable;
+import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialArticleDisplayable;
+import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialInstallDisplayable;
+import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialRecommendationDisplayable;
+import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialStoreLatestAppsDisplayable;
+import cm.aptoide.pt.v8engine.timeline.view.displayable.SocialVideoDisplayable;
+import cm.aptoide.pt.v8engine.timeline.view.displayable.StoreLatestAppsDisplayable;
+import cm.aptoide.pt.v8engine.timeline.view.displayable.TimeLineStatsDisplayable;
+import cm.aptoide.pt.v8engine.timeline.view.displayable.TimeLineStatsWidget;
+import cm.aptoide.pt.v8engine.timeline.view.displayable.VideoDisplayable;
+import cm.aptoide.pt.v8engine.timeline.view.follow.FollowStoreWidget;
+import cm.aptoide.pt.v8engine.timeline.view.follow.FollowUserWidget;
+import cm.aptoide.pt.v8engine.timeline.view.login.TimelineLoginDisplayable;
+import cm.aptoide.pt.v8engine.timeline.view.login.TimelineLoginWidget;
+import cm.aptoide.pt.v8engine.timeline.view.widget.AggregatedSocialArticleWidget;
+import cm.aptoide.pt.v8engine.timeline.view.widget.AggregatedSocialInstallWidget;
+import cm.aptoide.pt.v8engine.timeline.view.widget.AggregatedSocialStoreLatestAppsWidget;
+import cm.aptoide.pt.v8engine.timeline.view.widget.AggregatedSocialVideoWidget;
+import cm.aptoide.pt.v8engine.timeline.view.widget.AppUpdateWidget;
+import cm.aptoide.pt.v8engine.timeline.view.widget.ArticleWidget;
+import cm.aptoide.pt.v8engine.timeline.view.widget.FeatureWidget;
+import cm.aptoide.pt.v8engine.timeline.view.widget.PopularAppWidget;
+import cm.aptoide.pt.v8engine.timeline.view.widget.RecommendationWidget;
+import cm.aptoide.pt.v8engine.timeline.view.widget.SocialArticleWidget;
+import cm.aptoide.pt.v8engine.timeline.view.widget.SocialInstallWidget;
+import cm.aptoide.pt.v8engine.timeline.view.widget.SocialRecommendationWidget;
+import cm.aptoide.pt.v8engine.timeline.view.widget.SocialStoreLatestAppsWidget;
+import cm.aptoide.pt.v8engine.timeline.view.widget.SocialVideoWidget;
+import cm.aptoide.pt.v8engine.timeline.view.widget.StoreLatestAppsWidget;
+import cm.aptoide.pt.v8engine.timeline.view.widget.VideoWidget;
 import cm.aptoide.pt.v8engine.view.updates.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.updates.UpdateWidget;
 import cm.aptoide.pt.v8engine.view.updates.UpdatesHeaderDisplayable;
@@ -244,8 +252,6 @@ public class DisplayableWidgetMapping {
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(VideoWidget.class, VideoDisplayable.class));
     displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(SimilarWidget.class, SimilarDisplayable.class));
-    displayableWidgetMappings.add(
         new DisplayableWidgetMapping(RecommendationWidget.class, RecommendationDisplayable.class));
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(SocialArticleWidget.class, SocialArticleDisplayable.class));
@@ -257,6 +263,17 @@ public class DisplayableWidgetMapping {
         new DisplayableWidgetMapping(SocialInstallWidget.class, SocialInstallDisplayable.class));
     displayableWidgetMappings.add(new DisplayableWidgetMapping(SocialRecommendationWidget.class,
         SocialRecommendationDisplayable.class));
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping(PopularAppWidget.class, PopularAppDisplayable.class));
+    displayableWidgetMappings.add(new DisplayableWidgetMapping(AggregatedSocialInstallWidget.class,
+        AggregatedSocialInstallDisplayable.class));
+    displayableWidgetMappings.add(new DisplayableWidgetMapping(AggregatedSocialArticleWidget.class,
+        AggregatedSocialArticleDisplayable.class));
+    displayableWidgetMappings.add(new DisplayableWidgetMapping(AggregatedSocialVideoWidget.class,
+        AggregatedSocialVideoDisplayable.class));
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping(AggregatedSocialStoreLatestAppsWidget.class,
+            AggregatedSocialStoreLatestAppsDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(RollbackWidget.class, RollbackDisplayable.class));

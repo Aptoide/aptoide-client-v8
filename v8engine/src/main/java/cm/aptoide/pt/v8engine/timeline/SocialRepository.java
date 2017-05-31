@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.timeline;
 
-import android.content.Context;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccount;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -11,9 +10,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.ShareCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ShareInstallCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
-import cm.aptoide.pt.v8engine.view.timeline.ShareCardCallback;
+import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
@@ -40,10 +38,9 @@ public class SocialRepository {
     this.timelineAnalytics = timelineAnalytics;
   }
 
-  public void share(TimelineCard timelineCard, Context context, boolean privacy,
-      ShareCardCallback shareCardCallback, TimelineSocialActionData timelineSocialActionData) {
+  public void share(String cardId, boolean privacy, ShareCardCallback shareCardCallback, TimelineSocialActionData timelineSocialActionData) {
     //todo(pribeiro): check if timelineSocialActionData is null
-    ShareCardRequest.of(timelineCard, bodyInterceptor, httpClient, converterFactory)
+    ShareCardRequest.of(cardId, bodyInterceptor, httpClient, converterFactory)
         .observe()
         .toSingle()
         .flatMapCompletable(response -> {
@@ -66,9 +63,47 @@ public class SocialRepository {
     return privateAccess ? Account.Access.PRIVATE : Account.Access.PUBLIC;
   }
 
-  public void share(TimelineCard timelineCard, Context context, ShareCardCallback shareCardCallback,
-      TimelineSocialActionData timelineSocialActionData) {
-    ShareCardRequest.of(timelineCard, bodyInterceptor, httpClient, converterFactory)
+  public void share(String cardId, ShareCardCallback shareCardCallback, TimelineSocialActionData timelineSocialActionData) {
+    ShareCardRequest.of(cardId, bodyInterceptor, httpClient, converterFactory)
+        .observe()
+        .toSingle()
+        .flatMapCompletable(response -> {
+          if (response.isOk()) {
+            if (shareCardCallback != null) {
+              shareCardCallback.onCardShared(response.getData()
+                  .getCardUid());
+            }
+            return Completable.complete();
+          }
+          return Completable.error(
+              new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
+        })
+        .subscribe(() -> {
+        }, throwable -> throwable.printStackTrace());
+  }
+
+  public void share(String cardId, long storeId, boolean privacy,
+      ShareCardCallback shareCardCallback, TimelineSocialActionData timelineSocialActionData) {
+    ShareCardRequest.of(cardId, storeId, httpClient, converterFactory, bodyInterceptor)
+        .observe()
+        .toSingle()
+        .flatMapCompletable(response -> {
+          if (response.isOk()) {
+            if (shareCardCallback != null) {
+              shareCardCallback.onCardShared(response.getData()
+                  .getCardUid());
+            }
+            return accountManager.updateAccount(getAccountAccess(privacy));
+          }
+          return Completable.error(
+              new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
+        })
+        .subscribe(() -> {
+        }, throwable -> throwable.printStackTrace());
+  }
+
+  public void share(String cardId, long storeId, ShareCardCallback shareCardCallback, TimelineSocialActionData timelineSocialActionData) {
+    ShareCardRequest.of(cardId, storeId, httpClient, converterFactory, bodyInterceptor)
         .observe()
         .toSingle()
         .flatMapCompletable(response -> {
@@ -100,8 +135,8 @@ public class SocialRepository {
         }, throwable -> throwable.printStackTrace());
   }
 
-  public void share(String packageName, String shareType, boolean privacy) {
-    ShareInstallCardRequest.of(packageName, shareType, bodyInterceptor, httpClient,
+  public void share(String packageName, Long storeId, String shareType, boolean privacy) {
+    ShareInstallCardRequest.of(packageName, storeId, shareType, bodyInterceptor, httpClient,
         converterFactory)
         .observe()
         .toSingle()
@@ -116,9 +151,9 @@ public class SocialRepository {
         }, throwable -> throwable.printStackTrace());
   }
 
-  public void share(String packageName, String shareType) {
+  public void share(String packageName, Long storeId, String shareType) {
     //todo(pribeiro): check if timelineSocialActionData is null
-    ShareInstallCardRequest.of(packageName, shareType, bodyInterceptor, httpClient,
+    ShareInstallCardRequest.of(packageName, storeId, shareType, bodyInterceptor, httpClient,
         converterFactory)
         .observe()
         .toSingle()
