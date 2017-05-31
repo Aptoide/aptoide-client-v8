@@ -1,15 +1,21 @@
 package cm.aptoide.pt.v8engine.view.account.store;
 
 import android.os.Bundle;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import rx.Completable;
 
 public class ManageStorePresenter implements Presenter {
 
+  private final ManageStoreView view;
   private final boolean goBackToHome;
+  private final StoreManager storeManager;
 
-  public ManageStorePresenter(ManageStoreView view, boolean goBackToHome) {
+  public ManageStorePresenter(ManageStoreView view, boolean goBackToHome,
+      StoreManager storeManager) {
+    this.view = view;
     this.goBackToHome = goBackToHome;
+    this.storeManager = storeManager;
   }
 
   @Override public void present() {
@@ -24,12 +30,20 @@ public class ManageStorePresenter implements Presenter {
     // does nothing
   }
 
-  public Completable handleSaveClick(ManageStoreModel storeModel){
-    return new UpdateStoreUseCase(storeModel).execute().toCompletable();
+  public Completable handleSaveClick(ManageStoreViewModel storeModel) {
+    return storeManager.createOrUpdate(storeModel.getStoreId(), storeModel.getStoreName(),
+        storeModel.getStoreDescription(), storeModel.getStoreImagePath(), storeModel.hasNewAvatar(),
+        storeModel.getStoreThemeName(), storeModel.storeExists())
+        .onErrorResumeNext(err -> {
+          // todo
+          // handle errors here
+          CrashReport.getInstance()
+              .log(err);
+          return Completable.complete();
+        });
   }
 
-  public Completable handleCancelClick(){
-    return  Completable.complete();
+  public Completable handleCancelClick() {
+    return Completable.complete();
   }
-
 }

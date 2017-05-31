@@ -60,7 +60,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
   public static final String ERROR_CODE_2 = "WOP-2";
   public static final String ERROR_CODE_3 = "WOP-3";
   public static final String ERROR_API_1 = "API-1";
-  private static final String STORE_MODEL = "store_model";
+  private static final String EXTRA_STORE_MODEL = "store_model";
+  private static final String EXTRA_GO_HOME = "go_home";
   private ProgressDialog waitDialog;
   private View storeAvatarLayout;
   private ImageView storeAvatar;
@@ -77,18 +78,16 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
   private RequestBodyFactory requestBodyFactory;
 
   private IdsRepository idsRepository;
-  private ManageStoreModel storeModel;
+  private ManageStoreViewModel storeModel;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private boolean goHome;
 
-  public CreateStoreFragment() {
-    super(false, true);
-  }
-
-  public static CreateStoreFragment newInstance(ManageStoreModel storeModel) {
+  public static CreateStoreFragment newInstance(ManageStoreViewModel storeModel, boolean goHome) {
     CreateStoreFragment fragment = new CreateStoreFragment();
     Bundle args = new Bundle();
-    args.putParcelable(STORE_MODEL, Parcels.wrap(storeModel));
+    args.putParcelable(EXTRA_STORE_MODEL, Parcels.wrap(storeModel));
+    args.putBoolean(EXTRA_GO_HOME, goHome);
     fragment.setArguments(args);
     return fragment;
   }
@@ -110,15 +109,17 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    if (savedInstanceState != null && savedInstanceState.containsKey(STORE_MODEL)) {
-      storeModel = Parcels.unwrap(savedInstanceState.getParcelable(STORE_MODEL));
+    if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_STORE_MODEL)) {
+      storeModel = Parcels.unwrap(savedInstanceState.getParcelable(EXTRA_STORE_MODEL));
     }
 
     if (storeModel == null) {
-      storeModel = new ManageStoreModel(true);
+      storeModel = new ManageStoreViewModel();
     }
 
-    loadImage(storeModel.getStoreAvatarPath());
+    goHome = savedInstanceState == null || savedInstanceState.getBoolean(EXTRA_GO_HOME, true);
+
+    loadImage(storeModel.getStoreImagePath());
 
     setupViewsDefaultValues(view);
   }
@@ -130,7 +131,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
 
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
-    storeModel = Parcels.unwrap(args.getParcelable(STORE_MODEL));
+    storeModel = Parcels.unwrap(args.getParcelable(EXTRA_STORE_MODEL));
     storeThemeSelector = new StoreThemeSelector(storeModel);
 
     if (TextUtils.isEmpty(storeModel.getStoreThemeName())) {
@@ -140,7 +141,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putParcelable(STORE_MODEL, Parcels.wrap(storeModel));
+    outState.putParcelable(EXTRA_STORE_MODEL, Parcels.wrap(storeModel));
   }
 
   @Override public void loadImage(Uri imagePath) {
@@ -222,7 +223,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
       storeName.setVisibility(View.GONE);
       storeDescription.setVisibility(View.VISIBLE);
       storeDescription.setText(storeModel.getStoreDescription());
-      loadImage(storeModel.getStoreAvatarPath());
+      loadImage(storeModel.getStoreImagePath());
       createStoreBtn.setText(R.string.save_edit_store);
       skipBtn.setText(R.string.cancel);
     }
@@ -236,7 +237,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
 
   private Completable sendSkipAnalytics() {
     return Completable.fromAction(
-        () -> Analytics.Account.createStore(!TextUtils.isEmpty(storeModel.getStoreAvatarPath()),
+        () -> Analytics.Account.createStore(!TextUtils.isEmpty(storeModel.getStoreImagePath()),
             Analytics.Account.CreateStoreAction.SKIP));
   }
 
@@ -244,12 +245,18 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
     return RxView.clicks(storeAvatarLayout);
   }
 
-  @Override public Observable<Void> saveDataClick() {
-    return RxView.clicks(createStoreBtn);
+  @Override public Observable<ManageStoreViewModel> saveDataClick() {
+    // FIXME
+    return RxView.clicks(createStoreBtn)
+        .map(__ -> null);
   }
 
   @Override public Observable<Void> cancelClick() {
     return RxView.clicks(skipBtn);
+  }
+
+  @Override public void showLoadImageDialog() {
+
   }
 
   private void setupListeners() {
@@ -279,7 +286,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
           final String storeDescription = this.storeDescription.getText()
               .toString()
               .trim();
-          return Observable.just(ManageStoreModel.from(storeModel, storeName, storeDescription));
+          return Observable.just(ManageStoreViewModel.from(storeModel, storeName, storeDescription));
         })
         .flatMap(storeModel -> {
           final CreateStoreType createStoreType = validateData(storeModel);
@@ -338,7 +345,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
   /**
    * This will not use a multipart request.
    */
-  private Observable<Void> editStore(ManageStoreModel storeModel) {
+  private Observable<Void> editStore(ManageStoreViewModel storeModel) {
 
     return Observable.fromCallable(() -> {
       storeModel.prepareToSendRequest();
@@ -368,7 +375,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
         .map(__ -> null);
   }
 
-  private Observable<Void> editStoreWithMultipartRequest(ManageStoreModel storeModel) {
+  private Observable<Void> editStoreWithMultipartRequest(ManageStoreViewModel storeModel) {
 
     return Observable.fromCallable(() -> {
       storeModel.prepareToSendRequest();
@@ -378,7 +385,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
         .flatMap(__ -> accountManager.accountStatus()
             .first())
         .flatMap(account -> SetStoreRequest.of(account.getAccessToken(), storeModel.getStoreName(),
-            storeModel.getStoreThemeName(), storeModel.getStoreAvatarPath(),
+            storeModel.getStoreThemeName(), storeModel.getStoreImagePath(),
             storeModel.getStoreDescription(), true, storeModel.getStoreId(),
             createStoreInterceptor(storeModel), httpClient, converterFactory)
             .observe())
@@ -406,7 +413,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
         .map(__ -> null);
   }
 
-  private Observable<Void> createStore(@NonNull final ManageStoreModel storeModel,
+  private Observable<Void> createStore(@NonNull final ManageStoreViewModel storeModel,
       @NonNull final CreateStoreType createStoreType) {
     showWaitDialog();
 
@@ -471,7 +478,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
 
   private Completable sendCreateAnalytics() {
     return Completable.fromAction(
-        () -> Analytics.Account.createStore(!TextUtils.isEmpty(storeModel.getStoreAvatarPath()),
+        () -> Analytics.Account.createStore(!TextUtils.isEmpty(storeModel.getStoreImagePath()),
             Analytics.Account.CreateStoreAction.CREATE));
   }
 
@@ -479,7 +486,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
    * This method validates the user data inserted when the create store button is pressed and
    * returns a code for the corresponding create store remote request.
    */
-  private CreateStoreType validateData(@NonNull final ManageStoreModel storeModel) {
+  private CreateStoreType validateData(@NonNull final ManageStoreViewModel storeModel) {
     if (storeModel.storeExists()) {
       if (storeModel.hasStoreDescription() || storeModel.hasThemeName()) {
         if (storeModel.hasStoreAvatar()) {
@@ -505,7 +512,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
   private void navigateToHome() {
     dismissWaitDialog();
 
-    if (storeModel.isGoToHome()) {
+    if (goHome) {
       getFragmentNavigator().navigateToHomeCleaningBackStack();
       return;
     }
@@ -513,7 +520,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
     getFragmentNavigator().back();
   }
 
-  private void updateStoreDataAfterCreateStore(@NonNull final ManageStoreModel storeModel,
+  private void updateStoreDataAfterCreateStore(@NonNull final ManageStoreViewModel storeModel,
       @NonNull final CreateStoreType createStoreType) {
     ShowMessage.asSnack(this, R.string.create_store_store_created);
     if (createStoreType == CreateStoreType.CREATE_STORE_MULTIPART) {
@@ -522,7 +529,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
        */
       storeModel.prepareToSendRequest();
       SetStoreRequest.of(accountManager.getAccessToken(), storeModel.getStoreName(),
-          storeModel.getStoreThemeName(), storeModel.getStoreAvatarPath(),
+          storeModel.getStoreThemeName(), storeModel.getStoreImagePath(),
           createStoreInterceptor(storeModel), httpClient, converterFactory)
           .observe()
           .timeout(90, TimeUnit.SECONDS)
@@ -606,7 +613,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
     return Completable.fromAction(() -> dismissWaitDialog());
   }
 
-  @NonNull private StoreBodyInterceptor createStoreInterceptor(ManageStoreModel storeModel) {
+  @NonNull private StoreBodyInterceptor createStoreInterceptor(ManageStoreViewModel storeModel) {
 
     ObjectMapper serializer = new ObjectMapper();
     serializer.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -630,7 +637,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
 
     try {
       final String filePath = getMediaStoragePath(avatarUrl, applicationContext);
-      storeModel.setStoreAvatarPath(filePath);
+      storeModel.setStoreImagePath(filePath);
       checkAvatarRequirements(filePath, avatarUrl);
     } catch (NullPointerException ex) {
       CrashReport.getInstance()
@@ -658,9 +665,9 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
 
   private static class StoreThemeSelector {
 
-    private final ManageStoreModel storeModel;
+    private final ManageStoreViewModel storeModel;
 
-    public StoreThemeSelector(ManageStoreModel storeModel) {
+    public StoreThemeSelector(ManageStoreViewModel storeModel) {
       this.storeModel = storeModel;
     }
 

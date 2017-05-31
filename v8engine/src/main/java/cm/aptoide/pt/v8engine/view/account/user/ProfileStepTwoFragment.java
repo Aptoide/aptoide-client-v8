@@ -15,8 +15,8 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.view.account.store.CreateStoreFragment;
-import cm.aptoide.pt.v8engine.view.account.store.ManageStoreModel;
+import cm.aptoide.pt.v8engine.view.account.store.ManageStoreFragment;
+import cm.aptoide.pt.v8engine.view.account.store.ManageStoreViewModel;
 import cm.aptoide.pt.v8engine.view.fragment.BaseToolbarFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import com.jakewharton.rxbinding.view.RxView;
@@ -134,6 +134,6 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment {
       fragmentNavigator.navigateToHomeCleaningBackStack();
       return;
     }
-    fragmentNavigator.navigateTo(CreateStoreFragment.newInstance(new ManageStoreModel(true)));
+    fragmentNavigator.navigateTo(ManageStoreFragment.newInstance(new ManageStoreViewModel(), true));
   }
 }

@@ -19,14 +19,14 @@ import rx.Observable;
  */
 public class CreateStoreUseCase {
 
-  private final ManageStoreModel storeModel;
+  private final ManageStoreViewModel storeModel;
   private final AptoideAccountManager accountManager;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final StoreBodyInterceptor bodyInterceptor;
   private BodyInterceptor<BaseBody> bodyInterceptorV3;
 
-  public CreateStoreUseCase(ManageStoreModel storeModel, AptoideAccountManager accountManager,
+  public CreateStoreUseCase(ManageStoreViewModel storeModel, AptoideAccountManager accountManager,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       StoreBodyInterceptor bodyInterceptor, BodyInterceptor<BaseBody> bodyInterceptorV3) {
     this.storeModel = storeModel;

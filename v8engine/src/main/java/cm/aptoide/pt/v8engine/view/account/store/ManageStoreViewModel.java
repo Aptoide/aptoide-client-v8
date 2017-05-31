@@ -3,58 +3,34 @@ package cm.aptoide.pt.v8engine.view.account.store;
 import android.text.TextUtils;
 import org.parceler.Parcel;
 
-@Parcel public class ManageStoreModel {
+@Parcel public class ManageStoreViewModel {
   long storeId;
   String storeName;
   String storeDescription;
-  String storeAvatarPath;
+  String storeImagePath;
   String storeThemeName;
-  boolean goToHome;
   private boolean newAvatar;
 
-  public ManageStoreModel() {
+  public ManageStoreViewModel() {
     this.storeId = -1;
     this.storeName = "";
     this.storeDescription = "";
-    this.storeAvatarPath = "";
+    this.storeImagePath = "";
     this.storeThemeName = "";
-    this.goToHome = true;
     this.newAvatar = false;
   }
 
-  public ManageStoreModel(boolean goToHome) {
-    this.storeId = -1;
-    this.storeName = "";
-    this.storeDescription = "";
-    this.storeAvatarPath = "";
-    this.storeThemeName = "";
-    this.goToHome = goToHome;
-    this.newAvatar = false;
-  }
-
-  public ManageStoreModel(long storeId, boolean goToHome, String storeThemeName, String storeName,
-      String storeDescription, String storeAvatarPath) {
+  public ManageStoreViewModel(long storeId, String storeThemeName, String storeName,
+      String storeDescription, String storeImagePath) {
     this.storeId = storeId;
     this.storeName = storeName;
     this.storeDescription = storeDescription;
-    this.storeAvatarPath = storeAvatarPath;
+    this.storeImagePath = storeImagePath;
     this.storeThemeName = storeThemeName;
-    this.goToHome = goToHome;
     this.newAvatar = false;
   }
 
-  public ManageStoreModel(long storeId, String storeAvatarPath, boolean goToHome,
-      String storeThemeName, String storeName, String storeDescription) {
-    this.storeId = storeId;
-    this.storeName = storeName;
-    this.storeDescription = storeDescription;
-    this.storeAvatarPath = storeAvatarPath;
-    this.storeThemeName = storeThemeName;
-    this.goToHome = goToHome;
-    this.newAvatar = false;
-  }
-
-  public static ManageStoreModel from(ManageStoreModel otherStoreModel, String storeName,
+  public static ManageStoreViewModel from(ManageStoreViewModel otherStoreModel, String storeName,
       String storeDescription) {
 
     // if current store name is empty we use the old one
@@ -67,9 +43,9 @@ import org.parceler.Parcel;
       storeDescription = otherStoreModel.getStoreDescription();
     }
 
-    return new ManageStoreModel(otherStoreModel.getStoreId(), otherStoreModel.isGoToHome(),
+    return new ManageStoreViewModel(otherStoreModel.getStoreId(),
         otherStoreModel.getStoreThemeName(), storeName, storeDescription,
-        otherStoreModel.getStoreAvatarPath());
+        otherStoreModel.getStoreImagePath());
   }
 
   public String getStoreName() {
@@ -84,12 +60,12 @@ import org.parceler.Parcel;
     return storeDescription;
   }
 
-  public String getStoreAvatarPath() {
-    return storeAvatarPath;
+  public String getStoreImagePath() {
+    return storeImagePath;
   }
 
-  public void setStoreAvatarPath(String storeAvatarPath) {
-    this.storeAvatarPath = storeAvatarPath;
+  public void setStoreImagePath(String storeAvatarPath) {
+    this.storeImagePath = storeAvatarPath;
     this.newAvatar = true;
   }
 
@@ -107,10 +83,6 @@ import org.parceler.Parcel;
 
   public void setStoreThemeName(String storeTheme) {
     this.storeThemeName = storeTheme;
-  }
-
-  public boolean isGoToHome() {
-    return goToHome;
   }
 
   /**
@@ -140,7 +112,7 @@ import org.parceler.Parcel;
   }
 
   public boolean hasStoreAvatar() {
-    return !TextUtils.isEmpty(getStoreAvatarPath());
+    return !TextUtils.isEmpty(getStoreImagePath());
   }
 
   public boolean hasStoreName() {

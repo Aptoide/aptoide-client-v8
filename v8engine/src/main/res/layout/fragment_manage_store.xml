@@ -1,100 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+    >
+
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
 
-  <RelativeLayout
+  <android.support.design.widget.AppBarLayout
+      android:id="@+id/appbar"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
+      android:layout_height="wrap_content"
       >
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
-
-      <android.support.v7.widget.Toolbar
-          android:id="@+id/toolbar"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:theme="?attr/toolbarTheme"
-          />
-
-    </android.support.design.widget.AppBarLayout>
-
-    <TextView
-        android:id="@+id/create_store_header"
-        android:layout_width="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/appbar"
-        android:background="@color/create_user_dark_orange"
-        android:gravity="center_vertical"
-        android:padding="@dimen/padding_medium_default"
-        android:text="@string/create_store_header"
-        android:textColor="@color/white"
-        style="@style/Aptoide.TextView.Medium"
+        android:theme="?attr/toolbarTheme"
         />
 
+  </android.support.design.widget.AppBarLayout>
+
+  <TextView
+      android:id="@+id/create_store_header"
+      android:layout_width="match_parent"
+      android:layout_alignParentStart="true"
+      android:layout_below="@+id/appbar"
+      android:background="@color/create_user_dark_orange"
+      android:gravity="center_vertical"
+      android:padding="@dimen/padding_medium_default"
+      android:text="@string/create_store_header"
+      android:textColor="@color/white"
+      style="@style/Aptoide.TextView.Medium"
+      />
+
+
+  <LinearLayout
+      android:id="@+id/bottom_buttons"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:layout_marginBottom="@dimen/padding_medium_small"
+      android:layout_marginEnd="@dimen/padding_small"
+      android:layout_marginLeft="@dimen/padding_small"
+      android:layout_marginRight="@dimen/padding_small"
+      android:layout_marginStart="@dimen/padding_small"
+      android:layout_marginTop="@dimen/padding_medium"
+      android:gravity="bottom"
+      android:orientation="horizontal"
+      android:weightSum="2"
+      >
+
+    <Button
+        android:id="@+id/create_store_skip"
+        android:layout_width="0dp"
+        android:layout_marginEnd="@dimen/padding_smaller"
+        android:layout_marginRight="@dimen/padding_smaller"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/skip"
+        style="@style/Aptoide.Button.Ghost"
+        />
+
+    <Button
+        android:id="@+id/create_store_action"
+        android:layout_width="0dp"
+        android:layout_marginLeft="@dimen/padding_smaller"
+        android:layout_marginStart="@dimen/padding_smaller"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/create_store_create"
+        style="@style/Aptoide.Button"
+        />
+
+  </LinearLayout>
+
+  <ScrollView
+      android:id="@+id/scroll_view"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_above="@id/bottom_buttons"
+      android:layout_below="@id/create_store_header"
+      >
 
     <LinearLayout
-        android:id="@+id/bottom_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/padding_medium_small"
-        android:layout_marginEnd="@dimen/padding_small"
-        android:layout_marginLeft="@dimen/padding_small"
-        android:layout_marginRight="@dimen/padding_small"
-        android:layout_marginStart="@dimen/padding_small"
-        android:layout_marginTop="@dimen/padding_medium"
-        android:gravity="bottom"
-        android:orientation="horizontal"
-        android:weightSum="2"
+        android:orientation="vertical"
         >
 
-      <Button
-          android:id="@+id/create_store_skip"
-          android:layout_width="0dp"
-          android:layout_marginEnd="@dimen/padding_smaller"
-          android:layout_marginRight="@dimen/padding_smaller"
-          android:layout_weight="1"
-          android:gravity="center"
-          android:text="@string/skip"
-          style="@style/Aptoide.Button.Ghost"
-          />
-
-      <Button
-          android:id="@+id/create_store_action"
-          android:layout_width="0dp"
-          android:layout_marginLeft="@dimen/padding_smaller"
-          android:layout_marginStart="@dimen/padding_smaller"
-          android:layout_weight="1"
-          android:gravity="center"
-          android:text="@string/create_store_create"
-          style="@style/Aptoide.Button"
-          />
-
-    </LinearLayout>
-
-    <ScrollView
-        android:id="@+id/scroll_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/bottom_buttons"
-        android:layout_below="@id/create_store_header"
-        >
-
-      <LinearLayout
+      <RelativeLayout
+          android:id="@+id/create_store_image_action"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:orientation="vertical"
+          android:layout_marginEnd="@dimen/padding_small"
+          android:layout_marginLeft="@dimen/padding_small"
+          android:layout_marginRight="@dimen/padding_small"
+          android:layout_marginStart="@dimen/padding_small"
+          android:layout_marginTop="@dimen/padding_medium"
           >
 
-        <RelativeLayout
-            android:id="@+id/create_store_image_action"
+        <ImageView
+            android:id="@+id/create_store_image"
+            android:layout_width="@dimen/profile_picture_large_size"
+            android:layout_height="@dimen/profile_picture_large_size"
+            android:src="@drawable/create_store_avatar"
+            />
+
+        <ImageView
+            android:layout_width="@dimen/select_picture_camera_icon_size"
+            android:layout_height="@dimen/select_picture_camera_icon_size"
+            android:layout_alignBottom="@+id/create_store_image"
+            android:layout_alignEnd="@+id/create_store_image"
+            android:layout_alignRight="@+id/create_store_image"
+            android:background="@drawable/create_user_camera_background_shape"
+            android:padding="@dimen/padding_very_small"
+            android:src="@drawable/create_user_camera"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/padding_medium_default"
+            android:layout_marginStart="@dimen/padding_medium_default"
+            android:layout_toEndOf="@id/create_store_image"
+            android:layout_toRightOf="@id/create_store_image"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:text="@string/create_store_choose_image"
+            android:textAlignment="center"
+            style="@style/Aptoide.TextView.Medium"
+            />
+
+      </RelativeLayout>
+
+      <RelativeLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          >
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/padding_small"
@@ -102,594 +151,92 @@
             android:layout_marginRight="@dimen/padding_small"
             android:layout_marginStart="@dimen/padding_small"
             android:layout_marginTop="@dimen/padding_medium"
+            android:orientation="vertical"
             >
 
-          <ImageView
-              android:id="@+id/create_store_image"
-              android:layout_width="@dimen/profile_picture_large_size"
-              android:layout_height="@dimen/profile_picture_large_size"
-              android:src="@drawable/create_store_avatar"
+          <TextView
+              android:id="@+id/create_store_choose_name_title"
+              android:layout_width="match_parent"
+              android:text="@string/create_store_name"
+              style="@style/Aptoide.TextView.Medium.S"
               />
 
-          <ImageView
-              android:layout_width="@dimen/select_picture_camera_icon_size"
-              android:layout_height="@dimen/select_picture_camera_icon_size"
-              android:layout_alignBottom="@+id/create_store_image"
-              android:layout_alignEnd="@+id/create_store_image"
-              android:layout_alignRight="@+id/create_store_image"
-              android:background="@drawable/create_user_camera_background_shape"
-              android:padding="@dimen/padding_very_small"
-              android:src="@drawable/create_user_camera"
+          <EditText
+              android:id="@+id/create_store_name"
+              android:layout_width="match_parent"
+              android:layout_marginTop="@dimen/padding_very_small"
+              android:background="@drawable/rounded_corners_white"
+              android:hint="@string/create_store_name_inserted"
+              android:paddingBottom="@dimen/padding_very_small"
+              android:paddingEnd="@dimen/padding_smaller"
+              android:paddingLeft="@dimen/padding_smaller"
+              android:paddingRight="@dimen/padding_smaller"
+              android:paddingStart="@dimen/padding_smaller"
+              android:paddingTop="@dimen/padding_very_small"
+              android:textColorHint="@color/grey_fog_dark"
+              style="@style/Aptoide.TextView.Regular.S"
+              />
+
+          <EditText
+              android:id="@+id/edit_store_description"
+              android:layout_width="match_parent"
+              android:layout_height="80dp"
+              android:layout_marginTop="@dimen/padding_very_small"
+              android:background="@drawable/rounded_corners_white"
+              android:gravity="top|start"
+              android:hint="@string/create_store_description_title"
+              android:inputType="textMultiLine"
+              android:maxLength="140"
+              android:maxLines="3"
+              android:paddingBottom="@dimen/padding_very_small"
+              android:paddingEnd="@dimen/padding_smaller"
+              android:paddingLeft="@dimen/padding_smaller"
+              android:paddingRight="@dimen/padding_smaller"
+              android:paddingStart="@dimen/padding_smaller"
+              android:paddingTop="@dimen/padding_very_small"
+              android:textColorHint="@color/grey_fog_dark"
+              android:visibility="gone"
+              tools:visibility="gone"
+              style="@style/Aptoide.TextView.Regular.S"
               />
 
           <TextView
               android:layout_width="match_parent"
-              android:layout_centerVertical="true"
-              android:layout_marginLeft="@dimen/padding_medium_default"
-              android:layout_marginStart="@dimen/padding_medium_default"
-              android:layout_toEndOf="@id/create_store_image"
-              android:layout_toRightOf="@id/create_store_image"
-              android:gravity="center_vertical"
-              android:maxLines="2"
-              android:text="@string/create_store_choose_image"
-              android:textAlignment="center"
-              style="@style/Aptoide.TextView.Medium"
+              android:layout_marginTop="@dimen/padding_medium_default"
+              android:text="@string/create_store_theme"
+              style="@style/Aptoide.TextView.Medium.S"
               />
 
-        </RelativeLayout>
+          <View
+              android:layout_width="match_parent"
+              android:layout_height="1dp"
+              android:layout_marginTop="8dp"
+              android:background="@color/grey_fog_dark"
+              >
+          </View>
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            >
-
-          <LinearLayout
+          <android.support.v7.widget.RecyclerView
+              android:id="@+id/theme_selector"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_marginEnd="@dimen/padding_small"
-              android:layout_marginLeft="@dimen/padding_small"
-              android:layout_marginRight="@dimen/padding_small"
-              android:layout_marginStart="@dimen/padding_small"
-              android:layout_marginTop="@dimen/padding_medium"
-              android:orientation="vertical"
+              />
+
+          <View
+              android:layout_width="match_parent"
+              android:layout_height="1dp"
+              android:background="@color/grey_fog_dark"
               >
+          </View>
 
-            <TextView
-                android:id="@+id/create_store_choose_name_title"
-                android:layout_width="match_parent"
-                android:text="@string/create_store_name"
-                style="@style/Aptoide.TextView.Medium.S"
-                />
+        </LinearLayout>
 
-            <EditText
-                android:id="@+id/create_store_name"
-                android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/padding_very_small"
-                android:background="@drawable/rounded_corners_white"
-                android:hint="@string/create_store_name_inserted"
-                android:paddingBottom="@dimen/padding_very_small"
-                android:paddingEnd="@dimen/padding_smaller"
-                android:paddingLeft="@dimen/padding_smaller"
-                android:paddingRight="@dimen/padding_smaller"
-                android:paddingStart="@dimen/padding_smaller"
-                android:paddingTop="@dimen/padding_very_small"
-                android:textColorHint="@color/grey_fog_dark"
-                style="@style/Aptoide.TextView.Regular.S"
-                />
+      </RelativeLayout>
 
-            <EditText
-                android:id="@+id/edit_store_description"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_marginTop="@dimen/padding_very_small"
-                android:background="@drawable/rounded_corners_white"
-                android:gravity="top|start"
-                android:hint="@string/create_store_description_title"
-                android:inputType="textMultiLine"
-                android:maxLength="140"
-                android:maxLines="3"
-                android:paddingBottom="@dimen/padding_very_small"
-                android:paddingEnd="@dimen/padding_smaller"
-                android:paddingLeft="@dimen/padding_smaller"
-                android:paddingRight="@dimen/padding_smaller"
-                android:paddingStart="@dimen/padding_smaller"
-                android:paddingTop="@dimen/padding_very_small"
-                android:textColorHint="@color/grey_fog_dark"
-                android:visibility="gone"
-                tools:visibility="gone"
-                style="@style/Aptoide.TextView.Regular.S"
-                />
+    </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/padding_medium_default"
-                android:text="@string/create_store_theme"
-                style="@style/Aptoide.TextView.Medium.S"
-                />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/grey_fog_dark"
-                >
-            </View>
-
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="none"
-                >
-
-              <LinearLayout
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_marginBottom="@dimen/padding_very_small"
-                  android:layout_marginTop="@dimen/padding_very_small"
-                  android:orientation="horizontal"
-                  >
-
-                <!-- individual item -->
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="26dp"
-                    >
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_default"
-                      android:layout_width="43.3dp"
-                      android:layout_height="43.3dp"
-                      android:background="@drawable/create_store_theme_shape_default"
-                      />
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_check_default"
-                      android:layout_width="23dp"
-                      android:layout_height="23dp"
-                      android:layout_alignBottom="@+id/create_store_theme_default"
-                      android:layout_alignEnd="@+id/create_store_theme_default"
-                      android:layout_alignRight="@+id/create_store_theme_default"
-                      android:scaleType="centerInside"
-                      android:src="@drawable/create_store_theme_check"
-                      android:visibility="invisible"
-                      />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="26dp"
-                    android:layout_marginRight="26dp"
-                    >
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_orange"
-                      android:layout_width="43.3dp"
-                      android:layout_height="43.3dp"
-                      android:background="@drawable/create_store_theme_shape_orange"
-                      />
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_check_orange"
-                      android:layout_width="23dp"
-                      android:layout_height="23dp"
-                      android:layout_alignBottom="@+id/create_store_theme_orange"
-                      android:layout_alignEnd="@+id/create_store_theme_orange"
-                      android:layout_alignRight="@+id/create_store_theme_orange"
-                      android:scaleType="centerInside"
-                      android:src="@drawable/create_store_theme_check"
-                      android:visibility="invisible"
-                      />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="26dp"
-                    android:layout_marginRight="26dp"
-                    >
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_green"
-                      android:layout_width="43.3dp"
-                      android:layout_height="43.3dp"
-                      android:background="@drawable/create_store_theme_shape_green"
-                      />
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_check_green"
-                      android:layout_width="23dp"
-                      android:layout_height="23dp"
-                      android:layout_alignBottom="@+id/create_store_theme_green"
-                      android:layout_alignEnd="@+id/create_store_theme_green"
-                      android:layout_alignRight="@+id/create_store_theme_green"
-                      android:scaleType="centerInside"
-                      android:src="@drawable/create_store_theme_check"
-                      android:visibility="invisible"
-                      />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="26dp"
-                    android:layout_marginRight="26dp"
-                    >
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_red"
-                      android:layout_width="43.3dp"
-                      android:layout_height="43.3dp"
-                      android:background="@drawable/create_store_theme_shape_red"
-                      />
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_check_red"
-                      android:layout_width="23dp"
-                      android:layout_height="23dp"
-                      android:layout_alignBottom="@+id/create_store_theme_red"
-                      android:layout_alignEnd="@+id/create_store_theme_red"
-                      android:layout_alignRight="@+id/create_store_theme_red"
-                      android:scaleType="centerInside"
-                      android:src="@drawable/create_store_theme_check"
-                      android:visibility="invisible"
-                      />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="26dp"
-                    android:layout_marginRight="26dp"
-                    >
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_indigo"
-                      android:layout_width="43.3dp"
-                      android:layout_height="43.3dp"
-                      android:background="@drawable/create_store_theme_shape_indigo"
-                      />
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_check_indigo"
-                      android:layout_width="23dp"
-                      android:layout_height="23dp"
-                      android:layout_alignBottom="@+id/create_store_theme_indigo"
-                      android:layout_alignEnd="@+id/create_store_theme_indigo"
-                      android:layout_alignRight="@+id/create_store_theme_indigo"
-                      android:scaleType="centerInside"
-                      android:src="@drawable/create_store_theme_check"
-                      android:visibility="invisible"
-                      />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="26dp"
-                    android:layout_marginRight="26dp"
-                    >
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_teal"
-                      android:layout_width="43.3dp"
-                      android:layout_height="43.3dp"
-                      android:background="@drawable/create_store_theme_shape_teal"
-                      />
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_check_teal"
-                      android:layout_width="23dp"
-                      android:layout_height="23dp"
-                      android:layout_alignBottom="@+id/create_store_theme_teal"
-                      android:layout_alignEnd="@+id/create_store_theme_teal"
-                      android:layout_alignRight="@+id/create_store_theme_teal"
-                      android:scaleType="centerInside"
-                      android:src="@drawable/create_store_theme_check"
-                      android:visibility="invisible"
-                      />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="26dp"
-                    android:layout_marginRight="26dp"
-                    >
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_pink"
-                      android:layout_width="43.3dp"
-                      android:layout_height="43.3dp"
-                      android:background="@drawable/create_store_theme_shape_pink"
-                      />
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_check_pink"
-                      android:layout_width="23dp"
-                      android:layout_height="23dp"
-                      android:layout_alignBottom="@+id/create_store_theme_pink"
-                      android:layout_alignEnd="@+id/create_store_theme_pink"
-                      android:layout_alignRight="@+id/create_store_theme_pink"
-                      android:scaleType="centerInside"
-                      android:src="@drawable/create_store_theme_check"
-                      android:visibility="invisible"
-                      />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="26dp"
-                    android:layout_marginRight="26dp"
-                    >
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_lime"
-                      android:layout_width="43.3dp"
-                      android:layout_height="43.3dp"
-                      android:background="@drawable/create_store_theme_shape_lime"
-                      />
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_check_lime"
-                      android:layout_width="23dp"
-                      android:layout_height="23dp"
-                      android:layout_alignBottom="@+id/create_store_theme_lime"
-                      android:layout_alignEnd="@+id/create_store_theme_lime"
-                      android:layout_alignRight="@+id/create_store_theme_lime"
-                      android:scaleType="centerInside"
-                      android:src="@drawable/create_store_theme_check"
-                      android:visibility="invisible"
-                      />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="26dp"
-                    android:layout_marginRight="26dp"
-                    >
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_amber"
-                      android:layout_width="43.3dp"
-                      android:layout_height="43.3dp"
-                      android:background="@drawable/create_store_theme_shape_amber"
-                      />
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_check_amber"
-                      android:layout_width="23dp"
-                      android:layout_height="23dp"
-                      android:layout_alignBottom="@+id/create_store_theme_amber"
-                      android:layout_alignEnd="@+id/create_store_theme_amber"
-                      android:layout_alignRight="@+id/create_store_theme_amber"
-                      android:scaleType="centerInside"
-                      android:src="@drawable/create_store_theme_check"
-                      android:visibility="invisible"
-                      />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="26dp"
-                    android:layout_marginRight="26dp"
-                    >
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_brown"
-                      android:layout_width="43.3dp"
-                      android:layout_height="43.3dp"
-                      android:background="@drawable/create_store_theme_shape_brown"
-                      />
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_check_brown"
-                      android:layout_width="23dp"
-                      android:layout_height="23dp"
-                      android:layout_alignBottom="@+id/create_store_theme_brown"
-                      android:layout_alignEnd="@+id/create_store_theme_brown"
-                      android:layout_alignRight="@+id/create_store_theme_brown"
-                      android:scaleType="centerInside"
-                      android:src="@drawable/create_store_theme_check"
-                      android:visibility="invisible"
-                      />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="26dp"
-                    >
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_lightblue"
-                      android:layout_width="43.3dp"
-                      android:layout_height="43.3dp"
-                      android:background="@drawable/create_store_theme_shape_lightblue"
-                      />
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_check_lightblue"
-                      android:layout_width="23dp"
-                      android:layout_height="23dp"
-                      android:layout_alignBottom="@+id/create_store_theme_lightblue"
-                      android:layout_alignEnd="@+id/create_store_theme_lightblue"
-                      android:layout_alignRight="@+id/create_store_theme_lightblue"
-                      android:scaleType="centerInside"
-                      android:src="@drawable/create_store_theme_check"
-                      android:visibility="invisible"
-                      />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="26dp"
-                    >
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_black"
-                      android:layout_width="43.3dp"
-                      android:layout_height="43.3dp"
-                      android:background="@drawable/create_store_theme_shape_black"
-                      />
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_check_black"
-                      android:layout_width="23dp"
-                      android:layout_height="23dp"
-                      android:layout_alignBottom="@+id/create_store_theme_black"
-                      android:layout_alignEnd="@+id/create_store_theme_black"
-                      android:layout_alignRight="@+id/create_store_theme_black"
-                      android:scaleType="centerInside"
-                      android:src="@drawable/create_store_theme_check"
-                      android:visibility="invisible"
-                      />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="26dp"
-                    >
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_blue_grey"
-                      android:layout_width="43.3dp"
-                      android:layout_height="43.3dp"
-                      android:background="@drawable/create_store_theme_shape_blue_grey"
-                      />
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_check_blue_grey"
-                      android:layout_width="23dp"
-                      android:layout_height="23dp"
-                      android:layout_alignBottom="@+id/create_store_theme_blue_grey"
-                      android:layout_alignEnd="@+id/create_store_theme_blue_grey"
-                      android:layout_alignRight="@+id/create_store_theme_blue_grey"
-                      android:scaleType="centerInside"
-                      android:src="@drawable/create_store_theme_check"
-                      android:visibility="invisible"
-                      />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="26dp"
-                    >
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_deep_purple"
-                      android:layout_width="43.3dp"
-                      android:layout_height="43.3dp"
-                      android:background="@drawable/create_store_theme_shape_deep_purple"
-                      />
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_check_deep_purple"
-                      android:layout_width="23dp"
-                      android:layout_height="23dp"
-                      android:layout_alignBottom="@+id/create_store_theme_deep_purple"
-                      android:layout_alignEnd="@+id/create_store_theme_deep_purple"
-                      android:layout_alignRight="@+id/create_store_theme_deep_purple"
-                      android:scaleType="centerInside"
-                      android:src="@drawable/create_store_theme_check"
-                      android:visibility="invisible"
-                      />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="26dp"
-                    >
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_light_green"
-                      android:layout_width="43.3dp"
-                      android:layout_height="43.3dp"
-                      android:background="@drawable/create_store_theme_shape_light_green"
-                      />
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_check_light_green"
-                      android:layout_width="23dp"
-                      android:layout_height="23dp"
-                      android:layout_alignBottom="@+id/create_store_theme_light_green"
-                      android:layout_alignEnd="@+id/create_store_theme_light_green"
-                      android:layout_alignRight="@+id/create_store_theme_light_green"
-                      android:scaleType="centerInside"
-                      android:src="@drawable/create_store_theme_check"
-                      android:visibility="invisible"
-                      />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="26dp"
-                    >
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_grey"
-                      android:layout_width="43.3dp"
-                      android:layout_height="43.3dp"
-                      android:background="@drawable/create_store_theme_shape_grey"
-                      />
-
-                  <ImageView
-                      android:id="@+id/create_store_theme_check_grey"
-                      android:layout_width="23dp"
-                      android:layout_height="23dp"
-                      android:layout_alignBottom="@+id/create_store_theme_grey"
-                      android:layout_alignEnd="@+id/create_store_theme_grey"
-                      android:layout_alignRight="@+id/create_store_theme_grey"
-                      android:scaleType="centerInside"
-                      android:src="@drawable/create_store_theme_check"
-                      android:visibility="invisible"
-                      />
-
-                </RelativeLayout>
-
-              </LinearLayout>
-
-            </HorizontalScrollView>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/grey_fog_dark"
-                >
-            </View>
-
-          </LinearLayout>
-
-        </RelativeLayout>
-
-      </LinearLayout>
-
-    </ScrollView>
-
-  </RelativeLayout>
+  </ScrollView>
 
 </RelativeLayout>
+
+</RelativeLayout>
+

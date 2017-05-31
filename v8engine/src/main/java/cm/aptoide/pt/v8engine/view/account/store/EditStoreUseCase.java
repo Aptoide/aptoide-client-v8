@@ -14,13 +14,13 @@ import rx.Observable;
  */
 public class EditStoreUseCase {
 
-  private final ManageStoreModel storeModel;
+  private final ManageStoreViewModel storeModel;
   private final AptoideAccountManager accountManager;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final StoreBodyInterceptor bodyInterceptor;
 
-  public EditStoreUseCase(ManageStoreModel storeModel, AptoideAccountManager accountManager,
+  public EditStoreUseCase(ManageStoreViewModel storeModel, AptoideAccountManager accountManager,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       StoreBodyInterceptor bodyInterceptor) {
     this.storeModel = storeModel;
@@ -44,7 +44,7 @@ public class EditStoreUseCase {
     return accountManager.accountStatus()
         .first()
         .flatMap(account -> SetStoreRequest.of(account.getAccessToken(), storeModel.getStoreName(),
-            storeModel.getStoreThemeName(), storeModel.getStoreAvatarPath(),
+            storeModel.getStoreThemeName(), storeModel.getStoreImagePath(),
             storeModel.getStoreDescription(), true, storeModel.getStoreId(), bodyInterceptor,
             httpClient, converterFactory)
             .observe())

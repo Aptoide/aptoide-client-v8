@@ -41,7 +41,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
@@ -137,7 +137,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void onDestroy() {
     super.onDestroy();
     if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(
           V8Engine.getConfiguration()
               .getDefaultTheme()));
     }
@@ -161,7 +161,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
       @Nullable Bundle savedInstanceState) {
     if (storeTheme != null) {
       ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
     }
 
     return super.onCreateView(inflater, container, savedInstanceState);

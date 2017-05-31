@@ -66,9 +66,8 @@ public class DownloadsFragmentMvp extends FragmentView implements DownloadsView 
     RecyclerView downloadsRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
     downloadsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-    final int pixelDimen = AptoideUtils.ScreenU.getPixelsForDip(5);
     final DividerItemDecoration decor =
-        new DividerItemDecoration(pixelDimen, DividerItemDecoration.ALL);
+        new DividerItemDecoration(getContext(), 5, DividerItemDecoration.ALL);
     downloadsRecyclerView.addItemDecoration(decor);
 
     adapter = new DownloadsAdapter(installConverter, downloadConverter, installManager, analytics);

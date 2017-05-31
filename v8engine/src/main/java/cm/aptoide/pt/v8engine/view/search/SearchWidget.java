@@ -18,7 +18,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.search.SearchAnalytics;
-import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.facebook.appevents.AppEventsLogger;
@@ -98,7 +98,7 @@ import rx.functions.Action1;
       }
     }
 
-    final StoreThemeEnum theme = StoreThemeEnum.get(searchAppsApp.getStore()
+    final StoreTheme theme = StoreTheme.get(searchAppsApp.getStore()
         .getAppearance()
         .getTheme());
 
@@ -107,11 +107,11 @@ import rx.functions.Action1;
       ((ShapeDrawable) background).getPaint()
           .setColor(itemView.getContext()
               .getResources()
-              .getColor(theme.getStoreHeader()));
+              .getColor(theme.getPrimaryColor()));
     } else if (background instanceof GradientDrawable) {
       ((GradientDrawable) background).setColor(itemView.getContext()
           .getResources()
-          .getColor(theme.getStoreHeader()));
+          .getColor(theme.getPrimaryColor()));
     }
 
     background = storeTextView.getBackground();
@@ -119,11 +119,11 @@ import rx.functions.Action1;
       ((ShapeDrawable) background).getPaint()
           .setColor(itemView.getContext()
               .getResources()
-              .getColor(theme.getStoreHeader()));
+              .getColor(theme.getPrimaryColor()));
     } else if (background instanceof GradientDrawable) {
       ((GradientDrawable) background).setColor(itemView.getContext()
           .getResources()
-          .getColor(theme.getStoreHeader()));
+          .getColor(theme.getPrimaryColor()));
     }
 
     storeTextView.setText(searchAppsApp.getStore()

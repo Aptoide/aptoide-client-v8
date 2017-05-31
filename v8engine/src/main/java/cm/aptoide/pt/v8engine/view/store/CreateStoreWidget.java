@@ -8,8 +8,8 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
-import cm.aptoide.pt.v8engine.view.account.store.CreateStoreFragment;
-import cm.aptoide.pt.v8engine.view.account.store.ManageStoreModel;
+import cm.aptoide.pt.v8engine.view.account.store.ManageStoreFragment;
+import cm.aptoide.pt.v8engine.view.account.store.ManageStoreViewModel;
 import cm.aptoide.pt.v8engine.view.account.user.CreateStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -49,7 +49,8 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
         .subscribe(account -> {
           if (account.isLoggedIn()) {
             button.setText(R.string.create_store_displayable_button);
-            getFragmentNavigator().navigateTo(CreateStoreFragment.newInstance(new ManageStoreModel(false)));
+            getFragmentNavigator().navigateTo(
+                ManageStoreFragment.newInstance(new ManageStoreViewModel(), false));
           } else {
             button.setText(R.string.login);
             accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.STORE);

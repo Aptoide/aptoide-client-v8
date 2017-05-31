@@ -16,7 +16,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.store.StoreAddCommentDisplayable;
@@ -70,13 +70,13 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
         }));
   }
 
-  private int getColorOrDefault(StoreThemeEnum theme, Context context) {
+  private int getColorOrDefault(StoreTheme theme, Context context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       return context.getResources()
-          .getColor(theme.getStoreHeader(), context.getTheme());
+          .getColor(theme.getPrimaryColor(), context.getTheme());
     } else {
       return context.getResources()
-          .getColor(theme.getStoreHeader());
+          .getColor(theme.getPrimaryColor());
     }
   }
 

@@ -24,8 +24,8 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
-import cm.aptoide.pt.v8engine.view.account.store.CreateStoreFragment;
-import cm.aptoide.pt.v8engine.view.account.store.ManageStoreModel;
+import cm.aptoide.pt.v8engine.view.account.store.ManageStoreFragment;
+import cm.aptoide.pt.v8engine.view.account.store.ManageStoreViewModel;
 import cm.aptoide.pt.v8engine.view.comments.CommentDialogFragment;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -50,6 +50,7 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
 
+  protected String socialAction = "(blank)";
   TextView shareButton;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
@@ -58,7 +59,6 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   private LikeButtonView likeButton;
   private TextView comment;
   private Account account;
-  protected String socialAction = "(blank)";
 
   CardWidget(View itemView) {
     super(itemView);
@@ -142,7 +142,8 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
         account.getAccess())) {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
           R.string.create_store_create, snackView -> {
-            getFragmentNavigator().navigateTo(CreateStoreFragment.newInstance(new ManageStoreModel(false)));
+            getFragmentNavigator().navigateTo(
+                ManageStoreFragment.newInstance(new ManageStoreViewModel(), false));
           });
       return;
     }

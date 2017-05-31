@@ -32,27 +32,19 @@ import java.util.Locale;
 /**
  * Created by pedroribeiro on 02/12/16.
  */
-
-// FIXME: 6/4/2017
-// migrate the profile picture rules to another entity
-@Deprecated public abstract class PictureLoaderFragment extends BaseToolbarFragment {
+public abstract class PictureLoaderFragment extends BaseToolbarFragment {
 
   public static final int GALLERY_CODE = 1046;
   public static final int REQUEST_IMAGE_CAPTURE = 1;
-  protected static final String FILE_NAME = "file_name";
+  private static final String FILE_NAME = "file_name";
   private static final String TAG = PictureLoaderFragment.class.getName();
+  private static final SimpleDateFormat DATE_FORMAT =
+      new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
   protected String photoFileName;
-  private boolean createUserProfile;
-  private boolean createStore;
-
-  protected PictureLoaderFragment(boolean createUserProfile, boolean createStore) {
-    this.createUserProfile = createUserProfile;
-    this.createStore = createStore;
-  }
 
   public void chooseAvatarSource() {
     final Dialog dialog = new Dialog(getActivity());
-    dialog.setContentView(R.layout.dialog_choose_avatar_layout);
+    dialog.setContentView(R.layout.dialog_choose_avatar_source);
 
     RxView.clicks(dialog.findViewById(R.id.button_camera))
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
@@ -88,16 +80,20 @@ import java.util.Locale;
     photoFileName = getPhotoFileName();
     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        Uri uriForFile = FileProvider.getUriForFile(getActivity(), Application.getConfiguration()
-            .getAppId() + ".provider", new File(getFileUriFromFileName(photoFileName).getPath()));
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriForFile);
-      } else {
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, getFileUriFromFileName(photoFileName));
-      }
-      takePictureIntent.putExtra(FILE_NAME, photoFileName);
+      prepareTakePictureIntent(takePictureIntent, photoFileName);
       startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
     }
+  }
+
+  private void prepareTakePictureIntent(Intent takePictureIntent, String photoFileName) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      Uri uriForFile = FileProvider.getUriForFile(getActivity(), Application.getConfiguration()
+          .getAppId() + ".provider", new File(getFileUriFromFileName(photoFileName).getPath()));
+      takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriForFile);
+    } else {
+      takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, getFileUriFromFileName(photoFileName));
+    }
+    takePictureIntent.putExtra(FILE_NAME, photoFileName);
   }
 
   public void dispatchOpenGalleryIntent() {
@@ -108,22 +104,11 @@ import java.util.Locale;
   }
 
   private String getPhotoFileName() {
-
-    final String timestamp = getTimestampString();
-    if (createUserProfile) {
-      return String.format("aptoide_user_avatar_%s.jpg", timestamp);
-    }
-
-    if (createStore) {
-      return String.format("aptoide_store_avatar_%s.jpg", timestamp);
-    }
-
-    // return default picture name
-    return String.format("aptoide_photo_%s.jpg", timestamp);
+    return String.format("aptoide_photo_%s.jpg", getTimestampString());
   }
 
   private String getTimestampString() {
-    return new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+    return DATE_FORMAT.format(new Date());
   }
 
   protected Uri getFileUriFromFileName(String fileName) {
@@ -170,7 +155,6 @@ import java.util.Locale;
               getResources().getInteger(R.integer.max_avatar_width),
               getResources().getInteger(R.integer.max_avatar_Size));
       if (imageErrors.isEmpty()) {
-        Logger.v(TAG, String.format("loading image with url '%s'", avatarUrl.toString()));
         loadImage(avatarUrl);
       } else {
         showIconPropertiesError(getErrorsMessage(imageErrors));

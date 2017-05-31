@@ -55,10 +55,6 @@ public class CreateUserFragment extends PictureLoaderFragment implements ManageU
   private ProgressDialog uploadWaitDialog;
   private ProgressDialog waitDialog;
 
-  public CreateUserFragment() {
-    super(true, false);
-  }
-
   public static CreateUserFragment newInstance() {
     return new CreateUserFragment();
   }

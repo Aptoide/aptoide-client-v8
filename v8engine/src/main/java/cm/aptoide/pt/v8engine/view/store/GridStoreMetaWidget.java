@@ -29,10 +29,10 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
-import cm.aptoide.pt.v8engine.view.account.store.CreateStoreFragment;
-import cm.aptoide.pt.v8engine.view.account.store.ManageStoreModel;
+import cm.aptoide.pt.v8engine.view.account.store.ManageStoreFragment;
+import cm.aptoide.pt.v8engine.view.account.store.ManageStoreViewModel;
 import com.jakewharton.rxbinding.view.RxView;
 import java.text.NumberFormat;
 import java.util.List;
@@ -101,7 +101,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         .getUser();
 
     if (store != null) {
-      final StoreThemeEnum theme = StoreThemeEnum.get(store.getAppearance() == null ? "default"
+      final StoreTheme theme = StoreTheme.get(store.getAppearance() == null ? "default"
           : store.getAppearance()
               .getTheme());
       final Context context = itemView.getContext();
@@ -185,8 +185,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
       }
     } else {
       followStoreButton.setVisibility(View.INVISIBLE);
-      setupMainInfo(user.getName(), StoreThemeEnum.get("default"), getContext(),
-          getHomeMeta.getData()
+      setupMainInfo(user.getName(), StoreTheme.get("default"), getContext(), getHomeMeta.getData()
               .getStats()
               .getFollowers(), getHomeMeta.getData()
               .getStats()
@@ -218,7 +217,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   /**
    * @param appsVisibility true if number of apps should be displayed, false otherwise
    */
-  private void setupMainInfo(String name, StoreThemeEnum theme, Context context, long appsCount,
+  private void setupMainInfo(String name, StoreTheme theme, Context context, long appsCount,
       long followersCount, long followingCount, boolean appsVisibility, String mainIconUrl,
       @DrawableRes int defaultMainIcon, @DrawableRes int mainNameDrawable) {
 
@@ -288,8 +287,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
 
   private void editStore(long storeId, String storeTheme, String storeDescription, String storeName,
       String storeAvatar) {
-    Fragment fragment = CreateStoreFragment.newInstance(
-        new ManageStoreModel(storeId, storeAvatar, false, storeTheme, storeName, storeDescription));
+    Fragment fragment = ManageStoreFragment.newInstance(
+        new ManageStoreViewModel(storeId, storeAvatar, storeTheme, storeName, storeDescription), false);
     getFragmentNavigator().navigateTo(fragment);
   }
 
@@ -304,14 +303,14 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         .loadWithShadowCircleTransform(secondaryIconUrl, secondaryIcon);
   }
 
-  private void setupMainInfo(String name, StoreThemeEnum theme, Context context,
-      long followersCount, long followingCount, String mainIconUrl,
-      @DrawableRes int defaultMainIcon, @DrawableRes int mainNameDrawble) {
+  private void setupMainInfo(String name, StoreTheme theme, Context context, long followersCount,
+      long followingCount, String mainIconUrl, @DrawableRes int defaultMainIcon,
+      @DrawableRes int mainNameDrawble) {
     setupMainInfo(name, theme, context, 0, followersCount, followingCount, false, mainIconUrl,
         defaultMainIcon, mainNameDrawble);
   }
 
-  private void setupTheme(StoreThemeEnum theme, Context context) {
+  private void setupTheme(StoreTheme theme, Context context) {
     @ColorInt int color = getColorOrDefault(theme, context);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       Drawable d = context.getDrawable(R.drawable.dialog_bg_2);
@@ -327,13 +326,13 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     editStoreButton.setTextColor(color);
   }
 
-  private int getColorOrDefault(StoreThemeEnum theme, Context context) {
+  private int getColorOrDefault(StoreTheme theme, Context context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       return context.getResources()
-          .getColor(theme.getStoreHeader(), context.getTheme());
+          .getColor(theme.getPrimaryColor(), context.getTheme());
     } else {
       return context.getResources()
-          .getColor(theme.getStoreHeader());
+          .getColor(theme.getPrimaryColor());
     }
   }
 

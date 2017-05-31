@@ -8,16 +8,16 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
-public class UpdateStoreUseCase implements UseCase<Void> {
+public class UpdateOrCreateStoreUseCase implements UseCase<Void> {
 
-  private final ManageStoreModel storeModel;
+  private final ManageStoreViewModel storeModel;
   private final AptoideAccountManager accountManager;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final StoreBodyInterceptor bodyInterceptor;
   private BodyInterceptor<BaseBody> bodyInterceptorV3;
 
-  public UpdateStoreUseCase(ManageStoreModel storeModel, AptoideAccountManager accountManager,
+  public UpdateOrCreateStoreUseCase(ManageStoreViewModel storeModel, AptoideAccountManager accountManager,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       StoreBodyInterceptor bodyInterceptor, BodyInterceptor<BaseBody> bodyInterceptorV3) {
     this.storeModel = storeModel;
