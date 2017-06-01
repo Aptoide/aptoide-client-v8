@@ -24,7 +24,7 @@
 
   <string name="alert">Alert</string>
   <string name="send">Send</string>
-  <string name="cancel">Cancel</string>
+  <string name="spotandshare_button_cancel_option_dialog">Cancel</string>
   <string name="noSelectedAppsToSend">Please select something to send</string>
 
   <string name="preparingSend">Preparing to send </string>
@@ -46,7 +46,7 @@
   <string name="delete">Delete</string>
 
   <string name="alertInstallApp">Are you sure you want to install the %1$s application?</string>
-  <string name="install">Install</string>
+  <string name="spotandshare_button_install_option_dialog">Install</string>
 
 
   <string name="errorAppVersionNew">There was an error while loading the file %1$s. \nPlease check if the version on your device is the same or higher than the version of %2$s that you received.</string>
@@ -94,7 +94,7 @@
   <string name="waiting_group_friends">Waiting for friends to join group</string>
   <string name="share_instruction">Share apps or wait for someone in the group to share them.</string>
 
-  <string name="warning">Warning</string>
+  <string name="spotandshare_title_warning_dialog">Warning</string>
   <string name="clear_history_warning">If you didn’t install the apps shared they will be deleted.</string>
 
   <string name="locationDialog">We will not be able to join groups if location is off</string>
@@ -126,4 +126,5 @@
   <string name="spotandshare_button_number_one" translatable="false">1</string>
   <string name="spotandshare_button_number_two" translatable="false">2</string>
   <string name="spotandshare_button_number_three" translatable="false">3</string>
+
 </resources>
