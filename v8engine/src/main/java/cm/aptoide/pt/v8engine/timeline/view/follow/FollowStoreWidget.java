@@ -6,9 +6,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.timeline.view.displayable.FollowStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.store.AddStoreDialog;
-import cm.aptoide.pt.v8engine.timeline.view.displayable.FollowStoreDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 
 /**

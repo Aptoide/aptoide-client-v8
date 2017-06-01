@@ -525,7 +525,7 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
                   .observe()
                   .timeout(90, TimeUnit.SECONDS))
           .observeOn(AndroidSchedulers.mainThread())
-          .flatMap(__ ->accountManager.syncCurrentAccount()
+          .flatMap(__ -> accountManager.syncCurrentAccount()
               .andThen(sendCreateAnalytics())
               .andThen(dismissDialogAsync())
               .observeOn(AndroidSchedulers.mainThread())

@@ -31,7 +31,7 @@ public class NotificationSyncService extends Service {
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
 
-    if (intent.getAction() != null) {
+    if (intent != null && intent.getAction() != null) {
       switch (intent.getAction()) {
         case PUSH_NOTIFICATIONS_CAMPAIGN_ACTION:
           notificationSync.syncCampaigns()

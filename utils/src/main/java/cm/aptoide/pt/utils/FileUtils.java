@@ -5,11 +5,7 @@
 
 package cm.aptoide.pt.utils;
 
-import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.pt.logger.Logger;

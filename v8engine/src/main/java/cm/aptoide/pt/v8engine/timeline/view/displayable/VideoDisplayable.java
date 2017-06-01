@@ -14,9 +14,9 @@ import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
-import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -162,13 +162,15 @@ public class VideoDisplayable extends CardDisplayable {
 
   @Override
   public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback, getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getTitle(),
-        getVideoTitle()));
+    socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getTitle(),
+            getVideoTitle()));
   }
 
   @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), shareCardCallback, getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getTitle(),
-        getVideoTitle()));
+    socialRepository.share(getTimelineCard().getCardId(), shareCardCallback,
+        getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getTitle(),
+            getVideoTitle()));
   }
 
   @Override public void like(Context context, String cardType, int rating) {

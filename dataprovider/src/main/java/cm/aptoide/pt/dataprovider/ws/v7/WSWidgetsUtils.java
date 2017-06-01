@@ -153,7 +153,7 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case APP_META:
-          return GetAppRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory)
+          return GetAppMetaRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))

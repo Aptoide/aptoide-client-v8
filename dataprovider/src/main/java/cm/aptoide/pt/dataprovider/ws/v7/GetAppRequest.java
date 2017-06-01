@@ -77,29 +77,6 @@ import rx.Observable;
     return new GetAppRequest(BASE_HOST, body, bodyInterceptor, httpClient, converterFactory);
   }
 
-  public static GetAppRequest ofAction(String url, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    final long appId = getAppIdFromUrl(url);
-    return new GetAppRequest(BASE_HOST, new Body(appId), bodyInterceptor, httpClient,
-        converterFactory);
-  }
-
-  private static long getAppIdFromUrl(String url) {
-    try {
-      // find first index of "appId", split on "=" and the app id is the next index (1) of
-      // the resulting array, excluding the remaining "trash"
-      // example: http://ws75.aptoide.com/api/7/getApp/appId=15168558
-      // example: http://ws75.aptoide.com/api/7/getApp/appId=15168558/other=stuff/in=here
-      String tmp = url.substring(url.indexOf("app_id"))
-          .split("=")[1];
-      int lastIdx = tmp.lastIndexOf('/');
-      return Long.parseLong(tmp.substring(0, lastIdx > 0 ? lastIdx : tmp.length()));
-    } catch (Exception e) {
-      Log.e(GetAppRequest.class.getName(), e.getMessage());
-    }
-    return 12765245; // -> Aptoide Uploader app id
-  }
-
   @Override
   protected Observable<GetApp> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
     return interfaces.getApp(body, bypassCache);
