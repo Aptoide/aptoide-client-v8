@@ -24,15 +24,16 @@ public class ManageStorePresenter implements Presenter {
     // does nothing
   }
 
-  public Completable handleSaveClick(ManageStoreModel storeModel){
-    if(storeModel.storeExists()) {
-      return new EditStoreUseCase(storeModel).execute().toCompletable();
+  public Completable handleSaveClick(ManageStoreModel storeModel) {
+    if (storeModel.storeExists()) {
+      return new EditStoreUseCase(storeModel).execute()
+          .toCompletable();
     }
-    return new CreateStoreUseCase(storeModel).execute().toCompletable();
+    return new CreateStoreUseCase(storeModel).execute()
+        .toCompletable();
   }
 
-  public Completable handleCancelClick(){
-    return  Completable.complete();
+  public Completable handleCancelClick() {
+    return Completable.complete();
   }
-
 }
