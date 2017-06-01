@@ -59,6 +59,8 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
+import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY;
+
 /**
  * Created by fabio on 26-10-2015.
  *
@@ -73,8 +75,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private static final String REMOVE_ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY = "removeMaturepin";
   private static final String ADULT_CONTENT_WITH_PIN_PREFERENCE_VIEW_KEY = "matureChkBoxWithPin";
   private static final String ADULT_CONTENT_PREFERENCE_VIEW_KEY = "matureChkBox";
-  private static final String CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY =
-      "notification_campaign_and_social";
 
   protected Toolbar toolbar;
   private Context context;
@@ -173,9 +173,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
         (CheckBoxPreference) findPreference(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY);
     pinPreferenceView = findPreference(ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
     removePinPreferenceView = findPreference(REMOVE_ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
-
-    //we should change this if notification center can be enabled and disabled in background
-    SocialCampaignNotifications.setChecked(notificationCenter.isEnable());
 
     setupClickHandlers();
   }
@@ -512,10 +509,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   private void handleSocialNotifications(Boolean isChecked) {
     if (isChecked) {
-      notificationCenter.enable();
       notificationCenter.start();
     } else {
-      notificationCenter.disable();
       notificationCenter.stop();
     }
   }
