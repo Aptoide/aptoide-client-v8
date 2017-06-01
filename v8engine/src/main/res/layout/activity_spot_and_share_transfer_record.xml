@@ -50,7 +50,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_weight="0.8"
-      android:background="@color/light_grey"
+      android:background="@color/grey_fog_normal"
       >
 
     <TextView
