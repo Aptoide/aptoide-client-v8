@@ -8,10 +8,10 @@ package cm.aptoide.pt.v8engine.view.app.widget;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.ErrorResponse;
 import cm.aptoide.pt.dataprovider.ws.v3.AddApkFlagRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -178,7 +178,7 @@ import rx.android.schedulers.AndroidSchedulers;
       appViewFlagThisDisplayable.getAppViewAnalytics()
           .sendFlagAppEvent(type.toString());
       compositeSubscription.add(AddApkFlagRequest.of(storeName, md5, type.name()
-          .toLowerCase(), accountManager.getAccessToken(), baseBodyInterceptorV3, httpClient)
+          .toLowerCase(), baseBodyInterceptorV3, httpClient)
           .observe(true)
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(response -> {

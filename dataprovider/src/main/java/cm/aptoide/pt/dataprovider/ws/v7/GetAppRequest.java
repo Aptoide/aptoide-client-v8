@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.util.Log;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import com.fasterxml.jackson.annotation.JsonProperty;

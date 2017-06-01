@@ -48,8 +48,8 @@ public class AptoideAccountManagerTest {
 
     when(credentialsValidatorMock.validate(eq("marcelo.benites@aptoide.com"), eq("1234"),
         anyBoolean())).thenReturn(Completable.complete());
-    when(serviceMock.login("APTOIDE", "marcelo.benites@aptoide.com", "1234", null)).thenReturn(
-        Single.just(oAuthMock));
+    when(serviceMock.login("APTOIDE", "marcelo.benites@aptoide.com", "1234", null,
+        accountManager)).thenReturn(Single.just(oAuthMock));
 
     when(oAuthMock.getAccessToken()).thenReturn("ABCD");
     when(oAuthMock.getRefreshToken()).thenReturn("EFG");
@@ -77,14 +77,15 @@ public class AptoideAccountManagerTest {
     when(credentialsValidatorMock.validate(eq("john.lennon@aptoide.com"), eq("imagine"),
         anyBoolean())).thenReturn(Completable.complete());
 
-    when(serviceMock.createAccount("john.lennon@aptoide.com", "imagine")).thenReturn(
+    when(
+        serviceMock.createAccount("john.lennon@aptoide.com", "imagine", accountManager)).thenReturn(
         Completable.complete());
 
     final OAuth oAuthMock = mock(OAuth.class);
     final Account accountMock = mock(Account.class);
 
-    when(serviceMock.login("APTOIDE", "john.lennon@aptoide.com", "imagine", null)).thenReturn(
-        Single.just(oAuthMock));
+    when(serviceMock.login("APTOIDE", "john.lennon@aptoide.com", "imagine", null,
+        accountManager)).thenReturn(Single.just(oAuthMock));
 
     when(oAuthMock.getAccessToken()).thenReturn("ABCD");
     when(oAuthMock.getRefreshToken()).thenReturn("EFG");
@@ -112,14 +113,15 @@ public class AptoideAccountManagerTest {
     when(credentialsValidatorMock.validate(eq("john.lennon@aptoide.com"), eq("imagine"),
         anyBoolean())).thenReturn(Completable.complete());
 
-    when(serviceMock.createAccount("john.lennon@aptoide.com", "imagine")).thenReturn(
+    when(
+        serviceMock.createAccount("john.lennon@aptoide.com", "imagine", accountManager)).thenReturn(
         Completable.error(new SocketTimeoutException()));
 
     final OAuth oAuthMock = mock(OAuth.class);
     final Account accountMock = mock(Account.class);
 
-    when(serviceMock.login("APTOIDE", "john.lennon@aptoide.com", "imagine", null)).thenReturn(
-        Single.just(oAuthMock));
+    when(serviceMock.login("APTOIDE", "john.lennon@aptoide.com", "imagine", null,
+        accountManager)).thenReturn(Single.just(oAuthMock));
 
     when(oAuthMock.getAccessToken()).thenReturn("ABCD");
     when(oAuthMock.getRefreshToken()).thenReturn("EFG");

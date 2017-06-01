@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -22,26 +22,23 @@ public class CheckUserCredentialsRequest extends V3<CheckUserCredentialsJson> {
     this.createStore = createStore;
   }
 
-  public static CheckUserCredentialsRequest of(String store, String accessToken,
+  public static CheckUserCredentialsRequest of(String storeName,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
 
     final BaseBody body = new BaseBody();
-    body.put("access_token", accessToken);
     body.put("mode", "json");
     body.put("createRepo", "1");
-    body.put("repo", store);
+    body.put("repo", storeName);
     body.put("authMode", "aptoide");
-    body.put("oauthToken", accessToken);
     body.put("oauthCreateRepo", "true");
 
     return new CheckUserCredentialsRequest(body, true, bodyInterceptor, httpClient,
         converterFactory);
   }
 
-  public static CheckUserCredentialsRequest of(String accessToken,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+  public static CheckUserCredentialsRequest of(BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory, String accessToken) {
     final BaseBody body = new BaseBody();
     body.put("access_token", accessToken);
     body.put("mode", "json");
