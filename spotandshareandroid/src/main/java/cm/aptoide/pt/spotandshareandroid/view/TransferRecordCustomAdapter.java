@@ -59,8 +59,8 @@ public class TransferRecordCustomAdapter extends BaseAdapter {
           (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
       if (type == 0) {
-        convertView =
-            layoutInflater.inflate(R.layout.activity_transfer_record_received_app_row, parent,
+        convertView = layoutInflater.inflate(
+            R.layout.activity_spot_and_share_transfer_record_received_app_row, parent,
                 false);
         viewHolder.transfRecRecvRowIcons =
             (RelativeLayout) convertView.findViewById(R.id.transfRecRecvRowIcons);
@@ -70,7 +70,8 @@ public class TransferRecordCustomAdapter extends BaseAdapter {
         viewHolder.installButton = (Button) convertView.findViewById(R.id.transfRecRowInstall);
       } else {
         convertView =
-            layoutInflater.inflate(R.layout.activity_transfer_record_sent_app_row, parent, false);
+            layoutInflater.inflate(R.layout.activity_spot_and_share_transfer_record_sent_app_row,
+                parent, false);
 
         viewHolder.reSendButton = (Button) convertView.findViewById(R.id.transfRecReSendButton);
       }

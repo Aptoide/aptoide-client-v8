@@ -88,7 +88,7 @@ public class RadarActivity extends ActivityView implements RadarView, Permission
     analytics = ShareApps.getAnalytics();
     groupManager = new GroupManager(connectionManager);
 
-    setContentView(R.layout.activity_radar);
+    setContentView(R.layout.activity_spot_and_share_radar);
 
     bindViews();
     setupViews();
