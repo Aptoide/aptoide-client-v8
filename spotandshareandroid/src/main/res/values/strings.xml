@@ -90,7 +90,7 @@
   <string name="waiting_group_friends">Waiting for friends to join group</string>
   <string name="share_instruction">Share apps or wait for someone in the group to share them.</string>
 
-  <string name="warning">Warning</string>
+  <string name="spotandshare_title_warning_dialog">Warning</string>
   <string name="clear_history_warning">If you didn’t install the apps shared they will be deleted.</string>
 
   <string name="locationDialog">We will not be able to join groups if location is off</string>

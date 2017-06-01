@@ -272,7 +272,7 @@ public class RadarActivity extends ActivityView implements RadarView, Permission
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
     builder.setTitle(this.getResources()
-        .getString(R.string.warning))
+        .getString(R.string.spotandshare_title_warning_dialog))
         .setMessage(this.getResources()
             .getString(R.string.locationDialog))
         .setPositiveButton(this.getResources()
