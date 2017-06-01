@@ -485,7 +485,8 @@ public class TransferRecordActivity extends ActivityView implements TransferReco
 
     builder.setTitle(getResources().getString(R.string.alert));
     builder.setMessage(message);
-    builder.setPositiveButton(getResources().getString(R.string.install),
+    builder.setPositiveButton(
+        getResources().getString(R.string.spotandshare_button_install_option_dialog),
         new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int id) {
             presenter.installApp(filePath, packageName);

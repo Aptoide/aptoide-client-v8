@@ -42,7 +42,7 @@
   <string name="delete">Delete</string>
 
   <string name="alertInstallApp">Are you sure you want to install the %1$s application?</string>
-  <string name="install">Install</string>
+  <string name="spotandshare_button_install_option_dialog">Install</string>
 
 
   <string name="errorAppVersionNew">There was an error while loading the file %1$s. \nPlease check if the version on your device is the same or higher than the version of %2$s that you received.</string>
