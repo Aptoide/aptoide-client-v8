@@ -15,6 +15,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.timeline.PackageRepository;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.Collections;
 import java.util.List;
 import rx.subjects.PublishSubject;
@@ -49,7 +50,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         WebService.getDefaultConverter(), new PackageRepository(getContext().getPackageManager()),
         20, 10, new TimelineResponseCardMapper()))), savedInstanceState);
     articleSubject = PublishSubject.create();
-    adapter = new CardAdapter(Collections.emptyList(), articleSubject, new DateCalculator());
+    adapter = new CardAdapter(Collections.emptyList(), articleSubject, new DateCalculator(),
+        new SpannableFactory());
   }
 
   private void loadExtras() {
