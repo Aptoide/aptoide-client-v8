@@ -20,7 +20,7 @@
 
   <string name="alert">Alert</string>
   <string name="send">Send</string>
-  <string name="cancel">Cancel</string>
+  <string name="spotandshare_button_cancel_option_dialog">Cancel</string>
   <string name="noSelectedAppsToSend">Please select something to send</string>
 
   <string name="preparingSend">Preparing to send </string>

@@ -180,7 +180,8 @@ public class TransferRecordActivity extends ActivityView implements TransferReco
             }
           })
           .setNegativeButton(this.getResources()
-              .getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                  .getString(R.string.spotandshare_button_cancel_option_dialog),
+              new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
               // User cancelled the dialog
             }
@@ -201,7 +202,8 @@ public class TransferRecordActivity extends ActivityView implements TransferReco
             }
           })
           .setNegativeButton(this.getResources()
-              .getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                  .getString(R.string.spotandshare_button_cancel_option_dialog),
+              new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
               // User cancelled the dialog
             }
@@ -447,7 +449,8 @@ public class TransferRecordActivity extends ActivityView implements TransferReco
           }
         })
         .setNegativeButton(this.getResources()
-            .getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                .getString(R.string.spotandshare_button_cancel_option_dialog),
+            new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int id) {
             // User cancelled the dialog
             Logger.d(TAG, "Pressed cancel button");
@@ -488,7 +491,8 @@ public class TransferRecordActivity extends ActivityView implements TransferReco
             presenter.installApp(filePath, packageName);
           }
         })
-        .setNegativeButton(getResources().getString(R.string.cancel),
+        .setNegativeButton(
+            getResources().getString(R.string.spotandshare_button_cancel_option_dialog),
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int id) {
               }
@@ -511,7 +515,8 @@ public class TransferRecordActivity extends ActivityView implements TransferReco
             presenter.deleteAppFile(item);
           }
         })
-        .setNegativeButton(getResources().getString(R.string.cancel),
+        .setNegativeButton(
+            getResources().getString(R.string.spotandshare_button_cancel_option_dialog),
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int id) {
               }

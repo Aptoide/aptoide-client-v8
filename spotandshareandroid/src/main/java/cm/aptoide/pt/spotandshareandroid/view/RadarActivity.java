@@ -282,7 +282,8 @@ public class RadarActivity extends ActivityView implements RadarView, Permission
           }
         })
         .setNegativeButton(this.getResources()
-            .getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                .getString(R.string.spotandshare_button_cancel_option_dialog),
+            new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int id) {
             // User cancelled the dialog
             onPermissionsDenied();
