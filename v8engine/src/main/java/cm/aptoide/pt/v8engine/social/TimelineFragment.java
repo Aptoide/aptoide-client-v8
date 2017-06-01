@@ -26,6 +26,8 @@ import rx.subjects.PublishSubject;
 
 public class TimelineFragment extends FragmentView implements TimelineView {
 
+  public static final int LATEST_PACKAGES_COUNT = 20;
+  public static final int RANDOM_PACKAGES_COUNT = 10;
   private static final String ACTION_KEY = "action";
   private RecyclerView list;
   private CardAdapter adapter;
@@ -45,10 +47,11 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     super.onCreate(savedInstanceState);
     loadExtras();
     attachPresenter(new TimelinePresenter(this, new SocialManager(new SocialService(url,
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
-        ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-        WebService.getDefaultConverter(), new PackageRepository(getContext().getPackageManager()),
-        20, 10, new TimelineResponseCardMapper()))), savedInstanceState);
+            ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
+            ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
+            WebService.getDefaultConverter(), new PackageRepository(getContext().getPackageManager()),
+            LATEST_PACKAGES_COUNT, RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper()))),
+        savedInstanceState);
     articleSubject = PublishSubject.create();
     adapter = new CardAdapter(Collections.emptyList(), articleSubject, new DateCalculator(),
         new SpannableFactory());
