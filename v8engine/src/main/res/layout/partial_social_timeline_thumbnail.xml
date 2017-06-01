@@ -26,8 +26,7 @@
       style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />
 
-  <include
-      layout="@layout/brick_app_item_list"
+  <RelativeLayout
       android:id="@+id/partial_social_timeline_thumbnail_image"
       android:layout_width="match_parent"
       android:layout_height="152dp"
@@ -38,7 +37,40 @@
       android:layout_marginLeft="12dp"
       android:layout_marginRight="12dp"
       android:layout_marginStart="12dp"
-      />
+      >
+
+    <ImageView
+        android:id="@+id/featured_graphic"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/gradient_black"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:padding="4dp"
+        >
+
+      <TextView
+          android:id="@+id/app_name"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentStart="true"
+          android:layout_centerVertical="true"
+          android:paddingEnd="1.5dp"
+          android:paddingRight="1.5dp"
+          android:textColor="?attr/inverseTextColor"
+          tools:text="Little Commander worl world II"
+          />
+    </RelativeLayout>
+
+  </RelativeLayout>
 
   <View
       android:id="@+id/divider"

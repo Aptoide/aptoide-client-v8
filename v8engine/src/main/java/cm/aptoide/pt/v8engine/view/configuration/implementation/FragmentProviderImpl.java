@@ -7,6 +7,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 import cm.aptoide.pt.v8engine.presenter.InviteFriendsContract;
+import cm.aptoide.pt.v8engine.social.TimelineFragment;
 import cm.aptoide.pt.v8engine.timeline.view.AppsTimelineFragment;
 import cm.aptoide.pt.v8engine.timeline.view.SocialFragment;
 import cm.aptoide.pt.v8engine.timeline.view.TimeLineLikesFragment;
@@ -196,7 +197,7 @@ public class FragmentProviderImpl implements FragmentProvider {
 
   @Override public Fragment newAppsTimelineFragment(String action, Long userId, Long storeId,
       StoreContext storeContext) {
-    return AppsTimelineFragment.newInstance(action, userId, storeId, storeContext);
+    return TimelineFragment.newInstance(action, userId, storeId, storeContext);
   }
 
   @Override
