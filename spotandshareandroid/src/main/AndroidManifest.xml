@@ -45,15 +45,6 @@
     <activity android:name=".view.AppSelectionActivity"/>
 
     <service
-        android:name=".HighwayClientComm"
-        android:enabled="true"
-        android:exported="true"/>
-    <!-- <service -->
-    <!-- android:name=".HighwayServerComm" -->
-    <!-- android:enabled="true" -->
-    <!-- android:exported="true" /> -->
-
-    <service
         android:name=".transference.ClientService"
         android:enabled="true"
         android:exported="true"/>
