@@ -11,8 +11,10 @@ import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.preferences.Preferences;
 import rx.Completable;
 
 /**
@@ -31,6 +33,7 @@ public class PullingContentReceiver extends BroadcastReceiver {
   private NotificationAccessor notificationAccessor;
   private NotificationIdsMapper notificationIdsMapper;
   private NotificationCenter notificationCenter;
+  private Preferences preferences;
 
   @Override public void onReceive(Context context, Intent intent) {
     Logger.d(TAG,
@@ -39,11 +42,13 @@ public class PullingContentReceiver extends BroadcastReceiver {
     crashReport = CrashReport.getInstance();
     notificationIdsMapper = new NotificationIdsMapper();
     notificationCenter = ((V8Engine) context.getApplicationContext()).getNotificationCenter();
+    preferences = ((V8Engine) context.getApplicationContext()).getPreferences();
     String action = intent.getAction();
     if (action != null) {
       switch (action) {
         case Intent.ACTION_BOOT_COMPLETED:
-          startSync();
+          startSync().subscribe(() -> {
+          }, throwable -> crashReport.log(throwable));
           break;
         case NOTIFICATION_PRESSED_ACTION:
           pushNotificationPressed(context, intent);
@@ -65,8 +70,13 @@ public class PullingContentReceiver extends BroadcastReceiver {
     }
   }
 
-  private void startSync() {
-    notificationCenter.startIfEnabled();
+  private Completable startSync() {
+    return preferences.getBoolean(ManagedKeys.CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY,
+        true)
+        .first()
+        .filter(isEnable -> isEnable)
+        .doOnNext(isEnable -> notificationCenter.start())
+        .toCompletable();
   }
 
   private Completable notificationDismissed(int notificationId) {

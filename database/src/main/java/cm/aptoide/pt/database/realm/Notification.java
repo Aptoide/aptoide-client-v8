@@ -8,6 +8,7 @@ import io.realm.annotations.PrimaryKey;
  */
 
 public class Notification extends RealmObject {
+  public final static String OWNER_ID_KEY = "ownerId";
   @PrimaryKey private String key;
   private String abTestingGroup;
   private String body;
@@ -22,10 +23,11 @@ public class Notification extends RealmObject {
   private long dismissed;
   private String appName;
   private String graphic;
+  private String ownerId;
 
   public Notification(String abTestingGroup, String body, int campaignId, String img, String lang,
       String title, String url, String urlTrack, long timeStamp, int type, long dismissed,
-      String appName, String graphic) {
+      String appName, String graphic, String ownerId) {
     this.body = body;
     this.img = img;
     this.title = title;
@@ -39,6 +41,7 @@ public class Notification extends RealmObject {
     this.dismissed = dismissed;
     this.appName = appName;
     this.graphic = graphic;
+    this.ownerId = ownerId;
     key = String.valueOf(timeStamp + type);
   }
 
@@ -99,5 +102,9 @@ public class Notification extends RealmObject {
 
   public long getTimeStamp() {
     return timeStamp;
+  }
+
+  public String getOwnerId() {
+    return ownerId;
   }
 }

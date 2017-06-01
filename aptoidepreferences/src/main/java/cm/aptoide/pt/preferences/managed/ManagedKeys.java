@@ -39,4 +39,6 @@ public class ManagedKeys {
   public static final String TWITTER_SYNC = "twitter_sync";
   public static final String FACEBOOK_SYNC = "facebook_sync";
   public static final String AUTO_UPDATE_ENABLE = "auto_update";
+  public static final String CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY =
+      "notification_campaign_and_social";
 }
