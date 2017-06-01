@@ -3,7 +3,7 @@
     android:id="@+id/HighwayGridViewItem"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/highway_appselection_selector"
+    android:background="@drawable/spot_and_share_app_selection_item_selector"
     android:clickable="true"
     android:orientation="vertical"
     >

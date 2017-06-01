@@ -30,7 +30,7 @@
       android:layout_marginLeft="6dp"
       android:layout_marginRight="6dp"
       android:layout_weight="0.3"
-      android:background="@drawable/customcardview"
+      android:background="@drawable/spot_and_share_custom_cardview"
       android:orientation="vertical"
       android:paddingBottom="6dp"
       >
@@ -163,7 +163,7 @@
           android:layout_height="wrap_content"
           android:layout_alignParentEnd="true"
           android:layout_alignParentRight="true"
-          android:background="@drawable/roundedcornerbuttons_blue"
+          android:background="@drawable/spot_and_share_rounded_corner_buttons_orange"
           android:clickable="true"
           android:paddingBottom="5dp"
           android:paddingLeft="20dp"

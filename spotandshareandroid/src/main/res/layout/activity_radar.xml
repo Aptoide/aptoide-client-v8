@@ -82,7 +82,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_centerInParent="true"
-          android:indeterminateDrawable="@drawable/custom_progressbarwheel"
+          android:indeterminateDrawable="@drawable/spot_and_share_custom_progressbar"
           android:visibility="gone"
           style="?android:attr/progressBarStyleLarge"
           />
@@ -103,7 +103,7 @@
           android:layout_height="wrap_content"
           android:layout_gravity="center_horizontal"
           android:indeterminate="true"
-          android:indeterminateDrawable="@drawable/custom_progressbarwheel"
+          android:indeterminateDrawable="@drawable/spot_and_share_custom_progressbar"
           android:indeterminateOnly="true"
           style="?android:attr/progressBarStyleLarge"
           />
@@ -126,7 +126,7 @@
           android:layout_height="wrap_content"
           android:layout_gravity="center_horizontal"
           android:layout_weight="0.333"
-          android:background="@drawable/button_selector_main"
+          android:background="@drawable/spot_and_share_button_selector_main"
           android:baselineAligned="false"
           android:clickable="true"
           android:orientation="vertical"
