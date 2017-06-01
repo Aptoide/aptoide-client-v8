@@ -143,7 +143,7 @@
             android:layout_marginLeft="18dp"
             android:layout_marginRight="18dp"
             android:layout_marginTop="3dp"
-            android:src="@drawable/qr_code_spotshare"
+            android:src="@drawable/spot_and_share_qr_code"
             />
 
         <LinearLayout

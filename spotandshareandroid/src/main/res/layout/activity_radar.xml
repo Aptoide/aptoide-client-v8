@@ -32,7 +32,7 @@
         android:layout_height="50dp"
         android:layout_gravity="right"
         android:layout_marginTop="20dp"
-        android:drawableLeft="@drawable/supervisor_account_material"
+        android:drawableLeft="@drawable/spot_and_share_invite_friends_icon"
         android:drawablePadding="5dp"
         android:ellipsize="end"
         android:maxLines="2"
@@ -140,7 +140,7 @@
             android:layout_marginTop="4dp"
             android:layout_weight="0.9"
             android:adjustViewBounds="true"
-            android:src="@drawable/creategroup"
+            android:src="@drawable/spot_and_share_create_group"
             />
 
         <TextView

@@ -102,7 +102,7 @@
           android:layout_marginTop="4dp"
           android:layout_weight="1"
           android:adjustViewBounds="true"
-          android:src="@drawable/share"
+          android:src="@drawable/share_white"
           />
 
       <TextView
@@ -139,7 +139,7 @@
           android:layout_marginTop="4dp"
           android:layout_weight="0.9"
           android:adjustViewBounds="true"
-          android:src="@drawable/garbage"
+          android:src="@drawable/spot_and_share_garbage"
           />
 
       <TextView

@@ -99,7 +99,7 @@
     <item name="icMyAccountDrawable">@drawable/ic_action_accounts</item>
     <item name="icRollbackDrawable">@drawable/ic_action_time</item>
     <item name="icScheduledDrawable">@drawable/ic_drawer_schedule</item>
-    <item name="icSpotShare">@drawable/ic_action_spotshare</item>
+    <item name="icSpotShare">@drawable/spot_and_share_ic_action_spotshare_grey</item>
     <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel</item>
     <item name="icSettingsDrawable">@drawable/ic_action_settings_light</item>
     <item name="icSendFeedbackDrawable">@drawable/ic_send_feedback</item>

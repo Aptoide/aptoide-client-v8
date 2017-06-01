@@ -57,7 +57,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_action_send_app"
+        android:src="@drawable/spot_and_share_ic_action_send_app"
         app:elevation="8dp"
         />
 
