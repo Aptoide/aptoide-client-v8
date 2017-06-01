@@ -300,7 +300,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override public void navigateToCreateProfile() {
     getFragmentNavigator().cleanBackStack();
-    getFragmentNavigator().navigateTo(ManageUserFragment.newInstance());
+    getFragmentNavigator().navigateTo(ManageUserFragment.newInstanceToCreate());
   }
 
   @Override public Context getApplicationContext() {

@@ -33,6 +33,7 @@ import cm.aptoide.pt.v8engine.networking.StoreBodyInterceptor;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.view.account.ImageLoaderFragment;
 import cm.aptoide.pt.v8engine.view.custom.DividerItemDecoration;
+import cm.aptoide.pt.v8engine.view.dialog.ImageSourceSelectionDialogFragment;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jakewharton.rxbinding.view.RxView;
@@ -222,7 +223,8 @@ public class ManageStoreFragment extends ImageLoaderFragment
     StoreManagerFactory storeManagerFactory =
         new StoreManagerFactory(accountManager, httpClient, converterFactory, storeBodyInterceptor,
             bodyInterceptorV3, bodyInterceptorV7);
-    return new ManageStorePresenter(this, goToHome, storeManagerFactory.create());
+    return new ManageStorePresenter(this, CrashReport.getInstance(), goToHome,
+        storeManagerFactory.create());
   }
 
   @NonNull private StoreBodyInterceptor buildStoreInterceptor(AptoideAccountManager accountManager,
@@ -271,7 +273,7 @@ public class ManageStoreFragment extends ImageLoaderFragment
     outState.putBoolean(EXTRA_GO_TO_HOME, goToHome);
   }
 
-  public void loadImageFromCamera() {
+  private void loadImageFromCamera() {
     requestAccessToCamera(() -> {
       dispatchTakePictureIntent();
     }, () -> {
@@ -297,7 +299,7 @@ public class ManageStoreFragment extends ImageLoaderFragment
     currentModel.setStoreImagePath(filePath);
   }
 
-  public void loadImageFromGallery() {
+  private void loadImageFromGallery() {
     requestAccessToExternalFileSystem(false, R.string.access_to_open_gallery_rationale, () -> {
       dispatchOpenGalleryIntent();
     }, () -> {

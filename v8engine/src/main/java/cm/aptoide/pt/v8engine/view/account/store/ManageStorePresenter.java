@@ -12,12 +12,14 @@ import rx.Observable;
 public class ManageStorePresenter implements Presenter {
 
   private final ManageStoreView view;
+  private final CrashReport crashReport;
   private final boolean goBackToHome;
   private final StoreManager storeManager;
 
-  public ManageStorePresenter(ManageStoreView view, boolean goBackToHome,
+  public ManageStorePresenter(ManageStoreView view, CrashReport crashReport, boolean goBackToHome,
       StoreManager storeManager) {
     this.view = view;
+    this.crashReport = crashReport;
     this.goBackToHome = goBackToHome;
     this.storeManager = storeManager;
   }
@@ -36,7 +38,8 @@ public class ManageStorePresenter implements Presenter {
         .filter(event -> event == View.LifecycleEvent.RESUME)
         .flatMap(__ -> Observable.merge(handleSaveDataClick, handleCancelClick,
             handleLoadStoreImageClick))
-        .subscribe();
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
   }
 
   @Override public void saveState(Bundle state) {
@@ -83,8 +86,7 @@ public class ManageStorePresenter implements Presenter {
       view.showGenericError();
     }
 
-    CrashReport.getInstance()
-        .log(err);
+    crashReport.log(err);
     return Completable.complete();
   }
 

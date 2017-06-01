@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.view.account.store;
+package cm.aptoide.pt.v8engine.view.dialog;
 
 import android.app.Dialog;
 import android.os.Bundle;

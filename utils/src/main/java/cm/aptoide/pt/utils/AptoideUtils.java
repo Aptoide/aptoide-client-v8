@@ -873,7 +873,11 @@ public class AptoideUtils {
       return list;
     }
 
-    public static void hideKeyboard(Activity activity) {
+    /**
+     * If you are trying to use this method inside a fragment, the base fragment already has
+     * a copy of it. Use that instead.
+     */
+    @Deprecated public static void hideKeyboard(Activity activity) {
       View view = activity.getCurrentFocus();
       if (view != null) {
         ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).
