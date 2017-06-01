@@ -7,13 +7,15 @@ import cm.aptoide.pt.dataprovider.ws.v3.OAuth2AuthenticationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.GetMySubscribedStoresRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.GetUserMetaRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.GetUserInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserMultipartRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
 import cm.aptoide.pt.model.v3.OAuth;
+import cm.aptoide.pt.model.v7.GetUserInfo;
 import cm.aptoide.pt.model.v7.GetUserMeta;
+import cm.aptoide.pt.model.v7.GetUserSettings;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -115,8 +117,7 @@ public class AccountManagerService {
 
   public Completable updateAccount(String accessLevel, AptoideAccountManager accountManager) {
     return SetUserRequest.of(accessLevel, interceptorFactory.createV7(accountManager, "pool"),
-        httpClient,
-        converterFactory)
+        httpClient, converterFactory)
         .observe(true)
         .toSingle()
         .flatMapCompletable(response -> {
@@ -191,10 +192,10 @@ public class AccountManagerService {
             encryptedPassword, type, stores));
   }
 
-  private Single<GetUserMeta> getServerAccount(AptoideAccountManager accountManager,
+  private Single<GetUserInfo> getServerAccount(AptoideAccountManager accountManager,
       String accessToken) {
-    return GetUserMetaRequest.of(REFRESH, accessToken, "",
-        interceptorFactory.createV7(accountManager, "web"), httpClient, converterFactory)
+    return GetUserInfoRequest.of(accessToken, httpClient, converterFactory,
+        interceptorFactory.createV7(accountManager, "web"))
         .observe()
         .toSingle()
         .flatMap(response -> {
@@ -206,17 +207,24 @@ public class AccountManagerService {
         });
   }
 
-  private Account mapServerAccountToAccount(GetUserMeta user, String refreshToken,
+  private Account mapServerAccountToAccount(GetUserInfo userInfo, String refreshToken,
       String accessToken, String encryptedPassword, String type, List<Store> subscribedStores) {
-    GetUserMeta.Data userData = user.getData();
+    GetUserMeta.Data userData = userInfo.getNodes()
+        .getMeta()
+        .getData();
+    GetUserSettings.Data userSettings = userInfo.getNodes()
+        .getSettings()
+        .getData();
     String storeName = userData.getStore() == null ? "" : userData.getStore()
         .getName();
+    String storeAvatar = userData.getStore() == null ? "" : userData.getStore()
+        .getAvatar();
     return accountFactory.createAccount(userData.getAccess(), subscribedStores,
         String.valueOf(userData.getId()), userData.getIdentity()
             .getEmail(), userData.getName(), userData.getAvatar(), refreshToken, accessToken,
-        encryptedPassword, Account.Type.valueOf(type), storeName, userData.getStore()
-            .getAvatar(), false,
-        true);
+        encryptedPassword, Account.Type.valueOf(type), storeName, storeAvatar,
+        userSettings.isMature(), userSettings.getAccess()
+            .isConfirmed());
   }
 
   public Completable updateAccount(boolean adultContentEnabled, String accessToken) {
