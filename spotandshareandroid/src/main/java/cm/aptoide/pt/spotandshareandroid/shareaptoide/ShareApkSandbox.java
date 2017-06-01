@@ -1,4 +1,4 @@
-package cm.aptoide.pt.nanohttpd;
+package cm.aptoide.pt.spotandshareandroid.shareaptoide;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
