@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    >
+
+  <android.support.design.widget.AppBarLayout
+      android:id="@+id/shareAppsAppbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/shareAppsToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="?attr/toolbarTheme"
+        />
+  </android.support.design.widget.AppBarLayout>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:weightSum="1"
+      >
+
+    <TextView
+        android:id="@+id/share_aptoide_apk_button"
+        android:layout_width="180dp"
+        android:layout_height="50dp"
+        android:layout_gravity="right"
+        android:layout_marginTop="20dp"
+        android:drawableLeft="@drawable/spot_and_share_invite_friends_icon"
+        android:drawablePadding="5dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:paddingLeft="16dp"
+        android:text="@string/spotandshare_button_invite_friends"
+        android:textColor="@color/white"
+        style="@style/Aptoide.Spot.Button.Ghost.Spotandshare"
+        >
+
+    </TextView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="#FFFFFF"
+        android:gravity="center"
+        >
+
+
+      <cm.aptoide.pt.spotandshareandroid.view.radar.RadarScan
+          android:id="@+id/radar"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          />
+
+      <cm.aptoide.pt.spotandshareandroid.view.radar.RadarTextView
+          android:id="@+id/hotspotTextView"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_margin="20dp"
+          />
+
+      <TextView
+          android:id="@+id/searching_groups"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_margin="10dp"
+          android:color="@color/medium_gray"
+          android:gravity="bottom|center"
+          android:text="@string/searching_groups"
+          android:textSize="16sp"
+          />
+
+      <ProgressBar
+          android:id="@+id/buttonsProgressBar"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerInParent="true"
+          android:indeterminateDrawable="@drawable/spot_and_share_custom_progressbar"
+          android:visibility="gone"
+          style="?android:attr/progressBarStyleLarge"
+          />
+
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/circular_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        >
+
+      <ProgressBar
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:indeterminate="true"
+          android:indeterminateDrawable="@drawable/spot_and_share_custom_progressbar"
+          android:indeterminateOnly="true"
+          style="?android:attr/progressBarStyleLarge"
+          />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/groupButtonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3.7"
+        android:background="#FFFFFF"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        >
+
+      <LinearLayout
+          android:id="@+id/createGroup"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:layout_weight="0.333"
+          android:background="@drawable/spot_and_share_button_selector_main"
+          android:baselineAligned="false"
+          android:clickable="true"
+          android:orientation="vertical"
+          android:weightSum="1"
+          >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="4dp"
+            android:layout_weight="0.9"
+            android:adjustViewBounds="true"
+            android:src="@drawable/spot_and_share_create_group"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0.1"
+            android:padding="5dp"
+            android:text="@string/createGroup"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp"
+            />
+
+      </LinearLayout>
+
+
+    </LinearLayout>
+
+  </LinearLayout>
+
+
+</LinearLayout>
