@@ -25,11 +25,12 @@ import lombok.ToString;
   private String title;
   private String url;
   private String urlTrack;
+  private String ownerId;
   private @NotificationType int type;
   private long timeStamp;
 
   public AptoideNotification(String body, String img, String title, String url, int type,
-      long timeStamp, String appName, String graphic, long dismissed) {
+      long timeStamp, String appName, String graphic, long dismissed, String ownerId) {
     this.body = body;
     this.img = img;
     this.title = title;
@@ -39,23 +40,26 @@ import lombok.ToString;
     this.appName = appName;
     this.graphic = graphic;
     this.dismissed = dismissed;
+    this.ownerId = ownerId;
   }
 
   public AptoideNotification(String body, String img, String title, String url, int type,
-      String appName, String graphic, long dismissed) {
-    this(body, img, title, url, type, System.currentTimeMillis(), appName, graphic, dismissed);
+      String appName, String graphic, long dismissed, String ownerId) {
+    this(body, img, title, url, type, System.currentTimeMillis(), appName, graphic, dismissed,
+        ownerId);
   }
 
   public AptoideNotification(String abTestingGroup, String body, int campaignId, String img,
-      String lang, String title, String url, String urlTrack, String appName, String graphic) {
+      String lang, String title, String url, String urlTrack, String appName, String graphic,
+      String ownerId) {
     this(abTestingGroup, body, campaignId, img, lang, title, url, urlTrack,
-        System.currentTimeMillis(), CAMPAIGN, -1, appName, graphic);
+        System.currentTimeMillis(), CAMPAIGN, -1, appName, graphic, ownerId);
   }
 
   public AptoideNotification(String abTestingGroup, String body, int campaignId, String img,
       String lang, String title, String url, String urlTrack, long timeStamp, int type,
-      long dismissed, String appName, String graphic) {
-    this(body, img, title, url, type, timeStamp, appName, graphic, dismissed);
+      long dismissed, String appName, String graphic, String ownerId) {
+    this(body, img, title, url, type, timeStamp, appName, graphic, dismissed, ownerId);
     this.abTestingGroup = abTestingGroup;
     this.campaignId = campaignId;
     this.lang = lang;
@@ -112,6 +116,10 @@ import lombok.ToString;
 
   public long getTimeStamp() {
     return timeStamp;
+  }
+
+  public String getOwnerId() {
+    return ownerId;
   }
 
   @Retention(RetentionPolicy.SOURCE) @IntDef({ CAMPAIGN, COMMENT, LIKE, POPULAR })

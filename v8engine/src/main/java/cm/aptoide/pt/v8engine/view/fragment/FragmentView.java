@@ -98,6 +98,7 @@ public abstract class FragmentView extends LeakFragment implements View {
 
   @NonNull private Observable<LifecycleEvent> convertToEvent(FragmentEvent event) {
     switch (event) {
+      case ATTACH:
       case CREATE:
         return Observable.empty();
       case CREATE_VIEW:
@@ -112,6 +113,7 @@ public abstract class FragmentView extends LeakFragment implements View {
         return Observable.just(LifecycleEvent.STOP);
       case DESTROY_VIEW:
         return Observable.just(LifecycleEvent.DESTROY);
+      case DETACH:
       case DESTROY:
         return Observable.empty();
       default:

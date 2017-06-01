@@ -3,6 +3,8 @@ package cm.aptoide.pt.spotandshareandroid;
 import android.support.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by filipegoncalves on 09-02-2017.
@@ -10,6 +12,7 @@ import java.util.List;
 
 public class TransferRecordManager {
 
+  private final ExecutorService singleThreadedExecutorService = Executors.newSingleThreadExecutor();
   private ApplicationsManager applicationsManager;
 
   public TransferRecordManager(ApplicationsManager applicationsManager) {
@@ -53,6 +56,10 @@ public class TransferRecordManager {
   public void installApp(String filePath, String packageName) {
     applicationsManager.moveObbs(filePath, packageName);
     applicationsManager.installApp(filePath);
+  }
+
+  public void installAppAsync(String filePath, String packageName) {
+    singleThreadedExecutorService.execute(() -> installApp(filePath, packageName));
   }
 
   public App convertTransferRecordItemToApp(HighwayTransferRecordItem item) {
