@@ -15,7 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.spotandshareandroid.R;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.spotandshare.DataHolder;
 import cm.aptoide.pt.v8engine.spotandshare.ShareApps;
 import cm.aptoide.pt.v8engine.spotandshare.analytics.SpotAndShareAnalyticsInterface;

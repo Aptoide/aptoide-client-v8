@@ -22,7 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import cm.aptoide.pt.spotandshareandroid.R;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.spotandshare.DataHolder;
 import cm.aptoide.pt.v8engine.spotandshare.PermissionListener;
 import cm.aptoide.pt.v8engine.spotandshare.PermissionManager;

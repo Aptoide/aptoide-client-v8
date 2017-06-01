@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import cm.aptoide.pt.spotandshareandroid.R;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.spotandshare.app.AppViewModel;
 import cm.aptoide.pt.v8engine.spotandshare.presenter.AppSelectionView;
 import java.util.List;
@@ -78,7 +78,7 @@ public class AppSelectionCustomAdapter extends BaseAdapter {
     if (appsList.get(position)
         .isSelected()) {
       viewHolder.linearLayout.setBackgroundColor(context.getResources()
-          .getColor(R.color.light_grey));
+          .getColor(R.color.grey_fog_normal));
       //            notifyDataSetChanged();
     } else {
       viewHolder.linearLayout.setBackgroundColor(context.getResources()

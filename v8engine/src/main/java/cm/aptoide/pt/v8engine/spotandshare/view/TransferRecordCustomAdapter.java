@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cm.aptoide.pt.spotandshareandroid.R;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.spotandshare.presenter.TransferRecordView;
 import cm.aptoide.pt.v8engine.spotandshare.transference.TransferRecordItem;
 import java.util.List;

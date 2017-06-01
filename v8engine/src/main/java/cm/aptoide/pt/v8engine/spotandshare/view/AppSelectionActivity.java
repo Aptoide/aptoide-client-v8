@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import cm.aptoide.pt.spotandshareandroid.R;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.spotandshare.app.AppViewModel;
 import cm.aptoide.pt.v8engine.spotandshare.app.ApplicationProvider;
 import cm.aptoide.pt.v8engine.spotandshare.presenter.ActivityView;

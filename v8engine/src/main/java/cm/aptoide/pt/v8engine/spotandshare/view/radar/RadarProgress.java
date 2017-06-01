@@ -11,7 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
-import cm.aptoide.pt.spotandshareandroid.R;
+import cm.aptoide.pt.v8engine.R;
 
 /**
  * Created by filipegoncalves on 24-08-2016.
@@ -48,7 +48,7 @@ public class RadarProgress extends View {
   @Override protected void onDraw(Canvas canvas) {
     super.onDraw(canvas);
     //    int[] f = { Color.parseColor("#00A8D7A7"), Color.parseColor("#ffA8D7A7") };
-    int[] f = { R.color.dark_blue, R.color.dark_blue };
+    int[] f = { R.color.black_87_alpha, R.color.black_87_alpha };
     float[] p = { 0.0f, 1.0f };
     SweepGradient sweepGradient = new SweepGradient(rect.centerX(), rect.centerX(), f, p);
     paint.setShader(sweepGradient);

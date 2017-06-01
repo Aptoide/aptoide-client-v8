@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.spotandshare;
 
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.spotandshareandroid.group.GroupNameProvider;
+import cm.aptoide.pt.v8engine.spotandshare.group.GroupNameProvider;
 import rx.Single;
 
 /**

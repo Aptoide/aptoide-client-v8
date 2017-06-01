@@ -24,8 +24,8 @@ import cm.aptoide.pt.spotandshare.socket.message.client.AptoideMessageClientSock
 import cm.aptoide.pt.spotandshare.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.spotandshare.socket.message.messages.v1.RequestPermissionToSend;
 import cm.aptoide.pt.spotandshare.socket.message.server.AptoideMessageServerSocket;
-import cm.aptoide.pt.spotandshareandroid.R;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.spotandshare.DataHolder;
 import cm.aptoide.pt.v8engine.spotandshare.Utils;
 import cm.aptoide.pt.v8engine.spotandshare.app.App;

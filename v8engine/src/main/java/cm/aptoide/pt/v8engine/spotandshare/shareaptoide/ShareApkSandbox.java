@@ -5,7 +5,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import cm.aptoide.pt.nanohttpd.servers.modular.modules.ShareApkServer;
-import cm.aptoide.pt.spotandshareandroid.R;
+import cm.aptoide.pt.v8engine.R;
 import fi.iki.elonen.NanoHTTPD;
 import java.io.File;
 import java.io.IOException;
