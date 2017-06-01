@@ -3,11 +3,13 @@ package cm.aptoide.pt.v8engine.social;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.R;
@@ -16,6 +18,7 @@ import cm.aptoide.pt.v8engine.timeline.PackageRepository;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import java.util.Collections;
 import java.util.List;
 import rx.subjects.PublishSubject;
@@ -29,10 +32,14 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   public static final int LATEST_PACKAGES_COUNT = 20;
   public static final int RANDOM_PACKAGES_COUNT = 10;
   private static final String ACTION_KEY = "action";
-  private RecyclerView list;
+
   private CardAdapter adapter;
   private PublishSubject<Article> articleSubject;
   private String url;
+
+  private RecyclerView list;
+  private ProgressBar progressBar;
+  private SwipeRefreshLayout swipeRefreshLayout;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -71,13 +78,39 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
+    progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     list = (RecyclerView) view.findViewById(R.id.fragment_cards_list);
     list.setAdapter(adapter);
     list.setLayoutManager(new LinearLayoutManager(getContext()));
+
+    // Pull-to-refresh
+    swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
+    swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
+        R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
+
+    //super needs to be call last because the presenter will try to access this local variables.
+    super.onViewCreated(view, savedInstanceState);
   }
 
   @Override public void showCards(List<Article> cards) {
     adapter.updateCards(cards);
+  }
+
+  @Override public void showProgressIndicator() {
+    list.setVisibility(View.GONE);
+    progressBar.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void hideProgressIndicator() {
+    list.setVisibility(View.VISIBLE);
+    progressBar.setVisibility(View.GONE);
+  }
+
+  @Override public void hideRefresh() {
+    swipeRefreshLayout.setRefreshing(false);
+  }
+
+  @Override public rx.Observable<Void> refreshes() {
+    return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
   }
 }
