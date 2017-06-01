@@ -17,20 +17,9 @@ import rx.Single;
 public abstract class ProductRepository {
 
   private final PaymentFactory paymentFactory;
-  private final AuthorizationRepository authorizationRepository;
-  private final PaymentConfirmationRepository confirmationRepository;
-  private final Payer payer;
-  private final AuthorizationFactory authorizationFactory;
 
-  protected ProductRepository(PaymentFactory paymentFactory,
-      AuthorizationRepository authorizationRepository,
-      PaymentConfirmationRepository confirmationRepository, Payer payer,
-      AuthorizationFactory authorizationFactory) {
+  protected ProductRepository(PaymentFactory paymentFactory) {
     this.paymentFactory = paymentFactory;
-    this.authorizationRepository = authorizationRepository;
-    this.confirmationRepository = confirmationRepository;
-    this.payer = payer;
-    this.authorizationFactory = authorizationFactory;
   }
 
   public abstract Single<Purchase> getPurchase(Product product);

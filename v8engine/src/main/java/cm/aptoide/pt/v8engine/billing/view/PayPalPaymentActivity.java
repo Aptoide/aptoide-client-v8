@@ -30,8 +30,6 @@ public class PayPalPaymentActivity extends ProductActivity implements PayPalPaym
 
   private static final int PAY_APP_REQUEST_CODE = 12;
 
-  private com.paypal.android.sdk.payments.PayPalPayment payment;
-  private PayPalConfiguration configuration;
   private PublishSubject<String> authorizationSubject;
   private ProgressBar progressBar;
   private AlertDialog unknownErrorDialog;
@@ -48,12 +46,6 @@ public class PayPalPaymentActivity extends ProductActivity implements PayPalPaym
           finish();
         })
         .create();
-    unknownErrorDialog = new AlertDialog.Builder(this).setMessage(R.string.having_some_trouble)
-        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-          finish();
-        })
-        .create();
-
     unknownErrorDialog = new AlertDialog.Builder(this).setMessage(R.string.having_some_trouble)
         .setPositiveButton(android.R.string.ok, (dialog, which) -> {
           finish();

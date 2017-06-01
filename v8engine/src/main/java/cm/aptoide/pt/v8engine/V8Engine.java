@@ -630,7 +630,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
               paymentRepositoryFactory.getPaidAppConfirmationRepository(), getAccountPayer(),
               getAuthorizationFactory(), getNetworkOperatorManager(), getBaseBodyInterceptorV3(),
               getDefaultClient(), WebService.getDefaultConverter(), productFactory),
-          new InAppBillingProductRepository(getInAppBillingRepository(), purchaseFactory,
+          new InAppBillingProductRepository(purchaseFactory,
               paymentFactory, authorizationRepository,
               paymentRepositoryFactory.getInAppConfirmationRepository(), getAccountPayer(),
               getAuthorizationFactory(), productFactory, getBaseBodyInterceptorV3(),

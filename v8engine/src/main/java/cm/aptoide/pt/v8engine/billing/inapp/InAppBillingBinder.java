@@ -59,13 +59,16 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
   private final InAppBillingSerializer serializer;
   private final PaymentThrowableCodeMapper errorCodeFactory;
   private final AptoideBilling billing;
+  private final CrashReport crashReport;
 
   public InAppBillingBinder(Context context, InAppBillingSerializer serializer,
-      PaymentThrowableCodeMapper errorCodeFactory, AptoideBilling billing) {
+      PaymentThrowableCodeMapper errorCodeFactory, AptoideBilling billing,
+      CrashReport crashReport) {
     this.context = context;
     this.serializer = serializer;
     this.errorCodeFactory = errorCodeFactory;
     this.billing = billing;
+    this.crashReport = crashReport;
   }
 
   @Override public int isBillingSupported(int apiVersion, String packageName, String type)
@@ -76,8 +79,7 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
           .toBlocking()
           .value();
     } catch (Exception exception) {
-      CrashReport.getInstance()
-          .log(exception);
+      crashReport.log(exception);
       return errorCodeFactory.map(exception.getCause());
     }
   }
@@ -102,23 +104,19 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
 
     try {
       final List<String> serializedProducts =
-          billing.getInAppProducts(apiVersion, packageName, itemIdList, type)
-              .flatMap(products -> {
-                try {
-                  return Single.just(serializer.serializeProducts(products));
-                } catch (IOException e) {
-                  return Single.error(e);
-                }
-              })
-              .toBlocking()
-              .value();
+          billing.getInAppProducts(apiVersion, packageName, itemIdList, type).flatMap(products -> {
+            try {
+              return Single.just(serializer.serializeProducts(products));
+            } catch (IOException e) {
+              return Single.error(e);
+            }
+          }).toBlocking().value();
 
       result.putInt(RESPONSE_CODE, RESULT_OK);
       result.putStringArrayList(DETAILS_LIST, new ArrayList<>(serializedProducts));
       return result;
     } catch (Exception exception) {
-      CrashReport.getInstance()
-          .log(exception);
+      crashReport.log(exception);
       result.putInt(RESPONSE_CODE, errorCodeFactory.map(exception.getCause()));
       return result;
     }
@@ -134,8 +132,7 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
           PaymentActivity.getIntent(context, apiVersion, packageName, sku, type, developerPayload),
           PendingIntent.FLAG_UPDATE_CURRENT));
     } catch (Exception exception) {
-      CrashReport.getInstance()
-          .log(exception);
+      crashReport.log(exception);
       result.putInt(RESPONSE_CODE, errorCodeFactory.map(exception.getCause()));
     }
 
@@ -148,9 +145,8 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
     final Bundle result = new Bundle();
     try {
 
-      final List<Purchase> purchases = billing.getInAppPurchases(apiVersion, packageName, type)
-          .toBlocking()
-          .value();
+      final List<Purchase> purchases =
+          billing.getInAppPurchases(apiVersion, packageName, type).toBlocking().value();
 
       final List<String> dataList = new ArrayList<>();
       final List<String> signatureList = new ArrayList<>();
@@ -168,8 +164,7 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
       result.putInt(RESPONSE_CODE, RESULT_OK);
       return result;
     } catch (Exception exception) {
-      CrashReport.getInstance()
-          .log(exception);
+      crashReport.log(exception);
       result.putInt(RESPONSE_CODE, errorCodeFactory.map(exception.getCause()));
       return result;
     }
@@ -183,8 +178,7 @@ public class InAppBillingBinder extends AptoideInAppBillingService.Stub {
           .toBlocking()
           .value();
     } catch (Exception exception) {
-      CrashReport.getInstance()
-          .log(exception);
+      crashReport.log(exception);
       return errorCodeFactory.map(exception.getCause());
     }
   }

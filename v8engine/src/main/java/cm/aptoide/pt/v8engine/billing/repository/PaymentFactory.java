@@ -39,8 +39,8 @@ public class PaymentFactory {
   public Payment create(PaymentServiceResponse paymentService) {
     switch (paymentService.getShortName()) {
       case PAYPAL:
-        return new PayPalPayment(context, paymentService.getId(), paymentService.getName(),
-            paymentService.getDescription(), paymentRepositoryFactory, authorizationRepository);
+        return new PayPalPayment(paymentService.getId(), paymentService.getName(),
+            paymentService.getDescription(), paymentRepositoryFactory);
       case BOACOMPRA:
       case BOACOMPRAGOLD:
         return new WebPayment(paymentService.getId(), paymentService.getName(),

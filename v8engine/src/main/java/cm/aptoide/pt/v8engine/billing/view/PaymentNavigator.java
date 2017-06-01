@@ -22,9 +22,9 @@ public class PaymentNavigator {
     if (payment instanceof WebPayment) {
       activityNavigator.navigateTo(WebAuthorizationActivity.class,
           getProductBundle(payment, product));
+    } else {
+      throw new IllegalArgumentException("Invalid authorized payment.");
     }
-
-    throw new IllegalArgumentException("Invalid authorized payment.");
   }
 
   public void navigateToLocalPaymentView(Payment payment, Product product) {
@@ -45,7 +45,7 @@ public class PaymentNavigator {
       bundle = ProductActivity.getBundle(payment.getId(), ((PaidAppProduct) product).getAppId(),
           ((PaidAppProduct) product).getStoreName(), ((PaidAppProduct) product).isSponsored());
     } else {
-      throw new IllegalArgumentException("Invalid product. Only in app and paid apps supported");
+      throw new IllegalArgumentException("Invalid product. Only in-app and paid apps supported");
     }
     return bundle;
   }

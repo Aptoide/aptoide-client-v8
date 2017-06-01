@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.billing.inapp.InAppBillingBinder;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 
 public class InAppBillingService extends Service {
 
@@ -20,7 +21,7 @@ public class InAppBillingService extends Service {
     billingBinder = new InAppBillingBinder(this,
         ((V8Engine) getApplicationContext()).getInAppBillingSerializer(),
         ((V8Engine) getApplicationContext()).getPaymentThrowableCodeMapper(),
-        ((V8Engine) getApplicationContext()).getAptoideBilling());
+        ((V8Engine) getApplicationContext()).getAptoideBilling(), CrashReport.getInstance());
   }
 
   @Override public IBinder onBind(Intent intent) {

@@ -5,32 +5,25 @@
 
 package cm.aptoide.pt.v8engine.billing.services;
 
-import android.content.Context;
 import cm.aptoide.pt.v8engine.billing.Payment;
 import cm.aptoide.pt.v8engine.billing.Product;
 import cm.aptoide.pt.v8engine.billing.exception.PaymentLocalProcessingRequiredException;
-import cm.aptoide.pt.v8engine.billing.repository.AuthorizationRepository;
 import cm.aptoide.pt.v8engine.billing.repository.PaymentRepositoryFactory;
 import rx.Completable;
 
 public class PayPalPayment implements Payment {
 
-  private final Context context;
   private final int id;
   private final String name;
   private final String description;
   private final PaymentRepositoryFactory paymentRepositoryFactory;
-  private final AuthorizationRepository authorizationRepository;
 
-  public PayPalPayment(Context context, int id, String name, String description,
-      PaymentRepositoryFactory paymentRepositoryFactory,
-      AuthorizationRepository authorizationRepository) {
-    this.context = context;
+  public PayPalPayment(int id, String name, String description,
+      PaymentRepositoryFactory paymentRepositoryFactory) {
     this.id = id;
     this.name = name;
     this.description = description;
     this.paymentRepositoryFactory = paymentRepositoryFactory;
-    this.authorizationRepository = authorizationRepository;
   }
 
   @Override public int getId() {

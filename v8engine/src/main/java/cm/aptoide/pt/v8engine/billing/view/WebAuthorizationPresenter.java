@@ -83,7 +83,9 @@ public class WebAuthorizationPresenter implements Presenter {
                         return Completable.complete();
                       }
 
-                      return aptoideBilling.processWebPayment(paymentId, product);
+                      return aptoideBilling.processWebPayment(paymentId, product)
+                          .observeOn(AndroidSchedulers.mainThread())
+                          .doOnCompleted(() -> view.dismiss());
                     })))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnError(throwable -> view.showErrorAndDismiss())
@@ -98,11 +100,5 @@ public class WebAuthorizationPresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
 
-  }
-
-  private Completable processPaymentAndDismiss(WebPayment payment, Product product) {
-    return payment.process(product)
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnCompleted(() -> view.dismiss());
   }
 }
