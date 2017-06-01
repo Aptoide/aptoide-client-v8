@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <integer name="numberOfColumns_appSelection">5</integer>
+  <integer name="spot_and_share_number_of_columns_app_selection">5</integer>
 </resources>

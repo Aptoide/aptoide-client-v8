@@ -42,7 +42,7 @@
         android:layout_alignParentTop="true"
         android:gravity="center"
         android:horizontalSpacing="2sp"
-        android:numColumns="@integer/numberOfColumns_appSelection"
+        android:numColumns="@integer/spot_and_share_number_of_columns_app_selection"
         android:scrollbars="none"
         android:stretchMode="columnWidth"
         android:verticalSpacing="2sp"
