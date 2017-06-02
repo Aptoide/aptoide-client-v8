@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 17/06/2016.
-  -->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -13,13 +9,5 @@
       android:id="@id/fragment_placeholder"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      />
-
-  <include
-      layout="@layout/custom_snackbar"
-      android:layout_width="match_parent"
-      android:layout_height="@dimen/custom_snackbar_height"
-      android:layout_below="@id/fragment_placeholder"
-      android:visibility="visible"
       />
 </RelativeLayout>
