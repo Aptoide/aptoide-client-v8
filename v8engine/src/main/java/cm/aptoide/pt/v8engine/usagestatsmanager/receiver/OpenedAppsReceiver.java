@@ -20,7 +20,6 @@ import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -42,20 +41,17 @@ public class OpenedAppsReceiver extends WakelockReceiver {
         CollectionUtils.map(usageEventList, UsageStatsManager.UsageEvent::getPackageName));
   }
 
-  private void broadcastAndRemoveReferrer(Context context, List<String> map) {
-    // TODO: 02-06-2017 neuro
-  }
-
-  private void checkAndBroadcastReferrer(String packageName) {
+  private void broadcastAndRemoveReferrer(Context context, List<String> list) {
     StoredMinimalAdAccessor storedMinimalAdAccessor =
         AccessorFactory.getAccessorFor(StoredMinimalAd.class);
-    Subscription unManagedSubscription = storedMinimalAdAccessor.get(packageName)
+    storedMinimalAdAccessor.getAll()
+        .flatMapIterable(storedMinimalAds -> storedMinimalAds)
+        .filter(storedMinimalAd -> list.contains(storedMinimalAd.getPackageName()))
         .flatMapCompletable(storeMinimalAd -> {
-          if (storeMinimalAd != null) {
-            return knockCpi(packageName, storedMinimalAdAccessor, storeMinimalAd);
-          } else {
-            return extractReferrer(packageName);
-          }
+          Completable completable =
+              knockCpi(storeMinimalAd.getPackageName(), storedMinimalAdAccessor, storeMinimalAd);
+          storedMinimalAdAccessor.remove(storeMinimalAd);
+          return completable;
         })
         .subscribe(__ -> { /* do nothing */ }, err -> {
           CrashReport.getInstance()

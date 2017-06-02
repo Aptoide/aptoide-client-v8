@@ -1,6 +1,7 @@
 package cm.aptoide.pt.database.accessors;
 
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
+import java.util.List;
 import rx.Observable;
 
 /**
@@ -24,5 +25,9 @@ public class StoredMinimalAdAccessor extends SimpleAccessor<StoredMinimalAd> {
 
   public void insert(StoredMinimalAd storedMinimalAd) {
     database.insert(storedMinimalAd);
+  }
+
+  public Observable<List<StoredMinimalAd>> getAll() {
+    return database.getAll(StoredMinimalAd.class);
   }
 }
