@@ -10,7 +10,7 @@ public class BootOpenedAppsReceiver extends BroadcastReceiver {
 
   private static final String TAG = BootOpenedAppsReceiver.class.getSimpleName();
 
-  public static final long ALARM_INTERVAL = 60000;
+  public static final long ALARM_INTERVAL = 60 * 60 * 1000;
 
   @Override public void onReceive(Context context, Intent intent) {
     Logger.d(TAG,
