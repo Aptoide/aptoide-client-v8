@@ -111,6 +111,16 @@
           android:name="cm.aptoide.pt.imageloader.GlideModifications"
           android:value="GlideModule"/>
     </service>
+
+    <receiver
+        android:name=".v8engine.usagestatsmanager.receiver.OpenedAppsReceiver"
+        android:process=":remote"/>
+
+    <receiver android:name=".v8engine.usagestatsmanager.receiver.BootOpenedAppsReceiver">
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+      </intent-filter>
+    </receiver>
   </application>
 
 </manifest>
