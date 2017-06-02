@@ -245,10 +245,12 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
     Action0 action0 = new Action0() {
       @Override public void call() {
         toRunWhenAccessIsGranted.call();
-        if (!usageAccessGranted(V8Engine.getContext())) {
-          requestPermissions();
-        } else {
-          setupAlarm(V8Engine.getContext());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+          if (!usageAccessGranted(V8Engine.getContext())) {
+            requestPermissions();
+          } else {
+            setupAlarm(V8Engine.getContext());
+          }
         }
       }
     };
