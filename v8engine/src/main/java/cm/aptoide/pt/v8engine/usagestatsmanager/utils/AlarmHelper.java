@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import cm.aptoide.pt.logger.Logger;
 
 /**
  * Created by neuro on 31-05-2017.
@@ -27,8 +28,7 @@ public class AlarmHelper {
         PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), intervalMillis,
         pendingIntent);
-    System.out.println(
-        TAG + ": setupAlarm called with interval " + intervalMillis + " for class " + aClass);
+    Logger.d(TAG, ": setupAlarm called with interval " + intervalMillis + " for class " + aClass);
   }
 
   public void cancelAlarm() {
@@ -37,7 +37,7 @@ public class AlarmHelper {
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     alarmManager.cancel(sender);
 
-    System.out.println(TAG + ": cancelAlarm called for class " + this.aClass);
+    Logger.d(TAG, ": cancelAlarm called for class " + this.aClass);
   }
 
   public boolean isAlarmActive() {

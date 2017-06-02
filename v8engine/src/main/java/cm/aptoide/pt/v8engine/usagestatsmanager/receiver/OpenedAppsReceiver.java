@@ -8,6 +8,7 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.ads.AdsRepository;
@@ -26,8 +27,10 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class OpenedAppsReceiver extends WakelockReceiver {
 
+  private static final String TAG = OpenedAppsReceiver.class.getSimpleName();
+
   @Override protected void wakeLockReceive(Context context, Intent intent) {
-    System.out.println("OpenedAppsReceiver Alarm Called.");
+    Logger.d(TAG, "OpenedAppsReceiver Alarm Called.");
 
     broadcastOpenendAppsReferrer(context);
   }
