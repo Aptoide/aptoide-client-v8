@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.spotandshare.view;
+package cm.aptoide.pt.v8engine.view.spotandshare;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -38,8 +38,8 @@ import cm.aptoide.pt.v8engine.spotandshare.presenter.ActivityView;
 import cm.aptoide.pt.v8engine.spotandshare.presenter.RadarPresenter;
 import cm.aptoide.pt.v8engine.spotandshare.presenter.RadarView;
 import cm.aptoide.pt.v8engine.spotandshare.transference.ApplicationSender;
-import cm.aptoide.pt.v8engine.spotandshare.view.radar.RadarScan;
-import cm.aptoide.pt.v8engine.spotandshare.view.radar.RadarTextView;
+import cm.aptoide.pt.v8engine.view.spotandshare.radar.RadarScan;
+import cm.aptoide.pt.v8engine.view.spotandshare.radar.RadarTextView;
 import java.util.ArrayList;
 import java.util.List;
 

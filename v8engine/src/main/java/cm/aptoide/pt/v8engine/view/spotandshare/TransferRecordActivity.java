@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.spotandshare.view;
+package cm.aptoide.pt.v8engine.view.spotandshare;
 
 import android.app.Dialog;
 import android.content.DialogInterface;

@@ -53,13 +53,13 @@
         >
 
 
-      <cm.aptoide.pt.v8engine.spotandshare.view.radar.RadarScan
+      <cm.aptoide.pt.v8engine.view.spotandshare.radar.RadarScan
           android:id="@+id/radar"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           />
 
-      <cm.aptoide.pt.v8engine.spotandshare.view.radar.RadarTextView
+      <cm.aptoide.pt.v8engine.view.spotandshare.radar.RadarTextView
           android:id="@+id/hotspotTextView"
           android:layout_width="match_parent"
           android:layout_height="match_parent"

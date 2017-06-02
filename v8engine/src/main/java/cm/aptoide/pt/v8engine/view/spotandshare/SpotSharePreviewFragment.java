@@ -17,7 +17,6 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.presenter.SpotSharePreviewPresenter;
 import cm.aptoide.pt.v8engine.presenter.SpotSharePreviewView;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
-import cm.aptoide.pt.v8engine.spotandshare.view.RadarActivity;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;

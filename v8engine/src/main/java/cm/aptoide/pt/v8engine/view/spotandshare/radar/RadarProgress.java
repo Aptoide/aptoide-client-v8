@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.spotandshare.view.radar;
+package cm.aptoide.pt.v8engine.view.spotandshare.radar;
 
 import android.content.Context;
 import android.graphics.Canvas;

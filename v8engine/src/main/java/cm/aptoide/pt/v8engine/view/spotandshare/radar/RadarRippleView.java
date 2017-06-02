@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.spotandshare.view.radar;
+package cm.aptoide.pt.v8engine.view.spotandshare.radar;
 
 import android.animation.ObjectAnimator;
 import android.animation.TypeEvaluator;
