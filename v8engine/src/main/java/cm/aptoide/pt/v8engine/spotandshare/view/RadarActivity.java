@@ -198,10 +198,6 @@ public class RadarActivity extends ActivityView implements RadarView, Permission
   }
 
   private boolean checkNormalPermissions() {
-    if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-        != PackageManager.PERMISSION_GRANTED) {
-      return false;
-    }
 
     if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         != PackageManager.PERMISSION_GRANTED) {
