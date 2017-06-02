@@ -50,7 +50,6 @@ public class OpenedAppsReceiver extends WakelockReceiver {
         .flatMapCompletable(storeMinimalAd -> {
           Completable completable =
               knockCpi(storeMinimalAd.getPackageName(), storedMinimalAdAccessor, storeMinimalAd);
-          storedMinimalAdAccessor.remove(storeMinimalAd);
           return completable;
         })
         .subscribe(__ -> { /* do nothing */ }, err -> {
