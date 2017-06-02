@@ -65,4 +65,12 @@ public class NotificationProvider {
             .take(entries)
             .toList());
   }
+
+  public Single<Notification> getLastShowed(Integer[] notificationType) {
+    return notificationAccessor.getLastShowed(notificationType);
+  }
+
+  public void save(Notification notification) {
+    notificationAccessor.insert(notification);
+  }
 }

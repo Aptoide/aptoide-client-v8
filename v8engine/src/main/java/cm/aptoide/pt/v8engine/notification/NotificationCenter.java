@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.notification;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 import rx.subscriptions.CompositeSubscription;
 
@@ -93,5 +94,21 @@ public class NotificationCenter {
   public Observable<Boolean> haveNotifications() {
     return notificationProvider.getNotifications(1)
         .map(list -> !list.isEmpty());
+  }
+
+  public Completable notificationDismissed(
+      @AptoideNotification.NotificationType Integer[] notificationType) {
+    return Completable.defer(() -> {
+      try {
+        return notificationProvider.getLastShowed(notificationType)
+            .doOnSuccess(notification -> {
+              notification.setDismissed(System.currentTimeMillis());
+              notificationProvider.save(notification);
+            })
+            .toCompletable();
+      } catch (Exception e) {
+        return Completable.error(e);
+      }
+    });
   }
 }

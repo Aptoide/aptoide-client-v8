@@ -80,19 +80,8 @@ public class PullingContentReceiver extends BroadcastReceiver {
   }
 
   private Completable notificationDismissed(int notificationId) {
-    return Completable.defer(() -> {
-      try {
-        return notificationAccessor.getLastShowed(
-            notificationIdsMapper.getNotificationType(notificationId))
-            .doOnSuccess(notification -> {
-              notification.setDismissed(System.currentTimeMillis());
-              notificationAccessor.insert(notification);
-            })
-            .toCompletable();
-      } catch (Exception e) {
-        return Completable.error(e);
-      }
-    });
+    return notificationCenter.notificationDismissed(
+        notificationIdsMapper.getNotificationType(notificationId));
   }
 
   private void pushNotificationPressed(Context context, Intent intent) {
