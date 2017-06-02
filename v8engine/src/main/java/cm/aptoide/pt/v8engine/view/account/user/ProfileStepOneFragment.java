@@ -14,10 +14,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.view.account.store.ManageStoreFragment;
-import cm.aptoide.pt.v8engine.view.account.store.ManageStoreViewModel;
 import cm.aptoide.pt.v8engine.view.fragment.BaseToolbarFragment;
-import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
 
@@ -26,7 +23,6 @@ public class ProfileStepOneFragment extends BaseToolbarFragment implements Profi
   private Button continueBtn;
   private Button moreInfoBtn;
   private ProgressDialog waitDialog;
-  private FragmentNavigator fragmentNavigator;
   private boolean externalLogin;
 
   public static ProfileStepOneFragment newInstance() {
@@ -35,7 +31,6 @@ public class ProfileStepOneFragment extends BaseToolbarFragment implements Profi
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    fragmentNavigator = getFragmentNavigator();
     final Context context = getContext();
     waitDialog = GenericDialogs.createGenericPleaseWaitDialog(context,
         context.getString(R.string.please_wait));
@@ -90,19 +85,6 @@ public class ProfileStepOneFragment extends BaseToolbarFragment implements Profi
     }
   }
 
-  @Override public void navigateToProfileStepTwoView() {
-    fragmentNavigator.navigateTo(ProfileStepTwoFragment.newInstance());
-  }
-
-  @Override public void navigateToHome() {
-    fragmentNavigator.navigateToHomeCleaningBackStack();
-  }
-
-  @Override public void navigateToCreateStore() {
-    fragmentNavigator.navigateToWithoutBackSave(
-        ManageStoreFragment.newInstance(new ManageStoreViewModel(), true));
-  }
-
   @Override public void showGenericErrorMessage() {
     ShowMessage.asSnack(this, R.string.unknown_error);
   }
@@ -112,8 +94,8 @@ public class ProfileStepOneFragment extends BaseToolbarFragment implements Profi
     final Context applicationContext = getActivity().getApplicationContext();
     final AptoideAccountManager accountManager =
         ((V8Engine) applicationContext).getAccountManager();
-    attachPresenter(new ProfileStepOnePresenter(this, CrashReport.getInstance(), accountManager),
-        null);
+    attachPresenter(new ProfileStepOnePresenter(this, CrashReport.getInstance(), accountManager,
+        getFragmentNavigator()), null);
   }
 
   @Override protected void setupToolbarDetails(Toolbar toolbar) {

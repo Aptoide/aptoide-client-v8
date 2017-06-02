@@ -96,7 +96,7 @@ public class ManageUserPresenter implements Presenter {
 
   private void navigateToProfileStepOne() {
     fragmentNavigator.cleanBackStack();
-    fragmentNavigator.navigateTo(ProfileStepOneFragment.newInstance());
+    fragmentNavigator.navigateToWithoutBackSave(ProfileStepOneFragment.newInstance());
   }
 
   private void navigateToHome() {

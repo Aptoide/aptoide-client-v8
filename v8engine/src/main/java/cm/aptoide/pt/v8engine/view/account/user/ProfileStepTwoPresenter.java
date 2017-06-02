@@ -7,6 +7,9 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
+import cm.aptoide.pt.v8engine.view.account.store.ManageStoreFragment;
+import cm.aptoide.pt.v8engine.view.account.store.ManageStoreViewModel;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -16,12 +19,14 @@ public class ProfileStepTwoPresenter implements Presenter {
   private final ProfileStepTwoView view;
   private final AptoideAccountManager accountManager;
   private final CrashReport crashReport;
+  private final FragmentNavigator fragmentNavigator;
 
   public ProfileStepTwoPresenter(ProfileStepTwoView view, AptoideAccountManager accountManager,
-      CrashReport crashReport) {
+      CrashReport crashReport, FragmentNavigator fragmentNavigator) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
+    this.fragmentNavigator = fragmentNavigator;
   }
 
   @Override public void present() {
@@ -31,7 +36,7 @@ public class ProfileStepTwoPresenter implements Presenter {
             externalLogin -> makeAccountPublic().observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> sendAnalytics(Analytics.Account.ProfileAction.CONTINUE))
                 .doOnCompleted(() -> view.dismissWaitDialog())
-                .doOnCompleted(() -> navigateToCreateStoreOrHome(externalLogin)))
+                .doOnCompleted(() -> navigate(externalLogin)))
         .retry()
         .map(__ -> null);
 
@@ -41,7 +46,7 @@ public class ProfileStepTwoPresenter implements Presenter {
             externalLogin -> makeAccountPrivate().observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> sendAnalytics(Analytics.Account.ProfileAction.PRIVATE_PROFILE))
                 .doOnCompleted(() -> view.dismissWaitDialog())
-                .doOnCompleted(() -> navigateToCreateStoreOrHome(externalLogin)))
+                .doOnCompleted(() -> navigate(externalLogin)))
         .retry()
         .map(__ -> null);
 
@@ -83,11 +88,12 @@ public class ProfileStepTwoPresenter implements Presenter {
     return Completable.fromAction(() -> Analytics.Account.accountProfileAction(2, action));
   }
 
-  private void navigateToCreateStoreOrHome(boolean externalLogin) {
+  private void navigate(boolean externalLogin) {
     if (externalLogin) {
-      view.navigateToHome();
+      fragmentNavigator.navigateToHomeCleaningBackStack();
     } else {
-      view.navigateToManageStore();
+      fragmentNavigator.navigateToWithoutBackSave(
+          ManageStoreFragment.newInstance(new ManageStoreViewModel(), true));
     }
   }
 }

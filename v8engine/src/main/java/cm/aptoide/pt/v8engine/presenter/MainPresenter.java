@@ -6,6 +6,8 @@
 package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.AutoUpdate;
@@ -14,6 +16,10 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.notification.ContentPuller;
 import cm.aptoide.pt.v8engine.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.v8engine.util.ApkFy;
+import cm.aptoide.pt.v8engine.view.DeepLinkManager;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
+import cm.aptoide.pt.v8engine.view.store.home.HomeFragment;
+import cm.aptoide.pt.v8engine.view.wizard.WizardFragment;
 
 /**
  * Created by marcelobenites on 18/01/17.
@@ -26,17 +32,22 @@ public class MainPresenter implements Presenter {
   private final ApkFy apkFy;
   private final AutoUpdate autoUpdate;
   private final CrashReport crashReport;
+  private final FragmentNavigator fragmentNavigator;
+  private final DeepLinkManager deepLinkManager;
   private boolean firstCreated;
 
   public MainPresenter(MainView view, ApkFy apkFy, AutoUpdate autoUpdate,
       ContentPuller contentPuller, NotificationSyncScheduler notificationSyncScheduler,
-      CrashReport crashReport) {
+      CrashReport crashReport, FragmentNavigator fragmentNavigator,
+      DeepLinkManager deepLinkManager) {
     this.view = view;
     this.apkFy = apkFy;
     this.autoUpdate = autoUpdate;
     this.contentPuller = contentPuller;
     this.notificationSyncScheduler = notificationSyncScheduler;
     this.crashReport = crashReport;
+    this.fragmentNavigator = fragmentNavigator;
+    this.deepLinkManager = deepLinkManager;
     this.firstCreated = true;
   }
 
@@ -63,18 +74,29 @@ public class MainPresenter implements Presenter {
   // FIXME we are showing home by default when we should decide were to go here and provide
   // proper up/back navigation to home if needed
   private void navigate() {
-    view.showHome();
+    showHome();
     if (ManagerPreferences.isCheckAutoUpdateEnable() && !V8Engine.isAutoUpdateWasCalled()) {
       // only call auto update when the app was not on the background
       autoUpdate.execute();
     }
-    if (view.showDeepLink()) {
+    if (deepLinkManager.showDeepLink(view.getIntentAfterCreate())) {
       SecurePreferences.setWizardAvailable(false);
     } else {
       if (SecurePreferences.isWizardAvailable()) {
-        view.showWizard();
+        showWizard();
         SecurePreferences.setWizardAvailable(false);
       }
     }
+  }
+
+  private void showWizard() {
+    fragmentNavigator.navigateTo(WizardFragment.newInstance());
+  }
+
+  private void showHome() {
+    Fragment home = HomeFragment.newInstance(V8Engine.getConfiguration()
+        .getDefaultStore(), StoreContext.home, V8Engine.getConfiguration()
+        .getDefaultTheme());
+    fragmentNavigator.navigateToWithoutBackSave(home);
   }
 }

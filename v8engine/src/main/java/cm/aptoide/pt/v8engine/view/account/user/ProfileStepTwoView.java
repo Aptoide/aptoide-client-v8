@@ -14,8 +14,4 @@ interface ProfileStepTwoView extends View {
   void dismissWaitDialog();
 
   Completable showGenericErrorMessage();
-
-  void navigateToHome();
-
-  void navigateToManageStore();
 }

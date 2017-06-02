@@ -77,8 +77,7 @@ public class ManageStorePresenter implements Presenter {
   }
 
   private void navigateBack() {
-    //fragmentNavigator.popBackStack();
-    fragmentNavigator.navigateToHomeCleaningBackStack();
+    fragmentNavigator.popBackStack();
   }
 
   private Completable handleStoreCreationErrors(Throwable err) {

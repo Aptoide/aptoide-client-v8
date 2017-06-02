@@ -13,10 +13,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.view.account.store.ManageStoreFragment;
-import cm.aptoide.pt.v8engine.view.account.store.ManageStoreViewModel;
 import cm.aptoide.pt.v8engine.view.fragment.BaseToolbarFragment;
-import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Completable;
 import rx.Observable;
@@ -27,7 +24,6 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment implements Profi
   private Button privateProfileBtn;
   private ProgressDialog waitDialog;
   private boolean externalLogin;
-  private FragmentNavigator fragmentNavigator;
 
   public static ProfileStepTwoFragment newInstance() {
     return new ProfileStepTwoFragment();
@@ -35,7 +31,6 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment implements Profi
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    fragmentNavigator = getFragmentNavigator();
     waitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext(),
         getContext().getString(R.string.please_wait));
   }
@@ -96,22 +91,14 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment implements Profi
             .toCompletable());
   }
 
-  @Override public void navigateToHome() {
-    fragmentNavigator.navigateToHomeCleaningBackStack();
-  }
-
-  @Override public void navigateToManageStore() {
-    fragmentNavigator.navigateToWithoutBackSave(
-        ManageStoreFragment.newInstance(new ManageStoreViewModel(), true));
-  }
-
   @Override public void setupViews() {
     super.setupViews();
     final Context applicationContext = getContext().getApplicationContext();
     final AptoideAccountManager accountManager =
         ((V8Engine) applicationContext).getAccountManager();
     ProfileStepTwoPresenter presenter =
-        new ProfileStepTwoPresenter(this, accountManager, CrashReport.getInstance());
+        new ProfileStepTwoPresenter(this, accountManager, CrashReport.getInstance(),
+            getFragmentNavigator());
     attachPresenter(presenter, null);
   }
 

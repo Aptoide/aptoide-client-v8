@@ -13,11 +13,5 @@ interface ProfileStepOneView extends View {
 
   void dismissWaitDialog();
 
-  void navigateToProfileStepTwoView();
-
-  void navigateToHome();
-
-  void navigateToCreateStore();
-
   void showGenericErrorMessage();
 }
