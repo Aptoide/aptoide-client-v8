@@ -36,6 +36,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.subscriptions.CompositeSubscription;
 
+import static cm.aptoide.pt.utils.AptoideUtils.SystemU.openApp;
+
 public class InstalledIntentService extends IntentService {
 
   private static final String TAG = InstalledIntentService.class.getName();
@@ -251,6 +253,7 @@ public class InstalledIntentService extends IntentService {
     return Completable.fromCallable(() -> {
       ReferrerUtils.broadcastReferrer(packageName, storeMinimalAd.getReferrer());
       DataproviderUtils.AdNetworksUtils.knockCpi(storeMinimalAd);
+      openApp(storeMinimalAd.getPackageName());
       storedMinimalAdAccessor.remove(storeMinimalAd);
       return null;
     });
