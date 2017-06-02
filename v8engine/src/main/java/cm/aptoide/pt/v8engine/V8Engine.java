@@ -351,7 +351,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
     if (notificationCenter == null) {
 
       final SystemNotificationShower systemNotificationShower = new SystemNotificationShower(this,
-          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
+          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE),
+          new NotificationIdsMapper());
 
       final NotificationAccessor notificationAccessor =
           AccessorFactory.getAccessorFor(Notification.class);
@@ -359,8 +360,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
       final NotificationProvider notificationProvider =
           new NotificationProvider(notificationAccessor);
 
-      notificationCenter =
-          new NotificationCenter(new NotificationIdsMapper(), getNotificationHandler(),
+      notificationCenter = new NotificationCenter(getNotificationHandler(),
               notificationProvider, getNotificationSyncScheduler(), systemNotificationShower,
               CrashReport.getInstance(), new NotificationPolicyFactory(notificationProvider),
               new NotificationsCleaner(notificationAccessor), getAccountManager());
@@ -376,7 +376,6 @@ public abstract class V8Engine extends SpotAndShareApplication {
           && ManagerPreferences.getPushNotificationPullingInterval() > 0) {
         pushNotificationSocialPeriodicity = ManagerPreferences.getPushNotificationPullingInterval();
       }
-
 
       final List<NotificationSyncScheduler.Schedule> scheduleList = Arrays.asList(
           new NotificationSyncScheduler.Schedule(
@@ -656,11 +655,11 @@ public abstract class V8Engine extends SpotAndShareApplication {
               paymentRepositoryFactory.getPaidAppConfirmationRepository(), getAccountPayer(),
               getAuthorizationFactory(), getNetworkOperatorManager(), getBaseBodyInterceptorV3(),
               getDefaultClient(), WebService.getDefaultConverter(), productFactory),
-          new InAppBillingProductRepository(purchaseFactory,
-              paymentFactory, authorizationRepository,
-              paymentRepositoryFactory.getInAppConfirmationRepository(), getAccountPayer(),
-              getAuthorizationFactory(), productFactory, getBaseBodyInterceptorV3(),
-              getDefaultClient(), WebService.getDefaultConverter(), getNetworkOperatorManager()));
+          new InAppBillingProductRepository(purchaseFactory, paymentFactory,
+              authorizationRepository, paymentRepositoryFactory.getInAppConfirmationRepository(),
+              getAccountPayer(), getAuthorizationFactory(), productFactory,
+              getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
+              getNetworkOperatorManager()));
 
       aptoideBilling = new AptoideBilling(productRepositoryFactory, paymentRepositoryFactory,
           getInAppBillingRepository(), authorizationRepository);

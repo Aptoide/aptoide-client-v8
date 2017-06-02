@@ -14,7 +14,6 @@ public class NotificationCenter {
 
   public static final int MAX_NUMBER_NOTIFICATIONS_SAVED = 50;
   private final CrashReport crashReport;
-  private final NotificationIdsMapper notificationIdsMapper;
   private NotificationHandler notificationHandler;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SystemNotificationShower notificationShower;
@@ -24,13 +23,12 @@ public class NotificationCenter {
   private NotificationProvider notificationProvider;
   private AptoideAccountManager accountManager;
 
-  public NotificationCenter(NotificationIdsMapper notificationIdsMapper,
-      NotificationHandler notificationHandler, NotificationProvider notificationProvider,
+  public NotificationCenter(NotificationHandler notificationHandler,
+      NotificationProvider notificationProvider,
       NotificationSyncScheduler notificationSyncScheduler,
       SystemNotificationShower notificationShower, CrashReport crashReport,
       NotificationPolicyFactory notificationPolicyFactory,
       NotificationsCleaner notificationsCleaner, AptoideAccountManager accountManager) {
-    this.notificationIdsMapper = notificationIdsMapper;
     this.notificationHandler = notificationHandler;
     this.notificationSyncScheduler = notificationSyncScheduler;
     this.notificationShower = notificationShower;
@@ -45,14 +43,14 @@ public class NotificationCenter {
   public void start() {
     notificationSyncScheduler.schedule();
     subscriptions.add(getNewNotifications().flatMapCompletable(
-        aptoideNotification -> notificationShower.showNotification(aptoideNotification,
-            notificationIdsMapper.getNotificationId(aptoideNotification.getType())))
+        aptoideNotification -> notificationShower.showNotification(aptoideNotification))
         .subscribe(aptoideNotification -> {
         }, throwable -> crashReport.log(throwable)));
 
     subscriptions.add(accountManager.accountStatus()
         .filter(account -> account.isLoggedIn())
-        .flatMapCompletable(account -> notificationsCleaner.cleanUserNotifications(account.getId()))
+        .flatMapCompletable(
+            account -> notificationsCleaner.cleanOtherUsersNotifications(account.getId()))
         .subscribe(notificationsCleaned -> {
         }, throwable -> crashReport.log(throwable)));
 

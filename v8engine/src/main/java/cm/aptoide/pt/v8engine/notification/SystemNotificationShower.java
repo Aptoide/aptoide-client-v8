@@ -23,16 +23,19 @@ import rx.schedulers.Schedulers;
  */
 
 public class SystemNotificationShower {
-  private static final String TAG = SystemNotificationShower.class.getSimpleName();
   private Context context;
   private NotificationManager notificationManager;
+  private NotificationIdsMapper notificationIdsMapper;
 
-  public SystemNotificationShower(Context context, NotificationManager notificationManager) {
+  public SystemNotificationShower(Context context, NotificationManager notificationManager,
+      NotificationIdsMapper notificationIdsMapper) {
     this.context = context;
     this.notificationManager = notificationManager;
+    this.notificationIdsMapper = notificationIdsMapper;
   }
 
-  public Completable showNotification(AptoideNotification aptoideNotification, int notificationId) {
+  public Completable showNotification(AptoideNotification aptoideNotification) {
+    int notificationId = notificationIdsMapper.getNotificationId(aptoideNotification.getType());
     return mapToAndroidNotification(aptoideNotification, notificationId).doOnSuccess(
         notification -> notificationManager.notify(notificationId, notification))
         .toCompletable();
