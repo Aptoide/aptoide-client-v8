@@ -157,7 +157,7 @@ public class InstalledIntentService extends IntentService {
     Subscription unManagedSubscription = storedMinimalAdAccessor.get(packageName)
         .flatMapCompletable(storeMinimalAd -> {
           if (storeMinimalAd != null) {
-            return knockCpi(packageName, storedMinimalAdAccessor, storeMinimalAd);
+            return knockCpi(packageName, storeMinimalAd);
           } else {
             return extractReferrer(packageName);
           }
@@ -248,13 +248,11 @@ public class InstalledIntentService extends IntentService {
     }
   }
 
-  private Completable knockCpi(String packageName, StoredMinimalAdAccessor storedMinimalAdAccessor,
-      StoredMinimalAd storeMinimalAd) {
+  private Completable knockCpi(String packageName, StoredMinimalAd storeMinimalAd) {
     return Completable.fromCallable(() -> {
       ReferrerUtils.broadcastReferrer(packageName, storeMinimalAd.getReferrer());
       DataproviderUtils.AdNetworksUtils.knockCpi(storeMinimalAd);
       openApp(storeMinimalAd.getPackageName());
-      storedMinimalAdAccessor.remove(storeMinimalAd);
       return null;
     });
   }

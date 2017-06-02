@@ -7,9 +7,13 @@ package cm.aptoide.pt.v8engine.view.permission;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.AppOpsManager;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -24,6 +28,9 @@ import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.usagestatsmanager.receiver.BootOpenedAppsReceiver;
+import cm.aptoide.pt.v8engine.usagestatsmanager.receiver.OpenedAppsReceiver;
+import cm.aptoide.pt.v8engine.usagestatsmanager.utils.AlarmHelper;
 import cm.aptoide.pt.v8engine.view.account.LoginBottomSheetActivity;
 import com.facebook.FacebookSdk;
 import rx.functions.Action0;
@@ -235,7 +242,40 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
   @TargetApi(Build.VERSION_CODES.M) @Override
   public void requestAccessToExternalFileSystem(@Nullable Action0 toRunWhenAccessIsGranted,
       @Nullable Action0 toRunWhenAccessIsDennied) {
-    requestAccessToExternalFileSystem(true, toRunWhenAccessIsGranted, toRunWhenAccessIsDennied);
+    Action0 action0 = new Action0() {
+      @Override public void call() {
+        toRunWhenAccessIsGranted.call();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+          if (!usageAccessGranted(V8Engine.getContext())) {
+            requestPermissions();
+          } else {
+            setupAlarm(V8Engine.getContext());
+          }
+        }
+      }
+    };
+
+    requestAccessToExternalFileSystem(true, action0, toRunWhenAccessIsDennied);
+  }
+
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+  public static boolean usageAccessGranted(Context context) {
+    AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+    int mode =
+        appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(),
+            context.getPackageName());
+    return mode == AppOpsManager.MODE_ALLOWED;
+  }
+
+  private void setupAlarm(Context context) {
+    AlarmHelper alarmHelper = new AlarmHelper(context, OpenedAppsReceiver.class);
+    alarmHelper.setupAlarm(BootOpenedAppsReceiver.ALARM_INTERVAL);
+  }
+
+  private void requestPermissions() {
+    Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    startActivity(intent);
   }
 
   @TargetApi(Build.VERSION_CODES.M) @Override
