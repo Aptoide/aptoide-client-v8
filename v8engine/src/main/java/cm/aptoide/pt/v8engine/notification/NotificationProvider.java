@@ -7,6 +7,7 @@ import io.realm.Sort;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
+import rx.Scheduler;
 import rx.Single;
 
 /**
@@ -14,10 +15,12 @@ import rx.Single;
  */
 
 public class NotificationProvider {
-  private NotificationAccessor notificationAccessor;
 
-  public NotificationProvider(NotificationAccessor notificationAccessor) {
+  private final NotificationAccessor notificationAccessor;
+  private final Scheduler scheduler;
 
+  public NotificationProvider(NotificationAccessor notificationAccessor, Scheduler scheduler) {
+    this.scheduler = scheduler;
     this.notificationAccessor = notificationAccessor;
   }
 
@@ -64,5 +67,15 @@ public class NotificationProvider {
             .map(notification -> convertToAptoideNotification(notification))
             .take(entries)
             .toList());
+  }
+
+  public Single<Notification> getLastShowed(Integer[] notificationType) {
+    return notificationAccessor.getLastShowed(notificationType);
+  }
+
+  public Completable save(Notification notification) {
+    return Completable.fromAction(() -> {
+      notificationAccessor.insert(notification);
+    }).subscribeOn(scheduler);
   }
 }

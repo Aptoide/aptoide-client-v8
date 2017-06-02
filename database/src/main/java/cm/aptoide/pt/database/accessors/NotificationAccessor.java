@@ -72,4 +72,9 @@ public class NotificationAccessor extends SimpleAccessor<Notification> {
     return Completable.fromAction(
         () -> database.deleteAllExcluding(Notification.class, "ownerId", ids));
   }
+
+  public Completable delete(String[] keys) {
+    return Completable.fromAction(
+        () -> database.deleteAllIn(Notification.class, Notification.KEY, keys));
+  }
 }
