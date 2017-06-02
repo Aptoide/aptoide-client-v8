@@ -182,7 +182,6 @@ public abstract class V8Engine extends DataProvider {
     }, intentFilter);
 
     SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
-    Analytics.LocalyticsSessionControl.firstSession(sPref);
     Analytics.Lifecycle.Application.onCreate(this);
     Logger.setDBG(ManagerPreferences.isDebug() || BuildConfig.DEBUG);
     new FlurryAgent.Builder().withLogEnabled(false).build(this, BuildConfig.FLURRY_KEY);

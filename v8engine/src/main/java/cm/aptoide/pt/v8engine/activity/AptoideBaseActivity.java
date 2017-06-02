@@ -96,7 +96,6 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
 
   @Override protected void onStart() {
     super.onStart();
-    Analytics.Lifecycle.Activity.onStart(this);
   }
 
   @Override protected void onStop() {
@@ -111,13 +110,11 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
   @Override protected void onPause() {
     super.onPause();
     _resumed = false;
-    Analytics.Lifecycle.Activity.onPause(this);
   }
 
   @Override protected void onResume() {
     super.onResume();
     _resumed = true;
-    Analytics.Lifecycle.Activity.onResume(this);
   }
 
   @TargetApi(Build.VERSION_CODES.M) @Override
