@@ -8,6 +8,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeoutException;
 import rx.Completable;
@@ -19,13 +20,16 @@ public class ManageUserPresenter implements Presenter {
   private final CrashReport crashReport;
   private final AptoideAccountManager accountManager;
   private final ThrowableToStringMapper errorMapper;
+  private final FragmentNavigator fragmentNavigator;
 
   public ManageUserPresenter(ManageUserView view, CrashReport crashReport,
-      AptoideAccountManager accountManager, ThrowableToStringMapper errorMapper) {
+      AptoideAccountManager accountManager, ThrowableToStringMapper errorMapper,
+      FragmentNavigator fragmentNavigator) {
     this.view = view;
     this.crashReport = crashReport;
     this.accountManager = accountManager;
     this.errorMapper = errorMapper;
+    this.fragmentNavigator = fragmentNavigator;
   }
 
   @Override public void present() {
@@ -43,9 +47,13 @@ public class ManageUserPresenter implements Presenter {
     Observable<Void> handleCancelClick = view.cancelButtonClick()
         .doOnNext(__ -> view.navigateBack());
 
+    Observable<Void> handleSelectImageClick = view.selectUserImageClick()
+        .doOnNext(__ -> view.showLoadImageDialog());
+
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> Observable.merge(handleCancelClick, handleSaveDataClick))
+        .flatMap(
+            __ -> Observable.merge(handleCancelClick, handleSaveDataClick, handleSelectImageClick))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -80,10 +88,19 @@ public class ManageUserPresenter implements Presenter {
     if (isEditProfile) {
       view.navigateBack();
     } else if (showPrivacyConfigs) {
-      view.navigateToProfileStepOne();
+      navigateToProfileStepOne();
     } else {
-      view.navigateToHome();
+      navigateToHome();
     }
+  }
+
+  private void navigateToProfileStepOne() {
+    fragmentNavigator.cleanBackStack();
+    fragmentNavigator.navigateTo(ProfileStepOneFragment.newInstance());
+  }
+
+  private void navigateToHome() {
+    fragmentNavigator.navigateToHomeCleaningBackStack();
   }
 
   private Completable saveUSerData(ManageUserFragment.ViewModel userData) {

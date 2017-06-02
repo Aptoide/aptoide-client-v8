@@ -6,6 +6,7 @@ import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import rx.Completable;
 import rx.Observable;
 
@@ -15,13 +16,15 @@ public class ManageStorePresenter implements Presenter {
   private final CrashReport crashReport;
   private final boolean goBackToHome;
   private final StoreManager storeManager;
+  private final FragmentNavigator fragmentNavigator;
 
   public ManageStorePresenter(ManageStoreView view, CrashReport crashReport, boolean goBackToHome,
-      StoreManager storeManager) {
+      StoreManager storeManager, FragmentNavigator fragmentNavigator) {
     this.view = view;
     this.crashReport = crashReport;
     this.goBackToHome = goBackToHome;
     this.storeManager = storeManager;
+    this.fragmentNavigator = fragmentNavigator;
   }
 
   @Override public void present() {
@@ -62,11 +65,20 @@ public class ManageStorePresenter implements Presenter {
         .doOnCompleted(() -> view.dismissWaitProgressBar())
         .doOnCompleted(() -> {
           if (goBackToHome) {
-            view.navigateHome();
+            navigateHome();
           } else {
-            view.navigateBack();
+            navigateBack();
           }
         });
+  }
+
+  private void navigateHome() {
+    fragmentNavigator.navigateToHomeCleaningBackStack();
+  }
+
+  private void navigateBack() {
+    //fragmentNavigator.popBackStack();
+    fragmentNavigator.navigateToHomeCleaningBackStack();
   }
 
   private Completable handleStoreCreationErrors(Throwable err) {
@@ -97,10 +109,10 @@ public class ManageStorePresenter implements Presenter {
   private Completable handleCancelClick() {
     return Completable.fromAction(() -> {
       if (goBackToHome) {
-        view.navigateHome();
+        navigateHome();
         return;
       }
-      view.navigateBack();
+      navigateBack();
     });
   }
 }

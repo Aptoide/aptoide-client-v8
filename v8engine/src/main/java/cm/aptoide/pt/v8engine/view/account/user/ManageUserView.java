@@ -15,10 +15,6 @@ public interface ManageUserView extends View {
 
   Observable<Void> cancelButtonClick();
 
-  void navigateToProfileStepOne();
-
-  void navigateToHome();
-
   void showProgressDialog();
 
   void dismissProgressDialog();

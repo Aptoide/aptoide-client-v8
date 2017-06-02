@@ -99,14 +99,6 @@ public class ManageStoreFragment extends ImageLoaderFragment
     dialogFragment.show(getChildFragmentManager(), "imageSourceChooser");
   }
 
-  @Override public void navigateHome() {
-    getFragmentNavigator().navigateToHomeCleaningBackStack();
-  }
-
-  @Override public void navigateBack() {
-    getFragmentNavigator().popBackStack();
-  }
-
   @Override public void showError(@StringRes int errorMessage) {
     ShowMessage.asSnack(this, errorMessage);
   }
@@ -212,7 +204,6 @@ public class ManageStoreFragment extends ImageLoaderFragment
     BodyInterceptor<BaseBody> bodyInterceptorV3 = engine.getBaseBodyInterceptorV3();
     BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorV7 =
         engine.getBaseBodyInterceptorV7();
-    //IdsRepository idsRepository = engine.getIdsRepository();
     RequestBodyFactory requestBodyFactory = new RequestBodyFactory();
     OkHttpClient httpClient = engine.getDefaultClient();
     Converter.Factory converterFactory = WebService.getDefaultConverter();
@@ -226,7 +217,7 @@ public class ManageStoreFragment extends ImageLoaderFragment
             multipartBodyInterceptor, bodyInterceptorV3, bodyInterceptorV7, requestBodyFactory,
             objectMapper);
     return new ManageStorePresenter(this, CrashReport.getInstance(), goToHome,
-        storeManagerFactory.create());
+        storeManagerFactory.create(), getFragmentNavigator());
   }
 
   private void setupViewsDefaultDataUsingStore(ManageStoreViewModel storeModel) {

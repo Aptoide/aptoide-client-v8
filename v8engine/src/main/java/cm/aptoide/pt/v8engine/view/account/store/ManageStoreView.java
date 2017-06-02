@@ -13,10 +13,6 @@ public interface ManageStoreView extends View {
 
   void showLoadImageDialog();
 
-  void navigateHome();
-
-  void navigateBack();
-
   void showError(@StringRes int errorMessage);
 
   void showGenericError();

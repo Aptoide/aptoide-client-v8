@@ -24,7 +24,6 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.account.AccountErrorMapper;
 import cm.aptoide.pt.v8engine.view.account.ImageLoaderFragment;
 import cm.aptoide.pt.v8engine.view.dialog.ImageSourceSelectionDialogFragment;
-import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import com.jakewharton.rxbinding.view.RxView;
 import org.parceler.Parcel;
 import org.parceler.Parcels;
@@ -98,11 +97,8 @@ public class ManageUserFragment extends ImageLoaderFragment
     CreateUserErrorMapper errorMapper =
         new CreateUserErrorMapper(context, new AccountErrorMapper(context));
     ManageUserPresenter presenter =
-        new ManageUserPresenter(this, CrashReport.getInstance(), accountManager, errorMapper);
+        new ManageUserPresenter(this, CrashReport.getInstance(), accountManager, errorMapper, getFragmentNavigator());
     attachPresenter(presenter, null);
-
-    final Completable dismissProgressDialogCompletable =
-        Completable.fromAction(() -> dismissProgressDialog());
   }
 
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
@@ -193,16 +189,6 @@ public class ManageUserFragment extends ImageLoaderFragment
 
   @Override public Observable<Void> cancelButtonClick() {
     return RxView.clicks(cancelUserProfile);
-  }
-
-  @Override public void navigateToProfileStepOne() {
-    final FragmentNavigator fragmentNavigator = getFragmentNavigator();
-    fragmentNavigator.cleanBackStack();
-    fragmentNavigator.navigateTo(ProfileStepOneFragment.newInstance());
-  }
-
-  @Override public void navigateToHome() {
-    getFragmentNavigator().navigateToHomeCleaningBackStack();
   }
 
   @Override public void showProgressDialog() {
