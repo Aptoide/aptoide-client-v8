@@ -15,7 +15,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.FullReview;
-import cm.aptoide.pt.model.v7.GetApp;
+import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.model.v7.ListApps;
@@ -121,7 +121,7 @@ public class DisplayablesFactory {
           GetStoreWidgets.WSWidget.Data dataObj = widget.getData();
           String message = dataObj.getMessage();
           return Observable.just(
-              new OfficialAppDisplayable(new Pair<>(message, (GetApp) widget.getViewObject())));
+              new OfficialAppDisplayable(new Pair<>(message, (GetAppMeta) widget.getViewObject())));
       }
     }
     return Observable.empty();

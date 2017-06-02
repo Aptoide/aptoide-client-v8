@@ -1,10 +1,10 @@
 package cm.aptoide.pt.v8engine.notification;
 
-import android.content.SharedPreferences;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import java.util.List;
 import rx.Observable;
-import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by trinkes on 09/05/2017.
@@ -12,22 +12,23 @@ import rx.Subscription;
 
 public class NotificationCenter {
 
-  public static final String NOTIFICATION_CENTER_ENABLE = "notification_campaign_and_social";
   private final CrashReport crashReport;
   private final NotificationIdsMapper notificationIdsMapper;
   private NotificationHandler notificationHandler;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SystemNotificationShower notificationShower;
   private NotificationPolicyFactory notificationPolicyFactory;
-  private SharedPreferences sharedPreferences;
-  private Subscription notificationProviderSubscription;
+  private NotificationsCleaner notificationsCleaner;
+  private CompositeSubscription subscriptions;
   private NotificationProvider notificationProvider;
+  private AptoideAccountManager accountManager;
 
   public NotificationCenter(NotificationIdsMapper notificationIdsMapper,
       NotificationHandler notificationHandler, NotificationProvider notificationProvider,
       NotificationSyncScheduler notificationSyncScheduler,
       SystemNotificationShower notificationShower, CrashReport crashReport,
-      NotificationPolicyFactory notificationPolicyFactory, SharedPreferences sharedPreferences) {
+      NotificationPolicyFactory notificationPolicyFactory,
+      NotificationsCleaner notificationsCleaner, AptoideAccountManager accountManager) {
     this.notificationIdsMapper = notificationIdsMapper;
     this.notificationHandler = notificationHandler;
     this.notificationSyncScheduler = notificationSyncScheduler;
@@ -35,38 +36,24 @@ public class NotificationCenter {
     this.notificationProvider = notificationProvider;
     this.crashReport = crashReport;
     this.notificationPolicyFactory = notificationPolicyFactory;
-    this.sharedPreferences = sharedPreferences;
-  }
-
-  public void enable() {
-    sharedPreferences.edit()
-        .putBoolean(NOTIFICATION_CENTER_ENABLE, true)
-        .apply();
-  }
-
-  public void disable() {
-    sharedPreferences.edit()
-        .putBoolean(NOTIFICATION_CENTER_ENABLE, false)
-        .apply();
-  }
-
-  public void startIfEnabled() {
-    if (isEnable()) {
-      start();
-    }
+    this.notificationsCleaner = notificationsCleaner;
+    this.accountManager = accountManager;
+    subscriptions = new CompositeSubscription();
   }
 
   public void start() {
     notificationSyncScheduler.schedule();
-    notificationProviderSubscription = getNewNotifications().flatMapCompletable(
+    subscriptions.add(getNewNotifications().flatMapCompletable(
         aptoideNotification -> notificationShower.showNotification(aptoideNotification,
             notificationIdsMapper.getNotificationId(aptoideNotification.getType())))
         .subscribe(aptoideNotification -> {
-        }, throwable -> crashReport.log(throwable));
-  }
+        }, throwable -> crashReport.log(throwable)));
 
-  public void forceSync() {
-    notificationSyncScheduler.forceSync();
+    subscriptions.add(accountManager.accountStatus()
+        .filter(account -> account.isLoggedIn())
+        .flatMapCompletable(account -> notificationsCleaner.cleanNotifications(account.getId()))
+        .subscribe(notificationsCleaned -> {
+        }, throwable -> crashReport.log(throwable)));
   }
 
   private Observable<AptoideNotification> getNewNotifications() {
@@ -87,14 +74,10 @@ public class NotificationCenter {
   }
 
   public void stop() {
-    if (!notificationProviderSubscription.isUnsubscribed()) {
-      notificationProviderSubscription.unsubscribe();
+    if (!subscriptions.isUnsubscribed()) {
+      subscriptions.clear();
     }
     notificationSyncScheduler.stop();
-  }
-
-  public boolean isEnable() {
-    return sharedPreferences.getBoolean(NOTIFICATION_CENTER_ENABLE, true);
   }
 
   public Observable<List<AptoideNotification>> getInboxNotifications(int entries) {

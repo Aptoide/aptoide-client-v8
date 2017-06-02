@@ -7,6 +7,7 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
@@ -23,6 +24,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetApp;
+import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.model.v7.GetMySubscribedStoresResponse;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
@@ -329,7 +331,7 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @Multipart @POST("store/set") Observable<BaseV7Response> editStore(
-        @Part MultipartBody.Part store_avatar, @PartMap HashMapNotNull<String, RequestBody> body);
+        @Part MultipartBody.Part multipartBody, @PartMap HashMapNotNull<String, RequestBody> body);
 
     @POST("user/getTimelineStats") Observable<TimelineStats> getTimelineStats(
         @retrofit2.http.Body GetTimelineStatsRequest.Body body,
@@ -368,6 +370,10 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
     Observable<GetMySubscribedStoresResponse> getMySubscribedStores(
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
         @retrofit2.http.Body GetMySubscribedStoresRequest.Body body);
+
+    @POST("getAppMeta{url}") Observable<GetAppMeta> getAppMeta(
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
+        @Path(value = "url", encoded = true) String url);
   }
 }
 

@@ -12,12 +12,13 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
@@ -43,9 +44,11 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
   private StoreCredentialsProvider storeCredentialsProvider;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private QManager qManager;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    qManager = ((V8Engine) getContext().getApplicationContext()).getQManager();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
     idsRepository = ((V8Engine) getContext().getApplicationContext()).getIdsRepository();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
@@ -58,21 +61,18 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
 
   protected Observable<List<Displayable>> loadGetStoreWidgets(GetStoreWidgets getStoreWidgets,
       boolean refresh, String url) {
-    return Observable.from(getStoreWidgets.getDatalist()
-        .getList())
+    return Observable.from(getStoreWidgets.getDatalist().getList())
         .flatMap(wsWidget -> {
           return WSWidgetsUtils.loadWidgetNode(wsWidget,
               StoreUtils.getStoreCredentialsFromUrl(url, storeCredentialsProvider), refresh,
-              accountManager.getAccessToken(), idsRepository.getUniqueIdentifier(),
+              idsRepository.getUniqueIdentifier(),
               DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                  V8Engine.getContext()), DataProvider.getConfiguration()
-                  .getPartnerId(), accountManager.isAccountMature(), bodyInterceptor, httpClient,
-              converterFactory, V8Engine.getQManager()
-                  .getFilters(ManagerPreferences.getHWSpecsFilter()));
+                  V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
+              accountManager.isAccountMature(), bodyInterceptor, httpClient, converterFactory,
+              qManager.getFilters(ManagerPreferences.getHWSpecsFilter()));
         })
         .toList()
-        .flatMapIterable(wsWidgets -> getStoreWidgets.getDatalist()
-            .getList())
+        .flatMapIterable(wsWidgets -> getStoreWidgets.getDatalist().getList())
         .concatMap(wsWidget -> {
           return DisplayablesFactory.parse(wsWidget, storeTheme, storeRepository, storeContext,
               getContext(), accountManager, storeUtilsProxy);

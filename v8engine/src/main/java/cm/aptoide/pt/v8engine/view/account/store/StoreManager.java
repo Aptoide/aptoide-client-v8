@@ -3,15 +3,18 @@ package cm.aptoide.pt.v8engine.view.account.store;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreImageRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.model.v3.ErrorResponse;
-import cm.aptoide.pt.v8engine.networking.StoreBodyInterceptor;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import retrofit2.Converter;
 import rx.Completable;
 import rx.Single;
@@ -25,29 +28,38 @@ public class StoreManager {
   private final AptoideAccountManager accountManager;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
-  private final StoreBodyInterceptor storeBodyInterceptor;
+  private final BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptor;
   private final BodyInterceptor<BaseBody> bodyInterceptorV3;
   private final BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorV7;
+  private final RequestBodyFactory requestBodyFactory;
+  private final ObjectMapper objectMapper;
 
   StoreManager(AptoideAccountManager accountManager, OkHttpClient httpClient,
-      Converter.Factory converterFactory, StoreBodyInterceptor storeBodyInterceptor,
-      BodyInterceptor<BaseBody> bodyInterceptorV3, BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorV7) {
+      Converter.Factory converterFactory,
+      BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptor,
+      BodyInterceptor<BaseBody> bodyInterceptorV3,
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorV7,
+      RequestBodyFactory requestBodyFactory, ObjectMapper objectMapper) {
 
     this.accountManager = accountManager;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
-    this.storeBodyInterceptor = storeBodyInterceptor;
+    this.multipartBodyInterceptor = multipartBodyInterceptor;
     this.bodyInterceptorV3 = bodyInterceptorV3;
     this.bodyInterceptorV7 = bodyInterceptorV7;
+    this.requestBodyFactory = requestBodyFactory;
+    this.objectMapper = objectMapper;
   }
 
-  public Completable createOrUpdate(String storeName, String storeDescription,
+  public Completable createOrUpdate(long storeId, String storeName, String storeDescription,
       String storeImage, boolean hasNewAvatar, String storeThemeName, boolean storeExists) {
     return Completable.defer(() -> {
       if (storeExists) {
-        return updateStore(storeName, storeDescription, storeImage, hasNewAvatar, storeThemeName);
+        return updateStore(storeId, storeName, storeDescription, storeImage, hasNewAvatar,
+            storeThemeName);
       }
-      return createStore(storeName, storeDescription, storeImage, hasNewAvatar, storeThemeName);
+      return createStore(storeId, storeName, storeDescription, storeImage, hasNewAvatar,
+          storeThemeName);
     })
         .onErrorResumeNext(err -> {
           if (err instanceof StoreCreationError || err instanceof NetworkError) {
@@ -78,13 +90,13 @@ public class StoreManager {
    * a store image, or a SetStore without image. This is the edit store use case {@link
    * #updateStore}.
    */
-  private Completable createStore(String storeName, String storeDescription, String storeImage,
-      boolean hasNewAvatar, String storeThemeName) {
+  private Completable createStore(long storeId, String storeName, String storeDescription,
+      String storeImage, boolean hasNewAvatar, String storeThemeName) {
     return accountManager.accountStatus()
         .first()
         .toSingle()
-        .flatMap(account -> CheckUserCredentialsRequest.of(storeName, account.getAccessToken(),
-            bodyInterceptorV3, httpClient, converterFactory)
+        .flatMap(account -> CheckUserCredentialsRequest.toCreateStore(bodyInterceptorV3, httpClient,
+            converterFactory, storeName)
             .observe()
             .toSingle()
             .flatMap(data -> {
@@ -99,8 +111,10 @@ public class StoreManager {
               return Single.just(data);
             }))
         .flatMapCompletable(data -> {
+          // TODO use response store ID to upload image
+          // data.repo
           if (needToUploadMoreStoreData(storeDescription, storeImage, hasNewAvatar)) {
-            return updateStore(storeName, storeDescription, storeImage, hasNewAvatar,
+            return updateStore(storeId, storeName, storeDescription, storeImage, hasNewAvatar,
                 storeThemeName);
           }
           return Completable.complete();
@@ -116,36 +130,34 @@ public class StoreManager {
    * If we have more data we either use a SetStore with multi-part request if we have
    * a store image, or a SetStore without image.
    */
-  private Completable updateStore(String storeName, String storeDescription, String storeImage,
-      boolean hasNewAvatar, String storeThemeName) {
-    return updateStoreWithoutAvatar(storeName, storeDescription, storeThemeName).andThen(
-        Completable.defer(() -> {
-          if (hasNewAvatar) {
-            return updateStoreWithAvatar(storeName, storeImage);
-          }
+  private Completable updateStore(long storeId, String storeName, String storeDescription,
+      String storeImage, boolean hasNewAvatar, String storeThemeName) {
 
-          return Completable.complete();
-        }));
+    if (hasNewAvatar) {
+      return updateStoreWithAvatar(storeName, storeDescription, storeThemeName, storeImage);
+    }
+
+    return updateStoreWithoutAvatar(storeName, storeDescription, storeThemeName);
   }
 
   private Completable updateStoreWithoutAvatar(String storeName, String storeDescription,
       String storeThemeName) {
-    return SimpleSetStoreRequest.of(storeName, storeThemeName, storeDescription,
-        bodyInterceptorV7,
+    return SimpleSetStoreRequest.of(storeName, storeThemeName, storeDescription, bodyInterceptorV7,
         httpClient, converterFactory)
         .observe()
         .toCompletable();
   }
 
-  private Completable updateStoreWithAvatar(String storeName, String storeImage) {
+  private Completable updateStoreWithAvatar(String storeName, String storeDescription,
+      String storeThemeName, String storeImage) {
     return accountManager.accountStatus()
         .first()
         .toSingle()
-        .flatMap(
-            account -> SetStoreImageRequest.of(storeImage, storeName, storeBodyInterceptor, httpClient,
-                converterFactory)
-                .observe()
-                .toSingle())
+        .flatMap(account -> SetStoreImageRequest.of(storeName, storeThemeName, storeDescription,
+            storeImage, multipartBodyInterceptor, httpClient, converterFactory, requestBodyFactory,
+            objectMapper)
+            .observe()
+            .toSingle())
         .toCompletable();
   }
 

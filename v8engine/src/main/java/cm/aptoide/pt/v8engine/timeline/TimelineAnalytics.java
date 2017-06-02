@@ -1,9 +1,9 @@
 package cm.aptoide.pt.v8engine.timeline;
 
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.analytics.events.AptoideEvent;

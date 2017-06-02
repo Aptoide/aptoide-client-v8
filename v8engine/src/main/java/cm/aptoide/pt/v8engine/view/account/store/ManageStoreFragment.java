@@ -17,29 +17,29 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.networking.StoreBodyInterceptor;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.view.account.ImageLoaderFragment;
 import cm.aptoide.pt.v8engine.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.dialog.ImageSourceSelectionDialogFragment;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import org.parceler.Parcels;
 import retrofit2.Converter;
 import rx.Observable;
@@ -216,24 +216,17 @@ public class ManageStoreFragment extends ImageLoaderFragment
     RequestBodyFactory requestBodyFactory = new RequestBodyFactory();
     OkHttpClient httpClient = engine.getDefaultClient();
     Converter.Factory converterFactory = WebService.getDefaultConverter();
+    ObjectMapper objectMapper = engine.getNonNullObjectMapper();
 
-    final StoreBodyInterceptor storeBodyInterceptor =
-        buildStoreInterceptor(accountManager, requestBodyFactory);
+    final BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptor =
+        engine.getMultipartBodyInterceptor();
 
     StoreManagerFactory storeManagerFactory =
-        new StoreManagerFactory(accountManager, httpClient, converterFactory, storeBodyInterceptor,
-            bodyInterceptorV3, bodyInterceptorV7);
+        new StoreManagerFactory(accountManager, httpClient, converterFactory,
+            multipartBodyInterceptor, bodyInterceptorV3, bodyInterceptorV7, requestBodyFactory,
+            objectMapper);
     return new ManageStorePresenter(this, CrashReport.getInstance(), goToHome,
         storeManagerFactory.create());
-  }
-
-  @NonNull private StoreBodyInterceptor buildStoreInterceptor(AptoideAccountManager accountManager,
-      RequestBodyFactory requestBodyFactory) {
-
-    ObjectMapper serializer = new ObjectMapper();
-    serializer.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
-    return new StoreBodyInterceptor(accountManager, requestBodyFactory);
   }
 
   private void setupViewsDefaultDataUsingStore(ManageStoreViewModel storeModel) {

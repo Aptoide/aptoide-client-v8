@@ -17,6 +17,7 @@ import lombok.EqualsAndHashCode;
 
   @JsonProperty("apk") public Path path;
   @JsonProperty("payment") private Payment payment;
+  @JsonProperty("meta") private App app;
 
   public boolean isPaid() {
     return (payment != null
@@ -44,11 +45,21 @@ import lombok.EqualsAndHashCode;
 
   @Data public static class Metadata {
 
-    @JsonProperty("id") private int id;
+    @JsonProperty("id") private int productId;
   }
 
   @Data public static class Path {
 
     @JsonProperty("path") private String stringPath;
+    @JsonProperty("id") private int appId;
+    @JsonProperty("repo") private String storeName;
+    @JsonProperty("icon_hd") private String icon;
+    @JsonProperty("icon") private String alternativeIcon;
+  }
+
+  @Data public static class App {
+
+    @JsonProperty("title") private String name;
+    @JsonProperty("description") private String description;
   }
 }

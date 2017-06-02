@@ -59,6 +59,8 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
+import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY;
+
 /**
  * Created by fabio on 26-10-2015.
  *
@@ -73,8 +75,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private static final String REMOVE_ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY = "removeMaturepin";
   private static final String ADULT_CONTENT_WITH_PIN_PREFERENCE_VIEW_KEY = "matureChkBoxWithPin";
   private static final String ADULT_CONTENT_PREFERENCE_VIEW_KEY = "matureChkBox";
-  private static final String CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY =
-      "notification_campaign_and_social";
 
   protected Toolbar toolbar;
   private Context context;
@@ -92,7 +92,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private Preference removePinPreferenceView;
   private CheckBoxPreference adultContentPreferenceView;
   private CheckBoxPreference adultContentWithPinPreferenceView;
-  private CheckBoxPreference SocialCampaignNotifications;
+  private CheckBoxPreference socialCampaignNotifications;
   private boolean trackAnalytics;
   private NotificationCenter notificationCenter;
 
@@ -169,13 +169,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
         (CheckBoxPreference) findPreference(ADULT_CONTENT_PREFERENCE_VIEW_KEY);
     adultContentWithPinPreferenceView =
         (CheckBoxPreference) findPreference(ADULT_CONTENT_WITH_PIN_PREFERENCE_VIEW_KEY);
-    SocialCampaignNotifications =
+    socialCampaignNotifications =
         (CheckBoxPreference) findPreference(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY);
     pinPreferenceView = findPreference(ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
     removePinPreferenceView = findPreference(REMOVE_ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
-
-    //we should change this if notification center can be enabled and disabled in background
-    SocialCampaignNotifications.setChecked(notificationCenter.isEnable());
 
     setupClickHandlers();
   }
@@ -222,7 +219,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
             Application.getConfiguration()
                 .getMarketName()));
 
-    subscriptions.add(RxPreference.checks(SocialCampaignNotifications)
+    subscriptions.add(RxPreference.checks(socialCampaignNotifications)
         .subscribe(isChecked -> handleSocialNotifications(isChecked)));
 
     subscriptions.add(adultContent.enabled()
@@ -479,53 +476,18 @@ public class SettingsFragment extends PreferenceFragmentCompat
         return true;
       }
     });
-
-    // AN-1533 - temporary solution was to remove root installation
-    //CheckBoxPreference autoUpdatePreference =
-    //    (CheckBoxPreference) findPreference(SettingsConstants.AUTO_UPDATE_ENABLE);
-    //findPreference(SettingsConstants.ALLOW_ROOT_INSTALLATION).setOnPreferenceChangeListener(
-    //    (preference, o) -> {
-    //      final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) preference;
-    //      if (checkBoxPreference.isChecked()) {
-    //        ManagerPreferences.setAutoUpdateEnable(false);
-    //        autoUpdatePreference.setChecked(false);
-    //      }
-    //      return true;
-    //    });
-    //
-    //PermissionService permissionRequest = (PermissionService) getContext();
-    //autoUpdatePreference.setDependency(SettingsConstants.ALLOW_ROOT_INSTALLATION);
-    //autoUpdatePreference.setOnPreferenceClickListener(preference -> {
-    //  final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) preference;
-    //  if (checkBoxPreference.isChecked()) {
-    //    checkBoxPreference.setChecked(false);
-    //    subscriptions.add(permissionManager.requestExternalStoragePermission(permissionRequest)
-    //        .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
-    //        .subscribe(success -> {
-    //          checkBoxPreference.setChecked(true);
-    //          ManagerPreferences.setAutoUpdateEnable(true);
-    //        }, throwable -> CrashReport.getInstance().log(throwable)));
-    //  }
-    //  return true;
-    //});
   }
 
   private void handleSocialNotifications(Boolean isChecked) {
     if (isChecked) {
-      notificationCenter.enable();
       notificationCenter.start();
     } else {
-      notificationCenter.disable();
       notificationCenter.stop();
     }
   }
 
   private void rollbackCheck(CheckBoxPreference preference) {
     preference.setChecked(!preference.isChecked());
-  }
-
-  private void settingsResult() {
-    getActivity().setResult(Activity.RESULT_OK);
   }
 
   private void trackLock() {

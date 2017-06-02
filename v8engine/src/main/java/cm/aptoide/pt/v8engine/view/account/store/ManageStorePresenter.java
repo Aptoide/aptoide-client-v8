@@ -52,9 +52,9 @@ public class ManageStorePresenter implements Presenter {
 
   private Completable handleSaveClick(ManageStoreViewModel storeModel) {
     Completable saveDataCompletable =
-        storeManager.createOrUpdate(storeModel.getStoreName(), storeModel.getStoreDescription(),
-            storeModel.getStoreImagePath(), storeModel.hasNewAvatar(),
-            storeModel.getStoreThemeName(), storeModel.storeExists())
+        storeManager.createOrUpdate(storeModel.getStoreId(), storeModel.getStoreName(),
+            storeModel.getStoreDescription(), storeModel.getStoreImagePath(),
+            storeModel.hasNewAvatar(), storeModel.getStoreThemeName(), storeModel.storeExists())
             .onErrorResumeNext(err -> handleStoreCreationErrors(err));
 
     return Completable.fromAction(() -> view.showWaitProgressBar())

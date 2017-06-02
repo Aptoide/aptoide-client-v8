@@ -3,6 +3,7 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.util.CommentType;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import com.fasterxml.jackson.annotation.JsonProperty;

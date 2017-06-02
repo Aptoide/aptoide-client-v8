@@ -24,24 +24,27 @@ public class NotificationSyncService extends Service {
 
     NotificationAccessor notificationAccessor = AccessorFactory.getAccessorFor(Notification.class);
     NotificationProvider notificationProvider = new NotificationProvider(notificationAccessor);
-    final NotificationHandler notificationHandler =
-        ((V8Engine) getApplicationContext()).getNotificationHandler();
+    final NotificationNetworkService notificationHandler =
+        ((V8Engine) getApplicationContext()).getNotificationNetworkService();
     notificationSync = new NotificationSync(notificationProvider, notificationHandler);
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
-    switch (intent.getAction()) {
-      case PUSH_NOTIFICATIONS_CAMPAIGN_ACTION:
-        notificationSync.syncCampaigns()
-            .doOnTerminate(() -> stopSelf(startId))
-            .subscribe(() -> {
-            }, throwable -> throwable.printStackTrace());
-        break;
-      case PUSH_NOTIFICATIONS_SOCIAL_ACTION:
-        notificationSync.syncSocial()
-            .doOnTerminate(() -> stopSelf(startId))
-            .subscribe(() -> {
-            }, throwable -> throwable.printStackTrace());
+
+    if (intent != null && intent.getAction() != null) {
+      switch (intent.getAction()) {
+        case PUSH_NOTIFICATIONS_CAMPAIGN_ACTION:
+          notificationSync.syncCampaigns()
+              .doOnTerminate(() -> stopSelf(startId))
+              .subscribe(() -> {
+              }, throwable -> throwable.printStackTrace());
+          break;
+        case PUSH_NOTIFICATIONS_SOCIAL_ACTION:
+          notificationSync.syncSocial()
+              .doOnTerminate(() -> stopSelf(startId))
+              .subscribe(() -> {
+              }, throwable -> throwable.printStackTrace());
+      }
     }
 
     return Service.START_NOT_STICKY;
