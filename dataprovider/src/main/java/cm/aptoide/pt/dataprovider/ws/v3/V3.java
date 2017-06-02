@@ -11,8 +11,8 @@ import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.BaseV3Response;
 import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
 import cm.aptoide.pt.model.v3.ErrorResponse;
@@ -40,7 +40,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created on 21/07/16.
@@ -118,9 +117,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
                       accessTokenRetry = true;
                       return DataProvider.invalidateAccessToken()
                           .flatMapObservable(s -> {
-                            this.map.setAccess_token(s);
-                            return V3.this.observe(bypassCache)
-                                .observeOn(AndroidSchedulers.mainThread());
+                            return V3.this.observe(bypassCache);
                           });
                     }
                   } else {
@@ -161,6 +158,9 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
     @POST("productPurchaseAuthorization") @FormUrlEncoded
     Observable<PaymentAuthorizationsResponse> getPaymentAuthorization(@FieldMap BaseBody args);
 
+    @POST("productPurchaseAuthorization") @FormUrlEncoded
+    Observable<BaseV3Response> createPaymentAuthorizationWithCode(@FieldMap BaseBody args);
+
     @POST("payProduct") @FormUrlEncoded Observable<BaseV3Response> createPaymentConfirmation(
         @FieldMap BaseBody args);
 
@@ -184,7 +184,5 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
     @POST("changeUserSettings") @FormUrlEncoded Observable<BaseV3Response> changeUserSettings(
         @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("changeUserRepoSubscription") @FormUrlEncoded
-    Observable<BaseV3Response> changeUserRepoSubscription(@FieldMap BaseBody args);
   }
 }

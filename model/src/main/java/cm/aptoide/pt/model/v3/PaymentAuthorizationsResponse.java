@@ -10,9 +10,6 @@ import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-/**
- * Created by marcelobenites on 15/11/16.
- */
 @Data @EqualsAndHashCode(callSuper = true) public class PaymentAuthorizationsResponse
     extends BaseV3Response {
 

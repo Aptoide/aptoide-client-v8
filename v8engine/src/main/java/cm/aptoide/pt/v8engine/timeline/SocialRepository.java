@@ -3,8 +3,8 @@ package cm.aptoide.pt.v8engine.timeline;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccount;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.LikeCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ShareCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ShareInstallCardRequest;
@@ -38,7 +38,8 @@ public class SocialRepository {
     this.timelineAnalytics = timelineAnalytics;
   }
 
-  public void share(String cardId, boolean privacy, ShareCardCallback shareCardCallback, TimelineSocialActionData timelineSocialActionData) {
+  public void share(String cardId, boolean privacy, ShareCardCallback shareCardCallback,
+      TimelineSocialActionData timelineSocialActionData) {
     //todo(pribeiro): check if timelineSocialActionData is null
     ShareCardRequest.of(cardId, bodyInterceptor, httpClient, converterFactory)
         .observe()
@@ -63,7 +64,8 @@ public class SocialRepository {
     return privateAccess ? Account.Access.PRIVATE : Account.Access.PUBLIC;
   }
 
-  public void share(String cardId, ShareCardCallback shareCardCallback, TimelineSocialActionData timelineSocialActionData) {
+  public void share(String cardId, ShareCardCallback shareCardCallback,
+      TimelineSocialActionData timelineSocialActionData) {
     ShareCardRequest.of(cardId, bodyInterceptor, httpClient, converterFactory)
         .observe()
         .toSingle()
@@ -102,7 +104,8 @@ public class SocialRepository {
         }, throwable -> throwable.printStackTrace());
   }
 
-  public void share(String cardId, long storeId, ShareCardCallback shareCardCallback, TimelineSocialActionData timelineSocialActionData) {
+  public void share(String cardId, long storeId, ShareCardCallback shareCardCallback,
+      TimelineSocialActionData timelineSocialActionData) {
     ShareCardRequest.of(cardId, storeId, httpClient, converterFactory, bodyInterceptor)
         .observe()
         .toSingle()

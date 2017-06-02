@@ -58,11 +58,14 @@
     </activity>
 
     <activity
-        android:name=".view.payment.PaymentActivity"
-        android:theme="@style/AppBaseTheme.Payment"/>
+        android:name=".billing.view.PaymentActivity"
+        android:theme="@style/AppBaseTheme.NoTitle.Transparent.WhiteGreen"/>
 
-    <activity android:name=".payment.providers.paypal.PayPalPaymentActivity"/>
-    <activity android:name=".view.payment.PaymentAuthorizationActivity"/>
+    <activity
+        android:name=".billing.view.PayPalPaymentActivity"
+        android:theme="@style/AppBaseTheme.NoTitle"/>
+
+    <activity android:name=".billing.view.WebAuthorizationActivity"/>
     <activity android:name=".view.account.LoginActivity"/>
     <activity android:name=".spotandshare.SpotSharePreviewActivity"/>
 

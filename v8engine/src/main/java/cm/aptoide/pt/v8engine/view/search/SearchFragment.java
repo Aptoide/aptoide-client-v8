@@ -18,8 +18,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.ListSearchApps;
@@ -342,16 +342,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
     outState.putInt(BundleCons.SELECTED_BUTTON, selectedButton);
   }
 
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int i = item.getItemId();
-
-    if (i == android.R.id.home) {
-      getActivity().onBackPressed();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
-  }
-
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_search, menu);
@@ -361,6 +351,16 @@ public class SearchFragment extends BasePagerToolbarFragment {
     } else {
       SearchUtils.setupGlobalSearchView(menu, this);
     }
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int i = item.getItemId();
+
+    if (i == android.R.id.home) {
+      getActivity().onBackPressed();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

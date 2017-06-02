@@ -8,8 +8,8 @@ package cm.aptoide.pt.v8engine.view.search;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.WebService;
@@ -55,8 +55,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
         LinkedList<Displayable> displayables = new LinkedList<>();
 
-        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist()
-            .getList();
+        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
         Observable<ListSearchApps.SearchAppsApp> from = Observable.from(list);
 
         if (addSubscribedStores) {
@@ -102,14 +101,14 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     final AptoideAccountManager accountManager =
         ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    searchAbTest = ABTestManager.getInstance()
-        .get(ABTestManager.SEARCH_TAB_TEST);
+    searchAbTest = ABTestManager.getInstance().get(ABTestManager.SEARCH_TAB_TEST);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     adsRepository =
         new AdsRepository(((V8Engine) getContext().getApplicationContext()).getIdsRepository(),
-            accountManager, httpClient, converterFactory, V8Engine.getQManager());
+            accountManager, httpClient, converterFactory,
+            ((V8Engine) getContext().getApplicationContext()).getQManager());
     super.onCreate(savedInstanceState);
   }
 

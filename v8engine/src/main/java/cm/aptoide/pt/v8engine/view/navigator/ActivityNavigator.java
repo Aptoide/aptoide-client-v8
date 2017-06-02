@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.view.navigator;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 /**
@@ -20,6 +21,13 @@ public class ActivityNavigator {
   public void navigateTo(Class<? extends AppCompatActivity> activityClass) {
     final Intent intent = new Intent();
     intent.setComponent(new ComponentName(context, activityClass));
+    context.startActivity(intent);
+  }
+
+  public void navigateTo(Class<? extends AppCompatActivity> activityClass, Bundle bundle) {
+    final Intent intent = new Intent();
+    intent.setComponent(new ComponentName(context, activityClass));
+    intent.putExtras(bundle);
     context.startActivity(intent);
   }
 }

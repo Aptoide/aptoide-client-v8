@@ -9,7 +9,8 @@ public interface BasebBodyInterceptorFactory {
 
   BodyInterceptor<BaseBody> createV7(AptoideAccountManager accountManager, String cdn);
 
-  BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> createV3();
+  BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> createV3(
+      AptoideAccountManager accountManager);
 
   BodyInterceptor<HashMapNotNull<String, RequestBody>> createUserMultipartBodyInterceptor(
       AptoideAccountManager accountManager, String userName);

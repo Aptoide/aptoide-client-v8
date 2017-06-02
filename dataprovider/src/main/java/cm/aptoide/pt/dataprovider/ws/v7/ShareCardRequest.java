@@ -1,5 +1,8 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.model.v7.timeline.TimelineCard;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
