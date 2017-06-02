@@ -22,18 +22,21 @@ public class MainPresenter implements Presenter {
 
   private final MainView view;
   private final ContentPuller contentPuller;
-  private NotificationSyncScheduler notificationSyncScheduler;
-  private ApkFy apkFy;
-  private AutoUpdate autoUpdate;
+  private final NotificationSyncScheduler notificationSyncScheduler;
+  private final ApkFy apkFy;
+  private final AutoUpdate autoUpdate;
+  private final CrashReport crashReport;
   private boolean firstCreated;
 
   public MainPresenter(MainView view, ApkFy apkFy, AutoUpdate autoUpdate,
-      ContentPuller contentPuller, NotificationSyncScheduler notificationSyncScheduler) {
+      ContentPuller contentPuller, NotificationSyncScheduler notificationSyncScheduler,
+      CrashReport crashReport) {
     this.view = view;
     this.apkFy = apkFy;
     this.autoUpdate = autoUpdate;
     this.contentPuller = contentPuller;
     this.notificationSyncScheduler = notificationSyncScheduler;
+    this.crashReport = crashReport;
     this.firstCreated = true;
   }
 
@@ -44,30 +47,34 @@ public class MainPresenter implements Presenter {
         .filter(created -> firstCreated)
         .doOnNext(created -> notificationSyncScheduler.forceSync())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-          view.showHome();
-          contentPuller.start();
-          if (ManagerPreferences.isCheckAutoUpdateEnable() && !V8Engine.isAutoUpdateWasCalled()) {
-            // only call auto update when the app was not on the background
-            autoUpdate.execute();
-          }
-          if (view.showDeepLink()) {
-            SecurePreferences.setWizardAvailable(false);
-          } else {
-            if (SecurePreferences.isWizardAvailable()) {
-              view.showWizard();
-              SecurePreferences.setWizardAvailable(false);
-            }
-          }
-        }, throwable -> CrashReport.getInstance()
-            .log(throwable));
+        .doOnNext(__ -> contentPuller.start())
+        .doOnNext(__ -> navigate())
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   @Override public void saveState(Bundle state) {
-
   }
 
   @Override public void restoreState(Bundle state) {
     firstCreated = false;
+  }
+
+  // FIXME we are showing home by default when we should decide were to go here and provide
+  // proper up/back navigation to home if needed
+  private void navigate() {
+    view.showHome();
+    if (ManagerPreferences.isCheckAutoUpdateEnable() && !V8Engine.isAutoUpdateWasCalled()) {
+      // only call auto update when the app was not on the background
+      autoUpdate.execute();
+    }
+    if (view.showDeepLink()) {
+      SecurePreferences.setWizardAvailable(false);
+    } else {
+      if (SecurePreferences.isWizardAvailable()) {
+        view.showWizard();
+        SecurePreferences.setWizardAvailable(false);
+      }
+    }
   }
 }

@@ -96,12 +96,12 @@ public class MainActivity extends TabNavigatorActivity implements MainView {
 
     attachPresenter(
         new MainPresenter(this, new ApkFy(this, getIntent()), autoUpdate, new ContentPuller(this),
-            ((V8Engine) getApplicationContext()).getNotificationSyncScheduler()),
-        savedInstanceState);
+            ((V8Engine) getApplicationContext()).getNotificationSyncScheduler(),
+            CrashReport.getInstance()), savedInstanceState);
   }
 
   @Override public void showWizard() {
-    fragmentNavigator.navigateTo(new WizardFragment());
+    fragmentNavigator.navigateTo(WizardFragment.newInstance());
   }
 
   @Override public void showHome() {

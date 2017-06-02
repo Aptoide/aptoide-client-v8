@@ -47,6 +47,10 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
   private boolean isInPortraitMode;
   private int currentPosition;
 
+  public static WizardFragment newInstance() {
+    return new WizardFragment();
+  }
+
   @Override public void onAttach(Context context) {
     super.onAttach(context);
     if (context instanceof LoginBottomSheet) {
