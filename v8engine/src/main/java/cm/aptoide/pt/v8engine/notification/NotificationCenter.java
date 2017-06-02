@@ -92,23 +92,14 @@ public class NotificationCenter {
   }
 
   public Observable<Boolean> haveNotifications() {
-    return notificationProvider.getNotifications(1)
-        .map(list -> !list.isEmpty());
+    return notificationProvider.getNotifications(1).map(list -> !list.isEmpty());
   }
 
   public Completable notificationDismissed(
       @AptoideNotification.NotificationType Integer[] notificationType) {
-    return Completable.defer(() -> {
-      try {
-        return notificationProvider.getLastShowed(notificationType)
-            .doOnSuccess(notification -> {
-              notification.setDismissed(System.currentTimeMillis());
-              notificationProvider.save(notification);
-            })
-            .toCompletable();
-      } catch (Exception e) {
-        return Completable.error(e);
-      }
+    return notificationProvider.getLastShowed(notificationType).flatMapCompletable(notification -> {
+      notification.setDismissed(System.currentTimeMillis());
+      return notificationProvider.save(notification);
     });
   }
 }

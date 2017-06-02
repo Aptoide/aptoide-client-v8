@@ -16,7 +16,7 @@ public class NotificationSyncScheduler {
   private final Context context;
   private final AlarmManager alarmManager;
   private final Class<? extends Service> serviceClass;
-  private List<Schedule> scheduleList;
+  private final List<Schedule> scheduleList;
 
   public NotificationSyncScheduler(Context context, AlarmManager alarmManager,
       Class<? extends Service> serviceClass, List<Schedule> scheduleList) {

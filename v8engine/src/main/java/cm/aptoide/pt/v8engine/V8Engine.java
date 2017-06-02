@@ -358,7 +358,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
           AccessorFactory.getAccessorFor(Notification.class);
 
       final NotificationProvider notificationProvider =
-          new NotificationProvider(notificationAccessor);
+          new NotificationProvider(notificationAccessor, Schedulers.io());
 
       notificationCenter = new NotificationCenter(getNotificationHandler(),
               notificationProvider, getNotificationSyncScheduler(), systemNotificationShower,
@@ -379,9 +379,9 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
       final List<NotificationSyncScheduler.Schedule> scheduleList = Arrays.asList(
           new NotificationSyncScheduler.Schedule(
-              NotificationSyncService.PUSH_NOTIFICATIONS_CAMPAIGN_ACTION,
+              NotificationSyncService.NOTIFICATIONS_CAMPAIGN_ACTION,
               AlarmManager.INTERVAL_DAY), new NotificationSyncScheduler.Schedule(
-              NotificationSyncService.PUSH_NOTIFICATIONS_SOCIAL_ACTION,
+              NotificationSyncService.NOTIFICATIONS_SOCIAL_ACTION,
               pushNotificationSocialPeriodicity));
 
       notificationSyncScheduler =

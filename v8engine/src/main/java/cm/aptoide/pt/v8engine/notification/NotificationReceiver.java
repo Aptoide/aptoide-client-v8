@@ -20,15 +20,14 @@ import rx.Completable;
 /**
  * Created by trinkes on 7/13/16.
  */
-public class PullingContentReceiver extends BroadcastReceiver {
+public class NotificationReceiver extends BroadcastReceiver {
 
   public static final String NOTIFICATION_PRESSED_ACTION = "NOTIFICATION_PRESSED_ACTION";
-  public static final String PUSH_NOTIFICATION_TRACK_URL = "PUSH_NOTIFICATION_TRACK_URL";
-  public static final String PUSH_NOTIFICATION_TARGET_URL = "PUSH_NOTIFICATION_TARGET_URL";
-  public static final String PUSH_NOTIFICATION_DISMISSED = "PUSH_NOTIFICATION_DISMISSED";
-  public static final String PUSH_NOTIFICATION_NOTIFICATION_ID =
-      "PUSH_NOTIFICATION_NOTIFICATION_ID";
-  private static final String TAG = PullingContentReceiver.class.getSimpleName();
+  public static final String NOTIFICATION_TRACK_URL = "PUSH_NOTIFICATION_TRACK_URL";
+  public static final String NOTIFICATION_TARGET_URL = "PUSH_NOTIFICATION_TARGET_URL";
+  public static final String NOTIFICATION_DISMISSED_ACTION = "PUSH_NOTIFICATION_DISMISSED";
+  public static final String NOTIFICATION_NOTIFICATION_ID = "PUSH_NOTIFICATION_NOTIFICATION_ID";
+  private static final String TAG = NotificationReceiver.class.getSimpleName();
   private CrashReport crashReport;
   private NotificationAccessor notificationAccessor;
   private NotificationIdsMapper notificationIdsMapper;
@@ -51,19 +50,16 @@ public class PullingContentReceiver extends BroadcastReceiver {
           }, throwable -> crashReport.log(throwable));
           break;
         case NOTIFICATION_PRESSED_ACTION:
-          pushNotificationPressed(context, intent);
-          notificationDismissed(
-              intent.getIntExtra(PUSH_NOTIFICATION_NOTIFICATION_ID, -1)).subscribe(() -> {
-          }, throwable -> crashReport.log(throwable));
+          callDeepLink(context, intent);
+          dismissNotification(intent.getIntExtra(NOTIFICATION_NOTIFICATION_ID, -1)).subscribe(
+              () -> {
+              }, throwable -> crashReport.log(throwable));
           break;
-        case PUSH_NOTIFICATION_DISMISSED:
-          if (intent.hasExtra(PUSH_NOTIFICATION_NOTIFICATION_ID)) {
-            notificationDismissed(
-                intent.getIntExtra(PUSH_NOTIFICATION_NOTIFICATION_ID, -1)).subscribe(() -> {
-            }, throwable -> {
-              throwable.printStackTrace();
-              crashReport.log(throwable);
-            });
+        case NOTIFICATION_DISMISSED_ACTION:
+          if (intent.hasExtra(NOTIFICATION_NOTIFICATION_ID)) {
+            dismissNotification(intent.getIntExtra(NOTIFICATION_NOTIFICATION_ID, -1)).subscribe(
+                () -> {
+                }, throwable -> crashReport.log(throwable));
           }
           break;
       }
@@ -79,17 +75,23 @@ public class PullingContentReceiver extends BroadcastReceiver {
         .toCompletable();
   }
 
-  private Completable notificationDismissed(int notificationId) {
-    return notificationCenter.notificationDismissed(
-        notificationIdsMapper.getNotificationType(notificationId));
+  private Completable dismissNotification(int notificationId) {
+    return Completable.defer(() -> {
+      try {
+        return notificationCenter.notificationDismissed(
+            notificationIdsMapper.getNotificationType(notificationId));
+      } catch (RuntimeException e) {
+        return Completable.error(e);
+      }
+    });
   }
 
-  private void pushNotificationPressed(Context context, Intent intent) {
-    String trackUrl = intent.getStringExtra(PUSH_NOTIFICATION_TRACK_URL);
+  private void callDeepLink(Context context, Intent intent) {
+    String trackUrl = intent.getStringExtra(NOTIFICATION_TRACK_URL);
     if (!TextUtils.isEmpty(trackUrl)) {
       DataproviderUtils.knock(trackUrl);
     }
-    String targetUrl = intent.getStringExtra(PUSH_NOTIFICATION_TARGET_URL);
+    String targetUrl = intent.getStringExtra(NOTIFICATION_TARGET_URL);
     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(targetUrl));
     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     try {
