@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.NavigationProvider;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
@@ -20,7 +21,7 @@ import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.ActivityEvent;
 import rx.Observable;
 
-public abstract class ActivityView extends LeakActivity implements View {
+public abstract class ActivityView extends LeakActivity implements View, NavigationProvider {
 
   private Presenter presenter;
   private FragmentNavigator fragmentNavigator;
@@ -89,11 +90,11 @@ public abstract class ActivityView extends LeakActivity implements View {
     super.onSaveInstanceState(outState);
   }
 
-  public ActivityNavigator getActivityNavigator() {
+  @Override public ActivityNavigator getActivityNavigator() {
     return activityNavigator;
   }
 
-  public FragmentNavigator getFragmentNavigator() {
+  @Override public FragmentNavigator getFragmentNavigator() {
     return fragmentNavigator;
   }
 }

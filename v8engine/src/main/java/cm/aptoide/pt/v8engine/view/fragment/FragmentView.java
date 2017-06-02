@@ -1,16 +1,16 @@
 package cm.aptoide.pt.v8engine.view.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.NavigationProvider;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
-import cm.aptoide.pt.v8engine.view.ActivityView;
 import cm.aptoide.pt.v8engine.view.MainActivity;
 import cm.aptoide.pt.v8engine.view.leak.LeakFragment;
 import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
@@ -22,16 +22,17 @@ import rx.Observable;
 
 public abstract class FragmentView extends LeakFragment implements View {
 
+  private static final String TAG = FragmentView.class.getName();
+
   private Presenter presenter;
-  private FragmentNavigator fragmentNavigator;
-  private ActivityNavigator activityNavigator;
+  private NavigationProvider navigationProvider;
 
   public FragmentNavigator getFragmentNavigator() {
-    return fragmentNavigator;
+    return navigationProvider.getFragmentNavigator();
   }
 
   public ActivityNavigator getActivityNavigator() {
-    return activityNavigator;
+    return navigationProvider.getActivityNavigator();
   }
 
   public FragmentNavigator getFragmentChildNavigator(@IdRes int containerId) {
@@ -39,10 +40,14 @@ public abstract class FragmentView extends LeakFragment implements View {
         android.R.anim.fade_out);
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    fragmentNavigator = ((ActivityView) getActivity()).getFragmentNavigator();
-    activityNavigator = ((ActivityView) getActivity()).getActivityNavigator();
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    try {
+      navigationProvider = (NavigationProvider) activity;
+    } catch (ClassCastException ex) {
+      Logger.e(TAG, String.format("Parent activity must implement %s interface",
+          NavigationProvider.class.getName()));
+    }
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -73,7 +78,7 @@ public abstract class FragmentView extends LeakFragment implements View {
    */
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == android.R.id.home) {
-      fragmentNavigator.popBackStack();
+      getFragmentNavigator().popBackStack();
       return true;
     }
     return super.onOptionsItemSelected(item);
