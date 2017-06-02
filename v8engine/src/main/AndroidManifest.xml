@@ -260,19 +260,19 @@
     <activity android:name=".spotandshare.view.AppSelectionActivity"/>
 
     <service
-        android:name="spotandshare.transference.ClientService"
+        android:name=".spotandshare.transference.ClientService"
         android:enabled="true"
         android:exported="true"/>
     <service
-        android:name="spotandshare.transference.ServerService"
+        android:name=".spotandshare.transference.ServerService"
         android:enabled="true"
         android:exported="true"/>
 
     <activity
-        android:name="spotandshare.view.TransferRecordActivity"
+        android:name=".spotandshare.view.TransferRecordActivity"
         android:configChanges="orientation|keyboardHidden|screenSize">
     </activity>
-    <activity android:name="spotandshare.view.ShareAptoideActivity">
+    <activity android:name=".spotandshare.view.ShareAptoideActivity">
     </activity>
 
   </application>
