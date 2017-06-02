@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.networking;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;

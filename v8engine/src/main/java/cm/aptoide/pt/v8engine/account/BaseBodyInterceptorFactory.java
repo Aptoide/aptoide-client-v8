@@ -4,7 +4,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.BasebBodyInterceptorFactory;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.utils.q.QManager;
@@ -39,10 +38,10 @@ public class BaseBodyInterceptorFactory implements BasebBodyInterceptorFactory {
     this.qManager = qManager;
   }
 
-  @Override
   public BodyInterceptor<BaseBody> createV7(AptoideAccountManager accountManager, String cdn) {
-    return new BaseBodyInterceptorV7(aptoideMd5sum, aptoidePackage, idsRepository, accountManager,
-        new AdultContent(accountManager, preferences, securePreferences), qManager, cdn);
+    return new BaseBodyInterceptorV7(idsRepository, accountManager,
+        new AdultContent(accountManager, preferences, securePreferences), aptoideMd5sum,
+        aptoidePackage, qManager, cdn);
   }
 
   @Override public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> createV3(

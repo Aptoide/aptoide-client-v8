@@ -22,12 +22,9 @@ public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
   private final String cdn;
 
   public BaseBodyInterceptorV7(IdsRepository idsRepository, AptoideAccountManager accountManager,
-      AdultContent adultContent, String aptoideMd5sum, String aptoidePackage, QManager qManager) {
+      AdultContent adultContent, String aptoideMd5sum, String aptoidePackage, QManager qManager,
+      String cdn) {
     this.idsRepository = idsRepository;
-  public BaseBodyInterceptorV7(String aptoideMd5sum, String aptoidePackage,
-      IdsRepository idsRepository, AptoideAccountManager accountManager, AdultContent adultContent,
-      QManager qManager, String cdn) {
-    super(aptoideMd5sum, aptoidePackage, idsRepository, qManager);
     this.accountManager = accountManager;
     this.adultContent = adultContent;
     this.aptoideMd5sum = aptoideMd5sum;
