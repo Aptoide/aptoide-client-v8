@@ -17,6 +17,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.presenter.SpotSharePreviewPresenter;
 import cm.aptoide.pt.v8engine.presenter.SpotSharePreviewView;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
+import cm.aptoide.pt.v8engine.spotandshare.view.RadarActivity;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
@@ -97,8 +98,7 @@ public class SpotSharePreviewFragment extends FragmentView implements SpotShareP
   }
 
   @Override public void navigateToSpotShareView() {
-    startActivity(
-        new Intent(getContext(), cm.aptoide.pt.v8engine.spotandshare.view.RadarActivity.class));
+    startActivity(new Intent(getContext(), RadarActivity.class));
   }
 
   @Override public void showToolbar(String title) {

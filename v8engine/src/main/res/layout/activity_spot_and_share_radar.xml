@@ -53,7 +53,7 @@
         >
 
 
-      <cm.aptoide.pt.spotandshareandroid.view.radar.RadarScan
+      <cm.aptoide.pt.v8engine.view.radar.RadarScan
           android:id="@+id/radar"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
