@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.download;
 
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import java.io.IOException;
@@ -25,11 +26,19 @@ public class PaidAppsDownloadInterceptor implements Interceptor {
     if (request.url()
         .host()
         .contains(BuildConfig.APTOIDE_WEB_SERVICES_HOST)) {
-      request = request.newBuilder()
-          .post(RequestBody.create(MediaType.parse("application/json"),
-              "{\"access_token\" : \"" + accountManager.getAccessToken() + "\"}"))
-          .build();
+      final Account account = accountManager.accountStatus()
+          .first()
+          .toSingle()
+          .toBlocking()
+          .value();
+      if (account.isLoggedIn()) {
+        request = request.newBuilder()
+            .post(RequestBody.create(MediaType.parse("application/json"),
+                "{\"access_token\" : \"" + account.getAccessToken() + "\"}"))
+            .build();
+      }
     }
+
     return chain.proceed(request);
   }
 }

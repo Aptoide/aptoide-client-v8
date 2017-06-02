@@ -1,12 +1,11 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import java.io.File;
-import java.io.Serializable;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class RequestBodyFactory implements Serializable, Cloneable {
+public class RequestBodyFactory {
 
   public RequestBody createBodyPartFromLong(long longValue) {
     return RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(longValue));

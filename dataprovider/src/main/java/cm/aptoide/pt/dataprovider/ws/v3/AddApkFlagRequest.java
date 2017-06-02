@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.networkclient.WebService;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -23,14 +23,13 @@ public class AddApkFlagRequest extends V3<GenericResponseV2> {
   }
 
   public static AddApkFlagRequest of(String storeName, String appMd5sum, String flag,
-      String accessToken, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient) {
     BaseBody args = new BaseBody();
 
     args.put("repo", storeName);
     args.put("md5sum", appMd5sum);
     args.put("flag", flag);
     args.put("mode", "json");
-    args.put("access_token", accessToken);
 
     return new AddApkFlagRequest(args, bodyInterceptor, httpClient,
         WebService.getDefaultConverter());

@@ -18,15 +18,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -36,15 +37,14 @@ import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
-import cm.aptoide.pt.v8engine.networking.StoreBodyInterceptor;
 import cm.aptoide.pt.v8engine.view.account.PictureLoaderFragment;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jakewharton.rxbinding.view.RxView;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import org.parceler.Parcels;
 import retrofit2.Converter;
 import rx.Completable;
@@ -72,14 +72,15 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
   private Button skipBtn;
   private StoreThemeSelector storeThemeSelector;
   private AptoideAccountManager accountManager;
-  private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3;
+  private BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> oAuthBodyInterceptor;
   private BodyInterceptor<BaseBody> bodyInterceptorV7;
   private RequestBodyFactory requestBodyFactory;
-
+  private ObjectMapper serializer;
   private IdsRepository idsRepository;
   private ManageStoreModel storeModel;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptor;
 
   public CreateStoreFragment() {
     super(false, true);
@@ -97,12 +98,14 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
     super.onCreate(savedInstanceState);
     final V8Engine engine = (V8Engine) getActivity().getApplicationContext();
     accountManager = engine.getAccountManager();
-    bodyInterceptorV3 = engine.getBaseBodyInterceptorV3();
+    oAuthBodyInterceptor = engine.getOAuthBodyInterceptor();
     bodyInterceptorV7 = engine.getBaseBodyInterceptorV7();
     idsRepository = engine.getIdsRepository();
     requestBodyFactory = new RequestBodyFactory();
     httpClient = engine.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
+    multipartBodyInterceptor = engine.getMultipartBodyInterceptor();
+    serializer = ((V8Engine) getContext().getApplicationContext()).getNonNullObjectMapper();
     waitDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity(),
         getApplicationContext().getString(R.string.please_wait_upload));
   }
@@ -368,10 +371,9 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
     })
         .flatMap(__ -> accountManager.accountStatus()
             .first())
-        .flatMap(account -> SetStoreRequest.of(account.getAccessToken(), storeModel.getStoreName(),
-            storeModel.getStoreThemeName(), storeModel.getStoreAvatarPath(),
-            storeModel.getStoreDescription(), true, storeModel.getStoreId(),
-            createStoreInterceptor(storeModel), httpClient, converterFactory)
+        .flatMap(account -> SetStoreRequest.of(storeModel.getStoreId(), storeModel.getStoreThemeName(),
+            storeModel.getStoreDescription(), storeModel.getStoreAvatarPath(),
+            multipartBodyInterceptor, httpClient, converterFactory, requestBodyFactory, serializer)
             .observe())
         .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
             .observeOn(AndroidSchedulers.mainThread())
@@ -403,8 +405,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
 
     return accountManager.accountStatus()
         .first()
-        .flatMap(account -> CheckUserCredentialsRequest.of(storeModel.getStoreName(),
-            account.getAccessToken(), bodyInterceptorV3, httpClient, converterFactory)
+        .flatMap(account -> CheckUserCredentialsRequest.of(storeModel.getStoreName(), oAuthBodyInterceptor,
+            httpClient, converterFactory)
             .observe()
             .observeOn(AndroidSchedulers.mainThread())
             .map(answer -> {
@@ -517,9 +519,9 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
           .first()
           .doOnNext(__ -> showWaitDialog())
           .flatMap(
-              account -> SetStoreRequest.of(account.getAccessToken(), storeModel.getStoreName(),
-                  storeModel.getStoreThemeName(), storeModel.getStoreAvatarPath(),
-                  createStoreInterceptor(storeModel), httpClient, converterFactory)
+              account -> SetStoreRequest.of(storeModel.getStoreName(), storeModel.getStoreThemeName(),
+                  storeModel.getStoreDescription(), storeModel.getStoreAvatarPath(),
+                  multipartBodyInterceptor, httpClient, converterFactory, requestBodyFactory, serializer)
                   .observe()
                   .timeout(90, TimeUnit.SECONDS))
           .observeOn(AndroidSchedulers.mainThread())
@@ -601,16 +603,6 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
 
   @NonNull private Completable dismissDialogAsync() {
     return Completable.fromAction(() -> dismissWaitDialog());
-  }
-
-  @NonNull private StoreBodyInterceptor createStoreInterceptor(ManageStoreModel storeModel) {
-
-    ObjectMapper serializer = new ObjectMapper();
-    serializer.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
-    return new StoreBodyInterceptor(idsRepository.getUniqueIdentifier(), accountManager,
-        requestBodyFactory, storeModel.getStoreThemeName(), storeModel.getStoreDescription(),
-        serializer);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {

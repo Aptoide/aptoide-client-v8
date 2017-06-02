@@ -24,8 +24,8 @@ public class NotificationSyncService extends Service {
 
     NotificationAccessor notificationAccessor = AccessorFactory.getAccessorFor(Notification.class);
     NotificationProvider notificationProvider = new NotificationProvider(notificationAccessor);
-    final NotificationHandler notificationHandler =
-        ((V8Engine) getApplicationContext()).getNotificationHandler();
+    final NotificationNetworkService notificationHandler =
+        ((V8Engine) getApplicationContext()).getNotificationNetworkService();
     notificationSync = new NotificationSync(notificationProvider, notificationHandler);
   }
 
