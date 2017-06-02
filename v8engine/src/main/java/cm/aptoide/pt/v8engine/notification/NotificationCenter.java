@@ -12,6 +12,7 @@ import rx.subscriptions.CompositeSubscription;
 
 public class NotificationCenter {
 
+  public static final int MAX_NUMBER_NOTIFICATIONS_SAVED = 50;
   private final CrashReport crashReport;
   private final NotificationIdsMapper notificationIdsMapper;
   private NotificationHandler notificationHandler;
@@ -51,8 +52,15 @@ public class NotificationCenter {
 
     subscriptions.add(accountManager.accountStatus()
         .filter(account -> account.isLoggedIn())
-        .flatMapCompletable(account -> notificationsCleaner.cleanNotifications(account.getId()))
+        .flatMapCompletable(account -> notificationsCleaner.cleanUserNotifications(account.getId()))
         .subscribe(notificationsCleaned -> {
+        }, throwable -> crashReport.log(throwable)));
+
+    subscriptions.add(notificationProvider.getNotifications(1)
+        .flatMapCompletable(
+            aptoideNotifications -> notificationsCleaner.cleanLimitExceededNotifications(
+                MAX_NUMBER_NOTIFICATIONS_SAVED))
+        .subscribe(aptoideNotifications -> {
         }, throwable -> crashReport.log(throwable)));
   }
 
