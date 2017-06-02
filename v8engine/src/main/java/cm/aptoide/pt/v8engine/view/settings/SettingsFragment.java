@@ -46,6 +46,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
 import cm.aptoide.pt.v8engine.notification.NotificationCenter;
+import cm.aptoide.pt.v8engine.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
 import cm.aptoide.pt.v8engine.preferences.Preferences;
 import cm.aptoide.pt.v8engine.preferences.SecurePreferences;
@@ -95,6 +96,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private CheckBoxPreference socialCampaignNotifications;
   private boolean trackAnalytics;
   private NotificationCenter notificationCenter;
+  private NotificationSyncScheduler notificationSyncScheduler;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -134,6 +136,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         .build();
 
     notificationCenter = ((V8Engine) getContext().getApplicationContext()).getNotificationCenter();
+    notificationSyncScheduler = ((V8Engine) getContext().getApplicationContext()).getNotificationSyncScheduler();
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -479,10 +482,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
   }
 
   private void handleSocialNotifications(Boolean isChecked) {
+    notificationSyncScheduler.setEnabled(isChecked);
     if (isChecked) {
-      notificationCenter.start();
+      notificationSyncScheduler.schedule();
     } else {
-      notificationCenter.stop();
+      notificationSyncScheduler.removeSchedules();
     }
   }
 

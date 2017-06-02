@@ -41,7 +41,7 @@ public class NotificationCenter {
     subscriptions = new CompositeSubscription();
   }
 
-  public void start() {
+  public void setup() {
     notificationSyncScheduler.schedule();
     subscriptions.add(getNewNotifications().flatMapCompletable(
         aptoideNotification -> notificationShower.showNotification(aptoideNotification))
@@ -78,13 +78,6 @@ public class NotificationCenter {
           throwable.printStackTrace();
           return Observable.empty();
         });
-  }
-
-  public void stop() {
-    if (!subscriptions.isUnsubscribed()) {
-      subscriptions.clear();
-    }
-    notificationSyncScheduler.stop();
   }
 
   public Observable<List<AptoideNotification>> getInboxNotifications(int entries) {

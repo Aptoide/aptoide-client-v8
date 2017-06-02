@@ -17,27 +17,31 @@ public class NotificationSyncScheduler {
   private final AlarmManager alarmManager;
   private final Class<? extends Service> serviceClass;
   private final List<Schedule> scheduleList;
+  private boolean enabled;
 
   public NotificationSyncScheduler(Context context, AlarmManager alarmManager,
-      Class<? extends Service> serviceClass, List<Schedule> scheduleList) {
+      Class<? extends Service> serviceClass, List<Schedule> scheduleList, boolean enabled) {
     this.context = context;
     this.alarmManager = alarmManager;
     this.serviceClass = serviceClass;
     this.scheduleList = scheduleList;
+    this.enabled = enabled;
   }
 
-  void schedule() {
-    for (final Schedule schedule : scheduleList) {
-      if (!isAlarmActive(schedule)) {
-        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, schedule.getInterval(),
-            getPendingIntent(schedule));
+  public void schedule() {
+    if (enabled) {
+      for (final Schedule schedule : scheduleList) {
+        if (!isAlarmActive(schedule)) {
+          alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, schedule.getInterval(),
+              getPendingIntent(schedule));
+        }
       }
     }
   }
 
   public void forceSync() {
-    for (Schedule schedule : scheduleList) {
-      if (isAlarmActive(schedule)) {
+    if (enabled) {
+      for (Schedule schedule : scheduleList) {
         context.startService(buildIntent(schedule));
       }
     }
@@ -48,7 +52,7 @@ public class NotificationSyncScheduler {
         != null;
   }
 
-  void stop() {
+  public void removeSchedules() {
     for (final Schedule schedule : scheduleList) {
       PendingIntent pendingIntent = getPendingIntent(schedule);
       alarmManager.cancel(pendingIntent);
@@ -65,6 +69,10 @@ public class NotificationSyncScheduler {
     Intent intent = new Intent(context, serviceClass);
     intent.setAction(schedule.getAction());
     return intent;
+  }
+
+  public void setEnabled(boolean enabled) {
+    this.enabled = enabled;
   }
 
   public static class Schedule {
