@@ -1,15 +1,20 @@
 package cm.aptoide.pt.v8engine.timeline.view.displayable;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
 import cm.aptoide.pt.model.v7.timeline.AggregatedSocialInstall;
 import cm.aptoide.pt.model.v7.timeline.MinimalCard;
 import cm.aptoide.pt.model.v7.timeline.UserSharerTimeline;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.Date;
 import java.util.List;
 
@@ -35,6 +40,7 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
   private Date date;
   private String abTestingURL;
   private TimelineAnalytics timelineAnalytics;
+  private SpannableFactory spannableFactory;
 
   public AggregatedSocialInstallDisplayable() {
   }
@@ -42,11 +48,12 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
   public AggregatedSocialInstallDisplayable(AggregatedSocialInstall card, long appId,
       String packageName, String appName, String appIcon, String abTestingURL, Date date,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
-      DateCalculator dateCalculator) {
+      DateCalculator dateCalculator, SpannableFactory spannableFactory) {
     super(card, timelineAnalytics);
     this.minimalCardList = card.getMinimalCardList();
     this.sharers = card.getSharers();
     this.socialRepository = socialRepository;
+    this.spannableFactory = spannableFactory;
     this.timelineAnalytics = timelineAnalytics;
     this.appStoreId = card.getApp()
         .getStore()
@@ -66,7 +73,7 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
 
   public static Displayable from(AggregatedSocialInstall aggregatedSocialInstall,
       TimelineAnalytics timelineAnalytics, SocialRepository socialRepository,
-      DateCalculator dateCalculator) {
+      DateCalculator dateCalculator, SpannableFactory spannableFactory) {
 
     String abTestingURL = null;
 
@@ -87,7 +94,7 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
         .getPackageName(), aggregatedSocialInstall.getApp()
         .getName(), aggregatedSocialInstall.getApp()
         .getIcon(), abTestingURL, aggregatedSocialInstall.getDate(), timelineAnalytics,
-        socialRepository, dateCalculator);
+        socialRepository, dateCalculator, spannableFactory);
   }
 
   @Override
@@ -165,6 +172,16 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
 
   public long getAppStoreId() {
     return appStoreId;
+  }
+
+  public void likesPreviewClick(FragmentNavigator navigator, long numberOfLikes, String cardId) {
+    navigator.navigateTo(V8Engine.getFragmentProvider()
+        .newTimeLineLikesFragment(cardId, numberOfLikes, "default"));
+  }
+
+  public Spannable getBlackHighlightedLike(Context context, String string) {
+    return spannableFactory.createColorSpan(context.getString(R.string.x_liked_it, string),
+        ContextCompat.getColor(context, R.color.black_87_alpha), string);
   }
 
   public String getCardHeaderNames() {

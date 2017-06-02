@@ -1,20 +1,25 @@
 package cm.aptoide.pt.v8engine.timeline.view.widget;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.MinimalCard;
+import cm.aptoide.pt.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -161,6 +166,23 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
       TextView shareSubCardButton = (TextView) subCardView.findViewById(R.id.social_share);
       LinearLayout likeLayout = (LinearLayout) subCardView.findViewById(R.id.social_like);
       TextView comment = (TextView) subCardView.findViewById(R.id.social_comment);
+      LinearLayout socialInfoBar = (LinearLayout) subCardView.findViewById(R.id.social_info_bar);
+      RelativeLayout likePreviewContainer = (RelativeLayout) subCardView.findViewById(
+          R.id.displayable_social_timeline_likes_preview_container);
+      TextView numberLikes = (TextView) subCardView.findViewById(R.id.social_number_of_likes);
+      TextView numberLikesOneLike = (TextView) subCardView.findViewById(R.id.social_one_like);
+      TextView numberComments = (TextView) subCardView.findViewById(R.id.social_number_of_comments);
+      LinearLayout socialCommentBar =
+          (LinearLayout) subCardView.findViewById(R.id.social_latest_comment_bar);
+      TextView socialCommentUsername =
+          (TextView) subCardView.findViewById(R.id.social_latest_comment_user_name);
+      TextView socialCommentBody =
+          (TextView) subCardView.findViewById(R.id.social_latest_comment_body);
+      ImageView latestCommentMainAvatar =
+          (ImageView) subCardView.findViewById(R.id.card_last_comment_main_icon);
+
+      int marginOfTheNextLikePreview = 0;
+
       ImageLoader.with(getContext())
           .loadWithShadowCircleTransform(minimalCard.getSharers()
               .get(0)
@@ -193,6 +215,85 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
         likeSubCardButton.setHeartState(false);
       }
 
+      likePreviewContainer.removeAllViews();
+      showLikesPreview(marginOfTheNextLikePreview, likePreviewContainer, minimalCard);
+
+      if ((minimalCard.getUsersLikes() != null
+          && minimalCard.getUsersLikes()
+          .size() != 0)
+          || minimalCard.getStats()
+          .getComments() > 0) {
+        socialInfoBar.setVisibility(View.VISIBLE);
+      } else {
+        socialInfoBar.setVisibility(View.GONE);
+      }
+
+      final long numberOfLikes = minimalCard.getStats()
+          .getLikes();
+      if (numberOfLikes > 0) {
+        if (numberOfLikes > 1) {
+          showNumberOfLikes(numberOfLikes, numberLikes, numberLikesOneLike);
+        } else if (minimalCard.getUsersLikes() != null
+            && minimalCard.getUsersLikes()
+            .size() != 0) {
+          if (minimalCard.getUsersLikes()
+              .get(0)
+              .getName() != null) {
+            numberLikesOneLike.setText(displayable.getBlackHighlightedLike(getContext(),
+                minimalCard.getUsersLikes()
+                    .get(0)
+                    .getName()));
+            numberLikes.setVisibility(View.INVISIBLE);
+            numberLikesOneLike.setVisibility(View.VISIBLE);
+          } else {
+            if (minimalCard.getUsersLikes()
+                .get(0)
+                .getStore() != null
+                && minimalCard.getUsersLikes()
+                .get(0)
+                .getStore()
+                .getName() != null) {
+              numberLikesOneLike.setText(displayable.getBlackHighlightedLike(getContext(),
+                  minimalCard.getUsersLikes()
+                      .get(0)
+                      .getStore()
+                      .getName()));
+              numberLikes.setVisibility(View.INVISIBLE);
+              numberLikesOneLike.setVisibility(View.VISIBLE);
+            } else {
+              showNumberOfLikes(numberOfLikes, numberLikes, numberLikesOneLike);
+            }
+          }
+        }
+      } else {
+        numberLikes.setVisibility(View.INVISIBLE);
+        numberLikesOneLike.setVisibility(View.INVISIBLE);
+      }
+
+      if (minimalCard.getStats()
+          .getComments() > 0
+          && minimalCard.getComments()
+          .size() > 0) {
+        numberComments.setVisibility(View.VISIBLE);
+        numberComments.setText(String.format("%s %s", String.valueOf(minimalCard.getStats()
+            .getComments()), getContext().getString(R.string.comments)
+            .toLowerCase()));
+        socialCommentBar.setVisibility(View.VISIBLE);
+        ImageLoader.with(getContext())
+            .loadWithShadowCircleTransform(minimalCard.getComments()
+                .get(0)
+                .getAvatar(), latestCommentMainAvatar);
+        socialCommentUsername.setText(minimalCard.getComments()
+            .get(0)
+            .getName());
+        socialCommentBody.setText(minimalCard.getComments()
+            .get(0)
+            .getBody());
+      } else {
+        numberComments.setVisibility(View.INVISIBLE);
+        socialCommentBar.setVisibility(View.GONE);
+      }
+
       compositeSubscription.add(RxView.clicks(shareSubCardButton)
           .subscribe(click -> shareCard(displayable, minimalCard.getCardId(), null,
               SharePreviewDialog.SharePreviewOpenMode.SHARE), err -> CrashReport.getInstance()
@@ -218,9 +319,28 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
               .toSingle()
               .toObservable())
           .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(account -> likeCard(displayable, minimalCard.getCardId(), 1),
-              err -> CrashReport.getInstance()
-                  .log(err)));
+          .subscribe(account -> {
+            if (likeCard(displayable, minimalCard.getCardId(), 1)) {
+              numberLikes.setText(String.valueOf(minimalCard.getStats()
+                  .getLikes() + 1));
+              numberLikes.setVisibility(View.VISIBLE);
+              if (likePreviewContainer.getChildCount() < 4) {
+                if (!minimalCard.getMy()
+                    .isLiked()) {
+                  knockWithSixpackCredentials(displayable.getAbTestingURL());
+                  UserTimeline user = new UserTimeline();
+                  Store store = new Store();
+                  store.setAvatar(account.getStoreAvatar());
+                  user.setAvatar(account.getAvatar());
+                  user.setStore(store);
+                  addUserToPreview(marginOfTheNextLikePreview, user, likePreviewContainer,
+                      marginOfTheNextLikePreview);
+                  likePreviewContainer.invalidate();
+                }
+              }
+            }
+          }, err -> CrashReport.getInstance()
+              .log(err)));
 
       compositeSubscription.add(accountManager.accountStatus()
           .subscribe());
@@ -240,6 +360,12 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
               err -> CrashReport.getInstance()
                   .log(err)));
 
+      compositeSubscription.add(RxView.clicks(likePreviewContainer)
+          .subscribe(click -> displayable.likesPreviewClick(getFragmentNavigator(),
+              minimalCard.getStats()
+                  .getLikes(), minimalCard.getCardId()), err -> CrashReport.getInstance()
+              .log(err)));
+
       subCardsContainer.addView(subCardView);
       i++;
     }
@@ -252,5 +378,66 @@ public class AggregatedSocialInstallWidget extends CardWidget<AggregatedSocialIn
     } else {
       seeMore.setVisibility(View.GONE);
     }
+  }
+
+  private int addUserToPreview(int i, UserTimeline user, ViewGroup likePreviewContainer,
+      int marginOfTheNextLikePreview) {
+    View likeUserPreviewView;
+    ImageView likeUserPreviewIcon;
+    likeUserPreviewView =
+        inflater.inflate(R.layout.social_timeline_like_user_preview, likePreviewContainer, false);
+    likeUserPreviewIcon =
+        (ImageView) likeUserPreviewView.findViewById(R.id.social_timeline_like_user_preview);
+    ViewGroup.MarginLayoutParams p =
+        (ViewGroup.MarginLayoutParams) likeUserPreviewView.getLayoutParams();
+    p.setMargins(i, 0, 0, 0);
+    likeUserPreviewView.requestLayout();
+
+    if (user != null) {
+      final FragmentActivity context = getContext();
+      if (user.getAvatar() != null) {
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(user.getAvatar(), likeUserPreviewIcon);
+      } else if (user.getStore()
+          .getAvatar() != null) {
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(user.getStore()
+                .getAvatar(), likeUserPreviewIcon);
+      }
+      likePreviewContainer.addView(likeUserPreviewView);
+      return marginOfTheNextLikePreview - 20;
+    } else {
+      return marginOfTheNextLikePreview;
+    }
+  }
+
+  private void showLikesPreview(int marginOfTheNextLikePreview, ViewGroup likePreviewContainer,
+      MinimalCard minimalCard) {
+    marginOfTheNextLikePreview = 60;
+    for (int j = 0; j < minimalCard.getStats()
+        .getLikes(); j++) {
+
+      UserTimeline user = null;
+      if (minimalCard.getUsersLikes() != null && j < minimalCard.getUsersLikes()
+          .size()) {
+        user = minimalCard.getUsersLikes()
+            .get(j);
+      }
+      marginOfTheNextLikePreview =
+          addUserToPreview(marginOfTheNextLikePreview, user, likePreviewContainer,
+              marginOfTheNextLikePreview);
+      if (marginOfTheNextLikePreview < 0) {
+        break;
+      }
+    }
+  }
+
+  private void showNumberOfLikes(long numberOfLikes, TextView numberLikes,
+      TextView numberLikesOneLike) {
+    numberLikes.setVisibility(View.VISIBLE);
+    numberLikes.setText(String.format("%s %s", String.valueOf(numberOfLikes),
+        getContext().getString(R.string.likes)
+            .toLowerCase()));
+    numberLikesOneLike.setVisibility(View.INVISIBLE);
   }
 }
