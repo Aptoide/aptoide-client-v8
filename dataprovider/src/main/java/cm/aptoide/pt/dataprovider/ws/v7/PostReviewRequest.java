@@ -31,15 +31,15 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
 
   public static PostReviewRequest of(String storeName, String packageName, String title,
       String textBody, Integer rating, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    final Body body = new Body(storeName, packageName, title, textBody, rating);
+      OkHttpClient httpClient, Converter.Factory converterFactory, boolean appInstalled) {
+    final Body body = new Body(storeName, packageName, title, textBody, rating, appInstalled);
     return new PostReviewRequest(body, bodyInterceptor, httpClient, converterFactory);
   }
 
   public static PostReviewRequest of(String packageName, String title, String textBody,
       Integer rating, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
-    final Body body = new Body(packageName, title, textBody, rating);
+      Converter.Factory converterFactory, boolean appInstalled) {
+    final Body body = new Body(packageName, title, textBody, rating, appInstalled);
     return new PostReviewRequest(body, bodyInterceptor, httpClient, converterFactory);
   }
 
@@ -55,20 +55,25 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
     private String title;
     private String body;
     private Integer rating;
+    private final boolean appInstalled;
 
-    public Body(String packageName, String title, String body, Integer rating) {
+    public Body(String packageName, String title, String body, Integer rating,
+        boolean appInstalled) {
       this.packageName = packageName;
       this.title = title;
       this.body = body;
       this.rating = rating;
+      this.appInstalled = appInstalled;
     }
 
-    public Body(String storeName, String packageName, String title, String body, Integer rating) {
+    public Body(String storeName, String packageName, String title, String body, Integer rating,
+        boolean appInstalled) {
       this.storeName = storeName;
       this.packageName = packageName;
       this.title = title;
       this.body = body;
       this.rating = rating;
+      this.appInstalled = appInstalled;
     }
   }
 }

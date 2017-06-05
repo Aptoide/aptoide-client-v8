@@ -652,7 +652,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics));
     displayables.add(
-        new AppViewRateAndCommentsDisplayable(getApp, storeCredentialsProvider, appViewAnalytics));
+        new AppViewRateAndCommentsDisplayable(getApp, storeCredentialsProvider, appViewAnalytics, installedRepository));
 
     // only show screen shots / video if the app has them
     if (isMediaAvailable(media)) {

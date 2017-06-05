@@ -220,7 +220,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
           new TimelineAnalytics(analytics, AppEventsLogger.newLogger(getContext()),
               ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
               ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-              WebService.getDefaultConverter())));
+              WebService.getDefaultConverter()), installedRepository));
     }
     addDisplayables(installedDisplayablesList, false);
     Logger.v(TAG, "listed installed apps");
