@@ -112,7 +112,6 @@ import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.networking.MultipartBodyInterceptor;
-import cm.aptoide.pt.v8engine.networking.OAuthBodyInterceptor;
 import cm.aptoide.pt.v8engine.networking.UserAgentInterceptor;
 import cm.aptoide.pt.v8engine.notification.NotificationCenter;
 import cm.aptoide.pt.v8engine.notification.NotificationHandler;
@@ -202,7 +201,6 @@ public abstract class V8Engine extends SpotAndShareApplication {
   private AccountFactory accountFactory;
   private AndroidAccountProvider androidAccountProvider;
   private PaymentAnalytics paymentAnalytics;
-  private OAuthBodyInterceptor oAuthBodyInterceptor;
   private ObjectMapper nonNullObjectMapper;
   private RequestBodyFactory requestBodyFactory;
   private PaymentSyncScheduler paymentSyncScheduler;
@@ -303,7 +301,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
     final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-    sendAppStartToAnalytics(sharedPreferences);
+    sendAppStartToAnalytics();
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
@@ -376,7 +374,6 @@ public abstract class V8Engine extends SpotAndShareApplication {
           && ManagerPreferences.getPushNotificationPullingInterval() > 0) {
         pushNotificationSocialPeriodicity = ManagerPreferences.getPushNotificationPullingInterval();
       }
-
 
       final List<NotificationSyncScheduler.Schedule> scheduleList = Arrays.asList(
           new NotificationSyncScheduler.Schedule(
@@ -656,11 +653,11 @@ public abstract class V8Engine extends SpotAndShareApplication {
               paymentRepositoryFactory.getPaidAppConfirmationRepository(), getAccountPayer(),
               getAuthorizationFactory(), getNetworkOperatorManager(), getBaseBodyInterceptorV3(),
               getDefaultClient(), WebService.getDefaultConverter(), productFactory),
-          new InAppBillingProductRepository(purchaseFactory,
-              paymentFactory, authorizationRepository,
-              paymentRepositoryFactory.getInAppConfirmationRepository(), getAccountPayer(),
-              getAuthorizationFactory(), productFactory, getBaseBodyInterceptorV3(),
-              getDefaultClient(), WebService.getDefaultConverter(), getNetworkOperatorManager()));
+          new InAppBillingProductRepository(purchaseFactory, paymentFactory,
+              authorizationRepository, paymentRepositoryFactory.getInAppConfirmationRepository(),
+              getAccountPayer(), getAuthorizationFactory(), productFactory,
+              getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
+              getNetworkOperatorManager()));
 
       aptoideBilling = new AptoideBilling(productRepositoryFactory, paymentRepositoryFactory,
           getInAppBillingRepository(), authorizationRepository);
@@ -733,7 +730,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
         .build(context, flurryKey);
   }
 
-  private void sendAppStartToAnalytics(SharedPreferences sPref) {
+  private void sendAppStartToAnalytics() {
     Analytics.Lifecycle.Application.onCreate(this);
   }
 
@@ -843,15 +840,6 @@ public abstract class V8Engine extends SpotAndShareApplication {
               getRequestBodyFactory());
     }
     return multipartBodyInterceptor;
-  }
-
-  public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getOAuthBodyInterceptor() {
-    if (oAuthBodyInterceptor == null) {
-      oAuthBodyInterceptor =
-          new OAuthBodyInterceptor(getIdsRepository(), getAptoideMd5sum(), getAptoidePackage(),
-              getAccountManager(), getQManager());
-    }
-    return oAuthBodyInterceptor;
   }
 
   public RequestBodyFactory getRequestBodyFactory() {

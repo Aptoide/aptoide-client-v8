@@ -28,7 +28,6 @@ public class CheckUserCredentialsRequest extends V3<CheckUserCredentialsJson> {
     final BaseBody body = new BaseBody();
     body.put("mode", "json");
     body.put("createRepo", "1");
-    body.put("authMode", "aptoide");
     body.put("oauthCreateRepo", "true");
     body.put("repo", storeName);
 

@@ -16,6 +16,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.fragment.BaseToolbarFragment;
 import com.jakewharton.rxbinding.view.RxView;
+import rx.Completable;
 import rx.Observable;
 
 public class ProfileStepOneFragment extends BaseToolbarFragment implements ProfileStepOneView {
@@ -85,8 +86,8 @@ public class ProfileStepOneFragment extends BaseToolbarFragment implements Profi
     }
   }
 
-  @Override public void showGenericErrorMessage() {
-    ShowMessage.asSnack(this, R.string.unknown_error);
+  @Override public Completable showGenericErrorMessage() {
+    return ShowMessage.asLongObservableSnack(this, R.string.unknown_error);
   }
 
   @Override public void setupViews() {

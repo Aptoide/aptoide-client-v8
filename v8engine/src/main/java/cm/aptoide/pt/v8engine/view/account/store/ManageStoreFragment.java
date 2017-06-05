@@ -102,11 +102,11 @@ public class ManageStoreFragment extends ImageLoaderFragment
   }
 
   @Override public Completable showError(@StringRes int errorMessage) {
-    return ShowMessage.asObservableSnack(this, errorMessage);
+    return ShowMessage.asLongObservableSnack(this, errorMessage);
   }
 
   @Override public Completable showGenericError() {
-    return ShowMessage.asObservableSnack(this, R.string.having_some_trouble);
+    return ShowMessage.asLongObservableSnack(this, R.string.having_some_trouble);
   }
 
   @Override public void showWaitProgressBar() {
@@ -119,6 +119,10 @@ public class ManageStoreFragment extends ImageLoaderFragment
     if (waitDialog != null && waitDialog.isShowing()) {
       waitDialog.dismiss();
     }
+  }
+
+  @Override public void hideKeyboard(){
+    super.hideKeyboard();
   }
 
   @Override public void onDestroyView() {

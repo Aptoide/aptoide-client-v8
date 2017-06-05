@@ -62,9 +62,11 @@ public class ManageStorePresenter implements Presenter {
         storeManager.createOrUpdate(storeModel.getStoreId(), storeModel.getStoreName(),
             storeModel.getStoreDescription(), storeModel.getStoreImagePath(),
             storeModel.hasNewAvatar(), storeModel.getStoreThemeName(), storeModel.storeExists())
-            .onErrorResumeNext(err -> handleStoreCreationErrors(err));
+            .onErrorResumeNext(err -> Completable.fromAction(() -> view.dismissWaitProgressBar())
+                .andThen(handleStoreCreationErrors(err)));
 
     return Completable.fromAction(() -> view.showWaitProgressBar())
+
         .andThen(saveDataCompletable)
         .doOnCompleted(() -> view.dismissWaitProgressBar())
         .doOnCompleted(() -> {

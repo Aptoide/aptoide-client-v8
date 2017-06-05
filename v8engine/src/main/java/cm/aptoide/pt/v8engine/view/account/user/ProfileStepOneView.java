@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.view.account.user;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.v8engine.presenter.View;
+import rx.Completable;
 import rx.Observable;
 
 interface ProfileStepOneView extends View {
@@ -13,5 +14,5 @@ interface ProfileStepOneView extends View {
 
   void dismissWaitDialog();
 
-  void showGenericErrorMessage();
+  Completable showGenericErrorMessage();
 }

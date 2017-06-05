@@ -21,4 +21,6 @@ public interface ManageStoreView extends View {
   void showWaitProgressBar();
 
   void dismissWaitProgressBar();
+
+  void hideKeyboard();
 }

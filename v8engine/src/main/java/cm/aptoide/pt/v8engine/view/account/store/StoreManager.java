@@ -113,11 +113,14 @@ public class StoreManager {
         .flatMapCompletable(data -> {
           // TODO use response store ID to upload image
           // data.repo
+
+          final Completable syncAccount = accountManager.syncCurrentAccount();
+
           if (needToUploadMoreStoreData(storeDescription, storeImage, hasNewAvatar)) {
             return updateStore(storeId, storeName, storeDescription, storeImage, hasNewAvatar,
-                storeThemeName);
+                storeThemeName).andThen(syncAccount);
           }
-          return Completable.complete();
+          return syncAccount;
         });
   }
 

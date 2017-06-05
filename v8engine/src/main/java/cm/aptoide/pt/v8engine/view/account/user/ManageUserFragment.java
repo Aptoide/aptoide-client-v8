@@ -211,23 +211,17 @@ public class ManageUserFragment extends ImageLoaderFragment
   }
 
   @Override public Completable showErrorMessage(String error) {
-    return ShowMessage.asObservableSnack(createUserButton, error);
+    return ShowMessage.asLongObservableSnack(createUserButton, error);
   }
 
   private void loadImageFromCamera() {
-    requestAccessToCamera(() -> {
-      dispatchTakePictureIntent();
-    }, () -> {
-      Logger.e(TAG, "User denied access to camera");
-    });
+    requestAccessToCamera(() -> dispatchTakePictureIntent(),
+        () -> Logger.e(TAG, "User denied access to camera"));
   }
 
   private void loadImageFromGallery() {
-    requestAccessToExternalFileSystem(false, R.string.access_to_open_gallery_rationale, () -> {
-      dispatchOpenGalleryIntent();
-    }, () -> {
-      Logger.e(TAG, "User denied access to camera");
-    });
+    requestAccessToExternalFileSystem(false, R.string.access_to_open_gallery_rationale,
+        () -> dispatchOpenGalleryIntent(), () -> Logger.e(TAG, "User denied access to camera"));
   }
 
   @Override public void selectedGallery() {

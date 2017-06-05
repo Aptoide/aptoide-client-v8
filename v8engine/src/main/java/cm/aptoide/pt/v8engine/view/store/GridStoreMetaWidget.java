@@ -154,26 +154,27 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
       }
 
       //check if the user is the store's owner
-      if (accountManager.isLoggedIn()
-          && accountManager.getAccount()
-          .getStoreName() != null
-          && accountManager.getAccount()
-          .getStoreName()
-          .equals(store.getName())) {
-        description.setVisibility(View.VISIBLE);
-        backgroundView.setVisibility(View.VISIBLE);
-        if (TextUtils.isEmpty(store.getAppearance()
-            .getDescription())) {
-          description.setText("Add a description to your store by editing it.");
-        }
-        editStoreButton.setVisibility(View.VISIBLE);
-        compositeSubscription.add(RxView.clicks(editStoreButton)
-            .subscribe(click -> editStore(store.getId(), store.getAppearance()
-                .getTheme(), store.getAppearance()
-                .getDescription(), store.getName(), store.getAvatar())));
-      } else {
-        editStoreButton.setVisibility(View.GONE);
-      }
+      accountManager.accountStatus()
+          .first()
+          .toSingle()
+          .subscribe(account -> {
+            if (!TextUtils.isEmpty(store.getName()) && account.isLoggedIn() && store.getName()
+                .equals(account.getStoreName())) {
+              description.setVisibility(View.VISIBLE);
+              backgroundView.setVisibility(View.VISIBLE);
+              if (TextUtils.isEmpty(store.getAppearance()
+                  .getDescription())) {
+                description.setText("Add a description to your store by editing it.");
+              }
+              editStoreButton.setVisibility(View.VISIBLE);
+              compositeSubscription.add(RxView.clicks(editStoreButton)
+                  .subscribe(click -> editStore(store.getId(), store.getAppearance()
+                      .getTheme(), store.getAppearance()
+                      .getDescription(), store.getName(), store.getAvatar())));
+            } else {
+              editStoreButton.setVisibility(View.GONE);
+            }
+          });
 
       if (user != null) {
         setSecondaryInfoVisibility(true);
@@ -286,7 +287,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   private void editStore(long storeId, String storeTheme, String storeDescription, String storeName,
       String storeAvatar) {
     ManageStoreFragment.ViewModel viewModel =
-        new ManageStoreFragment.ViewModel(storeId, storeAvatar, storeTheme, storeName, storeDescription);
+        new ManageStoreFragment.ViewModel(storeId, storeAvatar, storeTheme, storeName,
+            storeDescription);
     getFragmentNavigator().navigateTo(ManageStoreFragment.newInstance(viewModel, false));
   }
 

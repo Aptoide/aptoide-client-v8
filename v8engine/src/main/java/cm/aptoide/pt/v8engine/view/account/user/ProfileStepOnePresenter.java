@@ -86,8 +86,7 @@ public class ProfileStepOnePresenter implements Presenter {
     return accountManager.updateAccount(Account.Access.PUBLIC)
         .onErrorResumeNext(err -> {
           crashReport.log(err);
-          view.showGenericErrorMessage();
-          return Completable.complete();
+          return view.showGenericErrorMessage();
         });
   }
 }

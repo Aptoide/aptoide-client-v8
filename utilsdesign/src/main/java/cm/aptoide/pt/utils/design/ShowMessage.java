@@ -158,9 +158,32 @@ public class ShowMessage {
     return asSnackObservableInternal(asLongSnackInternal(activity, msg));
   }
 
-  private static Snackbar asLongSnackInternal(Activity activity, @StringRes int msg) {
-    View view = getViewFromActivity(activity);
+  @NonNull public static Completable asLongObservableSnack(View view, @StringRes int msg) {
+    return asSnackObservableInternal(asLongSnackInternal(view, msg));
+  }
+
+  @NonNull public static Completable asLongObservableSnack(View view, String msg) {
+    return asSnackObservableInternal(asLongSnackInternal(view, msg));
+  }
+
+  @NonNull public static Completable asLongObservableSnack(Fragment fragment, @StringRes int msg) {
+    return asSnackObservableInternal(asLongSnackInternal(fragment, msg));
+  }
+
+  private static Snackbar asLongSnackInternal(View view, String msg) {
     return Snackbar.make(view, msg, Snackbar.LENGTH_LONG);
+  }
+
+  private static Snackbar asLongSnackInternal(View view, @StringRes int msg) {
+    return Snackbar.make(view, msg, Snackbar.LENGTH_LONG);
+  }
+
+  private static Snackbar asLongSnackInternal(Fragment fragment, @StringRes int msg) {
+    return asLongSnackInternal(fragment.getView(), msg);
+  }
+
+  private static Snackbar asLongSnackInternal(Activity activity, @StringRes int msg) {
+    return asLongSnackInternal(getViewFromActivity(activity), msg);
   }
 
   public static void asSnack(Fragment fragment, String msg) {
