@@ -372,6 +372,18 @@ public class AggregatedSocialArticleWidget extends CardWidget<AggregatedSocialAr
           }, throwable -> CrashReport.getInstance()
               .log(throwable)));
 
+      compositeSubscription.add(RxView.clicks(numberComments)
+          .flatMap(aVoid -> {
+            final String elementId = minimalCard.getCardId();
+            Fragment fragment = V8Engine.getFragmentProvider()
+                .newCommentGridRecyclerFragment(CommentType.TIMELINE, elementId);
+            getFragmentNavigator().navigateTo(fragment);
+            return null;
+          })
+          .subscribe(aVoid -> knockWithSixpackCredentials(displayable.getAbTestingURL()),
+              throwable -> CrashReport.getInstance()
+                  .log(throwable)));
+
       compositeSubscription.add(RxView.clicks(comment)
           .flatMap(aVoid -> Observable.fromCallable(() -> {
             final String elementId = minimalCard.getCardId();

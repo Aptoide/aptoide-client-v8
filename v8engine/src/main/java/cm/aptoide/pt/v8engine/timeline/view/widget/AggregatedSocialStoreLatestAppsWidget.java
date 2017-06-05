@@ -470,6 +470,18 @@ public class AggregatedSocialStoreLatestAppsWidget
       likeLayout.setVisibility(View.VISIBLE);
       comment.setVisibility(View.VISIBLE);
 
+      compositeSubscription.add(RxView.clicks(numberComments)
+          .flatMap(aVoid -> {
+            final String elementId = minimalCard.getCardId();
+            Fragment fragment = V8Engine.getFragmentProvider()
+                .newCommentGridRecyclerFragment(CommentType.TIMELINE, elementId);
+            getFragmentNavigator().navigateTo(fragment);
+            return null;
+          })
+          .subscribe(aVoid -> knockWithSixpackCredentials(displayable.getAbTestingURL()),
+              throwable -> CrashReport.getInstance()
+                  .log(throwable)));
+
       compositeSubscription.add(RxView.clicks(comment)
           .flatMap(aVoid -> Observable.fromCallable(() -> {
             final String elementId = minimalCard.getCardId();
