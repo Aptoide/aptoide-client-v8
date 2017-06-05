@@ -1,5 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
+import android.support.annotation.CheckResult;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadLargeFileListener;
@@ -54,7 +55,7 @@ public class Downloader extends FileDownloadLargeFileListener implements Downloa
     }
   }
 
-  public boolean startDownload() {
+  @CheckResult public boolean startDownload() {
     return fileDownloader.start(this, true);
   }
 

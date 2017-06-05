@@ -18,10 +18,11 @@ import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.exception.FileDownloadHttpException;
 import com.liulishuo.filedownloader.exception.FileDownloadOutOfSpaceException;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import lombok.Setter;
 import rx.Observable;
 import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
@@ -45,7 +46,7 @@ class DownloadTask {
    * default value is
    * true
    */
-  @Setter boolean isSerial = true;
+  private List<Downloader> downloaders;
   private ConnectableObservable<Download> observable;
   private Analytics analytics;
   private String apkPath;
@@ -65,6 +66,7 @@ class DownloadTask {
     this.obbPath = obbPath;
     this.genericPath = genericPath;
     this.fileDownloader = fileDownloader;
+    this.downloaders = new ArrayList<>();
     this.observable = Observable.interval(INTERVAL / 4, INTERVAL, TimeUnit.MILLISECONDS)
         .subscribeOn(Schedulers.io())
         .takeUntil(integer1 -> download.getOverallDownloadStatus() != Download.PROGRESS
@@ -87,93 +89,7 @@ class DownloadTask {
           }
         })
         .publish();
-  }
 
-  /**
-   * Update the overall download progress. It updates the value on database and in memory list
-   *
-   * @return new current progress
-   */
-  @NonNull private Download updateProgress() {
-    if (download.getOverallProgress() >= AptoideDownloadManager.PROGRESS_MAX_VALUE
-        || download.getOverallDownloadStatus() != Download.PROGRESS) {
-      return download;
-    }
-
-    int progress = 0;
-    for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-      progress += fileToDownload.getProgress();
-    }
-    download.setOverallProgress((int) Math.floor((float) progress / download.getFilesToDownload()
-        .size()));
-    saveDownloadInDb(download);
-    Logger.d(TAG, "Download: " + download.getMd5() + " Progress: " + download.getOverallProgress());
-    return download;
-  }
-
-  private void setDownloadStatus(@Download.DownloadState int status, Download download) {
-    setDownloadStatus(status, download, -1);
-  }
-
-  private synchronized void saveDownloadInDb(Download download) {
-    Observable.fromCallable(() -> {
-      downloadAccessor.save(download);
-      return null;
-    })
-        .subscribeOn(Schedulers.io())
-        .subscribe(__ -> {
-        }, err -> CrashReport.getInstance()
-            .log(err));
-  }
-
-  private void setDownloadStatus(@Download.DownloadState int status, Download download,
-      long downloadId) {
-    if (downloadId != -1) {
-      for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-        if (fileToDownload.getDownloadId() == downloadId) {
-          fileToDownload.setStatus(status);
-        }
-      }
-    }
-
-    this.download.setOverallDownloadStatus(status);
-    saveDownloadInDb(download);
-    if (status == Download.PROGRESS || status == Download.PENDING) {
-      downloadManager.setDownloading(true);
-    } else {
-      downloadManager.setDownloading(false);
-    }
-  }
-
-  /**
-   * this method will pause all downloads listed on {@link Download#filesToDownload} without change
-   * download state, the listener is removed in order to keep the download state, this means that
-   * the "virtual" pause will not affect the download state
-   */
-  private void stopDownloadQueue(Download download) {
-    //this try catch sucks
-    try {
-      for (int i = download.getFilesToDownload()
-          .size() - 1; i >= 0; i--) {
-        FileToDownload fileToDownload = download.getFilesToDownload()
-            .get(i);
-        fileDownloader.getStatus(fileToDownload.getDownloadId(), fileToDownload.getPath());
-        int taskId = fileDownloader.replaceListener(fileToDownload.getDownloadId(), null);
-        if (taskId != 0) {
-          fileDownloader.pause(taskId);
-        }
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  /**
-   * @throws IllegalArgumentException
-   */
-  public void startDownload() throws IllegalArgumentException {
-
-    observable.connect();
     Map<String, String> headers = new HashMap<>();
     headers.put(Constants.VERSION_CODE, String.valueOf(download.getVersionCode()));
     headers.put(Constants.PACKAGE, download.getPackageName());
@@ -288,6 +204,96 @@ class DownloadTask {
       downloader.getWarn()
           .subscribe(downloadId -> setDownloadStatus(Download.WARN, download, downloadId));
 
+      downloaders.add(downloader);
+    }
+  }
+
+  /**
+   * Update the overall download progress. It updates the value on database and in memory list
+   *
+   * @return new current progress
+   */
+  @NonNull private Download updateProgress() {
+    if (download.getOverallProgress() >= AptoideDownloadManager.PROGRESS_MAX_VALUE
+        || download.getOverallDownloadStatus() != Download.PROGRESS) {
+      return download;
+    }
+
+    int progress = 0;
+    for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+      progress += fileToDownload.getProgress();
+    }
+    download.setOverallProgress((int) Math.floor((float) progress / download.getFilesToDownload()
+        .size()));
+    saveDownloadInDb(download);
+    Logger.d(TAG, "Download: " + download.getMd5() + " Progress: " + download.getOverallProgress());
+    return download;
+  }
+
+  private void setDownloadStatus(@Download.DownloadState int status, Download download) {
+    setDownloadStatus(status, download, -1);
+  }
+
+  private synchronized void saveDownloadInDb(Download download) {
+    Observable.fromCallable(() -> {
+      downloadAccessor.save(download);
+      return null;
+    })
+        .subscribeOn(Schedulers.io())
+        .subscribe(__ -> {
+        }, err -> CrashReport.getInstance()
+            .log(err));
+  }
+
+  private void setDownloadStatus(@Download.DownloadState int status, Download download,
+      long downloadId) {
+    if (downloadId != -1) {
+      for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+        if (fileToDownload.getDownloadId() == downloadId) {
+          fileToDownload.setStatus(status);
+        }
+      }
+    }
+
+    this.download.setOverallDownloadStatus(status);
+    saveDownloadInDb(download);
+    if (status == Download.PROGRESS || status == Download.PENDING) {
+      downloadManager.setDownloading(true);
+    } else {
+      downloadManager.setDownloading(false);
+    }
+  }
+
+  /**
+   * this method will pause all downloads listed on {@link Download#filesToDownload} without change
+   * download state, the listener is removed in order to keep the download state, this means that
+   * the "virtual" pause will not affect the download state
+   */
+  private void stopDownloadQueue(Download download) {
+    //this try catch sucks
+    try {
+      for (int i = download.getFilesToDownload()
+          .size() - 1; i >= 0; i--) {
+        FileToDownload fileToDownload = download.getFilesToDownload()
+            .get(i);
+        fileDownloader.getStatus(fileToDownload.getDownloadId(), fileToDownload.getPath());
+        int taskId = fileDownloader.replaceListener(fileToDownload.getDownloadId(), null);
+        if (taskId != 0) {
+          fileDownloader.pause(taskId);
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * @throws IllegalArgumentException
+   */
+  public void startDownload() throws IllegalArgumentException {
+
+    observable.connect();
+    for (Downloader downloader : downloaders) {
       downloader.startDownload();
     }
   }
