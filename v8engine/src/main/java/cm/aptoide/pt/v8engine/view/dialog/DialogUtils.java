@@ -31,6 +31,8 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import java.util.Locale;
 import okhttp3.OkHttpClient;
@@ -49,6 +51,7 @@ public class DialogUtils {
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
+  private final InstalledRepository installedRepository;
 
   public DialogUtils(AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
@@ -58,6 +61,7 @@ public class DialogUtils {
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
+    installedRepository = RepositoryFactory.getInstalledRepository();
   }
 
   public Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
@@ -150,12 +154,13 @@ public class DialogUtils {
 
         // WS call
         if (storeName != null) {
+
           PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-              bodyInterceptor, httpClient, converterFactory)
+              bodyInterceptor, httpClient, converterFactory, isAppInstalled(packageName))
               .execute(successRequestListener, errorRequestListener);
         } else {
           PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor,
-              httpClient, converterFactory)
+              httpClient, converterFactory, isAppInstalled(packageName))
               .execute(successRequestListener, errorRequestListener);
         }
       });
@@ -163,6 +168,10 @@ public class DialogUtils {
       // create and show rating dialog
       dialog.show();
     });
+  }
+
+  private boolean isAppInstalled(@NonNull String packageName) {
+    return installedRepository.contains(packageName);
   }
 
   public void showRateDialog(@NonNull Activity activity, @NonNull String appName,
@@ -238,11 +247,11 @@ public class DialogUtils {
 
       if (storeName != null) {
         PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-            bodyInterceptor, httpClient, converterFactory)
+            bodyInterceptor, httpClient, converterFactory, isAppInstalled(packageName))
             .execute(successRequestListener, errorRequestListener);
       } else {
         PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor,
-            httpClient, converterFactory)
+            httpClient, converterFactory, isAppInstalled(packageName))
             .execute(successRequestListener, errorRequestListener);
       }
     });
