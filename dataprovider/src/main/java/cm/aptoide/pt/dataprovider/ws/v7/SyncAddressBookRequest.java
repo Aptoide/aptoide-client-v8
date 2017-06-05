@@ -3,6 +3,7 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.GetFollowers;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import java.util.List;
 import lombok.Data;
 import okhttp3.OkHttpClient;
@@ -15,7 +16,8 @@ import rx.Observable;
 
 public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequest.Body> {
 
-  private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+  private static final String BASE_HOST = (ManagerPreferences.isToolboxEnableHttpScheme() ? "http"
+      : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
       + "://"
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";

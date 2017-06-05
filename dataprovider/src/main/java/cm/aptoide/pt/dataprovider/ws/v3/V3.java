@@ -46,7 +46,8 @@ import rx.Observable;
  */
 public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
-  protected static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+  protected static final String BASE_HOST = (ManagerPreferences.isToolboxEnableHttpScheme() ? "http"
+      : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
       + "://"
       + BuildConfig.APTOIDE_WEB_SERVICES_HOST
       + "/webservices/3/";

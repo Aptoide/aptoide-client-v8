@@ -5,6 +5,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
@@ -17,7 +18,8 @@ import rx.Single;
 
 public class SetStoreRequest extends V7<BaseV7Response, HashMapNotNull<String, RequestBody>> {
 
-  private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+  private static final String BASE_HOST = (ManagerPreferences.isToolboxEnableHttpScheme() ? "http"
+      : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
       + "://"
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
