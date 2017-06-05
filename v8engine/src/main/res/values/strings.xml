@@ -640,4 +640,8 @@
   <string name="edit_profile_title">Edit Your Profile</string>
   <string name="user_edited">User Edited</string>
 
+  <!-- Appview Share"-->
+
+  <string name="appview_message_install_before_share_spotandshare">Install app first</string>
+  <string name="appview_button_install_before_share_spotandshare">install</string>
 </resources>
