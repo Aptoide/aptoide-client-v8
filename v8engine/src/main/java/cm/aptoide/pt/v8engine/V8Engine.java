@@ -160,6 +160,7 @@ import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
+import okhttp3.logging.HttpLoggingInterceptor;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -412,30 +413,40 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
   public OkHttpClient getLongTimeoutClient() {
     if (longTimeoutClient == null) {
-      final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
-      clientBuilder.addInterceptor(getUserAgentInterceptor());
-      clientBuilder.connectTimeout(2, TimeUnit.MINUTES);
-      clientBuilder.readTimeout(2, TimeUnit.MINUTES);
-      clientBuilder.writeTimeout(2, TimeUnit.MINUTES);
-      longTimeoutClient = clientBuilder.build();
+      final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+      okHttpClientBuilder.addInterceptor(getUserAgentInterceptor());
+      okHttpClientBuilder.addInterceptor(getToolboxRetrofitLogsInterceptor());
+      okHttpClientBuilder.connectTimeout(2, TimeUnit.MINUTES);
+      okHttpClientBuilder.readTimeout(2, TimeUnit.MINUTES);
+      okHttpClientBuilder.writeTimeout(2, TimeUnit.MINUTES);
+
+      if (ManagerPreferences.isToolboxEnableRetrofitLogs()) {
+        okHttpClientBuilder.addInterceptor(getToolboxRetrofitLogsInterceptor());
+      }
+
+      longTimeoutClient = okHttpClientBuilder.build();
     }
     return longTimeoutClient;
   }
 
   public OkHttpClient getDefaultClient() {
     if (defaultClient == null) {
-      final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
-      clientBuilder.readTimeout(45, TimeUnit.SECONDS);
-      clientBuilder.writeTimeout(45, TimeUnit.SECONDS);
+      final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+      okHttpClientBuilder.readTimeout(45, TimeUnit.SECONDS);
+      okHttpClientBuilder.writeTimeout(45, TimeUnit.SECONDS);
 
       final File cacheDirectory = new File("/");
       final int cacheMaxSize = 10 * 1024 * 1024;
-      clientBuilder.cache(new Cache(cacheDirectory, cacheMaxSize)); // 10 MiB
+      okHttpClientBuilder.cache(new Cache(cacheDirectory, cacheMaxSize)); // 10 MiB
 
-      clientBuilder.addInterceptor(new POSTCacheInterceptor(getHttpClientCache()));
-      clientBuilder.addInterceptor(getUserAgentInterceptor());
+      okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(getHttpClientCache()));
+      okHttpClientBuilder.addInterceptor(getUserAgentInterceptor());
 
-      defaultClient = clientBuilder.build();
+      if (ManagerPreferences.isToolboxEnableRetrofitLogs()) {
+        okHttpClientBuilder.addInterceptor(getToolboxRetrofitLogsInterceptor());
+      }
+
+      defaultClient = okHttpClientBuilder.build();
     }
     return defaultClient;
   }
@@ -448,6 +459,10 @@ public abstract class V8Engine extends SpotAndShareApplication {
               AptoideUtils.SystemU.TERMINAL_INFO, AptoideUtils.Core.getDefaultVername());
     }
     return userAgentInterceptor;
+  }
+
+  private Interceptor getToolboxRetrofitLogsInterceptor() {
+    return new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
   }
 
   public L2Cache getHttpClientCache() {
