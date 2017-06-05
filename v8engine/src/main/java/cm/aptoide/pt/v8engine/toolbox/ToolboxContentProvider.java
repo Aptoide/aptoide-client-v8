@@ -211,6 +211,16 @@ public class ToolboxContentProvider extends ContentProvider {
                   Logger.setDBG((Boolean) entry.getValue());
                   changed++;
                 }
+                if (entry.getKey()
+                    .equals(ManagedKeys.TOOLBOX_ENABLE_HTTP_SCHEME)) {
+                  ManagerPreferences.setToolboxEnableHttpScheme((Boolean) entry.getValue());
+                  changed++;
+                }
+                if (entry.getKey()
+                    .equals(ManagedKeys.TOOLBOX_RETROFIT_LOGS)) {
+                  ManagerPreferences.setToolboxEnableRetrofitLogs((Boolean) entry.getValue());
+                  changed++;
+                }
               } else if (value instanceof Long) {
                 if (entry.getKey()
                     .equals(ManagedKeys.PUSH_NOTIFICATION_PULL_INTERVAL)) {

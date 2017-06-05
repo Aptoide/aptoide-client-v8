@@ -195,6 +195,30 @@ public class ManagerPreferences {
         .apply();
   }
 
+  public static boolean isToolboxEnableHttpScheme() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getBoolean(ManagedKeys.TOOLBOX_ENABLE_HTTP_SCHEME, false);
+  }
+
+  public static void setToolboxEnableHttpScheme(boolean toolboxEnableHttp) {
+    Preferences.get()
+        .edit()
+        .putBoolean(ManagedKeys.TOOLBOX_ENABLE_HTTP_SCHEME, toolboxEnableHttp)
+        .apply();
+  }
+
+  public static boolean isToolboxEnableRetrofitLogs() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getBoolean(ManagedKeys.TOOLBOX_RETROFIT_LOGS, false);
+  }
+
+  public static void setToolboxEnableRetrofitLogs(boolean toolboxEnableRetrofitLogs) {
+    Preferences.get()
+        .edit()
+        .putBoolean(ManagedKeys.TOOLBOX_RETROFIT_LOGS, toolboxEnableRetrofitLogs)
+        .apply();
+  }
+
   public static String getNotificationType() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
         .getString(ManagedKeys.NOTIFICATION_TYPE, "");

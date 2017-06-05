@@ -39,4 +39,6 @@ public class ManagedKeys {
   public static final String AUTO_UPDATE_ENABLE = "auto_update";
   public static final String CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY =
       "notification_campaign_and_social";
+  public static final String TOOLBOX_ENABLE_HTTP_SCHEME = "toolbox_enable_http_scheme";
+  public static final String TOOLBOX_RETROFIT_LOGS = "toolbox_enable_retrofit_logs";
 }
