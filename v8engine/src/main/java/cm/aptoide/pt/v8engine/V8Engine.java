@@ -69,7 +69,7 @@ import cm.aptoide.pt.v8engine.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.account.AndroidAccountDataMigration;
 import cm.aptoide.pt.v8engine.account.AndroidAccountManagerDataPersist;
 import cm.aptoide.pt.v8engine.account.AndroidAccountProvider;
-import cm.aptoide.pt.v8engine.account.BaseBodyInterceptorFactory;
+import cm.aptoide.pt.v8engine.account.BaseBodyAccountManagerInterceptorFactory;
 import cm.aptoide.pt.v8engine.account.DatabaseStoreDataPersist;
 import cm.aptoide.pt.v8engine.account.LogAccountAnalytics;
 import cm.aptoide.pt.v8engine.account.NoTokenBodyInterceptor;
@@ -377,7 +377,6 @@ public abstract class V8Engine extends SpotAndShareApplication {
         pushNotificationSocialPeriodicity = ManagerPreferences.getPushNotificationPullingInterval();
       }
 
-
       final List<NotificationSyncScheduler.Schedule> scheduleList = Arrays.asList(
           new NotificationSyncScheduler.Schedule(
               NotificationSyncService.PUSH_NOTIFICATIONS_CAMPAIGN_ACTION,
@@ -516,10 +515,10 @@ public abstract class V8Engine extends SpotAndShareApplication {
     if (accountManager == null) {
 
       final AccountManagerService accountManagerService = new AccountManagerService(
-          new BaseBodyInterceptorFactory(getIdsRepository(), getPreferences(),
+          new BaseBodyAccountManagerInterceptorFactory(getIdsRepository(), getPreferences(),
               getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage(), getQManager()),
           getAccountFactory(), getDefaultClient(), getLongTimeoutClient(),
-          WebService.getDefaultConverter());
+          WebService.getDefaultConverter(), getNonNullObjectMapper());
 
       final AndroidAccountDataMigration accountDataMigration =
           new AndroidAccountDataMigration(SecurePreferencesImplementation.getInstance(this),
@@ -656,11 +655,11 @@ public abstract class V8Engine extends SpotAndShareApplication {
               paymentRepositoryFactory.getPaidAppConfirmationRepository(), getAccountPayer(),
               getAuthorizationFactory(), getNetworkOperatorManager(), getBaseBodyInterceptorV3(),
               getDefaultClient(), WebService.getDefaultConverter(), productFactory),
-          new InAppBillingProductRepository(purchaseFactory,
-              paymentFactory, authorizationRepository,
-              paymentRepositoryFactory.getInAppConfirmationRepository(), getAccountPayer(),
-              getAuthorizationFactory(), productFactory, getBaseBodyInterceptorV3(),
-              getDefaultClient(), WebService.getDefaultConverter(), getNetworkOperatorManager()));
+          new InAppBillingProductRepository(purchaseFactory, paymentFactory,
+              authorizationRepository, paymentRepositoryFactory.getInAppConfirmationRepository(),
+              getAccountPayer(), getAuthorizationFactory(), productFactory,
+              getBaseBodyInterceptorV3(), getDefaultClient(), WebService.getDefaultConverter(),
+              getNetworkOperatorManager()));
 
       aptoideBilling = new AptoideBilling(productRepositoryFactory, paymentRepositoryFactory,
           getInAppBillingRepository(), authorizationRepository);

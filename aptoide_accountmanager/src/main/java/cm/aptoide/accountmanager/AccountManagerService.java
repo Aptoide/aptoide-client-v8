@@ -15,6 +15,7 @@ import cm.aptoide.pt.model.v3.OAuth;
 import cm.aptoide.pt.model.v7.GetUserInfo;
 import cm.aptoide.pt.model.v7.GetUserMeta;
 import cm.aptoide.pt.model.v7.GetUserSettings;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -23,21 +24,22 @@ import rx.Single;
 
 public class AccountManagerService {
 
-  public static final boolean REFRESH = true;
-  private final BasebBodyInterceptorFactory interceptorFactory;
+  private final AccountManagerInterceptorFactory interceptorFactory;
   private final AccountFactory accountFactory;
   private final OkHttpClient httpClient;
   private final OkHttpClient longTimeoutHttpClient;
   private final Converter.Factory converterFactory;
+  private final ObjectMapper serializer;
 
-  public AccountManagerService(BasebBodyInterceptorFactory interceptorFactory,
+  public AccountManagerService(AccountManagerInterceptorFactory interceptorFactory,
       AccountFactory accountFactory, OkHttpClient httpClient, OkHttpClient longTimeoutHttpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, ObjectMapper serializer) {
     this.interceptorFactory = interceptorFactory;
     this.accountFactory = accountFactory;
     this.httpClient = httpClient;
     this.longTimeoutHttpClient = longTimeoutHttpClient;
     this.converterFactory = converterFactory;
+    this.serializer = serializer;
   }
 
   public Completable createAccount(String email, String password,
@@ -88,8 +90,8 @@ public class AccountManagerService {
   public Completable updateAccount(String nickname, String avatarPath,
       AptoideAccountManager accountManager) {
     return SetUserMultipartRequest.of(nickname, avatarPath,
-        interceptorFactory.createUserMultipartBodyInterceptor(accountManager, nickname), httpClient,
-        converterFactory)
+        interceptorFactory.createMultipartBodyInterceptor(accountManager), longTimeoutHttpClient,
+        converterFactory, serializer)
         .observe(true)
         .toSingle()
         .flatMapCompletable(response -> {
@@ -102,8 +104,8 @@ public class AccountManagerService {
   }
 
   public Completable updateAccount(String accessLevel, AptoideAccountManager accountManager) {
-    return SetUserRequest.of(accessLevel, interceptorFactory.createV7(accountManager),
-        httpClient, converterFactory)
+    return SetUserRequest.of(accessLevel, interceptorFactory.createV7(accountManager), httpClient,
+        converterFactory)
         .observe(true)
         .toSingle()
         .flatMapCompletable(response -> {
@@ -115,9 +117,8 @@ public class AccountManagerService {
         });
   }
 
-  public Completable updateAccountWithUserName(String userName,
-      AptoideAccountManager accountManager) {
-    return SetUserRequest.ofWithName(userName, interceptorFactory.createV7(accountManager),
+  public Completable updateAccountUsername(String username, AptoideAccountManager accountManager) {
+    return SetUserRequest.ofWithName(username, interceptorFactory.createV7(accountManager),
         httpClient, converterFactory)
         .observe(true)
         .toSingle()
@@ -180,9 +181,9 @@ public class AccountManagerService {
 
   private Single<GetUserInfo> getServerAccount(AptoideAccountManager accountManager,
       String accessToken) {
-    return GetUserInfoRequest.of(accessToken, REFRESH, httpClient, converterFactory,
+    return GetUserInfoRequest.of(accessToken, httpClient, converterFactory,
         interceptorFactory.createUserInfoV7(accountManager))
-        .observe()
+        .observe(true)
         .toSingle()
         .flatMap(response -> {
           if (response.isOk()) {
@@ -195,15 +196,15 @@ public class AccountManagerService {
 
   private Account mapServerAccountToAccount(GetUserInfo userInfo, String refreshToken,
       String accessToken, String encryptedPassword, String type, List<Store> subscribedStores) {
-    GetUserMeta.Data userData = userInfo.getNodes()
+    final GetUserMeta.Data userData = userInfo.getNodes()
         .getMeta()
         .getData();
-    GetUserSettings.Data userSettings = userInfo.getNodes()
+    final GetUserSettings.Data userSettings = userInfo.getNodes()
         .getSettings()
         .getData();
-    String storeName = userData.getStore() == null ? "" : userData.getStore()
+    final String storeName = userData.getStore() == null ? "" : userData.getStore()
         .getName();
-    String storeAvatar = userData.getStore() == null ? "" : userData.getStore()
+    final String storeAvatar = userData.getStore() == null ? "" : userData.getStore()
         .getAvatar();
     return accountFactory.createAccount(userData.getAccess(), subscribedStores,
         String.valueOf(userData.getId()), userData.getIdentity()

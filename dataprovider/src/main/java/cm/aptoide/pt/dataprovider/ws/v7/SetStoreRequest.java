@@ -69,7 +69,7 @@ public class SetStoreRequest extends V7<BaseV7Response, HashMapNotNull<String, R
           serializer.writeValueAsString(
               new SimpleSetStoreRequest.StoreProperties(storeTheme, storeDescription))));
     } catch (JsonProcessingException e) {
-      Single.error(e);
+      throw new RuntimeException(e);
     }
   }
 

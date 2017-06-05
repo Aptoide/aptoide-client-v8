@@ -36,7 +36,6 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.networking.IdsRepository;
 import cm.aptoide.pt.v8engine.view.account.PictureLoaderFragment;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jakewharton.rxbinding.view.RxView;
@@ -76,9 +75,9 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
   private BodyInterceptor<BaseBody> bodyInterceptorV7;
   private RequestBodyFactory requestBodyFactory;
   private ObjectMapper serializer;
-  private IdsRepository idsRepository;
   private ManageStoreModel storeModel;
   private OkHttpClient httpClient;
+  private OkHttpClient longTimeoutHttpClient;
   private Converter.Factory converterFactory;
   private BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptor;
 
@@ -100,9 +99,9 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
     accountManager = engine.getAccountManager();
     oAuthBodyInterceptor = engine.getOAuthBodyInterceptor();
     bodyInterceptorV7 = engine.getBaseBodyInterceptorV7();
-    idsRepository = engine.getIdsRepository();
     requestBodyFactory = new RequestBodyFactory();
     httpClient = engine.getDefaultClient();
+    longTimeoutHttpClient = engine.getLongTimeoutClient();
     converterFactory = WebService.getDefaultConverter();
     multipartBodyInterceptor = engine.getMultipartBodyInterceptor();
     serializer = ((V8Engine) getContext().getApplicationContext()).getNonNullObjectMapper();
@@ -371,10 +370,12 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
     })
         .flatMap(__ -> accountManager.accountStatus()
             .first())
-        .flatMap(account -> SetStoreRequest.of(storeModel.getStoreId(), storeModel.getStoreThemeName(),
-            storeModel.getStoreDescription(), storeModel.getStoreAvatarPath(),
-            multipartBodyInterceptor, httpClient, converterFactory, requestBodyFactory, serializer)
-            .observe())
+        .flatMap(
+            account -> SetStoreRequest.of(storeModel.getStoreId(), storeModel.getStoreThemeName(),
+                storeModel.getStoreDescription(), storeModel.getStoreAvatarPath(),
+                multipartBodyInterceptor, longTimeoutHttpClient, converterFactory,
+                requestBodyFactory, serializer)
+                .observe())
         .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnCompleted(() -> navigateToHome())
@@ -405,8 +406,8 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
 
     return accountManager.accountStatus()
         .first()
-        .flatMap(account -> CheckUserCredentialsRequest.of(storeModel.getStoreName(), oAuthBodyInterceptor,
-            httpClient, converterFactory)
+        .flatMap(account -> CheckUserCredentialsRequest.of(storeModel.getStoreName(),
+            oAuthBodyInterceptor, httpClient, converterFactory)
             .observe()
             .observeOn(AndroidSchedulers.mainThread())
             .map(answer -> {
@@ -518,12 +519,12 @@ public class CreateStoreFragment extends PictureLoaderFragment implements Manage
       accountManager.accountStatus()
           .first()
           .doOnNext(__ -> showWaitDialog())
-          .flatMap(
-              account -> SetStoreRequest.of(storeModel.getStoreName(), storeModel.getStoreThemeName(),
-                  storeModel.getStoreDescription(), storeModel.getStoreAvatarPath(),
-                  multipartBodyInterceptor, httpClient, converterFactory, requestBodyFactory, serializer)
-                  .observe()
-                  .timeout(90, TimeUnit.SECONDS))
+          .flatMap(account -> SetStoreRequest.of(storeModel.getStoreName(),
+              storeModel.getStoreThemeName(), storeModel.getStoreDescription(),
+              storeModel.getStoreAvatarPath(), multipartBodyInterceptor, longTimeoutHttpClient,
+              converterFactory, requestBodyFactory, serializer)
+              .observe()
+              .timeout(90, TimeUnit.SECONDS))
           .observeOn(AndroidSchedulers.mainThread())
           .flatMap(__ -> accountManager.syncCurrentAccount()
               .andThen(sendCreateAnalytics())

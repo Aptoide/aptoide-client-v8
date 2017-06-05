@@ -4,6 +4,7 @@ import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -26,7 +27,7 @@ public class SetUserSettings extends V7<BaseV7Response, SetUserSettings.Body> {
 
   public static SetUserSettings of(boolean adultContentEnabled, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor) {
-    Body body = new Body(adultContentEnabled);
+    final Body body = new Body(adultContentEnabled);
     body.setMature(adultContentEnabled);
     return new SetUserSettings(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
   }
@@ -36,7 +37,7 @@ public class SetUserSettings extends V7<BaseV7Response, SetUserSettings.Body> {
     return interfaces.setUserSettings(body);
   }
 
-  @Data public static class Body extends BaseBody {
+  @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
     public boolean mature;
 
     public Body(boolean mature) {

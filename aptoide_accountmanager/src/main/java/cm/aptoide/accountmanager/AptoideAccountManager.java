@@ -173,17 +173,16 @@ public class AptoideAccountManager {
             account.getPassword(), account.getType()));
   }
 
-  public Completable updateAccount(boolean adultContentEnabled,
-      AptoideAccountManager accountManager) {
+  public Completable updateAccount(boolean adultContentEnabled) {
     return singleAccountStatus().flatMapCompletable(
-        account -> accountManagerService.updateAccount(adultContentEnabled, accountManager)
+        account -> accountManagerService.updateAccount(adultContentEnabled, this)
             .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
                 account.getPassword(), account.getType())));
   }
 
-  public Completable updateAccount(String userName) {
+  public Completable updateAccount(String username) {
     return singleAccountStatus().flatMapCompletable(
-        account -> accountManagerService.updateAccountWithUserName(userName, this)
+        account -> accountManagerService.updateAccountUsername(username, this)
             .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
                 account.getPassword(), account.getType())));
   }
@@ -195,8 +194,7 @@ public class AptoideAccountManager {
                 account.getPassword(), account.getType())));
   }
 
-  public Completable updateAccount(String nickname, String avatarPath,
-      AptoideAccountManager accountManager) {
+  public Completable updateAccount(String nickname, String avatarPath) {
     return singleAccountStatus().flatMapCompletable(account -> {
       if (TextUtils.isEmpty(nickname) && TextUtils.isEmpty(avatarPath)) {
         return Completable.error(
@@ -206,9 +204,9 @@ public class AptoideAccountManager {
             new AccountValidationException(AccountValidationException.EMPTY_NAME));
       }
       return accountManagerService.updateAccount(nickname,
-          TextUtils.isEmpty(avatarPath) ? "" : avatarPath, accountManager)
+          TextUtils.isEmpty(avatarPath) ? "" : avatarPath, this)
           .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
-          account.getPassword(), account.getType()));
+              account.getPassword(), account.getType()));
     });
   }
 

@@ -233,8 +233,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
             .doOnCompleted(() -> trackUnlock())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnTerminate(() -> adultContentPreferenceView.setEnabled(true))
-            .doOnError(throwable -> Logger.d(TAG, throwable.getCause()
-                .toString()))
             .toObservable())
         .retry()
         .subscribe());

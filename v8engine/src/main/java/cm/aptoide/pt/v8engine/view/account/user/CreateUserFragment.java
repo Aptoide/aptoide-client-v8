@@ -365,7 +365,7 @@ public class CreateUserFragment extends PictureLoaderFragment implements ManageU
     if (userPicturePath != null) {
       return accountManager.updateAccount(userName.getText()
           .toString()
-          .trim(), userPicturePath, accountManager);
+          .trim(), userPicturePath);
     } else {
       return accountManager.updateAccount(userName.getText()
           .toString()

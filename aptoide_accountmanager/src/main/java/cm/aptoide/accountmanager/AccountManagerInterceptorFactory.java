@@ -5,7 +5,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import okhttp3.RequestBody;
 
-public interface BasebBodyInterceptorFactory {
+public interface AccountManagerInterceptorFactory {
 
   BodyInterceptor<BaseBody> createV7(AptoideAccountManager accountManager);
 
@@ -17,6 +17,6 @@ public interface BasebBodyInterceptorFactory {
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> createV3(
       AptoideAccountManager accountManager);
 
-  BodyInterceptor<HashMapNotNull<String, RequestBody>> createUserMultipartBodyInterceptor(
-      AptoideAccountManager accountManager, String userName);
+  BodyInterceptor<HashMapNotNull<String, RequestBody>> createMultipartBodyInterceptor(
+      AptoideAccountManager accountManager);
 }
