@@ -121,8 +121,20 @@ public class ManageStoreFragment extends ImageLoaderFragment
     }
   }
 
-  @Override public void hideKeyboard(){
+  @Override public void hideKeyboard() {
     super.hideKeyboard();
+  }
+
+  @Override public void loadExtras(@Nullable Bundle args) {
+    super.loadExtras(args);
+    if (args != null) {
+      try {
+        currentModel = Parcels.unwrap(args.getParcelable(EXTRA_STORE_MODEL));
+      } catch (NullPointerException ex) {
+        currentModel = new ViewModel();
+      }
+      goToHome = args.getBoolean(EXTRA_GO_TO_HOME, true);
+    }
   }
 
   @Override public void onDestroyView() {
@@ -139,7 +151,8 @@ public class ManageStoreFragment extends ImageLoaderFragment
     themeSelectorView.setLayoutManager(
         new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
     PublishRelay<StoreTheme> storeThemePublishRelay = PublishRelay.create();
-    themeSelectorAdapter = new ThemeSelectorViewAdapter(storeThemePublishRelay);
+    themeSelectorAdapter =
+        new ThemeSelectorViewAdapter(storeThemePublishRelay, StoreTheme.getThemesFromVersion(8));
     themeSelectorView.setAdapter(themeSelectorAdapter);
 
     themeSelectorAdapter.storeThemeSelection()
@@ -191,18 +204,6 @@ public class ManageStoreFragment extends ImageLoaderFragment
 
   @Override public int getContentViewId() {
     return R.layout.fragment_manage_store;
-  }
-
-  @Override public void loadExtras(@Nullable Bundle args) {
-    super.loadExtras(args);
-    if (args != null) {
-      try {
-        currentModel = Parcels.unwrap(args.getParcelable(EXTRA_STORE_MODEL));
-      } catch (NullPointerException ex) {
-        currentModel = new ViewModel();
-      }
-      goToHome = args.getBoolean(EXTRA_GO_TO_HOME, true);
-    }
   }
 
   @NonNull private ManageStorePresenter buildPresenter(@NonNull V8Engine engine, boolean goToHome) {

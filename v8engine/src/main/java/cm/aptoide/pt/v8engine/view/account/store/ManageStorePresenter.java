@@ -66,7 +66,6 @@ public class ManageStorePresenter implements Presenter {
                 .andThen(handleStoreCreationErrors(err)));
 
     return Completable.fromAction(() -> view.showWaitProgressBar())
-
         .andThen(saveDataCompletable)
         .doOnCompleted(() -> view.dismissWaitProgressBar())
         .doOnCompleted(() -> {

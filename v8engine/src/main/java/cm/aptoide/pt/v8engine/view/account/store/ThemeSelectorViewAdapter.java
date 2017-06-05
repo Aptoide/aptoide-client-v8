@@ -6,20 +6,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
+import java.util.List;
 import rx.Observable;
 
 public class ThemeSelectorViewAdapter
     extends RecyclerView.Adapter<ThemeSelectorViewAdapter.ViewHolder> {
 
   private final PublishRelay<StoreTheme> storeThemePublishRelay;
+  private final List<StoreTheme> themes;
   private String selectedStoreThemeName;
 
-  public ThemeSelectorViewAdapter(PublishRelay<StoreTheme> storeThemePublishRelay) {
+  public ThemeSelectorViewAdapter(PublishRelay<StoreTheme> storeThemePublishRelay,
+      List<StoreTheme> themes) {
     this.storeThemePublishRelay = storeThemePublishRelay;
+    this.themes = themes;
   }
 
   @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -29,11 +32,11 @@ public class ThemeSelectorViewAdapter
   }
 
   @Override public void onBindViewHolder(ViewHolder holder, int position) {
-    holder.update(StoreTheme.values()[position], selectedStoreThemeName);
+    holder.update(themes.get(position), selectedStoreThemeName);
   }
 
   @Override public int getItemCount() {
-    return StoreTheme.values().length;
+    return themes != null ? themes.size() : 0;
   }
 
   public void selectTheme(String selectedStoreThemeName) {
@@ -67,14 +70,8 @@ public class ThemeSelectorViewAdapter
       storeThemeImage = (ImageView) view.findViewById(R.id.theme_color);
       storeThemeCheckMark = (ImageView) view.findViewById(R.id.theme_checked);
       RxView.clicks(view)
-          .doOnNext(__ -> {
-            storeThemePublishRelay.call(storeTheme);
-          })
-          .subscribe(__ -> {
-          }, err -> {
-            CrashReport.getInstance()
-                .log(err);
-          });
+          .doOnNext(__ -> storeThemePublishRelay.call(storeTheme))
+          .subscribe();
     }
 
     public void update(StoreTheme storeTheme, String selectedStoreThemeName) {

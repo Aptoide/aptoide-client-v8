@@ -38,6 +38,7 @@ import java.util.Locale;
 import lombok.Getter;
 import lombok.Setter;
 import okhttp3.OkHttpClient;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
 /**
@@ -157,6 +158,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
       accountManager.accountStatus()
           .first()
           .toSingle()
+          .observeOn(AndroidSchedulers.mainThread())
           .subscribe(account -> {
             if (!TextUtils.isEmpty(store.getName()) && account.isLoggedIn() && store.getName()
                 .equals(account.getStoreName())) {
@@ -285,10 +287,10 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   }
 
   private void editStore(long storeId, String storeTheme, String storeDescription, String storeName,
-      String storeAvatar) {
+      String storeImagePath) {
     ManageStoreFragment.ViewModel viewModel =
-        new ManageStoreFragment.ViewModel(storeId, storeAvatar, storeTheme, storeName,
-            storeDescription);
+        new ManageStoreFragment.ViewModel(storeId, storeTheme, storeName, storeDescription,
+            storeImagePath);
     getFragmentNavigator().navigateTo(ManageStoreFragment.newInstance(viewModel, false));
   }
 

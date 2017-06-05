@@ -15,131 +15,152 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.StyleRes;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by neuro on 05-05-2016.
  */
+/*
+ * › Allowed values: "default", "amber", "black", "blue-grey", "brown", "deep-purple", "green",
+ * "grey", "indigo", "light-blue", "light-green", "lime", "orange", "pink", "red", "teal"
+ *
+ * from http://ws75-primary.aptoide.com/api/7/store/set/info/1
+ *
+ */
 public enum StoreTheme {
 
   DEFAULT(R.style.AptoideThemeDefault, R.color.default_color, R.color.default_color_700,
-      R.drawable.button_border_orange, R.drawable.create_store_theme_shape_default),
+      R.drawable.button_border_orange, R.drawable.create_store_theme_shape_default, 8),
 
   GREEN(R.style.AptoideThemeDefaultGreen, R.color.green, R.color.green_700,
-      R.drawable.button_border_green, R.drawable.create_store_theme_shape_green),
+      R.drawable.button_border_green, R.drawable.create_store_theme_shape_green, 8),
 
   TEAL(R.style.AptoideThemeDefaultTeal, R.color.teal, R.color.teal_700,
-      R.drawable.button_border_teal, R.drawable.create_store_theme_shape_teal),
+      R.drawable.button_border_teal, R.drawable.create_store_theme_shape_teal, 8),
 
   RED(R.style.AptoideThemeDefaultRed, R.color.red, R.color.red_700, R.drawable.button_border_red,
-      R.drawable.create_store_theme_shape_red),
+      R.drawable.create_store_theme_shape_red, 8),
 
   INDIGO(R.style.AptoideThemeDefaultIndigo, R.color.indigo, R.color.indigo_700,
-      R.drawable.button_border_indigo, R.drawable.create_store_theme_shape_indigo),
+      R.drawable.button_border_indigo, R.drawable.create_store_theme_shape_indigo, 8),
 
   PINK(R.style.AptoideThemeDefaultPink, R.color.pink, R.color.pink_700,
-      R.drawable.button_border_pink, R.drawable.create_store_theme_shape_pink),
+      R.drawable.button_border_pink, R.drawable.create_store_theme_shape_pink, 8),
 
   ORANGE(R.style.AptoideThemeDefaultOrange, R.color.orange, R.color.orange_700,
-      R.drawable.button_border_orange, R.drawable.create_store_theme_shape_orange),
+      R.drawable.button_border_orange, R.drawable.create_store_theme_shape_orange, 8),
 
   BROWN(R.style.AptoideThemeDefaultBrown, R.color.brown, R.color.brown_700,
-      R.drawable.button_border_brown, R.drawable.create_store_theme_shape_brown),
-
-  BLUE_GRAY(R.style.AptoideThemeDefaultBluegrey, R.color.blue_grey, R.color.blue_grey_700,
-      R.drawable.button_border_bluegrey, R.drawable.create_store_theme_shape_blue_grey),
+      R.drawable.button_border_brown, R.drawable.create_store_theme_shape_brown, 8),
 
   BLUE_GREY(R.style.AptoideThemeDefaultBluegrey, R.color.blue_grey, R.color.blue_grey_700,
-      R.drawable.button_border_bluegrey, R.drawable.create_store_theme_shape_blue_grey),
+      R.drawable.button_border_bluegrey, R.drawable.create_store_theme_shape_blue_grey, 8),
 
   GREY(R.style.AptoideThemeDefaultGrey, R.color.grey, R.color.grey_700,
-      R.drawable.button_border_grey, R.drawable.create_store_theme_shape_grey),
+      R.drawable.button_border_grey, R.drawable.create_store_theme_shape_grey, 8),
 
   BLACK(R.style.AptoideThemeDefaultBlack, R.color.black, R.color.grey,
-      R.drawable.button_border_black, R.drawable.create_store_theme_shape_black),
+      R.drawable.button_border_black, R.drawable.create_store_theme_shape_black, 8),
 
   DEEP_PURPLE(R.style.AptoideThemeDefaultDeepPurple, R.color.deep_purple, R.color.deep_purple_700,
-      R.drawable.button_border_deeppurple, R.drawable.create_store_theme_shape_deep_purple),
+      R.drawable.button_border_deeppurple, R.drawable.create_store_theme_shape_deep_purple, 8),
 
   AMBER(R.style.AptoideThemeDefaultAmber, R.color.amber, R.color.amber_700,
-      R.drawable.button_border_amber, R.drawable.create_store_theme_shape_amber),
+      R.drawable.button_border_amber, R.drawable.create_store_theme_shape_amber, 8),
 
   LIGHT_GREEN(R.style.AptoideThemeDefaultLightgreen, R.color.light_green, R.color.light_green_700,
-      R.drawable.button_border_lightgreen, R.drawable.create_store_theme_shape_light_green),
+      R.drawable.button_border_lightgreen, R.drawable.create_store_theme_shape_light_green, 8),
 
   LIME(R.style.AptoideThemeDefaultLime, R.color.lime, R.color.lime_700,
-      R.drawable.button_border_lime, R.drawable.create_store_theme_shape_lime),
+      R.drawable.button_border_lime, R.drawable.create_store_theme_shape_lime, 8),
 
   LIGHT_BLUE(R.style.AptoideThemeDefaultLightblue, R.color.light_blue, R.color.light_blue_700,
-      R.drawable.button_border_lightblue, R.drawable.create_store_theme_shape_lightblue),
+      R.drawable.button_border_lightblue, R.drawable.create_store_theme_shape_lightblue, 8),
 
   //Translated themes to new version
   //SEAGREEN TO GREEN
   SEA_GREEN(R.style.AptoideThemeDefaultGreen, R.color.green, R.color.green_700,
-      R.drawable.button_border_green, R.drawable.create_store_theme_shape_green),
+      R.drawable.button_border_green, R.drawable.create_store_theme_shape_green, 7),
 
   //SLATEGRAY TO TEAL
   SLATE_GRAY(R.style.AptoideThemeDefaultTeal, R.color.teal, R.color.teal_700,
-      R.drawable.button_border_teal, R.drawable.create_store_theme_shape_teal),
+      R.drawable.button_border_teal, R.drawable.create_store_theme_shape_teal, 7),
 
   //BLUE TO INDIGO
   BLUE(R.style.AptoideThemeDefaultIndigo, R.color.indigo, R.color.indigo_700,
-      R.drawable.button_border_indigo, R.drawable.create_store_theme_shape_indigo),
+      R.drawable.button_border_indigo, R.drawable.create_store_theme_shape_indigo, 7),
 
   //MAROON TO BROWN
   MAROON(R.style.AptoideThemeDefaultBrown, R.color.brown, R.color.brown_700,
-      R.drawable.button_border_brown, R.drawable.create_store_theme_shape_brown),
+      R.drawable.button_border_brown, R.drawable.create_store_theme_shape_brown, 7),
 
   //MIDNIGHT TO BLUE_GREY
   MIDNIGHT(R.style.AptoideThemeDefaultBluegrey, R.color.blue_grey, R.color.blue_grey_700,
-      R.drawable.button_border_bluegrey, R.drawable.create_store_theme_shape_blue_grey),
+      R.drawable.button_border_bluegrey, R.drawable.create_store_theme_shape_blue_grey, 7),
+
+  BLUE_GRAY(R.style.AptoideThemeDefaultBluegrey, R.color.blue_grey, R.color.blue_grey_700,
+      R.drawable.button_border_bluegrey, R.drawable.create_store_theme_shape_blue_grey, 7),
 
   //SILVER AND DIMGREY TO GREY
   SILVER(R.style.AptoideThemeDefaultGrey, R.color.grey, R.color.grey_700,
-      R.drawable.button_border_grey, R.drawable.create_store_theme_shape_grey),
+      R.drawable.button_border_grey, R.drawable.create_store_theme_shape_grey, 7),
 
   DIM_GRAY(R.style.AptoideThemeDefaultGrey, R.color.grey, R.color.grey_700,
-      R.drawable.button_border_grey, R.drawable.create_store_theme_shape_grey),
+      R.drawable.button_border_grey, R.drawable.create_store_theme_shape_grey, 7),
 
   //MAGENTA TO DEEPPURPLE
   MAGENTA(R.style.AptoideThemeDefaultDeepPurple, R.color.deep_purple, R.color.deep_purple_700,
-      R.drawable.button_border_deeppurple, R.drawable.create_store_theme_shape_deep_purple),
+      R.drawable.button_border_deeppurple, R.drawable.create_store_theme_shape_deep_purple, 7),
 
   //YELLOW AND GOLD TO AMBER
   YELLOW(R.style.AptoideThemeDefaultAmber, R.color.amber, R.color.amber_700,
-      R.drawable.button_border_amber, R.drawable.create_store_theme_shape_amber),
+      R.drawable.button_border_amber, R.drawable.create_store_theme_shape_amber, 7),
 
   GOLD(R.style.AptoideThemeDefaultAmber, R.color.amber, R.color.amber_700,
-      R.drawable.button_border_amber, R.drawable.create_store_theme_shape_amber),
+      R.drawable.button_border_amber, R.drawable.create_store_theme_shape_amber, 7),
 
   //SPRINGGREEN TO LIGHTGREEN
   SPRING_GREEN(R.style.AptoideThemeDefaultLightgreen, R.color.light_green, R.color.light_green_700,
-      R.drawable.button_border_lightgreen, R.drawable.create_store_theme_shape_light_green),
+      R.drawable.button_border_lightgreen, R.drawable.create_store_theme_shape_light_green, 7),
 
   //GREENAPPLE TO LIME
   GREEN_APPLE(R.style.AptoideThemeDefaultLime, R.color.lime, R.color.lime_700,
-      R.drawable.button_border_lime, R.drawable.create_store_theme_shape_lime),
+      R.drawable.button_border_lime, R.drawable.create_store_theme_shape_lime, 7),
 
   //LIGHTSKY AND LIGHTSKY TO LIGHTBLUE
   LIGHT_SKY(R.style.AptoideThemeDefaultLightblue, R.color.light_blue, R.color.light_blue_700,
-      R.drawable.button_border_lightblue, R.drawable.create_store_theme_shape_lightblue),
+      R.drawable.button_border_lightblue, R.drawable.create_store_theme_shape_lightblue, 7),
 
   //LIGHTSKY AND HAPPYBLUE TO LIGHTBLUE
   HAPPY_BLUE(R.style.AptoideThemeDefaultLightblue, R.color.light_blue, R.color.light_blue_700,
-      R.drawable.button_border_lightblue, R.drawable.create_store_theme_shape_lightblue);
+      R.drawable.button_border_lightblue, R.drawable.create_store_theme_shape_lightblue, 7);
 
   @ColorRes private final int darkerColor;
   @DrawableRes private final int buttonDrawable;
   @DrawableRes private final int roundDrawable;
   @ColorRes private int storeStyle;
   @ColorRes private int primaryColor;
+  private int version;
 
   StoreTheme(@StyleRes int storeStyle, @ColorRes int primaryColor, @ColorRes int darkerColor,
-      @DrawableRes int buttonDrawable, @DrawableRes int roundDrawable) {
+      @DrawableRes int buttonDrawable, @DrawableRes int roundDrawable, int version) {
     this.storeStyle = storeStyle;
     this.primaryColor = primaryColor;
     this.darkerColor = darkerColor;
     this.buttonDrawable = buttonDrawable;
     this.roundDrawable = roundDrawable;
+    this.version = version;
+  }
+
+  public static List<StoreTheme> getThemesFromVersion(int version) {
+    List<StoreTheme> themes = new LinkedList<>();
+    for (StoreTheme theme : values()) {
+      if (theme.getVersion() == version) {
+        themes.add(theme);
+      }
+    }
+    return themes;
   }
 
   public static StoreTheme get(Store store) {
@@ -174,6 +195,10 @@ public enum StoreTheme {
     }
 
     return theme;
+  }
+
+  public int getVersion() {
+    return version;
   }
 
   @DrawableRes public int getRoundDrawable() {
