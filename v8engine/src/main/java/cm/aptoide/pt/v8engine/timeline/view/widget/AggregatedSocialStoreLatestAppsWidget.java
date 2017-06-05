@@ -435,13 +435,13 @@ public class AggregatedSocialStoreLatestAppsWidget
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(account -> {
             if (likeCard(displayable, minimalCard.getCardId(), 1)) {
+              knockWithSixpackCredentials(displayable.getAbTestingURL());
               numberLikes.setText(String.valueOf(minimalCard.getStats()
                   .getLikes() + 1));
               numberLikes.setVisibility(View.VISIBLE);
               if (likePreviewContainer.getChildCount() < 4) {
                 if (!minimalCard.getMy()
                     .isLiked()) {
-                  knockWithSixpackCredentials(displayable.getAbTestingURL());
                   UserTimeline user = new UserTimeline();
                   cm.aptoide.pt.model.v7.store.Store store =
                       new cm.aptoide.pt.model.v7.store.Store();
@@ -515,7 +515,7 @@ public class AggregatedSocialStoreLatestAppsWidget
     }
   }
 
-  private int addUserToPreview(int i, UserTimeline user, ViewGroup likePreviewContainer,
+  private int addUserToPreview(int marginLeft, UserTimeline user, ViewGroup likePreviewContainer,
       int marginOfTheNextLikePreview) {
     View likeUserPreviewView;
     ImageView likeUserPreviewIcon;
@@ -525,7 +525,7 @@ public class AggregatedSocialStoreLatestAppsWidget
         (ImageView) likeUserPreviewView.findViewById(R.id.social_timeline_like_user_preview);
     ViewGroup.MarginLayoutParams p =
         (ViewGroup.MarginLayoutParams) likeUserPreviewView.getLayoutParams();
-    p.setMargins(i, 0, 0, 0);
+    p.setMargins(marginLeft, 0, 0, 0);
     likeUserPreviewView.requestLayout();
 
     if (user != null) {

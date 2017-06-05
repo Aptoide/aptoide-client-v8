@@ -234,13 +234,13 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(account -> {
             if (likeCard(displayable, minimalCard.getCardId(), 1)) {
+              knockWithSixpackCredentials(displayable.getAbTestingURL());
               numberLikes.setText(String.valueOf(minimalCard.getStats()
                   .getLikes() + 1));
               numberLikes.setVisibility(View.VISIBLE);
               if (likePreviewContainer.getChildCount() < 4) {
                 if (!minimalCard.getMy()
                     .isLiked()) {
-                  knockWithSixpackCredentials(displayable.getAbTestingURL());
                   UserTimeline user = new UserTimeline();
                   Store store = new Store();
                   store.setAvatar(account.getStoreAvatar());
@@ -429,7 +429,7 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
     }
   }
 
-  private int addUserToPreview(int i, UserTimeline user, ViewGroup likePreviewContainer,
+  private int addUserToPreview(int marginLeft, UserTimeline user, ViewGroup likePreviewContainer,
       int marginOfTheNextLikePreview) {
     View likeUserPreviewView;
     ImageView likeUserPreviewIcon;
@@ -439,7 +439,7 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
         (ImageView) likeUserPreviewView.findViewById(R.id.social_timeline_like_user_preview);
     ViewGroup.MarginLayoutParams p =
         (ViewGroup.MarginLayoutParams) likeUserPreviewView.getLayoutParams();
-    p.setMargins(i, 0, 0, 0);
+    p.setMargins(marginLeft, 0, 0, 0);
     likeUserPreviewView.requestLayout();
 
     if (user != null) {
