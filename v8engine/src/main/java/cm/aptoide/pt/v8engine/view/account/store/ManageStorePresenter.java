@@ -29,13 +29,17 @@ public class ManageStorePresenter implements Presenter {
 
   @Override public void present() {
     Observable<Void> handleSaveDataClick = view.saveDataClick()
-        .flatMap(storeModel -> handleSaveClick(storeModel).toObservable());
+        .retry()
+        .flatMap(storeModel -> handleSaveClick(storeModel).toObservable())
+        .map(__ -> null);
 
     Observable<Void> handleCancelClick = view.cancelClick()
         .flatMap(__ -> handleCancelClick().toObservable());
 
     Observable<Void> handleLoadStoreImageClick = view.selectStoreImageClick()
-        .flatMap(__ -> handleSelectStoreImageClick().toObservable());
+        .retry()
+        .flatMap(__ -> handleSelectStoreImageClick().toObservable())
+        .map(__ -> null);
 
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.RESUME)
@@ -53,7 +57,7 @@ public class ManageStorePresenter implements Presenter {
     // does nothing
   }
 
-  private Completable handleSaveClick(ManageStoreViewModel storeModel) {
+  private Completable handleSaveClick(ManageStoreFragment.ViewModel storeModel) {
     Completable saveDataCompletable =
         storeManager.createOrUpdate(storeModel.getStoreId(), storeModel.getStoreName(),
             storeModel.getStoreDescription(), storeModel.getStoreImagePath(),
@@ -84,21 +88,20 @@ public class ManageStorePresenter implements Presenter {
     if (err instanceof StoreManager.NetworkError) {
       StoreManager.NetworkError networkError = ((StoreManager.NetworkError) err);
       if (networkError.isApiError()) {
-        view.showError(R.string.ws_error_API_1);
+        return view.showError(R.string.ws_error_API_1);
       } else {
-        view.showError(ErrorsMapper.getWebServiceErrorMessageFromCode(networkError.getError()));
+        return view.showError(
+            ErrorsMapper.getWebServiceErrorMessageFromCode(networkError.getError()));
       }
     } else if (err instanceof StoreManager.StoreCreationErrorWithCode) {
-      view.showError(ErrorsMapper.getWebServiceErrorMessageFromCode(
+      return view.showError(ErrorsMapper.getWebServiceErrorMessageFromCode(
           ((StoreManager.StoreCreationErrorWithCode) err).getErrorCode()));
     } else if (err instanceof StoreManager.StoreCreationError) {
-      view.showError(R.string.ws_error_WOP_2);
-    } else {
-      view.showGenericError();
+      return view.showError(R.string.ws_error_WOP_2);
     }
 
     crashReport.log(err);
-    return Completable.complete();
+    return view.showGenericError();
   }
 
   private Completable handleSelectStoreImageClick() {

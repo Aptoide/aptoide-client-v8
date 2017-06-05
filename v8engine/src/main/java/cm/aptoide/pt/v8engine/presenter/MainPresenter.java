@@ -97,6 +97,7 @@ public class MainPresenter implements Presenter {
     Fragment home = HomeFragment.newInstance(V8Engine.getConfiguration()
         .getDefaultStore(), StoreContext.home, V8Engine.getConfiguration()
         .getDefaultTheme());
-    fragmentNavigator.navigateToWithoutBackSave(home);
+    //fragmentNavigator.navigateToWithoutBackSave(home);
+    fragmentNavigator.navigateTo(home);
   }
 }

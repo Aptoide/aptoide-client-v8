@@ -87,8 +87,7 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment implements Profi
 
   @Override public Completable showGenericErrorMessage() {
     return Completable.fromAction(() -> waitDialog.dismiss())
-        .andThen(ShowMessage.asObservableSnack(this, R.string.unknown_error)
-            .toCompletable());
+        .andThen(ShowMessage.asObservableSnack(this, R.string.unknown_error));
   }
 
   @Override public void setupViews() {

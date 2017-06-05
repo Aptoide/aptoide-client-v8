@@ -31,7 +31,6 @@ import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.account.store.ManageStoreFragment;
-import cm.aptoide.pt.v8engine.view.account.store.ManageStoreViewModel;
 import com.jakewharton.rxbinding.view.RxView;
 import java.text.NumberFormat;
 import java.util.List;
@@ -286,8 +285,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
 
   private void editStore(long storeId, String storeTheme, String storeDescription, String storeName,
       String storeAvatar) {
-    ManageStoreViewModel viewModel =
-        new ManageStoreViewModel(storeId, storeAvatar, storeTheme, storeName, storeDescription);
+    ManageStoreFragment.ViewModel viewModel =
+        new ManageStoreFragment.ViewModel(storeId, storeAvatar, storeTheme, storeName, storeDescription);
     getFragmentNavigator().navigateTo(ManageStoreFragment.newInstance(viewModel, false));
   }
 

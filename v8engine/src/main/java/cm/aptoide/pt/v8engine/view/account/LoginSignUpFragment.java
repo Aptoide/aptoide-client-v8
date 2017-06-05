@@ -78,6 +78,7 @@ public class LoginSignUpFragment extends BackButtonFragment implements LoginSign
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     navigator = getFragmentChildNavigator(R.id.login_signup_layout);
+
     final Bundle args = getArguments();
     withBottomBar = args.getBoolean(BOTTOM_SHEET_WITH_BOTTOM_BAR);
     dismissToNavigateToMainView = args.getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);

@@ -28,7 +28,6 @@ import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.CardDisplayable;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.account.store.ManageStoreFragment;
-import cm.aptoide.pt.v8engine.view.account.store.ManageStoreViewModel;
 import cm.aptoide.pt.v8engine.view.comments.CommentDialogFragment;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -170,7 +169,7 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
           R.string.create_store_create, snackView -> {
             getFragmentNavigator().navigateTo(
-                ManageStoreFragment.newInstance(new ManageStoreViewModel(), false));
+                ManageStoreFragment.newInstance(new ManageStoreFragment.ViewModel(), false));
           });
       return;
     }
@@ -233,7 +232,7 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
           R.string.create_store_create, snackView -> {
             getFragmentNavigator().navigateTo(
-                ManageStoreFragment.newInstance(new ManageStoreViewModel(), false));
+                ManageStoreFragment.newInstance(new ManageStoreFragment.ViewModel(), false));
           });
       return false;
     }

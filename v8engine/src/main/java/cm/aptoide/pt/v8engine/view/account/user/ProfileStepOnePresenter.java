@@ -8,7 +8,6 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.view.account.store.ManageStoreFragment;
-import cm.aptoide.pt.v8engine.view.account.store.ManageStoreViewModel;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import rx.Completable;
 import rx.Observable;
@@ -80,7 +79,7 @@ public class ProfileStepOnePresenter implements Presenter {
 
   private void navigateToCreateStore() {
     fragmentNavigator.navigateToWithoutBackSave(
-        ManageStoreFragment.newInstance(new ManageStoreViewModel(), true));
+        ManageStoreFragment.newInstance(new ManageStoreFragment.ViewModel(), true));
   }
 
   private Completable makeUserProfilePublic() {

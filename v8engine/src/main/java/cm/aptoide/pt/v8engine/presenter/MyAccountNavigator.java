@@ -4,7 +4,6 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.notification.view.InboxFragment;
 import cm.aptoide.pt.v8engine.view.account.store.ManageStoreFragment;
-import cm.aptoide.pt.v8engine.view.account.store.ManageStoreViewModel;
 import cm.aptoide.pt.v8engine.view.account.user.ManageUserFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 
@@ -25,7 +24,8 @@ public class MyAccountNavigator {
   }
 
   public void navigateToEditStoreView(Store store) {
-    ManageStoreViewModel viewModel = new ManageStoreViewModel(store.getId(), store.getAvatar(),
+    ManageStoreFragment.ViewModel
+        viewModel = new ManageStoreFragment.ViewModel(store.getId(), store.getAvatar(),
         store.getAppearance()
             .getTheme(), store.getName(), store.getAppearance()
         .getDescription());

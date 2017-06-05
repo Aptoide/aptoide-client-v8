@@ -49,7 +49,7 @@ public interface LoginSignUpCredentialsView extends GoogleLoginView {
 
   void navigateToMainView();
 
-  void goBack();
+  void navigateBack();
 
   void dismiss();
 

@@ -62,7 +62,7 @@ import rx.functions.Action1;
 
 import static cm.aptoide.pt.v8engine.analytics.Analytics.AppsTimeline.BLANK;
 
-// TODO: 21/12/2016 sithengineer refactor and split in multiple classes to list comments
+// TODO: 21/12/2016 refactor and split in multiple classes to list comments
 // for each type: store and timeline card
 public class CommentListFragment extends GridRecyclerSwipeFragment
     implements CommentDialogCallbackContract {
@@ -394,7 +394,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   }
 
   //
-  // Re-Do: 6/1/2017 sithengineer create new comment different fragment constructions
+  // Re-Do: 6/1/2017 create new comment different fragment constructions
   //
 
   //
@@ -403,10 +403,9 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   private Observable<Void> showSignInMessage() {
     return ShowMessage.asObservableSnack(this.getActivity(), R.string.you_need_to_be_logged_in,
-        R.string.login, snackView -> {
-          accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.COMMENT_LIST);
-        })
-        .flatMap(a -> Observable.empty());
+        R.string.login, snackView -> accountNavigator.navigateToAccountView(
+            Analytics.Account.AccountOrigins.COMMENT_LIST))
+        .toObservable();
   }
 
   private Observable<Void> reloadComments() {

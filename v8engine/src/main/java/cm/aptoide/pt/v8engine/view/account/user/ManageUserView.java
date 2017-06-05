@@ -7,8 +7,6 @@ import rx.Observable;
 public interface ManageUserView extends View {
   void showLoadImageDialog();
 
-  void navigateBack();
-
   Observable<ManageUserFragment.ViewModel> saveUserDataButtonClick();
 
   Observable<Void> selectUserImageClick();

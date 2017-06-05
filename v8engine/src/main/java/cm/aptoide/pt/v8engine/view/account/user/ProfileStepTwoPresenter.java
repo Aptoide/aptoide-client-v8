@@ -8,7 +8,6 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.view.account.store.ManageStoreFragment;
-import cm.aptoide.pt.v8engine.view.account.store.ManageStoreViewModel;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import rx.Completable;
 import rx.Observable;
@@ -69,8 +68,7 @@ public class ProfileStepTwoPresenter implements Presenter {
   private Completable makeAccountPublic() {
     return accountManager.updateAccount(Account.Access.PUBLIC)
         .onErrorResumeNext(err -> {
-          CrashReport.getInstance()
-              .log(err);
+          crashReport.log(err);
           return view.showGenericErrorMessage();
         });
   }
@@ -78,8 +76,7 @@ public class ProfileStepTwoPresenter implements Presenter {
   private Completable makeAccountPrivate() {
     return accountManager.updateAccount(Account.Access.UNLISTED)
         .onErrorResumeNext(err -> {
-          CrashReport.getInstance()
-              .log(err);
+          crashReport.log(err);
           return view.showGenericErrorMessage();
         });
   }
@@ -93,7 +90,7 @@ public class ProfileStepTwoPresenter implements Presenter {
       fragmentNavigator.navigateToHomeCleaningBackStack();
     } else {
       fragmentNavigator.navigateToWithoutBackSave(
-          ManageStoreFragment.newInstance(new ManageStoreViewModel(), true));
+          ManageStoreFragment.newInstance(new ManageStoreFragment.ViewModel(), true));
     }
   }
 }

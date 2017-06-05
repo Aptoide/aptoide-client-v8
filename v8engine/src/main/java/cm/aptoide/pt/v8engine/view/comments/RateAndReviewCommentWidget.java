@@ -152,7 +152,8 @@ import rx.Observable;
                 R.string.login, snackView -> {
                   accountNavigator.navigateToAccountView(
                       Analytics.Account.AccountOrigins.REPLY_REVIEW);
-                });
+                })
+                .toObservable();
           }
         })
         .subscribe(a -> { /* do nothing */ }, err -> {

@@ -15,7 +15,7 @@ import retrofit2.Converter;
 import rx.Observable;
 import rx.subscriptions.CompositeSubscription;
 
-// FIXME: 17/11/2016 sithengineer missing the dependency injection of the data providers
+// FIXME: 17/11/2016 missing the dependency injection of the data providers
 public class RateAndReviewsPresenter implements Presenter {
 
   @NonNull private final RateAndReviewsView view;
@@ -66,7 +66,7 @@ public class RateAndReviewsPresenter implements Presenter {
                   view.showNextReviews(0, response.getDatalist()
                       .getList());
                 } else {
-                  // TODO: 17/11/2016 sithengineer improve this exception
+                  // TODO: 17/11/2016 improve this exception
                   IllegalStateException exception =
                       new IllegalStateException("Unexpected response");
                   view.showError(exception);
@@ -100,7 +100,7 @@ public class RateAndReviewsPresenter implements Presenter {
             view.showNextReviews(0, response.getDatalist()
                 .getList());
           } else {
-            // TODO: 17/11/2016 sithengineer improve this exception
+            // TODO: 17/11/2016 improve this exception
             IllegalStateException exception = new IllegalStateException("Unexpected response");
             view.showError(exception);
             CrashReport.getInstance()
@@ -121,7 +121,7 @@ public class RateAndReviewsPresenter implements Presenter {
                 .getStats()
                 .getRating());
           } else {
-            // TODO: 17/11/2016 sithengineer improve this exception
+            // TODO: 17/11/2016 improve this exception
             IllegalStateException exception = new IllegalStateException("Unexpected response");
             view.showError(exception);
             CrashReport.getInstance()

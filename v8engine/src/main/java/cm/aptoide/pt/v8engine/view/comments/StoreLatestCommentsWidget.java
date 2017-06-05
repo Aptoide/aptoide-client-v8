@@ -71,7 +71,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
     storeId = displayable.getStoreId();
     storeName = displayable.getStoreName();
 
-    // TODO: 9/12/2016 sithengineer create load and store methods when fragment is destroyed
+    // TODO: 9/12/2016 create load and store methods when fragment is destroyed
 
     setAdapter(displayable.getComments());
   }
@@ -152,11 +152,9 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
 
     private Observable<Void> showSignInMessage(@NonNull final View view) {
       return ShowMessage.asObservableSnack(view, R.string.you_need_to_be_logged_in, R.string.login,
-          snackView -> {
-            accountNavigator.navigateToAccountView(
-                Analytics.Account.AccountOrigins.LATEST_COMMENTS_STORE);
-          })
-          .flatMap(a -> Observable.empty());
+          snackView -> accountNavigator.navigateToAccountView(
+              Analytics.Account.AccountOrigins.LATEST_COMMENTS_STORE))
+          .toObservable();
     }
   }
 }

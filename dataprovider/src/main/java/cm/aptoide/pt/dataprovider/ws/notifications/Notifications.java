@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016.
- * Modified by SithEngineer on 03/08/2016.
+ * Modified on 03/08/2016.
  */
 
 package cm.aptoide.pt.dataprovider.ws.notifications;
@@ -21,7 +21,7 @@ import retrofit2.http.QueryMap;
 import rx.Observable;
 
 /**
- * Created by sithengineer on 21/07/16.
+ * Created by on 21/07/16.
  */
 public abstract class Notifications<U> extends WebService<Notifications.Interfaces, U> {
 

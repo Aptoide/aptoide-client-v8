@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -73,23 +74,13 @@ public class ManageUserFragment extends ImageLoaderFragment
   @Override public void setupViews() {
     super.setupViews();
 
-    if (viewModel != null && !TextUtils.isEmpty(viewModel.getImage())) {
-      loadImage(Uri.parse(viewModel.getImage()));
-    }
-
     if (viewModel.isEditProfile()) {
       createUserButton.setText(getString(R.string.edit_profile_save_button));
-      String image = viewModel.getImage();
-      if (image != null) {
-        image = image.replace("50", "150");
-        loadImage(Uri.parse(image));
-      }
-      if (viewModel.getName() != null) {
-        userName.setText(viewModel.getName());
-      }
       cancelUserProfile.setVisibility(View.VISIBLE);
       header.setText(getString(R.string.edit_profile_header_message));
     }
+
+    loadUserData();
 
     final Context context = getContext();
     final Context applicationContext = context.getApplicationContext();
@@ -97,7 +88,8 @@ public class ManageUserFragment extends ImageLoaderFragment
     CreateUserErrorMapper errorMapper =
         new CreateUserErrorMapper(context, new AccountErrorMapper(context));
     ManageUserPresenter presenter =
-        new ManageUserPresenter(this, CrashReport.getInstance(), accountManager, errorMapper, getFragmentNavigator());
+        new ManageUserPresenter(this, CrashReport.getInstance(), accountManager, errorMapper,
+            getFragmentNavigator());
     attachPresenter(presenter, null);
   }
 
@@ -124,14 +116,36 @@ public class ManageUserFragment extends ImageLoaderFragment
         context.getString(R.string.please_wait_upload));
   }
 
+  private void loadUserData() {
+    if (viewModel != null) {
+      final String image = viewModel.getImage();
+      if (!TextUtils.isEmpty(image)) {
+        loadImage(Uri.parse(image.replace("50", "150")));
+      }
+
+      final String name = viewModel.getName();
+      if (!TextUtils.isEmpty(name)) {
+        userName.setText(name);
+      }
+    }
+  }
+
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
-    viewModel = Parcels.unwrap(args.getParcelable(EXTRA_USER_MODEL));
+    if (args != null) {
+      viewModel = Parcels.unwrap(args.getParcelable(EXTRA_USER_MODEL));
+    }
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     outState.putParcelable(EXTRA_USER_MODEL, Parcels.wrap(viewModel));
+  }
+
+  @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+    super.onViewStateRestored(savedInstanceState);
+    loadExtras(savedInstanceState);
+    loadUserData();
   }
 
   @Override public int getContentViewId() {
@@ -160,10 +174,6 @@ public class ManageUserFragment extends ImageLoaderFragment
     DialogFragment dialogFragment = new ImageSourceSelectionDialogFragment();
     dialogFragment.setTargetFragment(this, 0);
     dialogFragment.show(getChildFragmentManager(), "imageSourceChooser");
-  }
-
-  @Override public void navigateBack() {
-    getFragmentNavigator().popBackStack();
   }
 
   @Override public Observable<ViewModel> saveUserDataButtonClick() {
@@ -201,8 +211,7 @@ public class ManageUserFragment extends ImageLoaderFragment
   }
 
   @Override public Completable showErrorMessage(String error) {
-    return ShowMessage.asObservableSnack(createUserButton, error)
-        .toCompletable();
+    return ShowMessage.asObservableSnack(createUserButton, error);
   }
 
   private void loadImageFromCamera() {
@@ -230,11 +239,11 @@ public class ManageUserFragment extends ImageLoaderFragment
   }
 
   @Parcel protected static class ViewModel {
-    private final String name;
-    private final String image;
-    private final boolean editProfile;
+    final String name;
+    final String image;
+    final boolean editProfile;
 
-    public ViewModel(){
+    public ViewModel() {
       name = "";
       image = "";
       editProfile = false;

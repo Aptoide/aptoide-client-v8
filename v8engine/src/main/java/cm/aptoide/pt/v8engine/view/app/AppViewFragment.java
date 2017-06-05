@@ -401,14 +401,14 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onResume();
 
     // restore download bar status
-    // TODO: 04/08/16 sithengineer restore download bar status
+    // TODO: 04/08/16 restore download bar status
   }
 
   @Override public void onPause() {
     super.onPause();
 
     // save download bar status
-    // TODO: 04/08/16 sithengineer save download bar status
+    // TODO: 04/08/16 save download bar status
   }
 
   private boolean hasDescription(GetAppMeta.Media media) {

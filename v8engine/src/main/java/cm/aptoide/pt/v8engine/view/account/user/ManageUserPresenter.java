@@ -42,12 +42,14 @@ public class ManageUserPresenter implements Presenter {
             .onErrorResumeNext(err -> handleSaveUserDataError(err, userData.isEditProfile()))
             .toObservable())
         .doOnNext(__ -> view.dismissProgressDialog())
+        .retry()
         .map(__ -> null);
 
     Observable<Void> handleCancelClick = view.cancelButtonClick()
-        .doOnNext(__ -> view.navigateBack());
+        .doOnNext(__ -> navigateBack());
 
     Observable<Void> handleSelectImageClick = view.selectUserImageClick()
+        .retry()
         .doOnNext(__ -> view.showLoadImageDialog());
 
     view.getLifecycle()
@@ -86,7 +88,7 @@ public class ManageUserPresenter implements Presenter {
     final boolean showPrivacyConfigs = Application.getConfiguration()
         .isCreateStoreAndSetUserPrivacyAvailable();
     if (isEditProfile) {
-      view.navigateBack();
+      navigateBack();
     } else if (showPrivacyConfigs) {
       navigateToProfileStepOne();
     } else {
@@ -95,12 +97,16 @@ public class ManageUserPresenter implements Presenter {
   }
 
   private void navigateToProfileStepOne() {
-    fragmentNavigator.cleanBackStack();
+    //fragmentNavigator.cleanBackStack();
     fragmentNavigator.navigateToWithoutBackSave(ProfileStepOneFragment.newInstance());
   }
 
   private void navigateToHome() {
     fragmentNavigator.navigateToHomeCleaningBackStack();
+  }
+
+  private void navigateBack() {
+    fragmentNavigator.popBackStack();
   }
 
   private Completable saveUSerData(ManageUserFragment.ViewModel userData) {

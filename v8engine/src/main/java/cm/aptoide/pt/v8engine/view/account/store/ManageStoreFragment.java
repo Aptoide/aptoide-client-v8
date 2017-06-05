@@ -40,8 +40,10 @@ import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
+import org.parceler.Parcel;
 import org.parceler.Parcels;
 import retrofit2.Converter;
+import rx.Completable;
 import rx.Observable;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -67,10 +69,10 @@ public class ManageStoreFragment extends ImageLoaderFragment
   private RecyclerView themeSelectorView;
   private ThemeSelectorViewAdapter themeSelectorAdapter;
 
-  private ManageStoreViewModel currentModel;
+  private ViewModel currentModel;
   private boolean goToHome;
 
-  public static ManageStoreFragment newInstance(ManageStoreViewModel storeModel, boolean goToHome) {
+  public static ManageStoreFragment newInstance(ViewModel storeModel, boolean goToHome) {
     Bundle args = new Bundle();
     args.putParcelable(EXTRA_STORE_MODEL, Parcels.wrap(storeModel));
     args.putBoolean(EXTRA_GO_TO_HOME, goToHome);
@@ -84,7 +86,7 @@ public class ManageStoreFragment extends ImageLoaderFragment
     return RxView.clicks(selectStoreImageButton);
   }
 
-  @Override public Observable<ManageStoreViewModel> saveDataClick() {
+  @Override public Observable<ViewModel> saveDataClick() {
     return RxView.clicks(saveDataButton)
         .map(__ -> updateAndGetStoreModel());
   }
@@ -99,12 +101,12 @@ public class ManageStoreFragment extends ImageLoaderFragment
     dialogFragment.show(getChildFragmentManager(), "imageSourceChooser");
   }
 
-  @Override public void showError(@StringRes int errorMessage) {
-    ShowMessage.asSnack(this, errorMessage);
+  @Override public Completable showError(@StringRes int errorMessage) {
+    return ShowMessage.asObservableSnack(this, errorMessage);
   }
 
-  @Override public void showGenericError() {
-    ShowMessage.asSnack(this, R.string.having_some_trouble);
+  @Override public Completable showGenericError() {
+    return ShowMessage.asObservableSnack(this, R.string.having_some_trouble);
   }
 
   @Override public void showWaitProgressBar() {
@@ -175,8 +177,8 @@ public class ManageStoreFragment extends ImageLoaderFragment
         getApplicationContext().getString(R.string.please_wait_upload));
   }
 
-  private ManageStoreViewModel updateAndGetStoreModel() {
-    currentModel = ManageStoreViewModel.from(currentModel, storeName.getText()
+  private ViewModel updateAndGetStoreModel() {
+    currentModel = ViewModel.from(currentModel, storeName.getText()
         .toString(), storeDescription.getText()
         .toString());
     currentModel.setStoreThemeName(themeSelectorAdapter.getSelectedThemeName());
@@ -193,7 +195,7 @@ public class ManageStoreFragment extends ImageLoaderFragment
       try {
         currentModel = Parcels.unwrap(args.getParcelable(EXTRA_STORE_MODEL));
       } catch (NullPointerException ex) {
-        currentModel = new ManageStoreViewModel();
+        currentModel = new ViewModel();
       }
       goToHome = args.getBoolean(EXTRA_GO_TO_HOME, true);
     }
@@ -220,7 +222,7 @@ public class ManageStoreFragment extends ImageLoaderFragment
         storeManagerFactory.create(), getFragmentNavigator());
   }
 
-  private void setupViewsDefaultDataUsingStore(ManageStoreViewModel storeModel) {
+  private void setupViewsDefaultDataUsingStore(ViewModel storeModel) {
     if (!storeModel.storeExists()) {
       String appName = getString(R.string.app_name);
       header.setText(
@@ -243,7 +245,7 @@ public class ManageStoreFragment extends ImageLoaderFragment
     }
   }
 
-  private String getViewTitle(ManageStoreViewModel storeModel) {
+  private String getViewTitle(ViewModel storeModel) {
     if (!storeModel.storeExists()) {
       return getString(R.string.create_store_title);
     } else {
@@ -302,5 +304,99 @@ public class ManageStoreFragment extends ImageLoaderFragment
 
   @Override public void selectedCamera() {
     loadImageFromCamera();
+  }
+
+  @Parcel public static class ViewModel {
+    long storeId;
+    String storeName;
+    String storeDescription;
+    String storeImagePath;
+    String storeThemeName;
+    boolean newAvatar;
+
+    public ViewModel() {
+      this.storeId = -1;
+      this.storeName = "";
+      this.storeDescription = "";
+      this.storeImagePath = "";
+      this.storeThemeName = "";
+      this.newAvatar = false;
+    }
+
+    public ViewModel(long storeId, String storeThemeName, String storeName, String storeDescription,
+        String storeImagePath) {
+      this.storeId = storeId;
+      this.storeName = storeName;
+      this.storeDescription = storeDescription;
+      this.storeImagePath = storeImagePath;
+      this.storeThemeName = storeThemeName;
+      this.newAvatar = false;
+    }
+
+    public static ViewModel from(ViewModel otherStoreModel, String storeName,
+        String storeDescription) {
+
+      // if current store name is empty we use the old one
+      if (TextUtils.isEmpty(storeName)) {
+        storeName = otherStoreModel.getStoreName();
+      }
+
+      // if current store description is empty we use the old one
+      if (TextUtils.isEmpty(storeDescription)) {
+        storeDescription = otherStoreModel.getStoreDescription();
+      }
+
+      ViewModel newModel =
+          new ViewModel(otherStoreModel.getStoreId(), otherStoreModel.getStoreThemeName(),
+              storeName, storeDescription, otherStoreModel.getStoreImagePath());
+
+      // if previous model had a new image, set it in new model
+      if (otherStoreModel.hasNewAvatar()) {
+        newModel.setStoreImagePath(otherStoreModel.getStoreImagePath());
+      }
+
+      return newModel;
+    }
+
+    public String getStoreName() {
+      return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+      this.storeName = storeName;
+    }
+
+    public String getStoreDescription() {
+      return storeDescription;
+    }
+
+    public String getStoreImagePath() {
+      return storeImagePath;
+    }
+
+    public void setStoreImagePath(String storeAvatarPath) {
+      this.storeImagePath = storeAvatarPath;
+      this.newAvatar = true;
+    }
+
+    public boolean hasNewAvatar() {
+      return newAvatar;
+    }
+
+    public long getStoreId() {
+      return storeId;
+    }
+
+    public String getStoreThemeName() {
+      return storeThemeName;
+    }
+
+    public void setStoreThemeName(String storeTheme) {
+      this.storeThemeName = storeTheme;
+    }
+
+    public boolean storeExists() {
+      return storeId >= 0L;
+    }
   }
 }

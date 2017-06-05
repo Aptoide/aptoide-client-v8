@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
@@ -21,7 +20,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -29,12 +27,12 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.account.LoginPreferences;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
 import cm.aptoide.pt.v8engine.view.account.user.ManageUserFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
-import cm.aptoide.pt.v8engine.view.store.home.HomeFragment;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -107,9 +105,15 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         ((V8Engine) getContext().getApplicationContext()).getAccountManager(),
         facebookRequestedPermissions,
         new LoginPreferences(getContext(), V8Engine.getConfiguration(),
-            GoogleApiAvailability.getInstance()),
+            GoogleApiAvailability.getInstance()), CrashReport.getInstance(),
         getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW),
         getArguments().getBoolean(CLEAN_BACK_STACK));
+  }
+
+  @Override public void onDestroyView() {
+    unregisterBackClickHandler(presenter);
+    unlockScreenRotation();
+    super.onDestroyView();
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -169,7 +173,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void showError(Throwable throwable) {
-    // FIXME: 23/2/2017 sithengineer find a better solution than this.
     ShowMessage.asToast(getContext(), errorMapper.map(throwable));
   }
 
@@ -231,14 +234,15 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void navigateToMainView() {
-    Fragment home = HomeFragment.newInstance(V8Engine.getConfiguration()
-        .getDefaultStore(), StoreContext.home, V8Engine.getConfiguration()
-        .getDefaultTheme());
-    fragmentNavigator.cleanBackStack();
-    fragmentNavigator.navigateTo(home);
+    //Fragment home = HomeFragment.newInstance(V8Engine.getConfiguration()
+    //    .getDefaultStore(), StoreContext.home, V8Engine.getConfiguration()
+    //    .getDefaultTheme());
+    //fragmentNavigator.cleanBackStack();
+    //fragmentNavigator.navigateTo(home);
+    fragmentNavigator.navigateToHomeCleaningBackStack();
   }
 
-  @Override public void goBack() {
+  @Override public void navigateBack() {
     fragmentNavigator.popBackStack();
   }
 
@@ -299,8 +303,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void navigateToCreateProfile() {
-    getFragmentNavigator().cleanBackStack();
-    getFragmentNavigator().navigateTo(ManageUserFragment.newInstanceToCreate());
+    fragmentNavigator.cleanBackStack();
+    fragmentNavigator.navigateTo(ManageUserFragment.newInstanceToCreate());
   }
 
   @Override public Context getApplicationContext() {
@@ -438,14 +442,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     }
   }
 
-  public String getCompanyName() {
+  private String getCompanyName() {
     return ((V8Engine) getActivity().getApplication()).createConfiguration()
         .getMarketName();
-  }
-
-  @Override public void onDestroyView() {
-    unregisterBackClickHandler(presenter);
-    unlockScreenRotation();
-    super.onDestroyView();
   }
 }

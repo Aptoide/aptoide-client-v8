@@ -233,7 +233,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
    *
    * @return {@link Observable} to a {@link Installed} or empty.
    */
-  // TODO: 31/1/2017 sithengineer instead of Observable<Installed> use Single<Installed>
+  // TODO: 31/1/2017 instead of Observable<Installed> use Single<Installed>
   private Observable<Installed> filterUpdates(Installed item) {
     return updateRepository.contains(item.getPackageName(), false)
         .flatMap(isUpdate -> {
