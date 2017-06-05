@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.text.TextUtils;
@@ -72,7 +73,7 @@ public class DialogUtils {
         ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
             snackView -> {
               accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.RATE_DIALOG);
-            });
+            }, Snackbar.LENGTH_SHORT);
         subscriber.onNext(GenericDialogs.EResponse.CANCEL);
         subscriber.onCompleted();
         return;
@@ -181,7 +182,7 @@ public class DialogUtils {
       ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
             accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.RATE_DIALOG);
-          });
+          }, Snackbar.LENGTH_SHORT);
 
       return;
     }

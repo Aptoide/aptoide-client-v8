@@ -103,6 +103,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.share.ShareAppHelper;
 import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 import com.facebook.appevents.AppEventsLogger;
+import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.LinkedList;
 import java.util.List;
@@ -186,6 +187,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private QManager qManager;
   private TimelineAnalytics timelineAnalytics;
   private AppViewAnalytics appViewAnalytics;
+  private PublishRelay installAppRelay;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -287,11 +289,13 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(StoredMinimalAd.class);
     spotAndShareAnalytics = new SpotAndShareAnalytics(Analytics.getInstance());
     paymentAnalytics = ((V8Engine) getContext().getApplicationContext()).getPaymentAnalytics();
-    shareAppHelper =
-        new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
-            spotAndShareAnalytics, timelineAnalytics);
     appViewAnalytics = new AppViewAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()));
+
+    installAppRelay = PublishRelay.create();
+    shareAppHelper =
+        new ShareAppHelper(installedRepository, accountManager, accountNavigator, getActivity(),
+            spotAndShareAnalytics, timelineAnalytics, installAppRelay);
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
@@ -648,7 +652,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     }
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
-            installedRepository, timelineAnalytics, appViewAnalytics);
+            installedRepository, timelineAnalytics, appViewAnalytics, installAppRelay);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics));
     displayables.add(

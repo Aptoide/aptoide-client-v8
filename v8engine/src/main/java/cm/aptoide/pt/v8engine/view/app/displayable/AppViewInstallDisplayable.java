@@ -24,6 +24,7 @@ import cm.aptoide.pt.v8engine.install.rollback.RollbackRepository;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import com.jakewharton.rxrelay.PublishRelay;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import lombok.AccessLevel;
@@ -62,6 +63,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
    */
   private static final int ACTION_NO_STATE = -1;
   @Getter @Setter private boolean shouldInstall;
+  private final Observable<Void> installAppRelay;
   @Getter private MinimalAd minimalAd;
 
   private RollbackRepository rollbackRepository;
@@ -77,11 +79,13 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 
   public AppViewInstallDisplayable() {
     super();
+    installAppRelay = PublishRelay.empty();
   }
 
   public AppViewInstallDisplayable(InstallManager installManager, GetApp getApp,
       MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository,
-      TimelineAnalytics timelineAnalytics, AppViewAnalytics appViewAnalytics) {
+      TimelineAnalytics timelineAnalytics, AppViewAnalytics appViewAnalytics,
+      PublishRelay installAppRelay) {
     super(getApp, appViewAnalytics);
     this.installManager = installManager;
     this.md5 = getApp.getNodes()
@@ -98,6 +102,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
         .getData();
     this.minimalAd = minimalAd;
     this.shouldInstall = shouldInstall;
+    this.installAppRelay = installAppRelay;
     this.rollbackRepository = RepositoryFactory.getRollbackRepository();
     this.installedRepository = installedRepository;
     this.timelineAnalytics = timelineAnalytics;
@@ -106,9 +111,10 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 
   public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager,
       MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository,
-      TimelineAnalytics timelineAnalytics, AppViewAnalytics appViewAnalytics) {
+      TimelineAnalytics timelineAnalytics, AppViewAnalytics appViewAnalytics,
+      PublishRelay installAppRelay) {
     return new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall,
-        installedRepository, timelineAnalytics, appViewAnalytics);
+        installedRepository, timelineAnalytics, appViewAnalytics, installAppRelay);
   }
 
   public void startInstallationProcess() {
@@ -202,6 +208,10 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 
   public TimelineAnalytics getTimelineAnalytics() {
     return timelineAnalytics;
+  }
+
+  public Observable<Void> getInstallAppRelay() {
+    return installAppRelay;
   }
 
   @IntDef({

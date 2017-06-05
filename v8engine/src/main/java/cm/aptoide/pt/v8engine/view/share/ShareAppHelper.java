@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.preferences.Application;
@@ -21,6 +23,7 @@ import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
+import com.jakewharton.rxrelay.PublishRelay;
 import rx.Observable;
 
 /**
@@ -35,16 +38,19 @@ public class ShareAppHelper {
   private final SpotAndShareAnalytics spotAndShareAnalytics;
   private final Activity activity;
   private TimelineAnalytics timelineAnalytics;
+  private final PublishRelay installAppRelay;
 
   public ShareAppHelper(InstalledRepository installedRepository,
       AptoideAccountManager accountManager, AccountNavigator accountNavigator, Activity activity,
-      SpotAndShareAnalytics spotAndShareAnalytics, TimelineAnalytics timelineAnalytics) {
+      SpotAndShareAnalytics spotAndShareAnalytics, TimelineAnalytics timelineAnalytics,
+      PublishRelay installAppRelay) {
     this.installedRepository = installedRepository;
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.activity = activity;
     this.spotAndShareAnalytics = spotAndShareAnalytics;
     this.timelineAnalytics = timelineAnalytics;
+    this.installAppRelay = installAppRelay;
   }
 
   private boolean isInstalled(String packageName) {
@@ -57,8 +63,7 @@ public class ShareAppHelper {
     String title = activity.getString(R.string.share);
 
     Observable<ShareDialogs.ShareResponse> genericAppviewShareDialog =
-        isInstalled(packageName) ? ShareDialogs.createAppviewShareWithSpotandShareDialog(activity,
-            title) : ShareDialogs.createAppviewShareDialog(activity, title);
+        ShareDialogs.createAppviewShareWithSpotandShareDialog(activity, title);
 
     genericAppviewShareDialog.subscribe(eResponse -> {
       if (ShareDialogs.ShareResponse.SHARE_EXTERNAL == eResponse) {
@@ -66,9 +71,22 @@ public class ShareAppHelper {
       } else if (ShareDialogs.ShareResponse.SHARE_TIMELINE == eResponse) {
         caseAppsTimelineShare(appName, packageName, iconPath, averageRating);
       } else if (ShareDialogs.ShareResponse.SHARE_SPOT_AND_SHARE == eResponse) {
-        caseSpotAndShareShare(appName, packageName, origin);
+        if (isInstalled(packageName)) {
+          caseSpotAndShareShare(appName, packageName, origin);
+        } else {
+          showInstallSnackbar(installAppRelay);
+        }
       }
     }, CrashReport.getInstance()::log);
+  }
+
+  private void showInstallSnackbar(PublishRelay installAppRelay) {
+    ShowMessage.asSnack(activity, R.string.appview_message_install_before_share_spotandshare,
+        R.string.appview_button_install_before_share_spotandshare, new View.OnClickListener() {
+          @Override public void onClick(View v) {
+            installAppRelay.call(null);
+          }
+        }, Snackbar.LENGTH_INDEFINITE);
   }
 
   public void shareApp(String appName, String packageName, String iconPath, String origin) {
@@ -100,7 +118,7 @@ public class ShareAppHelper {
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> accountNavigator.navigateToAccountView(
-              Analytics.Account.AccountOrigins.APP_VIEW_SHARE));
+              Analytics.Account.AccountOrigins.APP_VIEW_SHARE), Snackbar.LENGTH_SHORT);
       return;
     }
     if (Application.getConfiguration()

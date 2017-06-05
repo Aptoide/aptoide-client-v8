@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.comments;
 
 import android.content.res.Resources;
 import android.os.Build;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatRatingBar;
@@ -264,7 +265,7 @@ import rx.Observable;
           snackView -> {
             accountNavigator.navigateToAccountView(
                 Analytics.Account.AccountOrigins.REVIEW_FEEDBACK);
-          });
+          }, Snackbar.LENGTH_SHORT);
       setHelpButtonsClickable(true);
     }
   }

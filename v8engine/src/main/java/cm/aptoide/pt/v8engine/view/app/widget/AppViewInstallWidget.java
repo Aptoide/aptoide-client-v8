@@ -218,6 +218,9 @@ import rx.android.schedulers.AndroidSchedulers;
         setDownloadBarInvisible();
         setupInstallOrBuyButton(displayable, getApp);
         ((AppMenuOptions) getFragmentNavigator().peekLast()).setUnInstallMenuOptionVisible(null);
+        compositeSubscription.add(displayable.getInstallAppRelay()
+            .doOnNext(__ -> actionButton.performClick())
+            .subscribe());
         break;
       case AppViewInstallDisplayable.ACTION_DOWNGRADE:
         setDownloadBarInvisible();
