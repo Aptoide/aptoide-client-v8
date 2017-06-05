@@ -285,7 +285,7 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
       }
 
       likePreviewContainer.removeAllViews();
-      showLikesPreview(marginOfTheNextLikePreview, likePreviewContainer, minimalCard);
+      showLikesPreview(likePreviewContainer, minimalCard);
 
       if ((minimalCard.getUsersLikes() != null
           && minimalCard.getUsersLikes()
@@ -460,9 +460,8 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
     }
   }
 
-  private void showLikesPreview(int marginOfTheNextLikePreview, ViewGroup likePreviewContainer,
-      MinimalCard minimalCard) {
-    marginOfTheNextLikePreview = 60;
+  private void showLikesPreview(ViewGroup likePreviewContainer, MinimalCard minimalCard) {
+    int marginOfTheNextLikePreview = 60;
     for (int j = 0; j < minimalCard.getStats()
         .getLikes(); j++) {
 
