@@ -1,15 +1,14 @@
 package cm.aptoide.accountmanager;
 
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
-import cm.aptoide.pt.dataprovider.ws.v3.ChangeUserSettingsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.CreateUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.OAuth2AuthenticationRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.GetMySubscribedStoresRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserMultipartRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.SetUserSettings;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
 import cm.aptoide.pt.model.v3.OAuth;
@@ -86,21 +85,6 @@ public class AccountManagerService {
         });
   }
 
-  public Completable updateAccount(String email, String nickname, String password,
-      String avatarPath, String accessToken, AptoideAccountManager accountManager) {
-    return CreateUserRequest.of(email, nickname, password, avatarPath, accessToken,
-        interceptorFactory.createV3(accountManager), httpClient, longTimeoutHttpClient)
-        .observe(true)
-        .toSingle()
-        .flatMapCompletable(response -> {
-          if (!response.hasErrors()) {
-            return Completable.complete();
-          } else {
-            return Completable.error(new AccountException(response.getErrors()));
-          }
-        });
-  }
-
   public Completable updateAccount(String nickname, String avatarPath,
       AptoideAccountManager accountManager) {
     return SetUserMultipartRequest.of(nickname, avatarPath,
@@ -118,7 +102,7 @@ public class AccountManagerService {
   }
 
   public Completable updateAccount(String accessLevel, AptoideAccountManager accountManager) {
-    return SetUserRequest.of(accessLevel, interceptorFactory.createV7(accountManager, "pool"),
+    return SetUserRequest.of(accessLevel, interceptorFactory.createV7(accountManager),
         httpClient, converterFactory)
         .observe(true)
         .toSingle()
@@ -133,7 +117,7 @@ public class AccountManagerService {
 
   public Completable updateAccountWithUserName(String userName,
       AptoideAccountManager accountManager) {
-    return SetUserRequest.ofWithName(userName, interceptorFactory.createV7(accountManager, "pool"),
+    return SetUserRequest.ofWithName(userName, interceptorFactory.createV7(accountManager),
         httpClient, converterFactory)
         .observe(true)
         .toSingle()
@@ -162,7 +146,7 @@ public class AccountManagerService {
       String storePassword, AptoideAccountManager accountManager,
       ChangeStoreSubscriptionResponse.StoreSubscriptionState subscription) {
     return ChangeStoreSubscriptionRequest.of(storeName, subscription, storeUserName, storePassword,
-        interceptorFactory.createV7(accountManager, "pool"), httpClient, converterFactory)
+        interceptorFactory.createV7(accountManager), httpClient, converterFactory)
         .observe()
         .toSingle()
         .toCompletable();
@@ -171,7 +155,7 @@ public class AccountManagerService {
   private Single<List<Store>> getSubscribedStores(String accessToken,
       AptoideAccountManager accountManager) {
     return new GetMySubscribedStoresRequest(accessToken,
-        interceptorFactory.createV7(accountManager, "pool"), httpClient, converterFactory).observe()
+        interceptorFactory.createV7(accountManager), httpClient, converterFactory).observe()
         .map(getUserRepoSubscription -> getUserRepoSubscription.getDatalist()
             .getList())
         .flatMapIterable(list -> list)
@@ -196,8 +180,8 @@ public class AccountManagerService {
 
   private Single<GetUserInfo> getServerAccount(AptoideAccountManager accountManager,
       String accessToken) {
-    return GetUserInfoRequest.of(accessToken, httpClient, converterFactory,
-        interceptorFactory.createV7(accountManager, "web"))
+    return GetUserInfoRequest.of(accessToken, REFRESH, httpClient, converterFactory,
+        interceptorFactory.createUserInfoV7(accountManager))
         .observe()
         .toSingle()
         .flatMap(response -> {
@@ -229,18 +213,17 @@ public class AccountManagerService {
             .isConfirmed());
   }
 
-  public Completable updateAccount(boolean adultContentEnabled, String accessToken,
+  public Completable updateAccount(boolean adultContentEnabled,
       AptoideAccountManager accountManager) {
-    return ChangeUserSettingsRequest.of(adultContentEnabled,
-        interceptorFactory.createV3(accountManager), httpClient, converterFactory)
+    return SetUserSettings.of(adultContentEnabled, httpClient, converterFactory,
+        interceptorFactory.createAdultContentV7(accountManager, adultContentEnabled))
         .observe(true)
         .toSingle()
         .flatMapCompletable(response -> {
-          if (response.getStatus()
-              .equals("OK")) {
+          if (response.isOk()) {
             return Completable.complete();
           } else {
-            return Completable.error(new Exception(V3.getErrorMessage(response)));
+            return Completable.error(new Exception(V7.getErrorMessage(response)));
           }
         });
   }

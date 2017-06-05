@@ -173,10 +173,10 @@ public class AptoideAccountManager {
             account.getPassword(), account.getType()));
   }
 
-  public Completable updateAccount(boolean adultContentEnabled) {
+  public Completable updateAccount(boolean adultContentEnabled,
+      AptoideAccountManager accountManager) {
     return singleAccountStatus().flatMapCompletable(
-        account -> accountManagerService.updateAccount(adultContentEnabled,
-            account.getAccessToken(), this)
+        account -> accountManagerService.updateAccount(adultContentEnabled, accountManager)
             .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
                 account.getPassword(), account.getType())));
   }

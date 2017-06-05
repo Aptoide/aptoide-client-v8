@@ -29,7 +29,6 @@ import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.model.v7.GetMySubscribedStoresResponse;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.GetUserInfo;
-import cm.aptoide.pt.model.v7.GetUserMeta;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.ListFullReviews;
@@ -377,13 +376,15 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
         @retrofit2.http.Body GetMySubscribedStoresRequest.Body body);
 
+    @POST("user/get") Observable<GetUserInfo> getUserInfo(@Body GetUserInfoRequest.Body body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
     @POST("getAppMeta{url}") Observable<GetAppMeta> getAppMeta(
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
         @Path(value = "url", encoded = true) String url);
 
-    @POST("user/getMeta") Observable<GetUserMeta> getUserMeta(@Body GetUserMetaRequest.Body body);
-
-    @POST("user/get") Observable<GetUserInfo> getUserInfo(@Body GetUserInfoRequest.Body body);
+    @POST("user/settings/set") Observable<BaseV7Response> setUserSettings(
+        @Body SetUserSettings.Body body);
   }
 }
 

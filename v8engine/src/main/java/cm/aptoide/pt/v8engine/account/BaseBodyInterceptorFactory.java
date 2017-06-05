@@ -38,10 +38,25 @@ public class BaseBodyInterceptorFactory implements BasebBodyInterceptorFactory {
     this.qManager = qManager;
   }
 
-  public BodyInterceptor<BaseBody> createV7(AptoideAccountManager accountManager, String cdn) {
+  @Override public BodyInterceptor<BaseBody> createV7(AptoideAccountManager accountManager) {
     return new BaseBodyInterceptorV7(idsRepository, accountManager,
         new AdultContent(accountManager, preferences, securePreferences), aptoideMd5sum,
-        aptoidePackage, qManager, cdn);
+        aptoidePackage, qManager, "pool");
+  }
+
+  @Override
+  public BodyInterceptor<BaseBody> createUserInfoV7(AptoideAccountManager accountManager) {
+    return new BaseBodyInterceptorV7(idsRepository, accountManager,
+        new AdultContent(accountManager, preferences, securePreferences), aptoideMd5sum,
+        aptoidePackage, qManager, "web");
+  }
+
+  @Override
+  public BodyInterceptor<BaseBody> createAdultContentV7(AptoideAccountManager accountManager,
+      boolean adultContentEnabled) {
+    return new BaseBodyInterceptorV7(aptoideMd5sum, aptoidePackage, idsRepository, accountManager,
+        new AdultContent(accountManager, preferences, securePreferences), qManager, "pool",
+        adultContentEnabled);
   }
 
   @Override public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> createV3(

@@ -25,23 +25,25 @@ public class GetUserInfoRequest extends V7<GetUserInfo, GetUserInfoRequest.Body>
     super(body, baseHost, httpClient, converterFactory, bodyInterceptor);
   }
 
-  public static GetUserInfoRequest of(String accessToken, OkHttpClient httpClient,
+  public static GetUserInfoRequest of(String accessToken, boolean refresh, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor) {
-    Body body = new Body();
+    Body body = new Body(refresh);
     body.setAccessToken(accessToken);
     return new GetUserInfoRequest(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
   }
 
   @Override protected Observable<GetUserInfo> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getUserInfo(body);
+    return interfaces.getUserInfo(body, true);
   }
 
   @Data public static class Body extends BaseBody {
 
     private ArrayList<String> nodes;
+    private boolean refresh;
 
-    public Body() {
+    public Body(boolean refresh) {
+      this.refresh = refresh;
       nodes = new ArrayList<>();
       nodes.add("meta");
       nodes.add("settings");

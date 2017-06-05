@@ -20,6 +20,7 @@ public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
   private final String aptoidePackage;
   private final QManager qManager;
   private final String cdn;
+  private final Boolean adultContentDefaultValue;
 
   public BaseBodyInterceptorV7(IdsRepository idsRepository, AptoideAccountManager accountManager,
       AdultContent adultContent, String aptoideMd5sum, String aptoidePackage, QManager qManager,
@@ -31,6 +32,20 @@ public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
     this.aptoidePackage = aptoidePackage;
     this.qManager = qManager;
     this.cdn = cdn;
+    this.adultContentDefaultValue = null;
+  }
+
+  public BaseBodyInterceptorV7(String aptoideMd5sum, String aptoidePackage,
+      IdsRepository idsRepository, AptoideAccountManager accountManager, AdultContent adultContent,
+      QManager qManager, String cdn, boolean mature) {
+    this.cdn = cdn;
+    this.accountManager = accountManager;
+    this.adultContent = adultContent;
+    this.adultContentDefaultValue = mature;
+    this.aptoideMd5sum = aptoideMd5sum;
+    this.aptoidePackage = aptoidePackage;
+    this.idsRepository = idsRepository;
+    this.qManager = qManager;
   }
 
   public Single<BaseBody> intercept(BaseBody body) {
@@ -47,7 +62,11 @@ public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
       body.setAptoideVercode(AptoideUtils.Core.getVerCode());
       body.setCdn(cdn);
       body.setLang(AptoideUtils.SystemU.getCountryCode());
-      body.setMature(adultContentEnabled);
+      if (adultContentDefaultValue == null) {
+        body.setMature(adultContentEnabled);
+      } else {
+        body.setMature(adultContentDefaultValue);
+      }
       body.setQ(qManager
           .getFilters(ManagerPreferences.getHWSpecsFilter()));
       if (ManagerPreferences.isDebug()) {
