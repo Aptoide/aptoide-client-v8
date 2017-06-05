@@ -272,16 +272,16 @@ public class ShowMessage {
     return asSnackObservableInternal(asSnackInternal(fragment, msg));
   }
 
-  public static void asSnack(Activity activity, int msg, int actionMsg,
-      View.OnClickListener action) {
-    Snackbar snackbar = asSnackInternal(activity, msg, actionMsg, action);
+  public static void asSnack(Activity activity, int msg, int actionMsg, View.OnClickListener action,
+      int duration) {
+    Snackbar snackbar = asSnackInternal(activity, msg, actionMsg, action, Snackbar.LENGTH_SHORT);
     if (snackbar != null) {
       snackbar.show();
     }
   }
 
   private static Snackbar asSnackInternal(Activity activity, int msg, int actionMsg,
-      View.OnClickListener action) {
+      View.OnClickListener action, int duration) {
     View view = getViewFromActivity(activity);
     if (view == null) {
       return null;
@@ -299,7 +299,7 @@ public class ShowMessage {
    */
   @NonNull public static Observable<Integer> asObservableSnack(Activity activity, int msg,
       int actionMsg, View.OnClickListener action) {
-    Snackbar snackbar = asSnackInternal(activity, msg, actionMsg, action);
+    Snackbar snackbar = asSnackInternal(activity, msg, actionMsg, action, Snackbar.LENGTH_SHORT);
     if (snackbar != null) {
       return asSnackObservableInternal(snackbar);
     }

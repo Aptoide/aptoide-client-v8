@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.timeline.view.widget;
 
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -297,7 +298,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
             accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.SOCIAL_LIKE);
-          });
+          }, Snackbar.LENGTH_SHORT);
       return false;
     }
     displayable.like(getContext(), getCardTypeName().toUpperCase(), rating);

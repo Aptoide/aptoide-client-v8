@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.timeline.view.widget;
 
 import android.support.annotation.CallSuper;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -162,7 +163,7 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> accountNavigator.navigateToAccountView(
-              Analytics.Account.AccountOrigins.SHARE_CARD));
+              Analytics.Account.AccountOrigins.SHARE_CARD), Snackbar.LENGTH_SHORT);
       return;
     }
 
@@ -172,7 +173,7 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
           R.string.create_store_create, snackView -> {
             getFragmentNavigator().navigateTo(
                 CreateStoreFragment.newInstance(new ManageStoreModel(false)));
-          });
+          }, Snackbar.LENGTH_SHORT);
       return;
     }
 
@@ -225,7 +226,8 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   protected boolean hasSocialPermissions(Analytics.Account.AccountOrigins accountOrigins) {
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
-          snackView -> accountNavigator.navigateToAccountView(accountOrigins));
+          snackView -> accountNavigator.navigateToAccountView(accountOrigins),
+          Snackbar.LENGTH_SHORT);
       return false;
     }
 
@@ -235,7 +237,7 @@ abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
           R.string.create_store_create, snackView -> {
             Fragment fragment = CreateStoreFragment.newInstance(new ManageStoreModel(false));
             getFragmentNavigator().navigateTo(fragment);
-          });
+          }, Snackbar.LENGTH_SHORT);
       return false;
     }
     return true;
