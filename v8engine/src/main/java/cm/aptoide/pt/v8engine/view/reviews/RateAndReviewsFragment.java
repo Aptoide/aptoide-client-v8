@@ -27,6 +27,8 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.comments.ListFullReviewsSuccessRequestListener;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.networking.IdsRepository;
+import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
@@ -58,6 +60,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
   private IdsRepository idsRepository;
+  private InstalledRepository installedRepository;
   private DialogUtils dialogUtils;
 
   private long appId;
@@ -188,7 +191,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     super.onViewCreated();
     dialogUtils = new DialogUtils(accountManager,
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
-        baseBodyInterceptor, httpClient, converterFactory);
+        baseBodyInterceptor, httpClient, converterFactory, installedRepository);
   }
 
   private void fetchRating(boolean refresh) {
@@ -247,6 +250,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     super.onCreate(savedInstanceState);
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     idsRepository = ((V8Engine) getContext().getApplicationContext()).getIdsRepository();
+    installedRepository = RepositoryFactory.getInstalledRepository();
     baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();

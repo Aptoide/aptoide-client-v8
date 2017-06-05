@@ -77,7 +77,7 @@ import retrofit2.Converter;
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
     this.accountNavigator = accountNavigator;
     dialogUtils = new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
-        converterFactory);
+        converterFactory, displayable.getInstalledRepository());
     shareAppHelper = new ShareAppHelper(RepositoryFactory.getInstalledRepository(), accountManager,
         accountNavigator, getContext(), new SpotAndShareAnalytics(Analytics.getInstance()),
         displayable.getTimelineAnalytics());

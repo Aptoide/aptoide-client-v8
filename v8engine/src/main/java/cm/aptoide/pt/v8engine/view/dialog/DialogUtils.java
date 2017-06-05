@@ -32,7 +32,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
-import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import java.util.Locale;
 import okhttp3.OkHttpClient;
@@ -55,13 +54,13 @@ public class DialogUtils {
 
   public DialogUtils(AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, InstalledRepository installedRepository) {
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
-    installedRepository = RepositoryFactory.getInstalledRepository();
+    this.installedRepository = installedRepository;
   }
 
   public Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
