@@ -1,21 +1,26 @@
 package cm.aptoide.pt.v8engine.timeline.view.displayable;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.AggregatedSocialStoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.MinimalCard;
 import cm.aptoide.pt.model.v7.timeline.UserSharerTimeline;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.Date;
 import java.util.List;
+import java.util.Stack;
 
 import static cm.aptoide.pt.v8engine.analytics.Analytics.AppsTimeline.BLANK;
 
@@ -25,6 +30,7 @@ import static cm.aptoide.pt.v8engine.analytics.Analytics.AppsTimeline.BLANK;
 
 public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable {
   public static final String CARD_TYPE_NAME = "AGGREGATED_SOCIAL_LATEST_APPS";
+  private SpannableFactory spannableFactory;
   private List<App> latestApps;
   private String abTestingUrl;
   private Store ownerStore;
@@ -54,6 +60,7 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
     this.dateCalculator = dateCalculator;
     this.timelineAnalytics = timelineAnalytics;
     this.socialRepository = socialRepository;
+    this.spannableFactory = spannableFactory;
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.minimalCards = minimalCards;
     this.sharers = sharers;
@@ -156,6 +163,16 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
 
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_aggregated_social_store;
+  }
+
+  public void likesPreviewClick(FragmentNavigator navigator, long numberOfLikes, String cardId) {
+    navigator.navigateTo(V8Engine.getFragmentProvider()
+        .newTimeLineLikesFragment(cardId, numberOfLikes, "default"));
+  }
+
+  public Spannable getBlackHighlightedLike(Context context, String string) {
+    return spannableFactory.createColorSpan(context.getString(R.string.x_liked_it, string),
+        ContextCompat.getColor(context, R.color.black_87_alpha), string);
   }
 
   @Override

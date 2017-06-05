@@ -23,16 +23,19 @@ import rx.schedulers.Schedulers;
  */
 
 public class SystemNotificationShower {
-  private static final String TAG = SystemNotificationShower.class.getSimpleName();
   private Context context;
   private NotificationManager notificationManager;
+  private NotificationIdsMapper notificationIdsMapper;
 
-  public SystemNotificationShower(Context context, NotificationManager notificationManager) {
+  public SystemNotificationShower(Context context, NotificationManager notificationManager,
+      NotificationIdsMapper notificationIdsMapper) {
     this.context = context;
     this.notificationManager = notificationManager;
+    this.notificationIdsMapper = notificationIdsMapper;
   }
 
-  public Completable showNotification(AptoideNotification aptoideNotification, int notificationId) {
+  public Completable showNotification(AptoideNotification aptoideNotification) {
+    int notificationId = notificationIdsMapper.getNotificationId(aptoideNotification.getType());
     return mapToAndroidNotification(aptoideNotification, notificationId).doOnSuccess(
         notification -> notificationManager.notify(notificationId, notification))
         .toCompletable();
@@ -51,17 +54,17 @@ public class SystemNotificationShower {
   private Single<PendingIntent> getPressIntentAction(String trackUrl, String url,
       int notificationId, Context context) {
     return Single.fromCallable(() -> {
-      Intent resultIntent = new Intent(context, PullingContentReceiver.class);
-      resultIntent.setAction(PullingContentReceiver.NOTIFICATION_PRESSED_ACTION);
+      Intent resultIntent = new Intent(context, NotificationReceiver.class);
+      resultIntent.setAction(NotificationReceiver.NOTIFICATION_PRESSED_ACTION);
 
-      resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_NOTIFICATION_ID,
+      resultIntent.putExtra(NotificationReceiver.NOTIFICATION_NOTIFICATION_ID,
           notificationId);
 
       if (!TextUtils.isEmpty(trackUrl)) {
-        resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TRACK_URL, trackUrl);
+        resultIntent.putExtra(NotificationReceiver.NOTIFICATION_TRACK_URL, trackUrl);
       }
       if (!TextUtils.isEmpty(url)) {
-        resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TARGET_URL, url);
+        resultIntent.putExtra(NotificationReceiver.NOTIFICATION_TARGET_URL, url);
       }
 
       return PendingIntent.getBroadcast(context, notificationId, resultIntent,
@@ -117,9 +120,9 @@ public class SystemNotificationShower {
   }
 
   public PendingIntent getOnDismissAction(int notificationId) {
-    Intent resultIntent = new Intent(context, PullingContentReceiver.class);
-    resultIntent.setAction(PullingContentReceiver.PUSH_NOTIFICATION_DISMISSED);
-    resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_NOTIFICATION_ID, notificationId);
+    Intent resultIntent = new Intent(context, NotificationReceiver.class);
+    resultIntent.setAction(NotificationReceiver.NOTIFICATION_DISMISSED_ACTION);
+    resultIntent.putExtra(NotificationReceiver.NOTIFICATION_NOTIFICATION_ID, notificationId);
 
     return PendingIntent.getBroadcast(context, notificationId, resultIntent,
         PendingIntent.FLAG_UPDATE_CURRENT);

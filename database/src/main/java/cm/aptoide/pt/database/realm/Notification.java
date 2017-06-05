@@ -9,6 +9,8 @@ import io.realm.annotations.PrimaryKey;
 
 public class Notification extends RealmObject {
   public final static String OWNER_ID_KEY = "ownerId";
+  public final static String KEY = "key";
+
   @PrimaryKey private String key;
   private String abTestingGroup;
   private String body;
@@ -106,5 +108,9 @@ public class Notification extends RealmObject {
 
   public String getOwnerId() {
     return ownerId;
+  }
+
+  public String getKey() {
+    return key;
   }
 }
