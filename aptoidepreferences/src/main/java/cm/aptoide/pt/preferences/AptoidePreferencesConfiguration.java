@@ -79,6 +79,8 @@ public interface AptoidePreferencesConfiguration {
    */
   boolean isCreateStoreAndSetUserPrivacyAvailable();
 
+  int numberOfAdsRowOnHomepage();
+
   enum SocialLogin {
     FACEBOOK,
     GOOGLE
