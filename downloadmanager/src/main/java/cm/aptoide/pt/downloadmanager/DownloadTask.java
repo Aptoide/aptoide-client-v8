@@ -14,12 +14,12 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
-import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.exception.FileDownloadHttpException;
 import com.liulishuo.filedownloader.exception.FileDownloadOutOfSpaceException;
-import io.realm.RealmList;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import lombok.Setter;
 import rx.Observable;
@@ -172,156 +172,124 @@ class DownloadTask {
    * @throws IllegalArgumentException
    */
   public void startDownload() throws IllegalArgumentException {
+
     observable.connect();
-    Downloader downloader = new Downloader();
-    if (download.getFilesToDownload() != null) {
+    Map<String, String> headers = new HashMap<>();
+    headers.put(Constants.VERSION_CODE, String.valueOf(download.getVersionCode()));
+    headers.put(Constants.PACKAGE, download.getPackageName());
+    for (FileToDownload fileToDownload : download.getFilesToDownload()) {
+      headers.put(Constants.FILE_TYPE, String.valueOf(fileToDownload.getFileType()));
 
-      RealmList<FileToDownload> filesToDownload = download.getFilesToDownload();
-      FileToDownload fileToDownload;
-      for (int i = 0; i < filesToDownload.size(); i++) {
+      Downloader downloader = new Downloader(fileDownloader, fileToDownload.getLink(),
+          genericPath + fileToDownload.getFileName(), headers, RETRY_TIMES,
+          fileToDownload.getFileName());
+      fileToDownload.setDownloadId(downloader.getId());
+      fileToDownload.setPath(downloader.getPath());
+      fileToDownload.setFileName(downloader.fileName());
 
-        fileToDownload = filesToDownload.get(i);
+      saveDownloadInDb(download);
 
-        if (TextUtils.isEmpty(fileToDownload.getLink())) {
-          throw new IllegalArgumentException("A link to download must be provided");
-        }
-        BaseDownloadTask baseDownloadTask = fileDownloader.create(fileToDownload.getLink())
-            .setAutoRetryTimes(RETRY_TIMES);
-        /*
-         * Aptoide - events 2 : download
-         * Get X-Mirror and add to the event
-         */
-        baseDownloadTask.addHeader(Constants.VERSION_CODE,
-            String.valueOf(download.getVersionCode()));
-        baseDownloadTask.addHeader(Constants.PACKAGE, download.getPackageName());
-        baseDownloadTask.addHeader(Constants.FILE_TYPE, String.valueOf(i));
-        /*
-         * end
-         */
+      downloader.getPending()
+          .subscribe(downloadId -> setDownloadStatus(Download.PENDING, download, downloadId));
 
-        baseDownloadTask.setTag(APTOIDE_DOWNLOAD_TASK_TAG_KEY, this);
-        if (fileToDownload.getFileName()
-            .endsWith(".temp")) {
-          fileToDownload.setFileName(fileToDownload.getFileName()
-              .replace(".temp", ""));
-        }
-        fileToDownload.setDownloadId(baseDownloadTask.setListener(downloader)
-            .setCallbackProgressTimes(AptoideDownloadManager.PROGRESS_MAX_VALUE)
-            .setPath(genericPath + fileToDownload.getFileName())
-            .asInQueueTask()
-            .enqueue());
-        fileToDownload.setPath(genericPath);
-        fileToDownload.setFileName(fileToDownload.getFileName() + ".temp");
-      }
-
-      if (isSerial) {
-        // To form a queue with the same queueTarget and execute them linearly
-        fileDownloader.start(downloader, true);
-      } else {
-        // To form a queue with the same queueTarget and execute them in parallel
-        fileDownloader.start(downloader, false);
-      }
-    }
-    saveDownloadInDb(download);
-
-    downloader.getPending()
-        .subscribe(downloadId -> setDownloadStatus(Download.PENDING, download, downloadId));
-
-    downloader.getProgress()
-        .subscribe(downloadProgress -> {
-          for (FileToDownload fileToDownload : download.getFilesToDownload()) {
-            if (fileToDownload.getDownloadId() == downloadProgress.getId()) {
-              //sometimes to totalBytes = 0, i believe that's when a 301(Moved Permanently) http error occurs
-              if (downloadProgress.getTotalBytes() > 0) {
-                fileToDownload.setProgress((int) Math.floor(
-                    (float) downloadProgress.getSoFarBytes() / downloadProgress.getTotalBytes()
-                        * AptoideDownloadManager.PROGRESS_MAX_VALUE));
-              } else {
-                fileToDownload.setProgress(0);
-              }
-            }
-          }
-          this.download.setDownloadSpeed(downloadProgress.getSpeed() * 1024);
-          if (download.getOverallDownloadStatus() != Download.PROGRESS) {
-            setDownloadStatus(Download.PROGRESS, download, downloadProgress.getId());
-          }
-        });
-
-    downloader.getPause()
-        .subscribe(downloadId -> {
-          setDownloadStatus(Download.PAUSED, download, downloadId);
-          downloadManager.currentDownloadFinished();
-        });
-
-    downloader.getComplete()
-        .subscribe(downloadId -> {
-          Observable.from(download.getFilesToDownload())
-              .filter(file -> file.getDownloadId() == downloadId)
-              .flatMap(file -> {
-                file.setStatus(Download.COMPLETED);
-                for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-                  if (fileToDownload.getStatus() != Download.COMPLETED) {
-                    file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
-                    return Observable.just(null);
-                  }
+      downloader.getProgress()
+          .subscribe(downloadProgress -> {
+            for (FileToDownload downloadingFile : download.getFilesToDownload()) {
+              if (downloadingFile.getDownloadId() == downloadProgress.getId()) {
+                //sometimes to totalBytes = 0, i believe that's when a 301(Moved Permanently) http error occurs
+                if (downloadProgress.getTotalBytes() > 0) {
+                  downloadingFile.setProgress((int) Math.floor(
+                      (float) downloadProgress.getSoFarBytes() / downloadProgress.getTotalBytes()
+                          * AptoideDownloadManager.PROGRESS_MAX_VALUE));
+                } else {
+                  downloadingFile.setProgress(0);
                 }
-                return checkMd5AndMoveFileToRightPlace(download).doOnNext(fileMoved -> {
-                  if (fileMoved) {
-                    Logger.d(TAG, "Download md5 match");
-                    file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
-                  } else {
-                    Logger.e(TAG, "Download md5 is not correct");
-                    downloadManager.deleteDownloadlFiles(download);
-                    download.setDownloadError(Download.GENERIC_ERROR);
-                    setDownloadStatus(Download.ERROR, download, downloadId);
-                  }
-                });
-              })
-              .doOnUnsubscribe(() -> downloadManager.setDownloading(false))
-              .subscribeOn(Schedulers.io())
-              .subscribe(success -> saveDownloadInDb(download),
-                  throwable -> setDownloadStatus(Download.ERROR, download));
-          download.setDownloadSpeed(0);
-        });
-
-    downloader.getError()
-        .subscribe(downloadProgress -> {
-          stopDownloadQueue(download);
-          if (downloadProgress.getThrowable() instanceof FileDownloadHttpException
-              && ((FileDownloadHttpException) downloadProgress.getThrowable()).getCode()
-              == FILE_NOTFOUND_HTTP_ERROR) {
-            for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-              if (TextUtils.equals(fileToDownload.getLink(), downloadProgress.getUrl())
-                  && !TextUtils.isEmpty(fileToDownload.getAltLink())) {
-                fileToDownload.setLink(fileToDownload.getAltLink());
-                fileToDownload.setAltLink(null);
-                downloadAccessor.save(download);
-                startDownload();
-                return;
               }
             }
-          } else {
-            Logger.d(TAG, "Error on download: " + download.getMd5());
-            // Apparently throwable e can be null.
-            if (downloadProgress.getThrowable() != null) {
-              downloadProgress.getThrowable()
-                  .printStackTrace();
+            this.download.setDownloadSpeed(downloadProgress.getSpeed() * 1024);
+            if (download.getOverallDownloadStatus() != Download.PROGRESS) {
+              setDownloadStatus(Download.PROGRESS, download, downloadProgress.getId());
             }
-            if (analytics != null) {
-              analytics.onError(download, downloadProgress.getThrowable());
-            }
-          }
-          if (downloadProgress.getThrowable() instanceof FileDownloadOutOfSpaceException) {
-            download.setDownloadError(Download.NOT_ENOUGH_SPACE_ERROR);
-          } else {
-            download.setDownloadError(Download.GENERIC_ERROR);
-          }
-          setDownloadStatus(Download.ERROR, download, downloadProgress.getId());
-          downloadManager.currentDownloadFinished();
-        });
+          });
 
-    downloader.getWarn()
-        .subscribe(downloadId -> setDownloadStatus(Download.WARN, download, downloadId));
+      downloader.getPause()
+          .subscribe(downloadId -> {
+            setDownloadStatus(Download.PAUSED, download, downloadId);
+            downloadManager.currentDownloadFinished();
+          });
+
+      downloader.getComplete()
+          .subscribe(downloadId -> {
+            Observable.from(download.getFilesToDownload())
+                .filter(file -> file.getDownloadId() == downloadId)
+                .flatMap(file -> {
+                  file.setStatus(Download.COMPLETED);
+                  for (final FileToDownload downloadingFile : download.getFilesToDownload()) {
+                    if (downloadingFile.getStatus() != Download.COMPLETED) {
+                      file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
+                      return Observable.just(null);
+                    }
+                  }
+                  return checkMd5AndMoveFileToRightPlace(download).doOnNext(fileMoved -> {
+                    if (fileMoved) {
+                      Logger.d(TAG, "Download md5 match");
+                      file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
+                    } else {
+                      Logger.e(TAG, "Download md5 is not correct");
+                      downloadManager.deleteDownloadlFiles(download);
+                      download.setDownloadError(Download.GENERIC_ERROR);
+                      setDownloadStatus(Download.ERROR, download, downloadId);
+                    }
+                  });
+                })
+                .doOnUnsubscribe(() -> downloadManager.setDownloading(false))
+                .subscribeOn(Schedulers.io())
+                .subscribe(success -> saveDownloadInDb(download),
+                    throwable -> setDownloadStatus(Download.ERROR, download));
+            download.setDownloadSpeed(0);
+          });
+
+      downloader.getError()
+          .subscribe(downloadProgress -> {
+            stopDownloadQueue(download);
+            if (downloadProgress.getThrowable() instanceof FileDownloadHttpException
+                && ((FileDownloadHttpException) downloadProgress.getThrowable()).getCode()
+                == FILE_NOTFOUND_HTTP_ERROR) {
+              for (final FileToDownload downloadingFile : download.getFilesToDownload()) {
+                if (TextUtils.equals(downloadingFile.getLink(), downloadProgress.getUrl())
+                    && !TextUtils.isEmpty(downloadingFile.getAltLink())) {
+                  downloadingFile.setLink(downloadingFile.getAltLink());
+                  downloadingFile.setAltLink(null);
+                  downloadAccessor.save(download);
+                  startDownload();
+                  return;
+                }
+              }
+            } else {
+              Logger.d(TAG, "Error on download: " + download.getMd5());
+              // Apparently throwable e can be null.
+              if (downloadProgress.getThrowable() != null) {
+                downloadProgress.getThrowable()
+                    .printStackTrace();
+              }
+              if (analytics != null) {
+                analytics.onError(download, downloadProgress.getThrowable());
+              }
+            }
+            if (downloadProgress.getThrowable() instanceof FileDownloadOutOfSpaceException) {
+              download.setDownloadError(Download.NOT_ENOUGH_SPACE_ERROR);
+            } else {
+              download.setDownloadError(Download.GENERIC_ERROR);
+            }
+            setDownloadStatus(Download.ERROR, download, downloadProgress.getId());
+            downloadManager.currentDownloadFinished();
+          });
+
+      downloader.getWarn()
+          .subscribe(downloadId -> setDownloadStatus(Download.WARN, download, downloadId));
+
+      downloader.startDownload();
+    }
   }
 
   private Observable<Boolean> checkMd5AndMoveFileToRightPlace(Download download) {

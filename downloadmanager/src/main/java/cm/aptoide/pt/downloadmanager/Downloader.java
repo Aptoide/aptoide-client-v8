@@ -3,12 +3,16 @@ package cm.aptoide.pt.downloadmanager;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadLargeFileListener;
+import com.liulishuo.filedownloader.FileDownloader;
+import java.util.Map;
 
 /**
  * Created by trinkes on 02/06/2017.
  */
 
 public class Downloader extends FileDownloadLargeFileListener implements DownloadStatus {
+  private final FileDownloader fileDownloader;
+  private final BaseDownloadTask baseDownloadTask;
   private BehaviorRelay<Integer> pending;
   private BehaviorRelay<DownloadProgress> progress;
   private BehaviorRelay<Integer> pause;
@@ -19,13 +23,39 @@ public class Downloader extends FileDownloadLargeFileListener implements Downloa
   /**
    * @throws IllegalArgumentException if the provided path or url is not valid
    */
-  public Downloader() {
+  public Downloader(FileDownloader fileDownloader, String url, String path,
+      Map<String, String> headers, int retryTimes, String fileName) {
+    this.fileDownloader = fileDownloader;
     pending = BehaviorRelay.create();
     progress = BehaviorRelay.create();
     pause = BehaviorRelay.create();
     complete = BehaviorRelay.create();
     error = BehaviorRelay.create();
     warn = BehaviorRelay.create();
+    validateArguments(url, path);
+
+    baseDownloadTask = fileDownloader.create(url)
+        .setAutoRetryTimes(retryTimes)
+        .setListener(this)
+        .setPath(path + fileName);
+    for (Map.Entry<String, String> entry : headers.entrySet()) {
+      baseDownloadTask.addHeader(entry.getKey(), entry.getValue());
+    }
+    baseDownloadTask.asInQueueTask()
+        .enqueue();
+  }
+
+  private void validateArguments(String url, String path) throws IllegalArgumentException {
+    if (url == null || url.isEmpty()) {
+      throw new IllegalArgumentException("An url should be provided. (url = " + url + ")");
+    }
+    if (path == null || path.isEmpty()) {
+      throw new IllegalArgumentException("A path should be provided. (path = " + path + ")");
+    }
+  }
+
+  public boolean startDownload() {
+    return fileDownloader.start(this, true);
   }
 
   public BehaviorRelay<Integer> getPending() {
@@ -50,6 +80,18 @@ public class Downloader extends FileDownloadLargeFileListener implements Downloa
 
   public BehaviorRelay<Integer> getWarn() {
     return warn;
+  }
+
+  public int getId() {
+    return baseDownloadTask.getId();
+  }
+
+  public String getPath() {
+    return baseDownloadTask.getPath();
+  }
+
+  public String fileName() {
+    return baseDownloadTask.getFilename();
   }
 
   @Override protected void pending(BaseDownloadTask task, long soFarBytes, long totalBytes) {

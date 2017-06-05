@@ -149,6 +149,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
+import com.liulishuo.filedownloader.util.FileDownloadUtils;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
@@ -325,15 +326,6 @@ public abstract class V8Engine extends SpotAndShareApplication {
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
   }
 
-  private void startNotificationCenter() {
-    getPreferences().getBoolean(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY, true)
-        .first()
-        .subscribe(enabled -> getNotificationSyncScheduler().setEnabled(enabled),
-            throwable -> CrashReport.getInstance().log(throwable));
-
-    getNotificationCenter().setup();
-  }
-
   @Override protected TokenInvalidator getTokenInvalidator() {
     return new TokenInvalidator() {
       @Override public Single<String> invalidateAccessToken() {
@@ -345,6 +337,16 @@ public abstract class V8Engine extends SpotAndShareApplication {
             .map(account -> account.getAccessToken());
       }
     };
+  }
+
+  private void startNotificationCenter() {
+    getPreferences().getBoolean(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY, true)
+        .first()
+        .subscribe(enabled -> getNotificationSyncScheduler().setEnabled(enabled),
+            throwable -> CrashReport.getInstance()
+                .log(throwable));
+
+    getNotificationCenter().setup();
   }
 
   public NotificationNetworkService getNotificationNetworkService() {
@@ -477,6 +479,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
       FileDownloader.init(this, new DownloadMgrInitialParams.InitCustomMaker().connectionCreator(
           new OkHttp3Connection.Creator(httpClientBuilder)));
 
+      FileDownloadUtils.setDefaultSaveRootPath(getConfiguration().getCachePath());
       downloadManager = new AptoideDownloadManager(AccessorFactory.getAccessorFor(Download.class),
           CacheHelper.build(), new FileUtils(action -> Analytics.File.moveFile(action)),
           new DownloadAnalytics(Analytics.getInstance()), FileDownloader.getImpl(),

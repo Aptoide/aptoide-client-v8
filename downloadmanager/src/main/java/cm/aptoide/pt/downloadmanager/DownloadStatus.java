@@ -19,4 +19,10 @@ public interface DownloadStatus {
   BehaviorRelay<DownloadProgress> getError();
 
   BehaviorRelay<Integer> getWarn();
+
+  int getId();
+
+  String getPath();
+
+  String fileName();
 }
