@@ -7,6 +7,7 @@ package cm.aptoide.pt.preferences.managed;
 
 import android.preference.PreferenceManager;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.toolbox.ToolboxKeys;
 
 /**
  * Created by neuro on 21-04-2016.
@@ -55,7 +56,7 @@ public class ManagerPreferences {
 
   public static long getPushNotificationPullingInterval() {
     return Preferences.get()
-        .getLong(ManagedKeys.PUSH_NOTIFICATION_PULL_INTERVAL, -1);
+        .getLong(ToolboxKeys.PUSH_NOTIFICATION_PULL_INTERVAL, -1);
   }
 
   /**
@@ -64,7 +65,7 @@ public class ManagerPreferences {
   public static void setPushNotificationPullingInterval(long intervalTime) {
     Preferences.get()
         .edit()
-        .putLong(ManagedKeys.PUSH_NOTIFICATION_PULL_INTERVAL, intervalTime)
+        .putLong(ToolboxKeys.PUSH_NOTIFICATION_PULL_INTERVAL, intervalTime)
         .apply();
   }
 
@@ -173,61 +174,61 @@ public class ManagerPreferences {
 
   public static String getForceCountry() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getString(ManagedKeys.FORCE_COUNTRY, "");
+        .getString(ToolboxKeys.FORCE_COUNTRY, "");
   }
 
   public static void setForceCountry(String forcedCountry) {
     Preferences.get()
         .edit()
-        .putString(ManagedKeys.FORCE_COUNTRY, forcedCountry)
+        .putString(ToolboxKeys.FORCE_COUNTRY, forcedCountry)
         .apply();
   }
 
   public static boolean isDebug() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getBoolean(ManagedKeys.DEBUG, false);
+        .getBoolean(ToolboxKeys.DEBUG, false);
   }
 
   public static void setDebug(boolean debug) {
     Preferences.get()
         .edit()
-        .putBoolean(ManagedKeys.DEBUG, debug)
+        .putBoolean(ToolboxKeys.DEBUG, debug)
         .apply();
   }
 
   public static boolean isToolboxEnableHttpScheme() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getBoolean(ManagedKeys.TOOLBOX_ENABLE_HTTP_SCHEME, false);
+        .getBoolean(ToolboxKeys.TOOLBOX_ENABLE_HTTP_SCHEME, false);
   }
 
   public static void setToolboxEnableHttpScheme(boolean toolboxEnableHttp) {
     Preferences.get()
         .edit()
-        .putBoolean(ManagedKeys.TOOLBOX_ENABLE_HTTP_SCHEME, toolboxEnableHttp)
+        .putBoolean(ToolboxKeys.TOOLBOX_ENABLE_HTTP_SCHEME, toolboxEnableHttp)
         .apply();
   }
 
   public static boolean isToolboxEnableRetrofitLogs() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getBoolean(ManagedKeys.TOOLBOX_RETROFIT_LOGS, false);
+        .getBoolean(ToolboxKeys.TOOLBOX_RETROFIT_LOGS, false);
   }
 
   public static void setToolboxEnableRetrofitLogs(boolean toolboxEnableRetrofitLogs) {
     Preferences.get()
         .edit()
-        .putBoolean(ManagedKeys.TOOLBOX_RETROFIT_LOGS, toolboxEnableRetrofitLogs)
+        .putBoolean(ToolboxKeys.TOOLBOX_RETROFIT_LOGS, toolboxEnableRetrofitLogs)
         .apply();
   }
 
   public static String getNotificationType() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getString(ManagedKeys.NOTIFICATION_TYPE, "");
+        .getString(ToolboxKeys.NOTIFICATION_TYPE, "");
   }
 
   public static void setNotificationType(String notificationType) {
     Preferences.get()
         .edit()
-        .putString(ManagedKeys.NOTIFICATION_TYPE, notificationType)
+        .putString(ToolboxKeys.NOTIFICATION_TYPE, notificationType)
         .apply();
   }
 

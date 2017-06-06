@@ -15,7 +15,6 @@ public class ManagedKeys {
   public static final String GENERAL_DOWNLOADS_WIFI = "generalnetworkwifi";
   public static final String GENERAL_DOWNLOADS_MOBILE = "generalnetworkmobile";
   public static final String LAST_PUSH_NOTIFICATION_ID = "lastPushNotificationId";
-  public static final String PUSH_NOTIFICATION_PULL_INTERVAL = "lastPushNotificationPullInterval";
   public static final String CHECK_AUTO_UPDATE = "checkautoupdate";
   public static final String PREF_ALWAYS_UPDATE = "dev_mode_always_update";
   public static final String LAST_UPDATES_KEY = "last_updates_key";
@@ -27,9 +26,6 @@ public class ManagedKeys {
   public static final String UPDATES_SYSTEM_APPS_KEY = "updatesSystemAppsKey";
   public static final String SCHEDULE_DOWNLOAD_SETTING = "schDwnBox";
   public static final String ALLOW_ROOT_INSTALATION = "allowRoot";
-  public static final String FORCE_COUNTRY = "forcecountry";
-  public static final String DEBUG = "debugmode";
-  public static final String NOTIFICATION_TYPE = "notificationtype";
   public static final String PRIVACY_CONFIRMATION = "privacyconfirmation";
   public static final String DONT_SHOW_ME_AGAIN = "dontshowmeagain";
   public static final String FIRST_RUN_V7 = "firstrun";
@@ -39,6 +35,4 @@ public class ManagedKeys {
   public static final String AUTO_UPDATE_ENABLE = "auto_update";
   public static final String CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY =
       "notification_campaign_and_social";
-  public static final String TOOLBOX_ENABLE_HTTP_SCHEME = "toolbox_enable_http_scheme";
-  public static final String TOOLBOX_RETROFIT_LOGS = "toolbox_enable_retrofit_logs";
 }
