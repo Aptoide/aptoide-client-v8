@@ -22,9 +22,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -241,6 +241,5 @@ public class MyAccountFragment extends BaseToolbarFragment implements MyAccountV
     }
     headerText.setText(getString(R.string.myaccount_header_title));
     logoutButton.setAllCaps(true);
-    userProfileEditButton.setVisibility(View.GONE);
   }
 }

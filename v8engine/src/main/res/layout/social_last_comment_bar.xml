@@ -4,7 +4,6 @@
     android:id="@+id/social_latest_comment_bar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/backgroundCardColor"
     android:orientation="vertical"
     >
 

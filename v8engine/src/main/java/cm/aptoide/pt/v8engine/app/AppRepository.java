@@ -7,9 +7,9 @@ package cm.aptoide.pt.v8engine.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v7.GetApp;
@@ -66,7 +66,7 @@ public class AppRepository {
                 .getMeta()
                 .getData()
                 .isPaid()) {
-              return addPayment(sponsored, response, refresh);
+              return addPayment(sponsored, response);
             } else {
               return Observable.just(response);
             }
@@ -77,7 +77,7 @@ public class AppRepository {
         });
   }
 
-  private Observable<GetApp> addPayment(boolean sponsored, GetApp getApp, boolean refresh) {
+  private Observable<GetApp> addPayment(boolean sponsored, GetApp getApp) {
     return getPaidApp(getApp.getNodes()
         .getMeta()
         .getData()
@@ -85,8 +85,7 @@ public class AppRepository {
         .getMeta()
         .getData()
         .getStore()
-        .getName(), refresh).map(paidApp -> {
-
+        .getName(), true).map(paidApp -> {
       if (paidApp.getPayment()
           .isPaid()) {
         getApp.getNodes()
@@ -95,43 +94,7 @@ public class AppRepository {
             .getFile()
             .setPath(paidApp.getPath()
                 .getStringPath());
-      } else {
-        getApp.getNodes()
-            .getMeta()
-            .getData()
-            .getPay()
-            .setProductId(paidApp.getPayment()
-                .getMetadata()
-                .getId());
-        getApp.getNodes()
-            .getMeta()
-            .getData()
-            .getPay()
-            .setCurrency(paidApp.getPayment()
-                .getPaymentServices()
-                .get(0)
-                .getCurrency());
-        getApp.getNodes()
-            .getMeta()
-            .getData()
-            .getPay()
-            .setTaxRate(paidApp.getPayment()
-                .getPaymentServices()
-                .get(0)
-                .getTaxRate());
       }
-      getApp.getNodes()
-          .getMeta()
-          .getData()
-          .getPay()
-          .setPrice(paidApp.getPayment()
-              .getAmount());
-      getApp.getNodes()
-          .getMeta()
-          .getData()
-          .getPay()
-          .setSymbol(paidApp.getPayment()
-              .getSymbol());
       getApp.getNodes()
           .getMeta()
           .getData()
@@ -148,10 +111,10 @@ public class AppRepository {
         });
   }
 
-  public Observable<PaidApp> getPaidApp(long appId, boolean sponsored, String storeName,
+  private Observable<PaidApp> getPaidApp(long appId, boolean sponsored, String storeName,
       boolean refresh) {
-    return GetApkInfoRequest.of(appId, operatorManager, sponsored, storeName,
-        accountManager.getAccessToken(), bodyInterceptorV3, httpClient, converterFactory)
+    return GetApkInfoRequest.of(appId, sponsored, storeName, operatorManager, bodyInterceptorV3,
+        httpClient, converterFactory)
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk() && response.isPaid()) {
@@ -173,7 +136,7 @@ public class AppRepository {
                 .getMeta()
                 .getData()
                 .isPaid()) {
-              return addPayment(sponsored, response, refresh);
+              return addPayment(sponsored, response);
             } else {
               return Observable.just(response);
             }
@@ -193,7 +156,7 @@ public class AppRepository {
                 .getMeta()
                 .getData()
                 .isPaid()) {
-              return addPayment(sponsored, response, refresh);
+              return addPayment(sponsored, response);
             } else {
               return Observable.just(response);
             }
@@ -213,7 +176,7 @@ public class AppRepository {
                 .getMeta()
                 .getData()
                 .isPaid()) {
-              return addPayment(sponsored, response, refresh);
+              return addPayment(sponsored, response);
             } else {
               return Observable.just(response);
             }

@@ -1,8 +1,8 @@
 package cm.aptoide.pt.v8engine.addressbook.data;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.SetConnectionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SyncAddressBookRequest;
 import cm.aptoide.pt.model.v7.Comment;

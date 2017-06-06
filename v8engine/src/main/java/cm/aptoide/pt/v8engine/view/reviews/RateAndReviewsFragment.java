@@ -10,8 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.logger.Logger;
@@ -188,7 +188,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     super.onViewCreated();
     dialogUtils = new DialogUtils(accountManager,
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
-        baseBodyInterceptor, httpClient, converterFactory);
+        baseBodyInterceptor, httpClient, converterFactory, installedRepository);
   }
 
   private void fetchRating(boolean refresh) {
@@ -247,6 +247,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     super.onCreate(savedInstanceState);
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     idsRepository = ((V8Engine) getContext().getApplicationContext()).getIdsRepository();
+    installedRepository = RepositoryFactory.getInstalledRepository();
     baseBodyInterceptor =
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     storeCredentialsProvider = new StoreCredentialsProviderImpl();

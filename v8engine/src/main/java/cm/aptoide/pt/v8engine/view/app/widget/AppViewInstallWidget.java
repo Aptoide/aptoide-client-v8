@@ -25,8 +25,8 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -56,7 +56,7 @@ import cm.aptoide.pt.v8engine.download.InstallEventConverter;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
-import cm.aptoide.pt.v8engine.view.app.Payments;
+import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.install.InstallWarningDialog;
@@ -386,8 +386,8 @@ import rx.android.schedulers.AndroidSchedulers;
 
   private void buyApp(GetAppMeta.App app) {
     Fragment fragment = getFragmentNavigator().peekLast();
-    if (fragment != null && Payments.class.isAssignableFrom(fragment.getClass())) {
-      ((Payments) fragment).buyApp(app);
+    if (fragment != null && AppViewFragment.class.isAssignableFrom(fragment.getClass())) {
+      ((AppViewFragment) fragment).buyApp(app);
     }
   }
 

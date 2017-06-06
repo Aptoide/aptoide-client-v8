@@ -9,28 +9,18 @@ import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import java.util.List;
 import rx.Observable;
 
-/**
- * Created by marcelobenites on 23/11/16.
- */
-
 public class PaymentAuthorizationAccessor extends SimpleAccessor<PaymentAuthorization> {
 
   public PaymentAuthorizationAccessor(Database db) {
     super(db, PaymentAuthorization.class);
   }
 
-  public Observable<List<PaymentAuthorization>> getPaymentAuthorizations(String payerId) {
+  public Observable<List<PaymentAuthorization>> getPaymentAuthorization(String payerId,
+      int paymentId) {
     return database.getRealm()
         .map(realm -> realm.where(PaymentAuthorization.class)
-            .equalTo(PaymentAuthorization.PAYER_ID, payerId))
-        .flatMap(query -> database.findAsSortedList(query, PaymentAuthorization.PAYMENT_ID));
-  }
-
-  public void updateAll(List<PaymentAuthorization> paymentAuthorizations) {
-    database.insertAll(paymentAuthorizations);
-  }
-
-  public void save(PaymentAuthorization paymentAuthorization) {
-    database.insert(paymentAuthorization);
+            .equalTo(PaymentAuthorization.PAYER_ID, payerId)
+            .equalTo(PaymentAuthorization.PAYMENT_ID, paymentId))
+        .flatMap(query -> database.findAsList(query));
   }
 }

@@ -22,7 +22,7 @@ import rx.schedulers.Schedulers;
  */
 public final class Database {
 
-  private static final int SCHEMA_VERSION = 8084; // if you bump this value, also add changes to the
+  private static final int SCHEMA_VERSION = 8085; // if you bump this value, also add changes to the
   private static final String DB_NAME = "aptoide.realm.db";
 
   private static boolean isInitialized = false;
@@ -318,6 +318,19 @@ public final class Database {
     realm.where(classType)
         .in(classField, fieldsIn)
         .findAll()
+        .deleteAllFromRealm();
+    realm.commitTransaction();
+  }
+
+  public <E extends RealmObject> void deleteAllExcluding(Class<E> classType, String classField,
+      List<String> fieldsIn) {
+    @Cleanup Realm realm = get();
+    realm.beginTransaction();
+    RealmQuery<E> query = realm.where(classType);
+    for (String field : fieldsIn) {
+      query.notEqualTo(classField, field);
+    }
+    query.findAll()
         .deleteAllFromRealm();
     realm.commitTransaction();
   }

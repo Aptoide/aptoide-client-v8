@@ -239,7 +239,8 @@ public class CardToDisplayableConverter implements CardToDisplayable {
     //
     converters.put(AggregatedSocialInstall.class,
         (card, dateCalculator, spannableFactory, downloadFactory, linksHandlerFactory) -> AggregatedSocialInstallDisplayable.from(
-            (AggregatedSocialInstall) card, timelineAnalytics, socialRepository, dateCalculator));
+            (AggregatedSocialInstall) card, timelineAnalytics, socialRepository, dateCalculator,
+            spannableFactory));
 
     //
     // AggregatedSocialArticle

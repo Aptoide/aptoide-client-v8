@@ -7,6 +7,7 @@ import io.realm.Sort;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
+import rx.Scheduler;
 import rx.Single;
 
 /**
@@ -14,10 +15,12 @@ import rx.Single;
  */
 
 public class NotificationProvider {
-  private NotificationAccessor notificationAccessor;
 
-  public NotificationProvider(NotificationAccessor notificationAccessor) {
+  private final NotificationAccessor notificationAccessor;
+  private final Scheduler scheduler;
 
+  public NotificationProvider(NotificationAccessor notificationAccessor, Scheduler scheduler) {
+    this.scheduler = scheduler;
     this.notificationAccessor = notificationAccessor;
   }
 
@@ -27,7 +30,8 @@ public class NotificationProvider {
         aptoideNotification.getLang(), aptoideNotification.getTitle(), aptoideNotification.getUrl(),
         aptoideNotification.getUrlTrack(), aptoideNotification.getTimeStamp(),
         aptoideNotification.getType(), aptoideNotification.getDismissed(),
-        aptoideNotification.getAppName(), aptoideNotification.getGraphic());
+        aptoideNotification.getAppName(), aptoideNotification.getGraphic(),
+        aptoideNotification.getOwnerId());
   }
 
   public Single<List<AptoideNotification>> getDismissedNotifications(
@@ -46,7 +50,7 @@ public class NotificationProvider {
         notification.getCampaignId(), notification.getImg(), notification.getLang(),
         notification.getTitle(), notification.getUrl(), notification.getUrlTrack(),
         notification.getTimeStamp(), notification.getType(), notification.getDismissed(),
-        notification.getAppName(), notification.getGraphic());
+        notification.getAppName(), notification.getGraphic(), notification.getOwnerId());
   }
 
   public Completable save(List<AptoideNotification> aptideNotifications) {
@@ -63,5 +67,15 @@ public class NotificationProvider {
             .map(notification -> convertToAptoideNotification(notification))
             .take(entries)
             .toList());
+  }
+
+  public Single<Notification> getLastShowed(Integer[] notificationType) {
+    return notificationAccessor.getLastShowed(notificationType);
+  }
+
+  public Completable save(Notification notification) {
+    return Completable.fromAction(() -> {
+      notificationAccessor.insert(notification);
+    }).subscribeOn(scheduler);
   }
 }

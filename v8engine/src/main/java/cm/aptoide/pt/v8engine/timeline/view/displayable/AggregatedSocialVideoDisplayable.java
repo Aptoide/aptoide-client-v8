@@ -12,12 +12,14 @@ import cm.aptoide.pt.model.v7.timeline.AggregatedSocialVideo;
 import cm.aptoide.pt.model.v7.timeline.MinimalCard;
 import cm.aptoide.pt.model.v7.timeline.UserSharerTimeline;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.timeline.view.ShareCardCallback;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.ArrayList;
@@ -241,6 +243,16 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
     socialRepository.like(cardId, cardType, "", rating,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, LIKE, BLANK, getPublisherName(),
             BLANK));
+  }
+
+  public Spannable getBlackHighlightedLike(Context context, String string) {
+    return spannableFactory.createColorSpan(context.getString(R.string.x_liked_it, string),
+        ContextCompat.getColor(context, R.color.black_87_alpha), string);
+  }
+
+  public void likesPreviewClick(FragmentNavigator navigator, long numberOfLikes, String cardId) {
+    navigator.navigateTo(V8Engine.getFragmentProvider()
+        .newTimeLineLikesFragment(cardId, numberOfLikes, "default"));
   }
 
   @Override public int getViewLayout() {

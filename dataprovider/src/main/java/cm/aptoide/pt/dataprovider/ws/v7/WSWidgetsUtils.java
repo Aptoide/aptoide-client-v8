@@ -7,6 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.util.Pair;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
@@ -34,9 +35,8 @@ public class WSWidgetsUtils {
 
   public static Observable<GetStoreWidgets.WSWidget> loadWidgetNode(
       GetStoreWidgets.WSWidget wsWidget, BaseRequestWithStore.StoreCredentials storeCredentials,
-      boolean refresh, String accessToken, String clientUniqueId,
-      boolean googlePlayServicesAvailable, String oemid, boolean mature,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      boolean refresh, String clientUniqueId, boolean googlePlayServicesAvailable, String oemid,
+      boolean mature, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, String q) {
 
     if (isKnownType(wsWidget.getType())) {
@@ -153,7 +153,7 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case APP_META:
-          return GetAppRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory)
+          return GetAppMetaRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))

@@ -6,8 +6,8 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.networkclient.WebService;
@@ -220,7 +220,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
           new TimelineAnalytics(analytics, AppEventsLogger.newLogger(getContext()),
               ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
               ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-              WebService.getDefaultConverter())));
+              WebService.getDefaultConverter()), installedRepository));
     }
     addDisplayables(installedDisplayablesList, false);
     Logger.v(TAG, "listed installed apps");

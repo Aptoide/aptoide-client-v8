@@ -50,11 +50,9 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
   private static final String TAG = ReferrerUtils.class.getSimpleName();
 
-  private static final QManager qManager = V8Engine.getQManager();
-
   public static void extractReferrer(MinimalAd minimalAd, final int retries,
       boolean broadcastReferrer, AdsRepository adsRepository, final OkHttpClient httpClient,
-      final Converter.Factory converterFactory) {
+      final Converter.Factory converterFactory, final QManager qManager) {
     String packageName = minimalAd.getPackageName();
     long networkId = minimalAd.getNetworkId();
     String clickUrl = minimalAd.getClickUrl();
@@ -139,7 +137,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
               }
 
               future.cancel(false);
-              postponeReferrerExtraction(minimalAd, 0, true, httpClient, converterFactory);
+              postponeReferrerExtraction(minimalAd, 0, true, httpClient, converterFactory, qManager);
             }
           }
 
@@ -153,25 +151,29 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
           if (future == null) {
             future = postponeReferrerExtraction(minimalAd, TIME_OUT, retries, httpClient,
-                converterFactory);
+                converterFactory, qManager);
           }
         }
 
         private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta,
-            int retries, OkHttpClient httpClient, Converter.Factory converterFactory) {
+            int retries, OkHttpClient httpClient, Converter.Factory converterFactory,
+            QManager qManager) {
           return postponeReferrerExtraction(minimalAd, delta, false, retries, httpClient,
-              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()));
+              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()),
+              qManager);
         }
 
         private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta,
-            boolean success, OkHttpClient httpClient, Converter.Factory converterFactory) {
+            boolean success, OkHttpClient httpClient, Converter.Factory converterFactory,
+            QManager qManager) {
           return postponeReferrerExtraction(minimalAd, delta, success, 0, httpClient,
-              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()));
+              converterFactory, qManager.getFilters(ManagerPreferences.getHWSpecsFilter()),
+              qManager);
         }
 
         private ScheduledFuture<Void> postponeReferrerExtraction(MinimalAd minimalAd, int delta,
             final boolean success, final int retries, OkHttpClient httpClient,
-            Converter.Factory converterFactory, String q) {
+            Converter.Factory converterFactory, String q, QManager qManager) {
           Logger.d("ExtractReferrer", "Referrer postponed " + delta + " seconds.");
 
           Callable<Void> callable = () -> {
@@ -196,7 +198,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
                       .filter(minimalAd1 -> minimalAd != null)
                       .subscribe(
                           minimalAd1 -> extractReferrer(minimalAd1, retries - 1, broadcastReferrer,
-                              adsRepository, httpClient, converterFactory),
+                              adsRepository, httpClient, converterFactory, qManager),
                           throwable -> clearExcludedNetworks(packageName));
                 } else {
                   // A lista de excluded networks deve ser limpa a cada "ronda"

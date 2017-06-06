@@ -12,7 +12,7 @@ import cm.aptoide.pt.v8engine.AutoUpdate;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.notification.ContentPuller;
-import cm.aptoide.pt.v8engine.notification.NotificationCenter;
+import cm.aptoide.pt.v8engine.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.v8engine.util.ApkFy;
 
 /**
@@ -22,18 +22,18 @@ public class MainPresenter implements Presenter {
 
   private final MainView view;
   private final ContentPuller contentPuller;
-  private NotificationCenter notificationCenter;
+  private NotificationSyncScheduler notificationSyncScheduler;
   private ApkFy apkFy;
   private AutoUpdate autoUpdate;
   private boolean firstCreated;
 
   public MainPresenter(MainView view, ApkFy apkFy, AutoUpdate autoUpdate,
-      ContentPuller contentPuller, NotificationCenter notificationCenter) {
+      ContentPuller contentPuller, NotificationSyncScheduler notificationSyncScheduler) {
     this.view = view;
     this.apkFy = apkFy;
     this.autoUpdate = autoUpdate;
     this.contentPuller = contentPuller;
-    this.notificationCenter = notificationCenter;
+    this.notificationSyncScheduler = notificationSyncScheduler;
     this.firstCreated = true;
   }
 
@@ -42,7 +42,7 @@ public class MainPresenter implements Presenter {
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .doOnNext(created -> apkFy.run())
         .filter(created -> firstCreated)
-        .doOnNext(created -> notificationCenter.forceSync())
+        .doOnNext(created -> notificationSyncScheduler.forceSync())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
           view.showHome();
