@@ -155,11 +155,11 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
       }
 
       //check if the user is the store's owner
-      accountManager.accountStatus()
+      compositeSubscription.add(accountManager.accountStatus()
           .first()
           .toSingle()
           .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(account -> {
+          .doOnSuccess(account -> {
             if (!TextUtils.isEmpty(store.getName()) && account.isLoggedIn() && store.getName()
                 .equals(account.getStoreName())) {
               description.setVisibility(View.VISIBLE);
@@ -176,7 +176,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
             } else {
               editStoreButton.setVisibility(View.GONE);
             }
-          });
+          })
+          .subscribe());
 
       if (user != null) {
         setSecondaryInfoVisibility(true);

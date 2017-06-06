@@ -20,12 +20,14 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
 
+  private final CrashReport crashReport;
   private Button button;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
 
   public CreateStoreWidget(View itemView) {
     super(itemView);
+    crashReport = CrashReport.getInstance();
   }
 
   @Override protected void assignViews(View itemView) {
@@ -36,16 +38,13 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator =
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator());
-    if (accountManager.isLoggedIn()) {
-      button.setText(R.string.create_store_displayable_button);
-    } else {
-      button.setText(R.string.login);
-    }
 
-    RxView.clicks(button)
-        .flatMap(__ -> accountManager.accountStatus())
+    compositeSubscription.add(RxView.clicks(button)
+        .flatMapSingle(__ -> accountManager.accountStatus()
+            .first()
+            .toSingle())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(account -> {
+        .doOnNext(account -> {
           if (account.isLoggedIn()) {
             button.setText(R.string.create_store_displayable_button);
             getFragmentNavigator().navigateTo(
@@ -54,7 +53,8 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
             button.setText(R.string.login);
             accountNavigator.navigateToAccountView(Analytics.Account.AccountOrigins.STORE);
           }
-        }, err -> CrashReport.getInstance()
-            .log(err));
+        })
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err)));
   }
 }

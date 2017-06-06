@@ -31,7 +31,6 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.v8engine.view.ThrowableToStringMapper;
-import cm.aptoide.pt.v8engine.view.account.user.ManageUserFragment;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -82,7 +81,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   private ThrowableToStringMapper errorMapper;
   private LoginSignUpCredentialsPresenter presenter;
   private List<String> facebookRequestedPermissions;
-  private FragmentNavigator fragmentNavigator;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
@@ -100,12 +98,12 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     super.onCreate(savedInstanceState);
     errorMapper = new AccountErrorMapper(getContext());
     facebookRequestedPermissions = Arrays.asList("email", "user_friends");
-    fragmentNavigator = getFragmentNavigator();
+    final FragmentNavigator fragmentNavigator = getFragmentNavigator();
     presenter = new LoginSignUpCredentialsPresenter(this,
         ((V8Engine) getContext().getApplicationContext()).getAccountManager(),
         facebookRequestedPermissions,
         new LoginPreferences(getContext(), V8Engine.getConfiguration(),
-            GoogleApiAvailability.getInstance()), CrashReport.getInstance(),
+            GoogleApiAvailability.getInstance()), fragmentNavigator, CrashReport.getInstance(),
         getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW),
         getArguments().getBoolean(CLEAN_BACK_STACK));
   }
@@ -207,7 +205,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     facebookLoginButton.setVisibility(View.GONE);
   }
 
-  @Override public void navigateToForgotPasswordView() {
+  @Override public void showForgotPasswordView() {
     // FIXME remove hardcoded links
     Uri mobilePageUri = Uri.parse("http://m.aptoide.com/account/password-recovery");
     startActivity(new Intent(Intent.ACTION_VIEW, mobilePageUri));
@@ -231,19 +229,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override public Observable<Void> forgotPasswordClick() {
     return RxView.clicks(forgotPasswordButton);
-  }
-
-  @Override public void navigateToMainView() {
-    //Fragment home = HomeFragment.newInstance(V8Engine.getConfiguration()
-    //    .getDefaultStore(), StoreContext.home, V8Engine.getConfiguration()
-    //    .getDefaultTheme());
-    //fragmentNavigator.cleanBackStack();
-    //fragmentNavigator.navigateTo(home);
-    fragmentNavigator.navigateToHomeCleaningBackStack();
-  }
-
-  @Override public void navigateBack() {
-    fragmentNavigator.popBackStack();
   }
 
   @Override public void dismiss() {
@@ -293,18 +278,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         .toString());
   }
 
-  @Override public void setCredentials(@NonNull AptoideAccountViewModel model) {
-    aptoideEmailEditText.setText(model.getUsername());
-    aptoidePasswordEditText.setText(model.getPassword());
-  }
-
   @Override public boolean isPasswordVisible() {
     return isPasswordVisible;
-  }
-
-  @Override public void navigateToCreateProfile() {
-    fragmentNavigator.cleanBackStack();
-    fragmentNavigator.navigateTo(ManageUserFragment.newInstanceToCreate());
   }
 
   @Override public Context getApplicationContext() {

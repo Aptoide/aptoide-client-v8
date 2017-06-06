@@ -37,11 +37,11 @@ public class ManageUserPresenter implements Presenter {
     Observable<Void> handleSaveDataClick = view.saveUserDataButtonClick()
         .doOnNext(__ -> view.showProgressDialog())
         .flatMap(userData -> saveUSerData(userData).observeOn(AndroidSchedulers.mainThread())
+            .doOnCompleted(() -> view.dismissProgressDialog())
             .doOnCompleted(() -> sendAnalytics(userData.hasImage()))
             .doOnCompleted(() -> navigateAway(userData.isEditProfile()))
             .onErrorResumeNext(err -> handleSaveUserDataError(err, userData.isEditProfile()))
             .toObservable())
-        .doOnNext(__ -> view.dismissProgressDialog())
         .retry()
         .map(__ -> null);
 
@@ -71,13 +71,18 @@ public class ManageUserPresenter implements Presenter {
 
   private Completable handleSaveUserDataError(Throwable throwable, boolean isEditProfile) {
     final String message = errorMapper.map(throwable);
+    Completable errorHandler;
     if (throwable instanceof SocketTimeoutException || throwable instanceof TimeoutException) {
       // navigate away
-      return view.showErrorMessage(message)
+      errorHandler = view.showErrorMessage(message)
           .doOnCompleted(() -> navigateAway(isEditProfile));
+    } else {
+      // show message but do not navigate
+      errorHandler = view.showErrorMessage(message);
     }
-    // show message but do not navigate
-    return view.showErrorMessage(message);
+
+    return Completable.fromAction(() -> view.dismissProgressDialog())
+        .andThen(errorHandler);
   }
 
   private void sendAnalytics(boolean hasImage) {
@@ -97,7 +102,6 @@ public class ManageUserPresenter implements Presenter {
   }
 
   private void navigateToProfileStepOne() {
-    //fragmentNavigator.cleanBackStack();
     fragmentNavigator.navigateToWithoutBackSave(ProfileStepOneFragment.newInstance());
   }
 

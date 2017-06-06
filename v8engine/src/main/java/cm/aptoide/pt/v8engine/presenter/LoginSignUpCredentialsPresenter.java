@@ -14,6 +14,8 @@ import cm.aptoide.pt.v8engine.account.LoginPreferences;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.BackButton;
+import cm.aptoide.pt.v8engine.view.account.user.ManageUserFragment;
+import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
@@ -22,6 +24,7 @@ import java.util.Collection;
 import java.util.Set;
 import org.json.JSONException;
 import org.json.JSONObject;
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
@@ -39,18 +42,20 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   private final AptoideAccountManager accountManager;
   private final Collection<String> facebookRequiredPermissions;
   private final LoginPreferences loginAvailability;
+  private final FragmentNavigator fragmentNavigator;
   private final CrashReport crashReport;
   private final boolean navigateToHome;
   private boolean dismissToNavigateToMainView;
 
   public LoginSignUpCredentialsPresenter(LoginSignUpCredentialsView view,
       AptoideAccountManager accountManager, Collection<String> facebookRequiredPermissions,
-      LoginPreferences loginAvailability, CrashReport crashReport,
-      boolean dismissToNavigateToMainView, boolean navigateToHome) {
+      LoginPreferences loginAvailability, FragmentNavigator fragmentNavigator,
+      CrashReport crashReport, boolean dismissToNavigateToMainView, boolean navigateToHome) {
     this.view = view;
     this.accountManager = accountManager;
     this.facebookRequiredPermissions = facebookRequiredPermissions;
     this.loginAvailability = loginAvailability;
+    this.fragmentNavigator = fragmentNavigator;
     this.crashReport = crashReport;
     this.dismissToNavigateToMainView = dismissToNavigateToMainView;
     this.navigateToHome = navigateToHome;
@@ -76,6 +81,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
         .flatMap(resumed -> Observable.merge(forgotPasswordSelection(), togglePasswordVisibility()))
+        .retry()
         .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE))
         .subscribe(__ -> {
         }, err -> CrashReport.getInstance()
@@ -83,10 +89,12 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
 
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
-        .flatMapSingle(__ -> accountManager.accountStatus().first().toSingle())
+        .flatMapSingle(__ -> accountManager.accountStatus()
+            .first()
+            .toSingle())
         .doOnNext(account -> {
           if (account.isLoggedIn()) {
-            view.navigateBack();
+            navigateBack();
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE))
@@ -199,12 +207,15 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
       view.hideKeyboard();
       view.showLoading();
       lockScreenRotation();
-      return accountManager.signUp(credentials.getUsername(), credentials.getPassword())
-          .observeOn(AndroidSchedulers.mainThread())
+
+      final Completable signUp =
+          accountManager.signUp(credentials.getUsername(), credentials.getPassword());
+
+      return signUp.observeOn(AndroidSchedulers.mainThread())
           .doOnCompleted(() -> {
             Logger.d(TAG, "aptoide sign up successful");
             Analytics.Account.signInSuccessAptoide(Analytics.Account.SignUpLoginStatus.SUCCESS);
-            view.navigateToCreateProfile();
+            navigateToCreateProfile();
             unlockScreenRotation();
           })
           .doOnTerminate(() -> view.hideLoading())
@@ -230,7 +241,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
 
   private Observable<Void> forgotPasswordSelection() {
     return view.forgotPasswordClick()
-        .doOnNext(selection -> view.navigateToForgotPasswordView());
+        .doOnNext(selection -> view.showForgotPasswordView());
   }
 
   private Observable<Void> togglePasswordVisibility() {
@@ -264,9 +275,9 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
     if (dismissToNavigateToMainView) {
       view.dismiss();
     } else if (navigateToHome) {
-      view.navigateToMainView();
+      navigateToMainViewCleaningBackStack();
     } else {
-      view.navigateBack();
+      navigateBack();
     }
   }
 
@@ -311,5 +322,17 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
 
   private void unlockScreenRotation() {
     view.unlockScreenRotation();
+  }
+
+  private void navigateToCreateProfile() {
+    fragmentNavigator.navigateToWithoutBackSave(ManageUserFragment.newInstanceToCreate());
+  }
+
+  private void navigateToMainViewCleaningBackStack() {
+    fragmentNavigator.navigateToHomeCleaningBackStack();
+  }
+
+  private void navigateBack() {
+    fragmentNavigator.popBackStack();
   }
 }

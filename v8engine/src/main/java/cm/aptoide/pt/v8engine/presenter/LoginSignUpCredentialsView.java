@@ -37,7 +37,7 @@ public interface LoginSignUpCredentialsView extends GoogleLoginView {
 
   void hideFacebookLogin();
 
-  void navigateToForgotPasswordView();
+  void showForgotPasswordView();
 
   void showPassword();
 
@@ -46,10 +46,6 @@ public interface LoginSignUpCredentialsView extends GoogleLoginView {
   Observable<Void> showHidePasswordClick();
 
   Observable<Void> forgotPasswordClick();
-
-  void navigateToMainView();
-
-  void navigateBack();
 
   void dismiss();
 
@@ -65,11 +61,7 @@ public interface LoginSignUpCredentialsView extends GoogleLoginView {
 
   @NonNull AptoideAccountViewModel getCredentials();
 
-  void setCredentials(@NonNull AptoideAccountViewModel model);
-
   boolean isPasswordVisible();
-
-  void navigateToCreateProfile();
 
   Context getApplicationContext();
 

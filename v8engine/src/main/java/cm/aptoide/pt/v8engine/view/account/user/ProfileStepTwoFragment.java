@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.view.account.user;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -19,6 +20,8 @@ import rx.Completable;
 import rx.Observable;
 
 public class ProfileStepTwoFragment extends BaseToolbarFragment implements ProfileStepTwoView {
+
+  @LayoutRes private static final int LAYOUT = R.layout.fragment_profile_step_two;
 
   private Button continueBtn;
   private Button privateProfileBtn;
@@ -60,7 +63,7 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment implements Profi
   }
 
   @Override public int getContentViewId() {
-    return R.layout.fragment_profile_step_two;
+    return LAYOUT;
   }
 
   @Override public Observable<Boolean> continueButtonClick() {
