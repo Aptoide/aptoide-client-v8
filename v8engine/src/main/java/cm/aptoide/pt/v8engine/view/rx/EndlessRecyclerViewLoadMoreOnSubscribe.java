@@ -31,6 +31,10 @@ public class EndlessRecyclerViewLoadMoreOnSubscribe implements Observable.OnSubs
           subscriber.onNext(adapter.getItemCount());
         }
       }
+
+      @Override protected boolean hasMoreElements() {
+        return true;
+      }
     };
 
     recyclerView.addOnScrollListener(listener);
