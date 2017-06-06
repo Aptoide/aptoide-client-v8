@@ -22,10 +22,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import rx.Observable;
-import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by trinkes on 5/13/16.
@@ -33,31 +32,26 @@ import rx.schedulers.Schedulers;
 class DownloadTask {
 
   public static final int RETRY_TIMES = 3;
-  private static final int INTERVAL = 1000;    //interval between progress updates
-  private static final int APTOIDE_DOWNLOAD_TASK_TAG_KEY = 888;
   private static final int FILE_NOTFOUND_HTTP_ERROR = 404;
   private static final String TAG = DownloadTask.class.getSimpleName();
+  public final int progressMaxValue;
   private final Download download;
   private final DownloadAccessor downloadAccessor;
   private final FileUtils fileUtils;
   private final AptoideDownloadManager downloadManager;
-  /**
-   * this boolean is used to change between serial and parallel download (in this downloadTask) the
-   * default value is
-   * true
-   */
-  private List<Downloader> downloaders;
-  private ConnectableObservable<Download> observable;
-  private Analytics analytics;
+  private final CompositeSubscription subscriptions;
+  private int currentDownload;
+  private List<DownloadStatus> downloaders;
   private String apkPath;
   private String obbPath;
   private String genericPath;
   private FileDownloader fileDownloader;
 
-  DownloadTask(DownloadAccessor downloadAccessor, Download download, FileUtils fileUtils,
-      Analytics analytics, AptoideDownloadManager downloadManager, String apkPath, String obbPath,
-      String genericPath, FileDownloader fileDownloader) {
-    this.analytics = analytics;
+  DownloadTask(int progressMaxValue, DownloadAccessor downloadAccessor, Download download,
+      FileUtils fileUtils, Analytics analytics, AptoideDownloadManager downloadManager,
+      CrashReport crashReport, String apkPath, String obbPath, String genericPath,
+      FileDownloader fileDownloader) {
+    this.progressMaxValue = progressMaxValue;
     this.download = download;
     this.downloadAccessor = downloadAccessor;
     this.fileUtils = fileUtils;
@@ -67,28 +61,7 @@ class DownloadTask {
     this.genericPath = genericPath;
     this.fileDownloader = fileDownloader;
     this.downloaders = new ArrayList<>();
-    this.observable = Observable.interval(INTERVAL / 4, INTERVAL, TimeUnit.MILLISECONDS)
-        .subscribeOn(Schedulers.io())
-        .takeUntil(integer1 -> download.getOverallDownloadStatus() != Download.PROGRESS
-            && download.getOverallDownloadStatus() != Download.IN_QUEUE
-            && download.getOverallDownloadStatus() != Download.PENDING)
-        .filter(aLong1 -> download.getOverallDownloadStatus() == Download.PROGRESS
-            || download.getOverallDownloadStatus() == Download.COMPLETED)
-        .map(aLong -> updateProgress())
-        .filter(updatedDownload -> {
-          if (updatedDownload.getOverallProgress() <= AptoideDownloadManager.PROGRESS_MAX_VALUE
-              && download.getOverallDownloadStatus() == Download.PROGRESS) {
-            if (updatedDownload.getOverallProgress() == AptoideDownloadManager.PROGRESS_MAX_VALUE
-                && download.getOverallDownloadStatus() != Download.COMPLETED) {
-              setDownloadStatus(Download.COMPLETED, download);
-              downloadManager.currentDownloadFinished();
-            }
-            return true;
-          } else {
-            return false;
-          }
-        })
-        .publish();
+    this.subscriptions = new CompositeSubscription();
 
     Map<String, String> headers = new HashMap<>();
     headers.put(Constants.VERSION_CODE, String.valueOf(download.getVersionCode()));
@@ -105,36 +78,35 @@ class DownloadTask {
 
       saveDownloadInDb(download);
 
-      downloader.getPending()
-          .subscribe(downloadId -> setDownloadStatus(Download.PENDING, download, downloadId));
+      subscriptions.add(downloader.getPending()
+          .subscribe(downloadId -> setDownloadStatus(Download.PENDING, download, downloadId)));
 
-      downloader.getProgress()
+      subscriptions.add(downloader.getProgress()
+          .observeOn(Schedulers.io())
           .subscribe(downloadProgress -> {
-            for (FileToDownload downloadingFile : download.getFilesToDownload()) {
-              if (downloadingFile.getDownloadId() == downloadProgress.getId()) {
-                //sometimes to totalBytes = 0, i believe that's when a 301(Moved Permanently) http error occurs
-                if (downloadProgress.getTotalBytes() > 0) {
-                  downloadingFile.setProgress((int) Math.floor(
-                      (float) downloadProgress.getSoFarBytes() / downloadProgress.getTotalBytes()
-                          * AptoideDownloadManager.PROGRESS_MAX_VALUE));
-                } else {
-                  downloadingFile.setProgress(0);
-                }
-              }
+            FileToDownload downloadingFile = download.getFilesToDownload()
+                .get(currentDownload);
+            //sometimes to totalBytes = 0, i believe that's when a 301(Moved Permanently) http error occurs
+            if (downloadProgress.getTotalBytes() > 0) {
+              downloadingFile.setProgress((int) Math.floor(
+                  (float) downloadProgress.getSoFarBytes() / downloadProgress.getTotalBytes()
+                      * this.progressMaxValue));
+            } else {
+              downloadingFile.setProgress(0);
             }
             this.download.setDownloadSpeed(downloadProgress.getSpeed() * 1024);
-            if (download.getOverallDownloadStatus() != Download.PROGRESS) {
-              setDownloadStatus(Download.PROGRESS, download, downloadProgress.getId());
-            }
-          });
+            updateProgress();
+            setDownloadStatus(Download.PROGRESS, download, downloadProgress.getId());
+          }, throwable -> crashReport.log(throwable)));
 
-      downloader.getPause()
+      subscriptions.add(downloader.getPause()
           .subscribe(downloadId -> {
             setDownloadStatus(Download.PAUSED, download, downloadId);
+            onDownloadTermitaed();
             downloadManager.currentDownloadFinished();
-          });
+          }));
 
-      downloader.getComplete()
+      subscriptions.add(downloader.getComplete()
           .subscribe(downloadId -> {
             Observable.from(download.getFilesToDownload())
                 .filter(file -> file.getDownloadId() == downloadId)
@@ -142,14 +114,15 @@ class DownloadTask {
                   file.setStatus(Download.COMPLETED);
                   for (final FileToDownload downloadingFile : download.getFilesToDownload()) {
                     if (downloadingFile.getStatus() != Download.COMPLETED) {
-                      file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
+                      file.setProgress(this.progressMaxValue);
                       return Observable.just(null);
                     }
                   }
                   return checkMd5AndMoveFileToRightPlace(download).doOnNext(fileMoved -> {
                     if (fileMoved) {
                       Logger.d(TAG, "Download md5 match");
-                      file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
+                      file.setProgress(this.progressMaxValue);
+                      updateProgress();
                     } else {
                       Logger.e(TAG, "Download md5 is not correct");
                       downloadManager.deleteDownloadlFiles(download);
@@ -163,9 +136,10 @@ class DownloadTask {
                 .subscribe(success -> saveDownloadInDb(download),
                     throwable -> setDownloadStatus(Download.ERROR, download));
             download.setDownloadSpeed(0);
-          });
+            startNextDownload();
+          }));
 
-      downloader.getError()
+      subscriptions.add(downloader.getError()
           .subscribe(downloadProgress -> {
             stopDownloadQueue(download);
             if (downloadProgress.getThrowable() instanceof FileDownloadHttpException
@@ -198,11 +172,12 @@ class DownloadTask {
               download.setDownloadError(Download.GENERIC_ERROR);
             }
             setDownloadStatus(Download.ERROR, download, downloadProgress.getId());
+            onDownloadTermitaed();
             downloadManager.currentDownloadFinished();
-          });
+          }));
 
-      downloader.getWarn()
-          .subscribe(downloadId -> setDownloadStatus(Download.WARN, download, downloadId));
+      subscriptions.add(downloader.getWarn()
+          .subscribe(downloadId -> setDownloadStatus(Download.WARN, download, downloadId)));
 
       downloaders.add(downloader);
     }
@@ -214,7 +189,7 @@ class DownloadTask {
    * @return new current progress
    */
   @NonNull private Download updateProgress() {
-    if (download.getOverallProgress() >= AptoideDownloadManager.PROGRESS_MAX_VALUE
+    if (download.getOverallProgress() >= progressMaxValue
         || download.getOverallDownloadStatus() != Download.PROGRESS) {
       return download;
     }
@@ -225,7 +200,14 @@ class DownloadTask {
     }
     download.setOverallProgress((int) Math.floor((float) progress / download.getFilesToDownload()
         .size()));
-    saveDownloadInDb(download);
+
+    if (download.getOverallProgress() == progressMaxValue
+        && download.getOverallDownloadStatus() != Download.COMPLETED) {
+      setDownloadStatus(Download.COMPLETED, download);
+      onDownloadTermitaed();
+      downloadManager.currentDownloadFinished();
+    }
+
     Logger.d(TAG, "Download: " + download.getMd5() + " Progress: " + download.getOverallProgress());
     return download;
   }
@@ -290,12 +272,23 @@ class DownloadTask {
   /**
    * @throws IllegalArgumentException
    */
-  public void startDownload() throws IllegalArgumentException {
+  public boolean startDownload() throws IllegalArgumentException {
+    return startNextDownload();
+  }
 
-    observable.connect();
-    for (Downloader downloader : downloaders) {
-      downloader.startDownload();
+  private boolean startNextDownload() {
+    for (int i = 0; i < downloaders.size(); i++) {
+      DownloadStatus downloader = downloaders.get(i);
+      if (!downloader.isCompleted()) {
+        if (downloader.startDownload()) {
+          currentDownload = i;
+          return true;
+        } else {
+          return false;
+        }
+      }
     }
+    return false;
   }
 
   private Observable<Boolean> checkMd5AndMoveFileToRightPlace(Download download) {
@@ -332,5 +325,11 @@ class DownloadTask {
         break;
     }
     return path;
+  }
+
+  private void onDownloadTermitaed() {
+    if (!subscriptions.isUnsubscribed()) {
+      subscriptions.unsubscribe();
+    }
   }
 }

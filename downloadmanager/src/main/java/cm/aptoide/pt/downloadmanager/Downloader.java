@@ -20,6 +20,7 @@ public class Downloader extends FileDownloadLargeFileListener implements Downloa
   private BehaviorRelay<Integer> complete;
   private BehaviorRelay<DownloadProgress> error;
   private BehaviorRelay<Integer> warn;
+  private boolean completed;
 
   /**
    * @throws IllegalArgumentException if the provided path or url is not valid
@@ -44,6 +45,7 @@ public class Downloader extends FileDownloadLargeFileListener implements Downloa
     }
     baseDownloadTask.asInQueueTask()
         .enqueue();
+    completed = false;
   }
 
   private void validateArguments(String url, String path) throws IllegalArgumentException {
@@ -55,8 +57,34 @@ public class Downloader extends FileDownloadLargeFileListener implements Downloa
     }
   }
 
-  @CheckResult public boolean startDownload() {
-    return fileDownloader.start(this, true);
+  @Override protected void pending(BaseDownloadTask task, long soFarBytes, long totalBytes) {
+    pending.call(task.getId());
+  }
+
+  @Override protected void progress(BaseDownloadTask task, long soFarBytes, long totalBytes) {
+    DownloadProgress downloadProgress =
+        new DownloadProgress(task.getId(), task.getSpeed(), soFarBytes, totalBytes, task, null,
+            task.getUrl());
+    progress.call(downloadProgress);
+  }
+
+  @Override protected void paused(BaseDownloadTask task, long soFarBytes, long totalBytes) {
+    pause.call(task.getId());
+  }
+
+  @Override protected void completed(BaseDownloadTask task) {
+    completed = true;
+    complete.call(task.getId());
+  }
+
+  @Override protected void error(BaseDownloadTask task, Throwable e) {
+    DownloadProgress downloadProgress =
+        new DownloadProgress(task.getId(), task.getSpeed(), 0, 0, task, e, task.getUrl());
+    error.call(downloadProgress);
+  }
+
+  @Override protected void warn(BaseDownloadTask task) {
+    warn.call(task.getId());
   }
 
   public BehaviorRelay<Integer> getPending() {
@@ -95,32 +123,11 @@ public class Downloader extends FileDownloadLargeFileListener implements Downloa
     return baseDownloadTask.getFilename();
   }
 
-  @Override protected void pending(BaseDownloadTask task, long soFarBytes, long totalBytes) {
-    pending.call(task.getId());
+  @Override public boolean isCompleted() {
+    return completed;
   }
 
-  @Override protected void progress(BaseDownloadTask task, long soFarBytes, long totalBytes) {
-    DownloadProgress downloadProgress =
-        new DownloadProgress(task.getId(), task.getSpeed(), soFarBytes, totalBytes, task, null,
-            task.getUrl());
-    progress.call(downloadProgress);
-  }
-
-  @Override protected void paused(BaseDownloadTask task, long soFarBytes, long totalBytes) {
-    pause.call(task.getId());
-  }
-
-  @Override protected void completed(BaseDownloadTask task) {
-    complete.call(task.getId());
-  }
-
-  @Override protected void error(BaseDownloadTask task, Throwable e) {
-    DownloadProgress downloadProgress =
-        new DownloadProgress(task.getId(), task.getSpeed(), 0, 0, task, e, task.getUrl());
-    error.call(downloadProgress);
-  }
-
-  @Override protected void warn(BaseDownloadTask task) {
-    warn.call(task.getId());
+  @CheckResult @Override public boolean startDownload() {
+    return fileDownloader.start(this, true);
   }
 }

@@ -198,8 +198,9 @@ public class AptoideDownloadManager {
       getNextDownload().first()
           .subscribe(download -> {
             if (download != null) {
-              new DownloadTask(downloadAccessor, download, fileUtils, analytics, this, apkPath,
-                  obbPath, downloadsStoragePath, fileDownloader).startDownload();
+              new DownloadTask(PROGRESS_MAX_VALUE, downloadAccessor, download, fileUtils, analytics,
+                  this, CrashReport.getInstance(), apkPath, obbPath, downloadsStoragePath,
+                  fileDownloader).startDownload();
               Logger.d(TAG, "Download with md5 " + download.getMd5() + " started");
             } else {
               isDownloading = false;

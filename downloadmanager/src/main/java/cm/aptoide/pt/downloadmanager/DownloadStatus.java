@@ -1,5 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
+import android.support.annotation.CheckResult;
 import com.jakewharton.rxrelay.BehaviorRelay;
 
 /**
@@ -25,4 +26,8 @@ public interface DownloadStatus {
   String getPath();
 
   String fileName();
+
+  boolean isCompleted();
+
+  @CheckResult boolean startDownload();
 }
