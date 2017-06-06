@@ -25,8 +25,10 @@ public class ToolboxManager {
   }
 
   public static String getForceCountry() {
-    return PreferenceManager.getDefaultSharedPreferences(context)
-        .getString(ToolboxKeys.FORCE_COUNTRY, "");
+    String defaultValue = "";
+
+    return isDebug() ? PreferenceManager.getDefaultSharedPreferences(context)
+        .getString(ToolboxKeys.FORCE_COUNTRY, defaultValue) : defaultValue;
   }
 
   public static void setForceCountry(String forcedCountry) {
@@ -37,8 +39,10 @@ public class ToolboxManager {
   }
 
   public static boolean isToolboxEnableHttpScheme() {
-    return PreferenceManager.getDefaultSharedPreferences(context)
-        .getBoolean(ToolboxKeys.TOOLBOX_ENABLE_HTTP_SCHEME, false);
+    boolean defaultValue = false;
+
+    return isDebug() ? PreferenceManager.getDefaultSharedPreferences(context)
+        .getBoolean(ToolboxKeys.TOOLBOX_ENABLE_HTTP_SCHEME, defaultValue) : defaultValue;
   }
 
   public static void setToolboxEnableHttpScheme(boolean toolboxEnableHttp) {
@@ -49,8 +53,10 @@ public class ToolboxManager {
   }
 
   public static boolean isToolboxEnableRetrofitLogs() {
-    return PreferenceManager.getDefaultSharedPreferences(context)
-        .getBoolean(ToolboxKeys.TOOLBOX_RETROFIT_LOGS, false);
+    boolean defaultValue = false;
+
+    return isDebug() ? PreferenceManager.getDefaultSharedPreferences(context)
+        .getBoolean(ToolboxKeys.TOOLBOX_RETROFIT_LOGS, defaultValue) : defaultValue;
   }
 
   public static void setToolboxEnableRetrofitLogs(boolean toolboxEnableRetrofitLogs) {
@@ -61,8 +67,10 @@ public class ToolboxManager {
   }
 
   public static String getNotificationType() {
-    return PreferenceManager.getDefaultSharedPreferences(context)
-        .getString(ToolboxKeys.NOTIFICATION_TYPE, "");
+    String defaultValue = "";
+
+    return isDebug() ? PreferenceManager.getDefaultSharedPreferences(context)
+        .getString(ToolboxKeys.NOTIFICATION_TYPE, defaultValue) : defaultValue;
   }
 
   public static void setNotificationType(String notificationType) {
@@ -73,8 +81,10 @@ public class ToolboxManager {
   }
 
   public static long getPushNotificationPullingInterval() {
-    return PreferenceManager.getDefaultSharedPreferences(context)
-        .getLong(ToolboxKeys.PUSH_NOTIFICATION_PULL_INTERVAL, -1);
+    long defaultValue = -1;
+
+    return isDebug() ? PreferenceManager.getDefaultSharedPreferences(context)
+        .getLong(ToolboxKeys.PUSH_NOTIFICATION_PULL_INTERVAL, defaultValue) : defaultValue;
   }
 
   /**
