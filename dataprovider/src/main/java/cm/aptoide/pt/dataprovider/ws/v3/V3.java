@@ -88,7 +88,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
   protected static void addNetworkInformation(NetworkOperatorManager operatorManager,
       BaseBody args) {
     String forceCountry = ToolboxManager.getForceCountry();
-    if (ToolboxManager.isDebug() && !TextUtils.isEmpty(forceCountry)) {
+    if (!TextUtils.isEmpty(forceCountry)) {
       args.put("simcc", forceCountry);
     } else {
       if (operatorManager.isSimStateReady()) {

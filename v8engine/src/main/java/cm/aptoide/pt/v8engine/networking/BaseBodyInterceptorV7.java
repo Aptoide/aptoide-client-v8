@@ -70,12 +70,10 @@ public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
       }
       body.setQ(qManager
           .getFilters(ManagerPreferences.getHWSpecsFilter()));
-      if (ToolboxManager.isDebug()) {
         String forceCountry = ToolboxManager.getForceCountry();
         if (!TextUtils.isEmpty(forceCountry)) {
           body.setCountry(forceCountry);
         }
-      }
       body.setAptoideMd5sum(aptoideMd5sum);
       body.setAptoidePackage(aptoidePackage);
 

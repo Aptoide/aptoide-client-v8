@@ -174,12 +174,10 @@ import rx.Observable;
     parameters.put("oem_id", oemid);
     parameters.put("country", forcedCountry);
 
-    if (ToolboxManager.isDebug()) {
       String forceCountry = ToolboxManager.getForceCountry();
       if (!TextUtils.isEmpty(forceCountry)) {
         parameters.put("country", forceCountry);
       }
-    }
     if (googlePlayServicesAvailable) {
       parameters.put("flag", "gms");
     }
