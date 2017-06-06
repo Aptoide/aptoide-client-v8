@@ -6,7 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.notifications;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,7 +55,7 @@ public class PullSocialNotificationRequest
       options.put("oem_id", oemid);
     }
     options.put("aptoide_package", appId);
-    if (ManagerPreferences.isDebug()) {
+    if (ToolboxManager.isDebug()) {
       options.put("debug", "true");
     }
 

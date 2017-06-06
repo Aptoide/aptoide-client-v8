@@ -53,21 +53,6 @@ public class ManagerPreferences {
         .apply();
   }
 
-  public static long getPushNotificationPullingInterval() {
-    return Preferences.get()
-        .getLong(ManagedKeys.PUSH_NOTIFICATION_PULL_INTERVAL, -1);
-  }
-
-  /**
-   * @param intervalTime time in ms
-   */
-  public static void setPushNotificationPullingInterval(long intervalTime) {
-    Preferences.get()
-        .edit()
-        .putLong(ManagedKeys.PUSH_NOTIFICATION_PULL_INTERVAL, intervalTime)
-        .apply();
-  }
-
   public static boolean getGeneralDownloadsWifi() {
     return Preferences.get()
         .getBoolean(ManagedKeys.GENERAL_DOWNLOADS_WIFI, true);
@@ -169,42 +154,6 @@ public class ManagerPreferences {
   public static boolean allowRootInstallation() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
         .getBoolean(ManagedKeys.ALLOW_ROOT_INSTALATION, false);
-  }
-
-  public static String getForceCountry() {
-    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getString(ManagedKeys.FORCE_COUNTRY, "");
-  }
-
-  public static void setForceCountry(String forcedCountry) {
-    Preferences.get()
-        .edit()
-        .putString(ManagedKeys.FORCE_COUNTRY, forcedCountry)
-        .apply();
-  }
-
-  public static boolean isDebug() {
-    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getBoolean(ManagedKeys.DEBUG, false);
-  }
-
-  public static void setDebug(boolean debug) {
-    Preferences.get()
-        .edit()
-        .putBoolean(ManagedKeys.DEBUG, debug)
-        .apply();
-  }
-
-  public static String getNotificationType() {
-    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getString(ManagedKeys.NOTIFICATION_TYPE, "");
-  }
-
-  public static void setNotificationType(String notificationType) {
-    Preferences.get()
-        .edit()
-        .putString(ManagedKeys.NOTIFICATION_TYPE, notificationType)
-        .apply();
   }
 
   public static void setAllowRootInstallation(boolean allowRootInstallation) {
