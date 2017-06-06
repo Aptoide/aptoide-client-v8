@@ -12,7 +12,7 @@ import cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.List;
 import lombok.Data;
@@ -174,8 +174,8 @@ import rx.Observable;
     parameters.put("oem_id", oemid);
     parameters.put("country", forcedCountry);
 
-    if (ManagerPreferences.isDebug()) {
-      String forceCountry = ManagerPreferences.getForceCountry();
+    if (ToolboxManager.isDebug()) {
+      String forceCountry = ToolboxManager.getForceCountry();
       if (!TextUtils.isEmpty(forceCountry)) {
         parameters.put("country", forceCountry);
       }

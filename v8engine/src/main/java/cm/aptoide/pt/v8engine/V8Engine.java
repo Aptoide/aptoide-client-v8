@@ -54,10 +54,10 @@ import cm.aptoide.pt.networkclient.okhttp.cache.POSTCacheInterceptor;
 import cm.aptoide.pt.networkclient.okhttp.cache.POSTCacheKeyAlgorithm;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.PRNGFixes;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.spotandshareandroid.GroupNameProvider;
 import cm.aptoide.pt.spotandshareandroid.ShareApps;
 import cm.aptoide.pt.spotandshareandroid.SpotAndShareApplication;
@@ -276,7 +276,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
     //  RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
     //}
 
-    Logger.setDBG(ManagerPreferences.isDebug() || BuildConfig.DEBUG);
+    Logger.setDBG(ToolboxManager.isDebug() || BuildConfig.DEBUG);
 
     Database.initialize(this);
 
@@ -377,9 +377,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
     if (notificationSyncScheduler == null) {
 
       long pushNotificationSocialPeriodicity = DateUtils.MINUTE_IN_MILLIS * 10;
-      if (ManagerPreferences.isDebug()
-          && ManagerPreferences.getPushNotificationPullingInterval() > 0) {
-        pushNotificationSocialPeriodicity = ManagerPreferences.getPushNotificationPullingInterval();
+      if (ToolboxManager.isDebug() && ToolboxManager.getPushNotificationPullingInterval() > 0) {
+        pushNotificationSocialPeriodicity = ToolboxManager.getPushNotificationPullingInterval();
       }
 
       final List<NotificationSyncScheduler.Schedule> scheduleList = Arrays.asList(
@@ -420,7 +419,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
       okHttpClientBuilder.readTimeout(2, TimeUnit.MINUTES);
       okHttpClientBuilder.writeTimeout(2, TimeUnit.MINUTES);
 
-      if (ManagerPreferences.isToolboxEnableRetrofitLogs()) {
+      if (ToolboxManager.isToolboxEnableRetrofitLogs()) {
         okHttpClientBuilder.addInterceptor(getToolboxRetrofitLogsInterceptor());
       }
 
@@ -442,7 +441,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
       okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(getHttpClientCache()));
       okHttpClientBuilder.addInterceptor(getUserAgentInterceptor());
 
-      if (ManagerPreferences.isToolboxEnableRetrofitLogs()) {
+      if (ToolboxManager.isToolboxEnableRetrofitLogs()) {
         okHttpClientBuilder.addInterceptor(getToolboxRetrofitLogsInterceptor());
       }
 

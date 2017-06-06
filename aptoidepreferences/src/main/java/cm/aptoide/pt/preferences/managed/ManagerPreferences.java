@@ -7,7 +7,6 @@ package cm.aptoide.pt.preferences.managed;
 
 import android.preference.PreferenceManager;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.toolbox.ToolboxKeys;
 
 /**
  * Created by neuro on 21-04-2016.
@@ -51,21 +50,6 @@ public class ManagerPreferences {
     Preferences.get()
         .edit()
         .putInt(ManagedKeys.LAST_PUSH_NOTIFICATION_ID, notificationId)
-        .apply();
-  }
-
-  public static long getPushNotificationPullingInterval() {
-    return Preferences.get()
-        .getLong(ToolboxKeys.PUSH_NOTIFICATION_PULL_INTERVAL, -1);
-  }
-
-  /**
-   * @param intervalTime time in ms
-   */
-  public static void setPushNotificationPullingInterval(long intervalTime) {
-    Preferences.get()
-        .edit()
-        .putLong(ToolboxKeys.PUSH_NOTIFICATION_PULL_INTERVAL, intervalTime)
         .apply();
   }
 
@@ -170,66 +154,6 @@ public class ManagerPreferences {
   public static boolean allowRootInstallation() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
         .getBoolean(ManagedKeys.ALLOW_ROOT_INSTALATION, false);
-  }
-
-  public static String getForceCountry() {
-    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getString(ToolboxKeys.FORCE_COUNTRY, "");
-  }
-
-  public static void setForceCountry(String forcedCountry) {
-    Preferences.get()
-        .edit()
-        .putString(ToolboxKeys.FORCE_COUNTRY, forcedCountry)
-        .apply();
-  }
-
-  public static boolean isDebug() {
-    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getBoolean(ToolboxKeys.DEBUG, false);
-  }
-
-  public static void setDebug(boolean debug) {
-    Preferences.get()
-        .edit()
-        .putBoolean(ToolboxKeys.DEBUG, debug)
-        .apply();
-  }
-
-  public static boolean isToolboxEnableHttpScheme() {
-    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getBoolean(ToolboxKeys.TOOLBOX_ENABLE_HTTP_SCHEME, false);
-  }
-
-  public static void setToolboxEnableHttpScheme(boolean toolboxEnableHttp) {
-    Preferences.get()
-        .edit()
-        .putBoolean(ToolboxKeys.TOOLBOX_ENABLE_HTTP_SCHEME, toolboxEnableHttp)
-        .apply();
-  }
-
-  public static boolean isToolboxEnableRetrofitLogs() {
-    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getBoolean(ToolboxKeys.TOOLBOX_RETROFIT_LOGS, false);
-  }
-
-  public static void setToolboxEnableRetrofitLogs(boolean toolboxEnableRetrofitLogs) {
-    Preferences.get()
-        .edit()
-        .putBoolean(ToolboxKeys.TOOLBOX_RETROFIT_LOGS, toolboxEnableRetrofitLogs)
-        .apply();
-  }
-
-  public static String getNotificationType() {
-    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getString(ToolboxKeys.NOTIFICATION_TYPE, "");
-  }
-
-  public static void setNotificationType(String notificationType) {
-    Preferences.get()
-        .edit()
-        .putString(ToolboxKeys.NOTIFICATION_TYPE, notificationType)
-        .apply();
   }
 
   public static void setAllowRootInstallation(boolean allowRootInstallation) {
