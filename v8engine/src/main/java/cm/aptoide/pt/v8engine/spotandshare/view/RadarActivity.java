@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.view.spotandshare;
+package cm.aptoide.pt.v8engine.spotandshare.view;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -34,12 +34,11 @@ import cm.aptoide.pt.v8engine.spotandshare.connection.DeactivateHotspotTask;
 import cm.aptoide.pt.v8engine.spotandshare.group.Group;
 import cm.aptoide.pt.v8engine.spotandshare.group.GroupManager;
 import cm.aptoide.pt.v8engine.spotandshare.group.GroupNameProvider;
-import cm.aptoide.pt.v8engine.spotandshare.presenter.ActivityView;
 import cm.aptoide.pt.v8engine.spotandshare.presenter.RadarPresenter;
 import cm.aptoide.pt.v8engine.spotandshare.presenter.RadarView;
 import cm.aptoide.pt.v8engine.spotandshare.transference.ApplicationSender;
-import cm.aptoide.pt.v8engine.view.spotandshare.radar.RadarScan;
-import cm.aptoide.pt.v8engine.view.spotandshare.radar.RadarTextView;
+import cm.aptoide.pt.v8engine.spotandshare.view.radar.RadarScan;
+import cm.aptoide.pt.v8engine.spotandshare.view.radar.RadarTextView;
 import java.util.ArrayList;
 import java.util.List;
 

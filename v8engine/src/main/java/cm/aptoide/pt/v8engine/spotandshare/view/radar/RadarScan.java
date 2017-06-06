@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.view.spotandshare.radar;
+package cm.aptoide.pt.v8engine.spotandshare.view.radar;
 
 import android.content.Context;
 import android.content.res.TypedArray;

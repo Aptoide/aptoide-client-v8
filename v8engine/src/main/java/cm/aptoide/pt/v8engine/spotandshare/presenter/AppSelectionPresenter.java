@@ -5,6 +5,7 @@ import cm.aptoide.pt.v8engine.spotandshare.app.App;
 import cm.aptoide.pt.v8engine.spotandshare.app.AppViewModel;
 import cm.aptoide.pt.v8engine.spotandshare.app.ApplicationProvider;
 import cm.aptoide.pt.v8engine.spotandshare.transference.ApplicationSender;
+import cm.aptoide.pt.v8engine.spotandshare.view.Presenter;
 import java.util.ArrayList;
 import java.util.List;
 

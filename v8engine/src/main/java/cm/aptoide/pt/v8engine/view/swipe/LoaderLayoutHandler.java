@@ -15,7 +15,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.LoadInterface;
 import cm.aptoide.pt.v8engine.view.navigator.ActivityNavigator;
-import cm.aptoide.pt.v8engine.view.spotandshare.SpotSharePreviewActivity;
+import cm.aptoide.pt.v8engine.spotandshare.view.SpotSharePreviewActivity;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;

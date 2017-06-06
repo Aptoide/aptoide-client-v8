@@ -30,7 +30,7 @@ import cm.aptoide.pt.v8engine.spotandshare.DataHolder;
 import cm.aptoide.pt.v8engine.spotandshare.Utils;
 import cm.aptoide.pt.v8engine.spotandshare.app.App;
 import cm.aptoide.pt.v8engine.spotandshare.connection.HostsCallbackManager;
-import cm.aptoide.pt.v8engine.view.spotandshare.TransferRecordActivity;
+import cm.aptoide.pt.v8engine.spotandshare.view.TransferRecordActivity;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

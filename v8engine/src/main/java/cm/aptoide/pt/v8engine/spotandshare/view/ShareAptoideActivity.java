@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.view.spotandshare;
+package cm.aptoide.pt.v8engine.spotandshare.view;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -16,7 +16,6 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.spotandshare.connection.ConnectionManager;
 import cm.aptoide.pt.v8engine.spotandshare.connection.HotspotManager;
-import cm.aptoide.pt.v8engine.spotandshare.presenter.ActivityView;
 import cm.aptoide.pt.v8engine.spotandshare.presenter.ShareAptoidePresenter;
 import cm.aptoide.pt.v8engine.spotandshare.presenter.ShareAptoideView;
 import cm.aptoide.pt.v8engine.spotandshare.shareaptoide.ShareAptoideManager;

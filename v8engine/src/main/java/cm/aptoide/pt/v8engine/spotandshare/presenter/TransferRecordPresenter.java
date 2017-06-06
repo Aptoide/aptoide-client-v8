@@ -8,6 +8,7 @@ import cm.aptoide.pt.v8engine.spotandshare.transference.ApplicationSender;
 import cm.aptoide.pt.v8engine.spotandshare.transference.Disconnecter;
 import cm.aptoide.pt.v8engine.spotandshare.transference.TransferRecordItem;
 import cm.aptoide.pt.v8engine.spotandshare.transference.TransferRecordManager;
+import cm.aptoide.pt.v8engine.spotandshare.view.Presenter;
 import java.util.ArrayList;
 import java.util.List;
 

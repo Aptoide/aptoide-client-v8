@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.view.spotandshare;
+package cm.aptoide.pt.v8engine.spotandshare.view;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -21,7 +21,6 @@ import cm.aptoide.pt.v8engine.spotandshare.ShareApps;
 import cm.aptoide.pt.v8engine.spotandshare.analytics.SpotAndShareAnalyticsInterface;
 import cm.aptoide.pt.v8engine.spotandshare.app.ApplicationsManager;
 import cm.aptoide.pt.v8engine.spotandshare.connection.ConnectionManager;
-import cm.aptoide.pt.v8engine.spotandshare.presenter.ActivityView;
 import cm.aptoide.pt.v8engine.spotandshare.presenter.TransferRecordPresenter;
 import cm.aptoide.pt.v8engine.spotandshare.presenter.TransferRecordView;
 import cm.aptoide.pt.v8engine.spotandshare.transference.ApplicationReceiver;

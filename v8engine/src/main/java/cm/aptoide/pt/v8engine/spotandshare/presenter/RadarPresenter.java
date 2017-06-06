@@ -13,6 +13,7 @@ import cm.aptoide.pt.v8engine.spotandshare.connection.DeactivateHotspotTask;
 import cm.aptoide.pt.v8engine.spotandshare.group.Group;
 import cm.aptoide.pt.v8engine.spotandshare.group.GroupManager;
 import cm.aptoide.pt.v8engine.spotandshare.group.GroupNameProvider;
+import cm.aptoide.pt.v8engine.spotandshare.view.Presenter;
 import java.util.ArrayList;
 import rx.Subscription;
 

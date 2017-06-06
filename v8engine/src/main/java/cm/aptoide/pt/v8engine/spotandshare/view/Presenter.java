@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.spotandshare.presenter;
+package cm.aptoide.pt.v8engine.spotandshare.view;
 
 /**
  * Created by filipegoncalves on 31-01-2017.

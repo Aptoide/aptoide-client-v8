@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.view.spotandshare;
+package cm.aptoide.pt.v8engine.spotandshare.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

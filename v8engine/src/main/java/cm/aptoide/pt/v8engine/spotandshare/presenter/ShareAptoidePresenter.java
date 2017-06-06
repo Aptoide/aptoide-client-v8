@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.spotandshare.presenter;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.spotandshare.shareaptoide.ShareApkSandbox;
 import cm.aptoide.pt.v8engine.spotandshare.shareaptoide.ShareAptoideManager;
+import cm.aptoide.pt.v8engine.spotandshare.view.Presenter;
 import java.io.IOException;
 
 /**

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.spotandshare.presenter;
+package cm.aptoide.pt.v8engine.spotandshare.view;
 
 import android.support.v7.app.AppCompatActivity;
 

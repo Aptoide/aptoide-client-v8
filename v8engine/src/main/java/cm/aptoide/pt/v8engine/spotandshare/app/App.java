@@ -43,10 +43,6 @@ public class App implements Parcelable {
     return imageIcon;
   }
 
-  public void setImageIcon(Drawable imageIcon) {
-    this.imageIcon = imageIcon;
-  }
-
   public String getAppName() {
     return appName;
   }

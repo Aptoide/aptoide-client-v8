@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.view.spotandshare;
+package cm.aptoide.pt.v8engine.spotandshare.view;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -13,7 +13,6 @@ import android.widget.Toast;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.spotandshare.app.AppViewModel;
 import cm.aptoide.pt.v8engine.spotandshare.app.ApplicationProvider;
-import cm.aptoide.pt.v8engine.spotandshare.presenter.ActivityView;
 import cm.aptoide.pt.v8engine.spotandshare.presenter.AppSelectionPresenter;
 import cm.aptoide.pt.v8engine.spotandshare.presenter.AppSelectionView;
 import cm.aptoide.pt.v8engine.spotandshare.transference.ApplicationSender;

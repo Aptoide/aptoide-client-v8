@@ -20,7 +20,7 @@ import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
-import cm.aptoide.pt.v8engine.view.spotandshare.RadarActivity;
+import cm.aptoide.pt.v8engine.spotandshare.view.RadarActivity;
 import rx.Observable;
 
 /**

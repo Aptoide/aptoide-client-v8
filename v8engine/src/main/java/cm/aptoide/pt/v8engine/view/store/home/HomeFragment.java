@@ -41,7 +41,7 @@ import cm.aptoide.pt.v8engine.view.custom.BadgeView;
 import cm.aptoide.pt.v8engine.view.navigator.FragmentNavigator;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigation;
 import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
-import cm.aptoide.pt.v8engine.view.spotandshare.SpotSharePreviewActivity;
+import cm.aptoide.pt.v8engine.spotandshare.view.SpotSharePreviewActivity;
 import cm.aptoide.pt.v8engine.view.store.StoreFragment;
 import cm.aptoide.pt.v8engine.view.store.StorePagerAdapter;
 import com.facebook.appevents.AppEventsLogger;
