@@ -13,6 +13,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserSettings;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v3.OAuth;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetUserInfo;
@@ -197,7 +198,9 @@ public class AccountManagerService {
             return Single.error(new Exception(V7.getErrorMessage(response)));
           }
         })
-        .retryWhen(observableError -> retryOnTicket(observableError));
+        .retryWhen(observableError -> retryOnTicket(observableError).doOnNext(__ -> {
+          Logger.w("AccountManagerService", "retryOnTicket() doOnNext()");
+        }));
   }
 
   /**
@@ -215,7 +218,7 @@ public class AccountManagerService {
         if (errors != null && !errors.isEmpty() && errors.get(0)
             .getCode()
             .equalsIgnoreCase("user-1") && count < 3) {
-          return Observable.timer((long) Math.pow(2, count), TimeUnit.SECONDS).<Throwable>map(
+          return Observable.timer((long) Math.pow(5, count), TimeUnit.SECONDS).<Throwable>map(
               __ -> null);
         }
       } catch (ClassCastException | NullPointerException ex) {
