@@ -4,4 +4,127 @@
   <string name="spot_share_line_1">Share apps with your friends</string>
   <string name="spot_share_line_2">Phone to phone, without Internet</string>
   <string name="spot_share_share">Share</string>
+
+  <string name="spot_share">Spot&amp;Share</string>
+
+  <string name="youSent">You <b>sent</b> this app</string>
+  <string name="youReceived">You <b>received</b> this app</string>
+  <string name="youAreSending">You are <b>sending</b> this app</string>
+
+  <string name="ok">OK</string>
+
+  <string name="enablingWifi">Enabling the Wifi functionality</string>
+  <string name="noHotspotYet">Please, you or your friend(s) should create a hotspot</string>
+  <string name="couldNotCreateHotspot">Couldn\'t create the hotspot</string>
+  <string name="unkownHotspotError">We are sorry, there was an error while trying to create the hotspot</string>
+
+  <string name="noSelectedHotspot">Please select a friends phone in the Spot</string>
+  <string name="errorJoiningNetwork">There was an error joining the network </string>
+  <string name="unkownJoinNetError">We are sorry, there was an error while joining the network.</string>
+
+  <string name="alert">Alert</string>
+  <string name="send">Send</string>
+  <string name="spotandshare_button_cancel_option_dialog">Cancel</string>
+  <string name="noSelectedAppsToSend">Please select something to send</string>
+
+  <string name="preparingSend">Preparing to send </string>
+  <string name="sending">Sending </string>
+  <string name="transfCompleted">Transfer Completed</string>
+  <string name="receive">Receive</string>
+  <string name="receiving">Receiving </string>
+
+  <string name="hotspotLeft">The creator of the group left !</string>
+  <string name="noSpaceForApp">You have no space available to the app: </string>
+  <string name="fileProblem">There was a problem with the file of </string>
+
+  <string name="welcome">Welcome </string>
+  <string name="alertCreatorLeave">You are the creator of this group, if you leave it will be closed </string>
+  <string name="leave">Leave</string>
+  <string name="alertClientLeave">Are you sure you want to leave this group?</string>
+  <string name="alertClearApps1">This action will not just clear the history, but it will also delete the application files.</string>
+  <string name="alertClearApps2">Are you sure you want to delete?</string>
+  <string name="delete">Delete</string>
+
+  <string name="alertInstallApp">Are you sure you want to install the %1$s application?</string>
+  <string name="spotandshare_button_install_option_dialog">Install</string>
+
+
+  <string name="errorAppVersionNew">There was an error while loading the file %1$s. \nPlease check if the version on your device is the same or higher than the version of %2$s that you received.</string>
+
+  <string name="alertDeleteApp">Are you sure you want to delete the %1$s application?</string>
+
+  <string name="createGroup">Create Group</string>
+  <string name="joinGroup">Join Group</string>
+  <string name="upperInstall">INSTALL</string>
+  <string name="upperDelete">DELETE </string>
+  <string name="upperResend">RESEND</string>
+  <string name="deletedMessage">You deleted this file!</string>
+  <string name="noRecords">There\'s no Apps shared yet</string>
+  <string name="clearHistory">CLEAR HISTORY</string>
+  <string name="noRecordsDelete">No apps to delete</string>
+
+  <string name="reSendError"><b>ERROR ON SENDING</b></string>
+  <string name="reSendError_no_friends_in_group">No friends in the group yet. Please ask them to join.</string>
+
+
+  <string name="mobileDataTitle">Mobile data</string>
+  <string name="mobileDataMessage">In order to join a group you have to turn off your mobile data temporarily. \nPlease turn off your data.</string>
+  <string name="turnOffButton">Turn off</string>
+  <string name="mDataJoinGroup">Please turn off your data in order to join a group</string>
+
+  <string name="sendApps">Send APPS</string>
+
+  <string name="reSendOutside"><b>No one is in the group yet</b></string>
+
+  <string name="unsupportedApp">App with this filename %1$s is not supported by this device</string>
+
+  <string name="recoveringWifiState">Recovering the Wifi state, from when you joined the app</string>
+
+  <string name="generalError">Having some trouble. Can you retry later?</string>
+
+  <string name="groupCreatorLeft">Your friend that created the group left</string>
+
+  <string name="spotandshare_message_create_group_error_for_nougat">Your phone doesn\'t allow you to create a group. Please, ask your friend to create one</string>
+
+  <string name="searching_groups">Searching for groups to join</string>
+
+  <string name="joined_group">Joined group %1$s</string>
+  <string name="created_group">Created group %1$s</string>
+
+  <string name="waiting_group_friends">Waiting for friends to join group</string>
+  <string name="share_instruction">Share apps or wait for someone in the group to share them.</string>
+
+  <string name="spotandshare_title_warning_dialog">Warning</string>
+  <string name="clear_history_warning">If you didn’t install the apps shared they will be deleted.</string>
+
+  <string name="locationDialog">We will not be able to join groups if location is off</string>
+  <string name="turn_on">turn on</string>
+
+  <string name="spotandshare_message_share_aptoide_initial_message">Your friend doesn\'t use Aptoide and doesn\'t have Spot&amp;Share?</string>
+  <string name="spotandshare_message_share_aptoide_follow_steps_order">Follow these 3 steps:</string>
+  <string name="spotandshare_message_first_share_instruction">Ask your friend to connect via Wi-Fi to %1$s hotspot</string>
+  <string name="spotandshare_message_second_share_instruction">Ask him to scan this QR code</string>
+  <string name="spotandshare_message_second_share_instruction_alternative">or open this link \n%1$s</string>
+  <string name="spotandshare_message_third_share_instruction">Finally ask him to start the transfer on his phone</string>
+
+  <string name="spotandshare_title_exit_share_aptoide_activity">Transfer in progress</string>
+  <string name="spotandshare_message_warning_leaving_while_sharing_aptoide">By leaving this screen you will stop Aptoide\'s transfer. Make sure the transfer is finished before leaving the screen.</string>
+  <string name="spotandshare_button_exit">Exit</string>
+  <string name="spotandshare_button_wait">Wait</string>
+
+  <string name="spotandshare_button_invite_friends">Invite nearby friends to use Spot&amp;Share</string>
+
+
+  <!-- Share Apk HTML -->
+  <string name="spotandshare_title_share_apk_welcome_page">Install Aptoide on your device</string>
+  <string name="spotandshare_message_share_apk_welcome_download_aptoide">DOWNLOAD APTOIDE</string>
+  <string name="spotandshare_message_share_apk_welcome_install_when_completed">Install Aptoide as soon as the download is completed, and start using Spot&amp;Share with your friend.</string>
+  <string name="spotandshare_message_share_apk_welcome_ask_your_friend">Ask your friend to guide you\nduring installation :)</string>
+
+  <string name="spotandshare_message_create_hotspot_error">Unable to create the hotspot</string>
+  <string name="spotandshare_button_retry_enable_hotspot">Retry</string>
+  <string name="spotandshare_button_number_one" translatable="false">1</string>
+  <string name="spotandshare_button_number_two" translatable="false">2</string>
+  <string name="spotandshare_button_number_three" translatable="false">3</string>
+
 </resources>

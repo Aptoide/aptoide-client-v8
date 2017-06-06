@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.spotandshareandroid.HighwayActivity;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -21,6 +20,7 @@ import cm.aptoide.pt.v8engine.timeline.SocialRepository;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
+import cm.aptoide.pt.v8engine.spotandshare.view.RadarActivity;
 import rx.Observable;
 
 /**
@@ -124,7 +124,7 @@ public class ShareAppHelper {
     String filepath = getFilepath(packageName);
     String appNameToShare = filterAppName(appName);
 
-    Intent intent = HighwayActivity.buildIntent(activity, filepath, appNameToShare);
+    Intent intent = RadarActivity.buildIntent(activity, filepath, appNameToShare);
 
     activity.startActivity(intent);
   }
