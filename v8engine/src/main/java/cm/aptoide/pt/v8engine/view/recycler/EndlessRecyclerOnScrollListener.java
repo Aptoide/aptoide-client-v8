@@ -27,6 +27,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   protected final V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request;
   protected final Action1 successRequestListener;
   protected ErrorRequestListener errorRequestListener;
+  protected int lastTotal;
   protected int total;
   protected int offset;
   protected boolean stableData = false;
@@ -121,7 +122,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
                 total = response.getTotal();
                 offset = response.getNextSize();
               } else {
-                total += response.getTotal();
+                total += (lastTotal = response.getTotal());
                 offset += response.getNextSize();
               }
               v7request.getBody()
@@ -160,7 +161,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   }
 
   protected boolean hasMoreElements() {
-    return (stableData) ? offset < total : offset <= total;
+    return (stableData) ? offset < total : lastTotal != 0;
   }
 
   public void removeListeners() {

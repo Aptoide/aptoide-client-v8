@@ -54,10 +54,10 @@ import cm.aptoide.pt.networkclient.okhttp.cache.POSTCacheInterceptor;
 import cm.aptoide.pt.networkclient.okhttp.cache.POSTCacheKeyAlgorithm;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.PRNGFixes;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
@@ -66,7 +66,7 @@ import cm.aptoide.pt.v8engine.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.account.AndroidAccountDataMigration;
 import cm.aptoide.pt.v8engine.account.AndroidAccountManagerDataPersist;
 import cm.aptoide.pt.v8engine.account.AndroidAccountProvider;
-import cm.aptoide.pt.v8engine.account.BaseBodyInterceptorFactory;
+import cm.aptoide.pt.v8engine.account.BaseBodyAccountManagerInterceptorFactory;
 import cm.aptoide.pt.v8engine.account.DatabaseStoreDataPersist;
 import cm.aptoide.pt.v8engine.account.LogAccountAnalytics;
 import cm.aptoide.pt.v8engine.account.NoTokenBodyInterceptor;
@@ -160,6 +160,7 @@ import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
+import okhttp3.logging.HttpLoggingInterceptor;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -275,7 +276,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
     //  RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
     //}
 
-    Logger.setDBG(ManagerPreferences.isDebug() || BuildConfig.DEBUG);
+    Logger.setDBG(ToolboxManager.isDebug() || BuildConfig.DEBUG);
 
     Database.initialize(this);
 
@@ -319,15 +320,19 @@ public abstract class V8Engine extends SpotAndShareApplication {
       db.close();
     }
 
-    getPreferences().getBoolean(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY, true)
-        .first()
-        .filter(isEnable -> isEnable)
-        .subscribe(isEnable -> getNotificationCenter().start(),
-            throwable -> CrashReport.getInstance()
-                .log(throwable));
+    startNotificationCenter();
 
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
+  }
+
+  private void startNotificationCenter() {
+    getPreferences().getBoolean(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY, true)
+        .first()
+        .subscribe(enabled -> getNotificationSyncScheduler().setEnabled(enabled),
+            throwable -> CrashReport.getInstance().log(throwable));
+
+    getNotificationCenter().setup();
   }
 
   @Override protected TokenInvalidator getTokenInvalidator() {
@@ -351,19 +356,19 @@ public abstract class V8Engine extends SpotAndShareApplication {
     if (notificationCenter == null) {
 
       final SystemNotificationShower systemNotificationShower = new SystemNotificationShower(this,
-          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
+          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE),
+          new NotificationIdsMapper());
 
       final NotificationAccessor notificationAccessor =
           AccessorFactory.getAccessorFor(Notification.class);
 
       final NotificationProvider notificationProvider =
-          new NotificationProvider(notificationAccessor);
+          new NotificationProvider(notificationAccessor, Schedulers.io());
 
-      notificationCenter =
-          new NotificationCenter(new NotificationIdsMapper(), getNotificationHandler(),
-              notificationProvider, getNotificationSyncScheduler(), systemNotificationShower,
-              CrashReport.getInstance(), new NotificationPolicyFactory(notificationProvider),
-              new NotificationsCleaner(notificationAccessor), getAccountManager());
+      notificationCenter = new NotificationCenter(getNotificationHandler(), notificationProvider,
+          getNotificationSyncScheduler(), systemNotificationShower, CrashReport.getInstance(),
+          new NotificationPolicyFactory(notificationProvider),
+          new NotificationsCleaner(notificationAccessor), getAccountManager());
     }
     return notificationCenter;
   }
@@ -372,22 +377,20 @@ public abstract class V8Engine extends SpotAndShareApplication {
     if (notificationSyncScheduler == null) {
 
       long pushNotificationSocialPeriodicity = DateUtils.MINUTE_IN_MILLIS * 10;
-      if (ManagerPreferences.isDebug()
-          && ManagerPreferences.getPushNotificationPullingInterval() > 0) {
-        pushNotificationSocialPeriodicity = ManagerPreferences.getPushNotificationPullingInterval();
+      if (ToolboxManager.getPushNotificationPullingInterval() > 0) {
+        pushNotificationSocialPeriodicity = ToolboxManager.getPushNotificationPullingInterval();
       }
-
 
       final List<NotificationSyncScheduler.Schedule> scheduleList = Arrays.asList(
           new NotificationSyncScheduler.Schedule(
-              NotificationSyncService.PUSH_NOTIFICATIONS_CAMPAIGN_ACTION,
+              NotificationSyncService.NOTIFICATIONS_CAMPAIGN_ACTION,
               AlarmManager.INTERVAL_DAY), new NotificationSyncScheduler.Schedule(
-              NotificationSyncService.PUSH_NOTIFICATIONS_SOCIAL_ACTION,
+              NotificationSyncService.NOTIFICATIONS_CAMPAIGN_ACTION,
               pushNotificationSocialPeriodicity));
 
       notificationSyncScheduler =
           new NotificationSyncScheduler(this, (AlarmManager) getSystemService(ALARM_SERVICE),
-              NotificationSyncService.class, scheduleList);
+              NotificationSyncService.class, scheduleList, true);
     }
     return notificationSyncScheduler;
   }
@@ -409,30 +412,40 @@ public abstract class V8Engine extends SpotAndShareApplication {
 
   public OkHttpClient getLongTimeoutClient() {
     if (longTimeoutClient == null) {
-      final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
-      clientBuilder.addInterceptor(getUserAgentInterceptor());
-      clientBuilder.connectTimeout(2, TimeUnit.MINUTES);
-      clientBuilder.readTimeout(2, TimeUnit.MINUTES);
-      clientBuilder.writeTimeout(2, TimeUnit.MINUTES);
-      longTimeoutClient = clientBuilder.build();
+      final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+      okHttpClientBuilder.addInterceptor(getUserAgentInterceptor());
+      okHttpClientBuilder.addInterceptor(getToolboxRetrofitLogsInterceptor());
+      okHttpClientBuilder.connectTimeout(2, TimeUnit.MINUTES);
+      okHttpClientBuilder.readTimeout(2, TimeUnit.MINUTES);
+      okHttpClientBuilder.writeTimeout(2, TimeUnit.MINUTES);
+
+      if (ToolboxManager.isToolboxEnableRetrofitLogs()) {
+        okHttpClientBuilder.addInterceptor(getToolboxRetrofitLogsInterceptor());
+      }
+
+      longTimeoutClient = okHttpClientBuilder.build();
     }
     return longTimeoutClient;
   }
 
   public OkHttpClient getDefaultClient() {
     if (defaultClient == null) {
-      final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
-      clientBuilder.readTimeout(45, TimeUnit.SECONDS);
-      clientBuilder.writeTimeout(45, TimeUnit.SECONDS);
+      final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+      okHttpClientBuilder.readTimeout(45, TimeUnit.SECONDS);
+      okHttpClientBuilder.writeTimeout(45, TimeUnit.SECONDS);
 
       final File cacheDirectory = new File("/");
       final int cacheMaxSize = 10 * 1024 * 1024;
-      clientBuilder.cache(new Cache(cacheDirectory, cacheMaxSize)); // 10 MiB
+      okHttpClientBuilder.cache(new Cache(cacheDirectory, cacheMaxSize)); // 10 MiB
 
-      clientBuilder.addInterceptor(new POSTCacheInterceptor(getHttpClientCache()));
-      clientBuilder.addInterceptor(getUserAgentInterceptor());
+      okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(getHttpClientCache()));
+      okHttpClientBuilder.addInterceptor(getUserAgentInterceptor());
 
-      defaultClient = clientBuilder.build();
+      if (ToolboxManager.isToolboxEnableRetrofitLogs()) {
+        okHttpClientBuilder.addInterceptor(getToolboxRetrofitLogsInterceptor());
+      }
+
+      defaultClient = okHttpClientBuilder.build();
     }
     return defaultClient;
   }
@@ -445,6 +458,10 @@ public abstract class V8Engine extends SpotAndShareApplication {
               AptoideUtils.SystemU.TERMINAL_INFO, AptoideUtils.Core.getDefaultVername());
     }
     return userAgentInterceptor;
+  }
+
+  private Interceptor getToolboxRetrofitLogsInterceptor() {
+    return new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
   }
 
   public L2Cache getHttpClientCache() {
@@ -516,10 +533,10 @@ public abstract class V8Engine extends SpotAndShareApplication {
     if (accountManager == null) {
 
       final AccountManagerService accountManagerService = new AccountManagerService(
-          new BaseBodyInterceptorFactory(getIdsRepository(), getPreferences(),
+          new BaseBodyAccountManagerInterceptorFactory(getIdsRepository(), getPreferences(),
               getSecurePreferences(), getAptoideMd5sum(), getAptoidePackage(), getQManager()),
           getAccountFactory(), getDefaultClient(), getLongTimeoutClient(),
-          WebService.getDefaultConverter());
+          WebService.getDefaultConverter(), getNonNullObjectMapper());
 
       final AndroidAccountDataMigration accountDataMigration =
           new AndroidAccountDataMigration(SecurePreferencesImplementation.getInstance(this),
@@ -822,7 +839,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
     if (baseBodyInterceptorV7 == null) {
       baseBodyInterceptorV7 = new BaseBodyInterceptorV7(getIdsRepository(), getAccountManager(),
           getAdultContent(getSecurePreferences()), getAptoideMd5sum(), getAptoidePackage(),
-          getQManager());
+          getQManager(), "pool");
     }
     return baseBodyInterceptorV7;
   }

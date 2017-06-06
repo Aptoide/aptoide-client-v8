@@ -175,8 +175,14 @@ public class AptoideAccountManager {
 
   public Completable updateAccount(boolean adultContentEnabled) {
     return singleAccountStatus().flatMapCompletable(
-        account -> accountManagerService.updateAccount(adultContentEnabled,
-            account.getAccessToken(), this)
+        account -> accountManagerService.updateAccount(adultContentEnabled, this)
+            .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
+                account.getPassword(), account.getType())));
+  }
+
+  public Completable updateAccount(String username) {
+    return singleAccountStatus().flatMapCompletable(
+        account -> accountManagerService.updateAccountUsername(username, this)
             .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
                 account.getPassword(), account.getType())));
   }
@@ -197,11 +203,10 @@ public class AptoideAccountManager {
         return Completable.error(
             new AccountValidationException(AccountValidationException.EMPTY_NAME));
       }
-      return accountManagerService.updateAccount(account.getEmail(), nickname,
-          account.getPassword(), TextUtils.isEmpty(avatarPath) ? "" : avatarPath,
-          account.getAccessToken(), this)
+      return accountManagerService.updateAccount(nickname,
+          TextUtils.isEmpty(avatarPath) ? "" : avatarPath, this)
           .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
-          account.getPassword(), account.getType()));
+              account.getPassword(), account.getType()));
     });
   }
 

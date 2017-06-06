@@ -13,13 +13,9 @@ import rx.Observable;
 
 public class CheckUserCredentialsRequest extends V3<CheckUserCredentialsJson> {
 
-  private final boolean createStore;
-
-  private CheckUserCredentialsRequest(BaseBody baseBody, boolean createStore,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+  private CheckUserCredentialsRequest(BaseBody baseBody, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory) {
     super(baseBody, httpClient, converterFactory, bodyInterceptor);
-    this.createStore = createStore;
   }
 
   public static CheckUserCredentialsRequest of(String storeName,
@@ -33,26 +29,12 @@ public class CheckUserCredentialsRequest extends V3<CheckUserCredentialsJson> {
     body.put("authMode", "aptoide");
     body.put("oauthCreateRepo", "true");
 
-    return new CheckUserCredentialsRequest(body, true, bodyInterceptor, httpClient,
-        converterFactory);
-  }
-
-  public static CheckUserCredentialsRequest of(BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory, String accessToken) {
-    final BaseBody body = new BaseBody();
-    body.put("access_token", accessToken);
-    body.put("mode", "json");
-    return new CheckUserCredentialsRequest(body, false, bodyInterceptor, httpClient,
-        converterFactory);
+    return new CheckUserCredentialsRequest(body, bodyInterceptor, httpClient, converterFactory);
   }
 
   @Override
   protected Observable<CheckUserCredentialsJson> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    if (createStore) {
-      return interfaces.checkUserCredentials(map, bypassCache);
-    }
-
-    return interfaces.getUserInfo(map, bypassCache);
+    return interfaces.checkUserCredentials(map, bypassCache);
   }
 }
