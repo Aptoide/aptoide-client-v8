@@ -377,7 +377,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
     if (notificationSyncScheduler == null) {
 
       long pushNotificationSocialPeriodicity = DateUtils.MINUTE_IN_MILLIS * 10;
-      if (ToolboxManager.isDebug() && ToolboxManager.getPushNotificationPullingInterval() > 0) {
+      if (ToolboxManager.getPushNotificationPullingInterval() > 0) {
         pushNotificationSocialPeriodicity = ToolboxManager.getPushNotificationPullingInterval();
       }
 
