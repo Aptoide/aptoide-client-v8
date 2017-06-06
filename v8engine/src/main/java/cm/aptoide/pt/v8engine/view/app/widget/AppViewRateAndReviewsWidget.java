@@ -124,7 +124,7 @@ import rx.functions.Action1;
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     dialogUtils = new DialogUtils(accountManager,
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
-        bodyInterceptor, httpClient, converterFactory);
+        bodyInterceptor, httpClient, converterFactory, displayable.getInstalledRepository());
     appName = app.getName();
     packageName = app.getPackageName();
     storeName = app.getStore()

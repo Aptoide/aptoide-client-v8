@@ -1,6 +1,9 @@
 package cm.aptoide.pt.v8engine.view.account.store;
 
+// TODO
+// create presenter and separate logic code from view
 public class CreateStoreFragment {
+//public class CreateStoreFragment extends PictureLoaderFragment implements ManageStoreView {
   /*
   public static final String ERROR_CODE_2 = "WOP-2";
   public static final String ERROR_CODE_3 = "WOP-3";
@@ -21,9 +24,9 @@ public class CreateStoreFragment {
   private BodyInterceptor<BaseBody> bodyInterceptorV7;
   private RequestBodyFactory requestBodyFactory;
   private ObjectMapper serializer;
-  private IdsRepository idsRepository;
   private ManageStoreModel storeModel;
   private OkHttpClient httpClient;
+  private OkHttpClient longTimeoutHttpClient;
   private Converter.Factory converterFactory;
   private BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptor;
 
@@ -45,9 +48,9 @@ public class CreateStoreFragment {
     accountManager = engine.getAccountManager();
     oAuthBodyInterceptor = engine.getOAuthBodyInterceptor();
     bodyInterceptorV7 = engine.getBaseBodyInterceptorV7();
-    idsRepository = engine.getIdsRepository();
     requestBodyFactory = new RequestBodyFactory();
     httpClient = engine.getDefaultClient();
+    longTimeoutHttpClient = engine.getLongTimeoutClient();
     converterFactory = WebService.getDefaultConverter();
     multipartBodyInterceptor = engine.getMultipartBodyInterceptor();
     serializer = ((V8Engine) getContext().getApplicationContext()).getNonNullObjectMapper();
@@ -309,10 +312,12 @@ public class CreateStoreFragment {
     })
         .flatMap(__ -> accountManager.accountStatus()
             .first())
-        .flatMap(account -> SetStoreRequest.of(storeModel.getStoreId(), storeModel.getStoreThemeName(),
-            storeModel.getStoreDescription(), storeModel.getStoreAvatarPath(),
-            multipartBodyInterceptor, httpClient, converterFactory, requestBodyFactory, serializer)
-            .observe())
+        .flatMap(
+            account -> SetStoreRequest.of(storeModel.getStoreId(), storeModel.getStoreThemeName(),
+                storeModel.getStoreDescription(), storeModel.getStoreAvatarPath(),
+                multipartBodyInterceptor, longTimeoutHttpClient, converterFactory,
+                requestBodyFactory, serializer)
+                .observe())
         .flatMap(__ -> dismissDialogAsync().andThen(accountManager.syncCurrentAccount())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnCompleted(() -> navigateToHome())
@@ -343,8 +348,8 @@ public class CreateStoreFragment {
 
     return accountManager.accountStatus()
         .first()
-        .flatMap(account -> CheckUserCredentialsRequest.of(storeModel.getStoreName(), oAuthBodyInterceptor,
-            httpClient, converterFactory)
+        .flatMap(account -> CheckUserCredentialsRequest.of(storeModel.getStoreName(),
+            oAuthBodyInterceptor, httpClient, converterFactory)
             .observe()
             .observeOn(AndroidSchedulers.mainThread())
             .map(answer -> {
@@ -450,12 +455,12 @@ public class CreateStoreFragment {
       accountManager.accountStatus()
           .first()
           .doOnNext(__ -> showWaitDialog())
-          .flatMap(
-              account -> SetStoreRequest.of(storeModel.getStoreName(), storeModel.getStoreThemeName(),
-                  storeModel.getStoreDescription(), storeModel.getStoreAvatarPath(),
-                  multipartBodyInterceptor, httpClient, converterFactory, requestBodyFactory, serializer)
-                  .observe()
-                  .timeout(90, TimeUnit.SECONDS))
+          .flatMap(account -> SetStoreRequest.of(storeModel.getStoreName(),
+              storeModel.getStoreThemeName(), storeModel.getStoreDescription(),
+              storeModel.getStoreAvatarPath(), multipartBodyInterceptor, longTimeoutHttpClient,
+              converterFactory, requestBodyFactory, serializer)
+              .observe()
+              .timeout(90, TimeUnit.SECONDS))
           .observeOn(AndroidSchedulers.mainThread())
           .flatMap(__ -> accountManager.syncCurrentAccount()
               .andThen(sendCreateAnalytics())

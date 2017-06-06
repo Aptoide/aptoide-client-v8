@@ -13,6 +13,8 @@ import rx.schedulers.Schedulers;
 
 public class BaseBodyInterceptorV3 implements BodyInterceptor<BaseBody> {
 
+  public static final String RESPONSE_MODE_JSON = "json";
+
   private final String aptoideMd5sum;
   private final String aptoidePackage;
   private final IdsRepository idsRepository;
@@ -29,11 +31,6 @@ public class BaseBodyInterceptorV3 implements BodyInterceptor<BaseBody> {
     this.accountManager = accountManager;
     this.qManager = qManager;
     this.responseMode = responseMode;
-  }
-
-  public BaseBodyInterceptorV3(IdsRepository idsRepository, String aptoideMd5sum,
-      String aptoidePackage, AptoideAccountManager accountManager, QManager qManager) {
-    this(idsRepository, aptoideMd5sum, aptoidePackage, accountManager, qManager, "json");
   }
 
   public Single<BaseBody> intercept(BaseBody body) {

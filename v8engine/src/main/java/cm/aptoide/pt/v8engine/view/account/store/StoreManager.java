@@ -21,9 +21,9 @@ import rx.Single;
 
 public class StoreManager {
 
-  public static final String ERROR_CODE_2 = "WOP-2";
-  public static final String ERROR_CODE_3 = "WOP-3";
-  public static final String ERROR_API_1 = "API-1";
+  private static final String ERROR_CODE_2 = "WOP-2";
+  private static final String ERROR_CODE_3 = "WOP-3";
+  private static final String ERROR_API_1 = "API-1";
 
   private final AptoideAccountManager accountManager;
   private final OkHttpClient httpClient;

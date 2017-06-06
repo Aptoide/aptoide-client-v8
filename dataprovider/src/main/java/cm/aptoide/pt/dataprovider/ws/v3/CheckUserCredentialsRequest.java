@@ -26,21 +26,11 @@ public class CheckUserCredentialsRequest extends V3<CheckUserCredentialsJson> {
       OkHttpClient httpClient, Converter.Factory converterFactory, String storeName) {
 
     final BaseBody body = new BaseBody();
-    body.put("mode", "json");
     body.put("createRepo", "1");
     body.put("oauthCreateRepo", "true");
     body.put("repo", storeName);
 
     return new CheckUserCredentialsRequest(body, true, bodyInterceptor, httpClient,
-        converterFactory);
-  }
-
-  public static CheckUserCredentialsRequest toEditStore(BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory, String accessToken) {
-    final BaseBody body = new BaseBody();
-    body.put("access_token", accessToken);
-    body.put("mode", "json");
-    return new CheckUserCredentialsRequest(body, false, bodyInterceptor, httpClient,
         converterFactory);
   }
 

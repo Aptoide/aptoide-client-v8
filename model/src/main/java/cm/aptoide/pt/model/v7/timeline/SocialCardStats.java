@@ -1,6 +1,5 @@
 package cm.aptoide.pt.model.v7.timeline;
 
-import java.util.List;
 import lombok.Data;
 
 /**
@@ -9,5 +8,4 @@ import lombok.Data;
 @Data public class SocialCardStats {
   private long likes;
   private long comments;
-  private List<UserTimeline> usersLikes;
 }

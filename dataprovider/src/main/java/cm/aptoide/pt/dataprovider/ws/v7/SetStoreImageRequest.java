@@ -70,7 +70,7 @@ public class SetStoreImageRequest extends V7<BaseV7Response, HashMapNotNull<Stri
           serializer.writeValueAsString(
               new SimpleSetStoreRequest.StoreProperties(storeTheme, storeDescription))));
     } catch (JsonProcessingException e) {
-      Single.error(e);
+      throw new RuntimeException(e);
     }
   }
 

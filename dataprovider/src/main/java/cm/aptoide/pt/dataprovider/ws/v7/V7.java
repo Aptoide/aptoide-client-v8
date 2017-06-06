@@ -28,6 +28,7 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.model.v7.GetMySubscribedStoresResponse;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.model.v7.GetUserInfo;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.ListFullReviews;
@@ -54,6 +55,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import retrofit2.Converter;
 import retrofit2.adapter.rxjava.HttpException;
+import retrofit2.http.Body;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -355,6 +357,9 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
     @POST("user/set") Observable<BaseV7Response> setUser(
         @retrofit2.http.Body SetUserRequest.Body body);
 
+    @Multipart @POST("user/set") Observable<BaseV7Response> editUser(
+        @Part MultipartBody.Part user_avatar, @PartMap HashMapNotNull<String, RequestBody> body);
+
     @POST("user/connections/add") Observable<GetFollowers> setConnections(
         @retrofit2.http.Body SyncAddressBookRequest.Body body);
 
@@ -371,9 +376,15 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
         @retrofit2.http.Body GetMySubscribedStoresRequest.Body body);
 
+    @POST("user/get") Observable<GetUserInfo> getUserInfo(@Body GetUserInfoRequest.Body body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
     @POST("getAppMeta{url}") Observable<GetAppMeta> getAppMeta(
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
         @Path(value = "url", encoded = true) String url);
+
+    @POST("user/settings/set") Observable<BaseV7Response> setUserSettings(
+        @Body SetUserSettings.Body body);
   }
 }
 

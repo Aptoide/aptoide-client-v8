@@ -244,6 +244,6 @@ public enum StoreTheme {
   }
 
   public String getThemeName() {
-    return name().toLowerCase();
+    return name().toLowerCase().replace('_','-');
   }
 }

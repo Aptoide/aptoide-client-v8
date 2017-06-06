@@ -25,9 +25,16 @@ public class SetUserRequest extends V7<BaseV7Response, SetUserRequest.Body> {
     super(body, BASE_HOST, httpClient, converterFactory, bodyInterceptor);
   }
 
-  public static SetUserRequest of(String user_access, BodyInterceptor<BaseBody> bodyInterceptor,
+  public static SetUserRequest of(String userAccess, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory) {
-    Body body = new Body(user_access);
+    Body body = new Body(userAccess, null);
+    return new SetUserRequest(body, bodyInterceptor, httpClient, converterFactory);
+  }
+
+  public static SetUserRequest ofWithName(String userName,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory) {
+    Body body = new Body(null, userName);
     return new SetUserRequest(body, bodyInterceptor, httpClient, converterFactory);
   }
 
@@ -39,9 +46,20 @@ public class SetUserRequest extends V7<BaseV7Response, SetUserRequest.Body> {
   @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
 
     public String user_access;
+    public UserProperties userProperties;
 
-    public Body(String user_access) {
+    public Body(String user_access, String userName) {
       this.user_access = user_access;
+      userProperties = new UserProperties(userName);
+    }
+  }
+
+  @Data public static class UserProperties {
+
+    private String name;
+
+    public UserProperties(String name) {
+      this.name = name;
     }
   }
 }

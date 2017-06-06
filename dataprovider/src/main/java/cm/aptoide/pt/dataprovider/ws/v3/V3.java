@@ -183,9 +183,5 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
     @POST("createUser") @Multipart Observable<BaseV3Response> createUserWithFile(
         @Part MultipartBody.Part user_avatar, @PartMap() HashMapNotNull<String, RequestBody> args,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("changeUserSettings") @FormUrlEncoded Observable<BaseV3Response> changeUserSettings(
-        @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
   }
 }
