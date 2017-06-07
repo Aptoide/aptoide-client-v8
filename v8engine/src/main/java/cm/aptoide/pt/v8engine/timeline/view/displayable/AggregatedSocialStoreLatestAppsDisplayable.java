@@ -20,7 +20,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.Date;
 import java.util.List;
-import java.util.Stack;
 
 import static cm.aptoide.pt.v8engine.analytics.Analytics.AppsTimeline.BLANK;
 
@@ -95,10 +94,6 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
     return minimalCards;
   }
 
-  public List<UserSharerTimeline> getSharers() {
-    return sharers;
-  }
-
   public Store getOwnerStore() {
     return ownerStore;
   }
@@ -139,11 +134,6 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
         packageName, ownerStore.getName());
   }
 
-  public void sendOpenStoreEvent() {
-    timelineAnalytics.sendOpenStoreEvent(CARD_TYPE_NAME, TimelineAnalytics.SOURCE_APTOIDE,
-        ownerStore.getName());
-  }
-
   public void sendOpenSharedStoreEvent() {
     timelineAnalytics.sendOpenStoreEvent(CARD_TYPE_NAME, TimelineAnalytics.SOURCE_APTOIDE,
         sharedStore.getName());
@@ -159,6 +149,10 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
     }
     headerNamesStringBuilder.setLength(headerNamesStringBuilder.length() - 2);
     return headerNamesStringBuilder.toString();
+  }
+
+  public List<UserSharerTimeline> getSharers() {
+    return sharers;
   }
 
   @Override public int getViewLayout() {
@@ -177,12 +171,12 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
 
   @Override
   public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback,
+    socialRepository.share(cardId, privacyResult, shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, BLANK, BLANK));
   }
 
   @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), shareCardCallback,
+    socialRepository.share(cardId, shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, BLANK, BLANK));
   }
 

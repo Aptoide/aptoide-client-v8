@@ -37,11 +37,9 @@ import static cm.aptoide.pt.v8engine.analytics.Analytics.AppsTimeline.BLANK;
 public class AggregatedSocialArticleDisplayable extends CardDisplayable {
   public static final String CARD_TYPE_NAME = "AGGREGATED_SOCIAL_ARTICLE";
   private Link link;
-  private Link developerLink;
   private String title;
   private String publisherName;
   private String thumbnailUrl;
-  private String avatarUrl;
   private String abTestingURL;
   private String packageName;
   private List<App> relatedToAppsList;
@@ -57,17 +55,14 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
   }
 
   public AggregatedSocialArticleDisplayable(AggregatedSocialArticle card, String title, Link link,
-      Link developerLink, String publisherName, String thumbnailUrl, String avatarUrl,
-      String abTestingURL, List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
-      SpannableFactory spannableFactory, TimelineAnalytics timelineAnalytics,
-      SocialRepository socialRepository) {
+      String publisherName, String thumbnailUrl, String abTestingURL, List<App> relatedToAppsList,
+      Date date, DateCalculator dateCalculator, SpannableFactory spannableFactory,
+      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
     super(card, timelineAnalytics);
     this.link = link;
-    this.developerLink = developerLink;
     this.title = title;
     this.publisherName = publisherName;
     this.thumbnailUrl = thumbnailUrl;
-    this.avatarUrl = avatarUrl;
     this.abTestingURL = abTestingURL;
     this.relatedToAppsList = relatedToAppsList;
     this.date = date;
@@ -96,11 +91,9 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
     }
     return new AggregatedSocialArticleDisplayable(card, card.getTitle(),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, card.getUrl()),
-        linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, card.getPublisher()
-            .getBaseUrl()), card.getPublisher()
-        .getName(), card.getThumbnailUrl(), card.getPublisher()
-        .getLogoUrl(), abTestingURL, card.getApps(), card.getDate(), dateCalculator,
-        spannableFactory, timelineAnalytics, socialRepository);
+        card.getPublisher()
+            .getName(), card.getThumbnailUrl(), abTestingURL, card.getApps(), card.getDate(),
+        dateCalculator, spannableFactory, timelineAnalytics, socialRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -111,6 +104,8 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
       for (int i = 0; i < relatedToAppsList.size(); i++) {
         packageNamesList.add(relatedToAppsList.get(i)
             .getPackageName());
+        packageName = relatedToAppsList.get(i)
+            .getPackageName();
       }
 
       final String[] packageNames = packageNamesList.toArray(new String[packageNamesList.size()]);
@@ -159,16 +154,8 @@ public class AggregatedSocialArticleDisplayable extends CardDisplayable {
     return abTestingURL;
   }
 
-  public String getPackageName() {
-    return packageName;
-  }
-
   public List<App> getRelatedToAppsList() {
     return relatedToAppsList;
-  }
-
-  public Date getDate() {
-    return date;
   }
 
   public List<MinimalCard> getMinimalCardList() {
