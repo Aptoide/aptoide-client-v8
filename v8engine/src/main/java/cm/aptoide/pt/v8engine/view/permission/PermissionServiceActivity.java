@@ -245,13 +245,6 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
     Action0 action0 = new Action0() {
       @Override public void call() {
         toRunWhenAccessIsGranted.call();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
-          if (!usageAccessGranted(V8Engine.getContext())) {
-            requestPermissions();
-          } else {
-            setupAlarm(V8Engine.getContext());
-          }
-        }
       }
     };
 
@@ -386,6 +379,19 @@ public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
           if (toRunWhenAccessToFileSystemIsGranted != null) {
             toRunWhenAccessToFileSystemIsGranted.call();
           }
+          showMessageOKCancel(getString(R.string.usage_permission_request_message),
+              new SimpleSubscriber<GenericDialogs.EResponse>() {
+                @Override public void onNext(GenericDialogs.EResponse eResponse) {
+                  super.onNext(eResponse);
+                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    if (!usageAccessGranted(V8Engine.getContext())) {
+                      requestPermissions();
+                    } else {
+                      setupAlarm(V8Engine.getContext());
+                    }
+                  }
+                }
+              });
         } else {
           if (toRunWhenAccessToFileSystemIsDenied != null) {
             toRunWhenAccessToFileSystemIsDenied.call();

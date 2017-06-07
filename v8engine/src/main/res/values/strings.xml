@@ -417,6 +417,7 @@
   <string name="additional_permissions">Additional Permissions</string>
   <string name="no_permissions_required">No permissions required for this app.</string>
   <string name="restore">Install</string>
+  <string name="usage_permission_request_message">Press over Aptoide and turn on the permission.</string>
 
   <!-- DownloadManager -->
   <string name="timeout">Network connection timeout</string>
