@@ -43,14 +43,16 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   public static final int LATEST_PACKAGES_COUNT = 20;
   public static final int RANDOM_PACKAGES_COUNT = 10;
   private static final String ACTION_KEY = "action";
-
+  /**
+   * The minimum number of items to have below your current scroll position before loading more.
+   */
+  private final int visibleThreshold = 5;
   private CardAdapter adapter;
   private PublishSubject<CardTouchEvent> articleSubject;
   private RecyclerView list;
   private ProgressBar progressBar;
   private SwipeRefreshLayout swipeRefreshLayout;
   private RecyclerViewPositionHelper helper;
-  private int visibleThreshold;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -64,7 +66,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     LinksHandlerFactory linksHandlerFactory = new LinksHandlerFactory(getContext());
-    visibleThreshold = 0;
     attachPresenter(new TimelinePresenter(this, new SocialManager(
         new SocialService(getArguments().getString(ACTION_KEY),
             ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
