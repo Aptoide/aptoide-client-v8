@@ -19,11 +19,11 @@
  * See each License for the specific language governing permissions and
  * limitations under that License.
  */
-package cm.aptoide.pt.v8engine.install.root.execution;
+package cm.aptoide.pt.root.execution;
 
 import android.content.Context;
-import cm.aptoide.pt.v8engine.install.root.RootShell;
-import cm.aptoide.pt.v8engine.install.root.exceptions.RootDeniedException;
+import cm.aptoide.pt.root.RootShell;
+import cm.aptoide.pt.root.exceptions.RootDeniedException;
 import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.File;
