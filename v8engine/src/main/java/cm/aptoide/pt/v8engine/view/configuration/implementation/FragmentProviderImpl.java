@@ -33,7 +33,7 @@ import cm.aptoide.pt.v8engine.view.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.v8engine.view.search.SearchFragment;
 import cm.aptoide.pt.v8engine.view.search.SearchPagerTabFragment;
 import cm.aptoide.pt.v8engine.view.settings.SettingsFragment;
-import cm.aptoide.pt.v8engine.view.spotandshare.SpotSharePreviewFragment;
+import cm.aptoide.pt.v8engine.spotandshare.view.SpotSharePreviewFragment;
 import cm.aptoide.pt.v8engine.view.store.FragmentTopStores;
 import cm.aptoide.pt.v8engine.view.store.GetStoreFragment;
 import cm.aptoide.pt.v8engine.view.store.GetStoreWidgetsFragment;

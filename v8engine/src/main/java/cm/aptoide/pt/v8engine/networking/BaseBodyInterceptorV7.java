@@ -5,6 +5,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.preferences.AdultContent;
@@ -69,12 +70,10 @@ public class BaseBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
       }
       body.setQ(qManager
           .getFilters(ManagerPreferences.getHWSpecsFilter()));
-      if (ManagerPreferences.isDebug()) {
-        String forceCountry = ManagerPreferences.getForceCountry();
+        String forceCountry = ToolboxManager.getForceCountry();
         if (!TextUtils.isEmpty(forceCountry)) {
           body.setCountry(forceCountry);
         }
-      }
       body.setAptoideMd5sum(aptoideMd5sum);
       body.setAptoidePackage(aptoidePackage);
 

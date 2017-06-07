@@ -3,6 +3,7 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,7 +19,8 @@ import rx.Observable;
 
 public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequest.Body> {
 
-  private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+  private static final String BASE_HOST = (ToolboxManager.isToolboxEnableHttpScheme() ? "http"
+      : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
       + "://"
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
