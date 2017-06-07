@@ -128,16 +128,12 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
   @Override public Observable<Void> reachesBottom() {
     return RxRecyclerView.scrollEvents(list)
-        .filter(event -> {
-          int visibleItemCount = event.view()
-              .getChildCount();
-          int totalItemCount = helper.getItemCount();
-          int firstVisibleItemPosition = helper.findFirstVisibleItemPosition();
-          int firstVisibleItem = (firstVisibleItemPosition == -1 ? 0 : firstVisibleItemPosition);
-          return helper != null && event.view()
-              .isAttachedToWindow() && (totalItemCount - visibleItemCount) <= (firstVisibleItem
-              + visibleThreshold);
-        })
+        .filter(event -> helper != null
+            && event.view()
+            .isAttachedToWindow()
+            && (helper.getItemCount() - event.view()
+            .getChildCount()) <= ((helper.findFirstVisibleItemPosition() == -1 ? 0
+            : helper.findFirstVisibleItemPosition()) + visibleThreshold))
         .map(event -> null)
         .cast(Void.class);
   }

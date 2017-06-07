@@ -12,7 +12,7 @@ import java.util.List;
 import rx.subjects.PublishSubject;
 
 /**
- * Created by pedroribeiro on 16/05/17.
+ * Created by jdandrade on 2/06/17.
  */
 
 public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
