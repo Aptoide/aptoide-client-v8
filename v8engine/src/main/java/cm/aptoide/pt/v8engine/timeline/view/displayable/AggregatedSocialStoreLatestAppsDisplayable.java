@@ -20,7 +20,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.Date;
 import java.util.List;
-import java.util.Stack;
 
 import static cm.aptoide.pt.v8engine.analytics.Analytics.AppsTimeline.BLANK;
 
@@ -95,10 +94,6 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
     return minimalCards;
   }
 
-  public List<UserSharerTimeline> getSharers() {
-    return sharers;
-  }
-
   public Store getOwnerStore() {
     return ownerStore;
   }
@@ -139,11 +134,6 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
         packageName, ownerStore.getName());
   }
 
-  public void sendOpenStoreEvent() {
-    timelineAnalytics.sendOpenStoreEvent(CARD_TYPE_NAME, TimelineAnalytics.SOURCE_APTOIDE,
-        ownerStore.getName());
-  }
-
   public void sendOpenSharedStoreEvent() {
     timelineAnalytics.sendOpenStoreEvent(CARD_TYPE_NAME, TimelineAnalytics.SOURCE_APTOIDE,
         sharedStore.getName());
@@ -159,6 +149,10 @@ public class AggregatedSocialStoreLatestAppsDisplayable extends CardDisplayable 
     }
     headerNamesStringBuilder.setLength(headerNamesStringBuilder.length() - 2);
     return headerNamesStringBuilder.toString();
+  }
+
+  public List<UserSharerTimeline> getSharers() {
+    return sharers;
   }
 
   @Override public int getViewLayout() {
