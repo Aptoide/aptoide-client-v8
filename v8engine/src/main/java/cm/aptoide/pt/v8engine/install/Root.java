@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.install;
 
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.root.RootShell;
 import cm.aptoide.pt.v8engine.preferences.SecurePreferences;
 import rx.Completable;
@@ -12,7 +11,6 @@ import rx.Single;
 
 public class Root {
   public static final String IS_PHONE_ROOTED = "IS_PHONE_ROOTED";
-  private static final String TAG = Root.class.getSimpleName();
   private SecurePreferences sharedPreferences;
 
   public Root(SecurePreferences sharedPreferences) {
@@ -20,11 +18,11 @@ public class Root {
   }
 
   public Single<Boolean> isRootAvailable() {
-    return sharedPreferences.contains(IS_PHONE_ROOTED)
+    return Single.defer(() -> sharedPreferences.contains(IS_PHONE_ROOTED))
         .flatMap(contains -> {
-          Logger.d(TAG, "isRootAvailable: Contains" + contains);
           if (contains) {
             return sharedPreferences.getBoolean(IS_PHONE_ROOTED, false)
+                .first()
                 .toSingle();
           } else {
             return updateRootAvailability().andThen(isRootAvailable());
