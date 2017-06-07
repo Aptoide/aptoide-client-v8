@@ -8,8 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.networkclient.WebService;
@@ -77,8 +75,9 @@ public class DownloadsFragmentMvp extends FragmentView implements DownloadsView 
     noDownloadsView = view.findViewById(R.id.no_apps_downloaded);
 
     InstallManager installManager =
-        new InstallManager(((V8Engine) getContext().getApplicationContext()).getDownloadManager(),
-            new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK));
+        ((V8Engine) getContext().getApplicationContext()).getInstallManager(
+            InstallerFactory.ROLLBACK);
+
     attachPresenter(new DownloadsPresenter(this, installManager), savedInstanceState);
 
     return view;

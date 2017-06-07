@@ -325,15 +325,6 @@ public abstract class V8Engine extends SpotAndShareApplication {
     Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
   }
 
-  private void startNotificationCenter() {
-    getPreferences().getBoolean(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY, true)
-        .first()
-        .subscribe(enabled -> getNotificationSyncScheduler().setEnabled(enabled),
-            throwable -> CrashReport.getInstance().log(throwable));
-
-    getNotificationCenter().setup();
-  }
-
   @Override protected TokenInvalidator getTokenInvalidator() {
     return new TokenInvalidator() {
       @Override public Single<String> invalidateAccessToken() {
@@ -345,6 +336,15 @@ public abstract class V8Engine extends SpotAndShareApplication {
             .map(account -> account.getAccessToken());
       }
     };
+  }
+
+  private void startNotificationCenter() {
+    getPreferences().getBoolean(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY, true)
+        .first()
+        .subscribe(enabled -> getNotificationSyncScheduler().setEnabled(enabled),
+            throwable -> CrashReport.getInstance().log(throwable));
+
+    getNotificationCenter().setup();
   }
 
   public NotificationNetworkService getNotificationNetworkService() {
@@ -494,7 +494,7 @@ public abstract class V8Engine extends SpotAndShareApplication {
     InstallManager installManager = installManagers.get(installerType);
     if (installManager == null) {
       installManager = new InstallManager(getDownloadManager(),
-          new InstallerFactory().create(this, installerType));
+          new InstallerFactory().create(this, installerType), 180000, ManagerPreferences.isDebug());
       installManagers.put(installerType, installManager);
     }
 
