@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.view.account.store;
 import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -55,6 +56,7 @@ public class ManageStoreFragment extends ImageLoaderFragment
 
   private static final String EXTRA_STORE_MODEL = "store_model";
   private static final String EXTRA_GO_TO_HOME = "go_to_home";
+  @LayoutRes private static final int LAYOUT = R.layout.fragment_manage_store;
 
   private TextView header;
   private TextView chooseStoreNameTitle;
@@ -203,7 +205,7 @@ public class ManageStoreFragment extends ImageLoaderFragment
   }
 
   @Override public int getContentViewId() {
-    return R.layout.fragment_manage_store;
+    return LAYOUT;
   }
 
   @NonNull private ManageStorePresenter buildPresenter(@NonNull V8Engine engine, boolean goToHome) {

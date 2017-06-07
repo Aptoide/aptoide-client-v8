@@ -325,7 +325,8 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
   }
 
   private void navigateToCreateProfile() {
-    fragmentNavigator.navigateToWithoutBackSave(ManageUserFragment.newInstanceToCreate());
+    fragmentNavigator.cleanBackStack();
+    fragmentNavigator.navigateTo(ManageUserFragment.newInstanceToCreate());
   }
 
   private void navigateToMainViewCleaningBackStack() {

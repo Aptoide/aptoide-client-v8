@@ -89,7 +89,8 @@ public class ProfileStepTwoPresenter implements Presenter {
     if (externalLogin) {
       fragmentNavigator.navigateToHomeCleaningBackStack();
     } else {
-      fragmentNavigator.navigateToWithoutBackSave(
+      fragmentNavigator.cleanBackStack();
+      fragmentNavigator.navigateTo(
           ManageStoreFragment.newInstance(new ManageStoreFragment.ViewModel(), true));
     }
   }

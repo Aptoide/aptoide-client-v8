@@ -55,6 +55,9 @@ public class FragmentNavigator {
     return tag;
   }
 
+  /**
+   * Only use this method when it is navigating to the first fragment in the activity.
+   */
   public void navigateToWithoutBackSave(Fragment fragment) {
     fragmentManager.beginTransaction()
         .setCustomAnimations(enterAnimation, exitAnimation, enterAnimation, exitAnimation)
@@ -72,7 +75,7 @@ public class FragmentNavigator {
     fragmentManager.popBackStack();
   }
 
-  private void cleanBackStack() {
+  public void cleanBackStack() {
     for (int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i) {
       fragmentManager.popBackStack();
     }

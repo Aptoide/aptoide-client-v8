@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.view.account.user;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -102,7 +103,8 @@ public class ManageUserPresenter implements Presenter {
   }
 
   private void navigateToProfileStepOne() {
-    fragmentNavigator.navigateToWithoutBackSave(ProfileStepOneFragment.newInstance());
+    fragmentNavigator.cleanBackStack();
+    fragmentNavigator.navigateTo(ProfileStepOneFragment.newInstance());
   }
 
   private void navigateToHome() {
@@ -114,6 +116,9 @@ public class ManageUserPresenter implements Presenter {
   }
 
   private Completable saveUSerData(ManageUserFragment.ViewModel userData) {
+    if (TextUtils.isEmpty(userData.getImage())) {
+      return accountManager.updateAccount(userData.getName());
+    }
     return accountManager.updateAccount(userData.getName(), userData.getImage());
   }
 }

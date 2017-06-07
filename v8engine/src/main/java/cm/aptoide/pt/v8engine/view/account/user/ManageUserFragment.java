@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.Toolbar;
@@ -36,6 +37,7 @@ public class ManageUserFragment extends ImageLoaderFragment
 
   public static final String EXTRA_USER_MODEL = "user_model";
   private static final String TAG = ManageUserFragment.class.getName();
+  @LayoutRes private static final int LAYOUT = R.layout.fragment_manage_user;
   private ImageView userPicture;
   private RelativeLayout userPictureLayout;
   private EditText userName;
@@ -149,7 +151,7 @@ public class ManageUserFragment extends ImageLoaderFragment
   }
 
   @Override public int getContentViewId() {
-    return R.layout.fragment_create_user;
+    return LAYOUT;
   }
 
   @Override public void loadImage(Uri imagePath) {

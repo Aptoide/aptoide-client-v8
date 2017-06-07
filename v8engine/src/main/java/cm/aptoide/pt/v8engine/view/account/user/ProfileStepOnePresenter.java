@@ -70,7 +70,8 @@ public class ProfileStepOnePresenter implements Presenter {
   }
 
   private void navigateToProfileStepTwoView() {
-    fragmentNavigator.navigateToWithoutBackSave(ProfileStepTwoFragment.newInstance());
+    fragmentNavigator.cleanBackStack();
+    fragmentNavigator.navigateTo(ProfileStepTwoFragment.newInstance());
   }
 
   private void navigateToHome() {
@@ -78,7 +79,8 @@ public class ProfileStepOnePresenter implements Presenter {
   }
 
   private void navigateToCreateStore() {
-    fragmentNavigator.navigateToWithoutBackSave(
+    fragmentNavigator.cleanBackStack();
+    fragmentNavigator.navigateTo(
         ManageStoreFragment.newInstance(new ManageStoreFragment.ViewModel(), true));
   }
 
