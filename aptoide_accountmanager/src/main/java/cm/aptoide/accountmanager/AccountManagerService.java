@@ -210,14 +210,14 @@ public class AccountManagerService {
    */
   @NonNull private Observable<Throwable> retryOnTicket(
       Observable<? extends Throwable> observableError) {
-    return observableError.zipWith(Observable.range(1, 3), (throwable, count) -> {
+    return observableError.zipWith(Observable.range(2, 4), (throwable, count) -> {
       try {
         AptoideWsV7Exception v7Exception = (AptoideWsV7Exception) throwable;
         List<BaseV7Response.Error> errors = v7Exception.getBaseResponse()
             .getErrors();
         if (errors != null && !errors.isEmpty() && errors.get(0)
             .getCode()
-            .equalsIgnoreCase("user-1") && count < 3) {
+            .equalsIgnoreCase("user-1")) {
           return Observable.timer((long) Math.pow(5, count), TimeUnit.SECONDS).<Throwable>map(
               __ -> null);
         }
