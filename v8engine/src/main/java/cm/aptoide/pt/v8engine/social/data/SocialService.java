@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.social;
+package cm.aptoide.pt.v8engine.social.data;
 
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -14,7 +14,7 @@ import rx.Single;
  * Created by jdandrade on 31/05/2017.
  */
 
-class SocialService {
+public class SocialService {
   private final String url;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient okhttp;

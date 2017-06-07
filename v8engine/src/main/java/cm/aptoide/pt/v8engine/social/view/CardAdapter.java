@@ -1,9 +1,10 @@
-package cm.aptoide.pt.v8engine.social;
+package cm.aptoide.pt.v8engine.social.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.social.data.Article;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.List;
@@ -29,8 +30,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
   }
 
   @Override public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    return new CardViewHolder(LayoutInflater.from(parent.getContext())
-        .inflate(viewType, parent, false), articleSubject, dateCalculator, spannableFactory);
+    return new CardViewHolder(
+        LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false), articleSubject,
+        dateCalculator, spannableFactory);
   }
 
   @Override public void onBindViewHolder(CardViewHolder holder, int position) {

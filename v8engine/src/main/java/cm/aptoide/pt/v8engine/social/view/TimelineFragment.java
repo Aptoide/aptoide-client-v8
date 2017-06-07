@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.social;
+package cm.aptoide.pt.v8engine.social.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +14,11 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.social.data.Article;
+import cm.aptoide.pt.v8engine.social.data.SocialManager;
+import cm.aptoide.pt.v8engine.social.data.SocialService;
+import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
+import cm.aptoide.pt.v8engine.social.presenter.TimelinePresenter;
 import cm.aptoide.pt.v8engine.timeline.PackageRepository;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;

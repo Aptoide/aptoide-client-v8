@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.social;
+package cm.aptoide.pt.v8engine.social.data;
 
 import java.util.List;
 import rx.Single;
@@ -7,10 +7,10 @@ import rx.Single;
  * Created by jdandrade on 31/05/2017.
  */
 
-class SocialManager {
+public class SocialManager {
   private final SocialService service;
 
-  SocialManager(SocialService service) {
+  public SocialManager(SocialService service) {
     this.service = service;
   }
 

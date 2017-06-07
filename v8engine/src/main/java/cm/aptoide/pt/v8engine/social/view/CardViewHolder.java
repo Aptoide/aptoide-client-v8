@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.social;
+package cm.aptoide.pt.v8engine.social.view;
 
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.social.data.Article;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
@@ -15,7 +16,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 31/05/2017.
  */
 
-class CardViewHolder extends RecyclerView.ViewHolder {
+public class CardViewHolder extends RecyclerView.ViewHolder {
 
   private final PublishSubject<Article> articleSubject;
   private final TextView publisherName;
@@ -45,13 +46,12 @@ class CardViewHolder extends RecyclerView.ViewHolder {
   }
 
   public void setCard(Article card) {
-    publisherName.setText(spannableFactory.createColorSpan(itemView.getContext()
-            .getString(R.string.x_posted, card.getPublisherName()),
+    publisherName.setText(spannableFactory.createColorSpan(
+        itemView.getContext().getString(R.string.x_posted, card.getPublisherName()),
         ContextCompat.getColor(itemView.getContext(), R.color.black_87_alpha),
         card.getPublisherName()));
     articleTitle.setText(card.getTitle());
-    relatedTo.setText(card.getRelatedApp()
-        .getName());
+    relatedTo.setText(card.getRelatedApp().getName());
     date.setText(dateCalculator.getTimeSinceDate(itemView.getContext(), card.getDate()));
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(card.getPublisherAvatarURL(), publisherAvatar);

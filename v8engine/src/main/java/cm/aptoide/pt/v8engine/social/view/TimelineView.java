@@ -1,6 +1,7 @@
-package cm.aptoide.pt.v8engine.social;
+package cm.aptoide.pt.v8engine.social.view;
 
 import cm.aptoide.pt.v8engine.presenter.View;
+import cm.aptoide.pt.v8engine.social.data.Article;
 import java.util.List;
 import rx.Observable;
 
@@ -8,7 +9,7 @@ import rx.Observable;
  * Created by jdandrade on 31/05/2017.
  */
 
-interface TimelineView extends View {
+public interface TimelineView extends View {
 
   void showCards(List<Article> cards);
 

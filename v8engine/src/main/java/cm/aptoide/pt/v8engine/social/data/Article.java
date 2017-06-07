@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.social;
+package cm.aptoide.pt.v8engine.social.data;
 
 import cm.aptoide.pt.model.v7.listapp.App;
 import java.util.Date;

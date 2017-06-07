@@ -1,10 +1,13 @@
-package cm.aptoide.pt.v8engine.social;
+package cm.aptoide.pt.v8engine.social.presenter;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.spotandshare.socket.Log;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
+import cm.aptoide.pt.v8engine.social.data.Article;
+import cm.aptoide.pt.v8engine.social.data.SocialManager;
+import cm.aptoide.pt.v8engine.social.view.TimelineView;
 import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -32,8 +35,7 @@ public class TimelinePresenter implements Presenter {
         .doOnNext(cards -> showCardsAndHideProgress(cards))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(articles -> {
-        }, throwable -> Log.d(this.getClass()
-            .getCanonicalName(), "ERROR LOADING CARDS"));
+        }, throwable -> Log.d(this.getClass().getCanonicalName(), "ERROR LOADING CARDS"));
 
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -43,8 +45,7 @@ public class TimelinePresenter implements Presenter {
         .doOnNext(cards -> showCardsAndHideRefresh(cards))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(articles -> {
-        }, throwable -> Log.d(this.getClass()
-            .getCanonicalName(), "ERROR REFRESHING CARDS"));
+        }, throwable -> Log.d(this.getClass().getCanonicalName(), "ERROR REFRESHING CARDS"));
   }
 
   @Override public void saveState(Bundle state) {
@@ -55,13 +56,13 @@ public class TimelinePresenter implements Presenter {
 
   }
 
-  private void showCardsAndHideRefresh(List<Article> cards) {
-    view.hideRefresh();
+  private void showCardsAndHideProgress(List<Article> cards) {
+    view.hideProgressIndicator();
     view.showCards(cards);
   }
 
-  private void showCardsAndHideProgress(List<Article> cards) {
-    view.hideProgressIndicator();
+  private void showCardsAndHideRefresh(List<Article> cards) {
+    view.hideRefresh();
     view.showCards(cards);
   }
 }
