@@ -15,11 +15,11 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.root.RootShell;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.Installer;
+import cm.aptoide.pt.v8engine.install.RootAvailabilityManager;
 import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.installer.InstallationState;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
@@ -42,13 +42,16 @@ public class InstallManager {
   private final Installer installer;
   private final DownloadRepository downloadRepository;
   private final InstalledRepository installedRepository;
+  private RootAvailabilityManager rootAvailabilityManager;
 
   /**
    * Uses the default {@link Repository} for {@link Download} and {@link Installed}
    */
-  public InstallManager(AptoideDownloadManager aptoideDownloadManager, Installer installer) {
+  public InstallManager(AptoideDownloadManager aptoideDownloadManager, Installer installer,
+      RootAvailabilityManager rootAvailabilityManager) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
+    this.rootAvailabilityManager = rootAvailabilityManager;
     this.downloadRepository = RepositoryFactory.getDownloadRepository();
     this.installedRepository = RepositoryFactory.getInstalledRepository();
   }
@@ -356,7 +359,9 @@ public class InstallManager {
 
   public boolean showWarning() {
     boolean wasRootDialogShowed = SecurePreferences.isRootDialogShowed();
-    boolean isRooted = RootShell.isRootAvailable();
+    boolean isRooted = rootAvailabilityManager.isRootAvailable()
+        .toBlocking()
+        .value();
     boolean canGiveRoot = ManagerPreferences.allowRootInstallation();
     return isRooted && !wasRootDialogShowed && !canGiveRoot;
   }
@@ -364,9 +369,6 @@ public class InstallManager {
   public void rootInstallAllowed(boolean allowRoot) {
     SecurePreferences.setRootDialogShowed(true);
     ManagerPreferences.setAllowRootInstallation(allowRoot);
-    if (allowRoot) {
-      RootShell.isAccessGiven();
-    }
   }
 
   public Observable<Boolean> startInstalls(List<Download> downloads, Context context) {

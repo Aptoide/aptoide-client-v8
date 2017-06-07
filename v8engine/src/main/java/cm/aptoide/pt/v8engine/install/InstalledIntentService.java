@@ -16,7 +16,6 @@ import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.root.RootShell;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.InstallManager;
@@ -48,7 +47,7 @@ public class InstalledIntentService extends IntentService {
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private InstallManager installManager;
-  private Root root;
+  private RootAvailabilityManager rootAvailabilityManager;
   private QManager qManager;
 
   public InstalledIntentService() {
@@ -72,7 +71,8 @@ public class InstalledIntentService extends IntentService {
     analytics = Analytics.getInstance();
     installManager =
         ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
-    root = new Root(((V8Engine) getApplicationContext()).getSecurePreferences());
+    rootAvailabilityManager =
+        new RootAvailabilityManager(((V8Engine) getApplicationContext()).getSecurePreferences());
   }
 
   @Override protected void onHandleIntent(Intent intent) {
@@ -182,7 +182,7 @@ public class InstalledIntentService extends IntentService {
       InstallEvent event =
           (InstallEvent) analytics.get(packageName + packageInfo.versionCode, InstallEvent.class);
       if (event != null) {
-        event.setPhoneRooted(root.isRootAvailable()
+        event.setPhoneRooted(rootAvailabilityManager.isRootAvailable()
             .toBlocking()
             .value());
         event.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.SUCC);

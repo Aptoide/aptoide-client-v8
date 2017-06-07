@@ -104,6 +104,7 @@ import cm.aptoide.pt.v8engine.download.PaidAppsDownloadInterceptor;
 import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.install.RootAvailabilityManager;
 import cm.aptoide.pt.v8engine.leak.LeakTool;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV3;
 import cm.aptoide.pt.v8engine.networking.BaseBodyInterceptorV7;
@@ -509,7 +510,8 @@ public abstract class V8Engine extends SpotAndShareApplication {
     InstallManager installManager = installManagers.get(installerType);
     if (installManager == null) {
       installManager = new InstallManager(getDownloadManager(),
-          new InstallerFactory().create(this, installerType));
+          new InstallerFactory().create(this, installerType),
+          new RootAvailabilityManager(((V8Engine) getApplicationContext()).getSecurePreferences()));
       installManagers.put(installerType, installManager);
     }
 
@@ -804,7 +806,9 @@ public abstract class V8Engine extends SpotAndShareApplication {
             PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 
             return setupFirstRun(accountManager).andThen(
-                Completable.merge(accountManager.syncCurrentAccount(), createShortcut()));
+                Completable.merge(accountManager.syncCurrentAccount(), createShortcut()))
+                .andThen(
+                    new RootAvailabilityManager(getSecurePreferences()).updateRootAvailability());
           }
 
           return Completable.complete();

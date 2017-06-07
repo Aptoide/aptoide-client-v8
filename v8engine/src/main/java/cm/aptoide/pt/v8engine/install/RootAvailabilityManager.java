@@ -9,25 +9,19 @@ import rx.Single;
  * Created by trinkes on 19/05/2017.
  */
 
-public class Root {
+public class RootAvailabilityManager {
   public static final String IS_PHONE_ROOTED = "IS_PHONE_ROOTED";
   private SecurePreferences sharedPreferences;
 
-  public Root(SecurePreferences sharedPreferences) {
+  public RootAvailabilityManager(SecurePreferences sharedPreferences) {
     this.sharedPreferences = sharedPreferences;
   }
 
   public Single<Boolean> isRootAvailable() {
     return Single.defer(() -> sharedPreferences.contains(IS_PHONE_ROOTED))
-        .flatMap(contains -> {
-          if (contains) {
-            return sharedPreferences.getBoolean(IS_PHONE_ROOTED, false)
-                .first()
-                .toSingle();
-          } else {
-            return updateRootAvailability().andThen(isRootAvailable());
-          }
-        });
+        .flatMap(contains -> sharedPreferences.getBoolean(IS_PHONE_ROOTED, false)
+            .first()
+            .toSingle());
   }
 
   public Completable updateRootAvailability() {

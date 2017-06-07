@@ -29,7 +29,7 @@ import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.download.InstallEvent;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.Installer;
-import cm.aptoide.pt.v8engine.install.Root;
+import cm.aptoide.pt.v8engine.install.RootAvailabilityManager;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import java.io.File;
 import java.util.List;
@@ -52,12 +52,13 @@ public class DefaultInstaller implements Installer {
   private final InstallationProvider installationProvider;
   private FileUtils fileUtils;
   private Analytics analytics;
-  private Root root;
+  private RootAvailabilityManager rootAvailabilityManager;
   private InstalledRepository installedRepository;
 
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
       FileUtils fileUtils, Analytics analytics, boolean debug,
-      InstalledRepository installedRepository, int rootTimeout, Root root) {
+      InstalledRepository installedRepository, int rootTimeout,
+      RootAvailabilityManager rootAvailabilityManager) {
     this.packageManager = packageManager;
     this.installationProvider = installationProvider;
     this.fileUtils = fileUtils;
@@ -65,7 +66,7 @@ public class DefaultInstaller implements Installer {
     this.installedRepository = installedRepository;
     RootShell.debugMode = debug;
     RootShell.defaultCommandTimeout = rootTimeout;
-    this.root = root;
+    this.rootAvailabilityManager = rootAvailabilityManager;
   }
 
   @Override public Observable<Boolean> isInstalled(String md5) {
@@ -77,14 +78,11 @@ public class DefaultInstaller implements Installer {
 
   @Override public Completable install(Context context, String md5) {
 
-    // TODO: 22/05/2017 trinkes chain this code with the next one. This code shouldn't break the chain
-    root.isRootAvailable()
-        .subscribe(isRoot -> {
-          Analytics.RootInstall.installationType(ManagerPreferences.allowRootInstallation(),
-              isRoot);
-        });
-    return installationProvider.getInstallation(md5)
-        .first()
+    return rootAvailabilityManager.isRootAvailable()
+        .doOnSuccess(isRoot -> Analytics.RootInstall.installationType(
+            ManagerPreferences.allowRootInstallation(), isRoot))
+        .flatMapObservable(isRoot -> installationProvider.getInstallation(md5)
+            .first())
         .observeOn(Schedulers.computation())
         .doOnNext(installation -> {
           installation.setStatus(Installed.STATUS_INSTALLING);
