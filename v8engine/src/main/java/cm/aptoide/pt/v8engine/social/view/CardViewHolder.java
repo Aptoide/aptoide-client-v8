@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.social.view;
 
+import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -52,8 +53,10 @@ public class CardViewHolder extends RecyclerView.ViewHolder {
         ContextCompat.getColor(itemView.getContext(), R.color.black_87_alpha),
         card.getPublisherName()));
     articleTitle.setText(card.getTitle());
-    relatedTo.setText(card.getRelatedApp()
-        .getName());
+    relatedTo.setText(spannableFactory.createStyleSpan(itemView.getContext()
+        .getString(R.string.displayable_social_timeline_article_related_to, card.getRelatedApp()
+            .getName()), Typeface.BOLD, card.getRelatedApp()
+        .getName()));
     date.setText(dateCalculator.getTimeSinceDate(itemView.getContext(), card.getDate()));
     ImageLoader.with(itemView.getContext())
         .loadWithShadowCircleTransform(card.getPublisherAvatarURL(), publisherAvatar);
