@@ -17,10 +17,10 @@ import rx.subjects.PublishSubject;
 
 public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
+  private final PublishSubject<CardTouchEvent> articleSubject;
+  private final DateCalculator dateCalculator;
+  private final SpannableFactory spannableFactory;
   private List<Article> cards;
-  private PublishSubject<CardTouchEvent> articleSubject;
-  private DateCalculator dateCalculator;
-  private SpannableFactory spannableFactory;
 
   public CardAdapter(List<Article> cards, PublishSubject<CardTouchEvent> articleSubject,
       DateCalculator dateCalculator, SpannableFactory spannableFactory) {
@@ -44,7 +44,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
   }
 
   @Override public int getItemCount() {
-    return cards.size();
+    return this.cards.size();
   }
 
   public void updateCards(List<Article> cards) {
