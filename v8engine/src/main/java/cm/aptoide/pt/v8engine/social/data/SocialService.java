@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.social.data;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
+import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.timeline.PackageRepository;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -23,10 +24,12 @@ public class SocialService {
   private final int latestPackagesCount;
   private final int randomPackagesCount;
   private final TimelineResponseCardMapper mapper;
+  private final LinksHandlerFactory linksHandlerFactory;
 
   public SocialService(String url, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient okhttp,
       Converter.Factory converterFactory, PackageRepository packageRepository,
-      int latestPackagesCount, int randomPackagesCount, TimelineResponseCardMapper mapper) {
+      int latestPackagesCount, int randomPackagesCount, TimelineResponseCardMapper mapper,
+      LinksHandlerFactory linksHandlerFactory) {
     this.url = url;
     this.bodyInterceptor = bodyInterceptor;
     this.okhttp = okhttp;
@@ -35,6 +38,7 @@ public class SocialService {
     this.latestPackagesCount = latestPackagesCount;
     this.randomPackagesCount = randomPackagesCount;
     this.mapper = mapper;
+    this.linksHandlerFactory = linksHandlerFactory;
   }
 
   public Single<List<Article>> getCards(int limit, int offset) {
@@ -45,7 +49,7 @@ public class SocialService {
             return Single.just(timelineResponse);
           }
           return Single.error(new IllegalStateException("Could not obtain timeline from server."));
-        })).map(timelineResponse -> mapper.map(timelineResponse));
+        })).map(timelineResponse -> mapper.map(timelineResponse, linksHandlerFactory));
   }
 
   private Single<List<String>> getPackages() {

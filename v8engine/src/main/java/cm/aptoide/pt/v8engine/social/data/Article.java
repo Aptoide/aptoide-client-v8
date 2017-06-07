@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.social.data;
 
 import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.v8engine.link.Link;
 import java.util.Date;
 
 /**
@@ -14,28 +15,24 @@ public class Article {
   private final Date date;
   private final App relatedApp;
   private final String abTestURL;
-  private final String publisherURL;
   private final String publisherAvatarURL;
   private final String publisherName;
-  private final String contentUrl;
+  private final Link publisherLink;
+  private final Link articleLink;
 
   public Article(String cardId, String title, String thumbnailUrl, Date date, App app,
-      String abTestURL, String publisherURL, String publisherAvatarURL, String publisherName,
-      String contentUrl) {
+      String abTestURL, String publisherAvatarURL, String publisherName, Link publisherLink,
+      Link articleLink) {
     this.cardId = cardId;
     this.title = title;
     this.thumbnailUrl = thumbnailUrl;
     this.date = date;
     this.relatedApp = app;
     this.abTestURL = abTestURL;
-    this.publisherURL = publisherURL;
+    this.publisherLink = publisherLink;
     this.publisherAvatarURL = publisherAvatarURL;
     this.publisherName = publisherName;
-    this.contentUrl = contentUrl;
-  }
-
-  public String getContentUrl() {
-    return contentUrl;
+    this.articleLink = articleLink;
   }
 
   public String getCardId() {
@@ -62,15 +59,19 @@ public class Article {
     return abTestURL;
   }
 
-  public String getPublisherURL() {
-    return publisherURL;
-  }
-
   public String getPublisherAvatarURL() {
     return publisherAvatarURL;
   }
 
   public String getPublisherName() {
     return publisherName;
+  }
+
+  public Link getPublisherLink() {
+    return publisherLink;
+  }
+
+  public Link getArticleLink() {
+    return articleLink;
   }
 }

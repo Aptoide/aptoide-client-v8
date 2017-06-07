@@ -62,12 +62,13 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     loadExtras();
+    LinksHandlerFactory linksHandlerFactory = new LinksHandlerFactory(getContext());
     attachPresenter(new TimelinePresenter(this, new SocialManager(new SocialService(url,
         ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
         WebService.getDefaultConverter(), new PackageRepository(getContext().getPackageManager()),
-        LATEST_PACKAGES_COUNT, RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper())),
-        new LinksHandlerFactory(getContext()), CrashReport.getInstance()), savedInstanceState);
+        LATEST_PACKAGES_COUNT, RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(),
+        linksHandlerFactory)), linksHandlerFactory, CrashReport.getInstance()), savedInstanceState);
     articleSubject = PublishSubject.create();
     adapter = new CardAdapter(Collections.emptyList(), articleSubject, new DateCalculator(),
         new SpannableFactory());

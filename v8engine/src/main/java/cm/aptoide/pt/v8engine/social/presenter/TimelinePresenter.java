@@ -60,11 +60,9 @@ public class TimelinePresenter implements Presenter {
         .flatMap(created -> view.articleClicked())
         .map(cardTouchEvent -> {
           if (cardTouchEvent.getActionType().equals(CardTouchEvent.Type.ARTICLE_BODY)) {
-            return linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
-                cardTouchEvent.getCard().getContentUrl());
+            return cardTouchEvent.getCard().getArticleLink();
           } else if (cardTouchEvent.getActionType().equals(CardTouchEvent.Type.ARTICLE_HEADER)) {
-            return linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
-                cardTouchEvent.getCard().getPublisherURL());
+            return cardTouchEvent.getCard().getPublisherLink();
           }
           throw new IllegalStateException("Unknown Card Touch Event type.");
         })

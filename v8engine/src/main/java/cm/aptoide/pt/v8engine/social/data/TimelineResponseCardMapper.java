@@ -4,6 +4,7 @@ import cm.aptoide.pt.model.v7.timeline.ArticleTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
+import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  */
 
 public class TimelineResponseCardMapper {
-  public List<Article> map(GetUserTimeline timelineResponse) {
+  public List<Article> map(GetUserTimeline timelineResponse, LinksHandlerFactory linksFactory) {
     final List<Article> cards = new ArrayList();
 
     for (TimelineItem<TimelineCard> item : timelineResponse.getDatalist().getList()) {
@@ -25,9 +26,11 @@ public class TimelineResponseCardMapper {
         }
 
         cards.add(new Article(article.getCardId(), article.getTitle(), article.getThumbnailUrl(),
-            article.getDate(), article.getApps().get(0), ab, article.getPublisher().getBaseUrl(),
-            article.getPublisher().getLogoUrl(), article.getPublisher().getName(),
-            article.getUrl()));
+            article.getDate(), article.getApps().get(0), ab, article.getPublisher().getLogoUrl(),
+            article.getPublisher().getName(),
+            linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
+                article.getPublisher().getBaseUrl()),
+            linksFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, article.getUrl())));
       }
     }
 
