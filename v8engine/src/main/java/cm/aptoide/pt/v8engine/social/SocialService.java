@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.social;
 
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
 import cm.aptoide.pt.v8engine.timeline.PackageRepository;
 import java.util.List;
@@ -40,23 +40,16 @@ class SocialService {
   public Single<List<Article>> getCards(int limit, int offset) {
     return getPackages().flatMap(
         packages -> GetUserTimelineRequest.of(url, limit, offset, packages, bodyInterceptor, okhttp,
-            converterFactory, null)
-            .observe()
-            .toSingle()
-            .flatMap(timelineResponse -> {
-              if (timelineResponse.isOk()) {
-                return Single.just(timelineResponse);
-              }
-              return Single.error(
-                  new IllegalStateException("Could not obtain timeline from server."));
-            }))
-        .map(timelineResponse -> mapper.map(timelineResponse));
+            converterFactory, null).observe().toSingle().flatMap(timelineResponse -> {
+          if (timelineResponse.isOk()) {
+            return Single.just(timelineResponse);
+          }
+          return Single.error(new IllegalStateException("Could not obtain timeline from server."));
+        })).map(timelineResponse -> mapper.map(timelineResponse));
   }
 
   private Single<List<String>> getPackages() {
     return Observable.concat(packageRepository.getLatestInstalledPackages(latestPackagesCount),
-        packageRepository.getRandomInstalledPackages(randomPackagesCount))
-        .toList()
-        .toSingle();
+        packageRepository.getRandomInstalledPackages(randomPackagesCount)).toList().toSingle();
   }
 }
