@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.social.data.Article;
+import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.List;
@@ -17,11 +18,11 @@ import rx.subjects.PublishSubject;
 public class CardAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
   private List<Article> cards;
-  private PublishSubject<Article> articleSubject;
+  private PublishSubject<CardTouchEvent> articleSubject;
   private DateCalculator dateCalculator;
   private SpannableFactory spannableFactory;
 
-  public CardAdapter(List<Article> cards, PublishSubject<Article> articleSubject,
+  public CardAdapter(List<Article> cards, PublishSubject<CardTouchEvent> articleSubject,
       DateCalculator dateCalculator, SpannableFactory spannableFactory) {
     this.cards = cards;
     this.articleSubject = articleSubject;

@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.social.view;
 
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.social.data.Article;
+import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import java.util.List;
 import rx.Observable;
 
@@ -21,5 +22,5 @@ public interface TimelineView extends View {
 
   Observable<Void> refreshes();
 
-  Observable<Article> articleClicked();
+  Observable<CardTouchEvent> articleClicked();
 }

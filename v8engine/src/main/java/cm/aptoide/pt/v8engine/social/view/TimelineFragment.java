@@ -17,6 +17,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.social.data.Article;
+import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialManager;
 import cm.aptoide.pt.v8engine.social.data.SocialService;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
@@ -42,7 +43,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private static final String ACTION_KEY = "action";
 
   private CardAdapter adapter;
-  private PublishSubject<Article> articleSubject;
+  private PublishSubject<CardTouchEvent> articleSubject;
   private String url;
 
   private RecyclerView list;
@@ -122,7 +123,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
   }
 
-  @Override public Observable<Article> articleClicked() {
+  @Override public Observable<CardTouchEvent> articleClicked() {
     return articleSubject;
   }
 }

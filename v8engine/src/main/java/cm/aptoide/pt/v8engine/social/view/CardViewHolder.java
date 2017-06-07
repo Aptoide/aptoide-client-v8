@@ -8,6 +8,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.social.data.Article;
+import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
@@ -18,7 +19,7 @@ import rx.subjects.PublishSubject;
 
 public class CardViewHolder extends RecyclerView.ViewHolder {
 
-  private final PublishSubject<Article> articleSubject;
+  private final PublishSubject<CardTouchEvent> articleSubject;
   private final TextView publisherName;
   private final TextView date;
   private final ImageView publisherAvatar;
@@ -29,7 +30,7 @@ public class CardViewHolder extends RecyclerView.ViewHolder {
   private final SpannableFactory spannableFactory;
   private final DateCalculator dateCalculator;
 
-  public CardViewHolder(View itemView, PublishSubject<Article> articleSubject,
+  public CardViewHolder(View itemView, PublishSubject<CardTouchEvent> articleSubject,
       DateCalculator dateCalculator, SpannableFactory spannableFactory) {
     super(itemView);
     this.articleSubject = articleSubject;
@@ -58,6 +59,9 @@ public class CardViewHolder extends RecyclerView.ViewHolder {
     ImageLoader.with(itemView.getContext())
         .loadWithCenterCrop(card.getThumbnailUrl(), articleThumbnail);
 
-    articleThumbnail.setOnClickListener(click -> articleSubject.onNext(card));
+    articleThumbnail.setOnClickListener(
+        click -> articleSubject.onNext(new CardTouchEvent(card, CardTouchEvent.Type.ARTICLE_BODY)));
+    articleHeader.setOnClickListener(click -> articleSubject.onNext(
+        new CardTouchEvent(card, CardTouchEvent.Type.ARTICLE_HEADER)));
   }
 }

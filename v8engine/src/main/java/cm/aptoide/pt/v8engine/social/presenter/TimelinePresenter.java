@@ -8,6 +8,7 @@ import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.social.data.Article;
+import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.SocialManager;
 import cm.aptoide.pt.v8engine.social.view.TimelineView;
 import java.util.List;
@@ -57,8 +58,16 @@ public class TimelinePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.articleClicked())
-        .map(article -> linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
-            article.getContentUrl()))
+        .map(cardTouchEvent -> {
+          if (cardTouchEvent.getActionType().equals(CardTouchEvent.Type.ARTICLE_BODY)) {
+            return linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
+                cardTouchEvent.getCard().getContentUrl());
+          } else if (cardTouchEvent.getActionType().equals(CardTouchEvent.Type.ARTICLE_HEADER)) {
+            return linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
+                cardTouchEvent.getCard().getPublisherURL());
+          }
+          throw new IllegalStateException("Unknown Card Touch Event type.");
+        })
         .doOnNext(link -> link.launch())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(articleUrl -> {
