@@ -68,7 +68,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
         WebService.getDefaultConverter(), new PackageRepository(getContext().getPackageManager()),
         LATEST_PACKAGES_COUNT, RANDOM_PACKAGES_COUNT, new TimelineResponseCardMapper(),
-        linksHandlerFactory)), linksHandlerFactory, CrashReport.getInstance()), savedInstanceState);
+        linksHandlerFactory)), CrashReport.getInstance()), savedInstanceState);
     articleSubject = PublishSubject.create();
     adapter = new CardAdapter(Collections.emptyList(), articleSubject, new DateCalculator(),
         new SpannableFactory());

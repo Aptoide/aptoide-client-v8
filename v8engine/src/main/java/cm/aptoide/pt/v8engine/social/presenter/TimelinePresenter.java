@@ -22,14 +22,12 @@ public class TimelinePresenter implements Presenter {
 
   private final TimelineView view;
   private final SocialManager socialManager;
-  private LinksHandlerFactory linksHandlerFactory;
   private CrashReport crashReport;
 
   public TimelinePresenter(@NonNull TimelineView cardsView, @NonNull SocialManager socialManager,
-      LinksHandlerFactory linksHandlerFactory, CrashReport crashReport) {
+      CrashReport crashReport) {
     this.view = cardsView;
     this.socialManager = socialManager;
-    this.linksHandlerFactory = linksHandlerFactory;
     this.crashReport = crashReport;
   }
 
