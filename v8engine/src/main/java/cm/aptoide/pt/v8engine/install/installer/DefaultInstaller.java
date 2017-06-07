@@ -20,6 +20,7 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.root.RootShell;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -56,12 +57,14 @@ public class DefaultInstaller implements Installer {
 
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
       FileUtils fileUtils, Analytics analytics, boolean debug,
-      InstalledRepository installedRepository, Root root) {
+      InstalledRepository installedRepository, int rootTimeout, Root root) {
     this.packageManager = packageManager;
     this.installationProvider = installationProvider;
     this.fileUtils = fileUtils;
     this.analytics = analytics;
     this.installedRepository = installedRepository;
+    RootShell.debugMode = debug;
+    RootShell.defaultCommandTimeout = rootTimeout;
     this.root = root;
   }
 

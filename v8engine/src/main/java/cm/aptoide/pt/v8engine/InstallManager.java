@@ -15,6 +15,7 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.root.RootShell;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
@@ -22,7 +23,6 @@ import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.installer.InstallationState;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
-import cm.aptoide.pt.v8engine.install.root.RootShell;
 import cm.aptoide.pt.v8engine.repository.DownloadRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import java.util.Collections;
@@ -46,14 +46,11 @@ public class InstallManager {
   /**
    * Uses the default {@link Repository} for {@link Download} and {@link Installed}
    */
-  public InstallManager(AptoideDownloadManager aptoideDownloadManager, Installer installer,
-      int rootInstallDefaultTimeout, boolean rootInstallDebug) {
+  public InstallManager(AptoideDownloadManager aptoideDownloadManager, Installer installer) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
     this.downloadRepository = RepositoryFactory.getDownloadRepository();
     this.installedRepository = RepositoryFactory.getInstalledRepository();
-    RootShell.defaultCommandTimeout = rootInstallDefaultTimeout;
-    RootShell.debugMode = rootInstallDebug;
   }
 
   public void stopAllInstallations(Context context) {

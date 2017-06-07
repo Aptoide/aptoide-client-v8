@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.install;
 
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.v8engine.install.root.RootShell;
+import cm.aptoide.pt.root.RootShell;
 import cm.aptoide.pt.v8engine.preferences.SecurePreferences;
 import rx.Completable;
 import rx.Single;

@@ -1,11 +1,11 @@
 package cm.aptoide.pt.v8engine.install.installer;
 
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.root.RootShell;
+import cm.aptoide.pt.root.exceptions.RootDeniedException;
+import cm.aptoide.pt.root.execution.Command;
+import cm.aptoide.pt.root.execution.Shell;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
-import cm.aptoide.pt.v8engine.install.root.RootShell;
-import cm.aptoide.pt.v8engine.install.root.exceptions.RootDeniedException;
-import cm.aptoide.pt.v8engine.install.root.execution.Command;
-import cm.aptoide.pt.v8engine.install.root.execution.Shell;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 import rx.Observable;

@@ -20,7 +20,7 @@
  * limitations under that License.
  */
 
-package cm.aptoide.pt.v8engine.install.root.exceptions;
+package cm.aptoide.pt.root.exceptions;
 
 public class RootDeniedException extends Exception {
 

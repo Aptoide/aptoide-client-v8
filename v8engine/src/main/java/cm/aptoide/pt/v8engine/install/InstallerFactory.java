@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -44,8 +44,8 @@ public class InstallerFactory {
   @NonNull private DefaultInstaller getDefaultInstaller(Context context) {
     return new DefaultInstaller(context.getPackageManager(),
         getInstallationProvider(((V8Engine) context.getApplicationContext()).getDownloadManager()),
-        new FileUtils(), Analytics.getInstance(), ManagerPreferences.isDebug() || BuildConfig.DEBUG,
-        RepositoryFactory.getInstalledRepository(),
+        new FileUtils(), Analytics.getInstance(), ToolboxManager.isDebug() || BuildConfig.DEBUG,
+        RepositoryFactory.getInstalledRepository(), 180000,
         new Root(((V8Engine) context.getApplicationContext()).getSecurePreferences()));
   }
 
