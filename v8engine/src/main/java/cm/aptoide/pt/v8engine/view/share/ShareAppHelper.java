@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.spotandshareandroid.HighwayActivity;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -18,8 +17,10 @@ import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.account.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
+import cm.aptoide.pt.v8engine.spotandshare.view.RadarActivity;
 import rx.Observable;
 
 /**
@@ -33,15 +34,17 @@ public class ShareAppHelper {
   private final AccountNavigator accountNavigator;
   private final SpotAndShareAnalytics spotAndShareAnalytics;
   private final Activity activity;
+  private TimelineAnalytics timelineAnalytics;
 
   public ShareAppHelper(InstalledRepository installedRepository,
       AptoideAccountManager accountManager, AccountNavigator accountNavigator, Activity activity,
-      SpotAndShareAnalytics spotAndShareAnalytics) {
+      SpotAndShareAnalytics spotAndShareAnalytics, TimelineAnalytics timelineAnalytics) {
     this.installedRepository = installedRepository;
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.activity = activity;
     this.spotAndShareAnalytics = spotAndShareAnalytics;
+    this.timelineAnalytics = timelineAnalytics;
   }
 
   private boolean isInstalled(String packageName) {
@@ -49,7 +52,7 @@ public class ShareAppHelper {
   }
 
   public void shareApp(String appName, String packageName, String wUrl, String iconPath,
-      String origin) {
+      float averageRating, String origin) {
 
     String title = activity.getString(R.string.share);
 
@@ -61,7 +64,7 @@ public class ShareAppHelper {
       if (ShareDialogs.ShareResponse.SHARE_EXTERNAL == eResponse) {
         caseDefaultShare(appName, wUrl);
       } else if (ShareDialogs.ShareResponse.SHARE_TIMELINE == eResponse) {
-        caseAppsTimelineShare(appName, packageName, iconPath);
+        caseAppsTimelineShare(appName, packageName, iconPath, averageRating);
       } else if (ShareDialogs.ShareResponse.SHARE_SPOT_AND_SHARE == eResponse) {
         caseSpotAndShareShare(appName, packageName, origin);
       }
@@ -73,7 +76,7 @@ public class ShareAppHelper {
         activity.getString(R.string.share))
         .subscribe(shareResponse -> {
           if (ShareDialogs.ShareResponse.SHARE_TIMELINE == shareResponse) {
-            caseAppsTimelineShare(appName, packageName, iconPath);
+            caseAppsTimelineShare(appName, packageName, iconPath, 0);
           } else if (ShareDialogs.ShareResponse.SHARE_SPOT_AND_SHARE == shareResponse) {
             caseSpotAndShareShare(appName, packageName, origin);
           }
@@ -92,7 +95,8 @@ public class ShareAppHelper {
     }
   }
 
-  private void caseAppsTimelineShare(String appName, String packageName, String iconPath) {
+  private void caseAppsTimelineShare(String appName, String packageName, String iconPath,
+      float averageRating) {
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> accountNavigator.navigateToAccountView(
@@ -102,13 +106,14 @@ public class ShareAppHelper {
     if (Application.getConfiguration()
         .isCreateStoreAndSetUserPrivacyAvailable()) {
       SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(accountManager, false,
-          SharePreviewDialog.SharePreviewOpenMode.SHARE);
+          SharePreviewDialog.SharePreviewOpenMode.SHARE, timelineAnalytics);
       AlertDialog.Builder alertDialog =
           sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(activity, appName,
-              iconPath);
-      SocialRepository socialRepository = RepositoryFactory.getSocialRepository(activity);
+              iconPath, averageRating);
+      SocialRepository socialRepository =
+          RepositoryFactory.getSocialRepository(activity, timelineAnalytics);
 
-      sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", activity,
+      sharePreviewDialog.showShareCardPreviewDialog(packageName, null, "app", activity,
           sharePreviewDialog, alertDialog, socialRepository);
     }
   }
@@ -119,7 +124,7 @@ public class ShareAppHelper {
     String filepath = getFilepath(packageName);
     String appNameToShare = filterAppName(appName);
 
-    Intent intent = HighwayActivity.buildIntent(activity, filepath, appNameToShare);
+    Intent intent = RadarActivity.buildIntent(activity, filepath, appNameToShare);
 
     activity.startActivity(intent);
   }

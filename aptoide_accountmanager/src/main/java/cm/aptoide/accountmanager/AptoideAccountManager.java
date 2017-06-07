@@ -91,7 +91,7 @@ public class AptoideAccountManager {
 
   public Completable signUp(String email, String password) {
     return credentialsValidator.validate(email, password, true)
-        .andThen(accountManagerService.createAccount(email, password))
+        .andThen(accountManagerService.createAccount(email, password, this))
         .andThen(login(Account.Type.APTOIDE, email, password, null))
         .doOnCompleted(() -> accountAnalytics.signUp())
         .onErrorResumeNext(throwable -> {
@@ -105,7 +105,7 @@ public class AptoideAccountManager {
   public Completable login(Account.Type type, final String email, final String password,
       final String name) {
     return credentialsValidator.validate(email, password, false)
-        .andThen(accountManagerService.login(type.name(), email, password, name))
+        .andThen(accountManagerService.login(type.name(), email, password, name, this))
         .flatMapCompletable(
             oAuth -> syncAccount(oAuth.getAccessToken(), oAuth.getRefreshToken(), password, type))
         .doOnCompleted(() -> accountAnalytics.login(email));
@@ -167,7 +167,7 @@ public class AptoideAccountManager {
     return getAccount().getAccess();
   }
 
-  public Completable syncCurrentAccount() {
+  @Deprecated public Completable syncCurrentAccount() {
     return singleAccountStatus().flatMapCompletable(
         account -> syncAccount(account.getAccessToken(), account.getRefreshToken(),
             account.getPassword(), account.getType()));
@@ -175,8 +175,14 @@ public class AptoideAccountManager {
 
   public Completable updateAccount(boolean adultContentEnabled) {
     return singleAccountStatus().flatMapCompletable(
-        account -> accountManagerService.updateAccount(adultContentEnabled,
-            account.getAccessToken())
+        account -> accountManagerService.updateAccount(adultContentEnabled, this)
+            .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
+                account.getPassword(), account.getType())));
+  }
+
+  public Completable updateAccount(String username) {
+    return singleAccountStatus().flatMapCompletable(
+        account -> accountManagerService.updateAccountUsername(username, this)
             .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
                 account.getPassword(), account.getType())));
   }
@@ -197,20 +203,11 @@ public class AptoideAccountManager {
         return Completable.error(
             new AccountValidationException(AccountValidationException.EMPTY_NAME));
       }
-      return accountManagerService.updateAccount(account.getEmail(), nickname,
-          account.getPassword(), TextUtils.isEmpty(avatarPath) ? "" : avatarPath,
-          account.getAccessToken());
+      return accountManagerService.updateAccount(nickname,
+          TextUtils.isEmpty(avatarPath) ? "" : avatarPath, this)
+          .andThen(syncAccount(account.getAccessToken(), account.getRefreshToken(),
+              account.getPassword(), account.getType()));
     });
-  }
-
-  /**
-   * Use {@link Account#getAccessToken()} instead.
-   *
-   * @return account access token.
-   */
-  @Deprecated public String getAccessToken() {
-    final Account account = getAccount();
-    return account == null ? null : account.getAccessToken();
   }
 
   public static class Builder {

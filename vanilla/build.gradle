@@ -11,7 +11,6 @@ buildscript {
 
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
-//apply plugin: 'android-command'
 apply plugin: 'realm-android'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.getkeepsafe.dexcount'
@@ -39,7 +38,7 @@ android {
     multiDexEnabled true
     resValue "string", "authenticator_account_type", APPLICATION_ID
     versionCode project.PROD_VERSION_CODE.toInteger()
-    versionName "8.3.0.0"
+    versionName "8.3.0.1"
     resValue "string", "content_authority", APPLICATION_ID + ".StubProvider"
     buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider\""
     // test default configs
@@ -109,7 +108,6 @@ android {
   buildTypes {
     release {
       buildConfigField "boolean", "CRASH_REPORTS_DISABLED", "false"
-      manifestPlaceholders = [LOCALYTICS_APP_KEY: project.LOCALYTICS_RELEASE_KEY]
       zipAlignEnabled true
       minifyEnabled true
       shrinkResources true
@@ -120,7 +118,6 @@ android {
     debug {
       buildConfigField "boolean", "CRASH_REPORTS_DISABLED", "true"
       ext.enableCrashlytics = false
-      manifestPlaceholders = [LOCALYTICS_APP_KEY: project.LOCALYTICS_DEBUG_KEY]
       zipAlignEnabled false
       minifyEnabled false
       shrinkResources false

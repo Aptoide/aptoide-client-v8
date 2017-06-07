@@ -11,8 +11,10 @@ import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.InstallationProgress;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
 import cm.aptoide.pt.v8engine.download.DownloadFactory;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Observable;
@@ -32,6 +34,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   private String packageName;
   private Button installButton;
   private DownloadFactory downloadFactory;
+  private TimelineAnalytics timelineAnalytics;
 
   public AppViewInstallDisplayable() {
     super();
@@ -39,8 +42,9 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 
   public AppViewInstallDisplayable(InstallManager installManager, GetApp getApp,
       MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository,
-      DownloadFactory downloadFactory) {
-    super(getApp);
+      DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
+      AppViewAnalytics appViewAnalytics) {
+    super(getApp, appViewAnalytics);
     this.installManager = installManager;
     this.md5 = getApp.getNodes()
         .getMeta()
@@ -59,13 +63,16 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     this.minimalAd = minimalAd;
     this.shouldInstall = shouldInstall;
     this.downloadFactory = downloadFactory;
+    this.timelineAnalytics = timelineAnalytics;
   }
 
   public static AppViewInstallDisplayable newInstance(GetApp getApp, InstallManager installManager,
       MinimalAd minimalAd, boolean shouldInstall, InstalledRepository installedRepository,
-      DownloadFactory downloadFactory) {
+      DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
+      AppViewAnalytics appViewAnalytics) {
+
     return new AppViewInstallDisplayable(installManager, getApp, minimalAd, shouldInstall,
-        installedRepository, downloadFactory);
+        installedRepository, downloadFactory, timelineAnalytics, appViewAnalytics);
   }
 
   public void startInstallationProcess() {
@@ -100,5 +107,9 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 
   public Single<InstallManager.Error> getError() {
     return installManager.getError(md5);
+  }
+
+  public TimelineAnalytics getTimelineAnalytics() {
+    return timelineAnalytics;
   }
 }

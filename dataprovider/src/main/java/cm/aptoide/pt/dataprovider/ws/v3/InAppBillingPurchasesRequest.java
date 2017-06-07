@@ -6,7 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.utils.AptoideUtils;
 import okhttp3.OkHttpClient;
@@ -24,21 +24,19 @@ public class InAppBillingPurchasesRequest extends V3<InAppBillingPurchasesRespon
   }
 
   public static InAppBillingPurchasesRequest of(int apiVersion, String packageName, String type,
-      String accessToken, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
-    BaseBody args = getBaseArgs(apiVersion, packageName, type, accessToken);
+    BaseBody args = getBaseArgs(apiVersion, packageName, type);
     return new InAppBillingPurchasesRequest(args, bodyInterceptor, httpClient, converterFactory);
   }
 
-  @NonNull private static BaseBody getBaseArgs(int apiVersion, String packageName, String type,
-      String accessToken) {
+  @NonNull private static BaseBody getBaseArgs(int apiVersion, String packageName, String type) {
     BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("aptvercode", String.valueOf(AptoideUtils.Core.getVerCode()));
     args.put("package", packageName);
     args.put("apiversion", String.valueOf(apiVersion));
     args.put("reqtype", "iabpurchases");
-    args.put("access_token", accessToken);
     args.put("purchasetype", type);
     return args;
   }

@@ -4,15 +4,14 @@ import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
-import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -54,7 +53,6 @@ public class StoreUtilsProxy {
   }
 
   public Observable<GetStoreMeta> subscribeStoreObservable(String storeName) {
-    Analytics.Stores.subscribe(storeName);
     return StoreUtils.subscribeStore(
         GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider),
             bodyInterceptor, httpClient, converterFactory), accountManager, null, null);
@@ -74,7 +72,6 @@ public class StoreUtilsProxy {
       @Nullable ErrorRequestListener errorRequestListener, String storeName,
       AptoideAccountManager accountManager, String storeUserName, String storePassword) {
 
-    Analytics.Stores.subscribe(storeName);
     StoreUtils.subscribeStore(getStoreMetaRequest, successRequestListener, errorRequestListener,
         accountManager, storeUserName, storePassword);
   }
@@ -91,7 +88,6 @@ public class StoreUtilsProxy {
 
   public void unSubscribeStore(String storeName,
       StoreCredentialsProvider storeCredentialsProvider) {
-    Analytics.Stores.unSubscribe(storeName);
     StoreUtils.unSubscribeStore(storeName, accountManager, storeCredentialsProvider);
   }
 

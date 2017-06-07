@@ -35,18 +35,18 @@ public class GetAdsFragment extends StoreTabGridRecyclerFragment {
     final Converter.Factory converterFactory = WebService.getDefaultConverter();
     adsRepository =
         new AdsRepository(((V8Engine) getContext().getApplicationContext()).getIdsRepository(),
-            accountManager, httpClient, converterFactory, V8Engine.getQManager());
+            accountManager, httpClient, converterFactory,
+            ((V8Engine) getContext().getApplicationContext()).getQManager());
   }
 
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
-    return adsRepository.getAdsFromHomepageMore(refresh)
-        .map(minimalAds -> {
-          List<Displayable> displayables = new LinkedList<>();
-          for (MinimalAd minimalAd : minimalAds) {
-            displayables.add(new GridAdDisplayable(minimalAd, tag));
-          }
+    return adsRepository.getAdsFromHomepageMore(refresh).map(minimalAds -> {
+      List<Displayable> displayables = new LinkedList<>();
+      for (MinimalAd minimalAd : minimalAds) {
+        displayables.add(new GridAdDisplayable(minimalAd, tag));
+      }
 
-          return Collections.singletonList(new DisplayableGroup(displayables));
-        });
+      return Collections.singletonList(new DisplayableGroup(displayables));
+    });
   }
 }

@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.addressbook;
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.events.FacebookEvent;
-import cm.aptoide.pt.v8engine.analytics.events.LocalyticsEvent;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,67 +27,49 @@ public class AddressBookAnalytics {
   public void sendSyncFacebookEvent() {
     analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_Choose_Network",
         createBundleData("choose_network_action", "Facebook")));
-    analytics.sendEvent(new LocalyticsEvent("Follow_Friends_Choose_Network",
-        createMapData("choose_network_action", "Facebook")));
   }
 
   public void sendSyncTwitterEvent() {
     analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_Choose_Network",
         createBundleData("choose_network_action", "Twitter")));
-    analytics.sendEvent(new LocalyticsEvent("Follow_Friends_Choose_Network",
-        createMapData("choose_network_action", "Twitter")));
   }
 
   public void sendSyncAddressBookEvent() {
     analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_Choose_Network",
         createBundleData("choose_network_action", "Sync Address Book")));
-    analytics.sendEvent(new LocalyticsEvent("Follow_Friends_Choose_Network",
-        createMapData("choose_network_action", "Sync Address Book")));
   }
 
   public void sendHowAptoideUsesYourDataEvent() {
     analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_How_To"));
-    analytics.sendEvent(new LocalyticsEvent("Follow_Friends_How_To"));
   }
 
   public void sendAllowAptoideAccessToContactsEvent() {
     analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_Aptoide_Access",
         createBundleData("action", "Allow")));
-    analytics.sendEvent(
-        new LocalyticsEvent("Follow_Friends_Aptoide_Access", createMapData("action", "Allow")));
   }
 
   public void sendDenyAptoideAccessToContactsEvent() {
     analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_Aptoide_Access",
         createBundleData("action", "Deny")));
-    analytics.sendEvent(
-        new LocalyticsEvent("Follow_Friends_Aptoide_Access", createMapData("action", "Deny")));
   }
 
   public void sendNewConnectionsAllowFriendsToFindYouEvent(String screen) {
     analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_New_Connections",
         createScreenBundleData("action", "Allow friend to find you", screen)));
-    analytics.sendEvent(new LocalyticsEvent("Follow_Friends_New_Connections",
-        createScreenMapData("action", "Allow friend to find you", screen)));
   }
 
   public void sendNewConnectionsDoneEvent(String screen) {
     analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_New_Connections",
         createScreenBundleData("action", "Done", screen)));
-    analytics.sendEvent(new LocalyticsEvent("Follow_Friends_New_Connections",
-        createScreenMapData("action", "Done", screen)));
   }
 
   public void sendNewConnectionsShareEvent(String screen) {
     analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_New_Connections",
         createScreenBundleData("action", "Share", screen)));
-    analytics.sendEvent(new LocalyticsEvent("Follow_Friends_New_Connections",
-        createScreenMapData("action", "Share", screen)));
   }
 
   public void sendShareYourPhoneSuccessEvent() {
     analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_Set_My_Phonenumber"));
-    analytics.sendEvent(new LocalyticsEvent("Follow_Friends_Set_My_Phonenumber"));
   }
 
   private Map<String, String> createScreenMapData(String key, String value, String screen) {

@@ -40,6 +40,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     mediaList.setLayoutManager(
         new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
     mediaList.setNestedScrollingEnabled(false); // because otherwise the AppBar won't be collapsed
-    mediaList.setAdapter(new ScreenshotsAdapter(media, getFragmentNavigator()));
+    mediaList.setAdapter(
+        new ScreenshotsAdapter(media, getFragmentNavigator(), displayable.getAppViewAnalytics()));
   }
 }

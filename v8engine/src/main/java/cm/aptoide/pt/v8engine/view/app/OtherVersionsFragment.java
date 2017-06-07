@@ -1,14 +1,11 @@
 package cm.aptoide.pt.v8engine.view.app;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.style.StyleSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,8 +13,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
@@ -188,19 +185,9 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     private final AppBarLayout appBarLayout;
     private final ImageView appIcon;
 
-    private final SpannableString composedTitle1;
-    private final SpannableString composedTitle2;
-
     // ctor
     ViewHeader(@NonNull View view) {
-      composedTitle1 = new SpannableString(view.getResources()
-          .getString(R.string.other_versions_partial_title_1));
       this.view = view;
-      composedTitle1.setSpan(new StyleSpan(Typeface.ITALIC), 0, composedTitle1.length(), 0);
-
-      composedTitle2 = new SpannableString(view.getResources()
-          .getString(R.string.other_versions_partial_title_2));
-      composedTitle2.setSpan(new StyleSpan(Typeface.ITALIC), 0, composedTitle2.length(), 0);
 
       animationsEnabled = ManagerPreferences.getAnimationsEnabledStatus();
 

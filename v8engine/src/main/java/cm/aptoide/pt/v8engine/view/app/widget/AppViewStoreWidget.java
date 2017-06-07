@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -108,11 +108,15 @@ import rx.functions.Action1;
             WebService.getDefaultConverter());
 
     Action1<Void> openStore = __ -> {
+      displayable.getAppViewAnalytics()
+          .sendOpenStoreEvent();
       getFragmentNavigator().navigateTo(V8Engine.getFragmentProvider()
           .newStoreFragment(storeName, storeTheme));
     };
 
     Action1<Void> subscribeStore = __ -> {
+      displayable.getAppViewAnalytics()
+          .sendFollowStoreEvent();
       storeUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
         ShowMessage.asSnack(itemView,
             AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));

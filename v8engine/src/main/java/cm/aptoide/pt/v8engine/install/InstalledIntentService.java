@@ -14,10 +14,10 @@ import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.ads.AdsRepository;
@@ -48,6 +48,7 @@ public class InstalledIntentService extends IntentService {
   private Converter.Factory converterFactory;
   private InstallManager installManager;
   private Root root;
+  private QManager qManager;
 
   public InstalledIntentService() {
     super("InstalledIntentService");
@@ -57,20 +58,19 @@ public class InstalledIntentService extends IntentService {
     super.onCreate();
     final AptoideAccountManager accountManager =
         ((V8Engine) getApplicationContext()).getAccountManager();
+    qManager = ((V8Engine) getApplicationContext()).getQManager();
     httpClient = ((V8Engine) getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     adsRepository =
         new AdsRepository(((V8Engine) getApplicationContext()).getIdsRepository(), accountManager,
-            httpClient, converterFactory, V8Engine.getQManager());
+            httpClient, converterFactory, qManager);
     repository = RepositoryFactory.getRollbackRepository();
     updatesRepository = RepositoryFactory.getUpdateRepository(this);
 
     subscriptions = new CompositeSubscription();
     analytics = Analytics.getInstance();
-    final AptoideDownloadManager downloadManager =
-        ((V8Engine) getApplicationContext()).getDownloadManager();
-    Installer installer = new InstallerFactory().create(this, InstallerFactory.ROLLBACK);
-    installManager = new InstallManager(downloadManager, installer);
+    installManager =
+        ((V8Engine) getApplicationContext()).getInstallManager(InstallerFactory.ROLLBACK);
     root = new Root(((V8Engine) getApplicationContext()).getSecurePreferences());
   }
 
@@ -135,7 +135,8 @@ public class InstalledIntentService extends IntentService {
     return rollback != null && ((rollback.getAction()
         .equals(Rollback.Action.INSTALL.name()) && action.equals(Intent.ACTION_PACKAGE_ADDED))
         || (rollback.getAction()
-        .equals(Rollback.Action.UNINSTALL.name()) && action.equals(Intent.ACTION_PACKAGE_REMOVED))
+        .equals(Rollback.Action.UNINSTALL.name())
+        && action.equals(Intent.ACTION_PACKAGE_REMOVED))
         || (rollback.getAction()
         .equals(Rollback.Action.UPDATE.name()) && action.equals(Intent.ACTION_PACKAGE_REPLACED))
         || (rollback.getAction()
@@ -264,7 +265,7 @@ public class InstalledIntentService extends IntentService {
     return adsRepository.getAdsFromSecondInstall(packageName)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, true,
-            adsRepository, httpClient, converterFactory))
+            adsRepository, httpClient, converterFactory, qManager))
         .toCompletable();
   }
 }

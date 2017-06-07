@@ -27,6 +27,7 @@ android {
     buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
     resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID + "\""
     buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
+    buildConfigField "int", "DEFAULT_PAYMENT_ID", project.DEFAULT_PAYMENT_ID
     buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
     buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
         "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
@@ -112,15 +113,12 @@ dependencies {
 
   internalCompile project(path: ':dataprovider', configuration: 'internalRelease')
   internalCompile project(path: ':aptoide_accountmanager', configuration: 'internalRelease')
-  internalCompile project(path: ':spotandshareandroid', configuration: 'internalRelease')
 
   prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
   prodCompile project(path: ':aptoide_accountmanager', configuration: 'prodRelease')
-  prodCompile project(path: ':spotandshareandroid', configuration: 'prodRelease')
 
   leakCompile project(path: ':dataprovider', configuration: 'prodRelease')
   leakCompile project(path: ':aptoide_accountmanager', configuration: 'prodRelease')
-  leakCompile project(path: ':spotandshareandroid', configuration: 'prodRelease')
 
 
   compile project(path: ':utils', configuration: 'release')
@@ -128,7 +126,6 @@ dependencies {
   compile project(path: ':crashreports', configuration: 'release')
   compile project(path: ':imageloader', configuration: 'release')
   compile project(path: ':downloadmanager', configuration: 'release')
-  compile project(path: ':spotandshareandroid')
 
   //
   // custom libs in folders
@@ -195,12 +192,6 @@ dependencies {
     exclude group: 'io.card'
   }
 
-  // Localytics sdk
-  compile "com.localytics.android:library:${LOCALYTICS_VERSION}"
-  //Only used by localytics
-  compile "com.google.android.gms:play-services-ads:${PLAY_SERVICES_VERSION}"
-  compile "com.google.android.gms:play-services-gcm:${PLAY_SERVICES_VERSION}"
-
   // Flurry Android sdk
   compile "com.flurry.android:analytics:${FLURRY_VERSION}"
 
@@ -240,4 +231,5 @@ dependencies {
 
 
   leakCompile "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
+  compile project(path: ':spotandshare')
 }

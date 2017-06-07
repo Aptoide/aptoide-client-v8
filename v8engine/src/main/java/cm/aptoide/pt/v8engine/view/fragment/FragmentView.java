@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
@@ -54,6 +56,14 @@ public abstract class FragmentView extends LeakFragment implements View {
     super.onSaveInstanceState(outState);
   }
 
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override public void onPrepareOptionsMenu(Menu menu) {
+    super.onPrepareOptionsMenu(menu);
+  }
+
   /**
    * Do not override this method in fragments to handle back stack navigation, before deciding if
    * toolbar menu items should be handled in activity or the fragment.
@@ -88,6 +98,7 @@ public abstract class FragmentView extends LeakFragment implements View {
 
   @NonNull private Observable<LifecycleEvent> convertToEvent(FragmentEvent event) {
     switch (event) {
+      case ATTACH:
       case CREATE:
         return Observable.empty();
       case CREATE_VIEW:
@@ -102,6 +113,7 @@ public abstract class FragmentView extends LeakFragment implements View {
         return Observable.just(LifecycleEvent.STOP);
       case DESTROY_VIEW:
         return Observable.just(LifecycleEvent.DESTROY);
+      case DETACH:
       case DESTROY:
         return Observable.empty();
       default:

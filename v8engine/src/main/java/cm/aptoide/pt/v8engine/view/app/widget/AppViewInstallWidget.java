@@ -25,8 +25,8 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -55,12 +55,14 @@ import cm.aptoide.pt.v8engine.download.InstallEvent;
 import cm.aptoide.pt.v8engine.download.InstallEventConverter;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.timeline.SocialRepository;
-import cm.aptoide.pt.v8engine.view.app.Payments;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.view.app.AppViewFragment;
 import cm.aptoide.pt.v8engine.view.app.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.install.InstallWarningDialog;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.facebook.appevents.AppEventsLogger;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
@@ -105,9 +107,6 @@ import rx.android.schedulers.AndroidSchedulers;
   private SocialRepository socialRepository;
   private DownloadFactory downloadFactory;
 
-  //private Subscription subscribe;
-  //private long appID;
-
   public AppViewInstallWidget(View itemView) {
     super(itemView);
   }
@@ -147,13 +146,16 @@ import rx.android.schedulers.AndroidSchedulers;
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
-    socialRepository =
-        new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient);
     downloadInstallEventConverter =
         new DownloadEventConverter(bodyInterceptor, httpClient, converterFactory);
     installConverter = new InstallEventConverter(bodyInterceptor, httpClient, converterFactory);
     analytics = Analytics.getInstance();
     downloadFactory = displayable.getDownloadFactory();
+    socialRepository =
+        new SocialRepository(accountManager, bodyInterceptor, converterFactory, httpClient,
+            new TimelineAnalytics(analytics,
+                AppEventsLogger.newLogger(getContext().getApplicationContext()), bodyInterceptor,
+                httpClient, WebService.getDefaultConverter()));
 
     minimalAd = this.displayable.getMinimalAd();
     GetApp getApp = this.displayable.getPojo();
@@ -163,6 +165,8 @@ import rx.android.schedulers.AndroidSchedulers;
     versionName.setText(currentApp.getFile()
         .getVername());
     otherVersions.setOnClickListener(v -> {
+      displayable.getAppViewAnalytics()
+          .sendOtherVersionsEvent();
       Fragment fragment = V8Engine.getFragmentProvider()
           .newOtherVersionsFragment(currentApp.getName(), currentApp.getIcon(),
               currentApp.getPackageName());
@@ -382,8 +386,8 @@ import rx.android.schedulers.AndroidSchedulers;
 
   private void buyApp(GetAppMeta.App app) {
     Fragment fragment = getFragmentNavigator().peekLast();
-    if (fragment != null && Payments.class.isAssignableFrom(fragment.getClass())) {
-      ((Payments) fragment).buyApp(app);
+    if (fragment != null && AppViewFragment.class.isAssignableFrom(fragment.getClass())) {
+      ((AppViewFragment) fragment).buyApp(app);
     }
   }
 
@@ -502,16 +506,21 @@ import rx.android.schedulers.AndroidSchedulers;
                 .isCreateStoreAndSetUserPrivacyAvailable()) {
               SharePreviewDialog sharePreviewDialog =
                   new SharePreviewDialog(displayable, accountManager, true,
-                      SharePreviewDialog.SharePreviewOpenMode.SHARE);
+                      SharePreviewDialog.SharePreviewOpenMode.SHARE,
+                      displayable.getTimelineAnalytics());
               AlertDialog.Builder alertDialog =
                   sharePreviewDialog.getPreviewDialogBuilder(getContext());
 
               sharePreviewDialog.showShareCardPreviewDialog(displayable.getPojo()
-                      .getNodes()
-                      .getMeta()
-                      .getData()
-                      .getPackageName(), "install", context, sharePreviewDialog, alertDialog,
-                  socialRepository);
+                  .getNodes()
+                  .getMeta()
+                  .getData()
+                  .getPackageName(), displayable.getPojo()
+                  .getNodes()
+                  .getMeta()
+                  .getData()
+                  .getStore()
+                  .getId(), "install", context, sharePreviewDialog, alertDialog, socialRepository);
             }
             ShowMessage.asSnack(v, installOrUpgradeMsg);
           }, err -> {

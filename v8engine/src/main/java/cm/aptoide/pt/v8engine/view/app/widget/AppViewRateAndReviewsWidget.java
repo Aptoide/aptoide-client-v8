@@ -21,9 +21,9 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
@@ -124,7 +124,7 @@ import rx.functions.Action1;
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     dialogUtils = new DialogUtils(accountManager,
         new AccountNavigator(getFragmentNavigator(), accountManager, getActivityNavigator()),
-        bodyInterceptor, httpClient, converterFactory);
+        bodyInterceptor, httpClient, converterFactory, displayable.getInstalledRepository());
     appName = app.getName();
     packageName = app.getPackageName();
     storeName = app.getStore()
@@ -147,14 +147,20 @@ import rx.functions.Action1;
         dialogUtils.showRateDialog(context, appName, packageName, storeName);
 
     compositeSubscription.add(RxView.clicks(rateThisButton)
+        .doOnNext(__ -> displayable.getAppViewAnalytics()
+            .sendRateThisAppEvent())
         .flatMap(__ -> showRateDialog)
         .subscribe(__ -> {
         }, handleError));
     compositeSubscription.add(RxView.clicks(rateThisButtonLarge)
+        .doOnNext(__ -> displayable.getAppViewAnalytics()
+            .sendRateThisAppEvent())
         .flatMap(__ -> showRateDialog)
         .subscribe(__ -> {
         }, handleError));
     compositeSubscription.add(RxView.clicks(ratingLayout)
+        .doOnNext(__ -> displayable.getAppViewAnalytics()
+            .sendRateThisAppEvent())
         .flatMap(__ -> showRateDialog)
         .subscribe(__ -> {
         }, handleError));
@@ -167,9 +173,14 @@ import rx.functions.Action1;
               .getTheme());
       getFragmentNavigator().navigateTo(fragment);
     };
+
     compositeSubscription.add(RxView.clicks(readAllButton)
+        .doOnNext(__ -> displayable.getAppViewAnalytics()
+            .sendReadAllEvent())
         .subscribe(commentsOnClickListener, handleError));
     compositeSubscription.add(RxView.clicks(commentsLayout)
+        .doOnNext(__ -> displayable.getAppViewAnalytics()
+            .sendReadAllEvent())
         .subscribe(commentsOnClickListener, handleError));
 
     LinearLayoutManagerWithSmoothScroller layoutManager =

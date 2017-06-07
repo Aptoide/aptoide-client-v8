@@ -266,6 +266,12 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
     }
 
     if (oldVersion == 8083) {
+      schema.get(Notification.class.getSimpleName())
+          .addField(Notification.OWNER_ID_KEY, String.class)
+          .transform(notification -> notification.set(Notification.OWNER_ID_KEY, ""));
+    }
+
+    if (oldVersion == 8084) {
       schema.get("Installed")
           .removePrimaryKey()
           .addField("packageAndVersionCode", String.class)

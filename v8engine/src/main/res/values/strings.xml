@@ -79,8 +79,6 @@
   <!-- Preferences -->
 
   <!-- "Other <app name> versions on different Stores" -->
-  <string name="other_versions_partial_title_1">Other</string>
-  <string name="other_versions_partial_title_2">versions on different Stores</string>
   <string name="social_facebook_screen_title">Facebook</string>
   <string name="social_twitter_screen_title">Twitter</string>
   <string name="top_comments">Top Comments</string>
@@ -638,5 +636,8 @@
   <string name="my_account_edit_store">Edit</string>
   <string name="my_account_log_out">LOG OUT</string>
   <string name="fragment_inbox_title_text">Notification Center</string>
+  <string name="edit_profile_save_button">Save</string>
+  <string name="edit_profile_title">Edit Your Profile</string>
+  <string name="user_edited">User Edited</string>
 
 </resources>

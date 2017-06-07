@@ -11,8 +11,8 @@ import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.model.v3.BaseV3Response;
 import cm.aptoide.pt.model.v3.CheckUserCredentialsJson;
 import cm.aptoide.pt.model.v3.ErrorResponse;
@@ -25,7 +25,7 @@ import cm.aptoide.pt.model.v3.PaymentAuthorizationsResponse;
 import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import java.io.IOException;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -40,14 +40,14 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created on 21/07/16.
  */
 public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
-  protected static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+  protected static final String BASE_HOST = (ToolboxManager.isToolboxEnableHttpScheme() ? "http"
+      : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
       + "://"
       + BuildConfig.APTOIDE_WEB_SERVICES_HOST
       + "/webservices/3/";
@@ -87,8 +87,8 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
   protected static void addNetworkInformation(NetworkOperatorManager operatorManager,
       BaseBody args) {
-    String forceCountry = ManagerPreferences.getForceCountry();
-    if (ManagerPreferences.isDebug() && !TextUtils.isEmpty(forceCountry)) {
+    String forceCountry = ToolboxManager.getForceCountry();
+    if (!TextUtils.isEmpty(forceCountry)) {
       args.put("simcc", forceCountry);
     } else {
       if (operatorManager.isSimStateReady()) {
@@ -118,9 +118,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
                       accessTokenRetry = true;
                       return DataProvider.invalidateAccessToken()
                           .flatMapObservable(s -> {
-                            this.map.setAccess_token(s);
-                            return V3.this.observe(bypassCache)
-                                .observeOn(AndroidSchedulers.mainThread());
+                            return V3.this.observe(bypassCache);
                           });
                     }
                   } else {
@@ -161,6 +159,9 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
     @POST("productPurchaseAuthorization") @FormUrlEncoded
     Observable<PaymentAuthorizationsResponse> getPaymentAuthorization(@FieldMap BaseBody args);
 
+    @POST("productPurchaseAuthorization") @FormUrlEncoded
+    Observable<BaseV3Response> createPaymentAuthorizationWithCode(@FieldMap BaseBody args);
+
     @POST("payProduct") @FormUrlEncoded Observable<BaseV3Response> createPaymentConfirmation(
         @FieldMap BaseBody args);
 
@@ -168,9 +169,6 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
     Observable<BaseV3Response> createPaymentAuthorization(@FieldMap BaseBody args);
 
     @POST("oauth2Authentication") @FormUrlEncoded Observable<OAuth> oauth2Authentication(
-        @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("getUserInfo") @FormUrlEncoded Observable<CheckUserCredentialsJson> getUserInfo(
         @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("checkUserCredentials") @FormUrlEncoded
@@ -183,11 +181,5 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
     @POST("createUser") @Multipart Observable<BaseV3Response> createUserWithFile(
         @Part MultipartBody.Part user_avatar, @PartMap() HashMapNotNull<String, RequestBody> args,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("changeUserSettings") @FormUrlEncoded Observable<BaseV3Response> changeUserSettings(
-        @FieldMap BaseBody args, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("changeUserRepoSubscription") @FormUrlEncoded
-    Observable<BaseV3Response> changeUserRepoSubscription(@FieldMap BaseBody args);
   }
 }

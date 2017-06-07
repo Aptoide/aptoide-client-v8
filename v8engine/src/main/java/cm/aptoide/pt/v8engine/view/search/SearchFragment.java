@@ -18,8 +18,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.ListSearchApps;
@@ -31,9 +31,11 @@ import cm.aptoide.pt.v8engine.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.abtesting.SearchTabOptions;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.search.SearchAnalytics;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.fragment.BasePagerToolbarFragment;
+import com.facebook.appevents.AppEventsLogger;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -63,6 +65,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private SearchAnalytics searchAnalytics;
 
   public static SearchFragment newInstance(String query) {
     return newInstance(query, false);
@@ -95,6 +98,8 @@ public class SearchFragment extends BasePagerToolbarFragment {
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
+    searchAnalytics = new SearchAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -137,7 +142,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     if (hasSubscribedResults || hasEverywhereResults) {
       super.setupViewPager();
     } else {
-      Analytics.Search.noSearchResults(query);
+      searchAnalytics.searchNoResults(query);
 
       noSearchLayout.setVisibility(View.VISIBLE);
       buttonsLayout.setVisibility(View.INVISIBLE);
@@ -246,7 +251,8 @@ public class SearchFragment extends BasePagerToolbarFragment {
   }
 
   @Partners protected void executeSearchRequests(String storeName, boolean create) {
-    Analytics.Search.searchTerm(query);
+    //TODO (pedro): Don't have search source (which tab)
+    searchAnalytics.search(query);
 
     if (storeName != null) {
       shouldFinishLoading = true;
@@ -336,16 +342,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
     outState.putInt(BundleCons.SELECTED_BUTTON, selectedButton);
   }
 
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int i = item.getItemId();
-
-    if (i == android.R.id.home) {
-      getActivity().onBackPressed();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
-  }
-
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_search, menu);
@@ -355,6 +351,16 @@ public class SearchFragment extends BasePagerToolbarFragment {
     } else {
       SearchUtils.setupGlobalSearchView(menu, this);
     }
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int i = item.getItemId();
+
+    if (i == android.R.id.home) {
+      getActivity().onBackPressed();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

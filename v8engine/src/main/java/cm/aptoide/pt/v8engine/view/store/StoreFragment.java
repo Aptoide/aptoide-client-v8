@@ -24,12 +24,11 @@ import android.view.ViewGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
@@ -44,11 +43,13 @@ import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
+import cm.aptoide.pt.v8engine.timeline.view.AppsTimelineFragment;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.fragment.BasePagerToolbarFragment;
-import cm.aptoide.pt.v8engine.view.timeline.AppsTimelineFragment;
 import com.astuetz.PagerSlidingTabStrip;
+import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -79,6 +80,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private Long storeId;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
+  private TimelineAnalytics timelineAnalytics;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -128,6 +130,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
+    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()), null, null, null);
   }
 
   @Override public void onDestroy() {
@@ -188,9 +192,14 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override public void onDestroyView() {
-    if (storeTheme != null && !storeContext.equals(StoreContext.meta)) {
-      ThemeUtils.setAptoideTheme(getActivity());
-    }
+
+    // reset to default theme in the toolbar
+    // TODO re-do this ThemeUtils methods and avoid loading resources using
+    // execution-time generated ids for the desired resource
+    ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(V8Engine.getConfiguration()
+        .getDefaultTheme()));
+    ThemeUtils.setAptoideTheme(getActivity());
+
     if (pagerSlidingTabStrip != null) {
       pagerSlidingTabStrip.setOnTabReselectedListener(null);
       pagerSlidingTabStrip = null;
@@ -226,7 +235,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
       }
     });
 
-
     /* Be careful maintaining this code
      * this affects both the main ViewPager when we open app
      * and the ViewPager inside the StoresView
@@ -238,6 +246,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
         StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
         if (Event.Name.getUserTimeline.equals(adapter.getEventName(position))) {
           Analytics.AppsTimeline.openTimeline();
+          timelineAnalytics.sendTimelineTabOpened();
         }
       }
     });
@@ -271,6 +280,10 @@ public class StoreFragment extends BasePagerToolbarFragment {
     inflater.inflate(R.menu.menu_search, menu);
 
     setupSearch(menu);
+  }
+
+  protected void setupSearch(Menu menu) {
+    SearchUtils.setupInsideStoreSearchView(menu, this, storeName);
   }
 
   /**
@@ -381,10 +394,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
         });
   }
 
-  protected void setupSearch(Menu menu) {
-    SearchUtils.setupInsideStoreSearchView(menu, this, storeName);
-  }
-
   @Override public void setupViews() {
     super.setupViews();
     setHasOptionsMenu(true);
@@ -392,9 +401,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Partners @CallSuper @Override public void setupToolbar() {
     super.setupToolbar();
-    // FIXME: 17/1/2017 sithengineer is this the right place to have this event ?? why ??
-    Logger.d(TAG, "LOCALYTICS TESTING - STORES ACTION ENTER " + storeName);
-    Analytics.Stores.enter(storeName == null ? String.valueOf(userId) : storeName);
   }
 
   protected boolean displayHomeUpAsEnabled() {

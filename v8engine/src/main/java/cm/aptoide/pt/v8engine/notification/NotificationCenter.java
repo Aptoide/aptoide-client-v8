@@ -1,9 +1,11 @@
 package cm.aptoide.pt.v8engine.notification;
 
-import android.content.SharedPreferences;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import java.util.List;
+import rx.Completable;
 import rx.Observable;
-import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by trinkes on 09/05/2017.
@@ -11,58 +13,54 @@ import rx.Subscription;
 
 public class NotificationCenter {
 
-  public static final String NOTIFICATION_CENTER_ENABLE = "notification_campaign_and_social";
+  public static final int MAX_NUMBER_NOTIFICATIONS_SAVED = 50;
   private final CrashReport crashReport;
-  private final NotificationIdsMapper notificationIdsMapper;
   private NotificationHandler notificationHandler;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SystemNotificationShower notificationShower;
   private NotificationPolicyFactory notificationPolicyFactory;
-  private SharedPreferences sharedPreferences;
-  private Subscription notificationProviderSubscription;
+  private NotificationsCleaner notificationsCleaner;
+  private CompositeSubscription subscriptions;
+  private NotificationProvider notificationProvider;
+  private AptoideAccountManager accountManager;
 
-  public NotificationCenter(NotificationIdsMapper notificationIdsMapper,
-      NotificationHandler notificationHandler, NotificationSyncScheduler notificationSyncScheduler,
+  public NotificationCenter(NotificationHandler notificationHandler,
+      NotificationProvider notificationProvider,
+      NotificationSyncScheduler notificationSyncScheduler,
       SystemNotificationShower notificationShower, CrashReport crashReport,
-      NotificationPolicyFactory notificationPolicyFactory, SharedPreferences sharedPreferences) {
-    this.notificationIdsMapper = notificationIdsMapper;
+      NotificationPolicyFactory notificationPolicyFactory,
+      NotificationsCleaner notificationsCleaner, AptoideAccountManager accountManager) {
     this.notificationHandler = notificationHandler;
     this.notificationSyncScheduler = notificationSyncScheduler;
     this.notificationShower = notificationShower;
+    this.notificationProvider = notificationProvider;
     this.crashReport = crashReport;
     this.notificationPolicyFactory = notificationPolicyFactory;
-    this.sharedPreferences = sharedPreferences;
+    this.notificationsCleaner = notificationsCleaner;
+    this.accountManager = accountManager;
+    subscriptions = new CompositeSubscription();
   }
 
-  public void enable() {
-    sharedPreferences.edit()
-        .putBoolean(NOTIFICATION_CENTER_ENABLE, true)
-        .apply();
-  }
+  public void setup() {
+    notificationSyncScheduler.schedule();
+    subscriptions.add(getNewNotifications().flatMapCompletable(
+        aptoideNotification -> notificationShower.showNotification(aptoideNotification))
+        .subscribe(aptoideNotification -> {
+        }, throwable -> crashReport.log(throwable)));
 
-  public void disable() {
-    sharedPreferences.edit()
-        .putBoolean(NOTIFICATION_CENTER_ENABLE, false)
-        .apply();
-  }
+    subscriptions.add(accountManager.accountStatus()
+        .filter(account -> account.isLoggedIn())
+        .flatMapCompletable(
+            account -> notificationsCleaner.cleanOtherUsersNotifications(account.getId()))
+        .subscribe(notificationsCleaned -> {
+        }, throwable -> crashReport.log(throwable)));
 
-  public void startIfEnabled() {
-    if (isEnable()) {
-      start();
-    }
-  }
-
-  public void start() {
-      notificationSyncScheduler.schedule();
-      notificationProviderSubscription = getNewNotifications().flatMapCompletable(
-          aptoideNotification -> notificationShower.showNotification(aptoideNotification,
-              notificationIdsMapper.getNotificationId(aptoideNotification.getType())))
-          .subscribe(aptoideNotification -> {
-          }, throwable -> crashReport.log(throwable));
-  }
-
-  public void forceSync() {
-    notificationSyncScheduler.forceSync();
+    subscriptions.add(notificationProvider.getNotifications(1)
+        .flatMapCompletable(
+            aptoideNotifications -> notificationsCleaner.cleanLimitExceededNotifications(
+                MAX_NUMBER_NOTIFICATIONS_SAVED))
+        .subscribe(aptoideNotifications -> {
+        }, throwable -> crashReport.log(throwable)));
   }
 
   private Observable<AptoideNotification> getNewNotifications() {
@@ -82,14 +80,19 @@ public class NotificationCenter {
         });
   }
 
-  public void stop() {
-    if (!notificationProviderSubscription.isUnsubscribed()) {
-      notificationProviderSubscription.unsubscribe();
-    }
-    notificationSyncScheduler.stop();
+  public Observable<List<AptoideNotification>> getInboxNotifications(int entries) {
+    return notificationProvider.getNotifications(entries);
   }
 
-  public boolean isEnable() {
-    return sharedPreferences.getBoolean(NOTIFICATION_CENTER_ENABLE, true);
+  public Observable<Boolean> haveNotifications() {
+    return notificationProvider.getNotifications(1).map(list -> !list.isEmpty());
+  }
+
+  public Completable notificationDismissed(
+      @AptoideNotification.NotificationType Integer[] notificationType) {
+    return notificationProvider.getLastShowed(notificationType).flatMapCompletable(notification -> {
+      notification.setDismissed(System.currentTimeMillis());
+      return notificationProvider.save(notification);
+    });
   }
 }

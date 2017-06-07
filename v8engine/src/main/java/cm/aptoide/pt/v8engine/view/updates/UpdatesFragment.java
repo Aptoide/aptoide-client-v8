@@ -6,8 +6,8 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.networkclient.WebService;
@@ -25,11 +25,13 @@ import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
+import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.updates.UpdateRepository;
 import cm.aptoide.pt.v8engine.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.store.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.updates.installed.InstalledAppDisplayable;
+import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.LinkedList;
 import java.util.List;
@@ -214,7 +216,11 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
             AptoideUtils.StringU.getResString(R.string.installed_tab))));
 
     for (Installed installedApp : installedApps) {
-      installedDisplayablesList.add(new InstalledAppDisplayable(installedApp));
+      installedDisplayablesList.add(new InstalledAppDisplayable(installedApp,
+          new TimelineAnalytics(analytics, AppEventsLogger.newLogger(getContext()),
+              ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
+              ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
+              WebService.getDefaultConverter()), installedRepository));
     }
     addDisplayables(installedDisplayablesList, false);
     Logger.v(TAG, "listed installed apps");

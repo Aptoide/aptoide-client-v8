@@ -4,6 +4,7 @@ import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import io.realm.Sort;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.schedulers.Schedulers;
@@ -54,5 +55,26 @@ public class NotificationAccessor extends SimpleAccessor<Notification> {
           }
         })
         .toSingle();
+  }
+
+  public Observable<List<Notification>> getAllSorted(Sort sort) {
+    return Observable.fromCallable(() -> Database.getInternal())
+        .flatMap(realm -> realm.where(Notification.class)
+            .findAllSorted("timeStamp", sort)
+            .asObservable())
+        .unsubscribeOn(RealmSchedulers.getScheduler())
+        .flatMap((data) -> database.copyFromRealm(data))
+        .subscribeOn(RealmSchedulers.getScheduler())
+        .observeOn(Schedulers.io());
+  }
+
+  public Completable deleteAllExcluding(List<String> ids) {
+    return Completable.fromAction(
+        () -> database.deleteAllExcluding(Notification.class, "ownerId", ids));
+  }
+
+  public Completable delete(String[] keys) {
+    return Completable.fromAction(
+        () -> database.deleteAllIn(Notification.class, Notification.KEY, keys));
   }
 }

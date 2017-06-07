@@ -1,7 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.store.ListStores;

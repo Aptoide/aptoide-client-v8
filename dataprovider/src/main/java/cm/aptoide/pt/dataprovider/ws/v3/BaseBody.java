@@ -6,23 +6,23 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import lombok.Getter;
-import lombok.Setter;
 
-/**
- * Created by neuro on 18-05-2016.
- */
 public class BaseBody extends HashMapNotNull<String, Object> {
 
-  @Getter @Setter private String aptoideMd5sum;
-  @Getter @Setter private String aptoidePackage;
-
-  public void setAccess_token(String token) {
-    put("access_token", token);
+  public void setAptoideMd5sum(String aptoideMd5sum) {
+    put("aptoide_md5sum", aptoideMd5sum);
   }
 
-  public void setAptoideUID(String aptoideUID) {
-    put("aptoide_uid", aptoideUID);
+  public void setAptoidePackage(String aptoidePackage) {
+    put("aptoide_package", aptoidePackage);
+  }
+
+  public void setAccessToken(String accessToken) {
+    put("access_token", accessToken);
+  }
+
+  public void setAptoideUid(String aptoideUid) {
+    put("aptoide_uid", aptoideUid);
   }
 
   public void setQ(String q) {

@@ -24,12 +24,15 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.install.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.updates.UpdateRepository;
+import cm.aptoide.pt.v8engine.updates.UpdatesAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -53,9 +56,12 @@ import rx.android.schedulers.AndroidSchedulers;
   private ProgressBar progressBar;
 
   private UpdateRepository updateRepository;
+  private UpdatesAnalytics updatesAnalytics;
 
   public UpdateWidget(View itemView) {
     super(itemView);
+    updatesAnalytics = new UpdatesAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
   }
 
   @Override protected void assignViews(View itemView) {
@@ -113,6 +119,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
   private Observable<Void> handleUpdateButtonClick(UpdateDisplayable displayable, Context context) {
     return RxView.clicks(updateButtonLayout)
+        .doOnNext(__ -> updatesAnalytics.updates("Update"))
         .flatMapCompletable(
             click -> displayable.downloadAndInstall(context, (PermissionService) context))
         .retry()
@@ -137,6 +144,7 @@ import rx.android.schedulers.AndroidSchedulers;
   @NonNull private Observable<Void> handleUpdateRowClick(UpdateDisplayable updateDisplayable) {
     return RxView.clicks(updateRowLayout)
         .doOnNext(v -> {
+          updatesAnalytics.updates("Open App View");
           final Fragment fragment = V8Engine.getFragmentProvider()
               .newAppViewFragment(updateDisplayable.getAppId(), updateDisplayable.getPackageName());
           getFragmentNavigator().navigateTo(fragment);
