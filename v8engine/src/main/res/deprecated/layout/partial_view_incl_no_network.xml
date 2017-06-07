@@ -85,7 +85,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="12dp"
             android:layout_marginTop="12dp"
-            android:src="@drawable/ic_action_spotshare_orange"
+            android:src="@drawable/spot_and_share_ic_action_spotshare_orange"
             />
         <TextView
             android:id="@+id/call_to_spot_and_share"

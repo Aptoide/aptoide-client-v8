@@ -25,8 +25,8 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.managed.ManagedKeys;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.toolbox.ToolboxKeys;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -177,19 +177,19 @@ public class ToolboxContentProvider extends ContentProvider {
             for (final Map.Entry<String, Object> entry : values.valueSet()) {
               Object value = entry.getValue();
               if (value instanceof String) {
-                if (!ManagerPreferences.isDebug()) {
+                if (!ToolboxManager.isDebug()) {
                   AptoideUtils.ThreadU.runOnUiThread(
                       () -> Toast.makeText(context, "Please enable debug mode for toolbox to work.",
                           Toast.LENGTH_LONG)
                           .show());
                 }
                 if (entry.getKey()
-                    .equals(ManagedKeys.FORCE_COUNTRY)) {
-                  ManagerPreferences.setForceCountry((String) value);
+                    .equals(ToolboxKeys.FORCE_COUNTRY)) {
+                  ToolboxManager.setForceCountry((String) value);
                   changed++;
                 } else if (entry.getKey()
-                    .equals(ManagedKeys.NOTIFICATION_TYPE)) {
-                  ManagerPreferences.setNotificationType((String) value);
+                    .equals(ToolboxKeys.NOTIFICATION_TYPE)) {
+                  ToolboxManager.setNotificationType((String) value);
                   changed++;
                 } else if (entry.getKey()
                     .equals("pullNotificationAction")) {
@@ -206,15 +206,25 @@ public class ToolboxContentProvider extends ContentProvider {
                 }
               } else if (value instanceof Boolean) {
                 if (entry.getKey()
-                    .equals(ManagedKeys.DEBUG)) {
-                  ManagerPreferences.setDebug((Boolean) entry.getValue());
+                    .equals(ToolboxKeys.DEBUG)) {
+                  ToolboxManager.setDebug((Boolean) entry.getValue());
                   Logger.setDBG((Boolean) entry.getValue());
+                  changed++;
+                }
+                if (entry.getKey()
+                    .equals(ToolboxKeys.TOOLBOX_ENABLE_HTTP_SCHEME)) {
+                  ToolboxManager.setToolboxEnableHttpScheme((Boolean) entry.getValue());
+                  changed++;
+                }
+                if (entry.getKey()
+                    .equals(ToolboxKeys.TOOLBOX_RETROFIT_LOGS)) {
+                  ToolboxManager.setToolboxEnableRetrofitLogs((Boolean) entry.getValue());
                   changed++;
                 }
               } else if (value instanceof Long) {
                 if (entry.getKey()
-                    .equals(ManagedKeys.PUSH_NOTIFICATION_PULL_INTERVAL)) {
-                  ManagerPreferences.setPushNotificationPullingInterval(((Long) value));
+                    .equals(ToolboxKeys.PUSH_NOTIFICATION_PULL_INTERVAL)) {
+                  ToolboxManager.setPushNotificationPullingInterval(((Long) value));
                   changed++;
                 }
               }

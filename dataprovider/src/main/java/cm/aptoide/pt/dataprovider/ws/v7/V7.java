@@ -47,6 +47,7 @@ import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
@@ -71,10 +72,11 @@ import rx.schedulers.Schedulers;
  */
 public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
 
-  public static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
-      + "://"
-      + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
-      + "/api/7/";
+  public static final String BASE_HOST = (ToolboxManager.isToolboxEnableHttpScheme() ? "http" :
+      BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+          + "://"
+          + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
+          + "/api/7/";
   @Getter protected final B body;
   private final BodyInterceptor bodyInterceptor;
   private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
