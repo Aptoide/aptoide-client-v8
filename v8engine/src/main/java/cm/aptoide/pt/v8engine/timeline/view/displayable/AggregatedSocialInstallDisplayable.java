@@ -99,14 +99,14 @@ public class AggregatedSocialInstallDisplayable extends CardDisplayable {
 
   @Override
   public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), getAppStoreId(), privacyResult,
+    socialRepository.share(cardId, getAppStoreId(), privacyResult,
         shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(), BLANK,
             BLANK));
   }
 
   @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), getAppStoreId(), shareCardCallback,
+    socialRepository.share(cardId, getAppStoreId(), shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, getPackageName(), BLANK,
             BLANK));
   }

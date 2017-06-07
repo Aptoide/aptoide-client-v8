@@ -222,13 +222,13 @@ public class AggregatedSocialVideoDisplayable extends CardDisplayable {
 
   @Override
   public void share(String cardId, boolean privacyResult, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), privacyResult, shareCardCallback,
+    socialRepository.share(cardId, privacyResult, shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getPublisherName(),
             BLANK));
   }
 
   @Override public void share(String cardId, ShareCardCallback shareCardCallback) {
-    socialRepository.share(getTimelineCard().getCardId(), shareCardCallback,
+    socialRepository.share(cardId, shareCardCallback,
         getTimelineSocialActionObject(CARD_TYPE_NAME, BLANK, SHARE, BLANK, getPublisherName(),
             BLANK));
   }
